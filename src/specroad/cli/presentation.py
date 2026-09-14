@@ -2,7 +2,6 @@
 
 import json
 import os
-import shutil
 import textwrap
 import unicodedata
 
@@ -16,13 +15,24 @@ class PrettyRenderer:
     presenter neither executes commands nor changes their outcomes.
     """
 
-    def __init__(self, out, err):
+    def __init__(self, out, err, *, no_color=False, quiet=False):
         self.out = out
         self.err = err
-        self.color = bool(getattr(out, "isatty", lambda: False)()) and "NO_COLOR" not in os.environ
-        self.width = max(32, min(100, shutil.get_terminal_size(fallback=(76, 24)).columns))
+        self.color = self._is_tty(out) and not no_color and "NO_COLOR" not in os.environ
+        try:
+            columns = os.get_terminal_size(out.fileno()).columns if self._is_tty(out) else 76
+        except (AttributeError, OSError, ValueError):
+            columns = 76
+        self.width = max(32, min(100, columns))
         self.unicode = self._supports_symbols(out) and self._supports_symbols(err)
-        self.quiet = False
+        self.quiet = bool(quiet)
+
+    @staticmethod
+    def _is_tty(stream):
+        try:
+            return bool(getattr(stream, "isatty", lambda: False)())
+        except (OSError, ValueError):
+            return False
 
     @staticmethod
     def _supports_symbols(stream):
@@ -118,6 +128,11 @@ class PrettyRenderer:
                 self._line(stream, diagnostic.path, prefix="  ")
             if diagnostic.remediation:
                 self._line(stream, "Next: " + diagnostic.remediation, prefix="  ")
+        if outcome.details:
+            self._line(stream, "Details", style="title")
+            self._line(stream, json.dumps(thaw(outcome.details), ensure_ascii=True, indent=2, allow_nan=False))
+        if outcome.partial_scope is not None:
+            self._line(stream, "Explicit partial scope: " + outcome.partial_scope, style="warning")
         if outcome.continuation is not None:
             claim = outcome.continuation.claim
             self.progress(claim.completed_units, claim.total_units)

@@ -16,6 +16,8 @@ _GLOBAL_OPTIONS = {
     "--configuration": OptionSpec("--configuration", takes_value=True),
     "--fail-on": OptionSpec("--fail-on", takes_value=True, choices=("error", "warning")),
     "--strict": OptionSpec("--strict"),
+    "--no-color": OptionSpec("--no-color"),
+    "--quiet": OptionSpec("--quiet"),
     "--format": OptionSpec("--format", takes_value=True, choices=("pretty", "json", "sarif")),
 }
 

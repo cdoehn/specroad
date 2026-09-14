@@ -29,7 +29,11 @@ def _error_options(arguments):
             formats.append(item.partition("=")[2])
         elif item == "--format":
             formats.append(arguments[index + 1] if index + 1 < len(arguments) else None)
-    return {"--format": formats[0]} if len(formats) == 1 and formats[0] in ("json", "sarif") else {}
+    options = {"--format": formats[0]} if len(formats) == 1 and formats[0] in ("json", "sarif") else {}
+    for flag in ("--quiet", "--no-color"):
+        if arguments.count(flag) == 1:
+            options[flag] = True
+    return options
 
 
 def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry | None = None,

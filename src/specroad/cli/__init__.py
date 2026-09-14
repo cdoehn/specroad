@@ -12,9 +12,11 @@ def main(argv: list[str] | None = None, *, stdout=None, stderr=None) -> int:
     arguments = sys.argv[1:] if argv is None else argv
     out = sys.stdout if stdout is None else stdout
     err = sys.stderr if stderr is None else stderr
-    output_format = _error_options(arguments).get("--format", "pretty")
+    display_options = _error_options(arguments)
+    output_format = display_options.get("--format", "pretty")
     try:
-        presenter = PrettyRenderer(out, err) if output_format == "pretty" else None
+        presenter = PrettyRenderer(out, err, no_color=display_options.get("--no-color", False),
+                                   quiet=display_options.get("--quiet", False)) if output_format == "pretty" else None
         if presenter is not None:
             presenter.phase("Run command")
         response = execute(arguments)
@@ -33,8 +35,9 @@ def main(argv: list[str] | None = None, *, stdout=None, stderr=None) -> int:
             out.flush()
         else:
             if presenter is None:
-                presenter = PrettyRenderer(out, err)
+                presenter = PrettyRenderer(out, err, no_color=response.options.get("--no-color", False),
+                                           quiet=response.options.get("--quiet", False))
             presenter.finish(outcome)
-    except (OSError, UnicodeError):
+    except (OSError, UnicodeError, ValueError):
         return 5
     return code

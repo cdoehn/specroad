@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 16
-last_completed_plan_commit: 1.f.W
-next_plan_commit: 1.f.R
+implementation_plan_commits_completed: 17
+last_completed_plan_commit: 1.f.R
+next_plan_commit: 1.f.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -307,7 +307,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.f.R – Make it Right
 
-- [ ] **1.f.R** · Position **17/885** · Voraussetzung: `1.f.W`.
+- [x] **1.f.R** · Position **17/885** · Voraussetzung: `1.f.W`.
 **Exakte Commit-Message:** `1.f.R style(core): Darstellungsschicht für die farbige CLI vervollständigen`
 
 **Vervollständigung:** TTY, NO_COLOR, no-color und quiet umsetzen; Status zusätzlich textuell unterscheiden und Maschinendaten frei von Dekoration halten.

@@ -6,8 +6,9 @@ from .results import CommandResult
 
 def _help(invocation) -> CommandResult:
     return CommandResult(invocation.command.command_id, result={
-        "usage": "specroad --help [--format pretty|json]",
-        "options": [{"flag": "--format", "values": ["pretty", "json"]}],
+        "usage": "specroad --help [--format pretty|json] [--no-color] [--quiet]",
+        "options": [{"flag": "--format", "values": ["pretty", "json"]},
+                    {"flag": "--no-color"}, {"flag": "--quiet"}],
         "commands": [{"command_id": "help", "words": ["--help"], "aliases": [["-h"]]}],
         "exit_codes": {"0": "completed", "2": "invalid usage", "4": "internal error", "5": "I/O failure"},
         "examples": ["specroad --help", "python3 -m specroad --help --format json"],
@@ -21,5 +22,6 @@ def builtin_registry() -> CommandRegistry:
         command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.BOOTSTRAP,
         effect_scope=EffectScope.NONE, handler=_help,
-        options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),),
+        options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
+                 OptionSpec("--no-color"), OptionSpec("--quiet")),
     ),))
