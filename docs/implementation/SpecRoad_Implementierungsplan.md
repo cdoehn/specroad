@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 13
-last_completed_plan_commit: 1.e.W
-next_plan_commit: 1.e.R
+implementation_plan_commits_completed: 14
+last_completed_plan_commit: 1.e.R
+next_plan_commit: 1.e.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -272,7 +272,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.e.R – Make it Right
 
-- [ ] **1.e.R** · Position **14/885** · Voraussetzung: `1.e.W`.
+- [x] **1.e.R** · Position **14/885** · Voraussetzung: `1.e.W`.
 **Exakte Commit-Message:** `1.e.R feat(core): Ergebnisobjekte und Exitcodes vervollständigen`
 
 **Vervollständigung:** Fehler-, Sicherheits-, Konflikt-, Blocker- und Fortsetzungszustände getrennt abbilden; kein Code 8 ohne bestätigten Checkpoint.

@@ -4,7 +4,7 @@ from types import MappingProxyType
 
 from ._arguments import bind_options
 from .options import check_global_contract
-from .results import CommandResult, ResultContractError, normalize_result
+from .results import CommandResult, OperationFailure, ResultContractError, normalize_result
 from .contracts import (
     CommandClass, CommandExecutionError, CommandSpec, CommandUsageError,
     EffectScope, Invocation, OptionSpec, PreflightProfile,
@@ -63,8 +63,10 @@ class CommandRegistry:
         """Execute once and normalize the typed result before any rendering."""
         try:
             value = invocation.command.handler(invocation)
-            return normalize_result(value, invocation.command.command_id)
-        except (CommandUsageError, OSError):
+            result = normalize_result(value, invocation.command.command_id)
+            result.verify_delivery()
+            return result
+        except (CommandUsageError, OperationFailure, OSError):
             raise
         except Exception as error:
             raise CommandExecutionError("Command handler failed") from error

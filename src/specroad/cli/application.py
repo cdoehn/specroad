@@ -7,7 +7,7 @@ from typing import Mapping
 from .commands import builtin_registry
 from .options import OptionResolutionError, resolve_options
 from .registry import CommandExecutionError, CommandRegistry, CommandUsageError
-from .results import CommandResult, FailureKind, failed_result
+from .results import CommandResult, FailureKind, OperationFailure, failed_result
 
 
 @dataclass(frozen=True)
@@ -52,6 +52,8 @@ def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry
         outcome = selected.execute_result(invocation)
         if outcome.project is None and project is not None:
             outcome = replace(outcome, project=project)
+    except OperationFailure as error:
+        outcome = failed_result(command, error.kind, str(error), complete=error.complete, details=error.details)
     except OptionResolutionError as error:
         outcome = failed_result(command, FailureKind(error.exit_code), str(error))
     except CommandUsageError as error:
@@ -60,6 +62,8 @@ def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry
         outcome = failed_result(command, FailureKind.ENVIRONMENT, "A required I/O operation failed.")
     except Exception:
         outcome = failed_result(command, FailureKind.INTERNAL, "An internal command contract failed.")
+    if outcome.project is None and project is not None:
+        outcome = replace(outcome, project=project)
     return CommandResponse(outcome, options)
 
 
@@ -68,4 +72,11 @@ def dispatch_result(arguments, **kwargs) -> CommandResult:
 
 
 def dispatch(arguments, **kwargs) -> int:
-    return dispatch_result(arguments, **kwargs).exit_code
+    try:
+        return dispatch_result(arguments, **kwargs).exit_code
+    except OperationFailure as error:
+        return int(error.kind)
+    except OSError:
+        return 5
+    except Exception:
+        return 4
