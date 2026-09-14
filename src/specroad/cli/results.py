@@ -1,6 +1,6 @@
 """Typed command outcomes: human presentation is never an execution contract."""
 
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 from enum import Enum, IntEnum
 from types import MappingProxyType
 from typing import Mapping
@@ -11,9 +11,7 @@ from pathlib import Path
 import stat
 import math
 import re
-from urllib.parse import quote
 
-from .._metadata import __version__
 
 FORMAT_VERSION = "2.0.0"
 
@@ -110,7 +108,8 @@ class Diagnostic:
         object.__setattr__(self, "related_ids", tuple(sorted(set(self.related_ids))))
 
     def as_dict(self):
-        return {name: thaw(getattr(self, name)) for name in self.__dataclass_fields__}
+        from .serialization import diagnostic_document
+        return diagnostic_document(self)
 
 
 def _diagnostic_key(item):
@@ -388,23 +387,8 @@ class CommandResult:
                    diagnostics=diagnostics, **kwargs)
 
     def as_dict(self):
-        self.verify_delivery()
-        summary = thaw(self.details)
-        summary["complete"] = self.complete
-        if self.failure is not None:
-            summary["failure_kind"] = self.failure.name.lower()
-        if self.partial_scope is not None:
-            summary["partial_scope"] = self.partial_scope
-        if self.continuation is not None:
-            summary.update(self.continuation.claim.summary())
-        if self.result_ref is not None:
-            summary["delivery"] = "external"
-        return {"format_version": FORMAT_VERSION, "command": self.command,
-                "status": self.status.value, "project": thaw(self.project),
-                "result": thaw(self.result),
-                "result_ref": None if self.result_ref is None else self.result_ref.as_dict(),
-                "diagnostics": [item.as_dict() for item in self.diagnostics],
-                "summary": summary}
+        from .serialization import envelope_document
+        return envelope_document(self)
 
 
 def failed_result(command, kind, message, *, complete=False, details=None):
@@ -426,38 +410,10 @@ def normalize_result(value, command):
 
 
 def sarif_document(outcome):
-    """A closed diagnostic result in SARIF 2.1.0; other states use the envelope.
-
-    Contract: OASIS SARIF 2.1.0, sections 3.13, 3.14, 3.19 and 3.27.
-    No imports, analyzer execution, or external schema fetching occur here.
-    """
-    outcome.verify_delivery()
-    if not outcome.complete or outcome.status is ResultStatus.CONTINUATION_REQUIRED:
-        return outcome.as_dict()
-    results = []
-    for item in outcome.diagnostics:
-        record = {"ruleId": item.rule_id or item.code,
-                  "level": {"info": "note", "warning": "warning", "error": "error"}[item.severity],
-                  "message": {"text": item.message},
-                  "properties": {"specroad": item.as_dict()}}
-        if item.path:
-            record["locations"] = [{"physicalLocation": {"artifactLocation": {
-                "uri": quote(item.path.replace("\\", "/"), safe="/")}}}]
-        results.append(record)
-    return {"version": "2.1.0",
-            "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/cos02/schemas/sarif-schema-2.1.0.json",
-            "runs": [{"tool": {"driver": {"name": "SpecRoad", "version": __version__}},
-                      "invocations": [{"executionSuccessful": outcome.exit_code in (0, 1),
-                                       "exitCode": outcome.exit_code}],
-                      "results": results,
-                      "properties": {"specroad": outcome.as_dict()}}]}
+    from .serialization import sarif_document as project_sarif
+    return project_sarif(outcome)
 
 
 def serialize_result(outcome, output_format="json"):
-    if output_format == "json":
-        document = outcome.as_dict()
-    elif output_format == "sarif":
-        document = sarif_document(outcome)
-    else:
-        raise ResultContractError("Unknown machine format")
-    return json.dumps(document, ensure_ascii=True, sort_keys=True, allow_nan=False)
+    from .serialization import serialize_result as encode
+    return encode(outcome, output_format)

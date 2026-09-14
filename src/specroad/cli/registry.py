@@ -4,7 +4,7 @@ from types import MappingProxyType
 
 from ._arguments import bind_options
 from .options import check_global_contract
-from .results import CommandResult, OperationFailure, ResultContractError, normalize_result
+from .results import CommandResult, OperationFailure, normalize_result
 from .contracts import (
     CommandClass, CommandExecutionError, CommandSpec, CommandUsageError,
     EffectScope, Invocation, OptionSpec, PreflightProfile,

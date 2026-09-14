@@ -6,7 +6,7 @@ from typing import Mapping
 
 from .commands import builtin_registry
 from .options import OptionResolutionError, resolve_options
-from .registry import CommandExecutionError, CommandRegistry, CommandUsageError
+from .registry import CommandRegistry, CommandUsageError
 from .results import CommandResult, FailureKind, OperationFailure, failed_result
 
 
@@ -50,8 +50,6 @@ def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry
             project = {"project_root": str(invocation.resolved.project_root),
                        "project_id": None, "model_root_sha256": None}
         outcome = selected.execute_result(invocation)
-        if outcome.project is None and project is not None:
-            outcome = replace(outcome, project=project)
     except OperationFailure as error:
         outcome = failed_result(command, error.kind, str(error), complete=error.complete, details=error.details)
     except OptionResolutionError as error:

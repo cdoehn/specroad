@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 14
-last_completed_plan_commit: 1.e.R
-next_plan_commit: 1.e.C
+implementation_plan_commits_completed: 15
+last_completed_plan_commit: 1.e.C
+next_plan_commit: 1.f.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -281,7 +281,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.e.C – Make it Clean
 
-- [ ] **1.e.C** · Position **15/885** · Voraussetzung: `1.e.R`.
+- [x] **1.e.C** · Position **15/885** · Voraussetzung: `1.e.R`.
 **Exakte Commit-Message:** `1.e.C refactor(core): Ergebnisobjekte und Exitcodes bereinigen`
 
 **Bereinigung:** Serialisierung als dünnen Adapter um typisierte Resultate halten.
