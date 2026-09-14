@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 1
-last_completed_plan_commit: 1.a.W
-next_plan_commit: 1.a.R
+implementation_plan_commits_completed: 2
+last_completed_plan_commit: 1.a.R
+next_plan_commit: 1.a.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -132,7 +132,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.a.R – Make it Right
 
-- [ ] **1.a.R** · Position **2/885** · Voraussetzung: `1.a.W`.
+- [x] **1.a.R** · Position **2/885** · Voraussetzung: `1.a.W`.
 **Exakte Commit-Message:** `1.a.R build(core): Core-Paket und unterstützte Python-Syntax vervollständigen`
 
 **Vervollständigung:** Importpfade, fehlende optionale Pakete und nicht aktivierte virtuelle Umgebungen berücksichtigen; keine Installation beim Start.
