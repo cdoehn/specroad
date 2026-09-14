@@ -157,6 +157,7 @@ class CommandSpec:
 class Invocation:
     command: CommandSpec
     options: Mapping[str, object]
+    resolved: object = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))

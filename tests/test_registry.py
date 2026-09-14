@@ -17,8 +17,8 @@ def read_command(handler, **changes):
     command = CommandSpec(
         command_id="fixture.read", words=("fixture", "read"),
         command_class=CommandClass.READ_ONLY,
-        preflight_profile=PreflightProfile.PROJECT_METADATA,
-        effect_scope=EffectScope.NONE, requires_project=True, handler=handler,
+        preflight_profile=PreflightProfile.INPUT_READ,
+        effect_scope=EffectScope.NONE, requires_project=False, handler=handler,
     )
     return replace(command, **changes)
 
