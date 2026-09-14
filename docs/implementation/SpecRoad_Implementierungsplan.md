@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 15
-last_completed_plan_commit: 1.e.C
-next_plan_commit: 1.f.W
+implementation_plan_commits_completed: 16
+last_completed_plan_commit: 1.f.W
+next_plan_commit: 1.f.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -298,7 +298,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.f.W – Let it Work
 
-- [ ] **1.f.W** · Position **16/885** · Voraussetzung: `1.e.C`.
+- [x] **1.f.W** · Position **16/885** · Voraussetzung: `1.e.C`.
 **Exakte Commit-Message:** `1.f.W style(core): Darstellungsschicht für die farbige CLI aufbauen`
 
 **Umsetzung:** Gemeinsame übersichtliche Pretty-Darstellung mit Phasen, Fortschritt, Status, Warnungen und kompaktem Abschluss aufbauen.
