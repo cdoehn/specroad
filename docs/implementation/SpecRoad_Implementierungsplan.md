@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 5
-last_completed_plan_commit: 1.b.R
-next_plan_commit: 1.b.C
+implementation_plan_commits_completed: 6
+last_completed_plan_commit: 1.b.C
+next_plan_commit: 1.c.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -176,7 +176,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.b.C – Make it Clean
 
-- [ ] **1.b.C** · Position **6/885** · Voraussetzung: `1.b.R`.
+- [x] **1.b.C** · Position **6/885** · Voraussetzung: `1.b.R`.
 **Exakte Commit-Message:** `1.b.C refactor(core): Modul- und CLI-Einstieg bereinigen`
 
 **Bereinigung:** Alle Einstiegspunkte auf genau einen anwendungsbezogenen Dispatcher reduzieren.
