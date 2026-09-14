@@ -3,6 +3,7 @@
 from types import MappingProxyType
 
 from ._arguments import bind_options
+from .options import check_global_contract
 from .contracts import (
     CommandClass, CommandExecutionError, CommandSpec, CommandUsageError,
     EffectScope, Invocation, OptionSpec, PreflightProfile,
@@ -18,6 +19,7 @@ class CommandRegistry:
         for command in commands:
             if not isinstance(command, CommandSpec) or command.command_id in by_id:
                 raise CommandUsageError("Duplicate or invalid command declaration")
+            check_global_contract(command)
             by_id[command.command_id] = command
             for route in (command.words, *command.aliases):
                 if route in routes:

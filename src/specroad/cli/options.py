@@ -10,6 +10,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Mapping
 import json
+import errno
 import os
 import stat
 
@@ -21,6 +22,8 @@ _GLOBAL_OPTIONS = {
     "--project": OptionSpec("--project", takes_value=True),
     "--profile": OptionSpec("--profile", takes_value=True, repeatable=True),
     "--configuration": OptionSpec("--configuration", takes_value=True),
+    "--fail-on": OptionSpec("--fail-on", takes_value=True, choices=("error", "warning")),
+    "--strict": OptionSpec("--strict"),
 }
 
 
@@ -30,6 +33,18 @@ def global_options(*flags: str) -> tuple[OptionSpec, ...]:
         return tuple(_GLOBAL_OPTIONS[flag] for flag in flags)
     except KeyError as error:
         raise CommandUsageError("Global option is not implemented") from error
+
+
+def check_global_contract(command) -> None:
+    """A recognized global flag must keep its shared parsing semantics."""
+    for option in command.options:
+        expected = _GLOBAL_OPTIONS.get(option.flag)
+        if expected is None:
+            continue
+        if (option.takes_value, option.repeatable, option.choices) != (expected.takes_value, expected.repeatable, expected.choices):
+            raise CommandUsageError("Command redefines a global option")
+    if command.preflight_profile is PreflightProfile.BOOTSTRAP and any(option.flag == "--project" for option in command.options):
+        raise CommandUsageError("Bootstrap contract must not select a project")
 
 
 class OptionResolutionError(CommandUsageError):
@@ -58,6 +73,28 @@ class ResolvedOptions:
     @property
     def origins(self) -> Mapping[str, str]:
         return MappingProxyType({key: changes[-1].source for key, changes in self.history.items()})
+
+
+@dataclass(frozen=True)
+class OptionLayer:
+    """Already resolved policy values, supplied by a future profile/variant engine.
+
+This adapter does not load, activate or validate the selected profile resources.
+Unknown values are rejected rather than pretending their policy was applied.
+"""
+    label: str
+    values: Mapping[str, object]
+
+    def __post_init__(self) -> None:
+        _text(self.label, "layer label")
+        if not isinstance(self.values, Mapping):
+            raise OptionResolutionError("Layer values must be a mapping")
+        checked = {}
+        for name, value in self.values.items():
+            if name != "fail_on":
+                raise OptionResolutionError("Unsupported policy-layer value")
+            checked[name] = _threshold(value)
+        object.__setattr__(self, "values", MappingProxyType(checked))
 
 
 def _text(value, name):
@@ -115,7 +152,8 @@ def _read_configuration(path: Path) -> dict:
     except (UnicodeError, ValueError, RecursionError) as error:
         raise OptionResolutionError("Invalid project configuration") from error
     except OSError as error:
-        raise OptionResolutionError("Cannot read project configuration", 5) from error
+        code = 7 if error.errno == errno.ELOOP else 5
+        raise OptionResolutionError("Cannot read project configuration", code) from error
     if not isinstance(data, dict):
         raise OptionResolutionError("Project configuration must be an object")
     return data
@@ -154,14 +192,30 @@ def _project(command, options, cwd):
         raise
     except FileNotFoundError as error:
         raise OptionResolutionError("Selected project does not exist") from error
+    except (TypeError, ValueError) as error:
+        raise OptionResolutionError("Invalid project search input") from error
     except (OSError, RuntimeError) as error:
         raise OptionResolutionError("Cannot resolve project", 5) from error
     raise OptionResolutionError("No project found; initialization must be explicit")
 
 
-def resolve_options(invocation: Invocation, *, cwd: Path | None = None) -> ResolvedOptions:
+def _threshold(value):
+    if not isinstance(value, str) or value not in {"error", "warning"}:
+        raise OptionResolutionError("Invalid failure threshold")
+    return value
+
+
+def resolve_options(invocation: Invocation, *, cwd: Path | None = None,
+                    profile_layers: tuple[OptionLayer, ...] = (),
+                    configuration_layer: OptionLayer | None = None) -> ResolvedOptions:
+    check_global_contract(invocation.command)
+    if not isinstance(profile_layers, (tuple, list)) or not all(isinstance(layer, OptionLayer) for layer in profile_layers):
+        raise OptionResolutionError("Invalid profile-policy layers")
+    if configuration_layer is not None and not isinstance(configuration_layer, OptionLayer):
+        raise OptionResolutionError("Invalid configuration-policy layer")
     root, source, project = _project(invocation.command, invocation.options, cwd)
-    values = {"profiles": (CORE_PROFILE,), "configuration": None}
+    values = {"profiles": (CORE_PROFILE,), "configuration": None, "fail_on": "error",
+              "strict": False, "core_lint_optional": False}
     history = {name: [OptionOrigin("default", value)] for name, value in values.items()}
 
     def assign(name, value, origin):
@@ -170,8 +224,38 @@ def resolve_options(invocation: Invocation, *, cwd: Path | None = None) -> Resol
 
     if "profiles" in project:
         assign("profiles", _profiles(project["profiles"]), "project")
+    policy = project.get("validation_policy", {})
+    if not isinstance(policy, dict):
+        raise OptionResolutionError("validation_policy must be an object")
+    if "fail_on" in policy:
+        assign("fail_on", _threshold(policy["fail_on"]), "project")
+    for layer in profile_layers:
+        for name, value in layer.values.items():
+            assign(name, value, "profile:" + layer.label)
+    if configuration_layer is not None:
+        for name, value in configuration_layer.values.items():
+            assign(name, value, "configuration:" + configuration_layer.label)
     if "--profile" in invocation.options:
         assign("profiles", _profiles(invocation.options["--profile"]), "cli")
     if "--configuration" in invocation.options:
         assign("configuration", _text(invocation.options["--configuration"], "configuration selector"), "cli")
+    if "--fail-on" in invocation.options:
+        assign("fail_on", _threshold(invocation.options["--fail-on"]), "cli")
+    if "--strict" in invocation.options:
+        if invocation.options["--strict"] is not True:
+            raise OptionResolutionError("strict must be a boolean flag")
+        assign("strict", True, "cli")
+        assign("fail_on", "warning", "cli:strict")
+        assign("core_lint_optional", True, "cli:strict")
     return ResolvedOptions(root, source, values, history)
+
+
+def policy_exit_code(severities, resolved: ResolvedOptions) -> int:
+    """Assess only known diagnostics; strict never starts analysis or hides work."""
+    threshold = _threshold(resolved.values["fail_on"])
+    failed = False
+    for severity in severities:
+        if not isinstance(severity, str) or severity not in {"error", "warning", "info"}:
+            raise OptionResolutionError("Unknown diagnostic severity")
+        failed = failed or severity == "error" or (threshold == "warning" and severity == "warning")
+    return 1 if failed else 0
