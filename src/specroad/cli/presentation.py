@@ -1,11 +1,9 @@
 """Replaceable human presentation. Never use its text or layout as an oracle."""
 
 import json
-import os
-import textwrap
-import unicodedata
 
 from .results import CommandResult, FailureKind, ResultStatus, normalize_result, thaw
+from .terminal import DisplayPolicy, TerminalWriter
 
 
 class PrettyRenderer:
@@ -18,49 +16,14 @@ class PrettyRenderer:
     def __init__(self, out, err, *, no_color=False, quiet=False):
         self.out = out
         self.err = err
-        self.color = self._is_tty(out) and not no_color and "NO_COLOR" not in os.environ
-        try:
-            columns = os.get_terminal_size(out.fileno()).columns if self._is_tty(out) else 76
-        except (AttributeError, OSError, ValueError):
-            columns = 76
-        self.width = max(32, min(100, columns))
-        self.unicode = self._supports_symbols(out) and self._supports_symbols(err)
-        self.quiet = bool(quiet)
-
-    @staticmethod
-    def _is_tty(stream):
-        try:
-            return bool(getattr(stream, "isatty", lambda: False)())
-        except (OSError, ValueError):
-            return False
-
-    @staticmethod
-    def _supports_symbols(stream):
-        encoding = getattr(stream, "encoding", None) or "utf-8"
-        try:
-            "✓↻│─◌×".encode(encoding)
-        except (UnicodeError, LookupError):
-            return False
-        return True
-
-    @staticmethod
-    def _safe(value):
-        # Do not interpret terminal control sequences from project content.
-        return "".join(char if char in "\n\t" or unicodedata.category(char) not in ("Cc", "Cf")
-                       else "?" for char in str(value))
-
-    def _paint(self, text, style):
-        colors = {"title": "1;36", "success": "1;32", "warning": "1;33", "error": "1;31", "muted": "2", "phase": "36"}
-        return "\033[" + colors[style] + "m" + text + "\033[0m" if self.color else text
+        policy = DisplayPolicy.from_streams(out, err, no_color=no_color, quiet=quiet)
+        self.width = policy.width
+        self.unicode = policy.unicode
+        self.quiet = policy.quiet
+        self._terminal = TerminalWriter(policy)
 
     def _line(self, stream, text="", *, style=None, prefix=""):
-        width = max(12, self.width - len(prefix))
-        lines = self._safe(text).splitlines() or [""]
-        for line in lines:
-            for wrapped in textwrap.wrap(line, width=width, replace_whitespace=False, drop_whitespace=False) or [""]:
-                value = prefix + wrapped
-                stream.write((self._paint(value, style) if style else value) + "\n")
-        stream.flush()
+        self._terminal.line(stream, text, style=style, prefix=prefix)
 
     def phase(self, label):
         if not self.quiet:
