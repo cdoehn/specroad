@@ -1,0 +1,7 @@
+# Python development artifacts; not SpecRoad project state.
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+/build/
+/dist/

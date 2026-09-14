@@ -1,9 +1,9 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
-**Status:** aktiver Plan zur Umsetzung, noch keine Produktimplementierung abgeschlossen.  
+**Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
 **Planrevision:** 1 · **Stand:** 14. September 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.7
 
-Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 295 Schritte und 885 einzeln beschriebene W/R/C-Commits**. Er fügt keine bereits ausgeführte Implementierung und keine bestandenen Produkttests hinzu. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
+Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 295 Schritte und 885 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
 ## Verbindliche Grundlagen und Rangfolge
 
@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 0
-last_completed_plan_commit: null
-next_plan_commit: 1.a.W
-implementation_state: not_started
+implementation_plan_commits_completed: 1
+last_completed_plan_commit: 1.a.W
+next_plan_commit: 1.a.R
+implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -123,7 +123,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.a.W – Let it Work
 
-- [ ] **1.a.W** · Position **1/885** · Voraussetzung: `OFF-PLAN PLAN-SETUP (Plan im tatsächlichen Git-Stand vorhanden)`.
+- [x] **1.a.W** · Position **1/885** · Voraussetzung: `OFF-PLAN PLAN-SETUP (Plan im tatsächlichen Git-Stand vorhanden)`.
 **Exakte Commit-Message:** `1.a.W build(core): Core-Paket und unterstützte Python-Syntax aufbauen`
 
 **Umsetzung:** Paketstruktur und minimalen importierbaren Standardbibliotheks-Core mit Python-3.10-kompatibler Syntax anlegen.
