@@ -7,9 +7,12 @@ Python. Only built-in handlers may be registered by production code.
 from dataclasses import dataclass
 from enum import Enum
 from types import MappingProxyType
-from typing import Callable, Mapping
+from typing import TYPE_CHECKING, Callable, Mapping
 import re
 import inspect
+
+if TYPE_CHECKING:
+    from .option_values import ResolvedOptions
 
 
 class CommandUsageError(ValueError):
@@ -157,7 +160,7 @@ class CommandSpec:
 class Invocation:
     command: CommandSpec
     options: Mapping[str, object]
-    resolved: object = None
+    resolved: "ResolvedOptions | None" = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))
