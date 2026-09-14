@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 6
-last_completed_plan_commit: 1.b.C
-next_plan_commit: 1.c.W
+implementation_plan_commits_completed: 7
+last_completed_plan_commit: 1.c.W
+next_plan_commit: 1.c.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -193,7 +193,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.c.W – Let it Work
 
-- [ ] **1.c.W** · Position **7/885** · Voraussetzung: `1.b.C`.
+- [x] **1.c.W** · Position **7/885** · Voraussetzung: `1.b.C`.
 **Exakte Commit-Message:** `1.c.W feat(core): Command Registry und Befehlsklassen aufbauen`
 
 **Umsetzung:** Deklarative Registry mit Command-ID, erlaubten Optionen, Befehlsklasse, Preflightprofil und Seiteneffektgrenzen einführen.

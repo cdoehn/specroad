@@ -1,13 +1,11 @@
-"""Bootstrap command semantics, independent of terminals and presentation."""
+"""Renderer-free dispatcher shared by every supported entry point."""
 
-from ..runtime import check_runtime
+from .commands import builtin_registry
+from .registry import CommandRegistry, CommandUsageError
 
 
-def dispatch(arguments: object) -> int:
-    """Return a behavior status; never read stdin or load a project."""
-    check_runtime()
-    if not isinstance(arguments, (list, tuple)):
+def dispatch(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry | None = None) -> int:
+    try:
+        return (builtin_registry() if registry is None else registry).invoke(arguments)
+    except CommandUsageError:
         return 2
-    if not all(isinstance(item, str) for item in arguments):
-        return 2
-    return 0 if list(arguments) in (["--help"], ["-h"]) else 2
