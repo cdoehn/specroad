@@ -9,10 +9,21 @@ from enum import Enum
 from types import MappingProxyType
 from typing import Callable, Mapping
 import re
+import inspect
 
 
 class CommandUsageError(ValueError):
     """Invalid command declaration or invocation; nothing has been executed."""
+
+
+class CommandExecutionError(RuntimeError):
+    """A registered handler did not obey its execution contract."""
+
+
+def _sequence(value, name):
+    if not isinstance(value, (tuple, list)):
+        raise CommandUsageError(name + " must be an explicit sequence")
+    return tuple(value)
 
 
 class CommandClass(str, Enum):
@@ -61,7 +72,7 @@ class OptionSpec:
         if any(type(value) is not bool for value in (self.takes_value, self.repeatable, self.required)):
             raise CommandUsageError("Option switches must be booleans")
         for name in ("choices", "excludes"):
-            values = tuple(getattr(self, name))
+            values = _sequence(getattr(self, name), name)
             if not all(isinstance(value, str) and value for value in values):
                 raise CommandUsageError("Option values must be nonempty strings")
             if len(values) != len(set(values)):
@@ -95,12 +106,15 @@ class CommandSpec:
                 object.__setattr__(self, name, cls(getattr(self, name)))
             except (ValueError, TypeError) as error:
                 raise CommandUsageError("Unknown command contract category") from error
-        if not callable(self.handler):
+        if (not callable(self.handler) or inspect.iscoroutinefunction(self.handler)
+                or inspect.isgeneratorfunction(self.handler)
+                or inspect.iscoroutinefunction(getattr(self.handler, "__call__", None))
+                or inspect.isgeneratorfunction(getattr(self.handler, "__call__", None))):
             raise CommandUsageError("An executable built-in handler is required")
-        object.__setattr__(self, "words", tuple(self.words))
-        object.__setattr__(self, "aliases", tuple(tuple(alias) for alias in self.aliases))
-        object.__setattr__(self, "options", tuple(self.options))
-        object.__setattr__(self, "requires_write_paths", tuple(self.requires_write_paths))
+        object.__setattr__(self, "words", _sequence(self.words, "words"))
+        object.__setattr__(self, "aliases", tuple(_sequence(alias, "alias") for alias in _sequence(self.aliases, "aliases")))
+        object.__setattr__(self, "options", _sequence(self.options, "options"))
+        object.__setattr__(self, "requires_write_paths", _sequence(self.requires_write_paths, "requires_write_paths"))
         for words in (self.words, *self.aliases):
             if not words or not all(isinstance(word, str) and re.fullmatch(r"(?:[a-z][a-z0-9-]*|--help|-h)", word) for word in words):
                 raise CommandUsageError("Invalid command spelling")
@@ -111,8 +125,16 @@ class CommandSpec:
         flags = [option.flag for option in self.options]
         if len(flags) != len(set(flags)):
             raise CommandUsageError("Duplicate option flag")
+        for option in self.options:
+            if any(other not in flags or other == option.flag for other in option.excludes):
+                raise CommandUsageError("Exclusion refers to an unknown option or itself")
+        normative_flags = {"--actor-type", "--actor-id", "--request-id", "--dry-run", "--as-proposal"}
+        if self.command_class is not CommandClass.NORMATIVE_WRITE and normative_flags.intersection(flags):
+            raise CommandUsageError("Normative write option on a non-write command")
         if not all(isinstance(path, str) and re.fullmatch(r"[a-z][a-z0-9_]*", path) for path in self.requires_write_paths):
             raise CommandUsageError("Write prerequisites name declared arguments, not paths")
+        if len(self.requires_write_paths) != len(set(self.requires_write_paths)):
+            raise CommandUsageError("Duplicate write prerequisite")
         allowed_scopes = {
             CommandClass.READ_ONLY: {EffectScope.NONE, EffectScope.EXTERNAL_OUTPUT},
             CommandClass.PLAN_OUTPUT: {EffectScope.EXTERNAL_OUTPUT},
@@ -170,16 +192,29 @@ class CommandRegistry:
     def parse(self, arguments: list[str] | tuple[str, ...]) -> Invocation:
         if not isinstance(arguments, (list, tuple)) or not arguments or not all(isinstance(arg, str) and arg and "\0" not in arg for arg in arguments):
             raise CommandUsageError("Invalid argument vector")
-        argv = tuple(arguments)
-        matches = [(route, command) for route, command in self._routes.items() if argv[:len(route)] == route]
-        if not matches:
-            raise CommandUsageError("Unknown command")
-        route, command = max(matches, key=lambda item: len(item[0]))
-        option_specs = {option.flag: option for option in command.options}
+        candidates = []
+        for route, command in self._routes.items():
+            try:
+                values = self._bind(tuple(arguments), route, command.options)
+            except CommandUsageError:
+                continue
+            candidates.append(Invocation(command, values))
+        if len(candidates) != 1:
+            raise CommandUsageError("Unknown, invalid or ambiguous invocation")
+        return candidates[0]
+
+    @staticmethod
+    def _bind(argv, route, options):
+        option_specs = {option.flag: option for option in options}
         values = {}
-        index = len(route)
+        words = []
+        index = 0
         while index < len(argv):
             token = argv[index]
+            if not token.startswith("-") or token in route:
+                words.append(token)
+                index += 1
+                continue
             flag, equals, attached = token.partition("=")
             option = option_specs.get(flag)
             if option is None or (flag in values and not option.repeatable):
@@ -200,13 +235,24 @@ class CommandRegistry:
                 value = True
             values[flag] = (*values.get(flag, ()), value) if option.repeatable else value
             index += 1
-        for option in command.options:
+        if tuple(words) != route:
+            raise CommandUsageError("Unknown command or unexpected positional argument")
+        for option in options:
             if option.required and option.flag not in values:
                 raise CommandUsageError("Missing required option")
             if option.flag in values and any(other in values for other in option.excludes):
                 raise CommandUsageError("Mutually exclusive options")
-        return Invocation(command, values)
+        return values
 
     def invoke(self, arguments: list[str] | tuple[str, ...]) -> int:
         invocation = self.parse(arguments)
-        return invocation.command.handler(invocation)
+        try:
+            status = invocation.command.handler(invocation)
+        except CommandUsageError:
+            raise
+        except Exception as error:
+            raise CommandExecutionError("Command handler failed") from error
+        # Continuations need typed, verified checkpoint results, not a bare 8.
+        if type(status) is not int or not 0 <= status <= 7:
+            raise CommandExecutionError("Invalid handler exit status")
+        return status
