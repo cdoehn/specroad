@@ -14,4 +14,4 @@ where = ["src"]
 include = ["specroad*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "specroad.__version__"}
+version = {attr = "specroad._metadata.__version__"}

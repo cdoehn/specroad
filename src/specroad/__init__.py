@@ -1,19 +1,8 @@
 """The dependency-free SpecRoad Core. No project is loaded on import."""
 
-import sys
+from ._metadata import MINIMUM_PYTHON, __version__
+from .runtime import UnsupportedRuntimeError, check_runtime
 
-__version__ = "0.2.0.dev0"
-MINIMUM_PYTHON = (3, 10)
-
-
-class UnsupportedRuntimeError(RuntimeError):
-    """The interpreter cannot run the SpecRoad Core."""
-
-
-def check_runtime() -> None:
-    """Validate the interpreter without I/O, installation or shell calls."""
-    if sys.implementation.name != "cpython" or sys.version_info[:2] < MINIMUM_PYTHON:
-        raise UnsupportedRuntimeError("SpecRoad requires CPython 3.10 or newer.")
-
+__all__ = ["MINIMUM_PYTHON", "UnsupportedRuntimeError", "__version__", "check_runtime"]
 
 check_runtime()
