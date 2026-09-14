@@ -9,6 +9,9 @@ description = "Single-repository specification workbench"
 requires-python = ">=3.10"
 dependencies = []
 
+[project.scripts]
+specroad = "specroad.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["specroad*"]

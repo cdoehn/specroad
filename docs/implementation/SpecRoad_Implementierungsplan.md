@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 3
-last_completed_plan_commit: 1.a.C
-next_plan_commit: 1.b.W
+implementation_plan_commits_completed: 4
+last_completed_plan_commit: 1.b.W
+next_plan_commit: 1.b.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -158,7 +158,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.b.W – Let it Work
 
-- [ ] **1.b.W** · Position **4/885** · Voraussetzung: `1.a.C`.
+- [x] **1.b.W** · Position **4/885** · Voraussetzung: `1.a.C`.
 **Exakte Commit-Message:** `1.b.W build(core): Modul- und CLI-Einstieg aufbauen`
 
 **Umsetzung:** Gemeinsamen Dispatcher für python -m specroad und installierten Einstieg aufbauen; Entwicklungs-Zipapp erzeugbar machen.
