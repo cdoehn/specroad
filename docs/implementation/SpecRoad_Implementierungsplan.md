@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 4
-last_completed_plan_commit: 1.b.W
-next_plan_commit: 1.b.R
+implementation_plan_commits_completed: 5
+last_completed_plan_commit: 1.b.R
+next_plan_commit: 1.b.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -167,7 +167,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.b.R – Make it Right
 
-- [ ] **1.b.R** · Position **5/885** · Voraussetzung: `1.b.W`.
+- [x] **1.b.R** · Position **5/885** · Voraussetzung: `1.b.W`.
 **Exakte Commit-Message:** `1.b.R build(core): Modul- und CLI-Einstieg vervollständigen`
 
 **Vervollständigung:** Nichtinteraktive Fehlereingaben deterministisch beenden; portable Distribution nicht an das Entwicklungsverzeichnis binden.

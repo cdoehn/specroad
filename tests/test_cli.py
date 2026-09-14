@@ -178,6 +178,154 @@ class EntryPointTests(unittest.TestCase):
             self.assertEqual(files_under(project), {})
 
 
+class EntryPointRobustnessTests(unittest.TestCase):
+    def test_bad_input_never_prompts_or_claims_success(self):
+        class ForbiddenInput:
+            def read(self, *args, **kwargs):
+                raise AssertionError("implicit stdin read")
+            readline = read
+            readlines = read
+            def __iter__(self):
+                raise AssertionError("implicit stdin iteration")
+        original = sys.stdin
+        sys.stdin = ForbiddenInput()
+        try:
+            for arguments in ([], ["--help", "extra"], ["--help", "--bad"],
+                              ["--he"], ["change", "apply"], ["validate"], ["init"],
+                              ["--format"], ["--format", "json"], ["\x1b[31m"],
+                              "--help", [None], 42):
+                with self.subTest(arguments=arguments):
+                    self.assertEqual(main(arguments, stdout=io.StringIO(), stderr=io.StringIO()), 2)
+        finally:
+            sys.stdin = original
+
+    def test_argument_list_is_not_modified(self):
+        args = ["--help"]
+        self.assertEqual(main(args, stdout=io.StringIO()), 0)
+        self.assertEqual(args, ["--help"])
+
+    def test_entry_point_uses_current_argv_when_not_supplied(self):
+        previous = sys.argv
+        try:
+            sys.argv = ["specroad", "--help"]
+            self.assertEqual(main(stdout=io.StringIO()), 0)
+            sys.argv = ["specroad", "unknown"]
+            self.assertEqual(main(stderr=io.StringIO()), 2)
+        finally:
+            sys.argv = previous
+
+    def test_relocated_distributions_do_not_need_original_source(self):
+        with tempfile.TemporaryDirectory(prefix="specroad relocation ") as tmp:
+            root = Path(tmp)
+            source = root / "source"
+            copy_source_fixture(source)
+            build_distribution(root / "build", source)
+            shutil.rmtree(source)
+            relocated = root / "verschoben ueberall"
+            (root / "build").rename(relocated)
+            project = root / "project"
+            project.mkdir()
+            before = files_under(relocated)
+            for command in (str(relocated / "specroad.pyz"), str(relocated / "module")):
+                for args, code in ((["--help"], 0), ([], 2), (["change", "apply"], 2)):
+                    result = run_process(["-I", "-S", "-B", command, *args], project)
+                    self.assertEqual(result.returncode, code, result.stderr)
+            self.assertEqual(files_under(project), {})
+            self.assertEqual(files_under(relocated), before)
+
+    def test_hostile_cwd_cannot_execute_code_in_isolated_portable_invocation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            module, archive = build_distribution(root / "build")
+            project = root / "project"
+            project.mkdir()
+            sentinel = project / "FOREIGN_CODE_EXECUTED"
+            poison = "open(" + repr(str(sentinel)) + ", 'w').write('executed')\nraise RuntimeError('foreign module')\n"
+            for name in ("argparse", "json", "os", "typing", "rich", "sitecustomize"):
+                (project / (name + ".py")).write_text(poison)
+            (project / "specroad").mkdir()
+            (project / "specroad" / "__init__.py").write_text(poison)
+            before = files_under(project)
+            for invocation in (archive, module):
+                result = run_process(["-I", "-S", "-B", str(invocation), "--help"], project)
+                self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse(sentinel.exists())
+            self.assertEqual(files_under(project), before)
+
+    def test_missing_builder_output_parameter_has_no_side_effect(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            result = run_process(["-I", "-S", "-B", str(ROOT / "tools/build_core.py")], root)
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual(files_under(root), {})
+
+    def test_incomplete_source_does_not_publish_partial_distribution(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "source" / "specroad").mkdir(parents=True)
+            with self.assertRaises(ValueError):
+                build_distribution(root / "build", root / "source")
+            self.assertFalse((root / "build").exists())
+
+    def test_output_inside_source_is_rejected_without_writes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "source"
+            copy_source_fixture(source)
+            before = files_under(source)
+            with self.assertRaises(ValueError):
+                build_distribution(source / "build", source)
+            self.assertEqual(before, files_under(source))
+
+
+    def test_source_directory_and_dangling_links_are_rejected(self):
+        if not hasattr(os, "symlink"):
+            self.skipTest("Host cannot create symlinks")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            outside = root / "outside"
+            outside.mkdir()
+            (outside / "keep.py").write_bytes(b"# original\n")
+            original = files_under(outside)
+            for kind in ("directory", "dangling"):
+                with self.subTest(kind=kind):
+                    source = copy_source_fixture(root / (kind + "-source"))
+                    target = outside if kind == "directory" else root / "absent.py"
+                    (source / "specroad" / "linked.py").symlink_to(
+                        target, target_is_directory=kind == "directory")
+                    output = root / (kind + "-build")
+                    with self.assertRaises(ValueError):
+                        build_distribution(output, source)
+                    self.assertFalse(output.exists())
+            self.assertEqual(files_under(outside), original)
+
+    def test_existing_output_file_and_link_are_not_overwritten(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            existing = root / "existing"
+            existing.write_bytes(b"preserve exactly")
+            with self.assertRaises(FileExistsError):
+                build_distribution(existing)
+            self.assertEqual(existing.read_bytes(), b"preserve exactly")
+            if hasattr(os, "symlink"):
+                link = root / "link"
+                link.symlink_to(existing)
+                with self.assertRaises(FileExistsError):
+                    build_distribution(link)
+                self.assertTrue(link.is_symlink())
+                self.assertEqual(existing.read_bytes(), b"preserve exactly")
+
+    def test_failed_archive_creation_leaves_no_partial_publication(self):
+        import zipapp
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            keep = root / "keep"
+            keep.write_bytes(b"preserve exactly")
+            with patch.object(zipapp, "create_archive", side_effect=OSError(errno.EIO, "archive write failed")):
+                with self.assertRaises(OSError):
+                    build_distribution(root / "build")
+            self.assertEqual(set(root.iterdir()), {keep})
+            self.assertEqual(keep.read_bytes(), b"preserve exactly")
+
 
 class SourceFixturePortabilityTests(unittest.TestCase):
     """Real copied bytes, isolation and rejection; no rendering expectations."""
