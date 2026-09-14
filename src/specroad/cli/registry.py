@@ -4,6 +4,7 @@ from types import MappingProxyType
 
 from ._arguments import bind_options
 from .options import check_global_contract
+from .results import CommandResult, ResultContractError, normalize_result
 from .contracts import (
     CommandClass, CommandExecutionError, CommandSpec, CommandUsageError,
     EffectScope, Invocation, OptionSpec, PreflightProfile,
@@ -56,14 +57,14 @@ class CommandRegistry:
         return self.execute(self.parse(arguments))
 
     def execute(self, invocation: Invocation) -> int:
-        """Call the already bound built-in handler; never perform a second parse."""
+        return self.execute_result(invocation).exit_code
+
+    def execute_result(self, invocation: Invocation) -> CommandResult:
+        """Execute once and normalize the typed result before any rendering."""
         try:
-            status = invocation.command.handler(invocation)
-        except CommandUsageError:
+            value = invocation.command.handler(invocation)
+            return normalize_result(value, invocation.command.command_id)
+        except (CommandUsageError, OSError):
             raise
         except Exception as error:
             raise CommandExecutionError("Command handler failed") from error
-        # Continuations need typed, verified checkpoint results, not a bare 8.
-        if type(status) is not int or not 0 <= status <= 7:
-            raise CommandExecutionError("Invalid handler exit status")
-        return status

@@ -2,13 +2,23 @@
 
 import sys
 
-from .application import dispatch
+from .application import execute
 from .presentation import render
+from .results import serialize_result
 
 
 def main(argv: list[str] | None = None, *, stdout=None, stderr=None) -> int:
-    """Adapt process arguments and streams to the application dispatcher."""
-    status = dispatch(sys.argv[1:] if argv is None else argv)
-    render(status, sys.stdout if stdout is None else stdout,
-           sys.stderr if stderr is None else stderr)
-    return status
+    """Emit exactly one machine document, or delegate human presentation."""
+    response = execute(sys.argv[1:] if argv is None else argv)
+    out = sys.stdout if stdout is None else stdout
+    err = sys.stderr if stderr is None else stderr
+    try:
+        output_format = response.options.get("--format", "pretty")
+        if output_format in ("json", "sarif"):
+            out.write(serialize_result(response.result, output_format) + "\n")
+            out.flush()
+        else:
+            render(response.result.exit_code, out, err)
+    except (OSError, UnicodeError):
+        return 5
+    return response.result.exit_code

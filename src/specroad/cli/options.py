@@ -16,6 +16,7 @@ _GLOBAL_OPTIONS = {
     "--configuration": OptionSpec("--configuration", takes_value=True),
     "--fail-on": OptionSpec("--fail-on", takes_value=True, choices=("error", "warning")),
     "--strict": OptionSpec("--strict"),
+    "--format": OptionSpec("--format", takes_value=True, choices=("pretty", "json", "sarif")),
 }
 
 
@@ -32,6 +33,10 @@ def check_global_contract(command) -> None:
     for option in command.options:
         expected = _GLOBAL_OPTIONS.get(option.flag)
         if expected is None:
+            continue
+        if option.flag == "--format":
+            if not option.takes_value or option.repeatable or not option.choices or not set(option.choices) <= set(expected.choices):
+                raise CommandUsageError("Command redefines supported result formats")
             continue
         if (option.takes_value, option.repeatable, option.choices) != (expected.takes_value, expected.repeatable, expected.choices):
             raise CommandUsageError("Command redefines a global option")
