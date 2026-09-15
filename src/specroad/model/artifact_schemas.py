@@ -11,7 +11,7 @@ from ._schema import validate_builtin
 from .configuration import _json_values
 from .versions import SCHEMA_VERSION
 from .errors import ModelError
-from .metadata import metadata_schemas, extensions_schema
+from .metadata_fields import metadata_schemas, extensions_schema
 from .artifact_types import ArtifactType, artifact_type, artifact_types
 
 DIALECT = "https://json-schema.org/draft/2020-12/schema"

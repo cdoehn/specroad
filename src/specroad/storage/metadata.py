@@ -9,7 +9,8 @@ from dataclasses import dataclass
 
 from ..model.artifact_schemas import validate_common_fields
 from ..model.errors import ModelError
-from ..model.metadata import METADATA_FIELDS
+from ..model.paths import artifact_path
+from ..model.metadata_fields import METADATA_FIELDS
 from .artifact_common import CommonArtifact
 from .json_syntax import parse_json_object
 
@@ -55,7 +56,6 @@ def resolve_artifact_reference(reference, artifacts, *, id_prefix):
     It validates the entire supplied inventory before returning detached data.
     Duplicate labels are harmless; duplicate actual identities are an error.
     """
-    from ..model.paths import artifact_path
     if type(reference) is not str or not reference:
         raise ModelError("artifact_reference_required")
     if isinstance(artifacts, (str, bytes, dict)):
