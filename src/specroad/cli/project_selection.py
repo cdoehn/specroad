@@ -6,6 +6,7 @@ import json
 import os
 import stat
 
+from ..security import ProjectBoundary, SafetyViolation, check_project_declarations
 from .contracts import PreflightProfile
 from .option_values import OptionResolutionError, _text
 
@@ -26,20 +27,18 @@ def _invalid_constant(value):
 def _read_configuration(path: Path) -> dict:
     """Read one regular configuration file; never follow a config-file link."""
     try:
+        # Preserve the established usage classification for a missing/invalid
+        # config file; the subsequent descriptor-bound read still revalidates it.
         before = path.lstat()
         if stat.S_ISLNK(before.st_mode):
-            raise OptionResolutionError("Linked project configuration is not accepted", 7)
+            raise SafetyViolation("Linked project configuration is not accepted")
         if not stat.S_ISREG(before.st_mode):
             raise OptionResolutionError("Project configuration must be a regular file")
-        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
-        descriptor = os.open(path, flags)
-        with os.fdopen(descriptor, "rb") as stream:
-            opened = os.fstat(stream.fileno())
-            if not stat.S_ISREG(opened.st_mode) or (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino):
-                raise OptionResolutionError("Configuration identity changed while opening", 7)
-            raw = stream.read()
+        raw = ProjectBoundary(path.parent).read_bytes(path.name)
         data = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_object,
                           parse_constant=_invalid_constant)
+    except SafetyViolation as error:
+        raise OptionResolutionError("Project safety boundary rejected the configuration", 7) from error
     except OptionResolutionError:
         raise
     except (UnicodeError, ValueError, RecursionError) as error:
@@ -49,6 +48,10 @@ def _read_configuration(path: Path) -> dict:
         raise OptionResolutionError("Cannot read project configuration", code) from error
     if not isinstance(data, dict):
         raise OptionResolutionError("Project configuration must be an object")
+    try:
+        check_project_declarations(data)
+    except SafetyViolation as error:
+        raise OptionResolutionError("Project execution or root declaration is not allowed", 7) from error
     return data
 
 

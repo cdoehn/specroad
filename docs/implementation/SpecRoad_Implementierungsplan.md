@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 27
-last_completed_plan_commit: 1.i.C
-next_plan_commit: 1.j.W
+implementation_plan_commits_completed: 28
+last_completed_plan_commit: 1.j.W
+next_plan_commit: 1.j.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -438,7 +438,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.j.W – Let it Work
 
-- [ ] **1.j.W** · Position **28/885** · Voraussetzung: `1.i.C`.
+- [x] **1.j.W** · Position **28/885** · Voraussetzung: `1.i.C`.
 **Exakte Commit-Message:** `1.j.W feat(core): Feste Sicherheits- und Offlinegrenze aufbauen`
 
 **Umsetzung:** Verbotene Netzwerk-, Telemetrie-, Fremdcode- und Multi-Projektpfade im Core-Design ausschließen; sichere Rootprüfung aufbauen.
