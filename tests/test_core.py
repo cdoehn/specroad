@@ -2,7 +2,6 @@
 
 from pathlib import Path
 import os
-import subprocess
 import sys
 import tempfile
 import unittest
@@ -10,19 +9,13 @@ import unittest
 SOURCE = Path(__file__).resolve().parents[1] / "src"
 
 
+from support import run_core
+
+
 class CoreHarness:
     def run_core(self, body, cwd, *, python=None, expose_cwd=False):
-        prefix = "import sys;sys.path.insert(0," + repr(str(SOURCE)) + ");\n"
-        if expose_cwd:
-            prefix += "sys.path.append(" + repr(str(cwd)) + ");\n"
-        env = dict(os.environ)
-        env["PATH"] = ""
-        env.pop("VIRTUAL_ENV", None)
-        return subprocess.run(
-            [str(python or sys.executable), "-I", "-S", "-B", "-c", prefix + body],
-            cwd=cwd, env=env, stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
-        )
+        return run_core(body, cwd, python=python, expose_cwd=expose_cwd)
+
 
 class CoreTests(CoreHarness, unittest.TestCase):
     def test_isolated_standard_library_only_import(self):

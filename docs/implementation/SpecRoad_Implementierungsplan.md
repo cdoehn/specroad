@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 20
-last_completed_plan_commit: 1.g.R
-next_plan_commit: 1.g.C
+implementation_plan_commits_completed: 21
+last_completed_plan_commit: 1.g.C
+next_plan_commit: 1.h.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -351,7 +351,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.g.C – Make it Clean
 
-- [ ] **1.g.C** · Position **21/885** · Voraussetzung: `1.g.R`.
+- [x] **1.g.C** · Position **21/885** · Voraussetzung: `1.g.R`.
 **Exakte Commit-Message:** `1.g.C refactor(core): Verhaltenstest-Infrastruktur bereinigen`
 
 **Bereinigung:** Gemeinsame Testhilfen von Produktcode trennen; nur Testabhängigkeiten dürfen optional sein.
