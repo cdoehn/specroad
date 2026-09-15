@@ -52,6 +52,10 @@ class PrettyRenderer:
             suffix = " | ".join(option.get("values", ()))
             self._line(self.out, option["flag"] + ("  " + suffix if suffix else ""), prefix="  ")
         self._line(self.out)
+        self._line(self.out, "Commands", style="title")
+        for command in payload.get("commands", ()):
+            self._line(self.out, "specroad " + " ".join(command["words"]), prefix="  ")
+        self._line(self.out)
         self._line(self.out, "Exit codes", style="title")
         for code, meaning in payload.get("exit_codes", {}).items():
             self._line(self.out, f"{code}: {meaning}", prefix="  ")
@@ -100,6 +104,21 @@ class PrettyRenderer:
         for example in payload["examples"]:
             self._line(self.out, json.dumps(example, ensure_ascii=True), prefix="  ")
 
+    def _capabilities(self, payload):
+        semantic = payload["semantic"]
+        self._line(self.out, "Available in " + semantic["program_version"], style="success")
+        self._line(self.out, "Commands", style="title")
+        for command in semantic["commands"]:
+            self._line(self.out, command["command_id"] + "  /  " + command["command_class"], prefix="  ")
+        self._line(self.out, "Output    " + ", ".join(semantic["output_formats"]))
+        self._line(self.out, "Exchange  " + (", ".join(semantic["exchange_formats"]) or "not available"), style="muted")
+        for key in ("schema", "srx", "proposal"):
+            self._line(self.out, key.upper() + "  " + (", ".join(semantic["supported_versions"][key]) or "not available"), style="muted")
+        self._line(self.out, "Work engine  " + ("available" if semantic["work"]["engine_available"] else "not available"), style="muted")
+        self._line(self.out, "Runtime", style="title")
+        runtime = payload["runtime"]["interpreter"]
+        self._line(self.out, runtime["implementation"] + " " + runtime["python_version"] + " / " + runtime["machine"], prefix="  ")
+
     def finish(self, outcome: CommandResult):
         # Immutable semantic data is projected, never modified for display.
         payload = thaw(outcome.result)
@@ -118,6 +137,8 @@ class PrettyRenderer:
             self._version(payload)
         elif outcome.command == "command.describe" and isinstance(payload, dict):
             self._description(payload)
+        elif outcome.command == "capabilities" and isinstance(payload, dict):
+            self._capabilities(payload)
         elif payload is not None:
             self._line(stream, json.dumps(payload, ensure_ascii=True, indent=2, allow_nan=False))
         if outcome.result_ref is not None:

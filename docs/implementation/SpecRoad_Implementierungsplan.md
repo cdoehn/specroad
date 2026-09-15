@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 39
-last_completed_plan_commit: 1.m.C
-next_plan_commit: 1.n.W
+implementation_plan_commits_completed: 40
+last_completed_plan_commit: 1.n.W
+next_plan_commit: 1.n.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -578,7 +578,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.n.W – Let it Work
 
-- [ ] **1.n.W** · Position **40/885** · Voraussetzung: `1.m.C`.
+- [x] **1.n.W** · Position **40/885** · Voraussetzung: `1.m.C`.
 **Exakte Commit-Message:** `1.n.W feat(core): Frühe Capabilities ohne Modellscan aufbauen`
 
 **Umsetzung:** Projektlose capabilities für tatsächlich verfügbare Formate, Versionen und Befehlsklassen aus der Registry erzeugen.

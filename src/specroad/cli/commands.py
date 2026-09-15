@@ -34,6 +34,16 @@ def _describe(invocation) -> CommandResult:
                          result=describe_command(invocation.registry, invocation.arguments["command"]))
 
 
+def _capabilities(invocation) -> CommandResult:
+    from .capabilities import capabilities
+    from ..runtime.identity import BuildMetadataError
+    try:
+        payload = capabilities(invocation.registry)
+    except BuildMetadataError as error:
+        raise OperationFailure(FailureKind.ENVIRONMENT, "Distribution identity is unavailable.") from error
+    return CommandResult(invocation.command.command_id, result=payload)
+
+
 def builtin_registry() -> CommandRegistry:
     return CommandRegistry((CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
@@ -63,4 +73,13 @@ def builtin_registry() -> CommandRegistry:
         protocol=CommandProtocol("command-description-v1", {
             "command_id": "command.describe", "arguments": {"command": "version"}, "options": {"--format": "json"}},
             work=WorkContract("registry_projection", ("command_registry",))),
+    ), CommandSpec(
+        command_id="capabilities", words=("capabilities",),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.BOOTSTRAP,
+        effect_scope=EffectScope.NONE, handler=_capabilities,
+        options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
+                 OptionSpec("--no-color"), OptionSpec("--quiet")),
+        protocol=CommandProtocol("capabilities-v1", {
+            "command_id": "capabilities", "options": {"--format": "json"}},
+            work=WorkContract("registry_projection", ("command_registry", "distribution_metadata"))),
     )))
