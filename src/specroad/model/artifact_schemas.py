@@ -59,11 +59,15 @@ def _version(version):
 
 
 def _definitions():
-    text = {"type": "string", "minLength": 1}
+    text = {"type": "string", "minLength": 1, "pattern": "\\S",
+            "not": {"pattern": "\\u0000"}}
     actor = {"type": "object", "required": ["actor_type", "actor_id"],
              "properties": {"actor_type": {"enum": ["human", "ai", "ci", "tool"]},
                             "actor_id": dict(text)}, "additionalProperties": False}
-    return {"text": text, "actor": actor}
+    utc = {"type": "string", "format": "date-time",
+           "pattern": r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:[Zz]|\+00:00)(?![\s\S])"}
+    return {"text": text, "actor": actor, "utc": utc}
+
 
 
 def _properties(kind):
@@ -74,7 +78,7 @@ def _properties(kind):
         "id_scheme": {"enum": ["random128-v1", "legacy-sequential-v1"]},
         "artifact_type": {"const": kind}, "title": dict(text),
         "maturity": {"enum": list(MATURITIES)}, "revision": {"type": "integer", "minimum": 1},
-        "created_at": dict(text), "updated_at": dict(text),
+        "created_at": {"$ref": "#/$defs/utc"}, "updated_at": {"$ref": "#/$defs/utc"},
         "created_by": dict(actor), "updated_by": dict(actor),
         "language": dict(text), "text_direction": {"enum": ["ltr", "rtl", "auto"]},
         "owner": {"anyOf": [dict(text), dict(actor)]},
@@ -94,20 +98,33 @@ def artifact_common_schema(kind, version=SCHEMA_VERSION):
     required = list(COMMON_REQUIRED)
     if kind in LANGUAGE_REQUIRED:
         required.append("language")
+    # The schema binds the identity grammar to BOTH artifact kind and id_scheme.
+    base = r"[A-Z][A-Z0-9]{1,7}-" + item.prefix + "-"
+    branches = []
+    for scheme, token in (("random128-v1", r"[0-7][0-9A-HJKMNP-TV-Z]{25}"),
+                          ("legacy-sequential-v1", r"[0-9]{4}")):
+        branches.append({"properties": {"id_scheme": {"const": scheme},
+                           "id": {"type": "string", "pattern": "^(?:" + base + token + r")(?![\s\S])"}}})
     return {"$schema": DIALECT, "$id": item.schema_id,
             "$comment": "Common fields only. Never sufficient for approval, authoring or publication.",
             "x-specroad-validation-scope": VALIDATION_SCOPE,
             "type": "object", "required": required, "properties": _properties(kind),
-            "$defs": _definitions(), "additionalProperties": True}
+            "$defs": _definitions(), "anyOf": branches, "additionalProperties": True}
 
 
 def validate_common_fields(value, *, expected_type=None):
     """Check only the common layer, never infer a complete artifact or success."""
     if type(value) is not dict:
         raise ModelError("object_required")
-    _json_values(value)
+    try:
+        _json_values(value)
+    except RecursionError as error:
+        raise ModelError("unsupported_json_nesting") from error
     _version(value.get("schema_version"))
     item = artifact_type(value.get("artifact_type"))
     if expected_type is not None and item != artifact_type(expected_type):
         raise ModelError("artifact_type_mismatch", pointer="/artifact_type")
-    validate_builtin(value, artifact_common_schema(item.artifact_type))
+    try:
+        validate_builtin(value, artifact_common_schema(item.artifact_type))
+    except RecursionError as error:
+        raise ModelError("unsupported_json_nesting") from error

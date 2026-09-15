@@ -40,9 +40,13 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_artifact_schemas.ArtifactSchemaWorkTests.test_all_28_types_have_distinct_versioned_schema_and_prefix",
-    "test_artifact_schemas.ArtifactSchemaWorkTests.test_file_identity_and_project_identity_are_bound"
+    "test_artifact_schemas.ArtifactSchemaWorkTests.test_file_identity_and_project_identity_are_bound",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_random_identity_alphabet_length_and_first_character",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_valid_legacy_ids_are_readable_but_not_minted",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_identity_scheme_cannot_be_swapped_without_changing_identity",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_artifact_project_prefix_grammar"
   ],
   "open_items": [
-    "Type-specific schemas, full-model validation and authoring are separate later plan steps. Historical immutable resources still require the later migration/read-adapter contracts."
+    "Common projection only: nested relations, provenance, external identities, SRX and complete BCP-47 validation remain with their later contracts. Type-specific schemas, graph/profile rules, lifecycle authorization, artifact creation and historical-resource adapters are not provided by this layer."
   ]
 }

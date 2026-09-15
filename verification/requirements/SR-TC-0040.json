@@ -41,9 +41,14 @@
   "test_ids": [
     "test_artifact_schemas.ArtifactSchemaWorkTests.test_all_common_required_fields_are_required_for_every_type",
     "test_artifact_schemas.ArtifactSchemaWorkTests.test_invalid_common_shapes_have_structured_failure",
-    "test_artifact_schemas.ArtifactSchemaWorkTests.test_language_required_only_for_declared_common_language_types"
+    "test_artifact_schemas.ArtifactSchemaWorkTests.test_language_required_only_for_declared_common_language_types",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_bad_calendar_and_non_utc_timestamps_are_rejected",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_actor_discriminators_and_ids_are_checked",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_json_integer_semantics_do_not_confuse_booleans_and_integers",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_json_only_input_boundary_catches_non_json_values_and_cycles",
+    "test_artifact_schemas.ArtifactSchemaRightTests.test_common_validation_has_no_graph_or_approval_side_effect"
   ],
   "open_items": [
-    "Type-specific schemas, full-model validation and authoring are separate later plan steps. Historical immutable resources still require the later migration/read-adapter contracts."
+    "Common projection only: nested relations, provenance, external identities, SRX and complete BCP-47 validation remain with their later contracts. Type-specific schemas, graph/profile rules, lifecycle authorization, artifact creation and historical-resource adapters are not provided by this layer."
   ]
 }

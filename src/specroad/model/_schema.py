@@ -5,6 +5,7 @@ references fail closed; there is no network resolver or plugin mechanism.
 """
 
 import math
+from datetime import date
 import re
 
 from .errors import ModelError
@@ -14,7 +15,7 @@ _KEYWORDS = frozenset({
     "$schema", "$id", "$defs", "$ref", "$comment", "description", "title",
     "x-specroad-validation-scope", "type", "const", "enum", "required",
     "properties", "additionalProperties", "items", "minLength", "minItems",
-    "minimum", "maximum", "pattern", "anyOf", "allOf",
+    "minimum", "maximum", "pattern", "anyOf", "allOf", "not", "format",
 })
 
 
@@ -43,8 +44,61 @@ def _json_equal(left, right):
     return left == right
 
 
+
+def _datetime_utc(value):
+    # RFC 3339 UTC only: -00:00 explicitly means an unknown local offset.
+    match = re.fullmatch(r"([0-9]{4})-([0-9]{2})-([0-9]{2})[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.[0-9]+)?(?:[Zz]|\+00:00)", value)
+    if match is None:
+        return False
+    year, month, day, hour, minute, second = map(int, match.groups())
+    try:
+        date(year, month, day)
+    except ValueError:
+        return False
+    if hour > 23 or minute > 59 or second > 60:
+        return False
+    # Syntax supports a UTC leap-second candidate; this is not an IERS registry
+    # lookup and makes no assertion that a future leap second was announced.
+    return second != 60 or (hour == 23 and minute == 59 and (month, day) in ((6, 30), (12, 31)))
+
+
+def _check_vocabulary(schema):
+    """Check all trusted branches, including those not selected by an instance."""
+    def check(node, active=()):
+        if type(node) is bool:
+            return
+        if type(node) is not dict or node.keys() - _KEYWORDS:
+            raise ValueError("Unsupported built-in schema vocabulary")
+        if "type" in node and node["type"] not in (
+                "object", "array", "string", "boolean", "null", "number", "integer"):
+            raise ValueError("Unsupported built-in schema type")
+        if "format" in node and node["format"] != "date-time":
+            raise ValueError("Unknown built-in format assertion")
+        if "$ref" in node:
+            ref = node["$ref"]
+            if type(ref) is not str or not ref.startswith("#/$defs/") or ref in active:
+                raise ValueError("Only acyclic local built-in references are supported")
+            name = ref[len("#/$defs/"):].replace("~1", "/").replace("~0", "~")
+            try:
+                target = schema["$defs"][name]
+            except (KeyError, TypeError) as error:
+                raise ValueError("Unknown built-in schema reference") from error
+            check(target, (*active, ref))
+        for key in ("$defs", "properties"):
+            for child in node.get(key, {}).values():
+                check(child, active)
+        for key in ("anyOf", "allOf"):
+            for child in node.get(key, ()):
+                check(child, active)
+        for key in ("not", "items", "additionalProperties"):
+            if key in node:
+                check(node[key], active)
+    check(schema)
+
+
 def validate_builtin(instance, schema):
     """Assert a built-in JSON Schema subset, reporting instance JSON Pointers."""
+    _check_vocabulary(schema)
     def visit(value, node, pointer="", references=()):
         if node is True:
             return
@@ -78,6 +132,13 @@ def validate_builtin(instance, schema):
                     continue
             else:
                 raise ModelError("schema_any_of", pointer=pointer)
+        if "not" in node:
+            try:
+                visit(value, node["not"], pointer, references)
+            except ModelError:
+                pass
+            else:
+                raise ModelError("schema_not", pointer=pointer)
         for candidate in node.get("allOf", ()):
             visit(value, candidate, pointer, references)
         if type(value) is str:
@@ -85,6 +146,11 @@ def validate_builtin(instance, schema):
                 raise ModelError("schema_min_length", pointer=pointer)
             if "pattern" in node and re.search(node["pattern"], value) is None:
                 raise ModelError("schema_pattern", pointer=pointer)
+        if "format" in node:
+            if node["format"] != "date-time":
+                raise ValueError("Unknown built-in format assertion")
+            if type(value) is str and not _datetime_utc(value):
+                raise ModelError("schema_format", pointer=pointer)
         if type(value) in (int, float):
             if "minimum" in node and value < node["minimum"]:
                 raise ModelError("schema_minimum", pointer=pointer)
