@@ -20,7 +20,9 @@ def version_info():
     build_id = None
     algorithm = None
     if record is not None:
-        if not isinstance(record, dict) or record.get("format_version") != 1:
+        if (type(record) is not dict
+                or set(record) != {"format_version", "hash_algorithm", "build_sha256"}
+                or type(record.get("format_version")) is not int or record["format_version"] != 1):
             raise BuildMetadataError("Invalid distribution metadata")
         build_hash = record.get("build_sha256")
         if not isinstance(build_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", build_hash):
@@ -35,6 +37,8 @@ def version_info():
         "build_id": build_id,
         "build_sha256": build_hash,
         "build_hash_algorithm": algorithm,
+        "build_hash_scope": "core-python-payload-excluding-generated-record" if record is not None else None,
+        "release_approved": False,
         "build_identity_status": "unrecorded" if record is None else "recorded",
         "distribution_kind": "zipapp" if isinstance(__loader__, zipimport.zipimporter) else "module",
         "runtime": {"implementation": sys.implementation.name,
@@ -42,8 +46,9 @@ def version_info():
                     "system": sys.platform, "machine": platform.machine()},
         "python_support": {"minimum_minor": ".".join(map(str, MINIMUM_PYTHON)),
                            "declared_minors": list(DECLARED_CPYTHON_MINORS),
+                           "maximum_declared_minor": DECLARED_CPYTHON_MINORS[-1],
                            "tested_minors": [], "maximum_tested_minor": None,
-                           "fully_verified_minors": [], "verification_status": "unrecorded"},
+                           "fully_verified_minors": [], "verification_status": "unrecorded", "evidence_refs": []},
         "supported_schema_versions": list(SUPPORTED_SCHEMA_VERSIONS),
         "supported_output_format_versions": {"json": [FORMAT_VERSION], "sarif": ["2.1.0"]},
     }

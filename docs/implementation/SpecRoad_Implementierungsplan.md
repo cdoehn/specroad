@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 25
-last_completed_plan_commit: 1.i.W
-next_plan_commit: 1.i.R
+implementation_plan_commits_completed: 26
+last_completed_plan_commit: 1.i.R
+next_plan_commit: 1.i.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -412,7 +412,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.i.R – Make it Right
 
-- [ ] **1.i.R** · Position **26/885** · Voraussetzung: `1.i.W`.
+- [x] **1.i.R** · Position **26/885** · Voraussetzung: `1.i.W`.
 **Exakte Commit-Message:** `1.i.R build(core): Version und Distributionsidentität vervollständigen`
 
 **Vervollständigung:** Deklarierte und tatsächlich getestete Matrix unterscheiden; unbekannte Buildinformationen nicht erfinden.

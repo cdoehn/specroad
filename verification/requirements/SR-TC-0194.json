@@ -24,7 +24,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
-    2
+    2,
+    5
   ],
   "json_pointers": [
     "/result/program_version",
@@ -45,7 +46,10 @@
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
     "test_identity.IdentityWorkTests.test_runtime_is_the_executing_interpreter",
-    "test_identity.IdentityWorkTests.test_portable_module_and_zipapp_share_the_recorded_payload_hash"
+    "test_identity.IdentityWorkTests.test_portable_module_and_zipapp_share_the_recorded_payload_hash",
+    "test_identity.IdentityRobustnessTests.test_declaration_and_actual_verification_are_distinct",
+    "test_identity.IdentityRobustnessTests.test_payload_hash_binds_program_bytes_not_paths_or_timestamps",
+    "test_identity.IdentityRobustnessTests.test_invalid_bundled_records_fail_without_exposing_data"
   ],
   "open_items": [
     "Release-bound cross-runtime verification and final distribution assembly remain in milestone 20."
