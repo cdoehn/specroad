@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_core.CoreTests.test_isolated_standard_library_only_import",
     "test_core.CoreRobustnessTests.test_old_python_is_rejected_by_runtime_check"

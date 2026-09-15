@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_support.FixtureWorkTests.test_public_operation_and_cli_preserve_real_project_bytes",
     "test_support.FixtureWorkTests.test_entropy_has_reproducible_finite_values",

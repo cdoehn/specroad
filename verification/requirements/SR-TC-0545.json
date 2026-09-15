@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_security.SafetyWorkTests.test_project_metadata_path_runs_without_git_network_or_processes",
     "test_security.SafetyWorkTests.test_bootstrap_remains_usable_when_project_declarations_are_hostile"

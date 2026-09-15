@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_bootstrap.BootstrapWorkTests.test_cli_import_does_not_request_execution_or_project_subsystems",
     "test_bootstrap.BootstrapWorkTests.test_machine_version_does_not_load_presenter_or_project"

@@ -28,6 +28,10 @@ def source_identity(root):
     # Limit the source tree to the package, not local editable-install siblings.
     for relative in ("src/specroad", "tests", "tools", "verification", "pyproject.toml"):
         visit(root / relative)
+    # The pytest bootstrap participates in the current test-input identity.
+    # Small legacy fixtures without it remain valid input trees.
+    if os.path.lexists(root / "conftest.py"):
+        visit(root / "conftest.py")
     return sha256(json_bytes(entries))
 
 

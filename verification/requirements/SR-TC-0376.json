@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_capabilities.CapabilitiesWorkTests.test_capabilities_match_actual_registered_handlers_and_descriptions",
     "test_capabilities.CapabilitiesWorkTests.test_unimplemented_formats_versions_and_engines_are_not_advertised",

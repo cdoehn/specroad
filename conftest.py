@@ -16,3 +16,5 @@ def isolated_test_process():
     leaked = state.restore()
     if leaked:
         pytest.fail("Test leaked process state: " + ", ".join(leaked), pytrace=False)
+
+pytest_plugins = ("verification_support.pytest_backend",)

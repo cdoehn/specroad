@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_security.SafetyWorkTests.test_unimplemented_executor_is_never_loaded",
     "test_security.SafetyWorkTests.test_project_execution_declarations_fail_before_handler"

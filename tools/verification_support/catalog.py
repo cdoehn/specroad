@@ -48,7 +48,7 @@ def validate_manifest(value, specification_sha256):
         raise CatalogError("Invalid exit-code contract")
     if not isinstance(value["required_environment"], dict) or not isinstance(value["resources"], dict):
         raise CatalogError("Missing environment/resource contract")
-    if value["evidence_kind"] != "specroad-dev-unittest-v1":
+    if value["evidence_kind"] not in ("specroad-dev-unittest-v1", "specroad-dev-pytest-v1"):
         raise CatalogError("Unknown developer evidence format")
     if value["oracle"]["kind"] != "behavior" and value["test_ids"]:
         raise CatalogError("Human presentation or pending oracles cannot have automated pass tests")

@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_bootstrap.BootstrapRobustnessTests.test_instrumented_bootstrap_performs_no_project_reads_scans_or_processes",
     "test_bootstrap.BootstrapRobustnessTests.test_metadata_only_call_does_not_read_model_or_git"

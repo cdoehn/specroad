@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_support.FixtureWorkTests.test_bad_cli_request_is_an_error_without_file_effects",
     "test_requests.RequestWorkTests.test_structured_public_api_runs_in_fresh_process",

@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_description.DescriptionWorkTests.test_each_published_example_runs_the_actual_command",
     "test_description.DescriptionWorkTests.test_cli_and_structured_description_are_same_contract",

@@ -27,7 +27,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [],
   "open_items": [
     "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."

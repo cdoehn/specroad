@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_verification.CatalogWorkTests.test_primary_test_number_must_match_requirement",
     "test_verification.CatalogWorkTests.test_manifest_delivers_requirement_fixture_and_verification_binding"

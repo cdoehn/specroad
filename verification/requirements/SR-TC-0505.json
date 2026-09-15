@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_requests.RequestWorkTests.test_unavailable_aliases_are_not_silently_registered",
     "test_requests.RequestWorkTests.test_actual_bootstrap_has_one_result_for_cli_alias_and_request"

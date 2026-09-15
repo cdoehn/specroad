@@ -1,61 +1,77 @@
-"""Run the actual development suite and optionally retain its bound JSON evidence."""
+"""Run pytest through a full-catalog gate, without scheduling tests ourselves."""
 
 import argparse
-import json
+import os
 from pathlib import Path
+import subprocess
 import sys
-import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "tools"))
-sys.path.insert(0, str(ROOT / "tests"))
-sys.path.insert(0, str(ROOT / "src"))
 
-import unittest
-from verification import (CatalogError, bind_tests, json_bytes, load_catalog, make_report,
-                          evidence_target, observe_suite, platform_identity, publish_report, sha256, source_identity)
+
+def worker_count(value):
+    if value == "auto":
+        return value
+    try:
+        number = int(value)
+    except (ValueError, TypeError) as error:
+        raise argparse.ArgumentTypeError("Workers must be auto or a nonnegative integer") from error
+    if number < 0:
+        raise argparse.ArgumentTypeError("Workers must be auto or a nonnegative integer")
+    return str(number)
+
+
+def test_environment(environment):
+    result = dict(environment)
+    for name in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_CURRENT_TEST",
+                 "PYTEST_XDIST_WORKER", "PYTEST_XDIST_WORKER_COUNT", "PYTEST_XDIST_TESTRUNUID"):
+        result.pop(name, None)
+    result["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    result["PYTHONDONTWRITEBYTECODE"] = "1"
+    return result
+
+
+def pytest_arguments(args):
+    arguments = ["-o", "addopts=", "--disable-plugin-autoload",
+                 "-p", "no:cacheprovider", "-p", "no:doctest"]
+    if args.workers != "0":
+        arguments += ["-p", "xdist.plugin", "-n", args.workers,
+                      "--dist", args.dist, "--max-worker-restart=0"]
+    arguments += ["--sr-gate", str(ROOT / "tests")]
+    for option, value in (("--sr-evidence", args.evidence),
+                          ("--sr-observations", args.observations),
+                          ("--sr-expected-tests", args.expected_tests)):
+        if value is not None:
+            arguments += [option, str(value)]
+    return arguments
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--workers", "-n", type=worker_count, default="0")
+    parser.add_argument("--dist", choices=("load", "worksteal", "loadscope", "loadfile"), default="load")
     parser.add_argument("--evidence", type=Path)
+    parser.add_argument("--observations", type=Path)
     parser.add_argument("--expected-tests", type=int)
     args = parser.parse_args(argv)
+    if args.expected_tests is not None and args.expected_tests <= 0:
+        parser.error("Expected tests must be positive")
+    # Publication paths are interpreted relative to the caller, not a later cwd.
+    for name in ("evidence", "observations"):
+        value = getattr(args, name)
+        if value is not None:
+            setattr(args, name, value.absolute())
+    environment = test_environment(os.environ)
+    auto = environment.get("PYTEST_XDIST_AUTO_NUM_WORKERS")
+    if args.workers == "auto" and auto is not None and (not auto.isdecimal() or int(auto) <= 0):
+        parser.error("PYTEST_XDIST_AUTO_NUM_WORKERS must be a positive integer")
+    command = [sys.executable, "-I", "-B", str(ROOT / "tools/pytest_entry.py"), *pytest_arguments(args)]
     try:
-        if args.expected_tests is not None and args.expected_tests <= 0:
-            raise CatalogError("Expected test count must be positive")
-        if args.evidence is not None:
-            evidence_target(args.evidence, ROOT)
-        catalog = load_catalog(ROOT / "verification")
-        # Integrity binding of the normative input, not a documentation test.
-        specification = ROOT / "docs/specification/SpecRoad_Spezifikation.md"
-        if sha256(specification.read_bytes()) != catalog.specification_sha256:
-            raise CatalogError("Catalog is not bound to the current specification bytes")
-        identity = source_identity(ROOT)
-        suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"))
-        discovered = bind_tests(catalog, suite)
-        if args.expected_tests is not None and len(discovered) != args.expected_tests:
-            raise CatalogError("Discovered suite size differs from the expected behavior gate")
-        runtime = platform_identity()
-        binding = {"run_id": str(uuid.uuid4()), "tool_build_sha256": identity,
-                   "platform_sha256": sha256(json_bytes(runtime)),
-                   "configuration_sha256": sha256(json_bytes({"suite": "unittest-discover-v1",
-                       "stdin": "closed", "test_timeout": None, "suite_timeout": None}))}
-        result = observe_suite(suite)
-        if (source_identity(ROOT) != identity
-                or sha256(specification.read_bytes()) != catalog.specification_sha256):
-            raise CatalogError("Inputs changed during test execution; no current pass evidence")
-        report = make_report(catalog, binding, result, discovered)
-        report["runtime"] = runtime
-        if args.evidence is not None:
-            publish_report(args.evidence, ROOT, report)
-        print(json.dumps({"tests_run": report["tests_run"], "suite_passed": report["suite_passed"],
-                          "requirement_counts": report["requirement_counts"],
-                          "release_approved": False}, sort_keys=True))
-        return 0 if report["suite_passed"] else 1
-    except (CatalogError, OSError) as error:
-        print("Development verification failed: " + str(error), file=sys.stderr)
-        return 2
+        return subprocess.run(command, cwd=ROOT, env=environment,
+                              stdin=subprocess.DEVNULL, check=False).returncode
+    except OSError:
+        print("Could not start the development test interpreter.", file=sys.stderr)
+        return 4
 
 
 if __name__ == "__main__":

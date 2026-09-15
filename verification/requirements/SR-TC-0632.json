@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "harness_suite_timeout": null
   },
-  "evidence_kind": "specroad-dev-unittest-v1",
+  "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_description.DescriptionRobustnessTests.test_all_current_handlers_explicitly_declare_no_continuation",
     "test_description.DescriptionRobustnessTests.test_minimum_step_limits_are_explicitly_unmeasured",
