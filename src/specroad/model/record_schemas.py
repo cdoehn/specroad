@@ -5,6 +5,8 @@ external payload hashes, SRX semantics or permission to publish a record.
 Loading an approved/recorded value never means that its provenance is verified.
 """
 
+import re
+
 from ._schema import validate_builtin, _json_equal
 from .artifact_schemas import artifact_common_schema, validate_common_fields
 from .artifact_types import artifact_types
@@ -12,22 +14,8 @@ from .domain_fields import reference_schema
 from .errors import ModelError
 from .paths import project_path
 from .versions import SCHEMA_VERSION
+from .record_contracts import RECORD_TYPES, SPECIAL_STATES, VALIDATION_SCOPE, record_contract
 
-RECORD_TYPES = (
-    "source", "verification", "test", "evidence", "baseline", "proposal", "issue",
-    "document", "section", "content_block", "view", "code_ref", "relation_review", "configuration",
-)
-VALIDATION_SCOPE = "record_fields_only"
-SPECIAL_STATES = {
-    "evidence": ("evidence_state", {"recorded": "approved"}),
-    "baseline": ("baseline_state", {"sealed": "approved"}),
-    "relation_review": ("review_state", {"recorded": "approved"}),
-    "proposal": ("proposal_status", {
-        "draft": "draft", "validated": "proposed", "checked": "proposed",
-        "in_review": "in_review", "approved": "approved", "applied": "approved",
-        "rejected": "rejected", "stale": "retired",
-    }),
-}
 VERIFICATION_METHODS = (
     "inspection", "review", "analysis", "simulation", "automated_test", "manual_test",
     "formal_proof", "monitoring", "audit", "measurement",
@@ -168,23 +156,22 @@ def _type_fields(kind):
 def record_schema(kind, version=SCHEMA_VERSION):
     """Return a detached schema. It is not a workflow command or a write permit."""
     schema = artifact_common_schema(kind, version)
-    if kind not in RECORD_TYPES:
-        raise ModelError("record_type_not_supported", pointer="/artifact_type")
+    contract = record_contract(kind)
     required, fields = _type_fields(kind)
-    schema["$id"] = "urn:specroad:schema:" + version + ":artifact-record:" + kind
+    schema["$id"] = contract.schema_id
     schema["$comment"] = "Local record fields only; no graph, payload integrity, review or publication approval."
-    schema["x-specroad-validation-scope"] = VALIDATION_SCOPE
+    schema["x-specroad-validation-scope"] = contract.validation_scope
     schema["$defs"].update(_definitions())
     schema["required"] = list(dict.fromkeys([*schema["required"], *required]))
     schema["properties"].update(fields)
     schema["additionalProperties"] = False
     conditions = []
-    if kind in SPECIAL_STATES:
-        field, states = SPECIAL_STATES[kind]
+    if contract.requires_specialized_operation:
+        field = contract.status_field
         schema["required"].append(field)
-        schema["properties"][field] = {"enum": list(states)}
+        schema["properties"][field] = {"enum": [state for state, _ in contract.state_maturities]}
         conditions.append({"anyOf": [{"properties": {field: {"const": state}, "maturity": {"const": maturity}}}
-                                      for state, maturity in states.items()]})
+                                      for state, maturity in contract.state_maturities]})
     if kind == "content_block":
         conditions.append({"anyOf": [{"properties": {"block_kind": {"const": block}, "payload": payload}}
                                       for block, payload in _block_payload().items()]})
@@ -248,18 +235,16 @@ Specialized records require their dedicated commands even if their bytes pass
 schema validation. No generic create, free patch or lifecycle transition may
 manufacture an Evidence, Baseline, Proposal or Relationsreview.
 """
-    if kind not in RECORD_TYPES:
-        raise ModelError("record_type_not_supported", pointer="/artifact_type")
+    contract = record_contract(kind)
     if operation not in ("create", "patch", "lifecycle"):
         raise ModelError("unknown_mutation_operation")
-    if kind in SPECIAL_STATES:
+    if contract.requires_specialized_operation:
         raise ModelError("specialized_operation_required", pointer="/artifact_type")
     if type(field_paths) not in (tuple, list):
         raise ModelError("field_path_sequence_required")
     for pointer in field_paths:
         if type(pointer) is not str or not pointer.startswith("/") or pointer == "/":
             raise ModelError("invalid_field_pointer")
-        import re
         if re.search(r"~(?![01])", pointer):
             raise ModelError("invalid_field_pointer", pointer=pointer)
         top = pointer.split("/", 2)[1].replace("~1", "/").replace("~0", "~")
@@ -276,7 +261,7 @@ def _unique(values, *, reason, pointer):
             raise ModelError(reason, pointer=pointer + "/" + str(index))
 
 
-def _typed_reference(value, prefixes, pointer):
+def _typed_reference(value, prefixes):
     validate_builtin(value, {"anyOf": [reference_schema(prefix) for prefix in prefixes]})
 
 
@@ -291,7 +276,7 @@ def _local_contains(value):
         if type(position) is not int or position < 0:
             raise ModelError("invalid_contains_position", pointer=pointer + "/position")
         try:
-            _typed_reference(relation.get("target"), prefixes, pointer + "/target")
+            _typed_reference(relation.get("target"), prefixes)
         except ModelError as error:
             raise ModelError("invalid_contains_target", pointer=pointer + "/target") from error
     # Do not decide parent cardinality or cyclic inclusion without a graph.
@@ -315,7 +300,7 @@ def _block_reference(value):
         raise ModelError("block_reference_cardinality", pointer="/relations")
     index, relation = relations[0]
     try:
-        _typed_reference(relation.get("target"), prefixes, "/relations/" + str(index) + "/target")
+        _typed_reference(relation.get("target"), prefixes)
     except ModelError as error:
         raise ModelError("block_reference_type", pointer="/relations/" + str(index) + "/target") from error
 

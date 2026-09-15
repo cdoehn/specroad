@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..model.record_schemas import VALIDATION_SCOPE, validate_record_fields
+from ..model.record_schemas import validate_record_fields
+from ..model.record_contracts import record_contract
 from ..model.errors import ModelError
 from .artifact_common import read_common_artifact
 from .json_reader import parse_json_object
@@ -29,7 +30,7 @@ class RecordArtifact:
         object.__setattr__(self, "artifact_type", value["artifact_type"])
         object.__setattr__(self, "id", value["id"])
         object.__setattr__(self, "path", path)
-        object.__setattr__(self, "validation_scope", VALIDATION_SCOPE)
+        object.__setattr__(self, "validation_scope", record_contract(value["artifact_type"]).validation_scope)
 
     @property
     def data(self):
