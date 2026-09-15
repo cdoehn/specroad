@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 32
-last_completed_plan_commit: 1.k.R
-next_plan_commit: 1.k.C
+implementation_plan_commits_completed: 33
+last_completed_plan_commit: 1.k.C
+next_plan_commit: 1.l.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -491,7 +491,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.k.C – Make it Clean
 
-- [ ] **1.k.C** · Position **33/885** · Voraussetzung: `1.k.R`.
+- [x] **1.k.C** · Position **33/885** · Voraussetzung: `1.k.R`.
 **Exakte Commit-Message:** `1.k.C refactor(core): Lazy Bootstrap und frischer Aufrufkontext bereinigen`
 
 **Bereinigung:** Kontextaufbau und fachliche Laufzeitdienste als getrennte Abhängigkeiten injizieren.

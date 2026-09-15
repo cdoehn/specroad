@@ -6,7 +6,7 @@ from typing import Mapping
 
 from .commands import builtin_registry
 from .options import OptionResolutionError
-from .invocation_context import prepare_invocation
+from .invocation_context import InvocationContextBuilder
 from .registry import CommandRegistry, CommandUsageError
 from .results import CommandResult, FailureKind, OperationFailure, failed_result
 
@@ -38,7 +38,8 @@ def _error_options(arguments):
 
 
 def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry | None = None,
-            cwd=None, profile_layers=(), configuration_layer=None) -> CommandResponse:
+            cwd=None, profile_layers=(), configuration_layer=None,
+            context_builder: InvocationContextBuilder | None = None) -> CommandResponse:
     if isinstance(arguments, (list, tuple)):
         arguments = tuple(arguments)
     command = "unknown"
@@ -49,7 +50,8 @@ def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry
         invocation = selected.parse(arguments)
         command = invocation.command.command_id
         options = invocation.options
-        invocation = prepare_invocation(
+        builder = InvocationContextBuilder() if context_builder is None else context_builder
+        invocation = builder.prepare(
             invocation, cwd=cwd, profile_layers=profile_layers,
             configuration_layer=configuration_layer)
         if invocation.resolved.project_root is not None:
