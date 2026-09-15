@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 44
-last_completed_plan_commit: 2.a.R
-next_plan_commit: 2.a.C
+implementation_plan_commits_completed: 45
+last_completed_plan_commit: 2.a.C
+next_plan_commit: 2.b.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -666,7 +666,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.a.C – Make it Clean
 
-- [ ] **2.a.C** · Position **45/885** · Voraussetzung: `2.a.R`.
+- [x] **2.a.C** · Position **45/885** · Voraussetzung: `2.a.R`.
 **Exakte Commit-Message:** `2.a.C refactor(model): Projektkonfiguration und Pfadklassen bereinigen`
 
 **Bereinigung:** Pfadklassifikation als gemeinsame Funktion für Reader, Writer und spätere Bundles führen.

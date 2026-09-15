@@ -10,7 +10,8 @@ import os
 import stat
 from types import MappingProxyType
 
-from ..model.configuration import ProjectConfiguration, CURRENT_JSON_CLASSES, PAYLOAD_CLASSES, classify_path, project_path
+from ..model.configuration import ProjectConfiguration
+from ..model.paths import CURRENT_JSON_CLASSES, PAYLOAD_CLASSES, classify_path, project_path
 from ..model.errors import ModelError
 from ..model.numbers import number_from_token
 from ..security import ProjectBoundary
