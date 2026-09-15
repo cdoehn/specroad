@@ -97,3 +97,64 @@ def test_gate_rejects_subsets_even_when_tests_themselves_pass():
     code, observation = run_pytest_fixture(PASSING, gate=True)
     assert code != 0
     assert observation is None or not observation["suite_passed"]
+
+
+def test_parallel_framework_matches_serial_test_identities():
+    serial_code, serial = run_pytest_fixture(PASSING)
+    parallel_code, parallel = run_pytest_fixture(PASSING, workers="2")
+    assert serial_code == parallel_code == 0
+    assert serial["suite_passed"] and parallel["suite_passed"]
+    assert serial["test_outcomes"] == parallel["test_outcomes"]
+    assert serial["nodeids"] == parallel["nodeids"]
+    assert parallel["tests_run"] == 5
+    assert len([count for count in parallel["worker_test_counts"].values() if count > 0]) == 2
+
+
+def test_parallel_framework_transports_failures_and_subtest_outcomes():
+    serial_code, serial = run_pytest_fixture(FAILING)
+    parallel_code, parallel = run_pytest_fixture(FAILING, workers="2")
+    assert serial_code != 0 and parallel_code != 0
+    assert not parallel["suite_passed"]
+    assert serial["test_outcomes"] == parallel["test_outcomes"]
+    assert serial["tests_run"] == parallel["tests_run"] == 7
+
+
+def test_crashed_worker_never_produces_success():
+    source = "import os\n\ndef test_crash():\n    os._exit(17)\n\ndef test_other():\n    pass\n"
+    code, observation = run_pytest_fixture(source, workers="2")
+    assert code != 0
+    assert observation is not None
+    assert not observation["suite_passed"]
+    assert "worker_crash" in observation["errors"]
+
+
+def test_workers_with_different_collections_fail():
+    source = """
+import os
+if os.environ.get('PYTEST_XDIST_WORKER') == 'gw0':
+    def test_first():
+        pass
+else:
+    def test_second():
+        pass
+"""
+    code, observation = run_pytest_fixture(source, workers="2")
+    assert code != 0
+    assert observation is not None
+    assert not observation["suite_passed"]
+    assert "inconsistent_worker_collection" in observation["errors"]
+
+
+def test_two_independent_parallel_sessions_do_not_share_artifacts():
+    first_code, first = run_pytest_fixture(PASSING, workers="2")
+    second_code, second = run_pytest_fixture(PASSING, workers="2")
+    assert first_code == second_code == 0
+    assert first["suite_passed"] and second["suite_passed"]
+    assert first["test_outcomes"] == second["test_outcomes"]
+
+
+def test_parallel_collection_failure_is_not_an_empty_success():
+    code, observation = run_pytest_fixture("raise ValueError('fixture collection failure')\n", workers="2")
+    assert code != 0
+    assert observation is not None
+    assert not observation["suite_passed"]

@@ -87,3 +87,27 @@ Es werden keine künstlichen Test- oder Suite-Timeouts eingeführt.
 - https://pytest-xdist.readthedocs.io/en/stable/distribution.html
 - https://pytest-xdist.readthedocs.io/en/stable/how-it-works.html
 - https://docs.astral.sh/uv/pip/packages/
+
+## Serial-/Parallelvergleich und Abbruchregressionen
+
+`tools/compare_test_runs.py` vergleicht bereits entstandene Berichte. Es verteilt selbst
+keine Tests. Die Berichte müssen unabhängige Run-IDs, identische Eingangsbindungen,
+identische Testmengen und Identitäten sowie ausschließlich bestandene Ergebnisse haben.
+Unterschiedliche Worker-Zuordnung ist erlaubt; fehlende oder doppelte Tests sind es nicht.
+
+```sh
+.venv/bin/python -I -B tools/run_tests.py --evidence build/parallel-evidence.json
+.venv/bin/python -I -B tools/run_tests.py --workers 0 --evidence build/serial-evidence.json
+.venv/bin/python -I -B tools/compare_test_runs.py build/parallel-evidence.json build/serial-evidence.json
+```
+
+Die Migrations-Abnahme wiederholt die vollständige Suite seriell und mit 2, 4, erneut
+2 und automatisch gewählten Workern; dabei variieren auch die Python-Hash-Seeds. Sämtliche
+Berichte müssen fachlich übereinstimmen. CI verwendet je Python-Version parallel und seriell.
+
+Regressionsfälle starten absichtlich eigene pytest-Prozesse mit lokalen Mini-Fixtures:
+ein absichtlicher Worker-Absturz, unterschiedliche Worker-Sammlungen, Collection-Fehler,
+Setup-/Teardown-Fehler, Skip/XFail/Unexpected Success sowie fehlgeschlagene/übersprungene
+unittest-Untertests. Die Prüfung wertet ausschließlich strukturierte Ergebnisse und
+Exitcodes aus. Diese kleinen Framework-Regressionsfälle benötigen auch beim äußeren
+seriellen Referenzlauf xdist. Fehlende Abhängigkeiten führen zu Fehlern, niemals zu Skips.

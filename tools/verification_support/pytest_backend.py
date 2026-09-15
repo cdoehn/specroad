@@ -136,7 +136,10 @@ def pytest_xdist_node_collection_finished(node, ids):
 @pytest.hookimpl(optionalhook=True)
 def pytest_testnodedown(node, error):
     state = node.config._specroad_verification
-    pairs = getattr(node, "workeroutput", {}).get("sr_collection")
+    output = getattr(node, "workeroutput", {}) or {}
+    pairs = output.get("sr_collection")
+    if output.get("exitstatus") != 0:
+        state.ledger.error("worker_nonzero_exit")
     if pairs is None:
         state.ledger.error("missing_worker_collection")
     else:

@@ -33,6 +33,8 @@ jobs:
       - name: Execute serial reference gate
         if: success() || failure()
         run: .venv/bin/python -I -B tools/run_tests.py --workers 0 --evidence build/serial-evidence.json
+      - name: Compare serial and parallel current-run evidence
+        run: .venv/bin/python -I -B tools/compare_test_runs.py build/parallel-evidence.json build/serial-evidence.json
       - name: Preserve development evidence
         if: always()
         uses: actions/upload-artifact@v7
