@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 29
-last_completed_plan_commit: 1.j.R
-next_plan_commit: 1.j.C
+implementation_plan_commits_completed: 30
+last_completed_plan_commit: 1.j.C
+next_plan_commit: 1.k.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -456,7 +456,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.j.C – Make it Clean
 
-- [ ] **1.j.C** · Position **30/885** · Voraussetzung: `1.j.R`.
+- [x] **1.j.C** · Position **30/885** · Voraussetzung: `1.j.R`.
 **Exakte Commit-Message:** `1.j.C refactor(core): Feste Sicherheits- und Offlinegrenze bereinigen`
 
 **Bereinigung:** Sichere I/O- und Prozessgrenzen zentralisieren; später nur ausdrücklich erlaubte Git-/Workeradapter anschließen.

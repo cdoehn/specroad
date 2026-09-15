@@ -3,7 +3,6 @@
 from pathlib import Path
 import errno
 import json
-import os
 import stat
 
 from ..security import ProjectBoundary, SafetyViolation, check_project_declarations
