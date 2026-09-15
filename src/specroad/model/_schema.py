@@ -45,6 +45,16 @@ def _json_equal(left, right):
 
 
 
+def _date(value):
+    if re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", value) is None:
+        return False
+    try:
+        date(*map(int, value.split("-")))
+    except ValueError:
+        return False
+    return True
+
+
 def _datetime_utc(value):
     # RFC 3339 UTC only: -00:00 explicitly means an unknown local offset.
     match = re.fullmatch(r"([0-9]{4})-([0-9]{2})-([0-9]{2})[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.[0-9]+)?(?:[Zz]|\+00:00)", value)
@@ -72,7 +82,7 @@ def _check_vocabulary(schema):
         if "type" in node and node["type"] not in (
                 "object", "array", "string", "boolean", "null", "number", "integer"):
             raise ValueError("Unsupported built-in schema type")
-        if "format" in node and node["format"] != "date-time":
+        if "format" in node and node["format"] not in ("date-time", "date"):
             raise ValueError("Unknown built-in format assertion")
         if "$ref" in node:
             ref = node["$ref"]
@@ -147,9 +157,9 @@ def validate_builtin(instance, schema):
             if "pattern" in node and re.search(node["pattern"], value) is None:
                 raise ModelError("schema_pattern", pointer=pointer)
         if "format" in node:
-            if node["format"] != "date-time":
+            if node["format"] not in ("date-time", "date"):
                 raise ValueError("Unknown built-in format assertion")
-            if type(value) is str and not _datetime_utc(value):
+            if type(value) is str and not (_date(value) if node["format"] == "date" else _datetime_utc(value)):
                 raise ModelError("schema_format", pointer=pointer)
         if type(value) in (int, float):
             if "minimum" in node and value < node["minimum"]:

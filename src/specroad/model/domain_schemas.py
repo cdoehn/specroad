@@ -83,7 +83,7 @@ def _type_fields(kind):
                        "contract": detail, "contract_not_applicable": text}),
         "release": (("name", "objective", "readiness_policy"),
                     {"name": text, "objective": text, "readiness_policy": {"type": "object"},
-                     "target_date": text, "scope_descriptor": {"type": "object"}}),
+                     "target_date": {"type": "string", "format": "date"}, "scope_descriptor": {"type": "object"}}),
         "milestone": (("objective", "owner"), {"objective": text, "owner": owner, "done_criteria": criteria}),
         "task": (("description", "owner", "implementation_status", "verification_plan_status", "done_criteria"),
                  {"description": text, "owner": owner, "implementation_status": implementation,
@@ -117,13 +117,30 @@ def domain_schema(kind, version=SCHEMA_VERSION):
     schema["x-specroad-validation-scope"] = VALIDATION_SCOPE
     schema["required"] = list(dict.fromkeys([*schema["required"], *required]))
     schema["properties"].update(fields)
-    schema["properties"]["maturity"] = {"const": "draft"}
     schema["additionalProperties"] = False
     conditions = []
     if kind == "requirement":
         conditions.append(_required_when("normative_force", "should", ("deviation_conditions", "deviation_authority")))
     if "verification_plan_status" in fields:
         conditions.append(_required_when("verification_plan_status", "waived", ("verification_waiver",)))
+    # Only instance-local mandatory data are checked here. For example, a
+    # risk's mitigation and a task's implementation link may be INCOMING edges;
+    # their absence cannot be decided from this file alone.
+    approved_fields = {
+        "goal": ("success_criterion",), "need": ("rationale", "priority"),
+        "capability": ("outcome", "priority"), "requirement": ("rationale",),
+        "scenario": ("preconditions", "postconditions", "exceptions"),
+        "decision": ("alternatives", "consequences"),
+        "assumption": ("validation_method", "reevaluation_condition"),
+        "release": ("scope_descriptor",), "milestone": ("done_criteria",),
+    }
+    if kind in approved_fields:
+        conditions.append(_required_when("maturity", "approved", approved_fields[kind]))
+    if kind == "interface":
+        conditions.append({"anyOf": [
+            {"properties": {"maturity": {"not": {"const": "approved"}}}},
+            {"required": ["contract"]}, {"required": ["contract_not_applicable"]},
+        ]})
     schema["allOf"] = conditions
     return schema
 

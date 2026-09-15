@@ -13,7 +13,8 @@
     "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation."
   ],
   "steps": [
-    "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes."
+    "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes.",
+    "Check stored non-draft field gates and malformed statuses without inferring approval or evidence outcomes."
   ],
   "oracle": {
     "kind": "behavior",
@@ -35,7 +36,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_domain_schemas.DomainWorkTests.test_milestone_has_exactly_one_release_relation"
+    "test_domain_schemas.DomainWorkTests.test_milestone_has_exactly_one_release_relation",
+    "test_domain_schemas.DomainRightTests.test_local_milestone_cardinality_has_precise_error_location"
   ],
   "open_items": [
     "Remaining graph, profile, specialized lifecycle, semantic, evidence and end-to-end checks at their assigned plan steps; no full requirement or release approval claimed."

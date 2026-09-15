@@ -295,3 +295,183 @@ class DomainWorkTests(unittest.TestCase):
                 result = subprocess.run([sys.executable, "-I", "-S", "-B", "-c", program, str(distribution)],
                                         input=raw, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
                 self.assertEqual(result.returncode, 0)
+
+
+class DomainRightTests(unittest.TestCase):
+    def load(self, value, **options):
+        return DomainArtifact(artifact_bytes(value), **options)
+
+    def test_stored_maturities_are_read_not_transitioned(self):
+        from support.domain import approved_value
+        for kind in PREFIXES:
+            for maturity in ("draft", "proposed", "in_review", "approved", "rejected", "superseded", "retired"):
+                with self.subTest(kind=kind, maturity=maturity):
+                    value = approved_value(kind) if maturity == "approved" else domain_value(kind, maturity=maturity)
+                    resource = self.load(value)
+                    self.assertEqual(resource.data, value)
+                    self.assertEqual(resource.validation_scope, "domain_fields_only")
+                    self.assertNotIn("verification_result", resource.data)
+
+    def test_approved_metadata_required_by_type(self):
+        from support.domain import approved_value
+        fields = {"goal": ("success_criterion",), "need": ("rationale", "priority"),
+                  "capability": ("outcome", "priority"), "requirement": ("rationale",),
+                  "scenario": ("preconditions", "postconditions", "exceptions"),
+                  "decision": ("alternatives", "consequences"),
+                  "assumption": ("validation_method", "reevaluation_condition"),
+                  "release": ("scope_descriptor",), "milestone": ("done_criteria",)}
+        for kind, names in fields.items():
+            for field in names:
+                with self.subTest(kind=kind, field=field):
+                    value = approved_value(kind); value.pop(field)
+                    with self.assertRaises(ModelError): self.load(value)
+                    value["maturity"] = "draft"
+                    self.assertEqual(self.load(value).data, value)
+
+    def test_goal_criterion_is_not_synthesized(self):
+        for criterion in ("Setup takes at most ten steps.", ["Runs offline", "Completes without writes"]):
+            value = domain_value("goal", maturity="approved", success_criterion=criterion)
+            self.assertEqual(self.load(value).data["success_criterion"], criterion)
+        for bad in ("", [], [""], True, {}):
+            with self.subTest(bad=str(bad)), self.assertRaises(ModelError):
+                self.load(domain_value("goal", maturity="approved", success_criterion=bad))
+
+    def test_interface_contract_or_reason_required(self):
+        value = domain_value("interface", maturity="approved")
+        with self.assertRaises(ModelError): self.load(value)
+        for extra in ({"contract": "Input/output contract"}, {"contract": {"input": "JSON"}},
+                      {"contract_not_applicable": "Only an internal type boundary"}):
+            changed = dict(value, **extra)
+            self.assertEqual(self.load(changed).data, changed)
+        for extra in ({"contract": ""}, {"contract": {}}, {"contract_not_applicable": True},
+                      {"contract_not_applicable": ""}):
+            with self.subTest(extra=str(extra)), self.assertRaises(ModelError): self.load(dict(value, **extra))
+
+    def test_task_does_not_invent_reverse_implementation_links(self):
+        # Relations are stored at their source. The task cannot decide whether
+        # another requirement/decision points to it until graph resolution.
+        value = domain_value("task", maturity="approved", implementation_status="implemented", relations=[])
+        result = self.load(value)
+        self.assertEqual(result.data, value)
+        self.assertEqual(result.validation_scope, "domain_fields_only")
+        self.assertNotIn("verification_result", result.data)
+
+    def test_incoming_risk_mitigation_not_replaced_by_fake_acceptance(self):
+        value = domain_value("risk", maturity="approved", relations=[])
+        self.assertEqual(self.load(value).data, value)
+        self.assertNotIn("acceptance_rationale", self.load(value).data)
+
+    def test_release_date_accepts_real_iso_dates_without_interpreting_schedule(self):
+        for date in ("2024-02-29", "2026-09-15", "2000-02-29", "9999-12-31"):
+            with self.subTest(date=date):
+                self.assertEqual(self.load(domain_value("release", target_date=date)).data["target_date"], date)
+        for bad in ("2026-02-29", "1900-02-29", "2026-13-01", "2026-09-31", "20260915", "2026-9-15",
+                    "0000-01-01", "2026-09-15T00:00:00Z", "2026-09-15\n", True, None):
+            with self.subTest(bad=str(bad)), self.assertRaises(ModelError):
+                self.load(domain_value("release", target_date=bad))
+
+    def test_builtin_date_format_does_not_accept_unsupported_formats(self):
+        from specroad.model._schema import validate_builtin
+        validate_builtin("2024-02-29", {"type": "string", "format": "date"})
+        with self.assertRaises(ModelError): validate_builtin("2023-02-29", {"type": "string", "format": "date"})
+        with self.assertRaises(ValueError): validate_builtin("anything", {"format": "custom"})
+
+    def test_invalid_status_datatypes_rejected_on_every_applicable_type(self):
+        for kind in ("capability", "requirement", "component", "interface", "task"):
+            for value in (None, False, 1, [], {}, "Implemented", " in_progress", "not_started\n"):
+                with self.subTest(kind=kind, value=str(value)), self.assertRaises(ModelError):
+                    self.load(domain_value(kind, implementation_status=value))
+        for kind in ("capability", "requirement", "task"):
+            for value in (None, False, 1, [], {}, "passed", "failed", "stale", "waived "):
+                with self.subTest(kind=kind, value=str(value)), self.assertRaises(ModelError):
+                    self.load(domain_value(kind, verification_plan_status=value))
+
+    def test_failed_validation_does_not_mutate_input_or_audit_metadata(self):
+        for kind in PREFIXES:
+            value = domain_value(kind, maturity="not_a_status"); before = copy.deepcopy(value)
+            with self.subTest(kind=kind), self.assertRaises(ModelError): validate_domain_fields(value)
+            self.assertEqual(value, before)
+
+    def test_whole_waiver_is_preserved_without_claiming_authorization(self):
+        data = waiver(); data["human_review_id"] = "human-review:external-17"
+        value = domain_value("requirement", verification_plan_status="waived", verification_waiver=data)
+        resource = self.load(value)
+        self.assertEqual(resource.data, value)
+        self.assertEqual(resource.validation_scope, "domain_fields_only")
+        self.assertEqual(resource.data["maturity"], "draft")
+
+    def test_waiver_hashes_and_actor_metadata_cannot_be_fabricated_from_bools(self):
+        for field, bad in (("artifact_sha256", "a" * 63), ("artifact_sha256", "A" * 64),
+                           ("configuration_sha256", True), ("scope_descriptor", "all"),
+                           ("human_review_id", True), ("expiry_condition", ""), ("reason", None)):
+            data = waiver(); data[field] = bad
+            with self.subTest(field=field, bad=str(bad)), self.assertRaises(ModelError):
+                self.load(domain_value("task", verification_plan_status="waived", verification_waiver=data))
+
+    def test_foreign_scope_and_policy_objects_are_not_executed(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            sentinel = Path(temporary) / "executed"
+            value = domain_value("release", readiness_policy={"command": "touch " + str(sentinel), "module": "malicious"})
+            self.assertEqual(self.load(value).data, value)
+            self.assertFalse(sentinel.exists())
+
+    def test_instance_identity_remains_bound_for_all_types(self):
+        for kind in PREFIXES:
+            with self.subTest(kind=kind), self.assertRaises(ModelError):
+                self.load(domain_value(kind, id="SR-UNKNOWN-0001"))
+
+    def test_local_milestone_cardinality_has_precise_error_location(self):
+        for relations, reason, pointer in (([], "milestone_release_cardinality", "/relations"),
+                                          ([relation(target="bad")], "milestone_release_reference", "/relations/0/target")):
+            with self.subTest(reason=reason), self.assertRaises(ModelError) as caught:
+                self.load(domain_value("milestone", relations=relations), path="milestone.json")
+            self.assertEqual((caught.exception.reason, caught.exception.pointer, caught.exception.path), (reason, pointer, "milestone.json"))
+
+    def test_schema_mutation_cannot_weaken_other_reads(self):
+        schema = domain_schema("requirement")
+        schema["allOf"].clear(); schema["properties"]["normative_force"]["enum"].append("optional")
+        with self.assertRaises(ModelError): self.load(domain_value("requirement", normative_force="optional"))
+        with self.assertRaises(ModelError): self.load(domain_value("requirement", normative_force="should"))
+
+    def test_references_are_only_checked_lexically_not_auto_created(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); configuration_file(root)
+            value = domain_value("interface"); name = artifact_path("interface", value["id"], "SR")
+            put(root, name, artifact_bytes(value))
+            resource = read_domain_artifact(ProjectSource(root), name)
+            self.assertEqual(resource.data, value)
+            self.assertFalse((root / "spec/components").exists())
+
+    def test_bound_reader_rejects_symlinks_without_followup_mutation(self):
+        from specroad.security import SafetyViolation
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); configuration_file(root)
+            value = domain_value(); target = put(root, "original.json", artifact_bytes(value))
+            name = artifact_path("goal", value["id"], "SR")
+            link = root / name; link.parent.mkdir(parents=True); link.symlink_to(target)
+            with self.assertRaises(SafetyViolation): read_domain_artifact(ProjectSource(root), name)
+            self.assertEqual(target.read_bytes(), artifact_bytes(value))
+
+    def test_declared_language_is_never_inferred_or_rewritten(self):
+        value = domain_value("requirement", language="DE-de", statement="An English statement.")
+        self.assertEqual(self.load(value).data, value)
+        value.pop("language")
+        with self.assertRaises(ModelError): self.load(value)
+
+    def test_schema_validation_does_not_rewrite_stored_statuses(self):
+        from support.domain import approved_value
+        for kind in ("capability", "requirement", "task"):
+            value = approved_value(kind, implementation_status="blocked", verification_plan_status="running")
+            self.assertEqual(self.load(value).data, value)
+
+    def test_non_json_values_do_not_enter_the_model(self):
+        for bad in (float("nan"), float("inf"), set(), object()):
+            value = domain_value("risk"); value["probability"] = bad
+            with self.subTest(type=type(bad).__name__), self.assertRaises(ModelError): validate_domain_fields(value)
+
+    def test_retired_record_loading_does_not_revive_or_approve_it(self):
+        value = domain_value("task", maturity="retired", implementation_status="blocked")
+        resource = self.load(value)
+        self.assertEqual(resource.data["maturity"], "retired")
+        self.assertEqual(resource.data["implementation_status"], "blocked")
+        self.assertEqual(resource.data["revision"], 1)

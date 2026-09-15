@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 52
-last_completed_plan_commit: 2.d.W
-next_plan_commit: 2.d.R
+implementation_plan_commits_completed: 53
+last_completed_plan_commit: 2.d.R
+next_plan_commit: 2.d.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -764,7 +764,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.d.R – Make it Right
 
-- [ ] **2.d.R** · Position **53/885** · Voraussetzung: `2.d.W`.
+- [x] **2.d.R** · Position **53/885** · Voraussetzung: `2.d.W`.
 **Exakte Commit-Message:** `2.d.R feat(model): Fach- und Planungstypen vervollständigen`
 
 **Vervollständigung:** Pflichtfelder und zulässige Statuswerte typbezogen prüfen; Erfolgsstatus nicht aus bloßer Existenz ableiten.

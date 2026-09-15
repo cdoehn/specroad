@@ -37,3 +37,22 @@ def waiver():
     return {"reason": "Deferred review", "scope_descriptor": {"scope_kind": "explicit"},
             "expiry_condition": "At next release", "human_review_id": "SR-RREV-" + "0" * 26,
             "artifact_sha256": "a" * 64, "configuration_sha256": None}
+
+
+def approved_value(kind, **overrides):
+    """A structurally readable stored record, NOT proof of legitimate approval."""
+    fields = {
+        "goal": {"success_criterion": ["Setup requires at most ten steps."]},
+        "need": {"rationale": "Required by operators.", "priority": "high"},
+        "capability": {"outcome": "Editable offline project", "priority": "high"},
+        "requirement": {"rationale": "Offline operation"},
+        "scenario": {"preconditions": [], "postconditions": ["Project inspected"], "exceptions": []},
+        "decision": {"alternatives": ["Remote database"], "consequences": ["Local versioning"]},
+        "assumption": {"validation_method": "Review platform contract", "reevaluation_condition": "Platform changes"},
+        "interface": {"contract": {"input": "JSON bytes"}},
+        "release": {"scope_descriptor": {"scope_kind": "release", "selector": {"release_id": "SR-REL-" + "0" * 26}}},
+        "milestone": {"done_criteria": ["Reader tests pass"]},
+    }
+    value = domain_value(kind, maturity="approved", **fields.get(kind, {}))
+    value.update(overrides)
+    return value
