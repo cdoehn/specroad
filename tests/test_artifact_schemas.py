@@ -254,7 +254,7 @@ class ArtifactSchemaRightTests(unittest.TestCase):
 
     def test_optional_common_fields_are_checked_without_modifying_input(self):
         value = common_artifact(owner={"actor_type": "human", "actor_id": "owner"},
-                                tags=["a", "b"], provenance=[{}], external_identities=[{}],
+                                tags=["a", "b"], provenance=[{"locator": "manual:example", "captured_at": "2026-01-01T00:00:00Z", "excerpt": "source text"}], external_identities=[{}],
                                 applicability={"op": "literal", "value": True}, text_direction="auto")
         before = artifact_bytes(value); validate_common_fields(value)
         self.assertEqual(artifact_bytes(value), before)

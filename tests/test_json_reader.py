@@ -189,10 +189,10 @@ class JsonReaderRightTests(unittest.TestCase):
 
     def test_direct_configuration_api_rejects_lossy_integer_values(self):
         from specroad.model import ProjectConfiguration
-        value=configuration_value();value['extensions']={'number':9007199254740993}
+        value=configuration_value();value['extensions']={'test.number':9007199254740993}
         with self.assertRaises(ModelError):ProjectConfiguration(value)
-        value['extensions']['number']=9007199254740994
-        self.assertEqual(ProjectConfiguration(value).data['extensions']['number'],9007199254740994)
+        value['extensions']['test.number']=9007199254740994
+        self.assertEqual(ProjectConfiguration(value).data['extensions']['test.number'],9007199254740994)
 
     def test_deep_input_is_a_controlled_rejection_not_a_partial_model(self):
         raw=b'{"value":'+b'['*2500+b'0'+b']'*2500+b'}'

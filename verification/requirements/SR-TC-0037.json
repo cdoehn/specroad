@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0037",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0003",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Trusted built-in field contracts and isolated synthetic data; no live project mutation."
+  ],
+  "steps": [
+    "Exercise the actual data contracts; compare complete values and rejected invalid input."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jedes Artefakt MUSS seine fachliche Herkunft über `provenance` oder typisierte Beziehungen zu Goal, Need oder Source nachvollziehbar machen können.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Passive metadata validation and UTF-8 JSON round-trip only. No canonical writer, external source resolution or artifact approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_metadata.MetadataTests.test_locator_provenance_retained",
+    "test_metadata.MetadataTests.test_source_and_hash_provenance_retained",
+    "test_metadata.MetadataTests.test_provenance_needs_source_or_locator",
+    "test_metadata.MetadataTests.test_provenance_needs_excerpt_or_hash"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full graph/profile validation, persistence and future workflow integration remain open."
   ]
 }

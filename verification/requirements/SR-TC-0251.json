@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0251",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Trusted built-in field contracts and isolated synthetic data; no live project mutation."
+  ],
+  "steps": [
+    "Exercise the actual data contracts; compare complete values and rejected invalid input."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Artefakt DARF ein optionales, nicht identitätsstiftendes `display_id` besitzen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Passive metadata validation and UTF-8 JSON round-trip only. No canonical writer, external source resolution or artifact approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_metadata.MetadataTests.test_display_id_is_optional_and_preserved",
+    "test_metadata.MetadataTests.test_domain_reader_preserves_display_id",
+    "test_metadata.MetadataTests.test_record_reader_preserves_display_id"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full graph/profile validation, persistence and future workflow integration remain open."
   ]
 }

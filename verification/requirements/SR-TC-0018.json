@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0018",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0002",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Trusted built-in field contracts and isolated synthetic data; no live project mutation."
+  ],
+  "steps": [
+    "Exercise the actual data contracts; compare complete values and rejected invalid input."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Erweiterungsdaten MÜSSEN ausschließlich im Objekt `extensions` unter einem namespaced Schlüssel der Form `<anbieter>.<name>` gespeichert werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Passive metadata validation and UTF-8 JSON round-trip only. No canonical writer, external source resolution or artifact approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_metadata.MetadataTests.test_rejects_missing_namespace",
+    "test_metadata.MetadataTests.test_relation_extensions_are_inert_namespaced_data",
+    "test_metadata.MetadataTests.test_project_extensions_use_same_namespace_contract"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full graph/profile validation, persistence and future workflow integration remain open."
   ]
 }

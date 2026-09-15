@@ -14,7 +14,7 @@ from .errors import ModelError
 _KEYWORDS = frozenset({
     "$schema", "$id", "$defs", "$ref", "$comment", "description", "title",
     "x-specroad-validation-scope", "type", "const", "enum", "required",
-    "properties", "additionalProperties", "items", "minLength", "minItems",
+    "properties", "propertyNames", "additionalProperties", "items", "minLength", "minItems",
     "minimum", "maximum", "pattern", "anyOf", "allOf", "not", "format",
 })
 
@@ -100,7 +100,7 @@ def _check_vocabulary(schema):
         for key in ("anyOf", "allOf"):
             for child in node.get(key, ()):
                 check(child, active)
-        for key in ("not", "items", "additionalProperties"):
+        for key in ("not", "items", "additionalProperties", "propertyNames"):
             if key in node:
                 check(node[key], active)
     check(schema)
@@ -177,6 +177,8 @@ def validate_builtin(instance, schema):
                     raise ModelError("missing_field", pointer=_pointer(pointer, field))
             properties = node.get("properties", {})
             for field, item in value.items():
+                if "propertyNames" in node:
+                    visit(field, node["propertyNames"], _pointer(pointer, field), references)
                 if field not in properties and node.get("additionalProperties", True) is False:
                     raise ModelError("unknown_field", pointer=_pointer(pointer, field))
                 visit(item, properties.get(field, node.get("additionalProperties", True)),

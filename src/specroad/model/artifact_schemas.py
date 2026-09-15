@@ -11,6 +11,7 @@ from ._schema import validate_builtin
 from .configuration import _json_values
 from .versions import SCHEMA_VERSION
 from .errors import ModelError
+from .metadata import metadata_schemas, extensions_schema
 from .artifact_types import ArtifactType, artifact_type, artifact_types
 
 DIALECT = "https://json-schema.org/draft/2020-12/schema"
@@ -53,10 +54,11 @@ def _properties(kind):
         "owner": {"anyOf": [dict(text), dict(actor)]},
         "tags": {"type": "array", "items": {"type": "string"}},
         "applicability": {"type": "object"},
-        "relations": {"type": "array", "items": {"type": "object"}},
+        "relations": {"type": "array", "items": {"type": "object",
+            "properties": {"extensions": extensions_schema()}}},
         "provenance": {"type": "array", "items": {"type": "object"}},
         "external_identities": {"type": "array", "items": {"type": "object"}},
-        "extensions": {"type": "object"},
+        **metadata_schemas(),
     }
 
 

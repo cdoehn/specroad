@@ -13,6 +13,7 @@ import re
 from ..security import SafetyViolation, check_project_declarations
 from .errors import ModelError
 from .numbers import number_from_token
+from .metadata import validate_extensions
 from .paths import PathClass, artifact_path, classify_path, project_path, _under
 
 from .versions import SCHEMA_VERSION
@@ -164,6 +165,8 @@ def validate_configuration(data):
         reference = project_path(registry["path"])
         if not reference.startswith("profiles/language-data/") or not any(_under(reference, path) for path in roots):
             raise ModelError("invalid_registry_binding", pointer="/language_registry/path")
+    if "extensions" in data:
+        validate_extensions(data["extensions"])
     try:
         check_project_declarations(data)
     except SafetyViolation as error:
