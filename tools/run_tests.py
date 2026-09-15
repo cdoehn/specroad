@@ -48,7 +48,7 @@ def pytest_arguments(args):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--workers", "-n", type=worker_count, default="0")
+    parser.add_argument("--workers", "-n", type=worker_count, default="auto")
     parser.add_argument("--dist", choices=("load", "worksteal", "loadscope", "loadfile"), default="load")
     parser.add_argument("--evidence", type=Path)
     parser.add_argument("--observations", type=Path)

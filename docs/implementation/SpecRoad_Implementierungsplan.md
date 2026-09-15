@@ -54,6 +54,29 @@ Fachliche Dokumentmodelle, vollständige ausgewählte Daten und sichere Verarbei
 
 Die CLI wird dennoch von Anfang an **farbig, übersichtlich und ansprechend** umgesetzt: austauschbare Präsentationsschicht, deutlich erkennbare Phasen, fortlaufender Fortschritt, klare Warnungen und kompakter Abschluss. Es gibt keinen nachträglichen Riesenschritt, der sämtliche Bedienbarkeit erst am Ende erzeugt. Terminalbreite, TTY-/Plain-Modus, NO_COLOR und quiet werden bei der Implementierung berücksichtigt, aber ihre Darstellung nicht automatisiert festgeschrieben.
 
+## TD-002 – pytest-xdist als paralleler Entwicklungsstandard
+
+Nutzerentscheidung vom 15. September 2026: `pytest` und `pytest-xdist` gehören ausschließlich
+in die Entwicklungsgruppe. Der Core bleibt ohne diese Laufzeitabhängigkeiten. Bestehende
+`unittest.TestCase`-Tests werden durch pytest eingesammelt, nicht pauschal neu geschrieben.
+
+Der vollständige Entwicklungs-/Patch-Check ist `.venv/bin/python -I -B tools/run_tests.py`;
+er läuft standardmäßig mit `-n auto`. Die ausdrücklich serielle Referenz verwendet
+`--workers 0`. **Beim Entwicklungsrunner kein `-S` verwenden**, da dieses installierte
+Entwicklungsabhängigkeiten ausblenden würde. Isolierte Core-Subprozesse dürfen weiter `-S`
+verwenden. `pytest` selbst läuft ebenfalls standardmäßig parallel; Teilmengen sind jedoch
+keine vollständige Katalog-Abnahme.
+
+Nur xdist verteilt Tests auf Prozesse; SpecRoad, PatchHarbor und Repo-Assist erhalten
+keinen eigenen Test-Scheduler. Tests isolieren Datei-/Prozesszustand. Nur der Controller
+veröffentlicht einen vollständigen, unverwechselbaren Nachweis. Übersprungene, fehlende,
+erwartet fehlgeschlagene Tests und Worker-Abbrüche sind keine bestandene Vollabnahme.
+CI führt sowohl den parallelen Standard als auch die serielle Referenz aus.
+TD-001 und das Verbot künstlicher Test-/Suite-Timeouts bleiben unverändert.
+
+Die Einrichtung ist **OFF-PLAN**: Produktfortschritt unverändert 42/885; nächster
+Produktcommit bleibt `2.a.W`. Anleitung und Audit: [Testentwicklung](../development/Testing.md).
+
 ## BD-001 – flexible Anzahl eigenständiger Commits pro Bundle
 
 **Der Nutzer autorisiert ausdrücklich, dass der implementierende Chatbot selbst entscheidet, wie viele aufeinanderfolgende Plan-Commits ein späteres PatchHarbor-Bundle enthält.** Es gibt keine feste Anzahl, kein künstliches Ein-Commit-Limit, kein verpflichtendes Dreierpaket und keine Pflicht, einen ganzen Schritt oder Meilenstein auf einmal fertigzustellen. Diese projektspezifische Ausnahme ersetzt ausschließlich für solche ausdrücklich beauftragten Implementierungsbündel die allgemeine Ein-Commit-Vorgabe der beiliegenden PatchHarbor-Chatvorlage. Alle Format-, Zustands-, Integritäts- und Sicherheitspflichten gelten unverändert. Die statische PatchHarbor-Vorlage selbst wird dadurch nicht umgeschrieben.

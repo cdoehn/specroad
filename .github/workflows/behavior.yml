@@ -23,15 +23,24 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
-      - name: Execute current behavior suite
-        # No pip, uv, optional dependencies, doctests, linter or test timeouts.
-        run: python -I -S -B tools/run_tests.py --evidence build/test-evidence.json
+      - name: Install isolated development dependencies
+        run: |
+          python -m pip install uv==0.12.7
+          uv venv --python python --no-python-downloads .venv
+          uv pip install --python .venv/bin/python --link-mode copy --group dev
+      - name: Execute parallel behavior gate
+        run: .venv/bin/python -I -B tools/run_tests.py --evidence build/parallel-evidence.json
+      - name: Execute serial reference gate
+        if: success() || failure()
+        run: .venv/bin/python -I -B tools/run_tests.py --workers 0 --evidence build/serial-evidence.json
       - name: Preserve development evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: behavior-ubuntu-python-${{ matrix.python }}
-          path: build/test-evidence.json
+          path: |
+            build/parallel-evidence.json
+            build/serial-evidence.json
           if-no-files-found: error
           retention-days: 14
-      # A green job is not the full platform/analyzer matrix or a release gate.
+      # No presentation/doc tests or test/suite timeouts. Not a release gate.
