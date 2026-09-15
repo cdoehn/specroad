@@ -41,9 +41,9 @@ class CommonArtifact:
 def read_common_artifact(source, path, *, expected_type=None):
     """Bind identity and location, preserving bytes and the original project root.
 
-This deliberately returns a COMMON projection, not a validated model artifact.
-Later type/graph/profile checks must consume source_bytes before publication.
-"""
+    This deliberately returns a COMMON projection, not a validated model artifact.
+    Later type/graph/profile checks must consume source_bytes before publication.
+    """
     if source.classify(path) is not PathClass.ARTIFACT:
         raise ModelError("resource_path_class_mismatch", path=path)
     resource = CommonArtifact(source.read_normative(path), expected_type=expected_type, path=path)

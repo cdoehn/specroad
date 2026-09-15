@@ -7,24 +7,11 @@ from types import MappingProxyType
 from ..security import SafetyViolation
 from ..security.paths import _parts
 from .errors import ModelError
+from .artifact_types import artifact_types
 
-# Paths and ID prefixes, not the artifact schemas introduced by 2.c.
+# Compatibility view derived from the same registry used by artifact schemas.
 ARTIFACT_PATHS = MappingProxyType({
-    "goal": ("goals", "GOAL"), "need": ("needs", "NEED"),
-    "capability": ("capabilities", "CAP"), "requirement": ("requirements", "REQ"),
-    "scenario": ("scenarios", "SCN"), "decision": ("decisions", "DEC"),
-    "risk": ("risks", "RISK"), "assumption": ("assumptions", "ASM"),
-    "component": ("components", "COMP"), "interface": ("interfaces", "IFC"),
-    "source": ("sources", "SRC"), "verification": ("verifications", "VER"),
-    "test": ("tests", "TEST"), "evidence": ("evidence", "EVD"),
-    "release": ("releases", "REL"), "milestone": ("milestones", "MS"),
-    "task": ("tasks", "TASK"), "term": ("terms", "TERM"),
-    "proposal": ("proposals", "PROP"), "baseline": ("baselines", "BASE"),
-    "issue": ("issues", "ISSUE"), "document": ("documents", "DOC"),
-    "section": ("sections", "SEC"), "content_block": ("content-blocks", "BLOCK"),
-    "view": ("views", "VIEW"), "code_ref": ("code-refs", "CODE"),
-    "relation_review": ("relation-reviews", "RREV"),
-    "configuration": ("configurations", "CFG"),
+    item.artifact_type: (item.directory, item.prefix) for item in artifact_types()
 })
 
 

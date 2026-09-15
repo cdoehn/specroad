@@ -7,14 +7,11 @@ The resources are generated from trusted Python data so all Core distributions
 ship the exact same schemas without optional data-file installation steps.
 """
 
-from dataclasses import dataclass
-from copy import deepcopy
-from types import MappingProxyType
-
 from ._schema import validate_builtin
-from .configuration import SCHEMA_VERSION, _json_values
+from .configuration import _json_values
+from .versions import SCHEMA_VERSION
 from .errors import ModelError
-from .paths import ARTIFACT_PATHS
+from .artifact_types import ArtifactType, artifact_type, artifact_types
 
 DIALECT = "https://json-schema.org/draft/2020-12/schema"
 VALIDATION_SCOPE = "common_fields_only"
@@ -24,33 +21,6 @@ COMMON_REQUIRED = (
 )
 MATURITIES = ("draft", "proposed", "in_review", "approved", "rejected", "superseded", "retired")
 LANGUAGE_REQUIRED = frozenset({"requirement", "document", "term"})
-
-
-@dataclass(frozen=True)
-class ArtifactType:
-    artifact_type: str
-    prefix: str
-    directory: str
-    schema_version: str
-    schema_id: str
-
-
-_TYPES = tuple(ArtifactType(kind, prefix, directory, SCHEMA_VERSION,
-                           "urn:specroad:schema:" + SCHEMA_VERSION + ":artifact-common:" + kind)
-               for kind, (directory, prefix) in ARTIFACT_PATHS.items())
-_BY_TYPE = MappingProxyType({item.artifact_type: item for item in _TYPES})
-
-
-def artifact_types():
-    """Stable immutable enumeration; modifying a result cannot alter the registry."""
-    return _TYPES
-
-
-def artifact_type(kind):
-    if type(kind) is not str or kind not in _BY_TYPE:
-        raise ModelError("unknown_artifact_type", pointer="/artifact_type")
-    return _BY_TYPE[kind]
-
 
 def _version(version):
     if type(version) is not str or version != SCHEMA_VERSION:
@@ -67,7 +37,6 @@ def _definitions():
     utc = {"type": "string", "format": "date-time",
            "pattern": r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:[Zz]|\+00:00)(?![\s\S])"}
     return {"text": text, "actor": actor, "utc": utc}
-
 
 
 def _properties(kind):

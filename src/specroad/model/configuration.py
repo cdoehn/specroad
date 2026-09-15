@@ -15,7 +15,7 @@ from .errors import ModelError
 from .numbers import number_from_token
 from .paths import PathClass, artifact_path, classify_path, project_path, _under
 
-SCHEMA_VERSION = "0.2.0"
+from .versions import SCHEMA_VERSION
 REQUIRED_FIELDS = frozenset({
     "schema_version", "project_id", "project_name", "id_prefix", "default_locale",
     "managed_paths", "profiles", "generated_path", "validation_policy",
