@@ -4,18 +4,29 @@
   "requirement_id": "SR-REQ-0505",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Use the current trusted checkout and isolated temporary inputs."
+  ],
+  "steps": [
+    "Execute the named behavior tests in the current complete suite.",
+    "Observe returned data, file effects, module loads and exit status; never human-readable output."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Falls `specroad retire` bereitgestellt wird, MUSS der Befehl als kompatibler Alias exakt denselben Change Plan wie der entsprechende Lifecycle-Übergang erzeugen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Generic aliases share canonical behavior. retire/lifecycle Change Plans are not implemented and are not offered."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +39,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-unittest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_requests.RequestWorkTests.test_unavailable_aliases_are_not_silently_registered",
+    "test_requests.RequestWorkTests.test_actual_bootstrap_has_one_result_for_cli_alias_and_request"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Implement lifecycle/retire semantics in the assigned later step before claiming the retire-specific Change Plan contract; current tests cover only absence and generic alias infrastructure."
   ]
 }

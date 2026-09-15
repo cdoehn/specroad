@@ -11,16 +11,16 @@
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
   "preconditions": [
-    "Use the current trusted checkout and a private temporary directory."
+    "Use the current trusted checkout and isolated temporary inputs."
   ],
   "steps": [
-    "Execute each listed unittest once in the current full suite.",
-    "Observe the declared file effects, returned data and exit statuses without matching human text."
+    "Execute the named behavior tests in the current complete suite.",
+    "Observe returned data, file effects, module loads and exit status; never human-readable output."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Sämtliche in Kapitel 11.2 aufgeführten Kernfunktionen MÜSSEN vollständig über nichtinteraktive CLI-Aufrufe ausführbar sein und bei fehlenden Eingaben eine strukturierte Nutzungsdiagnose statt einer Rückfrage erzeugen.",
-    "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
+    "scope": "Current public structured-request and noninteractive CLI integration, not the later Authoring input protocol."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -40,9 +40,12 @@
   },
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
-    "test_support.FixtureWorkTests.test_bad_cli_request_is_an_error_without_file_effects"
+    "test_support.FixtureWorkTests.test_bad_cli_request_is_an_error_without_file_effects",
+    "test_requests.RequestWorkTests.test_structured_public_api_runs_in_fresh_process",
+    "test_requests.RequestWorkTests.test_alias_and_structured_request_normalize_the_same_operation",
+    "test_requests.RequestWorkTests.test_public_handler_is_executed_once_with_real_file_effects"
   ],
   "open_items": [
-    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
+    "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."
   ]
 }

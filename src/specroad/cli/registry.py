@@ -53,14 +53,36 @@ class CommandRegistry:
             raise CommandUsageError("Unknown, invalid or ambiguous invocation")
         return candidates[0]
 
-    def invoke(self, arguments: list[str] | tuple[str, ...]) -> int:
-        return self.execute(self.parse(arguments))
+    def bind_request(self, request) -> Invocation:
+        from .requests import CommandRequest, request_arguments
+        if not isinstance(request, CommandRequest):
+            raise CommandUsageError("A structured CommandRequest is required")
+        command = self.resolve(request.command_id)
+        return self.parse(request_arguments(request, command))
 
-    def execute(self, invocation: Invocation) -> int:
-        return self.execute_result(invocation).exit_code
+    def invoke(self, arguments: list[str] | tuple[str, ...], **context_inputs) -> int:
+        from .application import dispatch
+        return dispatch(arguments, registry=self, **context_inputs)
 
-    def execute_result(self, invocation: Invocation) -> CommandResult:
-        """Execute once and normalize the typed result before any rendering."""
+    def execute(self, invocation: Invocation, **context_inputs) -> int:
+        return self.execute_result(invocation, **context_inputs).exit_code
+
+    def execute_result(self, invocation: Invocation, **context_inputs) -> CommandResult:
+        """Public invocation API: resolve current inputs, never trust old context."""
+        from .application import execute_request
+        from .requests import CommandRequest
+        self._require_registered(invocation)
+        request = CommandRequest(invocation.command.command_id, invocation.options)
+        return execute_request(request, registry=self, **context_inputs).result
+
+    def _require_registered(self, invocation):
+        if (not isinstance(invocation, Invocation)
+                or self.resolve(invocation.command.command_id) is not invocation.command):
+            raise CommandUsageError("Invocation is not bound to this registry")
+
+    def _run_handler(self, invocation: Invocation) -> CommandResult:
+        """Internal prepared-context seam; no alias-specific handler path."""
+        self._require_registered(invocation)
         try:
             value = invocation.command.handler(invocation)
             result = normalize_result(value, invocation.command.command_id)

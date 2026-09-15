@@ -11,20 +11,21 @@
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
   "preconditions": [
-    "Use the current trusted checkout and a private temporary directory."
+    "Use the current trusted checkout and isolated temporary inputs."
   ],
   "steps": [
-    "Execute each listed unittest once in the current full suite.",
-    "Observe the declared file effects, returned data and exit statuses without matching human text."
+    "Execute the named behavior tests in the current complete suite.",
+    "Observe returned data, file effects, module loads and exit status; never human-readable output."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Git-unabhängige Befehle MÜSSEN in einem SpecRoad-Projekt ohne `.git`-Verzeichnis funktionieren.",
-    "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
+    "scope": "Existing non-Git metadata boundary and alias/structured invocation; later command families remain pending."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
-    0
+    0,
+    2
   ],
   "json_pointers": [],
   "required_environment": {
@@ -39,9 +40,10 @@
   },
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
-    "test_support.FixtureWorkTests.test_public_operation_and_cli_preserve_real_project_bytes"
+    "test_support.FixtureWorkTests.test_public_operation_and_cli_preserve_real_project_bytes",
+    "test_requests.RequestWorkTests.test_non_git_operation_and_alias_use_project_without_git"
   ],
   "open_items": [
-    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
+    "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."
   ]
 }

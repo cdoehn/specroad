@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 33
-last_completed_plan_commit: 1.k.C
-next_plan_commit: 1.l.W
+implementation_plan_commits_completed: 34
+last_completed_plan_commit: 1.l.W
+next_plan_commit: 1.l.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -508,7 +508,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.l.W – Let it Work
 
-- [ ] **1.l.W** · Position **34/885** · Voraussetzung: `1.k.C`.
+- [x] **1.l.W** · Position **34/885** · Voraussetzung: `1.k.C`.
 **Exakte Commit-Message:** `1.l.W feat(core): CLI-Integrationsbasis und Aliasregeln aufbauen`
 
 **Umsetzung:** Öffentliche Handler über strukturierte Eingaben ausführbar machen; vorhandene kompatible Aliase auf denselben Handler leiten.

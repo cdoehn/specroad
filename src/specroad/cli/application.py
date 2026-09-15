@@ -8,6 +8,7 @@ from .commands import builtin_registry
 from .options import OptionResolutionError
 from .invocation_context import InvocationContextBuilder
 from .registry import CommandRegistry, CommandUsageError
+from .requests import CommandRequest
 from .results import CommandResult, FailureKind, OperationFailure, failed_result
 
 
@@ -37,7 +38,7 @@ def _error_options(arguments):
     return options
 
 
-def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry | None = None,
+def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry: CommandRegistry | None = None,
             cwd=None, profile_layers=(), configuration_layer=None,
             context_builder: InvocationContextBuilder | None = None) -> CommandResponse:
     if isinstance(arguments, (list, tuple)):
@@ -47,7 +48,8 @@ def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry
     project = None
     try:
         selected = builtin_registry() if registry is None else registry
-        invocation = selected.parse(arguments)
+        invocation = (selected.bind_request(arguments) if isinstance(arguments, CommandRequest)
+                      else selected.parse(arguments))
         command = invocation.command.command_id
         options = invocation.options
         builder = InvocationContextBuilder() if context_builder is None else context_builder
@@ -58,7 +60,7 @@ def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry
             # Identity and hashes remain unknown until a future model loader binds them.
             project = {"project_root": str(invocation.resolved.project_root),
                        "project_id": None, "model_root_sha256": None}
-        outcome = selected.execute_result(invocation)
+        outcome = selected._run_handler(invocation)
     except OperationFailure as error:
         outcome = failed_result(command, error.kind, str(error), complete=error.complete, details=error.details)
     except OptionResolutionError as error:
@@ -72,6 +74,15 @@ def execute(arguments: list[str] | tuple[str, ...], *, registry: CommandRegistry
     if outcome.project is None and project is not None:
         outcome = replace(outcome, project=project)
     return CommandResponse(outcome, options)
+
+
+def execute_request(request: CommandRequest | Mapping, **context_inputs) -> CommandResponse:
+    """Execute a canonical structured request through the normal CLI pipeline."""
+    try:
+        current = request if isinstance(request, CommandRequest) else CommandRequest.from_mapping(request)
+    except CommandUsageError as error:
+        return CommandResponse(failed_result("unknown", FailureKind.USAGE, str(error)), {})
+    return execute(current, **context_inputs)
 
 
 def dispatch_result(arguments, **kwargs) -> CommandResult:
