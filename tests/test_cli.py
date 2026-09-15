@@ -18,6 +18,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 from support.portable import build_distribution, copy_source_fixture, files_under
+
+
+def source_payload(root):
+    """The reserved build record is generated, all other package bytes are copied."""
+    return {name: data for name, data in files_under(root).items() if name != "_build.py"}
 from support.processes import run_python as run_process
 
 
@@ -102,7 +107,7 @@ class EntryPointTests(unittest.TestCase):
                 source_before = files_under(source)
                 module, archive = build_distribution(root / "build", source)
                 self.assertEqual(files_under(source), source_before)
-                self.assertEqual(files_under(module / "specroad"), files_under(source / "specroad"))
+                self.assertEqual(source_payload(module / "specroad"), source_payload(source / "specroad"))
             for invocation in (module, archive):
                 result = run_process(["-I", "-S", "-B", str(invocation), "--help"], project)
                 self.assertEqual(result.returncode, 0, result.stderr)
@@ -277,7 +282,7 @@ class SourceFixturePortabilityTests(unittest.TestCase):
             self.assertEqual({p.name for p in copied.iterdir()}, {"specroad"})
             self.assertEqual(files_under(copied / "specroad"), before)
             module, archive = build_distribution(root / "build", copied)
-            self.assertEqual(files_under(module / "specroad"), before)
+            self.assertEqual(source_payload(module / "specroad"), {k: v for k, v in before.items() if k != "_build.py"})
             result = run_process(["-I", "-S", "-B", str(archive), "--help"], root)
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual((outside / "keep.py").read_bytes(), b"do not package or alter\n")
@@ -316,7 +321,7 @@ class SourceFixturePortabilityTests(unittest.TestCase):
                 copied = copy_source_fixture(root / "copied", source_root=source)
             self.assertEqual(files_under(copied / "specroad"), expected)
             module, archive = build_distribution(root / "build", copied)
-            self.assertEqual(files_under(module / "specroad"), expected)
+            self.assertEqual(source_payload(module / "specroad"), {k: v for k, v in expected.items() if k != "_build.py"})
             result = run_process(["-I", "-S", "-B", str(archive), "--help"], root)
             self.assertEqual(result.returncode, 0, result.stderr)
 

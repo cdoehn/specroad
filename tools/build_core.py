@@ -7,6 +7,8 @@ is part of a distribution. Existing destinations are never overwritten.
 
 from pathlib import Path
 import argparse
+import hashlib
+import json
 import os
 import shutil
 import stat
@@ -44,6 +46,16 @@ def build_core(source_root: Path, output: Path) -> tuple[Path, Path]:
         payload[path.relative_to(source_root)] = path.read_bytes()
     if not {Path("specroad/__init__.py"), Path("specroad/__main__.py")} <= payload.keys():
         raise ValueError("The Core package is incomplete.")
+    # Content identity excludes its derived record, timestamps and absolute paths.
+    # Input modules are data: never import or execute the caller-supplied tree.
+    manifest = {path.as_posix(): hashlib.sha256(data).hexdigest()
+                for path, data in payload.items() if path != Path("specroad/_build.py")}
+    manifest["__main__.py"] = hashlib.sha256(ARCHIVE_MAIN.encode("utf-8")).hexdigest()
+    identity_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+    record = {"format_version": 1, "hash_algorithm": "specroad-dev-payload-v1",
+              "build_sha256": hashlib.sha256(b"specroad-dev-payload-v1\0" + identity_bytes).hexdigest()}
+    payload[Path("specroad/_build.py")] = ("\"\"\"Generated development payload identity; not release evidence.\"\"\"\n"
+                                           + "BUILD_METADATA = " + repr(record) + "\n").encode("utf-8")
     stage = Path(tempfile.mkdtemp(prefix=".specroad-build-", dir=parent))
     try:
         module = stage / "module"

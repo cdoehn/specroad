@@ -63,6 +63,19 @@ class PrettyRenderer:
             self._line(self.out)
             self._line(self.out, payload["scope"], style="muted")
 
+    def _version(self, payload):
+        self._line(self.out, "Version  " + payload["program_version"], style="success")
+        runtime = payload["runtime"]
+        self._line(self.out, f"Runtime  {runtime['implementation']} {runtime['python_version']}")
+        self._line(self.out, f"Platform {runtime['system']} / {runtime['machine']}")
+        self._line(self.out, "Delivery " + payload["distribution_kind"])
+        self._line(self.out, "Build    " + (payload["build_id"] or "unrecorded development checkout"), style="muted")
+        if payload["build_sha256"] is not None:
+            self._line(self.out, payload["build_sha256"], prefix="  ", style="muted")
+        support = payload["python_support"]
+        self._line(self.out, "Declared CPython  " + ", ".join(support["declared_minors"]))
+        self._line(self.out, "Verified matrix   " + (", ".join(support["fully_verified_minors"]) or "not recorded"), style="warning")
+
     def finish(self, outcome: CommandResult):
         # Immutable semantic data is projected, never modified for display.
         payload = thaw(outcome.result)
@@ -77,6 +90,8 @@ class PrettyRenderer:
             self._line(stream, ("─" if self.unicode else "-") * self.width, style="muted")
         if outcome.command == "help" and isinstance(payload, dict) and "usage" in payload:
             self._help(payload)
+        elif outcome.command == "version" and isinstance(payload, dict):
+            self._version(payload)
         elif payload is not None:
             self._line(stream, json.dumps(payload, ensure_ascii=True, indent=2, allow_nan=False))
         if outcome.result_ref is not None:

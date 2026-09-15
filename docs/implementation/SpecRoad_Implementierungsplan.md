@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 24
-last_completed_plan_commit: 1.h.C
-next_plan_commit: 1.i.W
+implementation_plan_commits_completed: 25
+last_completed_plan_commit: 1.i.W
+next_plan_commit: 1.i.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -403,7 +403,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.i.W – Let it Work
 
-- [ ] **1.i.W** · Position **25/885** · Voraussetzung: `1.h.C`.
+- [x] **1.i.W** · Position **25/885** · Voraussetzung: `1.h.C`.
 **Exakte Commit-Message:** `1.i.W build(core): Version und Distributionsidentität aufbauen`
 
 **Umsetzung:** Version, Buildidentität, Schema-/Formatunterstützung und deklarierte Pythonmatrix maschinenlesbar bereitstellen.
