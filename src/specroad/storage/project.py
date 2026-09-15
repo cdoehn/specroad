@@ -5,7 +5,6 @@ an explicit reference; unreferenced bytes never become model input merely by
 being present. Checks here authorize paths, not transactions or actual writes.
 """
 
-import json
 import os
 import stat
 from types import MappingProxyType
@@ -13,36 +12,17 @@ from types import MappingProxyType
 from ..model.configuration import ProjectConfiguration
 from ..model.paths import CURRENT_JSON_CLASSES, PAYLOAD_CLASSES, classify_path, project_path
 from ..model.errors import ModelError
-from ..model.numbers import number_from_token
 from ..security import ProjectBoundary
 
-
-def _unique(pairs):
-    result = {}
-    for key, value in pairs:
-        if key in result:
-            raise ModelError("duplicate_key")
-        result[key] = value
-    return result
-
-
-def _constant(value):
-    raise ModelError("nonfinite_number")
 
 
 class ProjectSource:
     def __init__(self, root, *, expected_project_id=None):
         self.boundary = ProjectBoundary(root)
         self.configuration_bytes = self.boundary.read_bytes("specroad.json")
-        try:
-            value = json.loads(self.configuration_bytes.decode("utf-8"),
-                               object_pairs_hook=_unique, parse_constant=_constant,
-                               parse_int=number_from_token, parse_float=number_from_token)
-        except (ValueError, UnicodeError, RecursionError) as error:
-            if isinstance(error, ModelError):
-                raise
-            raise ModelError("invalid_json", path="specroad.json") from error
-        self.configuration = ProjectConfiguration(value)
+        from .json_reader import JsonResource, configuration_schema
+        resource = JsonResource(self.configuration_bytes, configuration_schema(), path="specroad.json")
+        self.configuration = ProjectConfiguration(resource.data)
         if expected_project_id is not None and self.configuration.project_id != expected_project_id:
             raise ModelError("project_identity_mismatch")
 

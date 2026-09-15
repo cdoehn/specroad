@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 45
-last_completed_plan_commit: 2.a.C
-next_plan_commit: 2.b.W
+implementation_plan_commits_completed: 46
+last_completed_plan_commit: 2.b.W
+next_plan_commit: 2.b.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -683,7 +683,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.b.W – Let it Work
 
-- [ ] **2.b.W** · Position **46/885** · Voraussetzung: `2.a.C`.
+- [x] **2.b.W** · Position **46/885** · Voraussetzung: `2.a.C`.
 **Exakte Commit-Message:** `2.b.W feat(model): Strikter JSON-Reader aufbauen`
 
 **Umsetzung:** UTF-8-Objekte und unterstützte Schemaversionen strikt lesen; Parsepositionen verfügbar halten.

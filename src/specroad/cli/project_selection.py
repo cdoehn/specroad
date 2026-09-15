@@ -2,25 +2,12 @@
 
 from pathlib import Path
 import errno
-import json
 import stat
 
 from ..security import ProjectBoundary, SafetyViolation, check_project_declarations
+from ..storage.json_reader import parse_json_object
 from .contracts import PreflightProfile
 from .option_values import OptionResolutionError, _text
-
-
-def _unique_object(pairs):
-    result = {}
-    for key, value in pairs:
-        if key in result:
-            raise OptionResolutionError("Duplicate configuration key")
-        result[key] = value
-    return result
-
-
-def _invalid_constant(value):
-    raise OptionResolutionError("Non-finite configuration number")
 
 
 def _read_configuration(path: Path) -> dict:
@@ -34,8 +21,7 @@ def _read_configuration(path: Path) -> dict:
         if not stat.S_ISREG(before.st_mode):
             raise OptionResolutionError("Project configuration must be a regular file")
         raw = ProjectBoundary(path.parent).read_bytes(path.name)
-        data = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique_object,
-                          parse_constant=_invalid_constant)
+        data = parse_json_object(raw, path="specroad.json")
     except SafetyViolation as error:
         raise OptionResolutionError("Project safety boundary rejected the configuration", 7) from error
     except OptionResolutionError:
