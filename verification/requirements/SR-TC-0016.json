@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS eine nicht unterstützte `schema_version` ablehnen und die höchste unterstützte Version in der Diagnose nennen.",
-    "scope": "2.b: strict UTF-8 JSON and closed trusted resource descriptors; no implicit migrations or writes."
+    "scope": "Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,9 +35,12 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_json_reader.JsonReaderWorkTests.test_schema_versions_do_not_implicitly_upgrade"
+    "test_json_reader.JsonReaderWorkTests.test_schema_versions_do_not_implicitly_upgrade",
+    "test_json_reader.JsonReaderRightTests.test_closed_descriptor_owns_sets_and_orders_versions_numerically",
+    "test_json_reader.JsonReaderRightTests.test_malformed_trusted_descriptors_are_rejected"
   ],
   "open_items": [
-    "The remaining type-specific schemas, immutable legacy readers and write/format contracts remain in later plan steps."
+    "Complete per-artifact and persisted-resource schemas are implemented by later steps.",
+    "JCS serialization/hash implementation, full model inventory and transaction publication are not part of this reader."
   ]
 }

@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Normative und generierte Textdateien MÜSSEN als UTF-8 gespeichert werden und für interne JSON-, Markdown-, HTML-, SARIF- und NDJSON-Dateien LF sowie für einen ausdrücklich referenzierten Austauschstandard dessen festgelegtes Zeilenende verwenden.",
-    "scope": "2.b: strict UTF-8 JSON and closed trusted resource descriptors; no implicit migrations or writes."
+    "scope": "Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,9 +38,11 @@
     "test_json_reader.JsonReaderWorkTests.test_utf8_object_returns_its_original_values",
     "test_json_reader.JsonReaderWorkTests.test_invalid_utf8_is_rejected_with_a_position",
     "test_json_reader.JsonReaderWorkTests.test_unpaired_surrogates_and_bom_are_rejected",
-    "test_json_reader.JsonReaderWorkTests.test_typed_resource_retains_bytes_and_returns_owned_values"
+    "test_json_reader.JsonReaderWorkTests.test_typed_resource_retains_bytes_and_returns_owned_values",
+    "test_json_reader.JsonReaderRightTests.test_invalid_utf8_after_multibyte_prefix_has_a_byte_offset"
   ],
   "open_items": [
-    "The remaining type-specific schemas, immutable legacy readers and write/format contracts remain in later plan steps."
+    "Complete per-artifact and persisted-resource schemas are implemented by later steps.",
+    "JCS serialization/hash implementation, full model inventory and transaction publication are not part of this reader."
   ]
 }

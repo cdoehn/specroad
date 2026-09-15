@@ -5,6 +5,7 @@ an online registry. The specific policy engines belong to later plan steps.
 """
 
 from dataclasses import dataclass
+from datetime import date
 import json
 import math
 import re
@@ -155,6 +156,10 @@ def validate_configuration(data):
             raise ModelError("invalid_registry_binding", pointer="/language_registry")
         if not isinstance(registry["registry_version"], str) or not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", registry["registry_version"]):
             raise ModelError("invalid_registry_binding", pointer="/language_registry/registry_version")
+        try:
+            date.fromisoformat(registry["registry_version"])
+        except ValueError as error:
+            raise ModelError("invalid_registry_binding", pointer="/language_registry/registry_version") from error
         if not isinstance(registry["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", registry["sha256"]):
             raise ModelError("invalid_registry_binding", pointer="/language_registry/sha256")
         reference = project_path(registry["path"])

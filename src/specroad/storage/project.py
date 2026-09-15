@@ -30,6 +30,10 @@ class ProjectSource:
         if self.boundary.read_bytes("specroad.json") != self.configuration_bytes:
             raise ModelError("configuration_changed", path="specroad.json")
 
+    def check_current(self):
+        """Validate that this reader still refers to its original project."""
+        self._fresh_configuration()
+
     @staticmethod
     def _paths(values):
         if isinstance(values, (str, bytes)):

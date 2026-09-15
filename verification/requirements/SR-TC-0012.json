@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede normative Artefaktdatei MUSS genau ein Artefakt als JSON-Objekt enthalten.",
-    "scope": "2.b: strict UTF-8 JSON and closed trusted resource descriptors; no implicit migrations or writes."
+    "scope": "Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,9 +37,16 @@
   "test_ids": [
     "test_json_reader.JsonReaderWorkTests.test_only_one_object_is_accepted",
     "test_json_reader.JsonReaderWorkTests.test_duplicates_and_nonfinite_numbers_are_rejected",
-    "test_json_reader.JsonReaderWorkTests.test_failed_resource_set_has_no_partial_file_effects"
+    "test_json_reader.JsonReaderWorkTests.test_failed_resource_set_has_no_partial_file_effects",
+    "test_json_reader.JsonReaderRightTests.test_duplicate_unescaped_keys_report_the_nested_json_pointer",
+    "test_json_reader.JsonReaderRightTests.test_number_syntax_and_trailing_documents_are_not_repaired",
+    "test_json_reader.JsonReaderRightTests.test_lossy_numbers_are_never_silently_rounded",
+    "test_json_reader.JsonReaderRightTests.test_exact_roundtrip_uses_decimal_spelling_not_float_expansion",
+    "test_json_reader.JsonReaderRightTests.test_empty_resource_request_still_checks_the_configuration_binding",
+    "test_json_reader.JsonReaderRightTests.test_loaded_set_keeps_order_and_data_ownership"
   ],
   "open_items": [
-    "The remaining type-specific schemas, immutable legacy readers and write/format contracts remain in later plan steps."
+    "Complete per-artifact and persisted-resource schemas are implemented by later steps.",
+    "JCS serialization/hash implementation, full model inventory and transaction publication are not part of this reader."
   ]
 }

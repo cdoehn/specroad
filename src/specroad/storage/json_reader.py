@@ -6,6 +6,7 @@ project content. Full artifact schemas and legacy readers are separate steps.
 
 from dataclasses import dataclass
 import json
+import re
 from typing import Callable
 
 from ..model.errors import ModelError
@@ -92,6 +93,12 @@ class ResourceSchema:
                 or any(not isinstance(field, str) for field in self.allowed_fields)
                 or any(not isinstance(version, str) for version in self.supported_versions)):
             raise ValueError("Invalid closed resource descriptor")
+        if (len(set(self.supported_versions)) != len(self.supported_versions)
+                or any(not re.fullmatch(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)", version)
+                       for version in self.supported_versions)):
+            raise ValueError("Unsupported trusted schema version declaration")
+        object.__setattr__(self, "supported_versions", tuple(sorted(
+            self.supported_versions, key=lambda version: tuple(map(int, version.split("."))))))
         if self.validator is not None and not callable(self.validator):
             raise ValueError("Validator must be trusted Core code")
 
@@ -145,13 +152,27 @@ def read_resource(source, path, schema):
         raise TypeError("A trusted ResourceSchema is required")
     if source.classify(path) is not schema.path_class:
         raise ModelError("resource_path_class_mismatch", path=path)
-    return JsonResource(source.read_normative(path), schema, path=path)
+    resource = JsonResource(source.read_normative(path), schema, path=path)
+    source.check_current()
+    return resource
 
 
 def read_resources(source, requests):
     """No partial model is returned when any member is invalid."""
-    requests = tuple(requests)
+    if isinstance(requests, (str, bytes, dict)):
+        raise ModelError("resource_sequence_required")
+    try:
+        requests = tuple(requests)
+    except TypeError as error:
+        raise ModelError("resource_sequence_required") from error
+    if any(not isinstance(pair, (tuple, list)) or len(pair) != 2
+           or not isinstance(pair[0], str) or not isinstance(pair[1], ResourceSchema)
+           for pair in requests):
+        raise ModelError("invalid_resource_request")
     names = tuple(path for path, schema in requests)
     if len(set(names)) != len(names):
         raise ModelError("duplicate_resource_path")
-    return tuple(read_resource(source, path, schema) for path, schema in requests)
+    source.check_current()
+    result = tuple(read_resource(source, path, schema) for path, schema in requests)
+    source.check_current()
+    return result
