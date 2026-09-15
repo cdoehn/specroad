@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 34
-last_completed_plan_commit: 1.l.W
-next_plan_commit: 1.l.R
+implementation_plan_commits_completed: 35
+last_completed_plan_commit: 1.l.R
+next_plan_commit: 1.l.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -517,7 +517,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.l.R – Make it Right
 
-- [ ] **1.l.R** · Position **35/885** · Voraussetzung: `1.l.W`.
+- [x] **1.l.R** · Position **35/885** · Voraussetzung: `1.l.W`.
 **Exakte Commit-Message:** `1.l.R feat(core): CLI-Integrationsbasis und Aliasregeln vervollständigen`
 
 **Vervollständigung:** Nicht angebotene Aliase nicht behaupten; fehlende Eingaben beenden den Prozess ohne Interaktion.

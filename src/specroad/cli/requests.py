@@ -17,6 +17,10 @@ def _value(value):
     if value is True:
         return value
     if isinstance(value, str) and value and '\0' not in value:
+        try:
+            value.encode('utf-8')
+        except UnicodeError as error:
+            raise CommandUsageError("Structured option text must be valid Unicode") from error
         return value
     raise CommandUsageError("Structured option values must be strings or true flags")
 

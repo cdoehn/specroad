@@ -125,3 +125,145 @@ assert response.result.result['python_support']['verification_status'] == 'unrec
             self.assertEqual(execute_request({'command_id': command}).result.exit_code, 2)
         self.assertEqual(dispatch_result(['retire']).exit_code, 2)
         self.assertEqual({c.command_id for c in builtin_registry().commands}, {'help', 'version'})
+
+
+class RequestRobustnessTests(unittest.TestCase):
+    def test_missing_input_and_exclusion_are_rejected_before_file_effects(self):
+        calls = []
+        command = fixture_command(lambda i: calls.append(i) or 0, options=(
+            OptionSpec('--input', takes_value=True, required=True),
+            OptionSpec('--one', excludes=('--two',)), OptionSpec('--two')))
+        registry = CommandRegistry((command,))
+        for options in ({}, {'--input': ''}, {'--input': 'file', '--one': True, '--two': True}):
+            self.assertEqual(execute_request({'command_id': command.command_id, 'options': options}, registry=registry).result.exit_code, 2)
+        self.assertEqual(calls, [])
+
+    def test_malformed_envelopes_cannot_supply_handlers_or_context(self):
+        calls = []; registry = CommandRegistry((fixture_command(lambda i: calls.append(i) or 0),))
+        for request in (None, [], 'fixture.operation', {}, {'command_id': 1},
+                        {'command_id': 'fixture.operation', 'handler': 'anything'},
+                        {'command_id': 'fixture.operation', 'resolved': {}},
+                        {'command_id': 'fixture.operation', 'project_root': '/arbitrary'},
+                        {'command_id': 'fixture.operation', 'options': None}):
+            self.assertEqual(execute_request(request, registry=registry).result.exit_code, 2)
+        self.assertEqual(calls, [])
+
+    def test_invalid_option_types_are_not_coerced(self):
+        calls = []; registry = CommandRegistry((fixture_command(lambda i: calls.append(i) or 0),))
+        for options in ({'--select': 'a'}, {'--select': []}, {'--select': [1]}, {'--select': [None]},
+                        {'--select': [True]}, {'--check': 1}, {'--check': False}, {'--check': 'true'},
+                        {'--check': [True]}, {'--unknown': True}, {'select': ['a']},
+                        {1: True}, {'--select': {'nested': 'a'}}):
+            with self.subTest(options=repr(options)):
+                self.assertEqual(execute_request({'command_id': 'fixture.operation', 'options': options}, registry=registry).result.exit_code, 2)
+        self.assertEqual(calls, [])
+
+    def test_invalid_unicode_and_nul_are_usage_errors_for_both_inputs(self):
+        calls = []; registry = CommandRegistry((fixture_command(lambda i: calls.append(i) or 0),))
+        for text in ('x\0y', '\ud800'):
+            self.assertEqual(dispatch_result(['fixture-op', '--select', text], registry=registry).exit_code, 2)
+            self.assertEqual(execute_request({'command_id': 'fixture.operation', 'options': {'--select': [text]}}, registry=registry).result.exit_code, 2)
+        self.assertEqual(calls, [])
+
+    def test_missing_cli_input_never_attempts_to_read_stdin(self):
+        # Child-local audit hook observes an actual input attempt and fails it.
+        # The parent neither waits for a prompt nor parses the usage message.
+        body = '''
+from specroad.cli.application import dispatch_result, execute_request
+from specroad.cli.registry import CommandClass, CommandRegistry, CommandSpec, EffectScope, OptionSpec, PreflightProfile
+attempts = []
+def guard(event, args):
+    if event == 'builtins.input':
+        attempts.append(event)
+        raise AssertionError('interactive input is forbidden')
+sys.addaudithook(guard)
+calls = []
+command = CommandSpec('fixture.input', ('fixture', 'input'), CommandClass.READ_ONLY,
+    PreflightProfile.INPUT_READ, EffectScope.NONE, handler=lambda i: calls.append(i) or 0,
+    options=(OptionSpec('--input', takes_value=True, required=True),))
+registry = CommandRegistry((command,))
+for result in (dispatch_result(['fixture', 'input'], registry=registry),
+               execute_request({'command_id': 'fixture.input'}, registry=registry).result):
+    assert result.exit_code == 2 and result.status.value == 'failed'
+    assert len(result.diagnostics) == 1
+assert attempts == [] and calls == []
+'''
+        with tempfile.TemporaryDirectory() as tmp:
+            r = run_core(body, tmp)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertEqual(list(Path(tmp).iterdir()), [])
+
+    def test_handler_failure_and_unavailable_result_never_claim_success(self):
+        from specroad.cli.results import OperationFailure, FailureKind
+        def io_failure(invocation):
+            raise OSError('private environment')
+        def conflict(invocation):
+            raise OperationFailure(FailureKind.CONFLICT, 'conflict')
+        def broken(invocation):
+            raise ValueError('private failure')
+        for handler, code in ((io_failure, 5), (conflict, 6), (broken, 4), (lambda i: None, 4), (lambda i: 8, 4)):
+            registry = CommandRegistry((fixture_command(handler),))
+            self.assertEqual(execute_request({'command_id': 'fixture.operation'}, registry=registry).result.exit_code, code)
+            self.assertEqual(dispatch_result(['fixture-op'], registry=registry).exit_code, code)
+
+    def test_foreign_or_forged_invocation_cannot_execute_a_handler(self):
+        from specroad.cli.contracts import Invocation
+        calls = []; command = fixture_command(lambda i: calls.append('original') or 0)
+        registry = CommandRegistry((command,))
+        forged = replace(command, handler=lambda i: calls.append('forged') or 0)
+        with self.assertRaises(CommandUsageError):
+            registry.execute_result(Invocation(forged, {}))
+        with self.assertRaises(CommandUsageError):
+            registry.execute_result(None)
+        invalid = Invocation(command, {'--unknown': True})
+        self.assertEqual(registry.execute_result(invalid).exit_code, 2)
+        self.assertEqual(calls, [])
+
+    def test_registry_convenience_entry_cannot_bypass_root_validation(self):
+        from specroad.cli.options import global_options
+        calls = []; command = fixture_command(lambda i: calls.append(i) or 0,
+            preflight_profile=PreflightProfile.PROJECT_METADATA, requires_project=True,
+            options=global_options('--project'))
+        registry = CommandRegistry((command,))
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(registry.invoke(['fixture-op'], cwd=tmp), 2)
+            self.assertEqual(registry.execute(registry.parse(['fixture-op']), cwd=tmp), 2)
+            self.assertEqual(calls, [])
+            self.assertEqual(list(Path(tmp).iterdir()), [])
+
+    def test_context_dependencies_are_local_to_one_call(self):
+        from specroad.cli.invocation_context import InvocationContextBuilder
+        from specroad.runtime import UnsupportedRuntimeError
+        def denied():
+            raise UnsupportedRuntimeError('fixture runtime')
+        builder = InvocationContextBuilder(runtime_check=denied)
+        self.assertEqual(execute_request({'command_id': 'version'}, context_builder=builder).result.exit_code, 5)
+        self.assertEqual(execute_request({'command_id': 'version'}).result.exit_code, 0)
+
+    def test_choices_repetitions_and_infix_options_have_same_semantics(self):
+        calls = []; command = fixture_command(lambda i: calls.append(dict(i.options)) or 0,
+            options=(OptionSpec('--mode', takes_value=True, choices=('a', 'b')),
+                     OptionSpec('--select', takes_value=True, repeatable=True)))
+        registry = CommandRegistry((command,))
+        for values in (['a', 'b'], ['a', 'a'], ['Größe', 'x=y']):
+            argv = ['fixture', '--mode=b', 'operation'] + [f'--select={v}' for v in values]
+            self.assertEqual(dispatch_result(argv, registry=registry).exit_code, 0)
+            self.assertEqual(execute_request({'command_id': command.command_id,
+                'options': {'--mode': 'b', '--select': values}}, registry=registry).result.exit_code, 0)
+            self.assertEqual(calls[-1], calls[-2])
+        for mode in ('c', '--other'):
+            self.assertEqual(execute_request({'command_id': command.command_id,
+                'options': {'--mode': mode}}, registry=registry).result.exit_code, 2)
+
+    def test_data_request_uses_canonical_id_not_alias_spelling(self):
+        calls = []; registry = CommandRegistry((fixture_command(lambda i: calls.append(i) or 0),))
+        self.assertEqual(execute_request({'command_id': 'fixture-op'}, registry=registry).result.exit_code, 2)
+        self.assertEqual(execute_request({'command_id': 'fixture.operation'}, registry=registry).result.exit_code, 0)
+        self.assertEqual(len(calls), 1)
+
+    def test_error_format_preference_does_not_turn_bad_request_into_success(self):
+        response = execute_request({'command_id': 'unavailable', 'options': {'--format': 'json', '--quiet': True}})
+        self.assertEqual(response.options['--format'], 'json')
+        self.assertTrue(response.options['--quiet'])
+        self.assertEqual(response.result.exit_code, 2)
+        self.assertEqual(response.result.as_dict()['summary']['failure_kind'], 'usage')

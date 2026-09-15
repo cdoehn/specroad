@@ -42,6 +42,11 @@ class CommandRegistry:
     def parse(self, arguments: list[str] | tuple[str, ...]) -> Invocation:
         if not isinstance(arguments, (list, tuple)) or not arguments or not all(isinstance(arg, str) and arg and "\0" not in arg for arg in arguments):
             raise CommandUsageError("Invalid argument vector")
+        try:
+            for item in arguments:
+                item.encode('utf-8')
+        except UnicodeError as error:
+            raise CommandUsageError("Argument vector is not valid Unicode") from error
         candidates = []
         for route, command in self._routes.items():
             try:

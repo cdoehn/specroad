@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Sämtliche in Kapitel 11.2 aufgeführten Kernfunktionen MÜSSEN vollständig über nichtinteraktive CLI-Aufrufe ausführbar sein und bei fehlenden Eingaben eine strukturierte Nutzungsdiagnose statt einer Rückfrage erzeugen.",
-    "scope": "Current public structured-request and noninteractive CLI integration, not the later Authoring input protocol."
+    "scope": "Current structured/CLI invocation rejects bad inputs without prompts or preflight bypass; later command families and Authoring remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -43,7 +43,11 @@
     "test_support.FixtureWorkTests.test_bad_cli_request_is_an_error_without_file_effects",
     "test_requests.RequestWorkTests.test_structured_public_api_runs_in_fresh_process",
     "test_requests.RequestWorkTests.test_alias_and_structured_request_normalize_the_same_operation",
-    "test_requests.RequestWorkTests.test_public_handler_is_executed_once_with_real_file_effects"
+    "test_requests.RequestWorkTests.test_public_handler_is_executed_once_with_real_file_effects",
+    "test_requests.RequestRobustnessTests.test_missing_cli_input_never_attempts_to_read_stdin",
+    "test_requests.RequestRobustnessTests.test_invalid_option_types_are_not_coerced",
+    "test_requests.RequestRobustnessTests.test_missing_input_and_exclusion_are_rejected_before_file_effects",
+    "test_requests.RequestRobustnessTests.test_registry_convenience_entry_cannot_bypass_root_validation"
   ],
   "open_items": [
     "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."

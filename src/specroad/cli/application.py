@@ -23,6 +23,11 @@ class CommandResponse:
 
 def _error_options(arguments):
     """Honor an unambiguous error-report format without accepting invalid usage."""
+    if isinstance(arguments, CommandRequest):
+        arguments = [flag + '=' + value if isinstance(value, str) else flag
+                     for flag, value in arguments.options.items()
+                     if flag in ("--format", "--quiet", "--no-color")
+                     and (isinstance(value, str) or value is True)]
     if not isinstance(arguments, (list, tuple)) or not all(isinstance(item, str) for item in arguments):
         return {}
     formats = []
