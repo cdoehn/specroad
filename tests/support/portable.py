@@ -4,6 +4,7 @@ from pathlib import Path
 import importlib.util
 import os
 import stat
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -11,7 +12,13 @@ ROOT = Path(__file__).resolve().parents[2]
 def build_distribution(output, source=None):
     spec = importlib.util.spec_from_file_location("specroad_dev_build", ROOT / "tools/build_core.py")
     builder = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(builder)
+    previous_path = list(sys.path)
+    try:
+        spec.loader.exec_module(builder)
+    finally:
+        # The standalone build script temporarily prepends its tools directory.
+        # Importing it as a fixture must not leak that change to the next test.
+        sys.path[:] = previous_path
     return builder.build_core(source or ROOT / "src", output)
 
 
