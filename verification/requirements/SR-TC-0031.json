@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0031",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0003",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Trusted built-in field contracts and isolated synthetic data; no live project mutation."
+  ],
+  "steps": [
+    "Exercise the actual data contracts; compare complete values and rejected invalid input."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine einmal vergebene ID DARF NICHT nach Retirement, Supersession oder Ablehnung erneut vergeben werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure model identity allocation using explicit current, historical and reserved ID sets. No filesystem claim or automatic inventory scan; later transaction boundary must bind and revalidate project state."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,10 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_artifact_identity.ArtifactIdentityTests.test_archived_collision_is_not_reused"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied."
   ]
 }

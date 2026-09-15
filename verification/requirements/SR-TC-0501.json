@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0501",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Trusted built-in field contracts and isolated synthetic data; no live project mutation."
+  ],
+  "steps": [
+    "Exercise the actual data contracts; compare complete values and rejected invalid input."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der `<IDENTIFIER>`-Teil einer Artefakt-ID MUSS entweder eine aus Version 0.1 migrierte vierstellige Legacy-Nummer oder ein nach `random128-v1` erzeugter Token sein.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure model identity allocation using explicit current, historical and reserved ID sets. No filesystem claim or automatic inventory scan; later transaction boundary must bind and revalidate project state."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_artifact_identity.ArtifactIdentityTests.test_legacy_ids_are_readable_but_not_generated",
+    "test_artifact_identity.ArtifactIdentityTests.test_identity_scheme_cannot_disagree_with_token"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied."
   ]
 }

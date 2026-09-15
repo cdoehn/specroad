@@ -32,3 +32,18 @@ sind zulässig; doppelte reale IDs sind Fehler. Ein Label wird auch dann nicht a
 Alias akzeptiert, wenn es zufällig wie eine gültige ID aussieht. Die Existenz
 aller Quellen oder die Vollständigkeit eines Projektgraphen wird damit nicht
 behauptet; der Helfer lädt selbst keine Dateien.
+
+## 2.g – Artefaktidentitäten
+
+Neue Artefaktidentitäten verwenden `secrets.token_bytes(16)`, unveränderte 128 Bits
+und einen kanonischen 26-stelligen Crockford-Token (erstes Zeichen 0–7). Legacy-IDs
+sind ausschließlich lesbare Bestandsidentitäten. Kein zentraler Zähler, Server,
+Netzwerkzugriff oder Git-Branch wird zur Generierung benötigt.
+
+`IdentityInventory` verlangt alle drei Mengen ausdrücklich: aktuell, archiviert
+und reserviert. Nach einer Kollision wird neu ausgelost; erst ein freier Kandidat
+führt zu einer zurückgegebenen Kopie mit zusätzlicher Reservierung. Der Eingang
+wird nie verändert. `IdentityAllocation` ist ein Modellwert, KEIN dauerhafter
+Projektanspruch. Der spätere Transaktionspfad muss vollständige Inventare ermitteln,
+binden, erneut prüfen und Reservierung/Artefakt atomar veröffentlichen. Die
+hier implementierte Generierung enthält absichtlich keine Dateisuche oder Writes.
