@@ -43,6 +43,17 @@ class CommandRegistry:
         except (KeyError, TypeError) as error:
             raise CommandUsageError("Command is not implemented") from error
 
+    def resolve_selector(self, selector: str) -> CommandSpec:
+        """Resolve an exact canonical ID or registered spelling, not a command line."""
+        if not isinstance(selector, str) or not selector or "\0" in selector:
+            raise CommandUsageError("Invalid command selector")
+        matches = {cmd.command_id: cmd for cmd in self.commands
+                   if selector == cmd.command_id or any(selector == " ".join(route)
+                       for route in (cmd.words, *cmd.aliases))}
+        if len(matches) != 1:
+            raise CommandUsageError("Unknown or ambiguous command selector")
+        return next(iter(matches.values()))
+
     def parse(self, arguments: list[str] | tuple[str, ...]) -> Invocation:
         if not isinstance(arguments, (list, tuple)) or not arguments or not all(isinstance(arg, str) and arg and "\0" not in arg for arg in arguments):
             raise CommandUsageError("Invalid argument vector")

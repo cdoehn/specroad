@@ -166,3 +166,149 @@ class DescriptionWorkTests(unittest.TestCase):
         fresh = describe_command(registry, 'version')
         self.assertEqual({option['flag'] for option in fresh['options']}, {'--format', '--quiet', '--no-color'})
         self.assertEqual(execute_request(fresh['examples'][0], registry=registry).result.exit_code, 0)
+
+
+class DescriptionRobustnessTests(unittest.TestCase):
+    def test_id_spelling_and_alias_describe_identical_canonical_data(self):
+        registry = builtin_registry()
+        documents = [describe_command(registry, name) for name in ('help', '--help', '-h')]
+        self.assertEqual(documents[0], documents[1]); self.assertEqual(documents[1], documents[2])
+        self.assertEqual(describe_command(registry, 'command describe'),
+                         describe_command(registry, 'command.describe'))
+        result = dispatch_result(['command', 'describe', '--format=json', '--', '-h'])
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.result['command_id'], 'help')
+
+    def test_quoted_spelling_is_data_not_an_executable_command_line(self):
+        for target in ('version --format json', 'version; touch output', 'version\n--help', ' version', 'version '):
+            self.assertEqual(dispatch_result(['command', 'describe', target]).exit_code, 2)
+
+    def test_ambiguous_alias_cannot_select_arbitrary_description(self):
+        base = builtin_registry().resolve('version')
+        other = replace(base, command_id='fixture', words=('other',), aliases=(('version-id',),),
+            protocol=CommandProtocol('fixture-v1', {'command_id': 'fixture'}))
+        shadow = replace(base, command_id='version_id', words=('version-id-two',), aliases=(('fixture',),),
+            protocol=CommandProtocol('fixture-v1', {'command_id': 'version_id'}))
+        registry = CommandRegistry((other, shadow))
+        with self.assertRaises(CommandUsageError):
+            describe_command(registry, 'fixture')
+
+    def test_all_current_handlers_explicitly_declare_no_continuation(self):
+        registry = builtin_registry()
+        for command in registry.commands:
+            document = describe_command(registry, command.command_id)
+            work = document['work']
+            self.assertFalse(work['continuation_supported'])
+            self.assertEqual(work['external_side_effects'], [])
+            self.assertEqual(work['checkpoint_algorithms'], [])
+            self.assertEqual(document['write_effects']['external_work'], [])
+            self.assertEqual(document['lock_kind'], 'none')
+            self.assertNotIn(8, document['exit_codes'])
+            self.assertIsNone(document['budget_policy_version'])
+            self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
+
+    def test_minimum_step_limits_are_explicitly_unmeasured(self):
+        document = describe_command(builtin_registry(), 'command.describe')
+        minimum = document['work']['minimum_step']
+        self.assertEqual(minimum['required_inputs'], ['command_registry'])
+        self.assertEqual(minimum['limits_status'], 'unmeasured')
+        self.assertIsNone(minimum['limits']['memory_bytes'])
+        self.assertIsNone(minimum['limits']['cpu_seconds'])
+        self.assertEqual(minimum['blocked_exit_code'], 5)
+
+    def test_metadata_cannot_activate_a_missing_work_engine(self):
+        from specroad.cli.contracts import WorkContract
+        for kwargs in ({'continuation_supported': True}, {'continuation_supported': 0},
+                       {'checkpoint_algorithms': ('sha256',)}, {'external_side_effects': ('work_root',)},
+                       {'required_inputs': ('same', 'same')}):
+            with self.assertRaises(CommandUsageError):
+                WorkContract(**kwargs)
+
+    def test_current_handlers_reject_work_and_write_options_before_effects(self):
+        registry = builtin_registry()
+        for command in registry.commands:
+            document = describe_command(registry, command.command_id)
+            accepted = {option['flag'] for option in document['options']}
+            for flag in ('--work-dir', '--resume', '--request-id', '--dry-run', '--actor-id', '--project'):
+                self.assertNotIn(flag, accepted)
+                example = document['examples'][0]
+                example['options'][flag] = 'unavailable'
+                self.assertEqual(execute_request(example).result.exit_code, 2)
+                del example['options'][flag]
+
+    def test_mutating_a_contract_document_cannot_change_the_active_registry(self):
+        registry = builtin_registry(); document = describe_command(registry, 'version')
+        document['work']['checkpoint_algorithms'].append('fake')
+        document['work']['continuation_supported'] = True
+        self.assertEqual(describe_command(registry, 'version')['work']['checkpoint_algorithms'], [])
+        self.assertEqual(dispatch_result(['version', '--work-dir', 'fake'], registry=registry).exit_code, 2)
+
+    def test_description_observes_no_project_reads_processes_network_or_stdin(self):
+        from support import run_core
+        body = '''
+import os
+root = os.getcwd(); effects = []
+def observe(event, args):
+    if event in {'subprocess.Popen', 'os.system', 'os.posix_spawn', 'socket.connect', 'socket.getaddrinfo', 'builtins.input'}:
+        effects.append(event); raise AssertionError('forbidden bootstrap effect')
+    if event in {'open', 'os.scandir', 'os.listdir'} and args and isinstance(args[0], (str, bytes)):
+        path = os.path.abspath(os.fsdecode(args[0]))
+        if path == root or path.startswith(root + os.sep):
+            effects.append(event); raise AssertionError('forbidden project access')
+sys.addaudithook(observe)
+from specroad.cli.application import dispatch_result
+for target in ('version', 'help', 'command.describe'):
+    result = dispatch_result(['command', 'describe', target, '--format=json'])
+    assert result.exit_code == 0 and result.project is None
+assert not effects
+assert 'specroad.cli.project_selection' not in sys.modules
+assert 'specroad.cli.presentation' not in sys.modules
+assert 'py3langid' not in sys.modules
+'''
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); (root / 'specroad.json').write_bytes(b'broken')
+            result = run_core(body, root)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual((root / 'specroad.json').read_bytes(), b'broken')
+
+    def test_unknown_argument_names_and_extra_options_have_no_stdin_fallback(self):
+        for request in ({'command_id': 'command.describe', 'arguments': {'COMMAND': 'version'}},
+                        {'command_id': 'command.describe', 'arguments': {'command': 'version', 'input': '-'}},
+                        {'command_id': 'command.describe', 'arguments': {'command': 'version'}, 'stdin': '-'}):
+            self.assertEqual(execute_request(request).result.exit_code, 2)
+
+    def test_described_exitcodes_cover_real_usage_and_runtime_failures(self):
+        from specroad.cli.invocation_context import InvocationContextBuilder
+        from specroad.runtime import UnsupportedRuntimeError
+        def unsupported():
+            raise UnsupportedRuntimeError('fixture')
+        registry = builtin_registry()
+        for command in registry.commands:
+            document = describe_command(registry, command.command_id)
+            response = execute_request(document['examples'][0],
+                context_builder=InvocationContextBuilder(runtime_check=unsupported)).result
+            self.assertEqual(response.exit_code, 5)
+            self.assertIn(response.exit_code, document['exit_codes'])
+            self.assertIn(response.diagnostics[0].code, document['diagnostic_codes'])
+
+    def test_text_values_keep_unicode_spaces_and_literal_separator(self):
+        calls = []; command = described_fixture(lambda i: calls.append(dict(i.arguments)) or 0)
+        registry = CommandRegistry((command,))
+        for text in ('Größe 😀', 'a=b', '--literal', '-h', 'line\nbreak'):
+            result = dispatch_result(['fixture', 'action', '--mode=a', '--', text], registry=registry)
+            self.assertEqual(result.exit_code, 0)
+            self.assertEqual(calls[-1], {'name': text})
+        self.assertEqual(dispatch_result(['--', 'fixture', 'action', '--mode=a', 'x'], registry=registry).exit_code, 2)
+
+    def test_missing_protocol_is_not_fabricated_from_handler_name(self):
+        command = replace(described_fixture(lambda i: 0), protocol=None)
+        registry = CommandRegistry((*builtin_registry().commands, command))
+        self.assertEqual(dispatch_result(['command', 'describe', command.command_id], registry=registry).exit_code, 2)
+
+    def test_stored_invocation_arguments_rebind_and_do_not_inject_registry(self):
+        from specroad.cli.contracts import Invocation
+        registry = builtin_registry(); command = registry.resolve('command.describe')
+        invocation = Invocation(command, {}, arguments={'command': 'version'}, registry=object())
+        self.assertEqual(registry.execute_result(invocation).result['command_id'], 'version')
+        bad = replace(invocation, arguments={'command': 'unavailable'})
+        self.assertEqual(registry.execute_result(bad).exit_code, 2)

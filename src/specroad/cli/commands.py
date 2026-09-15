@@ -2,7 +2,7 @@
 
 from .registry import CommandClass, CommandRegistry, CommandSpec, EffectScope, OptionSpec, PreflightProfile
 from .results import CommandResult, FailureKind, OperationFailure
-from .contracts import CommandProtocol, PositionalSpec
+from .contracts import CommandProtocol, PositionalSpec, WorkContract
 
 
 def _help(invocation) -> CommandResult:
@@ -40,7 +40,8 @@ def builtin_registry() -> CommandRegistry:
         command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.BOOTSTRAP,
         effect_scope=EffectScope.NONE, handler=_help,
-        protocol=CommandProtocol("help-v1", {"command_id": "help", "options": {"--format": "json"}}),
+        protocol=CommandProtocol("help-v1", {"command_id": "help", "options": {"--format": "json"}},
+            work=WorkContract("registry_projection", ("command_registry",))),
         options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
                  OptionSpec("--no-color"), OptionSpec("--quiet")),
     ), CommandSpec(
@@ -48,7 +49,8 @@ def builtin_registry() -> CommandRegistry:
         command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.BOOTSTRAP,
         effect_scope=EffectScope.NONE, handler=_version,
-        protocol=CommandProtocol("version-info-v1", {"command_id": "version", "options": {"--format": "json"}}),
+        protocol=CommandProtocol("version-info-v1", {"command_id": "version", "options": {"--format": "json"}},
+            work=WorkContract("distribution_identity", ("distribution_metadata", "runtime_identity"))),
         options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
                  OptionSpec("--no-color"), OptionSpec("--quiet")),
     ), CommandSpec(
@@ -59,5 +61,6 @@ def builtin_registry() -> CommandRegistry:
                  OptionSpec("--no-color"), OptionSpec("--quiet")),
         positionals=(PositionalSpec("command"),),
         protocol=CommandProtocol("command-description-v1", {
-            "command_id": "command.describe", "arguments": {"command": "version"}, "options": {"--format": "json"}}),
+            "command_id": "command.describe", "arguments": {"command": "version"}, "options": {"--format": "json"}},
+            work=WorkContract("registry_projection", ("command_registry",))),
     )))

@@ -76,6 +76,30 @@ class PrettyRenderer:
         self._line(self.out, "Declared CPython  " + ", ".join(support["declared_minors"]))
         self._line(self.out, "Verified matrix   " + (", ".join(support["fully_verified_minors"]) or "not recorded"), style="warning")
 
+    def _description(self, payload):
+        self._line(self.out, payload["command_id"], style="success")
+        self._line(self.out, "Command  specroad " + " ".join(payload["words"]))
+        self._line(self.out, "Class    " + payload["command_class"])
+        self._line(self.out, "Preflight " + payload["preflight_profile"], style="muted")
+        self._line(self.out, "Inputs", style="title")
+        for arg in payload["parameters"]:
+            self._line(self.out, arg["name"] + "  " + arg["datatype"] +
+                       ("  required" if arg["required"] else "  optional"), prefix="  ")
+        for option in payload["options"]:
+            choices = " | ".join(option["choices"])
+            suffix = ("  " + choices if choices else "  " + option["datatype"])
+            if option["required"]:
+                suffix += "  required"
+            if option["repeatable"]:
+                suffix += "  repeatable"
+            self._line(self.out, option["flag"] + suffix, prefix="  ")
+        self._line(self.out, "Effects  " + payload["write_effects"]["scope"])
+        self._line(self.out, "Resume   " + ("available" if payload["work"]["continuation_supported"] else "not available"), style="muted")
+        self._line(self.out, "Exits    " + ", ".join(map(str, payload["exit_codes"])))
+        self._line(self.out, "Structured example", style="title")
+        for example in payload["examples"]:
+            self._line(self.out, json.dumps(example, ensure_ascii=True), prefix="  ")
+
     def finish(self, outcome: CommandResult):
         # Immutable semantic data is projected, never modified for display.
         payload = thaw(outcome.result)
@@ -92,6 +116,8 @@ class PrettyRenderer:
             self._help(payload)
         elif outcome.command == "version" and isinstance(payload, dict):
             self._version(payload)
+        elif outcome.command == "command.describe" and isinstance(payload, dict):
+            self._description(payload)
         elif payload is not None:
             self._line(stream, json.dumps(payload, ensure_ascii=True, indent=2, allow_nan=False))
         if outcome.result_ref is not None:

@@ -52,7 +52,7 @@ def request_schema(command):
 
 
 def describe_command(registry, command_id):
-    command = registry.resolve(command_id)
+    command = registry.resolve_selector(command_id)
     if command.protocol is None:
         raise CommandUsageError("Command has no published machine contract")
     protocol = command.protocol
@@ -66,6 +66,8 @@ def describe_command(registry, command_id):
         "command_class": command.command_class.value,
         "preflight_profile": command.preflight_profile.value,
         "budget_policy_version": command.budget_policy_version,
+        "lock_kind": protocol.lock_kind,
+        "work": protocol.work.as_dict(),
         "parameters": [{"name": arg.name, "kind": "positional", "datatype": "string",
                         "required": arg.required, "choices": list(arg.choices)} for arg in command.positionals],
         "options": [{"flag": opt.flag, "datatype": "string" if opt.takes_value else "boolean",
@@ -75,10 +77,13 @@ def describe_command(registry, command_id):
         "mutually_exclusive": _exclusions(command),
         "stdin": {"mode": "unused", "explicit_markers": []},
         "stdout": {"formats": formats, "default_format": "pretty", "json_envelope_version": FORMAT_VERSION,
-                   "result_schema": protocol.result_schema},
+                   "result_schema": protocol.result_schema,
+                   "continuation": {"supported": protocol.work.continuation_supported,
+                                    "sarif_fallback": None}},
         "diagnostic_codes": sorted(set(protocol.diagnostic_codes) | {"CORE_USAGE", "CORE_INTERNAL", "CORE_ENVIRONMENT"}),
         "exit_codes": sorted(set(protocol.handler_exit_codes) | {2, 4, 5}),
-        "write_effects": {"scope": command.effect_scope.value, "required_write_paths": list(command.requires_write_paths)},
+        "write_effects": {"scope": command.effect_scope.value, "required_write_paths": list(command.requires_write_paths),
+                          "external_work": list(protocol.work.external_side_effects)},
         "requires_project": command.requires_project, "requires_git": command.requires_git,
         "request_schema": request_schema(command),
         "examples": [protocol.example.as_dict()],

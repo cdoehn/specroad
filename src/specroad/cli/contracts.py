@@ -110,15 +110,52 @@ class PositionalSpec:
 
 
 @dataclass(frozen=True)
+class WorkContract:
+    """Explicit non-resumable minimum step of the currently available handlers.
+
+    Declaring metadata cannot install a work engine. Its later implementation
+    must extend this contract together with the actual execution capability.
+    """
+    minimum_step: str = "handler_call"
+    required_inputs: tuple[str, ...] = ()
+    continuation_supported: bool = False
+    external_side_effects: tuple[str, ...] = ()
+    checkpoint_algorithms: tuple[str, ...] = ()
+
+    def __post_init__(self):
+        if not isinstance(self.minimum_step, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", self.minimum_step):
+            raise CommandUsageError("Invalid minimum-step identity")
+        for name in ("required_inputs", "external_side_effects", "checkpoint_algorithms"):
+            values = _sequence(getattr(self, name), name)
+            if (any(not isinstance(value, str) or not re.fullmatch(r"[a-z][a-z0-9_.-]*", value) for value in values)
+                    or len(values) != len(set(values))):
+                raise CommandUsageError("Invalid work contract sequence")
+            object.__setattr__(self, name, values)
+        if self.continuation_supported is not False or self.external_side_effects or self.checkpoint_algorithms:
+            raise CommandUsageError("The current Core has no published work-resume engine")
+
+    def as_dict(self):
+        return {"continuation_supported": False, "external_side_effects": [],
+                "checkpoint_algorithms": [],
+                "minimum_step": {"kind": self.minimum_step, "required_inputs": list(self.required_inputs),
+                    "limits": {"memory_bytes": None, "cpu_seconds": None}, "limits_status": "unmeasured",
+                    "on_blocked": "fail_without_checkpoint", "blocked_exit_code": 5}}
+
+
+@dataclass(frozen=True)
 class CommandProtocol:
     """Trusted machine contract; examples are inert requests, never callbacks."""
     result_schema: str
     example: object
     handler_exit_codes: tuple[int, ...] = (0,)
     diagnostic_codes: tuple[str, ...] = ()
+    lock_kind: str = "none"
+    work: WorkContract = field(default_factory=WorkContract)
 
     def __post_init__(self):
         from .requests import CommandRequest
+        if self.lock_kind != "none" or not isinstance(self.work, WorkContract):
+            raise CommandUsageError("Unsupported lock or work protocol")
         if not isinstance(self.result_schema, str) or not re.fullmatch(r"[a-z][a-z0-9._-]*", self.result_schema):
             raise CommandUsageError("Invalid result schema identity")
         example = self.example if isinstance(self.example, CommandRequest) else CommandRequest.from_mapping(self.example)

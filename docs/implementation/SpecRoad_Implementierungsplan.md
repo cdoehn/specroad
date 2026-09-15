@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 37
-last_completed_plan_commit: 1.m.W
-next_plan_commit: 1.m.R
+implementation_plan_commits_completed: 38
+last_completed_plan_commit: 1.m.R
+next_plan_commit: 1.m.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -552,7 +552,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.m.R – Make it Right
 
-- [ ] **1.m.R** · Position **38/885** · Voraussetzung: `1.m.W`.
+- [x] **1.m.R** · Position **38/885** · Voraussetzung: `1.m.W`.
 **Exakte Commit-Message:** `1.m.R feat(core): Maschinenlesbare Command-Beschreibung vervollständigen`
 
 **Vervollständigung:** Workfähigkeit, Grenzen und Checkpointalgorithmen pro Handler korrekt erklären; nicht implementierte Funktionen nicht anbieten.

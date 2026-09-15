@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad command describe <COMMAND> --format json` MUSS Parameter, Datentypen, Pflichtangaben, gegenseitige Ausschlüsse, stdin-/stdout-Verträge, mögliche Diagnosen, Exit Codes, Schreibwirkung und mindestens ein maschinenlesbares Beispiel beschreiben.",
-    "scope": "Machine descriptors, closed requests and executable examples for the actually registered bootstrap handlers; no human presentation or documentation oracle."
+    "scope": "Actual parameters, aliases, examples, input schemas, diagnostics, write boundaries and non-resumable handler declarations; no human presentation tests."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -57,7 +57,21 @@
     "test_description.DescriptionWorkTests.test_invalid_structured_arguments_do_not_execute_handler",
     "test_description.DescriptionWorkTests.test_real_cli_delivers_parsable_description_in_fresh_process",
     "test_description.DescriptionWorkTests.test_project_metadata_is_not_read_or_repaired",
-    "test_description.DescriptionWorkTests.test_description_has_no_mutable_shared_state"
+    "test_description.DescriptionWorkTests.test_description_has_no_mutable_shared_state",
+    "test_description.DescriptionRobustnessTests.test_id_spelling_and_alias_describe_identical_canonical_data",
+    "test_description.DescriptionRobustnessTests.test_quoted_spelling_is_data_not_an_executable_command_line",
+    "test_description.DescriptionRobustnessTests.test_ambiguous_alias_cannot_select_arbitrary_description",
+    "test_description.DescriptionRobustnessTests.test_all_current_handlers_explicitly_declare_no_continuation",
+    "test_description.DescriptionRobustnessTests.test_minimum_step_limits_are_explicitly_unmeasured",
+    "test_description.DescriptionRobustnessTests.test_metadata_cannot_activate_a_missing_work_engine",
+    "test_description.DescriptionRobustnessTests.test_current_handlers_reject_work_and_write_options_before_effects",
+    "test_description.DescriptionRobustnessTests.test_mutating_a_contract_document_cannot_change_the_active_registry",
+    "test_description.DescriptionRobustnessTests.test_description_observes_no_project_reads_processes_network_or_stdin",
+    "test_description.DescriptionRobustnessTests.test_unknown_argument_names_and_extra_options_have_no_stdin_fallback",
+    "test_description.DescriptionRobustnessTests.test_described_exitcodes_cover_real_usage_and_runtime_failures",
+    "test_description.DescriptionRobustnessTests.test_text_values_keep_unicode_spaces_and_literal_separator",
+    "test_description.DescriptionRobustnessTests.test_missing_protocol_is_not_fabricated_from_handler_name",
+    "test_description.DescriptionRobustnessTests.test_stored_invocation_arguments_rebind_and_do_not_inject_registry"
   ],
   "open_items": [
     "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release."
