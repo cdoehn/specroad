@@ -43,15 +43,49 @@ def bind_values(values, options):
     return normalized
 
 
-def bind_options(argv, route, options):
+def bind_arguments(values, positionals):
+    if not isinstance(values, Mapping):
+        raise CommandUsageError("Arguments must be a mapping")
+    specs = {arg.name: arg for arg in positionals}
+    normalized = {}
+    for name, value in values.items():
+        arg = specs.get(name)
+        if arg is None or not isinstance(value, str) or not value or "\0" in value:
+            raise CommandUsageError("Unknown or invalid argument")
+        try:
+            value.encode("utf-8")
+        except UnicodeError as error:
+            raise CommandUsageError("Argument is not valid Unicode") from error
+        if arg.choices and value not in arg.choices:
+            raise CommandUsageError("Invalid argument choice")
+        normalized[name] = value
+    if any(arg.required and arg.name not in normalized for arg in positionals):
+        raise CommandUsageError("Missing required argument")
+    # Positional spelling has no holes. Structured inputs obey the same rule.
+    omitted = False
+    for arg in positionals:
+        if omitted and arg.name in normalized:
+            raise CommandUsageError("A positional argument cannot leave a gap")
+        omitted = omitted or arg.name not in normalized
+    return normalized
+
+
+def bind_options(argv, route, options, positionals=()):
     """Decode CLI spelling, then use the same binder as structured requests."""
     option_specs = {option.flag: option for option in options}
     values = {}
     words = []
     index = 0
+    literal = False
     while index < len(argv):
         token = argv[index]
-        if not token.startswith('-') or token in route:
+        if token == '--' and not literal:
+            if len(words) < len(route):
+                raise CommandUsageError("Argument separator precedes command spelling")
+            literal = True
+            index += 1
+            continue
+        if literal or not token.startswith('-') or (len(words) < len(route) and token == route[len(words)]):
             words.append(token)
             index += 1
             continue
@@ -73,6 +107,7 @@ def bind_options(argv, route, options):
             value = True
         values[flag] = (*values.get(flag, ()), value) if option.repeatable else value
         index += 1
-    if tuple(words) != route:
+    if tuple(words[:len(route)]) != route or len(words) > len(route) + len(positionals):
         raise CommandUsageError("Unknown command or unexpected positional argument")
-    return bind_values(values, options)
+    arguments = {arg.name: value for arg, value in zip(positionals, words[len(route):])}
+    return bind_values(values, options), bind_arguments(arguments, positionals)

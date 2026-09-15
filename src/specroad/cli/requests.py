@@ -29,6 +29,7 @@ def _value(value):
 class CommandRequest:
     command_id: str
     options: Mapping[str, object] = field(default_factory=dict)
+    arguments: Mapping[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
         if not isinstance(self.command_id, str) or not re.fullmatch(
@@ -47,11 +48,25 @@ class CommandRequest:
             else:
                 copied[flag] = _value(value)
         object.__setattr__(self, 'options', MappingProxyType(copied))
+        if not isinstance(self.arguments, Mapping):
+            raise CommandUsageError("Structured arguments must be a mapping")
+        arguments = {}
+        for name, value in self.arguments.items():
+            if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", name) or not isinstance(value, str):
+                raise CommandUsageError("Invalid structured argument")
+            arguments[name] = _value(value)
+        object.__setattr__(self, 'arguments', MappingProxyType(arguments))
+
+    def as_dict(self):
+        return {"command_id": self.command_id,
+                "options": {key: list(value) if isinstance(value, tuple) else value
+                            for key, value in self.options.items()},
+                "arguments": dict(self.arguments)}
 
     @classmethod
     def from_mapping(cls, value):
         """Accept only request data, never handlers or previously resolved state."""
         if (not isinstance(value, Mapping) or 'command_id' not in value
-                or set(value) - {'command_id', 'options'}):
+                or set(value) - {'command_id', 'options', 'arguments'}):
             raise CommandUsageError("Invalid structured request fields")
-        return cls(value['command_id'], value.get('options', {}))
+        return cls(value['command_id'], value.get('options', {}), value.get('arguments', {}))

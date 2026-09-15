@@ -2,6 +2,7 @@
 
 from .registry import CommandClass, CommandRegistry, CommandSpec, EffectScope, OptionSpec, PreflightProfile
 from .results import CommandResult, FailureKind, OperationFailure
+from .contracts import CommandProtocol, PositionalSpec
 
 
 def _help(invocation) -> CommandResult:
@@ -9,8 +10,9 @@ def _help(invocation) -> CommandResult:
         "usage": "specroad --help [--format pretty|json] [--no-color] [--quiet]",
         "options": [{"flag": "--format", "values": ["pretty", "json"]},
                     {"flag": "--no-color"}, {"flag": "--quiet"}],
-        "commands": [{"command_id": "help", "words": ["--help"], "aliases": [["-h"]]},
-                     {"command_id": "version", "words": ["version"], "aliases": []}],
+        "commands": [{"command_id": cmd.command_id, "words": list(cmd.words),
+                      "aliases": [list(alias) for alias in cmd.aliases]}
+                     for cmd in invocation.registry.commands],
         "exit_codes": {"0": "completed", "2": "invalid usage", "4": "internal error", "5": "I/O failure"},
         "examples": ["specroad --help", "specroad version --format json"],
         "scope": "Core bootstrap; project commands are not implemented yet.",
@@ -26,12 +28,19 @@ def _version(invocation) -> CommandResult:
     return CommandResult(invocation.command.command_id, result=payload)
 
 
+def _describe(invocation) -> CommandResult:
+    from .self_description import describe_command
+    return CommandResult(invocation.command.command_id,
+                         result=describe_command(invocation.registry, invocation.arguments["command"]))
+
+
 def builtin_registry() -> CommandRegistry:
     return CommandRegistry((CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
         command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.BOOTSTRAP,
         effect_scope=EffectScope.NONE, handler=_help,
+        protocol=CommandProtocol("help-v1", {"command_id": "help", "options": {"--format": "json"}}),
         options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
                  OptionSpec("--no-color"), OptionSpec("--quiet")),
     ), CommandSpec(
@@ -39,6 +48,16 @@ def builtin_registry() -> CommandRegistry:
         command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.BOOTSTRAP,
         effect_scope=EffectScope.NONE, handler=_version,
+        protocol=CommandProtocol("version-info-v1", {"command_id": "version", "options": {"--format": "json"}}),
         options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
                  OptionSpec("--no-color"), OptionSpec("--quiet")),
+    ), CommandSpec(
+        command_id="command.describe", words=("command", "describe"),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.BOOTSTRAP,
+        effect_scope=EffectScope.NONE, handler=_describe,
+        options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
+                 OptionSpec("--no-color"), OptionSpec("--quiet")),
+        positionals=(PositionalSpec("command"),),
+        protocol=CommandProtocol("command-description-v1", {
+            "command_id": "command.describe", "arguments": {"command": "version"}, "options": {"--format": "json"}}),
     )))

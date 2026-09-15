@@ -4,19 +4,34 @@
   "requirement_id": "SR-REQ-0379",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current Core distribution and isolated owned temporary directory."
+  ],
+  "steps": [
+    "Bind and execute the actual registered command or request.",
+    "Observe typed result data, exit codes and actual side effects."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad command describe <COMMAND> --format json` MUSS Parameter, Datentypen, Pflichtangaben, gegenseitige Ausschlüsse, stdin-/stdout-Verträge, mögliche Diagnosen, Exit Codes, Schreibwirkung und mindestens ein maschinenlesbares Beispiel beschreiben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Machine descriptors, closed requests and executable examples for the actually registered bootstrap handlers; no human presentation or documentation oracle."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    4,
+    5
+  ],
+  "json_pointers": [
+    "/result"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +43,23 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-unittest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_description.DescriptionWorkTests.test_each_published_example_runs_the_actual_command",
+    "test_description.DescriptionWorkTests.test_cli_and_structured_description_are_same_contract",
+    "test_description.DescriptionWorkTests.test_unknown_commands_are_not_success_placeholders",
+    "test_description.DescriptionWorkTests.test_missing_extra_and_unknown_input_is_rejected",
+    "test_description.DescriptionWorkTests.test_describing_writer_cannot_execute_or_create_output",
+    "test_description.DescriptionWorkTests.test_request_schema_constraints_match_rejections_before_effects",
+    "test_description.DescriptionWorkTests.test_invalid_examples_are_rejected_at_registration_without_execution",
+    "test_description.DescriptionWorkTests.test_argument_mapping_is_frozen_and_preserved_in_invocation_api",
+    "test_description.DescriptionWorkTests.test_infix_options_and_optional_positionals_share_binding",
+    "test_description.DescriptionWorkTests.test_invalid_positional_contracts_are_rejected",
+    "test_description.DescriptionWorkTests.test_invalid_structured_arguments_do_not_execute_handler",
+    "test_description.DescriptionWorkTests.test_real_cli_delivers_parsable_description_in_fresh_process",
+    "test_description.DescriptionWorkTests.test_project_metadata_is_not_read_or_repaired",
+    "test_description.DescriptionWorkTests.test_description_has_no_mutable_shared_state"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release."
   ]
 }

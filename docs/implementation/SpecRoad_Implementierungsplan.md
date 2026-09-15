@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 36
-last_completed_plan_commit: 1.l.C
-next_plan_commit: 1.m.W
+implementation_plan_commits_completed: 37
+last_completed_plan_commit: 1.m.W
+next_plan_commit: 1.m.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -543,7 +543,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.m.W – Let it Work
 
-- [ ] **1.m.W** · Position **37/885** · Voraussetzung: `1.l.C`.
+- [x] **1.m.W** · Position **37/885** · Voraussetzung: `1.l.C`.
 **Exakte Commit-Message:** `1.m.W feat(core): Maschinenlesbare Command-Beschreibung aufbauen`
 
 **Umsetzung:** command describe aus der realen Registry mit Typen, Pflichtfeldern, Ausschlüssen, Seiteneffekten und gültigem strukturiertem Beispiel erzeugen.

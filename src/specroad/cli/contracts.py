@@ -4,7 +4,7 @@ A command class describes its allowed effects; it does not sandbox arbitrary
 Python. Only built-in handlers may be registered by production code.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from types import MappingProxyType
 from typing import TYPE_CHECKING, Callable, Mapping
@@ -86,6 +86,56 @@ class OptionSpec:
 
 
 @dataclass(frozen=True)
+class PositionalSpec:
+    name: str
+    required: bool = True
+    choices: tuple[str, ...] = ()
+
+    def __post_init__(self):
+        if not isinstance(self.name, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", self.name):
+            raise CommandUsageError("Invalid positional argument name")
+        if type(self.required) is not bool:
+            raise CommandUsageError("Argument requirement must be a boolean")
+        values = _sequence(self.choices, "choices")
+        if not all(isinstance(value, str) and value and "\0" not in value for value in values):
+            raise CommandUsageError("Invalid argument choice")
+        if len(values) != len(set(values)):
+            raise CommandUsageError("Duplicate argument choice")
+        try:
+            for value in values:
+                value.encode("utf-8")
+        except UnicodeError as error:
+            raise CommandUsageError("Invalid argument choice Unicode") from error
+        object.__setattr__(self, "choices", values)
+
+
+@dataclass(frozen=True)
+class CommandProtocol:
+    """Trusted machine contract; examples are inert requests, never callbacks."""
+    result_schema: str
+    example: object
+    handler_exit_codes: tuple[int, ...] = (0,)
+    diagnostic_codes: tuple[str, ...] = ()
+
+    def __post_init__(self):
+        from .requests import CommandRequest
+        if not isinstance(self.result_schema, str) or not re.fullmatch(r"[a-z][a-z0-9._-]*", self.result_schema):
+            raise CommandUsageError("Invalid result schema identity")
+        example = self.example if isinstance(self.example, CommandRequest) else CommandRequest.from_mapping(self.example)
+        object.__setattr__(self, "example", example)
+        codes = _sequence(self.handler_exit_codes, "handler_exit_codes")
+        if (not codes or any(type(code) is not int or code not in range(8) for code in codes)
+                or len(codes) != len(set(codes))):
+            raise CommandUsageError("Invalid completed handler exit codes")
+        object.__setattr__(self, "handler_exit_codes", codes)
+        diagnostics = _sequence(self.diagnostic_codes, "diagnostic_codes")
+        if (any(not isinstance(code, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]*", code) for code in diagnostics)
+                or len(diagnostics) != len(set(diagnostics))):
+            raise CommandUsageError("Invalid diagnostic code declaration")
+        object.__setattr__(self, "diagnostic_codes", diagnostics)
+
+
+@dataclass(frozen=True)
 class CommandSpec:
     command_id: str
     words: tuple[str, ...]
@@ -100,6 +150,8 @@ class CommandSpec:
     requires_write_paths: tuple[str, ...] = ()
     # No resource-budget implementation or supported version is claimed yet.
     budget_policy_version: str | None = None
+    positionals: tuple[PositionalSpec, ...] = ()
+    protocol: CommandProtocol | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.command_id, str) or not re.fullmatch(r"[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)*", self.command_id):
@@ -125,6 +177,20 @@ class CommandSpec:
             raise CommandUsageError("Requirements must be booleans")
         if not all(isinstance(option, OptionSpec) for option in self.options):
             raise CommandUsageError("Invalid option contract")
+        positions = _sequence(self.positionals, "positionals")
+        if not all(isinstance(arg, PositionalSpec) for arg in positions):
+            raise CommandUsageError("Invalid positional contract")
+        if len({arg.name for arg in positions}) != len(positions):
+            raise CommandUsageError("Duplicate positional argument")
+        optional_seen = False
+        for arg in positions:
+            if optional_seen and arg.required:
+                raise CommandUsageError("Required arguments must precede optional arguments")
+            optional_seen = optional_seen or not arg.required
+        object.__setattr__(self, "positionals", positions)
+        if self.protocol is not None and (not isinstance(self.protocol, CommandProtocol)
+                or self.protocol.example.command_id != self.command_id):
+            raise CommandUsageError("Protocol example must address its own command")
         flags = [option.flag for option in self.options]
         if len(flags) != len(set(flags)):
             raise CommandUsageError("Duplicate option flag")
@@ -161,8 +227,11 @@ class Invocation:
     command: CommandSpec
     options: Mapping[str, object]
     resolved: "ResolvedOptions | None" = None
+    arguments: Mapping[str, str] = field(default_factory=dict)
+    registry: object = field(default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))
+        object.__setattr__(self, "arguments", MappingProxyType(dict(self.arguments)))
 
 

@@ -124,7 +124,7 @@ assert response.result.result['python_support']['verification_status'] == 'unrec
         for command in ('retire', 'init', 'environment.check', 'work.resume'):
             self.assertEqual(execute_request({'command_id': command}).result.exit_code, 2)
         self.assertEqual(dispatch_result(['retire']).exit_code, 2)
-        self.assertEqual({c.command_id for c in builtin_registry().commands}, {'help', 'version'})
+        self.assertEqual({c.command_id for c in builtin_registry().commands}, {'help', 'version', 'command.describe'})
 
 
 class RequestRobustnessTests(unittest.TestCase):

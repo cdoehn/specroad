@@ -1,8 +1,9 @@
 """Immutable command registry, binding and execution from one contract source."""
 
+from dataclasses import replace
 from types import MappingProxyType
 
-from ._arguments import bind_options, bind_values
+from ._arguments import bind_arguments, bind_options, bind_values
 from .options import check_global_contract
 from .results import CommandResult, OperationFailure, normalize_result
 from .contracts import (
@@ -28,6 +29,9 @@ class CommandRegistry:
                 routes[route] = command
         self._commands = MappingProxyType(by_id)
         self._routes = MappingProxyType(routes)
+        for command in self.commands:
+            if command.protocol is not None:
+                self.bind_request(command.protocol.example)
 
     @property
     def commands(self) -> tuple[CommandSpec, ...]:
@@ -50,10 +54,10 @@ class CommandRegistry:
         candidates = []
         for route, command in self._routes.items():
             try:
-                values = bind_options(tuple(arguments), route, command.options)
+                values, positions = bind_options(tuple(arguments), route, command.options, command.positionals)
             except CommandUsageError:
                 continue
-            candidates.append(Invocation(command, values))
+            candidates.append(Invocation(command, values, arguments=positions))
         if len(candidates) != 1:
             raise CommandUsageError("Unknown, invalid or ambiguous invocation")
         return candidates[0]
@@ -63,7 +67,8 @@ class CommandRegistry:
         if not isinstance(request, CommandRequest):
             raise CommandUsageError("A structured CommandRequest is required")
         command = self.resolve(request.command_id)
-        return Invocation(command, bind_values(request.options, command.options))
+        return Invocation(command, bind_values(request.options, command.options),
+                          arguments=bind_arguments(request.arguments, command.positionals))
 
     def invoke(self, arguments: list[str] | tuple[str, ...], **context_inputs) -> int:
         from .application import dispatch
@@ -77,7 +82,7 @@ class CommandRegistry:
         from .application import execute_request
         from .requests import CommandRequest
         self._require_registered(invocation)
-        request = CommandRequest(invocation.command.command_id, invocation.options)
+        request = CommandRequest(invocation.command.command_id, invocation.options, invocation.arguments)
         return execute_request(request, registry=self, **context_inputs).result
 
     def _require_registered(self, invocation):
@@ -89,7 +94,7 @@ class CommandRegistry:
         """Internal prepared-context seam; no alias-specific handler path."""
         self._require_registered(invocation)
         try:
-            value = invocation.command.handler(invocation)
+            value = invocation.command.handler(replace(invocation, registry=self))
             result = normalize_result(value, invocation.command.command_id)
             result.verify_delivery()
             return result
