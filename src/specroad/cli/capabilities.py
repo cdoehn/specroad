@@ -12,6 +12,7 @@ CAPABILITIES_VERSION = "1.0.0"
 
 def capabilities(registry):
     from ..runtime.identity import version_info
+    from ..runtime.limits import current_limits
     identity = version_info()
     commands = []
     output_formats = set()
@@ -42,6 +43,4 @@ def capabilities(registry):
     }
     return {"format_version": CAPABILITIES_VERSION, "semantic": semantic,
             "runtime": {"interpreter": identity["runtime"],
-                        "limits": {"process_address_space_bytes": None, "process_cpu_seconds": None,
-                                   "host_memory_bytes": None, "host_cpu_quota": None,
-                                   "status": "not_probed"}}}
+                        "limits": current_limits()}}

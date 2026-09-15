@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 40
-last_completed_plan_commit: 1.n.W
-next_plan_commit: 1.n.R
+implementation_plan_commits_completed: 41
+last_completed_plan_commit: 1.n.R
+next_plan_commit: 1.n.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -587,7 +587,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.n.R – Make it Right
 
-- [ ] **1.n.R** · Position **41/885** · Voraussetzung: `1.n.W`.
+- [x] **1.n.R** · Position **41/885** · Voraussetzung: `1.n.W`.
 **Exakte Commit-Message:** `1.n.R feat(core): Frühe Capabilities ohne Modellscan vervollständigen`
 
 **Vervollständigung:** Fachliche deterministische Projektion von dynamischen Laufzeitgrenzen trennen; Featureliste wächst erst mit vorhandener Implementierung.

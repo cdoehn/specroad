@@ -123,3 +123,151 @@ assert 'py3langid' not in sys.modules
             result = run_core(body, root)
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual((root / 'model/item').read_bytes(), b'untouched')
+
+
+class CapabilitiesRobustnessTests(unittest.TestCase):
+    @staticmethod
+    def resource_api(address=(1024, 2048), cpu=(10, 20)):
+        from types import SimpleNamespace
+        return SimpleNamespace(RLIMIT_AS=1, RLIMIT_CPU=2, RLIM_INFINITY=-1,
+                               getrlimit=lambda kind: address if kind == 1 else cpu)
+
+    def test_known_process_limits_are_reported_with_units_and_scope(self):
+        from specroad.runtime.limits import current_limits
+        with patch('specroad.runtime.limits._resource_api', return_value=self.resource_api()):
+            result = current_limits()
+        self.assertEqual(result['process_address_space_bytes']['soft'], {'state': 'known', 'value': 1024})
+        self.assertEqual(result['process_address_space_bytes']['hard'], {'state': 'known', 'value': 2048})
+        self.assertEqual(result['process_address_space_bytes']['unit'], 'bytes')
+        self.assertEqual(result['process_cpu_seconds']['soft'], {'state': 'known', 'value': 10})
+        self.assertEqual(result['process_cpu_seconds']['scope'], 'process')
+        self.assertIsNone(result['host_memory_bytes'])
+        self.assertIsNone(result['host_cpu_quota'])
+
+    def test_unlimited_process_limit_does_not_imply_unlimited_host_capacity(self):
+        from specroad.runtime.limits import current_limits
+        with patch('specroad.runtime.limits._resource_api', return_value=self.resource_api((-1, -1), (10, -1))):
+            result = current_limits()
+        self.assertEqual(result['process_address_space_bytes']['soft'], {'state': 'unlimited', 'value': None})
+        self.assertEqual(result['process_cpu_seconds']['soft']['value'], 10)
+        self.assertEqual(result['process_cpu_seconds']['hard']['state'], 'unlimited')
+        self.assertEqual(result['host_limits_status'], 'unknown')
+        self.assertIsNone(result['host_memory_bytes'])
+
+    def test_missing_or_failing_limit_facilities_remain_unknown(self):
+        from specroad.runtime.limits import current_limits
+        from types import SimpleNamespace
+        def denied(kind):
+            raise OSError('fixture failure')
+        failing = SimpleNamespace(RLIMIT_AS=1, RLIMIT_CPU=2, RLIM_INFINITY=-1, getrlimit=denied)
+        for api in (None, object(), failing):
+            with patch('specroad.runtime.limits._resource_api', return_value=api):
+                result = current_limits()
+            for key in ('process_address_space_bytes', 'process_cpu_seconds'):
+                self.assertEqual(result[key]['soft'], {'state': 'unknown', 'value': None})
+                self.assertEqual(result[key]['source'], 'unavailable')
+
+    def test_malformed_or_contradictory_limits_cannot_become_capacity_claims(self):
+        from specroad.runtime.limits import current_limits
+        for limits in ((True, 10), (-2, 10), ('10', 20), (20, 10), (-1, 10), (float('nan'), 10), (1,), None):
+            with self.subTest(limits=limits):
+                with patch('specroad.runtime.limits._resource_api', return_value=self.resource_api(limits, limits)):
+                    result = current_limits()
+                self.assertEqual(result['process_cpu_seconds']['soft']['state'], 'unknown')
+
+    def test_runtime_changes_do_not_change_semantic_projection(self):
+        registry = builtin_registry()
+        with patch('specroad.runtime.limits._resource_api', return_value=self.resource_api()), \
+             patch('specroad.runtime.identity.platform.machine', return_value='machine-a'):
+            first = capabilities(registry)
+        with patch('specroad.runtime.limits._resource_api', return_value=self.resource_api((4096, 8192), (30, 60))), \
+             patch('specroad.runtime.identity.platform.machine', return_value='machine-b'):
+            second = capabilities(registry)
+        self.assertEqual(first['semantic'], second['semantic'])
+        self.assertNotEqual(first['runtime'], second['runtime'])
+        self.assertEqual(json.dumps(first['semantic'], sort_keys=True, separators=(',', ':')),
+                         json.dumps(second['semantic'], sort_keys=True, separators=(',', ':')))
+
+    def test_registry_order_and_working_directory_do_not_change_semantic_bytes(self):
+        original = builtin_registry(); reversed_registry = CommandRegistry(tuple(reversed(original.commands)))
+        encode = lambda data: json.dumps(data, sort_keys=True, ensure_ascii=True, separators=(',', ':')).encode('utf-8')
+        with tempfile.TemporaryDirectory() as one, tempfile.TemporaryDirectory() as two:
+            Path(one, 'specroad.json').write_bytes(b'broken')
+            a = dispatch_result(['capabilities'], registry=original, cwd=one).as_dict()['result']['semantic']
+            b = dispatch_result(['capabilities', '--quiet', '--no-color'], registry=reversed_registry, cwd=two).as_dict()['result']['semantic']
+            self.assertEqual(encode(a), encode(b))
+            self.assertEqual(Path(one, 'specroad.json').read_bytes(), b'broken')
+            self.assertEqual(list(Path(two).iterdir()), [])
+
+    def test_distribution_identity_changes_the_semantic_input_binding(self):
+        registry = builtin_registry()
+        record = {'format_version': 1, 'hash_algorithm': 'specroad-dev-payload-v1', 'build_sha256': 'a' * 64}
+        with patch('specroad._build.BUILD_METADATA', record):
+            first = capabilities(registry)
+        with patch('specroad._build.BUILD_METADATA', dict(record, build_sha256='b' * 64)):
+            second = capabilities(registry)
+        self.assertNotEqual(first['semantic'], second['semantic'])
+        self.assertEqual(first['semantic']['distribution']['build_sha256'], 'a' * 64)
+        self.assertEqual(second['semantic']['distribution']['build_sha256'], 'b' * 64)
+
+    def test_limit_query_is_fresh_for_each_embedded_invocation(self):
+        with patch('specroad.runtime.limits._resource_api', side_effect=[
+            self.resource_api(cpu=(10, 20)), self.resource_api(cpu=(20, 40))]):
+            a = execute_request({'command_id': 'capabilities'}).result.as_dict()['result']
+            b = execute_request({'command_id': 'capabilities'}).result.as_dict()['result']
+        self.assertEqual(a['semantic'], b['semantic'])
+        self.assertEqual(a['runtime']['limits']['process_cpu_seconds']['soft']['value'], 10)
+        self.assertEqual(b['runtime']['limits']['process_cpu_seconds']['soft']['value'], 20)
+
+    def test_bootstrap_succeeds_without_current_directory_lookup(self):
+        with patch('pathlib.Path.cwd', side_effect=FileNotFoundError):
+            result = dispatch_result(['capabilities'])
+        self.assertEqual(result.exit_code, 0)
+        self.assertIsNone(result.project)
+
+    def test_no_claim_is_made_for_a_handler_without_a_machine_contract(self):
+        base = builtin_registry()
+        extra = replace(base.resolve('version'), command_id='fixture.undeclared', words=('undeclared',), protocol=None)
+        registry = CommandRegistry((*base.commands, extra))
+        result = dispatch_result(['capabilities'], registry=registry)
+        self.assertEqual(result.exit_code, 2)
+        self.assertIsNone(result.result)
+
+    def test_relocated_module_and_zipapp_self_description_remains_executable(self):
+        from support.portable import build_distribution, files_under
+        from support.processes import run_python
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); build_distribution(root / 'build')
+            relocated = root / 'relocated'; (root / 'build').rename(relocated)
+            project = root / 'project'; project.mkdir(); (project / 'specroad.json').write_bytes(b'broken')
+            before = files_under(project); dist_before = files_under(relocated)
+            semantics = []
+            for target in (relocated / 'module', relocated / 'specroad.pyz'):
+                result = run_python(['-I', '-S', '-B', str(target), 'capabilities', '--format=json'], project, capture=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                semantic = json.loads(result.stdout)['result']['semantic']
+                semantics.append(semantic)
+                for command in semantic['commands']:
+                    description = run_python(['-I', '-S', '-B', str(target), 'command', 'describe',
+                        command['command_id'], '--format=json'], project, capture=True)
+                    self.assertEqual(description.returncode, 0, description.stderr)
+                    self.assertEqual(json.loads(description.stdout)['result']['command_id'], command['command_id'])
+            self.assertEqual(semantics[0]['capability_ids'], semantics[1]['capability_ids'])
+            self.assertEqual(semantics[0]['distribution']['build_sha256'], semantics[1]['distribution']['build_sha256'])
+            self.assertEqual(files_under(project), before)
+            self.assertEqual(files_under(relocated), dist_before)
+
+    def test_bootstrap_limit_observation_never_changes_process_limits(self):
+        body = '''
+effects = []
+def observe(event, args):
+    if event in {'resource.setrlimit', 'resource.prlimit'}:
+        effects.append(event); raise AssertionError('limit mutation forbidden')
+sys.addaudithook(observe)
+from specroad.cli.application import dispatch_result
+assert dispatch_result(['capabilities']).exit_code == 0
+assert not effects
+'''
+        with tempfile.TemporaryDirectory() as tmp:
+            result = run_core(body, tmp)
+            self.assertEqual(result.returncode, 0, result.stderr)

@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad capabilities --format json` MUSS Toolversion, Capability-IDs, Befehlsgruppen, aktivierte Ausgabe- und Austauschformate, unterstützte Schema-, SRX- und Proposal-Versionen sowie Laufzeitgrenzen maschinenlesbar ausgeben.",
-    "scope": "Project-free capabilities from actual registered handlers and activated output formats; unsupported exchange/schema/SRX/proposal and work features remain unavailable."
+    "scope": "Registry-derived active capabilities, portable self-description, and fresh known/unlimited/unknown process-limit observations; no host/cgroup or future feature claims."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -53,7 +53,19 @@
     "test_capabilities.CapabilitiesWorkTests.test_bad_distribution_identity_is_environment_failure_not_fake_version",
     "test_capabilities.CapabilitiesWorkTests.test_project_and_work_options_do_not_activate_unimplemented_operations",
     "test_capabilities.CapabilitiesWorkTests.test_unknown_host_limits_are_not_reported_as_zero_or_capacity",
-    "test_capabilities.CapabilitiesWorkTests.test_bootstrap_does_not_scan_or_write_project_or_start_external_code"
+    "test_capabilities.CapabilitiesWorkTests.test_bootstrap_does_not_scan_or_write_project_or_start_external_code",
+    "test_capabilities.CapabilitiesRobustnessTests.test_known_process_limits_are_reported_with_units_and_scope",
+    "test_capabilities.CapabilitiesRobustnessTests.test_unlimited_process_limit_does_not_imply_unlimited_host_capacity",
+    "test_capabilities.CapabilitiesRobustnessTests.test_missing_or_failing_limit_facilities_remain_unknown",
+    "test_capabilities.CapabilitiesRobustnessTests.test_malformed_or_contradictory_limits_cannot_become_capacity_claims",
+    "test_capabilities.CapabilitiesRobustnessTests.test_runtime_changes_do_not_change_semantic_projection",
+    "test_capabilities.CapabilitiesRobustnessTests.test_registry_order_and_working_directory_do_not_change_semantic_bytes",
+    "test_capabilities.CapabilitiesRobustnessTests.test_distribution_identity_changes_the_semantic_input_binding",
+    "test_capabilities.CapabilitiesRobustnessTests.test_limit_query_is_fresh_for_each_embedded_invocation",
+    "test_capabilities.CapabilitiesRobustnessTests.test_bootstrap_succeeds_without_current_directory_lookup",
+    "test_capabilities.CapabilitiesRobustnessTests.test_no_claim_is_made_for_a_handler_without_a_machine_contract",
+    "test_capabilities.CapabilitiesRobustnessTests.test_relocated_module_and_zipapp_self_description_remains_executable",
+    "test_capabilities.CapabilitiesRobustnessTests.test_bootstrap_limit_observation_never_changes_process_limits"
   ],
   "open_items": [
     "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release."

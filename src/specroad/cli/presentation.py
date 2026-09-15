@@ -118,6 +118,13 @@ class PrettyRenderer:
         self._line(self.out, "Runtime", style="title")
         runtime = payload["runtime"]["interpreter"]
         self._line(self.out, runtime["implementation"] + " " + runtime["python_version"] + " / " + runtime["machine"], prefix="  ")
+        limits = payload["runtime"]["limits"]
+        for key, title in (("process_address_space_bytes", "Process address space"), ("process_cpu_seconds", "Process CPU time")):
+            limit = limits[key]
+            bound = limit["soft"]
+            value = str(bound["value"]) + " " + limit["unit"] if bound["state"] == "known" else bound["state"]
+            self._line(self.out, title + "  " + value, prefix="  ", style="muted")
+        self._line(self.out, "Host / cgroup capacity  unknown", prefix="  ", style="warning")
 
     def finish(self, outcome: CommandResult):
         # Immutable semantic data is projected, never modified for display.

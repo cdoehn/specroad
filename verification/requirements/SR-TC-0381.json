@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die fachlichen Selbstbeschreibungen MÜSSEN bei identischen fachlichen Eingaben und identischer Toolversion in der exakt definierten Projektion nach Kapitel 11.5.1 identische JSON-Bytes liefern; Projektroot, Lock, Transaktion und sonstiger Laufzeitkontext sind keine Bestandteile dieser Gleichheitsgarantie.",
-    "scope": "Semantic capabilities are deterministic for the same distribution and options; runtime data is isolated. Other self-description commands will extend coverage as they are implemented."
+    "scope": "Deterministic semantic projection across current-directory, registry-order, presentation and runtime-limit changes; build changes remain semantic. Future schema/project self-descriptions and full platform matrix remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -47,7 +47,10 @@
     "test_capabilities.CapabilitiesWorkTests.test_actual_cli_json_and_python_entry_deliver_the_same_semantics",
     "test_capabilities.CapabilitiesWorkTests.test_returned_data_cannot_mutate_next_capability_query",
     "test_capabilities.CapabilitiesWorkTests.test_display_options_do_not_change_semantic_capabilities",
-    "test_capabilities.CapabilitiesWorkTests.test_unknown_host_limits_are_not_reported_as_zero_or_capacity"
+    "test_capabilities.CapabilitiesWorkTests.test_unknown_host_limits_are_not_reported_as_zero_or_capacity",
+    "test_capabilities.CapabilitiesRobustnessTests.test_runtime_changes_do_not_change_semantic_projection",
+    "test_capabilities.CapabilitiesRobustnessTests.test_registry_order_and_working_directory_do_not_change_semantic_bytes",
+    "test_capabilities.CapabilitiesRobustnessTests.test_distribution_identity_changes_the_semantic_input_binding"
   ],
   "open_items": [
     "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release."
