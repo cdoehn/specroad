@@ -2,7 +2,7 @@
 
 from types import MappingProxyType
 
-from ._arguments import bind_options
+from ._arguments import bind_options, bind_values
 from .options import check_global_contract
 from .results import CommandResult, OperationFailure, normalize_result
 from .contracts import (
@@ -59,11 +59,11 @@ class CommandRegistry:
         return candidates[0]
 
     def bind_request(self, request) -> Invocation:
-        from .requests import CommandRequest, request_arguments
+        from .requests import CommandRequest
         if not isinstance(request, CommandRequest):
             raise CommandUsageError("A structured CommandRequest is required")
         command = self.resolve(request.command_id)
-        return self.parse(request_arguments(request, command))
+        return Invocation(command, bind_values(request.options, command.options))
 
     def invoke(self, arguments: list[str] | tuple[str, ...], **context_inputs) -> int:
         from .application import dispatch
