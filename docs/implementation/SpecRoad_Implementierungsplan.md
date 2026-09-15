@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 62
-last_completed_plan_commit: 2.g.R
-next_plan_commit: 2.g.C
+implementation_plan_commits_completed: 63
+last_completed_plan_commit: 2.g.C
+next_plan_commit: 2.h.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -880,7 +880,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.g.C – Make it Clean
 
-- [ ] **2.g.C** · Position **63/885** · Voraussetzung: `2.g.R`.
+- [x] **2.g.C** · Position **63/885** · Voraussetzung: `2.g.R`.
 **Exakte Commit-Message:** `2.g.C refactor(model): Kryptografische Artefaktidentitäten bereinigen`
 
 **Bereinigung:** ID-Codec, Zufallsquelle und Reservierungsprüfung separieren.
