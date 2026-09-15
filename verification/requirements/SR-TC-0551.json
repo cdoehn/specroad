@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die dem Profil `bootstrap` zugeordneten Befehle MÜSSEN ohne vorhandenes SpecRoad-Projekt ausführbar sein.",
-    "scope": "Currently implemented bootstrap commands only; capabilities and schema commands remain pending."
+    "scope": "Existing bootstrap works beside broken project metadata without reading it."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -41,7 +41,8 @@
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
     "test_bootstrap.BootstrapWorkTests.test_bootstrap_does_not_require_current_directory",
-    "test_bootstrap.BootstrapWorkTests.test_help_runs_without_project_or_distribution_identity_services"
+    "test_bootstrap.BootstrapWorkTests.test_help_runs_without_project_or_distribution_identity_services",
+    "test_bootstrap.BootstrapRobustnessTests.test_bootstrap_remains_available_beside_corrupt_project_metadata"
   ],
   "open_items": [
     "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."

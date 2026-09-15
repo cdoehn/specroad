@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein späterer CLI-Aufruf DARF NICHT für korrekte Ergebnisse den Prozess-, Session-, Umgebungsvariablen- oder Arbeitsverzeichniszustand eines früheren Aufrufs voraussetzen.",
-    "scope": "No prior root/session required by the implemented bootstrap and metadata boundary."
+    "scope": "Explicit project relocation and reused embedding calls without saved session authority."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -41,7 +41,8 @@
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
     "test_bootstrap.BootstrapWorkTests.test_explicit_selection_does_not_leak_to_next_call",
-    "test_bootstrap.BootstrapWorkTests.test_new_process_needs_no_prior_session"
+    "test_bootstrap.BootstrapWorkTests.test_new_process_needs_no_prior_session",
+    "test_bootstrap.BootstrapRobustnessTests.test_moved_project_uses_current_root_not_previous_location"
   ],
   "open_items": [
     "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."

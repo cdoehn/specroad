@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 31
-last_completed_plan_commit: 1.k.W
-next_plan_commit: 1.k.R
+implementation_plan_commits_completed: 32
+last_completed_plan_commit: 1.k.R
+next_plan_commit: 1.k.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -482,7 +482,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.k.R – Make it Right
 
-- [ ] **1.k.R** · Position **32/885** · Voraussetzung: `1.k.W`.
+- [x] **1.k.R** · Position **32/885** · Voraussetzung: `1.k.W`.
 **Exakte Commit-Message:** `1.k.R feat(core): Lazy Bootstrap und frischer Aufrufkontext vervollständigen`
 
 **Vervollständigung:** Fehlender Root bleibt ein Fehler; Hilfe und Betriebsdiagnose laden weder Vollmodell noch Analyzer.
