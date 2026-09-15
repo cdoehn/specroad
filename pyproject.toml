@@ -18,3 +18,17 @@ include = ["specroad*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "specroad._metadata.__version__"}
+
+# Development only. Neither package is included in Core distributions.
+[dependency-groups]
+dev = [
+    "pytest==9.0.2",
+    "pytest-xdist==3.8.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["tests"]
+pythonpath = ["src", "tests", "tools"]
+python_files = ["test_*.py"]
+addopts = "--disable-plugin-autoload -p no:cacheprovider -p no:doctest"
