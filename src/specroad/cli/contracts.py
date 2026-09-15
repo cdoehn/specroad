@@ -15,9 +15,7 @@ if TYPE_CHECKING:
     from .option_values import ResolvedOptions
 
 
-class CommandUsageError(ValueError):
-    """Invalid command declaration or invocation; nothing has been executed."""
-
+from .command_errors import CommandUsageError
 
 class CommandExecutionError(RuntimeError):
     """A registered handler did not obey its execution contract."""
@@ -60,53 +58,7 @@ class EffectScope(str, Enum):
     EXTERNAL_WORK = "external_work"
 
 
-@dataclass(frozen=True)
-class OptionSpec:
-    flag: str
-    takes_value: bool = False
-    repeatable: bool = False
-    choices: tuple[str, ...] = ()
-    required: bool = False
-    excludes: tuple[str, ...] = ()
-
-    def __post_init__(self) -> None:
-        if not isinstance(self.flag, str) or not re.fullmatch(r"--[a-z][a-z0-9-]*", self.flag):
-            raise CommandUsageError("Invalid option flag")
-        if any(type(value) is not bool for value in (self.takes_value, self.repeatable, self.required)):
-            raise CommandUsageError("Option switches must be booleans")
-        for name in ("choices", "excludes"):
-            values = _sequence(getattr(self, name), name)
-            if not all(isinstance(value, str) and value for value in values):
-                raise CommandUsageError("Option values must be nonempty strings")
-            if len(values) != len(set(values)):
-                raise CommandUsageError("Duplicate option constraint")
-            object.__setattr__(self, name, values)
-        if self.choices and not self.takes_value:
-            raise CommandUsageError("A flag cannot have value choices")
-
-
-@dataclass(frozen=True)
-class PositionalSpec:
-    name: str
-    required: bool = True
-    choices: tuple[str, ...] = ()
-
-    def __post_init__(self):
-        if not isinstance(self.name, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", self.name):
-            raise CommandUsageError("Invalid positional argument name")
-        if type(self.required) is not bool:
-            raise CommandUsageError("Argument requirement must be a boolean")
-        values = _sequence(self.choices, "choices")
-        if not all(isinstance(value, str) and value and "\0" not in value for value in values):
-            raise CommandUsageError("Invalid argument choice")
-        if len(values) != len(set(values)):
-            raise CommandUsageError("Duplicate argument choice")
-        try:
-            for value in values:
-                value.encode("utf-8")
-        except UnicodeError as error:
-            raise CommandUsageError("Invalid argument choice Unicode") from error
-        object.__setattr__(self, "choices", values)
+from .parameters import OptionSpec, PositionalSpec
 
 
 @dataclass(frozen=True)

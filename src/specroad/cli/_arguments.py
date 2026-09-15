@@ -2,7 +2,8 @@
 
 from typing import Mapping
 
-from .contracts import CommandUsageError
+from .command_errors import CommandUsageError
+from .parameters import exclusive_pairs
 
 
 def bind_values(values, options):
@@ -24,22 +25,13 @@ def bind_values(values, options):
                 raise CommandUsageError("A scalar option cannot repeat")
             items = (value,)
         for item in items:
-            if option.takes_value:
-                if (not isinstance(item, str) or not item or '\0' in item
-                        or item.startswith('--') or (option.choices and item not in option.choices)):
-                    raise CommandUsageError("Invalid option value")
-                try:
-                    item.encode('utf-8')
-                except UnicodeError as error:
-                    raise CommandUsageError("Option value is not valid Unicode") from error
-            elif item is not True:
-                raise CommandUsageError("Flag must be true or omitted")
+            option.value_contract.validate(item)
         normalized[flag] = items if option.repeatable else items[0]
     for option in options:
         if option.required and option.flag not in normalized:
             raise CommandUsageError("Missing required option")
-        if option.flag in normalized and any(other in normalized for other in option.excludes):
-            raise CommandUsageError("Mutually exclusive options")
+    if any(all(flag in normalized for flag in pair) for pair in exclusive_pairs(options)):
+        raise CommandUsageError("Mutually exclusive options")
     return normalized
 
 
@@ -50,14 +42,9 @@ def bind_arguments(values, positionals):
     normalized = {}
     for name, value in values.items():
         arg = specs.get(name)
-        if arg is None or not isinstance(value, str) or not value or "\0" in value:
-            raise CommandUsageError("Unknown or invalid argument")
-        try:
-            value.encode("utf-8")
-        except UnicodeError as error:
-            raise CommandUsageError("Argument is not valid Unicode") from error
-        if arg.choices and value not in arg.choices:
-            raise CommandUsageError("Invalid argument choice")
+        if arg is None:
+            raise CommandUsageError("Unknown argument")
+        arg.value_contract.validate(value)
         normalized[name] = value
     if any(arg.required and arg.name not in normalized for arg in positionals):
         raise CommandUsageError("Missing required argument")

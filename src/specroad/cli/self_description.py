@@ -2,53 +2,10 @@
 
 from .contracts import CommandUsageError
 from .results import FORMAT_VERSION
+from .parameters import exclusive_pairs
+from .request_schema import request_schema
 
 DESCRIPTION_VERSION = "1.0.0"
-
-
-def _text_schema(*, option=False, choices=()):
-    schema = {"type": "string", "minLength": 1,
-              "pattern": r"^[^\u0000\uD800-\uDFFF]+$"}
-    if option:
-        schema["not"] = {"pattern": "^--"}
-    if choices:
-        schema["enum"] = list(choices)
-    return schema
-
-
-def _option_schema(option):
-    value = _text_schema(option=True, choices=option.choices) if option.takes_value else {"const": True}
-    return {"type": "array", "minItems": 1, "items": value} if option.repeatable else value
-
-
-def _exclusions(command):
-    return [list(pair) for pair in sorted({tuple(sorted((opt.flag, other)))
-            for opt in command.options for other in opt.excludes})]
-
-
-def request_schema(command):
-    """The closed structured Python request accepted by this exact CommandSpec."""
-    options = {"type": "object", "additionalProperties": False,
-               "properties": {opt.flag: _option_schema(opt) for opt in command.options},
-               "required": [opt.flag for opt in command.options if opt.required]}
-    exclusions = _exclusions(command)
-    if exclusions:
-        options["allOf"] = [{"not": {"required": pair}} for pair in exclusions]
-    arguments = {"type": "object", "additionalProperties": False,
-                 "properties": {arg.name: _text_schema(choices=arg.choices) for arg in command.positionals},
-                 "required": [arg.name for arg in command.positionals if arg.required]}
-    if len(command.positionals) > 1:
-        arguments["dependentRequired"] = {arg.name: [prev.name for prev in command.positionals[:index]]
-             for index, arg in enumerate(command.positionals) if index}
-    required = ["command_id"]
-    if options["required"]:
-        required.append("options")
-    if arguments["required"]:
-        required.append("arguments")
-    return {"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object",
-            "additionalProperties": False, "required": required,
-            "properties": {"command_id": {"const": command.command_id},
-                           "options": options, "arguments": arguments}}
 
 
 def describe_command(registry, command_id):
@@ -74,7 +31,7 @@ def describe_command(registry, command_id):
                      "repeatable": opt.repeatable, "required": opt.required,
                      "choices": list(opt.choices), "excludes": sorted(opt.excludes)}
                     for opt in sorted(command.options, key=lambda item: item.flag)],
-        "mutually_exclusive": _exclusions(command),
+        "mutually_exclusive": [list(pair) for pair in exclusive_pairs(command.options)],
         "stdin": {"mode": "unused", "explicit_markers": []},
         "stdout": {"formats": formats, "default_format": "pretty", "json_envelope_version": FORMAT_VERSION,
                    "result_schema": protocol.result_schema,

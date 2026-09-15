@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 38
-last_completed_plan_commit: 1.m.R
-next_plan_commit: 1.m.C
+implementation_plan_commits_completed: 39
+last_completed_plan_commit: 1.m.C
+next_plan_commit: 1.n.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -561,7 +561,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.m.C – Make it Clean
 
-- [ ] **1.m.C** · Position **39/885** · Voraussetzung: `1.m.R`.
+- [x] **1.m.C** · Position **39/885** · Voraussetzung: `1.m.R`.
 **Exakte Commit-Message:** `1.m.C refactor(core): Maschinenlesbare Command-Beschreibung bereinigen`
 
 **Bereinigung:** Beschreibung und Parserdefinition aus einer Quelle speisen.
