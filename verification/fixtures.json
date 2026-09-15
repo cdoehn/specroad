@@ -4,7 +4,8 @@
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-CATALOG-DATA-v1",
-    "SR-FIX-ARTIFACT-COMMON-v1"
+    "SR-FIX-ARTIFACT-COMMON-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -22,6 +23,10 @@
     "SR-FIX-ARTIFACT-COMMON-v1": {
       "provider": "tests/support/artifacts.py:common_artifact",
       "kind": "common-field envelope only, not a complete per-type or approved artifact"
+    },
+    "SR-FIX-DOMAIN-DRAFT-v1": {
+      "provider": "tests/support/domain.py:domain_value",
+      "kind": "owned per-type field fixtures; no graph, review, Evidence or release-approval proof"
     }
   }
 }

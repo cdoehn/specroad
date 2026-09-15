@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 51
-last_completed_plan_commit: 2.c.C
-next_plan_commit: 2.d.W
+implementation_plan_commits_completed: 52
+last_completed_plan_commit: 2.d.W
+next_plan_commit: 2.d.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -748,12 +748,14 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 <a id="step-2-d"></a>
 ### 2.d – Fach- und Planungstypen
 
+**Lesevertrag dieses Schritts:** `DomainArtifact` und `domain_schema` ergänzen die gemeinsamen Felder für 13 Typen; `validation_scope=domain_fields_only`. Für die in §9.4 beschreibend benannten Felder werden `objective`, `done_criteria`, `target_date` und `reevaluation_condition` verwendet. Risiko-/Annahmenstatus bleiben nichtleere Fachlabels, da die Spezifikation dafür keine geschlossene Werteliste festlegt; numerische Wahrscheinlichkeit liegt in 0–1, alternativ bleibt eine nichtleere qualitative Einstufung erhalten. Strukturierte Semantik, Readiness-Policy, Waiver-Scope, Herkunft und Profile werden als Daten gelesen, nicht als vollständige fachliche Bewertung ausgegeben. Graphauflösung, Sprachregister, menschliche Freigaben, Done-/Evidence-Nachweise und Schreibautorisierung bleiben eigene spätere Gates. Task-Umsetzungsbeziehungen können eingehend sein; eine ausgehende `implemented_by`-Attrappe ist unzulässig. W unterstützt explizit Draftdaten; R ergänzt gespeicherte Reifegrade und deren lokale Pflichtfelder.
+
 **Anforderungsbezug:** `SR-REQ-0041`, `SR-REQ-0049`–`SR-REQ-0050`, `SR-REQ-0118`–`SR-REQ-0120`.
 **Verifikationsbezug:** `SR-VER-0004`, `SR-VER-0009`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
 #### 2.d.W – Let it Work
 
-- [ ] **2.d.W** · Position **52/885** · Voraussetzung: `2.c.C`.
+- [x] **2.d.W** · Position **52/885** · Voraussetzung: `2.c.C`.
 **Exakte Commit-Message:** `2.d.W feat(model): Fach- und Planungstypen aufbauen`
 
 **Umsetzung:** Typspezifische Datenverträge für Ziele, Needs, Capabilities, Requirements, Szenarien, Entscheidungen, Risiken, Annahmen, Komponenten, Interfaces, Releases, Milestones und Tasks implementieren.

@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0138",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0010",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1"
+  ],
+  "preconditions": [
+    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation."
+  ],
+  "steps": [
+    "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der gespeicherte `verification_plan_status=waived` MUSS ein vollständiges `verification_waiver`-Objekt nach Kapitel 10.5 besitzen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Common envelope and the implemented thirteen type-field contracts only. No complete graph/profile/evidence/approval validation."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_domain_schemas.DomainWorkTests.test_waiver_requires_declared_binding_metadata",
+    "test_domain_schemas.DomainWorkTests.test_all_verification_plan_values_require_no_inferred_result"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Remaining graph, profile, specialized lifecycle, semantic, evidence and end-to-end checks at their assigned plan steps; no full requirement or release approval claimed."
   ]
 }
