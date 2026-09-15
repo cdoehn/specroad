@@ -35,7 +35,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_minimum_required_fields_are_not_synthesized"
+    "test_record_schemas.RecordWorkTests.test_minimum_required_fields_are_not_synthesized",
+    "test_record_schemas.RecordRightTests.test_view_filter_is_only_a_passive_srx_envelope"
   ],
   "open_items": [
     "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."

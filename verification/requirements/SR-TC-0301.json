@@ -36,7 +36,12 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_seven_block_payloads_are_readable",
-    "test_record_schemas.RecordWorkTests.test_block_payloads_do_not_mix_variants"
+    "test_record_schemas.RecordWorkTests.test_block_payloads_do_not_mix_variants",
+    "test_record_schemas.RecordRightTests.test_reference_block_requires_exactly_one_reference",
+    "test_record_schemas.RecordRightTests.test_view_backed_blocks_reject_other_target_types",
+    "test_record_schemas.RecordRightTests.test_document_include_mode_controls_target_type",
+    "test_record_schemas.RecordRightTests.test_embedded_query_and_literal_table_need_no_fake_view",
+    "test_record_schemas.RecordRightTests.test_mixed_query_and_table_sources_are_invalid"
   ],
   "open_items": [
     "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."

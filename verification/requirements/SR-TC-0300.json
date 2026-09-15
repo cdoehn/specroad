@@ -35,7 +35,9 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_section_parent_is_not_fabricated_from_its_own_file"
+    "test_record_schemas.RecordWorkTests.test_section_parent_is_not_fabricated_from_its_own_file",
+    "test_record_schemas.RecordRightTests.test_contains_positions_must_be_nonnegative_integers",
+    "test_record_schemas.RecordRightTests.test_equal_contains_positions_are_retained_for_later_tie_breaking"
   ],
   "open_items": [
     "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."

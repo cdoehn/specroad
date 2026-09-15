@@ -36,7 +36,11 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_minimum_required_fields_are_not_synthesized",
-    "test_record_schemas.RecordWorkTests.test_reference_types_and_identity_grammars_are_checked"
+    "test_record_schemas.RecordWorkTests.test_reference_types_and_identity_grammars_are_checked",
+    "test_record_schemas.RecordRightTests.test_duplicate_verification_slots_are_not_silently_lost",
+    "test_record_schemas.RecordRightTests.test_verification_slot_requires_a_declared_dimension",
+    "test_record_schemas.RecordRightTests.test_duplicate_verification_subjects_and_dimensions_are_rejected",
+    "test_record_schemas.RecordRightTests.test_distinct_required_checks_preserve_declaration_order"
   ],
   "open_items": [
     "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."

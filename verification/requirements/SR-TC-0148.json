@@ -35,7 +35,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_schemas_never_enable_generic_special_mutations"
+    "test_record_schemas.RecordWorkTests.test_schemas_never_enable_generic_special_mutations",
+    "test_record_schemas.RecordRightTests.test_all_special_endstates_refuse_every_generic_route"
   ],
   "open_items": [
     "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."

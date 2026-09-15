@@ -37,7 +37,10 @@
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_evidence_subjects_require_revision_and_hash_bindings",
     "test_record_schemas.RecordWorkTests.test_run_context_is_closed_and_test_reference_typed",
-    "test_record_schemas.RecordWorkTests.test_loaded_record_does_not_infer_success"
+    "test_record_schemas.RecordWorkTests.test_loaded_record_does_not_infer_success",
+    "test_record_schemas.RecordRightTests.test_multiple_evidence_subjects_remain_explicit",
+    "test_record_schemas.RecordRightTests.test_bound_configuration_policy_requires_an_explicit_hash",
+    "test_record_schemas.RecordRightTests.test_independent_evidence_does_not_automatically_apply_to_any_configuration"
   ],
   "open_items": [
     "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."

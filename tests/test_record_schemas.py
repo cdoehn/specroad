@@ -288,3 +288,232 @@ class RecordWorkTests(unittest.TestCase):
             for distribution in (root/'moved/module', root/'moved/specroad.pyz'):
                 result = subprocess.run([sys.executable, '-I', '-S', '-B', '-c', program, str(distribution)], input=raw, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 self.assertEqual(result.returncode, 0, result.stderr.decode())
+
+
+class RecordRightTests(unittest.TestCase):
+    def load(self, value, **kwargs):
+        return RecordArtifact(artifact_bytes(value), **kwargs)
+
+    def test_duplicate_verification_slots_are_not_silently_lost(self):
+        value = record_value('verification'); value['evidence_slots'] *= 2
+        with self.assertRaises(ModelError) as caught: self.load(value)
+        self.assertEqual(caught.exception.reason, 'duplicate_check_id')
+        self.assertEqual(len(value['evidence_slots']), 2)
+
+    def test_verification_slot_requires_a_declared_dimension(self):
+        value = record_value('verification'); value['evidence_slots'][0]['dimension'] = 'unknown'
+        with self.assertRaises(ModelError) as caught: self.load(value)
+        self.assertEqual(caught.exception.reason, 'unknown_check_dimension')
+
+    def test_duplicate_verification_subjects_and_dimensions_are_rejected(self):
+        for field in ('subjects', 'dimensions'):
+            value = record_value('verification'); value[field] *= 2
+            with self.subTest(field=field), self.assertRaises(ModelError): self.load(value)
+
+    def test_distinct_required_checks_preserve_declaration_order(self):
+        value = record_value('verification', dimensions=['negative', 'positive'], evidence_slots=[
+            {'check_id': 'reject-invalid', 'dimension': 'negative', 'test_id': ref('TEST', '1')},
+            {'check_id': 'accept-valid', 'dimension': 'positive', 'test_id': ref('TEST', '0')},
+        ])
+        self.assertEqual(self.load(value).data, value)
+
+    def test_multiple_evidence_subjects_remain_explicit(self):
+        value = record_value('evidence'); value['subjects'].append(dict(value['subjects'][0], artifact_id=ref('VER')))
+        self.assertEqual(self.load(value).data, value)
+        value['subjects'].append(dict(value['subjects'][0], revision=2))
+        with self.assertRaises(ModelError): self.load(value)
+
+    def test_repeated_attachment_paths_are_rejected(self):
+        attachment = {'path': 'attachments/test.bin', 'media_type': 'application/octet-stream', 'size': 0, 'sha256': 'a' * 64}
+        with self.assertRaises(ModelError): self.load(record_value('evidence', attachments=[attachment, attachment]))
+
+    def test_bound_configuration_policy_requires_an_explicit_hash(self):
+        for extra in ({}, {'configuration_hash': None}):
+            with self.subTest(extra=str(extra)), self.assertRaises(ModelError):
+                self.load(record_value('evidence', configuration_policy='bound', **extra))
+        value = record_value('evidence', configuration_policy='bound', configuration_hash='f' * 64)
+        self.assertEqual(self.load(value).data, value)
+
+    def test_independent_evidence_does_not_automatically_apply_to_any_configuration(self):
+        value = record_value('evidence', configuration_policy='independent', configuration_hash=None)
+        record = self.load(value)
+        self.assertEqual(record.data, value)
+        self.assertEqual(record.validation_scope, 'record_fields_only')
+
+    def test_content_revision_cannot_exceed_physical_revision(self):
+        with self.assertRaises(ModelError): self.load(record_value('proposal', content_revision=2, revision=1))
+        for revision, content in ((1, 1), (3, 1), (3, 3)):
+            value = record_value('proposal', content_revision=content, revision=revision)
+            self.assertEqual(self.load(value).data, value)
+
+    def test_all_special_endstates_refuse_every_generic_route(self):
+        for status, maturity in (('applied', 'approved'), ('rejected', 'rejected'), ('stale', 'retired')):
+            self.load(record_value('proposal', proposal_status=status, maturity=maturity))
+            for operation in ('create', 'patch', 'lifecycle'):
+                with self.subTest(status=status, operation=operation), self.assertRaises(ModelError):
+                    require_generic_mutation('proposal', operation, field_paths=['/rationale'])
+
+    def test_free_patches_cannot_change_controlled_common_fields(self):
+        for field in ('id', 'id_scheme', 'artifact_type', 'schema_version', 'revision', 'created_at', 'created_by', 'updated_at', 'updated_by', 'maturity'):
+            with self.subTest(field=field), self.assertRaises(ModelError) as caught:
+                require_generic_mutation('document', 'patch', field_paths=['/' + field])
+            self.assertEqual(caught.exception.reason, 'controlled_field_mutation')
+        with self.assertRaises(ModelError): require_generic_mutation('document', 'patch', field_paths=['/created_by/actor_id'])
+
+    def test_field_edit_routing_validates_json_pointers(self):
+        for pointers in ('/title', None, [''], ['/'], ['title'], ['/x~'], ['/x~2']):
+            with self.subTest(pointers=str(pointers)), self.assertRaises(ModelError):
+                require_generic_mutation('document', 'patch', field_paths=pointers)
+        self.assertIsNone(require_generic_mutation('document', 'patch', field_paths=['/purpose', '/extensions/vendor~1key']))
+
+    def test_approved_issue_requires_resolution_or_reason(self):
+        with self.assertRaises(ModelError): self.load(record_value('issue', maturity='approved'))
+        for extra in ({'resolution_criteria': ['Review resolved']}, {'permanent_status_reason': 'Permanent tracking issue'}):
+            value = record_value('issue', maturity='approved', **extra)
+            self.assertEqual(self.load(value).data, value)
+
+    def test_contains_positions_must_be_nonnegative_integers(self):
+        from support.domain import relation
+        for kind, target in (('document', ref('SEC')), ('section', ref('BLOCK'))):
+            for position in (None, True, -1, '1', 0.5):
+                edge = relation('contains', target); edge['position'] = position
+                with self.subTest(kind=kind, position=str(position)), self.assertRaises(ModelError): self.load(record_value(kind, relations=[edge]))
+
+    def test_contains_target_type_is_bound_to_document_or_section(self):
+        from support.domain import relation
+        for kind, target in (('document', ref('BLOCK')), ('section', ref('DOC')), ('document', 'chapter')):
+            edge = dict(relation('contains', target), position=0)
+            with self.subTest(kind=kind, target=target), self.assertRaises(ModelError): self.load(record_value(kind, relations=[edge]))
+
+    def test_equal_contains_positions_are_retained_for_later_tie_breaking(self):
+        from support.domain import relation
+        edges = [dict(relation('contains', ref('SEC', '1')), position=0), dict(relation('contains', ref('SEC', '0')), position=0, relation_id='REL-'+'1'*26)]
+        value = record_value('document', relations=edges)
+        self.assertEqual(self.load(value).data['relations'], edges)
+
+    def test_reference_block_requires_exactly_one_reference(self):
+        for kind in ('artifact_ref', 'query', 'include_document'):
+            for count in (0, 2):
+                value = block_value(kind); value['relations'] *= count
+                with self.subTest(kind=kind, count=count), self.assertRaises(ModelError): self.load(value)
+
+    def test_view_backed_blocks_reject_other_target_types(self):
+        from support.domain import relation
+        for kind in ('query', 'table'):
+            value = block_value(kind)
+            if kind == 'table': value['payload'] = {'source': 'view'}
+            value['relations'] = [relation('references', ref('DOC'))]
+            with self.subTest(kind=kind), self.assertRaises(ModelError): self.load(value)
+            value['relations'][0]['target'] = ref('VIEW')
+            self.assertEqual(self.load(value).data, value)
+
+    def test_document_include_mode_controls_target_type(self):
+        value = block_value('include_document'); value['payload']['mode'] = 'section'
+        with self.assertRaises(ModelError): self.load(value)
+        value['relations'][0]['target'] = ref('SEC')
+        self.assertEqual(self.load(value).data, value)
+
+    def test_embedded_query_and_literal_table_need_no_fake_view(self):
+        value = block_value('query'); value['payload'].pop('source'); value['payload']['query'] = {'filter': {'op': 'literal', 'value': True}}; value['relations'] = []
+        self.assertEqual(self.load(value).data, value)
+        table = block_value('table'); self.assertEqual(self.load(table).data, table)
+
+    def test_mixed_query_and_table_sources_are_invalid(self):
+        for kind in ('query', 'table'):
+            value = block_value(kind)
+            if kind == 'query': value['payload']['query'] = {}
+            else: value['payload']['source'] = 'view'
+            with self.subTest(kind=kind), self.assertRaises(ModelError): self.load(value)
+
+    def test_view_filter_is_only_a_passive_srx_envelope(self):
+        for changes in ({'language': 'python'}, {'version': '2.0'}, {'expression': 'eval()'}, {'command': 'external'}):
+            value = record_value('view'); value['filter'].update(changes)
+            with self.subTest(changes=str(changes)), self.assertRaises(ModelError): self.load(value)
+        value = record_value('view'); value['filter']['expression'] = {'op': 'not-yet-interpreted'}
+        record = self.load(value)
+        self.assertEqual(record.data, value); self.assertEqual(record.validation_scope, 'record_fields_only')
+
+    def test_line_range_requires_selection_binding_and_encoding(self):
+        fields = {'reference_kind': 'line_range', 'start_line': 1, 'end_line': 3, 'encoding': 'utf-8', 'selection_sha256': 'a' * 64}
+        value = record_value('code_ref', **fields); self.assertEqual(self.load(value).data, value)
+        for field in ('start_line', 'end_line', 'encoding', 'selection_sha256'):
+            data = dict(value); data.pop(field)
+            with self.subTest(field=field), self.assertRaises(ModelError): self.load(data)
+
+    def test_line_range_is_inclusive_and_ordered(self):
+        value = record_value('code_ref', reference_kind='line_range', start_line=7, end_line=7, encoding='utf-8', selection_sha256='b' * 64)
+        self.assertEqual(self.load(value).data, value)
+        for start, end in ((3, 2), (0, 2), (True, 2), (1, False)):
+            with self.subTest(start=start, end=end), self.assertRaises(ModelError): self.load(dict(value, start_line=start, end_line=end))
+
+    def test_symbol_hint_cannot_claim_current_status(self):
+        with self.assertRaises(ModelError): self.load(record_value('code_ref', reference_kind='symbol_hint'))
+        value = record_value('code_ref', reference_kind='symbol_hint', symbol_hint='Module.Class.function')
+        record = self.load(value); self.assertEqual(record.data, value); self.assertNotIn('state', record.data)
+        with self.assertRaises(ModelError): self.load(dict(value, state='current'))
+
+    def test_text_anchor_requires_a_real_descriptor_and_selection_hash(self):
+        value = record_value('code_ref', reference_kind='text_anchor', anchor={'text': 'anchor', 'line': 1}, selection_sha256='a' * 64)
+        self.assertEqual(self.load(value).data, value)
+        for field in ('anchor', 'selection_sha256'):
+            data = dict(value); data.pop(field)
+            with self.subTest(field=field), self.assertRaises(ModelError): self.load(data)
+        with self.assertRaises(ModelError): self.load(dict(value, anchor={}))
+
+    def test_config_rejects_duplicate_names_and_values(self):
+        value = record_value('configuration'); value['dimensions'] *= 2
+        with self.assertRaises(ModelError): self.load(value)
+        value = record_value('configuration'); value['dimensions'][0]['allowed_values'] *= 2
+        with self.assertRaises(ModelError): self.load(value)
+
+    def test_config_default_and_selection_must_be_declared(self):
+        for field in ('default', 'selection'):
+            value = record_value('configuration')
+            if field == 'default': value['dimensions'][0]['default'] = 'unknown'
+            else: value['selection']['platform'] = 'unknown'
+            with self.subTest(field=field), self.assertRaises(ModelError): self.load(value)
+        value = record_value('configuration', selection={}); value['dimensions'][0].pop('default')
+        with self.assertRaises(ModelError): self.load(value)
+
+    def test_config_json_booleans_are_not_equal_to_numeric_choices(self):
+        value = record_value('configuration', dimensions=[{'name': 'flag', 'allowed_values': [1]}], selection={'flag': True})
+        with self.assertRaises(ModelError): self.load(value)
+        value['dimensions'][0]['allowed_values'] = [1, True]
+        self.assertEqual(self.load(value).data, value)
+        value['dimensions'][0]['allowed_values'] = [1, 1.0]
+        with self.assertRaises(ModelError): self.load(value)
+
+    def test_config_root_rejects_unknown_selections_but_child_defers_inherited_ones(self):
+        value = record_value('configuration', selection={'platform': 'linux', 'inherited': 'value'})
+        with self.assertRaises(ModelError): self.load(value)
+        value['parent'] = ref('CFG', '1'); self.assertEqual(self.load(value).data, value)
+        value['parent'] = value['id']
+        with self.assertRaises(ModelError): self.load(value)
+
+    def test_config_valid_default_is_not_materialized_into_original(self):
+        value = record_value('configuration', selection={})
+        record = self.load(value)
+        self.assertEqual(record.data['selection'], {})
+        self.assertNotIn('effective_values', record.data)
+
+    def test_nested_extensions_and_historical_controls_are_retained(self):
+        value = record_value('proposal', revision=4, content_revision=2,
+            control_history=[{'from_status': 'draft', 'to_status': 'validated', 'observed_revision': 2}],
+            reviews=[{'actor': 'test-human', 'decision': 'rejected'}], extensions={'vendor.example': {'nested': [{'text': 'Ä\n東京', 'value': None}]}})
+        self.assertEqual(self.load(value).data, value)
+        require = lambda: require_generic_mutation('proposal', 'patch', field_paths=['/reviews'])
+        with self.assertRaises(ModelError): require()
+
+    def test_model_error_includes_path_and_field_without_writing(self):
+        with temporary_project({}) as root:
+            configuration_file(root); value = record_value('code_ref', reference_kind='line_range', start_line=4, end_line=2, encoding='utf-8', selection_sha256='a'*64)
+            name = artifact_path('code_ref', value['id'], 'SR'); put(root, name, artifact_bytes(value)); before = tree_state(root)
+            with self.assertRaises(ModelError) as caught: read_record_artifact(ProjectSource(root), name)
+            self.assertEqual(caught.exception.path, name); self.assertEqual(caught.exception.pointer, '/end_line')
+            self.assertEqual(tree_state(root), before)
+
+    def test_deep_invalid_json_is_a_controlled_failure(self):
+        raw = b'[' * 3000 + b'0' + b']' * 3000
+        with self.assertRaises(ModelError): RecordArtifact(raw)
+        for raw in (b'[]', b'null', b'{"a":1,"a":2}', b'\xef\xbb\xbf{}'):
+            with self.subTest(raw=str(raw[:16])), self.assertRaises(ModelError): RecordArtifact(raw)

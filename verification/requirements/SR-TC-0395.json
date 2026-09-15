@@ -35,7 +35,12 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_configuration_fields_do_not_resolve_a_parent"
+    "test_record_schemas.RecordWorkTests.test_configuration_fields_do_not_resolve_a_parent",
+    "test_record_schemas.RecordRightTests.test_config_rejects_duplicate_names_and_values",
+    "test_record_schemas.RecordRightTests.test_config_default_and_selection_must_be_declared",
+    "test_record_schemas.RecordRightTests.test_config_json_booleans_are_not_equal_to_numeric_choices",
+    "test_record_schemas.RecordRightTests.test_config_root_rejects_unknown_selections_but_child_defers_inherited_ones",
+    "test_record_schemas.RecordRightTests.test_config_valid_default_is_not_materialized_into_original"
   ],
   "open_items": [
     "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."

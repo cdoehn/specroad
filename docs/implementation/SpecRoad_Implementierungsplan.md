@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 55
-last_completed_plan_commit: 2.e.W
-next_plan_commit: 2.e.R
+implementation_plan_commits_completed: 56
+last_completed_plan_commit: 2.e.R
+next_plan_commit: 2.e.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -801,7 +801,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.e.R – Make it Right
 
-- [ ] **2.e.R** · Position **56/885** · Voraussetzung: `2.e.W`.
+- [x] **2.e.R** · Position **56/885** · Voraussetzung: `2.e.W`.
 **Exakte Commit-Message:** `2.e.R feat(model): Dokument- und Nachweistypen vervollständigen`
 
 **Vervollständigung:** Spezialtypen nur nach ihrem Spezialvertrag erzeugbar machen; Schemaunterstützung ist keine Freigabe für generisches Erzeugen.

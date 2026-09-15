@@ -5,7 +5,7 @@ external payload hashes, SRX semantics or permission to publish a record.
 Loading an approved/recorded value never means that its provenance is verified.
 """
 
-from ._schema import validate_builtin
+from ._schema import validate_builtin, _json_equal
 from .artifact_schemas import artifact_common_schema, validate_common_fields
 from .artifact_types import artifact_types
 from .domain_fields import reference_schema
@@ -196,6 +196,22 @@ def record_schema(kind, version=SCHEMA_VERSION):
     if kind == "evidence":
         conditions.append({"anyOf": [{"properties": {"run_context": {"not": {"type": "null"}}}},
                                       {"required": ["unbound_reason"]}]})
+    if kind == "issue":
+        conditions.append({"anyOf": [{"properties": {"maturity": {"not": {"const": "approved"}}}},
+                                      {"required": ["resolution_criteria"]}, {"required": ["permanent_status_reason"]}]})
+    if kind == "code_ref":
+        for reference_kind, required in (
+            ("line_range", ("start_line", "end_line", "encoding", "selection_sha256")),
+            ("text_anchor", ("anchor", "selection_sha256")),
+            ("symbol_hint", ("symbol_hint",)),
+        ):
+            conditions.append({"anyOf": [{"properties": {"reference_kind": {"not": {"const": reference_kind}}}},
+                                          {"required": list(required)}]})
+        schema["properties"]["anchor"] = {"type": "object", "not": {"const": {}}}
+    if kind == "view":
+        schema["properties"]["filter"] = _object({
+            "language": {"const": "srx"}, "version": {"const": "1.0"}, "expression": {"type": "object"},
+        })
     schema["allOf"] = conditions
     return schema
 
@@ -220,11 +236,12 @@ def validate_record_fields(value, *, expected_type=None):
         if kind == "evidence":
             for index, attachment in enumerate(value.get("attachments", ())):
                 _safe_path(attachment["path"], "/attachments/" + str(index) + "/path")
+        _validate_local_record(value)
     except RecursionError as error:
         raise ModelError("unsupported_json_nesting") from error
 
 
-def require_generic_mutation(kind, operation):
+def require_generic_mutation(kind, operation, *, field_paths=()):
     """A routing PRECONDITION for future services, never publication authorization.
 
 Specialized records require their dedicated commands even if their bytes pass
@@ -237,3 +254,121 @@ manufacture an Evidence, Baseline, Proposal or Relationsreview.
         raise ModelError("unknown_mutation_operation")
     if kind in SPECIAL_STATES:
         raise ModelError("specialized_operation_required", pointer="/artifact_type")
+    if type(field_paths) not in (tuple, list):
+        raise ModelError("field_path_sequence_required")
+    for pointer in field_paths:
+        if type(pointer) is not str or not pointer.startswith("/") or pointer == "/":
+            raise ModelError("invalid_field_pointer")
+        import re
+        if re.search(r"~(?![01])", pointer):
+            raise ModelError("invalid_field_pointer", pointer=pointer)
+        top = pointer.split("/", 2)[1].replace("~1", "/").replace("~0", "~")
+        if top in {"id", "id_scheme", "artifact_type", "schema_version", "maturity", "revision",
+                   "created_at", "created_by", "updated_at", "updated_by"}:
+            raise ModelError("controlled_field_mutation", pointer=pointer)
+
+
+
+def _unique(values, *, reason, pointer):
+    """JSON equality, not Python's equality of True and 1. No input sorting."""
+    for index, value in enumerate(values):
+        if any(_json_equal(value, previous) for previous in values[:index]):
+            raise ModelError(reason, pointer=pointer + "/" + str(index))
+
+
+def _typed_reference(value, prefixes, pointer):
+    validate_builtin(value, {"anyOf": [reference_schema(prefix) for prefix in prefixes]})
+
+
+def _local_contains(value):
+    kind = value["artifact_type"]
+    prefixes = ("SEC",) if kind == "document" else ("SEC", "BLOCK")
+    for index, relation in enumerate(value["relations"]):
+        if relation.get("type") != "contains":
+            continue
+        pointer = "/relations/" + str(index)
+        position = relation.get("position")
+        if type(position) is not int or position < 0:
+            raise ModelError("invalid_contains_position", pointer=pointer + "/position")
+        try:
+            _typed_reference(relation.get("target"), prefixes, pointer + "/target")
+        except ModelError as error:
+            raise ModelError("invalid_contains_target", pointer=pointer + "/target") from error
+    # Do not decide parent cardinality or cyclic inclusion without a graph.
+    # Equal positions are legal and will use the specified ID tie-breaker.
+
+
+def _block_reference(value):
+    kind, payload = value["block_kind"], value["payload"]
+    prefixes = None
+    if kind == "artifact_ref":
+        prefixes = tuple(t.prefix for t in artifact_types())
+    elif kind in ("query", "table") and payload.get("source") == "view":
+        prefixes = ("VIEW",)
+    elif kind == "include_document":
+        prefixes = ("DOC",) if payload["mode"] == "content" else ("SEC",)
+    if prefixes is None:
+        return
+    relations = [(index, relation) for index, relation in enumerate(value["relations"])
+                 if relation.get("type") == "references"]
+    if len(relations) != 1:
+        raise ModelError("block_reference_cardinality", pointer="/relations")
+    index, relation = relations[0]
+    try:
+        _typed_reference(relation.get("target"), prefixes, "/relations/" + str(index) + "/target")
+    except ModelError as error:
+        raise ModelError("block_reference_type", pointer="/relations/" + str(index) + "/target") from error
+
+
+def _configuration_fields(value):
+    dimensions = value["dimensions"]
+    _unique([dimension["name"] for dimension in dimensions], reason="duplicate_dimension", pointer="/dimensions")
+    declared = {dimension["name"]: dimension for dimension in dimensions}
+    parent = value.get("parent")
+    if parent == value["id"]:
+        raise ModelError("configuration_self_parent", pointer="/parent")
+    for index, dimension in enumerate(dimensions):
+        allowed = dimension["allowed_values"]
+        _unique(allowed, reason="duplicate_allowed_value", pointer="/dimensions/" + str(index) + "/allowed_values")
+        if "default" in dimension and not any(_json_equal(dimension["default"], choice) for choice in allowed):
+            raise ModelError("invalid_dimension_default", pointer="/dimensions/" + str(index) + "/default")
+        if parent is None and dimension["name"] not in value["selection"] and "default" not in dimension:
+            raise ModelError("missing_dimension_selection", pointer="/selection")
+    for name, selection in value["selection"].items():
+        if not name.strip() or "\0" in name:
+            raise ModelError("invalid_dimension_name", pointer="/selection")
+        if name not in declared:
+            if parent is None:
+                raise ModelError("unknown_dimension", pointer="/selection")
+            continue  # Inherited dimensions are resolved by the later graph service.
+        if not any(_json_equal(selection, choice) for choice in declared[name]["allowed_values"]):
+            raise ModelError("invalid_dimension_selection", pointer="/selection")
+
+
+def _validate_local_record(value):
+    """Only contradictions decidable from this one record; never resolve its graph."""
+    kind = value["artifact_type"]
+    if kind == "verification":
+        _unique(value["subjects"], reason="duplicate_subject", pointer="/subjects")
+        _unique(value["dimensions"], reason="duplicate_verification_dimension", pointer="/dimensions")
+        _unique([slot["check_id"] for slot in value["evidence_slots"]], reason="duplicate_check_id", pointer="/evidence_slots")
+        for index, slot in enumerate(value["evidence_slots"]):
+            if slot["dimension"] not in value["dimensions"]:
+                raise ModelError("unknown_check_dimension", pointer="/evidence_slots/" + str(index) + "/dimension")
+    elif kind == "evidence":
+        _unique([subject["artifact_id"] for subject in value["subjects"]], reason="duplicate_subject", pointer="/subjects")
+        _unique([item["path"] for item in value.get("attachments", ())], reason="duplicate_attachment", pointer="/attachments")
+        if value.get("configuration_policy") == "bound" and value.get("configuration_hash") is None:
+            raise ModelError("missing_configuration_binding", pointer="/configuration_hash")
+    elif kind == "proposal":
+        if value["content_revision"] > value["revision"]:
+            raise ModelError("content_revision_exceeds_revision", pointer="/content_revision")
+    elif kind in ("document", "section"):
+        _local_contains(value)
+    elif kind == "content_block":
+        _block_reference(value)
+    elif kind == "code_ref":
+        if value["reference_kind"] == "line_range" and value["end_line"] < value["start_line"]:
+            raise ModelError("invalid_line_range", pointer="/end_line")
+    elif kind == "configuration":
+        _configuration_fields(value)
