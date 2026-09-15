@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS unbekannte, schema-gültige Inhalte im Feld `extensions` beim Lesen, Formatieren, Rendern und Schreiben verlustfrei erhalten.",
-    "scope": "Passive metadata validation and UTF-8 JSON round-trip only. No canonical writer, external source resolution or artifact approval."
+    "scope": "Lossless deep JSON metadata through passive parsing/serialization. Canonical formatting and rendering integration remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,7 +37,9 @@
   "test_ids": [
     "test_metadata.MetadataTests.test_unknown_extensions_survive_load_and_serialize",
     "test_metadata.MetadataTests.test_metadata_projection_detaches_inputs_and_outputs",
-    "test_metadata.MetadataTests.test_unknown_namespace_does_not_import_or_execute"
+    "test_metadata.MetadataTests.test_unknown_namespace_does_not_import_or_execute",
+    "test_metadata.MetadataRightTests.test_deep_extensions_preserve_all_values",
+    "test_metadata.MetadataRightTests.test_provenance_preserves_both_alternatives_and_extensions"
   ],
   "open_items": [
     "Full graph/profile validation, persistence and future workflow integration remain open."

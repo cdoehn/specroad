@@ -25,3 +25,10 @@ vergibt keine Revision und ist weder JCS-Formatter noch Publikationsfreigabe.
 Die vollständigen Typ-/Graph-/Profil-/Freigabeprüfungen bleiben eigenständige
 Schichten. Der Katalog weist die jeweiligen Anforderungen weiterhin als teilweise
 implementiert aus.
+
+Der reine `resolve_artifact_reference`-Helfer prüft ein explizit übergebenes
+Projektinventar und sucht ausschließlich nach `id`. Gleiche `display_id`-Werte
+sind zulässig; doppelte reale IDs sind Fehler. Ein Label wird auch dann nicht als
+Alias akzeptiert, wenn es zufällig wie eine gültige ID aussieht. Die Existenz
+aller Quellen oder die Vollständigkeit eines Projektgraphen wird damit nicht
+behauptet; der Helfer lädt selbst keine Dateien.

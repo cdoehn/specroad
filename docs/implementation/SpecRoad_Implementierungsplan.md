@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 58
-last_completed_plan_commit: 2.f.W
-next_plan_commit: 2.f.R
+implementation_plan_commits_completed: 59
+last_completed_plan_commit: 2.f.R
+next_plan_commit: 2.f.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -836,7 +836,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.f.R – Make it Right
 
-- [ ] **2.f.R** · Position **59/885** · Voraussetzung: `2.f.W`.
+- [x] **2.f.R** · Position **59/885** · Voraussetzung: `2.f.W`.
 **Exakte Commit-Message:** `2.f.R feat(model): Namespaced Extensions und Herkunft vervollständigen`
 
 **Vervollständigung:** Ungültige Namespaces und eine als Identität verwendete display_id zurückweisen.

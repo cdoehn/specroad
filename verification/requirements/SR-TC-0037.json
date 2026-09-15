@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jedes Artefakt MUSS seine fachliche Herkunft über `provenance` oder typisierte Beziehungen zu Goal, Need oder Source nachvollziehbar machen können.",
-    "scope": "Passive metadata validation and UTF-8 JSON round-trip only. No canonical writer, external source resolution or artifact approval."
+    "scope": "Local provenance source/locator, UTC capture and excerpt/hash shape; no source resolution or authenticity decision."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,7 +38,8 @@
     "test_metadata.MetadataTests.test_locator_provenance_retained",
     "test_metadata.MetadataTests.test_source_and_hash_provenance_retained",
     "test_metadata.MetadataTests.test_provenance_needs_source_or_locator",
-    "test_metadata.MetadataTests.test_provenance_needs_excerpt_or_hash"
+    "test_metadata.MetadataTests.test_provenance_needs_excerpt_or_hash",
+    "test_metadata.MetadataRightTests.test_provenance_hash_and_time_contracts_reject_invalid_values"
   ],
   "open_items": [
     "Full graph/profile validation, persistence and future workflow integration remain open."

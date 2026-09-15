@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Erweiterungsdaten MÜSSEN ausschließlich im Objekt `extensions` unter einem namespaced Schlüssel der Form `<anbieter>.<name>` gespeichert werden.",
-    "scope": "Passive metadata validation and UTF-8 JSON round-trip only. No canonical writer, external source resolution or artifact approval."
+    "scope": "Namespaced passive metadata in shared field contracts. No plugin or external schema dispatch."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,7 +37,9 @@
   "test_ids": [
     "test_metadata.MetadataTests.test_rejects_missing_namespace",
     "test_metadata.MetadataTests.test_relation_extensions_are_inert_namespaced_data",
-    "test_metadata.MetadataTests.test_project_extensions_use_same_namespace_contract"
+    "test_metadata.MetadataTests.test_project_extensions_use_same_namespace_contract",
+    "test_metadata.MetadataRightTests.test_whitespace_and_control_in_namespaces_rejected",
+    "test_metadata.MetadataRightTests.test_namespaces_preserve_unicode_and_do_not_normalize"
   ],
   "open_items": [
     "Full graph/profile validation, persistence and future workflow integration remain open."

@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Artefakt DARF ein optionales, nicht identitätsstiftendes `display_id` besitzen.",
-    "scope": "Passive metadata validation and UTF-8 JSON round-trip only. No canonical writer, external source resolution or artifact approval."
+    "scope": "Optional display labels are retained but excluded from canonical reference lookup and path identity."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,7 +37,11 @@
   "test_ids": [
     "test_metadata.MetadataTests.test_display_id_is_optional_and_preserved",
     "test_metadata.MetadataTests.test_domain_reader_preserves_display_id",
-    "test_metadata.MetadataTests.test_record_reader_preserves_display_id"
+    "test_metadata.MetadataTests.test_record_reader_preserves_display_id",
+    "test_metadata.MetadataRightTests.test_display_id_cannot_resolve_an_artifact",
+    "test_metadata.MetadataRightTests.test_duplicate_labels_do_not_merge_artifacts",
+    "test_metadata.MetadataRightTests.test_actual_id_wins_over_another_artifact_label",
+    "test_metadata.MetadataRightTests.test_label_change_never_changes_path_or_identity"
   ],
   "open_items": [
     "Full graph/profile validation, persistence and future workflow integration remain open."
