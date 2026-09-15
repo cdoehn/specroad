@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 48
-last_completed_plan_commit: 2.b.C
-next_plan_commit: 2.c.W
+implementation_plan_commits_completed: 49
+last_completed_plan_commit: 2.c.W
+next_plan_commit: 2.c.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -718,7 +718,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.c.W – Let it Work
 
-- [ ] **2.c.W** · Position **49/885** · Voraussetzung: `2.b.C`.
+- [x] **2.c.W** · Position **49/885** · Voraussetzung: `2.b.C`.
 **Exakte Commit-Message:** `2.c.W feat(model): Typregister und gemeinsame Schemas aufbauen`
 
 **Umsetzung:** Alle 28 Artefakttypen, Präfixe und gemeinsame Pflichtfelder als versionierte Ressourcen bereitstellen.

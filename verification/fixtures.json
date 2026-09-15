@@ -3,7 +3,8 @@
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-CATALOG-DATA-v1"
+    "SR-FIX-CATALOG-DATA-v1",
+    "SR-FIX-ARTIFACT-COMMON-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -17,6 +18,10 @@
     "SR-FIX-CATALOG-DATA-v1": {
       "provider": "tests/test_verification.py:fixture_files",
       "kind": "synthetic developer verification data"
+    },
+    "SR-FIX-ARTIFACT-COMMON-v1": {
+      "provider": "tests/support/artifacts.py:common_artifact",
+      "kind": "common-field envelope only, not a complete per-type or approved artifact"
     }
   }
 }

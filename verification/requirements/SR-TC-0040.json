@@ -4,19 +4,29 @@
   "requirement_id": "SR-REQ-0040",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0004",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Trusted 0.2.0 Core type registry; owned inert common-field JSON fixtures."
+  ],
+  "steps": [
+    "Validate versioned common-field envelopes; compare accepted identities and rejection diagnostics."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jedes reguläre 0.2-Artefakt MUSS die gemeinsamen Pflichtfelder aus Kapitel 9.3 enthalten; historisch unveränderbare Ressourcen werden ausschließlich nach Anhang Q gelesen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Common-field schema resources and read-only projections only. This is not a complete artifact acceptance, approval, release or creation gate."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/schema_version",
+    "/artifact_type",
+    "/id"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +38,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_artifact_schemas.ArtifactSchemaWorkTests.test_all_common_required_fields_are_required_for_every_type",
+    "test_artifact_schemas.ArtifactSchemaWorkTests.test_invalid_common_shapes_have_structured_failure",
+    "test_artifact_schemas.ArtifactSchemaWorkTests.test_language_required_only_for_declared_common_language_types"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Type-specific schemas, full-model validation and authoring are separate later plan steps. Historical immutable resources still require the later migration/read-adapter contracts."
   ]
 }
