@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS das aktuelle normative semantische Modell ausschließlich aus `specroad.json`, den dafür vorgesehenen JSON-Dateien unter `spec/`, `profiles/`, `rules/` und `mappings/` sowie den von diesen Ressourcen referenzierten Payloads unter `attachments/` und `archive/objects/` laden.",
-    "scope": "2.a: closed configuration, declared resource reads and path authorization. No complete model/transaction engine claimed."
+    "scope": "2.a: closed configuration, deterministic artifact paths, current root binding and input-only path classes."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,9 +37,11 @@
   "test_ids": [
     "test_model_configuration.ConfigurationWorkTests.test_explicit_resource_load_excludes_non_normative_data",
     "test_model_configuration.ConfigurationWorkTests.test_payload_requires_an_explicit_reference",
-    "test_model_configuration.ConfigurationWorkTests.test_standard_path_classes_are_disjoint"
+    "test_model_configuration.ConfigurationWorkTests.test_standard_path_classes_are_disjoint",
+    "test_model_configuration.ConfigurationRightTests.test_generated_and_recovery_changes_do_not_change_loaded_resource_set",
+    "test_model_configuration.ConfigurationRightTests.test_changed_configuration_invalidates_reads_and_write_authorization"
   ],
   "open_items": [
-    "Full artifact schemas, inventory, write transactions and final cross-platform evidence follow their assigned plan steps."
+    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps."
   ]
 }

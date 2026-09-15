@@ -175,6 +175,46 @@ def _text(value, pointer):
         raise ModelError("invalid_text", pointer=pointer)
 
 
+
+def _closed_object(value, allowed, pointer):
+    extra = value.keys() - set(allowed)
+    if extra:
+        raise ModelError("unknown_field", pointer=pointer + "/" + sorted(extra)[0])
+
+
+def _policy_shapes(data):
+    validation = data["validation_policy"]
+    _closed_object(validation, ("fail_on", "minimum_human_proposal_approvals", "required_relation_review"), "/validation_policy")
+    if "fail_on" in validation and validation["fail_on"] not in ("info", "warning", "error"):
+        raise ModelError("invalid_policy_value", pointer="/validation_policy/fail_on")
+    approvals = validation.get("minimum_human_proposal_approvals", 1)
+    if type(approvals) is not int or approvals < 1:
+        raise ModelError("invalid_policy_value", pointer="/validation_policy/minimum_human_proposal_approvals")
+    if "required_relation_review" in validation and validation["required_relation_review"] != "current":
+        raise ModelError("invalid_policy_value", pointer="/validation_policy/required_relation_review")
+    transaction = data.get("transaction_policy", {})
+    _closed_object(transaction, ("auto_recover", "retain_receipts"), "/transaction_policy")
+    if any(type(value) is not bool for value in transaction.values()):
+        raise ModelError("invalid_policy_value", pointer="/transaction_policy")
+    # Retention has a normative audit role; a declaration cannot disable it.
+    if transaction.get("retain_receipts", True) is not True:
+        raise ModelError("receipt_retention_required", pointer="/transaction_policy/retain_receipts")
+    precision = data.get("srx_policy", {})
+    _closed_object(precision, ("numeric_policy_version", "decimal_precision"), "/srx_policy")
+    if precision.get("numeric_policy_version", "srx-decimal-v1") != "srx-decimal-v1":
+        raise ModelError("invalid_policy_value", pointer="/srx_policy/numeric_policy_version")
+    digits = precision.get("decimal_precision", 34)
+    if type(digits) is not int or not 1 <= digits <= 1000:
+        raise ModelError("invalid_policy_value", pointer="/srx_policy/decimal_precision")
+    for key, value in data.get("resource_limits", {}).items():
+        if type(value) is not int or value < 0:
+            raise ModelError("invalid_policy_value", pointer="/resource_limits/" + key)
+    for field in ("profiles", "language_packages"):
+        for value in data.get(field, ()):
+            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*@[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?(?:\+[A-Za-z0-9.-]+)?", value):
+                raise ModelError("unversioned_resource", pointer="/" + field)
+
+
 def validate_configuration(data):
     if type(data) is not dict:
         raise ModelError("object_required")
@@ -204,6 +244,7 @@ def validate_configuration(data):
                   "analyzer_policy", "srx_policy", "language_registry", "extensions"):
         if field in data and type(data[field]) is not dict:
             raise ModelError("object_required", pointer="/" + field)
+    _policy_shapes(data)
     generated = project_path(data["generated_path"])
     roots = [project_path(path) for path in data["managed_paths"]]
     protected = ("specroad.json", "spec", "profiles", "rules", "mappings", "attachments", "archive", ".specroad")
@@ -216,6 +257,18 @@ def validate_configuration(data):
             raise ModelError("overlapping_path_classes", pointer="/managed_paths")
     if len({path.casefold() for path in roots}) != len(roots):
         raise ModelError("duplicate_path", pointer="/managed_paths")
+    registry = data.get("language_registry")
+    if registry is not None:
+        fields = {"registry_id", "registry_version", "path", "sha256"}
+        if set(registry) != fields or registry["registry_id"] != "iana-language-subtags":
+            raise ModelError("invalid_registry_binding", pointer="/language_registry")
+        if not isinstance(registry["registry_version"], str) or not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", registry["registry_version"]):
+            raise ModelError("invalid_registry_binding", pointer="/language_registry/registry_version")
+        if not isinstance(registry["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", registry["sha256"]):
+            raise ModelError("invalid_registry_binding", pointer="/language_registry/sha256")
+        reference = project_path(registry["path"])
+        if not reference.startswith("profiles/language-data/") or not any(_under(reference, path) for path in roots):
+            raise ModelError("invalid_registry_binding", pointer="/language_registry/path")
     try:
         check_project_declarations(data)
     except SafetyViolation as error:

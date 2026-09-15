@@ -103,3 +103,105 @@ class ConfigurationWorkTests(unittest.TestCase):
         for key,value in [('project_id',[]),('project_name',' '),('profiles','core'),('managed_paths','spec'),('validation_policy',[]),('extensions',[]),('generated_path',False)]:
             with self.subTest(key=key),self.assertRaises(ModelError):
                 ProjectConfiguration(configuration_value(**{key:value}))
+
+
+class ConfigurationRightTests(unittest.TestCase):
+    def test_standard_addresses_cover_all_declared_types(self):
+        types = [('goal','goals','GOAL'),('need','needs','NEED'),('capability','capabilities','CAP'),
+                 ('requirement','requirements','REQ'),('scenario','scenarios','SCN'),('decision','decisions','DEC'),
+                 ('risk','risks','RISK'),('assumption','assumptions','ASM'),('component','components','COMP'),
+                 ('interface','interfaces','IFC'),('source','sources','SRC'),('verification','verifications','VER'),
+                 ('test','tests','TEST'),('evidence','evidence','EVD'),('release','releases','REL'),
+                 ('milestone','milestones','MS'),('task','tasks','TASK'),('term','terms','TERM'),
+                 ('proposal','proposals','PROP'),('baseline','baselines','BASE'),('issue','issues','ISSUE'),
+                 ('document','documents','DOC'),('section','sections','SEC'),('content_block','content-blocks','BLOCK'),
+                 ('view','views','VIEW'),('code_ref','code-refs','CODE'),('relation_review','relation-reviews','RREV'),
+                 ('configuration','configurations','CFG')]
+        config=ProjectConfiguration(configuration_value())
+        for kind,directory,prefix in types:
+            identity='SR-'+prefix+'-'+'0'*26
+            path='spec/'+directory+'/'+identity+'.json'
+            with self.subTest(kind=kind):
+                self.assertEqual(artifact_path(kind,identity,'SR'),path)
+                self.assertEqual(classify_path(path,config),PathClass.ARTIFACT)
+
+    def test_custom_generated_directory_and_managed_subtrees(self):
+        config=ProjectConfiguration(configuration_value(generated_path='build/docs',managed_paths=['spec/requirements']))
+        self.assertEqual(classify_path('build/docs/a.json',config),PathClass.GENERATED)
+        self.assertEqual(classify_path('spec/goals/SR-GOAL-0001.json',config),PathClass.UNMANAGED)
+        self.assertEqual(classify_path('spec/requirements-other/a.json',config),PathClass.UNMANAGED)
+
+    def test_archive_addresses_require_a_consistent_hash_shard(self):
+        config=ProjectConfiguration(configuration_value());token='ab'+'0'*62
+        self.assertEqual(classify_path('archive/objects/ab/'+token,config),PathClass.ARCHIVE_OBJECT)
+        self.assertEqual(classify_path('archive/objects/cd/'+token,config),PathClass.UNMANAGED)
+
+    def test_duplicate_paths_and_scalar_path_sequences_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);configuration_file(root);source=ProjectSource(root)
+            for paths in (['specroad.json','specroad.json'],'specroad.json',[True],None):
+                with self.subTest(paths=paths),self.assertRaises(ModelError): source.load_resources(paths)
+
+    def test_payload_reference_is_not_a_substring_permission(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);configuration_file(root);put(root,'attachments/a',b'a');source=ProjectSource(root)
+            with self.assertRaises(ModelError): source.read_normative('attachments/a',referenced_payloads='attachments/abc')
+
+    def test_changed_configuration_invalidates_reads_and_write_authorization(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);configuration_file(root);put(root,'profiles/a.json');source=ProjectSource(root)
+            configuration_file(root,project_id='replacement')
+            for operation in (lambda:source.read_normative('profiles/a.json'),lambda:source.require_write_target('profiles/b.json'),lambda:source.load_resources([])):
+                with self.assertRaises(ModelError) as caught: operation()
+                self.assertEqual(caught.exception.reason,'configuration_changed')
+
+    def test_foreign_project_identity_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);configuration_file(root)
+            with self.assertRaises(ModelError):ProjectSource(root,expected_project_id='other')
+            self.assertEqual(ProjectSource(root,expected_project_id='sample').configuration.project_id,'sample')
+
+    def test_nested_roots_and_symlinks_are_rejected_for_read_and_write(self):
+        from specroad.security import SafetyViolation
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);configuration_file(root);source=ProjectSource(root)
+            nested=root/'profiles';nested.mkdir();configuration_file(nested);put(root,'profiles/a.json')
+            with self.assertRaises(SafetyViolation):source.read_normative('profiles/a.json')
+            with self.assertRaises(ModelError):source.require_write_target('profiles/new.json')
+            real=root/'real';real.mkdir();(root/'rules').symlink_to(real,target_is_directory=True)
+            put(root,'real/a.json')
+            with self.assertRaises(SafetyViolation):source.read_normative('rules/a.json')
+            with self.assertRaises(ModelError):source.require_write_target('rules/new.json')
+            self.assertFalse((real/'new.json').exists())
+
+    def test_generated_and_recovery_changes_do_not_change_loaded_resource_set(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);configuration_file(root);put(root,'rules/a.json',b'{"schema_version":"0.2.0"}')
+            source=ProjectSource(root);before=source.load_resources(['specroad.json','rules/a.json'])
+            for path in ('generated/a.json','.specroad/transactions/live','.specroad/requests/done','attachments/not-referenced','archive/objects/bad'):
+                put(root,path,b'not JSON')
+            self.assertEqual(source.load_resources(['rules/a.json','specroad.json']),before)
+
+    def test_policy_declarations_validate_without_resolving_or_executing(self):
+        value=configuration_value(profiles=['core@0.2.0'],language_packages=['de@1.0.0'],
+                                  transaction_policy={'auto_recover':True,'retain_receipts':True},
+                                  srx_policy={'numeric_policy_version':'srx-decimal-v1','decimal_precision':1000},
+                                  resource_limits={'model_bytes':1})
+        self.assertEqual(ProjectConfiguration(value).data,value)
+        for changes in ({'profiles':['../../plugin']},{'transaction_policy':{'retain_receipts':False}},
+                        {'validation_policy':{'fail_on':'never'}},{'srx_policy':{'decimal_precision':True}},
+                        {'resource_limits':{'model_bytes':False}},{'validation_policy':{'unexpected':True}}):
+            with self.subTest(changes=changes),self.assertRaises(ModelError):ProjectConfiguration(configuration_value(**changes))
+
+    def test_registry_binding_is_managed_and_no_file_is_invented(self):
+        registry={'registry_id':'iana-language-subtags','registry_version':'2026-01-01',
+                  'path':'profiles/language-data/registry.txt','sha256':'0'*64}
+        self.assertEqual(ProjectConfiguration(configuration_value(language_registry=registry)).data['language_registry'],registry)
+        for path in ('../registry','generated/registry','attachments/registry'):
+            with self.subTest(path=path),self.assertRaises(ModelError):
+                ProjectConfiguration(configuration_value(language_registry=dict(registry,path=path)))
+
+    def test_unsafe_portable_names_are_rejected(self):
+        config=ProjectConfiguration(configuration_value())
+        for path in ('spec/../a','spec//a','spec/./a','spec/a\\b','C:/a','profiles/CON.json','profiles/a.','profiles/a ','profiles/*.json','.git/config'):
+            with self.subTest(path=path),self.assertRaises(ModelError):classify_path(path,config)

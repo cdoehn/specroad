@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS Projektpräfixe gegen das Muster `[A-Z][A-Z0-9]{1,7}` validieren.",
-    "scope": "2.a: closed configuration, declared resource reads and path authorization. No complete model/transaction engine claimed."
+    "scope": "2.a: closed configuration, deterministic artifact paths, current root binding and input-only path classes."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -39,6 +39,6 @@
     "test_model_configuration.ConfigurationWorkTests.test_artifact_address_binds_type_and_project_prefix"
   ],
   "open_items": [
-    "Full artifact schemas, inventory, write transactions and final cross-platform evidence follow their assigned plan steps."
+    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps."
   ]
 }
