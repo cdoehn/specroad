@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 54
-last_completed_plan_commit: 2.d.C
-next_plan_commit: 2.e.W
+implementation_plan_commits_completed: 55
+last_completed_plan_commit: 2.e.W
+next_plan_commit: 2.e.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -785,12 +785,14 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 <a id="step-2-e"></a>
 ### 2.e – Dokument- und Nachweistypen
 
+**Umsetzungszuschnitt:** `model/record_schemas.py` und `storage/record_artifact.py` tragen die 14 hier benannten Typen als passive, bytegetreu gelesene `record_fields_only`-Datensätze. Lokal werden Feldtypen, Referenzformen und gekoppelte gespeicherte Spezialzustände geprüft. Schemaakzeptanz und die Routing-Vorprüfung für generische Operationen sind weder Schreibautorisierung noch Nachweis einer echten Freigabe. Allgemeine Graphauflösung, Parent-/Scope-Closure, CommonMark-/SRX-Auswertung, Payload-Selbsthashes, Evidence-Bewertung und Fachtransaktionen bleiben in ihren zugeordneten späteren Meilensteinen. Abschnittseltern werden nicht aus fehlenden ausgehenden Kanten erfunden; sie sind eingehende Graphbeziehungen. Das Glossar wird nicht als zusätzlicher Typ in diesen Schritt vorgezogen.
+
 **Anforderungsbezug:** `SR-REQ-0299`–`SR-REQ-0300`, `SR-REQ-0342`.
 **Verifikationsbezug:** `SR-VER-0023`, `SR-VER-0025`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
 #### 2.e.W – Let it Work
 
-- [ ] **2.e.W** · Position **55/885** · Voraussetzung: `2.d.C`.
+- [x] **2.e.W** · Position **55/885** · Voraussetzung: `2.d.C`.
 **Exakte Commit-Message:** `2.e.W feat(model): Dokument- und Nachweistypen aufbauen`
 
 **Umsetzung:** Datenverträge für Source, Verification, Test, Evidence, Baseline, Proposal, Issue, Document, Section, Block, View, Code-Ref, Review und Configuration vorbereiten.

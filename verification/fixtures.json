@@ -5,7 +5,8 @@
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-ARTIFACT-COMMON-v1",
-    "SR-FIX-DOMAIN-DRAFT-v1"
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -27,6 +28,10 @@
     "SR-FIX-DOMAIN-DRAFT-v1": {
       "provider": "tests/support/domain.py:domain_value",
       "kind": "owned per-type field fixtures; no graph, review, Evidence or release-approval proof"
+    },
+    "SR-FIX-RECORD-FIELDS-v1": {
+      "provider": "tests/support/records.py:record_value",
+      "kind": "owned passive document and evidence-field fixtures; no execution, authoring, real approvals or external hash verification"
     }
   }
 }

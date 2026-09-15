@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0395",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "preconditions": [
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+  ],
+  "steps": [
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein `configuration`-Artefakt MUSS einen eindeutigen Namen, deklarierte Dimensionen, je Dimension zulässige Werte, eine konkrete Wertauswahl und optional genau eine Elternkonfiguration enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,10 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_record_schemas.RecordWorkTests.test_configuration_fields_do_not_resolve_a_parent"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
   ]
 }
