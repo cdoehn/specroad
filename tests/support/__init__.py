@@ -18,7 +18,7 @@ class ManualClock:
 
     def __init__(self, start=None):
         self._start = datetime(2020, 1, 1, tzinfo=timezone.utc) if start is None else start
-        if not isinstance(self._start, datetime) or self._start.tzinfo is None:
+        if not isinstance(self._start, datetime) or self._start.utcoffset() is None:
             raise ValueError("An aware datetime is required")
         self._elapsed = 0
 
@@ -31,7 +31,10 @@ class ManualClock:
     def advance(self, nanoseconds):
         if type(nanoseconds) is not int or nanoseconds < 0:
             raise ValueError("Clock movement must be a non-negative integer")
-        self._elapsed += nanoseconds
+        candidate = self._elapsed + nanoseconds
+        # Reject overflow before changing the observable clock state.
+        self._start.astimezone(timezone.utc) + timedelta(microseconds=candidate // 1000)
+        self._elapsed = candidate
 
 
 class ByteSequence:
@@ -76,6 +79,12 @@ def temporary_project(files=None, *, parent=None):
         if type(data) is not bytes:
             raise TypeError("Fixture contents must be bytes")
         checked.append((relative, data))
+    paths = {str(relative).casefold() for relative, _ in checked}
+    if len(paths) != len(checked):
+        raise ValueError("Case-colliding fixture paths")
+    for relative, _ in checked:
+        if any(str(ancestor).casefold() in paths for ancestor in relative.parents if str(ancestor) != "."):
+            raise ValueError("Fixture file is also a directory")
     with tempfile.TemporaryDirectory(prefix="specroad-test-", dir=parent) as directory:
         root = Path(directory)
         for relative, data in checked:

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 19
-last_completed_plan_commit: 1.g.W
-next_plan_commit: 1.g.R
+implementation_plan_commits_completed: 20
+last_completed_plan_commit: 1.g.R
+next_plan_commit: 1.g.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -342,7 +342,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.g.R – Make it Right
 
-- [ ] **1.g.R** · Position **20/885** · Voraussetzung: `1.g.W`.
+- [x] **1.g.R** · Position **20/885** · Voraussetzung: `1.g.W`.
 **Exakte Commit-Message:** `1.g.R feat(core): Verhaltenstest-Infrastruktur vervollständigen`
 
 **Vervollständigung:** Keine Pretty-Snapshots, Doku-Linter, Linkchecker, Doctests oder künstlich rote spätere Featuretests einführen.
