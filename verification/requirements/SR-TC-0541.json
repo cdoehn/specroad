@@ -1,0 +1,35 @@
+{
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0541",
+  "requirement_id": "SR-REQ-0541",
+  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "primary_verification_id": "SR-VER-0026",
+  "implementation_status": "open",
+  "method": "pending",
+  "fixture_ids": [],
+  "preconditions": [],
+  "steps": [],
+  "oracle": {
+    "kind": "pending",
+    "requirement_contract": "Vor einem Merge von Eingaben mit unterschiedlichen unterstützten Schema-Versionen MUSS eine gemeinsame Zielversion durch Migration hergestellt werden.",
+    "scope": "Not implemented. No automated pass oracle is claimed."
+  },
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "json_pointers": [],
+  "required_environment": {
+    "implementation": "cpython",
+    "declared_minimum_python": "3.10",
+    "measured_scope": "current-run-only"
+  },
+  "resources": {
+    "owned_temporary_files": true,
+    "harness_test_timeout": null,
+    "harness_suite_timeout": null
+  },
+  "evidence_kind": "specroad-dev-unittest-v1",
+  "test_ids": [],
+  "open_items": [
+    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+  ]
+}

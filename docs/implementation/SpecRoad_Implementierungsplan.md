@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 22
-last_completed_plan_commit: 1.h.W
-next_plan_commit: 1.h.R
+implementation_plan_commits_completed: 23
+last_completed_plan_commit: 1.h.R
+next_plan_commit: 1.h.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -377,7 +377,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.h.R – Make it Right
 
-- [ ] **1.h.R** · Position **23/885** · Voraussetzung: `1.h.W`.
+- [x] **1.h.R** · Position **23/885** · Voraussetzung: `1.h.W`.
 **Exakte Commit-Message:** `1.h.R build(core): CI und Testfallzuordnung vorbereiten vervollständigen`
 
 **Vervollständigung:** Noch nicht implementierte Anforderungen als offen führen; ausgenommene Darstellung/Doku nicht mit grünen Dummytests vertreten.

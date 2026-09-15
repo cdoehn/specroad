@@ -1,0 +1,39 @@
+{
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0472",
+  "requirement_id": "SR-REQ-0472",
+  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "primary_verification_id": "SR-VER-0032",
+  "implementation_status": "open",
+  "method": "manual_presentation",
+  "fixture_ids": [],
+  "preconditions": [],
+  "steps": [],
+  "oracle": {
+    "kind": "manual_presentation",
+    "requirement_contract": "Die Rendersemantik für `admonition` und `page_break` MUSS für jedes unterstützte Ausgabeformat als Golden File versioniert sein.",
+    "scope": "Human rendering golden files are not automated under TD-001. Manual visual review is not an automated passed result."
+  },
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "json_pointers": [],
+  "required_environment": {
+    "implementation": "cpython",
+    "declared_minimum_python": "3.10",
+    "measured_scope": "current-run-only"
+  },
+  "resources": {
+    "owned_temporary_files": true,
+    "harness_test_timeout": null,
+    "harness_suite_timeout": null
+  },
+  "evidence_kind": "specroad-dev-unittest-v1",
+  "test_ids": [],
+  "open_items": [
+    "Implement rendering in its assigned plan step; document TD-001 as an explicit specification deviation and retain any manual visual review separately. Do not add output snapshots or placeholder tests."
+  ],
+  "not_automated_by_user_policy": "TD-001",
+  "policy_excluded_scope": [
+    "Entire automated human-rendering golden-file obligation of SR-REQ-0472."
+  ]
+}

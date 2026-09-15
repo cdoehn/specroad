@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 import unittest
 from verification import (CatalogError, bind_tests, json_bytes, load_catalog, make_report,
-                          observe_suite, platform_identity, sha256, source_identity)
+                          evidence_target, observe_suite, platform_identity, publish_report, sha256, source_identity)
 
 
 def main(argv=None):
@@ -22,9 +22,15 @@ def main(argv=None):
     parser.add_argument("--expected-tests", type=int)
     args = parser.parse_args(argv)
     try:
-        if args.evidence is not None and (args.evidence.exists() or args.evidence.is_symlink()):
-            raise CatalogError("Existing evidence is never overwritten")
+        if args.expected_tests is not None and args.expected_tests <= 0:
+            raise CatalogError("Expected test count must be positive")
+        if args.evidence is not None:
+            evidence_target(args.evidence, ROOT)
         catalog = load_catalog(ROOT / "verification")
+        # Integrity binding of the normative input, not a documentation test.
+        specification = ROOT / "docs/specification/SpecRoad_Spezifikation.md"
+        if sha256(specification.read_bytes()) != catalog.specification_sha256:
+            raise CatalogError("Catalog is not bound to the current specification bytes")
         identity = source_identity(ROOT)
         suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"))
         discovered = bind_tests(catalog, suite)
@@ -36,14 +42,13 @@ def main(argv=None):
                    "configuration_sha256": sha256(json_bytes({"suite": "unittest-discover-v1",
                        "stdin": "closed", "test_timeout": None, "suite_timeout": None}))}
         result = observe_suite(suite)
-        if source_identity(ROOT) != identity:
+        if (source_identity(ROOT) != identity
+                or sha256(specification.read_bytes()) != catalog.specification_sha256):
             raise CatalogError("Inputs changed during test execution; no current pass evidence")
         report = make_report(catalog, binding, result, discovered)
         report["runtime"] = runtime
         if args.evidence is not None:
-            args.evidence.parent.mkdir(parents=True, exist_ok=True)
-            with args.evidence.open("xb") as stream:
-                stream.write(json_bytes(report) + b"\n")
+            publish_report(args.evidence, ROOT, report)
         print(json.dumps({"tests_run": report["tests_run"], "suite_passed": report["suite_passed"],
                           "requirement_counts": report["requirement_counts"],
                           "release_approved": False}, sort_keys=True))
