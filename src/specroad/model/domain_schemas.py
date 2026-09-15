@@ -7,7 +7,11 @@ A parsed record is never an authorization to create, approve or publish data.
 
 from ._schema import validate_builtin
 from .artifact_schemas import artifact_common_schema, validate_common_fields
-from .artifact_types import artifact_type
+from .domain_fields import (
+    IMPLEMENTATION_STATUSES, VERIFICATION_PLAN_STATUSES, REQUIREMENT_KINDS,
+    PRIORITIES, CRITICALITIES, NORMATIVE_FORCES, field_schemas,
+    reference_schema as _reference,
+)
 from .errors import ModelError
 from .versions import SCHEMA_VERSION
 
@@ -17,34 +21,13 @@ DOMAIN_TYPES = (
     "risk", "assumption", "component", "interface", "release", "milestone", "task",
 )
 VALIDATION_SCOPE = "domain_fields_only"
-IMPLEMENTATION_STATUSES = ("not_started", "in_progress", "implemented", "blocked", "not_applicable")
-VERIFICATION_PLAN_STATUSES = ("not_planned", "planned", "running", "waived", "not_applicable")
-REQUIREMENT_KINDS = ("functional", "quality", "interface", "data", "constraint", "security", "safety", "compliance")
-PRIORITIES = ("mandatory", "high", "medium", "low")
-CRITICALITIES = ("normal", "important", "critical", "safety_critical")
-NORMATIVE_FORCES = ("must", "must_not", "should", "may")
-
-
-def _reference(prefix):
-    # Reading permits both current and preserved legacy identities. Generating
-    # new identifiers and resolving graph targets belong to their later services.
-    return {"type": "string", "pattern": r"^[A-Z][A-Z0-9]{1,7}-" + prefix +
-            r"-(?:[0-7][0-9A-HJKMNP-TV-Z]{25}|[0-9]{4})(?![\s\S])"}
-
-
 def _type_fields(kind):
     """Return independent trusted data, not user-configurable executable rules."""
-    text = {"$ref": "#/$defs/text"}
-    owner = {"anyOf": [text, {"$ref": "#/$defs/actor"}]}
-    texts = {"type": "array", "items": text}
-    criteria = {"type": "array", "minItems": 1, "items": text}
-    implementation = {"enum": list(IMPLEMENTATION_STATUSES)}
-    verification = {"enum": list(VERIFICATION_PLAN_STATUSES)}
-    priority = {"enum": list(PRIORITIES)}
-    detail = {"anyOf": [text, {"type": "object", "not": {"const": {}}}]}
-    # No risk/assumption vocabulary is enumerated in spec 9.4. Store nonempty
-    # labels without inventing meanings or treating a label as proof of success.
-    assessment = {"anyOf": [text, {"type": "number", "minimum": 0}]}
+    shared = field_schemas()
+    text, owner, texts, criteria = (shared[name] for name in ("text", "owner", "texts", "criteria"))
+    implementation, verification, priority, detail, assessment = (
+        shared[name] for name in ("implementation", "verification", "priority", "detail", "assessment")
+    )
     fields = {
         "goal": (("statement", "owner"), {"statement": text, "owner": owner,
                   "success_criterion": {"anyOf": [text, criteria]}}),
@@ -91,14 +74,7 @@ def _type_fields(kind):
     }
     required, properties = fields[kind]
     if "verification_plan_status" in properties:
-        properties["verification_waiver"] = {
-            "type": "object", "required": ["reason", "scope_descriptor", "expiry_condition", "human_review_id", "artifact_sha256"],
-            "properties": {"reason": text, "scope_descriptor": {"type": "object"}, "expiry_condition": text,
-                           "human_review_id": text,
-                           "artifact_sha256": {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"},
-                           "configuration_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"}]}},
-            "additionalProperties": False,
-        }
+        properties["verification_waiver"] = shared["waiver"]
     return required, properties
 
 

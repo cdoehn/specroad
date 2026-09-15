@@ -1,0 +1,47 @@
+"""Reusable immutable-by-construction field schema factories for Core records.
+
+Every call returns owned JSON values. Field schemas describe data; none load
+project plugins, interpret prose, resolve graph edges or authorize a write.
+"""
+
+IMPLEMENTATION_STATUSES = ("not_started", "in_progress", "implemented", "blocked", "not_applicable")
+VERIFICATION_PLAN_STATUSES = ("not_planned", "planned", "running", "waived", "not_applicable")
+REQUIREMENT_KINDS = ("functional", "quality", "interface", "data", "constraint", "security", "safety", "compliance")
+PRIORITIES = ("mandatory", "high", "medium", "low")
+CRITICALITIES = ("normal", "important", "critical", "safety_critical")
+NORMATIVE_FORCES = ("must", "must_not", "should", "may")
+
+
+def reference_schema(prefix):
+    # Reading permits both current and preserved legacy identities. Generating
+    # new identifiers and resolving graph targets belong to their later services.
+    return {"type": "string", "pattern": r"^[A-Z][A-Z0-9]{1,7}-" + prefix +
+            r"-(?:[0-7][0-9A-HJKMNP-TV-Z]{25}|[0-9]{4})(?![\s\S])"}
+
+
+def field_schemas():
+    text = {"$ref": "#/$defs/text"}
+    owner = {"anyOf": [text, {"$ref": "#/$defs/actor"}]}
+    texts = {"type": "array", "items": text}
+    criteria = {"type": "array", "minItems": 1, "items": text}
+    implementation = {"enum": list(IMPLEMENTATION_STATUSES)}
+    verification = {"enum": list(VERIFICATION_PLAN_STATUSES)}
+    priority = {"enum": list(PRIORITIES)}
+    detail = {"anyOf": [text, {"type": "object", "not": {"const": {}}}]}
+    # No risk/assumption vocabulary is enumerated in spec 9.4. Store nonempty
+    # labels without inventing meanings or treating a label as proof of success.
+    assessment = {"anyOf": [text, {"type": "number", "minimum": 0}]}
+    waiver = {
+        "type": "object", "required": ["reason", "scope_descriptor", "expiry_condition", "human_review_id", "artifact_sha256"],
+        "properties": {"reason": text, "scope_descriptor": {"type": "object"}, "expiry_condition": text,
+                       "human_review_id": text,
+                       "artifact_sha256": {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"},
+                       "configuration_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"}]}},
+        "additionalProperties": False,
+    }
+    return {
+        "text": text, "owner": owner, "texts": texts, "criteria": criteria,
+        "implementation": implementation, "verification": verification,
+        "priority": priority, "detail": detail, "assessment": assessment,
+        "waiver": waiver,
+    }
