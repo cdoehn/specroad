@@ -71,3 +71,20 @@ def test_repeated_build_fixture_does_not_change_import_path():
         build_distribution(root / "first")
         build_distribution(root / "second")
     assert sys.path == previous
+
+
+def test_removed_working_directory_is_restored():
+    import os
+    import tempfile
+    from pathlib import Path
+    state = ProcessState()
+    with tempfile.TemporaryDirectory(prefix="specroad-deleted-cwd-") as directory:
+        path = Path(directory) / "removed"
+        path.mkdir()
+        try:
+            os.chdir(path)
+            path.rmdir()
+            assert state.restore() == ("cwd",)
+            assert os.getcwd() == state.cwd
+        finally:
+            os.chdir(state.cwd)

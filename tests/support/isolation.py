@@ -21,7 +21,11 @@ class ProcessState:
 
     def restore(self):
         changed = []
-        if os.getcwd() != self.cwd:
+        try:
+            current_cwd = os.getcwd()
+        except FileNotFoundError:
+            current_cwd = None
+        if current_cwd != self.cwd:
             changed.append("cwd")
             os.chdir(self.cwd)
         if _environment() != self.environment:

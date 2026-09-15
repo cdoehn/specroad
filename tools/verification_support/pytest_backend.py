@@ -197,6 +197,9 @@ class VerificationSession:
         if self.gate:
             if config.getoption("collectonly") or config.getoption("keyword") or config.getoption("markexpr"):
                 raise CatalogError("A full behavior gate cannot select or only collect tests")
+            scopes = [Path(value).absolute() for value in config.args]
+            if scopes != [ROOT / "tests"] or config.getoption("ignore") or config.getoption("ignore_glob"):
+                raise CatalogError("A full behavior gate must collect the entire tests directory")
             self.catalog = load_catalog(ROOT / "verification")
             if sha256(self.specification.read_bytes()) != self.catalog.specification_sha256:
                 raise CatalogError("Catalog is not bound to the current specification bytes")
@@ -280,6 +283,10 @@ class ReportObserver:
     def pytest_collectreport(self, report):
         if report.failed:
             self.state.ledger.error("collection_error")
+
+    def pytest_deselected(self, items):
+        if items and self.state.gate:
+            self.state.ledger.error("deselected_tests")
 
     def pytest_internalerror(self, excrepr, excinfo):
         self.state.ledger.error("pytest_internal_error")
