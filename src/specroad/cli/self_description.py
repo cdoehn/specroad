@@ -8,20 +8,34 @@ from .request_schema import request_schema
 DESCRIPTION_VERSION = "1.0.0"
 
 
-def describe_command(registry, command_id):
+def published_contract(registry, command_id):
     command = registry.resolve_selector(command_id)
     if command.protocol is None:
         raise CommandUsageError("Command has no published machine contract")
     protocol = command.protocol
     # Binding is validation only. Describing a writer must never execute it.
     registry.bind_request(protocol.example)
-    formats = next((list(opt.choices) for opt in command.options if opt.flag == "--format"), ["pretty"])
+    return command, protocol
+
+
+def command_surface(command):
+    """Identity, spelling and class shared by all registry projections."""
+    return {"command_id": command.command_id,
+            "words": list(command.words), "aliases": [list(route) for route in sorted(command.aliases)],
+            "command_class": command.command_class.value,
+            "preflight_profile": command.preflight_profile.value}
+
+
+def output_formats(command):
+    return next((list(opt.choices) for opt in command.options if opt.flag == "--format"), ["pretty"])
+
+
+def describe_command(registry, command_id):
+    command, protocol = published_contract(registry, command_id)
+    formats = output_formats(command)
     return {
         "format_version": DESCRIPTION_VERSION,
-        "command_id": command.command_id,
-        "words": list(command.words), "aliases": [list(route) for route in sorted(command.aliases)],
-        "command_class": command.command_class.value,
-        "preflight_profile": command.preflight_profile.value,
+        **command_surface(command),
         "budget_policy_version": command.budget_policy_version,
         "lock_kind": protocol.lock_kind,
         "work": protocol.work.as_dict(),

@@ -19,13 +19,18 @@ def _help(invocation) -> CommandResult:
     })
 
 
-def _version(invocation) -> CommandResult:
-    from ..runtime.identity import BuildMetadataError, version_info
+def _distribution_result(invocation, producer) -> CommandResult:
+    from ..runtime.identity import BuildMetadataError
     try:
-        payload = version_info()
+        payload = producer()
     except BuildMetadataError as error:
         raise OperationFailure(FailureKind.ENVIRONMENT, "Distribution identity is unavailable.") from error
     return CommandResult(invocation.command.command_id, result=payload)
+
+
+def _version(invocation) -> CommandResult:
+    from ..runtime.identity import version_info
+    return _distribution_result(invocation, version_info)
 
 
 def _describe(invocation) -> CommandResult:
@@ -36,12 +41,7 @@ def _describe(invocation) -> CommandResult:
 
 def _capabilities(invocation) -> CommandResult:
     from .capabilities import capabilities
-    from ..runtime.identity import BuildMetadataError
-    try:
-        payload = capabilities(invocation.registry)
-    except BuildMetadataError as error:
-        raise OperationFailure(FailureKind.ENVIRONMENT, "Distribution identity is unavailable.") from error
-    return CommandResult(invocation.command.command_id, result=payload)
+    return _distribution_result(invocation, lambda: capabilities(invocation.registry))
 
 
 def builtin_registry() -> CommandRegistry:

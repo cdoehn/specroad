@@ -5,7 +5,8 @@ an existing serializer is not mistaken for a format accepted by a command.
 """
 
 from .results import FORMAT_VERSION
-from .self_description import DESCRIPTION_VERSION, describe_command
+from .self_description import (DESCRIPTION_VERSION, command_surface,
+                               output_formats, published_contract)
 
 CAPABILITIES_VERSION = "1.0.0"
 
@@ -15,17 +16,14 @@ def capabilities(registry):
     from ..runtime.limits import current_limits
     identity = version_info()
     commands = []
-    output_formats = set()
+    active_formats = set()
     for command in sorted(registry.commands, key=lambda item: item.command_id):
-        descriptor = describe_command(registry, command.command_id)
-        formats = descriptor["stdout"]["formats"]
-        output_formats.update(formats)
-        commands.append({"command_id": command.command_id, "words": list(command.words),
-            "aliases": [list(route) for route in sorted(command.aliases)],
-            "command_class": command.command_class.value,
-            "preflight_profile": command.preflight_profile.value,
-            "output_formats": formats, "result_schema": command.protocol.result_schema,
-            "continuation_supported": command.protocol.work.continuation_supported})
+        command, protocol = published_contract(registry, command.command_id)
+        formats = output_formats(command)
+        active_formats.update(formats)
+        commands.append({**command_surface(command),
+            "output_formats": formats, "result_schema": protocol.result_schema,
+            "continuation_supported": protocol.work.continuation_supported})
     semantic = {
         "program_version": identity["program_version"],
         "distribution": {key: identity[key] for key in ("distribution_kind", "build_id", "build_sha256", "build_hash_scope")},
@@ -33,7 +31,7 @@ def capabilities(registry):
         "commands": commands,
         "command_groups": sorted({cmd["command_id"].split(".")[0] for cmd in commands}),
         "command_classes": sorted({cmd["command_class"] for cmd in commands}),
-        "output_formats": sorted(output_formats),
+        "output_formats": sorted(active_formats),
         "exchange_formats": [],
         "supported_versions": {"schema": identity["supported_schema_versions"], "srx": [], "proposal": [],
             "json_envelope": [FORMAT_VERSION], "command_description": [DESCRIPTION_VERSION],
