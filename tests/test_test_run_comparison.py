@@ -1,6 +1,5 @@
 """Verification of current-run data, not human-readable test reports."""
 
-from copy import deepcopy
 import uuid
 
 import pytest

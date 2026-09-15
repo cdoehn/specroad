@@ -7,7 +7,7 @@ import subprocess
 import sys
 import tempfile
 
-from run_tests import test_environment
+from verification_support.process_environment import test_environment
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 

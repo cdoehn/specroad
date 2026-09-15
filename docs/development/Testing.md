@@ -111,3 +111,22 @@ Setup-/Teardown-Fehler, Skip/XFail/Unexpected Success sowie fehlgeschlagene/übe
 unittest-Untertests. Die Prüfung wertet ausschließlich strukturierte Ergebnisse und
 Exitcodes aus. Diese kleinen Framework-Regressionsfälle benötigen auch beim äußeren
 seriellen Referenzlauf xdist. Fehlende Abhängigkeiten führen zu Fehlern, niemals zu Skips.
+
+## OFF-PLAN-Commitfolge dieses Umbaus
+
+| Kennung | Zweck |
+|---|---|
+| TEST-PARALLEL.a.W | Entwicklungsabhängigkeiten und serielle pytest-Sammlung |
+| TEST-PARALLEL.a.R | Prozessisolation einschließlich tatsächlichem Build-Import-Leak |
+| TEST-PARALLEL.a.C | Gemeinsamer isolierter Builder-Import |
+| TEST-PARALLEL.b.W | pytest-Runner und controllergebundene Evidence |
+| TEST-PARALLEL.b.R | Strenge Fehler-/Vollständigkeitsprüfung mit realen pytest-Prozessen |
+| TEST-PARALLEL.b.C | Reine Ergebnisbuchhaltung von Framework-Hooks trennen |
+| TEST-PARALLEL.c.W | Paralleler Standard, serieller CI-Referenzlauf, TD-002 |
+| TEST-PARALLEL.c.R | Parallel-/Abbruchregressionen und fachlicher Laufvergleich |
+| TEST-PARALLEL.c.C | Gemeinsame Prozessstart-Policy und konsolidierte Anleitung |
+
+Alle 292 ursprünglichen Verhaltenstests bleiben vorhanden. Hinzu kommen 55 Tests zur
+Isolation, Framework-Integration und Nachweisprüfung, insgesamt 347 gesammelte Tests.
+Untertests werden ihren übergeordneten Testfällen zugeordnet und nicht als zusätzliche
+Plan- oder Requirement-Abdeckung hochgezählt. Keine neuen Produkt-Planpositionen.

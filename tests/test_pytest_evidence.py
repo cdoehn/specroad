@@ -1,7 +1,6 @@
 """Behavior of collection/outcome accounting, not terminal reporting."""
 
 import argparse
-import importlib.util
 from pathlib import Path
 
 import pytest

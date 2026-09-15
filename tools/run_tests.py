@@ -7,6 +7,10 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+# -I deliberately excludes script-directory imports; add only this trusted root.
+if str(ROOT / "tools") not in sys.path:
+    sys.path.insert(0, str(ROOT / "tools"))
+from verification_support.process_environment import test_environment
 
 
 def worker_count(value):
@@ -19,16 +23,6 @@ def worker_count(value):
     if number < 0:
         raise argparse.ArgumentTypeError("Workers must be auto or a nonnegative integer")
     return str(number)
-
-
-def test_environment(environment):
-    result = dict(environment)
-    for name in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_CURRENT_TEST",
-                 "PYTEST_XDIST_WORKER", "PYTEST_XDIST_WORKER_COUNT", "PYTEST_XDIST_TESTRUNUID"):
-        result.pop(name, None)
-    result["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
-    result["PYTHONDONTWRITEBYTECODE"] = "1"
-    return result
 
 
 def pytest_arguments(args):
