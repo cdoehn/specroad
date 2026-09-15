@@ -13,8 +13,7 @@ import re
 from ..security import SafetyViolation, check_project_declarations
 from .errors import ModelError
 from .numbers import number_from_token
-from .paths import (PathClass, CURRENT_JSON_CLASSES, PAYLOAD_CLASSES, ARTIFACT_PATHS,
-                    artifact_path, classify_path, project_path, _under)
+from .paths import PathClass, artifact_path, classify_path, project_path, _under
 
 SCHEMA_VERSION = "0.2.0"
 REQUIRED_FIELDS = frozenset({

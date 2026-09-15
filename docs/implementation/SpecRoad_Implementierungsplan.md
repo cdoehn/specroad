@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 47
-last_completed_plan_commit: 2.b.R
-next_plan_commit: 2.b.C
+implementation_plan_commits_completed: 48
+last_completed_plan_commit: 2.b.C
+next_plan_commit: 2.c.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -701,7 +701,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.b.C – Make it Clean
 
-- [ ] **2.b.C** · Position **48/885** · Voraussetzung: `2.b.R`.
+- [x] **2.b.C** · Position **48/885** · Voraussetzung: `2.b.R`.
 **Exakte Commit-Message:** `2.b.C refactor(model): Strikter JSON-Reader bereinigen`
 
 **Bereinigung:** Syntaxlesen und Modellvalidierung in klar getrennte Stufen teilen.

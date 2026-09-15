@@ -5,7 +5,7 @@ import errno
 import stat
 
 from ..security import ProjectBoundary, SafetyViolation, check_project_declarations
-from ..storage.json_reader import parse_json_object
+from ..storage.json_syntax import parse_json_object
 from .contracts import PreflightProfile
 from .option_values import OptionResolutionError, _text
 
