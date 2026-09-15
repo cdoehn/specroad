@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS eine zufällig erzeugte ID vor der Verwendung gegen alle aktuellen, archivierten und reservierten IDs des Projekts prüfen und bei einer Kollision ohne sichtbare Teiländerung erneut erzeugen.",
-    "scope": "Pure model identity allocation using explicit current, historical and reserved ID sets. No filesystem claim or automatic inventory scan; later transaction boundary must bind and revalidate project state."
+    "scope": "Pure identity guards and explicit inventory-bound generation. All collisions and invalid reservations fail without external effects. Durable history and atomic publication remain future work."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,7 +37,10 @@
   "test_ids": [
     "test_artifact_identity.ArtifactIdentityTests.test_current_collision_is_retried_without_input_mutation",
     "test_artifact_identity.ArtifactIdentityTests.test_archived_collision_is_not_reused",
-    "test_artifact_identity.ArtifactIdentityTests.test_reserved_collision_is_not_reused"
+    "test_artifact_identity.ArtifactIdentityTests.test_reserved_collision_is_not_reused",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_collision_sequence_checks_all_three_pools",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_no_intermediate_reservation_on_failure_after_collisions",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_allocation_must_carry_exact_new_reservation"
   ],
   "open_items": [
     "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied."

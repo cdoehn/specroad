@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Neue Artefakt- und Relations-IDs MÜSSEN mit einem kryptografisch sicheren Zufallszahlengenerator der unterstützten Python-Standardbibliothek erzeugt werden.",
-    "scope": "Pure model identity allocation using explicit current, historical and reserved ID sets. No filesystem claim or automatic inventory scan; later transaction boundary must bind and revalidate project state."
+    "scope": "Pure identity guards and explicit inventory-bound generation. All collisions and invalid reservations fail without external effects. Durable history and atomic publication remain future work."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,7 +35,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_artifact_identity.ArtifactIdentityTests.test_secure_standard_library_random_source_is_used"
+    "test_artifact_identity.ArtifactIdentityTests.test_secure_standard_library_random_source_is_used",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_entropy_contract_retains_high_and_low_bits"
   ],
   "open_items": [
     "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied."

@@ -71,7 +71,7 @@ class ArtifactIdentity:
         return artifact_path(self.artifact_type, self.id, self.id_prefix)
 
 
-def _inventory_ids(values, prefix):
+def _inventory_ids(values, prefix, *, reject_duplicates=False):
     if isinstance(values, (str, bytes, dict)):
         raise ModelError("identity_inventory_required")
     try:
@@ -86,6 +86,8 @@ def _inventory_ids(values, prefix):
         if len(parts) != 3 or parts[1] not in kinds:
             raise ModelError("invalid_inventory_identity")
         artifact_path(kinds[parts[1]], identity, prefix)
+    if reject_duplicates and len(set(values)) != len(values):
+        raise ModelError("duplicate_artifact_id")
     return frozenset(values)
 
 
@@ -100,7 +102,8 @@ class IdentityInventory:
     def __post_init__(self):
         _prefix(self.id_prefix)
         for field in ("current_ids", "archived_ids", "reserved_ids"):
-            object.__setattr__(self, field, _inventory_ids(getattr(self, field), self.id_prefix))
+            object.__setattr__(self, field, _inventory_ids(getattr(self, field), self.id_prefix,
+                               reject_duplicates=field == "current_ids"))
 
     def contains(self, identity):
         return identity in self.current_ids or identity in self.archived_ids or identity in self.reserved_ids
@@ -121,6 +124,16 @@ class IdentityAllocation:
     identity: ArtifactIdentity
     inventory: IdentityInventory
 
+    def __post_init__(self):
+        if (not isinstance(self.identity, ArtifactIdentity)
+                or not isinstance(self.inventory, IdentityInventory)
+                or self.identity.id_prefix != self.inventory.id_prefix
+                or self.identity.id_scheme != RANDOM_SCHEME
+                or self.identity.id not in self.inventory.reserved_ids
+                or self.identity.id in self.inventory.current_ids
+                or self.identity.id in self.inventory.archived_ids):
+            raise ModelError("allocation_reservation_mismatch")
+
 
 def allocate_artifact_identity(kind, inventory):
     """Allocate and return an owned reservation; caller input stays unchanged."""
@@ -137,3 +150,28 @@ def allocate_artifact_identity(kind, inventory):
                                      RANDOM_SCHEME, kind, inventory.id_prefix)
         if not inventory.contains(candidate.id):
             return IdentityAllocation(candidate, inventory.reserve(candidate))
+
+
+def artifact_identity(value):
+    """Read only identity fields; display_id and other metadata are irrelevant."""
+    if type(value) is not dict:
+        raise ModelError("object_required")
+    for name in ("id", "id_scheme", "artifact_type"):
+        if name not in value:
+            raise ModelError("missing_identity_field", pointer="/" + name)
+    if type(value["id"]) is not str:
+        raise ModelError("invalid_artifact_id", pointer="/id")
+    prefix = value["id"].split("-", 1)[0]
+    return ArtifactIdentity(value["id"], value["id_scheme"], value["artifact_type"], prefix)
+
+
+def require_identity_unchanged(previous, proposed):
+    """Reject identity mutation on normal updates; no generic migration escape.
+
+    Filling missing legacy id_scheme belongs exclusively to the future migration
+    workflow. This check is necessary but not sufficient to authorize an update.
+    """
+    before = artifact_identity(previous)
+    after = artifact_identity(proposed)
+    if before != after:
+        raise ModelError("artifact_identity_immutable")

@@ -128,3 +128,133 @@ class ArtifactIdentityTests(unittest.TestCase):
     def test_reservation_rejects_an_already_used_id(self):
         value = ArtifactIdentity(gid(0), "random128-v1", "goal", "SR")
         with self.assertRaises(ModelError): inventory(current_ids=[gid(0)]).reserve(value)
+
+
+class ArtifactIdentityRightTests(unittest.TestCase):
+    def test_collision_sequence_checks_all_three_pools(self):
+        state = inventory(current_ids=[gid(0)], archived_ids=[gid(1)], reserved_ids=[gid(2)])
+        with patch("specroad.model.identities.secrets.token_bytes", side_effect=[i.to_bytes(16, "big") for i in (0, 1, 2, 3)]) as source:
+            result = allocate_artifact_identity("goal", state)
+        self.assertEqual(source.call_count, 4)
+        self.assertEqual(result.identity.id, gid(3))
+        self.assertEqual(result.inventory.current_ids, state.current_ids)
+        self.assertEqual(result.inventory.archived_ids, state.archived_ids)
+        self.assertEqual(result.inventory.reserved_ids, state.reserved_ids | {gid(3)})
+
+    def test_no_intermediate_reservation_on_failure_after_collisions(self):
+        state = inventory(current_ids=[gid(0)], archived_ids=[gid(1)], reserved_ids=[gid(2)])
+        with patch("specroad.model.identities.secrets.token_bytes", side_effect=[bytes(16), (1).to_bytes(16, "big"), OSError("cannot randomize")]):
+            with self.assertRaises(ModelError): allocate_artifact_identity("goal", state)
+        self.assertEqual(state.reserved_ids, frozenset({gid(2)}))
+
+    def test_next_allocation_uses_returned_reservation(self):
+        with patch("specroad.model.identities.secrets.token_bytes", side_effect=[bytes(16), bytes(16), (1).to_bytes(16, "big")]):
+            first = allocate_artifact_identity("goal", inventory())
+            second = allocate_artifact_identity("goal", first.inventory)
+        self.assertEqual(first.inventory.reserved_ids, frozenset({gid(0)}))
+        self.assertEqual(second.inventory.reserved_ids, frozenset({gid(0), gid(1)}))
+
+    def test_duplicate_live_ids_are_an_error(self):
+        with self.assertRaises(ModelError) as caught: inventory(current_ids=[gid(0), gid(0)])
+        self.assertEqual(caught.exception.reason, "duplicate_artifact_id")
+
+    def test_repeated_historical_ids_stay_unavailable(self):
+        state = inventory(archived_ids=[gid(0), gid(0)], reserved_ids=[gid(1), gid(1)])
+        self.assertTrue(state.contains(gid(0)))
+        self.assertTrue(state.contains(gid(1)))
+        self.assertEqual(state.archived_ids, frozenset({gid(0)}))
+
+    def test_allocation_must_carry_exact_new_reservation(self):
+        from specroad.model.identities import IdentityAllocation
+        value = ArtifactIdentity(gid(0), "random128-v1", "goal", "SR")
+        for state in (inventory(), inventory(reserved_ids=[gid(1)]),
+                      inventory(current_ids=[gid(0)], reserved_ids=[gid(0)]),
+                      inventory(archived_ids=[gid(0)], reserved_ids=[gid(0)])):
+            with self.assertRaises(ModelError): IdentityAllocation(value, state)
+        self.assertEqual(IdentityAllocation(value, inventory(reserved_ids=[gid(0)])).identity, value)
+
+    def test_allocation_rejects_foreign_or_legacy_identity(self):
+        from specroad.model.identities import IdentityAllocation
+        other = ArtifactIdentity("XX-GOAL-" + "0" * 26, "random128-v1", "goal", "XX")
+        with self.assertRaises(ModelError): IdentityAllocation(other, inventory(reserved_ids=[gid(0)]))
+        legacy = ArtifactIdentity("SR-GOAL-0001", "legacy-sequential-v1", "goal", "SR")
+        with self.assertRaises(ModelError): IdentityAllocation(legacy, inventory(reserved_ids=[legacy.id]))
+
+    def test_identity_update_rejected(self):
+        from specroad.model.identities import require_identity_unchanged
+        before = common_artifact(); after = dict(before, id=gid(1))
+        with self.assertRaises(ModelError) as caught: require_identity_unchanged(before, after)
+        self.assertEqual(caught.exception.reason, "artifact_identity_immutable")
+        self.assertEqual(before["id"], gid(0))
+
+    def test_scheme_update_rejected(self):
+        from specroad.model.identities import require_identity_unchanged
+        before = common_artifact(); after = dict(before, id_scheme="legacy-sequential-v1")
+        with self.assertRaises(ModelError): require_identity_unchanged(before, after)
+
+    def test_legacy_to_random_reidentification_rejected(self):
+        from specroad.model.identities import require_identity_unchanged
+        legacy = common_artifact(id="SR-GOAL-0001", id_scheme="legacy-sequential-v1")
+        with self.assertRaises(ModelError): require_identity_unchanged(legacy, common_artifact())
+        self.assertIsNone(require_identity_unchanged(legacy, dict(legacy, title="changed")))
+
+    def test_type_and_prefix_changes_rejected(self):
+        from specroad.model.identities import require_identity_unchanged
+        before = common_artifact()
+        for after in (dict(before, artifact_type="need", id="SR-NEED-" + "0" * 26),
+                      dict(before, id="XX-GOAL-" + "0" * 26)):
+            with self.assertRaises(ModelError): require_identity_unchanged(before, after)
+
+    def test_nonidentity_changes_are_allowed_by_identity_guard(self):
+        from specroad.model.identities import require_identity_unchanged
+        before = common_artifact()
+        after = dict(before, title="new", display_id="SR-GOAL-0001", revision=2,
+                     extensions={"vendor.example": {"id": gid(1)}})
+        self.assertIsNone(require_identity_unchanged(before, after))
+
+    def test_missing_id_scheme_has_no_generic_migration_escape(self):
+        from specroad.model.identities import require_identity_unchanged
+        before = common_artifact(); del before["id_scheme"]
+        with self.assertRaises(ModelError) as caught: require_identity_unchanged(before, common_artifact())
+        self.assertEqual(caught.exception.pointer, "/id_scheme")
+
+    def test_display_id_cannot_fill_missing_id(self):
+        from specroad.model.identities import artifact_identity
+        value = common_artifact(display_id=gid(0)); del value["id"]
+        with self.assertRaises(ModelError) as caught: artifact_identity(value)
+        self.assertEqual(caught.exception.pointer, "/id")
+
+    def test_allocator_requires_explicit_complete_inventory(self):
+        for value in (None, {}, [], False, "SR"):
+            with self.subTest(value=repr(value)), self.assertRaises(ModelError):
+                allocate_artifact_identity("goal", value)
+        with self.assertRaises(TypeError): IdentityInventory("SR")
+
+    def test_invalid_inventory_containers_rejected(self):
+        for value in (None, False, 1, {}, gid(0), b"id"):
+            for field in ("current_ids", "archived_ids", "reserved_ids"):
+                with self.subTest(value=repr(value), field=field), self.assertRaises(ModelError):
+                    inventory(**{field: value})
+
+    def test_entropy_contract_retains_high_and_low_bits(self):
+        for bit in (0, 1, 63, 64, 126, 127):
+            random = (1 << bit).to_bytes(16, "big")
+            with patch("specroad.model.identities.secrets.token_bytes", return_value=random):
+                result = allocate_artifact_identity("goal", inventory())
+            self.assertEqual(decode128(result.identity.id.rsplit("-", 1)[1]), random)
+
+    def test_allocation_performs_no_file_network_or_process_operations(self):
+        import socket
+        import subprocess
+        with patch("builtins.open", side_effect=AssertionError("file access")), patch.object(socket, "socket", side_effect=AssertionError("network")), patch.object(subprocess, "run", side_effect=AssertionError("process")):
+            result = allocate_artifact_identity("goal", inventory())
+        self.assertEqual(len(decode128(result.identity.id.rsplit("-", 1)[1])), 16)
+
+    def test_reserve_rejects_wrong_project(self):
+        identity = ArtifactIdentity("XX-GOAL-" + "0" * 26, "random128-v1", "goal", "XX")
+        with self.assertRaises(ModelError): inventory().reserve(identity)
+        with self.assertRaises(ModelError): inventory().reserve(gid(0))
+
+    def test_token_decoder_rejects_nonstring_values(self):
+        for value in (None, True, 123, [], {}, bytes(26)):
+            with self.subTest(value=repr(value)), self.assertRaises(ModelError): decode128(value)

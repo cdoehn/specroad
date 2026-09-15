@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jedes Artefakt MUSS eine projektweit eindeutige ID der Form `<PROJECT>-<TYPE>-<IDENTIFIER>` besitzen.",
-    "scope": "Pure model identity allocation using explicit current, historical and reserved ID sets. No filesystem claim or automatic inventory scan; later transaction boundary must bind and revalidate project state."
+    "scope": "Pure identity guards and explicit inventory-bound generation. All collisions and invalid reservations fail without external effects. Durable history and atomic publication remain future work."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,7 +35,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_artifact_identity.ArtifactIdentityTests.test_all_registered_types_allocate_matching_paths"
+    "test_artifact_identity.ArtifactIdentityTests.test_all_registered_types_allocate_matching_paths",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_next_allocation_uses_returned_reservation"
   ],
   "open_items": [
     "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied."

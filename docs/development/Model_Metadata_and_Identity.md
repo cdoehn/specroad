@@ -47,3 +47,11 @@ wird nie verändert. `IdentityAllocation` ist ein Modellwert, KEIN dauerhafter
 Projektanspruch. Der spätere Transaktionspfad muss vollständige Inventare ermitteln,
 binden, erneut prüfen und Reservierung/Artefakt atomar veröffentlichen. Die
 hier implementierte Generierung enthält absichtlich keine Dateisuche oder Writes.
+
+Normale Änderungswege können `require_identity_unchanged` verwenden: `id`,
+`id_scheme`, Typ und Projektanteil dürfen nicht wechseln. Fehlendes Legacy-Schema
+wird nicht generisch ergänzt; die Ausnahme bleibt auf die spätere Migration
+beschränkt. Labels, Titel und andere Metadaten ändern diese Identitätsprüfung
+nicht. Sie ist keine Aussage zur fachlichen Zulässigkeit anderer Änderungen.
+Doppelte aktuelle IDs werden zurückgewiesen; mehrfach in historischen Ständen
+vorkommende IDs bleiben als eine dauerhaft belegte Identität gesperrt.

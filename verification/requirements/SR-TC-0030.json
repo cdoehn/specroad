@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die ID und das Feld `id_scheme` eines existierenden Artefakts DÜRFEN NICHT nach der ersten Speicherung geändert werden, ausgenommen die Ergänzung eines zuvor fehlenden `id_scheme` während einer Migration bei unveränderter ID.",
-    "scope": "Pure model identity allocation using explicit current, historical and reserved ID sets. No filesystem claim or automatic inventory scan; later transaction boundary must bind and revalidate project state."
+    "scope": "Pure identity guards and explicit inventory-bound generation. All collisions and invalid reservations fail without external effects. Durable history and atomic publication remain future work."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,7 +35,12 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_artifact_identity.ArtifactIdentityTests.test_new_identity_value_is_immutable"
+    "test_artifact_identity.ArtifactIdentityTests.test_new_identity_value_is_immutable",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_identity_update_rejected",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_scheme_update_rejected",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_legacy_to_random_reidentification_rejected",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_missing_id_scheme_has_no_generic_migration_escape",
+    "test_artifact_identity.ArtifactIdentityRightTests.test_nonidentity_changes_are_allowed_by_identity_guard"
   ],
   "open_items": [
     "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied."
