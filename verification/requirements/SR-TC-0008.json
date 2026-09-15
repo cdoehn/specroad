@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0008",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0001",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned project fixtures; installed development dependencies; isolated process state."
+  ],
+  "steps": [
+    "Read or validate the declared project resources and observe data, rejection and file effects."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS Projektpräfixe gegen das Muster `[A-Z][A-Z0-9]{1,7}` validieren.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "2.a: closed configuration, declared resource reads and path authorization. No complete model/transaction engine claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_model_configuration.ConfigurationWorkTests.test_prefix_boundaries",
+    "test_model_configuration.ConfigurationWorkTests.test_artifact_address_binds_type_and_project_prefix"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full artifact schemas, inventory, write transactions and final cross-platform evidence follow their assigned plan steps."
   ]
 }

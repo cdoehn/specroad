@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0011",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0002",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned project fixtures; installed development dependencies; isolated process state."
+  ],
+  "steps": [
+    "Read or validate the declared project resources and observe data, rejection and file effects."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS das aktuelle normative semantische Modell ausschließlich aus `specroad.json`, den dafür vorgesehenen JSON-Dateien unter `spec/`, `profiles/`, `rules/` und `mappings/` sowie den von diesen Ressourcen referenzierten Payloads unter `attachments/` und `archive/objects/` laden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "2.a: closed configuration, declared resource reads and path authorization. No complete model/transaction engine claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_model_configuration.ConfigurationWorkTests.test_explicit_resource_load_excludes_non_normative_data",
+    "test_model_configuration.ConfigurationWorkTests.test_payload_requires_an_explicit_reference",
+    "test_model_configuration.ConfigurationWorkTests.test_standard_path_classes_are_disjoint"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full artifact schemas, inventory, write transactions and final cross-platform evidence follow their assigned plan steps."
   ]
 }

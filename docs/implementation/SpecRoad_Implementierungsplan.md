@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 42
-last_completed_plan_commit: 1.n.C
-next_plan_commit: 2.a.W
+implementation_plan_commits_completed: 43
+last_completed_plan_commit: 2.a.W
+next_plan_commit: 2.a.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -648,7 +648,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.a.W – Let it Work
 
-- [ ] **2.a.W** · Position **43/885** · Voraussetzung: `1.n.C`.
+- [x] **2.a.W** · Position **43/885** · Voraussetzung: `1.n.C`.
 **Exakte Commit-Message:** `2.a.W feat(model): Projektkonfiguration und Pfadklassen aufbauen`
 
 **Umsetzung:** Geschlossene Projektkonfiguration, ID-Präfix und normative/generierte/betriebliche Pfadklassen definieren.
