@@ -9,7 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def build_distribution(output, source=None):
+def _load_builder():
     spec = importlib.util.spec_from_file_location("specroad_dev_build", ROOT / "tools/build_core.py")
     builder = importlib.util.module_from_spec(spec)
     previous_path = list(sys.path)
@@ -19,7 +19,11 @@ def build_distribution(output, source=None):
         # The standalone build script temporarily prepends its tools directory.
         # Importing it as a fixture must not leak that change to the next test.
         sys.path[:] = previous_path
-    return builder.build_core(source or ROOT / "src", output)
+    return builder
+
+
+def build_distribution(output, source=None):
+    return _load_builder().build_core(source or ROOT / "src", output)
 
 
 def copy_source_fixture(destination: Path, *, source_root: Path | None = None) -> Path:
