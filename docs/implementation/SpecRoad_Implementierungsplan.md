@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 28
-last_completed_plan_commit: 1.j.W
-next_plan_commit: 1.j.R
+implementation_plan_commits_completed: 29
+last_completed_plan_commit: 1.j.R
+next_plan_commit: 1.j.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -447,7 +447,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.j.R – Make it Right
 
-- [ ] **1.j.R** · Position **29/885** · Voraussetzung: `1.j.W`.
+- [x] **1.j.R** · Position **29/885** · Voraussetzung: `1.j.W`.
 **Exakte Commit-Message:** `1.j.R feat(core): Feste Sicherheits- und Offlinegrenze vervollständigen`
 
 **Vervollständigung:** Traversal, externe Symlinks, Geheimnisweitergabe und dynamische Projektausführung vor Verwendung verhindern.

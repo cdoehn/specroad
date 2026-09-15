@@ -24,6 +24,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
+    2,
+    5,
     7
   ],
   "json_pointers": [
@@ -41,7 +43,8 @@
   },
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
-    "test_security.SafetyWorkTests.test_project_metadata_path_runs_without_git_network_or_processes"
+    "test_security.SafetyWorkTests.test_project_metadata_path_runs_without_git_network_or_processes",
+    "test_security.SafetyRobustnessTests.test_audited_core_invocations_do_not_spawn_connect_or_write"
   ],
   "open_items": [
     "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones."

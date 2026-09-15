@@ -24,6 +24,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
+    2,
+    5,
     7
   ],
   "json_pointers": [
@@ -42,7 +44,11 @@
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
     "test_security.SafetyWorkTests.test_regular_project_bytes_are_read_without_modification",
-    "test_security.SafetyWorkTests.test_traversal_and_absolute_names_are_rejected"
+    "test_security.SafetyWorkTests.test_traversal_and_absolute_names_are_rejected",
+    "test_security.SafetyRobustnessTests.test_directory_replacement_between_check_and_open_is_rejected",
+    "test_security.SafetyRobustnessTests.test_leaf_replacement_between_check_and_open_is_rejected",
+    "test_security.SafetyRobustnessTests.test_in_place_mutation_is_not_returned_as_a_stable_read",
+    "test_security.SafetyRobustnessTests.test_managed_paths_cannot_request_traversal_or_another_root"
   ],
   "open_items": [
     "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones."

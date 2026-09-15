@@ -24,6 +24,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
+    2,
+    5,
     7
   ],
   "json_pointers": [
@@ -41,7 +43,9 @@
   },
   "evidence_kind": "specroad-dev-unittest-v1",
   "test_ids": [
-    "test_security.SafetyWorkTests.test_external_and_dangling_links_are_rejected_before_read"
+    "test_security.SafetyWorkTests.test_external_and_dangling_links_are_rejected_before_read",
+    "test_security.SafetyRobustnessTests.test_directory_link_cannot_cross_the_root_boundary",
+    "test_security.SafetyRobustnessTests.test_internal_links_are_conservatively_rejected"
   ],
   "open_items": [
     "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones."

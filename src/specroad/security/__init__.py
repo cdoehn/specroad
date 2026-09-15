@@ -10,6 +10,7 @@ import errno
 import os
 from pathlib import Path
 import stat
+from types import MappingProxyType
 
 
 class SafetyViolation(ValueError):
@@ -24,6 +25,10 @@ _HAS_SAFE_OPEN = (os.name == "posix" and os.open in os.supports_dir_fd
 def _parts(logical_path):
     if not isinstance(logical_path, str) or not logical_path or "\\" in logical_path:
         raise SafetyViolation("A relative project path is required")
+    try:
+        logical_path.encode("utf-8")
+    except UnicodeError as error:
+        raise SafetyViolation("Project path is not valid Unicode") from error
     parts = logical_path.split("/")
     if any(not part or part in {".", ".."} or ":" in part
            or any(ord(char) < 32 or ord(char) == 127 for char in part) for part in parts):
@@ -35,8 +40,13 @@ def _identity(info):
     return info.st_dev, info.st_ino
 
 
+def _signature(info):
+    return (_identity(info), info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
 def _regular(info, *, directory=False):
-    if stat.S_ISLNK(info.st_mode):
+    reparse = getattr(info, "st_file_attributes", 0) & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+    if stat.S_ISLNK(info.st_mode) or reparse:
         raise SafetyViolation("Linked project paths are not accepted")
     wanted = stat.S_ISDIR if directory else stat.S_ISREG
     if not wanted(info.st_mode):
@@ -103,11 +113,19 @@ without descriptor-relative non-following opens fail closed.
                     else:
                         raise SafetyViolation("Nested project roots cannot be combined")
                     parent = opened_fd
-            with os.fdopen(descriptors.pop(), "rb") as stream:
+            file_descriptor = descriptors[-1]
+            stream = os.fdopen(file_descriptor, "rb")
+            descriptors.pop()  # fdopen owns it only after successful construction.
+            with stream:
+                initial_content = os.fstat(stream.fileno())
                 data = stream.read()
+                if (_signature(os.fstat(stream.fileno())) != _signature(initial_content)
+                        or len(data) != initial_content.st_size):
+                    raise SafetyViolation("Project content changed during the read")
             for parent_fd, name, expected in entries:
                 current = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
-                if stat.S_ISLNK(current.st_mode) or _identity(current) != expected:
+                _regular(current, directory=(parent_fd, name, expected) != entries[-1])
+                if _identity(current) != expected:
                     raise SafetyViolation("Project entry changed while reading")
             self._check_root()
             return data
@@ -141,6 +159,22 @@ prose and unknown non-executable metadata remain inert, never evaluated.
     for key in ("project_roots", "project_ids", "repositories", "projects"):
         if key in data:
             raise SafetyViolation("Multiple project authorities are not supported")
+    if "managed_paths" in data:
+        if not isinstance(data["managed_paths"], list):
+            raise SafetyViolation("Managed paths must be declared explicitly")
+        for logical_path in data["managed_paths"]:
+            _parts(logical_path)
+    if "generated_path" in data:
+        _parts(data["generated_path"])
     for key in ("plugins", "plugin", "execution", "executor", "entrypoint", "hooks"):
         if key in data:
             require_builtin_execution(data[key])
+
+
+def isolated_process_environment():
+    """Minimal process data for future explicit adapters, not a spawn permission.
+
+Never inherit credentials, proxies, Git overrides, Python search paths or user
+startup hooks. The current Core authorizes no external adapter at all.
+"""
+    return MappingProxyType({"PATH": os.defpath, "LC_ALL": "C", "PYTHONNOUSERSITE": "1"})

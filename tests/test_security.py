@@ -145,3 +145,240 @@ class SafetyWorkTests(unittest.TestCase):
                 self.assertEqual(result.exit_code, 0)
                 self.assertIsNone(result.project)
             self.assertEqual(files_under(root), before)
+
+
+class SafetyRobustnessTests(unittest.TestCase):
+    def test_directory_link_cannot_cross_the_root_boundary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            root = parent / "root"
+            outside = parent / "outside"
+            root.mkdir()
+            outside.mkdir()
+            (outside / "secret").write_bytes(b'private')
+            (root / "data").symlink_to(outside, target_is_directory=True)
+            with self.assertRaises(SafetyViolation):
+                ProjectBoundary(root).read_bytes("data/secret")
+            self.assertEqual((outside / "secret").read_bytes(), b'private')
+
+    def test_internal_links_are_conservatively_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "value").write_bytes(b'ordinary')
+            (root / "alias").symlink_to("value")
+            with self.assertRaises(SafetyViolation):
+                ProjectBoundary(root).read_bytes("alias")
+            self.assertEqual(ProjectBoundary(root).read_bytes("value"), b'ordinary')
+
+    def test_fifo_is_not_opened_or_consumed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            os.mkfifo(root / "pipe")
+            with self.assertRaises(SafetyViolation):
+                ProjectBoundary(root).read_bytes("pipe")
+            self.assertTrue((root / "pipe").exists())
+
+    def test_directory_replacement_between_check_and_open_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            root = parent / "root"
+            (root / "data").mkdir(parents=True)
+            (root / "data/value").write_bytes(b'original')
+            outside = parent / "outside"
+            outside.mkdir()
+            (outside / "value").write_bytes(b'private')
+            boundary = ProjectBoundary(root)
+            real_open = os.open
+            swapped = []
+            def switch(path, *args, **kwargs):
+                if path == "data" and not swapped:
+                    swapped.append(True)
+                    (root / "data").rename(root / "preserved")
+                    (root / "data").symlink_to(outside, target_is_directory=True)
+                return real_open(path, *args, **kwargs)
+            with patch.object(os, "open", side_effect=switch), self.assertRaises(SafetyViolation):
+                boundary.read_bytes("data/value")
+            self.assertTrue(swapped)
+            self.assertEqual((root / "preserved/value").read_bytes(), b'original')
+            self.assertEqual((outside / "value").read_bytes(), b'private')
+
+    def test_leaf_replacement_between_check_and_open_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp)
+            root = parent / "root"
+            root.mkdir()
+            (root / "value").write_bytes(b'original')
+            outside = parent / "private"
+            outside.write_bytes(b'private')
+            boundary = ProjectBoundary(root)
+            real_open = os.open
+            swapped = []
+            def switch(path, *args, **kwargs):
+                if path == "value" and not swapped:
+                    swapped.append(True)
+                    (root / "value").rename(root / "preserved")
+                    (root / "value").symlink_to(outside)
+                return real_open(path, *args, **kwargs)
+            with patch.object(os, "open", side_effect=switch), self.assertRaises(SafetyViolation):
+                boundary.read_bytes("value")
+            self.assertTrue(swapped)
+            self.assertEqual((root / "preserved").read_bytes(), b'original')
+            self.assertEqual(outside.read_bytes(), b'private')
+
+    def test_in_place_mutation_is_not_returned_as_a_stable_read(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "value"
+            target.write_bytes(b'original')
+            boundary = ProjectBoundary(root)
+            real_fdopen = os.fdopen
+            class ChangingStream:
+                def __init__(self, *args, **kwargs):
+                    self.stream = real_fdopen(*args, **kwargs)
+                def __enter__(self):
+                    return self
+                def __exit__(self, *args):
+                    self.stream.close()
+                def fileno(self):
+                    return self.stream.fileno()
+                def read(self):
+                    target.write_bytes(b'deliberately longer changed content')
+                    return self.stream.read()
+            with patch.object(os, "fdopen", side_effect=ChangingStream), self.assertRaises(SafetyViolation):
+                boundary.read_bytes("value")
+            self.assertEqual(target.read_bytes(), b'deliberately longer changed content')
+
+    def test_unknown_secure_open_capability_fails_closed(self):
+        import errno
+        import sys
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "value").write_bytes(b'kept')
+            with patch.object(sys.modules[ProjectBoundary.__module__], "_HAS_SAFE_OPEN", False):
+                with self.assertRaises(OSError) as caught:
+                    ProjectBoundary(root).read_bytes("value")
+            self.assertEqual(caught.exception.errno, errno.ENOTSUP)
+            self.assertEqual((root / "value").read_bytes(), b'kept')
+
+    def test_invalid_unicode_path_is_rejected_before_open(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            boundary = ProjectBoundary(tmp)
+            with patch.object(os, "open", side_effect=AssertionError("unexpected I/O")), self.assertRaises(SafetyViolation):
+                boundary.read_bytes("bad\ud800path")
+
+    def test_managed_paths_cannot_request_traversal_or_another_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for data in ({"managed_paths": ["../outside"]}, {"managed_paths": ["/other"]},
+                         {"managed_paths": "spec"}, {"generated_path": "../../generated"}):
+                write_config(root, data)
+                calls = []
+                self.assertEqual(dispatch(["fixture", "metadata"], registry=metadata_registry(calls), cwd=root), 7)
+                self.assertEqual(calls, [])
+            # Safety validation is not a model scan; declared targets may not exist yet.
+            write_config(root, {"managed_paths": ["spec", "rules"], "generated_path": "generated"})
+            self.assertEqual(dispatch(["fixture", "metadata"], registry=metadata_registry([]), cwd=root), 0)
+            self.assertEqual({p.name for p in root.iterdir()}, {"specroad.json"})
+
+    def test_private_environment_is_not_forwarded_to_future_adapters(self):
+        from specroad.security import isolated_process_environment
+        with patch.dict(os.environ, {"SECRET": "DO-NOT-FORWARD", "PYTHONPATH": "DO-NOT-FORWARD",
+                                     "GIT_CONFIG_COUNT": "1", "HTTPS_PROXY": "DO-NOT-FORWARD",
+                                     "LD_PRELOAD": "DO-NOT-FORWARD"}):
+            environment = isolated_process_environment()
+        self.assertEqual(set(environment), {"PATH", "LC_ALL", "PYTHONNOUSERSITE"})
+        self.assertNotIn("DO-NOT-FORWARD", environment.values())
+        with self.assertRaises(TypeError):
+            environment["SECRET"] = "bad"
+        # Environment data alone is not permission to start a process.
+        with self.assertRaises(SafetyViolation):
+            require_builtin_execution("git")
+
+    def test_configuration_error_does_not_disclose_raw_content(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            secret = "PRIVATE-CONFIG-CONTENT"
+            (root / "specroad.json").write_text('{"password":"' + secret + '" BROKEN}')
+            result = dispatch_result(["fixture", "metadata"], registry=metadata_registry([]), cwd=root)
+            self.assertEqual(result.exit_code, 2)
+            self.assertNotIn(secret, json.dumps(result.as_dict()))
+
+    def test_execution_rejection_does_not_disclose_secret_arguments(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            secret = "PRIVATE-EXECUTOR-ARGUMENT"
+            write_config(root, {"plugins": [{"command": "curl", "token": secret}]})
+            result = dispatch_result(["fixture", "metadata"], registry=metadata_registry([]), cwd=root)
+            self.assertEqual(result.exit_code, 7)
+            self.assertNotIn(secret, json.dumps(result.as_dict()))
+
+    def test_io_exception_details_are_not_project_diagnostics(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_config(root, {})
+            with patch.object(os, "open", side_effect=PermissionError("PRIVATE-OS-DETAIL")):
+                result = dispatch_result(["fixture", "metadata"], registry=metadata_registry([]), cwd=root)
+            self.assertEqual(result.exit_code, 5)
+            self.assertNotIn("PRIVATE-OS-DETAIL", json.dumps(result.as_dict()))
+
+    def test_denied_read_closes_owned_directory_descriptors(self):
+        import errno
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "data").mkdir()
+            (root / "data/link").symlink_to(root / "missing")
+            boundary = ProjectBoundary(root)
+            real_open = os.open
+            opened = []
+            def observe(*args, **kwargs):
+                descriptor = real_open(*args, **kwargs)
+                opened.append(descriptor)
+                return descriptor
+            with patch.object(os, "open", side_effect=observe), self.assertRaises(SafetyViolation):
+                boundary.read_bytes("data/link")
+            self.assertGreaterEqual(len(opened), 2)
+            for descriptor in opened:
+                with self.assertRaises(OSError) as caught:
+                    os.fstat(descriptor)
+                self.assertEqual(caught.exception.errno, errno.EBADF)
+
+    def test_audited_core_invocations_do_not_spawn_connect_or_write(self):
+        body = r"""
+import os
+from pathlib import Path
+from specroad.cli.application import dispatch_result
+from specroad.runtime.identity import version_info
+from specroad.security import ProjectBoundary
+root = Path.cwd()
+forbidden = {"subprocess.Popen", "os.system", "os.posix_spawn", "socket.__new__", "socket.connect",
+             "socket.getaddrinfo", "socket.bind", "os.mkdir", "os.remove", "os.rename", "os.rmdir"}
+def guard(event, args):
+    if event in forbidden:
+        raise AssertionError("prohibited effect")
+    if event == "open":
+        path, mode, flags = args
+        if (isinstance(mode, str) and any(char in mode for char in "wax+")) or (
+            isinstance(flags, int) and flags & (os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC)):
+            raise AssertionError("write attempt")
+sys.addaudithook(guard)
+assert dispatch_result(["--help"]).exit_code == 0
+assert dispatch_result(["version"]).exit_code == 0
+assert ProjectBoundary(root).read_bytes("specroad.json") == b"{}"
+"""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "specroad.json").write_bytes(b'{}')
+            before = files_under(root)
+            result = run_core(body, root)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(files_under(root), before)
+
+    def test_data_read_does_not_modify_global_process_settings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "value").write_bytes(b'kept')
+            before_cwd = Path.cwd()
+            before_env = dict(os.environ)
+            self.assertEqual(ProjectBoundary(root).read_bytes("value"), b'kept')
+            self.assertEqual(Path.cwd(), before_cwd)
+            self.assertEqual(dict(os.environ), before_env)
