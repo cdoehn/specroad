@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 30
-last_completed_plan_commit: 1.j.C
-next_plan_commit: 1.k.W
+implementation_plan_commits_completed: 31
+last_completed_plan_commit: 1.k.W
+next_plan_commit: 1.k.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -473,7 +473,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.k.W – Let it Work
 
-- [ ] **1.k.W** · Position **31/885** · Voraussetzung: `1.j.C`.
+- [x] **1.k.W** · Position **31/885** · Voraussetzung: `1.j.C`.
 **Exakte Commit-Message:** `1.k.W feat(core): Lazy Bootstrap und frischer Aufrufkontext aufbauen`
 
 **Umsetzung:** Pro Aufruf nur aktuelle Eingaben prüfen und erforderliche Module laden; Bootstrap ohne Projekt erlauben.

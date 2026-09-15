@@ -7,7 +7,17 @@ from .option_values import (
     CORE_PROFILE, OptionLayer, OptionOrigin, OptionResolutionError,
     ResolvedOptions, _compose_values, _validate_layers, policy_exit_code,
 )
-from .project_selection import select_project
+
+def select_project(command, options, cwd):
+    """Do not import project I/O for a contract which does not select a root."""
+    if command.preflight_profile is PreflightProfile.BOOTSTRAP:
+        if "--project" in options:
+            raise OptionResolutionError("Bootstrap does not select a project")
+        return None, None, {}
+    if not command.requires_project and "--project" not in options:
+        return None, None, {}
+    from .project_selection import select_project as select
+    return select(command, options, cwd)
 
 
 _GLOBAL_OPTIONS = {

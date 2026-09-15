@@ -2,14 +2,26 @@
 
 import sys
 
-from .application import _error_options, execute
-from .presentation import PrettyRenderer
-from .results import FailureKind, OperationFailure, ResultContractError, failed_result, serialize_result
+def execute(*args, **kwargs):
+    """Load execution only when requested; importing the CLI is inert."""
+    from .application import execute as run
+    return run(*args, **kwargs)
+
+
+def PrettyRenderer(*args, **kwargs):
+    """Presentation is a replaceable dependency, not part of machine execution."""
+    from .presentation import PrettyRenderer as renderer
+    return renderer(*args, **kwargs)
 
 
 def main(argv: list[str] | None = None, *, stdout=None, stderr=None) -> int:
     """Keep machine documents separate from a replaceable human presenter."""
+    from .application import _error_options
+    from .results import FailureKind, OperationFailure, ResultContractError, failed_result, serialize_result
+
     arguments = sys.argv[1:] if argv is None else argv
+    if isinstance(arguments, (list, tuple)):
+        arguments = tuple(arguments)
     out = sys.stdout if stdout is None else stdout
     err = sys.stderr if stderr is None else stderr
     display_options = _error_options(arguments)
