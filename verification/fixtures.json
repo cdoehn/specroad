@@ -1,0 +1,22 @@
+{
+  "fixture_format_version": 1,
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-CATALOG-DATA-v1"
+  ],
+  "definitions": {
+    "SR-FIX-OWNED-TEMP-v1": {
+      "provider": "tests/support/files.py:temporary_project",
+      "kind": "owned byte fixture; not a future-schema project"
+    },
+    "SR-FIX-ISOLATED-CPYTHON-v1": {
+      "provider": "tests/support/processes.py:run_core",
+      "kind": "isolated CPython; closed stdin; no shell or timeout"
+    },
+    "SR-FIX-CATALOG-DATA-v1": {
+      "provider": "tests/test_verification.py:fixture_files",
+      "kind": "synthetic developer verification data"
+    }
+  }
+}

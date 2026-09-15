@@ -1,0 +1,51 @@
+{
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0214",
+  "requirement_id": "SR-REQ-0214",
+  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "primary_verification_id": "SR-VER-0013",
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Use the current trusted checkout and a private temporary directory."
+  ],
+  "steps": [
+    "Execute each listed unittest once in the current full suite.",
+    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Maschinenlesbare Ausgabeformate MÜSSEN eine eigene SemVer-kompatible `format_version` besitzen; inkompatible Änderungen erfordern eine neue Major-Version dieses Ausgabeformats.",
+    "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
+  },
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0
+  ],
+  "json_pointers": [
+    "/format_version",
+    "/command",
+    "/status"
+  ],
+  "required_environment": {
+    "implementation": "cpython",
+    "declared_minimum_python": "3.10",
+    "measured_scope": "current-run-only"
+  },
+  "resources": {
+    "owned_temporary_files": true,
+    "harness_test_timeout": null,
+    "harness_suite_timeout": null
+  },
+  "evidence_kind": "specroad-dev-unittest-v1",
+  "test_ids": [
+    "test_results.ResultWorkTests.test_json_envelope_has_version_required_fields_and_real_result"
+  ],
+  "open_items": [
+    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
+  ]
+}

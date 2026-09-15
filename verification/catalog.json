@@ -1,0 +1,50 @@
+{
+  "catalog_format_version": 1,
+  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "complete": false,
+  "test_case_ids": [
+    "SR-TC-0005",
+    "SR-TC-0006",
+    "SR-TC-0190",
+    "SR-TC-0214",
+    "SR-TC-0215",
+    "SR-TC-0223",
+    "SR-TC-0224",
+    "SR-TC-0225",
+    "SR-TC-0227",
+    "SR-TC-0229",
+    "SR-TC-0491",
+    "SR-TC-0492"
+  ],
+  "required_test_case_ids": [
+    "SR-TC-0005",
+    "SR-TC-0006",
+    "SR-TC-0190",
+    "SR-TC-0214",
+    "SR-TC-0215",
+    "SR-TC-0223",
+    "SR-TC-0224",
+    "SR-TC-0225",
+    "SR-TC-0227",
+    "SR-TC-0229",
+    "SR-TC-0491",
+    "SR-TC-0492"
+  ],
+  "automation_policy": {
+    "policy_id": "TD-001",
+    "automated_oracles": [
+      "behavior",
+      "machine_data_contract"
+    ],
+    "not_automated_by_user_policy": "TD-001",
+    "excluded_scope": [
+      "human_console_output",
+      "colors_symbols_layout",
+      "human_document_rendering",
+      "documentation_checks"
+    ],
+    "excluded_scope_is_not_passed": true,
+    "mixed_requirements_keep_real_behavior_tests": true,
+    "declaration": "Presentation may be manually reviewed. Policy exclusions must not be replaced by dummy tests or counted as original-specification acceptance."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0492",
+  "requirement_id": "SR-REQ-0492",
+  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "primary_verification_id": "SR-VER-0034",
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CATALOG-DATA-v1"
+  ],
+  "preconditions": [
+    "Use the current trusted checkout and a private temporary directory."
+  ],
+  "steps": [
+    "Execute each listed unittest once in the current full suite.",
+    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jeder Requirement-Testfall MUSS Requirement-ID und -Revision, primären Verification Contract, Methode, Fixture, Schritte, Oracle, erwartete Diagnosen und Exit Codes, Umgebung und Evidence-Art deklarieren.",
+    "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
+  },
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0
+  ],
+  "json_pointers": [],
+  "required_environment": {
+    "implementation": "cpython",
+    "declared_minimum_python": "3.10",
+    "measured_scope": "current-run-only"
+  },
+  "resources": {
+    "owned_temporary_files": true,
+    "harness_test_timeout": null,
+    "harness_suite_timeout": null
+  },
+  "evidence_kind": "specroad-dev-unittest-v1",
+  "test_ids": [
+    "test_verification.CatalogWorkTests.test_manifest_delivers_requirement_fixture_and_verification_binding",
+    "test_verification.CatalogWorkTests.test_unknown_fixture_is_not_an_executable_binding"
+  ],
+  "open_items": [
+    "The versioned catalog is an implementation inventory, not final requirement verification. Pending cases still need real fixtures and oracles.",
+    "TD-001 excludes presentation/documentation checks from automated coverage; this exception must remain visible in any final acceptance statement."
+  ],
+  "not_automated_by_user_policy": "TD-001",
+  "policy_excluded_scope": [
+    "Only human-output, rendering and documentation-test obligations. Machine data contracts and real behavioral obligations remain in scope."
+  ]
+}

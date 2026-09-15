@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 21
-last_completed_plan_commit: 1.g.C
-next_plan_commit: 1.h.W
+implementation_plan_commits_completed: 22
+last_completed_plan_commit: 1.h.W
+next_plan_commit: 1.h.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -368,7 +368,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.h.W – Let it Work
 
-- [ ] **1.h.W** · Position **22/885** · Voraussetzung: `1.g.C`.
+- [x] **1.h.W** · Position **22/885** · Voraussetzung: `1.g.C`.
 **Exakte Commit-Message:** `1.h.W build(core): CI und Testfallzuordnung vorbereiten aufbauen`
 
 **Umsetzung:** CI für tatsächlich vorhandene Tests und versionierten Requirement-Testfall-Katalog mit stabilen SR-TC-Kennungen aufbauen.

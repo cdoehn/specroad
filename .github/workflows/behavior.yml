@@ -1,0 +1,37 @@
+name: Behavior tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  behavior:
+    name: CPython ${{ matrix.python }} / Ubuntu
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Execute current behavior suite
+        # No pip, uv, optional dependencies, doctests, linter or test timeouts.
+        run: python -I -S -B tools/run_tests.py --evidence build/test-evidence.json
+      - name: Preserve development evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: behavior-ubuntu-python-${{ matrix.python }}
+          path: build/test-evidence.json
+          if-no-files-found: error
+          retention-days: 14
+      # A green job is not the full platform/analyzer matrix or a release gate.
