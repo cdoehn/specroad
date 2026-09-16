@@ -35,7 +35,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_requirement.RequirementWorkTests.test_structured_semantics_preserved"
+    "test_requirement.RequirementWorkTests.test_structured_semantics_preserved",
+    "test_requirement_right.RequirementRightTests.test_prepared_fields_roundtrip_through_reader"
   ],
   "open_items": [
     "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."

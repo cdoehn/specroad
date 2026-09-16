@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 79
-last_completed_plan_commit: 2.m.W
-next_plan_commit: 2.m.R
+implementation_plan_commits_completed: 80
+last_completed_plan_commit: 2.m.R
+next_plan_commit: 2.m.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1081,7 +1081,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.m.R – Make it Right
 
-- [ ] **2.m.R** · Position **80/885** · Voraussetzung: `2.m.W`.
+- [x] **2.m.R** · Position **80/885** · Voraussetzung: `2.m.W`.
 **Exakte Commit-Message:** `2.m.R feat(model): Explizite Requirement-Verbindlichkeit vervollständigen`
 
 **Vervollständigung:** Force nicht aus Priorität, Keywords oder Detector ableiten; fehlende Sprache und leere Abweichungsangaben ablehnen.

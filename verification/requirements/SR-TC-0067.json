@@ -38,7 +38,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_domain_schemas.DomainWorkTests.test_empty_required_text_is_rejected",
-    "test_requirement.RequirementWorkTests.test_indicative_statement_without_modal_word"
+    "test_requirement.RequirementWorkTests.test_indicative_statement_without_modal_word",
+    "test_requirement_right.RequirementRightTests.test_prose_is_not_semantically_rewritten",
+    "test_requirement_right.RequirementRightTests.test_unicode_statement_bytes_remain_distinct"
   ],
   "open_items": [
     "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."

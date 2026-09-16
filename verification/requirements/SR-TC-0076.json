@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0076",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0006",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-REQUIREMENT-INPUT-v1"
+  ],
+  "preconditions": [
+    "Explicit invocation of the bounded duration value constructor; no duration inference from arbitrary natural-language or custom semantics."
+  ],
+  "steps": [
+    "Read ISO designator durations or quantities with supported explicit UCUM time atoms; preserve values and reject unsupported/unitless forms."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Zeitdauern in strukturierten Semantikfeldern MÜSSEN als ISO-8601-Duration oder als Wert mit expliziter UCUM-kompatibler Einheit gespeichert werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Explicit duration value helper: known UCUM time atoms and unsigned ISO designator forms; no complete UCUM expression engine, dimensional conversion or automatic validation of arbitrary semantic trees."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_requirement_right.RequirementDurationTests.test_iso_durations_preserved_without_unit_conversion",
+    "test_requirement_right.RequirementDurationTests.test_quantity_requires_explicit_supported_time_unit",
+    "test_requirement_right.RequirementDurationTests.test_unitless_and_invalid_values_rejected",
+    "test_requirement_right.RequirementDurationTests.test_invalid_iso_designators_rejected",
+    "test_requirement_right.RequirementDurationTests.test_unknown_units_report_unsupported_not_validated",
+    "test_requirement_right.RequirementDurationTests.test_explicit_duration_can_be_used_in_requirement_semantics"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full profile-bound duration/unit validation at designated semantic fields and coverage of additional valid ISO/UCUM representations remain open. Arbitrary preserved semantics are not declared fully duration-validated."
   ]
 }

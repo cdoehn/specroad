@@ -39,7 +39,9 @@
     "test_requirement.RequirementWorkTests.test_argument_language_materialized",
     "test_requirement.RequirementWorkTests.test_argument_force_materialized",
     "test_requirement.RequirementWorkTests.test_conflicting_force_is_rejected_without_changing_input",
-    "test_requirement.RequirementWorkTests.test_conflicting_language_is_rejected"
+    "test_requirement.RequirementWorkTests.test_conflicting_language_is_rejected",
+    "test_requirement_right.RequirementRightTests.test_mutating_caller_config_does_not_change_draft",
+    "test_requirement_right.RequirementRightTests.test_invalid_project_default_is_not_repaired"
   ],
   "open_items": [
     "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."

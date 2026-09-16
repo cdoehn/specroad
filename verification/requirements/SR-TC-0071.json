@@ -39,7 +39,9 @@
   "test_ids": [
     "test_domain_schemas.DomainWorkTests.test_should_metadata_required_from_draft",
     "test_requirement.RequirementWorkTests.test_should_requires_both_deviation_fields",
-    "test_requirement.RequirementWorkTests.test_should_accepts_structured_authority"
+    "test_requirement.RequirementWorkTests.test_should_accepts_structured_authority",
+    "test_requirement_right.RequirementRightTests.test_empty_deviation_values_rejected",
+    "test_requirement_right.RequirementRightTests.test_invalid_authority_actor_rejected"
   ],
   "open_items": [
     "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."

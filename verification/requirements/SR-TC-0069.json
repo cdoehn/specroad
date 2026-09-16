@@ -39,7 +39,8 @@
   "test_ids": [
     "test_domain_schemas.DomainWorkTests.test_no_normative_force_inferred_from_text_or_priority",
     "test_requirement.RequirementWorkTests.test_indicative_statement_without_modal_word",
-    "test_requirement.RequirementWorkTests.test_positive_proposition_with_must_not_is_not_negated"
+    "test_requirement.RequirementWorkTests.test_positive_proposition_with_must_not_is_not_negated",
+    "test_requirement_right.RequirementRightTests.test_prose_is_not_semantically_rewritten"
   ],
   "open_items": [
     "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."

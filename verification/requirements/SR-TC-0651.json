@@ -36,7 +36,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_requirement.RequirementWorkTests.test_no_language_default",
-    "test_requirement.RequirementWorkTests.test_explicit_project_default_is_materialized"
+    "test_requirement.RequirementWorkTests.test_explicit_project_default_is_materialized",
+    "test_requirement_right.RequirementRightTests.test_multilingual_statements_preserved_without_detection",
+    "test_requirement_right.RequirementRightTests.test_loaded_record_missing_language_is_not_defaulted"
   ],
   "open_items": [
     "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."
