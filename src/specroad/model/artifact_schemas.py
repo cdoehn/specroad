@@ -12,7 +12,7 @@ from .configuration import _json_values
 from .versions import SCHEMA_VERSION
 from .errors import ModelError
 from .relation_fields import relation_identity_fields
-from .audit import UTC_PATTERN
+from .audit_fields import audit_definitions
 from .metadata_fields import metadata_schemas, extensions_schema
 from .artifact_types import ArtifactType, artifact_type, artifact_types
 
@@ -32,15 +32,7 @@ def _version(version):
 
 
 def _definitions():
-    text = {"type": "string", "minLength": 1, "pattern": "\\S",
-            "not": {"pattern": "\\u0000"}}
-    actor = {"type": "object", "required": ["actor_type", "actor_id"],
-             "properties": {"actor_type": {"enum": ["human", "ai", "ci", "tool"]},
-                            "actor_id": dict(text)}, "additionalProperties": False}
-    utc = {"type": "string", "format": "date-time",
-           "pattern": UTC_PATTERN}
-    return {"text": text, "actor": actor, "utc": utc}
-
+    return audit_definitions()
 
 def _properties(kind):
     text = {"$ref": "#/$defs/text"}

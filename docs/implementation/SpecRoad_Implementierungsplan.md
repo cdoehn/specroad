@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 68
-last_completed_plan_commit: 2.i.R
-next_plan_commit: 2.i.C
+implementation_plan_commits_completed: 69
+last_completed_plan_commit: 2.i.C
+next_plan_commit: 2.j.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -950,7 +950,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.i.C – Make it Clean
 
-- [ ] **2.i.C** · Position **69/885** · Voraussetzung: `2.i.R`.
+- [x] **2.i.C** · Position **69/885** · Voraussetzung: `2.i.R`.
 **Exakte Commit-Message:** `2.i.C refactor(model): Revisionen, Akteure und Zeitwerte bereinigen`
 
 **Bereinigung:** Datentypen vorbereiten, Revisionsfortschreibung ausschließlich der späteren Metadatenpolicy überlassen.
