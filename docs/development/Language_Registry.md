@@ -68,3 +68,11 @@ reserved ranges/overlaps, date fields and required extlang prefix metadata.
 project bytes; it is no substitute for the future transaction lock. Distribution
 manifest parsing is strict JSON, and unsafe project resources produce a typed
 registry failure with code 3 rather than a fallback read.
+
+## Clean-Schritt
+
+Syntaxparser, Registerdateiparser, unveränderliche Registerwerte und reine
+Tag-Auswertung sind getrennte Bausteine. Die bisherigen Importstellen bleiben
+kompatibel. Das Register trifft weiterhin keine Profil- oder Freigabeentscheidung;
+Policy-Verbraucher erhalten dieselben vollständigen Assessment-Daten wie zuvor.
+Die mitgelieferten Registerbytes und ihre Hashbindung bleiben unverändert.
