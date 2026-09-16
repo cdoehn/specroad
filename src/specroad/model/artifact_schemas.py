@@ -11,7 +11,7 @@ from ._schema import validate_builtin
 from .configuration import _json_values
 from .versions import SCHEMA_VERSION
 from .errors import ModelError
-from .relation_identity import relation_identity_fields
+from .relation_fields import relation_identity_fields
 from .metadata_fields import metadata_schemas, extensions_schema
 from .artifact_types import ArtifactType, artifact_type, artifact_types
 

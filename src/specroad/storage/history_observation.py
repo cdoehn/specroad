@@ -8,7 +8,7 @@ from IDs, content hashes, display labels or created_at/created_by.
 
 from hashlib import sha256
 
-from ..model.identity_history import HistoryObservation
+from ..model.history_values import HistoryObservation
 from ..model.identity_values import artifact_identity
 from ..model.relation_identity import relation_identity
 from .json_syntax import parse_json_object

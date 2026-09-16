@@ -9,35 +9,8 @@ from dataclasses import dataclass
 import secrets
 
 from .errors import ModelError
-from .identity_tokens import decode128, encode128
-
-RANDOM_SCHEME = "random128-v1"
-DERIVED_SCHEME = "derived128-v1"
-
-
-def _relation_id(value):
-    if type(value) is not str or not value.startswith("REL-"):
-        raise ModelError("invalid_relation_id", pointer="/relation_id")
-    decode128(value[4:])
-    return value
-
-
-@dataclass(frozen=True)
-class RelationIdentity:
-    relation_id: str
-    id_scheme: str
-
-    def __post_init__(self):
-        _relation_id(self.relation_id)
-        if type(self.id_scheme) is not str or self.id_scheme not in (RANDOM_SCHEME, DERIVED_SCHEME):
-            raise ModelError("unsupported_relation_id_scheme", pointer="/id_scheme")
-
-    @property
-    def id(self):
-        return self.relation_id
-
-    def as_fields(self):
-        return {"relation_id": self.relation_id, "id_scheme": self.id_scheme}
+from .identity_tokens import encode128
+from .relation_values import RANDOM_SCHEME, DERIVED_SCHEME, RelationIdentity, _relation_id
 
 
 def relation_identity(value):
@@ -122,20 +95,8 @@ def require_relation_identity_unchanged(previous, proposed):
         raise ModelError("relation_identity_immutable")
 
 
-def relation_identity_fields():
-    """Partial field assertions; the full relation/graph schema is a later layer.
 
-    Absence of BOTH fields is allowed in the existing common-only projection.
-    Supplying either requires both. This is never full relation validation.
-    """
-    return {
-        "type": "object",
-        "properties": {
-            "relation_id": {"type": "string", "pattern": r"^REL-[0-7][0-9A-HJKMNP-TV-Z]{25}(?![\s\S])"},
-            "id_scheme": {"enum": [RANDOM_SCHEME, DERIVED_SCHEME]},
-        },
-        "anyOf": [
-            {"required": ["relation_id", "id_scheme"]},
-            {"not": {"anyOf": [{"required": ["relation_id"]}, {"required": ["id_scheme"]}]}},
-        ],
-    }
+def relation_identity_fields():
+    """Compatibility entry for the independent passive schema provider."""
+    from .relation_fields import relation_identity_fields as fields
+    return fields()
