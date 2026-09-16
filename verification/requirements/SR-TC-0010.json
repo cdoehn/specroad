@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0010",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0001",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "preconditions": [
+    "Use explicit current resource paths in an owned temporary project; no authoring or full schema/graph approval."
+  ],
+  "steps": [
+    "Prepare normal-form candidates or non-normative views; observe value/byte bindings, exclusions and real absence of writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad format` MUSS ausschließlich die nach Kapitel 10.17 formatierbaren aktuellen JSON-Ressourcen in die definierte menschenlesbare Normalform überführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Read-only normalization proposals and generated-role/source rejection only. Human indentation, headers and layout are not test oracles (TD-001)."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_representation.RepresentationWorkTests.test_config_normalization_is_read_only",
+    "test_representation.RepresentationWorkTests.test_current_artifact_can_be_proposed_without_changing_revision",
+    "test_representation.RepresentationWorkTests.test_recorded_evidence_reviews_and_sealed_baselines_are_protected",
+    "test_representation.RepresentationWorkTests.test_terminal_proposals_are_protected"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Wire the pure representation candidates into future format CLI and checked Change Plan transactions. Complete rendering/import workflows remain later work; no write or release approval is claimed."
   ]
 }
