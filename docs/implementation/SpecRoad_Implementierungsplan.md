@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 63
-last_completed_plan_commit: 2.g.C
-next_plan_commit: 2.h.W
+implementation_plan_commits_completed: 64
+last_completed_plan_commit: 2.h.W
+next_plan_commit: 2.h.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -897,7 +897,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.h.W – Let it Work
 
-- [ ] **2.h.W** · Position **64/885** · Voraussetzung: `2.g.C`.
+- [x] **2.h.W** · Position **64/885** · Voraussetzung: `2.g.C`.
 **Exakte Commit-Message:** `2.h.W feat(model): Relationsidentität und Historienvergleich aufbauen`
 
 **Umsetzung:** Unabhängige zufällige Relations-IDs und Vergleich gleicher Identitäten mit Provenienz vorbereiten.

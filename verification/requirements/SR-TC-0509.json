@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0509",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation."
+  ],
+  "steps": [
+    "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine regulär neu erzeugte `relation_id` DARF NICHT aus Quelle, Ziel oder Position abgeleitet werden; ausschließlich die Bestandsmigration nach SR-REQ-0273 verwendet `derived128-v1`.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Regular allocation has no endpoint/position-derived mode; derived128-v1 can only be read, not newly reserved here."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_relation_identity.RelationIdentityTests.test_endpoint_fields_do_not_influence_identity_reading",
+    "test_relation_identity.RelationIdentityTests.test_equal_relation_contents_get_independent_identities",
+    "test_relation_identity.RelationIdentityTests.test_migrated_scheme_is_readable_not_regularly_reservable"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Actual legacy relation derivation belongs exclusively to the later migration workflow."
   ]
 }
