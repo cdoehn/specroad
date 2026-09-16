@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 from hashlib import sha256
-import json
 
+from ._pretty_json import encode_normal_form
 from .canonical import canonical_json_sha256
 from .errors import ModelError
 from .paths import project_path
@@ -22,8 +22,7 @@ def normal_json_bytes(raw: bytes) -> bytes:
     value = parse_json_object(raw)
     before = canonical_json_sha256(value)
     try:
-        rendered = (json.dumps(value, ensure_ascii=False, allow_nan=False,
-                               sort_keys=True, indent=2) + "\n").encode("utf-8")
+        rendered = encode_normal_form(value)
     except (UnicodeError, ValueError, TypeError, RecursionError) as error:
         raise ModelError("unsupported_json_representation") from error
     if canonical_json_sha256(parse_json_object(rendered)) != before:
