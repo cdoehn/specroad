@@ -1,0 +1,16 @@
+{
+  "format_version": 1,
+  "registry_id": "iana-language-subtags",
+  "registry_version": "2023-10-16",
+  "filename": "registry.txt",
+  "sha256": "3016607e64244c05b1ee2f9d469e399377fda86169c6f255bffd995b838c2fd4",
+  "validator_version": "specroad-bcp47-v1",
+  "record_count": 9851,
+  "source": {
+    "upstream": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+    "distribution": "liblangtag-common 0.6.7-1",
+    "source_file": "language-subtag-registry.xml",
+    "source_sha256": "d83cb02c1aa49acedbf0a8028dbb9796526f33da9e211136c6db5ff905d8dc48",
+    "representation": "All XML registry records and fields re-encoded as RFC 5646 text; not byte-identical to the IANA original file."
+  }
+}

@@ -32,3 +32,6 @@ testpaths = ["tests"]
 pythonpath = ["src", "tests", "tools"]
 python_files = ["test_*.py"]
 addopts = "--disable-plugin-autoload -p no:cacheprovider -p no:doctest -p xdist.plugin -n auto --dist load --max-worker-restart=0"
+
+[tool.setuptools.package-data]
+"specroad.language_data" = ["registry.txt", "snapshot.json"]

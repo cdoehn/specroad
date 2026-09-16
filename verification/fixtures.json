@@ -9,7 +9,8 @@
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-JCS-RFC8785-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
-    "SR-FIX-REQUIREMENT-INPUT-v1"
+    "SR-FIX-REQUIREMENT-INPUT-v1",
+    "SR-FIX-LANGUAGE-REGISTRY-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -47,6 +48,10 @@
     "SR-FIX-REQUIREMENT-INPUT-v1": {
       "provider": "tests/test_requirement.py:fields",
       "kind": "explicit new requirement drafts; pure in-memory preparation, no publication, ID reservation or approval"
+    },
+    "SR-FIX-LANGUAGE-REGISTRY-v1": {
+      "provider": "tests/support/languages.py:registry_bytes",
+      "kind": "synthetic bound IANA-format byte fixtures; full distribution snapshot is separately frozen and hash bound, not a linguistic or release approval"
     }
   }
 }

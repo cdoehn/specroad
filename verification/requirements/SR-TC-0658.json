@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0658",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-LANGUAGE-REGISTRY-v1"
+  ],
+  "preconditions": [
+    "Use the explicitly hash-bound snapshot; no online or host-locale fallback."
+  ],
+  "steps": [
+    "Run the referenced behavior cases with owned inputs and actual offline snapshot bytes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Sprach-Tag-Syntax und Registerzustand MÜSSEN gemäß Anhang S.3 getrennt bestimmt werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Tag grammar and snapshot-relative registration are distinct. Frozen historical snapshot transport is checked independently from language permission, detection, and release approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_language_tags.LanguageSyntaxTests.test_minimum_declared_corpus",
+    "test_language_tags.RegistryLookupTests.test_all_four_states",
+    "test_language_tags.RegistryLookupTests.test_reserved_private_subtags"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."
   ]
 }

@@ -42,7 +42,12 @@ def build_core(source_root: Path, output: Path) -> tuple[Path, Path]:
             raise ValueError("Source symlinks are not packaged.")
         if path.is_dir() or "__pycache__" in path.parts:
             continue
-        if path.suffix != ".py":
+        # Only explicitly shipped declarative resources are added. Arbitrary
+        # files under src remain excluded, including host/editor artifacts.
+        relative_package = path.relative_to(package).as_posix()
+        if path.suffix != ".py" and relative_package not in {
+            "language_data/registry.txt", "language_data/snapshot.json",
+        }:
             continue
         if not stat.S_ISREG(path.stat().st_mode):
             raise ValueError("Only regular source files are packaged.")
