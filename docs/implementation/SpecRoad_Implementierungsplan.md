@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 80
-last_completed_plan_commit: 2.m.R
-next_plan_commit: 2.m.C
+implementation_plan_commits_completed: 81
+last_completed_plan_commit: 2.m.C
+next_plan_commit: 2.n.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1090,7 +1090,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.m.C – Make it Clean
 
-- [ ] **2.m.C** · Position **81/885** · Voraussetzung: `2.m.R`.
+- [x] **2.m.C** · Position **81/885** · Voraussetzung: `2.m.R`.
 **Exakte Commit-Message:** `2.m.C refactor(model): Explizite Requirement-Verbindlichkeit bereinigen`
 
 **Bereinigung:** Gemeinsamen Requirement-Konstruktor für CLI, Import und Migration vorsehen.

@@ -9,7 +9,28 @@ VERIFICATION_PLAN_STATUSES = ("not_planned", "planned", "running", "waived", "no
 REQUIREMENT_KINDS = ("functional", "quality", "interface", "data", "constraint", "security", "safety", "compliance")
 PRIORITIES = ("mandatory", "high", "medium", "low")
 CRITICALITIES = ("normal", "important", "critical", "safety_critical")
-NORMATIVE_FORCES = ("must", "must_not", "should", "may")
+from enum import Enum
+from .errors import ModelError
+
+
+class NormativeForce(str, Enum):
+    """The declared force applies to the unchanged proposition, not its words."""
+    MUST = "must"
+    MUST_NOT = "must_not"
+    SHOULD = "should"
+    MAY = "may"
+
+    @classmethod
+    def from_value(cls, value):
+        if type(value) is not str:
+            raise ModelError("invalid_normative_force", pointer="/normative_force")
+        try:
+            return cls(value)
+        except ValueError as error:
+            raise ModelError("invalid_normative_force", pointer="/normative_force") from error
+
+
+NORMATIVE_FORCES = tuple(item.value for item in NormativeForce)
 
 
 def reference_schema(prefix):
