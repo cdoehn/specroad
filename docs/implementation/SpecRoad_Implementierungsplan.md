@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 64
-last_completed_plan_commit: 2.h.W
-next_plan_commit: 2.h.R
+implementation_plan_commits_completed: 65
+last_completed_plan_commit: 2.h.R
+next_plan_commit: 2.h.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -906,7 +906,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.h.R – Make it Right
 
-- [ ] **2.h.R** · Position **65/885** · Voraussetzung: `2.h.W`.
+- [x] **2.h.R** · Position **65/885** · Voraussetzung: `2.h.W`.
 **Exakte Commit-Message:** `2.h.R feat(model): Relationsidentität und Historienvergleich vervollständigen`
 
 **Vervollständigung:** Reguläre Ableitung aus Endpunkten untersagen; unabhängige Erzeugung unter gleicher ID als Konflikt klassifizieren.

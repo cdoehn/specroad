@@ -11,6 +11,7 @@ from ._schema import validate_builtin
 from .configuration import _json_values
 from .versions import SCHEMA_VERSION
 from .errors import ModelError
+from .relation_identity import relation_identity_fields
 from .metadata_fields import metadata_schemas, extensions_schema
 from .artifact_types import ArtifactType, artifact_type, artifact_types
 
@@ -54,7 +55,8 @@ def _properties(kind):
         "owner": {"anyOf": [dict(text), dict(actor)]},
         "tags": {"type": "array", "items": {"type": "string"}},
         "applicability": {"type": "object"},
-        "relations": {"type": "array", "items": {"type": "object",
+        "relations": {"type": "array", "items": {
+            "allOf": [relation_identity_fields()],
             "properties": {"extensions": extensions_schema()}}},
         "provenance": {"type": "array", "items": {"type": "object"}},
         "external_identities": {"type": "array", "items": {"type": "object"}},

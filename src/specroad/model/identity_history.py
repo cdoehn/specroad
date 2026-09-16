@@ -82,3 +82,15 @@ def compare_histories(left, right):
     if left.content_sha256 == right.content_sha256 and left.source == right.source:
         return HistoryComparison.IDENTICAL_COPY
     return HistoryComparison.SAME_HISTORY
+
+
+def require_same_history(left, right):
+    """Necessary identity precondition only; never authorizes combining content."""
+    result = compare_histories(left, right)
+    if result == HistoryComparison.IDENTITY_CONFLICT:
+        raise ModelError("identity_conflict")
+    if result == HistoryComparison.UNRESOLVED:
+        raise ModelError("identity_history_unresolved")
+    if result == HistoryComparison.DIFFERENT_IDENTITY:
+        raise ModelError("different_identity")
+    return result

@@ -114,3 +114,28 @@ def allocate_relation_identity(inventory):
         identity = RelationIdentity("REL-" + encode128(random_bytes), RANDOM_SCHEME)
         if not inventory.contains(identity.id):
             return RelationAllocation(identity, inventory.reserve(identity))
+
+
+def require_relation_identity_unchanged(previous, proposed):
+    """Normal edits cannot relabel an identity or switch to a migration scheme."""
+    if relation_identity(previous) != relation_identity(proposed):
+        raise ModelError("relation_identity_immutable")
+
+
+def relation_identity_fields():
+    """Partial field assertions; the full relation/graph schema is a later layer.
+
+    Absence of BOTH fields is allowed in the existing common-only projection.
+    Supplying either requires both. This is never full relation validation.
+    """
+    return {
+        "type": "object",
+        "properties": {
+            "relation_id": {"type": "string", "pattern": r"^REL-[0-7][0-9A-HJKMNP-TV-Z]{25}(?![\s\S])"},
+            "id_scheme": {"enum": [RANDOM_SCHEME, DERIVED_SCHEME]},
+        },
+        "anyOf": [
+            {"required": ["relation_id", "id_scheme"]},
+            {"not": {"anyOf": [{"required": ["relation_id"]}, {"required": ["id_scheme"]}]}},
+        ],
+    }

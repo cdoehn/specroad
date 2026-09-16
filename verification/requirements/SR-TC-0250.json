@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS beim Import und semantischen Merge unterscheiden, ob eine gleiche ID dieselbe Historie, eine zulässige identische Kopie oder eine fachlich kollidierende unabhängige Erzeugung bezeichnet.",
-    "scope": "Neutral comparison distinguishes equal copies, common history and unresolved origin using explicit caller-bound observations."
+    "scope": "Exact supplied bytes bind identity observations; absent origin stays unresolved and is rejected by the necessary history precondition."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,9 +37,12 @@
   "test_ids": [
     "test_identity_history.IdentityHistoryTests.test_changed_content_with_same_origin_is_same_history",
     "test_identity_history.IdentityHistoryTests.test_equal_ids_and_bytes_without_origin_do_not_prove_a_copy",
-    "test_identity_history.IdentityHistoryTests.test_identical_bound_copy_is_recognized"
+    "test_identity_history.IdentityHistoryTests.test_identical_bound_copy_is_recognized",
+    "test_identity_history_right.IdentityHistoryRightTests.test_artifact_observation_is_bound_to_exact_bytes_and_identity",
+    "test_identity_history_right.IdentityHistoryRightTests.test_equal_audit_metadata_does_not_establish_history",
+    "test_identity_history_right.IdentityHistoryRightTests.test_relation_observation_binds_source_and_bytes"
   ],
   "open_items": [
-    "Trusted provenance acquisition and integration with import/merge remain future work; comparison is not authorization."
+    "No automatic Git ancestry discovery, imported-provenance authentication or merge decision is implemented here."
   ]
 }

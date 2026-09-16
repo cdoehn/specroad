@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine gleiche ID aus fachlich unabhängiger Erzeugung MUSS als Identitätskonflikt abgewiesen werden.",
-    "scope": "A known independent origin for the same identity is a conflict, even with equal content hashes."
+    "scope": "Independent creation origins are classified and rejected; origin labels must first be established by trusted callers."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,9 +35,11 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_identity_history.IdentityHistoryTests.test_independent_origins_conflict_even_with_equal_content"
+    "test_identity_history.IdentityHistoryTests.test_independent_origins_conflict_even_with_equal_content",
+    "test_identity_history_right.IdentityHistoryRightTests.test_different_namespaces_with_same_event_are_not_equivalent",
+    "test_identity_history_right.IdentityHistoryRightTests.test_origin_event_distinguishes_independent_creation_in_one_namespace"
   ],
   "open_items": [
-    "Import/merge must establish trusted origin observations and enforce the result before mutation."
+    "Enforcement in complete import/merge workflows is not yet implemented."
   ]
 }

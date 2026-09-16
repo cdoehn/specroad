@@ -21,3 +21,17 @@ ungeklärt, auch bei gleichen Bytes. Unterschiedliche bekannte Ursprünge unter
 gleicher ID sind Konflikte, auch bei gleichen Bytes. Gleiche Historie besagt
 nicht, dass geänderte Inhalte konfliktfrei gemerged werden dürfen.
 
+## 2.h.R – Bindung und Fehlergrenzen
+
+`observe_artifact_history` und `observe_relation_history` binden Beobachtungen
+an die ID aus den tatsächlich übergebenen UTF-8-JSON-Bytes und deren SHA-256;
+bei Relationen gehört die explizite Quellidentität dazu. Es werden keine Dateien
+geöffnet, Referenzen aufgelöst, Programme ausgeführt oder Quellen authentifiziert.
+`require_same_history` weist Konflikte, andere Identitäten und ungeklärte Herkunft
+ab. Ein positives Ergebnis ist nur eine notwendige Identitätsvorbedingung.
+
+Die Common-Schicht validiert angegebene Relationsidentitätsfelder paarweise.
+Ihre vollständige Abwesenheit bleibt in der ausdrücklich partiellen Common-
+Projektion zulässig. Das ist keine vollständige Relation oder Graphfreigabe.
+Der spätere vollständige Relationsvertrag muss beide Pflichtfelder verlangen.
+
