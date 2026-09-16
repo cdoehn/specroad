@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Zeitstempel in normativen Artefakten MÜSSEN RFC-3339-konform in UTC mit dem Suffix `Z` gespeichert werden.",
-    "scope": "Immutable audit values and pure regular-revision-one metadata factory; explicit actor and planned_at inputs, no wall-clock defaults."
+    "scope": "Shared persisted UTC-Z and typed audit read contracts; existing history revisions and original bytes are preserved."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -36,9 +36,12 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_audit.AuditTests.test_exact_fractional_seconds_are_retained_not_truncated",
-    "test_audit.AuditTests.test_utc_z_contract_rejects_offset_and_local_spelling"
+    "test_audit.AuditTests.test_utc_z_contract_rejects_offset_and_local_spelling",
+    "test_audit_right.AuditRightTests.test_all_common_artifact_types_require_z_not_plus_zero_offset",
+    "test_audit_right.AuditRightTests.test_fractional_seconds_remain_exact_through_common_reader",
+    "test_audit_right.AuditRightTests.test_typed_and_schema_utc_boundaries_agree"
   ],
   "open_items": [
-    "Shared persisted UTC-Z integration and operation-specific update/merge/migration policies remain pending; no write permission."
+    "Operation-specific revision advancement and chronological metadata policies remain for Change Plans, merge and migration; these values authorize no write."
   ]
 }

@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede semantische Änderung an einem Artefakt MUSS die für ihre Operationsart in Anhang K festgelegte Revisionsregel erfüllen; unveränderte Übernahmen einer bestehenden Historienrevision sind keine Neuerzeugung.",
-    "scope": "Immutable audit values and pure regular-revision-one metadata factory; explicit actor and planned_at inputs, no wall-clock defaults."
+    "scope": "Shared persisted UTC-Z and typed audit read contracts; existing history revisions and original bytes are preserved."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,9 +35,11 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_audit.AuditTests.test_existing_audit_is_not_reset_to_revision_one"
+    "test_audit.AuditTests.test_existing_audit_is_not_reset_to_revision_one",
+    "test_audit_right.AuditRightTests.test_historical_revision_is_read_without_recreation_or_increment",
+    "test_audit_right.AuditRightTests.test_metadata_fields_cannot_be_used_as_a_policy_override"
   ],
   "open_items": [
-    "Shared persisted UTC-Z integration and operation-specific update/merge/migration policies remain pending; no write permission."
+    "Operation-specific revision advancement and chronological metadata policies remain for Change Plans, merge and migration; these values authorize no write."
   ]
 }

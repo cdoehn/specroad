@@ -205,8 +205,8 @@ class ArtifactSchemaRightTests(unittest.TestCase):
                 validate_common_fields(common_artifact(id=value))
 
     def test_utc_timestamp_forms_preserve_the_input_bytes(self):
-        for timestamp in ("2024-02-29T10:30:59Z", "2024-02-29t10:30:59z",
-                          "2024-02-29T10:30:59.123456789Z", "2024-02-29T10:30:59+00:00",
+        for timestamp in ("2024-02-29T10:30:59Z", "2024-02-29t10:30:59Z",
+                          "2024-02-29T10:30:59.123456789Z",
                           "2016-12-31T23:59:60Z"):
             with self.subTest(timestamp=timestamp):
                 raw = artifact_bytes(common_artifact(created_at=timestamp, updated_at=timestamp))
@@ -215,7 +215,7 @@ class ArtifactSchemaRightTests(unittest.TestCase):
                 self.assertEqual(resource.common_fields["created_at"], timestamp)
 
     def test_bad_calendar_and_non_utc_timestamps_are_rejected(self):
-        for timestamp in ("2023-02-29T00:00:00Z", "2024-13-01T00:00:00Z", "0000-01-01T00:00:00Z",
+        for timestamp in ("2024-02-29T10:30:59+00:00", "2024-02-29t10:30:59z", "2023-02-29T00:00:00Z", "2024-13-01T00:00:00Z", "0000-01-01T00:00:00Z",
                           "2024-01-01T24:00:00Z", "2024-01-01T00:60:00Z", "2024-01-01T00:00:61Z",
                           "2024-01-01T00:00:60Z", "2024-01-01T00:00:00", "2024-01-01T00:00:00-00:00",
                           "2024-01-01T00:00:00+01:00", "2024-01-01T00:00:00.Z", "2024-01-01T00:00:00Z\n"):

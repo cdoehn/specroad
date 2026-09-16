@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jedes Artefakt MUSS `created_at`, `created_by`, `updated_at` und `updated_by` enthalten.",
-    "scope": "Immutable audit values and pure regular-revision-one metadata factory; explicit actor and planned_at inputs, no wall-clock defaults."
+    "scope": "Shared persisted UTC-Z and typed audit read contracts; existing history revisions and original bytes are preserved."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -36,9 +36,11 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_audit.AuditTests.test_missing_audit_field_is_reported_at_its_pointer",
-    "test_audit.AuditTests.test_regular_creation_starts_at_one_with_complete_bound_actor_and_time"
+    "test_audit.AuditTests.test_regular_creation_starts_at_one_with_complete_bound_actor_and_time",
+    "test_audit_right.AuditRightTests.test_missing_actor_identity_never_resolves_from_environment",
+    "test_audit_right.AuditRightTests.test_valid_reader_exposes_owned_audit_fields_without_writes"
   ],
   "open_items": [
-    "Shared persisted UTC-Z integration and operation-specific update/merge/migration policies remain pending; no write permission."
+    "Operation-specific revision advancement and chronological metadata policies remain for Change Plans, merge and migration; these values authorize no write."
   ]
 }

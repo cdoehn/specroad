@@ -50,3 +50,17 @@ kein Artefakt an. `artifact_audit` liest bestehende Werte ohne Neustempelung.
 JSON-Zahlen mit ganzzahligem Wert wie 1.0 bleiben als Revision gültig; bool ist
 keine Revision. Die numerische JSON-Serialisierungsgrenze bleibt unabhängig.
 
+## 2.i.R – Persistierter UTC-Vertrag und Read-only-Projektion
+
+SR-REQ-0035 verlangt das Suffix `Z`. Die bisherige Common-Schemadefinition ließ
+auch `+00:00` und kleines `z` zu; diese zu breite Akzeptanz ist in diesem Right-
+Schritt korrigiert. Die zwei alten Positivvektoren wurden zu Negativvektoren;
+kein Fehler wird durch Überspringen verdeckt. RFC-konformes kleines `t` bleibt
+zulässig, die Quelldaten werden dabei nicht normalisiert oder umgeschrieben.
+
+`CommonArtifact.audit` liefert eine frische typisierte Auditprojektion. Bestehende
+Revisionen, ursprüngliche Actorwerte und Datei-Bytes bleiben unverändert.
+Keine `advance`- oder `apply`-Abkürzung: Revisionsfortschreibung, genau einmal pro
+gefaltetem Plan, UTC-Monotonie und Sonderregeln für Merge/Migration gehören
+weiterhin ausschließlich zur späteren Metadatenpolicy aus Anhang K.
+

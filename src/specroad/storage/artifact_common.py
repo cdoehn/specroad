@@ -32,6 +32,12 @@ class CommonArtifact:
         object.__setattr__(self, "validation_scope", VALIDATION_SCOPE)
 
     @property
+    def audit(self):
+        """Typed audit projection only; never advances revision or writes bytes."""
+        from ..model.audit import artifact_audit
+        return artifact_audit(parse_json_object(self.source_bytes, path=self.path))
+
+    @property
     def common_fields(self):
         value = parse_json_object(self.source_bytes, path=self.path)
         names = artifact_common_schema(self.artifact_type)["properties"]

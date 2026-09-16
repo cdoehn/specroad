@@ -12,6 +12,7 @@ from .configuration import _json_values
 from .versions import SCHEMA_VERSION
 from .errors import ModelError
 from .relation_fields import relation_identity_fields
+from .audit import UTC_PATTERN
 from .metadata_fields import metadata_schemas, extensions_schema
 from .artifact_types import ArtifactType, artifact_type, artifact_types
 
@@ -37,7 +38,7 @@ def _definitions():
              "properties": {"actor_type": {"enum": ["human", "ai", "ci", "tool"]},
                             "actor_id": dict(text)}, "additionalProperties": False}
     utc = {"type": "string", "format": "date-time",
-           "pattern": r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:[Zz]|\+00:00)(?![\s\S])"}
+           "pattern": UTC_PATTERN}
     return {"text": text, "actor": actor, "utc": utc}
 
 

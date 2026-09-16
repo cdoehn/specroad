@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 67
-last_completed_plan_commit: 2.i.W
-next_plan_commit: 2.i.R
+implementation_plan_commits_completed: 68
+last_completed_plan_commit: 2.i.R
+next_plan_commit: 2.i.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -941,7 +941,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.i.R – Make it Right
 
-- [ ] **2.i.R** · Position **68/885** · Voraussetzung: `2.i.W`.
+- [x] **2.i.R** · Position **68/885** · Voraussetzung: `2.i.W`.
 **Exakte Commit-Message:** `2.i.R feat(model): Revisionen, Akteure und Zeitwerte vervollständigen`
 
 **Vervollständigung:** Ungültige Revisionen, Lokalzeiten und unvollständige Actorwerte ablehnen.
