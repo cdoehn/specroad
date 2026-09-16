@@ -312,11 +312,11 @@ class ResourceRightTests(unittest.TestCase):
                          {'specroad.json','profiles/p.json'})
 
     def test_directory_disappearing_after_classification_is_an_error(self):
-        from specroad.storage import inventory
-        put(self.root,'rules/a.json',RAW);classify=inventory.resource_is_directory
+        from specroad.storage import resource_discovery
+        put(self.root,'rules/a.json',RAW);classify=resource_discovery.resource_is_directory
         def inspecting(boundary,path,**kwargs):
             result=classify(boundary,path,**kwargs)
             if path=='rules':(self.root/'rules').rename(self.root/'saved-rules')
             return result
-        with patch.object(inventory,'resource_is_directory',side_effect=inspecting),self.assertRaises(FileNotFoundError):
+        with patch.object(resource_discovery,'resource_is_directory',side_effect=inspecting),self.assertRaises(FileNotFoundError):
             inventory_project(self.source)

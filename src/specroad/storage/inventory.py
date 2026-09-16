@@ -5,102 +5,19 @@ are inputs. Generated, operational, unreferenced and archive data are excluded.
 No cache, workspace file, ID reservation or transaction is created by a read.
 """
 
-from dataclasses import dataclass
 from hashlib import sha256
 
 from ..model.artifact_schemas import validate_common_fields
 from ..model.attachments import AttachmentDescriptor
 from ..model.errors import ModelError
 from ..model.hashes import canonical_json_sha256
-from ..model.paths import CURRENT_JSON_CLASSES, PathClass, artifact_path, project_path
+from ..model.paths import PathClass, artifact_path
 from ..model.versions import SCHEMA_VERSION
-from ..security.resource_access import directory_entries, resource_is_directory
 from .attachments import fingerprint_file, verify_attachments
 from .json_syntax import parse_json_object
 from .project import ProjectSource
-
-
-@dataclass(frozen=True)
-class ResourceEntry:
-    path: str
-    kind: str
-    size: int
-    sha256: str
-    canonical_sha256: str | None = None
-    media_type: str | None = None
-
-    @property
-    def data(self):
-        return {"path": self.path, "kind": self.kind, "size": self.size,
-                "sha256": self.sha256, "canonical_sha256": self.canonical_sha256,
-                "media_type": self.media_type}
-
-
-@dataclass(frozen=True)
-class ResourceInventory:
-    project_id: str
-    entries: tuple[ResourceEntry, ...]
-    # An observed read binding is not a reusable write capability.
-    source_root: str
-    root_identity: tuple
-    explicit_attachments: tuple[AttachmentDescriptor, ...] = ()
-
-    @property
-    def atomic_snapshot(self):
-        return False
-
-    @property
-    def data(self):
-        return {"inventory_format_version": 1, "scope": "current_resources",
-                "project_id": self.project_id,
-                "resources": [value.data for value in self.entries]}
-
-    @property
-    def sha256(self):
-        # This byte-sensitive inventory binding is NOT model_root_sha256.
-        return canonical_json_sha256(self.data)
-
-
-def _scan_json_paths(source):
-    """Enumerate only the configured portions of normative JSON trees."""
-    pending = []
-    for path in source.configuration.managed_paths:
-        if path.split("/")[0] in {"spec", "profiles", "rules", "mappings"}:
-            pending.append((path, True))
-    seen = set()
-    paths = {"specroad.json"}
-    while pending:
-        path, optional = pending.pop()
-        path = project_path(path)
-        if path in seen:
-            continue
-        seen.add(path)
-        # A directory can have a .json suffix; classification never guesses.
-        is_directory = resource_is_directory(
-            source.boundary, path,
-            missing_ok=optional and source.classify(path) not in CURRENT_JSON_CLASSES,
-        )
-        if is_directory is None:
-            continue
-        if not is_directory:
-            if source.classify(path) not in CURRENT_JSON_CLASSES:
-                raise ModelError("unclassified_normative_resource", path=path)
-            paths.add(path)
-            continue
-        # The directory was just observed. Disappearance is no longer an
-        # optional missing tree: it invalidates this inventory attempt.
-        entries = directory_entries(source.boundary, path)
-        for name, is_directory in entries:
-            child = project_path(path + "/" + name)
-            if is_directory:
-                pending.append((child, False))
-            elif child.endswith(".json"):
-                if source.classify(child) not in CURRENT_JSON_CLASSES:
-                    raise ModelError("unclassified_normative_json", path=child)
-                paths.add(child)
-    if len({path.casefold() for path in paths}) != len(paths):
-        raise ModelError("resource_path_collision")
-    return tuple(sorted(paths))
+from ..model.resource_inventory import ResourceEntry, ResourceInventory
+from .resource_discovery import current_json_paths as _scan_json_paths
 
 
 def _read_json_entry(source, path):

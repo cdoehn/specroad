@@ -1,42 +1,22 @@
 """Read-only attachment verification; bytes are never copied into the project."""
 
-from dataclasses import dataclass
-from hashlib import sha256
 import os
 
 from ..model.attachments import AttachmentDescriptor
 from ..model.errors import ModelError
 from ..model.paths import PathClass, project_path
-from ..security.errors import SafetyViolation
 from ..security.resource_access import opened_resource
 from .project import ProjectSource
-
-
-@dataclass(frozen=True)
-class ByteFingerprint:
-    size: int
-    sha256: str
+from .byte_binding import ByteFingerprint, fingerprint_reader, validate_block_size
 
 
 def fingerprint_file(boundary, path, *, block_size=65536):
-    """Hash the actual file in bounded blocks, keeping no complete payload copy."""
-    if type(block_size) is not int or not 1 <= block_size <= 1048576:
-        raise ValueError("Block size must be between 1 and 1048576 bytes")
-    digest = sha256()
-    count = 0
+    """Bind a guarded descriptor to the shared bounded-memory byte hasher."""
+    validate_block_size(block_size)  # Reject invalid requests before file access.
     with opened_resource(boundary, project_path(path)) as (descriptor, initial):
-        while True:
-            block = os.read(descriptor, block_size)
-            if not block:
-                break
-            digest.update(block)
-            count += len(block)
-            if count > initial.st_size:
-                # A continuously growing input cannot extend this read forever.
-                raise SafetyViolation("Resource grew during inspection")
-        if count != initial.st_size:
-            raise SafetyViolation("Resource byte count changed during inspection")
-    return ByteFingerprint(count, digest.hexdigest())
+        observed = fingerprint_reader(lambda size: os.read(descriptor, size),
+                                      initial.st_size, block_size=block_size)
+    return observed
 
 
 def inspect_attachment(source, path, media_type):

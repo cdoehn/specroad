@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 77
-last_completed_plan_commit: 2.l.R
-next_plan_commit: 2.l.C
+implementation_plan_commits_completed: 78
+last_completed_plan_commit: 2.l.C
+next_plan_commit: 2.m.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1055,7 +1055,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.l.C – Make it Clean
 
-- [ ] **2.l.C** · Position **78/885** · Voraussetzung: `2.l.R`.
+- [x] **2.l.C** · Position **78/885** · Voraussetzung: `2.l.R`.
 **Exakte Commit-Message:** `2.l.C refactor(model): Ressourceninventur und Anhangsdaten bereinigen`
 
 **Bereinigung:** Inventarisierung und blockweises Hashen für Baselines, Exchange und Work gemeinsam nutzbar machen.
