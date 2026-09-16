@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 78
-last_completed_plan_commit: 2.l.C
-next_plan_commit: 2.m.W
+implementation_plan_commits_completed: 79
+last_completed_plan_commit: 2.m.W
+next_plan_commit: 2.m.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1072,7 +1072,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.m.W – Let it Work
 
-- [ ] **2.m.W** · Position **79/885** · Voraussetzung: `2.l.C`.
+- [x] **2.m.W** · Position **79/885** · Voraussetzung: `2.l.C`.
 **Exakte Commit-Message:** `2.m.W feat(model): Explizite Requirement-Verbindlichkeit aufbauen`
 
 **Umsetzung:** language, normative_force, statement und strukturierte Semantik ab draft materialisieren; should verlangt Abweichungsfelder.

@@ -7,10 +7,12 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-DOMAIN-DRAFT-v1"
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-REQUIREMENT-INPUT-v1"
   ],
   "preconditions": [
-    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation."
+    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation.",
+    "Explicit requirement identity and audit inputs; no language inference, publication or human approval."
   ],
   "steps": [
     "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes."
@@ -18,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Requirement MUSS genau einen `requirement_kind` aus `functional`, `quality`, `interface`, `data`, `constraint`, `security`, `safety` oder `compliance` besitzen.",
-    "scope": "Common envelope and the implemented thirteen type-field contracts only. No complete graph/profile/evidence/approval validation."
+    "scope": "Existing read-only field checks plus pure new requirement construction and explicit metadata. No natural-language interpretation, BCP-47 registry validation, profile, Change Plan, CLI/import or write authorization."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,9 +37,10 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_domain_schemas.DomainWorkTests.test_requirement_enumerations_are_exact"
+    "test_domain_schemas.DomainWorkTests.test_requirement_enumerations_are_exact",
+    "test_requirement.RequirementWorkTests.test_missing_mandatory_fields_rejected"
   ],
   "open_items": [
-    "Remaining graph, profile, specialized lifecycle, semantic, evidence and end-to-end checks at their assigned plan steps; no full requirement or release approval claimed."
+    "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."
   ]
 }

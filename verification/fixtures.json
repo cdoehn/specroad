@@ -8,7 +8,8 @@
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-JCS-RFC8785-v1",
-    "SR-FIX-RESOURCE-INVENTORY-v1"
+    "SR-FIX-RESOURCE-INVENTORY-v1",
+    "SR-FIX-REQUIREMENT-INPUT-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -42,6 +43,10 @@
     "SR-FIX-RESOURCE-INVENTORY-v1": {
       "provider": "tests/test_resource_inventory.py:descriptor",
       "kind": "owned binary payloads and normative JSON; actual byte checks, no external evidence authenticity or write authorization"
+    },
+    "SR-FIX-REQUIREMENT-INPUT-v1": {
+      "provider": "tests/test_requirement.py:fields",
+      "kind": "explicit new requirement drafts; pure in-memory preparation, no publication, ID reservation or approval"
     }
   }
 }

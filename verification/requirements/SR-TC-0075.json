@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0075",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0006",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-REQUIREMENT-INPUT-v1"
+  ],
+  "preconditions": [
+    "Explicit requirement identity and audit inputs; no language inference, publication or human approval."
+  ],
+  "steps": [
+    "Prepare a new requirement from explicit inputs and inspect stored values; reject incomplete or conflicting inputs."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS für Requirements strukturierte Semantikfelder für `scope`, `actor`, `trigger`, `preconditions`, `response`, `object`, `timing`, `thresholds` und `exceptions` unterstützen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Existing read-only field checks plus pure new requirement construction and explicit metadata. No natural-language interpretation, BCP-47 registry validation, profile, Change Plan, CLI/import or write authorization."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,10 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_requirement.RequirementWorkTests.test_structured_semantics_preserved"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."
   ]
 }
