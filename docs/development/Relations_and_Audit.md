@@ -35,3 +35,18 @@ Ihre vollständige Abwesenheit bleibt in der ausdrücklich partiellen Common-
 Projektion zulässig. Das ist keine vollständige Relation oder Graphfreigabe.
 Der spätere vollständige Relationsvertrag muss beide Pflichtfelder verlangen.
 
+## 2.i.W – Explizite Auditwerte
+
+`Revision`, `Actor` und `UtcTimestamp` sind unveränderbare Werte. Die Actorarten
+sind `human`, `ai`, `ci`, `tool`; die ID bleibt ein nichtleerer Unicode-Wert.
+Es erfolgt keine Anmeldung, Identitätsprüfung oder Ableitung aus Umgebungsdaten.
+UTC-Zeitwerte bewahren alle Nachkommastellen und werden nicht auf die sechs
+Nachkommastellen eines Python-datetime abgerundet. Schaltsekunden werden nur als
+syntaktisch mögliche Juni-/Dezember-Kandidaten geprüft, nicht online bestätigt.
+
+`new_artifact_audit(actor=..., planned_at=...)` liefert Revision 1 sowie identische
+Erstellungs-/Änderungswerte aus genau diesen gebundenen Inputs. Der Aufruf legt
+kein Artefakt an. `artifact_audit` liest bestehende Werte ohne Neustempelung.
+JSON-Zahlen mit ganzzahligem Wert wie 1.0 bleiben als Revision gültig; bool ist
+keine Revision. Die numerische JSON-Serialisierungsgrenze bleibt unabhängig.
+

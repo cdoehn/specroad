@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0033",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0003",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-COMMON-v1"
+  ],
+  "preconditions": [
+    "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation."
+  ],
+  "steps": [
+    "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jedes Artefakt MUSS eine positive ganzzahlige `revision` besitzen, die bei 1 beginnt.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Immutable audit values and pure regular-revision-one metadata factory; explicit actor and planned_at inputs, no wall-clock defaults."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_audit.AuditTests.test_fractional_boolean_and_nonpositive_revisions_are_rejected",
+    "test_audit.AuditTests.test_regular_creation_starts_at_one_with_complete_bound_actor_and_time"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Shared persisted UTC-Z integration and operation-specific update/merge/migration policies remain pending; no write permission."
   ]
 }
