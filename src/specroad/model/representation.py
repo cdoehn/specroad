@@ -71,3 +71,13 @@ class NormalizationCandidate:
     @property
     def normalized_data(self) -> dict:
         return parse_json_object(self.normalized_bytes, path=self.path)
+
+    def require_current(self, raw: bytes) -> None:
+        """Compare exact original bytes, even when changed bytes mean the same.
+
+        This is a precondition check, not a lock or an authorization to publish.
+        """
+        if type(raw) is not bytes:
+            raise ModelError("bytes_required", path=self.path)
+        if sha256(raw).hexdigest() != self.expected_byte_sha256 or raw != self.source_bytes:
+            raise ModelError("representation_source_changed", path=self.path)

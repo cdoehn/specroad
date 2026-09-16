@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT Änderungen an generierten Ansichten als Änderung des kanonischen Modells zurückimportieren.",
-    "scope": "Read-only normalization proposals and generated-role/source rejection only. Human indentation, headers and layout are not test oracles (TD-001)."
+    "scope": "Read-only normalization proposals and generated-role/source rejection only. Human indentation, headers and layout are not test oracles (TD-001). Source freshness and complete explicit-set checks do not replace the future transaction lock or an atomic project snapshot."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -39,7 +39,8 @@
   "test_ids": [
     "test_representation.RepresentationWorkTests.test_generated_path_cannot_be_read_as_normative_even_with_valid_config_bytes",
     "test_representation.RepresentationWorkTests.test_generated_envelope_is_not_a_canonical_configuration",
-    "test_representation.RepresentationWorkTests.test_generated_object_cannot_be_passed_as_normative_bytes"
+    "test_representation.RepresentationWorkTests.test_generated_object_cannot_be_passed_as_normative_bytes",
+    "test_representation_right.RepresentationRightTests.test_generated_role_cannot_be_changed_by_payload_metadata"
   ],
   "open_items": [
     "Wire the pure representation candidates into future format CLI and checked Change Plan transactions. Complete rendering/import workflows remain later work; no write or release approval is claimed."

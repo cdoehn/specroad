@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 73
-last_completed_plan_commit: 2.k.W
-next_plan_commit: 2.k.R
+implementation_plan_commits_completed: 74
+last_completed_plan_commit: 2.k.R
+next_plan_commit: 2.k.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1011,7 +1011,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.k.R – Make it Right
 
-- [ ] **2.k.R** · Position **74/885** · Voraussetzung: `2.k.W`.
+- [x] **2.k.R** · Position **74/885** · Voraussetzung: `2.k.W`.
 **Exakte Commit-Message:** `2.k.R feat(model): Repräsentation ohne Fachänderung vervollständigen`
 
 **Vervollständigung:** Normative Originaltextbytes nicht vereinheitlichen; geschützte Originalressourcen von Normalisierung ausnehmen.
