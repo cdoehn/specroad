@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 69
-last_completed_plan_commit: 2.i.C
-next_plan_commit: 2.j.W
+implementation_plan_commits_completed: 70
+last_completed_plan_commit: 2.j.W
+next_plan_commit: 2.j.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -967,7 +967,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.j.W – Let it Work
 
-- [ ] **2.j.W** · Position **70/885** · Voraussetzung: `2.i.C`.
+- [x] **2.j.W** · Position **70/885** · Voraussetzung: `2.i.C`.
 **Exakte Commit-Message:** `2.j.W feat(model): JCS und kanonische Hashes aufbauen`
 
 **Umsetzung:** RFC-8785-konforme kanonische JSON-Bytes und SHA-256 implementieren; originale Unicodewerte erhalten.
