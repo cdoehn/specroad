@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 82
-last_completed_plan_commit: 2.n.W
-next_plan_commit: 2.n.R
+implementation_plan_commits_completed: 83
+last_completed_plan_commit: 2.n.R
+next_plan_commit: 2.n.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1116,7 +1116,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.n.R – Make it Right
 
-- [ ] **2.n.R** · Position **83/885** · Voraussetzung: `2.n.W`.
+- [x] **2.n.R** · Position **83/885** · Voraussetzung: `2.n.W`.
 **Exakte Commit-Message:** `2.n.R feat(model): Sprach-Tags und Offline-Register vervollständigen`
 
 **Vervollständigung:** Keine stille Makrosprachenalias-Auflösung oder Onlineaktualisierung; unbekannt ist nicht automatisch ungültig.

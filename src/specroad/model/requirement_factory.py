@@ -7,6 +7,7 @@ from .audit import new_artifact_audit
 from .configuration import ProjectConfiguration
 from .domain_fields import NormativeForce
 from .errors import ModelError
+from .language_tags import parse_language_tag
 from .identity_values import ArtifactIdentity, RANDOM_SCHEME
 from .requirement_values import RequirementDraft, _owned, _explicit_text
 from .versions import SCHEMA_VERSION
@@ -58,6 +59,7 @@ def prepare_requirement(fields, *, identity, actor, planned_at, configuration=No
     language_source = _resolve(data, "language", language, default)
     force_source = _resolve(data, "normative_force", normative_force)
     _explicit_text(data["language"], "language")
+    data["language"] = parse_language_tag(data["language"]).canonical
     NormativeForce.from_value(data["normative_force"])
     data.update(schema_version=SCHEMA_VERSION, artifact_type="requirement", id=identity.id,
                 id_scheme=identity.id_scheme, maturity="draft")

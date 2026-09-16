@@ -37,7 +37,9 @@
   "test_ids": [
     "test_language_storage.RegistryStorageTests.test_bound_snapshot_read_preserves_all_bytes",
     "test_language_storage.RegistryStorageTests.test_relocatable_module_and_zipapp_ship_snapshot",
-    "test_language_storage.RegistryStorageTests.test_bound_project_not_silently_upgraded"
+    "test_language_storage.RegistryStorageTests.test_bound_project_not_silently_upgraded",
+    "test_language_right.LanguageIntegrationTests.test_registry_changes_between_reads",
+    "test_language_right.LanguageIntegrationTests.test_changed_observation_not_refreshed_silently"
   ],
   "open_items": [
     "Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."

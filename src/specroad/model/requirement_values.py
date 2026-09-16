@@ -6,6 +6,7 @@ from .canonical import canonical_json_bytes
 from .domain_fields import NormativeForce
 from .domain_schemas import validate_domain_fields
 from .errors import ModelError
+from .language_tags import parse_language_tag
 from .identity_values import RANDOM_SCHEME
 
 VALIDATION_SCOPE = "requirement_fields_only"
@@ -37,6 +38,7 @@ class RequirementMeaning:
 
     def __post_init__(self):
         _explicit_text(self.language, "language")
+        parse_language_tag(self.language)
         _explicit_text(self.statement, "statement")
         if type(self.normative_force) is not NormativeForce:
             raise ModelError("typed_normative_force_required", pointer="/normative_force")

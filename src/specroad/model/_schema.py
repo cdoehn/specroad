@@ -82,7 +82,7 @@ def _check_vocabulary(schema):
         if "type" in node and node["type"] not in (
                 "object", "array", "string", "boolean", "null", "number", "integer"):
             raise ValueError("Unsupported built-in schema type")
-        if "format" in node and node["format"] not in ("date-time", "date"):
+        if "format" in node and node["format"] not in ("date-time", "date", "bcp47"):
             raise ValueError("Unknown built-in format assertion")
         if "$ref" in node:
             ref = node["$ref"]
@@ -157,9 +157,16 @@ def validate_builtin(instance, schema):
             if "pattern" in node and re.search(node["pattern"], value) is None:
                 raise ModelError("schema_pattern", pointer=pointer)
         if "format" in node:
-            if node["format"] not in ("date-time", "date"):
+            if node["format"] not in ("date-time", "date", "bcp47"):
                 raise ValueError("Unknown built-in format assertion")
-            if type(value) is str and not (_date(value) if node["format"] == "date" else _datetime_utc(value)):
+            if type(value) is str and node["format"] == "bcp47":
+                from .language_tags import LanguageTagError, parse_language_tag
+                try:
+                    parse_language_tag(value)
+                except LanguageTagError as error:
+                    error.pointer = pointer
+                    raise
+            elif type(value) is str and not (_date(value) if node["format"] == "date" else _datetime_utc(value)):
                 raise ModelError("schema_format", pointer=pointer)
         if type(value) in (int, float):
             if "minimum" in node and value < node["minimum"]:

@@ -3,6 +3,9 @@
 from hashlib import sha256
 from importlib.resources import files
 import json
+from .json_syntax import parse_json_object
+from ..model.errors import ModelError
+from ..security import SafetyViolation
 
 from ..model.language_registry import LanguageRegistry, LanguageRegistryError
 from ..model.language_tags import VALIDATOR_VERSION
@@ -12,8 +15,12 @@ def bundled_language_registry():
     """Distribution data for future init; never used as a project fallback."""
     resource = files("specroad.language_data")
     try:
-        manifest = json.loads(resource.joinpath("snapshot.json").read_bytes())
-        if (manifest["format_version"] != 1 or manifest["registry_id"] != "iana-language-subtags"
+        manifest = parse_json_object(resource.joinpath("snapshot.json").read_bytes())
+        if set(manifest) != {"format_version", "registry_id", "registry_version", "filename", "sha256",
+                             "validator_version", "record_count", "source"}:
+            raise LanguageRegistryError("invalid_distribution_registry_manifest")
+        if (type(manifest["format_version"]) is not int or manifest["format_version"] != 1
+                or type(manifest["record_count"]) is not int or manifest["record_count"] < 1 or manifest["registry_id"] != "iana-language-subtags"
                 or manifest["filename"] != "registry.txt" or manifest["validator_version"] != VALIDATOR_VERSION):
             raise LanguageRegistryError("invalid_distribution_registry_manifest")
         raw = resource.joinpath("registry.txt").read_bytes()
@@ -21,7 +28,9 @@ def bundled_language_registry():
         if len(registry.records) != manifest["record_count"]:
             raise LanguageRegistryError("registry_record_count_mismatch")
         return registry
-    except (OSError, KeyError, TypeError, UnicodeError, json.JSONDecodeError) as error:
+    except LanguageRegistryError:
+        raise
+    except (OSError, KeyError, TypeError, UnicodeError, ModelError, json.JSONDecodeError) as error:
         raise LanguageRegistryError("distribution_registry_unavailable") from error
 
 
@@ -43,6 +52,8 @@ def read_language_registry(source):
             raise LanguageRegistryError("registry_changed", path=path)
         source.check_current()
         return registry
+    except SafetyViolation as error:
+        raise LanguageRegistryError("unsafe_registry_resource", path=path) from error
     except OSError as error:
         raise LanguageRegistryError("registry_unavailable", path=path) from error
 
@@ -56,3 +67,13 @@ def registry_binding(registry, *, path="profiles/language-data/registry.txt"):
         raise LanguageRegistryError("invalid_registry_binding", path=path)
     return {"registry_id": "iana-language-subtags", "registry_version": registry.version,
             "path": path, "sha256": registry.sha256}
+
+
+def require_registry_current(source, registry):
+    """Revalidate an observation; still not a transactional write permission."""
+    if not isinstance(registry, LanguageRegistry):
+        raise TypeError("A validated registry is required")
+    current = read_language_registry(source)
+    if (current.version, current.sha256, current.source_bytes) != (registry.version, registry.sha256, registry.source_bytes):
+        raise LanguageRegistryError("registry_observation_changed")
+    return current

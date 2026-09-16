@@ -52,3 +52,19 @@ The later init/Change Plan implementation must materialize or explicitly replace
 the bound bytes. Installing another SpecRoad version does not upgrade projects.
 Language policies, Basic Filtering, label packages and detector integration
 retain their separate plan positions. No new CLI command is advertised here.
+
+## Complete local validation (2.n.R)
+
+The common artifact schema now asserts BCP-47 syntax for declared `language`
+fields, including requirement/document/term. It does NOT make unknown registered
+subtags schema-invalid and does not read a registry implicitly. Stored tags are
+never rewritten. New requirement preparation proposes case-only canonical
+spelling without changing statements, identity, or audit. Full authorization
+and policy decisions still belong to later planned workflows.
+
+Registry parsing also checks per-type identifier grammar, duplicate records,
+reserved ranges/overlaps, date fields and required extlang prefix metadata.
+`require_registry_current` checks a read observation against freshly loaded
+project bytes; it is no substitute for the future transaction lock. Distribution
+manifest parsing is strict JSON, and unsafe project resources produce a typed
+registry failure with code 3 rather than a fallback read.

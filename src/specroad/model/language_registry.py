@@ -66,7 +66,8 @@ def _registry_records(raw):
         raise LanguageRegistryError("invalid_registry_encoding") from error
     if "\x00" in text or "\r" in text.replace("\r\n", ""):
         raise LanguageRegistryError("invalid_registry_encoding")
-    lines = text.splitlines()
+    lines = text.replace("\r\n", "\n").split("\n")
+    if lines[-1:] == [""]: lines.pop()
     if not lines or not re.fullmatch(r"File-Date: [0-9]{4}-[0-9]{2}-[0-9]{2}", lines[0]):
         raise LanguageRegistryError("invalid_registry_date")
     version = lines[0].split(": ", 1)[1]
@@ -81,7 +82,7 @@ def _registry_records(raw):
         if line == "%%":
             if not current: raise LanguageRegistryError("empty_registry_record")
             groups.append(current); current = []
-        elif line.startswith(" "):
+        elif line.startswith((" ", "\t")):
             if not current: raise LanguageRegistryError("orphan_registry_continuation")
             key, value = current[-1]; current[-1] = (key, value + " " + line.lstrip())
         else:
@@ -115,6 +116,26 @@ def _registry_records(raw):
         value = fields[field][0]
         if not value.isascii() or not re.fullmatch(r"[A-Za-z0-9-]+(?:\.\.[A-Za-z0-9]+)?", value):
             raise LanguageRegistryError("invalid_registry_subtag")
+        grammar = {
+            "language": r"[A-Za-z]{2,8}", "extlang": r"[A-Za-z]{3}",
+            "script": r"[A-Za-z]{4}", "region": r"[A-Za-z]{2}|[0-9]{3}",
+            "variant": r"[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}",
+        }
+        if ".." not in value:
+            if kind in grammar and not re.fullmatch(grammar[kind], value):
+                raise LanguageRegistryError("invalid_registry_subtag")
+            if kind in {"grandfathered", "redundant"}:
+                try:
+                    parsed = parse_language_tag(value)
+                except LanguageTagError as error:
+                    raise LanguageRegistryError("invalid_registry_tag") from error
+                if parsed.grandfathered != (kind == "grandfathered"):
+                    raise LanguageRegistryError("invalid_registry_tag_kind")
+        elif (kind, value.lower()) not in {
+            ("language", "qaa..qtz"), ("script", "qaaa..qabx"),
+            ("region", "qm..qz"), ("region", "xa..xz"),
+        }:
+            raise LanguageRegistryError("invalid_registry_range")
         identity = kind, value.lower()
         if identity in records: raise LanguageRegistryError("duplicate_registry_record")
         if ".." in value:
@@ -122,6 +143,15 @@ def _registry_records(raw):
             if len(start) != len(end) or start > end or kind not in {"language", "script", "region"}:
                 raise LanguageRegistryError("invalid_registry_range")
         records[identity] = RegistryRecord(kind, value, tuple(group))
+    for (kind, token), record in records.items():
+        if ".." in token:
+            start, end = token.split("..")
+            if any(k == kind and ".." not in v and len(v) == len(start) and start <= v <= end
+                   for k, v in records):
+                raise LanguageRegistryError("overlapping_registry_entries")
+        if kind == "extlang" and (len(record.values("Prefix")) != 1
+                                  or not re.fullmatch(r"[A-Za-z]{2,3}", record.values("Prefix")[0])):
+            raise LanguageRegistryError("invalid_registry_prefix")
     return version, MappingProxyType(records)
 
 

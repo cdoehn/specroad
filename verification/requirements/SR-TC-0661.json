@@ -37,7 +37,9 @@
   "test_ids": [
     "test_language_tags.RegistryLookupTests.test_unsupported_language_is_retained_not_invalid",
     "test_language_tags.RegistryLookupTests.test_private_suffix_does_not_hide_unknown_subtags",
-    "test_language_tags.RegistryLookupTests.test_no_extension_registration_claim"
+    "test_language_tags.RegistryLookupTests.test_no_extension_registration_claim",
+    "test_language_right.LanguageIntegrationTests.test_unknown_private_and_unspecified_remain_schema_valid",
+    "test_language_right.RegistryRobustnessTests.test_variant_prefix_advice_is_not_allowlist"
   ],
   "open_items": [
     "Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."

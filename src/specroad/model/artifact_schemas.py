@@ -44,7 +44,7 @@ def _properties(kind):
         "maturity": {"enum": list(MATURITIES)}, "revision": {"type": "integer", "minimum": 1},
         "created_at": {"$ref": "#/$defs/utc"}, "updated_at": {"$ref": "#/$defs/utc"},
         "created_by": dict(actor), "updated_by": dict(actor),
-        "language": dict(text), "text_direction": {"enum": ["ltr", "rtl", "auto"]},
+        "language": {"type": "string", "format": "bcp47"}, "text_direction": {"enum": ["ltr", "rtl", "auto"]},
         "owner": {"anyOf": [dict(text), dict(actor)]},
         "tags": {"type": "array", "items": {"type": "string"}},
         "applicability": {"type": "object"},

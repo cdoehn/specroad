@@ -37,7 +37,9 @@
   "test_ids": [
     "test_language_tags.LanguageSyntaxTests.test_minimum_declared_corpus",
     "test_language_tags.RegistryLookupTests.test_all_four_states",
-    "test_language_tags.RegistryLookupTests.test_reserved_private_subtags"
+    "test_language_tags.RegistryLookupTests.test_reserved_private_subtags",
+    "test_language_right.LanguageIntegrationTests.test_bad_language_rejected_by_common_schema",
+    "test_language_right.LanguageIntegrationTests.test_loaded_tag_and_bytes_unchanged"
   ],
   "open_items": [
     "Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."
