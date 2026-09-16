@@ -31,6 +31,9 @@ def fingerprint_file(boundary, path, *, block_size=65536):
                 break
             digest.update(block)
             count += len(block)
+            if count > initial.st_size:
+                # A continuously growing input cannot extend this read forever.
+                raise SafetyViolation("Resource grew during inspection")
         if count != initial.st_size:
             raise SafetyViolation("Resource byte count changed during inspection")
     return ByteFingerprint(count, digest.hexdigest())
@@ -74,6 +77,8 @@ def verify_attachments(source, descriptors):
     names = [value.path for value in descriptors]
     if len(set(names)) != len(names):
         raise ModelError("duplicate_attachment")
+    if len({name.casefold() for name in names}) != len(names):
+        raise ModelError("attachment_path_collision")
     result = tuple(verify_attachment(source, value) for value in sorted(descriptors, key=lambda value: value.path))
     # Check earlier members again; never publish a partially verified tuple.
     for value in result:

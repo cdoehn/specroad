@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 76
-last_completed_plan_commit: 2.l.W
-next_plan_commit: 2.l.R
+implementation_plan_commits_completed: 77
+last_completed_plan_commit: 2.l.R
+next_plan_commit: 2.l.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1046,7 +1046,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.l.R – Make it Right
 
-- [ ] **2.l.R** · Position **77/885** · Voraussetzung: `2.l.W`.
+- [x] **2.l.R** · Position **77/885** · Voraussetzung: `2.l.W`.
 **Exakte Commit-Message:** `2.l.R feat(model): Ressourceninventur und Anhangsdaten vervollständigen`
 
 **Vervollständigung:** Externe Symlinks, falsche Größe, fehlende Bytes und Hashabweichung abweisen.

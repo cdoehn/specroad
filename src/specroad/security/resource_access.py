@@ -30,8 +30,9 @@ def opened_resource(boundary, path, *, directory=False):
         if guards._identity(os.fstat(parent)) != boundary._root_identity:
             raise SafetyViolation("Project root changed while opening")
         for index, name in enumerate(parts):
-            is_directory = directory or index < len(parts) - 1
             before = os.stat(name, dir_fd=parent, follow_symlinks=False)
+            is_directory = (index < len(parts) - 1 or
+                            (stat.S_ISDIR(before.st_mode) if directory is None else directory))
             guards._regular(before, directory=is_directory)
             flags = directory_flags if is_directory else os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_NONBLOCK", 0)
             descriptor = os.open(name, flags, dir_fd=parent)
@@ -40,7 +41,7 @@ def opened_resource(boundary, path, *, directory=False):
             guards._regular(opened, directory=is_directory)
             if guards._identity(opened) != guards._identity(before):
                 raise SafetyViolation("Project entry changed while opening")
-            entries.append((parent, name, guards._identity(opened), is_directory))
+            entries.append((parent, name, guards._identity(opened), is_directory, descriptor))
             if is_directory:
                 try:
                     os.stat("specroad.json", dir_fd=descriptor, follow_symlinks=False)
@@ -53,11 +54,18 @@ def opened_resource(boundary, path, *, directory=False):
         yield descriptors[-1], initial
         if guards._signature(os.fstat(descriptors[-1])) != guards._signature(initial):
             raise SafetyViolation("Resource changed during inspection")
-        for parent, name, identity, is_directory in entries:
+        for parent, name, identity, is_directory, descriptor in entries:
             current = os.stat(name, dir_fd=parent, follow_symlinks=False)
             guards._regular(current, directory=is_directory)
             if guards._identity(current) != identity:
                 raise SafetyViolation("Resource path changed during inspection")
+            if is_directory:
+                try:
+                    os.stat("specroad.json", dir_fd=descriptor, follow_symlinks=False)
+                except FileNotFoundError:
+                    pass
+                else:
+                    raise SafetyViolation("A nested project appeared during inspection")
         boundary._check_root()
     except OSError as error:
         if error.errno in (errno.ELOOP, errno.ENOTDIR):
@@ -75,6 +83,8 @@ def directory_entries(boundary, path, *, missing_ok=False):
         with opened_resource(boundary, path, directory=True) as (descriptor, initial):
             entered = True
             names = sorted(os.listdir(descriptor))
+            if len({name.casefold() for name in names}) != len(names):
+                raise SafetyViolation("Portable directory names collide")
             result = []
             for name in names:
                 guards._parts(name)
@@ -85,6 +95,20 @@ def directory_entries(boundary, path, *, missing_ok=False):
             if names != sorted(os.listdir(descriptor)):
                 raise SafetyViolation("Directory membership changed during inspection")
         return tuple(result)
+    except FileNotFoundError:
+        if entered or not missing_ok:
+            raise
+        return None
+
+
+def resource_is_directory(boundary, path, *, missing_ok=False):
+    """Classify an explicit managed root without guessing from its suffix."""
+    entered = False
+    try:
+        with opened_resource(boundary, path, directory=None) as (descriptor, metadata):
+            entered = True
+            result = stat.S_ISDIR(metadata.st_mode)
+        return result
     except FileNotFoundError:
         if entered or not missing_ok:
             raise

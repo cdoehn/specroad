@@ -42,7 +42,10 @@
     "test_resource_inventory.ResourceWorkTests.test_descriptor_requires_every_declared_field",
     "test_resource_inventory.ResourceWorkTests.test_declared_size_mismatch_is_an_error",
     "test_resource_inventory.ResourceWorkTests.test_same_size_byte_tampering_is_an_error",
-    "test_resource_inventory.ResourceWorkTests.test_inventory_automatically_verifies_evidence_attachments"
+    "test_resource_inventory.ResourceWorkTests.test_inventory_automatically_verifies_evidence_attachments",
+    "test_resource_inventory_right.ResourceRightTests.test_explicit_attachment_declarations_remain_part_of_recheck",
+    "test_resource_inventory_right.ResourceRightTests.test_reference_changes_are_bound_even_with_unchanged_payload_bytes",
+    "test_resource_inventory_right.ResourceRightTests.test_byte_sensitive_inventory_is_not_confused_with_canonical_model_hash"
   ],
   "open_items": [
     "Integrate these read/verification contracts with the later Evidence authoring/import, scope, baseline and transaction workflows. No full requirement/release approval claimed."

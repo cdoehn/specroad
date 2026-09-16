@@ -14,7 +14,7 @@ from ..model.errors import ModelError
 from ..model.hashes import canonical_json_sha256
 from ..model.paths import CURRENT_JSON_CLASSES, PathClass, artifact_path, project_path
 from ..model.versions import SCHEMA_VERSION
-from ..security.resource_access import directory_entries
+from ..security.resource_access import directory_entries, resource_is_directory
 from .attachments import fingerprint_file, verify_attachments
 from .json_syntax import parse_json_object
 from .project import ProjectSource
@@ -66,29 +66,40 @@ def _scan_json_paths(source):
     pending = []
     for path in source.configuration.managed_paths:
         if path.split("/")[0] in {"spec", "profiles", "rules", "mappings"}:
-            pending.append(path)
+            pending.append((path, True))
     seen = set()
     paths = {"specroad.json"}
     while pending:
-        path = project_path(pending.pop())
+        path, optional = pending.pop()
+        path = project_path(path)
         if path in seen:
             continue
         seen.add(path)
-        # managed_paths may name an individual current JSON resource.
-        if source.classify(path) in CURRENT_JSON_CLASSES:
+        # A directory can have a .json suffix; classification never guesses.
+        is_directory = resource_is_directory(
+            source.boundary, path,
+            missing_ok=optional and source.classify(path) not in CURRENT_JSON_CLASSES,
+        )
+        if is_directory is None:
+            continue
+        if not is_directory:
+            if source.classify(path) not in CURRENT_JSON_CLASSES:
+                raise ModelError("unclassified_normative_resource", path=path)
             paths.add(path)
             continue
-        entries = directory_entries(source.boundary, path, missing_ok=True)
-        if entries is None:
-            continue  # Missing optional tree; an interrupted listing is an error.
+        # The directory was just observed. Disappearance is no longer an
+        # optional missing tree: it invalidates this inventory attempt.
+        entries = directory_entries(source.boundary, path)
         for name, is_directory in entries:
             child = project_path(path + "/" + name)
             if is_directory:
-                pending.append(child)
+                pending.append((child, False))
             elif child.endswith(".json"):
                 if source.classify(child) not in CURRENT_JSON_CLASSES:
                     raise ModelError("unclassified_normative_json", path=child)
                 paths.add(child)
+    if len({path.casefold() for path in paths}) != len(paths):
+        raise ModelError("resource_path_collision")
     return tuple(sorted(paths))
 
 
@@ -136,6 +147,8 @@ def inventory_project(source, *, attachments=()):
         raise ModelError("attachment_sequence_required") from error
     if any(not isinstance(value, AttachmentDescriptor) for value in explicit):
         raise ModelError("invalid_attachment_descriptor")
+    if len({value.path for value in explicit}) != len(explicit):
+        raise ModelError("duplicate_attachment")
     source.check_current()
     names = _scan_json_paths(source)
     entries = []
@@ -165,6 +178,8 @@ def inventory_project(source, *, attachments=()):
     for item in verify_attachments(source, tuple(declared.values())):
         entries.append(ResourceEntry(item.path, "attachment", item.size, item.sha256,
                                      media_type=item.media_type))
+    if len({entry.path.casefold() for entry in entries}) != len(entries):
+        raise ModelError("resource_path_collision")
     # Full byte recheck plus second membership scan. This detects observed races,
     # but cannot replace locking and target validation in a future transaction.
     for entry in entries:
@@ -178,3 +193,17 @@ def inventory_project(source, *, attachments=()):
                              tuple(sorted(entries, key=lambda item: item.path)),
                              str(source.boundary.root), source.boundary._root_identity,
                              tuple(sorted(explicit, key=lambda item: item.path)))
+
+
+def check_inventory_current(source, inventory):
+    """Rebuild and compare a read binding. Still not a locked write permission."""
+    if not isinstance(source, ProjectSource) or not isinstance(inventory, ResourceInventory):
+        raise TypeError("A ProjectSource and ResourceInventory are required")
+    source.check_current()
+    if (inventory.source_root != str(source.boundary.root)
+            or inventory.root_identity != source.boundary._root_identity
+            or inventory.project_id != source.configuration.project_id):
+        raise ModelError("inventory_project_mismatch")
+    current = inventory_project(source, attachments=inventory.explicit_attachments)
+    if current.data != inventory.data:
+        raise ModelError("inventory_changed")
