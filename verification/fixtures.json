@@ -6,7 +6,8 @@
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-ARTIFACT-COMMON-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
-    "SR-FIX-RECORD-FIELDS-v1"
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-JCS-RFC8785-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -32,6 +33,10 @@
     "SR-FIX-RECORD-FIELDS-v1": {
       "provider": "tests/support/records.py:record_value",
       "kind": "owned passive document and evidence-field fixtures; no execution, authoring, real approvals or external hash verification"
+    },
+    "SR-FIX-JCS-RFC8785-v1": {
+      "provider": "tests/data/jcs-rfc8785-v1.json",
+      "kind": "versioned normative binary64/canonical byte vectors, not presentation output"
     }
   }
 }

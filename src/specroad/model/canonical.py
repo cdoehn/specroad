@@ -79,59 +79,77 @@ def _child(pointer, name):
     return pointer + "/" + str(name).replace("~", "~0").replace("/", "~1")
 
 
-def canonical_json_bytes(value):
-    """Return JCS UTF-8 for one value, without changing it or writing files.
+def _children(item, pointer):
+    """Produce one container's tokens lazily, preserving array order."""
+    if type(item) is list:
+        for index, element in enumerate(item):
+            if index:
+                yield ("bytes", b",", None)
+            yield ("value", element, _child(pointer, index))
+    else:
+        keys = sorted(item, key=lambda key: _key(key, pointer))
+        for index, key in enumerate(keys):
+            if index:
+                yield ("bytes", b",", None)
+            yield ("bytes", _string(key, pointer) + b":", None)
+            yield ("value", item[key], _child(pointer, key))
 
-Numbers already represented by float are binary64 values, not their lost
-source token. To reject precision loss in an external JSON object, use
-canonical_object_bytes on the original bytes instead of a permissive parser.
+
+def _chunks(value):
+    """Internal traversal; no external writer sees an incomplete document.
+
+Frames advance one child at a time, avoiding Python recursion and a separate
+work item for every descendant. Cycle detection follows the active ancestry,
+not a global seen set, so independent shared subobjects remain valid JSON.
+The caller owns the input and must not concurrently mutate it.
     """
-    output = bytearray()
+    work = [("value", value, "")]
     active = set()
-
-    def visit(item, pointer):
+    while work:
+        action, item, pointer = work.pop()
+        if action == "bytes":
+            yield item
+            continue
+        if action == "children":
+            iterator, identity, closing = item
+            try:
+                child = next(iterator)
+            except StopIteration:
+                active.remove(identity)
+                yield closing
+            else:
+                work.append((action, item, pointer))
+                work.append(child)
+            continue
         kind = type(item)
         if item is None:
-            output.extend(b"null")
+            yield b"null"
         elif kind is bool:
-            output.extend(b"true" if item else b"false")
+            yield b"true" if item else b"false"
         elif kind in (int, float):
-            output.extend(_number(item, pointer).encode("ascii"))
+            yield _number(item, pointer).encode("ascii")
         elif kind is str:
-            output.extend(_string(item, pointer))
+            yield _string(item, pointer)
         elif kind in (list, dict):
             identity = id(item)
             if identity in active:
                 raise ModelError("cyclic_json", pointer=pointer)
             active.add(identity)
-            try:
-                if kind is list:
-                    output.extend(b"[")
-                    for index, element in enumerate(item):
-                        if index:
-                            output.extend(b",")
-                        visit(element, _child(pointer, index))
-                    output.extend(b"]")
-                else:
-                    keys = sorted(item, key=lambda key: _key(key, pointer))
-                    output.extend(b"{")
-                    for index, key in enumerate(keys):
-                        if index:
-                            output.extend(b",")
-                        output.extend(_string(key, pointer))
-                        output.extend(b":")
-                        visit(item[key], _child(pointer, key))
-                    output.extend(b"}")
-            finally:
-                active.remove(identity)
+            yield b"[" if kind is list else b"{"
+            closing = b"]" if kind is list else b"}"
+            work.append(("children", (_children(item, pointer), identity, closing), pointer))
         else:
             raise ModelError("unsupported_json_type", pointer=pointer)
 
-    try:
-        visit(value, "")
-    except RecursionError as error:
-        raise ModelError("json_nesting_limit") from error
-    return bytes(output)
+
+def canonical_json_bytes(value):
+    """Return complete JCS UTF-8 or fail without changing any external state.
+
+Only exact built-in JSON types are accepted. For external JSON object bytes,
+use canonical_object_bytes to preserve and check original numeric tokens.
+This in-memory API does not authorize or perform a file write.
+    """
+    return b"".join(_chunks(value))
 
 
 def canonical_json_sha256(value):
@@ -140,7 +158,10 @@ def canonical_json_sha256(value):
 This is not a signature, review, verification result, or write authorization.
 No audit field or application-defined self-hash is implicitly excluded.
     """
-    return sha256(canonical_json_bytes(value)).hexdigest()
+    digest = sha256()
+    for chunk in _chunks(value):
+        digest.update(chunk)
+    return digest.hexdigest()
 
 
 def canonical_object_bytes(raw, *, path=None):
@@ -151,4 +172,5 @@ def canonical_object_bytes(raw, *, path=None):
 
 def canonical_object_sha256(raw, *, path=None):
     """Hash an object's canonical values, not its original file bytes."""
-    return sha256(canonical_object_bytes(raw, path=path)).hexdigest()
+    from ..storage.json_syntax import parse_json_object
+    return canonical_json_sha256(parse_json_object(raw, path=path))

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 70
-last_completed_plan_commit: 2.j.W
-next_plan_commit: 2.j.R
+implementation_plan_commits_completed: 71
+last_completed_plan_commit: 2.j.R
+next_plan_commit: 2.j.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -976,7 +976,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.j.R – Make it Right
 
-- [ ] **2.j.R** · Position **71/885** · Voraussetzung: `2.j.W`.
+- [x] **2.j.R** · Position **71/885** · Voraussetzung: `2.j.W`.
 **Exakte Commit-Message:** `2.j.R feat(model): JCS und kanonische Hashes vervollständigen`
 
 **Vervollständigung:** JCS-Zahlengrenzen, Schlüsselsortierung, Escapegrenzen und negative Null mit versionierten Datenvektoren abdecken.

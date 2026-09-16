@@ -7,7 +7,8 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-ISOLATED-CPYTHON-v1"
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-JCS-RFC8785-v1"
   ],
   "preconditions": [
     "Trusted JSON values or original UTF-8 object bytes; no writes or external execution."
@@ -35,7 +36,9 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_canonical.CanonicalWorkTests.test_key_insertion_order_cannot_change_hash"
+    "test_canonical.CanonicalWorkTests.test_key_insertion_order_cannot_change_hash",
+    "test_canonical_right.CanonicalRightTests.test_hash_state_is_private_between_threads",
+    "test_canonical_right.CanonicalRightTests.test_portable_distributions_keep_jcs_contract_without_third_party_packages"
   ],
   "open_items": [
     "Wire canonical hashing into later model-root, review, verification, export and analyzer domains without implicit field exclusion. No complete feature/release approval is claimed."
