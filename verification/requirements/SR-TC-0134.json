@@ -7,18 +7,19 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1"
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-RESOURCE-INVENTORY-v1"
   ],
   "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+    "Owned configured project root, known binary fixtures and declared attachment metadata."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Inventory current resource files and verify actual attachment bytes, including safe failure cases without project mutation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder Evidence-Anhang MUSS einen relativen Projektpfad, Medientyp, Größe und SHA-256-Hash besitzen.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Read-only inventory and streamed byte verification of declared attachment sizes and hashes; not an atomic snapshot or authoring authorization."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -36,9 +37,14 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_evidence_attachments_are_bound_but_not_opened",
-    "test_record_schemas.RecordRightTests.test_repeated_attachment_paths_are_rejected"
+    "test_record_schemas.RecordRightTests.test_repeated_attachment_paths_are_rejected",
+    "test_resource_inventory.ResourceWorkTests.test_inspect_binds_real_binary_bytes",
+    "test_resource_inventory.ResourceWorkTests.test_descriptor_requires_every_declared_field",
+    "test_resource_inventory.ResourceWorkTests.test_declared_size_mismatch_is_an_error",
+    "test_resource_inventory.ResourceWorkTests.test_same_size_byte_tampering_is_an_error",
+    "test_resource_inventory.ResourceWorkTests.test_inventory_automatically_verifies_evidence_attachments"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Integrate these read/verification contracts with the later Evidence authoring/import, scope, baseline and transaction workflows. No full requirement/release approval claimed."
   ]
 }

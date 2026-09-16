@@ -7,7 +7,8 @@
     "SR-FIX-ARTIFACT-COMMON-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RECORD-FIELDS-v1",
-    "SR-FIX-JCS-RFC8785-v1"
+    "SR-FIX-JCS-RFC8785-v1",
+    "SR-FIX-RESOURCE-INVENTORY-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -37,6 +38,10 @@
     "SR-FIX-JCS-RFC8785-v1": {
       "provider": "tests/data/jcs-rfc8785-v1.json",
       "kind": "versioned normative binary64/canonical byte vectors, not presentation output"
+    },
+    "SR-FIX-RESOURCE-INVENTORY-v1": {
+      "provider": "tests/test_resource_inventory.py:descriptor",
+      "kind": "owned binary payloads and normative JSON; actual byte checks, no external evidence authenticity or write authorization"
     }
   }
 }

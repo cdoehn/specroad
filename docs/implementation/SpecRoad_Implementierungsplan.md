@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 75
-last_completed_plan_commit: 2.k.C
-next_plan_commit: 2.l.W
+implementation_plan_commits_completed: 76
+last_completed_plan_commit: 2.l.W
+next_plan_commit: 2.l.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1037,7 +1037,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.l.W – Let it Work
 
-- [ ] **2.l.W** · Position **76/885** · Voraussetzung: `2.k.C`.
+- [x] **2.l.W** · Position **76/885** · Voraussetzung: `2.k.C`.
 **Exakte Commit-Message:** `2.l.W feat(model): Ressourceninventur und Anhangsdaten aufbauen`
 
 **Umsetzung:** Anhänge als sichere relative Pfade mit Medientyp, Größe und Bytehash laden; vollständige Inventur anbieten.
