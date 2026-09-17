@@ -4,13 +4,13 @@ The small index may be read without reading each package. Only explicitly
 activated and matching packages are loaded. Project-bound profile composition
 and its hashes will be implemented by the later profile workflow.
 """
-from dataclasses import dataclass
 from importlib.resources import files
-import re
 
 from ..model.language_packages import (LanguagePackage, LanguagePackageError, package_key,
                                        parse_package_key, validate_ranges, range_matches, coalesce_packages)
 from ..model.language_tags import parse_language_tag
+from ..model.language_package_index import decode_package_index
+from ..model.language_package_values import PackageSelection
 from .json_syntax import parse_json_object
 
 
@@ -22,27 +22,7 @@ def _read(filename):
 
 
 def bundled_package_index():
-    value = parse_json_object(_read("packages.json"))
-    if set(value) != {"format_version", "packages"} or type(value["format_version"]) is not int or value["format_version"] != 1:
-        raise LanguagePackageError("invalid_package_index")
-    entries = value["packages"]
-    if type(entries) is not list:
-        raise LanguagePackageError("invalid_package_index")
-    keys, filenames = set(), set()
-    for item in entries:
-        if type(item) is not dict or set(item) != {"package_id", "version", "language_ranges", "sha256", "filename"}:
-            raise LanguagePackageError("invalid_package_reference")
-        key = package_key(item["package_id"], item["version"])
-        validate_ranges(item["language_ranges"])
-        if type(item["sha256"]) is not str or not re.fullmatch(r"[0-9a-f]{64}", item["sha256"]):
-            raise LanguagePackageError("invalid_package_hash")
-        name = item["filename"]
-        if type(name) is not str or not re.fullmatch(r"packages/[A-Za-z][A-Za-z0-9_-]*\.json", name, re.ASCII):
-            raise LanguagePackageError("invalid_package_filename")
-        if key in keys or name.casefold() in filenames:
-            raise LanguagePackageError("duplicate_package_reference")
-        keys.add(key); filenames.add(name.casefold())
-    return tuple(entries)
+    return decode_package_index(_read("packages.json"))
 
 
 def _load_reference(item):
@@ -58,34 +38,6 @@ def load_bundled_package(key):
         if package_key(item["package_id"], item["version"]) == key:
             return _load_reference(item)
     raise LanguagePackageError("package_not_available")
-
-
-@dataclass(frozen=True)
-class PackageSelection:
-    language: str
-    packages: tuple
-    unavailable: tuple
-
-    def __post_init__(self):
-        parse_language_tag(self.language)
-        packages = coalesce_packages(self.packages)
-        if any(not any(range_matches(r, self.language) for r in p.language_ranges) for p in packages):
-            raise LanguagePackageError("selection_language_mismatch")
-        if type(self.unavailable) not in (tuple, list):
-            raise LanguagePackageError("package_sequence_required")
-        for key in self.unavailable: parse_package_key(key)
-        missing = tuple(dict.fromkeys(self.unavailable))
-        if set(missing) & {p.key for p in packages}:
-            raise LanguagePackageError("contradictory_package_availability")
-        object.__setattr__(self, "packages", packages)
-        object.__setattr__(self, "unavailable", missing)
-
-    def as_dict(self):
-        return {"language": self.language, "packages": [p.binding() for p in self.packages],
-                "unavailable": list(self.unavailable),
-                "content_support": "utf8", "metadata_policy": "not_evaluated",
-                "labels": "available" if any("labels" in p.capabilities for p in self.packages) else "not_available",
-                "lint": "not_available", "detector": "not_available"}
 
 
 def packages_for_language(language, *, activated=()):
