@@ -8,18 +8,21 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-MODEL-MANIFEST-v1"
   ],
   "preconditions": [
-    "Bound local directory; untrusted data remains inert."
+    "Bound local directory; untrusted data remains inert.",
+    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof."
   ],
   "steps": [
-    "Exercise the single-root read boundary and reject prohibited execution before any handler."
+    "Exercise the single-root read boundary and reject prohibited execution before any handler.",
+    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein SpecRoad-Projekt MUSS genau eine `project_id` und genau einen Projektroot besitzen.",
-    "scope": "Current read and execution boundary only; no full-model, writer or future-analyzer safety approval."
+    "scope": "Partial model-input/hash binding, not resolved scope completeness, full policy composition or transaction authorization."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -27,7 +30,10 @@
     7
   ],
   "json_pointers": [
-    "/project/project_root"
+    "/project/project_root",
+    "/project_id",
+    "/scope_descriptor",
+    "/scope_sha256"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -42,9 +48,11 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_security.SafetyWorkTests.test_boundary_accepts_exactly_one_root",
-    "test_security.SafetyWorkTests.test_multiple_project_declarations_are_not_accepted"
+    "test_security.SafetyWorkTests.test_multiple_project_declarations_are_not_accepted",
+    "test_model_root.ModelRootWorkTests.test_configuration_identity_is_bound",
+    "test_model_root.ModelRootWorkTests.test_wrong_expected_project_is_rejected"
   ],
   "open_items": [
-    "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones."
+    "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."
   ]
 }

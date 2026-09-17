@@ -4,19 +4,29 @@
   "requirement_id": "SR-REQ-0562",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-MODEL-MANIFEST-v1"
+  ],
+  "preconditions": [
+    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof."
+  ],
+  "steps": [
+    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Wechsel des absoluten Projektpfads oder der kompatiblen Runtime DARF NICHT allein normative Inhalte, fachliche Hashes oder die gebundene Idempotenz abgeschlossener Requests verändern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Partial model-input/hash binding, not resolved scope completeness, full policy composition or transaction authorization."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/project_id",
+    "/scope_descriptor",
+    "/scope_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +38,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_model_root.ModelRootWorkTests.test_same_snapshot_under_another_root_has_same_hash",
+    "test_model_root.ModelRootWorkTests.test_original_byte_formatting_does_not_change_root",
+    "test_model_root.ModelRootWorkTests.test_semantic_configuration_removes_display_and_soft_targets"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."
   ]
 }

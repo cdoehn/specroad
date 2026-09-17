@@ -11,7 +11,8 @@
     "SR-FIX-RESOURCE-INVENTORY-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-LANGUAGE-REGISTRY-v1",
-    "SR-FIX-LANGUAGE-PACKAGES-v1"
+    "SR-FIX-LANGUAGE-PACKAGES-v1",
+    "SR-FIX-MODEL-MANIFEST-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -57,6 +58,10 @@
     "SR-FIX-LANGUAGE-PACKAGES-v1": {
       "provider": "tests/test_language_packages.py:package_data",
       "kind": "owned passive package bytes and multilingual requirements; no translation or linguistic approval oracle"
+    },
+    "SR-FIX-MODEL-MANIFEST-v1": {
+      "provider": "tests/test_model_root.py:fixture",
+      "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission."
     }
   }
 }
