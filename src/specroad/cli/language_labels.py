@@ -1,13 +1,12 @@
 """Presentation-only label lookup, never requirement parsing or translation."""
-from ..model.language_packages import LanguagePackage, LanguagePackageError
+from ..model.language_packages import coalesce_packages
 from ..storage.language_packages import packages_for_language
 
 
 def label_for(enum_value, *, domain, packages=()):
     if type(enum_value) is not str or type(domain) is not str:
         raise TypeError("Labels require string data keys")
-    if type(packages) not in (tuple, list) or any(type(p) is not LanguagePackage for p in packages):
-        raise LanguagePackageError("typed_packages_required")
+    packages = coalesce_packages(packages)
     label = enum_value
     for package in packages:
         label = package.data["labels"].get(domain, {}).get(enum_value, label)

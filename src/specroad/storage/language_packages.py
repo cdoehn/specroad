@@ -9,7 +9,7 @@ from importlib.resources import files
 import re
 
 from ..model.language_packages import (LanguagePackage, LanguagePackageError, package_key,
-                                       parse_package_key, validate_ranges, range_matches)
+                                       parse_package_key, validate_ranges, range_matches, coalesce_packages)
 from ..model.language_tags import parse_language_tag
 from .json_syntax import parse_json_object
 
@@ -66,6 +66,20 @@ class PackageSelection:
     packages: tuple
     unavailable: tuple
 
+    def __post_init__(self):
+        parse_language_tag(self.language)
+        packages = coalesce_packages(self.packages)
+        if any(not any(range_matches(r, self.language) for r in p.language_ranges) for p in packages):
+            raise LanguagePackageError("selection_language_mismatch")
+        if type(self.unavailable) not in (tuple, list):
+            raise LanguagePackageError("package_sequence_required")
+        for key in self.unavailable: parse_package_key(key)
+        missing = tuple(dict.fromkeys(self.unavailable))
+        if set(missing) & {p.key for p in packages}:
+            raise LanguagePackageError("contradictory_package_availability")
+        object.__setattr__(self, "packages", packages)
+        object.__setattr__(self, "unavailable", missing)
+
     def as_dict(self):
         return {"language": self.language, "packages": [p.binding() for p in self.packages],
                 "unavailable": list(self.unavailable),
@@ -79,6 +93,7 @@ def packages_for_language(language, *, activated=()):
     if type(activated) not in (tuple, list):
         raise LanguagePackageError("package_sequence_required")
     for key in activated: parse_package_key(key)
+    activated = tuple(dict.fromkeys(activated))
     # No requested packages means no index or resource IO at all.
     index = {package_key(v["package_id"], v["version"]): v for v in bundled_package_index()} if activated else {}
     selected, unavailable = [], []

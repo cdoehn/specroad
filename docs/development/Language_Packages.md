@@ -68,3 +68,28 @@ Die spätere vollständige Projekt-Erlaubnisprüfung wird hier nicht vorweggenom
 - RFC 4647, §§ 2.1 und 3.3.1: https://www.rfc-editor.org/rfc/rfc4647.html
 - Semantic Versioning 2.0.0: https://semver.org/spec/v2.0.0.html
 - Projektvertrag: Spezifikation 0.2.7, Anhang S.3, S.4 und S.6.
+
+## Robuste Vertragsergebnisse
+
+Wiederholte gleiche Aktivierungen werden in ihrer ersten Position zusammengeführt.
+Paketidentität plus Version darf nur bei gleichem Ressourcenhash zusammenfallen;
+eine andere Bytefassung derselben Identität ist ein Konflikt. Auch gleichwertige
+JSON-Werte in anderer Formatierung sind nicht dieselbe Ressourcenbindung.
+Labelauflösung übergibt widersprüchliche Pakete nicht still an einen Last-wins-Merge.
+Verschiedene gültige Pakete werden in der ausdrücklich gebundenen Reihenfolge
+angewandt; für Labels überschreibt ein späteres vorhandenes Label denselben Schlüssel.
+Eine bloße fehlende Übersetzung löscht kein vorheriges Label. Das ist nicht der
+noch ausstehende Interpreter für Regeln und deren Regelidentitäten.
+
+Ergebnisobjekte nehmen eigene unveränderliche Paket-/Fehlmengen auf und weisen
+widersprüchliche Verfügbarkeit oder nicht zum deklarierten Inhalt passende Pakete
+zurück. Die Anzeige-Lookups verändern die Modelle weder direkt noch durch globale
+Locale-Einstellungen. Es gibt keine globalen Daten-Caches mit stiller Invalidierung.
+
+Der Locale-/Zeitzonenregressionstest startet getrennte CPython-Prozesse mit C,
+C.UTF-8 und absichtlich nicht vorausgesetzter weiterer Locale, unterschiedlichen
+Zeitzonen sowie untersagtem locale.setlocale-Aufruf. Verglichen werden die
+strukturierten Fachdaten, Paketidentitäten und kanonischen Hashes, nicht Konsolentext.
+Das beweist den getesteten Datenpfad auf der ausführenden Laufzeit, keine vollständige
+OS-/Python-Matrix. Übersetzte Labels sind manuell sichtbare Ressourcen und bleiben
+von automatisierten Darstellungstests ausgenommen.

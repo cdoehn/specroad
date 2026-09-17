@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 85
-last_completed_plan_commit: 2.o.W
-next_plan_commit: 2.o.R
+implementation_plan_commits_completed: 86
+last_completed_plan_commit: 2.o.R
+next_plan_commit: 2.o.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1151,7 +1151,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.o.R – Make it Right
 
-- [ ] **2.o.R** · Position **86/885** · Voraussetzung: `2.o.W`.
+- [x] **2.o.R** · Position **86/885** · Voraussetzung: `2.o.W`.
 **Exakte Commit-Message:** `2.o.R feat(model): Sprachpakete und Locale-Unabhängigkeit vervollständigen`
 
 **Vervollständigung:** Unicode- und Richtungsmetadaten nicht mit Detektion oder Übersetzung verwechseln.

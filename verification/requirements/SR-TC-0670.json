@@ -38,7 +38,10 @@
   "test_ids": [
     "test_language_packages.LanguagePackageWorkTests.test_all_minimum_tags_support_unmodified_utf8",
     "test_language_packages.LanguagePackageWorkTests.test_additional_tags_remain_metadata_without_a_pack",
-    "test_language_packages.LanguagePackageWorkTests.test_display_locale_is_not_requirement_language"
+    "test_language_packages.LanguagePackageWorkTests.test_display_locale_is_not_requirement_language",
+    "test_language_packages_right.LanguagePackageRightTests.test_locale_and_timezone_changes_leave_values_and_hashes_identical",
+    "test_language_packages_right.LanguagePackageRightTests.test_model_hash_ignores_package_read_and_display_choices",
+    "test_language_packages_right.LanguagePackageRightTests.test_source_text_and_unicode_normalization_are_preserved"
   ],
   "open_items": [
     "Full release/platform matrix, bound project profile composition and integrated rendering remain outside this foundational step."

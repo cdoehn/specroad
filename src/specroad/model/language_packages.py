@@ -92,6 +92,8 @@ class LanguagePackage:
     sha256: str
 
     def __init__(self, raw):
+        if type(raw) is not bytes:
+            raise LanguagePackageError("package_bytes_required")
         value = parse_json_object(raw)
         _validate_package(value)
         object.__setattr__(self, "source_bytes", raw)
@@ -114,9 +116,21 @@ class LanguagePackage:
                 "language_ranges": list(self.language_ranges), "sha256": self.sha256}
 
 
+def coalesce_packages(packages):
+    """Collapse identical identity/version/bytes only; conflicts are not merges."""
+    if type(packages) not in (tuple, list) or any(type(p) is not LanguagePackage for p in packages):
+        raise LanguagePackageError("typed_packages_required")
+    unique = {}
+    for package in packages:
+        prior = unique.get(package.key)
+        if prior is not None and prior.sha256 != package.sha256:
+            raise LanguagePackageError("package_identity_conflict")
+        unique.setdefault(package.key, package)
+    return tuple(unique.values())
+
+
 def select_language_packages(language, packages):
     """Select from an explicitly supplied, already validated set; no defaults."""
     parse_language_tag(language)
-    if type(packages) not in (tuple, list) or any(type(p) is not LanguagePackage for p in packages):
-        raise LanguagePackageError("typed_packages_required")
+    packages = coalesce_packages(packages)
     return tuple(p for p in packages if any(range_matches(r, language) for r in p.language_ranges))

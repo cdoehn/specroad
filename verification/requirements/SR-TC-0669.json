@@ -40,7 +40,12 @@
     "test_language_packages.LanguagePackageWorkTests.test_each_package_matches_byte_binding",
     "test_language_packages.LanguagePackageWorkTests.test_minimum_corpus_is_separate_from_allowlist",
     "test_language_packages.LanguagePackageWorkTests.test_all_minimum_tags_select_metadata",
-    "test_language_packages.LanguagePackageWorkTests.test_relocatable_distributions_ship_same_package_bytes"
+    "test_language_packages.LanguagePackageWorkTests.test_relocatable_distributions_ship_same_package_bytes",
+    "test_language_packages_right.LanguagePackageRightTests.test_corrupt_matching_package_hash_fails",
+    "test_language_packages_right.LanguagePackageRightTests.test_same_identity_different_bytes_is_conflict",
+    "test_language_packages_right.LanguagePackageRightTests.test_duplicate_activation_is_stable_and_loaded_once",
+    "test_language_packages_right.LanguagePackageRightTests.test_unrelated_package_is_not_opened_even_if_unreadable",
+    "test_language_packages_right.LanguagePackageRightTests.test_label_resource_changes_build_identity"
   ],
   "open_items": [
     "Full release/platform matrix, bound project profile composition and integrated rendering remain outside this foundational step."
