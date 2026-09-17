@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0052",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELATIONS-v1"
+  ],
+  "preconditions": [
+    "Owned source artifact bytes and explicit synthetic relation records."
+  ],
+  "steps": [
+    "Load complete relation fields and inspect exact preserved data, identity and read-only effects."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jede gespeicherte Beziehung MUSS mindestens `relation_id`, `id_scheme`, `type`, `target`, `external_identities` und `extensions` enthalten und am Quellartefakt gespeichert werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Relation fields and original source-byte preservation; no complete model approval or file publication."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_relations.RelationWorkTests.test_complete_relation_retains_external_identity_and_extensions",
+    "test_relations.RelationWorkTests.test_required_fields_are_not_filled_with_defaults",
+    "test_relations.RelationWorkTests.test_reader_preserves_files_and_path_binding"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate with complete graph, authoring/import and transaction gates; computed inverses and full project-level constraints follow later."
   ]
 }

@@ -13,7 +13,8 @@
     "SR-FIX-LANGUAGE-REGISTRY-v1",
     "SR-FIX-LANGUAGE-PACKAGES-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
-    "SR-FIX-SCHEMA-CATALOG-v1"
+    "SR-FIX-SCHEMA-CATALOG-v1",
+    "SR-FIX-RELATIONS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -67,6 +68,10 @@
     "SR-FIX-SCHEMA-CATALOG-v1": {
       "provider": "tests/test_schema_catalog.py:SchemaCatalogWorkTests",
       "kind": "Trusted local schema resources, synthetic artifact values and project-free command invocations; not a graph or release approval"
+    },
+    "SR-FIX-RELATIONS-v1": {
+      "provider": "tests/support/relations.py:artifact",
+      "kind": "Source-bound synthetic relation data; not a full model, graph approval or write authorization"
     }
   }
 }

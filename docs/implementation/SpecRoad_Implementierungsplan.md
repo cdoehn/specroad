@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 93
-last_completed_plan_commit: 2.q.C
-next_plan_commit: 3.a.W
+implementation_plan_commits_completed: 94
+last_completed_plan_commit: 3.a.W
+next_plan_commit: 3.a.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1259,7 +1259,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.a.W – Let it Work
 
-- [ ] **3.a.W** · Position **94/885** · Voraussetzung: `2.q.C`.
+- [x] **3.a.W** · Position **94/885** · Voraussetzung: `2.q.C`.
 **Exakte Commit-Message:** `3.a.W feat(graph): Relationsdaten und unveränderbare Schlüssel aufbauen`
 
 **Umsetzung:** Relationsobjekte am Quellartefakt mit stabiler ID, Typ, Ziel und Extensions laden.
