@@ -67,3 +67,18 @@ Das Ergebnis ist vollständig für diese Eingabe, aber keine Behauptung, dass ei
 Projekt vollständig gescannt wurde. Grenzreferenzen partieller Scopes, inverse
 Sichten, Zyklen und Review-/Lifecyclegates folgen später. Ein temporäres Lookup
 ist kein persistenter Adjazenzindex. Es gibt weiterhin keinen neuen CLI-Befehl.
+
+## Planschritt 3.b.R
+
+Ein unabhängiger Testvertrag prüft alle 17 × 28 × 28 Quell-/Zielkombinationen.
+Jede erlaubte Kombination wird zusätzlich durch echte Relations-/Artefaktobjekte
+aufgelöst. Self-Links bleiben unabhängig von der Typkombination immer verboten.
+
+Externe Relationsidentitäten werden innerhalb der übergebenen Objektklasse
+projektweit auf doppelte `(source_system, source_document, external_id)` geprüft;
+eine andere externe Revision macht denselben Schlüssel nicht zu einer anderen
+Identität. Artefakt- und Relationsidentitäten sind getrennte Objektklassen.
+Fehlende Ziele, Schlüsselkonflikte oder fremde Eingaben ergeben niemals ein
+teilweise erfolgreiches Resultat und verändern weder Eingaben noch Dateien.
+Mehrere Verfeinerungsbeziehungen und verschiedene Relationstypen zwischen
+denselben Endpunkten bleiben getrennte Kanten mit eigener Relation-ID.

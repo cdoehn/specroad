@@ -28,5 +28,6 @@ def edge(kind="refines", target=None, number=1, **changes):
 
 
 def artifact(kind="requirement", number=1, relations=(), project="SR", **changes):
-    return common_artifact(kind, artifact_type(kind).prefix, id=aid(kind, number, project),
-                           relations=list(relations), **changes)
+    values = {"id": aid(kind, number, project), "relations": list(relations)}
+    values.update(changes)
+    return common_artifact(kind, artifact_type(kind).prefix, **values)

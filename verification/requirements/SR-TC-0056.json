@@ -35,7 +35,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_relation_references.RelationReferenceWorkTests.test_self_links_rejected"
+    "test_relation_references.RelationReferenceWorkTests.test_self_links_rejected",
+    "test_relation_references_right.RelationReferenceRightTests.test_self_link_forbidden_for_all_types_and_all_stored_relations"
   ],
   "open_items": [
     "Connect this input-set validator to complete model loading, scope closures and authoring/transaction gates. Natural-language refinement meaning and lifecycle policy are not inferred."

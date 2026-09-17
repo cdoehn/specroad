@@ -67,12 +67,19 @@ class RelationReferences:
             index[source.identity.id] = source
         relations = []
         seen = set()
+        external_keys = set()
         for source in sorted(records, key=lambda record: record.identity.id):
             for position, relation in enumerate(source.relations):
                 try:
                     if relation.identity.id in seen:
                         raise ModelError("duplicate_relation_id", pointer="/relation_id")
                     seen.add(relation.identity.id)
+                    for external_index, external in enumerate(relation.data["external_identities"]):
+                        key = tuple(external[name] for name in ("source_system", "source_document", "external_id"))
+                        if key in external_keys:
+                            raise ModelError("duplicate_external_relation_identity",
+                                             pointer="/external_identities/" + str(external_index))
+                        external_keys.add(key)
                     target = index.get(relation.target)
                     if target is None:
                         raise ModelError("missing_relation_target", pointer="/target")

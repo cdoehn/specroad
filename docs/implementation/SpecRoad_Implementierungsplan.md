@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 97
-last_completed_plan_commit: 3.b.W
-next_plan_commit: 3.b.R
+implementation_plan_commits_completed: 98
+last_completed_plan_commit: 3.b.R
+next_plan_commit: 3.b.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1303,7 +1303,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.b.R – Make it Right
 
-- [ ] **3.b.R** · Position **98/885** · Voraussetzung: `3.b.W`.
+- [x] **3.b.R** · Position **98/885** · Voraussetzung: `3.b.W`.
 **Exakte Commit-Message:** `3.b.R feat(graph): Quell-Ziel-Matrix und Referenzen vervollständigen`
 
 **Vervollständigung:** Jede unzulässige Kombination und fehlende Referenz als Modellfehler behandeln.

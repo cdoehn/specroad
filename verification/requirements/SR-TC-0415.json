@@ -36,7 +36,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_relation_references.RelationReferenceWorkTests.test_one_accepted_pair_for_each_core_relation",
-    "test_relation_references.RelationReferenceWorkTests.test_same_type_requirement_for_supersedes_and_duplicates"
+    "test_relation_references.RelationReferenceWorkTests.test_same_type_requirement_for_supersedes_and_duplicates",
+    "test_relation_references_right.RelationReferenceRightTests.test_all_13328_type_combinations_match_independent_contract",
+    "test_relation_references_right.RelationReferenceRightTests.test_unlisted_pairs_fail_in_resolved_value_constructor"
   ],
   "open_items": [
     "Connect this input-set validator to complete model loading, scope closures and authoring/transaction gates. Natural-language refinement meaning and lifecycle policy are not inferred."

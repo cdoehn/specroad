@@ -36,7 +36,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_relation_references.RelationReferenceWorkTests.test_requirement_refinement_points_from_detail_to_general",
-    "test_relation_references.RelationReferenceWorkTests.test_requirement_dependency_is_not_refinement"
+    "test_relation_references.RelationReferenceWorkTests.test_requirement_dependency_is_not_refinement",
+    "test_relation_references_right.RelationReferenceRightTests.test_multiple_refinements_do_not_imply_a_single_parent_field",
+    "test_relation_references_right.RelationReferenceRightTests.test_two_distinct_relations_between_same_endpoints_remain_distinct"
   ],
   "open_items": [
     "Connect this input-set validator to complete model loading, scope closures and authoring/transaction gates. Natural-language refinement meaning and lifecycle policy are not inferred."

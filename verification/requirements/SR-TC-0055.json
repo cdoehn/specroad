@@ -37,7 +37,9 @@
   "test_ids": [
     "test_relation_references.RelationReferenceWorkTests.test_absent_target_fails_closed",
     "test_relation_references.RelationReferenceWorkTests.test_missing_non_owning_reference_is_still_an_error",
-    "test_relation_references.RelationReferenceWorkTests.test_display_name_does_not_resolve_a_missing_target"
+    "test_relation_references.RelationReferenceWorkTests.test_display_name_does_not_resolve_a_missing_target",
+    "test_relation_references_right.RelationReferenceRightTests.test_missing_targets_rejected_for_every_stored_type",
+    "test_relation_references_right.RelationReferenceRightTests.test_relation_targets_are_not_resolved_through_external_identities"
   ],
   "open_items": [
     "Connect this input-set validator to complete model loading, scope closures and authoring/transaction gates. Natural-language refinement meaning and lifecycle policy are not inferred."
