@@ -1,0 +1,25 @@
+{
+  "package_id": "ru",
+  "version": "1.0.0",
+  "language_ranges": [
+    "ru"
+  ],
+  "labels": {
+    "normative_force": {
+      "must": "Обязательно",
+      "must_not": "Запрещено",
+      "should": "Рекомендуется",
+      "may": "Разрешено"
+    },
+    "maturity": {
+      "draft": "Черновик",
+      "approved": "Утверждено",
+      "rejected": "Отклонено"
+    }
+  },
+  "literal_rules": [],
+  "capabilities": [
+    "metadata",
+    "labels"
+  ]
+}

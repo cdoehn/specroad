@@ -1,0 +1,25 @@
+{
+  "package_id": "hi",
+  "version": "1.0.0",
+  "language_ranges": [
+    "hi"
+  ],
+  "labels": {
+    "normative_force": {
+      "must": "अनिवार्य",
+      "must_not": "निषिद्ध",
+      "should": "अनुशंसित",
+      "may": "अनुमत"
+    },
+    "maturity": {
+      "draft": "प्रारूप",
+      "approved": "स्वीकृत",
+      "rejected": "अस्वीकृत"
+    }
+  },
+  "literal_rules": [],
+  "capabilities": [
+    "metadata",
+    "labels"
+  ]
+}

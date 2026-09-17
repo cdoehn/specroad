@@ -1,0 +1,25 @@
+{
+  "package_id": "en",
+  "version": "1.0.0",
+  "language_ranges": [
+    "en"
+  ],
+  "labels": {
+    "normative_force": {
+      "must": "Must",
+      "must_not": "Must not",
+      "should": "Should",
+      "may": "May"
+    },
+    "maturity": {
+      "draft": "Draft",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    }
+  },
+  "literal_rules": [],
+  "capabilities": [
+    "metadata",
+    "labels"
+  ]
+}

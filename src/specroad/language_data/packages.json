@@ -1,0 +1,87 @@
+{
+  "format_version": 1,
+  "packages": [
+    {
+      "package_id": "de",
+      "version": "1.0.0",
+      "language_ranges": [
+        "de"
+      ],
+      "filename": "packages/de.json",
+      "sha256": "04eb27bf6f2c16fd4969ac600572feb1776261fb4af5bc715e648dee14deace7"
+    },
+    {
+      "package_id": "en",
+      "version": "1.0.0",
+      "language_ranges": [
+        "en"
+      ],
+      "filename": "packages/en.json",
+      "sha256": "c1d42f9bb43828cc5f422f0c413e614304ff2f62c8b5d0d99badc239d45e9771"
+    },
+    {
+      "package_id": "hi",
+      "version": "1.0.0",
+      "language_ranges": [
+        "hi"
+      ],
+      "filename": "packages/hi.json",
+      "sha256": "08fe190a74569dd4db699f1e647b41cc427508737370e902320d7c8d590c650f"
+    },
+    {
+      "package_id": "id",
+      "version": "1.0.0",
+      "language_ranges": [
+        "id"
+      ],
+      "filename": "packages/id.json",
+      "sha256": "4867b3e8f2ab03f9ccb316fdb8f44882a43c2f51cb6a5cddccde42cbd9cd6c6e"
+    },
+    {
+      "package_id": "pt",
+      "version": "1.0.0",
+      "language_ranges": [
+        "pt"
+      ],
+      "filename": "packages/pt.json",
+      "sha256": "21734ef76bf618ce09198d1154d923573ba081e11a3cf5770cfed109eb3955f2"
+    },
+    {
+      "package_id": "es",
+      "version": "1.0.0",
+      "language_ranges": [
+        "es"
+      ],
+      "filename": "packages/es.json",
+      "sha256": "2598a1275f2c0d5d356ea96baa0c87054b61f5887904b2abfe378fc67671246e"
+    },
+    {
+      "package_id": "ru",
+      "version": "1.0.0",
+      "language_ranges": [
+        "ru"
+      ],
+      "filename": "packages/ru.json",
+      "sha256": "71373a492fde42b9d3405e2e6440d7391f5225201d22beddae44f758a501812a"
+    },
+    {
+      "package_id": "ja",
+      "version": "1.0.0",
+      "language_ranges": [
+        "ja"
+      ],
+      "filename": "packages/ja.json",
+      "sha256": "6b99e4adfdf543806c2e1e10f8f1683aedb26b2d6ee028c39a37ba263f1c6f75"
+    },
+    {
+      "package_id": "zh-Hans",
+      "version": "1.0.0",
+      "language_ranges": [
+        "zh-Hans",
+        "cmn-Hans"
+      ],
+      "filename": "packages/zh-Hans.json",
+      "sha256": "7f63324285e1fa9e3c874cbdad01232b975052da11018d0eed5c49824559205b"
+    }
+  ]
+}

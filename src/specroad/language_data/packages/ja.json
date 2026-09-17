@@ -1,0 +1,25 @@
+{
+  "package_id": "ja",
+  "version": "1.0.0",
+  "language_ranges": [
+    "ja"
+  ],
+  "labels": {
+    "normative_force": {
+      "must": "必須",
+      "must_not": "禁止",
+      "should": "推奨",
+      "may": "許可"
+    },
+    "maturity": {
+      "draft": "草案",
+      "approved": "承認済み",
+      "rejected": "却下"
+    }
+  },
+  "literal_rules": [],
+  "capabilities": [
+    "metadata",
+    "labels"
+  ]
+}

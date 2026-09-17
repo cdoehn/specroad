@@ -1,0 +1,25 @@
+{
+  "package_id": "es",
+  "version": "1.0.0",
+  "language_ranges": [
+    "es"
+  ],
+  "labels": {
+    "normative_force": {
+      "must": "Obligatorio",
+      "must_not": "Prohibido",
+      "should": "Recomendado",
+      "may": "Permitido"
+    },
+    "maturity": {
+      "draft": "Borrador",
+      "approved": "Aprobado",
+      "rejected": "Rechazado"
+    }
+  },
+  "literal_rules": [],
+  "capabilities": [
+    "metadata",
+    "labels"
+  ]
+}

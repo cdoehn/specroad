@@ -4,15 +4,22 @@
   "requirement_id": "SR-REQ-0669",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-LANGUAGE-PACKAGES-v1",
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Current Core distribution and explicitly activated metadata/label packages; no optional analyzers."
+  ],
+  "steps": [
+    "Read bound package resources; create UTF-8 requirements; inspect metadata and portable distribution behavior."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Core-Distribution MUSS die Metadaten-/Labelpakete und alle Mindestkennzeichnungen aus Anhang S.4 und S.6 bereitstellen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Declared package identity and byte integrity, minimum metadata/content transport; not translated display strings or linguistic results."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +35,14 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_language_packages.LanguagePackageWorkTests.test_nine_explicit_distribution_packages",
+    "test_language_packages.LanguagePackageWorkTests.test_each_package_matches_byte_binding",
+    "test_language_packages.LanguagePackageWorkTests.test_minimum_corpus_is_separate_from_allowlist",
+    "test_language_packages.LanguagePackageWorkTests.test_all_minimum_tags_select_metadata",
+    "test_language_packages.LanguagePackageWorkTests.test_relocatable_distributions_ship_same_package_bytes"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full release/platform matrix, bound project profile composition and integrated rendering remain outside this foundational step."
   ]
 }

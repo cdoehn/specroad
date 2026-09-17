@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "minimum_tags": [
+    "en-US",
+    "en-IN",
+    "hi-IN",
+    "id-ID",
+    "pt-BR",
+    "es-MX",
+    "ru-RU",
+    "ja-JP",
+    "de-DE",
+    "zh-Hans-CN",
+    "cmn-Hans-CN"
+  ],
+  "additional_tags": [
+    "zh-Hant",
+    "ar",
+    "ur-IN",
+    "x-specroad-demo",
+    "und",
+    "zzzz"
+  ]
+}

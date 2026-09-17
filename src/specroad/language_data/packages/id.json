@@ -1,0 +1,25 @@
+{
+  "package_id": "id",
+  "version": "1.0.0",
+  "language_ranges": [
+    "id"
+  ],
+  "labels": {
+    "normative_force": {
+      "must": "Wajib",
+      "must_not": "Dilarang",
+      "should": "Disarankan",
+      "may": "Diizinkan"
+    },
+    "maturity": {
+      "draft": "Draf",
+      "approved": "Disetujui",
+      "rejected": "Ditolak"
+    }
+  },
+  "literal_rules": [],
+  "capabilities": [
+    "metadata",
+    "labels"
+  ]
+}

@@ -47,6 +47,8 @@ def build_core(source_root: Path, output: Path) -> tuple[Path, Path]:
         relative_package = path.relative_to(package).as_posix()
         if path.suffix != ".py" and relative_package not in {
             "language_data/registry.txt", "language_data/snapshot.json",
+            "language_data/packages.json", "language_data/minimum_corpus.json",
+            "language_data/packages/de.json", "language_data/packages/en.json", "language_data/packages/hi.json", "language_data/packages/id.json", "language_data/packages/pt.json", "language_data/packages/es.json", "language_data/packages/ru.json", "language_data/packages/ja.json", "language_data/packages/zh-Hans.json",
         }:
             continue
         if not stat.S_ISREG(path.stat().st_mode):

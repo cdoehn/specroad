@@ -1,0 +1,26 @@
+{
+  "package_id": "zh-Hans",
+  "version": "1.0.0",
+  "language_ranges": [
+    "zh-Hans",
+    "cmn-Hans"
+  ],
+  "labels": {
+    "normative_force": {
+      "must": "必须",
+      "must_not": "禁止",
+      "should": "建议",
+      "may": "允许"
+    },
+    "maturity": {
+      "draft": "草案",
+      "approved": "已批准",
+      "rejected": "已拒绝"
+    }
+  },
+  "literal_rules": [],
+  "capabilities": [
+    "metadata",
+    "labels"
+  ]
+}

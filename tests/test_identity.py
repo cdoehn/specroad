@@ -132,7 +132,9 @@ class IdentityRobustnessTests(unittest.TestCase):
             module, archive = build_distribution(root / "first", source)
             manifest = {"specroad/" + name: hashlib.sha256(data).hexdigest()
                         for name, data in files_under(source / "specroad").items()
-                        if (name.endswith(".py") or name in {"language_data/registry.txt", "language_data/snapshot.json"}) and name != "_build.py"}
+                        if (name.endswith(".py") or name in {"language_data/registry.txt", "language_data/snapshot.json",
+                            "language_data/packages.json", "language_data/minimum_corpus.json",
+                            "language_data/packages/de.json", "language_data/packages/en.json", "language_data/packages/hi.json", "language_data/packages/id.json", "language_data/packages/pt.json", "language_data/packages/es.json", "language_data/packages/ru.json", "language_data/packages/ja.json", "language_data/packages/zh-Hans.json"}) and name != "_build.py"}
             manifest["__main__.py"] = hashlib.sha256((module / "__main__.py").read_bytes()).hexdigest()
             expected = hashlib.sha256(b"specroad-dev-payload-v1\0" + json.dumps(
                 manifest, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")).hexdigest()
