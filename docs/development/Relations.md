@@ -46,3 +46,24 @@ Die öffentliche API bleibt in `graph.relations`. Neutrale Relationswerte,
 Feldprüfungen und reine Update-Guards sind in getrennten Modulen. Der bestehende
 Leser und sämtliche Verhaltenserwartungen bleiben unverändert. Diese Trennung
 führt keine persistenten Indizes oder Writeroperationen vorzeitig ein.
+
+## Planschritt 3.b.W
+
+`validate_relation_references` prüft die explizit übergebenen `SourceRelations`
+gegen die vollständige Quell-/Zielmatrix aus §9.7. Ziele werden ausschließlich
+über echte Artefakt-IDs aufgelöst; display_id, externe Kennungen und Dateipfade
+sind keine alternativen Zieladressen. Alle Kanten einschließlich `references`
+verlangen vorhandene Ziele; jeder Self-Link ist verboten. Doppelte Artefakt-
+oder Relations-IDs und gemischte Projektpräfixe werden zurückgewiesen.
+
+`refines` zeigt unverändert von Detail zu Allgemeinem; `depends_on` bleibt eine
+andere Beziehung. Die Datenprüfung kann nicht aus natürlicher Sprache beweisen,
+ob eine Anforderung tatsächlich detaillierter ist oder eine Voraussetzung braucht.
+`ResolvedRelation` enthält die beobachteten Endpunktidentitäten, keine Reifegrad-
+oder Reviewfreigabe. Das Ergebnis trägt `relation_references_only`.
+
+Der Aufrufer muss den vorgesehenen vollständigen Modellbestand liefern.
+Das Ergebnis ist vollständig für diese Eingabe, aber keine Behauptung, dass ein
+Projekt vollständig gescannt wurde. Grenzreferenzen partieller Scopes, inverse
+Sichten, Zyklen und Review-/Lifecyclegates folgen später. Ein temporäres Lookup
+ist kein persistenter Adjazenzindex. Es gibt weiterhin keinen neuen CLI-Befehl.

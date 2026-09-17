@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 96
-last_completed_plan_commit: 3.a.C
-next_plan_commit: 3.b.W
+implementation_plan_commits_completed: 97
+last_completed_plan_commit: 3.b.W
+next_plan_commit: 3.b.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1294,7 +1294,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.b.W – Let it Work
 
-- [ ] **3.b.W** · Position **97/885** · Voraussetzung: `3.a.C`.
+- [x] **3.b.W** · Position **97/885** · Voraussetzung: `3.a.C`.
 **Exakte Commit-Message:** `3.b.W feat(graph): Quell-Ziel-Matrix und Referenzen aufbauen`
 
 **Umsetzung:** Die vollständige Kernrelationsmatrix einschließlich Self-Link-Verbot als Datenvalidator implementieren.
