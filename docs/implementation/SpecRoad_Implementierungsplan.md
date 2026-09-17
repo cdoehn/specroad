@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 89
-last_completed_plan_commit: 2.p.R
-next_plan_commit: 2.p.C
+implementation_plan_commits_completed: 90
+last_completed_plan_commit: 2.p.C
+next_plan_commit: 2.q.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1195,7 +1195,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.p.C – Make it Clean
 
-- [ ] **2.p.C** · Position **90/885** · Voraussetzung: `2.p.R`.
+- [x] **2.p.C** · Position **90/885** · Voraussetzung: `2.p.R`.
 **Exakte Commit-Message:** `2.p.C refactor(model): Modellwurzel und Projektbindung bereinigen`
 
 **Bereinigung:** Projektion, Inventur und Hashbildung als wiederverwendbare reine Dienste führen.
