@@ -39,3 +39,10 @@ Entfernen und Hinzufügen einer Relation mit frischer ID ist kein Update. Der
 Vergleich erteilt dafür ausdrücklich keine Authoringfreigabe: vollständige
 Inventur, frische ID, Revisionierung, Spezialartefaktregeln und die transaktionale
 Veröffentlichung werden erst in ihren späteren Schritten integriert.
+
+## Planschritt 3.a.C
+
+Die öffentliche API bleibt in `graph.relations`. Neutrale Relationswerte,
+Feldprüfungen und reine Update-Guards sind in getrennten Modulen. Der bestehende
+Leser und sämtliche Verhaltenserwartungen bleiben unverändert. Diese Trennung
+führt keine persistenten Indizes oder Writeroperationen vorzeitig ein.
