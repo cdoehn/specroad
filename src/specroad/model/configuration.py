@@ -171,6 +171,9 @@ def validate_configuration(data):
         check_project_declarations(data)
     except SafetyViolation as error:
         raise ModelError("unsafe_project_declaration") from error
+    from .configuration_schema import configuration_json_schema
+    from ._schema import validate_builtin
+    validate_builtin(data, configuration_json_schema())
 
 
 @dataclass(frozen=True, init=False)

@@ -126,6 +126,23 @@ class PrettyRenderer:
             self._line(self.out, title + "  " + value, prefix="  ", style="muted")
         self._line(self.out, "Host / cgroup capacity  unknown", prefix="  ", style="warning")
 
+    def _schemas(self, payload, *, detail=False):
+        if detail:
+            item = payload["metadata"]
+            self._line(self.out, item["schema_id"], style="success")
+            self._line(self.out, item["version"] + "  /  " + item["stability"], style="muted")
+            self._line(self.out, "Validation scope  " + item["validation_scope"], style="warning")
+            self._line(self.out, json.dumps(payload["schema"], ensure_ascii=True, indent=2))
+            return
+        self._line(self.out, str(len(payload["schemas"])) + " available schema resources", style="success")
+        for category, count in payload["categories"].items():
+            self._line(self.out, category.upper() + "  /  " + str(count), style="title" if count else "muted")
+            for item in payload["schemas"]:
+                if item["category"] == category:
+                    self._line(self.out, item["schema_id"], prefix="  ")
+                    self._line(self.out, item["version"] + "  /  " + item["validation_scope"], prefix="    ", style="muted")
+        self._line(self.out, "Inspect: specroad schema show <SCHEMA-ID> --format json", style="phase")
+
     def finish(self, outcome: CommandResult):
         # Immutable semantic data is projected, never modified for display.
         payload = thaw(outcome.result)
@@ -146,6 +163,8 @@ class PrettyRenderer:
             self._description(payload)
         elif outcome.command == "capabilities" and isinstance(payload, dict):
             self._capabilities(payload)
+        elif outcome.command in ("schema.list", "schema.show") and isinstance(payload, dict):
+            self._schemas(payload, detail=outcome.command == "schema.show")
         elif payload is not None:
             self._line(stream, json.dumps(payload, ensure_ascii=True, indent=2, allow_nan=False))
         if outcome.result_ref is not None:

@@ -50,7 +50,7 @@ class DescriptionWorkTests(unittest.TestCase):
         self.assertEqual(cli.result['stdout']['json_envelope_version'], '2.0.0')
 
     def test_unknown_commands_are_not_success_placeholders(self):
-        for target in ('init', 'retire', 'schema.show', 'work.resume', 'not-registered'):
+        for target in ('init', 'retire', 'schema.unavailable', 'work.resume', 'not-registered'):
             self.assertEqual(dispatch_result(['command', 'describe', target]).exit_code, 2)
 
     def test_missing_extra_and_unknown_input_is_rejected(self):

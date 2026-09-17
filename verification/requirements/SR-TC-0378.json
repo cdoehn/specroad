@@ -4,18 +4,27 @@
   "requirement_id": "SR-REQ-0378",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SCHEMA-CATALOG-v1"
+  ],
+  "preconditions": [
+    "Use implemented distribution schemas; no project, network, schema plugin or user file is a schema provider."
+  ],
+  "steps": [
+    "List the resources; retrieve their full field schemas; validate real positive and negative field fixtures and execute project-free commands."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad schema show <SCHEMA-ID> --format json` MUSS das vollständige Schema einschließlich Beschreibungen, Defaults, Beispielen, Enumwerten und deprecation-Hinweisen ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Complete available structural schema catalog and actual project-free CLI/API retrieval. Field schemas are not lifecycle, graph or evidence approval."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +37,16 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_schema_catalog.SchemaCatalogWorkTests.test_list_and_show_metadata_agree_for_every_resource",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_request_schema_is_the_command_description_schema",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_common_field_acceptance_matches_the_existing_validator",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_domain_field_acceptance_matches_the_existing_validator",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_record_field_acceptance_matches_the_existing_validator",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_cli_show_returns_schema_not_a_stub",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_schema_resources_work_after_portable_distribution_move"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas."
   ]
 }

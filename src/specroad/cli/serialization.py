@@ -69,4 +69,7 @@ def serialize_result(outcome, output_format="json"):
         document = sarif_document(outcome)
     else:
         raise ResultContractError("Unknown machine format")
+    from .result_schemas import ENVELOPE_ID, validate_result_document
+    schema_id = "sarif-specroad-v1" if "runs" in document and output_format == "sarif" else ENVELOPE_ID
+    validate_result_document(schema_id, document)
     return json.dumps(document, ensure_ascii=True, sort_keys=True, allow_nan=False)

@@ -3,10 +3,16 @@
 from .registry import CommandClass, CommandRegistry, CommandSpec, EffectScope, OptionSpec, PreflightProfile
 from .results import CommandResult, FailureKind, OperationFailure
 from .contracts import CommandProtocol, PositionalSpec, WorkContract
+from .result_schemas import validate_result_document
+
+
+def _published_result(invocation, payload):
+    validate_result_document(invocation.command.protocol.result_schema, payload)
+    return CommandResult(invocation.command.command_id, result=payload)
 
 
 def _help(invocation) -> CommandResult:
-    return CommandResult(invocation.command.command_id, result={
+    return _published_result(invocation, {
         "usage": "specroad --help [--format pretty|json] [--no-color] [--quiet]",
         "options": [{"flag": "--format", "values": ["pretty", "json"]},
                     {"flag": "--no-color"}, {"flag": "--quiet"}],
@@ -25,7 +31,7 @@ def _distribution_result(invocation, producer) -> CommandResult:
         payload = producer()
     except BuildMetadataError as error:
         raise OperationFailure(FailureKind.ENVIRONMENT, "Distribution identity is unavailable.") from error
-    return CommandResult(invocation.command.command_id, result=payload)
+    return _published_result(invocation, payload)
 
 
 def _version(invocation) -> CommandResult:
@@ -35,13 +41,27 @@ def _version(invocation) -> CommandResult:
 
 def _describe(invocation) -> CommandResult:
     from .self_description import describe_command
-    return CommandResult(invocation.command.command_id,
-                         result=describe_command(invocation.registry, invocation.arguments["command"]))
+    return _published_result(invocation, describe_command(invocation.registry, invocation.arguments["command"]))
 
 
 def _capabilities(invocation) -> CommandResult:
     from .capabilities import capabilities
     return _distribution_result(invocation, lambda: capabilities(invocation.registry))
+
+
+def _schema_list(invocation) -> CommandResult:
+    from ..model.schema_catalog import SchemaCatalog
+    return _published_result(invocation, SchemaCatalog(invocation.registry).list())
+
+
+def _schema_show(invocation) -> CommandResult:
+    from ..model.schema_catalog import SchemaCatalog, SchemaLookupError
+    from .command_errors import CommandUsageError
+    try:
+        payload = SchemaCatalog(invocation.registry).show(invocation.arguments["schema_id"])
+    except SchemaLookupError as error:
+        raise CommandUsageError("Unknown schema identity") from error
+    return _published_result(invocation, payload)
 
 
 def builtin_registry() -> CommandRegistry:
@@ -82,4 +102,24 @@ def builtin_registry() -> CommandRegistry:
         protocol=CommandProtocol("capabilities-v1", {
             "command_id": "capabilities", "options": {"--format": "json"}},
             work=WorkContract("registry_projection", ("command_registry", "distribution_metadata"))),
+    ), CommandSpec(
+        command_id="schema.list", words=("schema", "list"),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.BOOTSTRAP,
+        effect_scope=EffectScope.NONE, handler=_schema_list,
+        options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
+                 OptionSpec("--no-color"), OptionSpec("--quiet")),
+        protocol=CommandProtocol("schema-catalog-v1", {
+            "command_id": "schema.list", "options": {"--format": "json"}},
+            work=WorkContract("schema_catalog", ("distribution_schemas",))),
+    ), CommandSpec(
+        command_id="schema.show", words=("schema", "show"),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.BOOTSTRAP,
+        effect_scope=EffectScope.NONE, handler=_schema_show,
+        options=(OptionSpec("--format", takes_value=True, choices=("pretty", "json")),
+                 OptionSpec("--no-color"), OptionSpec("--quiet")),
+        positionals=(PositionalSpec("schema_id"),),
+        protocol=CommandProtocol("schema-document-v1", {
+            "command_id": "schema.show", "arguments": {"schema_id": "json-envelope-v2"},
+            "options": {"--format": "json"}},
+            work=WorkContract("schema_lookup", ("distribution_schemas",))),
     )))

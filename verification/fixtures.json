@@ -12,7 +12,8 @@
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-LANGUAGE-REGISTRY-v1",
     "SR-FIX-LANGUAGE-PACKAGES-v1",
-    "SR-FIX-MODEL-MANIFEST-v1"
+    "SR-FIX-MODEL-MANIFEST-v1",
+    "SR-FIX-SCHEMA-CATALOG-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -62,6 +63,10 @@
     "SR-FIX-MODEL-MANIFEST-v1": {
       "provider": "tests/test_model_root.py:fixture",
       "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission."
+    },
+    "SR-FIX-SCHEMA-CATALOG-v1": {
+      "provider": "tests/test_schema_catalog.py:SchemaCatalogWorkTests",
+      "kind": "Trusted local schema resources, synthetic artifact values and project-free command invocations; not a graph or release approval"
     }
   }
 }

@@ -30,7 +30,9 @@ def request_schema(command):
         required.append("options")
     if arguments["required"]:
         required.append("arguments")
-    return {"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object",
+    return {"$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": "urn:specroad:schema:1.0.0:request:" + command.command_id,
+            "x-specroad-validation-scope": "request_fields_only", "type": "object",
             "additionalProperties": False, "required": required,
             "properties": {"command_id": {"const": command.command_id},
                            "options": options, "arguments": arguments}}
