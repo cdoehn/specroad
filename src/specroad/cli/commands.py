@@ -49,19 +49,25 @@ def _capabilities(invocation) -> CommandResult:
     return _distribution_result(invocation, lambda: capabilities(invocation.registry))
 
 
-def _schema_list(invocation) -> CommandResult:
-    from ..model.schema_catalog import SchemaCatalog
-    return _published_result(invocation, SchemaCatalog(invocation.registry).list())
-
-
-def _schema_show(invocation) -> CommandResult:
+def _schema_result(invocation, schema_id=None) -> CommandResult:
     from ..model.schema_catalog import SchemaCatalog, SchemaLookupError
     from .command_errors import CommandUsageError
+    catalog = SchemaCatalog(invocation.registry)
+    if schema_id is None:
+        return _published_result(invocation, catalog.list())
     try:
-        payload = SchemaCatalog(invocation.registry).show(invocation.arguments["schema_id"])
+        payload = catalog.show(schema_id)
     except SchemaLookupError as error:
         raise CommandUsageError("Unknown schema identity") from error
     return _published_result(invocation, payload)
+
+
+def _schema_list(invocation) -> CommandResult:
+    return _schema_result(invocation)
+
+
+def _schema_show(invocation) -> CommandResult:
+    return _schema_result(invocation, invocation.arguments["schema_id"])
 
 
 def builtin_registry() -> CommandRegistry:

@@ -1,4 +1,4 @@
-# Schema catalog – 2.q.R
+# Schema catalog – 2.q.C
 
 `schema list --format json` and `schema show <SCHEMA-ID> --format json` are
 project-free, read-only bootstrap operations. They never resolve IDs as paths,
@@ -54,3 +54,17 @@ Result schemas contain the present work, stream and process-limit field contract
 Additional relational and lifecycle checks are still performed by their owning
 validators. The test that a structurally valid milestone can still fail a local
 relation requirement intentionally demonstrates this boundary.
+
+## Shared resources and boundaries
+
+`schema_identity` owns only identity metadata. `schema_sources` references the
+existing validators' trusted resource factories; it contains no duplicated schema
+content. `SchemaResource` owns canonical bytes, validates their binding and
+supplies both detached schema retrieval and assertion evaluation from those same
+bytes. `SchemaCatalog` only selects and projects these resources. There is no
+persistent schema cache, project registration or extensible plugin scheduler.
+
+The Clean step does not change schema IDs, defaults, field assertions, examples,
+scopes, categories or fingerprints. Later milestones must add actual resources
+and validators together, not placeholder schemas. Product plan reaches 93/885;
+platform evidence, full semantic checks and overall release readiness stay open.

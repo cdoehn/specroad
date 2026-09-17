@@ -4,14 +4,9 @@ The typed producers retain cross-field/semantic and publication-integrity checks
 Schemas cover their serialized field shapes; arbitrary result, project, environment
 or schema-document objects stay passive JSON data. No remote resolution exists.
 """
-DIALECT = "https://json-schema.org/draft/2020-12/schema"
 from ..model._schema import validate_builtin
+from ..model.schema_identity import CATEGORIES, DIALECT, ENVELOPE_ID, RESULT_IDS
 from .results import FORMAT_VERSION, ResultStatus
-
-ENVELOPE_ID = "json-envelope-v2"
-RESULT_IDS = (ENVELOPE_ID, "help-v1", "version-info-v1", "command-description-v1",
-              "capabilities-v1", "schema-catalog-v1", "schema-document-v1", "sarif-specroad-v1")
-CATEGORIES = ("artifact", "configuration", "mapping", "result", "exchange", "request")
 
 
 def _object(properties, required=None, extra=False):
