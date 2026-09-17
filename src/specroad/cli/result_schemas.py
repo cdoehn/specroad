@@ -49,6 +49,18 @@ def _fields(schema_id):
                     "build_hash_scope": _nullable(text)}
     entry = _object({"schema_id": nonempty, "version": nonempty, "stability": {"enum": ["experimental"]},
         "category": {"enum": list(CATEGORIES)}, "validation_scope": nonempty, "sha256": sha})
+    work = _object({"continuation_supported": {"const": False},
+        "external_side_effects": {"const": []}, "checkpoint_algorithms": {"const": []},
+        "minimum_step": _object({"kind": nonempty, "required_inputs": strings,
+            "limits": _object({"memory_bytes": {"type": "null"}, "cpu_seconds": {"type": "null"}}),
+            "limits_status": {"const": "unmeasured"}, "on_blocked": {"const": "fail_without_checkpoint"},
+            "blocked_exit_code": {"const": 5}})})
+    bound = _object({"state": {"enum": ["known", "unknown", "unlimited"]}, "value": _nullable(count)})
+    process_limit = _object({"scope": {"const": "process"}, "unit": text, "source": text,
+                            "soft": bound, "hard": bound})
+    limits = _object({"process_address_space_bytes": process_limit, "process_cpu_seconds": process_limit,
+        "host_memory_bytes": {"type": "null"}, "host_cpu_quota": {"type": "null"},
+        "host_limits_status": {"const": "unknown"}, "scope": {"const": "process_limits_not_host_capacity"}})
     if schema_id == ENVELOPE_ID:
         return _object({"format_version": {"const": FORMAT_VERSION}, "command": nonempty,
             "status": {"enum": [s.value for s in ResultStatus]}, "project": _nullable(obj),
@@ -65,14 +77,19 @@ def _fields(schema_id):
             "supported_output_format_versions": {"type": "object", "additionalProperties": strings}})
     if schema_id == "command-description-v1":
         return _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
-            "lock_kind": text, "work": obj,
+            "lock_kind": {"const": "none"}, "work": work,
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
                 "datatype": text, "required": boolean, "choices": strings})),
             "options": _array(_object({"flag": text, "datatype": text, "repeatable": boolean,
                 "required": boolean, "choices": strings, "excludes": strings})),
-            "mutually_exclusive": _array(strings), "stdin": obj, "stdout": obj,
+            "mutually_exclusive": _array(strings),
+            "stdin": _object({"mode": {"const": "unused"}, "explicit_markers": {"const": []}}),
+            "stdout": _object({"formats": strings, "default_format": text,
+                "json_envelope_version": {"const": FORMAT_VERSION}, "result_schema": nonempty,
+                "continuation": _object({"supported": {"const": False}, "sarif_fallback": {"type": "null"}})}),
             "diagnostic_codes": strings, "exit_codes": _array({"type": "integer", "minimum": 0, "maximum": 8}),
-            "write_effects": obj, "requires_project": boolean, "requires_git": boolean,
+            "write_effects": _object({"scope": text, "required_write_paths": strings, "external_work": strings}),
+            "requires_project": boolean, "requires_git": boolean,
             "request_schema": obj, "examples": _array(obj)})
     if schema_id == "capabilities-v1":
         semantic = _object({"program_version": text, "distribution": _object(distribution),
@@ -80,9 +97,10 @@ def _fields(schema_id):
                 "result_schema": text, "continuation_supported": boolean})),
             "command_groups": strings, "command_classes": strings, "output_formats": strings, "exchange_formats": strings,
             "supported_versions": {"type": "object", "additionalProperties": strings},
-            "python_support": support, "work": obj})
+            "python_support": support, "work": _object({"engine_available": {"const": False},
+                "checkpoint_algorithms": {"const": []}, "budget_policy_version": {"type": "null"}})})
         return _object({"format_version": {"const": "1.0.0"}, "semantic": semantic,
-            "runtime": _object({"interpreter": runtime, "limits": obj})})
+            "runtime": _object({"interpreter": runtime, "limits": limits})})
     if schema_id == "schema-catalog-v1":
         return _object({"format_version": {"const": "1.0.0"}, "schemas": _array(entry),
             "categories": _object({name: count for name in CATEGORIES})})

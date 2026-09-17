@@ -38,7 +38,9 @@ def _type_fields(kind):
                         "verification_plan_status": verification, "outcome": text, "priority": priority}),
         "requirement": (("requirement_kind", "language", "normative_force", "statement", "priority",
                          "criticality", "implementation_status", "verification_plan_status"),
-                        {"requirement_kind": {"enum": list(REQUIREMENT_KINDS)}, "normative_force": {"enum": list(NORMATIVE_FORCES)},
+                        {"requirement_kind": {"enum": list(REQUIREMENT_KINDS)}, "normative_force": {"enum": list(NORMATIVE_FORCES),
+                         "description": "Explicit obligation; never inferred from priority or statement text.",
+                         "examples": ["must", "must_not", "should", "may"]},
                          "statement": text, "priority": priority, "criticality": {"enum": list(CRITICALITIES)},
                          "implementation_status": implementation, "verification_plan_status": verification,
                          "rationale": text, "deviation_conditions": text, "deviation_authority": owner,
@@ -89,6 +91,7 @@ def domain_schema(kind, version=SCHEMA_VERSION):
         raise ModelError("domain_type_not_supported", pointer="/artifact_type")
     required, fields = _type_fields(kind)
     schema["$id"] = "urn:specroad:schema:" + version + ":artifact-domain:" + kind
+    schema["description"] = "Stored domain and planning fields for " + kind + "; additional local and graph checks remain required."
     schema["$comment"] = "Domain fields only; graph, profile, evidence and authorization gates are not evaluated."
     schema["x-specroad-validation-scope"] = VALIDATION_SCOPE
     schema["required"] = list(dict.fromkeys([*schema["required"], *required]))

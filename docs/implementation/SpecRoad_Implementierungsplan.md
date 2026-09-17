@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 91
-last_completed_plan_commit: 2.q.W
-next_plan_commit: 2.q.R
+implementation_plan_commits_completed: 92
+last_completed_plan_commit: 2.q.R
+next_plan_commit: 2.q.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1221,7 +1221,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.q.R – Make it Right
 
-- [ ] **2.q.R** · Position **92/885** · Voraussetzung: `2.q.W`.
+- [x] **2.q.R** · Position **92/885** · Voraussetzung: `2.q.W`.
 **Exakte Commit-Message:** `2.q.R feat(model): Schema-Katalog und vollständiger Schemaabruf vervollständigen`
 
 **Vervollständigung:** Unbekannte IDs ablehnen; Beschreibungen, Defaults, Beispiele, Enums und deprecation als Vertragsdaten erhalten.

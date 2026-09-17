@@ -69,9 +69,11 @@ def artifact_common_schema(kind, version=SCHEMA_VERSION):
     branches = []
     for scheme, token in (("random128-v1", r"[0-7][0-9A-HJKMNP-TV-Z]{25}"),
                           ("legacy-sequential-v1", r"[0-9]{4}")):
-        branches.append({"properties": {"id_scheme": {"const": scheme},
+        branches.append({"properties": {"id_scheme": {"const": scheme, "deprecated": scheme == "legacy-sequential-v1",
+                               "description": "Legacy identities remain readable; new identities require random128-v1."},
                            "id": {"type": "string", "pattern": "^(?:" + base + token + r")(?![\s\S])"}}})
     return {"$schema": DIALECT, "$id": item.schema_id,
+            "description": "Common stored fields for " + kind + "; type, graph and lifecycle checks are separate.",
             "$comment": "Common fields only. Never sufficient for approval, authoring or publication.",
             "x-specroad-validation-scope": VALIDATION_SCOPE,
             "type": "object", "required": required, "properties": _properties(kind),

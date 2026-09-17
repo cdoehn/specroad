@@ -43,7 +43,11 @@
     "test_schema_catalog.SchemaCatalogWorkTests.test_all_domain_resources_are_present",
     "test_schema_catalog.SchemaCatalogWorkTests.test_all_record_resources_are_present",
     "test_schema_catalog.SchemaCatalogWorkTests.test_category_counts_cover_every_entry",
-    "test_schema_catalog.SchemaCatalogWorkTests.test_every_builtin_has_a_real_retrievable_result_contract"
+    "test_schema_catalog.SchemaCatalogWorkTests.test_every_builtin_has_a_real_retrievable_result_contract",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_registry_order_does_not_change_catalog_or_schema_examples",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_schema_commands_reject_project_reads_network_and_subprocesses",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_valid_but_mismatched_version_and_category_are_rejected",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_future_formats_and_unsupported_sarif_commands_stay_unavailable"
   ],
   "open_items": [
     "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas."

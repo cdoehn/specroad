@@ -44,7 +44,14 @@
     "test_schema_catalog.SchemaCatalogWorkTests.test_domain_field_acceptance_matches_the_existing_validator",
     "test_schema_catalog.SchemaCatalogWorkTests.test_record_field_acceptance_matches_the_existing_validator",
     "test_schema_catalog.SchemaCatalogWorkTests.test_cli_show_returns_schema_not_a_stub",
-    "test_schema_catalog.SchemaCatalogWorkTests.test_schema_resources_work_after_portable_distribution_move"
+    "test_schema_catalog.SchemaCatalogWorkTests.test_schema_resources_work_after_portable_distribution_move",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_complete_schema_retains_every_annotation_value",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_missing_configuration_defaults_are_not_inserted",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_deprecated_legacy_branch_still_reads_existing_identity",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_request_examples_remain_executable_input_contracts",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_multi_positional_dependencies_match_actual_request_binding",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_remote_reference_in_schema_is_never_resolved",
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_catalog_retrieval_does_not_grant_lifecycle_or_write_approval"
   ],
   "open_items": [
     "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas."

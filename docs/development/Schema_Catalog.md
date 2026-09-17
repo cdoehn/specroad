@@ -1,4 +1,4 @@
-# Schema catalog – 2.q.W
+# Schema catalog – 2.q.R
 
 `schema list --format json` and `schema show <SCHEMA-ID> --format json` are
 project-free, read-only bootstrap operations. They never resolve IDs as paths,
@@ -35,3 +35,22 @@ parallel via xdist; C includes a serial reference and bound evidence comparison.
 No human output/layout/doc tests and no suite/individual-test timeout are added.
 A target-device apply or the full supported CPython matrix is not inferred from
 local validation. This file is not a release record.
+
+## Hardened resource and annotation contract
+
+Schema resources verify canonical bytes, complete local references, vocabulary,
+ID/version/category/scope consistency and immutable metadata. Their schema views
+are independent data copies. A malformed resource cannot be called "approved".
+
+Descriptions, examples, enum values and legacy-branch deprecation are exported
+from the same owning factories as validation. Known defaults document only the
+actual existing policy. Defaults never fill missing fields or alter an instance;
+examples never execute. Explicit boolean flags still require `true` when present;
+no invalid `false` default is advertised. Requirement obligation has no default.
+Unknown assertions and remote references fail closed. Dependent positionals use
+the same dependency requirements as the structured request binder.
+
+Result schemas contain the present work, stream and process-limit field contracts.
+Additional relational and lifecycle checks are still performed by their owning
+validators. The test that a structurally valid milestone can still fail a local
+relation requirement intentionally demonstrates this boundary.

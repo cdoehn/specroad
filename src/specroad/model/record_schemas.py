@@ -161,6 +161,7 @@ def record_schema(kind, version=SCHEMA_VERSION):
     schema["$id"] = contract.schema_id
     schema["$comment"] = "Local record fields only; no graph, payload integrity, review or publication approval."
     schema["x-specroad-validation-scope"] = contract.validation_scope
+    schema["description"] = "Stored record fields for " + kind + "; not evidence verification, lifecycle approval or graph validation."
     schema["$defs"].update(_definitions())
     schema["required"] = list(dict.fromkeys([*schema["required"], *required]))
     schema["properties"].update(fields)

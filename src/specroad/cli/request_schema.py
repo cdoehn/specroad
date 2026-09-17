@@ -30,11 +30,18 @@ def request_schema(command):
         required.append("options")
     if arguments["required"]:
         required.append("arguments")
-    return {"$schema": "https://json-schema.org/draft/2020-12/schema",
+    schema = {"$schema": "https://json-schema.org/draft/2020-12/schema",
             "$id": "urn:specroad:schema:1.0.0:request:" + command.command_id,
             "x-specroad-validation-scope": "request_fields_only", "type": "object",
             "additionalProperties": False, "required": required,
             "properties": {"command_id": {"const": command.command_id},
                            "options": options, "arguments": arguments}}
-
-
+    schema["description"] = "Structured request for " + command.command_id + "; binding never executes example requests."
+    if command.protocol is not None:
+        schema["examples"] = [command.protocol.example.as_dict()]
+    # These describe the existing bootstrap option policy, not inserted values.
+    for flag, default in (("--format", "pretty"),):
+        field = options["properties"].get(flag)
+        if field is not None and (flag != "--format" or "pretty" in field.get("enum", ())):
+            field["default"] = default
+    return schema

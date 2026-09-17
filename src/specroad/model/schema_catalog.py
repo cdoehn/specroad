@@ -7,6 +7,8 @@ Semantic postchecks and future format implementations are not implied by it.
 from dataclasses import dataclass
 import hashlib
 import json
+from types import MappingProxyType
+import re
 
 from .artifact_types import artifact_types
 from .artifact_schemas import artifact_common_schema
@@ -34,11 +36,56 @@ class SchemaResource:
     _encoded: bytes
     stability: str = "experimental"
 
+    def __post_init__(self):
+        from ._schema import _check_vocabulary
+        from ..cli.result_schemas import CATEGORIES, DIALECT
+        if (type(self.schema_id) is not str or not self.schema_id or
+                type(self.version) is not str or re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", self.version) is None or
+                self.category not in CATEGORIES or self.stability != "experimental" or
+                type(self.validation_scope) is not str or not self.validation_scope or
+                type(self._encoded) is not bytes):
+            raise SchemaLookupError("invalid_schema_resource")
+        from ..cli.result_schemas import RESULT_IDS
+        if self.schema_id in RESULT_IDS:
+            expected = ("2.0.0" if self.schema_id == "json-envelope-v2" else "1.0.0",
+                "exchange" if self.schema_id == "sarif-specroad-v1" else "result",
+                "sarif_projection_only" if self.schema_id == "sarif-specroad-v1" else "result_fields_only")
+        else:
+            parts = self.schema_id.split(":", 4)
+            if len(parts) != 5 or parts[:3] != ["urn", "specroad", "schema"]:
+                raise SchemaLookupError("invalid_schema_resource")
+            category_scopes = {"artifact-common": ("artifact", "common_fields_only"),
+                "artifact-domain": ("artifact", "domain_fields_only"),
+                "artifact-record": ("artifact", "record_fields_only"),
+                "project-configuration": ("configuration", "configuration_fields_only"),
+                "request": ("request", "request_fields_only")}
+            family = parts[4].split(":", 1)[0]
+            if family not in category_scopes:
+                raise SchemaLookupError("invalid_schema_resource")
+            expected = (parts[3], *category_scopes[family])
+        if (self.version, self.category, self.validation_scope) != expected:
+            raise SchemaLookupError("invalid_schema_resource")
+        try:
+            schema = json.loads(self._encoded)
+            if (type(schema) is not dict or schema.get("$id") != self.schema_id or
+                    schema.get("$schema") != DIALECT or
+                    schema.get("x-specroad-validation-scope") != self.validation_scope or
+                    canonical_json_bytes(schema) != self._encoded):
+                raise ValueError("inconsistent resource")
+            _check_vocabulary(schema)
+        except (ValueError, TypeError, RecursionError, ModelError) as error:
+            raise SchemaLookupError("invalid_schema_resource") from error
+
     @classmethod
     def capture(cls, document, version, category):
-        encoded = canonical_json_bytes(document)
+        if type(document) is not dict or not {"$id", "x-specroad-validation-scope"} <= document.keys():
+            raise SchemaLookupError("invalid_schema_resource")
+        try:
+            encoded = canonical_json_bytes(document)
+        except (ValueError, TypeError, RecursionError, ModelError) as error:
+            raise SchemaLookupError("invalid_schema_resource") from error
         return cls(document["$id"], version, category,
-                   document.get("x-specroad-validation-scope", "request_fields_only"), encoded)
+                   document["x-specroad-validation-scope"], encoded)
 
     @property
     def schema(self):
@@ -69,7 +116,7 @@ class SchemaCatalog:
         for command in self._registry.commands:
             schema_id = "urn:specroad:schema:1.0.0:request:" + command.command_id
             providers[schema_id] = ("request", "1.0.0", "request", command.command_id)
-        self._providers = providers
+        self._providers = MappingProxyType(providers)
 
     def get(self, schema_id):
         if type(schema_id) is not str or schema_id not in self._providers:

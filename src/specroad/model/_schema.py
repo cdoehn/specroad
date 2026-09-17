@@ -16,6 +16,7 @@ _KEYWORDS = frozenset({
     "x-specroad-validation-scope", "type", "const", "enum", "required",
     "properties", "propertyNames", "additionalProperties", "items", "minLength", "minItems",
     "minimum", "maximum", "pattern", "anyOf", "allOf", "not", "format",
+    "default", "examples", "deprecated", "readOnly", "writeOnly", "dependentRequired",
 })
 
 
@@ -84,6 +85,23 @@ def _check_vocabulary(schema):
             raise ValueError("Unsupported built-in schema type")
         if "format" in node and node["format"] not in ("date-time", "date", "bcp47"):
             raise ValueError("Unknown built-in format assertion")
+        # Annotation values are inert data, NOT schemas or instructions. In
+        # particular a default never supplies a missing required instance field.
+        for annotation in ("description", "title", "$comment"):
+            if annotation in node and type(node[annotation]) is not str:
+                raise ValueError("Invalid string schema annotation")
+        for annotation in ("deprecated", "readOnly", "writeOnly"):
+            if annotation in node and type(node[annotation]) is not bool:
+                raise ValueError("Invalid boolean schema annotation")
+        if "examples" in node and type(node["examples"]) is not list:
+            raise ValueError("Schema examples must be an array")
+        if "dependentRequired" in node:
+            dependencies = node["dependentRequired"]
+            if (type(dependencies) is not dict or
+                any(type(key) is not str or type(names) is not list or
+                    any(type(name) is not str for name in names) or
+                    len(set(names)) != len(names) for key, names in dependencies.items())):
+                raise ValueError("Invalid dependent-required assertion")
         if "$ref" in node:
             ref = node["$ref"]
             if type(ref) is not str or not ref.startswith("#/$defs/") or ref in active:
@@ -182,6 +200,11 @@ def validate_builtin(instance, schema):
             for field in node.get("required", ()):
                 if field not in value:
                     raise ModelError("missing_field", pointer=_pointer(pointer, field))
+            for field, dependencies in node.get("dependentRequired", {}).items():
+                if field in value:
+                    for dependency in dependencies:
+                        if dependency not in value:
+                            raise ModelError("missing_dependency", pointer=_pointer(pointer, dependency))
             properties = node.get("properties", {})
             for field, item in value.items():
                 if "propertyNames" in node:
