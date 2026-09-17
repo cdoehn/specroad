@@ -49,7 +49,9 @@
   "test_ids": [
     "test_security.SafetyWorkTests.test_nested_projects_cannot_be_merged_by_a_read",
     "test_model_root.ModelRootWorkTests.test_foreign_root_resources_cannot_be_merged",
-    "test_model_root.ModelRootWorkTests.test_freshness_check_rejects_identical_bytes_from_other_root"
+    "test_model_root.ModelRootWorkTests.test_freshness_check_rejects_identical_bytes_from_other_root",
+    "test_model_root_right.ModelRootRightTests.test_nested_project_is_not_merged",
+    "test_model_root_right.ModelRootRightTests.test_foreign_project_id_inside_resource_rejected"
   ],
   "open_items": [
     "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."

@@ -49,7 +49,9 @@
   "test_ids": [
     "test_security.SafetyWorkTests.test_project_metadata_path_runs_without_git_network_or_processes",
     "test_model_root.ModelRootWorkTests.test_same_snapshot_under_another_root_has_same_hash",
-    "test_model_root.ModelRootWorkTests.test_foreign_root_resources_cannot_be_merged"
+    "test_model_root.ModelRootWorkTests.test_foreign_root_resources_cannot_be_merged",
+    "test_model_root_right.ModelRootRightTests.test_project_relocation_requires_fresh_read_binding",
+    "test_model_root_right.ModelRootRightTests.test_nested_project_is_not_merged"
   ],
   "open_items": [
     "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 88
-last_completed_plan_commit: 2.p.W
-next_plan_commit: 2.p.R
+implementation_plan_commits_completed: 89
+last_completed_plan_commit: 2.p.R
+next_plan_commit: 2.p.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1186,7 +1186,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.p.R – Make it Right
 
-- [ ] **2.p.R** · Position **89/885** · Voraussetzung: `2.p.W`.
+- [x] **2.p.R** · Position **89/885** · Voraussetzung: `2.p.W`.
 **Exakte Commit-Message:** `2.p.R feat(model): Modellwurzel und Projektbindung vervollständigen`
 
 **Vervollständigung:** Betriebsdaten, Farbe, Laufzeitmesswerte und externe Workpfade ausschließen; mehrere project_id nicht mischen.

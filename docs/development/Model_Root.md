@@ -40,7 +40,8 @@ Seine vollständigen JCS-Bytes bilden die Modellwurzel. Diese Grundlagen-API
 Die Profilprojektion ist ein erforderliches Datenargument. Es wird keine
 Profilkomposition erfunden. Eine explizite leere Projektion für eine Testfixture
 ist kein Beleg dafür, dass ein produktives Projekt ohne Coreprofil gültig wäre.
-Versionierte Dateiresourcen deklarieren `<kind>_id` und `<kind>_version`; Namen
+Versionierte Dateiresourcen deklarieren `<kind>_id` und `<kind>_version` oder `version`; widersprüchliche
+Doppelangaben werden abgewiesen. Namen
 werden nicht aus Dateinamen geraten. Weitere Schemavarianten gehören zum
 späteren tatsächlich definierten Ressourcenschema.
 
@@ -70,3 +71,21 @@ Testfallzuordnungen bleiben partiell. Keine Ausgabe-, Dokumentations- oder
 Layouttests; fachliche Manifeste und Hashdomänen sind maschinenlesbare Verträge.
 Keine neue Laufzeitabhängigkeit, keine Projekt- oder Cachewrites, keine
 Netzwerkanfrage und keine Ausführung von Profil-/Extensiondaten.
+
+## Boundary References und Endprüfung
+
+Partielle, ausdrücklich übergebene Boundary References binden Quelle,
+Relations-ID soweit vorhanden, Relationstyp, Zieltyp, Ziel-ID, Grund und
+Ursprungszielhash. Geordnet wird nach den UTF-8-Bytes des Tupels
+(source_id, relation_id oder leer, target_id). Duplikate, fehlende enthaltene
+Quellen, bereits enthaltene Ziele und Boundaries im closed-Scope sind Fehler.
+Starke Beziehungen werden nicht als schwache Boundary ausgegeben.
+`boundary_relationships_verified=false` bleibt jedoch ausdrücklich: Existenz
+und genaue Übereinstimmung mit echten Kanten sind Aufgabe des Scopekerns,
+keine aus einem Inputhash ableitbare Eigenschaft.
+
+Konfigurierte Register werden über den vorhandenen Offline-Registerlader an
+Date und Inhalt gebunden. Beschädigte oder fehlende Originale führen zum
+Fehler statt zum automatischen Ersatz. Nach dem Manifestzusammenbau werden
+sämtliche ausgewählten Originaldateien nochmals geprüft. Dies erkennt
+beobachtete Änderungen, bietet jedoch keine atomare Lesetransaktion.

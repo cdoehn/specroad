@@ -42,7 +42,11 @@
     "test_model_root.ModelRootWorkTests.test_scope_descriptor_changes_are_bound",
     "test_model_root.ModelRootWorkTests.test_artifact_order_is_independent_of_path_input_order",
     "test_model_root.ModelRootWorkTests.test_required_seed_missing_is_not_a_partial_success",
-    "test_model_root.ModelRootWorkTests.test_included_attachment_hashes_actual_bytes"
+    "test_model_root.ModelRootWorkTests.test_included_attachment_hashes_actual_bytes",
+    "test_model_root_right.ModelRootRightTests.test_boundary_content_and_origin_hash_change_both_hashes",
+    "test_model_root_right.ModelRootRightTests.test_boundary_order_uses_utf8_source_relation_target",
+    "test_model_root_right.ModelRootRightTests.test_closed_scope_rejects_boundaries",
+    "test_model_root_right.ModelRootRightTests.test_strong_relation_cannot_be_weakened_to_boundary"
   ],
   "open_items": [
     "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."

@@ -41,7 +41,11 @@
   "test_ids": [
     "test_model_root.ModelRootWorkTests.test_same_snapshot_under_another_root_has_same_hash",
     "test_model_root.ModelRootWorkTests.test_original_byte_formatting_does_not_change_root",
-    "test_model_root.ModelRootWorkTests.test_semantic_configuration_removes_display_and_soft_targets"
+    "test_model_root.ModelRootWorkTests.test_semantic_configuration_removes_display_and_soft_targets",
+    "test_model_root_right.ModelRootRightTests.test_locale_timezone_and_work_environment_do_not_change_model",
+    "test_model_root_right.ModelRootRightTests.test_manifest_services_work_in_moved_portable_distributions",
+    "test_model_root_right.ModelRootRightTests.test_display_and_recovery_switch_leave_model_root_unchanged",
+    "test_model_root_right.ModelRootRightTests.test_generated_cache_receipts_and_workpaths_are_not_loaded"
   ],
   "open_items": [
     "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."

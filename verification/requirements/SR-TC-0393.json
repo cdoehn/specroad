@@ -50,7 +50,9 @@
     "test_security.SafetyWorkTests.test_boundary_accepts_exactly_one_root",
     "test_security.SafetyWorkTests.test_multiple_project_declarations_are_not_accepted",
     "test_model_root.ModelRootWorkTests.test_configuration_identity_is_bound",
-    "test_model_root.ModelRootWorkTests.test_wrong_expected_project_is_rejected"
+    "test_model_root.ModelRootWorkTests.test_wrong_expected_project_is_rejected",
+    "test_model_root_right.ModelRootRightTests.test_foreign_project_id_inside_resource_rejected",
+    "test_model_root_right.ModelRootRightTests.test_foreign_project_profile_projection_rejected"
   ],
   "open_items": [
     "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."

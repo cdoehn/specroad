@@ -53,9 +53,11 @@ def _json_resource(source, path, raw, binding):
         id_key = kind.value + "_id"
         version_key = kind.value + "_version"
         # Resource metadata must be explicit, never inferred from a filename.
-        if id_key not in value or version_key not in value:
+        if id_key not in value or not ({version_key, "version"} & value.keys()):
             raise ModelError("missing_resource_identity", path=path)
-        common.update(id=value[id_key], version=value[version_key])
+        if version_key in value and "version" in value and value["version"] != value[version_key]:
+            raise ModelError("conflicting_resource_version", path=path)
+        common.update(id=value[id_key], version=value.get(version_key, value.get("version")))
     else:
         raise ModelError("not_manifest_input", path=path)
     return ManifestResource(binding, common)
@@ -82,8 +84,11 @@ def capture_model_inputs(source, resource_paths, *, attachments=()):
         path = registry["path"]
         if path in names:
             raise ModelError("conflicting_resource_roles", path=path)
+        from .language_registry import read_language_registry
+        validated_registry = read_language_registry(source)
         item = fingerprint_file(source.boundary, path)
-        if item.sha256 != registry["sha256"]:
+        if (item.sha256 != validated_registry.sha256 or item.sha256 != registry["sha256"]
+                or item.size != len(validated_registry.source_bytes)):
             raise ModelError("registry_hash_mismatch", path=path)
         resources.append(ManifestResource(binding, {"kind": "language_registry",
             "id": registry["registry_id"], "version": registry["registry_version"],

@@ -43,7 +43,8 @@ class ProjectReadBinding:
     def __post_init__(self):
         _text(self.project_id)
         _text(self.source_root)
-        if type(self.root_identity) is not tuple or not self.root_identity:
+        if (type(self.root_identity) is not tuple or len(self.root_identity) != 2
+                or any(type(item) is not int or item < 0 for item in self.root_identity)):
             raise ModelError("invalid_root_binding")
 
 
@@ -77,12 +78,20 @@ class ManifestResource:
         if "artifact_type" in data:
             # Prefix is bound by the reader; pure assembly checks it against configuration.
             _text(data["artifact_type"])
+            from .artifact_types import artifact_types
+            if data["artifact_type"] not in {item.artifact_type for item in artifact_types()}:
+                raise ModelError("unknown_artifact_type")
         if "path" in data:
             project_path(data["path"])
         if "size" in data and (type(data["size"]) is not int or data["size"] < 0):
             raise ModelError("invalid_resource_size")
-        if "media_type" in data:
-            _text(data["media_type"])
+        if kind == "attachment":
+            from .attachments import AttachmentDescriptor
+            AttachmentDescriptor.from_data({k: v for k, v in data.items() if k != "kind"})
+            if not data["path"].startswith("attachments/"):
+                raise ModelError("not_manifest_input")
+        if kind == "language_registry" and not data["path"].startswith("profiles/language-data/"):
+            raise ModelError("not_manifest_input")
         object.__setattr__(self, "binding", binding)
         object.__setattr__(self, "_encoded", canonical_json(data))
 
@@ -101,6 +110,8 @@ def _descriptor(value):
             or value["boundary_policy"] not in ("closed", "partial")):
         raise ModelError("invalid_scope_descriptor")
     kind, selector = value["scope_kind"], value["selector"]
+    if type(kind) is not str:
+        raise ModelError("invalid_scope_descriptor")
     if value["configuration_id"] is not None:
         raise ModelError("configured_scope_not_supported")
     if type(selector) is not dict:
@@ -121,6 +132,44 @@ def _descriptor(value):
     else:
         raise ModelError("scope_kind_not_supported")
     return json.loads(canonical_json(value))
+
+
+def _boundaries(values, descriptor, artifacts, configuration):
+    """Validate explicit boundary records; do not fabricate target provenance."""
+    if isinstance(values, (str, bytes, dict)):
+        raise ModelError("boundary_sequence_required")
+    try:
+        values = tuple(values)
+    except TypeError as error:
+        raise ModelError("boundary_sequence_required") from error
+    if values and descriptor["boundary_policy"] != "partial":
+        raise ModelError("boundary_in_closed_scope")
+    included = {item["id"] for item in artifacts}
+    result, seen = [], set()
+    required = {"source_id", "relation_type", "target_id", "target_type", "reason", "origin_target_sha256"}
+    from .paths import artifact_path
+    from .relation_values import _relation_id
+    for item in values:
+        if type(item) is not dict or not required <= item.keys() or item.keys() - required - {"relation_id"}:
+            raise ModelError("invalid_boundary_reference")
+        for name in ("source_id", "target_id", "target_type", "reason"):
+            _text(item[name])
+        if item["relation_type"] not in ("conflicts_with", "duplicates"):
+            raise ModelError("strong_relation_cannot_be_boundary")
+        relation = item.get("relation_id")
+        if "relation_id" in item:
+            _relation_id(relation)
+        _hash(item["origin_target_sha256"])
+        artifact_path(item["target_type"], item["target_id"], configuration.id_prefix)
+        if item["source_id"] not in included or item["target_id"] in included:
+            raise ModelError("boundary_membership_mismatch")
+        key = (item["source_id"], relation or "", item["target_id"])
+        if key in seen:
+            raise ModelError("duplicate_boundary_reference")
+        seen.add(key)
+        result.append(json.loads(canonical_json(item)))
+    return sorted(result, key=lambda item: tuple(item.get(key, "").encode("utf-8")
+                  for key in ("source_id", "relation_id", "target_id")))
 
 
 @dataclass(frozen=True, init=False)
@@ -158,6 +207,10 @@ class ModelManifest:
 
     @property
     def profile_composition_verified(self):
+        return False
+
+    @property
+    def boundary_relationships_verified(self):
         return False
 
     @property
@@ -211,14 +264,14 @@ def assemble_model_manifest(configuration, binding, resources, *, scope_descript
             raise ModelError("missing_scope_seed")
     if type(effective_profile) is not dict:
         raise ModelError("effective_profile_projection_required")
+    if "project_id" in effective_profile and effective_profile["project_id"] != binding.project_id:
+        raise ModelError("manifest_project_mismatch")
     profile_hash = canonical_json_sha256(effective_profile)
     config_hash = canonical_json_sha256(semantic_configuration(configuration))
-    # W supports closed observations; partial boundaries are implemented in R.
-    if boundary_references:
-        raise ModelError("boundary_references_not_supported")
+    boundaries = _boundaries(boundary_references, descriptor, artifacts, configuration)
     scope = {"project_id": binding.project_id, "scope_descriptor": descriptor,
              "artifacts": artifacts, "resources": others, "attachments": attachments,
-             "boundary_references": [], "configuration_sha256": config_hash,
+             "boundary_references": boundaries, "configuration_sha256": config_hash,
              "profile_sha256": profile_hash}
     return ModelManifest({"model_manifest_version": "model-manifest-v1", **scope,
                           "scope_sha256": canonical_json_sha256(scope)})
