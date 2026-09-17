@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 98
-last_completed_plan_commit: 3.b.R
-next_plan_commit: 3.b.C
+implementation_plan_commits_completed: 99
+last_completed_plan_commit: 3.b.C
+next_plan_commit: 3.c.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1312,7 +1312,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.b.C – Make it Clean
 
-- [ ] **3.b.C** · Position **99/885** · Voraussetzung: `3.b.R`.
+- [x] **3.b.C** · Position **99/885** · Voraussetzung: `3.b.R`.
 **Exakte Commit-Message:** `3.b.C refactor(graph): Quell-Ziel-Matrix und Referenzen bereinigen`
 
 **Bereinigung:** Ein einziges Matrixregister für Validation, Authoring und Import verwenden.

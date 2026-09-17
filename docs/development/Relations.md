@@ -82,3 +82,21 @@ Fehlende Ziele, Schlüsselkonflikte oder fremde Eingaben ergeben niemals ein
 teilweise erfolgreiches Resultat und verändern weder Eingaben noch Dateien.
 Mehrere Verfeinerungsbeziehungen und verschiedene Relationstypen zwischen
 denselben Endpunkten bleiben getrennte Kanten mit eigener Relation-ID.
+
+## Planschritt 3.b.C
+
+`graph.relation_types` ist das eine unveränderliche Register für gespeicherte
+Arten und ihre vollständigen Quell-/Zielregeln. `graph.relation_matrix` bewahrt
+die öffentliche Prüf-API. Der Feldparser und die Referenzprüfung verwenden
+dieselbe Registry; zukünftige Authoring- und Importpfade sollen diese APIs
+wiederverwenden statt eigene Matrixkopien anzulegen. Regeln, Ergebnisse,
+Fehlerklassen und Nebenwirkungsgrenzen bleiben identisch.
+
+## Entwicklungsabnahme
+
+Standard sind vollständige parallele Verhaltenstests mit pytest-xdist und ein
+serieller Referenzlauf samt Vergleich der gebundenen Ergebnisse an jedem
+Clean-Commit. Darstellung und Dokumentation sind nach TD-001 keine Oracles.
+Die lokale CPython-3.13-Vorprüfung ist kein Nachweis der gesamten 3.10–3.14-
+Matrix und ersetzt nicht den Pixel-Apply. Die lokalen Upstream-Entwicklungsbuilds
+von xdist/execnet gehören nicht zum ausgelieferten Core oder Patchpaket.
