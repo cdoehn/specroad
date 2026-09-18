@@ -83,3 +83,11 @@ Fehlende/ungültige Quellen und beobachtete Änderungen liefern keinen Teilerfol
 Die lokale Projektbindung wird getrennt mitgeliefert; `atomic_snapshot=false`.
 Ressourcenweite project/specification-Scopes und Query-/Konfigurationsauflösung
 werden von diesem spezialisierten Reader nicht still auf Artefakte reduziert.
+
+## C: Zuständigkeiten
+
+Der reine Selektorvertrag liegt getrennt im privaten `_scope_selector_contract`.
+Der öffentliche `ScopeDescriptor` bleibt ein unveränderlicher Wert. Die neutrale
+`scope_query_page.QuerySeedPage` kann künftig unabhängig von den Auswahlalgorithmen
+verwendet werden; der bisherige Import aus `scope_seeds` bleibt erhalten.
+Keine Änderung der Selektoren, ihrer Hashes, Ausgangsmengen oder Fehlerklassen.

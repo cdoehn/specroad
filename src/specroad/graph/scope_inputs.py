@@ -15,7 +15,7 @@ from ..model.configuration import ProjectConfiguration
 from ..model.errors import ModelError
 from ..model.semantic_configuration import semantic_configuration
 from .references import RelationReferences
-from .scope_descriptors import _text, _artifact_id
+from ._scope_selector_contract import _text, _artifact_id
 
 
 def _sequence(values):
