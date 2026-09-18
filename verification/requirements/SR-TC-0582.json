@@ -4,19 +4,28 @@
   "requirement_id": "SR-REQ-0582",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned complete current-artifact trees under a bound ProjectSource; current source membership is rechecked."
+  ],
+  "steps": [
+    "Build both adjacency directions from all current artifact records, select one artifact and inspect returned edge identities and byte bindings."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Selektives Laden MUSS alle für das zugesagte Ergebnis erforderlichen Abhängigkeiten und inversen Beziehungen nachweislich berücksichtigen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Complete observed stored/inverse relations for current configured artifact sources. No atomic snapshot or full dependency closure is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/relations"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +37,31 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_relation_index.RelationIndexTests.test_bound_source_is_required",
+    "test_relation_index.RelationIndexTests.test_broken_unselected_source_is_an_error_not_partial_success",
+    "test_relation_index.RelationIndexTests.test_build_creates_no_cache_or_transaction_directory",
+    "test_relation_index.RelationIndexTests.test_edge_id_and_stored_source_are_preserved_in_inverse",
+    "test_relation_index.RelationIndexTests.test_empty_project_index_is_valid_but_unknown_lookup_is_not",
+    "test_relation_index.RelationIndexTests.test_enumeration_order_does_not_change_views",
+    "test_relation_index.RelationIndexTests.test_known_isolated_artifact_has_empty_incoming_set",
+    "test_relation_index.RelationIndexTests.test_missing_endpoint_is_an_error",
+    "test_relation_index.RelationIndexTests.test_no_atomic_snapshot_or_approval_is_claimed",
+    "test_relation_index.RelationIndexTests.test_noncanonical_symmetric_storage_is_not_silently_repaired",
+    "test_relation_index.RelationIndexTests.test_outgoing_incoming_and_both_do_not_truncate",
+    "test_relation_index.RelationIndexTests.test_profile_payload_not_interpreted_as_relation_source",
+    "test_relation_index.RelationIndexTests.test_pure_index_matches_scan_for_both_directions",
+    "test_relation_index.RelationIndexTests.test_pure_input_index_does_not_claim_project_completeness",
+    "test_relation_index.RelationIndexTests.test_query_ids_are_not_display_labels",
+    "test_relation_index.RelationIndexTests.test_result_mutation_cannot_change_source_records",
+    "test_relation_index.RelationIndexTests.test_selectively_returned_target_includes_unselected_source",
+    "test_relation_index.RelationIndexTests.test_source_files_and_configuration_are_unchanged",
+    "test_relation_index.RelationIndexTests.test_superseded_by_remains_computed",
+    "test_relation_index.RelationIndexTests.test_symmetric_edges_visible_without_duplicate_normative_copy",
+    "test_relation_index.RelationIndexTests.test_unknown_direction_is_not_silently_both",
+    "test_relation_index.RelationIndexTests.test_unreferenced_attachments_and_archive_not_sources"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integration into future CLI/impact/scope operations and non-relation dependency closure remain open; observations are not atomic snapshots."
   ]
 }

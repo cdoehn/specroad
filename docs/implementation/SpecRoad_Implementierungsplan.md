@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 105
-last_completed_plan_commit: 3.d.C
-next_plan_commit: 3.e.W
+implementation_plan_commits_completed: 106
+last_completed_plan_commit: 3.e.W
+next_plan_commit: 3.e.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1399,7 +1399,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.e.W – Let it Work
 
-- [ ] **3.e.W** · Position **106/885** · Voraussetzung: `3.d.C`.
+- [x] **3.e.W** · Position **106/885** · Voraussetzung: `3.d.C`.
 **Exakte Commit-Message:** `3.e.W feat(graph): Vollständige eingehende Indizes aufbauen`
 
 **Umsetzung:** Vorwärts- und Rückwärtsindex auf vollständiger Datenbasis beziehungsweise nachweislich vollständigem Index aufbauen.
