@@ -13,7 +13,8 @@
     "Bound ScopeSeeds and ScopeSeedInputs; explicit usage/review selections and attachment observations, with no inference of completeness from missing providers."
   ],
   "steps": [
-    "Compute the strong reachable fixed point, resolving typed relations and known schema dependency fields; reject missing or stale observations."
+    "Compute the strong reachable fixed point, resolving typed relations and known schema dependency fields; reject missing or stale observations.",
+    "Compare the fixed point with an independent exhaustive reachability oracle, revalidate observations, and run the same pure operation in moved portable distributions."
   ],
   "oracle": {
     "kind": "behavior",
@@ -42,7 +43,16 @@
     "test_strong_closure.StrongClosureTests.test_contract_slot_includes_test_and_its_strong_dependencies",
     "test_strong_closure.StrongClosureTests.test_current_reviews_selected_for_contained_relation_are_included",
     "test_strong_closure.StrongClosureTests.test_referenced_attachment_uses_exact_observed_descriptor",
-    "test_strong_closure.StrongClosureTests.test_missing_usage_observation_is_not_assumed_empty"
+    "test_strong_closure.StrongClosureTests.test_missing_usage_observation_is_not_assumed_empty",
+    "test_strong_closure_right.StrongClosureRightTests.test_all_fifteen_strong_relation_types_have_actual_reachability",
+    "test_strong_closure_right.StrongClosureRightTests.test_exhaustive_three_node_graphs_match_independent_fixed_point",
+    "test_strong_closure_right.StrongClosureRightTests.test_deep_chain_does_not_depend_on_python_recursion_limit",
+    "test_strong_closure_right.StrongClosureRightTests.test_wide_frontier_is_not_cut_at_an_output_limit",
+    "test_strong_closure_right.StrongClosureRightTests.test_member_content_hashes_and_resource_versions_are_preserved",
+    "test_strong_closure_right.StrongClosureRightTests.test_query_page_order_is_retained_but_dependencies_are_canonical",
+    "test_strong_closure_right.StrongClosureRightTests.test_changed_current_review_selection_invalidates_old_result",
+    "test_strong_closure_right.StrongClosureRightTests.test_shared_attachment_is_deduplicated_across_evidences",
+    "test_strong_closure_right.StrongClosureRightTests.test_portable_module_and_zipapp_execute_real_strong_closure"
   ],
   "open_items": [
     "Weak-edge boundary policy (3.h), complete exclusion diagnostics (3.i), full scope hash (3.j), actual configuration applicability, profile/mapping use resolution and review freshness evaluation remain in their assigned steps.",

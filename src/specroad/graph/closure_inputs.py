@@ -11,6 +11,7 @@ from types import MappingProxyType
 from ..model.attachments import AttachmentDescriptor
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
+from ..model.record_schemas import validate_record_fields
 from ._scope_selector_contract import _artifact_id, _text
 from .scope_inputs import ScopeSeedInputs, _sequence
 
@@ -97,6 +98,7 @@ class ClosureBindings:
                 record = record_index.get(review_id)
                 if record is None:
                     raise ModelError('closure_current_review_missing')
+                validate_record_fields(record.data, expected_type='relation_review')
                 if record.data.get('relation_id') != relation_id:
                     raise ModelError('closure_review_relation_mismatch')
             if len(set(review_ids)) != len(review_ids):
@@ -111,7 +113,7 @@ class ClosureBindings:
             if type(descriptor) is not AttachmentDescriptor or descriptor.sha256 != resource.sha256:
                 raise ModelError('closure_attachment_binding_mismatch')
             attachment_map[identity] = descriptor
-        if len({item.path for item in attachment_map.values()}) != len(attachment_map):
+        if len({item.path.casefold() for item in attachment_map.values()}) != len(attachment_map):
             raise ModelError('duplicate_closure_attachment_path')
         data = {
             'binding_version': 'strong-closure-inputs-v1', 'seed_inputs_sha256': inventory.fingerprint,

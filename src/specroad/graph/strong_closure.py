@@ -23,6 +23,18 @@ WEAK_RELATIONS = frozenset(('conflicts_with', 'duplicates'))
 
 
 @dataclass(frozen=True)
+class ClosureMember:
+    """Selected identity and content binding; not an authenticated provenance."""
+    node: ClosureNode
+    sha256: str
+    version: str | None = None
+
+    @property
+    def data(self):
+        return {**self.node.data, 'version': self.version, 'sha256': self.sha256}
+
+
+@dataclass(frozen=True)
 class StrongClosure:
     seeds: ScopeSeeds
     bindings_sha256: str
@@ -31,6 +43,27 @@ class StrongClosure:
     attachments: tuple
     pending_weak_relations: tuple
     processing_order: tuple
+    members: tuple
+
+    @property
+    def data(self):
+        """Owned observation document, deliberately NOT a complete Scope-Hash."""
+        return {
+            'observation_version': 'strong-closure-observation-v1',
+            'descriptor': self.seeds.descriptor.data,
+            'seed_artifact_ids': list(self.seeds.artifact_ids),
+            'seed_resource_ids': list(self.seeds.resource_ids),
+            'seed_inputs_sha256': self.seeds.inputs_sha256,
+            'bindings_sha256': self.bindings_sha256,
+            'members': [member.data for member in self.members],
+            'attachments': [descriptor.data for descriptor in self.attachments],
+            'pending_weak_relations': [list(edge) for edge in self.pending_weak_relations],
+            'closure_complete': False,
+        }
+
+    @property
+    def observation_sha256(self):
+        return canonical_json_sha256(self.data)
 
     @property
     def strong_closure_complete(self):
@@ -131,21 +164,21 @@ def _field_dependencies(record, bindings, records):
             yield resource_node(identity)
 
 
-def _check_seeds(seeds, bindings):
+def _check_seeds(seeds, bindings, query_page):
     if type(seeds) is not ScopeSeeds or type(bindings) is not ClosureBindings:
         raise ModelError('closure_values_required')
     if seeds.inputs_sha256 != bindings.inventory.fingerprint:
         raise ModelError('stale_closure_seed_inputs')
     if seeds.descriptor.data['configuration_id'] is not None:
         raise ModelError('scope_configuration_resolver_required')
-    if seeds.descriptor.scope_kind != 'query':
-        if seeds != resolve_scope_seeds(seeds.descriptor, bindings.inventory):
-            raise ModelError('closure_seed_selection_mismatch')
-    # Query seeds originate at the separately bound QuerySeedPage boundary. They
-    # retain page order; this function does not reexecute or repaginate queries.
+    expected = resolve_scope_seeds(seeds.descriptor, bindings.inventory, query_page=query_page)
+    if seeds != expected:
+        raise ModelError('closure_seed_selection_mismatch')
+    # This reruns selection, NOT the query engine. A query requires the same
+    # bound QuerySeedPage and preserves the resolver's actual page order.
 
 
-def resolve_strong_closure(seeds, bindings):
+def resolve_strong_closure(seeds, bindings, *, query_page=None):
     """Compute every strong reachable node or raise, without returning a prefix.
 
     Every reached usage/review observation must be explicit. Resource descriptors
@@ -153,7 +186,7 @@ def resolve_strong_closure(seeds, bindings):
     infer current reviews from persisted maturity fields. Retired/rejected nodes
     remain reachable. Cyclic required dependency graphs terminate by identity.
     """
-    _check_seeds(seeds, bindings)
+    _check_seeds(seeds, bindings, query_page)
     records = {record.identity.id: record for record in bindings.inventory.records}
     resources = {value.resource_id: value for value in bindings.inventory.resources}
     pending = {artifact_node(identity) for identity in seeds.artifact_ids}
@@ -202,5 +235,23 @@ def resolve_strong_closure(seeds, bindings):
                                 key=lambda name: (name.encode('utf-8'), (resources[name].version or '').encode('utf-8'))))
     attachments = tuple(sorted((bindings.attachments[identity] for identity in resource_ids
                                 if resources[identity].kind == 'attachment'), key=lambda item: item.path.encode('utf-8')))
+    members = tuple(ClosureMember(artifact_node(identity), canonical_json_sha256(records[identity].data))
+                    for identity in artifact_ids)
+    members += tuple(ClosureMember(resource_node(identity), resources[identity].sha256, resources[identity].version)
+                     for identity in resource_ids)
     return StrongClosure(seeds, bindings.fingerprint, artifact_ids, resource_ids, attachments,
-                         tuple(sorted(weak, key=lambda edge: tuple(item.encode('utf-8') for item in edge))), tuple(processing))
+                         tuple(sorted(weak, key=lambda edge: tuple(item.encode('utf-8') for item in edge))),
+                         tuple(processing), members)
+
+
+def require_strong_closure_current(observation, seeds, bindings, *, query_page=None):
+    """Recompute from fresh supplied observations; never fall back to old success.
+
+    The caller must first reread/evaluate its live sources. Equal pure values
+    cannot prove that a filesystem stayed unchanged or that a review is current.
+    """
+    if type(observation) is not StrongClosure:
+        raise ModelError('strong_closure_observation_required')
+    current = resolve_strong_closure(seeds, bindings, query_page=query_page)
+    if current != observation:
+        raise ModelError('strong_closure_observation_stale')

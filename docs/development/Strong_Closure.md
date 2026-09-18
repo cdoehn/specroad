@@ -67,3 +67,24 @@ Verhaltenstests prüfen tatsächliche Mengen, Datenbindungen, Fehlzustände,
 Deduplizierung und erhaltene Eingabedaten, nicht menschliche Ausgaben. Der
 parallele Entwicklungsstandard und die serielle Vergleichsprüfung bleiben
 unverändert. Keine Test-/Suite-Timeouts, keine übersprungenen Pflichtprüfungen.
+
+## Ergänzte Robustheit und Wiederprüfung
+
+Das Ergebnis enthält je ausgewähltem Artefakt den kanonischen JSON-Hash,
+je anderer Ressource deren gelieferte Versions- und Hashbindung sowie die
+vollständigen Anhangsdeskriptoren. `observation_sha256` bindet diese Beobachtung,
+ist aber ausdrücklich nicht der spätere normative Scope-Hash. Die Datenansicht
+liefert unabhängige Kopien und enthält keine ursprünglichen Fachtexte.
+
+`require_strong_closure_current(old, seeds, fresh_bindings, query_page=...)`
+berechnet erneut aus den frisch gelieferten Beobachtungen. Änderungen der
+Quelle, Versionsbindung, Ressourcennutzung oder Reviewauswahl machen das alte
+Ergebnis ungültig. Bei einem aktuellen Fehler wird niemals das alte erfolgreiche
+Ergebnis ersatzweise verwendet. Die Funktion liest selbst keine Dateien: Der
+Aufrufer muss die Eingaben vorher durch die zuständigen Reader erneuern.
+
+Query-Scopes verlangen den tatsächlichen gebundenen `QuerySeedPage`; ein frei
+konstruiertes Seed-Objekt allein wird nicht als Queryergebnis akzeptiert. Dies
+ist weiterhin keine eigene Query- oder SRX-Engine. Aktuelle Reviews müssen neben
+ihrer Relationszuordnung auch ihren gespeicherten Feldvertrag erfüllen. Dadurch
+wird noch keine Reviewfrische oder Echtheit attestiert.

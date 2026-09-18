@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 112
-last_completed_plan_commit: 3.g.W
-next_plan_commit: 3.g.R
+implementation_plan_commits_completed: 113
+last_completed_plan_commit: 3.g.R
+next_plan_commit: 3.g.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1478,7 +1478,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.g.R – Make it Right
 
-- [ ] **3.g.R** · Position **113/885** · Voraussetzung: `3.g.W`.
+- [x] **3.g.R** · Position **113/885** · Voraussetzung: `3.g.W`.
 **Exakte Commit-Message:** `3.g.R feat(graph): Starke Closure und Ressourcenbindungen vervollständigen`
 
 **Vervollständigung:** Fehlende Ressourcen nicht still ignorieren; zurückgezogene erreichte Artefakte bleiben erreichbar.
