@@ -4,19 +4,27 @@
   "requirement_id": "SR-REQ-0058",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0005",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELATIONS-v1"
+  ],
+  "preconditions": [
+    "Explicit, locally owned source-bound relation fixtures; not a full-project approval."
+  ],
+  "steps": [
+    "Validate supplied source records, compute the specific graph operation, inspect identities and errors without writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS inverse Beziehungssichten einschließlich `superseded_by` berechnen, ohne inverse Beziehungen als zweite normative Kopie zu speichern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Canonical symmetric relation proposals and inverse views over explicit resolved inputs; no normative writer."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/relations"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +36,31 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_relation_views.RelationViewsWorkTests.test_boolean_direction_flag_is_required",
+    "test_relation_views.RelationViewsWorkTests.test_canonicalization_is_idempotent",
+    "test_relation_views.RelationViewsWorkTests.test_canonicalization_preserves_identity_and_metadata",
+    "test_relation_views.RelationViewsWorkTests.test_conflict_is_visible_from_both_endpoints_once",
+    "test_relation_views.RelationViewsWorkTests.test_conflicts_and_duplicates_between_same_pair_remain_distinct",
+    "test_relation_views.RelationViewsWorkTests.test_directional_relation_is_not_reversed",
+    "test_relation_views.RelationViewsWorkTests.test_duplicate_relation_has_the_same_symmetric_semantics",
+    "test_relation_views.RelationViewsWorkTests.test_empty_model_has_no_normative_or_computed_edges",
+    "test_relation_views.RelationViewsWorkTests.test_explicit_directions_match_physical_storage",
+    "test_relation_views.RelationViewsWorkTests.test_incoming_refinement_is_not_misrepresented_as_normative_reverse",
+    "test_relation_views.RelationViewsWorkTests.test_inputs_and_original_bytes_are_untouched",
+    "test_relation_views.RelationViewsWorkTests.test_invalid_direction_is_not_silently_defaulted",
+    "test_relation_views.RelationViewsWorkTests.test_isolated_artifact_has_empty_views",
+    "test_relation_views.RelationViewsWorkTests.test_projection_does_not_read_files_or_spawn_processes",
+    "test_relation_views.RelationViewsWorkTests.test_read_views_reject_noncanonical_storage_not_silently_fix",
+    "test_relation_views.RelationViewsWorkTests.test_record_order_does_not_change_view_order",
+    "test_relation_views.RelationViewsWorkTests.test_same_direction_duplicate_is_also_rejected",
+    "test_relation_views.RelationViewsWorkTests.test_superseded_by_is_computed_not_stored",
+    "test_relation_views.RelationViewsWorkTests.test_twice_stored_symmetric_pair_is_rejected",
+    "test_relation_views.RelationViewsWorkTests.test_unknown_artifact_not_resolved_via_display_label",
+    "test_relation_views.RelationViewsWorkTests.test_views_cannot_be_modified",
+    "test_relation_views.RelationViewsWorkTests.test_wrong_input_types_are_controlled_model_errors"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate with controlled source-file authoring, full incoming project lookup and final end-to-end behavior."
   ]
 }
