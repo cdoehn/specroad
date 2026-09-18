@@ -39,6 +39,65 @@ def _has_cycle(edges):
     return visited != len(indegree)
 
 
+def _cycle_witness(edges):
+    """Find one deterministic directed cycle without recursive Python frames."""
+    outgoing = {}
+    for edge in edges:
+        outgoing.setdefault(edge.source.id, []).append(edge)
+        outgoing.setdefault(edge.target.id, [])
+    for values in outgoing.values():
+        values.sort(key=lambda edge: (edge.target.id, edge.relation.identity.id))
+    finished = set()
+    for root in sorted(outgoing):
+        if root in finished:
+            continue
+        active = {root: 0}
+        nodes = [root]
+        path = []
+        frames = [iter(outgoing[root])]
+        while frames:
+            edge = next(frames[-1], None)
+            if edge is None:
+                finished.add(nodes.pop())
+                del active[next(reversed(active))]
+                frames.pop()
+                if path:
+                    path.pop()
+                continue
+            target = edge.target.id
+            if target in active:
+                cycle = path[active[target]:] + [edge]
+                first = min(range(len(cycle)), key=lambda index: cycle[index].source.id)
+                return tuple(cycle[first:] + cycle[:first])
+            if target not in finished:
+                active[target] = len(nodes)
+                nodes.append(target)
+                path.append(edge)
+                frames.append(iter(outgoing[target]))
+    return None
+
+
+class HierarchyCycleError(ModelError):
+    """One blocking cycle with exact artifact/relation IDs, not inferred text."""
+
+    def __init__(self, relation_type, edges):
+        if (type(relation_type) is not str or relation_type not in HIERARCHY_RELATION_TYPES or type(edges) is not tuple
+                or len(edges) < 2 or any(type(edge) is not ResolvedRelation for edge in edges)):
+            raise ModelError("invalid_cycle_witness")
+        if (any(edge.relation.type != relation_type for edge in edges)
+                or any(edge.target != edges[(index + 1) % len(edges)].source for index, edge in enumerate(edges))
+                or len({edge.source.id for edge in edges}) != len(edges)):
+            raise ModelError("invalid_cycle_witness")
+        super().__init__("relation_hierarchy_cycle", pointer="/relations")
+        self.relation_type = relation_type
+        self.artifact_ids = tuple(edge.source.id for edge in edges) + (edges[-1].target.id,)
+        self.relation_ids = tuple(edge.relation.identity.id for edge in edges)
+
+    def diagnostic(self):
+        return {**super().diagnostic(), "relation_type": self.relation_type,
+                "artifact_ids": list(self.artifact_ids), "relation_ids": list(self.relation_ids)}
+
+
 @dataclass(frozen=True)
 class HierarchyValidation:
     checked_relation_types: tuple
@@ -57,7 +116,7 @@ def validate_hierarchies(references):
     for kind in HIERARCHY_RELATION_TYPES:
         edges = tuple(edge for edge in references.relations if edge.relation.type == kind)
         if _has_cycle(edges):
-            raise ModelError("relation_hierarchy_cycle", pointer="/relations")
+            raise HierarchyCycleError(kind, _cycle_witness(edges))
     return HierarchyValidation(HIERARCHY_RELATION_TYPES, len(references.sources), len(references.relations))
 
 

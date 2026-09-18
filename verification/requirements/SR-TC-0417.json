@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede `contains`-Relation MUSS eine nichtnegative `position` besitzen, wobei die Ziel-ID gleiche Positionen deterministisch ordnet.",
-    "scope": "Local contains position validation and deterministic target/relation-ID ordering; no renderer or document ownership approval."
+    "scope": "Protected per-type hierarchies, deterministic blocking cycle witnesses and normative contains ordering over supplied records."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -58,9 +58,33 @@
     "test_hierarchies.HierarchyWorkTests.test_section_children_include_content_blocks",
     "test_hierarchies.HierarchyWorkTests.test_self_relation_rejected_before_traversal",
     "test_hierarchies.HierarchyWorkTests.test_three_node_cycle_is_rejected",
-    "test_hierarchies.HierarchyWorkTests.test_wrong_parent_kind_and_unknown_parent_fail"
+    "test_hierarchies.HierarchyWorkTests.test_wrong_parent_kind_and_unknown_parent_fail",
+    "test_hierarchies_right.HierarchyRightTests.test_all_three_node_digraphs_match_independent_reachability_oracle",
+    "test_hierarchies_right.HierarchyRightTests.test_contains_requires_an_explicit_position",
+    "test_hierarchies_right.HierarchyRightTests.test_cycle_error_contains_no_private_artifact_text",
+    "test_hierarchies_right.HierarchyRightTests.test_cycle_witness_is_deterministic_under_source_and_relation_reordering",
+    "test_hierarchies_right.HierarchyRightTests.test_deep_acyclic_hierarchy_does_not_require_recursive_stack",
+    "test_hierarchies_right.HierarchyRightTests.test_deep_cycle_detected_without_recursion_limit_failure",
+    "test_hierarchies_right.HierarchyRightTests.test_disconnected_cycle_is_not_hidden_by_valid_component",
+    "test_hierarchies_right.HierarchyRightTests.test_failure_leaves_original_bytes_and_ids_untouched",
+    "test_hierarchies_right.HierarchyRightTests.test_inserting_then_removing_cycle_rechecks_current_data",
+    "test_hierarchies_right.HierarchyRightTests.test_invalid_cycle_witness_cannot_be_a_report",
+    "test_hierarchies_right.HierarchyRightTests.test_large_and_integer_valued_float_positions_keep_numeric_order",
+    "test_hierarchies_right.HierarchyRightTests.test_moved_portable_build_detects_cycle_and_orders_positions",
+    "test_hierarchies_right.HierarchyRightTests.test_multiple_cycle_types_choose_stable_type_order",
+    "test_hierarchies_right.HierarchyRightTests.test_non_contains_position_key_is_rejected",
+    "test_hierarchies_right.HierarchyRightTests.test_nonfinite_position_rejected_without_sorting",
+    "test_hierarchies_right.HierarchyRightTests.test_ordering_ignores_display_labels",
+    "test_hierarchies_right.HierarchyRightTests.test_ownership_and_full_document_approval_not_inferred",
+    "test_hierarchies_right.HierarchyRightTests.test_position_changes_never_change_relation_identity",
+    "test_hierarchies_right.HierarchyRightTests.test_position_rejects_negative_boolean_fractional_and_string_values",
+    "test_hierarchies_right.HierarchyRightTests.test_repeated_parallel_edges_still_find_the_real_return_edge",
+    "test_hierarchies_right.HierarchyRightTests.test_sorting_is_stable_when_both_input_orders_are_reversed",
+    "test_hierarchies_right.HierarchyRightTests.test_success_result_is_immutable",
+    "test_hierarchies_right.HierarchyRightTests.test_witness_is_a_closed_path_of_existing_edges",
+    "test_hierarchies_right.HierarchyRightTests.test_witness_rotation_preserves_directed_orientation"
   ],
   "open_items": [
-    "Integrate document authoring, full document graph validation and transaction publication."
+    "Full-project validation, source diagnostics integration, document authoring and controlled transaction publication remain later work."
   ]
 }
