@@ -15,7 +15,8 @@
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-SCHEMA-CATALOG-v1",
     "SR-FIX-RELATIONS-v1",
-    "SR-FIX-SCOPE-SEEDS-v1"
+    "SR-FIX-SCOPE-SEEDS-v1",
+    "SR-FIX-STRONG-CLOSURE-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -77,6 +78,10 @@
     "SR-FIX-SCOPE-SEEDS-v1": {
       "provider": "tests/support/scopes.py:inputs",
       "kind": "owned explicit current relation inventories, passive resources and bound query-page fixtures; no query engine, complete archive inventory or authorization"
+    },
+    "SR-FIX-STRONG-CLOSURE-v1": {
+      "provider": "tests/support/closure.py:observe",
+      "kind": "Synthetic explicit resource-use, attachment and current-review observations bound to source bytes; not authentic freshness decisions, live inventory or writes."
     }
   }
 }

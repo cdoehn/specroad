@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 111
-last_completed_plan_commit: 3.f.C
-next_plan_commit: 3.g.W
+implementation_plan_commits_completed: 112
+last_completed_plan_commit: 3.g.W
+next_plan_commit: 3.g.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1469,7 +1469,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.g.W – Let it Work
 
-- [ ] **3.g.W** · Position **112/885** · Voraussetzung: `3.f.C`.
+- [x] **3.g.W** · Position **112/885** · Voraussetzung: `3.f.C`.
 **Exakte Commit-Message:** `3.g.W feat(graph): Starke Closure und Ressourcenbindungen aufbauen`
 
 **Umsetzung:** Kleinsten Fixpunkt aus starken Relationen, Anhängen, Profilen, Regeln, Mappings und Nachweisbindungen berechnen.

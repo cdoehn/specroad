@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0412",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-STRONG-CLOSURE-v1"
+  ],
+  "preconditions": [
+    "Bound ScopeSeeds and ScopeSeedInputs; explicit usage/review selections and attachment observations, with no inference of completeness from missing providers."
+  ],
+  "steps": [
+    "Compute the strong reachable fixed point, resolving typed relations and known schema dependency fields; reject missing or stale observations."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Scope-Closure MUSS den kleinsten zulässigen Fixpunkt aus starken Relationen und Ressourcenbindungen unter Beachtung der permanenten Ausschlüsse und der Fehlerregeln aus Kapitel 10.8 berechnen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Least strong closure over explicitly supplied resources and observations, retained retired/rejected targets, no missing-provider fallback and no full closure/approval claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,18 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_strong_closure.StrongClosureTests.test_transitive_dependencies_include_all_required_targets",
+    "test_strong_closure.StrongClosureTests.test_depends_on_cycle_terminates_without_discarding_members",
+    "test_strong_closure.StrongClosureTests.test_used_profiles_rules_and_mappings_expand_transitively",
+    "test_strong_closure.StrongClosureTests.test_evidence_subjects_are_mandatory_dependencies",
+    "test_strong_closure.StrongClosureTests.test_contract_slot_includes_test_and_its_strong_dependencies",
+    "test_strong_closure.StrongClosureTests.test_current_reviews_selected_for_contained_relation_are_included",
+    "test_strong_closure.StrongClosureTests.test_referenced_attachment_uses_exact_observed_descriptor",
+    "test_strong_closure.StrongClosureTests.test_missing_usage_observation_is_not_assumed_empty"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Weak-edge boundary policy (3.h), complete exclusion diagnostics (3.i), full scope hash (3.j), actual configuration applicability, profile/mapping use resolution and review freshness evaluation remain in their assigned steps.",
+    "This pure fixed-point engine consumes explicit bound observations. It is neither an automatic complete live-project reader nor an atomic snapshot or authorization."
   ]
 }
