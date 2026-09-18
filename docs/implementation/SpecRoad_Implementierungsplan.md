@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 107
-last_completed_plan_commit: 3.e.R
-next_plan_commit: 3.e.C
+implementation_plan_commits_completed: 108
+last_completed_plan_commit: 3.e.C
+next_plan_commit: 3.f.W
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1417,7 +1417,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.e.C – Make it Clean
 
-- [ ] **3.e.C** · Position **108/885** · Voraussetzung: `3.e.R`.
+- [x] **3.e.C** · Position **108/885** · Voraussetzung: `3.e.R`.
 **Exakte Commit-Message:** `3.e.C refactor(graph): Vollständige eingehende Indizes bereinigen`
 
 **Bereinigung:** Indexaufbau und indexunabhängige Fallback-Lesepfade hinter dieselbe API stellen.

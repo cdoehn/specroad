@@ -1,92 +1,19 @@
-"""Full current-artifact relation reads with byte and membership rechecks.
+"""Complete current-project relation queries, with or without adjacency.
 
-The selection limits returned views, never the source files inspected. No
-persistent cache is read/written. A completed observation is not an atomic
-snapshot, a scope closure, a lifecycle approval or a reusable write permission.
+An optional in-memory index is only a hint. Every query observes all current
+artifact source bytes and membership; stale/partial hints never truncate data.
+No persistent cache, atomic snapshot, full closure or write grant is implied.
 """
 from dataclasses import dataclass
-from hashlib import sha256
 
 from ..graph.indices import RelationIndex
 from ..graph.references import RelationReferences
 from ..graph.relation_views import RelationViews
 from ..graph.relations import SourceRelations
 from ..model.errors import ModelError
-from ..model.hashes import canonical_json_sha256
-from ..model.paths import PathClass
-from .project import ProjectSource
-from .relations import read_source_relations
-from .resource_discovery import current_json_paths
-
-
-@dataclass(frozen=True)
-class RelationSourceBinding:
-    project_id: str
-    source_root: str
-    root_identity: tuple
-    configuration_sha256: str
-    resources: tuple
-
-    @property
-    def sha256(self):
-        """Local byte observation binding, deliberately NOT a model root."""
-        return canonical_json_sha256({
-            "binding_version": 1, "scope": "current_project_artifacts",
-            "project_id": self.project_id, "source_root": self.source_root,
-            "root_identity": [str(part) for part in self.root_identity],
-            "configuration_sha256": self.configuration_sha256,
-            "resources": [{"path": path, "sha256": digest} for path, digest in self.resources],
-        })
-
-
-@dataclass(frozen=True)
-class _RelationSnapshot:
-    binding: RelationSourceBinding
-    records: tuple
-
-
-def _artifact_paths(source):
-    # The existing safe enumerator covers configured normative trees. Only
-    # artifact records can store these graph edges; profiles/rules are separate.
-    return tuple(path for path in current_json_paths(source)
-                 if source.classify(path) is PathClass.ARTIFACT)
-
-
-def _require_source(source):
-    if not isinstance(source, ProjectSource):
-        raise TypeError("A bound ProjectSource is required")
-    source.check_current()
-
-
-def _check_snapshot_current(source, snapshot):
-    _require_source(source)
-    if (str(source.boundary.root) != snapshot.binding.source_root
-            or source.boundary._root_identity != snapshot.binding.root_identity
-            or source.configuration.project_id != snapshot.binding.project_id
-            or sha256(source.configuration_bytes).hexdigest() != snapshot.binding.configuration_sha256):
-        raise ModelError("relation_index_project_mismatch")
-    paths = tuple(record.path for record in snapshot.records)
-    if _artifact_paths(source) != paths:
-        raise ModelError("relation_index_membership_changed")
-    for record in snapshot.records:
-        if source.read_normative(record.path) != record.source_bytes:
-            raise ModelError("relation_index_source_changed", path=record.path)
-    if _artifact_paths(source) != paths:
-        raise ModelError("relation_index_membership_changed")
-    source.check_current()
-
-
-def _capture_sources(source):
-    _require_source(source)
-    names = _artifact_paths(source)
-    records = tuple(read_source_relations(source, path) for path in names)
-    binding = RelationSourceBinding(
-        source.configuration.project_id, str(source.boundary.root),
-        source.boundary._root_identity, sha256(source.configuration_bytes).hexdigest(),
-        tuple((record.path, sha256(record.source_bytes).hexdigest()) for record in records))
-    result = _RelationSnapshot(binding, records)
-    _check_snapshot_current(source, result)
-    return result
+from ._relation_snapshot import (
+    RelationSourceBinding, _RelationSnapshot, _capture_sources, _check_snapshot_current,
+)
 
 
 @dataclass(frozen=True, init=False)
@@ -146,6 +73,18 @@ def build_project_relation_index(source):
     return result
 
 
+def _provider(snapshot, index, strategy):
+    """The same query interface, independent of whether adjacency is available."""
+    if strategy == "scan":
+        references = RelationReferences(snapshot.records)
+        return RelationViews(references), references
+    if type(index) is ProjectRelationIndex and index._snapshot == snapshot:
+        selected = index
+    else:
+        selected = ProjectRelationIndex(snapshot)
+    return selected.adjacency, selected.adjacency.references
+
+
 def read_project_relation_views(source, artifact_id, *, direction="both", index=None, strategy="indexed"):
     """Read fresh source membership/bytes even when reusing a prior index.
 
@@ -160,18 +99,10 @@ def read_project_relation_views(source, artifact_id, *, direction="both", index=
     if index is not None and type(index) not in (ProjectRelationIndex, RelationIndex):
         raise ModelError("invalid_relation_index_hint")
     snapshot = _capture_sources(source)
-    if strategy == "scan":
-        references = RelationReferences(snapshot.records)
-        views = RelationViews(references).for_artifact(artifact_id, direction=direction)
-        source_count, relation_count = len(references.sources), len(references.relations)
-    else:
-        if type(index) is ProjectRelationIndex and index._snapshot == snapshot:
-            selected = index
-        else:
-            selected = ProjectRelationIndex(snapshot)
-        views = selected.adjacency.for_artifact(artifact_id, direction=direction)
-        source_count, relation_count = selected.source_count, selected.relation_count
+    provider, references = _provider(snapshot, index, strategy)
+    views = provider.for_artifact(artifact_id, direction=direction)
     artifact = next(record for record in snapshot.records if record.identity.id == artifact_id)
-    result = ProjectRelationViews(artifact, views, snapshot.binding, source_count, relation_count)
+    result = ProjectRelationViews(artifact, views, snapshot.binding,
+                                  len(references.sources), len(references.relations))
     _check_snapshot_current(source, snapshot)
     return result
