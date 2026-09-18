@@ -9,6 +9,7 @@ from hashlib import sha256
 
 from ..graph.indices import RelationIndex
 from ..graph.references import RelationReferences
+from ..graph.relation_views import RelationViews
 from ..graph.relations import SourceRelations
 from ..model.errors import ModelError
 from ..model.hashes import canonical_json_sha256
@@ -32,7 +33,7 @@ class RelationSourceBinding:
         return canonical_json_sha256({
             "binding_version": 1, "scope": "current_project_artifacts",
             "project_id": self.project_id, "source_root": self.source_root,
-            "root_identity": list(self.root_identity),
+            "root_identity": [str(part) for part in self.root_identity],
             "configuration_sha256": self.configuration_sha256,
             "resources": [{"path": path, "sha256": digest} for path, digest in self.resources],
         })
@@ -145,11 +146,32 @@ def build_project_relation_index(source):
     return result
 
 
-def read_project_relation_views(source, artifact_id, *, direction="both"):
-    """Return complete observed incoming/outgoing views for one selected ID."""
-    index = build_project_relation_index(source)
-    views = index.adjacency.for_artifact(artifact_id, direction=direction)
-    artifact = next(record for record in index._snapshot.records if record.identity.id == artifact_id)
-    result = ProjectRelationViews(artifact, views, index.binding, index.source_count, index.relation_count)
-    _check_snapshot_current(source, index._snapshot)
+def read_project_relation_views(source, artifact_id, *, direction="both", index=None, strategy="indexed"):
+    """Read fresh source membership/bytes even when reusing a prior index.
+
+    An index is only an optimization hint, never a completeness assertion.
+    A stale, foreign or supplied-set-only hint is rebuilt from current sources.
+    An unreadable/invalid source raises rather than falling back to old data.
+    ``scan`` is the index-independent reference path over the same fresh inputs.
+    No persistent cache format, cache side effect or mtime shortcut is introduced.
+    """
+    if type(strategy) is not str or strategy not in ("indexed", "scan"):
+        raise ModelError("invalid_relation_index_strategy")
+    if index is not None and type(index) not in (ProjectRelationIndex, RelationIndex):
+        raise ModelError("invalid_relation_index_hint")
+    snapshot = _capture_sources(source)
+    if strategy == "scan":
+        references = RelationReferences(snapshot.records)
+        views = RelationViews(references).for_artifact(artifact_id, direction=direction)
+        source_count, relation_count = len(references.sources), len(references.relations)
+    else:
+        if type(index) is ProjectRelationIndex and index._snapshot == snapshot:
+            selected = index
+        else:
+            selected = ProjectRelationIndex(snapshot)
+        views = selected.adjacency.for_artifact(artifact_id, direction=direction)
+        source_count, relation_count = selected.source_count, selected.relation_count
+    artifact = next(record for record in snapshot.records if record.identity.id == artifact_id)
+    result = ProjectRelationViews(artifact, views, snapshot.binding, source_count, relation_count)
+    _check_snapshot_current(source, snapshot)
     return result

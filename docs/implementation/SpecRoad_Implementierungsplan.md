@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 106
-last_completed_plan_commit: 3.e.W
-next_plan_commit: 3.e.R
+implementation_plan_commits_completed: 107
+last_completed_plan_commit: 3.e.R
+next_plan_commit: 3.e.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1408,7 +1408,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.e.R – Make it Right
 
-- [ ] **3.e.R** · Position **107/885** · Voraussetzung: `3.e.W`.
+- [x] **3.e.R** · Position **107/885** · Voraussetzung: `3.e.W`.
 **Exakte Commit-Message:** `3.e.R feat(graph): Vollständige eingehende Indizes vervollständigen`
 
 **Vervollständigung:** Teilindizes ohne Vollständigkeitsnachweis nicht als vollständig verwenden.

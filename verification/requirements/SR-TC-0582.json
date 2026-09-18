@@ -14,7 +14,8 @@
     "Owned complete current-artifact trees under a bound ProjectSource; current source membership is rechecked."
   ],
   "steps": [
-    "Build both adjacency directions from all current artifact records, select one artifact and inspect returned edge identities and byte bindings."
+    "Build both adjacency directions from all current artifact records, select one artifact and inspect returned edge identities and byte bindings.",
+    "Compare an index-independent scan with fresh and stale hints; inject late sources, deletion, byte replacement, invalid sources and missing cache entries."
   ],
   "oracle": {
     "kind": "behavior",
@@ -59,7 +60,39 @@
     "test_relation_index.RelationIndexTests.test_superseded_by_remains_computed",
     "test_relation_index.RelationIndexTests.test_symmetric_edges_visible_without_duplicate_normative_copy",
     "test_relation_index.RelationIndexTests.test_unknown_direction_is_not_silently_both",
-    "test_relation_index.RelationIndexTests.test_unreferenced_attachments_and_archive_not_sources"
+    "test_relation_index.RelationIndexTests.test_unreferenced_attachments_and_archive_not_sources",
+    "test_relation_index_right.RelationIndexRightTests.test_binding_digest_handles_large_local_inode_numbers",
+    "test_relation_index_right.RelationIndexRightTests.test_cached_objects_and_project_bytes_are_not_modified_by_rebuild",
+    "test_relation_index_right.RelationIndexRightTests.test_claimed_complete_mapping_is_not_a_trusted_index",
+    "test_relation_index_right.RelationIndexRightTests.test_configuration_change_rejects_old_reader_even_with_hint",
+    "test_relation_index_right.RelationIndexRightTests.test_corrupt_unselected_source_never_falls_back_to_cached_success",
+    "test_relation_index_right.RelationIndexRightTests.test_deleted_source_during_read_is_not_silently_dropped",
+    "test_relation_index_right.RelationIndexRightTests.test_deleting_disk_cache_is_irrelevant_to_complete_read",
+    "test_relation_index_right.RelationIndexRightTests.test_duplicate_relation_identity_from_unselected_source_rejected",
+    "test_relation_index_right.RelationIndexRightTests.test_foreign_root_index_is_not_a_local_binding",
+    "test_relation_index_right.RelationIndexRightTests.test_fresh_hint_and_no_hint_have_identical_complete_results",
+    "test_relation_index_right.RelationIndexRightTests.test_hundreds_of_incoming_sources_are_not_limited_to_display_page",
+    "test_relation_index_right.RelationIndexRightTests.test_index_scan_and_fresh_rebuild_agree_after_changes",
+    "test_relation_index_right.RelationIndexRightTests.test_late_source_after_index_build_is_discovered",
+    "test_relation_index_right.RelationIndexRightTests.test_missing_edge_in_supplied_cache_does_not_change_current_result",
+    "test_relation_index_right.RelationIndexRightTests.test_moved_portable_distributions_keep_complete_inverse_queries",
+    "test_relation_index_right.RelationIndexRightTests.test_nested_project_is_not_combined",
+    "test_relation_index_right.RelationIndexRightTests.test_new_reader_with_changed_configuration_gets_new_binding",
+    "test_relation_index_right.RelationIndexRightTests.test_new_source_during_final_byte_recheck_is_error",
+    "test_relation_index_right.RelationIndexRightTests.test_new_source_during_read_invalidates_complete_observation",
+    "test_relation_index_right.RelationIndexRightTests.test_observation_binding_is_immutable_and_includes_empty_source",
+    "test_relation_index_right.RelationIndexRightTests.test_partial_index_cannot_hide_unselected_incoming_source",
+    "test_relation_index_right.RelationIndexRightTests.test_removed_selected_target_is_error_not_cached_success",
+    "test_relation_index_right.RelationIndexRightTests.test_removed_source_is_not_returned_from_old_index",
+    "test_relation_index_right.RelationIndexRightTests.test_retargeted_relation_not_reused_from_cached_endpoint",
+    "test_relation_index_right.RelationIndexRightTests.test_retired_source_still_contributes_stored_edges",
+    "test_relation_index_right.RelationIndexRightTests.test_same_size_and_mtime_change_is_detected_by_bytes",
+    "test_relation_index_right.RelationIndexRightTests.test_scan_path_does_not_need_an_adjacency_index",
+    "test_relation_index_right.RelationIndexRightTests.test_source_byte_change_during_capture_is_error",
+    "test_relation_index_right.RelationIndexRightTests.test_symlink_source_is_rejected_without_reading_external_bytes",
+    "test_relation_index_right.RelationIndexRightTests.test_unknown_strategy_is_rejected",
+    "test_relation_index_right.RelationIndexRightTests.test_unreadable_current_source_never_falls_back_to_cached_success",
+    "test_relation_index_right.RelationIndexRightTests.test_wrong_source_path_is_not_treated_as_valid_index_entry"
   ],
   "open_items": [
     "Integration into future CLI/impact/scope operations and non-relation dependency closure remain open; observations are not atomic snapshots."
