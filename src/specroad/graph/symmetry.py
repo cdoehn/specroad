@@ -132,3 +132,20 @@ class RelationViews:
             if edge.target.id == artifact_id and direction in ("incoming", "both"):
                 views.append(RelationView(edge, inverse=True))
         return tuple(sorted(views, key=lambda view: (view.type, view.target.id, view.relation_id, view.inverse)))
+
+
+def require_canonical_reorder(previous, proposed):
+    """Allow only the exact canonical preparation of the same logical edge.
+
+    This narrowly checks the symmetry exception. It cannot authorize retargeting,
+    changing relation kind/identity or sneaking metadata changes into a reorder.
+    It is not an update or write permission; normal update guards stay strict.
+    """
+    from ..model.canonical import canonical_json_bytes
+
+    if type(previous) is not ResolvedRelation or type(proposed) is not ResolvedRelation:
+        raise ModelError("resolved_relation_required")
+    expected = canonical_relation(previous)
+    if (expected.source != proposed.source or expected.target != proposed.target
+            or canonical_json_bytes(expected.relation.data) != canonical_json_bytes(proposed.relation.data)):
+        raise ModelError("invalid_canonical_relation_reorder", pointer="/relations")

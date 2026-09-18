@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS inverse Beziehungssichten einschließlich `superseded_by` berechnen, ohne inverse Beziehungen als zweite normative Kopie zu speichern.",
-    "scope": "Canonical symmetric relation proposals and inverse views over explicit resolved inputs; no normative writer."
+    "scope": "Canonical symmetric proposals, exact reorder guard and inverse views over resolved inputs; no normative writer."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -58,9 +58,31 @@
     "test_relation_views.RelationViewsWorkTests.test_twice_stored_symmetric_pair_is_rejected",
     "test_relation_views.RelationViewsWorkTests.test_unknown_artifact_not_resolved_via_display_label",
     "test_relation_views.RelationViewsWorkTests.test_views_cannot_be_modified",
-    "test_relation_views.RelationViewsWorkTests.test_wrong_input_types_are_controlled_model_errors"
+    "test_relation_views.RelationViewsWorkTests.test_wrong_input_types_are_controlled_model_errors",
+    "test_relation_views_right.RelationViewsRightTests.test_aliases_and_external_ids_never_change_canonical_orientation",
+    "test_relation_views_right.RelationViewsRightTests.test_boolean_and_integer_metadata_are_not_equal",
+    "test_relation_views_right.RelationViewsRightTests.test_cross_type_conflicts_sort_entire_ids_not_array_position",
+    "test_relation_views_right.RelationViewsRightTests.test_distinct_isolated_instances_do_not_share_query_state",
+    "test_relation_views_right.RelationViewsRightTests.test_generic_update_guard_still_rejects_source_relocation",
+    "test_relation_views_right.RelationViewsRightTests.test_inverse_projection_works_in_moved_module_and_zipapp",
+    "test_relation_views_right.RelationViewsRightTests.test_legacy_artifact_ids_use_literal_lexicographic_order",
+    "test_relation_views_right.RelationViewsRightTests.test_migration_relation_id_survives_canonical_preparation",
+    "test_relation_views_right.RelationViewsRightTests.test_missing_targets_are_not_synthesized_for_inverse_views",
+    "test_relation_views_right.RelationViewsRightTests.test_only_exact_canonical_reorder_is_allowed",
+    "test_relation_views_right.RelationViewsRightTests.test_opposite_directed_dependencies_are_not_inverse_copies",
+    "test_relation_views_right.RelationViewsRightTests.test_projection_cannot_be_used_as_a_normative_relation",
+    "test_relation_views_right.RelationViewsRightTests.test_relation_id_and_metadata_do_not_change_on_array_reordering",
+    "test_relation_views_right.RelationViewsRightTests.test_reorder_cannot_change_metadata",
+    "test_relation_views_right.RelationViewsRightTests.test_reorder_cannot_exchange_relation_id",
+    "test_relation_views_right.RelationViewsRightTests.test_reorder_cannot_relabel_id_scheme",
+    "test_relation_views_right.RelationViewsRightTests.test_reorder_cannot_switch_symmetric_relation_type",
+    "test_relation_views_right.RelationViewsRightTests.test_reverse_copies_with_different_metadata_are_not_merged",
+    "test_relation_views_right.RelationViewsRightTests.test_semantically_equal_metadata_key_order_is_not_a_change",
+    "test_relation_views_right.RelationViewsRightTests.test_source_bytes_are_preserved_after_repeated_queries",
+    "test_relation_views_right.RelationViewsRightTests.test_view_flags_are_not_falsely_claimed_as_graph_approval",
+    "test_relation_views_right.RelationViewsRightTests.test_wrong_reorder_value_types_rejected"
   ],
   "open_items": [
-    "Integrate with controlled source-file authoring, full incoming project lookup and final end-to-end behavior."
+    "Controlled source-file authoring, full-project traversal and final end-to-end validation remain later work."
   ]
 }

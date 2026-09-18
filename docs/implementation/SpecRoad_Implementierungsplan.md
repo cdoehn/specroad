@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 100
-last_completed_plan_commit: 3.c.W
-next_plan_commit: 3.c.R
+implementation_plan_commits_completed: 101
+last_completed_plan_commit: 3.c.R
+next_plan_commit: 3.c.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1338,7 +1338,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.c.R – Make it Right
 
-- [ ] **3.c.R** · Position **101/885** · Voraussetzung: `3.c.W`.
+- [x] **3.c.R** · Position **101/885** · Voraussetzung: `3.c.W`.
 **Exakte Commit-Message:** `3.c.R feat(graph): Symmetrische und inverse Beziehungen vervollständigen`
 
 **Vervollständigung:** Umordnung darf relation_id nicht ändern; doppelte normative inverse Kopien abweisen.
