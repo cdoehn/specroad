@@ -5,7 +5,6 @@ services. An explicit empty observation is different from a missing provider.
 Hashes bind these observations to source bytes; they do not authenticate them.
 """
 from dataclasses import dataclass
-from hashlib import sha256
 from types import MappingProxyType
 
 from ..model.attachments import AttachmentDescriptor

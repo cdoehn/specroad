@@ -88,3 +88,12 @@ konstruiertes Seed-Objekt allein wird nicht als Queryergebnis akzeptiert. Dies
 ist weiterhin keine eigene Query- oder SRX-Engine. Aktuelle Reviews müssen neben
 ihrer Relationszuordnung auch ihren gespeicherten Feldvertrag erfüllen. Dadurch
 wird noch keine Reviewfrische oder Echtheit attestiert.
+
+## Interne Arbeitsmenge
+
+Die offene Menge, die besuchten Identitäten und die Verarbeitungsfolge sind in
+einer separaten identitätsbasierten Arbeitsliste gekapselt. Die kleinste offene
+UTF-8-Identität wird über einen Heap gewählt. Abhängigkeitsregeln kennen keine
+Heapdetails; Verhalten, Fehler, ausgewählte Mengen und Hashverträge bleiben
+unverändert. Diese Strukturgrenze ist für den späteren fortsetzbaren Workdienst
+vorgesehen, implementiert aber noch keine Checkpointdatei oder Wiederaufnahme.

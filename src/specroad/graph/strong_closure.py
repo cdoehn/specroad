@@ -4,7 +4,6 @@ No weak expansion/boundaries, configuration evaluator, review decision, model
 root or transaction is implied. Unknown required providers fail closed.
 """
 from dataclasses import dataclass
-from hashlib import sha256
 import re
 
 from ..model.attachments import AttachmentDescriptor
@@ -13,6 +12,7 @@ from ..model.errors import ModelError
 from ._scope_selector_contract import _artifact_id
 from .closure_inputs import ClosureBindings, ClosureNode, artifact_node, resource_node
 from .scope_seeds import ScopeSeeds, resolve_scope_seeds
+from ._closure_frontier import IdentityFrontier
 
 STRONG_RELATIONS = frozenset((
     'addresses', 'refines', 'derived_from', 'depends_on', 'constrains',
@@ -189,14 +189,12 @@ def resolve_strong_closure(seeds, bindings, *, query_page=None):
     _check_seeds(seeds, bindings, query_page)
     records = {record.identity.id: record for record in bindings.inventory.records}
     resources = {value.resource_id: value for value in bindings.inventory.resources}
-    pending = {artifact_node(identity) for identity in seeds.artifact_ids}
-    pending.update(resource_node(identity) for identity in seeds.resource_ids)
-    visited, processing, weak = set(), [], set()
-    while pending:
-        node = min(pending, key=lambda item: item.order_key)
-        pending.remove(node)
-        if node in visited:
-            continue
+    initial = [artifact_node(identity) for identity in seeds.artifact_ids]
+    initial.extend(resource_node(identity) for identity in seeds.resource_ids)
+    frontier = IdentityFrontier(initial)
+    weak = set()
+    while frontier:
+        node = frontier.take()
         if node.kind == 'artifact':
             record = records.get(node.identity)
             if record is None:
@@ -210,8 +208,6 @@ def resolve_strong_closure(seeds, bindings, *, query_page=None):
             raise ModelError('closure_bound_resource_missing')
         if node not in bindings.uses:
             raise ModelError('closure_usage_observation_missing')
-        visited.add(node)
-        processing.append(node)
         targets = list(bindings.uses[node])
         if node.kind == 'artifact':
             for relation in record.relations:
@@ -228,7 +224,8 @@ def resolve_strong_closure(seeds, bindings, *, query_page=None):
             targets.extend(_field_dependencies(record, bindings, records))
         elif resources[node.identity].kind == 'attachment' and node.identity not in bindings.attachments:
             raise ModelError('closure_attachment_observation_missing')
-        pending.update(target for target in targets if target not in visited)
+        frontier.extend(targets)
+    visited = frontier.visited
     artifact_ids = tuple(sorted((node.identity for node in visited if node.kind == 'artifact'),
                                 key=lambda name: name.encode('utf-8')))
     resource_ids = tuple(sorted((node.identity for node in visited if node.kind == 'resource'),
@@ -241,7 +238,7 @@ def resolve_strong_closure(seeds, bindings, *, query_page=None):
                      for identity in resource_ids)
     return StrongClosure(seeds, bindings.fingerprint, artifact_ids, resource_ids, attachments,
                          tuple(sorted(weak, key=lambda edge: tuple(item.encode('utf-8') for item in edge))),
-                         tuple(processing), members)
+                         frontier.processing_order, members)
 
 
 def require_strong_closure_current(observation, seeds, bindings, *, query_page=None):
