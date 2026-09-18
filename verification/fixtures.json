@@ -14,7 +14,8 @@
     "SR-FIX-LANGUAGE-PACKAGES-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-SCHEMA-CATALOG-v1",
-    "SR-FIX-RELATIONS-v1"
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-SCOPE-SEEDS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -72,6 +73,10 @@
     "SR-FIX-RELATIONS-v1": {
       "provider": "tests/support/relations.py:artifact",
       "kind": "Source-bound synthetic relation data; not a full model, graph approval or write authorization"
+    },
+    "SR-FIX-SCOPE-SEEDS-v1": {
+      "provider": "tests/support/scopes.py:inputs",
+      "kind": "owned explicit current relation inventories, passive resources and bound query-page fixtures; no query engine, complete archive inventory or authorization"
     }
   }
 }

@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0406",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SCOPE-SEEDS-v1"
+  ],
+  "preconditions": [
+    "Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation."
+  ],
+  "steps": [
+    "Validate descriptor, select exact seeds and verify bound page membership and order."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der Scope `specification` MUSS die Seed-Menge und den permanenten Ausschluss von Proposal- und Baseline-Artefakten einschließlich der Fehlerbehandlung aus Kapitel 10.8 und 10.8.1 anwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Deterministic seed selection over explicitly supplied inputs only; no full closure/model approval, automatic completeness claim or write."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_scope_seeds.ScopeSeedTests.test_specification_excludes_both_control_types",
+    "test_scope_seeds.ScopeSeedTests.test_specification_uses_only_active_profiles_rules_mappings",
+    "test_scope_seeds.ScopeSeedTests.test_retired_and_rejected_seeds_are_not_dropped"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."
   ]
 }
