@@ -100,3 +100,33 @@ Clean-Commit. Darstellung und Dokumentation sind nach TD-001 keine Oracles.
 Die lokale CPython-3.13-Vorprüfung ist kein Nachweis der gesamten 3.10–3.14-
 Matrix und ersetzt nicht den Pixel-Apply. Die lokalen Upstream-Entwicklungsbuilds
 von xdist/execnet gehören nicht zum ausgelieferten Core oder Patchpaket.
+
+
+## 3.c – Kanonische Symmetrie und berechnete Sichten
+
+`canonical_relation` und `canonical_relations` bereiten `conflicts_with` und
+`duplicates` in lexikografischer Reihenfolge der vollständigen Artefakt-IDs vor.
+Relations-ID, ID-Schema und sämtliche Metadaten bleiben erhalten. Mehrere
+Speicherkopien derselben symmetrischen Typ-/Endpunktkombination sind ein Fehler,
+nicht ein Anlass, IDs zu verwerfen oder Metadaten automatisch zusammenzuführen.
+Andere gerichtete Beziehungstypen werden nicht umgedreht.
+
+Die vorhandenen generischen Immutable-Key-Prüfungen bleiben unverändert streng.
+`require_canonical_reorder` prüft ausschließlich die exakte Symmetrie-Umordnung,
+einschließlich aller sonstigen Metadaten; es autorisiert keine Mutation. Die
+spätere Schreibtransaktion muss diese vorbereitete Änderung separat planen,
+Revisionen behandeln und alle vollständigen Zielinvarianten prüfen.
+
+`RelationViews` akzeptiert nur bereits kanonische, aufgelöste Eingabemengen.
+`for_artifact(id, direction="outgoing"|"incoming"|"both")` bezieht die Richtung
+auf die physisch gespeicherte Kante. Eingehende Sichten tauschen die dargestellten
+Endpunkte; `inverse=True` macht dies ausdrücklich. Nur `supersedes` erhält dabei
+den spezifizierten Namen `superseded_by`; für andere gerichtete Typen ist der
+Richtungsindikator maßgeblich. Alle Sichten sind `normative=False` und behalten
+Relations-ID und Verweis auf das unveränderte gespeicherte Original.
+
+Prüfumfang: `canonical_relations_and_views_only`. Keine implizite Korrektur
+gespeicherter Dateien, keine vollständige Projektinventur, kein persistenter
+Index, keine Graph-/Lifecycle-Freigabe und keine neue CLI-Schreibfunktion.
+Die Tests prüfen Identitäten, Eingabeerhalt und erlaubte/abgewiesene Operationen,
+nicht Darstellung oder Konsolentexte.
