@@ -1,8 +1,9 @@
 """Scope seed selection before closure. No file access, write or query engine."""
 from dataclasses import dataclass
+import re
 
 from ..model.errors import ModelError
-from .scope_descriptors import ScopeDescriptor, _artifact_id
+from .scope_descriptors import ScopeDescriptor, _artifact_id, _text
 from .scope_inputs import ScopeSeedInputs, _sequence
 
 
@@ -50,6 +51,24 @@ class ScopeSeeds:
     artifact_ids: tuple
     resource_ids: tuple
     configuration_sha256: str | None
+
+    def __post_init__(self):
+        if type(self.descriptor) is not ScopeDescriptor:
+            raise ModelError('scope_descriptor_required')
+        for name, digest in (('inputs', self.inputs_sha256), ('configuration', self.configuration_sha256)):
+            if name == 'configuration' and digest is None:
+                continue
+            if type(digest) is not str or re.fullmatch('[0-9a-f]{64}', digest) is None:
+                raise ModelError('invalid_scope_seed_binding')
+        for names, is_artifact in ((self.artifact_ids, True), (self.resource_ids, False)):
+            if type(names) is not tuple:
+                raise ModelError('scope_seed_tuple_required')
+            for name in names:
+                (_artifact_id if is_artifact else _text)(name)
+            if len(set(names)) != len(names):
+                raise ModelError('duplicate_scope_seed')
+            if (not is_artifact or self.descriptor.scope_kind != 'query') and names != tuple(sorted(names, key=lambda name: name.encode('utf-8'))):
+                raise ModelError('noncanonical_scope_seeds')
 
     @property
     def validation_scope(self):

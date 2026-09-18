@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 109
-last_completed_plan_commit: 3.f.W
-next_plan_commit: 3.f.R
+implementation_plan_commits_completed: 110
+last_completed_plan_commit: 3.f.R
+next_plan_commit: 3.f.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1443,7 +1443,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.f.R – Make it Right
 
-- [ ] **3.f.R** · Position **110/885** · Voraussetzung: `3.f.W`.
+- [x] **3.f.R** · Position **110/885** · Voraussetzung: `3.f.W`.
 **Exakte Commit-Message:** `3.f.R feat(graph): Scope-Descriptor und Seed-Mengen vervollständigen`
 
 **Vervollständigung:** Unbekannte Selektorfelder, Dubletten und rekursive Konfigurationshüllen abweisen.

@@ -36,7 +36,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_document_starts_only_at_document_before_contains_closure",
-    "test_scope_seeds.ScopeSeedTests.test_unknown_document_or_release_is_not_an_empty_success"
+    "test_scope_seeds.ScopeSeedTests.test_unknown_document_or_release_is_not_an_empty_success",
+    "test_scope_seeds_right.ScopeStorageTests.test_source_mutation_during_selection_is_rejected",
+    "test_scope_seeds_right.ScopeStorageTests.test_portable_module_and_zipapp_provide_scope_selection"
   ],
   "open_items": [
     "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."

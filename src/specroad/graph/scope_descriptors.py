@@ -15,7 +15,7 @@ from ._relation_validation import _reference
 
 _FIELDS = frozenset(('scope_version', 'scope_kind', 'selector', 'configuration_id',
                      'closure_profile', 'boundary_policy'))
-_KINDS = frozenset(('specification', 'project', 'release', 'document', 'query', 'explicit'))
+_KINDS = frozenset(('specification', 'project', 'release', 'document', 'query', 'explicit', 'configuration'))
 _FILTERS = frozenset(('type', 'maturity', 'implementation_status', 'verification_plan_status',
                      'verification_result', 'owner', 'tag', 'release', 'has_relation',
                      'missing_relation', 'full_text'))
@@ -122,10 +122,18 @@ def _descriptor(value):
     if type(selector) is not dict:
         raise ModelError('invalid_scope_selector')
     fields = {'release': {'release_id'}, 'document': {'document_id'},
-              'query': {'query'}, 'explicit': {'artifact_ids', 'resource_ids'}}
+              'query': {'query'}, 'explicit': {'artifact_ids', 'resource_ids'},
+              'configuration': {'base_scope_descriptor'}}
     if set(selector) != fields.get(kind, set()):
         raise ModelError('invalid_scope_selector')
-    if kind in ('release', 'document'):
+    if kind == 'configuration':
+        base = selector['base_scope_descriptor']
+        if (value['configuration_id'] is None or type(base) is not dict
+                or base.get('scope_kind') == 'configuration'
+                or base.get('configuration_id') is not None):
+            raise ModelError('recursive_or_ambiguous_configuration_scope')
+        _descriptor(base)
+    elif kind in ('release', 'document'):
         _artifact_id(selector[kind + '_id'], kind)
     elif kind == 'explicit':
         _ordered_ids(selector['artifact_ids'], artifacts=True)
@@ -141,7 +149,12 @@ class ScopeDescriptor:
 
     def __init__(self, value):
         _descriptor(value)
-        object.__setattr__(self, '_encoded', canonical_json_bytes(value))
+        encoded = canonical_json_bytes(value)
+        try:
+            json.loads(encoded)
+        except (ValueError, RecursionError) as error:
+            raise ModelError('unsupported_scope_descriptor_nesting') from error
+        object.__setattr__(self, '_encoded', encoded)
 
     @property
     def data(self):

@@ -37,7 +37,12 @@
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_unknown_top_level_and_selector_fields_rejected",
     "test_scope_seeds.ScopeSeedTests.test_descriptor_hash_ignores_object_key_order",
-    "test_scope_seeds.ScopeSeedTests.test_missing_version_is_not_filled"
+    "test_scope_seeds.ScopeSeedTests.test_missing_version_is_not_filled",
+    "test_scope_seeds_right.ScopeRightTests.test_configuration_wrapper_contains_one_unbound_base",
+    "test_scope_seeds_right.ScopeRightTests.test_recursive_configuration_wrapper_is_rejected",
+    "test_scope_seeds_right.ScopeRightTests.test_already_configured_inner_scope_is_rejected",
+    "test_scope_seeds_right.ScopeRightTests.test_explicit_duplicate_or_unsorted_artifact_ids_fail",
+    "test_scope_seeds_right.ScopeRightTests.test_resource_order_is_utf8_not_locale_or_utf16"
   ],
   "open_items": [
     "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."

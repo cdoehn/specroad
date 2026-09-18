@@ -37,7 +37,9 @@
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_query_preserves_page_order_without_repagination",
     "test_scope_seeds.ScopeSeedTests.test_query_page_from_changed_source_rejected",
-    "test_scope_seeds.ScopeSeedTests.test_query_limit_zero_has_no_items"
+    "test_scope_seeds.ScopeSeedTests.test_query_limit_zero_has_no_items",
+    "test_scope_seeds_right.ScopeRightTests.test_query_more_than_default_hundred_not_clipped",
+    "test_scope_seeds_right.ScopeRightTests.test_query_page_duplicate_or_foreign_id_is_rejected"
   ],
   "open_items": [
     "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."

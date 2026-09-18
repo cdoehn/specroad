@@ -67,3 +67,19 @@ Daten und Modellfehler. Keine Konsolen-/Formatierungs-/Doku-Oracles. Die reinen
 Vorbereitungsbausteine führen weder Netzwerk- noch Dateischreibzugriffe aus.
 Bestehende ModelManifest-Aufrufer bleiben auf ihren implementierten Teilumfang
 beschränkt, bis Scope-Closure und Fachresolver integriert werden.
+
+## R: Konfigurationshüllen und frische Projektlesezugriffe
+
+Auch der siebte Descriptor `configuration` ist strukturell definiert: genau eine
+configuration_id und ein unkonfigurierter Basisscope anderen Typs. Eine zweite
+Hülle oder ein schon konfigurierter Basisscope sind Fehler. Die effektive
+Konfigurationsauflösung bleibt wie oben ausdrücklich gesperrt, bis ihr Resolver
+vorhanden ist; eine gültige Hülle ist kein ungefiltert gültiger Scope.
+
+`storage.scope_seeds.read_artifact_scope_seeds` verbindet document/release sowie
+artifact-only explicit mit der vollständigen **aktuellen Artefaktinventur** aus
+3.e. Quellbytes und Mitgliedschaft werden nach der Auswahl erneut geprüft.
+Fehlende/ungültige Quellen und beobachtete Änderungen liefern keinen Teilerfolg.
+Die lokale Projektbindung wird getrennt mitgeliefert; `atomic_snapshot=false`.
+Ressourcenweite project/specification-Scopes und Query-/Konfigurationsauflösung
+werden von diesem spezialisierten Reader nicht still auf Artefakte reduziert.

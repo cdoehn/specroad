@@ -37,7 +37,9 @@
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_project_includes_controls_with_explicit_archive_inventory",
     "test_scope_seeds.ScopeSeedTests.test_project_never_assumes_missing_baseline_inventory_empty",
-    "test_scope_seeds.ScopeSeedTests.test_non_normative_operational_resources_rejected"
+    "test_scope_seeds.ScopeSeedTests.test_non_normative_operational_resources_rejected",
+    "test_scope_seeds_right.ScopeRightTests.test_missing_archive_binding_resource_is_rejected",
+    "test_scope_seeds_right.ScopeRightTests.test_unreferenced_archive_is_not_part_of_project_seeds"
   ],
   "open_items": [
     "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."

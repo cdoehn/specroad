@@ -36,7 +36,10 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_release_uses_incoming_planning_memberships",
-    "test_scope_seeds.ScopeSeedTests.test_release_does_not_expand_requirement_dependencies"
+    "test_scope_seeds.ScopeSeedTests.test_release_does_not_expand_requirement_dependencies",
+    "test_scope_seeds_right.ScopeStorageTests.test_release_reader_finds_incoming_unselected_sources_and_preserves_bytes",
+    "test_scope_seeds_right.ScopeStorageTests.test_new_source_between_calls_is_not_hidden_by_prior_result",
+    "test_scope_seeds_right.ScopeRightTests.test_all_small_release_assignment_graphs_match_independent_expected_sets"
   ],
   "open_items": [
     "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."
