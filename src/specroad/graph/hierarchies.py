@@ -4,10 +4,10 @@ No files, caches, revision values or source records are changed. These checks do
 not infer missing scope members, document ownership or include_document edges.
 """
 from dataclasses import dataclass
-import heapq
 
 from ..model.errors import ModelError
 from .references import RelationReferences, ResolvedRelation
+from ._graph_traversal import _cycle_witness
 
 HIERARCHY_RELATION_TYPES = ("refines", "part_of", "supersedes", "contains")
 
@@ -15,66 +15,6 @@ HIERARCHY_RELATION_TYPES = ("refines", "part_of", "supersedes", "contains")
 def _require_references(references):
     if type(references) is not RelationReferences:
         raise ModelError("relation_references_required")
-
-
-def _has_cycle(edges):
-    """Kahn traversal counts all nodes participating in this one edge type."""
-    outgoing = {}
-    indegree = {}
-    for edge in edges:
-        source, target = edge.source.id, edge.target.id
-        outgoing.setdefault(source, []).append(target)
-        indegree.setdefault(source, 0)
-        indegree[target] = indegree.get(target, 0) + 1
-    ready = [node for node, degree in indegree.items() if degree == 0]
-    heapq.heapify(ready)
-    visited = 0
-    while ready:
-        source = heapq.heappop(ready)
-        visited += 1
-        for target in sorted(outgoing.get(source, ())):
-            indegree[target] -= 1
-            if indegree[target] == 0:
-                heapq.heappush(ready, target)
-    return visited != len(indegree)
-
-
-def _cycle_witness(edges):
-    """Find one deterministic directed cycle without recursive Python frames."""
-    outgoing = {}
-    for edge in edges:
-        outgoing.setdefault(edge.source.id, []).append(edge)
-        outgoing.setdefault(edge.target.id, [])
-    for values in outgoing.values():
-        values.sort(key=lambda edge: (edge.target.id, edge.relation.identity.id))
-    finished = set()
-    for root in sorted(outgoing):
-        if root in finished:
-            continue
-        active = {root: 0}
-        nodes = [root]
-        path = []
-        frames = [iter(outgoing[root])]
-        while frames:
-            edge = next(frames[-1], None)
-            if edge is None:
-                finished.add(nodes.pop())
-                del active[next(reversed(active))]
-                frames.pop()
-                if path:
-                    path.pop()
-                continue
-            target = edge.target.id
-            if target in active:
-                cycle = path[active[target]:] + [edge]
-                first = min(range(len(cycle)), key=lambda index: cycle[index].source.id)
-                return tuple(cycle[first:] + cycle[:first])
-            if target not in finished:
-                active[target] = len(nodes)
-                nodes.append(target)
-                path.append(edge)
-                frames.append(iter(outgoing[target]))
-    return None
 
 
 class HierarchyCycleError(ModelError):
@@ -115,8 +55,9 @@ def validate_hierarchies(references):
     _require_references(references)
     for kind in HIERARCHY_RELATION_TYPES:
         edges = tuple(edge for edge in references.relations if edge.relation.type == kind)
-        if _has_cycle(edges):
-            raise HierarchyCycleError(kind, _cycle_witness(edges))
+        cycle = _cycle_witness(edges)
+        if cycle is not None:
+            raise HierarchyCycleError(kind, cycle)
     return HierarchyValidation(HIERARCHY_RELATION_TYPES, len(references.sources), len(references.relations))
 
 

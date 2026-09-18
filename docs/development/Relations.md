@@ -130,3 +130,37 @@ gespeicherter Dateien, keine vollständige Projektinventur, kein persistenter
 Index, keine Graph-/Lifecycle-Freigabe und keine neue CLI-Schreibfunktion.
 Die Tests prüfen Identitäten, Eingabeerhalt und erlaubte/abgewiesene Operationen,
 nicht Darstellung oder Konsolentexte.
+
+
+## 3.d – Hierarchien und Dokumentpositionen
+
+`validate_hierarchies(RelationReferences(...))` prüft `refines`, `part_of`,
+`supersedes` und `contains` jeweils getrennt auf gerichtete Zyklen. Die Regeln
+werden nicht auf die Vereinigung aller Beziehungstypen übertragen. Insbesondere
+ist ein `depends_on`-Zyklus durch diese lokale Hierarchieregel allein nicht
+verboten; Planungs- und Readiness-Regeln dürfen darüber später separat urteilen.
+Die bestehende Referenzprüfung weist fehlende Ziele und Selbstbeziehungen vorher ab.
+
+Eine gemeinsame iterative Tiefensuche benötigt keinen rekursiven Python-Stack.
+Bei einem Zyklus wird eine deterministisch ausgewählte erste blockierende
+`HierarchyCycleError` mit Beziehungstyp, geschlossener Artefakt-ID-Folge und
+zugehörigen Relations-IDs erzeugt. Es wird nicht behauptet, dass dieser eine
+Pfad alle möglichen Zyklen aufzählt. Die Typreihenfolge ist `refines`, `part_of`,
+`supersedes`, `contains`; innerhalb eines Typs werden IDs deterministisch geordnet.
+Ein erfolgreicher Rückgabewert hat `validation_scope=hierarchies_only` und
+bezieht sich ausschließlich auf die übergebene Menge, nicht auf eine automatisch
+ermittelte vollständige Projektmenge.
+
+`ordered_children` ordnet ausgehende `contains`-Beziehungen eines expliziten
+Dokuments oder Abschnitts nach numerischer Position, vollständiger Ziel-ID und
+Relations-ID. Null ist gültig; boolesche, negative und gebrochene Werte sind es
+nicht. Gemäß vorhandener JSON-Integer-Semantik ist `0.0` ebenfalls Null. Die
+Ordnung betrifft die normativen Dokumentdaten, nicht die visuelle Ausgabe.
+Weder Relations-IDs noch die Reihenfolge der ursprünglichen Arrays werden geändert.
+
+Nicht enthalten: Include-Graph-Auflösung, Prüfung genau eines Abschnittselterns,
+Document-Rendering, Source-Inventur, Authoring, Revisionserhöhung und sichere
+Schreibtransaktionen. Diese bleiben den passenden späteren Planschritten zugeordnet.
+Neue Tests prüfen beide Symmetrietypen, ID-/Metadaten-Erhalt, inverse Projektion,
+alle Drei-Knoten-Digraphen pro Hierarchietyp gegen einen unabhängigen
+Erreichbarkeitsoracle, tiefe Ketten/Zyklen und Positionen. Keine Darstellungstests.
