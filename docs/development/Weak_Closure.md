@@ -34,3 +34,34 @@ IO, resource/profile discovery or write authorization is added here.
 Tests use owned data and observe membership, values, hashes and errors, not
 terminal output, translations, formatting or documentation. The existing
 parallel development gate and explicit serial reference remain unchanged.
+
+## Exact partial-reference validation
+
+`validate_boundary_references(local_records, declarations, descriptor=...)`
+compares the stored local source relations to exactly the declared omitted weak
+endpoints. It rejects missing, duplicate, stray, type-mismatched or source/target-
+mismatched declarations. A local target needs no boundary. A strong target
+must exist locally, regardless of whether an origin copy or plausible hash was
+supplied. Record IDs, relation IDs and external relation identities stay unique.
+Both raw seven-field dictionaries and immutable `BoundaryReference` values are
+accepted; no filename, URL or arbitrary metadata causes a read or execution.
+
+Without `origin_sources`, omitted target content cannot be observed and
+`origin_hashes_verified=false` is explicit. With origin records, local source
+content must agree canonically with that origin, every origin relation must
+resolve, and the declared target hashes must match actual canonical values.
+This proves agreement with the **supplied** origin bytes, not their authenticity
+or binding to a verified original model root. Archive/manifest verification,
+read-only bundle policy and actual root binding remain tasks for M15.
+
+`require_scope_closure_current` reruns the selection and closure using freshly
+supplied observations and rejects old or tampered results. A caller must still
+obtain new observations from the live providers first. No filesystem freshness
+can be inferred merely from reusing equal in-memory objects.
+
+The R regressions cover all 64 label assignments (absent, strong, duplicates,
+conflicts_with) on the three possible edges of a three-node acyclic graph, each
+with all three seeds and both policies. Separate cases cover cycles, a chain of
+1,100 nodes, 141 boundary records, query pagination, missing providers, origin
+changes and real execution in moved module/zipapp distributions. These are
+behavioral checks, not assertions on documentation or human-readable output.

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 115
-last_completed_plan_commit: 3.h.W
-next_plan_commit: 3.h.R
+implementation_plan_commits_completed: 116
+last_completed_plan_commit: 3.h.R
+next_plan_commit: 3.h.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1513,7 +1513,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.h.R – Make it Right
 
-- [ ] **3.h.R** · Position **116/885** · Voraussetzung: `3.h.W`.
+- [x] **3.h.R** · Position **116/885** · Voraussetzung: `3.h.W`.
 **Exakte Commit-Message:** `3.h.R feat(graph): Schwache Kanten und Boundary References vervollständigen`
 
 **Vervollständigung:** Fehlende starke Ziele nicht zu Boundaries abschwächen; falsche oder doppelte Boundaries ablehnen.

@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
 from .boundaries import boundary_for_relation
+from .boundary_validation import validate_boundary_references
 from .strong_closure import _resolve_closure_members
 
 
@@ -83,4 +84,21 @@ def resolve_scope_closure(seeds, bindings, *, query_page=None):
                     or edge.target.id != target_id):
                 raise ModelError('boundary_origin_reference_missing')
             boundaries.append(boundary_for_relation(edge.relation, target))
-    return ScopeClosure(**values, boundary_references=tuple(sorted(boundaries, key=lambda item: item.order_key)))
+    checked = validate_boundary_references(
+        [records[identity] for identity in values['artifact_ids']], boundaries,
+        descriptor=seeds.descriptor, origin_sources=bindings.inventory.records)
+    return ScopeClosure(**values, boundary_references=checked.boundary_references)
+
+
+def require_scope_closure_current(observation, seeds, bindings, *, query_page=None):
+    """Recompute against fresh supplied inputs; never trust an old hash alone.
+
+    Caller-owned observation objects cannot certify completeness or freshness.
+    Live providers must reread/re-evaluate their sources before this pure check.
+    """
+    if type(observation) is not ScopeClosure:
+        raise ModelError('scope_closure_observation_required')
+    current = resolve_scope_closure(seeds, bindings, query_page=query_page)
+    if current != observation:
+        raise ModelError('scope_closure_observation_stale')
+
