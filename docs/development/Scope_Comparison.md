@@ -73,3 +73,17 @@ error. Neither the product nor these tests change the process-global recursion l
 Deep values must either retain the complete correct delta or be rejected with
 a controlled nesting error; decoder limits vary by runtime. The error mapping
 is also exercised using an explicitly failing JSON decoder.
+
+## Clean-stage module boundaries
+
+`graph.comparison` is the stable public facade. Immutable inputs/results,
+structural field comparison, conservative category policy, artifact-set diff,
+one-hop impact, and explicit duration-bound arithmetic now have separate
+modules. None import CLI or report formatting. Both the earlier manifest
+assembler and the new closure adapter use `model.manifest_projection`; the
+existing canonical model/scope hash format remains unchanged. The W/R test
+files and their expected values are unchanged by this refactoring.
+
+The clean field walker visits object members directly instead of canonically
+hashing each remaining subtree again at every depth. Arrays remain atomic,
+and the field/result contracts are unchanged.
