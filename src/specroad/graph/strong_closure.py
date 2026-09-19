@@ -13,6 +13,7 @@ from ._scope_selector_contract import _artifact_id
 from .closure_inputs import ClosureBindings, ClosureNode, artifact_node, resource_node
 from .scope_seeds import ScopeSeeds, resolve_scope_seeds
 from ._closure_frontier import IdentityFrontier
+from .scope_admission import require_artifact_admissible
 
 STRONG_RELATIONS = frozenset((
     'addresses', 'refines', 'derived_from', 'depends_on', 'constrains',
@@ -122,7 +123,7 @@ def _field_dependencies(record, bindings, records):
             subject_ids.add(target.identity)
             # Staleness of historical hashes is a verification question. It is
             # NOT a reason to lose the subject from the required scope.
-            yield target
+            yield target, pointer + '/artifact_id'
         by_path = {descriptor.path: (identity, descriptor)
                    for identity, descriptor in bindings.attachments.items()}
         seen = set()
@@ -137,7 +138,7 @@ def _field_dependencies(record, bindings, records):
                 raise ModelError('closure_attachment_observation_missing', pointer=pointer)
             if observed[1] != descriptor:
                 raise ModelError('closure_attachment_binding_mismatch', pointer=pointer)
-            yield resource_node(observed[0])
+            yield resource_node(observed[0]), pointer
     elif record.identity.artifact_type == 'verification':
         slots = _array(value.get('evidence_slots'), '/evidence_slots')
         if not slots:
@@ -156,12 +157,12 @@ def _field_dependencies(record, bindings, records):
             if type(slot['dimension']) is not str or not slot['dimension'].strip():
                 raise ModelError('closure_evidence_slot_invalid', pointer=pointer + '/dimension')
             if slot['test_id'] is not None:
-                yield _artifact_target(slot['test_id'], records, pointer + '/test_id', 'test')
+                yield _artifact_target(slot['test_id'], records, pointer + '/test_id', 'test'), pointer + '/test_id'
     elif record.identity.artifact_type == 'baseline':
         if record.identity.id not in bindings.inventory.archive_bindings:
             raise ModelError('scope_baseline_archive_inventory_required')
-        for identity in bindings.inventory.archive_bindings[record.identity.id]:
-            yield resource_node(identity)
+        for position, identity in enumerate(bindings.inventory.archive_bindings[record.identity.id]):
+            yield resource_node(identity), '/archive_bindings/' + record.identity.id + '/' + str(position)
 
 
 def _check_seeds(seeds, bindings, query_page):
@@ -193,7 +194,22 @@ def _resolve_closure_members(seeds, bindings, *, query_page=None, follow_weak=Fa
     resources = {value.resource_id: value for value in bindings.inventory.resources}
     initial = [artifact_node(identity) for identity in seeds.artifact_ids]
     initial.extend(resource_node(identity) for identity in seeds.resource_ids)
-    frontier = IdentityFrontier(initial)
+    frontier = IdentityFrontier(())
+
+    def admit(target, *, source_id=None, relation_id=None, pointer=''):
+        if target.kind == 'artifact':
+            target_record = records.get(target.identity)
+            if target_record is None:
+                raise ModelError('closure_bound_artifact_missing', pointer=pointer)
+            require_artifact_admissible(seeds.descriptor, target_record.identity,
+                                       source_id=source_id, relation_id=relation_id,
+                                       pointer=pointer)
+        elif target.identity not in resources:
+            raise ModelError('closure_bound_resource_missing', pointer=pointer)
+        frontier.extend((target,))
+
+    for position, node in enumerate(initial):
+        admit(node, pointer='/seeds/' + str(position))
     weak = set()
     while frontier:
         node = frontier.take()
@@ -201,34 +217,35 @@ def _resolve_closure_members(seeds, bindings, *, query_page=None, follow_weak=Fa
             record = records.get(node.identity)
             if record is None:
                 raise ModelError('closure_bound_artifact_missing')
-            # Preserve the pre-existing specification-scope safety boundary.
-            # Its complete diagnostic/closure-policy integration is step 3.i.
-            if (seeds.descriptor.scope_kind == 'specification'
-                    and record.identity.artifact_type in ('proposal', 'baseline')):
-                raise ModelError('scope_control_dependency')
         elif node.identity not in resources:
             raise ModelError('closure_bound_resource_missing')
         if node not in bindings.uses:
             raise ModelError('closure_usage_observation_missing')
-        targets = list(bindings.uses[node])
+        for position, target in enumerate(bindings.uses[node]):
+            admit(target, source_id=node.identity,
+                  pointer='/uses/' + str(position))
         if node.kind == 'artifact':
-            for relation in record.relations:
+            for position, relation in enumerate(record.relations):
                 relation_id = relation.identity.id
                 if relation_id not in bindings.current_reviews:
                     raise ModelError('closure_review_observation_missing')
-                targets.extend(artifact_node(identity) for identity in bindings.current_reviews[relation_id])
+                for number, identity in enumerate(bindings.current_reviews[relation_id]):
+                    admit(artifact_node(identity), source_id=node.identity, relation_id=relation_id,
+                          pointer='/current_reviews/' + relation_id + '/' + str(number))
                 if relation.type in STRONG_RELATIONS:
-                    targets.append(artifact_node(relation.target))
+                    admit(artifact_node(relation.target), source_id=node.identity,
+                          relation_id=relation_id, pointer='/relations/' + str(position) + '/target')
                 elif relation.type in WEAK_RELATIONS:
                     weak.add((node.identity, relation_id, relation.target))
                     if follow_weak:
-                        targets.append(artifact_node(relation.target))
+                        admit(artifact_node(relation.target), source_id=node.identity,
+                          relation_id=relation_id, pointer='/relations/' + str(position) + '/target')
                 else:
                     raise ModelError('unsupported_closure_relation')
-            targets.extend(_field_dependencies(record, bindings, records))
+            for target, pointer in _field_dependencies(record, bindings, records):
+                admit(target, source_id=node.identity, pointer=pointer)
         elif resources[node.identity].kind == 'attachment' and node.identity not in bindings.attachments:
             raise ModelError('closure_attachment_observation_missing')
-        frontier.extend(targets)
     visited = frontier.visited
     artifact_ids = tuple(sorted((node.identity for node in visited if node.kind == 'artifact'),
                                 key=lambda name: name.encode('utf-8')))

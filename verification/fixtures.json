@@ -17,7 +17,8 @@
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-SCOPE-SEEDS-v1",
     "SR-FIX-STRONG-CLOSURE-v1",
-    "SR-FIX-WEAK-BOUNDARY-v1"
+    "SR-FIX-WEAK-BOUNDARY-v1",
+    "SR-FIX-SCOPE-CONTROL-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -87,6 +88,10 @@
     "SR-FIX-WEAK-BOUNDARY-v1": {
       "provider": "tests/support/boundary.py:selection",
       "kind": "Owned source inventories and explicit policy selections; not authenticated bundle provenance or live project completeness."
+    },
+    "SR-FIX-SCOPE-CONTROL-v1": {
+      "provider": "tests/test_scope_controls.py:referenced_control",
+      "kind": "Synthetic bound control dependencies and passive mentions; no live project completeness, proposal authorization or actual writes."
     }
   }
 }

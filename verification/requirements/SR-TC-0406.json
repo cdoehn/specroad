@@ -7,22 +7,33 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SCOPE-SEEDS-v1"
+    "SR-FIX-SCOPE-SEEDS-v1",
+    "SR-FIX-SCOPE-CONTROL-v1",
+    "SR-FIX-STRONG-CLOSURE-v1",
+    "SR-FIX-WEAK-BOUNDARY-v1"
   ],
   "preconditions": [
     "Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation."
   ],
   "steps": [
-    "Validate descriptor, select exact seeds and verify bound page membership and order."
+    "Validate descriptor, select exact seeds and verify bound page membership and order.",
+    "Resolve specification closure with permanent control admission guards; compare non-control members and assert SRV140/code 3 with endpoints and relation ID or field pointer."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Scope `specification` MUSS die Seed-Menge und den permanenten Ausschluss von Proposal- und Baseline-Artefakten einschließlich der Fehlerbehandlung aus Kapitel 10.8 und 10.8.1 anwenden.",
-    "scope": "Deterministic seed selection over explicitly supplied inputs only; no full closure/model approval, automatic completeness claim or write."
+    "scope": "Permanent control exclusions over explicitly supplied closure bindings, including evidence subjects and closed weak relations. Not a complete live inventory, configured applicability evaluator, proposal approval or write."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV140"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/relations/0/target",
+    "/subjects/0/artifact_id"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -37,9 +48,38 @@
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_specification_excludes_both_control_types",
     "test_scope_seeds.ScopeSeedTests.test_specification_uses_only_active_profiles_rules_mappings",
-    "test_scope_seeds.ScopeSeedTests.test_retired_and_rejected_seeds_are_not_dropped"
+    "test_scope_seeds.ScopeSeedTests.test_retired_and_rejected_seeds_are_not_dropped",
+    "test_scope_controls.ScopeControlTests.test_control_artifacts_remain_excluded_from_seeds_and_members",
+    "test_scope_controls.ScopeControlTests.test_control_only_inventory_has_no_specification_members",
+    "test_scope_controls.ScopeControlTests.test_adding_unreferenced_controls_does_not_change_selected_values",
+    "test_scope_controls.ScopeControlTests.test_editing_unreferenced_control_does_not_change_member_hashes",
+    "test_scope_controls.ScopeControlTests.test_free_text_mention_of_control_is_not_a_relation",
+    "test_scope_controls.ScopeControlTests.test_extension_target_text_is_not_a_relation",
+    "test_scope_controls.ScopeControlTests.test_direct_proposal_reference_has_complete_diagnostic",
+    "test_scope_controls.ScopeControlTests.test_direct_baseline_reference_is_denied_before_archive_requirements",
+    "test_scope_controls.ScopeControlTests.test_partial_policy_does_not_downgrade_strong_control_dependency",
+    "test_scope_controls.ScopeControlTests.test_strong_only_api_uses_same_control_gate",
+    "test_scope_controls.ScopeControlTests.test_closed_weak_control_dependency_is_denied",
+    "test_scope_controls.ScopeControlTests.test_partial_weak_control_dependency_retains_boundary",
+    "test_scope_controls.ScopeControlTests.test_evidence_subject_proposal_has_field_pointer",
+    "test_scope_controls.ScopeControlTests.test_evidence_subject_baseline_has_field_pointer",
+    "test_scope_controls.ScopeControlTests.test_second_evidence_subject_has_original_index",
+    "test_scope_controls.ScopeControlTests.test_project_scope_may_include_same_reference",
+    "test_scope_controls.ScopeControlTests.test_document_scope_may_include_same_reference_transitively",
+    "test_scope_controls.ScopeControlTests.test_explicit_scope_may_select_control",
+    "test_scope_controls.ScopeControlTests.test_project_baseline_retains_archive_dependencies",
+    "test_scope_controls.ScopeControlTests.test_rejected_control_is_still_excluded",
+    "test_scope_controls.ScopeControlTests.test_retired_control_is_not_allowed_as_dependency",
+    "test_scope_controls.ScopeControlTests.test_excluded_control_needs_no_usage_observation",
+    "test_scope_controls.ScopeControlTests.test_referenced_control_is_denied_before_reading_its_uses",
+    "test_scope_controls.ScopeControlTests.test_error_does_not_mutate_source_bytes",
+    "test_scope_controls.ScopeControlTests.test_diagnostic_returns_independent_data",
+    "test_scope_controls.ScopeControlTests.test_configuration_wrapper_preserves_specification_exclusions",
+    "test_scope_controls.ScopeControlTests.test_configuration_wrapper_does_not_impose_specification_on_project",
+    "test_scope_controls.ScopeControlTests.test_unresolved_configuration_still_fails_closed"
   ],
   "open_items": [
-    "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."
+    "Actual configuration/applicability evaluation, live complete resource providers and end-to-end no-write proposal gates remain in later steps. Pure guard already recognizes a configuration wrapper around specification.",
+    "No normative scope hash is certified by a closure-observation fingerprint; normative hash primitives belong to 3.j."
   ]
 }

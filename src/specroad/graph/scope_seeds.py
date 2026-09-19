@@ -7,6 +7,7 @@ from .scope_descriptors import ScopeDescriptor
 from ._scope_selector_contract import _artifact_id, _text
 from .scope_inputs import ScopeSeedInputs
 from .scope_query_page import QuerySeedPage
+from .scope_admission import CONTROL_ARTIFACT_TYPES
 
 
 @dataclass(frozen=True)
@@ -84,7 +85,7 @@ def resolve_scope_seeds(descriptor, inputs, *, query_page=None):
     resources = {resource.resource_id: resource for resource in inputs.resources}
     selected, selected_resources, config_hash = set(), set(), None
     if kind == 'specification':
-        selected = {name for name, record in by_id.items() if record.identity.artifact_type not in ('proposal', 'baseline')}
+        selected = {name for name, record in by_id.items() if record.identity.artifact_type not in CONTROL_ARTIFACT_TYPES}
         selected_resources = {name for name, resource in resources.items() if resource.active}
         config_hash = inputs.configuration_sha256
     elif kind == 'project':
