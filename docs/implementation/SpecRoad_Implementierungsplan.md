@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 121
-last_completed_plan_commit: 3.j.W
-next_plan_commit: 3.j.R
+implementation_plan_commits_completed: 122
+last_completed_plan_commit: 3.j.R
+next_plan_commit: 3.j.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1583,7 +1583,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.j.R – Make it Right
 
-- [ ] **3.j.R** · Position **122/885** · Voraussetzung: `3.j.W`.
+- [x] **3.j.R** · Position **122/885** · Voraussetzung: `3.j.W`.
 **Exakte Commit-Message:** `3.j.R feat(graph): Scope-Hash und fachliche Vergleichsprimitiven vervollständigen`
 
 **Vervollständigung:** Unstrukturierte Textänderung nur text_changed nennen; keine erfundene semantische Interpretation.

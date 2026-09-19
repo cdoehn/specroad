@@ -35,7 +35,10 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_scope_comparison.ScopeComparisonTests.test_text_is_never_interpreted_as_a_timing_constraint"
+    "test_scope_comparison.ScopeComparisonTests.test_text_is_never_interpreted_as_a_timing_constraint",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_unstructured_timing_prose_remains_text",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_ambiguous_timing_structure_does_not_claim_tightening",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_exception_text_not_interpreted_as_numerical_threshold"
   ],
   "open_items": [
     "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."

@@ -77,9 +77,32 @@ class ComparisonInputs:
 
 
 def _category(parts, before, after):
-    # Only the declared field location, never words or numbers inside prose.
-    if parts and parts[0] in ('statement', 'description', 'rationale', 'title'):
-        return 'text_changed'
+    # Only declared structural field locations; never infer from words.
+    if not parts:
+        return 'field_changed'
+    name = parts[0]
+    if name in ('statement', 'description', 'rationale', 'title', 'response',
+                'actor', 'trigger', 'object', 'context', 'decision'):
+        return 'text_changed' if type(before) is str or type(after) is str else 'field_changed'
+    if name == 'timing':
+        return ('text_changed' if len(parts) == 1 and (type(before) is str or type(after) is str)
+                else 'timing_changed')
+    if name in ('revision', 'created_at', 'updated_at', 'created_by', 'updated_by'):
+        return 'audit_changed'
+    if name in ('maturity', 'implementation_status', 'risk_status', 'proposal_status', 'baseline_status'):
+        return 'status_changed'
+    if name in ('scope', 'scope_descriptor', 'applicability'):
+        return 'scope_changed'
+    if name in ('exceptions', 'deviation_conditions', 'deviation_authority'):
+        return 'exception_changed'
+    if name == 'thresholds':
+        return 'threshold_changed'
+    if name == 'relations':
+        return 'relation_changed'
+    if name in ('verification_plan_status', 'verification_waiver', 'evidence_slots', 'verification_context_sha256'):
+        return 'verification_changed'
+    if name in ('code_references', 'code_ref', 'file_path', 'line_range', 'symbol', 'source_component', 'target_component'):
+        return 'code_reference_changed' if name in ('code_references', 'code_ref') else 'field_changed'
     return 'field_changed'
 
 
@@ -126,8 +149,27 @@ def compare_artifacts(before, after):
         delta = field_diff(old.data if old is not None else None,
                            new.data if new is not None else None).data
         if delta['changed']:
+            if old is None or new is None:
+                delta['changes'][0].update(
+                    operation='add' if old is None else 'remove',
+                    before_present=old is not None, after_present=new is not None)
+            categories = {item['category'] for item in delta['changes']}
+            change_kind = 'added' if old is None else 'removed' if new is None else 'modified'
+            if old is not None and new is not None:
+                if old.data['maturity'] != 'retired' and new.data['maturity'] == 'retired':
+                    change_kind = 'retired'
+                artifact_type = new.identity.artifact_type
+                fields = {item['pointer'].split('/')[1] for item in delta['changes'] if item['pointer']}
+                if artifact_type in ('document', 'section', 'content_block', 'view') and fields & {
+                        'relations', 'block_type', 'payload', 'content', 'query', 'render_policy'}:
+                    categories.add('document_structure_changed')
+                if artifact_type == 'code_ref' and fields - {'revision', 'updated_at', 'updated_by'}:
+                    categories.add('code_reference_changed')
+                if artifact_type in ('verification', 'test') and fields - {'revision', 'updated_at', 'updated_by'}:
+                    categories.add('verification_changed')
+            categories.add(change_kind)
             changes.append({'artifact_id': identity,
-                'change_kind': 'added' if old is None else 'removed' if new is None else 'modified',
+                'change_kind': change_kind, 'categories': sorted(categories),
                 'before_sha256': canonical_json_sha256(old.data) if old is not None else None,
                 'after_sha256': canonical_json_sha256(new.data) if new is not None else None,
                 'fields': delta['changes']})
@@ -157,4 +199,58 @@ def direct_impact(artifact_id, references):
             'artifact_ids': sorted({c['related_id'] for c in connections}), 'connections': connections})
     return ComparisonResult({'impact_version': 'direct-impact-v1', 'artifact_id': artifact_id,
         'groups': result, 'depth': 1, 'transitive': False,
+        'input_relations_sha256': canonical_json_sha256({
+            'sources': [source.id for source in references.sources],
+            'relations': [{'source_id': edge.source.id, 'value': edge.relation.data}
+                          for edge in references.relations]}),
         'validation_scope': 'supplied_relation_set_only', 'write_authorized': False})
+
+
+# Comparison of explicit upper/lower duration bounds is separate from text
+# comparison. The caller's profile supplies bound semantics; none are guessed.
+def _duration_seconds(value):
+    from fractions import Fraction
+    import re
+    from ..model.requirement_duration import RequirementDuration
+    duration = RequirementDuration(value)
+    data = duration.data
+    if type(data) is dict:
+        units = {'s': Fraction(1), 'ms': Fraction(1, 1000), 'us': Fraction(1, 10**6),
+                 'ns': Fraction(1, 10**9), 'min': Fraction(60), 'h': Fraction(3600),
+                 'd': Fraction(86400), 'wk': Fraction(604800)}
+        factor = units.get(data['unit'])
+        return None if factor is None else Fraction(str(data['value'])) * factor
+    # Time-only designators have fixed units. Calendar/day/week context is
+    # intentionally not guessed from ISO dates, timezones or locale.
+    match = re.fullmatch(r'PT(?:(\d+(?:[.,]\d+)?)H)?(?:(\d+(?:[.,]\d+)?)M)?(?:(\d+(?:[.,]\d+)?)S)?', data)
+    if match is None:
+        return None
+    return sum((Fraction(part.replace(',', '.')) * factor
+                for part, factor in zip(match.groups(), (3600, 60, 1)) if part is not None), Fraction(0))
+
+
+def compare_duration_bounds(before, after, *, bound):
+    """Only explicit duration values AND an explicit bound direction justify this.
+
+    This is not installed as a heuristic in field_diff. Calendar durations and
+    unsupported unit conversions remain timing_changed, with no order claim.
+    """
+    if type(bound) is not str or bound not in ('maximum', 'minimum'):
+        raise ModelError('explicit_timing_bound_required')
+    left, right = _duration_seconds(before), _duration_seconds(after)
+    changed = canonical_json_bytes(before) != canonical_json_bytes(after)
+    comparable = left is not None and right is not None
+    order = (right > left) - (right < left) if comparable else None
+    if not changed:
+        kind = 'unchanged'
+    elif order == 0:
+        kind = 'timing_equivalent'
+    elif order is None:
+        kind = 'timing_changed'
+    else:
+        tightened = (order < 0) if bound == 'maximum' else (order > 0)
+        kind = 'timing_tightened' if tightened else 'timing_relaxed'
+    return ComparisonResult({'comparison_version': 'duration-bound-diff-v1',
+        'before': before, 'after': after, 'bound': bound, 'category': kind,
+        'value_changed': changed, 'comparable': comparable, 'order': order,
+        'interpretation': 'explicit_caller_bound', 'write_authorized': False})

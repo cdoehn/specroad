@@ -38,7 +38,10 @@
     "test_scope_comparison.ScopeComparisonTests.test_direct_impact_includes_both_directions",
     "test_scope_comparison.ScopeComparisonTests.test_direct_impact_does_not_include_transitive_only_nodes",
     "test_scope_comparison.ScopeComparisonTests.test_multiple_relations_keep_all_relation_ids",
-    "test_scope_comparison.ScopeComparisonTests.test_symmetric_relationship_is_seen_from_both_ends"
+    "test_scope_comparison.ScopeComparisonTests.test_symmetric_relationship_is_seen_from_both_ends",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_large_incoming_set_is_not_truncated",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_impact_binds_supplied_relation_data",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_impact_cycles_stay_one_hop"
   ],
   "open_items": [
     "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."

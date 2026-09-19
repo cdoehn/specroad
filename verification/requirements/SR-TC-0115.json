@@ -38,7 +38,15 @@
     "test_scope_comparison.ScopeComparisonTests.test_new_artifact_is_added",
     "test_scope_comparison.ScopeComparisonTests.test_missing_artifact_is_removed_not_assumed_retired",
     "test_scope_comparison.ScopeComparisonTests.test_scalar_nested_field_delta_is_structured",
-    "test_scope_comparison.ScopeComparisonTests.test_changed_artifact_has_bound_before_and_after_values"
+    "test_scope_comparison.ScopeComparisonTests.test_changed_artifact_has_bound_before_and_after_values",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_retirement_diff_is_not_deletion",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_structured_field_categories",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_document_contains_position_change_is_structural",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_code_ref_field_change_is_classified",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_strict_upper_duration_bound_is_tightened",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_larger_upper_duration_bound_is_relaxed",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_unit_conversion_can_be_equivalent",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_calendar_durations_do_not_invent_fixed_seconds"
   ],
   "open_items": [
     "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."

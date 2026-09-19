@@ -42,3 +42,34 @@ configuration and all previous PRoot safeguards are unchanged. These are
 preparatory APIs for the later Change Plan and Diff/Impact command providers,
 not newly registered commands. Tests assert data and behavior only, no rendered
 strings, documentation checks or layout snapshots.
+
+## Right-stage classification boundaries
+
+Structured field locations distinguish status, audit, scope/applicability,
+threshold, exception, relation, document-structure, verification and code-ref
+changes where their stored values permit this. A transition to maturity
+`retired` is distinguished from absence in the compared set. Root presence
+flags for additions/removals remain explicit. Evidence freshness is not guessed
+from its bytes: the later verification evaluator must provide that observation.
+
+The separate `compare_duration_bounds` API requires an explicit `maximum` or
+`minimum` meaning from its caller. It compares validated durations using exact
+rational arithmetic for a documented fixed subset of units (s, ms, us, ns, min,
+h, d, wk and time-only ISO designators). Equivalent durations, tighter bounds
+and looser bounds are distinguished. Valid calendar or unconverted units return
+`timing_changed` without an order claim. No interpretation is installed as a
+prose/keyword heuristic in `field_diff`; a changed `/timing` sentence is still
+`text_changed`, and an unqualified numerical timing structure is just
+`timing_changed`. This is not a general UCUM or language understanding engine.
+
+Direct impact now also binds the full supplied relation set by its value hash.
+It does not imply that the supplied set is a complete or freshly read project.
+A resource hash mismatch, different local read binding, stale/tampered closure,
+missing query page, or an unsupported archive expansion is a controlled error.
+There is no fallback from failed validation to an older successful observation.
+
+Oversized nesting unsupported by the local JSON decoder is a controlled model
+error. Neither the product nor these tests change the process-global recursion limit.
+Deep values must either retain the complete correct delta or be rejected with
+a controlled nesting error; decoder limits vary by runtime. The error mapping
+is also exercised using an explicitly failing JSON decoder.
