@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 118
-last_completed_plan_commit: 3.i.W
-next_plan_commit: 3.i.R
+implementation_plan_commits_completed: 119
+last_completed_plan_commit: 3.i.R
+next_plan_commit: 3.i.C
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1548,7 +1548,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.i.R – Make it Right
 
-- [ ] **3.i.R** · Position **119/885** · Voraussetzung: `3.i.W`.
+- [x] **3.i.R** · Position **119/885** · Voraussetzung: `3.i.W`.
 **Exakte Commit-Message:** `3.i.R feat(graph): Permanente Kontrollausschlüsse vervollständigen`
 
 **Vervollständigung:** Starke oder closed-schwache Kontrollabhängigkeit mit SRV140/reason scope_control_dependency ablehnen.

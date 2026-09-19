@@ -225,7 +225,8 @@ def _resolve_closure_members(seeds, bindings, *, query_page=None, follow_weak=Fa
             admit(target, source_id=node.identity,
                   pointer='/uses/' + str(position))
         if node.kind == 'artifact':
-            for position, relation in enumerate(record.relations):
+            for position, relation in sorted(enumerate(record.relations),
+                                             key=lambda item: item[1].identity.id.encode('utf-8')):
                 relation_id = relation.identity.id
                 if relation_id not in bindings.current_reviews:
                     raise ModelError('closure_review_observation_missing')
@@ -239,7 +240,7 @@ def _resolve_closure_members(seeds, bindings, *, query_page=None, follow_weak=Fa
                     weak.add((node.identity, relation_id, relation.target))
                     if follow_weak:
                         admit(artifact_node(relation.target), source_id=node.identity,
-                          relation_id=relation_id, pointer='/relations/' + str(position) + '/target')
+                              relation_id=relation_id, pointer='/relations/' + str(position) + '/target')
                 else:
                     raise ModelError('unsupported_closure_relation')
             for target, pointer in _field_dependencies(record, bindings, records):

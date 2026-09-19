@@ -15,6 +15,7 @@ from .references import RelationReferences, ResolvedRelation
 from .relations import SourceRelations
 from .scope_descriptors import ScopeDescriptor
 from .scope_inputs import _sequence
+from .scope_admission import require_artifact_admissible
 from .strong_closure import WEAK_RELATIONS
 
 
@@ -68,6 +69,11 @@ def validate_boundary_references(sources, declarations, *, descriptor, origin_so
     if type(descriptor) is not ScopeDescriptor:
         raise ModelError('scope_descriptor_required')
     records = _sources(sources)
+    # Supplied local members are admissions too. Origin records below are only
+    # observations of omitted targets and are deliberately NOT admitted here.
+    for position, record in enumerate(records.values()):
+        require_artifact_admissible(descriptor, record.identity,
+                                   pointer='/sources/' + str(position) + '/id')
     boundaries = {}
     for index, declaration in enumerate(_sequence(declarations)):
         try:

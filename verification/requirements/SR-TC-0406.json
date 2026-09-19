@@ -17,7 +17,8 @@
   ],
   "steps": [
     "Validate descriptor, select exact seeds and verify bound page membership and order.",
-    "Resolve specification closure with permanent control admission guards; compare non-control members and assert SRV140/code 3 with endpoints and relation ID or field pointer."
+    "Resolve specification closure with permanent control admission guards; compare non-control members and assert SRV140/code 3 with endpoints and relation ID or field pointer.",
+    "Check original relation/field positions, long indirect references, mixed partial dependencies, closed/local imported members and unchanged project/document/query behavior; execute pure gate in moved portable distributions."
   ],
   "oracle": {
     "kind": "behavior",
@@ -76,7 +77,37 @@
     "test_scope_controls.ScopeControlTests.test_diagnostic_returns_independent_data",
     "test_scope_controls.ScopeControlTests.test_configuration_wrapper_preserves_specification_exclusions",
     "test_scope_controls.ScopeControlTests.test_configuration_wrapper_does_not_impose_specification_on_project",
-    "test_scope_controls.ScopeControlTests.test_unresolved_configuration_still_fails_closed"
+    "test_scope_controls.ScopeControlTests.test_unresolved_configuration_still_fails_closed",
+    "test_scope_controls_right.ScopeControlRightTests.test_transitive_document_composition_does_not_readmit_controls",
+    "test_scope_controls_right.ScopeControlRightTests.test_long_reference_chain_terminates_with_control_diagnostic",
+    "test_scope_controls_right.ScopeControlRightTests.test_control_subject_reached_through_evidence_is_mandatory",
+    "test_scope_controls_right.ScopeControlRightTests.test_relation_error_uses_identity_order_and_original_field_position",
+    "test_scope_controls_right.ScopeControlRightTests.test_error_is_independent_of_supplied_source_order",
+    "test_scope_controls_right.ScopeControlRightTests.test_new_control_dependency_invalidates_previous_success_without_fallback",
+    "test_scope_controls_right.ScopeControlRightTests.test_control_writes_leave_non_control_member_projection_unchanged",
+    "test_scope_controls_right.ScopeControlRightTests.test_unused_control_archive_is_not_promoted_by_inventory_presence",
+    "test_scope_controls_right.ScopeControlRightTests.test_project_reference_to_baseline_still_requires_archive_observation",
+    "test_scope_controls_right.ScopeControlRightTests.test_partial_omitted_control_outgoing_dependencies_are_not_traversed",
+    "test_scope_controls_right.ScopeControlRightTests.test_partial_boundary_hash_tracks_control_content",
+    "test_scope_controls_right.ScopeControlRightTests.test_strong_dependency_cannot_hide_behind_existing_partial_weak_edge",
+    "test_scope_controls_right.ScopeControlRightTests.test_plain_configured_specification_uses_same_admission_policy",
+    "test_scope_controls_right.ScopeControlRightTests.test_every_non_control_artifact_type_is_admissible",
+    "test_scope_controls_right.ScopeControlRightTests.test_guard_does_not_accept_raw_unvalidated_identity",
+    "test_scope_controls_right.ScopeControlRightTests.test_guard_does_not_accept_raw_descriptor",
+    "test_scope_controls_right.ScopeControlRightTests.test_control_cannot_be_mislabelled_as_current_review",
+    "test_scope_controls_right.ScopeControlRightTests.test_resource_identifier_resembling_control_id_is_not_an_artifact",
+    "test_scope_controls_right.ScopeControlRightTests.test_resource_cannot_replace_a_missing_subject_artifact",
+    "test_scope_controls_right.ScopeControlRightTests.test_active_resource_is_retained_despite_unrelated_controls",
+    "test_scope_controls_right.ScopeControlRightTests.test_partial_reader_rejects_local_control_even_without_relation",
+    "test_scope_controls_right.ScopeControlRightTests.test_partial_reader_allows_control_as_omitted_origin_target",
+    "test_scope_controls_right.ScopeControlRightTests.test_partial_reader_applies_guard_to_configuration_wrapper",
+    "test_scope_controls_right.ScopeControlRightTests.test_partial_reader_does_not_exclude_project_controls",
+    "test_scope_controls_right.ScopeControlRightTests.test_query_scope_may_select_control_without_specification_rule",
+    "test_scope_controls_right.ScopeControlRightTests.test_error_has_no_unrelated_confidential_text",
+    "test_scope_controls_right.ScopeControlRightTests.test_repeated_rejection_is_stable_without_state_change",
+    "test_scope_controls_right.ScopeControlRightTests.test_locale_and_timezone_do_not_modify_admission",
+    "test_scope_controls_right.ScopeControlRightTests.test_partial_reader_control_source_is_not_allowed_via_self_contained_list",
+    "test_scope_controls_right.ScopeControlRightTests.test_portable_distributions_preserve_control_diagnostic_and_no_writes"
   ],
   "open_items": [
     "Actual configuration/applicability evaluation, live complete resource providers and end-to-end no-write proposal gates remain in later steps. Pure guard already recognizes a configuration wrapper around specification.",
