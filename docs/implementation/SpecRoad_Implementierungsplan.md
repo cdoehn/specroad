@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 114
-last_completed_plan_commit: 3.g.C
-next_plan_commit: 3.h.W
+implementation_plan_commits_completed: 115
+last_completed_plan_commit: 3.h.W
+next_plan_commit: 3.h.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1504,7 +1504,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.h.W – Let it Work
 
-- [ ] **3.h.W** · Position **115/885** · Voraussetzung: `3.g.C`.
+- [x] **3.h.W** · Position **115/885** · Voraussetzung: `3.g.C`.
 **Exakte Commit-Message:** `3.h.W feat(graph): Schwache Kanten und Boundary References aufbauen`
 
 **Umsetzung:** Closed- und Partial-Behandlung schwacher Relationen und vollständige Boundary-Tupel implementieren.

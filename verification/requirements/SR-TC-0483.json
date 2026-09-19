@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0483",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0033",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-WEAK-BOUNDARY-v1"
+  ],
+  "preconditions": [
+    "Explicit source bytes and complete dependency observations; no live inventory or origin-root authentication."
+  ],
+  "steps": [
+    "Resolve closed/partial policy and check exact omitted-target bindings without weakening required edges."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein partielles Bundle MUSS Ursprungmodellwurzel, partiellen Scope Descriptor, partielle Modellwurzel und Boundary References speichern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Closure and seven-field boundary values over supplied observations; not archive publication, root authentication, lifecycle or write permission."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,40 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_scope_closure.ScopeClosureTests.test_partial_records_all_seven_boundary_fields",
+    "test_scope_closure.ScopeClosureTests.test_closed_includes_weak_target_without_boundary",
+    "test_scope_closure.ScopeClosureTests.test_conflict_with_other_type_is_a_valid_boundary",
+    "test_scope_closure.ScopeClosureTests.test_closed_continues_through_weak_and_strong_edges",
+    "test_scope_closure.ScopeClosureTests.test_partial_does_not_expand_omitted_targets_outgoing_relations",
+    "test_scope_closure.ScopeClosureTests.test_closed_cycle_terminates_with_single_visits",
+    "test_scope_closure.ScopeClosureTests.test_internal_weak_target_does_not_create_boundary",
+    "test_scope_closure.ScopeClosureTests.test_later_strong_reachability_makes_weak_edge_internal",
+    "test_scope_closure.ScopeClosureTests.test_distinct_edges_to_same_omitted_target_keep_both_ids",
+    "test_scope_closure.ScopeClosureTests.test_boundary_order_is_independent_of_input_relation_order",
+    "test_scope_closure.ScopeClosureTests.test_empty_selection_is_empty",
+    "test_scope_closure.ScopeClosureTests.test_project_scope_has_no_artificial_boundaries_between_included_nodes",
+    "test_scope_closure.ScopeClosureTests.test_closed_includes_resources_used_by_weak_target",
+    "test_scope_closure.ScopeClosureTests.test_current_review_of_partial_edge_is_still_mandatory",
+    "test_scope_closure.ScopeClosureTests.test_closed_evidence_target_includes_subject_and_attachment",
+    "test_scope_closure.ScopeClosureTests.test_retired_weak_targets_are_included_when_closed",
+    "test_scope_closure.ScopeClosureTests.test_unreachable_weak_sources_do_not_contribute_boundaries",
+    "test_scope_closure.ScopeClosureTests.test_reverse_relations_are_not_fabricated",
+    "test_scope_closure.ScopeClosureTests.test_original_strong_only_api_keeps_weak_edges_pending",
+    "test_scope_closure.ScopeClosureTests.test_boundary_factory_rejects_strong_relation",
+    "test_scope_closure.ScopeClosureTests.test_boundary_factory_rejects_wrong_target_record",
+    "test_scope_closure.ScopeClosureTests.test_missing_origin_target_is_error_even_for_partial",
+    "test_scope_closure.ScopeClosureTests.test_boundary_requires_real_relation_id_and_hash",
+    "test_scope_closure.ScopeClosureTests.test_boundary_rejects_malformed_hash_and_unknown_fields",
+    "test_scope_closure.ScopeClosureTests.test_boundary_rejects_mismatched_type_and_project",
+    "test_scope_closure.ScopeClosureTests.test_boundary_rejects_self_reference_and_empty_reason",
+    "test_scope_closure.ScopeClosureTests.test_boundary_value_is_owned_and_immutable",
+    "test_scope_closure.ScopeClosureTests.test_result_data_mutation_does_not_change_observation",
+    "test_scope_closure.ScopeClosureTests.test_input_original_bytes_stay_unchanged",
+    "test_scope_closure.ScopeClosureTests.test_origin_hash_binds_full_target_including_revision"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate actual partial bundle export, verified origin/partial roots and archive reader in M15; full control exclusions in 3.i and normative scope-hash assembly in 3.j remain distinct.",
+    "Validation of untrusted boundary declarations and fresh-observation replay is the next R commit."
   ]
 }

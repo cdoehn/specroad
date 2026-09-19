@@ -178,7 +178,7 @@ def _check_seeds(seeds, bindings, query_page):
     # bound QuerySeedPage and preserves the resolver's actual page order.
 
 
-def resolve_strong_closure(seeds, bindings, *, query_page=None):
+def _resolve_closure_members(seeds, bindings, *, query_page=None, follow_weak=False):
     """Compute every strong reachable node or raise, without returning a prefix.
 
     Every reached usage/review observation must be explicit. Resource descriptors
@@ -219,6 +219,8 @@ def resolve_strong_closure(seeds, bindings, *, query_page=None):
                     targets.append(artifact_node(relation.target))
                 elif relation.type in WEAK_RELATIONS:
                     weak.add((node.identity, relation_id, relation.target))
+                    if follow_weak:
+                        targets.append(artifact_node(relation.target))
                 else:
                     raise ModelError('unsupported_closure_relation')
             targets.extend(_field_dependencies(record, bindings, records))
@@ -236,9 +238,15 @@ def resolve_strong_closure(seeds, bindings, *, query_page=None):
                     for identity in artifact_ids)
     members += tuple(ClosureMember(resource_node(identity), resources[identity].sha256, resources[identity].version)
                      for identity in resource_ids)
-    return StrongClosure(seeds, bindings.fingerprint, artifact_ids, resource_ids, attachments,
-                         tuple(sorted(weak, key=lambda edge: tuple(item.encode('utf-8') for item in edge))),
-                         frontier.processing_order, members)
+    return dict(seeds=seeds, bindings_sha256=bindings.fingerprint,
+                artifact_ids=artifact_ids, resource_ids=resource_ids, attachments=attachments,
+                pending_weak_relations=tuple(sorted(weak, key=lambda edge: tuple(item.encode('utf-8') for item in edge))),
+                processing_order=frontier.processing_order, members=members)
+
+
+def resolve_strong_closure(seeds, bindings, *, query_page=None):
+    """Retain the strong-only API; weak edges remain pending regardless of policy."""
+    return StrongClosure(**_resolve_closure_members(seeds, bindings, query_page=query_page))
 
 
 def require_strong_closure_current(observation, seeds, bindings, *, query_page=None):

@@ -16,7 +16,8 @@
     "SR-FIX-SCHEMA-CATALOG-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-SCOPE-SEEDS-v1",
-    "SR-FIX-STRONG-CLOSURE-v1"
+    "SR-FIX-STRONG-CLOSURE-v1",
+    "SR-FIX-WEAK-BOUNDARY-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -82,6 +83,10 @@
     "SR-FIX-STRONG-CLOSURE-v1": {
       "provider": "tests/support/closure.py:observe",
       "kind": "Synthetic explicit resource-use, attachment and current-review observations bound to source bytes; not authentic freshness decisions, live inventory or writes."
+    },
+    "SR-FIX-WEAK-BOUNDARY-v1": {
+      "provider": "tests/support/boundary.py:selection",
+      "kind": "Owned source inventories and explicit policy selections; not authenticated bundle provenance or live project completeness."
     }
   }
 }
