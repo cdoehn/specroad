@@ -48,3 +48,12 @@ evidence subjects, coexistence of weak/strong edges, current-review type misuse,
 passive identifier-looking strings, stable repeated diagnostics and relocated
 module/zipapp execution. The process regression returns the model error's code 3;
 no new CLI command or proposal workflow is implied.
+
+## Clean boundary
+
+`scope_admission` owns the permanent type policy and structured model error;
+`_admission_frontier` composes that gate with the existing identity worklist;
+`strong_closure` enumerates the actual relation/field/resource dependencies.
+Every seed and dependency is admitted before scheduling, including repeated
+references. Partial-source validation uses the same policy without admitting
+its origin-only records. W/R tests and their expected results are unchanged.
