@@ -9,8 +9,8 @@ from dataclasses import dataclass
 
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
-from ..model.identity_values import ArtifactIdentity
 from .boundaries import BoundaryReference
+from ._boundary_contract import require_boundary_match
 from .references import RelationReferences, ResolvedRelation
 from .relations import SourceRelations
 from .scope_descriptors import ScopeDescriptor
@@ -43,12 +43,6 @@ def _sources(values):
     if len(prefixes) > 1:
         raise ModelError('mixed_project_prefix')
     return by_id
-
-
-def _target_identity(value):
-    token = value['target_id'].rsplit('-', 1)[-1]
-    scheme = 'legacy-sequential-v1' if len(token) == 4 else 'random128-v1'
-    return ArtifactIdentity(value['target_id'], scheme, value['target_type'], value['target_id'].split('-')[0])
 
 
 @dataclass(frozen=True)
@@ -107,11 +101,8 @@ def validate_boundary_references(sources, declarations, *, descriptor, origin_so
             boundary = boundaries.get(key)
             if boundary is None:
                 raise ModelError('boundary_reference_missing', path=source.path, pointer='/relations')
-            data = boundary.data
-            if data['relation_type'] != relation.type:
-                raise ModelError('boundary_reference_mismatch')
-            # Endpoint shape and matrix checks do not assert target existence.
-            ResolvedRelation(relation, source.identity, _target_identity(data))
+            # Shared endpoint contract does not assert target existence.
+            require_boundary_match(boundary.data, relation)
             used.add(key)
     if used != set(boundaries):
         raise ModelError('unexpected_boundary_reference')

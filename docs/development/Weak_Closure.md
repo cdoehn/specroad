@@ -65,3 +65,11 @@ with all three seeds and both policies. Separate cases cover cycles, a chain of
 1,100 nodes, 141 boundary records, query pagination, missing providers, origin
 changes and real execution in moved module/zipapp distributions. These are
 behavioral checks, not assertions on documentation or human-readable output.
+
+## Clean structure
+
+`_boundary_contract` owns the passive field/endpoint rules; `boundaries` owns
+immutable values and origin-based generation; `boundary_validation` owns exact
+local/declaration matching and optional origin-content checks. Generation and
+partial readers share the same endpoint contract. No W/R test or expected value
+changes for this cleanup.

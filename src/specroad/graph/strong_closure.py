@@ -179,8 +179,10 @@ def _check_seeds(seeds, bindings, query_page):
 
 
 def _resolve_closure_members(seeds, bindings, *, query_page=None, follow_weak=False):
-    """Compute every strong reachable node or raise, without returning a prefix.
+    """Shared membership walk, optionally also following weak outgoing edges.
 
+    The public strong-only API leaves weak edges pending. The policy-aware API
+    uses the same dependency rules and constructs boundaries after this walk.
     Every reached usage/review observation must be explicit. Resource descriptors
     are provided by trusted readers; this function does not open their paths or
     infer current reviews from persisted maturity fields. Retired/rejected nodes
