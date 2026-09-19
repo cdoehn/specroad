@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 120
-last_completed_plan_commit: 3.i.C
-next_plan_commit: 3.j.W
+implementation_plan_commits_completed: 121
+last_completed_plan_commit: 3.j.W
+next_plan_commit: 3.j.R
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1574,7 +1574,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.j.W – Let it Work
 
-- [ ] **3.j.W** · Position **121/885** · Voraussetzung: `3.i.C`.
+- [x] **3.j.W** · Position **121/885** · Voraussetzung: `3.i.C`.
 **Exakte Commit-Message:** `3.j.W feat(graph): Scope-Hash und fachliche Vergleichsprimitiven aufbauen`
 
 **Umsetzung:** Scopehash sowie reine direkte Impact- und Felddiff-Kerne für sichere Change Plans bereitstellen.

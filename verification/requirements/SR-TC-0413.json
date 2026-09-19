@@ -7,18 +7,21 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-MODEL-MANIFEST-v1"
+    "SR-FIX-MODEL-MANIFEST-v1",
+    "SR-FIX-SCOPE-COMPARISON-v1"
   ],
   "preconditions": [
-    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof."
+    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof.",
+    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority."
   ],
   "steps": [
-    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance."
+    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance.",
+    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Scope-Hash MUSS Scope Descriptor, enthaltene Ressourcen und geordnete Boundary References binden.",
-    "scope": "Partial model-input/hash binding, not resolved scope completeness, full policy composition or transaction authorization."
+    "scope": "Pure supplied-input primitives. Complete CLI/base providers, evaluation-derived currency, effective-profile and platform approval remain separate."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -46,9 +49,15 @@
     "test_model_root_right.ModelRootRightTests.test_boundary_content_and_origin_hash_change_both_hashes",
     "test_model_root_right.ModelRootRightTests.test_boundary_order_uses_utf8_source_relation_target",
     "test_model_root_right.ModelRootRightTests.test_closed_scope_rejects_boundaries",
-    "test_model_root_right.ModelRootRightTests.test_strong_relation_cannot_be_weakened_to_boundary"
+    "test_model_root_right.ModelRootRightTests.test_strong_relation_cannot_be_weakened_to_boundary",
+    "test_scope_comparison.ScopeComparisonTests.test_scope_hash_binds_transitive_members",
+    "test_scope_comparison.ScopeComparisonTests.test_scope_hash_preserves_existing_manifest_contract",
+    "test_scope_comparison.ScopeComparisonTests.test_scope_hash_ignores_unselected_unconnected_artifact",
+    "test_scope_comparison.ScopeComparisonTests.test_boundary_target_hash_changes_partial_scope_hash",
+    "test_scope_comparison.ScopeComparisonTests.test_source_iteration_order_is_not_semantic",
+    "test_scope_comparison.ScopeComparisonTests.test_scope_hash_is_sha256_of_the_defined_scope_projection"
   ],
   "open_items": [
-    "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."
+    "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."
   ]
 }

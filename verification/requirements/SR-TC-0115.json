@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0115",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SCOPE-COMPARISON-v1"
+  ],
+  "preconditions": [
+    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority."
+  ],
+  "steps": [
+    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der semantische Diff MUSS mindestens Hinzufügen, Retirement, Feldänderung, Grenzwertänderung, Timing-Verschärfung oder -Lockerung, Scope- oder Applicability-Änderung, Ausnahmeänderung, Relationsänderung, Dokumentstruktur- oder Positionsänderung, Statusänderung, Verifikationsänderung, Evidence-Aktualitätsänderung und Code-Referenzänderung unterscheiden, sofern strukturierte Felder diese Klassifikation erlauben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure supplied-input primitives. Complete CLI/base providers, evaluation-derived currency, effective-profile and platform approval remain separate."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_scope_comparison.ScopeComparisonTests.test_new_artifact_is_added",
+    "test_scope_comparison.ScopeComparisonTests.test_missing_artifact_is_removed_not_assumed_retired",
+    "test_scope_comparison.ScopeComparisonTests.test_scalar_nested_field_delta_is_structured",
+    "test_scope_comparison.ScopeComparisonTests.test_changed_artifact_has_bound_before_and_after_values"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."
   ]
 }

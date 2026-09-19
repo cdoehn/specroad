@@ -181,9 +181,6 @@ def assemble_model_manifest(configuration, binding, resources, *, scope_descript
     profile_hash = canonical_json_sha256(effective_profile)
     config_hash = canonical_json_sha256(semantic_configuration(configuration))
     boundaries = _boundaries(boundary_references, descriptor, artifacts, configuration)
-    scope = {"project_id": binding.project_id, "scope_descriptor": descriptor,
-             "artifacts": artifacts, "resources": others, "attachments": attachments,
-             "boundary_references": boundaries, "configuration_sha256": config_hash,
-             "profile_sha256": profile_hash}
-    return ModelManifest({"model_manifest_version": "model-manifest-v1", **scope,
-                          "scope_sha256": canonical_json_sha256(scope)})
+    from .manifest_projection import project_manifest_value
+    return ModelManifest(project_manifest_value(binding.project_id, descriptor,
+        artifacts, others, attachments, boundaries, config_hash, profile_hash))
