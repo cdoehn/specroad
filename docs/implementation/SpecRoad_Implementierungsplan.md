@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 126
-last_completed_plan_commit: 3.k.C
-next_plan_commit: 4.a.W
+implementation_plan_commits_completed: 127
+last_completed_plan_commit: 4.a.W
+next_plan_commit: 4.a.R
 last_completed_numbered_bundle: 1
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1673,11 +1673,13 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 ### 4.a – SRX-AST und Kontextgrenze
 
 **Anforderungsbezug:** `SR-REQ-0286`–`SR-REQ-0287`, `SR-REQ-0517`.
+
+**Umsetzungsgrenze 4.a:** Reine Python-API mit versioniertem JSON-AST; ausschließlich `literal` ist ausführbar. Alle weiteren Operatoren bleiben bis zu ihren Planschritten ausdrücklich nicht unterstützt. Vier explizite Kontextwurzeln gemäß §9.9; aktive Profile und Statistikwerte sind passive vom Aufrufer bereitgestellte Projektprojektionen. Kein neuer persistenter Profilvertrag, keine implizite Konfigurationsauflösung, kein I/O und keine vollständige SRX-Freigabe. W baut eingefrorene Daten und echte Literalauswertung; R ergänzt den strikten Rohbyte-Einlesepfad und Sicherheits-/Portabilitätsregressionen; C trennt Parser, Validator, Kontext und Auswertung ohne Vertragsänderung.
 **Verifikationsbezug:** `SR-VER-0022`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
 #### 4.a.W – Let it Work
 
-- [ ] **4.a.W** · Position **127/885** · Voraussetzung: `3.k.C`.
+- [x] **4.a.W** · Position **127/885** · Voraussetzung: `3.k.C`.
 **Exakte Commit-Message:** `4.a.W feat(validation): SRX-AST und Kontextgrenze aufbauen`
 
 **Umsetzung:** Versionierten JSON-AST mit explizitem Artefakt-/Konfigurations-/Graphkontext einlesen.

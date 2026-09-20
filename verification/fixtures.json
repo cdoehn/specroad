@@ -20,7 +20,8 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-SCOPE-CONTROL-v1",
     "SR-FIX-SCOPE-COMPARISON-v1",
-    "SR-FIX-RELATION-OBLIGATIONS-v1"
+    "SR-FIX-RELATION-OBLIGATIONS-v1",
+    "SR-FIX-SRX-CONTEXT-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -102,6 +103,10 @@
     "SR-FIX-RELATION-OBLIGATIONS-v1": {
       "provider": "tests/test_relation_obligations.py:satisfied_fixture",
       "kind": "Synthetic common envelopes and explicit relation inventories, no actual approval or authenticated reviews."
+    },
+    "SR-FIX-SRX-CONTEXT-v1": {
+      "provider": "tests/test_srx_context.py:context_data",
+      "kind": "Owned explicit JSON context projections and literal expressions; no live profile/configuration resolution or full SRX approval."
     }
   }
 }
