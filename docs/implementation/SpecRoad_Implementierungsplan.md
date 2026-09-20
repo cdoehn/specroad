@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 128
-last_completed_plan_commit: 4.a.R
-next_plan_commit: 4.a.C
-last_completed_numbered_bundle: 1
+implementation_plan_commits_completed: 129
+last_completed_plan_commit: 4.a.C
+next_plan_commit: 4.b.W
+last_completed_numbered_bundle: 2
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -95,7 +95,7 @@ Bei Fehlern stoppt die Sequenz vor dem Commit des fehlerhaften Schritts. Zuvor i
 Nutzerentscheidung vom 20. September 2026: Ab dem Bundle für `3.k.W` bis
 `3.k.C` wird eine eigene laufende Bundle-Nummer geführt, beginnend mit `001`.
 Sie zählt ausgelieferte nummerierte Pakete, nicht W/R/C-Commits. Der bisherige
-Bestand wird nicht rückwirkend nummeriert. Das nächste neue Paket erhält `002`;
+Bestand wird nicht rückwirkend nummeriert. Das nächste neue Paket erhält `003`;
 bei erneuter Auslieferung derselben byteidentischen ZIP bleibt deren Nummer gleich.
 
 Die Chat-Antwort endet mit `SPECRoad-PATCH-NR: NNN`. Nur nach sämtlichen Gates,
@@ -1697,7 +1697,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.a.C – Make it Clean
 
-- [ ] **4.a.C** · Position **129/885** · Voraussetzung: `4.a.R`.
+- [x] **4.a.C** · Position **129/885** · Voraussetzung: `4.a.R`.
 **Exakte Commit-Message:** `4.a.C refactor(validation): SRX-AST und Kontextgrenze bereinigen`
 
 **Bereinigung:** AST-Parsing, Validierung und Auswertung separieren.

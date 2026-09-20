@@ -47,3 +47,11 @@ Python evaluation and reject cycles and foreign conversion objects. This is not
 the later configurable AST-node/depth/work policy. No arbitrary work truncation
 or artificial evaluation/test timeout is added. Complete SRX conformance,
 quantifier item scopes and phase-specific resource diagnostics remain open.
+
+## Component boundaries after the clean step
+
+`parsing` delegates raw syntax to the existing strict reader. `validation`
+checks the closed envelope, supported operator and context roots. `program`
+and `context` own immutable snapshots; `evaluation` returns a new literal
+value. The `core` facade and package-level API remain compatible. No operator,
+input acceptance rule, diagnostic or test expectation changes in this step.
