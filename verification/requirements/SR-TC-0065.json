@@ -4,19 +4,30 @@
   "requirement_id": "SR-REQ-0065",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0005",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELATION-OBLIGATIONS-v1"
+  ],
+  "preconditions": [
+    "Explicit immutable source records; no live project completeness or review selection is assumed."
+  ],
+  "steps": [
+    "Evaluate relation minima and/or compute Appendix J projections from unchanged input bytes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS profilabhängig fehlende erwartete Beziehungen als Diagnosen ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure minima and hash inputs only. Lifecycle enforcement, effective profile composition and review selection remain later integration work."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "missing_required_relation"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/relations",
+    "/maturity"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +39,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_relation_obligations_right.ProfileObligationTests.test_severity_is_preserved_without_granting_approval"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Connect to complete project validation, effective profiles and lifecycle gates.",
+    "Select authenticated/current relations reviews in the later dedicated review workflow."
   ]
 }

@@ -31,3 +31,33 @@ Die Hashes sind Integritätswerte über gelieferte Daten, keine Signaturen.
 
 Verhaltenstests prüfen fachliche Daten und unveränderte Eingaben; keine
 Konsolenformulierungen, Farben, Layouts, Dokumentation oder neue Testtimeouts.
+
+## Explizite profilabhängige Minima (R)
+
+`MinimumRelationRule` ist ein unveränderlicher interner Wert für bereits
+aufgelöste Regeln. Er führt keinen Code oder SRX aus und erfindet kein neues
+persistentes Profilformat. Der spätere Profilcompiler bleibt verantwortlich
+für Komposition, Auswahl und bedingte Regeln. Filter berücksichtigen alle
+Core-Artefakttypen, alle sieben Reifegrade, gespeicherte Beziehungstypen und
+bei Bedarf den Typ des gegenüberliegenden Endpunkts. Richtungen sind
+`outgoing`, `incoming` und `both`, relativ zum geprüften Artefakt.
+
+`minimum` zählt verschiedene gespeicherte Relations-IDs. Mehrere echte
+Beziehungen zum gleichen Ziel bleiben verschiedene Beziehungen; berechnete
+inverse Sichten erzeugen keine zusätzliche Identität. Alle Treffer-IDs und
+die deduplizierten Endpunkt-IDs bleiben für die Erklärung erhalten. Auch
+mehr als hundert Treffer werden nicht durch eine Anzeigegrenze abgeschnitten.
+Die Richtung nutzt die gespeicherte Art: Eine eingehende `supersedes`-Regel
+braucht keine illegale gespeicherte `superseded_by`-Relation.
+
+Die Diagnose behält die ausdrücklich gelieferte Severity `info`, `warning`
+oder `error`. `requirements_satisfied` prüft sämtliche Minima, `has_errors`
+nur verletzte Fehlerregeln. Beide sind von einer fachlichen Freigabe getrennt.
+Regeln mit der reservierten Kennung `core:` und doppelte Profilregel-IDs werden
+abgewiesen. Auch `minimum=0` kann die zusätzlich geprüften Core-Minima nicht
+abschalten. Nicht passende Filter erzeugen keine Pflicht für andere Typen.
+
+Die SHA-256-Werte für das gesamte gelieferte Quellmodell und die sortierte
+explizite Regelmenge sind getrennt. Sie beweisen keine Frische lokaler Dateien,
+keine Vollständigkeit eingehender Quellen außerhalb des übergebenen Bestands
+und keine Echtheit eines Profils. Dafür sind spätere aufrufende Gates zuständig.

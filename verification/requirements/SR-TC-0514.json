@@ -42,7 +42,8 @@
   "test_ids": [
     "test_relation_obligations.ContextWorkTests.test_lifecycle_change_does_not_change_review_context",
     "test_relation_obligations.ContextWorkTests.test_nested_status_and_audit_keys_remain_bound",
-    "test_relation_obligations.ContextWorkTests.test_other_relations_do_not_change_endpoint_context"
+    "test_relation_obligations.ContextWorkTests.test_other_relations_do_not_change_endpoint_context",
+    "test_relation_obligations_right.ReviewContextRightTests.test_all_excluded_top_level_fields"
   ],
   "open_items": [
     "Connect to complete project validation, effective profiles and lifecycle gates.",
