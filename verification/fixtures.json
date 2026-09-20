@@ -19,7 +19,8 @@
     "SR-FIX-STRONG-CLOSURE-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-SCOPE-CONTROL-v1",
-    "SR-FIX-SCOPE-COMPARISON-v1"
+    "SR-FIX-SCOPE-COMPARISON-v1",
+    "SR-FIX-RELATION-OBLIGATIONS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -97,6 +98,10 @@
     "SR-FIX-SCOPE-COMPARISON-v1": {
       "provider": "tests/test_scope_comparison.py:snapshot",
       "kind": "Owned value comparisons and explicitly supplied dependency observations; no real world semantic interpretation, source authenticity or writes."
+    },
+    "SR-FIX-RELATION-OBLIGATIONS-v1": {
+      "provider": "tests/test_relation_obligations.py:satisfied_fixture",
+      "kind": "Synthetic common envelopes and explicit relation inventories, no actual approval or authenticated reviews."
     }
   }
 }
