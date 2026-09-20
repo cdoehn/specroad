@@ -19,9 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 125
-last_completed_plan_commit: 3.k.R
-next_plan_commit: 3.k.C
+implementation_plan_commits_completed: 126
+last_completed_plan_commit: 3.k.C
+next_plan_commit: 4.a.W
+last_completed_numbered_bundle: 1
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -88,6 +89,26 @@ Der Chatbot wählt eine sichere zusammenhängende Strecke ab der nächsten offen
 Bei Fehlern stoppt die Sequenz vor dem Commit des fehlerhaften Schritts. Zuvor in diesem Bundle tatsächlich grün abgeschlossene Commits bleiben erhalten; kein destruktives Rollback. Der Result-Zustand wird ausgewertet und ein gebundener FIX beziehungsweise Restauftrag erstellt. Die Aussage „bei Fehler kein Commit“ gilt für den gerade fehlgeschlagenen Commit, nicht als erfundene globale Transaktion über bereits bestätigte Commits. FIX-Commits verändern den Planzähler nicht. Auf einen noch nicht geprüften aktuellen Result-Zustand wird kein Folgepaket geraten.
 
 **Dieses plananlegende Paket bleibt dagegen genau ein OFF-PLAN-Commit.** Noch keine der 885 Implementierungspositionen wird mitgeliefert oder als erledigt markiert.
+
+## BN-001 – sichtbare fortlaufende Bundle-Nummer
+
+Nutzerentscheidung vom 20. September 2026: Ab dem Bundle für `3.k.W` bis
+`3.k.C` wird eine eigene laufende Bundle-Nummer geführt, beginnend mit `001`.
+Sie zählt ausgelieferte nummerierte Pakete, nicht W/R/C-Commits. Der bisherige
+Bestand wird nicht rückwirkend nummeriert. Das nächste neue Paket erhält `002`;
+bei erneuter Auslieferung derselben byteidentischen ZIP bleibt deren Nummer gleich.
+
+Die Chat-Antwort endet mit `SPECRoad-PATCH-NR: NNN`. Nur nach sämtlichen Gates,
+allen vorgesehenen Commits und sauberem Endstand gibt der Entrypoint als seine
+letzte Zeile `SPECRoad-PATCH-NR: NNN | APPLIED SUCCESSFULLY` aus. Bei einem
+Abbruch darf diese Erfolgszeile nicht erscheinen. Der Fortschrittskopf hält die
+letzte vollständig abgeschlossene nummerierte Bundle-Folge fest.
+
+PatchHarbor selbst erzeugt **danach** seinen Result-Bericht und kann weitere
+Terminalzeilen ausgeben. Die Kennung bestätigt den Entrypoint-Abschluss, nicht
+einen erst danach möglicherweise scheiternden Result-Export. Run-Ergebnis,
+Git-Stand und frisches Result bleiben die belastbaren Prüfquellen; die sichtbare
+Nummer ersetzt keine SHA-256-, Repository- oder Replay-Bindung.
 
 ## Umsetzung, Pfade, Abhängigkeiten und Testgates
 
@@ -1627,7 +1648,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.k.C – Make it Clean
 
-- [ ] **3.k.C** · Position **126/885** · Voraussetzung: `3.k.R`.
+- [x] **3.k.C** · Position **126/885** · Voraussetzung: `3.k.R`.
 **Exakte Commit-Message:** `3.k.C refactor(graph): Pflichtbeziehungen und Reviewkontexte bereinigen`
 
 **Bereinigung:** Kontextprojektion, Relationstypregeln und spätere Reviewauswahl getrennt halten.

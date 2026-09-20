@@ -61,3 +61,12 @@ Die SHA-256-Werte für das gesamte gelieferte Quellmodell und die sortierte
 explizite Regelmenge sind getrennt. Sie beweisen keine Frische lokaler Dateien,
 keine Vollständigkeit eingehender Quellen außerhalb des übergebenen Bestands
 und keine Echtheit eines Profils. Dafür sind spätere aufrufende Gates zuständig.
+
+## Interne Trennung (C)
+
+Die öffentliche API bleibt gleich. Reine Hashdomänen liegen in
+`_review_projection`, unveränderliche Review-Beobachtungen in
+`review_context_values`, voraufgelöste Pflichtregeln in `_obligation_rules`
+und Prüfergebniswerte in `obligation_values`. Die gemeinsame Zählung verwendet
+bei Core- und Profilregeln dieselbe gespeicherte Relationsidentität. Keine
+Reviewauswahl oder automatische Freigabe wird in diese Bausteine aufgenommen.
