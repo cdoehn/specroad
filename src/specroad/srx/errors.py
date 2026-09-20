@@ -5,7 +5,8 @@ class SrxError(ValueError):
     """A rejected expression/context is not a Boolean false result."""
 
     def __init__(self, reason, *, rule_id, pointer="/expression",
-                 expected="JSON", actual="invalid", subject="expression"):
+                 expected="JSON", actual="invalid", subject="expression",
+                 position=None, line=None, column=None):
         super().__init__("SRX input rejected: " + reason)
         self.reason = reason
         self.rule_id = rule_id
@@ -14,11 +15,15 @@ class SrxError(ValueError):
         self.actual = actual
         self.subject = subject
         self.code = "SRV110"
+        self.position = position
+        self.line = line
+        self.column = column
 
     def diagnostic(self):
         return {"code": self.code, "reason": self.reason,
                 "rule_id": self.rule_id,
                 "expression_pointer": self.pointer if self.subject == "expression" else "/expression",
                 "input_pointer": self.pointer, "subject": self.subject,
+                "position": self.position, "line": self.line, "column": self.column,
                 "expected_type": self.expected, "actual_type": self.actual,
                 "recommendation": "Supply an explicit supported SRX 1.0 expression and JSON-only context."}

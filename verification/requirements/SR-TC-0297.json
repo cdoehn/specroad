@@ -40,7 +40,9 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_srx_context.SrxContextWorkTests.test_error_keeps_machine_context"
+    "test_srx_context.SrxContextWorkTests.test_error_keeps_machine_context",
+    "test_srx_context_right.SrxContextRightTests.test_nested_context_pointer_escapes",
+    "test_srx_context_right.SrxContextRightTests.test_diagnostics_are_repeatable_without_input_values"
   ],
   "open_items": [
     "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",

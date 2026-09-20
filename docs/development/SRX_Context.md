@@ -31,3 +31,19 @@ Structural and parser failures do not return false or a green rule result.
 
 Test policy: behavioral values and structured error contracts only. No output,
 layout or documentation tests and no test/suite timeouts.
+
+## Raw input and limits
+
+`parse_program(raw_bytes, rule_id=...)` and `parse_context` reuse the existing
+strict JSON reader. Duplicate keys, non-UTF-8 data, trailing data and invalid
+numbers yield structured SRV110 diagnostics, retaining available source offsets
+and rule identity. A program retains `source_bytes` unchanged. Programmatic
+construction has `source_bytes=None`. No raw bytes are inferred from a filename.
+The strict raw reader has its own existing numeric/structural constraints;
+programmatic JSON values do not claim to recover original numeric tokens.
+
+The immutable in-memory snapshots handle deep acyclic JSON without recursive
+Python evaluation and reject cycles and foreign conversion objects. This is not
+the later configurable AST-node/depth/work policy. No arbitrary work truncation
+or artificial evaluation/test timeout is added. Complete SRX conformance,
+quantifier item scopes and phase-specific resource diagnostics remain open.

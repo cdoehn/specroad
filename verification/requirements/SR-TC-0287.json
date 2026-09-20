@@ -42,7 +42,9 @@
   "test_ids": [
     "test_srx_context.SrxContextWorkTests.test_context_copies_each_root",
     "test_srx_context.SrxContextWorkTests.test_external_item_context_is_rejected",
-    "test_srx_context.SrxContextWorkTests.test_foreign_root_is_rejected"
+    "test_srx_context.SrxContextWorkTests.test_foreign_root_is_rejected",
+    "test_srx_context_right.SrxContextRightTests.test_relation_callback_is_never_called",
+    "test_srx_context_right.SrxContextRightTests.test_context_is_unmodified_by_multiple_evaluations"
   ],
   "open_items": [
     "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",
