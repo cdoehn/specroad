@@ -48,7 +48,8 @@
     "test_srx_collections.SrxCollectionsTests.test_in_scalar_array",
     "test_srx_collections.SrxCollectionsTests.test_contains_string",
     "test_srx_collections.SrxCollectionsTests.test_length_object",
-    "test_srx_collections.SrxCollectionsTests.test_count_array"
+    "test_srx_collections.SrxCollectionsTests.test_count_array",
+    "test_srx_collections_right.SrxCollectionsRightTests.test_full_arrays_are_not_truncated_by_display_limits"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."

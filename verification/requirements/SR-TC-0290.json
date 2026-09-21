@@ -48,7 +48,9 @@
     "test_srx_logic.SrxLogicTests.test_ordering_rejects_array_and_object",
     "test_srx_logic_right.SrxLogicRightTests.test_top_level_type_pairs_never_coerce",
     "test_srx_collections.SrxCollectionsTests.test_count_rejects_string",
-    "test_srx_collections.SrxCollectionsTests.test_no_boolean_number_coercion"
+    "test_srx_collections.SrxCollectionsTests.test_no_boolean_number_coercion",
+    "test_srx_collections_right.SrxCollectionsRightTests.test_string_signatures_reject_every_other_type",
+    "test_srx_collections_right.SrxCollectionsRightTests.test_length_and_count_have_distinct_type_signatures"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
