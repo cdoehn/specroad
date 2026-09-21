@@ -11678,3 +11678,7 @@ Die Produktfolge bleibt unverändert; danach folgt 4.d.W.
 
 Der letzte zurückgegebene Apply-Nachweis bestätigt Bundle 005. Die früheren
 Auslieferungen 003/004 wurden nicht als vollständiger Erfolg nachgetragen.
+
+CI-Nachweise verwenden frische exklusive Verzeichnisse. Fehler, fehlende/ungültige
+Berichte und nicht äquivalente Eingangsbindungen verhindern den Gesamterfolg.
+Ein gemeinsamer summary.json wird nur vom Controller veröffentlicht.

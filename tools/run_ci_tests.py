@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import stat
 from pathlib import Path
 import subprocess
 import sys
@@ -12,6 +13,24 @@ if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 from compare_test_runs import compare_reports
 from verification_support.process_environment import test_environment
+
+
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("Duplicate report key")
+        result[key] = value
+    return result
+
+
+def _load_report(path):
+    if not stat.S_ISREG(path.lstat().st_mode):
+        raise ValueError("CI report must be a regular file")
+    def invalid_number(value):
+        raise ValueError("Non-finite report value")
+    return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique_object,
+                      parse_constant=invalid_number)
 
 
 def run_reference(outdir, *, workers=4, environment=None, runner=None):
@@ -45,14 +64,22 @@ def run_reference(outdir, *, workers=4, environment=None, runner=None):
             code = 4
         checks.append({"mode": name, "workers": count, "exit_code": code})
     comparison = None
+    errors = []
     if all(check["exit_code"] == 0 for check in checks):
         try:
-            comparison = compare_reports([json.loads(path.read_text(encoding="utf-8")) for path in paths])
-        except (OSError, ValueError, TypeError, KeyError):
-            pass
-    return {"format_version": 1, "checks": checks, "comparison": comparison,
-            "suite_passed": comparison is not None,
-            "exit_code": 0 if comparison is not None else 1}
+            comparison = compare_reports([_load_report(path) for path in paths])
+        except (OSError, ValueError, TypeError, KeyError, AttributeError, RecursionError):
+            errors.append("invalid_or_non_equivalent_evidence")
+    else:
+        errors.append("gate_failed")
+    result = {"format_version": 1, "checks": checks, "comparison": comparison,
+              "errors": errors, "suite_passed": comparison is not None,
+              "exit_code": 0 if comparison is not None else 1}
+    # Only this controller publishes the summary, without replacing any artifact.
+    with (outdir / "summary.json").open("x", encoding="utf-8") as stream:
+        json.dump(result, stream, sort_keys=True, allow_nan=False)
+        stream.write("\n")
+    return result
 
 
 def main(argv=None):
