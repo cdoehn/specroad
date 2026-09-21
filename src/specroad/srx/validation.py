@@ -2,10 +2,10 @@
 
 from .errors import SrxError
 from ._json_values import json_type
+from .operators import OPERATOR_FIELDS, SUPPORTED_OPERATORS
 
 LANGUAGE = "srx"
 VERSION = "1.0"
-SUPPORTED_OPERATORS = ("literal", "field", "exists")
 CONTEXT_NAMES = ("artifact", "configuration", "project", "relations")
 
 
@@ -53,13 +53,12 @@ def _validate_expression(expression, rule_id):
         if type(op) is not str or op not in SUPPORTED_OPERATORS:
             raise SrxError("unsupported_operator", rule_id=rule_id, pointer=at+"/op",
                            expected="supported operator", actual=json_type(op))
+        _exact_fields(node, OPERATOR_FIELDS[op], rule_id=rule_id, pointer=at)
         if op == "literal":
-            _exact_fields(node, ("op", "value"), rule_id=rule_id, pointer=at)
-        elif op == "field":
-            _exact_fields(node, ("op", "context", "pointer"), rule_id=rule_id, pointer=at)
+            continue
+        if op == "field":
             checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at)
         else:
-            _exact_fields(node, ("op", "arg"), rule_id=rule_id, pointer=at)
             work.append((node["arg"], at+"/arg"))
 
 

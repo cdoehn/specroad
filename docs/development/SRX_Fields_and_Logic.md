@@ -34,3 +34,9 @@ nested inside JSON data, and no default replaces it. No per-test timeout.
 Regression cases cover RFC example pointers, malformed full paths, 10,000-digit
 out-of-range indices, raw duplicate keys, 1,400-level paths and expressions,
 foreign conversion hooks, immutable copies and relocated portable distributions.
+
+## 4.b.C
+
+Pointer grammar and traversal are centralized in pointers.py; fields.py owns
+named-context access. Closed operator-field signatures are shared by the AST
+validator. Public names, errors, Missing behavior and all W/R tests are unchanged.

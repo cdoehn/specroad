@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 131
-last_completed_plan_commit: 4.b.R
-next_plan_commit: 4.b.C
+implementation_plan_commits_completed: 132
+last_completed_plan_commit: 4.b.C
+next_plan_commit: 4.c.W
 last_completed_numbered_bundle: 2
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1732,7 +1732,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.b.C – Make it Clean
 
-- [ ] **4.b.C** · Position **132/885** · Voraussetzung: `4.b.R`.
+- [x] **4.b.C** · Position **132/885** · Voraussetzung: `4.b.R`.
 **Exakte Commit-Message:** `4.b.C refactor(validation): Feldzugriff, Missing und strikte Typen bereinigen`
 
 **Bereinigung:** Pointerauflösung und Typsignaturen zentral für alle Operatoren führen.
