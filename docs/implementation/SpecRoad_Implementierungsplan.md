@@ -22,7 +22,7 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 135
 last_completed_plan_commit: 4.c.C
 next_plan_commit: 4.d.W
-last_completed_numbered_bundle: 3
+last_completed_numbered_bundle: 5
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -61,22 +61,34 @@ Nutzerentscheidung vom 15. September 2026: `pytest` und `pytest-xdist` gehören 
 in die Entwicklungsgruppe. Der Core bleibt ohne diese Laufzeitabhängigkeiten. Bestehende
 `unittest.TestCase`-Tests werden durch pytest eingesammelt, nicht pauschal neu geschrieben.
 
-Der vollständige Entwicklungs-/Patch-Check ist `.venv/bin/python -I -B tools/run_tests.py`;
-er läuft standardmäßig mit `-n auto`. Die ausdrücklich serielle Referenz verwendet
-`--workers 0`. **Beim Entwicklungsrunner kein `-S` verwenden**, da dieses installierte
-Entwicklungsabhängigkeiten ausblenden würde. Isolierte Core-Subprozesse dürfen weiter `-S`
-verwenden. `pytest` selbst läuft ebenfalls standardmäßig parallel; Teilmengen sind jedoch
-keine vollständige Katalog-Abnahme.
+Der vollständige Entwicklungs-/Patch-Check ist `.venv/bin/python -I -B tools/run_tests.py`.
+**Nutzerentscheidung vom 21. September 2026:** lokal und in Patch-Bundles läuft die
+vollständige Suite ausschließlich parallel, standardmäßig mit vier xdist-Workern.
+Auch direktes pytest startet mit vier Workern. Explizite positive Workerzahlen und
+bewusst gewähltes `auto` bleiben möglich; es gibt keinen stillen seriellen Fallback.
+Der serielle Vollreferenzlauf (`--workers 0`) und der Parallel-/Seriell-Vergleich
+gehören ausschließlich in die vorbereitete GitHub-CI, nicht in lokale Clean-Gates.
+Jeder W-, R- und C-Zwischenstand behält sein vollständiges paralleles Verhaltenstest-Gate.
+Die kleinen isolierten Framework-Regressionsprozesse bleiben erhalten; sie sind
+keine zusätzliche serielle Ausführung der Produktsuite.
 
-Nur xdist verteilt Tests auf Prozesse; SpecRoad, PatchHarbor und Repo-Assist erhalten
-keinen eigenen Test-Scheduler. Tests isolieren Datei-/Prozesszustand. Nur der Controller
-veröffentlicht einen vollständigen, unverwechselbaren Nachweis. Übersprungene, fehlende,
-erwartet fehlgeschlagene Tests und Worker-Abbrüche sind keine bestandene Vollabnahme.
-CI führt sowohl den parallelen Standard als auch die serielle Referenz aus.
+**Beim Entwicklungsrunner kein `-S` verwenden**, da es installierte Entwicklungs-
+abhängigkeiten ausblenden würde. Isolierte Core-Unterprozesse dürfen weiter `-S`
+verwenden. Nur xdist verteilt Tests auf Prozesse; kein eigener Scheduler. Nur der
+Controller veröffentlicht die vollständigen Nachweise. Fehlende, übersprungene,
+erwartet fehlgeschlagene Tests oder Worker-Abbrüche sind keine bestandene Vollabnahme.
 TD-001 und das Verbot künstlicher Test-/Suite-Timeouts bleiben unverändert.
 
-Die Einrichtung ist **OFF-PLAN**: Produktfortschritt unverändert 42/885; nächster
-Produktcommit bleibt `2.a.W`. Anleitung und Audit: [Testentwicklung](../development/Testing.md).
+Die bestehende GitHub-Actions-Vorlage prüft CPython 3.10 bis 3.14 auf Ubuntu,
+parallel und seriell je Version mit gebundenem Nachweisvergleich. Der CI-Starter
+verlangt die explizite GitHub-Actions-Umgebung als Schutz vor versehentlichem
+lokalem Start (keine Sicherheits- oder Authentifizierungsgrenze).
+Es wird hier kein GitHub-Repository angelegt, kein Remote gesetzt und nichts gepusht.
+Eine vorbereitete Workflowdatei ist kein bereits ausgeführter CI-Nachweis.
+
+Die Testpolicy-Anpassung erfolgt getrennt als OFF-PLAN `TEST-POLICY.a.W/R/C` und
+zählt keine Produktposition hoch. Die ursprüngliche Testmigration bei 42/885
+bleibt historische Grundlage. Anleitung und Audit: [Testentwicklung](../development/Testing.md).
 
 ## BD-001 – flexible Anzahl eigenständiger Commits pro Bundle
 
@@ -95,7 +107,7 @@ Bei Fehlern stoppt die Sequenz vor dem Commit des fehlerhaften Schritts. Zuvor i
 Nutzerentscheidung vom 20. September 2026: Ab dem Bundle für `3.k.W` bis
 `3.k.C` wird eine eigene laufende Bundle-Nummer geführt, beginnend mit `001`.
 Sie zählt ausgelieferte nummerierte Pakete, nicht W/R/C-Commits. Der bisherige
-Bestand wird nicht rückwirkend nummeriert. Das nächste neue Paket erhält `004`;
+Bestand wird nicht rückwirkend nummeriert. Das aktuelle neue Paket erhält `006`;
 bei erneuter Auslieferung derselben byteidentischen ZIP bleibt deren Nummer gleich.
 
 Der Abschlussblock der Chat-Antwort wiederholt den zutreffenden grünen, gelben oder roten Statusbalken. Bei einer Auslieferung stehen darunter `SPECRoad-PATCH-NR: NNN` und als allerletzte Zeile der tatsächliche Patch-Download-Link. SHA-256 und Backupstatus stehen davor. Bei STOP gibt es weder ein neues Paket noch einen erfundenen Download-Link. Diese Nutzerentscheidung vom 20. September 2026 ersetzt die ältere widersprechende Darstellungsregel der beigelegten statischen Chatvorlage, nicht deren Sicherheitsvertrag. Nur nach sämtlichen Gates,
@@ -11656,3 +11668,13 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 Der Plan-Setup-Patch ändert nur `docs/implementation/SpecRoad_Implementierungsplan.md`. Die Spezifikation und der Prüfbericht bleiben byteidentisch. Für diese reine Planablage existiert noch keine Produktsuite; der Entrypoint prüft ausschließlich sichere Git-/Basis-/Payload-/Scopebindungen und erzeugt danach den einen OFF-PLAN-Commit. Er führt keine Darstellungs- oder Dokumentationstests aus, erzeugt keine Produktfreigabe und ruft weder PatchHarbor rekursiv noch externe Backupdienste vom Entwicklungsrechner aus auf.
 
 **Offen bleibt die gesamte Produktumsetzung: 885 Plan-Commits.** Umfangreiche feine Planung ist keine Zusage über notwendige Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+
+## Testpolicy-Nachtrag vom 21. September 2026
+
+`TEST-POLICY.a.W` setzt den lokalen Vier-Worker-Standard und den CI-Starter um.
+`TEST-POLICY.a.R` sichert Fehlerfälle und isolierte CI-Nachweise ab.
+`TEST-POLICY.a.C` führt die wiederverwendbare Ausführungskonfiguration zusammen.
+Die Produktfolge bleibt unverändert; danach folgt 4.d.W.
+
+Der letzte zurückgegebene Apply-Nachweis bestätigt Bundle 005. Die früheren
+Auslieferungen 003/004 wurden nicht als vollständiger Erfolg nachgetragen.

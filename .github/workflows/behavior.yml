@@ -28,21 +28,19 @@ jobs:
           python -m pip install uv==0.12.7
           uv venv --python python --no-python-downloads .venv
           uv pip install --python .venv/bin/python --link-mode copy --group dev
-      - name: Execute parallel behavior gate
-        run: .venv/bin/python -I -B tools/run_tests.py --evidence build/parallel-evidence.json
-      - name: Execute serial reference gate
-        if: success() || failure()
-        run: .venv/bin/python -I -B tools/run_tests.py --workers 0 --evidence build/serial-evidence.json
-      - name: Compare serial and parallel current-run evidence
-        run: .venv/bin/python -I -B tools/compare_test_runs.py build/parallel-evidence.json build/serial-evidence.json
+      - name: Execute parallel gate, serial CI reference and compare evidence
+        run: >-
+          .venv/bin/python -I -B tools/run_ci_tests.py
+          --workers 4
+          --outdir "${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}"
       - name: Preserve development evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: behavior-ubuntu-python-${{ matrix.python }}
           path: |
-            build/parallel-evidence.json
-            build/serial-evidence.json
+            ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/*.json
           if-no-files-found: error
           retention-days: 14
+      # Preparation only: no repository creation, remote or push by this file.
       # No presentation/doc tests or test/suite timeouts. Not a release gate.

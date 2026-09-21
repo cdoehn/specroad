@@ -11,10 +11,9 @@ Ein vollständiges transitive Lockfile wird damit noch nicht behauptet.
 uv venv --python python3 --no-python-downloads .venv
 uv pip install --python .venv/bin/python --link-mode copy --group dev
 .venv/bin/python -I -B tools/run_tests.py
-.venv/bin/python -I -B tools/run_tests.py --workers 0
 .venv/bin/python -I -B tools/run_tests.py --workers 4
 .venv/bin/python -m pytest
-.venv/bin/python -m pytest -n 0 tests/test_core.py
+.venv/bin/python -m pytest -n 4 tests/test_core.py
 ```
 
 Eine vorhandene `.venv` nicht löschen oder blind neu erstellen; nur die Installation der
@@ -23,7 +22,9 @@ PRoot. Der Runner nutzt niemals `-S`; isolierte Tests des abhängigkeitfreien Co
 schon. Die Testausführung selbst installiert nichts und braucht kein Netzwerk. Nur die
 vorherige Abhängigkeitsinstallation benötigt verfügbare Pakete oder einen gefüllten Cache.
 
-`auto` lässt xdist die Workerzahl bestimmen. Explizite Zahlen und
+Lokal gilt seit dem 21. September 2026 der Standard von vier Workern.
+Die vollständige serielle Referenz ist der CI vorbehalten, nicht jedem Clean-Commit.
+Nur explizites `auto` lässt xdist die Workerzahl bestimmen. Explizite Zahlen und
 `PYTEST_XDIST_AUTO_NUM_WORKERS` erlauben die Anpassung an vorhandene CPU-/Speicherressourcen.
 Es gibt keinen stillen seriellen Fallback, keine automatische Wiederholung abgestürzter
 Worker und keinen eigenen SpecRoad-Scheduler. Ein schnellerer Lauf ist nicht garantiert;
@@ -88,22 +89,27 @@ Es werden keine künstlichen Test- oder Suite-Timeouts eingeführt.
 - https://pytest-xdist.readthedocs.io/en/stable/how-it-works.html
 - https://docs.astral.sh/uv/pip/packages/
 
-## Serial-/Parallelvergleich und Abbruchregressionen
+## CI-Referenz und Abbruchregressionen
 
 `tools/compare_test_runs.py` vergleicht bereits entstandene Berichte. Es verteilt selbst
 keine Tests. Die Berichte müssen unabhängige Run-IDs, identische Eingangsbindungen,
 identische Testmengen und Identitäten sowie ausschließlich bestandene Ergebnisse haben.
 Unterschiedliche Worker-Zuordnung ist erlaubt; fehlende oder doppelte Tests sind es nicht.
 
-```sh
-.venv/bin/python -I -B tools/run_tests.py --evidence build/parallel-evidence.json
-.venv/bin/python -I -B tools/run_tests.py --workers 0 --evidence build/serial-evidence.json
-.venv/bin/python -I -B tools/compare_test_runs.py build/parallel-evidence.json build/serial-evidence.json
-```
+Der Workflow `.github/workflows/behavior.yml` ruft in GitHub Actions
+`tools/run_ci_tests.py --outdir <frisches-Verzeichnis>` auf. Er führt je Python-
+Version erst die vollständige Suite parallel, danach seriell und den Nachweisvergleich
+aus. Lokal wird dieser Starter nicht verwendet. Sein GitHub-Umgebungscheck ist nur
+ein Schutz vor versehentlichem Start, keine Ausführungs-Sandbox. Ein serielles
+Scheitern darf einen vorherigen parallelen Fehler niemals als Erfolg überschreiben.
 
-Die Migrations-Abnahme wiederholt die vollständige Suite seriell und mit 2, 4, erneut
-2 und automatisch gewählten Workern; dabei variieren auch die Python-Hash-Seeds. Sämtliche
-Berichte müssen fachlich übereinstimmen. CI verwendet je Python-Version parallel und seriell.
+Die Python-Matrix 3.10–3.14 bleibt vorbereitet; ein GitHub-Repository und ein Push
+werden erst in einem späteren separaten Auftrag eingerichtet. Erst ein dortiger
+Workflowlauf kann den CI-Erfolg bestätigen. Ein lokaler paralleler Testlauf genügt
+nicht als Nachweis der seriellen oder plattformübergreifenden Abnahme.
+
+Historisch verglich die Migrations-Abnahme seriell/2/4/auto mit verschiedenen
+Hash-Seeds. Künftige vollständige Vergleiche gehören ausschließlich in die CI.
 
 Regressionsfälle starten absichtlich eigene pytest-Prozesse mit lokalen Mini-Fixtures:
 ein absichtlicher Worker-Absturz, unterschiedliche Worker-Sammlungen, Collection-Fehler,
