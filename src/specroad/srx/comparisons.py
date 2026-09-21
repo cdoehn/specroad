@@ -8,15 +8,24 @@ COMPARISONS = ("eq", "ne", "lt", "lte", "gt", "gte")
 
 
 def _equal(left, right):
-    """Strict deep JSON equality, after full validation of both operands."""
-    kind = json_type(left)
-    if kind != json_type(right):
-        return False
-    if kind == "array":
-        return len(left) == len(right) and all(_equal(a, b) for a, b in zip(left, right))
-    if kind == "object":
-        return left.keys() == right.keys() and all(_equal(left[key], right[key]) for key in sorted(left))
-    return left == right
+    """Iterative deep JSON equality; keys visited in stable codepoint order."""
+    work = [(left, right)]
+    while work:
+        left, right = work.pop()
+        kind = json_type(left)
+        if kind != json_type(right):
+            return False
+        if kind == "array":
+            if len(left) != len(right):
+                return False
+            work.extend(reversed(tuple(zip(left, right))))
+        elif kind == "object":
+            if left.keys() != right.keys():
+                return False
+            work.extend((left[key], right[key]) for key in sorted(left, reverse=True))
+        elif left != right:
+            return False
+    return True
 
 
 def compare(op, left, right, *, rule_id, pointer="/expression"):

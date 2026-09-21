@@ -40,7 +40,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_srx_logic.SrxLogicTests.test_and_false_skips_bad_value",
-    "test_srx_logic.SrxLogicTests.test_or_true_skips_bad_value"
+    "test_srx_logic.SrxLogicTests.test_or_true_skips_bad_value",
+    "test_srx_logic_right.SrxLogicRightTests.test_and_evaluates_fields_left_to_right",
+    "test_srx_logic_right.SrxLogicRightTests.test_or_stops_before_bad_field"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."

@@ -44,7 +44,8 @@
     "test_srx_fields.SrxFieldTests.test_null_is_not_missing",
     "test_srx_fields_right.SrxFieldRightTests.test_missing_is_not_null_operand",
     "test_srx_logic.SrxLogicTests.test_eq_missing_is_false",
-    "test_srx_logic.SrxLogicTests.test_eq_null"
+    "test_srx_logic.SrxLogicTests.test_eq_null",
+    "test_srx_logic_right.SrxLogicRightTests.test_missing_in_nested_json_is_rejected"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."

@@ -60,3 +60,15 @@ normalization affects string equality/ordering. Array order is significant.
 The expression API remains in-memory, without filesystem or environment lookup.
 These operators do not add arithmetic, quantifiers, graph operators, a CLI rule
 command, profile composition or an assertion that all SRX requirements are done.
+
+## 4.c.R
+
+Deep equality is iterative as well as expression execution. Instrumented field
+access proves stable operand order and that decisive and/or operands prevent
+later evaluation; a Missing comparison operand does not skip evaluation of the
+other operand. Invalid full AST syntax remains an upfront error in all branches.
+
+Regression cases include all top-level kind pairs, Missing versus each value
+kind, all three-Boolean truth combinations, nested Boolean/Number distinctions,
+1,600-level comparisons and logical expressions, 601-operand conjunctions,
+finite numerical boundaries, malicious hooks and relocated distributions.

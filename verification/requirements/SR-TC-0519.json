@@ -44,7 +44,8 @@
     "test_srx_fields.SrxFieldTests.test_exists_false_zero_and_empty_values",
     "test_srx_fields_right.SrxFieldRightTests.test_string_number_is_not_numeric_operand",
     "test_srx_logic.SrxLogicTests.test_nested_boolean_is_not_number",
-    "test_srx_logic.SrxLogicTests.test_numeric_comparison_does_not_round_integer"
+    "test_srx_logic.SrxLogicTests.test_numeric_comparison_does_not_round_integer",
+    "test_srx_logic_right.SrxLogicRightTests.test_nested_kind_changes_are_unequal"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
