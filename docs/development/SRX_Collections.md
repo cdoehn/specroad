@@ -28,3 +28,7 @@ Die R-Abnahme umfasst leere/Unicode-Werte, Missing-Suchwerte, strikte Operandent
 linksläufige Argumentauswertung, JSON-Fremdobjektabwehr, tiefe Strukturen und portable
 Distributionen. Ein Typfehler in einem bereits besuchten heterogenen Arrayelement
 bleibt ein SRV110-Fehler; spätere Elemente werden dann nicht mehr ausgewertet.
+
+Die C-Bereinigung verwendet gemeinsame typisierte Größen-, Stringpaar- und
+Mitgliedschaftsbausteine. Parser und Auswerter entnehmen die Stelligkeit demselben
+statischen Operatorregister; es gibt keine dynamische Registrierung.

@@ -23,3 +23,8 @@ OPERATOR_FIELDS = MappingProxyType({
     "count": ("op", "arg"),
 })
 SUPPORTED_OPERATORS = tuple(OPERATOR_FIELDS)
+
+# Static arities shared by validation and the evaluator. No dynamic registration.
+UNARY_OPERATORS = tuple(op for op, names in OPERATOR_FIELDS.items() if names == ("op", "arg"))
+BINARY_OPERATORS = tuple(op for op, names in OPERATOR_FIELDS.items()
+                         if names == ("op", "args") and op not in ("and", "or"))

@@ -1,6 +1,6 @@
 """Private iterative machine over validated owned AST/context values."""
 
-from .comparisons import COMPARISONS
+from .operators import UNARY_OPERATORS, BINARY_OPERATORS
 from .errors import SrxError
 from ._operations import apply_values, boolean_value, leaf_value
 
@@ -31,10 +31,10 @@ def evaluate_expression(expression, roots, *, rule_id):
         op = node["op"]
         if op in ("literal", "field"):
             values.append(leaf_value(node, roots, rule_id=rule_id, at=at))
-        elif op in ("exists", "not", "length", "count"):
+        elif op in UNARY_OPERATORS:
             work.append(("apply", (op, 1), at))
             work.append(("visit", node["arg"], at+"/arg"))
-        elif op in COMPARISONS or op in ("in", "contains", "starts_with", "ends_with"):
+        elif op in BINARY_OPERATORS:
             work.append(("apply", (op, 2), at))
             work.append(("visit", node["args"][1], at+"/args/1"))
             work.append(("visit", node["args"][0], at+"/args/0"))

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 137
-last_completed_plan_commit: 4.d.R
-next_plan_commit: 4.d.C
-last_completed_numbered_bundle: 5
+implementation_plan_commits_completed: 138
+last_completed_plan_commit: 4.d.C
+next_plan_commit: 4.e.W
+last_completed_numbered_bundle: 6
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -107,8 +107,8 @@ Bei Fehlern stoppt die Sequenz vor dem Commit des fehlerhaften Schritts. Zuvor i
 Nutzerentscheidung vom 20. September 2026: Ab dem Bundle für `3.k.W` bis
 `3.k.C` wird eine eigene laufende Bundle-Nummer geführt, beginnend mit `001`.
 Sie zählt ausgelieferte nummerierte Pakete, nicht W/R/C-Commits. Der bisherige
-Bestand wird nicht rückwirkend nummeriert. Das aktuelle neue Paket erhält `006`;
-bei erneuter Auslieferung derselben byteidentischen ZIP bleibt deren Nummer gleich.
+Bestand wird nicht rückwirkend nummeriert. Bei erneuter Auslieferung derselben byteidentischen ZIP bleibt deren Nummer gleich.
+Die höchste bereits ausgelieferte Nummer ist auch bei Fortsetzungsbundles zu berücksichtigen.
 
 Der Abschlussblock der Chat-Antwort wiederholt den zutreffenden grünen, gelben oder roten Statusbalken. Bei einer Auslieferung stehen darunter `SPECRoad-PATCH-NR: NNN` und als allerletzte Zeile der tatsächliche Patch-Download-Link. SHA-256 und Backupstatus stehen davor. Bei STOP gibt es weder ein neues Paket noch einen erfundenen Download-Link. Diese Nutzerentscheidung vom 20. September 2026 ersetzt die ältere widersprechende Darstellungsregel der beigelegten statischen Chatvorlage, nicht deren Sicherheitsvertrag. Nur nach sämtlichen Gates,
 allen vorgesehenen Commits und sauberem Endstand gibt der Entrypoint als seine
@@ -1814,7 +1814,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.d.C – Make it Clean
 
-- [ ] **4.d.C** · Position **138/885** · Voraussetzung: `4.d.R`.
+- [x] **4.d.C** · Position **138/885** · Voraussetzung: `4.d.R`.
 **Exakte Commit-Message:** `4.d.C refactor(validation): Strings, Mengen und Aggregationen bereinigen`
 
 **Bereinigung:** Wiederverwendbare typisierte Operatorbausteine schaffen.
