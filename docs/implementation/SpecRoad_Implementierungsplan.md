@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 130
-last_completed_plan_commit: 4.b.W
-next_plan_commit: 4.b.R
+implementation_plan_commits_completed: 131
+last_completed_plan_commit: 4.b.R
+next_plan_commit: 4.b.C
 last_completed_numbered_bundle: 2
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1723,7 +1723,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.b.R – Make it Right
 
-- [ ] **4.b.R** · Position **131/885** · Voraussetzung: `4.b.W`.
+- [x] **4.b.R** · Position **131/885** · Voraussetzung: `4.b.W`.
 **Exakte Commit-Message:** `4.b.R feat(validation): Feldzugriff, Missing und strikte Typen vervollständigen`
 
 **Vervollständigung:** Keine implizite Konvertierung oder dynamischen Feldnamen; fehlerhafte Pointer abweisen.

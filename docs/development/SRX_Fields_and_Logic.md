@@ -22,3 +22,15 @@ SrxProgram.value retains its literal-only meaning; contextual programs need
 
 This is read-only in-memory evaluation, not a rule engine CLI, file resolver,
 profile composer, global item context or a budget/checkpoint implementation.
+
+## 4.b.R
+
+`read_field` provides the same static selector validation for embedding callers.
+It accepts only the exact owned EvaluationContext type; no callbacks or attribute
+resolution are permitted. `require_type` exposes the SRX type boundary without
+converting values, with structured SRV110 type diagnostics. Missing cannot be
+nested inside JSON data, and no default replaces it. No per-test timeout.
+
+Regression cases cover RFC example pointers, malformed full paths, 10,000-digit
+out-of-range indices, raw duplicate keys, 1,400-level paths and expressions,
+foreign conversion hooks, immutable copies and relocated portable distributions.

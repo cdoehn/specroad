@@ -10,3 +10,7 @@ __all__ = ("LANGUAGE", "VERSION", "SUPPORTED_OPERATORS", "CONTEXT_NAMES",
 from .types import MISSING, value_type
 
 __all__ += ("MISSING", "value_type")
+
+from .fields import read_field
+from .types import require_type
+__all__ += ("read_field", "require_type")

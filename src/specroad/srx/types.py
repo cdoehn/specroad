@@ -25,3 +25,20 @@ def value_type(value, *, rule_id=None):
         return "missing"
     JsonSnapshot(value, rule_id=rule_id)
     return json_type(value)
+
+
+VALUE_TYPES = ("missing", "null", "boolean", "number", "string", "array", "object")
+
+
+def require_type(value, allowed, *, rule_id, pointer="/expression"):
+    """Operator type boundary with no truthiness, cast or value disclosure."""
+    from .errors import SrxError
+    if (type(allowed) is not tuple or not allowed
+            or any(type(name) is not str or name not in VALUE_TYPES for name in allowed)):
+        raise SrxError("invalid_type_signature", rule_id=rule_id, pointer=pointer,
+                       expected="explicit SRX type tuple", actual="invalid_signature")
+    actual = value_type(value, rule_id=rule_id)
+    if actual not in allowed:
+        raise SrxError("operand_type", rule_id=rule_id, pointer=pointer,
+                       expected=" or ".join(allowed), actual=actual)
+    return value

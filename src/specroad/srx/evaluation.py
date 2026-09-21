@@ -3,7 +3,7 @@
 from .program import SrxProgram
 from .context import EvaluationContext
 from .errors import SrxError
-from .fields import parse_pointer, resolve_tokens
+from .fields import checked_selector, resolve_tokens
 from .types import MISSING
 
 
@@ -26,8 +26,8 @@ def evaluate(program, context):
         if op == "literal":
             values.append(node["value"])
         elif op == "field":
-            tokens = parse_pointer(node["pointer"], rule_id=program.rule_id, at=at+"/pointer")
-            values.append(resolve_tokens(roots[node["context"]], tokens,
+            name, tokens = checked_selector(node["context"], node["pointer"], rule_id=program.rule_id, at=at)
+            values.append(resolve_tokens(roots[name], tokens,
                                          rule_id=program.rule_id, at=at+"/pointer"))
         else:
             work.append(("exists", None, at))

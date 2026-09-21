@@ -42,7 +42,7 @@ def _validate_document(data, rule_id):
 
 
 def _validate_expression(expression, rule_id):
-    from .fields import parse_pointer
+    from .fields import checked_selector
     work = [(expression, "/expression")]
     while work:
         node, at = work.pop()
@@ -57,10 +57,7 @@ def _validate_expression(expression, rule_id):
             _exact_fields(node, ("op", "value"), rule_id=rule_id, pointer=at)
         elif op == "field":
             _exact_fields(node, ("op", "context", "pointer"), rule_id=rule_id, pointer=at)
-            if type(node["context"]) is not str or node["context"] not in CONTEXT_NAMES:
-                raise SrxError("unknown_context", rule_id=rule_id, pointer=at+"/context",
-                               expected="explicit named context root", actual=json_type(node["context"]))
-            parse_pointer(node["pointer"], rule_id=rule_id, at=at+"/pointer")
+            checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at)
         else:
             _exact_fields(node, ("op", "arg"), rule_id=rule_id, pointer=at)
             work.append((node["arg"], at+"/arg"))

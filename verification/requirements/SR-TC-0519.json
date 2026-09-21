@@ -40,7 +40,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_all_value_kinds",
-    "test_srx_fields.SrxFieldTests.test_exists_false_zero_and_empty_values"
+    "test_srx_fields.SrxFieldTests.test_exists_false_zero_and_empty_values",
+    "test_srx_fields_right.SrxFieldRightTests.test_string_number_is_not_numeric_operand"
   ],
   "open_items": [
     "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."

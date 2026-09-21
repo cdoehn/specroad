@@ -40,7 +40,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_object_field",
-    "test_srx_fields.SrxFieldTests.test_slash_and_tilde_escaping"
+    "test_srx_fields.SrxFieldTests.test_slash_and_tilde_escaping",
+    "test_srx_fields_right.SrxFieldRightTests.test_rfc6901_string_examples"
   ],
   "open_items": [
     "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."

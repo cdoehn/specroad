@@ -40,7 +40,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_dynamic_pointer_rejected",
-    "test_srx_fields.SrxFieldTests.test_relative_pointer_rejected"
+    "test_srx_fields.SrxFieldTests.test_relative_pointer_rejected",
+    "test_srx_fields_right.SrxFieldRightTests.test_field_never_opens_paths"
   ],
   "open_items": [
     "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."
