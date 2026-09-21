@@ -7,9 +7,11 @@ expression runs once in the enclosing lexical scope. Each element is then
 bound to `item` for its predicate. The four supplied context roots are never
 modified. A public context or standalone `read_field` cannot supply `item`.
 
-The current W increment supports one quantifier layer. Nested quantifiers
-are explicitly rejected until the R increment; even unreachable malformed AST
-is rejected before evaluation. Operator-shaped literal JSON remains data.
+Nested quantifiers have lexical shadowing: the inner array expression sees the
+outer item; only its own predicate binds the inner item. Later expressions in
+the enclosing predicate continue with the outer binding. There is no dynamic
+outer-scope lookup or mutable global item. Even unreachable malformed AST is
+rejected before evaluation. Operator-shaped literal JSON remains data.
 
 Quantifiers visit every element in array order until the first evaluation error.
 This follows the B.2 each-element contract, not the separate short-circuit
@@ -27,3 +29,8 @@ new CLI command, structural budget, checkpoint or writing workflow is added.
 Development and bundle gates run the full suite only in parallel (four workers).
 The existing GitHub CI template keeps the serial reference and comparison;
 no repository is created and no CI execution is claimed here.
+
+R regressions cover all nine pairs of nested quantifiers over a bounded exhaustive
+Boolean corpus, deep expressions, complete ordered iteration, recovery after
+errors, concurrent reuse of immutable contexts and portable module/zipapp loads.
+These are development checks, not a full supported-platform release gate.

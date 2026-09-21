@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`any`, `all` und `none` MÜSSEN den in Anhang B.4 definierten geordneten Elementkontext und die dort bestimmten Ergebnisse für leere Arrays verwenden.",
-    "scope": "Ordered quantifiers and owned element scope; nested scope is explicitly unsupported in W."
+    "scope": "Ordered quantifiers and owned element scope; nested scope is checked including shadowing, restoration and deep iterative evaluation."
   },
   "expected_diagnostics": [
     "SRV110"
@@ -72,10 +72,46 @@
     "test_srx_quantifiers.SrxQuantifierTests.test_same_program_reused_without_leaking_elements",
     "test_srx_quantifiers.SrxQuantifierTests.test_boolean_truth_tables_up_to_six_elements",
     "test_srx_quantifiers.SrxQuantifierTests.test_versioned_positive_negative_and_empty_vectors",
-    "test_srx_quantifiers.SrxQuantifierTests.test_utf8_byte_program_is_supported"
+    "test_srx_quantifiers.SrxQuantifierTests.test_utf8_byte_program_is_supported",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_nested_array_reads_enclosing_item",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_inner_item_shadows_outer_item",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_outer_item_is_restored_after_inner_quantifier",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_outer_item_is_restored_after_empty_inner_quantifier",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_outer_item_survives_short_circuit_in_inner_predicate",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_multiple_nested_siblings_have_separate_bindings",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_three_lexical_levels_restore_each_parent",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_nested_scalar_item_has_no_outer_field_fallback",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_nested_null_item_is_a_real_binding",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_root_fields_named_item_do_not_leak_into_lexical_scope",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_dynamic_outer_context_reference_is_rejected",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_dynamic_pointer_is_rejected_inside_nested_predicate",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_relative_outer_escape_is_rejected",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_nested_quantifier_does_not_legalize_unbound_array_item",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_array_expression_is_evaluated_once",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_all_elements_visited_in_original_order_including_duplicates",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_first_bad_element_stops_before_later_element",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_decisive_value_does_not_hide_later_type_error",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_outer_boolean_short_circuit_skips_runtime_quantifier",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_quantifier_predicate_boolean_short_circuit_remains",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_type_failure_in_array_precedes_predicate_evaluation",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_nested_error_has_exact_expression_path",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_failed_evaluation_leaves_context_reusable",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_repeated_nested_error_is_deterministic",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_exhaustive_nested_boolean_models",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_deep_nesting_does_not_use_python_call_stack",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_broad_array_is_not_truncated",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_deeply_wrapped_predicate_preserves_item_scope",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_separate_threads_do_not_share_element_context",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_external_mutation_of_views_does_not_change_nested_result",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_foreign_boolean_conversion_never_executes",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_list_subclass_never_supplies_a_quantifier_array",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_no_host_environment_or_file_lookup",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_missing_in_predicate_comparisons_keeps_existing_policy",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_mutable_literal_values_are_neither_executed_nor_modified",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_raw_bytes_reject_duplicate_quantifier_keys",
+    "test_srx_quantifiers_right.SrxQuantifierRightTests.test_portable_module_and_zipapp_support_nested_quantifiers"
   ],
   "open_items": [
-    "Nested quantifiers follow in 4.e.R; currently rejected.",
     "Integrate into effective profile/rule consumers and complete supported runtime evidence."
   ]
 }

@@ -43,9 +43,9 @@ def _validate_document(data, rule_id):
 
 def _validate_expression(expression, rule_id):
     from .fields import checked_selector
-    work = [(expression, "/expression", False, 0)]
+    work = [(expression, "/expression", False)]
     while work:
-        node, at, item_in_scope, depth = work.pop()
+        node, at, item_in_scope = work.pop()
         if type(node) is not dict:
             raise SrxError("object_required", rule_id=rule_id, pointer=at,
                            expected="expression object", actual=json_type(node))
@@ -60,14 +60,11 @@ def _validate_expression(expression, rule_id):
             checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at,
                              item_in_scope=item_in_scope)
         elif op in QUANTIFIER_OPERATORS:
-            if depth:
-                raise SrxError("nested_quantifier_not_supported", rule_id=rule_id, pointer=at,
-                               expected="single quantifier layer", actual="nested quantifier")
             # The array is evaluated in the enclosing scope; only where binds item.
-            work.append((node["where"], at+"/where", True, depth+1))
-            work.append((node["array"], at+"/array", item_in_scope, depth+1))
+            work.append((node["where"], at+"/where", True))
+            work.append((node["array"], at+"/array", item_in_scope))
         elif op in UNARY_OPERATORS:
-            work.append((node["arg"], at+"/arg", item_in_scope, depth))
+            work.append((node["arg"], at+"/arg", item_in_scope))
         else:
             args = node["args"]
             if type(args) is not list:
@@ -76,7 +73,7 @@ def _validate_expression(expression, rule_id):
             if op in BINARY_OPERATORS and len(args) != 2:
                 raise SrxError("binary_arity", rule_id=rule_id, pointer=at+"/args",
                                expected="exactly two expressions", actual="array")
-            work.extend((arg, at+"/args/"+str(index), item_in_scope, depth)
+            work.extend((arg, at+"/args/"+str(index), item_in_scope)
                         for index, arg in reversed(tuple(enumerate(args))))
 
 
