@@ -1,4 +1,4 @@
-"""Pure declarative SRX foundation; static fields, Missing and existence."""
+"""Pure declarative SRX foundation; fields, logic, comparison and sequence operations."""
 
 from .core import (LANGUAGE, VERSION, SUPPORTED_OPERATORS, CONTEXT_NAMES,
                    SrxProgram, EvaluationContext, evaluate, parse_program, parse_context)

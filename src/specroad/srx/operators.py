@@ -15,5 +15,11 @@ OPERATOR_FIELDS = MappingProxyType({
     "lte": ("op", "args"),
     "gt": ("op", "args"),
     "gte": ("op", "args"),
+    "in": ("op", "args"),
+    "contains": ("op", "args"),
+    "starts_with": ("op", "args"),
+    "ends_with": ("op", "args"),
+    "length": ("op", "arg"),
+    "count": ("op", "arg"),
 })
 SUPPORTED_OPERATORS = tuple(OPERATOR_FIELDS)

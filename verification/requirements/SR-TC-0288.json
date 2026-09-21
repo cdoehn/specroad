@@ -8,7 +8,8 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-SRX-CONTEXT-v1",
-    "SR-FIX-SRX-LOGIC-v1"
+    "SR-FIX-SRX-LOGIC-v1",
+    "SR-FIX-SRX-COLLECTIONS-v1"
   ],
   "preconditions": [
     "Explicit SRX program and owned JSON-only context."
@@ -19,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SRX 1.0 MUSS mindestens die Operatoren `literal`, `field`, `exists`, `not`, `and`, `or`, `eq`, `ne`, `lt`, `lte`, `gt`, `gte`, `in`, `contains`, `starts_with`, `ends_with`, `length`, `count`, `any`, `all`, `none`, `add`, `subtract`, `multiply` und `divide` definieren.",
-    "scope": "Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."
+    "scope": "Field, logic, comparison and sequence families; quantifiers/arithmetic and full integration pending."
   },
   "expected_diagnostics": [
     "SRV110"
@@ -43,7 +44,11 @@
     "test_srx_context.SrxContextWorkTests.test_literal_array_preserves_order_and_types",
     "test_srx_context.SrxContextWorkTests.test_literal_null",
     "test_srx_logic.SrxLogicTests.test_field_based_rule",
-    "test_srx_logic.SrxLogicTests.test_nested_logic"
+    "test_srx_logic.SrxLogicTests.test_nested_logic",
+    "test_srx_collections.SrxCollectionsTests.test_in_scalar_array",
+    "test_srx_collections.SrxCollectionsTests.test_contains_string",
+    "test_srx_collections.SrxCollectionsTests.test_length_object",
+    "test_srx_collections.SrxCollectionsTests.test_count_array"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."

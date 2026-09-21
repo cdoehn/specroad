@@ -58,7 +58,7 @@ def _validate_expression(expression, rule_id):
             continue
         if op == "field":
             checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at)
-        elif op in ("exists", "not"):
+        elif op in ("exists", "not", "length", "count"):
             work.append((node["arg"], at+"/arg"))
         else:
             args = node["args"]

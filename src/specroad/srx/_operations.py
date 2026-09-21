@@ -3,6 +3,7 @@
 from . import fields
 from .comparisons import compare
 from .types import MISSING, require_type
+from .collections import COLLECTION_OPERATORS, collection_operation
 
 
 def boolean_value(value, *, rule_id, at):
@@ -14,6 +15,8 @@ def apply_values(op, operands, *, rule_id, at):
         return operands[0] is not MISSING
     if op == "not":
         return not boolean_value(operands[0], rule_id=rule_id, at=at+"/arg")
+    if op in COLLECTION_OPERATORS:
+        return collection_operation(op, operands, rule_id=rule_id, pointer=at)
     return compare(op, operands[0], operands[1], rule_id=rule_id, pointer=at)
 
 

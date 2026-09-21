@@ -8,7 +8,8 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-SRX-FIELDS-v1",
-    "SR-FIX-SRX-LOGIC-v1"
+    "SR-FIX-SRX-LOGIC-v1",
+    "SR-FIX-SRX-COLLECTIONS-v1"
   ],
   "preconditions": [
     "Explicit SRX program and owned JSON-only context."
@@ -45,7 +46,9 @@
     "test_srx_fields_right.SrxFieldRightTests.test_boolean_is_not_numeric_operand",
     "test_srx_logic.SrxLogicTests.test_incompatible_scalar_comparison_is_error",
     "test_srx_logic.SrxLogicTests.test_ordering_rejects_array_and_object",
-    "test_srx_logic_right.SrxLogicRightTests.test_top_level_type_pairs_never_coerce"
+    "test_srx_logic_right.SrxLogicRightTests.test_top_level_type_pairs_never_coerce",
+    "test_srx_collections.SrxCollectionsTests.test_count_rejects_string",
+    "test_srx_collections.SrxCollectionsTests.test_no_boolean_number_coercion"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."

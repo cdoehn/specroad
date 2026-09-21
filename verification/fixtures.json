@@ -23,7 +23,8 @@
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-SRX-CONTEXT-v1",
     "SR-FIX-SRX-FIELDS-v1",
-    "SR-FIX-SRX-LOGIC-v1"
+    "SR-FIX-SRX-LOGIC-v1",
+    "SR-FIX-SRX-COLLECTIONS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -117,6 +118,10 @@
     "SR-FIX-SRX-LOGIC-v1": {
       "provider": "tests/support/srx.py:binary",
       "kind": "Owned ordered Boolean/comparison AST and JSON operands with deliberate Missing cases"
+    },
+    "SR-FIX-SRX-COLLECTIONS-v1": {
+      "provider": "tests/support/srx.py:run",
+      "kind": "explicit JSON-only SRX context and sequence expression fixtures"
     }
   }
 }
