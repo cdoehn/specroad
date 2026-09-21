@@ -1,6 +1,6 @@
 """Compatibility facade for the public SRX foundation API.
 
-Only literal is currently enabled. Parsing, validation, immutable values and
+Literal, field and exists are enabled. Parsing, validation, immutable values and
 execution have separate responsibilities and retain their W/R contracts.
 """
 
@@ -12,3 +12,7 @@ from .parsing import parse_program, parse_context
 
 __all__ = ("LANGUAGE", "VERSION", "SUPPORTED_OPERATORS", "CONTEXT_NAMES",
            "SrxProgram", "EvaluationContext", "evaluate", "parse_program", "parse_context")
+
+from .types import MISSING, value_type
+
+__all__ += ("MISSING", "value_type")

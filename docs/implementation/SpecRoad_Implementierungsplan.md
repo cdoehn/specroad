@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 129
-last_completed_plan_commit: 4.a.C
-next_plan_commit: 4.b.W
+implementation_plan_commits_completed: 130
+last_completed_plan_commit: 4.b.W
+next_plan_commit: 4.b.R
 last_completed_numbered_bundle: 2
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -98,7 +98,7 @@ Sie zählt ausgelieferte nummerierte Pakete, nicht W/R/C-Commits. Der bisherige
 Bestand wird nicht rückwirkend nummeriert. Das nächste neue Paket erhält `003`;
 bei erneuter Auslieferung derselben byteidentischen ZIP bleibt deren Nummer gleich.
 
-Die Chat-Antwort endet mit `SPECRoad-PATCH-NR: NNN`. Nur nach sämtlichen Gates,
+Der Abschlussblock der Chat-Antwort wiederholt den zutreffenden grünen, gelben oder roten Statusbalken. Bei einer Auslieferung stehen darunter `SPECRoad-PATCH-NR: NNN` und als allerletzte Zeile der tatsächliche Patch-Download-Link. SHA-256 und Backupstatus stehen davor. Bei STOP gibt es weder ein neues Paket noch einen erfundenen Download-Link. Diese Nutzerentscheidung vom 20. September 2026 ersetzt die ältere widersprechende Darstellungsregel der beigelegten statischen Chatvorlage, nicht deren Sicherheitsvertrag. Nur nach sämtlichen Gates,
 allen vorgesehenen Commits und sauberem Endstand gibt der Entrypoint als seine
 letzte Zeile `SPECRoad-PATCH-NR: NNN | APPLIED SUCCESSFULLY` aus. Bei einem
 Abbruch darf diese Erfolgszeile nicht erscheinen. Der Fortschrittskopf hält die
@@ -1714,7 +1714,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.b.W – Let it Work
 
-- [ ] **4.b.W** · Position **130/885** · Voraussetzung: `4.a.C`.
+- [x] **4.b.W** · Position **130/885** · Voraussetzung: `4.a.C`.
 **Exakte Commit-Message:** `4.b.W feat(validation): Feldzugriff, Missing und strikte Typen aufbauen`
 
 **Umsetzung:** RFC-6901-Felder, missing und exists samt exakter Typsemantik implementieren.

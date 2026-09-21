@@ -21,7 +21,8 @@
     "SR-FIX-SCOPE-CONTROL-v1",
     "SR-FIX-SCOPE-COMPARISON-v1",
     "SR-FIX-RELATION-OBLIGATIONS-v1",
-    "SR-FIX-SRX-CONTEXT-v1"
+    "SR-FIX-SRX-CONTEXT-v1",
+    "SR-FIX-SRX-FIELDS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -107,6 +108,10 @@
     "SR-FIX-SRX-CONTEXT-v1": {
       "provider": "tests/test_srx_context.py:context_data",
       "kind": "Owned explicit JSON context projections and literal expressions; no live profile/configuration resolution or full SRX approval."
+    },
+    "SR-FIX-SRX-FIELDS-v1": {
+      "provider": "tests/support/srx.py:roots",
+      "kind": "Owned JSON-only SRX input values and static field expressions; no project scan or file writes"
     }
   }
 }

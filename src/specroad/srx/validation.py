@@ -5,7 +5,7 @@ from ._json_values import json_type
 
 LANGUAGE = "srx"
 VERSION = "1.0"
-SUPPORTED_OPERATORS = ("literal",)
+SUPPORTED_OPERATORS = ("literal", "field", "exists")
 CONTEXT_NAMES = ("artifact", "configuration", "project", "relations")
 
 
@@ -38,14 +38,32 @@ def _validate_document(data, rule_id):
     if data["version"] != VERSION:
         raise SrxError("unsupported_version", rule_id=rule_id, pointer="/version",
                        expected="1.0", actual=json_type(data["version"]))
-    node = data["expression"]
-    if type(node) is not dict:
-        raise SrxError("object_required", rule_id=rule_id, pointer="/expression",
-                       expected="expression object", actual=json_type(node))
-    if type(node.get("op")) is not str or node["op"] not in SUPPORTED_OPERATORS:
-        raise SrxError("unsupported_operator", rule_id=rule_id, pointer="/expression/op",
-                       expected="supported operator", actual=json_type(node.get("op")))
-    _exact_fields(node, ("op", "value"), rule_id=rule_id, pointer="/expression")
+    _validate_expression(data["expression"], rule_id)
+
+
+def _validate_expression(expression, rule_id):
+    from .fields import parse_pointer
+    work = [(expression, "/expression")]
+    while work:
+        node, at = work.pop()
+        if type(node) is not dict:
+            raise SrxError("object_required", rule_id=rule_id, pointer=at,
+                           expected="expression object", actual=json_type(node))
+        op = node.get("op")
+        if type(op) is not str or op not in SUPPORTED_OPERATORS:
+            raise SrxError("unsupported_operator", rule_id=rule_id, pointer=at+"/op",
+                           expected="supported operator", actual=json_type(op))
+        if op == "literal":
+            _exact_fields(node, ("op", "value"), rule_id=rule_id, pointer=at)
+        elif op == "field":
+            _exact_fields(node, ("op", "context", "pointer"), rule_id=rule_id, pointer=at)
+            if type(node["context"]) is not str or node["context"] not in CONTEXT_NAMES:
+                raise SrxError("unknown_context", rule_id=rule_id, pointer=at+"/context",
+                               expected="explicit named context root", actual=json_type(node["context"]))
+            parse_pointer(node["pointer"], rule_id=rule_id, at=at+"/pointer")
+        else:
+            _exact_fields(node, ("op", "arg"), rule_id=rule_id, pointer=at)
+            work.append((node["arg"], at+"/arg"))
 
 
 def _validate_context(data, rule_id):

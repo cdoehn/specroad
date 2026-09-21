@@ -135,7 +135,7 @@ class SrxContextWorkTests(unittest.TestCase):
             SrxProgram("1+1", rule_id="r")
 
     def test_unsupported_operator_is_not_false(self):
-        data = program_data(True); data["expression"] = {"op": "field", "context": "artifact", "pointer": "/title"}
+        data = program_data(True); data["expression"] = {"op": "any", "array": {"op": "literal", "value": []}, "where": {"op": "literal", "value": True}}
         with self.assertRaises(SrxError) as caught:
             SrxProgram(data, rule_id="r")
         self.assertEqual(caught.exception.reason, "unsupported_operator")

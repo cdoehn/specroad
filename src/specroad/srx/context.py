@@ -11,7 +11,7 @@ class EvaluationContext:
     configuration=None explicitly means no selected configuration. No defaults
     or host environment are consulted. item is reserved for later quantifiers
     and is never accepted as an external root. Relations are precomputed data,
-    never a callable resolver. No field lookup is enabled by this foundation.
+    never a callable resolver. Field lookup reads only these supplied immutable roots.
     """
     _snapshot: JsonSnapshot
 
