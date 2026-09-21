@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 134
-last_completed_plan_commit: 4.c.R
-next_plan_commit: 4.c.C
-last_completed_numbered_bundle: 2
+implementation_plan_commits_completed: 135
+last_completed_plan_commit: 4.c.C
+next_plan_commit: 4.d.W
+last_completed_numbered_bundle: 3
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -95,7 +95,7 @@ Bei Fehlern stoppt die Sequenz vor dem Commit des fehlerhaften Schritts. Zuvor i
 Nutzerentscheidung vom 20. September 2026: Ab dem Bundle für `3.k.W` bis
 `3.k.C` wird eine eigene laufende Bundle-Nummer geführt, beginnend mit `001`.
 Sie zählt ausgelieferte nummerierte Pakete, nicht W/R/C-Commits. Der bisherige
-Bestand wird nicht rückwirkend nummeriert. Das nächste neue Paket erhält `003`;
+Bestand wird nicht rückwirkend nummeriert. Das nächste neue Paket erhält `004`;
 bei erneuter Auslieferung derselben byteidentischen ZIP bleibt deren Nummer gleich.
 
 Der Abschlussblock der Chat-Antwort wiederholt den zutreffenden grünen, gelben oder roten Statusbalken. Bei einer Auslieferung stehen darunter `SPECRoad-PATCH-NR: NNN` und als allerletzte Zeile der tatsächliche Patch-Download-Link. SHA-256 und Backupstatus stehen davor. Bei STOP gibt es weder ein neues Paket noch einen erfundenen Download-Link. Diese Nutzerentscheidung vom 20. September 2026 ersetzt die ältere widersprechende Darstellungsregel der beigelegten statischen Chatvorlage, nicht deren Sicherheitsvertrag. Nur nach sämtlichen Gates,
@@ -1767,7 +1767,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.c.C – Make it Clean
 
-- [ ] **4.c.C** · Position **135/885** · Voraussetzung: `4.c.R`.
+- [x] **4.c.C** · Position **135/885** · Voraussetzung: `4.c.R`.
 **Exakte Commit-Message:** `4.c.C refactor(validation): Logik und Vergleich bereinigen`
 
 **Bereinigung:** Gemeinsame Dispatch-/Fehlerlogik statt Operator-Sonderwege verwenden.

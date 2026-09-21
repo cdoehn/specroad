@@ -72,3 +72,15 @@ Regression cases include all top-level kind pairs, Missing versus each value
 kind, all three-Boolean truth combinations, nested Boolean/Number distinctions,
 1,600-level comparisons and logical expressions, 601-operand conjunctions,
 finite numerical boundaries, malicious hooks and relocated distributions.
+
+## 4.c.C
+
+The public input boundary, iterative expression machine and pure operator
+completion are separate. Unary and binary completion share one dispatch path;
+short-circuit scheduling remains in the expression machine. Ordering uses a
+closed map of trusted standard numeric/string operators. The W/R tests and
+all expected diagnostics are unchanged. No custom functions are registered.
+
+The machine is only an in-process SRX interpreter, not the test scheduler;
+pytest-xdist continues to own test parallelism. Arithmetic, quantifiers, graph
+operators, SRX budgets and CLI/profile consumers remain their own plan steps.

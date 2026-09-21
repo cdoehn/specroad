@@ -1,10 +1,13 @@
 """Typed equality and ordering of explicit SRX values; no locale or casts."""
 
+from operator import lt, le, gt, ge
+from types import MappingProxyType
 from ._json_values import JsonSnapshot, json_type
 from .types import MISSING
 from .errors import SrxError
 
 COMPARISONS = ("eq", "ne", "lt", "lte", "gt", "gte")
+_ORDER = MappingProxyType({"lt": lt, "lte": le, "gt": gt, "gte": ge})
 
 
 def _equal(left, right):
@@ -45,17 +48,10 @@ def compare(op, left, right, *, rule_id, pointer="/expression"):
     if kind != json_type(right):
         raise SrxError("operand_types", rule_id=rule_id, pointer=pointer+"/args/1",
                        expected=kind, actual=json_type(right))
-    if op == "eq":
-        return _equal(left, right)
-    if op == "ne":
-        return not _equal(left, right)
+    if op in ("eq", "ne"):
+        equal = _equal(left, right)
+        return equal if op == "eq" else not equal
     if kind not in ("number", "string"):
         raise SrxError("operand_type", rule_id=rule_id, pointer=pointer+"/args/0",
                        expected="number or string", actual=kind)
-    if op == "lt":
-        return left < right
-    if op == "lte":
-        return left <= right
-    if op == "gt":
-        return left > right
-    return left >= right
+    return _ORDER[op](left, right)
