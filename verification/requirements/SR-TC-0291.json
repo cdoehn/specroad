@@ -7,18 +7,19 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SRX-FIELDS-v1"
+    "SR-FIX-SRX-FIELDS-v1",
+    "SR-FIX-SRX-LOGIC-v1"
   ],
   "preconditions": [
     "Explicit SRX program and owned JSON-only context."
   ],
   "steps": [
-    "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects."
+    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein fehlender Feldwert MUSS als interner Wert `missing` mit den in Anhang B.3 definierten Ergebnissen für `exists`, `eq`, `ne`, `lt`, `lte`, `gt` und `gte` behandelt werden.",
-    "scope": "Static field/exists/value-kind foundation; complete SRX operator and validation integration remain pending."
+    "scope": "Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."
   },
   "expected_diagnostics": [
     "SRV110"
@@ -41,9 +42,12 @@
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_exists_missing_is_false",
     "test_srx_fields.SrxFieldTests.test_exists_null_is_true",
-    "test_srx_fields_right.SrxFieldRightTests.test_deep_exists_is_iterative"
+    "test_srx_fields_right.SrxFieldRightTests.test_deep_exists_is_iterative",
+    "test_srx_logic.SrxLogicTests.test_eq_missing_is_false",
+    "test_srx_logic.SrxLogicTests.test_ne_missing_is_true",
+    "test_srx_logic.SrxLogicTests.test_ordered_missing_is_false"
   ],
   "open_items": [
-    "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."
+    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
   ]
 }

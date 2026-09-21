@@ -22,7 +22,8 @@
     "SR-FIX-SCOPE-COMPARISON-v1",
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-SRX-CONTEXT-v1",
-    "SR-FIX-SRX-FIELDS-v1"
+    "SR-FIX-SRX-FIELDS-v1",
+    "SR-FIX-SRX-LOGIC-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -112,6 +113,10 @@
     "SR-FIX-SRX-FIELDS-v1": {
       "provider": "tests/support/srx.py:roots",
       "kind": "Owned JSON-only SRX input values and static field expressions; no project scan or file writes"
+    },
+    "SR-FIX-SRX-LOGIC-v1": {
+      "provider": "tests/support/srx.py:binary",
+      "kind": "Owned ordered Boolean/comparison AST and JSON operands with deliberate Missing cases"
     }
   }
 }

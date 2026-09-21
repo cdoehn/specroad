@@ -7,18 +7,19 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SRX-FIELDS-v1"
+    "SR-FIX-SRX-FIELDS-v1",
+    "SR-FIX-SRX-LOGIC-v1"
   ],
   "preconditions": [
     "Explicit SRX program and owned JSON-only context."
   ],
   "steps": [
-    "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects."
+    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der interne Wert `missing` DARF NICHT als JSON-Nullwert behandelt werden.",
-    "scope": "Static field/exists/value-kind foundation; complete SRX operator and validation integration remain pending."
+    "scope": "Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."
   },
   "expected_diagnostics": [
     "SRV110"
@@ -41,9 +42,11 @@
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_missing_cannot_be_serialized_as_null",
     "test_srx_fields.SrxFieldTests.test_null_is_not_missing",
-    "test_srx_fields_right.SrxFieldRightTests.test_missing_is_not_null_operand"
+    "test_srx_fields_right.SrxFieldRightTests.test_missing_is_not_null_operand",
+    "test_srx_logic.SrxLogicTests.test_eq_missing_is_false",
+    "test_srx_logic.SrxLogicTests.test_eq_null"
   ],
   "open_items": [
-    "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."
+    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
   ]
 }

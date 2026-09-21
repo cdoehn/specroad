@@ -1,6 +1,6 @@
 """Compatibility facade for the public SRX foundation API.
 
-Literal, field and exists are enabled. Parsing, validation, immutable values and
+Literal, field, exists, Boolean logic and comparisons are enabled. Parsing, validation, immutable values and
 execution have separate responsibilities and retain their W/R contracts.
 """
 
@@ -20,3 +20,6 @@ __all__ += ("MISSING", "value_type")
 from .fields import read_field
 from .types import require_type
 __all__ += ("read_field", "require_type")
+
+from .comparisons import compare
+__all__ += ("compare",)

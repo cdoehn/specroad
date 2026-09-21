@@ -58,8 +58,17 @@ def _validate_expression(expression, rule_id):
             continue
         if op == "field":
             checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at)
-        else:
+        elif op in ("exists", "not"):
             work.append((node["arg"], at+"/arg"))
+        else:
+            args = node["args"]
+            if type(args) is not list:
+                raise SrxError("arguments_array_required", rule_id=rule_id, pointer=at+"/args",
+                               expected="array of expressions", actual=json_type(args))
+            if op not in ("and", "or") and len(args) != 2:
+                raise SrxError("binary_arity", rule_id=rule_id, pointer=at+"/args",
+                               expected="exactly two expressions", actual="array")
+            work.extend((arg, at+"/args/"+str(index)) for index, arg in reversed(tuple(enumerate(args))))
 
 
 def _validate_context(data, rule_id):

@@ -40,3 +40,23 @@ foreign conversion hooks, immutable copies and relocated portable distributions.
 Pointer grammar and traversal are centralized in pointers.py; fields.py owns
 named-context access. Closed operator-field signatures are shared by the AST
 validator. Public names, errors, Missing behavior and all W/R tests are unchanged.
+
+## 4.c.W
+
+Boolean not/and/or and eq/ne/lt/lte/gt/gte now execute through the same SRX entry.
+Boolean operands require Boolean, not truthy numbers, strings, null or Missing.
+and/or evaluate left to right and stop at their decisive Boolean value, with
+empty identities true/false respectively. All AST syntax is validated upfront;
+short circuit suppresses evaluation-time errors, not malformed program syntax.
+Comparisons evaluate both arguments left to right before applying Missing rules.
+
+If either operand is Missing, eq and all ordering comparisons return false and
+ne returns true. Otherwise equality/inequality require the same top-level SRX
+kind. Nested kind differences in arrays/objects mean unequal JSON structures.
+Booleans are not numbers. Number covers integers and finite floats; mixed numeric
+values are compared without casting integers to floats. No locale or Unicode
+normalization affects string equality/ordering. Array order is significant.
+
+The expression API remains in-memory, without filesystem or environment lookup.
+These operators do not add arithmetic, quantifiers, graph operators, a CLI rule
+command, profile composition or an assertion that all SRX requirements are done.

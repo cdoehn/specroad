@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 132
-last_completed_plan_commit: 4.b.C
-next_plan_commit: 4.c.W
+implementation_plan_commits_completed: 133
+last_completed_plan_commit: 4.c.W
+next_plan_commit: 4.c.R
 last_completed_numbered_bundle: 2
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1749,7 +1749,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.c.W – Let it Work
 
-- [ ] **4.c.W** · Position **133/885** · Voraussetzung: `4.b.C`.
+- [x] **4.c.W** · Position **133/885** · Voraussetzung: `4.b.C`.
 **Exakte Commit-Message:** `4.c.W feat(validation): Logik und Vergleich aufbauen`
 
 **Umsetzung:** not, and, or und Vergleichsoperatoren mit stabiler Argumentreihenfolge implementieren.

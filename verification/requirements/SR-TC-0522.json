@@ -4,19 +4,29 @@
   "requirement_id": "SR-REQ-0522",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SRX-LOGIC-v1"
+  ],
+  "preconditions": [
+    "Explicit SRX program and owned JSON-only context."
+  ],
+  "steps": [
+    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Alle übrigen SRX-Operatoren MÜSSEN ihre Argumente in der in Anhang B dokumentierten stabilen Reihenfolge auswerten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV110"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/expression"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +38,10 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_srx_logic.SrxLogicTests.test_field_based_rule"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
   ]
 }

@@ -22,3 +22,7 @@ def roots(artifact=None):
 def run(node, artifact=None, context=None):
     return evaluate(SrxProgram(expression_document(node), rule_id="rule-test"),
                     EvaluationContext(roots(artifact) if context is None else context, rule_id="rule-test"))
+
+
+def binary(op, left, right):
+    return {"op": op, "args": [left, right]}
