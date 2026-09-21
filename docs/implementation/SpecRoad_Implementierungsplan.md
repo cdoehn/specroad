@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 140
-last_completed_plan_commit: 4.e.R
-next_plan_commit: 4.e.C
-last_completed_numbered_bundle: 6
+implementation_plan_commits_completed: 141
+last_completed_plan_commit: 4.e.C
+next_plan_commit: 4.f.W
+last_completed_numbered_bundle: 7
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1849,7 +1849,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.e.C – Make it Clean
 
-- [ ] **4.e.C** · Position **141/885** · Voraussetzung: `4.e.R`.
+- [x] **4.e.C** · Position **141/885** · Voraussetzung: `4.e.R`.
 **Exakte Commit-Message:** `4.e.C refactor(validation): Quantoren und Elementkontext bereinigen`
 
 **Bereinigung:** Quantoreniteration von AST-Rekursion entkoppeln.

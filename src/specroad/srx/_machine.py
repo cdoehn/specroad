@@ -2,7 +2,7 @@
 
 from .operators import UNARY_OPERATORS, BINARY_OPERATORS, QUANTIFIER_OPERATORS
 from .errors import SrxError
-from .types import require_type
+from ._quantifier_iteration import QuantifierIteration
 from ._operations import apply_values, boolean_value, leaf_value
 
 
@@ -30,34 +30,18 @@ def evaluate_expression(expression, roots, *, rule_id):
                 work.append(("boolean", (op, args, index+1), at, scope))
                 work.append(("visit", args[index+1], at+"/args/"+str(index+1), scope))
             continue
-        if action == "quantifier_array":
-            op, where = node
-            items = values.pop()
-            require_type(items, ("array",), rule_id=rule_id, pointer=at+"/array")
-            if not items:
-                values.append(op != "any")
+        if action in ("quantifier_array", "quantifier_item"):
+            if action == "quantifier_array":
+                op, where = node
+                cursor = QuantifierIteration(op, values.pop(), where, rule_id=rule_id, at=at)
             else:
-                work.append(("quantifier_item", (op, items, where, 0, op != "any"), at, scope))
-                work.append(("visit", where, at+"/where", {"item": items[0]}))
-            continue
-        if action == "quantifier_item":
-            op, items, where, index, result = node
-            value = values.pop()
-            boolean_value(value, rule_id=rule_id, at=at+"/where")
-            if op == "any":
-                result = result or value
-            elif op == "all":
-                result = result and value
+                cursor = node
+                cursor.accept(values.pop())
+            if cursor.done:
+                values.append(cursor.result)
             else:
-                result = result and not value
-            # B.2 binds each element; only and/or have a short-circuit contract.
-            # A later invalid predicate must not be concealed by a prior result.
-            index += 1
-            if index == len(items):
-                values.append(result)
-            else:
-                work.append(("quantifier_item", (op, items, where, index, result), at, scope))
-                work.append(("visit", where, at+"/where", {"item": items[index]}))
+                work.append(("quantifier_item", cursor, at, scope))
+                work.append(("visit", cursor.predicate, at+"/where", cursor.item_scope()))
             continue
         op = node["op"]
         if op in ("literal", "field"):

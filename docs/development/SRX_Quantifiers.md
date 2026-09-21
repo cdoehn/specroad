@@ -34,3 +34,9 @@ R regressions cover all nine pairs of nested quantifiers over a bounded exhausti
 Boolean corpus, deep expressions, complete ordered iteration, recovery after
 errors, concurrent reuse of immutable contexts and portable module/zipapp loads.
 These are development checks, not a full supported-platform release gate.
+
+The Clean step separates the per-evaluation quantifier cursor from the iterative
+AST machine. The cursor owns only its index and Boolean accumulator; the machine
+owns lexical frames and schedules one predicate at a time. This is not a parallel
+scheduler, an execution budget or a persistent continuation. The R behavior and
+all behavioral tests remain unchanged.
