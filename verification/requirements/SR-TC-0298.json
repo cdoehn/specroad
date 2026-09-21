@@ -4,19 +4,29 @@
   "requirement_id": "SR-REQ-0298",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SRX-QUANTIFIERS-v1"
+  ],
+  "preconditions": [
+    "Explicit SRX 1.0 program and stable JSON-only context input."
+  ],
+  "steps": [
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Referenzimplementierung MUSS die versionierten Positiv-, Negativ-, Grenzwert- und Fehlervektoren sämtlicher SRX-Operatoren einschließlich der expliziten Zahlenpolicy aus Anhang U nachweisen; freigegebene inkompatible Semantikänderungen verlangen eine neue SRX-Major-Version.",
     "scope": "Not implemented. No automated pass oracle is claimed."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV110"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/expression"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,7 +38,10 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_srx_quantifiers.SrxQuantifierTests.test_boolean_truth_tables_up_to_six_elements",
+    "test_srx_quantifiers.SrxQuantifierTests.test_versioned_positive_negative_and_empty_vectors"
+  ],
   "open_items": [
     "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
   ]

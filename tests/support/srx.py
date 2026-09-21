@@ -26,3 +26,7 @@ def run(node, artifact=None, context=None):
 
 def binary(op, left, right):
     return {"op": op, "args": [left, right]}
+
+
+def quantifier(op, array, where):
+    return {"op": op, "array": array, "where": where}

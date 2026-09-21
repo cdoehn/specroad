@@ -7,13 +7,15 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SRX-FIELDS-v1"
+    "SR-FIX-SRX-FIELDS-v1",
+    "SR-FIX-SRX-QUANTIFIERS-v1"
   ],
   "preconditions": [
     "Explicit SRX program and owned JSON-only context."
   ],
   "steps": [
-    "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects."
+    "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects.",
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
   ],
   "oracle": {
     "kind": "behavior",
@@ -41,7 +43,10 @@
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_object_field",
     "test_srx_fields.SrxFieldTests.test_slash_and_tilde_escaping",
-    "test_srx_fields_right.SrxFieldRightTests.test_rfc6901_string_examples"
+    "test_srx_fields_right.SrxFieldRightTests.test_rfc6901_string_examples",
+    "test_srx_quantifiers.SrxQuantifierTests.test_top_level_array_expression_has_no_item_binding",
+    "test_srx_quantifiers.SrxQuantifierTests.test_escaped_item_pointer",
+    "test_srx_quantifiers.SrxQuantifierTests.test_array_element_pointer"
   ],
   "open_items": [
     "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."

@@ -1,6 +1,6 @@
 """Compatibility facade for the public SRX foundation API.
 
-Literal, fields, Boolean logic, comparisons and sequence operations are enabled. Parsing, validation, immutable values and
+Literal, fields, Boolean logic, comparisons sequence operations and single-layer quantifiers are enabled. Parsing, validation, immutable values and
 execution have separate responsibilities and retain their W/R contracts.
 """
 

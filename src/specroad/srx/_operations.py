@@ -20,8 +20,12 @@ def apply_values(op, operands, *, rule_id, at):
     return compare(op, operands[0], operands[1], rule_id=rule_id, pointer=at)
 
 
-def leaf_value(node, roots, *, rule_id, at):
+def leaf_value(node, roots, *, rule_id, at, item_scope=None):
     if node["op"] == "literal":
         return node["value"]
-    name, tokens = fields.checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at)
-    return fields.resolve_tokens(roots[name], tokens, rule_id=rule_id, at=at+"/pointer")
+    name, tokens = fields.checked_selector(
+        node["context"], node["pointer"], rule_id=rule_id, at=at,
+        item_in_scope=item_scope is not None,
+    )
+    value = item_scope["item"] if name == "item" else roots[name]
+    return fields.resolve_tokens(value, tokens, rule_id=rule_id, at=at+"/pointer")

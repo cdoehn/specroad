@@ -1,0 +1,570 @@
+{
+  "format_version": 1,
+  "srx_version": "1.0",
+  "cases": [
+    {
+      "id": "any-empty",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "literal",
+          "value": []
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": false
+    },
+    {
+      "id": "any-false",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "literal",
+          "value": [
+            false
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": false
+    },
+    {
+      "id": "any-true",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "literal",
+          "value": [
+            true
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": true
+    },
+    {
+      "id": "any-mixed",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "literal",
+          "value": [
+            false,
+            true,
+            false
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": true
+    },
+    {
+      "id": "any-bad-array",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "literal",
+          "value": "array"
+        },
+        "where": {
+          "op": "literal",
+          "value": true
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "any-null-predicate",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "literal",
+          "value": [
+            null
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "any-missing-array",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "field",
+          "context": "artifact",
+          "pointer": "/absent"
+        },
+        "where": {
+          "op": "literal",
+          "value": true
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "any-bad-late-predicate",
+      "expression": {
+        "op": "any",
+        "array": {
+          "op": "literal",
+          "value": [
+            true,
+            null
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "all-empty",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "literal",
+          "value": []
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": true
+    },
+    {
+      "id": "all-false",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "literal",
+          "value": [
+            false
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": false
+    },
+    {
+      "id": "all-true",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "literal",
+          "value": [
+            true
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": true
+    },
+    {
+      "id": "all-mixed",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "literal",
+          "value": [
+            false,
+            true,
+            false
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": false
+    },
+    {
+      "id": "all-bad-array",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "literal",
+          "value": "array"
+        },
+        "where": {
+          "op": "literal",
+          "value": true
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "all-null-predicate",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "literal",
+          "value": [
+            null
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "all-missing-array",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "field",
+          "context": "artifact",
+          "pointer": "/absent"
+        },
+        "where": {
+          "op": "literal",
+          "value": true
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "all-bad-late-predicate",
+      "expression": {
+        "op": "all",
+        "array": {
+          "op": "literal",
+          "value": [
+            true,
+            null
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "none-empty",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "literal",
+          "value": []
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": true
+    },
+    {
+      "id": "none-false",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "literal",
+          "value": [
+            false
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": true
+    },
+    {
+      "id": "none-true",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "literal",
+          "value": [
+            true
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": false
+    },
+    {
+      "id": "none-mixed",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "literal",
+          "value": [
+            false,
+            true,
+            false
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expected": false
+    },
+    {
+      "id": "none-bad-array",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "literal",
+          "value": "array"
+        },
+        "where": {
+          "op": "literal",
+          "value": true
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "none-null-predicate",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "literal",
+          "value": [
+            null
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "none-missing-array",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "field",
+          "context": "artifact",
+          "pointer": "/absent"
+        },
+        "where": {
+          "op": "literal",
+          "value": true
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    },
+    {
+      "id": "none-bad-late-predicate",
+      "expression": {
+        "op": "none",
+        "array": {
+          "op": "literal",
+          "value": [
+            true,
+            null
+          ]
+        },
+        "where": {
+          "op": "field",
+          "context": "item",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "reason": "operand_type"
+    }
+  ]
+}

@@ -7,13 +7,15 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SRX-CONTEXT-v1"
+    "SR-FIX-SRX-CONTEXT-v1",
+    "SR-FIX-SRX-QUANTIFIERS-v1"
   ],
   "preconditions": [
     "Explicit JSON-only caller projections and SRX 1.0 literal expression."
   ],
   "steps": [
-    "Capture own immutable data; evaluate literal or reject invalid declarations without side effects."
+    "Capture own immutable data; evaluate literal or reject invalid declarations without side effects.",
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
   ],
   "oracle": {
     "kind": "behavior",
@@ -42,7 +44,9 @@
   "test_ids": [
     "test_srx_context.SrxContextWorkTests.test_error_keeps_machine_context",
     "test_srx_context_right.SrxContextRightTests.test_nested_context_pointer_escapes",
-    "test_srx_context_right.SrxContextRightTests.test_diagnostics_are_repeatable_without_input_values"
+    "test_srx_context_right.SrxContextRightTests.test_diagnostics_are_repeatable_without_input_values",
+    "test_srx_quantifiers.SrxQuantifierTests.test_scalar_predicates_must_be_boolean",
+    "test_srx_quantifiers.SrxQuantifierTests.test_invalid_array_index_retains_error"
   ],
   "open_items": [
     "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",

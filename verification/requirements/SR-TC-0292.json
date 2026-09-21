@@ -4,19 +4,29 @@
   "requirement_id": "SR-REQ-0292",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SRX-QUANTIFIERS-v1"
+  ],
+  "preconditions": [
+    "Explicit SRX 1.0 program and stable JSON-only context input."
+  ],
+  "steps": [
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`any`, `all` und `none` MÜSSEN den in Anhang B.4 definierten geordneten Elementkontext und die dort bestimmten Ergebnisse für leere Arrays verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Ordered quantifiers and owned element scope; nested scope is explicitly unsupported in W."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV110"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/expression"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +38,44 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_srx_quantifiers.SrxQuantifierTests.test_any_finds_matching_element",
+    "test_srx_quantifiers.SrxQuantifierTests.test_any_without_match",
+    "test_srx_quantifiers.SrxQuantifierTests.test_all_requires_every_element",
+    "test_srx_quantifiers.SrxQuantifierTests.test_none_is_negated_any",
+    "test_srx_quantifiers.SrxQuantifierTests.test_empty_arrays_have_normative_results",
+    "test_srx_quantifiers.SrxQuantifierTests.test_empty_array_does_not_evaluate_predicate",
+    "test_srx_quantifiers.SrxQuantifierTests.test_empty_array_still_validates_predicate_ast",
+    "test_srx_quantifiers.SrxQuantifierTests.test_empty_array_still_validates_predicate_pointer",
+    "test_srx_quantifiers.SrxQuantifierTests.test_scalar_predicates_must_be_boolean",
+    "test_srx_quantifiers.SrxQuantifierTests.test_missing_predicate_is_type_error",
+    "test_srx_quantifiers.SrxQuantifierTests.test_null_element_is_present_not_unbound",
+    "test_srx_quantifiers.SrxQuantifierTests.test_false_and_zero_elements_are_present",
+    "test_srx_quantifiers.SrxQuantifierTests.test_missing_item_field_follows_existing_semantics",
+    "test_srx_quantifiers.SrxQuantifierTests.test_array_expression_can_use_artifact_fields",
+    "test_srx_quantifiers.SrxQuantifierTests.test_non_array_inputs_are_not_coerced",
+    "test_srx_quantifiers.SrxQuantifierTests.test_missing_array_is_error_not_empty",
+    "test_srx_quantifiers.SrxQuantifierTests.test_item_is_not_a_global_program_root",
+    "test_srx_quantifiers.SrxQuantifierTests.test_item_cannot_be_supplied_in_public_context",
+    "test_srx_quantifiers.SrxQuantifierTests.test_item_cannot_be_read_outside_evaluation",
+    "test_srx_quantifiers.SrxQuantifierTests.test_top_level_array_expression_has_no_item_binding",
+    "test_srx_quantifiers.SrxQuantifierTests.test_sibling_expression_cannot_see_quantifier_item",
+    "test_srx_quantifiers.SrxQuantifierTests.test_all_explicit_roots_remain_available_in_predicate",
+    "test_srx_quantifiers.SrxQuantifierTests.test_escaped_item_pointer",
+    "test_srx_quantifiers.SrxQuantifierTests.test_array_element_pointer",
+    "test_srx_quantifiers.SrxQuantifierTests.test_invalid_array_index_retains_error",
+    "test_srx_quantifiers.SrxQuantifierTests.test_unknown_quantifier_fields_rejected",
+    "test_srx_quantifiers.SrxQuantifierTests.test_required_quantifier_fields",
+    "test_srx_quantifiers.SrxQuantifierTests.test_array_and_predicate_require_expressions",
+    "test_srx_quantifiers.SrxQuantifierTests.test_quantifier_shaped_literals_remain_data",
+    "test_srx_quantifiers.SrxQuantifierTests.test_owned_input_and_context_unchanged",
+    "test_srx_quantifiers.SrxQuantifierTests.test_same_program_reused_without_leaking_elements",
+    "test_srx_quantifiers.SrxQuantifierTests.test_boolean_truth_tables_up_to_six_elements",
+    "test_srx_quantifiers.SrxQuantifierTests.test_versioned_positive_negative_and_empty_vectors",
+    "test_srx_quantifiers.SrxQuantifierTests.test_utf8_byte_program_is_supported"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Nested quantifiers follow in 4.e.R; currently rejected.",
+    "Integrate into effective profile/rule consumers and complete supported runtime evidence."
   ]
 }

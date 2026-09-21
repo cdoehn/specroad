@@ -9,13 +9,15 @@
   "fixture_ids": [
     "SR-FIX-SRX-CONTEXT-v1",
     "SR-FIX-SRX-LOGIC-v1",
-    "SR-FIX-SRX-COLLECTIONS-v1"
+    "SR-FIX-SRX-COLLECTIONS-v1",
+    "SR-FIX-SRX-QUANTIFIERS-v1"
   ],
   "preconditions": [
     "Explicit SRX program and owned JSON-only context."
   ],
   "steps": [
-    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."
+    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit.",
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
   ],
   "oracle": {
     "kind": "behavior",
@@ -49,7 +51,10 @@
     "test_srx_collections.SrxCollectionsTests.test_contains_string",
     "test_srx_collections.SrxCollectionsTests.test_length_object",
     "test_srx_collections.SrxCollectionsTests.test_count_array",
-    "test_srx_collections_right.SrxCollectionsRightTests.test_full_arrays_are_not_truncated_by_display_limits"
+    "test_srx_collections_right.SrxCollectionsRightTests.test_full_arrays_are_not_truncated_by_display_limits",
+    "test_srx_quantifiers.SrxQuantifierTests.test_any_finds_matching_element",
+    "test_srx_quantifiers.SrxQuantifierTests.test_all_requires_every_element",
+    "test_srx_quantifiers.SrxQuantifierTests.test_none_is_negated_any"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."

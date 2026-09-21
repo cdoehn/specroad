@@ -21,6 +21,9 @@ OPERATOR_FIELDS = MappingProxyType({
     "ends_with": ("op", "args"),
     "length": ("op", "arg"),
     "count": ("op", "arg"),
+    "any": ("op", "array", "where"),
+    "all": ("op", "array", "where"),
+    "none": ("op", "array", "where"),
 })
 SUPPORTED_OPERATORS = tuple(OPERATOR_FIELDS)
 
@@ -28,3 +31,6 @@ SUPPORTED_OPERATORS = tuple(OPERATOR_FIELDS)
 UNARY_OPERATORS = tuple(op for op, names in OPERATOR_FIELDS.items() if names == ("op", "arg"))
 BINARY_OPERATORS = tuple(op for op, names in OPERATOR_FIELDS.items()
                          if names == ("op", "args") and op not in ("and", "or"))
+
+QUANTIFIER_OPERATORS = tuple(op for op, names in OPERATOR_FIELDS.items()
+                             if names == ("op", "array", "where"))

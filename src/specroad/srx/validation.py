@@ -2,7 +2,7 @@
 
 from .errors import SrxError
 from ._json_values import json_type
-from .operators import OPERATOR_FIELDS, SUPPORTED_OPERATORS, UNARY_OPERATORS, BINARY_OPERATORS
+from .operators import OPERATOR_FIELDS, SUPPORTED_OPERATORS, UNARY_OPERATORS, BINARY_OPERATORS, QUANTIFIER_OPERATORS
 
 LANGUAGE = "srx"
 VERSION = "1.0"
@@ -43,9 +43,9 @@ def _validate_document(data, rule_id):
 
 def _validate_expression(expression, rule_id):
     from .fields import checked_selector
-    work = [(expression, "/expression")]
+    work = [(expression, "/expression", False, 0)]
     while work:
-        node, at = work.pop()
+        node, at, item_in_scope, depth = work.pop()
         if type(node) is not dict:
             raise SrxError("object_required", rule_id=rule_id, pointer=at,
                            expected="expression object", actual=json_type(node))
@@ -57,9 +57,17 @@ def _validate_expression(expression, rule_id):
         if op == "literal":
             continue
         if op == "field":
-            checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at)
+            checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at,
+                             item_in_scope=item_in_scope)
+        elif op in QUANTIFIER_OPERATORS:
+            if depth:
+                raise SrxError("nested_quantifier_not_supported", rule_id=rule_id, pointer=at,
+                               expected="single quantifier layer", actual="nested quantifier")
+            # The array is evaluated in the enclosing scope; only where binds item.
+            work.append((node["where"], at+"/where", True, depth+1))
+            work.append((node["array"], at+"/array", item_in_scope, depth+1))
         elif op in UNARY_OPERATORS:
-            work.append((node["arg"], at+"/arg"))
+            work.append((node["arg"], at+"/arg", item_in_scope, depth))
         else:
             args = node["args"]
             if type(args) is not list:
@@ -68,7 +76,8 @@ def _validate_expression(expression, rule_id):
             if op in BINARY_OPERATORS and len(args) != 2:
                 raise SrxError("binary_arity", rule_id=rule_id, pointer=at+"/args",
                                expected="exactly two expressions", actual="array")
-            work.extend((arg, at+"/args/"+str(index)) for index, arg in reversed(tuple(enumerate(args))))
+            work.extend((arg, at+"/args/"+str(index), item_in_scope, depth)
+                        for index, arg in reversed(tuple(enumerate(args))))
 
 
 def _validate_context(data, rule_id):
