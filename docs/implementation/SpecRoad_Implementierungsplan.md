@@ -11682,3 +11682,6 @@ Auslieferungen 003/004 wurden nicht als vollständiger Erfolg nachgetragen.
 CI-Nachweise verwenden frische exklusive Verzeichnisse. Fehler, fehlende/ungültige
 Berichte und nicht äquivalente Eingangsbindungen verhindern den Gesamterfolg.
 Ein gemeinsamer summary.json wird nur vom Controller veröffentlicht.
+
+CI-Referenzsteuerung und CLI-Argumente sind getrennt; lokaler Runner und CI-
+Starter verwenden denselben Vier-Worker-Default. Der einzige Scheduler bleibt xdist.
