@@ -1,17 +1,19 @@
-"""Private iterative machine over validated owned AST/context values."""
+"""Iterative AST machine with per-frame lexical and candidate root bindings."""
 
 from .operators import UNARY_OPERATORS, BINARY_OPERATORS, QUANTIFIER_OPERATORS
 from .errors import SrxError
 from ._quantifier_iteration import QuantifierIteration
 from ._operations import apply_values, boolean_value, leaf_value
+from .graph_validation import GRAPH_OPERATORS
+from .graph_operations import direct_graph_operation, ReachabilityIteration
 
 
 def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/expression", item_scope=None):
-    # Each work frame owns its lexical binding, never a mutable global root.
-    work = [("visit", expression, pointer, item_scope)]
+    # Every continuation carries roots and item; nested BFS never recurses here.
+    work = [("visit", expression, pointer, item_scope, roots)]
     values = []
     while work:
-        action, node, at, scope = work.pop()
+        action, node, at, scope, current_roots = work.pop()
         if action == "apply":
             op, count = node
             operands = values[-count:]
@@ -27,8 +29,8 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
             elif index + 1 == len(args):
                 values.append(op == "and")
             else:
-                work.append(("boolean", (op, args, index+1), at, scope))
-                work.append(("visit", args[index+1], at+"/args/"+str(index+1), scope))
+                work.append(("boolean", (op, args, index+1), at, scope, current_roots))
+                work.append(("visit", args[index+1], at+"/args/"+str(index+1), scope, current_roots))
             continue
         if action in ("quantifier_array", "quantifier_item"):
             if action == "quantifier_array":
@@ -40,34 +42,46 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
             if cursor.done:
                 values.append(cursor.result)
             else:
-                work.append(("quantifier_item", cursor, at, scope))
-                work.append(("visit", cursor.predicate, at+"/where", cursor.item_scope()))
+                work.append(("quantifier_item", cursor, at, scope, current_roots))
+                work.append(("visit", cursor.predicate, at+"/where", cursor.item_scope(), current_roots))
+            continue
+        if action == "reachable_item":
+            node.accept(values.pop())
+            if node.done:
+                values.append(node.result)
+            else:
+                candidate = node.next_roots()
+                work.append(("reachable_item", node, at, scope, current_roots))
+                work.append(("visit", node.node["where"], at+"/where", scope, candidate))
             continue
         op = node["op"]
-        from .graph_validation import GRAPH_OPERATORS
         if op in GRAPH_OPERATORS:
-            from .graph_operations import graph_operation
-            values.append(graph_operation(node, roots, graph=graph, rule_id=rule_id, at=at,
-                                          item_scope=scope, evaluate_predicate=evaluate_expression))
+            if op == "reachable":
+                cursor = ReachabilityIteration(node, current_roots, graph=graph, rule_id=rule_id, at=at)
+                candidate = cursor.next_roots()
+                work.append(("reachable_item", cursor, at, scope, current_roots))
+                work.append(("visit", node["where"], at+"/where", scope, candidate))
+            else:
+                values.append(direct_graph_operation(node, current_roots, graph=graph, rule_id=rule_id, at=at))
         elif op in ("literal", "field"):
-            values.append(leaf_value(node, roots, rule_id=rule_id, at=at, item_scope=scope))
+            values.append(leaf_value(node, current_roots, rule_id=rule_id, at=at, item_scope=scope))
         elif op in UNARY_OPERATORS:
-            work.append(("apply", (op, 1), at, scope))
-            work.append(("visit", node["arg"], at+"/arg", scope))
+            work.append(("apply", (op, 1), at, scope, current_roots))
+            work.append(("visit", node["arg"], at+"/arg", scope, current_roots))
         elif op in BINARY_OPERATORS:
-            work.append(("apply", (op, 2), at, scope))
-            work.append(("visit", node["args"][1], at+"/args/1", scope))
-            work.append(("visit", node["args"][0], at+"/args/0", scope))
+            work.append(("apply", (op, 2), at, scope, current_roots))
+            work.append(("visit", node["args"][1], at+"/args/1", scope, current_roots))
+            work.append(("visit", node["args"][0], at+"/args/0", scope, current_roots))
         elif op in QUANTIFIER_OPERATORS:
-            work.append(("quantifier_array", (op, node["where"]), at, scope))
-            work.append(("visit", node["array"], at+"/array", scope))
+            work.append(("quantifier_array", (op, node["where"]), at, scope, current_roots))
+            work.append(("visit", node["array"], at+"/array", scope, current_roots))
         elif op in ("and", "or"):
             args = node["args"]
             if not args:
                 values.append(op == "and")
             else:
-                work.append(("boolean", (op, args, 0), at, scope))
-                work.append(("visit", args[0], at+"/args/0", scope))
+                work.append(("boolean", (op, args, 0), at, scope, current_roots))
+                work.append(("visit", args[0], at+"/args/0", scope, current_roots))
         else:
             raise SrxError("unsupported_operator", rule_id=rule_id, pointer=at+"/op",
                            expected="supported operator", actual="string")

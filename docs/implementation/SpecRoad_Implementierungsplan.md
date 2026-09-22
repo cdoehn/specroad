@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 142
-last_completed_plan_commit: 4.f.W
-next_plan_commit: 4.f.R
+implementation_plan_commits_completed: 143
+last_completed_plan_commit: 4.f.R
+next_plan_commit: 4.f.C
 last_completed_numbered_bundle: 7
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1875,7 +1875,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.f.R – Make it Right
 
-- [ ] **4.f.R** · Position **143/885** · Voraussetzung: `4.f.W`.
+- [x] **4.f.R** · Position **143/885** · Voraussetzung: `4.f.W`.
 **Exakte Commit-Message:** `4.f.R feat(validation): Begrenzte Graphoperatoren vervollständigen`
 
 **Vervollständigung:** Fehlende Tiefe, unvollständige Indizes und Zyklen korrekt behandeln.

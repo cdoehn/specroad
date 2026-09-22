@@ -40,3 +40,7 @@ Beispiel:
 ## Entwicklung
 
 Verhaltenstests: Richtungen, Mengen, Zielauswahl, explizite Tiefe, Typ-/Modellfehler und unveränderte Eingaben. Keine Ausgabe-/Dokumentationstests. Jeder W/R/C-Stand erhält einen vollständigen parallelen Testlauf mit vier xdist-Workern. Die serielle Vollreferenz bleibt ausschließlich in der vorbereiteten GitHub-CI.
+
+## Robustheit (4.f.R)
+
+BFS-Cursor und AST-Fortsetzungen tragen ihre eigenen Kandidatenwurzeln. Auch ineinander verschachtelte reachable-Ausdrücke benötigen keine rekursive Python-Auswertung; ein inneres Ergebnis oder Fehler verändert weder das äußere artifact noch item. Jeder Suchlauf hat seine eigene Queue und Besuchsmenge, ohne globale Daten. Tests ergänzen zyklische und inverse Wege, unabhängige Erreichbarkeits-Oracles, stabile Fehler-/Besuchsreihenfolge, breite Modelle, viele eingehende Kanten, wiederverwendete Kontexte, Fremdobjektablehnung und verschobene Modul-/Zipapp-Distributionen.
