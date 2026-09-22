@@ -10,7 +10,10 @@ def boolean_value(value, *, rule_id, at):
     return require_type(value, ("boolean",), rule_id=rule_id, pointer=at)
 
 
-def apply_values(op, operands, *, rule_id, at):
+def apply_values(op, operands, *, rule_id, at, numeric_policy=None):
+    from .arithmetic import ARITHMETIC_OPERATORS, arithmetic_operation
+    if op in ARITHMETIC_OPERATORS:
+        return arithmetic_operation(op, operands[0], operands[1], policy=numeric_policy, rule_id=rule_id, pointer=at)
     if op == "exists":
         return operands[0] is not MISSING
     if op == "not":

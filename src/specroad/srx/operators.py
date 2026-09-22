@@ -4,6 +4,10 @@ from types import MappingProxyType
 
 OPERATOR_FIELDS = MappingProxyType({
     "literal": ("op", "value"),
+    "add": ("op", "args"),
+    "subtract": ("op", "args"),
+    "multiply": ("op", "args"),
+    "divide": ("op", "args"),
     "field": ("op", "context", "pointer"),
     "exists": ("op", "arg"),
     "not": ("op", "arg"),

@@ -20,3 +20,7 @@ __all__ += ("compare",)
 
 from .graph import LoadedGraph
 __all__ += ("LoadedGraph",)
+
+from .numeric_policy import NumericPolicy, SrxPolicyError
+from .arithmetic import SrxNumericError, arithmetic_operation
+__all__ += ("NumericPolicy", "SrxPolicyError", "SrxNumericError", "arithmetic_operation")

@@ -15,11 +15,15 @@ class EvaluationContext:
     """
     _snapshot: JsonSnapshot
     graph: object
+    numeric_policy: object
 
     def __init__(self, document, *, rule_id, graph=None):
         rule_id = _rule_id(rule_id)
         snapshot = JsonSnapshot(document, rule_id=rule_id, subject="context")
-        _validate_context(snapshot.data, rule_id)
+        data = snapshot.data
+        _validate_context(data, rule_id)
+        from .numeric_policy import NumericPolicy
+        object.__setattr__(self, "numeric_policy", NumericPolicy.from_project(data["project"], rule_id=rule_id))
         if graph is not None:
             from .graph import require_graph
             require_graph(graph, rule_id=rule_id, at="/graph")

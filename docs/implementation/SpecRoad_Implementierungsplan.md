@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 144
-last_completed_plan_commit: 4.f.C
-next_plan_commit: 4.g.W
+implementation_plan_commits_completed: 145
+last_completed_plan_commit: 4.g.W
+next_plan_commit: 4.g.R
 last_completed_numbered_bundle: 8
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1905,7 +1905,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.g.W – Let it Work
 
-- [ ] **4.g.W** · Position **145/885** · Voraussetzung: `4.f.C`.
+- [x] **4.g.W** · Position **145/885** · Voraussetzung: `4.f.C`.
 **Exakte Commit-Message:** `4.g.W feat(validation): Exakte Arithmetik und Zahlenpolicy aufbauen`
 
 **Umsetzung:** srx-decimal-v1 mit expliziter Präzision 34 sowie add, subtract, multiply und divide implementieren.

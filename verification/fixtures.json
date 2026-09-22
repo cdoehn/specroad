@@ -26,7 +26,8 @@
     "SR-FIX-SRX-LOGIC-v1",
     "SR-FIX-SRX-COLLECTIONS-v1",
     "SR-FIX-SRX-QUANTIFIERS-v1",
-    "SR-FIX-SRX-GRAPH-v1"
+    "SR-FIX-SRX-GRAPH-v1",
+    "SR-FIX-SRX-NUMERIC-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -132,6 +133,10 @@
     "SR-FIX-SRX-GRAPH-v1": {
       "provider": "tests/support/srx_graph.py:records",
       "kind": "owned full supplied SourceRelations model; directed, inverse, cyclic, disconnected and bounded graph behavior"
+    },
+    "SR-FIX-SRX-NUMERIC-v1": {
+      "provider": "tests/support/srx_numeric.py:vectors",
+      "kind": "Appendix U.3 numeric behavior vectors; fixed input data"
     }
   }
 }

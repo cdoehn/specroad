@@ -14,4 +14,4 @@ def evaluate(program, context):
         raise SrxError("context_required", rule_id=program.rule_id,
                        expected="EvaluationContext", actual="non_context", subject="context")
     roots = context.data
-    return evaluate_expression(program.expression, roots, rule_id=program.rule_id, graph=context.graph)
+    return evaluate_expression(program.expression, roots, rule_id=program.rule_id, graph=context.graph, numeric_policy=context.numeric_policy)

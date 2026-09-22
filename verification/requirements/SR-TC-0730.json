@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0730",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0050",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SRX-NUMERIC-v1"
+  ],
+  "preconditions": [
+    "Explicit SRX 1.0 context and numeric policy"
+  ],
+  "steps": [
+    "Evaluate actual numeric expressions and inspect values/structured errors."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die SRX-Testabnahme MUSS sämtliche Entscheidungsvektoren aus Anhang U.3 einschließlich veränderter Prozessdefaults nachweisen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure arithmetic values and numeric policy only; no product or release approval."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV197"
+  ],
+  "expected_exit_codes": [
+    2
+  ],
+  "json_pointers": [
+    "/project/srx_policy",
+    "/expression"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,10 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_srx_arithmetic.py::test_normative_decision_vectors"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full CI runtime matrix and integrated project validation/lifecycle are not proven by local selected tests."
   ]
 }

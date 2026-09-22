@@ -1,0 +1,15 @@
+{
+  "format_version": 1,
+  "source": "SpecRoad specification Appendix U.3; numeric behavior, not output layout",
+  "vectors": [
+    {"op":"divide","left":1,"right":8,"precision":3,"value":0.125},
+    {"op":"divide","left":1,"right":8,"precision":2,"error":"precision_exceeded"},
+    {"op":"divide","left":1,"right":3,"precision":34,"error":"non_terminating"},
+    {"op":"divide","left":1,"right":0,"precision":34,"error":"division_by_zero"},
+    {"op":"add","left":0.1,"right":0.2,"precision":34,"value":0.3},
+    {"op":"add","left":1.20,"right":0.30,"precision":2,"value":1.5},
+    {"op":"add","left":999,"right":1,"precision":1,"value":1000},
+    {"op":"divide","left":1,"right":16,"precision":3,"value":0.0625},
+    {"op":"add","left":9007199254740992,"right":1,"precision":34,"error":"jcs_roundtrip_loss"}
+  ]
+}

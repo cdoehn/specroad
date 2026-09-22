@@ -8,7 +8,7 @@ from .graph_validation import GRAPH_OPERATORS
 from .graph_operations import direct_graph_operation, ReachabilityIteration
 
 
-def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/expression", item_scope=None):
+def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/expression", item_scope=None, numeric_policy=None):
     # Every continuation carries roots and item; nested BFS never recurses here.
     work = [("visit", expression, pointer, item_scope, roots)]
     values = []
@@ -18,7 +18,7 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
             op, count = node
             operands = values[-count:]
             del values[-count:]
-            values.append(apply_values(op, operands, rule_id=rule_id, at=at))
+            values.append(apply_values(op, operands, rule_id=rule_id, at=at, numeric_policy=numeric_policy))
             continue
         if action == "boolean":
             op, args, index = node
