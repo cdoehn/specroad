@@ -61,30 +61,34 @@ Nutzerentscheidung vom 15. September 2026: `pytest` und `pytest-xdist` gehören 
 in die Entwicklungsgruppe. Der Core bleibt ohne diese Laufzeitabhängigkeiten. Bestehende
 `unittest.TestCase`-Tests werden durch pytest eingesammelt, nicht pauschal neu geschrieben.
 
-Der vollständige Entwicklungs-/Patch-Check ist `.venv/bin/python -I -B tools/run_tests.py`.
-**Nutzerentscheidung vom 21. September 2026:** lokal und in Patch-Bundles läuft die
-vollständige Suite ausschließlich parallel, standardmäßig mit vier xdist-Workern.
-Auch direktes pytest startet mit vier Workern. Explizite positive Workerzahlen und
-bewusst gewähltes `auto` bleiben möglich; es gibt keinen stillen seriellen Fallback.
-Der serielle Vollreferenzlauf (`--workers 0`) und der Parallel-/Seriell-Vergleich
-gehören ausschließlich in die vorbereitete GitHub-CI, nicht in lokale Clean-Gates.
-Jeder W-, R- und C-Zwischenstand behält sein vollständiges paralleles Verhaltenstest-Gate.
-Die kleinen isolierten Framework-Regressionsprozesse bleiben erhalten; sie sind
-keine zusätzliche serielle Ausführung der Produktsuite.
+**Neue Nutzerentscheidung vom 22. September 2026, ab Bundle 009:** Auf dem
+Pixel laufen bei JEDEM Commit ausschließlich explizit ausgewählte neue, geänderte
+und risikobezogene Testdateien, automatisch parallel mit vier xdist-Workern.
+Keine lokale Vollsuite, auch nicht beim letzten C. `tools/run_selected_tests.py`
+veröffentlicht nur einen gebundenen Teilnachweis (`selected_files_only`), keinen
+vollständigen Katalognachweis und keine Produktfreigabe.
 
-**Beim Entwicklungsrunner kein `-S` verwenden**, da es installierte Entwicklungs-
-abhängigkeiten ausblenden würde. Isolierte Core-Unterprozesse dürfen weiter `-S`
-verwenden. Nur xdist verteilt Tests auf Prozesse; kein eigener Scheduler. Nur der
-Controller veröffentlicht die vollständigen Nachweise. Fehlende, übersprungene,
-erwartet fehlgeschlagene Tests oder Worker-Abbrüche sind keine bestandene Vollabnahme.
-TD-001 und das Verbot künstlicher Test-/Suite-Timeouts bleiben unverändert.
+GitHub: Volltests von Zwischencommits sind manuell über `workflow_dispatch`
+startbar; automatisch nur bei einem gepushten Abschlusscommit auf `dev`.
+Die Commit-Trailer `SpecRoad-Bundle` und `SpecRoad-Bundle-Final` sind reine
+Auslöser, kein Sicherheits- oder Testnachweis. Normalerweise läuft die vollständige
+Suite parallel; jede durch vier teilbare Bundle-Nummer (ab hier 012, 016, ...)
+verlangt parallel PLUS seriell und den vorhandenen Nachweisvergleich. Die CI
+behält CPython 3.10–3.14. Ein beliebiger C-Commit ist NICHT automatisch ein
+Bundle-Abschluss. Historische W/R/C-Vollsuiteangaben werden hinsichtlich des
+Ausführungsortes durch diese explizite Nutzerregel ersetzt, nicht als erfolgte
+Abnahme ausgegeben.
 
-Die bestehende GitHub-Actions-Vorlage prüft CPython 3.10 bis 3.14 auf Ubuntu,
-parallel und seriell je Version mit gebundenem Nachweisvergleich. Der CI-Starter
-verlangt die explizite GitHub-Actions-Umgebung als Schutz vor versehentlichem
-lokalem Start (keine Sicherheits- oder Authentifizierungsgrenze).
-Es wird hier kein GitHub-Repository angelegt, kein Remote gesetzt und nichts gepusht.
-Eine vorbereitete Workflowdatei ist kein bereits ausgeführter CI-Nachweis.
+Nur pytest-xdist verteilt Tests. Kein eigener Scheduler, keine stillen Skips,
+keine kosmetischen Tests und keine künstlichen Einzeltest-/Suite-Timeouts.
+Kleine isolierte Framework-Regressionsprozesse bleiben erhalten. Ein erfolgreicher
+lokaler Commit bzw. Apply bestätigt nur die ausgewählten Gates; CI-Abschluss und
+Produktfreigabe sind davon strikt getrennt. Ein fehlgeschlagener CI-Lauf benötigt
+anschließend Reparatur, niemals nachträgliches Umschreiben seines Ergebnisses.
+
+Die vorhandene Vollsuite-Schnittstelle `tools/run_tests.py` bleibt für CI und
+bewusst angeforderte Diagnose verfügbar, wird aber von lokalen Bundles nicht
+mehr verwendet. `tools/run_ci_tests.py` bleibt der CI-interne Dualmodus.
 
 Die Testpolicy-Anpassung erfolgt getrennt als OFF-PLAN `TEST-POLICY.a.W/R/C` und
 zählt keine Produktposition hoch. Die ursprüngliche Testmigration bei 42/885
@@ -11685,3 +11689,7 @@ Ein gemeinsamer summary.json wird nur vom Controller veröffentlicht.
 
 CI-Referenzsteuerung und CLI-Argumente sind getrennt; lokaler Runner und CI-
 Starter verwenden denselben Vier-Worker-Default. Der einzige Scheduler bleibt xdist.
+
+## Zusatzauftrag BUNDLE-CI (Bundle 009)
+
+- BUNDLE-CI.a.W: gezielte lokale Testauswahl und Dev-Abschlussauslösung implementiert; OFF-PLAN, Produktzähler unverändert.

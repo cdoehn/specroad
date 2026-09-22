@@ -2,15 +2,50 @@ name: Behavior tests
 
 on:
   push:
-  pull_request:
+    branches: [dev]
   workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Optional full commit SHA from dev (e.g. an intermediate W/R/C commit)'
+        required: false
+        type: string
+      mode:
+        description: 'auto: final bundles 4/8/12... use both modes; otherwise parallel'
+        required: true
+        default: auto
+        type: choice
+        options: [auto, both]
 
 permissions:
   contents: read
 
 jobs:
+  select:
+    name: Select exact bundle revision (no full tests)
+    runs-on: ubuntu-24.04
+    outputs:
+      commit_sha: ${{ steps.selection.outputs.commit_sha }}
+      run_full: ${{ steps.selection.outputs.run_full }}
+      mode: ${{ steps.selection.outputs.mode }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - id: selection
+        name: Select full gate only for final commits or manual requests
+        env:
+          SR_COMMIT_SHA: ${{ inputs.commit_sha }}
+          SR_CI_MODE: ${{ inputs.mode || 'auto' }}
+        run: python -I -B tools/select_bundle_ci.py
+
   behavior:
-    name: CPython ${{ matrix.python }} / Ubuntu
+    needs: select
+    if: needs.select.outputs.run_full == 'true'
+    name: CPython ${{ matrix.python }} / ${{ needs.select.outputs.mode }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -19,6 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: ${{ needs.select.outputs.commit_sha }}
           persist-credentials: false
       - uses: actions/setup-python@v7
         with:
@@ -28,19 +64,24 @@ jobs:
           python -m pip install uv==0.12.7
           uv venv --python python --no-python-downloads .venv
           uv pip install --python .venv/bin/python --link-mode copy --group dev
-      - name: Execute parallel gate, serial CI reference and compare evidence
-        run: >-
-          .venv/bin/python -I -B tools/run_ci_tests.py
-          --workers 4
-          --outdir "${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}"
-      - name: Preserve development evidence
+      - name: Full parallel regression
+        if: needs.select.outputs.mode == 'parallel'
+        env:
+          SR_OUT: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
+          PYTHONHASHSEED: '117'
+        run: |
+          mkdir -- "$SR_OUT"
+          .venv/bin/python -I -B tools/run_tests.py --workers 4 --evidence "$SR_OUT/parallel-evidence.json"
+      - name: Full parallel and serial regression with evidence comparison
+        if: needs.select.outputs.mode == 'both'
+        env:
+          SR_OUT: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
+        run: .venv/bin/python -I -B tools/run_ci_tests.py --workers 4 --outdir "$SR_OUT"
+      - name: Preserve development evidence (not release approval)
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: behavior-ubuntu-python-${{ matrix.python }}
-          path: |
-            ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/*.json
+          name: behavior-${{ matrix.python }}-${{ needs.select.outputs.commit_sha }}
+          path: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/*.json
           if-no-files-found: error
           retention-days: 14
-      # Preparation only: no repository creation, remote or push by this file.
-      # No presentation/doc tests or test/suite timeouts. Not a release gate.

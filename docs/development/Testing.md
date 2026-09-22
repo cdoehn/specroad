@@ -1,3 +1,11 @@
+# Aktive Testpolicy ab Bundle 009
+
+Die Nutzerregel vom 22.09.2026 ersetzt frühere lokale Vollsuite-Anweisungen:
+Pixel nur gezielte parallele Tests je Commit, GitHub-Vollsuite automatisch am
+Bundleabschluss; jedes vierte Bundle parallel plus seriell samt Vergleich.
+Details: [Bundle-CI](Bundle_CI.md). Ältere Vollsuite-Befehle unten sind nur
+Referenz für CI bzw. ausdrücklich beauftragte Diagnosen, keine lokalen Patch-Gates.
+
 # SpecRoad: parallele Testentwicklung
 
 ## Einrichtung und Aufrufe
