@@ -8,19 +8,21 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-SRX-CONTEXT-v1",
-    "SR-FIX-SRX-QUANTIFIERS-v1"
+    "SR-FIX-SRX-QUANTIFIERS-v1",
+    "SR-FIX-SRX-RESOURCES-v1"
   ],
   "preconditions": [
     "Explicit JSON-only caller projections and SRX 1.0 literal expression."
   ],
   "steps": [
     "Capture own immutable data; evaluate literal or reject invalid declarations without side effects.",
-    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
+    "Observe first soft overruns without hiding later actual errors; reject inactive forbidden expressions and foreign conversion hooks before execution."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SRX DARF NICHT reguläre Ausdrücke, dynamische Importe, Reflection, Dateizugriffe, Netzwerkzugriffe, Zeit- oder Zufallsquellen, Shellbefehle, benutzerdefinierten Code oder nicht deterministische Operatoren enthalten.",
-    "scope": "Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."
+    "scope": "All currently implemented SRX operator families enforce closed AST forms and built-in JSON types before execution; literals remain inert. No implicit filesystem, network, clock, entropy, shell or caller code is invoked by these paths."
   },
   "expected_diagnostics": [
     "SRV110"
@@ -47,10 +49,14 @@
     "test_srx_context_right.SrxContextRightTests.test_code_text_and_import_declarations_have_no_file_effect",
     "test_srx_context_right.SrxContextRightTests.test_no_clock_entropy_or_shell_access",
     "test_srx_quantifiers.SrxQuantifierTests.test_item_cannot_be_read_outside_evaluation",
-    "test_srx_quantifiers.SrxQuantifierTests.test_quantifier_shaped_literals_remain_data"
+    "test_srx_quantifiers.SrxQuantifierTests.test_quantifier_shaped_literals_remain_data",
+    "test_srx_resources_right.test_evaluation_observes_no_file_network_clock_random_or_shell",
+    "test_srx_resources_right.test_foreign_graph_filter_comparison_hooks_are_never_called",
+    "test_srx_resources_right.test_forbidden_expression_never_reaches_executor_or_snapshot",
+    "test_srx_resources_right.test_literal_code_does_not_create_files_or_execute",
+    "test_srx_resources_right.test_json_attributes_are_data_not_reflection"
   ],
   "open_items": [
-    "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",
-    "Structure/work policy and complete language conformance are not established by literal evaluation."
+    "Complete profile/CLI and whole-product language conformance plus supported-runtime CI matrix in later scheduled steps."
   ]
 }

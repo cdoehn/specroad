@@ -35,7 +35,7 @@ class ReachabilityIteration:
 
     def next_roots(self):
         if self.access.meter is not None:
-            self.access.meter.add("graph_steps")
+            self.access.meter.add("graph_steps", pointer=self.at)
         self.current = self.queue.popleft()
         return self.access.candidate_roots(self.current[0])
 

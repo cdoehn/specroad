@@ -43,7 +43,7 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
                 values.append(cursor.result)
             else:
                 if meter is not None:
-                    meter.add("iterations")
+                    meter.add("iterations", pointer=at+"/where")
                 work.append(("quantifier_item", cursor, at, scope, current_roots))
                 work.append(("visit", cursor.predicate, at+"/where", cursor.item_scope(), current_roots))
             continue
@@ -57,7 +57,7 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
                 work.append(("visit", node.node["where"], at+"/where", scope, candidate))
             continue
         if meter is not None:
-            meter.add("evaluation_steps")
+            meter.add("evaluation_steps", pointer=at)
         op = node["op"]
         if op in GRAPH_OPERATORS:
             if op == "reachable":

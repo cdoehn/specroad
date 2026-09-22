@@ -6,7 +6,7 @@ from .errors import SrxError
 from ._machine import evaluate_expression
 from ._json_values import JsonSnapshot
 from .types import MISSING
-from .resources import WorkMeter
+from .resources import WorkMeter, ResourceUsage
 from .validation import _validate_document
 
 
@@ -17,6 +17,8 @@ class EvaluationObservation:
     usage: object
 
     def __init__(self, value, usage, *, rule_id):
+        if type(usage) is not ResourceUsage or usage.evaluation_completed is not True:
+            raise ValueError("A completed usage observation is required")
         snapshot = None if value is MISSING else JsonSnapshot(value, rule_id=rule_id, subject="result")
         object.__setattr__(self, "_snapshot", snapshot)
         object.__setattr__(self, "usage", usage)
@@ -37,8 +39,14 @@ def _run(program, context):
     structure = _validate_document(document, program.rule_id,
                                    structure_limits=context.resource_policy.structure)
     meter = WorkMeter(context.resource_policy, structure)
-    value = evaluate_expression(document["expression"], context.data, rule_id=program.rule_id,
-                                graph=context.graph, numeric_policy=context.numeric_policy, meter=meter)
+    try:
+        value = evaluate_expression(document["expression"], context.data, rule_id=program.rule_id,
+                                    graph=context.graph, numeric_policy=context.numeric_policy, meter=meter)
+    except SrxError as error:
+        # Keep the original numeric/type/graph diagnostic. A prior soft event
+        # cannot turn a real failure into false, success or ready-to-resume.
+        error.resource_usage = meter.observation(False)
+        raise
     return value, meter.observation(True)
 
 

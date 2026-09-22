@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Validate full executable AST against positive node/depth limits before evaluation.",
-    "Evaluate to completion beyond soft expression/quantifier/graph targets and inspect owned work observations."
+    "Evaluate to completion beyond soft expression/quantifier/graph targets and inspect owned work observations.",
+    "Observe first soft overruns without hiding later actual errors; reject inactive forbidden expressions and foreign conversion hooks before execution."
   ],
   "oracle": {
     "kind": "behavior",
@@ -45,7 +46,11 @@
     "test_srx_resources.test_soft_operation_target_is_not_an_error_or_truncation",
     "test_srx_resources.test_large_array_completes_beyond_iteration_target",
     "test_srx_resources.test_graph_observation_does_not_filter_results_to_budget",
-    "test_srx_resources.test_no_checkpoint_or_resume_claim_after_soft_exceedance"
+    "test_srx_resources.test_no_checkpoint_or_resume_claim_after_soft_exceedance",
+    "test_srx_resources_right.test_soft_events_are_bounded_and_have_first_crossing_positions",
+    "test_srx_resources_right.test_real_numeric_error_after_overrun_keeps_numeric_diagnostic",
+    "test_srx_resources_right.test_failed_observation_does_not_pollute_next_call",
+    "test_srx_resources_right.test_graph_work_above_target_preserves_first_real_error"
   ],
   "open_items": [
     "Complete profile/CLI composition and persistent checkpoint/work adapters in their scheduled steps.",

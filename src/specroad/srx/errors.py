@@ -18,6 +18,8 @@ class SrxError(ValueError):
         self.position = position
         self.line = line
         self.column = column
+        # Optional immutable observation of failed work, never a Boolean result.
+        self.resource_usage = None
 
     def diagnostic(self):
         return {"code": self.code, "reason": self.reason,

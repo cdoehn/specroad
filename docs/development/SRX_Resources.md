@@ -1,6 +1,6 @@
 # SRX-Ressourcen und Sicherheitsgrenzen
 
-Stand 4.h.W. Die API bleibt eine reine In-Memory-Auswertung. Fachliche Werte
+Stand 4.h.R. Die API bleibt eine reine In-Memory-Auswertung. Fachliche Werte
 werden weder aus der Hostumgebung beschafft noch durch ein Arbeitsziel verändert.
 
 ## Strukturgrenzen
@@ -63,3 +63,26 @@ Kein CLI-Fachbefehl, keine OS-Sandbox, kein Dateizugriff und kein automatisches
 Lockern harter Grenzen. Vollständige Profilkomposition, beobachtete Hostquoten
 und persistente Work-/Checkpoint-Protokolle folgen in ihren Planschritten.
 Lokal nur ausgewählte vier-Worker-Gates, Volltests und serielle Referenzen in CI.
+
+## Fehlersicht und Sicherheitsabnahme
+
+Die erste gemessene Überschreitung je Arbeitsdimension erzeugt genau ein
+unveränderliches Ereignis mit Ziel, beobachtetem Zähler, Ausdrucksposition und
+Fortsetzungsgrund. Insgesamt höchstens drei Ereignisse: kein wachsendes Log pro
+weiterem Element. Blockweise Graphmessungen melden den tatsächlich beobachteten
+Zähler am Messpunkt; es wird keine feinere CPU-Zeitmessung erfunden.
+
+Ein späterer Typ-, Zahlen- oder Graphfehler bleibt derselbe fachliche Fehler.
+`SrxError.resource_usage` enthält dann, sofern die Auswertung begonnen hat, den
+unveränderlichen Zwischenstand mit `evaluation_completed=false`. Vor der
+Auswertung abgelehnte Strukturen haben keinen vorgetäuschten Ausführungsnachweis.
+Die bestehende Operator-Diagnose bleibt unabhängig vom gewählten weichen Ziel.
+
+Die vollständige AST-Prüfung sperrt unbekannte/unerlaubte Operatoren auch in
+nicht ausgeführten Kurzschlusszweigen, leeren Quantoren und unerreichbaren
+Graphprädikaten. Datei-, Netzwerk-, Zeit-, Zufalls-, Shell-, Regex-, Import- und
+Reflection-Ausdrücke werden nicht als ausführbare Sprache zugelassen. Ein
+codeähnlicher Literalwert und ein JSON-Schlüssel namens `__class__` bleiben
+gewöhnliche Daten. Fremdobjekt-/Unterklassenmethoden werden vor Typ-/Feldprüfung
+nicht aufgerufen. Die Regressionen beobachten tatsächliche Zugriffsversuche und
+Dateiwirkungen; sie prüfen keinen Helptext und kein Konsolenlayout.
