@@ -28,7 +28,8 @@
     "SR-FIX-SRX-QUANTIFIERS-v1",
     "SR-FIX-SRX-GRAPH-v1",
     "SR-FIX-SRX-NUMERIC-v1",
-    "SR-FIX-SRX-RESOURCES-v1"
+    "SR-FIX-SRX-RESOURCES-v1",
+    "SR-FIX-SRX-CONFORMANCE-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -142,6 +143,10 @@
     "SR-FIX-SRX-RESOURCES-v1": {
       "provider": "tests/support/srx_resources.py:observed",
       "kind": "owned explicit AST policies and soft work targets; in-process observations, not persisted checkpoints or host quota proof"
+    },
+    "SR-FIX-SRX-CONFORMANCE-v1": {
+      "provider": "tests/support/srx_vectors.py:load_corpus",
+      "kind": "versioned SRX 1.0 behavior vectors; actual public APIs, explicit value/missing/error expectations; no human-output snapshots"
     }
   }
 }

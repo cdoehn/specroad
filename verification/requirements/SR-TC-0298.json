@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SRX-QUANTIFIERS-v1"
+    "SR-FIX-SRX-QUANTIFIERS-v1",
+    "SR-FIX-SRX-CONFORMANCE-v1"
   ],
   "preconditions": [
     "Explicit SRX 1.0 program and stable JSON-only context input."
   ],
   "steps": [
-    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
+    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Referenzimplementierung MUSS die versionierten Positiv-, Negativ-, Grenzwert- und Fehlervektoren sämtlicher SRX-Operatoren einschließlich der expliziten Zahlenpolicy aus Anhang U nachweisen; freigegebene inkompatible Semantikänderungen verlangen eine neue SRX-Major-Version.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Executable SRX 1.0 conformance corpus for 29 operators and all nine concrete Annex U.3 arithmetic decisions; diagnostics preserve rule ID, pointers and types with passive repair hints. Full project/profile/CLI integration and the runtime matrix require separate evidence."
   },
   "expected_diagnostics": [
     "SRV110"
@@ -40,9 +42,14 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_srx_quantifiers.SrxQuantifierTests.test_boolean_truth_tables_up_to_six_elements",
-    "test_srx_quantifiers.SrxQuantifierTests.test_versioned_positive_negative_and_empty_vectors"
+    "test_srx_quantifiers.SrxQuantifierTests.test_versioned_positive_negative_and_empty_vectors",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_positive_vectors",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_negative_vectors",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_boundary_vectors",
+    "test_srx_conformance.SrxConformanceWorkTests.test_every_supported_operator_has_all_four_case_classes"
   ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",
+    "Integrated project/profile validation and CLI/lifecycle diagnosis follow their scheduled steps."
   ]
 }

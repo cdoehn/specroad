@@ -8,19 +8,21 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-SRX-CONTEXT-v1",
-    "SR-FIX-SRX-QUANTIFIERS-v1"
+    "SR-FIX-SRX-QUANTIFIERS-v1",
+    "SR-FIX-SRX-CONFORMANCE-v1"
   ],
   "preconditions": [
     "Explicit JSON-only caller projections and SRX 1.0 literal expression."
   ],
   "steps": [
     "Capture own immutable data; evaluate literal or reject invalid declarations without side effects.",
-    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
+    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein SRX-Typ-, Versions-, Operator- oder Auswertungsfehler MUSS Regel-ID, JSON Pointer des Ausdrucksknotens, erwartete und tatsächliche Typen sowie eine Reparaturempfehlung ausgeben.",
-    "scope": "Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."
+    "scope": "Executable SRX 1.0 conformance corpus for 29 operators and all nine concrete Annex U.3 arithmetic decisions; diagnostics preserve rule ID, pointers and types with passive repair hints. Full project/profile/CLI integration and the runtime matrix require separate evidence."
   },
   "expected_diagnostics": [
     "SRV110"
@@ -46,10 +48,12 @@
     "test_srx_context_right.SrxContextRightTests.test_nested_context_pointer_escapes",
     "test_srx_context_right.SrxContextRightTests.test_diagnostics_are_repeatable_without_input_values",
     "test_srx_quantifiers.SrxQuantifierTests.test_scalar_predicates_must_be_boolean",
-    "test_srx_quantifiers.SrxQuantifierTests.test_invalid_array_index_retains_error"
+    "test_srx_quantifiers.SrxQuantifierTests.test_invalid_array_index_retains_error",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_error_vectors_and_pointers",
+    "test_srx_conformance.SrxConformanceWorkTests.test_numeric_repairs_remain_disjoint"
   ],
   "open_items": [
-    "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",
-    "Structure/work policy and complete language conformance are not established by literal evaluation."
+    "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",
+    "Integrated project/profile validation and CLI/lifecycle diagnosis follow their scheduled steps."
   ]
 }

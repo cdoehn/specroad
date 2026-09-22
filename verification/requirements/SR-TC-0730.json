@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SRX-NUMERIC-v1"
+    "SR-FIX-SRX-NUMERIC-v1",
+    "SR-FIX-SRX-CONFORMANCE-v1"
   ],
   "preconditions": [
     "Explicit SRX 1.0 context and numeric policy"
   ],
   "steps": [
-    "Evaluate actual numeric expressions and inspect values/structured errors."
+    "Evaluate actual numeric expressions and inspect values/structured errors.",
+    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die SRX-Testabnahme MUSS sämtliche Entscheidungsvektoren aus Anhang U.3 einschließlich veränderter Prozessdefaults nachweisen.",
-    "scope": "Pure arithmetic values and numeric policy only; no product or release approval."
+    "scope": "Executable SRX 1.0 conformance corpus for 29 operators and all nine concrete Annex U.3 arithmetic decisions; diagnostics preserve rule ID, pointers and types with passive repair hints. Full project/profile/CLI integration and the runtime matrix require separate evidence."
   },
   "expected_diagnostics": [
     "SRV197"
@@ -43,9 +45,11 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_srx_arithmetic.py::test_normative_decision_vectors",
-    "tests/test_srx_arithmetic_right.py::test_all_vectors_survive_modified_process_decimal_defaults"
+    "tests/test_srx_arithmetic_right.py::test_all_vectors_survive_modified_process_decimal_defaults",
+    "test_srx_conformance.SrxConformanceWorkTests.test_appendix_u_decisions"
   ],
   "open_items": [
-    "Full CI runtime matrix and integrated project validation/lifecycle are not proven by local selected tests."
+    "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",
+    "Integrated project/profile validation and CLI/lifecycle diagnosis follow their scheduled steps."
   ]
 }

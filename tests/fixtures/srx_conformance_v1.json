@@ -1,0 +1,5506 @@
+{
+  "format_version": 1,
+  "language": "srx",
+  "language_version": "1.0",
+  "corpus_revision": 1,
+  "cases": [
+    {
+      "id": "SRX1-literal-positive",
+      "operator": "literal",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "literal",
+          "value": {
+            "b": [
+              1,
+              null,
+              true
+            ],
+            "a": "text"
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": {
+          "a": "text",
+          "b": [
+            1,
+            null,
+            true
+          ]
+        }
+      }
+    },
+    {
+      "id": "SRX1-literal-negative",
+      "operator": "literal",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "literal"
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "invalid_fields",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      }
+    },
+    {
+      "id": "SRX1-literal-boundary",
+      "operator": "literal",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "literal",
+          "value": -0.0
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0.0
+      }
+    },
+    {
+      "id": "SRX1-literal-error",
+      "operator": "literal",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "literal",
+          "value": 1,
+          "extra": 0
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "invalid_fields",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      }
+    },
+    {
+      "id": "SRX1-field-positive",
+      "operator": "field",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "field",
+          "context": "artifact",
+          "pointer": "/a~1b/~0/1"
+        }
+      },
+      "context": {
+        "artifact": {
+          "a/b": {
+            "~": [
+              1,
+              false
+            ]
+          }
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-field-negative",
+      "operator": "field",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "field",
+          "context": "artifact",
+          "pointer": "/absent"
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "missing"
+      }
+    },
+    {
+      "id": "SRX1-field-boundary",
+      "operator": "field",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "field",
+          "context": "artifact",
+          "pointer": ""
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": {}
+      }
+    },
+    {
+      "id": "SRX1-field-error",
+      "operator": "field",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "field",
+          "context": "artifact",
+          "pointer": "/~2"
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "invalid_pointer_escape",
+        "input_pointer": "/expression/pointer",
+        "expression_pointer": "/expression/pointer"
+      }
+    },
+    {
+      "id": "SRX1-exists-positive",
+      "operator": "exists",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "exists",
+          "arg": {
+            "op": "literal",
+            "value": null
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-exists-negative",
+      "operator": "exists",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "exists",
+          "arg": {
+            "op": "field",
+            "context": "artifact",
+            "pointer": "/absent"
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-exists-boundary",
+      "operator": "exists",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "exists",
+          "arg": {
+            "op": "literal",
+            "value": false
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-exists-error",
+      "operator": "exists",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "exists",
+          "arg": {}
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "unsupported_operator",
+        "input_pointer": "/expression/arg/op",
+        "expression_pointer": "/expression/arg/op"
+      }
+    },
+    {
+      "id": "SRX1-not-positive",
+      "operator": "not",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "not",
+          "arg": {
+            "op": "literal",
+            "value": false
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-not-negative",
+      "operator": "not",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "not",
+          "arg": {
+            "op": "literal",
+            "value": true
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-not-boundary",
+      "operator": "not",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "not",
+          "arg": {
+            "op": "exists",
+            "arg": {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/x"
+            }
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-not-error",
+      "operator": "not",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "not",
+          "arg": {
+            "op": "literal",
+            "value": 0
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/arg",
+        "expression_pointer": "/expression/arg",
+        "expected_type": "boolean",
+        "actual_type": "number"
+      }
+    },
+    {
+      "id": "SRX1-and-positive",
+      "operator": "and",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "and",
+          "args": [
+            {
+              "op": "literal",
+              "value": false
+            },
+            {
+              "op": "literal",
+              "value": true
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-and-negative",
+      "operator": "and",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "and",
+          "args": [
+            {
+              "op": "literal",
+              "value": false
+            },
+            {
+              "op": "literal",
+              "value": false
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-and-boundary",
+      "operator": "and",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "and",
+          "args": []
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-and-error",
+      "operator": "and",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "and",
+          "args": [
+            {
+              "op": "literal",
+              "value": true
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1",
+        "expected_type": "boolean",
+        "actual_type": "number"
+      }
+    },
+    {
+      "id": "SRX1-or-positive",
+      "operator": "or",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "or",
+          "args": [
+            {
+              "op": "literal",
+              "value": false
+            },
+            {
+              "op": "literal",
+              "value": true
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-or-negative",
+      "operator": "or",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "or",
+          "args": [
+            {
+              "op": "literal",
+              "value": true
+            },
+            {
+              "op": "literal",
+              "value": false
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-or-boundary",
+      "operator": "or",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "or",
+          "args": []
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-or-error",
+      "operator": "or",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "or",
+          "args": [
+            {
+              "op": "literal",
+              "value": false
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1",
+        "expected_type": "boolean",
+        "actual_type": "number"
+      }
+    },
+    {
+      "id": "SRX1-eq-positive",
+      "operator": "eq",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "eq",
+          "args": [
+            {
+              "op": "literal",
+              "value": {
+                "x": [
+                  1,
+                  true
+                ]
+              }
+            },
+            {
+              "op": "literal",
+              "value": {
+                "x": [
+                  1,
+                  true
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-eq-negative",
+      "operator": "eq",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "eq",
+          "args": [
+            {
+              "op": "literal",
+              "value": [
+                1,
+                2
+              ]
+            },
+            {
+              "op": "literal",
+              "value": [
+                2,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-eq-boundary",
+      "operator": "eq",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "eq",
+          "args": [
+            {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/absent"
+            },
+            {
+              "op": "literal",
+              "value": null
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-eq-error",
+      "operator": "eq",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "eq",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": true
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_types",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1"
+      }
+    },
+    {
+      "id": "SRX1-ne-positive",
+      "operator": "ne",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ne",
+          "args": [
+            {
+              "op": "literal",
+              "value": {
+                "x": [
+                  1,
+                  true
+                ]
+              }
+            },
+            {
+              "op": "literal",
+              "value": {
+                "x": [
+                  1,
+                  true
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-ne-negative",
+      "operator": "ne",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ne",
+          "args": [
+            {
+              "op": "literal",
+              "value": [
+                1,
+                2
+              ]
+            },
+            {
+              "op": "literal",
+              "value": [
+                2,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-ne-boundary",
+      "operator": "ne",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ne",
+          "args": [
+            {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/absent"
+            },
+            {
+              "op": "literal",
+              "value": null
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-ne-error",
+      "operator": "ne",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ne",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": true
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_types",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1"
+      }
+    },
+    {
+      "id": "SRX1-lt-positive",
+      "operator": "lt",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lt",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-lt-negative",
+      "operator": "lt",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lt",
+          "args": [
+            {
+              "op": "literal",
+              "value": 2
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-lt-boundary",
+      "operator": "lt",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lt",
+          "args": [
+            {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/absent"
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-lt-error",
+      "operator": "lt",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lt",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_types",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1"
+      }
+    },
+    {
+      "id": "SRX1-lte-positive",
+      "operator": "lte",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lte",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-lte-negative",
+      "operator": "lte",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lte",
+          "args": [
+            {
+              "op": "literal",
+              "value": 2
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-lte-boundary",
+      "operator": "lte",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lte",
+          "args": [
+            {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/absent"
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-lte-error",
+      "operator": "lte",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "lte",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_types",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1"
+      }
+    },
+    {
+      "id": "SRX1-gt-positive",
+      "operator": "gt",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gt",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-gt-negative",
+      "operator": "gt",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gt",
+          "args": [
+            {
+              "op": "literal",
+              "value": 2
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-gt-boundary",
+      "operator": "gt",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gt",
+          "args": [
+            {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/absent"
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-gt-error",
+      "operator": "gt",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gt",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_types",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1"
+      }
+    },
+    {
+      "id": "SRX1-gte-positive",
+      "operator": "gte",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gte",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-gte-negative",
+      "operator": "gte",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gte",
+          "args": [
+            {
+              "op": "literal",
+              "value": 2
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-gte-boundary",
+      "operator": "gte",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gte",
+          "args": [
+            {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/absent"
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-gte-error",
+      "operator": "gte",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "gte",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_types",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1"
+      }
+    },
+    {
+      "id": "SRX1-in-positive",
+      "operator": "in",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "in",
+          "args": [
+            {
+              "op": "literal",
+              "value": {
+                "a": 1
+              }
+            },
+            {
+              "op": "literal",
+              "value": [
+                {
+                  "a": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-in-negative",
+      "operator": "in",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "in",
+          "args": [
+            {
+              "op": "literal",
+              "value": 4
+            },
+            {
+              "op": "literal",
+              "value": [
+                1,
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-in-boundary",
+      "operator": "in",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "in",
+          "args": [
+            {
+              "op": "field",
+              "context": "artifact",
+              "pointer": "/missing"
+            },
+            {
+              "op": "literal",
+              "value": [
+                null
+              ]
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-in-error",
+      "operator": "in",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "in",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1",
+        "expected_type": "array",
+        "actual_type": "string"
+      }
+    },
+    {
+      "id": "SRX1-contains-positive",
+      "operator": "contains",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "contains",
+          "args": [
+            {
+              "op": "literal",
+              "value": "中文é"
+            },
+            {
+              "op": "literal",
+              "value": "文"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-contains-negative",
+      "operator": "contains",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "contains",
+          "args": [
+            {
+              "op": "literal",
+              "value": "é"
+            },
+            {
+              "op": "literal",
+              "value": "é"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-contains-boundary",
+      "operator": "contains",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "contains",
+          "args": [
+            {
+              "op": "literal",
+              "value": ""
+            },
+            {
+              "op": "literal",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-contains-error",
+      "operator": "contains",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "contains",
+          "args": [
+            {
+              "op": "literal",
+              "value": "abc"
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1",
+        "expected_type": "string",
+        "actual_type": "number"
+      }
+    },
+    {
+      "id": "SRX1-starts_with-positive",
+      "operator": "starts_with",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "starts_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": "abc"
+            },
+            {
+              "op": "literal",
+              "value": "ab"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-starts_with-negative",
+      "operator": "starts_with",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "starts_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": "abc"
+            },
+            {
+              "op": "literal",
+              "value": "Z"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-starts_with-boundary",
+      "operator": "starts_with",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "starts_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": ""
+            },
+            {
+              "op": "literal",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-starts_with-error",
+      "operator": "starts_with",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "starts_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": []
+            },
+            {
+              "op": "literal",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/0",
+        "expression_pointer": "/expression/args/0",
+        "expected_type": "string",
+        "actual_type": "array"
+      }
+    },
+    {
+      "id": "SRX1-ends_with-positive",
+      "operator": "ends_with",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ends_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": "abc"
+            },
+            {
+              "op": "literal",
+              "value": "bc"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-ends_with-negative",
+      "operator": "ends_with",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ends_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": "abc"
+            },
+            {
+              "op": "literal",
+              "value": "Z"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-ends_with-boundary",
+      "operator": "ends_with",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ends_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": ""
+            },
+            {
+              "op": "literal",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-ends_with-error",
+      "operator": "ends_with",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "ends_with",
+          "args": [
+            {
+              "op": "literal",
+              "value": []
+            },
+            {
+              "op": "literal",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/0",
+        "expression_pointer": "/expression/args/0",
+        "expected_type": "string",
+        "actual_type": "array"
+      }
+    },
+    {
+      "id": "SRX1-length-positive",
+      "operator": "length",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "length",
+          "arg": {
+            "op": "literal",
+            "value": [
+              1,
+              1,
+              null
+            ]
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 3
+      }
+    },
+    {
+      "id": "SRX1-length-negative",
+      "operator": "length",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "length",
+          "arg": {
+            "op": "literal",
+            "value": 3
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/arg",
+        "expression_pointer": "/expression/arg"
+      }
+    },
+    {
+      "id": "SRX1-length-boundary",
+      "operator": "length",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "length",
+          "arg": {
+            "op": "literal",
+            "value": []
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      }
+    },
+    {
+      "id": "SRX1-length-error",
+      "operator": "length",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "length",
+          "arg": {
+            "op": "field",
+            "context": "artifact",
+            "pointer": "/absent"
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/arg",
+        "expression_pointer": "/expression/arg"
+      }
+    },
+    {
+      "id": "SRX1-count-positive",
+      "operator": "count",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "count",
+          "arg": {
+            "op": "literal",
+            "value": [
+              1,
+              1,
+              null
+            ]
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 3
+      }
+    },
+    {
+      "id": "SRX1-count-negative",
+      "operator": "count",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "count",
+          "arg": {
+            "op": "literal",
+            "value": 3
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/arg",
+        "expression_pointer": "/expression/arg"
+      }
+    },
+    {
+      "id": "SRX1-count-boundary",
+      "operator": "count",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "count",
+          "arg": {
+            "op": "literal",
+            "value": []
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      }
+    },
+    {
+      "id": "SRX1-count-error",
+      "operator": "count",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "count",
+          "arg": {
+            "op": "field",
+            "context": "artifact",
+            "pointer": "/absent"
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/arg",
+        "expression_pointer": "/expression/arg"
+      }
+    },
+    {
+      "id": "SRX1-any-positive",
+      "operator": "any",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "any",
+          "array": {
+            "op": "literal",
+            "value": [
+              true,
+              true
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-any-negative",
+      "operator": "any",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "any",
+          "array": {
+            "op": "literal",
+            "value": [
+              false,
+              false
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-any-boundary",
+      "operator": "any",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "any",
+          "array": {
+            "op": "literal",
+            "value": []
+          },
+          "where": {
+            "op": "literal",
+            "value": true
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-any-error",
+      "operator": "any",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "any",
+          "array": {
+            "op": "literal",
+            "value": [
+              true,
+              0
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/where",
+        "expression_pointer": "/expression/where",
+        "expected_type": "boolean",
+        "actual_type": "number"
+      }
+    },
+    {
+      "id": "SRX1-all-positive",
+      "operator": "all",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "all",
+          "array": {
+            "op": "literal",
+            "value": [
+              true,
+              true
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-all-negative",
+      "operator": "all",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "all",
+          "array": {
+            "op": "literal",
+            "value": [
+              false,
+              false
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-all-boundary",
+      "operator": "all",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "all",
+          "array": {
+            "op": "literal",
+            "value": []
+          },
+          "where": {
+            "op": "literal",
+            "value": true
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-all-error",
+      "operator": "all",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "all",
+          "array": {
+            "op": "literal",
+            "value": [
+              true,
+              0
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/where",
+        "expression_pointer": "/expression/where",
+        "expected_type": "boolean",
+        "actual_type": "number"
+      }
+    },
+    {
+      "id": "SRX1-none-positive",
+      "operator": "none",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "none",
+          "array": {
+            "op": "literal",
+            "value": [
+              true,
+              true
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      }
+    },
+    {
+      "id": "SRX1-none-negative",
+      "operator": "none",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "none",
+          "array": {
+            "op": "literal",
+            "value": [
+              false,
+              false
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-none-boundary",
+      "operator": "none",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "none",
+          "array": {
+            "op": "literal",
+            "value": []
+          },
+          "where": {
+            "op": "literal",
+            "value": true
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      }
+    },
+    {
+      "id": "SRX1-none-error",
+      "operator": "none",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "none",
+          "array": {
+            "op": "literal",
+            "value": [
+              true,
+              0
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/where",
+        "expression_pointer": "/expression/where",
+        "expected_type": "boolean",
+        "actual_type": "number"
+      }
+    },
+    {
+      "id": "SRX1-add-positive",
+      "operator": "add",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 2
+            },
+            {
+              "op": "literal",
+              "value": 3
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 5
+      }
+    },
+    {
+      "id": "SRX1-add-negative",
+      "operator": "add",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": true
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/0",
+        "expression_pointer": "/expression/args/0",
+        "expected_type": "number",
+        "actual_type": "boolean"
+      }
+    },
+    {
+      "id": "SRX1-add-boundary",
+      "operator": "add",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 0
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 1
+      }
+    },
+    {
+      "id": "SRX1-add-error",
+      "operator": "add",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1",
+        "expected_type": "number",
+        "actual_type": "string"
+      }
+    },
+    {
+      "id": "SRX1-subtract-positive",
+      "operator": "subtract",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "subtract",
+          "args": [
+            {
+              "op": "literal",
+              "value": 2
+            },
+            {
+              "op": "literal",
+              "value": 3
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": -1
+      }
+    },
+    {
+      "id": "SRX1-subtract-negative",
+      "operator": "subtract",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "subtract",
+          "args": [
+            {
+              "op": "literal",
+              "value": true
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/0",
+        "expression_pointer": "/expression/args/0",
+        "expected_type": "number",
+        "actual_type": "boolean"
+      }
+    },
+    {
+      "id": "SRX1-subtract-boundary",
+      "operator": "subtract",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "subtract",
+          "args": [
+            {
+              "op": "literal",
+              "value": 0
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": -1
+      }
+    },
+    {
+      "id": "SRX1-subtract-error",
+      "operator": "subtract",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "subtract",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1",
+        "expected_type": "number",
+        "actual_type": "string"
+      }
+    },
+    {
+      "id": "SRX1-multiply-positive",
+      "operator": "multiply",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "multiply",
+          "args": [
+            {
+              "op": "literal",
+              "value": 2
+            },
+            {
+              "op": "literal",
+              "value": 3
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 6
+      }
+    },
+    {
+      "id": "SRX1-multiply-negative",
+      "operator": "multiply",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "multiply",
+          "args": [
+            {
+              "op": "literal",
+              "value": true
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/0",
+        "expression_pointer": "/expression/args/0",
+        "expected_type": "number",
+        "actual_type": "boolean"
+      }
+    },
+    {
+      "id": "SRX1-multiply-boundary",
+      "operator": "multiply",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "multiply",
+          "args": [
+            {
+              "op": "literal",
+              "value": 0
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      }
+    },
+    {
+      "id": "SRX1-multiply-error",
+      "operator": "multiply",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "multiply",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1",
+        "expected_type": "number",
+        "actual_type": "string"
+      }
+    },
+    {
+      "id": "SRX1-divide-positive",
+      "operator": "divide",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 8
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0.125
+      }
+    },
+    {
+      "id": "SRX1-divide-negative",
+      "operator": "divide",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": true
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/args/0",
+        "expression_pointer": "/expression/args/0",
+        "expected_type": "number",
+        "actual_type": "boolean"
+      }
+    },
+    {
+      "id": "SRX1-divide-boundary",
+      "operator": "divide",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 0
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      }
+    },
+    {
+      "id": "SRX1-divide-error",
+      "operator": "divide",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "division_by_zero",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      }
+    },
+    {
+      "id": "SRX1-relation_count-positive",
+      "operator": "relation_count",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "relation_count",
+          "direction": "outgoing",
+          "types": "*"
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 1
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-relation_count-negative",
+      "operator": "relation_count",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "relation_count",
+          "direction": "outgoing",
+          "types": []
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-relation_count-boundary",
+      "operator": "relation_count",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "relation_count",
+          "direction": "outgoing",
+          "types": [
+            "depends_on"
+          ]
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 1
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-relation_count-error",
+      "operator": "relation_count",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "relation_count",
+          "direction": "outgoing",
+          "types": [
+            "unknown_relation"
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "unknown_graph_relation_type",
+        "input_pointer": "/expression/types",
+        "expression_pointer": "/expression/types"
+      }
+    },
+    {
+      "id": "SRX1-incoming_count-positive",
+      "operator": "incoming_count",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "incoming_count",
+          "types": "*"
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-incoming_count-negative",
+      "operator": "incoming_count",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "incoming_count",
+          "types": []
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-incoming_count-boundary",
+      "operator": "incoming_count",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "incoming_count",
+          "types": [
+            "depends_on"
+          ]
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-incoming_count-error",
+      "operator": "incoming_count",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "incoming_count",
+          "types": [
+            "unknown_relation"
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "unknown_graph_relation_type",
+        "input_pointer": "/expression/types",
+        "expression_pointer": "/expression/types"
+      }
+    },
+    {
+      "id": "SRX1-has_relation-positive",
+      "operator": "has_relation",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "has_relation",
+          "direction": "outgoing",
+          "types": "*"
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-has_relation-negative",
+      "operator": "has_relation",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "has_relation",
+          "direction": "outgoing",
+          "types": []
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-has_relation-boundary",
+      "operator": "has_relation",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "has_relation",
+          "direction": "outgoing",
+          "types": [
+            "depends_on"
+          ]
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-has_relation-error",
+      "operator": "has_relation",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "has_relation",
+          "direction": "outgoing",
+          "types": [
+            "unknown_relation"
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "unknown_graph_relation_type",
+        "input_pointer": "/expression/types",
+        "expression_pointer": "/expression/types"
+      }
+    },
+    {
+      "id": "SRX1-reachable-positive",
+      "operator": "reachable",
+      "category": "positive",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "reachable",
+          "direction": "outgoing",
+          "types": "*",
+          "max_depth": 2,
+          "where": {
+            "op": "eq",
+            "args": [
+              {
+                "op": "field",
+                "context": "artifact",
+                "pointer": "/id"
+              },
+              {
+                "op": "literal",
+                "value": "SR-REQ-00000000000000000000000003"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-reachable-negative",
+      "operator": "reachable",
+      "category": "negative",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "reachable",
+          "direction": "outgoing",
+          "types": [],
+          "max_depth": 2,
+          "where": {
+            "op": "eq",
+            "args": [
+              {
+                "op": "field",
+                "context": "artifact",
+                "pointer": "/id"
+              },
+              {
+                "op": "literal",
+                "value": "SR-REQ-00000000000000000000000003"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-reachable-boundary",
+      "operator": "reachable",
+      "category": "boundary",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "reachable",
+          "direction": "outgoing",
+          "types": "*",
+          "max_depth": 0,
+          "where": {
+            "op": "literal",
+            "value": true
+          }
+        }
+      },
+      "context": {
+        "artifact": {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      },
+      "graph": [
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000001",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000001",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000002",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000002",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [
+            {
+              "relation_id": "REL-00000000000000000000000002",
+              "id_scheme": "random128-v1",
+              "type": "depends_on",
+              "target": "SR-REQ-00000000000000000000000003",
+              "external_identities": [],
+              "extensions": {}
+            }
+          ],
+          "extensions": {},
+          "language": "de-DE"
+        },
+        {
+          "schema_version": "0.2.0",
+          "id": "SR-REQ-00000000000000000000000003",
+          "id_scheme": "random128-v1",
+          "artifact_type": "requirement",
+          "title": "Sample",
+          "maturity": "draft",
+          "revision": 1,
+          "created_at": "2026-01-01T00:00:00Z",
+          "updated_at": "2026-01-01T00:00:00Z",
+          "created_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "updated_by": {
+            "actor_type": "human",
+            "actor_id": "test-author"
+          },
+          "relations": [],
+          "extensions": {},
+          "language": "de-DE"
+        }
+      ]
+    },
+    {
+      "id": "SRX1-reachable-error",
+      "operator": "reachable",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "reachable",
+          "direction": "outgoing",
+          "types": [
+            "unknown_relation"
+          ],
+          "max_depth": 2,
+          "where": {
+            "op": "eq",
+            "args": [
+              {
+                "op": "field",
+                "context": "artifact",
+                "pointer": "/id"
+              },
+              {
+                "op": "literal",
+                "value": "SR-REQ-00000000000000000000000003"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "unknown_graph_relation_type",
+        "input_pointer": "/expression/types",
+        "expression_pointer": "/expression/types"
+      }
+    },
+    {
+      "id": "SRX1-divide-annex-U-01",
+      "operator": "divide",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 8
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 3
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0.125
+      }
+    },
+    {
+      "id": "SRX1-divide-annex-U-02",
+      "operator": "divide",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 8
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 2
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "precision_exceeded",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      }
+    },
+    {
+      "id": "SRX1-divide-annex-U-03",
+      "operator": "divide",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 3
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 34
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "non_terminating",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      }
+    },
+    {
+      "id": "SRX1-divide-annex-U-04",
+      "operator": "divide",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 34
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "division_by_zero",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      }
+    },
+    {
+      "id": "SRX1-add-annex-U-05",
+      "operator": "add",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 0.1
+            },
+            {
+              "op": "literal",
+              "value": 0.2
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 34
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0.3
+      }
+    },
+    {
+      "id": "SRX1-add-annex-U-06",
+      "operator": "add",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1.2
+            },
+            {
+              "op": "literal",
+              "value": 0.3
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 2
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 1.5
+      }
+    },
+    {
+      "id": "SRX1-add-annex-U-07",
+      "operator": "add",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 999
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 1
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 1000
+      }
+    },
+    {
+      "id": "SRX1-divide-annex-U-08",
+      "operator": "divide",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1
+            },
+            {
+              "op": "literal",
+              "value": 16
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 3
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0.0625
+      }
+    },
+    {
+      "id": "SRX1-add-annex-U-09",
+      "operator": "add",
+      "category": "annex_u",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 9007199254740992
+            },
+            {
+              "op": "literal",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 34
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "jcs_roundtrip_loss",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      }
+    },
+    {
+      "id": "SRX1-literal-version-2",
+      "operator": "literal",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "2.0",
+        "expression": {
+          "op": "literal",
+          "value": 1
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "unsupported_version",
+        "input_pointer": "/version",
+        "expression_pointer": "/version",
+        "expected_type": "1.0",
+        "actual_type": "string"
+      }
+    },
+    {
+      "id": "SRX1-add-nested-division",
+      "operator": "add",
+      "category": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "literal",
+              "value": 0
+            },
+            {
+              "op": "divide",
+              "args": [
+                {
+                  "op": "literal",
+                  "value": 1
+                },
+                {
+                  "op": "literal",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "division_by_zero",
+        "input_pointer": "/expression/args/1",
+        "expression_pointer": "/expression/args/1"
+      }
+    }
+  ]
+}

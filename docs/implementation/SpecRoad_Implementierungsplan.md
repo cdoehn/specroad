@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 150
-last_completed_plan_commit: 4.h.C
-next_plan_commit: 4.i.W
+implementation_plan_commits_completed: 151
+last_completed_plan_commit: 4.i.W
+next_plan_commit: 4.i.R
 last_completed_numbered_bundle: 12
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2011,7 +2011,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.i.W – Let it Work
 
-- [ ] **4.i.W** · Position **151/885** · Voraussetzung: `4.h.C`.
+- [x] **4.i.W** · Position **151/885** · Voraussetzung: `4.h.C`.
 **Exakte Commit-Message:** `4.i.W feat(validation): SRX-Diagnosen und Vektorkorpus aufbauen`
 
 **Umsetzung:** Versionierte Operator- und Zahlen-Testvektoren einschließlich Fehlerpointer ausführen.
