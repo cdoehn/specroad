@@ -29,6 +29,6 @@ def parse_program(raw, *, rule_id):
     return program
 
 
-def parse_context(raw, *, rule_id):
+def parse_context(raw, *, rule_id, graph=None):
     """Explicit passive context bytes, never a path, environment or live loader."""
-    return EvaluationContext(_decode(raw, rule_id, "context"), rule_id=rule_id)
+    return EvaluationContext(_decode(raw, rule_id, "context"), rule_id=rule_id, graph=graph)

@@ -14,11 +14,16 @@ class EvaluationContext:
     never a callable resolver. Field lookup reads only these supplied immutable roots.
     """
     _snapshot: JsonSnapshot
+    graph: object
 
-    def __init__(self, document, *, rule_id):
+    def __init__(self, document, *, rule_id, graph=None):
         rule_id = _rule_id(rule_id)
         snapshot = JsonSnapshot(document, rule_id=rule_id, subject="context")
         _validate_context(snapshot.data, rule_id)
+        if graph is not None:
+            from .graph import require_graph
+            require_graph(graph, rule_id=rule_id, at="/graph")
+        object.__setattr__(self, "graph", graph)
         object.__setattr__(self, "_snapshot", snapshot)
 
     @property

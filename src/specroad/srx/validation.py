@@ -53,6 +53,12 @@ def _validate_expression(expression, rule_id):
         if type(op) is not str or op not in SUPPORTED_OPERATORS:
             raise SrxError("unsupported_operator", rule_id=rule_id, pointer=at+"/op",
                            expected="supported operator", actual=json_type(op))
+        from .graph_validation import GRAPH_OPERATORS, validate_graph_node
+        if op in GRAPH_OPERATORS:
+            validate_graph_node(node, rule_id=rule_id, at=at)
+            if op == "reachable":
+                work.append((node["where"], at+"/where", item_in_scope))
+            continue
         _exact_fields(node, OPERATOR_FIELDS[op], rule_id=rule_id, pointer=at)
         if op == "literal":
             continue

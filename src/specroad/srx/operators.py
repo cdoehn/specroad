@@ -25,6 +25,8 @@ OPERATOR_FIELDS = MappingProxyType({
     "all": ("op", "array", "where"),
     "none": ("op", "array", "where"),
 })
+from .graph_validation import GRAPH_REQUIRED, GRAPH_OPERATORS
+OPERATOR_FIELDS = MappingProxyType({**OPERATOR_FIELDS, **GRAPH_REQUIRED})
 SUPPORTED_OPERATORS = tuple(OPERATOR_FIELDS)
 
 # Static arities shared by validation and the evaluator. No dynamic registration.

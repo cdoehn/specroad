@@ -25,7 +25,8 @@
     "SR-FIX-SRX-FIELDS-v1",
     "SR-FIX-SRX-LOGIC-v1",
     "SR-FIX-SRX-COLLECTIONS-v1",
-    "SR-FIX-SRX-QUANTIFIERS-v1"
+    "SR-FIX-SRX-QUANTIFIERS-v1",
+    "SR-FIX-SRX-GRAPH-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -127,6 +128,10 @@
     "SR-FIX-SRX-QUANTIFIERS-v1": {
       "provider": "tests/support/srx.py:quantifier",
       "kind": "Explicit JSON-only quantifier AST, lexical item values and versioned positive/negative vectors; no live project loading or approval."
+    },
+    "SR-FIX-SRX-GRAPH-v1": {
+      "provider": "tests/support/srx_graph.py:records",
+      "kind": "owned full supplied SourceRelations model; directed, inverse, cyclic, disconnected and bounded graph behavior"
     }
   }
 }

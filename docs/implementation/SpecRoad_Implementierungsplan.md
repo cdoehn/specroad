@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 141
-last_completed_plan_commit: 4.e.C
-next_plan_commit: 4.f.W
+implementation_plan_commits_completed: 142
+last_completed_plan_commit: 4.f.W
+next_plan_commit: 4.f.R
 last_completed_numbered_bundle: 7
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1866,7 +1866,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.f.W – Let it Work
 
-- [ ] **4.f.W** · Position **142/885** · Voraussetzung: `4.e.C`.
+- [x] **4.f.W** · Position **142/885** · Voraussetzung: `4.e.C`.
 **Exakte Commit-Message:** `4.f.W feat(validation): Begrenzte Graphoperatoren aufbauen`
 
 **Umsetzung:** relation_count, has_relation, reachable und incoming_count über den vollständigen Graphkern auswerten.

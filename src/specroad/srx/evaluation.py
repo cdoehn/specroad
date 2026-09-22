@@ -14,4 +14,8 @@ def evaluate(program, context):
         raise SrxError("context_required", rule_id=program.rule_id,
                        expected="EvaluationContext", actual="non_context", subject="context")
     roots = context.data
-    return evaluate_expression(program.expression, roots, rule_id=program.rule_id)
+    try:
+        return evaluate_expression(program.expression, roots, rule_id=program.rule_id, graph=context.graph)
+    except RecursionError:
+        raise SrxError("graph_nesting_limit", rule_id=program.rule_id,
+                       expected="supported expression nesting", actual="deep_graph_expression") from None

@@ -6,9 +6,9 @@ from ._quantifier_iteration import QuantifierIteration
 from ._operations import apply_values, boolean_value, leaf_value
 
 
-def evaluate_expression(expression, roots, *, rule_id):
+def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/expression", item_scope=None):
     # Each work frame owns its lexical binding, never a mutable global root.
-    work = [("visit", expression, "/expression", None)]
+    work = [("visit", expression, pointer, item_scope)]
     values = []
     while work:
         action, node, at, scope = work.pop()
@@ -44,7 +44,12 @@ def evaluate_expression(expression, roots, *, rule_id):
                 work.append(("visit", cursor.predicate, at+"/where", cursor.item_scope()))
             continue
         op = node["op"]
-        if op in ("literal", "field"):
+        from .graph_validation import GRAPH_OPERATORS
+        if op in GRAPH_OPERATORS:
+            from .graph_operations import graph_operation
+            values.append(graph_operation(node, roots, graph=graph, rule_id=rule_id, at=at,
+                                          item_scope=scope, evaluate_predicate=evaluate_expression))
+        elif op in ("literal", "field"):
             values.append(leaf_value(node, roots, rule_id=rule_id, at=at, item_scope=scope))
         elif op in UNARY_OPERATORS:
             work.append(("apply", (op, 1), at, scope))

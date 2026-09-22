@@ -4,19 +4,29 @@
   "requirement_id": "SR-REQ-0521",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SRX-GRAPH-v1"
+  ],
+  "preconditions": [
+    "Explicit SRX 1.0 AST and immutable LoadedGraph built from all source records of the supplied model."
+  ],
+  "steps": [
+    "Evaluate direct counts/existence or bounded stable breadth-first reachability using explicit direction, type selectors and maximum depth."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der SRX-Operator `reachable` MUSS Relationstypen, Richtung und eine explizite Maximaltiefe verlangen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Counts and bounded reachability over a freshly resolved and indexed supplied model; no live loading or global project-completeness claim."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV110"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/expression"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +38,50 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_srx_graph.SrxGraphTests.test_count_outgoing",
+    "test_srx_graph.SrxGraphTests.test_count_incoming",
+    "test_srx_graph.SrxGraphTests.test_count_both_directions",
+    "test_srx_graph.SrxGraphTests.test_incoming_count_uses_all_loaded_sources",
+    "test_srx_graph.SrxGraphTests.test_type_filter_and_no_matching_relations",
+    "test_srx_graph.SrxGraphTests.test_empty_explicit_type_list_means_no_edges",
+    "test_srx_graph.SrxGraphTests.test_wildcard_includes_all_stored_kinds",
+    "test_srx_graph.SrxGraphTests.test_has_matching_edge",
+    "test_srx_graph.SrxGraphTests.test_has_exact_target_id",
+    "test_srx_graph.SrxGraphTests.test_has_target_type",
+    "test_srx_graph.SrxGraphTests.test_has_both_target_filters",
+    "test_srx_graph.SrxGraphTests.test_incoming_target_filter_means_other_endpoint",
+    "test_srx_graph.SrxGraphTests.test_reachable_depth_zero_checks_start",
+    "test_srx_graph.SrxGraphTests.test_explicit_depth_limits_traversal",
+    "test_srx_graph.SrxGraphTests.test_reachable_incoming_and_both",
+    "test_srx_graph.SrxGraphTests.test_reachable_filters_each_hop",
+    "test_srx_graph.SrxGraphTests.test_unreachable_loaded_artifact_is_not_visited",
+    "test_srx_graph.SrxGraphTests.test_reach_predicate_reads_candidate_artifact",
+    "test_srx_graph.SrxGraphTests.test_reach_preserves_project_configuration",
+    "test_srx_graph.SrxGraphTests.test_reach_candidate_relations_are_computed_views",
+    "test_srx_graph.SrxGraphTests.test_reach_inside_quantifier_keeps_lexical_item",
+    "test_srx_graph.SrxGraphTests.test_reach_does_not_create_global_item",
+    "test_srx_graph.SrxGraphTests.test_predicate_requires_boolean_not_truthiness",
+    "test_srx_graph.SrxGraphTests.test_missing_predicate_is_error",
+    "test_srx_graph.SrxGraphTests.test_graph_is_required_not_inferred_from_relations_root",
+    "test_srx_graph.SrxGraphTests.test_missing_current_artifact_is_error",
+    "test_srx_graph.SrxGraphTests.test_changed_current_artifact_is_error",
+    "test_srx_graph.SrxGraphTests.test_loaded_graph_never_accepts_partial_adjacency_as_source",
+    "test_srx_graph.SrxGraphTests.test_caller_index_cannot_be_used_as_loaded_model",
+    "test_srx_graph.SrxGraphTests.test_missing_relation_target_is_rejected_during_loading",
+    "test_srx_graph.SrxGraphTests.test_unknown_options_rejected",
+    "test_srx_graph.SrxGraphTests.test_missing_required_selectors_rejected",
+    "test_srx_graph.SrxGraphTests.test_direction_is_static_and_known",
+    "test_srx_graph.SrxGraphTests.test_explicit_type_list_not_scalar_or_wildcard_mixture",
+    "test_srx_graph.SrxGraphTests.test_depth_is_nonnegative_integer_not_boolean",
+    "test_srx_graph.SrxGraphTests.test_unknown_target_type_and_empty_id_rejected",
+    "test_srx_graph.SrxGraphTests.test_original_graph_and_context_are_unchanged",
+    "test_srx_graph.SrxGraphTests.test_graph_object_is_immutable",
+    "test_srx_graph.SrxGraphTests.test_raw_program_and_context_do_not_load_model",
+    "test_srx_graph.SrxGraphTests.test_non_graph_rules_still_need_no_graph",
+    "test_srx_graph.SrxGraphTests.test_short_circuited_graph_operator_does_not_fetch_model"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integration into effective profile/rule consumers and acquisition of complete intended project models; complete supported runtime evidence."
   ]
 }

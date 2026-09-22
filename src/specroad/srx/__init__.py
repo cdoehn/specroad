@@ -17,3 +17,6 @@ __all__ += ("read_field", "require_type")
 
 from .comparisons import compare
 __all__ += ("compare",)
+
+from .graph import LoadedGraph
+__all__ += ("LoadedGraph",)
