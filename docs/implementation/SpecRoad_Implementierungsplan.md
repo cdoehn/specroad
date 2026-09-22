@@ -108,6 +108,9 @@ lokale Testausführung. Neue Berichte benennen alle fehlenden Verweise. Der
 Katalogcheck ist kein Volltestnachweis. Einzelheiten und Abnahmegrenzen:
 [`CI_Catalog_Repair.md`](../development/CI_Catalog_Repair.md).
 
+`CI-REPAIR.a.R` sichert den Abbruch vor Testkörpern, exakte Berichtsverträge
+und vollständige Fehlerbeobachtungen auch bei direkter xdist-Ausführung ab.
+
 ## BD-001 – flexible Anzahl eigenständiger Commits pro Bundle
 
 **Der Nutzer autorisiert ausdrücklich, dass der implementierende Chatbot selbst entscheidet, wie viele aufeinanderfolgende Plan-Commits ein späteres PatchHarbor-Bundle enthält.** Es gibt keine feste Anzahl, kein künstliches Ein-Commit-Limit, kein verpflichtendes Dreierpaket und keine Pflicht, einen ganzen Schritt oder Meilenstein auf einmal fertigzustellen. Diese projektspezifische Ausnahme ersetzt ausschließlich für solche ausdrücklich beauftragten Implementierungsbündel die allgemeine Ein-Commit-Vorgabe der beiliegenden PatchHarbor-Chatvorlage. Alle Format-, Zustands-, Integritäts- und Sicherheitspflichten gelten unverändert. Die statische PatchHarbor-Vorlage selbst wird dadurch nicht umgeschrieben.

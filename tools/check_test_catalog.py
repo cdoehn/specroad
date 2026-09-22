@@ -1,6 +1,7 @@
 """Bind every catalog reference to real pytest collection; run no test bodies."""
 import argparse
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -11,12 +12,17 @@ for child in ("src", "tests", "tools"):
         sys.path.insert(0, path)
 sys.dont_write_bytecode = True
 from verification_support.catalog_check import collect_catalog
+from verification_support.process_environment import test_environment
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
+    # This is a dedicated child interpreter, never the caller's test process.
+    environment = test_environment(os.environ)
+    os.environ.clear()
+    os.environ.update(environment)
     try:
         result = collect_catalog(ROOT, args.output)
         print(json.dumps({k: v for k, v in result.items() if k != "nodeid_to_test_id"}, sort_keys=True))

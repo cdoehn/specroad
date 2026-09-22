@@ -94,8 +94,14 @@ class VerificationSession:
         if self.worker:
             self.config.workeroutput["sr_collection"] = pairs
         if self.gate and (not self.required_ids <= set(ids) or len(ids) != len(set(ids))):
+            self.ledger.error("catalog_binding_invalid")
+            if self.worker:
+                self.config.workeroutput["sr_collection_errors"] = list(self.ledger.errors)
             raise pytest.UsageError("Catalog names missing or ambiguous collected tests")
         if self.expected is not None and len(ids) != self.expected:
+            self.ledger.error("unexpected_test_count")
+            if self.worker:
+                self.config.workeroutput["sr_collection_errors"] = list(self.ledger.errors)
             raise pytest.UsageError("Discovered suite size differs from the behavior gate")
         for item, (_, alias) in zip(items, pairs):
             item.user_properties.extend((("sr_test_id", alias), ("sr_worker", self.worker_id)))
@@ -115,8 +121,18 @@ def pytest_configure(config):
         raise pytest.UsageError(str(error)) from error
 
 
+@pytest.hookimpl(tryfirst=True)
 def pytest_collection_finish(session):
-    session.config._specroad_verification.collection(session.items)
+    # Validate BEFORE xdist sends collectionfinish to its controller. Sending
+    # IDs first can cause it to schedule an item for a worker already exiting.
+    try:
+        session.config._specroad_verification.collection(session.items)
+    except pytest.UsageError:
+        # A worker must announce a deliberate stop to xdist, not disappear as
+        # though it had completed its queue. Keep the real binding error and
+        # let the controller perform its normal coordinated shutdown.
+        session.shouldstop = "SpecRoad collection contract rejected"
+        raise
 
 
 @pytest.hookimpl(optionalhook=True)
@@ -144,6 +160,8 @@ def pytest_testnodedown(node, error):
         state.ledger.error("missing_worker_collection")
     else:
         state.ledger.collect(node.gateway.id, [row[0] for row in pairs], pairs)
+    for code in output.get("sr_collection_errors", ()):
+        state.ledger.error(code)
     if error is not None:
         state.ledger.error("worker_crash")
 
@@ -218,8 +236,28 @@ def pytest_sessionfinish(session, exitstatus):
                              sort_keys=True))
             if not report["suite_passed"] and session.exitstatus == 0:
                 session.exitstatus = pytest.ExitCode.TESTS_FAILED
-        if state.observations is not None:
-            publish_report(state.observations, ROOT, observation)
     except (CatalogError, OSError, ValueError) as error:
         print("Development verification failed: " + str(error), file=sys.stderr)
         session.exitstatus = pytest.ExitCode.USAGE_ERROR
+        state.ledger.error("verification_contract_error")
+        observation = state.ledger.snapshot(session.exitstatus)
+        # Failure diagnostics are not development pass evidence and cannot be
+        # compared as a successful serial/parallel run. Preserve real causes
+        # even when binding fails before the first test.
+        if state.evidence is not None:
+            failure = {"report_format_version": 1,
+                       "purpose": "development_verification_failure",
+                       "suite_passed": False, "release_approved": False,
+                       "tests_run": observation["tests_run"],
+                       "error": {"code": "verification_contract_error", "detail": str(error)},
+                       "observation": observation}
+            try:
+                publish_report(state.evidence, ROOT, failure)
+            except (CatalogError, OSError, ValueError):
+                print("Could not publish verification failure report.", file=sys.stderr)
+    if state.observations is not None:
+        try:
+            publish_report(state.observations, ROOT, observation)
+        except (CatalogError, OSError, ValueError) as error:
+            print("Could not publish test observations: " + str(error), file=sys.stderr)
+            session.exitstatus = pytest.ExitCode.USAGE_ERROR

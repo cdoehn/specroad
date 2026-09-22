@@ -49,3 +49,19 @@ Der Status des alten CI-Laufs wird nicht nachträglich grün erklärt.
 Die Korrektur benötigt nach lokalem Apply und normalem dev-Push einen neuen
 GitHub-Lauf über die unterstützte Python-Matrix. Teiltests auf dem Pixel
 und kleine künstliche Framework-Prozessregressionen ersetzen diesen nicht.
+
+## Kontrollierter Fehler vor dem Teststart
+
+Auch ein direkter Volltest-Aufruf ohne vorgeschaltete Katalogprüfung prüft die
+Zuordnung vor der Worker-Scheduling-Freigabe. Bei einem Vertragsfehler meldet
+der Worker einen ausdrücklichen Session-Stopp, statt kommentarlos aus dem
+xdist-Lebenszyklus zu verschwinden. Die Abschaltung und Verteilung bleiben bei
+pytest/xdist; SpecRoad implementiert keinen eigenen Scheduler.
+
+Der Controller erhält die tatsächliche Fehlerursache und veröffentlicht nach
+Möglichkeit einen gesonderten Fehlerbericht und die Laufbeobachtungen. Ein
+Katalogfehler ist kein bestandener Entwicklungsnachweis und keine Freigabe.
+Fehlt der erfolgreiche Testlauf, bleiben `suite_passed` und `release_approved`
+falsch. Die kleinen Prozessregressionen prüfen dies mit 0, 2 und 4 Workern; sie
+führen dabei nur synthetische Vier-Test-Projekte aus, keine serielle
+SpecRoad-Vollsuite auf dem Pixel.
