@@ -22,7 +22,7 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 150
 last_completed_plan_commit: 4.h.C
 next_plan_commit: 4.i.W
-last_completed_numbered_bundle: 11
+last_completed_numbered_bundle: 12
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -103,7 +103,7 @@ Der Produktzaehler bleibt bei 150/885, naechster Plan-Commit 4.i.W.
 
 - [x] `PY310-REPAIR.a.W`: Missing-Kopiervertrag und importfreie Mock-Zielaufloesung korrigieren.
 - [x] `PY310-REPAIR.a.R`: Identitaet, verschachtelte Kopien und wirksame I/O-Sperren absichern.
-- [ ] `PY310-REPAIR.a.C`: Gemeinsame I/O-Testschutzfunktion extrahieren, Verhalten erhalten.
+- [x] `PY310-REPAIR.a.C`: Gemeinsame I/O-Testschutzfunktion extrahieren, Verhalten erhalten.
 
 Lokal nur explizite Testdateien mit vier Workern; der bestehende Katalogcheck
 sammelt zusaetzlich, fuehrt aber keine Vollsuite aus. Bundle 012 fordert ueber

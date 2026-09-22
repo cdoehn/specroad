@@ -1,10 +1,8 @@
 """Passive metadata behavior, with no presentation or documentation oracles."""
 
-import builtins
 import json
 import unittest
 from copy import deepcopy
-from unittest.mock import patch
 
 from specroad.model.artifact_schemas import validate_common_fields, artifact_common_schema
 from specroad.model.configuration import ProjectConfiguration
@@ -18,6 +16,7 @@ from support.artifacts import common_artifact, artifact_bytes
 from support.domain import domain_value
 from support.records import record_value
 from support.model import configuration_value
+from support.io_guards import block_imports_and_open
 
 
 def provenance(**changes):
@@ -110,7 +109,7 @@ class MetadataTests(unittest.TestCase):
 
     def test_unknown_namespace_does_not_import_or_execute(self):
         value = common_artifact(extensions={"uninstalled.plugin": {"entrypoint": "os.system", "command": "raise"}})
-        with patch.object(builtins, "__import__", side_effect=AssertionError("unexpected import")), patch.object(builtins, "open", side_effect=AssertionError("unexpected file")):
+        with block_imports_and_open():
             result = ArtifactMetadata(value).data
             raw = serialize_common_artifact(value)
         self.assertEqual(result["extensions"], value["extensions"])

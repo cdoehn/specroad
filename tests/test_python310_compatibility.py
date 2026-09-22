@@ -2,7 +2,6 @@
 import builtins
 import copy
 import json
-from contextlib import contextmanager
 from unittest.mock import Mock, patch
 
 import pytest
@@ -11,15 +10,9 @@ from specroad.srx import MISSING, SrxError, value_type
 from specroad.storage.metadata import ArtifactMetadata, serialize_common_artifact
 from specroad.storage.json_syntax import parse_json_object
 from support.artifacts import common_artifact
+from support.io_guards import block_imports_and_open
 
 
-@contextmanager
-def block_imports_and_open():
-    """Resolve targets and replacements before blocking imports themselves."""
-    imports = Mock(side_effect=AssertionError("Unexpected import"))
-    files = Mock(side_effect=AssertionError("Unexpected file access"))
-    with patch.object(builtins, "open", files), patch.object(builtins, "__import__", imports):
-        yield
 
 
 def test_missing_copy_keeps_identity_inside_owned_containers():

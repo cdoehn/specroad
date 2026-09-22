@@ -52,3 +52,24 @@ Portable Modul-/Zipapp-Ausfuehrungen pruefen denselben Kopiervertrag.
 Testschutzregressionen zeigen die Wirksamkeit beider Sperren und korrekte
 Wiederherstellung nach Fehlern sowie verschachtelte Nutzung. Kein globaler
 Zustand wird zwischen Tests hinterlassen. Keine Skip-/Xfail-Ausnahme.
+
+## C: Gemeinsamer Testschutz
+
+Die bereits in R gepruefte Funktion block_imports_and_open ist in
+tests/support/io_guards.py gekapselt. Sowohl der urspruenglich gescheiterte
+Metadatentest als auch die positiven und negativen Kontrollen verwenden
+dieselbe Funktion. Kopierprotokoll, Testidentitaeten und Assertions bleiben
+erhalten. Die Sperre betrifft __import__ und builtins.open, keine behauptete
+vollstaendige Dateisystem-/Prozess-Sandbox.
+
+## Lokale Vorpruefung dieses Bundles
+
+Die ausgewaehlten Gates verwenden vier Worker unter CPython 3.13.5 mit
+pytest 9.0.2 und vorhandenen Upstream-Entwicklungsbuilds von xdist/execnet.
+Diese Builds sind ausschliesslich lokal und werden nicht mitgeliefert.
+Ein echter CPython-3.10-Interpreter konnte in der Chat-Umgebung wegen nicht
+erreichbarer Paketquellen nicht installiert werden. Der zuvor reproduzierte
+3.10-Fehler stammt aus den beigefuegten echten CI-Logs; die lokale isolierte
+Simulation ersetzt den erneuten echten 3.10-CI-Lauf ausdruecklich nicht.
+
+Die unterstuetzte Matrix und der GitHub-Workflow bleiben unveraendert.
