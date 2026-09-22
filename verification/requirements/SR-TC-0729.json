@@ -42,7 +42,9 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "tests/test_srx_arithmetic.py::test_nonfinite_direct_operands_have_numeric_diagnostic"
+    "tests/test_srx_arithmetic.py::test_nonfinite_direct_operands_have_numeric_diagnostic",
+    "tests/test_srx_arithmetic_right.py::test_all_vectors_survive_modified_process_decimal_defaults",
+    "tests/test_srx_arithmetic_right.py::test_context_raw_number_failure_is_not_expression_data"
   ],
   "open_items": [
     "Full CI runtime matrix and integrated project validation/lifecycle are not proven by local selected tests."

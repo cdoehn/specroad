@@ -11,13 +11,7 @@ from ._json_values import json_type
 ARITHMETIC_OPERATORS = ("add", "subtract", "multiply", "divide")
 
 
-class SrxNumericError(SrxError):
-    def __init__(self, reason, *, rule_id, pointer="/expression", subject="expression"):
-        if reason not in ("division_by_zero", "non_finite", "precision_exceeded", "non_terminating", "jcs_roundtrip_loss"):
-            raise ValueError("Unknown SRX numeric reason")
-        super().__init__(reason, rule_id=rule_id, pointer=pointer,
-                         expected="exact finite JCS number", actual="number", subject=subject)
-        self.code = "SRV197"
+from .numeric_errors import SrxNumericError
 
 
 def operand_decimal(value, *, rule_id, pointer):

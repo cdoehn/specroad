@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 145
-last_completed_plan_commit: 4.g.W
-next_plan_commit: 4.g.R
+implementation_plan_commits_completed: 146
+last_completed_plan_commit: 4.g.R
+next_plan_commit: 4.g.C
 last_completed_numbered_bundle: 8
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -1914,7 +1914,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.g.R – Make it Right
 
-- [ ] **4.g.R** · Position **146/885** · Voraussetzung: `4.g.W`.
+- [x] **4.g.R** · Position **146/885** · Voraussetzung: `4.g.W`.
 **Exakte Commit-Message:** `4.g.R feat(validation): Exakte Arithmetik und Zahlenpolicy vervollständigen`
 
 **Vervollständigung:** Nichtterminierende Division, precision_exceeded und JCS-Roundtripverletzung getrennt abweisen; kein globaler Decimal-Kontext.

@@ -42,7 +42,9 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "tests/test_srx_arithmetic.py::test_normative_decision_vectors"
+    "tests/test_srx_arithmetic.py::test_normative_decision_vectors",
+    "tests/test_srx_arithmetic_right.py::test_all_vectors_survive_modified_process_decimal_defaults",
+    "tests/test_srx_arithmetic_right.py::test_bounded_integer_corpus_against_independent_rational_oracle"
   ],
   "open_items": [
     "Full CI runtime matrix and integrated project validation/lifecycle are not proven by local selected tests."

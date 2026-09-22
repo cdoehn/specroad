@@ -28,3 +28,5 @@ Neue Tests und angrenzende SRX-/JCS-/Modellpolicy-Regressionsdateien laufen loka
 gezielt parallel. Die vollständige Suite gehört auf GitHub. Eine erfolgreiche
 lokale Teilprüfung ist keine Vollabnahme und keine Releasefreigabe. Kein neuer
 CLI-Fachbefehl, keine Host-/Datei-/Netzwerkbeschaffung und keine Transaktion.
+
+R: Numeric errors from raw inputs and immutable JSON snapshots use the same disjoint SRV197 reasons. Structural JSON errors stay SRV110. Modified process and DefaultContext precision, rounding, flags and traps neither change results nor leak changes. Full rule aggregation and resource-resume policies remain later steps.

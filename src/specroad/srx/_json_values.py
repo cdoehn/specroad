@@ -8,6 +8,7 @@ This is a value snapshot, not a hash, schema validator or parser budget policy.
 from dataclasses import dataclass
 import math
 from .errors import SrxError
+from .numeric_errors import SrxNumericError
 
 
 def json_type(value):
@@ -51,8 +52,7 @@ def _freeze(value, rule_id, pointer, subject):
             raise SrxError("non_json_value", rule_id=rule_id, pointer=at,
                            expected="JSON", actual=kind, subject=subject)
         if kind == "number" and type(current) is float and not math.isfinite(current):
-            raise SrxError("non_finite_number", rule_id=rule_id, pointer=at,
-                           expected="finite number", actual="number", subject=subject)
+            raise SrxNumericError("non_finite", rule_id=rule_id, pointer=at, subject=subject)
         if kind == "string":
             try:
                 current.encode("utf-8")

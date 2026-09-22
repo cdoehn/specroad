@@ -3,6 +3,7 @@
 from .program import SrxProgram
 from .context import EvaluationContext
 from .errors import SrxError
+from .numeric_errors import SrxNumericError
 from ._json_values import json_type
 from .validation import _rule_id
 
@@ -17,6 +18,11 @@ def _decode(raw, rule_id, subject):
     try:
         return parse_json_object(raw)
     except ModelError as error:
+        numeric_reason = {"nonfinite_number": "non_finite", "number_roundtrip_loss": "jcs_roundtrip_loss"}.get(error.reason)
+        if numeric_reason is not None:
+            raise SrxNumericError(numeric_reason, rule_id=rule_id, pointer=error.pointer,
+                                  subject=subject, position=error.position,
+                                  line=error.line, column=error.column) from None
         raise SrxError(error.reason, rule_id=rule_id, pointer=error.pointer,
                        expected="strict JSON object", actual="invalid_json", subject=subject,
                        position=error.position, line=error.line, column=error.column) from None
