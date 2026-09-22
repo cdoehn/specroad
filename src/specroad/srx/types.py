@@ -7,6 +7,14 @@ from ._json_values import JsonSnapshot, json_type
 class _Missing(Enum):
     TOKEN = object()
 
+    def __copy__(self):
+        """Missing is a singleton, including on Python 3.10."""
+        return self
+
+    def __deepcopy__(self, memo):
+        """Preserve identity instead of reconstructing the opaque Enum value."""
+        return self
+
     def __bool__(self):
         raise TypeError("SRX missing has no implicit truth value")
 

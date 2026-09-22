@@ -45,7 +45,8 @@
     "test_srx_fields_right.SrxFieldRightTests.test_missing_is_not_null_operand",
     "test_srx_logic.SrxLogicTests.test_eq_missing_is_false",
     "test_srx_logic.SrxLogicTests.test_eq_null",
-    "test_srx_logic_right.SrxLogicRightTests.test_missing_in_nested_json_is_rejected"
+    "test_srx_logic_right.SrxLogicRightTests.test_missing_in_nested_json_is_rejected",
+    "tests/test_python310_compatibility.py::test_missing_copy_keeps_identity_inside_owned_containers"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."

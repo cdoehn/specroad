@@ -1,5 +1,6 @@
 """Passive metadata behavior, with no presentation or documentation oracles."""
 
+import builtins
 import json
 import unittest
 from copy import deepcopy
@@ -109,7 +110,7 @@ class MetadataTests(unittest.TestCase):
 
     def test_unknown_namespace_does_not_import_or_execute(self):
         value = common_artifact(extensions={"uninstalled.plugin": {"entrypoint": "os.system", "command": "raise"}})
-        with patch("builtins.__import__", side_effect=AssertionError("unexpected import")), patch("builtins.open", side_effect=AssertionError("unexpected file")):
+        with patch.object(builtins, "__import__", side_effect=AssertionError("unexpected import")), patch.object(builtins, "open", side_effect=AssertionError("unexpected file")):
             result = ArtifactMetadata(value).data
             raw = serialize_common_artifact(value)
         self.assertEqual(result["extensions"], value["extensions"])
