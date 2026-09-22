@@ -4,19 +4,33 @@
   "requirement_id": "SR-REQ-0080",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROFILES-v1"
+  ],
+  "preconditions": [
+    "Explicit profile bytes and artifact values; no hidden CLI or project selection."
+  ],
+  "steps": [
+    "Parse exact versioned declarations and verify resource hashes.",
+    "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Version 0.2 MUSS die Fachprofile `core`, `software-de` und `software-en` ohne erzwungene gemeinsame Inhaltssprache gemäß Anhang S.6 bereitstellen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Single resource and field rules only, explicit definitions for later composition and lint consumers."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/profile_id",
+    "/version",
+    "/required_fields",
+    "/allowed_values",
+    "/relation_rules",
+    "/lint_rules"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +42,14 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_profiles.ProfileWorkTests.test_three_exact_bundled_profiles",
+    "test_profiles.ProfileWorkTests.test_both_software_profiles_accept_mixed_declared_languages",
+    "test_profiles.ProfileWorkTests.test_software_profiles_have_compatible_rule_definitions",
+    "test_profiles.ProfileWorkTests.test_portable_module_and_zipapp_ship_exact_resources"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full profile composition and conflicts (4.k), lint integration and full validator/CLI consumers remain separate.",
+    "Current evidence from the real supported runtime matrix remains necessary."
   ]
 }

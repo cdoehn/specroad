@@ -1,0 +1,141 @@
+{
+  "schema_version": "0.2.0",
+  "profile_format_version": "profile-v1",
+  "profile_id": "software-en",
+  "version": "0.2.0",
+  "required_fields": [
+    {
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [],
+      "fields": [
+        "/requirement_kind",
+        "/language",
+        "/normative_force",
+        "/statement",
+        "/priority",
+        "/criticality",
+        "/implementation_status",
+        "/verification_plan_status"
+      ]
+    },
+    {
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [
+        "approved"
+      ],
+      "fields": [
+        "/rationale"
+      ]
+    }
+  ],
+  "forbidden_fields": [],
+  "allowed_values": [
+    {
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [],
+      "field": "/normative_force",
+      "values": [
+        "must",
+        "must_not",
+        "should",
+        "may"
+      ]
+    },
+    {
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [],
+      "field": "/requirement_kind",
+      "values": [
+        "functional",
+        "quality",
+        "interface",
+        "data",
+        "constraint",
+        "security",
+        "safety",
+        "compliance"
+      ]
+    },
+    {
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [],
+      "field": "/priority",
+      "values": [
+        "mandatory",
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    {
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [],
+      "field": "/criticality",
+      "values": [
+        "normal",
+        "important",
+        "critical",
+        "safety_critical"
+      ]
+    }
+  ],
+  "relation_rules": [
+    {
+      "rule_id": "software:requirement-verification",
+      "version": "0.2.0",
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [
+        "approved"
+      ],
+      "relation_types": [
+        "verified_by"
+      ],
+      "endpoint_types": [
+        "test",
+        "verification"
+      ],
+      "minimum": 1,
+      "direction": "outgoing",
+      "severity": "error"
+    }
+  ],
+  "lint_rules": [
+    {
+      "rule_id": "software:statement-present",
+      "version": "0.2.0",
+      "artifact_types": [
+        "requirement"
+      ],
+      "maturities": [],
+      "severity": "error",
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "exists",
+          "arg": {
+            "op": "field",
+            "pointer": "/statement",
+            "context": "artifact"
+          }
+        }
+      }
+    }
+  ],
+  "severity_overrides": {},
+  "description": "Software domain rules without global content language; no language or display locale defaults."
+}

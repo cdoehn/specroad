@@ -29,7 +29,8 @@
     "SR-FIX-SRX-GRAPH-v1",
     "SR-FIX-SRX-NUMERIC-v1",
     "SR-FIX-SRX-RESOURCES-v1",
-    "SR-FIX-SRX-CONFORMANCE-v1"
+    "SR-FIX-SRX-CONFORMANCE-v1",
+    "SR-FIX-PROFILES-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -147,6 +148,10 @@
     "SR-FIX-SRX-CONFORMANCE-v1": {
       "provider": "tests/support/srx_vectors.py:load_corpus",
       "kind": "versioned SRX 1.0 behavior vectors; actual public APIs, explicit value/missing/error expectations; no human-output snapshots"
+    },
+    "SR-FIX-PROFILES-v1": {
+      "provider": "tests/support/profiles.py:profile_data",
+      "kind": "owned versioned declarative profiles and scoped field observations; no profile composition, lifecycle approval or analyzer execution"
     }
   }
 }

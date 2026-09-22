@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.2.0",
+  "profile_format_version": "profile-v1",
+  "profile_id": "core",
+  "version": "0.2.0",
+  "required_fields": [
+    {
+      "artifact_types": [
+        "goal",
+        "need",
+        "capability",
+        "requirement",
+        "scenario",
+        "decision",
+        "risk",
+        "assumption",
+        "component",
+        "interface",
+        "source",
+        "verification",
+        "test",
+        "evidence",
+        "release",
+        "milestone",
+        "task",
+        "term",
+        "proposal",
+        "baseline",
+        "issue",
+        "document",
+        "section",
+        "content_block",
+        "view",
+        "code_ref",
+        "relation_review",
+        "configuration"
+      ],
+      "maturities": [],
+      "fields": [
+        "/schema_version",
+        "/id",
+        "/id_scheme",
+        "/artifact_type",
+        "/title",
+        "/maturity",
+        "/revision",
+        "/created_at",
+        "/updated_at",
+        "/created_by",
+        "/updated_by",
+        "/relations",
+        "/extensions"
+      ]
+    },
+    {
+      "artifact_types": [
+        "requirement",
+        "document",
+        "term"
+      ],
+      "maturities": [],
+      "fields": [
+        "/language"
+      ]
+    }
+  ],
+  "forbidden_fields": [],
+  "allowed_values": [
+    {
+      "artifact_types": [
+        "goal",
+        "need",
+        "capability",
+        "requirement",
+        "scenario",
+        "decision",
+        "risk",
+        "assumption",
+        "component",
+        "interface",
+        "source",
+        "verification",
+        "test",
+        "evidence",
+        "release",
+        "milestone",
+        "task",
+        "term",
+        "proposal",
+        "baseline",
+        "issue",
+        "document",
+        "section",
+        "content_block",
+        "view",
+        "code_ref",
+        "relation_review",
+        "configuration"
+      ],
+      "maturities": [],
+      "field": "/maturity",
+      "values": [
+        "draft",
+        "proposed",
+        "in_review",
+        "approved",
+        "rejected",
+        "superseded",
+        "retired"
+      ]
+    }
+  ],
+  "relation_rules": [],
+  "lint_rules": [],
+  "severity_overrides": {},
+  "description": "Common stored fields; lifecycle, graph, language policy and composition require separate checks."
+}

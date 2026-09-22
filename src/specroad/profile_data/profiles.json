@@ -1,0 +1,26 @@
+{
+  "format_version": 1,
+  "profiles": [
+    {
+      "profile_id": "core",
+      "version": "0.2.0",
+      "filename": "core.json",
+      "sha256": "b39641f6ab4c3882fc3f631a6d425eec5d616a207efde65221a4b8fb02120075",
+      "source_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622"
+    },
+    {
+      "profile_id": "software-de",
+      "version": "0.2.0",
+      "filename": "software-de.json",
+      "sha256": "ba40b8a167100526966e234970edfc63efd095afb5ca7867e71b76a5f8e79875",
+      "source_sha256": "bc859fbe25129c5eebd8366ba0043c493a5cadc36e03ac372c59e90ad85f1c72"
+    },
+    {
+      "profile_id": "software-en",
+      "version": "0.2.0",
+      "filename": "software-en.json",
+      "sha256": "058823d78d46591e8578719871f1a62fea5537f70b8b21631ef7ba3082533ee7",
+      "source_sha256": "78fa8f6b6551058b65811544ca939ae14cd7e720ad453432fec254072dcb6d3f"
+    }
+  ]
+}

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 153
-last_completed_plan_commit: 4.i.C
-next_plan_commit: 4.j.W
+implementation_plan_commits_completed: 154
+last_completed_plan_commit: 4.j.W
+next_plan_commit: 4.j.R
 last_completed_numbered_bundle: 13
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2046,7 +2046,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.j.W – Let it Work
 
-- [ ] **4.j.W** · Position **154/885** · Voraussetzung: `4.i.C`.
+- [x] **4.j.W** · Position **154/885** · Voraussetzung: `4.i.C`.
 **Exakte Commit-Message:** `4.j.W feat(validation): Profilressourcen und Fachprofile aufbauen`
 
 **Umsetzung:** Deklarative Profile core, software-de und software-en mit Version und Hash bereitstellen.

@@ -1,0 +1,4 @@
+"""Declarative profile resources; no automatic project/CLI selection or writes."""
+from .core import ProfileResource, ProfileError, resolve_profile, check_profile_fields
+
+__all__ = ("ProfileResource", "ProfileError", "resolve_profile", "check_profile_fields")
