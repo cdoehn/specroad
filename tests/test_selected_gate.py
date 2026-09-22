@@ -15,7 +15,7 @@ def fixture(root):
 
 
 def observation():
-    return {'nodeids':['tests/test_one.py::test_one'],
+    return {'observation_format_version':1, 'engine':'pytest', 'nodeids':['tests/test_one.py::test_one'],
             'nodeid_to_test_id':{'tests/test_one.py::test_one':'tests/test_one.py::test_one'},
             'test_outcomes':{'tests/test_one.py::test_one':'passed'},
             'suite_passed':True,'errors':[], 'tests_run':1,'pytest_exit_code':0,

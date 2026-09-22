@@ -13,6 +13,8 @@ from verification_support.bundle_ci import commit_sha, select_ci
 def resolve_selection(environment, *, runner=None):
     runner = subprocess.run if runner is None else runner
     event, ref = environment.get("GITHUB_EVENT_NAME"), environment.get("GITHUB_REF", "")
+    if event not in ("push", "workflow_dispatch"):
+        raise ValueError("Unsupported workflow event")
     requested = environment.get("SR_COMMIT_SHA", "")
     if event != "workflow_dispatch" and requested:
         raise ValueError("Only a manual run accepts an explicit revision")

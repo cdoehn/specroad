@@ -11693,3 +11693,4 @@ Starter verwenden denselben Vier-Worker-Default. Der einzige Scheduler bleibt xd
 ## Zusatzauftrag BUNDLE-CI (Bundle 009)
 
 - BUNDLE-CI.a.W: gezielte lokale Testauswahl und Dev-Abschlussauslösung implementiert; OFF-PLAN, Produktzähler unverändert.
+- BUNDLE-CI.a.R: ungültige Revisionen, Duplikate, unvollständige Teilnachweise und unsichere Berichtspfade abgesichert; keine Zählererhöhung.

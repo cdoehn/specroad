@@ -12,6 +12,8 @@ from .ci_reference import _load_report
 
 def selected_files(root, names):
     root = Path(root).absolute()
+    if type(names) not in (list, tuple):
+        raise ValueError("A list of explicit file names is required")
     names = tuple(names)
     if not names or any(type(n) is not str for n in names) or len(set(names)) != len(names):
         raise ValueError("Select distinct test files explicitly")
@@ -38,17 +40,40 @@ def verify_observation(value, names, expected):
     aliases = value.get("nodeid_to_test_id", {})
     outcomes = value.get("test_outcomes", {})
     counts = value.get("worker_test_counts", {})
-    if (type(ids) is not list or not ids or any(type(n) is not str for n in ids)
-            or len(ids) != expected or len(set(ids)) != expected
+    if (value.get("observation_format_version") != 1 or value.get("engine") != "pytest"
+            or type(ids) is not list or not ids or any(type(n) is not str for n in ids)
+            or type(aliases) is not dict or type(outcomes) is not dict or type(counts) is not dict
+            or any(type(k) is not str or type(v) is not str or not v for k,v in aliases.items())):
+        raise ValueError("Invalid selected-run observation contract")
+    if (len(ids) != expected or len(set(ids)) != expected
             or {n.split("::", 1)[0] for n in ids} != set(names)
             or set(aliases) != set(ids) or len(set(aliases.values())) != expected
             or set(outcomes) != set(aliases.values())
             or any(v != "passed" for v in outcomes.values())
             or value.get("suite_passed") is not True or value.get("errors") != []
-            or value.get("tests_run") != expected or value.get("pytest_exit_code") != 0
-            or not counts or any(type(v) is not int or v < 0 for v in counts.values())
+            or type(value.get("tests_run")) is not int or value["tests_run"] != expected
+            or type(value.get("pytest_exit_code")) is not int or value["pytest_exit_code"] != 0
+            or not counts or any(type(k) is not str or type(v) is not int or v < 0 for k,v in counts.items())
             or sum(counts.values()) != expected):
         raise ValueError("Incomplete, unexpected or nonpassing selected tests")
+
+
+def new_report_directory(outdir, root):
+    """Refuse source paths, parent traversal and symlinked report ancestors."""
+    outdir, root = Path(outdir).absolute(), Path(root).absolute()
+    if ".." in outdir.parts:
+        raise ValueError("Report path must not contain parent traversal")
+    try:
+        relative = outdir.relative_to(root)
+    except ValueError:
+        relative = None
+    if relative is not None and (not relative.parts or relative.parts[0] not in ("build", "dist")):
+        raise ValueError("Test reports must be outside source inputs")
+    for ancestor in reversed(outdir.parents):
+        if os.path.lexists(ancestor) and not stat.S_ISDIR(ancestor.lstat().st_mode):
+            raise ValueError("Unsafe report ancestor")
+    outdir.mkdir(parents=True, exist_ok=False)
+    return outdir
 
 
 def run_selected(root, names, outdir, *, expected, workers=4, runner=None, environment=None):
@@ -56,15 +81,8 @@ def run_selected(root, names, outdir, *, expected, workers=4, runner=None, envir
     names = selected_files(root, names)
     if type(expected) is not int or expected < 1 or type(workers) is not int or workers < 1:
         raise ValueError("Positive selected count and parallel worker count required")
-    outdir = Path(outdir).absolute()
-    try:
-        relative = outdir.relative_to(root)
-    except ValueError:
-        relative = None
-    if relative is not None and (not relative.parts or relative.parts[0] not in ("build", "dist")):
-        raise ValueError("Test reports must be outside source inputs")
     binding = source_identity(root)
-    outdir.mkdir(parents=True, exist_ok=False)
+    outdir = new_report_directory(outdir, root)
     observed = outdir / "observations.json"
     command = [sys.executable, "-I", "-B", str(root / "tools/pytest_entry.py"),
                "-o", "addopts=", "--disable-plugin-autoload", "-p", "no:cacheprovider",
