@@ -39,3 +39,16 @@ Bundle 012 beide Volltestmodi samt fachlichem Nachweisvergleich.
 - https://docs.python.org/3.10/library/unittest.mock.html#patch-object
 
 Keine Abhaengigkeiten, Workflows, Sicherheitsregeln oder Laufzeitmatrix entfernt.
+
+## R: Regressionen
+
+Zusammenhaengende Datenkopien behalten Missing-Identitaet, geteilte Referenzen,
+Zyklen und unabhaengige mutable Container. Der memo-Vertrag bleibt unveraendert.
+Eine isolierte Kindprozessregression entfernt neuere Enum-Kopierhilfen, damit
+diese das eigene Singleton-Protokoll nicht versehentlich ersetzen; dies ist
+eine Simulation der relevanten Bibliotheksvoraussetzung, kein echter 3.10-Lauf.
+Portable Modul-/Zipapp-Ausfuehrungen pruefen denselben Kopiervertrag.
+
+Testschutzregressionen zeigen die Wirksamkeit beider Sperren und korrekte
+Wiederherstellung nach Fehlern sowie verschachtelte Nutzung. Kein globaler
+Zustand wird zwischen Tests hinterlassen. Keine Skip-/Xfail-Ausnahme.

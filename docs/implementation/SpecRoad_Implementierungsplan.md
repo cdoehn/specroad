@@ -102,7 +102,7 @@ CPython 3.10 meldet 2 Fehler / 2.762 Erfolge; 3.11 bis 3.14 jeweils
 Der Produktzaehler bleibt bei 150/885, naechster Plan-Commit 4.i.W.
 
 - [x] `PY310-REPAIR.a.W`: Missing-Kopiervertrag und importfreie Mock-Zielaufloesung korrigieren.
-- [ ] `PY310-REPAIR.a.R`: Identitaet, verschachtelte Kopien und wirksame I/O-Sperren absichern.
+- [x] `PY310-REPAIR.a.R`: Identitaet, verschachtelte Kopien und wirksame I/O-Sperren absichern.
 - [ ] `PY310-REPAIR.a.C`: Gemeinsame I/O-Testschutzfunktion extrahieren, Verhalten erhalten.
 
 Lokal nur explizite Testdateien mit vier Workern; der bestehende Katalogcheck

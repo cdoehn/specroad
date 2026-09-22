@@ -40,7 +40,8 @@
     "test_metadata.MetadataTests.test_unknown_namespace_does_not_import_or_execute",
     "test_metadata.MetadataRightTests.test_deep_extensions_preserve_all_values",
     "test_metadata.MetadataRightTests.test_provenance_preserves_both_alternatives_and_extensions",
-    "tests/test_python310_compatibility.py::test_guarded_metadata_roundtrip_still_processes_passive_data"
+    "tests/test_python310_compatibility.py::test_guarded_metadata_roundtrip_still_processes_passive_data",
+    "tests/test_python310_compatibility.py::test_invalid_metadata_does_not_bypass_guard_or_change_input"
   ],
   "open_items": [
     "Full graph/profile validation, persistence and future workflow integration remain open."

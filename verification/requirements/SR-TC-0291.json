@@ -47,7 +47,11 @@
     "test_srx_logic.SrxLogicTests.test_ne_missing_is_true",
     "test_srx_logic.SrxLogicTests.test_ordered_missing_is_false",
     "test_srx_logic_right.SrxLogicRightTests.test_missing_matrix_for_all_comparisons",
-    "tests/test_python310_compatibility.py::test_missing_copy_keeps_identity_inside_owned_containers"
+    "tests/test_python310_compatibility.py::test_missing_copy_keeps_identity_inside_owned_containers",
+    "tests/test_python310_compatibility.py::test_missing_deepcopy_preserves_cycles_and_aliases",
+    "tests/test_python310_compatibility.py::test_missing_as_mapping_key_keeps_identity_and_existing_memo_entries",
+    "tests/test_python310_compatibility.py::test_missing_copy_does_not_depend_on_newer_enum_copy_helpers",
+    "tests/test_python310_compatibility.py::test_portable_missing_copy_preserves_identity"
   ],
   "open_items": [
     "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
