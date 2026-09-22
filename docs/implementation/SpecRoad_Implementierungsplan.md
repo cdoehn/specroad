@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 151
-last_completed_plan_commit: 4.i.W
-next_plan_commit: 4.i.R
+implementation_plan_commits_completed: 152
+last_completed_plan_commit: 4.i.R
+next_plan_commit: 4.i.C
 last_completed_numbered_bundle: 12
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2020,7 +2020,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.i.R – Make it Right
 
-- [ ] **4.i.R** · Position **152/885** · Voraussetzung: `4.i.W`.
+- [x] **4.i.R** · Position **152/885** · Voraussetzung: `4.i.W`.
 **Exakte Commit-Message:** `4.i.R feat(validation): SRX-Diagnosen und Vektorkorpus vervollständigen`
 
 **Vervollständigung:** Unterschiedliche Prozessdefaults und alternative Reihenfolgen dürfen die Ergebnisse nicht ändern.

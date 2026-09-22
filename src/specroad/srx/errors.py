@@ -35,6 +35,11 @@ class SrxError(ValueError):
 
 # Hints are static data: no operand values, automatic repair, I/O or conversion.
 _REPAIRS = {
+    "invalid_pointer_escape": ("correct_json_pointer", "Use a static RFC-6901 pointer with only ~0 and ~1 escape sequences."),
+    "invalid_array_index": ("correct_array_index", "Use an explicitly valid array index; an invalid address is not a missing field."),
+    "duplicate_key": ("remove_duplicate_key", "Provide unambiguous JSON object keys without duplicate entries."),
+    "invalid_json": ("correct_json_document", "Provide one strict UTF-8 JSON object without comments or trailing data."),
+    "trailing_data": ("correct_json_document", "Provide exactly one JSON document; remove trailing data without altering intended values."),
     "unsupported_version": ("select_supported_version", "Use an explicitly supported SRX language version; do not reinterpret an incompatible program."),
     "unsupported_language": ("select_supported_language", "Declare the supported SRX language explicitly."),
     "unsupported_operator": ("replace_unsupported_operator", "Replace the operator with a supported declarative operation; do not execute code from data."),

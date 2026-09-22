@@ -36,3 +36,33 @@ werden Datentypen, Fehlerfelder und Reparaturkategorien.
 Lokal laufen ausschliesslich ausgewaehlte Testdateien parallel mit vier Workern.
 Vollsuite und serielle Referenz gehoeren in die GitHub-CI. Eine neue lokale
 Vorpruefung ersetzt weder einen Pixel-Apply noch einen vollstaendigen CI-Lauf.
+
+## 4.i.R – Prozessdefaults, Reihenfolgen und Fehlergrenzen
+
+Der Korpus umfasst 147 faelleigene Programme/Kontexte mit festen Erwartungen.
+Alle neun konkreten Entscheidungen aus U.3 werden ausgefuehrt; die zehnte Zeile
+wird als Querpruefung des gesamten Korpus unter veraenderten Prozessdefaults
+umgesetzt. Geaenderte Decimal-Praezision, Rundungsart, Exponentenbereich, Flags
+und Traps des aktuellen und Default-Kontexts veraendern weder Werte noch
+maschinenlesbare Diagnosen. Die Prozesseinstellungen werden nicht hinterlassen.
+Die Tests pruefen die Zustandswiederherstellung nach jedem einzelnen Fall.
+
+Weitere Durchlaeufe kehren Fallreihenfolge und JSON-Objektschluesselreihenfolge
+um; Graphquellen werden anders uebergeben. Zwei isolierte Kindprozesse starten
+mit unterschiedlichen Hash-Seeds, Sprach-/Localevariablen und Zeitzonen.
+Threads verwenden verschiedene lokale Decimal-Kontexte und denselben passiven
+Datenbestand. Diese kleinen Korpusprozesse sind keine lokale Vollsuite.
+
+Feste Regressionen pruefen Rohbytes (auch 1.20 + 0.30), Nichtendlichkeit,
+JCS-Verlust, fehlende Felder, echte Kurzschlussfaelle, nicht ausgefuehrte
+unbekannte Operatoren, verschachtelte Fehlerpointer, Unter-/Ueberlauf und
+Kontextpolicyfehler. Fehlerdaten enthalten keine Operandwerte. Eingabe-Pointer
+und Ausdruck-Pointer bleiben bei Kontextfehlern getrennt. Bytepositionen sind
+nur dort gesetzt, wo der vorhandene Parser sie tatsaechlich bestimmt; fuer
+spaetere numerische Materialisierungsfehler wird keine Position erfunden.
+
+Der Harness lehnt unbekannte Fall-/Erwartungsfelder, Kategorien, doppelte IDs,
+Versionen, leere Korpora, fremde Objekte, Zyklen und nichtendliche Erwartungen
+ab. Beliebige Ausnahmen werden nicht in erwartete SRX-Fehler umgedeutet. Der
+strukturierte Wiederholungsvergleich laesst den menschenlesbaren Empfehlungstext
+aus; dessen Formulierungen und JSON-Einrueckungen bleiben frei gestaltbar.

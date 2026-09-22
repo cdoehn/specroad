@@ -1,6 +1,7 @@
 """Test-only runner for versioned SRX value/error vectors, never console goldens."""
 import copy
 import json
+import math
 from pathlib import Path
 
 from specroad.graph.relations import SourceRelations
@@ -26,6 +27,7 @@ def _constant(value):
 
 def validate_corpus(value):
     """Reject malformed expectations rather than silently omitting test cases."""
+    _require_json(value)
     if (type(value) is not dict or set(value) != {'format_version', 'language', 'language_version', 'corpus_revision', 'cases'}
             or type(value['format_version']) is not int or value['format_version'] != 1
             or value['language'] != 'srx' or value['language_version'] != '1.0'
@@ -38,6 +40,16 @@ def validate_corpus(value):
         allowed = required | {'program', 'program_utf8', 'graph'}
         if type(case) is not dict or not required <= case.keys() or set(case) - allowed:
             raise ValueError('Invalid corpus case fields')
+        if case['category'] not in ('positive','negative','boundary','error','annex_u','regression'):
+            raise ValueError('Unknown corpus category')
+        if type(case['context']) is not dict:
+            raise ValueError('Explicit JSON context object required')
+        if 'program_utf8' in case and type(case['program_utf8']) is not str:
+            raise ValueError('Raw program must be explicit text, never a path to open')
+        if 'program' in case and type(case['program']) is not dict:
+            raise ValueError('Object program must be an object')
+        if 'graph' in case and type(case['graph']) is not list:
+            raise ValueError('Graph must be explicit source data')
         if ('program' in case) == ('program_utf8' in case):
             raise ValueError('Exactly one program input is required')
         if any(type(case[k]) is not str or not case[k] for k in ('id', 'operator', 'category')):
@@ -115,3 +127,50 @@ def assert_case(case):
     else:
         assert_json_equal(actual,expected)
     return actual
+
+
+def _require_json(value):
+    """The corpus is passive built-in JSON; reject hooks and cycles before copying."""
+    active = set()
+    stack = [(False, value)]
+    while stack:
+        leaving, value = stack.pop()
+        if leaving:
+            active.remove(id(value)); continue
+        kind = type(value)
+        if kind in (dict, list):
+            if id(value) in active:
+                raise ValueError('Cyclic corpus data')
+            active.add(id(value)); stack.append((True,value))
+            if kind is dict:
+                if any(type(k) is not str for k in value):
+                    raise ValueError('Corpus object keys must be strings')
+                for k in value: k.encode('utf-8')
+                values = value.values()
+            else:
+                values = value
+            stack.extend((False,v) for v in values)
+        elif kind is str:
+            value.encode('utf-8')
+        elif kind is float:
+            if not math.isfinite(value): raise ValueError('Nonfinite corpus number')
+        elif value is not None and kind not in (bool,int):
+            raise ValueError('Foreign corpus value')
+
+
+def semantic_observation(value):
+    """Exclude the human recommendation from structured regression comparisons."""
+    return {k:v for k,v in value.items() if k != 'recommendation'}
+
+
+def numeric_case(vector, number=0):
+    """Adapt the existing Annex U numeric fixture into the same execution contract."""
+    from .srx import roots, binary, literal, expression_document
+    context = roots()
+    context['project']['srx_policy'] = {'decimal_precision':vector['precision']}
+    expected = ({'kind':'error','code':'SRV197','reason':vector['error'],
+                 'input_pointer':'/expression','expression_pointer':'/expression'}
+                if 'error' in vector else {'kind':'value','value':vector['value']})
+    return {'id':'SRX1-numeric-'+str(number),'operator':vector['op'],'category':'annex_u',
+            'program':expression_document(binary(vector['op'],literal(vector['left']),literal(vector['right']))),
+            'context':context,'expect':expected}

@@ -15,7 +15,8 @@
   ],
   "steps": [
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
-    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings."
+    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings.",
+    "Repeat the full conformance corpus, including all Annex U decisions, under changed Decimal current/default contexts, object-key order, execution order and fresh process defaults; compare machine values/errors and preserve process state."
   ],
   "oracle": {
     "kind": "behavior",
@@ -46,7 +47,9 @@
     "test_srx_conformance.SrxConformanceWorkTests.test_operator_positive_vectors",
     "test_srx_conformance.SrxConformanceWorkTests.test_operator_negative_vectors",
     "test_srx_conformance.SrxConformanceWorkTests.test_operator_boundary_vectors",
-    "test_srx_conformance.SrxConformanceWorkTests.test_every_supported_operator_has_all_four_case_classes"
+    "test_srx_conformance.SrxConformanceWorkTests.test_every_supported_operator_has_all_four_case_classes",
+    "test_srx_conformance_right.SrxConformanceRightTests.test_all_vectors_survive_reordered_execution_and_object_keys",
+    "test_srx_conformance_right.SrxConformanceRightTests.test_corpus_in_fresh_processes_with_distinct_hash_seeds_and_locales"
   ],
   "open_items": [
     "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",

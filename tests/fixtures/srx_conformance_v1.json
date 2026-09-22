@@ -5501,6 +5501,569 @@
         "input_pointer": "/expression/args/1",
         "expression_pointer": "/expression/args/1"
       }
+    },
+    {
+      "id": "SRX1-raw-trailing",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "invalid_json",
+        "input_pointer": "",
+        "expression_pointer": ""
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"literal\",\"value\":1}} false"
+    },
+    {
+      "id": "SRX1-raw-duplicate",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "duplicate_key",
+        "input_pointer": "/expression/value",
+        "expression_pointer": "/expression/value"
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"literal\",\"value\":1,\"value\":2}}"
+    },
+    {
+      "id": "SRX1-raw-NaN",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "non_finite",
+        "input_pointer": "/expression/value",
+        "expression_pointer": "/expression/value"
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"literal\",\"value\":NaN}}"
+    },
+    {
+      "id": "SRX1-raw-Infinity",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "non_finite",
+        "input_pointer": "/expression/value",
+        "expression_pointer": "/expression/value"
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"literal\",\"value\":Infinity}}"
+    },
+    {
+      "id": "SRX1-raw-minusInfinity",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "non_finite",
+        "input_pointer": "/expression/value",
+        "expression_pointer": "/expression/value"
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"literal\",\"value\":-Infinity}}"
+    },
+    {
+      "id": "SRX1-raw-1e9999",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "non_finite",
+        "input_pointer": "/expression/value",
+        "expression_pointer": "/expression/value"
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"literal\",\"value\":1e9999}}"
+    },
+    {
+      "id": "SRX1-raw-roundtrip",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "jcs_roundtrip_loss",
+        "input_pointer": "/expression/value",
+        "expression_pointer": "/expression/value"
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"literal\",\"value\":9007199254740993}}"
+    },
+    {
+      "id": "SRX1-raw-trailing-zeroes",
+      "operator": "add",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 2
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 1.5
+      },
+      "program_utf8": "{\"language\":\"srx\",\"version\":\"1.0\",\"expression\":{\"op\":\"add\",\"args\":[{\"op\":\"literal\",\"value\":1.20},{\"op\":\"literal\",\"value\":0.30}]}}"
+    },
+    {
+      "id": "SRX1-nested-pointer",
+      "operator": "count",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/arg/arg",
+        "expression_pointer": "/expression/arg/arg",
+        "expected_type": "array",
+        "actual_type": "null"
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "not",
+          "arg": {
+            "op": "count",
+            "arg": {
+              "op": "literal",
+              "value": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "SRX1-late-quantifier-error",
+      "operator": "any",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "operand_type",
+        "input_pointer": "/expression/where",
+        "expression_pointer": "/expression/where",
+        "expected_type": "boolean",
+        "actual_type": "number"
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "any",
+          "array": {
+            "op": "literal",
+            "value": [
+              true,
+              0
+            ]
+          },
+          "where": {
+            "op": "field",
+            "context": "item",
+            "pointer": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "SRX1-shortcircuit-or",
+      "operator": "or",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": true
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "or",
+          "args": [
+            {
+              "op": "literal",
+              "value": true
+            },
+            {
+              "op": "divide",
+              "args": [
+                {
+                  "op": "literal",
+                  "value": 1
+                },
+                {
+                  "op": "literal",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "SRX1-shortcircuit-and",
+      "operator": "and",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": false
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "and",
+          "args": [
+            {
+              "op": "literal",
+              "value": false
+            },
+            {
+              "op": "divide",
+              "args": [
+                {
+                  "op": "literal",
+                  "value": 1
+                },
+                {
+                  "op": "literal",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "SRX1-unexecuted-unknown",
+      "operator": "and",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "unsupported_operator",
+        "input_pointer": "/expression/args/1/op",
+        "expression_pointer": "/expression/args/1/op"
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "and",
+          "args": [
+            {
+              "op": "literal",
+              "value": false
+            },
+            {
+              "op": "exec"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "SRX1-literal-code-is-data",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": {
+          "op": "exec",
+          "path": "/etc/passwd"
+        }
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "literal",
+          "value": {
+            "op": "exec",
+            "path": "/etc/passwd"
+          }
+        }
+      }
+    },
+    {
+      "id": "SRX1-unicode-codepoints",
+      "operator": "length",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 3
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "length",
+          "arg": {
+            "op": "literal",
+            "value": "é😀"
+          }
+        }
+      }
+    },
+    {
+      "id": "SRX1-object-members",
+      "operator": "length",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 2
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "length",
+          "arg": {
+            "op": "literal",
+            "value": {
+              "a": [],
+              "b": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "SRX1-numeric-zero-precision",
+      "operator": "multiply",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 1
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "value",
+        "value": 0
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "multiply",
+          "args": [
+            {
+              "op": "literal",
+              "value": 0
+            },
+            {
+              "op": "literal",
+              "value": 12345
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "SRX1-numeric-underflow",
+      "operator": "divide",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "jcs_roundtrip_loss",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "divide",
+          "args": [
+            {
+              "op": "literal",
+              "value": 5e-324
+            },
+            {
+              "op": "literal",
+              "value": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "SRX1-numeric-overflow",
+      "operator": "multiply",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {},
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV197",
+        "reason": "jcs_roundtrip_loss",
+        "input_pointer": "/expression",
+        "expression_pointer": "/expression"
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "multiply",
+          "args": [
+            {
+              "op": "literal",
+              "value": 1e+308
+            },
+            {
+              "op": "literal",
+              "value": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "SRX1-policy-context-not-expression",
+      "operator": "literal",
+      "category": "regression",
+      "context": {
+        "artifact": {},
+        "configuration": null,
+        "project": {
+          "srx_policy": {
+            "decimal_precision": 0
+          }
+        },
+        "relations": []
+      },
+      "expect": {
+        "kind": "error",
+        "code": "SRV110",
+        "reason": "invalid_numeric_policy",
+        "input_pointer": "/project/srx_policy/decimal_precision",
+        "expression_pointer": "/expression",
+        "subject": "context"
+      },
+      "program": {
+        "language": "srx",
+        "version": "1.0",
+        "expression": {
+          "op": "literal",
+          "value": 1
+        }
+      }
     }
   ]
 }

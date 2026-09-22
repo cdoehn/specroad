@@ -17,7 +17,8 @@
   "steps": [
     "Capture own immutable data; evaluate literal or reject invalid declarations without side effects.",
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
-    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings."
+    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings.",
+    "Repeat the full conformance corpus, including all Annex U decisions, under changed Decimal current/default contexts, object-key order, execution order and fresh process defaults; compare machine values/errors and preserve process state."
   ],
   "oracle": {
     "kind": "behavior",
@@ -50,7 +51,9 @@
     "test_srx_quantifiers.SrxQuantifierTests.test_scalar_predicates_must_be_boolean",
     "test_srx_quantifiers.SrxQuantifierTests.test_invalid_array_index_retains_error",
     "test_srx_conformance.SrxConformanceWorkTests.test_operator_error_vectors_and_pointers",
-    "test_srx_conformance.SrxConformanceWorkTests.test_numeric_repairs_remain_disjoint"
+    "test_srx_conformance.SrxConformanceWorkTests.test_numeric_repairs_remain_disjoint",
+    "test_srx_conformance_right.SrxConformanceRightTests.test_machine_diagnostics_never_embed_operand_values",
+    "test_srx_conformance_right.SrxConformanceRightTests.test_corpus_in_fresh_processes_with_distinct_hash_seeds_and_locales"
   ],
   "open_items": [
     "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",
