@@ -4,17 +4,13 @@ from dataclasses import FrozenInstanceError
 import pytest
 from specroad.srx import NumericPolicy, SrxPolicyError, SrxNumericError, SrxError, EvaluationContext, SrxProgram, evaluate, arithmetic_operation
 from support.srx_numeric import vectors, calculate
+from support.srx_vectors import assert_case, numeric_case
 from support.srx import roots, literal, binary, run, field, expression_document, quantifier
 
 
 def test_normative_decision_vectors():
-    for item in vectors():
-        args=(item['op'],item['left'],item['right'],item['precision'])
-        if 'error' in item:
-            with pytest.raises(SrxNumericError) as exc:calculate(*args)
-            assert exc.value.code=='SRV197' and exc.value.reason==item['error']
-        else:
-            assert calculate(*args)==item['value']
+    for index, item in enumerate(vectors()):
+        assert_case(numeric_case(item, index))
 
 
 @pytest.mark.parametrize('op,a,b,value', [('add',2,3,5),('subtract',2,3,-1),('multiply',3,-4,-12),

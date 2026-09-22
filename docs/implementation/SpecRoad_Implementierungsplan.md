@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 152
-last_completed_plan_commit: 4.i.R
-next_plan_commit: 4.i.C
-last_completed_numbered_bundle: 12
+implementation_plan_commits_completed: 153
+last_completed_plan_commit: 4.i.C
+next_plan_commit: 4.j.W
+last_completed_numbered_bundle: 13
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2029,7 +2029,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.i.C – Make it Clean
 
-- [ ] **4.i.C** · Position **153/885** · Voraussetzung: `4.i.R`.
+- [x] **4.i.C** · Position **153/885** · Voraussetzung: `4.i.R`.
 **Exakte Commit-Message:** `4.i.C refactor(validation): SRX-Diagnosen und Vektorkorpus bereinigen`
 
 **Bereinigung:** Gemeinsame Vektorharness nutzen; keine Ausgabe-Golden-Files einführen.

@@ -19,7 +19,7 @@ from support.srx_vectors import (load_corpus, validate_corpus, assert_case, obse
 from support.srx_numeric import vectors
 from support.processes import run_python
 from support.portable import build_distribution
-from test_srx_arithmetic_right import changed_defaults, context_state
+from support.srx_numeric import changed_defaults, context_state
 
 
 def ordered_objects(value):

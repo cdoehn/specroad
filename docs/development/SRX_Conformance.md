@@ -66,3 +66,14 @@ Versionen, leere Korpora, fremde Objekte, Zyklen und nichtendliche Erwartungen
 ab. Beliebige Ausnahmen werden nicht in erwartete SRX-Fehler umgedeutet. Der
 strukturierte Wiederholungsvergleich laesst den menschenlesbaren Empfehlungstext
 aus; dessen Formulierungen und JSON-Einrueckungen bleiben frei gestaltbar.
+
+
+## 4.i.C – Gemeinsame Bausteine ohne Semantikaenderung
+
+`src/specroad/srx/diagnostics.py` kapselt den unveraenderten Diagnose-Datenvertrag
+und die statischen Empfehlungen ausserhalb der Exception-Hierarchie. Der
+Testharness trennt passive Korpuspruefung / unabhaengiges JSON-Oracle von der
+Ausfuehrung. Die bereits vorhandenen numerischen U.3-Faelle verwenden dieselbe
+Vektorauswertung; Erwartungen, IDs und numerische Originaldaten bleiben erhalten.
+Die identische Decimal-Default-Fixture liegt gemeinsam in `support/srx_numeric.py`.
+Keine neuen Sprachoperatoren oder geaenderten Ergebnisse im Clean-Schritt.
