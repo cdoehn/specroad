@@ -65,3 +65,16 @@ Fehlt der erfolgreiche Testlauf, bleiben `suite_passed` und `release_approved`
 falsch. Die kleinen Prozessregressionen prüfen dies mit 0, 2 und 4 Workern; sie
 führen dabei nur synthetische Vier-Test-Projekte aus, keine serielle
 SpecRoad-Vollsuite auf dem Pixel.
+
+## Abschluss und erhaltene Grenzen
+
+Die Identitätsabbildung liegt gemeinsam in `collection_identity.py`, die
+Katalog-/Berichtsverträge in `catalog_contract.py`. Sammeln und Ausführen
+verwenden denselben Identitätsvertrag, aber getrennte Prozessabläufe. Die
+Spezifikation, sämtliche Produktdateien und die Anforderungsreife bleiben
+unverändert. Lokal werden nur die ausgewählten Testdateien mit vier Workern
+ausgeführt. Die vollständige Sammlung ist ausdrücklich kein bestandener
+Volltest. Auch die kleine synthetische Vier-Test-CI-Referenz ist kein echter
+GitHub-Lauf. Bundle 011 fordert parallele Volltests in GitHub an; Bundle 012
+behält parallel plus seriell und Vergleich. Aus dem erfolgreichen lokalen
+Apply oder Push darf kein erfolgreicher GitHub-Lauf abgeleitet werden.

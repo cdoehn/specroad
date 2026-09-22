@@ -22,7 +22,7 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 150
 last_completed_plan_commit: 4.h.C
 next_plan_commit: 4.i.W
-last_completed_numbered_bundle: 10
+last_completed_numbered_bundle: 11
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -110,6 +110,8 @@ Katalogcheck ist kein Volltestnachweis. Einzelheiten und Abnahmegrenzen:
 
 `CI-REPAIR.a.R` sichert den Abbruch vor Testkörpern, exakte Berichtsverträge
 und vollständige Fehlerbeobachtungen auch bei direkter xdist-Ausführung ab.
+`CI-REPAIR.a.C` trennt die stabilen Testidentitäten und Berichtsverträge von
+Sammlung, Prozessstart und pytest-Hooks. Alle lokalen Gates bleiben Teiltests.
 
 ## BD-001 – flexible Anzahl eigenständiger Commits pro Bundle
 

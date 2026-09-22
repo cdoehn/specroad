@@ -2,12 +2,12 @@
 
 from .common import CatalogError
 from .outcomes import RunLedger, bind_test_ids
+from .collection_identity import test_identity
 
 import importlib.metadata
 import json
 from pathlib import Path
 import sys
-import unittest
 import uuid
 
 import pytest
@@ -22,12 +22,6 @@ from .publication import evidence_target, publish_report
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_identity(item):
-    """Preserve existing unittest IDs; use native nodeids for new pytest tests."""
-    cls = getattr(item, "cls", None)
-    if isinstance(cls, type) and issubclass(cls, unittest.TestCase):
-        return cls.__module__ + "." + cls.__qualname__ + "." + item.name
-    return item.nodeid
 
 
 def pytest_addoption(parser):
