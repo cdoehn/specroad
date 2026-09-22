@@ -49,3 +49,32 @@ def load_bundled_profile(key):
             or resource.source_sha256 != reference["source_sha256"]):
         raise ProfileError("profile_binding_mismatch")
     return resource
+
+
+def read_profile(source, path, *, expected_key, expected_sha256):
+    """Read one explicit hash-bound normative profile; never use distribution fallback.
+
+The final read detects observed byte changes, not arbitrary concurrent changes
+between filesystem observations. This is no atomic multi-file snapshot and no
+reusable permission to write. A profile's canonical identity does not prove who
+created the supplied file or selected its expected digest.
+"""
+    from .project import ProjectSource
+    from ..model.paths import PathClass
+    if type(source) is not ProjectSource:
+        raise ProfileError("profile_project_source_required")
+    parse_profile_key(expected_key)
+    if type(expected_sha256) is not str or re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is None:
+        raise ProfileError("profile_expected_hash_required")
+    source.check_current()
+    if source.classify(path) is not PathClass.PROFILE:
+        raise ProfileError("profile_path_class_mismatch", path=path)
+    raw = source.read_normative(path)
+    profile = ProfileResource(raw)
+    if profile.key != expected_key or profile.sha256 != expected_sha256:
+        raise ProfileError("profile_binding_mismatch", path=path)
+    source.check_current()
+    if source.read_normative(path) != raw:
+        raise ProfileError("profile_changed_during_read", path=path)
+    source.check_current()
+    return profile

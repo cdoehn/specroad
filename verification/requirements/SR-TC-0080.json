@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Parse exact versioned declarations and verify resource hashes.",
-    "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents."
+    "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents.",
+    "Reject executable declarations, incompatible formats/versions and changed or incorrectly bound project resources."
   ],
   "oracle": {
     "kind": "behavior",
@@ -46,7 +47,10 @@
     "test_profiles.ProfileWorkTests.test_three_exact_bundled_profiles",
     "test_profiles.ProfileWorkTests.test_both_software_profiles_accept_mixed_declared_languages",
     "test_profiles.ProfileWorkTests.test_software_profiles_have_compatible_rule_definitions",
-    "test_profiles.ProfileWorkTests.test_portable_module_and_zipapp_ship_exact_resources"
+    "test_profiles.ProfileWorkTests.test_portable_module_and_zipapp_ship_exact_resources",
+    "test_profiles_right.ProfileRightTests.test_distribution_reads_only_exact_selected_resource",
+    "test_profiles_right.ProfileRightTests.test_missing_project_profile_does_not_fall_back_to_distribution",
+    "test_profiles_right.ProfileRightTests.test_environment_does_not_set_content_language"
   ],
   "open_items": [
     "Full profile composition and conflicts (4.k), lint integration and full validator/CLI consumers remain separate.",

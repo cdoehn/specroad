@@ -42,3 +42,27 @@ or development dependency, CLI command, network loader or writer is introduced.
 Local gates use selected behavior-test files with four workers; the complete
 catalog is collected without test execution. Full tests belong to GitHub CI.
 Bundle 014 uses parallel CI only; the next dual-mode bundle is 016.
+
+## Project reads and robust boundaries
+
+`read_profile(source, path, expected_key=..., expected_sha256=...)` uses the
+existing ProjectSource path/root/configuration checks. The expected profile
+identity and canonical hash are required and compared. Only normative profile
+paths are accepted. Original bytes and configuration are rechecked before return;
+a missing, corrupted, changed or wrongly bound file is an error, never a reason
+to substitute a bundled profile. No project/cache file is created or repaired.
+These are repeated read observations, not an atomic multi-file snapshot.
+
+For field evaluation, artifact type and maturity must be explicitly valid, so an
+unknown maturity cannot silently skip approval-specific requirements. Missing
+field values remain observations, not autofilled defaults. Lint program syntax
+is checked even when its declared target selector would not apply to a later
+artifact. Code-like content inside a literal remains JSON data. SRX runtime
+errors are not evaluated merely by loading a valid declaration.
+
+Profile resource/rule versions use exact SemVer strings. A valid resource version
+does not authorize a different schema/format or SRX version. Unknown requests,
+range selectors, duplicate resources and incompatible format versions fail;
+there is no latest-version selection, alias expansion or network resolution.
+The field-resource API does not claim to enforce downstream Core-security
+severity protections or merges; that composition belongs to 4.k.

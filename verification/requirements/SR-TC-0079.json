@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Parse exact versioned declarations and verify resource hashes.",
-    "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents."
+    "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents.",
+    "Reject executable declarations, incompatible formats/versions and changed or incorrectly bound project resources."
   ],
   "oracle": {
     "kind": "behavior",
@@ -48,7 +49,11 @@
     "test_profiles.ProfileWorkTests.test_profile_relation_rules_feed_existing_engine",
     "test_profiles.ProfileWorkTests.test_severity_overrides_are_passive_declarations",
     "test_profiles.ProfileWorkTests.test_lint_program_is_real_but_not_run_on_load",
-    "test_profiles.ProfileWorkTests.test_declaration_bytes_must_be_strict_json"
+    "test_profiles.ProfileWorkTests.test_declaration_bytes_must_be_strict_json",
+    "test_profiles_right.ProfileRightTests.test_rule_callbacks_are_not_resolved",
+    "test_profiles_right.ProfileRightTests.test_incompatible_srx_version_is_rejected",
+    "test_profiles_right.ProfileRightTests.test_invalid_relation_contract_cannot_hide_in_profile",
+    "test_profiles_right.ProfileRightTests.test_wrong_project_profile_hash_or_identity_fails"
   ],
   "open_items": [
     "Full profile composition and conflicts (4.k), lint integration and full validator/CLI consumers remain separate.",

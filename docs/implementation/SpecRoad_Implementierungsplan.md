@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 154
-last_completed_plan_commit: 4.j.W
-next_plan_commit: 4.j.R
+implementation_plan_commits_completed: 155
+last_completed_plan_commit: 4.j.R
+next_plan_commit: 4.j.C
 last_completed_numbered_bundle: 13
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2055,7 +2055,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.j.R – Make it Right
 
-- [ ] **4.j.R** · Position **155/885** · Voraussetzung: `4.j.W`.
+- [x] **4.j.R** · Position **155/885** · Voraussetzung: `4.j.W`.
 **Exakte Commit-Message:** `4.j.R feat(validation): Profilressourcen und Fachprofile vervollständigen`
 
 **Vervollständigung:** Ausführbare Profilteile und inkompatible Versionen ablehnen.

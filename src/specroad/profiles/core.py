@@ -251,7 +251,7 @@ lifecycle/graph/policy checks remain the responsibility of their own layers.
     value = parse_json_object(canonical_json_bytes(artifact))
     if type(value.get("artifact_type")) is not str or value["artifact_type"] not in KINDS:
         _fail("profile_artifact_type_required", "/artifact_type")
-    if "maturity" in value and (type(value["maturity"]) is not str or value["maturity"] not in MATURITIES):
+    if type(value.get("maturity")) is not str or value["maturity"] not in MATURITIES:
         _fail("profile_invalid_maturity", "/maturity")
     diagnostics, checked = [], 0
     data = profile.data
