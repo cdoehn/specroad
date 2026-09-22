@@ -66,3 +66,12 @@ range selectors, duplicate resources and incompatible format versions fail;
 there is no latest-version selection, alias expansion or network resolution.
 The field-resource API does not claim to enforce downstream Core-security
 severity protections or merges; that composition belongs to 4.k.
+
+## Module boundaries after 4.j.C
+
+The stable `specroad.profiles` / `profiles.core` facade delegates to:
+`_contract` for closed data validation, `values` for original bytes and detached
+values, `resolver` for exact selection from supplied resources, and `fields`
+for field-only observations. `storage.profiles` is the separate I/O adapter.
+No CLI setting is read by the resolver. The three profile resources, their
+bindings and the W/R behavior-test files are unchanged by this refactoring.
