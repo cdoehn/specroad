@@ -94,6 +94,20 @@ Die Testpolicy-Anpassung erfolgt getrennt als OFF-PLAN `TEST-POLICY.a.W/R/C` und
 zählt keine Produktposition hoch. Die ursprüngliche Testmigration bei 42/885
 bleibt historische Grundlage. Anleitung und Audit: [Testentwicklung](../development/Testing.md).
 
+## CI-REPAIR – OFF-PLAN-Korrektur der Testzuordnung (Bundle 011)
+
+Am 22. September 2026 angeforderte Korrektur des gescheiterten GitHub-Laufs:
+21 Referenzen nativer pytest-Funktionen in SR-TC-0295, SR-TC-0296 und
+SR-TC-0523 werden auf die wirklich gesammelten IDs berichtigt. Der vorhandene
+Produktstand bleibt 150/885, nächster Schritt 4.i.W. Es wird kein Produktplan-
+Commit vorgezogen und keine Anforderungsreife erhöht.
+
+Vor lokalen Teiltests und GitHub-Volltests wird die Katalogbindung durch echte
+pytest-Sammlung geprüft: keine Testkörper/Fixtures und keine vollständige
+lokale Testausführung. Neue Berichte benennen alle fehlenden Verweise. Der
+Katalogcheck ist kein Volltestnachweis. Einzelheiten und Abnahmegrenzen:
+[`CI_Catalog_Repair.md`](../development/CI_Catalog_Repair.md).
+
 ## BD-001 – flexible Anzahl eigenständiger Commits pro Bundle
 
 **Der Nutzer autorisiert ausdrücklich, dass der implementierende Chatbot selbst entscheidet, wie viele aufeinanderfolgende Plan-Commits ein späteres PatchHarbor-Bundle enthält.** Es gibt keine feste Anzahl, kein künstliches Ein-Commit-Limit, kein verpflichtendes Dreierpaket und keine Pflicht, einen ganzen Schritt oder Meilenstein auf einmal fertigzustellen. Diese projektspezifische Ausnahme ersetzt ausschließlich für solche ausdrücklich beauftragten Implementierungsbündel die allgemeine Ein-Commit-Vorgabe der beiliegenden PatchHarbor-Chatvorlage. Alle Format-, Zustands-, Integritäts- und Sicherheitspflichten gelten unverändert. Die statische PatchHarbor-Vorlage selbst wird dadurch nicht umgeschrieben.

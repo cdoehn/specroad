@@ -43,14 +43,14 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_srx_resources.test_exact_node_boundary_passes",
-    "test_srx_resources.test_node_boundary_reports_first_overflow_pointer",
-    "test_srx_resources.test_depth_boundary_is_hard_even_with_large_work_targets",
-    "test_srx_resources.test_project_recheck_occurs_before_operator_execution",
-    "test_srx_resources.test_semantic_configuration_excludes_only_soft_srx_targets",
-    "test_srx_resources_right.test_wide_ast_stops_at_small_limit_before_late_unknown_operator",
-    "test_srx_resources_right.test_deep_ast_is_validated_without_python_recursion",
-    "test_srx_resources_right.test_large_valid_ast_is_not_limited_by_work_target"
+    "tests/test_srx_resources.py::test_exact_node_boundary_passes",
+    "tests/test_srx_resources.py::test_node_boundary_reports_first_overflow_pointer",
+    "tests/test_srx_resources.py::test_depth_boundary_is_hard_even_with_large_work_targets",
+    "tests/test_srx_resources.py::test_project_recheck_occurs_before_operator_execution",
+    "tests/test_srx_resources.py::test_semantic_configuration_excludes_only_soft_srx_targets",
+    "tests/test_srx_resources_right.py::test_wide_ast_stops_at_small_limit_before_late_unknown_operator",
+    "tests/test_srx_resources_right.py::test_deep_ast_is_validated_without_python_recursion",
+    "tests/test_srx_resources_right.py::test_large_valid_ast_is_not_limited_by_work_target"
   ],
   "open_items": [
     "Complete profile/CLI composition and persistent checkpoint/work adapters in their scheduled steps.",

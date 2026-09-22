@@ -50,11 +50,11 @@
     "test_srx_context_right.SrxContextRightTests.test_no_clock_entropy_or_shell_access",
     "test_srx_quantifiers.SrxQuantifierTests.test_item_cannot_be_read_outside_evaluation",
     "test_srx_quantifiers.SrxQuantifierTests.test_quantifier_shaped_literals_remain_data",
-    "test_srx_resources_right.test_evaluation_observes_no_file_network_clock_random_or_shell",
-    "test_srx_resources_right.test_foreign_graph_filter_comparison_hooks_are_never_called",
-    "test_srx_resources_right.test_forbidden_expression_never_reaches_executor_or_snapshot",
-    "test_srx_resources_right.test_literal_code_does_not_create_files_or_execute",
-    "test_srx_resources_right.test_json_attributes_are_data_not_reflection"
+    "tests/test_srx_resources_right.py::test_evaluation_observes_no_file_network_clock_random_or_shell",
+    "tests/test_srx_resources_right.py::test_foreign_graph_filter_comparison_hooks_are_never_called",
+    "tests/test_srx_resources_right.py::test_forbidden_expression_never_reaches_executor_or_snapshot",
+    "tests/test_srx_resources_right.py::test_literal_code_does_not_create_files_or_execute",
+    "tests/test_srx_resources_right.py::test_json_attributes_are_data_not_reflection"
   ],
   "open_items": [
     "Complete profile/CLI and whole-product language conformance plus supported-runtime CI matrix in later scheduled steps."
