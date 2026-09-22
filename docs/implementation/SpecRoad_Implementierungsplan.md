@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 143
-last_completed_plan_commit: 4.f.R
-next_plan_commit: 4.f.C
-last_completed_numbered_bundle: 7
+implementation_plan_commits_completed: 144
+last_completed_plan_commit: 4.f.C
+next_plan_commit: 4.g.W
+last_completed_numbered_bundle: 8
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1884,7 +1884,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.f.C – Make it Clean
 
-- [ ] **4.f.C** · Position **144/885** · Voraussetzung: `4.f.R`.
+- [x] **4.f.C** · Position **144/885** · Voraussetzung: `4.f.R`.
 **Exakte Commit-Message:** `4.f.C refactor(validation): Begrenzte Graphoperatoren bereinigen`
 
 **Bereinigung:** Graphzugriff über einen kleinen lesenden Auswertungskontext kapseln.
