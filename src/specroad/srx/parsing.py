@@ -28,9 +28,9 @@ def _decode(raw, rule_id, subject):
                        position=error.position, line=error.line, column=error.column) from None
 
 
-def parse_program(raw, *, rule_id):
+def parse_program(raw, *, rule_id, structure_limits=None):
     """Parse original UTF-8 object bytes; keep them separate from JSON values."""
-    program = SrxProgram(_decode(raw, rule_id, "expression"), rule_id=rule_id)
+    program = SrxProgram(_decode(raw, rule_id, "expression"), rule_id=rule_id, structure_limits=structure_limits)
     object.__setattr__(program, "source_bytes", raw)
     return program
 

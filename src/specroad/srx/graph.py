@@ -78,20 +78,25 @@ class LoadedGraph:
                            subject="context", pointer="/artifact")
         return identifier
 
-    def neighbours(self, identifier, direction, types):
+    def neighbours(self, identifier, direction, types, *, meter=None):
         # Stored type selectors also match their computed incoming views.
         views = self._index.for_artifact(identifier, direction=direction)
+        if meter is not None:
+            meter.add("graph_steps", len(views))
         return tuple(view for view in views if types == "*" or
                      view.type in types or view.stored.relation.type in types)
 
-    def candidate_roots(self, roots, identifier, *, rule_id):
+    def candidate_roots(self, roots, identifier, *, rule_id, meter=None):
         result = dict(roots)
         result["artifact"] = self.artifact(identifier, rule_id=rule_id)
+        views = self._index.for_artifact(identifier, direction="both")
+        if meter is not None:
+            meter.add("graph_steps", len(views))
         result["relations"] = [
             {"relation_id": view.relation_id, "type": view.type,
              "source": view.source.id, "target": view.target.id,
              "target_type": view.target.artifact_type, "inverse": view.inverse}
-            for view in self._index.for_artifact(identifier, direction="both")]
+            for view in views]
         return result
 
 

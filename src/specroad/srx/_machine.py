@@ -8,7 +8,7 @@ from .graph_validation import GRAPH_OPERATORS
 from .graph_operations import direct_graph_operation, ReachabilityIteration
 
 
-def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/expression", item_scope=None, numeric_policy=None):
+def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/expression", item_scope=None, numeric_policy=None, meter=None):
     # Every continuation carries roots and item; nested BFS never recurses here.
     work = [("visit", expression, pointer, item_scope, roots)]
     values = []
@@ -42,6 +42,8 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
             if cursor.done:
                 values.append(cursor.result)
             else:
+                if meter is not None:
+                    meter.add("iterations")
                 work.append(("quantifier_item", cursor, at, scope, current_roots))
                 work.append(("visit", cursor.predicate, at+"/where", cursor.item_scope(), current_roots))
             continue
@@ -54,15 +56,17 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
                 work.append(("reachable_item", node, at, scope, current_roots))
                 work.append(("visit", node.node["where"], at+"/where", scope, candidate))
             continue
+        if meter is not None:
+            meter.add("evaluation_steps")
         op = node["op"]
         if op in GRAPH_OPERATORS:
             if op == "reachable":
-                cursor = ReachabilityIteration(node, current_roots, graph=graph, rule_id=rule_id, at=at)
+                cursor = ReachabilityIteration(node, current_roots, graph=graph, rule_id=rule_id, at=at, meter=meter)
                 candidate = cursor.next_roots()
                 work.append(("reachable_item", cursor, at, scope, current_roots))
                 work.append(("visit", node["where"], at+"/where", scope, candidate))
             else:
-                values.append(direct_graph_operation(node, current_roots, graph=graph, rule_id=rule_id, at=at))
+                values.append(direct_graph_operation(node, current_roots, graph=graph, rule_id=rule_id, at=at, meter=meter))
         elif op in ("literal", "field"):
             values.append(leaf_value(node, current_roots, rule_id=rule_id, at=at, item_scope=scope))
         elif op in UNARY_OPERATORS:

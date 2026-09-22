@@ -29,7 +29,7 @@ def validate_graph_node(node, *, rule_id, at):
         if type(node["direction"]) is not str or node["direction"] not in ("outgoing", "incoming", "both"):
             bad("invalid_graph_direction", "direction", "outgoing, incoming or both")
     selected = node["types"]
-    if selected != "*":
+    if not (type(selected) is str and selected == "*"):
         if type(selected) is not list:
             bad("graph_types_required", "types", "explicit type list or *")
         seen = set()

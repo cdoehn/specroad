@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from ._json_values import JsonSnapshot
 from .numeric_policy import NumericPolicy
+from .resources import ResourcePolicy
 from .validation import _rule_id, _validate_context
 
 @dataclass(frozen=True, init=False)
@@ -17,6 +18,7 @@ class EvaluationContext:
     _snapshot: JsonSnapshot
     graph: object
     numeric_policy: NumericPolicy
+    resource_policy: ResourcePolicy
 
     def __init__(self, document, *, rule_id, graph=None):
         rule_id = _rule_id(rule_id)
@@ -24,6 +26,7 @@ class EvaluationContext:
         data = snapshot.data
         _validate_context(data, rule_id)
         object.__setattr__(self, "numeric_policy", NumericPolicy.from_project(data["project"], rule_id=rule_id))
+        object.__setattr__(self, "resource_policy", ResourcePolicy.from_project(data["project"], rule_id=rule_id))
         if graph is not None:
             from .graph import require_graph
             require_graph(graph, rule_id=rule_id, at="/graph")

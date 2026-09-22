@@ -27,7 +27,8 @@
     "SR-FIX-SRX-COLLECTIONS-v1",
     "SR-FIX-SRX-QUANTIFIERS-v1",
     "SR-FIX-SRX-GRAPH-v1",
-    "SR-FIX-SRX-NUMERIC-v1"
+    "SR-FIX-SRX-NUMERIC-v1",
+    "SR-FIX-SRX-RESOURCES-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -137,6 +138,10 @@
     "SR-FIX-SRX-NUMERIC-v1": {
       "provider": "tests/support/srx_numeric.py:vectors",
       "kind": "Appendix U.3 numeric behavior vectors; fixed input data"
+    },
+    "SR-FIX-SRX-RESOURCES-v1": {
+      "provider": "tests/support/srx_resources.py:observed",
+      "kind": "owned explicit AST policies and soft work targets; in-process observations, not persisted checkpoints or host quota proof"
     }
   }
 }

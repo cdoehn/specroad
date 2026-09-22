@@ -5,8 +5,8 @@ from .graph_access import GraphReadContext
 from .types import require_type
 
 
-def direct_graph_operation(node, roots, *, graph, rule_id, at):
-    access = GraphReadContext(node, roots, graph=graph, rule_id=rule_id, at=at)
+def direct_graph_operation(node, roots, *, graph, rule_id, at, meter=None):
+    access = GraphReadContext(node, roots, graph=graph, rule_id=rule_id, at=at, meter=meter)
     op = node["op"]
     views = access.neighbours(access.start)
     if op == "has_relation":
@@ -18,8 +18,8 @@ def direct_graph_operation(node, roots, *, graph, rule_id, at):
 
 class ReachabilityIteration:
     """One search cursor per expression; the AST machine schedules predicates."""
-    def __init__(self, node, roots, *, graph, rule_id, at):
-        self.access = GraphReadContext(node, roots, graph=graph, rule_id=rule_id, at=at)
+    def __init__(self, node, roots, *, graph, rule_id, at, meter=None):
+        self.access = GraphReadContext(node, roots, graph=graph, rule_id=rule_id, at=at, meter=meter)
         start = self.access.start
         self.node = node
         self.rule_id = rule_id
@@ -34,6 +34,8 @@ class ReachabilityIteration:
         return self.result or not self.queue
 
     def next_roots(self):
+        if self.access.meter is not None:
+            self.access.meter.add("graph_steps")
         self.current = self.queue.popleft()
         return self.access.candidate_roots(self.current[0])
 

@@ -25,62 +25,105 @@ def _exact_fields(value, names, *, rule_id, pointer, subject="expression"):
     if type(value) is not dict:
         raise SrxError("object_required", rule_id=rule_id, pointer=pointer,
                        expected="object", actual=json_type(value), subject=subject)
+    if any(type(key) is not str for key in value):
+        raise SrxError("non_string_key", rule_id=rule_id, pointer=pointer,
+                       expected="string key", actual="non_string", subject=subject)
     if set(value) != set(names):
         raise SrxError("invalid_fields", rule_id=rule_id, pointer=pointer,
                        expected="closed object", actual="object", subject=subject)
 
 
-def _validate_document(data, rule_id):
+def _validate_document(data, rule_id, *, structure_limits=None):
     _exact_fields(data, ("language", "version", "expression"), rule_id=rule_id, pointer="")
-    if data["language"] != LANGUAGE:
+    if type(data["language"]) is not str or data["language"] != LANGUAGE:
         raise SrxError("unsupported_language", rule_id=rule_id, pointer="/language",
                        expected="srx", actual=json_type(data["language"]))
-    if data["version"] != VERSION:
+    if type(data["version"]) is not str or data["version"] != VERSION:
         raise SrxError("unsupported_version", rule_id=rule_id, pointer="/version",
                        expected="1.0", actual=json_type(data["version"]))
-    _validate_expression(data["expression"], rule_id)
+    return _validate_expression(data["expression"], rule_id, structure_limits=structure_limits)
 
 
-def _validate_expression(expression, rule_id):
+def _validate_expression(expression, rule_id, *, structure_limits=None):
+    """Check the entire executable AST, including runtime-skipped branches.
+
+    Iterator frames keep the frontier proportional to depth, not the width of
+    an untrusted args array. Shared occurrences count individually; true cycles
+    fail before traversal or JSON cloning can loop.
+    """
     from .fields import checked_selector
-    work = [(expression, "/expression", False)]
+    from .graph_validation import GRAPH_OPERATORS, validate_graph_node
+    from .resources import StructureLimits, StructureObservation, SrxStructureError, SrxResourcePolicyError
+    limits = StructureLimits() if structure_limits is None else structure_limits
+    if type(limits) is not StructureLimits:
+        raise SrxResourcePolicyError(rule_id=rule_id, pointer="/structure")
+    active = set()
+    nodes = maximum_depth = 0
+    work = [(iter(((expression, "/expression", False, 1),)), None)]
     while work:
-        node, at, item_in_scope = work.pop()
+        iterator, owner = work[-1]
+        try:
+            node, at, item_in_scope, depth = next(iterator)
+        except StopIteration:
+            work.pop()
+            if owner is not None:
+                active.remove(owner)
+            continue
         if type(node) is not dict:
             raise SrxError("object_required", rule_id=rule_id, pointer=at,
                            expected="expression object", actual=json_type(node))
+        if id(node) in active:
+            raise SrxError("cyclic_json_value", rule_id=rule_id, pointer=at,
+                           expected="acyclic AST", actual="object")
+        nodes += 1
+        maximum_depth = max(maximum_depth, depth)
+        if nodes > limits.ast_nodes:
+            raise SrxStructureError("ast_nodes", limits.ast_nodes, nodes, rule_id=rule_id, pointer=at)
+        if depth > limits.ast_depth:
+            raise SrxStructureError("ast_depth", limits.ast_depth, depth, rule_id=rule_id, pointer=at)
+        # Do not hash arbitrary user keys, compare foreign strings, or invoke
+        # conversion hooks while validating an as-yet-unsnapshotted program.
+        if any(type(key) is not str for key in node):
+            raise SrxError("non_string_key", rule_id=rule_id, pointer=at,
+                           expected="string key", actual="non_string")
         op = node.get("op")
         if type(op) is not str or op not in SUPPORTED_OPERATORS:
             raise SrxError("unsupported_operator", rule_id=rule_id, pointer=at+"/op",
                            expected="supported operator", actual=json_type(op))
-        from .graph_validation import GRAPH_OPERATORS, validate_graph_node
         if op in GRAPH_OPERATORS:
             validate_graph_node(node, rule_id=rule_id, at=at)
-            if op == "reachable":
-                work.append((node["where"], at+"/where", item_in_scope))
-            continue
-        _exact_fields(node, OPERATOR_FIELDS[op], rule_id=rule_id, pointer=at)
-        if op == "literal":
-            continue
-        if op == "field":
-            checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at,
-                             item_in_scope=item_in_scope)
-        elif op in QUANTIFIER_OPERATORS:
-            # The array is evaluated in the enclosing scope; only where binds item.
-            work.append((node["where"], at+"/where", True))
-            work.append((node["array"], at+"/array", item_in_scope))
-        elif op in UNARY_OPERATORS:
-            work.append((node["arg"], at+"/arg", item_in_scope))
+            children = ((node["where"], at+"/where", item_in_scope, depth+1),) if op == "reachable" else ()
         else:
-            args = node["args"]
-            if type(args) is not list:
-                raise SrxError("arguments_array_required", rule_id=rule_id, pointer=at+"/args",
-                               expected="array of expressions", actual=json_type(args))
-            if op in BINARY_OPERATORS and len(args) != 2:
-                raise SrxError("binary_arity", rule_id=rule_id, pointer=at+"/args",
-                               expected="exactly two expressions", actual="array")
-            work.extend((arg, at+"/args/"+str(index), item_in_scope)
-                        for index, arg in reversed(tuple(enumerate(args))))
+            _exact_fields(node, OPERATOR_FIELDS[op], rule_id=rule_id, pointer=at)
+            if op == "literal":
+                children = ()  # Literal JSON is data, not executable AST.
+            elif op == "field":
+                checked_selector(node["context"], node["pointer"], rule_id=rule_id, at=at,
+                                 item_in_scope=item_in_scope)
+                children = ()
+            elif op in QUANTIFIER_OPERATORS:
+                children = ((node["array"], at+"/array", item_in_scope, depth+1),
+                            (node["where"], at+"/where", True, depth+1))
+            elif op in UNARY_OPERATORS:
+                children = ((node["arg"], at+"/arg", item_in_scope, depth+1),)
+            else:
+                args = node["args"]
+                if type(args) is not list:
+                    raise SrxError("arguments_array_required", rule_id=rule_id, pointer=at+"/args",
+                                   expected="array of expressions", actual=json_type(args))
+                if op in BINARY_OPERATORS and len(args) != 2:
+                    raise SrxError("binary_arity", rule_id=rule_id, pointer=at+"/args",
+                                   expected="exactly two expressions", actual="array")
+                # Bind parent fields now, not later through a loop closure.
+                children = _argument_children(args, at, item_in_scope, depth)
+        active.add(id(node))
+        work.append((iter(children), id(node)))
+    return StructureObservation(nodes, maximum_depth)
+
+
+def _argument_children(args, at, item_in_scope, depth):
+    for index, arg in enumerate(args):
+        yield arg, at+"/args/"+str(index), item_in_scope, depth+1
 
 
 def _validate_context(data, rule_id):

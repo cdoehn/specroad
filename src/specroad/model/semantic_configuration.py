@@ -10,7 +10,7 @@ from .errors import ModelError
 
 SOFT_LIMITS = frozenset({
     "model_bytes", "relation_count", "diagnostic_count", "query_result_count",
-    "srx_operations", "import_object_count", "merge_conflict_count",
+    "srx_operations", "srx_iterations", "srx_graph_steps", "import_object_count", "merge_conflict_count",
 })
 SEMANTIC_LIMITS = frozenset({
     "artifact_file_bytes", "trace_depth", "query_default_limit", "xml_depth",

@@ -24,3 +24,9 @@ __all__ += ("LoadedGraph",)
 from .numeric_policy import NumericPolicy, SrxPolicyError
 from .arithmetic import SrxNumericError, arithmetic_operation
 __all__ += ("NumericPolicy", "SrxPolicyError", "SrxNumericError", "arithmetic_operation")
+
+from .resources import (StructureLimits, WorkTargets, ResourcePolicy, ResourceUsage,
+                        SrxStructureError, SrxResourcePolicyError)
+from .evaluation import evaluate_with_usage, EvaluationObservation
+__all__ += ("StructureLimits", "WorkTargets", "ResourcePolicy", "ResourceUsage",
+            "SrxStructureError", "SrxResourcePolicyError", "evaluate_with_usage", "EvaluationObservation")

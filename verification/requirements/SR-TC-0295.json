@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0295",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SRX-RESOURCES-v1"
+  ],
+  "preconditions": [
+    "Explicit SRX 1.0 program and immutable four-root context; versioned AST and work policy."
+  ],
+  "steps": [
+    "Validate full executable AST against positive node/depth limits before evaluation.",
+    "Evaluate to completion beyond soft expression/quantifier/graph targets and inspect owned work observations."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die SRX-Konfiguration MUSS AST-Knoten und Strukturtiefe als explizite Strukturgrenzen sowie Iterations-, Graph- und Auswertungsschrittzahlen als weiche fortsetzbare Arbeitsziele nach Anhang O.1 unterscheiden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Explicit AST node/depth limits and deterministic work counters. Soft overrun continues in-process without fabricated checkpoint, truncated value or rule failure."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV110",
+    "SRV111"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/expression",
+    "/project/resource_limits"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_srx_resources.test_exact_node_boundary_passes",
+    "test_srx_resources.test_node_boundary_reports_first_overflow_pointer",
+    "test_srx_resources.test_depth_boundary_is_hard_even_with_large_work_targets",
+    "test_srx_resources.test_project_recheck_occurs_before_operator_execution",
+    "test_srx_resources.test_semantic_configuration_excludes_only_soft_srx_targets"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete profile/CLI composition and persistent checkpoint/work adapters in their scheduled steps.",
+    "These counters do not measure CPU instructions, wall time, host memory or authenticate external quota data."
   ]
 }

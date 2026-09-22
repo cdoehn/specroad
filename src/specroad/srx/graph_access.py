@@ -17,8 +17,10 @@ class GraphReadContext:
     direction: str
     types: object
     rule_id: str
+    meter: object
 
-    def __init__(self, node, roots, *, graph, rule_id, at):
+    def __init__(self, node, roots, *, graph, rule_id, at, meter=None):
+        object.__setattr__(self, "meter", meter)
         graph = require_graph(graph, rule_id=rule_id, at=at)
         start = graph.checked_start(roots, rule_id=rule_id, at=at)
         direction = "incoming" if node["op"] == "incoming_count" else node["direction"]
@@ -31,7 +33,7 @@ class GraphReadContext:
         object.__setattr__(self, "rule_id", rule_id)
 
     def neighbours(self, identifier):
-        return self.graph.neighbours(identifier, self.direction, self.types)
+        return self.graph.neighbours(identifier, self.direction, self.types, meter=self.meter)
 
     def candidate_roots(self, identifier):
-        return self.graph.candidate_roots(self.roots, identifier, rule_id=self.rule_id)
+        return self.graph.candidate_roots(self.roots, identifier, rule_id=self.rule_id, meter=self.meter)
