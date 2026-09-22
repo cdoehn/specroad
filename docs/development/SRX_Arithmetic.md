@@ -30,3 +30,5 @@ lokale Teilprüfung ist keine Vollabnahme und keine Releasefreigabe. Kein neuer
 CLI-Fachbefehl, keine Host-/Datei-/Netzwerkbeschaffung und keine Transaktion.
 
 R: Numeric errors from raw inputs and immutable JSON snapshots use the same disjoint SRV197 reasons. Structural JSON errors stay SRV110. Modified process and DefaultContext precision, rounding, flags and traps neither change results nor leak changes. Full rule aggregation and resource-resume policies remain later steps.
+
+C: Reduced rational-to-decimal conversion (`_exact_decimal.py`), JSON/JCS transport (`numeric_boundary.py`), explicit policy (`numeric_policy.py`) and error data (`numeric_errors.py`) are separate. The arithmetic entrypoint only orchestrates these contracts. The arithmetic W/R behavior tests remain unchanged.

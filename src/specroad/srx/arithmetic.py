@@ -1,71 +1,19 @@
-"""Exact rational operations on JCS decimal spellings, not binary expansions."""
-from decimal import Context, Decimal, ROUND_HALF_EVEN, localcontext
+"""Exact operations with an explicitly scoped numeric policy and error boundary."""
+from decimal import Context, ROUND_HALF_EVEN, localcontext
 from fractions import Fraction
-import math
-from ..model.canonical import canonical_json_bytes
-from ..model.errors import ModelError
 from .errors import SrxError
-from .numeric_policy import NumericPolicy
-from ._json_values import json_type
+from .numeric_errors import SrxNumericError
+from .numeric_policy import NumericPolicy, SrxPolicyError
+from .numeric_boundary import operand_decimal, result_number
+from ._exact_decimal import finite_decimal
 
 ARITHMETIC_OPERATORS = ("add", "subtract", "multiply", "divide")
-
-
-from .numeric_errors import SrxNumericError
-
-
-def operand_decimal(value, *, rule_id, pointer):
-    # Check the exact built-in type before any conversion hooks may execute.
-    if type(value) not in (int, float):
-        from .types import MISSING
-        raise SrxError("operand_type", rule_id=rule_id, pointer=pointer,
-                       expected="number", actual="missing" if value is MISSING else json_type(value))
-    if type(value) is float and not math.isfinite(value):
-        raise SrxNumericError("non_finite", rule_id=rule_id, pointer=pointer)
-    try:
-        return Decimal(canonical_json_bytes(value).decode("ascii"))
-    except ModelError:
-        raise SrxNumericError("jcs_roundtrip_loss", rule_id=rule_id, pointer=pointer) from None
-
-
-def finite_decimal(value, *, rule_id, pointer):
-    """Reduce denominator first; an exact decimal has only factors 2 and 5."""
-    denominator = value.denominator
-    twos = fives = 0
-    while denominator % 2 == 0:
-        denominator //= 2
-        twos += 1
-    while denominator % 5 == 0:
-        denominator //= 5
-        fives += 1
-    if denominator != 1:
-        raise SrxNumericError("non_terminating", rule_id=rule_id, pointer=pointer)
-    if value.numerator == 0:
-        return Decimal(0), 1
-    scale = max(twos, fives)
-    coefficient = abs(value.numerator) * 2 ** (scale-twos) * 5 ** (scale-fives)
-    exponent = -scale
-    while coefficient % 10 == 0:
-        coefficient //= 10
-        exponent += 1
-    digits = tuple(int(c) for c in str(coefficient))
-    return Decimal((int(value.numerator < 0), digits, exponent)), len(digits)
-
-
-def result_number(value, decimal, *, rule_id, pointer):
-    candidate = float(decimal)
-    if not math.isfinite(candidate):
-        raise SrxNumericError("jcs_roundtrip_loss", rule_id=rule_id, pointer=pointer)
-    if Decimal(canonical_json_bytes(candidate).decode("ascii")) != decimal:
-        raise SrxNumericError("jcs_roundtrip_loss", rule_id=rule_id, pointer=pointer)
-    return value.numerator if value.denominator == 1 else candidate
 
 
 def arithmetic_operation(op, left, right, *, policy, rule_id, pointer="/expression"):
     if type(op) is not str or op not in ARITHMETIC_OPERATORS:
         raise SrxError("unsupported_operator", rule_id=rule_id, pointer=pointer+"/op")
     if type(policy) is not NumericPolicy:
-        from .numeric_policy import SrxPolicyError
         raise SrxPolicyError(rule_id=rule_id, pointer="/project/srx_policy")
     # Explicit local context; even DefaultContext/flags/traps changed by callers
     # cannot affect a result. Exact Fraction arithmetic never rounds to this prec.

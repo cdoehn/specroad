@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 146
-last_completed_plan_commit: 4.g.R
-next_plan_commit: 4.g.C
-last_completed_numbered_bundle: 8
+implementation_plan_commits_completed: 147
+last_completed_plan_commit: 4.g.C
+next_plan_commit: 4.h.W
+last_completed_numbered_bundle: 9
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1923,7 +1923,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.g.C – Make it Clean
 
-- [ ] **4.g.C** · Position **147/885** · Voraussetzung: `4.g.R`.
+- [x] **4.g.C** · Position **147/885** · Voraussetzung: `4.g.R`.
 **Exakte Commit-Message:** `4.g.C refactor(validation): Exakte Arithmetik und Zahlenpolicy bereinigen`
 
 **Bereinigung:** Exakte Zahlendarstellung, Policy und JCS-Übergang als eigenständige Schichten führen.
@@ -11695,3 +11695,7 @@ Starter verwenden denselben Vier-Worker-Default. Der einzige Scheduler bleibt xd
 - BUNDLE-CI.a.W: gezielte lokale Testauswahl und Dev-Abschlussauslösung implementiert; OFF-PLAN, Produktzähler unverändert.
 - BUNDLE-CI.a.R: ungültige Revisionen, Duplikate, unvollständige Teilnachweise und unsichere Berichtspfade abgesichert; keine Zählererhöhung.
 - BUNDLE-CI.a.C: Auswahl-/Beobachtungsvertrag von Prozessausführung getrennt; W/R-Verhalten unverändert.
+
+### Bundle 009 – lokaler Abschluss und CI-Übergabe
+
+Die sechs Zwischenstände wurden jeweils durch die dokumentierte Auswahl kompletter Testdateien parallel mit vier Workern geprüft. Dies ist kein Vollsuite-, CI- oder Release-Nachweis. Der Abschlusscommit trägt `SpecRoad-Bundle: 009` und `SpecRoad-Bundle-Final: true`; frühere Commits tragen `false`. Erst die Veröffentlichung auf `dev` kann die automatische parallele GitHub-Vollprüfung auslösen. Bundle 012 ist der nächste automatische Parallel-/Seriell-Vergleich.
