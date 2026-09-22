@@ -53,12 +53,12 @@ def _validate_expression(expression, rule_id, *, structure_limits=None):
     """
     from .fields import checked_selector
     from .graph_validation import GRAPH_OPERATORS, validate_graph_node
-    from .resources import StructureLimits, StructureObservation, SrxStructureError, SrxResourcePolicyError
+    from .resource_policy import StructureLimits, SrxResourcePolicyError
+    from ._resource_accounting import StructureCounter
     limits = StructureLimits() if structure_limits is None else structure_limits
     if type(limits) is not StructureLimits:
         raise SrxResourcePolicyError(rule_id=rule_id, pointer="/structure")
-    active = set()
-    nodes = maximum_depth = 0
+    counter = StructureCounter(limits, rule_id)
     work = [(iter(((expression, "/expression", False, 1),)), None)]
     while work:
         iterator, owner = work[-1]
@@ -67,20 +67,12 @@ def _validate_expression(expression, rule_id, *, structure_limits=None):
         except StopIteration:
             work.pop()
             if owner is not None:
-                active.remove(owner)
+                counter.leave(owner)
             continue
         if type(node) is not dict:
             raise SrxError("object_required", rule_id=rule_id, pointer=at,
                            expected="expression object", actual=json_type(node))
-        if id(node) in active:
-            raise SrxError("cyclic_json_value", rule_id=rule_id, pointer=at,
-                           expected="acyclic AST", actual="object")
-        nodes += 1
-        maximum_depth = max(maximum_depth, depth)
-        if nodes > limits.ast_nodes:
-            raise SrxStructureError("ast_nodes", limits.ast_nodes, nodes, rule_id=rule_id, pointer=at)
-        if depth > limits.ast_depth:
-            raise SrxStructureError("ast_depth", limits.ast_depth, depth, rule_id=rule_id, pointer=at)
+        counter.enter(node, at, depth)
         # Do not hash arbitrary user keys, compare foreign strings, or invoke
         # conversion hooks while validating an as-yet-unsnapshotted program.
         if any(type(key) is not str for key in node):
@@ -116,9 +108,9 @@ def _validate_expression(expression, rule_id, *, structure_limits=None):
                                    expected="exactly two expressions", actual="array")
                 # Bind parent fields now, not later through a loop closure.
                 children = _argument_children(args, at, item_in_scope, depth)
-        active.add(id(node))
+        counter.hold(node)
         work.append((iter(children), id(node)))
-    return StructureObservation(nodes, maximum_depth)
+    return counter.observation()
 
 
 def _argument_children(args, at, item_in_scope, depth):

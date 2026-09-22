@@ -1,6 +1,6 @@
 # SRX-Ressourcen und Sicherheitsgrenzen
 
-Stand 4.h.R. Die API bleibt eine reine In-Memory-Auswertung. Fachliche Werte
+Stand 4.h.C. Die API bleibt eine reine In-Memory-Auswertung. Fachliche Werte
 werden weder aus der Hostumgebung beschafft noch durch ein Arbeitsziel verändert.
 
 ## Strukturgrenzen
@@ -86,3 +86,13 @@ codeähnlicher Literalwert und ein JSON-Schlüssel namens `__class__` bleiben
 gewöhnliche Daten. Fremdobjekt-/Unterklassenmethoden werden vor Typ-/Feldprüfung
 nicht aufgerufen. Die Regressionen beobachten tatsächliche Zugriffsversuche und
 Dateiwirkungen; sie prüfen keinen Helptext und kein Konsolenlayout.
+
+## Verantwortlichkeiten nach C
+
+`resource_policy` hält die unveränderliche Grenz-/Zieldefinition,
+`resource_observations` die unveränderlichen Ergebnis-/Ereigniswerte.
+`_resource_accounting` bilanziert Struktur und tatsächlich gestartete Arbeit;
+`validation` bleibt für die deklarative AST-Grammatik verantwortlich. Die
+Auswertungsmaschine und die Graph-Lesegrenze melden nur Messpunkte. Sie
+implementieren keinen zusätzlichen Scheduler oder Checkpoint-Dateischreiber.
+Der Importweg `specroad.srx.resources` bleibt als gemeinsame Fassade erhalten.

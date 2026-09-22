@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 149
-last_completed_plan_commit: 4.h.R
-next_plan_commit: 4.h.C
-last_completed_numbered_bundle: 9
+implementation_plan_commits_completed: 150
+last_completed_plan_commit: 4.h.C
+next_plan_commit: 4.i.W
+last_completed_numbered_bundle: 10
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -1958,7 +1958,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.h.C – Make it Clean
 
-- [ ] **4.h.C** · Position **150/885** · Voraussetzung: `4.h.R`.
+- [x] **4.h.C** · Position **150/885** · Voraussetzung: `4.h.R`.
 **Exakte Commit-Message:** `4.h.C refactor(validation): SRX-Ressourcen und Sicherheitsgrenzen bereinigen`
 
 **Bereinigung:** Zählung und spätere Checkpointadapter außerhalb der Operatorsemantik halten.

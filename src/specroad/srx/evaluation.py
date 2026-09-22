@@ -6,7 +6,8 @@ from .errors import SrxError
 from ._machine import evaluate_expression
 from ._json_values import JsonSnapshot
 from .types import MISSING
-from .resources import WorkMeter, ResourceUsage
+from ._resource_accounting import WorkMeter
+from .resource_observations import ResourceUsage
 from .validation import _validate_document
 
 
