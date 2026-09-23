@@ -31,7 +31,8 @@
     "SR-FIX-SRX-RESOURCES-v1",
     "SR-FIX-SRX-CONFORMANCE-v1",
     "SR-FIX-PROFILES-v1",
-    "SR-FIX-PROFILE-COMPOSITION-v1"
+    "SR-FIX-PROFILE-COMPOSITION-v1",
+    "SR-FIX-LITERAL-LINT-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -157,6 +158,10 @@
     "SR-FIX-PROFILE-COMPOSITION-v1": {
       "provider": "tests/support/profile_composition.py:composed",
       "kind": "Owned ordered profile inputs, positive merge and deliberate conflict cases; not project approval or authentic provenance"
+    },
+    "SR-FIX-LITERAL-LINT-v1": {
+      "provider": "tests/support/literal_lint.py:observe",
+      "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval."
     }
   }
 }

@@ -1,4 +1,4 @@
-"""Read-only field contracts for the thirteen domain and planning artifact types.
+"""Read-only field contracts for the domain, planning and glossary artifact types.
 
 These contracts extend the common envelope. They do not evaluate a project's
 relations, profiles, language registry, evidence, review or release readiness.
@@ -18,7 +18,7 @@ from .versions import SCHEMA_VERSION
 
 DOMAIN_TYPES = (
     "goal", "need", "capability", "requirement", "scenario", "decision",
-    "risk", "assumption", "component", "interface", "release", "milestone", "task",
+    "risk", "assumption", "component", "interface", "release", "milestone", "task", "term",
 )
 VALIDATION_SCOPE = "domain_fields_only"
 def _type_fields(kind):
@@ -29,6 +29,9 @@ def _type_fields(kind):
         shared[name] for name in ("implementation", "verification", "priority", "detail", "assessment")
     )
     fields = {
+        "term": (("term", "definition", "language", "synonyms", "forbidden_synonyms", "owner"),
+                 {"term": text, "definition": text, "synonyms": texts,
+                  "forbidden_synonyms": texts, "owner": owner}),
         "goal": (("statement", "owner"), {"statement": text, "owner": owner,
                   "success_criterion": {"anyOf": [text, criteria]}}),
         "need": (("stakeholder", "statement", "owner"), {"stakeholder": owner,

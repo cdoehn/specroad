@@ -4,7 +4,7 @@ from .artifacts import common_artifact
 
 PREFIXES = {"goal": "GOAL", "need": "NEED", "capability": "CAP", "requirement": "REQ",
             "scenario": "SCN", "decision": "DEC", "risk": "RISK", "assumption": "ASM",
-            "component": "COMP", "interface": "IFC", "release": "REL", "milestone": "MS", "task": "TASK"}
+            "component": "COMP", "interface": "IFC", "release": "REL", "milestone": "MS", "task": "TASK", "term": "TERM"}
 
 
 def relation(kind="part_of", target="SR-REL-" + "0" * 26):
@@ -15,6 +15,8 @@ def relation(kind="part_of", target="SR-REL-" + "0" * 26):
 def domain_value(kind="goal", **overrides):
     value = common_artifact(kind, PREFIXES[kind])
     fields = {
+        "term": {"term": "Controller", "definition": "A declared test term.", "owner": "engineering",
+                 "synonyms": ["Control unit"], "forbidden_synonyms": ["Magic box"]},
         "goal": {"statement": "Reduce setup effort.", "owner": "product"},
         "need": {"stakeholder": "operator", "statement": "An offline workspace is needed.", "owner": "product"},
         "capability": {"description": "Offline editing", "owner": "engineering", "implementation_status": "not_started", "verification_plan_status": "not_planned"},

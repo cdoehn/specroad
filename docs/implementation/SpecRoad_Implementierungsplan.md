@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 159
-last_completed_plan_commit: 4.k.C
-next_plan_commit: 4.l.W
+implementation_plan_commits_completed: 160
+last_completed_plan_commit: 4.l.W
+next_plan_commit: 4.l.R
 last_completed_numbered_bundle: 15
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2116,7 +2116,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.l.W – Let it Work
 
-- [ ] **4.l.W** · Position **160/885** · Voraussetzung: `4.k.C`.
+- [x] **4.l.W** · Position **160/885** · Voraussetzung: `4.k.C`.
 **Exakte Commit-Message:** `4.l.W feat(validation): Glossar und literale Lintregeln aufbauen`
 
 **Umsetzung:** Terms, verbotene Synonyme und explizite Platzhalter sprachbezogen literal prüfen.

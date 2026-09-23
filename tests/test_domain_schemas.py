@@ -221,10 +221,10 @@ class DomainWorkTests(unittest.TestCase):
             schema["properties"].clear(); schema["required"].clear()
             self.assertTrue(domain_schema(kind)["properties"])
             self.assertTrue(domain_schema(kind)["required"])
-        self.assertEqual(len(identities), 13)
+        self.assertEqual(len(identities), 14)
 
     def test_other_registered_types_remain_explicitly_unsupported(self):
-        for kind in ("evidence", "document", "source", "configuration", "proposal", "term"):
+        for kind in ("evidence", "document", "source", "configuration", "proposal"):
             with self.subTest(kind=kind), self.assertRaises(ModelError) as caught: domain_schema(kind)
             self.assertEqual(caught.exception.reason, "domain_type_not_supported")
 

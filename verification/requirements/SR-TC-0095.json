@@ -4,19 +4,31 @@
   "requirement_id": "SR-REQ-0095",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-LITERAL-LINT-v1"
+  ],
+  "preconditions": [
+    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory."
+  ],
+  "steps": [
+    "Capture and validate owned records and exact selections.",
+    "Run literal checks on unchanged selected text and inspect structured findings and coverage."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad lint` MUSS deterministische Qualitätsregeln ausführen, die nicht für die strukturelle Modellgültigkeit erforderlich sind.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Selected literal fields and Term schema only; no complete project, language quality or approval proof."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV033",
+    "SRV053"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/statement"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +40,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_literal_lint.LiteralWorkTests.test_complete_report_is_reproducible_and_has_no_linguistic_success",
+    "test_literal_lint.LiteralWorkTests.test_offsets_are_unicode_codepoints_not_bytes"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full lint/validation pipeline and CLI integration remain later steps.",
+    "Language policy and package composition are implemented in the following language stage, not inferred here.",
+    "Full target runtime matrix evidence remains necessary."
   ]
 }
