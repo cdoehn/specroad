@@ -62,3 +62,15 @@ These inputs do not change stored content language or translate any artifact.
 Local bundle gates run selected files with four xdist workers, never a full
 serial or parallel suite. Full CI belongs to the final commit of Bundle 015.
 Bundle 016 retains the periodic serial plus parallel reference.
+
+
+## Module boundaries after 4.k.C
+
+The `profiles.composition` facade owns explicit selection and typed language
+binding checks. `composition_values` owns immutable results and SRV142 failures.
+`_composition_merge` centralizes the ordered mapping from each declaration family
+to its merge strategy (union/intersection/identity/later-wins/minimum/equality).
+The strategy registry is fixed trusted code; profiles cannot supply callbacks.
+The field observer is shared with individual ProfileResource checks. No behavior
+or test expectation changes in C. Complete materialized values and failures are
+additionally compared to R on a separate 70-case local projection corpus.
