@@ -34,8 +34,31 @@ profile. Diagnostic consumers may display the exception, not treat it as a model
 The later full validation/CLI pipeline must propagate this failure; it is not
 implicitly connected to the still-unimplemented model commands here.
 
-The W subset rejects nonempty language bindings and has no scalar/limit
-composition yet. The R state completes those explicit contracts.
+## Explicit policy and language inputs
+
+Optional `hard_limits` declarations accept positive integer values for the known
+hard structure/format limits: artifact_file_bytes, json_depth, xml_depth,
+srx_nodes, srx_depth, archive_uncompressed_bytes. The minimum of all active
+profiles wins. No soft work budget, trace/query default or unknown limit is
+reclassified as a hard cutoff; such declarations are rejected.
+
+Optional `normative_policy` is a map of named scalar normative values. Multiple
+profiles must agree on a value's canonical JSON value (bool is not number).
+Omission makes no declaration; null is an explicit value. No merge-by-last-writer
+or inferred nested-object merge. Language/default-locale, analyzer and SRX policy
+remain in effective project configuration, not in this generic scalar map.
+This data contract does not itself inject names into project configuration.
+
+Optional `language_registry` accepts an explicitly supplied LanguageRegistry;
+`language_packages` accepts explicitly activated LanguagePackage objects. Their
+bytes and metadata are rechecked. Registry identity/version/hash/validator and
+ordered package identity/version/ranges/hash are included in the full preimage.
+Identical package duplicates coalesce; conflicting bytes under the same package
+key fail. An explicit null registry and no packages mean absent bindings, not a
+claim that a real project's language dependencies are resolved. A future project
+consumer must supply its actual required bindings; it may not omit them and
+claim a fully validated project. No package is found via locale, I/O or fallback.
+These inputs do not change stored content language or translate any artifact.
 Local bundle gates run selected files with four xdist workers, never a full
 serial or parallel suite. Full CI belongs to the final commit of Bundle 015.
 Bundle 016 retains the periodic serial plus parallel reference.

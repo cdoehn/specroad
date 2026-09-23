@@ -16,8 +16,12 @@ from .values import ProfileResource
 from .fields import observe_profile_fields
 from ..model.artifact_schemas import MATURITIES
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from ..graph.relation_obligations import MinimumRelationRule
+from ..model.language_registry import LanguageRegistry
+from ..model.language_package_values import LanguagePackage
+from ..model.language_tags import VALIDATOR_VERSION
 
 COMPOSITION_VERSION = "profile-composition-v1"
 # Chapter 13: structural, integrity, identity, recorded-evidence, transaction,
@@ -105,6 +109,7 @@ def _field_rows(values):
 
 def _merge(chain):
     required, forbidden, allowed = {}, {}, {}
+    hard_limits, normative_policy = {}, {}
     rules = {"relation_rules": [], "lint_rules": []}
     seen_rules, rule_bindings, overrides = {}, [], {}
     minima = dict(CORE_MINIMUM_SEVERITIES)
@@ -117,6 +122,12 @@ def _merge(chain):
             minima[rule["rule_id"]] = max((minima.get(rule["rule_id"], "info"), rule["severity"]), key=levels.get)
     for profile in chain:
         data = profile.data
+        for name, limit in data.get("hard_limits", {}).items():
+            hard_limits[name] = min(hard_limits.get(name, limit), limit)
+        for name, scalar in data.get("normative_policy", {}).items():
+            if name in normative_policy and canonical_json_bytes(normative_policy[name]) != canonical_json_bytes(scalar):
+                _error("profile_scalar_policy_conflict", "/normative_policy/" + name, (p.key for p in chain))
+            normative_policy[name] = scalar
         for group, merged in (("required_fields", required), ("forbidden_fields", forbidden)):
             for entry in data[group]:
                 for cell in _cells(entry):
@@ -161,7 +172,7 @@ def _merge(chain):
                                 "field": field, "values": [json.loads(v) for v in sorted(values)]}
                                for (kind, maturity, field), values in sorted(allowed.items())],
             **rules, "rule_bindings": rule_bindings, "severity_overrides": overrides,
-            "minimum_severities": minima, "hard_limits": {}, "normative_policy": {}}
+            "minimum_severities": minima, "hard_limits": hard_limits, "normative_policy": normative_policy}
 
 
 @dataclass(frozen=True, init=False)
@@ -214,25 +225,55 @@ class EffectiveProfile:
         return max((chosen, floor), key=levels.get)
 
 
+
+def _language_bindings(registry, packages):
+    if registry is not None:
+        if type(registry) is not LanguageRegistry:
+            _error("profile_registry_required", "/language_registry")
+        # Verify the bound bytes, not just copied labels or a mutable metadata dict.
+        checked = LanguageRegistry(registry.source_bytes, expected_sha256=registry.sha256,
+                                   expected_version=registry.version)
+        binding = {"registry_id": "iana-language-subtags", "registry_version": checked.version,
+                   "sha256": checked.sha256, "validator_version": VALIDATOR_VERSION}
+    else:
+        binding = None  # Explicitly no supplied registry; not a project default.
+    if type(packages) not in (tuple, list):
+        _error("profile_language_packages_required", "/language_packages")
+    unique = {}
+    for package in packages:
+        if type(package) is not LanguagePackage:
+            _error("profile_language_package_required", "/language_packages")
+        checked = LanguagePackage(package.source_bytes)
+        if checked.binding() != package.binding():
+            _error("profile_package_binding_mismatch", "/language_packages")
+        if checked.key in unique:
+            if unique[checked.key] != checked.binding():
+                _error("profile_language_package_conflict", "/language_packages")
+            continue
+        unique[checked.key] = checked.binding()
+    # Keep the explicit activation order: later literal-rule composition must
+    # not silently reorder packages. No content-language equality is imposed.
+    return binding, list(unique.values())
+
+
 def compose_profiles(resources, *, core_key, project_profiles=(), cli_profiles=(),
                      language_registry=None, language_packages=()):
     """Core first, nonempty explicit CLI selection replaces the project selection.
 
-    This initial subset does not compose nonempty language bindings yet. A
-    conflict raises before any EffectiveProfile is returned. No partial success.
+    Language resources are explicit typed byte-bound values, not selected from
+    the host. A conflict returns no EffectiveProfile. No partial success.
     """
     try:
-        if language_registry is not None or type(language_packages) not in (tuple, list) or language_packages:
-            _error("profile_language_binding_not_supported")
+        registry_binding, package_bindings = _language_bindings(language_registry, language_packages)
         chain, source = _selection(resources, core_key, project_profiles, cli_profiles)
         merged = _merge(chain)
         value = {"composition_version": COMPOSITION_VERSION,
                  "profiles": [{k: p.binding()[k] for k in ("profile_id", "version", "sha256")} for p in chain],
-                 "language_registry": None, "language_packages": [], "merge": merged}
+                 "language_registry": registry_binding, "language_packages": package_bindings, "merge": merged}
         return EffectiveProfile._create(value, source)
     except ProfileCompositionError:
         raise
-    except ProfileError as error:
+    except ModelError as error:
         raise ProfileCompositionError(error.reason, pointer=error.pointer) from error
 
 

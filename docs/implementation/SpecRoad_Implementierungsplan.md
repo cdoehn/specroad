@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 157
-last_completed_plan_commit: 4.k.W
-next_plan_commit: 4.k.R
+implementation_plan_commits_completed: 158
+last_completed_plan_commit: 4.k.R
+next_plan_commit: 4.k.C
 last_completed_numbered_bundle: 14
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2090,7 +2090,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.k.R – Make it Right
 
-- [ ] **4.k.R** · Position **158/885** · Voraussetzung: `4.k.W`.
+- [x] **4.k.R** · Position **158/885** · Voraussetzung: `4.k.W`.
 **Exakte Commit-Message:** `4.k.R feat(validation): Profilkomposition und Konflikte vervollständigen`
 
 **Vervollständigung:** Leere Schnittmenge, Pflicht/Verbot-Konflikt, Regelhashkonflikt und abgesenkte Sicherheitsfehler blockieren.

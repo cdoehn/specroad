@@ -56,7 +56,7 @@
     "test_profiles_right.ProfileRightTests.test_wrong_project_profile_hash_or_identity_fails"
   ],
   "open_items": [
-    "Full profile composition and conflicts (4.k), lint integration and full validator/CLI consumers remain separate.",
+    "Profile composition is implemented separately in 4.k; full validator/CLI consumers and lint integration remain later steps.",
     "Current evidence from the real supported runtime matrix remains necessary."
   ]
 }

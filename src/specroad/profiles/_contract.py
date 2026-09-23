@@ -14,7 +14,7 @@ from ..srx.pointers import parse_pointer
 PROFILE_FORMAT = "profile-v1"
 PROFILE_FIELDS = frozenset({"schema_version", "profile_format_version", "profile_id", "version",
     "required_fields", "forbidden_fields", "allowed_values", "relation_rules", "lint_rules", "severity_overrides"})
-OPTIONAL_FIELDS = frozenset({"description"})
+OPTIONAL_FIELDS = frozenset({"description", "hard_limits", "normative_policy"})
 KINDS = frozenset(t.artifact_type for t in artifact_types())
 SEVERITIES = frozenset({"error", "warning", "info"})
 SEMVER = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?")
@@ -105,6 +105,7 @@ def _validate_profile(value):
         _fail("profile_unsupported_schema", "/schema_version")
     if type(value["profile_format_version"]) is not str or value["profile_format_version"] != PROFILE_FORMAT:
         _fail("profile_unsupported_format", "/profile_format_version")
+    _validate_composition_policies(value)
     _identity(value["profile_id"], "/profile_id")
     _version(value["version"], "/version")
     if "description" in value and type(value["description"]) is not str:
@@ -158,3 +159,34 @@ def _validate_profile(value):
     for key, severity in overrides.items():
         _identity(key, "/severity_overrides")
         _severity(severity, "/severity_overrides/" + key)
+
+
+# Only known hard structure/format budgets belong in this merge. Soft work
+# counters and query/display defaults are not made hard by putting them here.
+HARD_LIMIT_FIELDS = frozenset({"artifact_file_bytes", "json_depth", "xml_depth",
+    "srx_nodes", "srx_depth", "archive_uncompressed_bytes"})
+_NON_PROFILE_POLICY = frozenset({"default_locale", "default_language", "language",
+    "normative_language", "language_policy", "analyzer_policy", "srx_policy",
+    "language_packages", "language_registry", "resource_limits", "work_targets",
+    "generated_path", "auto_recover"})
+
+
+def _validate_composition_policies(value):
+    limits = value.get("hard_limits", {})
+    if type(limits) is not dict:
+        _fail("profile_object_required", "/hard_limits")
+    for key, limit in limits.items():
+        at = "/hard_limits/" + key.replace("~", "~0").replace("/", "~1")
+        if key not in HARD_LIMIT_FIELDS:
+            _fail("profile_not_a_hard_limit", at)
+        if type(limit) is not int or limit < 1:
+            _fail("profile_positive_hard_limit_required", at)
+    policies = value.get("normative_policy", {})
+    if type(policies) is not dict:
+        _fail("profile_object_required", "/normative_policy")
+    for key, scalar in policies.items():
+        _identity(key, "/normative_policy")
+        if key in _NON_PROFILE_POLICY or key.startswith("srx_"):
+            _fail("profile_policy_belongs_to_project", "/normative_policy/" + key)
+        if scalar is not None and type(scalar) not in (str, bool, int, float):
+            _fail("profile_scalar_policy_required", "/normative_policy/" + key)

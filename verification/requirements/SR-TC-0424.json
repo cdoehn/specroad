@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Compose the selected chain and compare actual field/rule effects and canonical identities.",
-    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash."
+    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash.",
+    "Compose explicit hard-limit, scalar-policy and typed language bindings; test conflicts, isolation and portable results."
   ],
   "oracle": {
     "kind": "behavior",
@@ -46,10 +47,13 @@
   "test_ids": [
     "test_profile_composition.ProfileCompositionWorkTests.test_severity_overrides_are_later_wins",
     "test_profile_composition.ProfileCompositionWorkTests.test_core_security_minimum_cannot_be_lowered",
-    "test_profile_composition.ProfileCompositionWorkTests.test_core_declared_rule_minimum_is_preserved"
+    "test_profile_composition.ProfileCompositionWorkTests.test_core_declared_rule_minimum_is_preserved",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_security_downgrade_cannot_be_fixed_by_a_later_override",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_protected_error_categories_never_weaken",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_nonsecurity_diagnostic_can_be_lowered"
   ],
   "open_items": [
-    "Language/resource policy bindings are completed in 4.k.R; full model-operation/CLI routing remains a later consumer.",
-    "A current supported-platform CI run is required; no complete project approval is implied."
+    "Full model-command gating, actual CLI selection and the project-level policy pipeline remain later consumers; current functions take explicit supplied inputs.",
+    "A current supported-platform CI run is required; no project approval or source authenticity is implied."
   ]
 }

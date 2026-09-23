@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Compose the selected chain and compare actual field/rule effects and canonical identities.",
-    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash."
+    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash.",
+    "Compose explicit hard-limit, scalar-policy and typed language bindings; test conflicts, isolation and portable results."
   ],
   "oracle": {
     "kind": "behavior",
@@ -47,10 +48,13 @@
     "test_profile_composition.ProfileCompositionWorkTests.test_required_field_union_and_no_duplicates",
     "test_profile_composition.ProfileCompositionWorkTests.test_forbidden_field_union",
     "test_profile_composition.ProfileCompositionWorkTests.test_required_forbidden_blocks_composition",
-    "test_profile_composition.ProfileCompositionWorkTests.test_disjoint_maturities_do_not_conflict"
+    "test_profile_composition.ProfileCompositionWorkTests.test_disjoint_maturities_do_not_conflict",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_overlapping_selector_conflict_is_not_hidden_by_grouping",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_forbidden_parent_cannot_hold_a_required_child",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_scope_grouping_does_not_change_materialized_fields"
   ],
   "open_items": [
-    "Language/resource policy bindings are completed in 4.k.R; full model-operation/CLI routing remains a later consumer.",
-    "A current supported-platform CI run is required; no complete project approval is implied."
+    "Full model-command gating, actual CLI selection and the project-level policy pipeline remain later consumers; current functions take explicit supplied inputs.",
+    "A current supported-platform CI run is required; no project approval or source authenticity is implied."
   ]
 }
