@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 161
-last_completed_plan_commit: 4.l.R
-next_plan_commit: 4.l.C
-last_completed_numbered_bundle: 15
+implementation_plan_commits_completed: 162
+last_completed_plan_commit: 4.l.C
+next_plan_commit: 4.m.W
+last_completed_numbered_bundle: 16
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2134,7 +2134,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.l.C – Make it Clean
 
-- [ ] **4.l.C** · Position **162/885** · Voraussetzung: `4.l.R`.
+- [x] **4.l.C** · Position **162/885** · Voraussetzung: `4.l.R`.
 **Exakte Commit-Message:** `4.l.C refactor(validation): Glossar und literale Lintregeln bereinigen`
 
 **Bereinigung:** Literalregeln und menschliche Qualitätsbewertung klar trennen.

@@ -75,3 +75,12 @@ The collection preflight checks all catalog identities without executing test
 bodies. No full local suite or serial local suite. Bundle 016's final commit
 requests both full modes and their comparison in the existing GitHub matrix.
 Local selected evidence is not full CI or release evidence.
+
+## Responsibility split
+
+Owned term/policy values and selection validation are separated from exact
+substring/reference matching and deterministic report projection. The report
+module alone declares which checks were unavailable or inapplicable; it does
+not infer any human quality judgment from literal results. The orchestration
+layer only captures inputs, invokes checks and assembles their observation.
+The W/R behavior tests and their expectations remain unchanged in the C step.
