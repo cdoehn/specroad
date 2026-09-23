@@ -25,6 +25,15 @@ lifecycle/graph/policy checks remain the responsibility of their own layers.
 """
     if type(profile) is not ProfileResource:
         _fail("profile_resource_required")
+    checked, diagnostics = observe_profile_fields(profile.data, artifact)
+    return {"profile": profile.binding(), "validation_scope": "profile_fields_only",
+            "checked_fields": checked, "diagnostics": diagnostics,
+            "field_checks_passed": not diagnostics, "profile_composition_checked": False,
+            "relation_rules_checked": False, "lint_rules_checked": False, "approval_granted": False}
+
+
+def observe_profile_fields(data, artifact):
+    """Shared field observation for validated resource and composition inputs."""
     # Reuse the safe JCS value boundary; never invoke input conversion hooks.
     value = parse_json_object(canonical_json_bytes(artifact))
     if type(value.get("artifact_type")) is not str or value["artifact_type"] not in KINDS:
@@ -32,7 +41,6 @@ lifecycle/graph/policy checks remain the responsibility of their own layers.
     if type(value.get("maturity")) is not str or value["maturity"] not in MATURITIES:
         _fail("profile_invalid_maturity", "/maturity")
     diagnostics, checked = [], 0
-    data = profile.data
     for group in ("required_fields", "forbidden_fields", "allowed_values"):
         for i, entry in enumerate(data[group]):
             if not _applies(entry, value):
@@ -54,7 +62,4 @@ lifecycle/graph/policy checks remain the responsibility of their own layers.
                     diagnostics.append({"reason": {"required_fields": "profile_required_field",
                         "forbidden_fields": "profile_forbidden_field", "allowed_values": "profile_value_not_allowed"}[group],
                         "severity": "error", "pointer": field, "profile_pointer": at})
-    return {"profile": profile.binding(), "validation_scope": "profile_fields_only",
-            "checked_fields": checked, "diagnostics": diagnostics,
-            "field_checks_passed": not diagnostics, "profile_composition_checked": False,
-            "relation_rules_checked": False, "lint_rules_checked": False, "approval_granted": False}
+    return checked, diagnostics

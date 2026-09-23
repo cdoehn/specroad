@@ -30,7 +30,8 @@
     "SR-FIX-SRX-NUMERIC-v1",
     "SR-FIX-SRX-RESOURCES-v1",
     "SR-FIX-SRX-CONFORMANCE-v1",
-    "SR-FIX-PROFILES-v1"
+    "SR-FIX-PROFILES-v1",
+    "SR-FIX-PROFILE-COMPOSITION-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -152,6 +153,10 @@
     "SR-FIX-PROFILES-v1": {
       "provider": "tests/support/profiles.py:profile_data",
       "kind": "owned versioned declarative profiles and scoped field observations; no profile composition, lifecycle approval or analyzer execution"
+    },
+    "SR-FIX-PROFILE-COMPOSITION-v1": {
+      "provider": "tests/support/profile_composition.py:composed",
+      "kind": "Owned ordered profile inputs, positive merge and deliberate conflict cases; not project approval or authentic provenance"
     }
   }
 }

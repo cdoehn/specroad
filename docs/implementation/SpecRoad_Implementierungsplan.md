@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 156
-last_completed_plan_commit: 4.j.C
-next_plan_commit: 4.k.W
+implementation_plan_commits_completed: 157
+last_completed_plan_commit: 4.k.W
+next_plan_commit: 4.k.R
 last_completed_numbered_bundle: 14
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2081,7 +2081,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.k.W – Let it Work
 
-- [ ] **4.k.W** · Position **157/885** · Voraussetzung: `4.j.C`.
+- [x] **4.k.W** · Position **157/885** · Voraussetzung: `4.j.C`.
 **Exakte Commit-Message:** `4.k.W feat(validation): Profilkomposition und Konflikte aufbauen`
 
 **Umsetzung:** Core zuerst, CLI-Ersetzung, Vereinigungen, Schnittmengen, Regelidentitäten und Severity-Overrides umsetzen.

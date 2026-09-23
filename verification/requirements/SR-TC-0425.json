@@ -4,19 +4,34 @@
   "requirement_id": "SR-REQ-0425",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROFILE-COMPOSITION-v1"
+  ],
+  "preconditions": [
+    "Explicit exact Core key, available resource bytes and ordered project/CLI selections."
+  ],
+  "steps": [
+    "Compose the selected chain and compare actual field/rule effects and canonical identities.",
+    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der effektive Profilhash MUSS die geordnete Profilkette und ihre vollständig materialisierte Mergeprojektion binden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Ordered profile composition and conflicts over explicitly supplied resources; field effects only, no implicit project/CLI acquisition."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV142"
+  ],
+  "expected_exit_codes": [
+    0,
+    3
+  ],
+  "json_pointers": [
+    "/profiles",
+    "/merge"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +43,14 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_profile_composition.ProfileCompositionWorkTests.test_hash_matches_full_canonical_projection",
+    "test_profile_composition.ProfileCompositionWorkTests.test_profile_chain_order_is_hash_bound",
+    "test_profile_composition.ProfileCompositionWorkTests.test_canonical_resource_hash_ignores_source_indentation",
+    "test_profile_composition.ProfileCompositionWorkTests.test_detached_output_cannot_mutate_composition"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Language/resource policy bindings are completed in 4.k.R; full model-operation/CLI routing remains a later consumer.",
+    "A current supported-platform CI run is required; no complete project approval is implied."
   ]
 }
