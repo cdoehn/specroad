@@ -1,7 +1,6 @@
 """Version behavior and data identity; no human presentation assertions."""
 
 from pathlib import Path
-import hashlib
 import io
 import json
 import platform
@@ -16,6 +15,7 @@ from specroad.cli.application import dispatch_result
 from specroad.cli.results import thaw
 from specroad.runtime.identity import version_info
 from support.portable import build_distribution, copy_source_fixture, files_under
+from support.payload_identity import reference_payload, reference_digest
 from support.processes import run_python, run_core
 
 
@@ -130,14 +130,8 @@ class IdentityRobustnessTests(unittest.TestCase):
             root = Path(tmp)
             source = copy_source_fixture(root / "source")
             module, archive = build_distribution(root / "first", source)
-            manifest = {"specroad/" + name: hashlib.sha256(data).hexdigest()
-                        for name, data in files_under(source / "specroad").items()
-                        if (name.endswith(".py") or name in {"language_data/registry.txt", "language_data/snapshot.json",
-                            "language_data/packages.json", "language_data/minimum_corpus.json",
-                            "language_data/packages/de.json", "language_data/packages/en.json", "language_data/packages/hi.json", "language_data/packages/id.json", "language_data/packages/pt.json", "language_data/packages/es.json", "language_data/packages/ru.json", "language_data/packages/ja.json", "language_data/packages/zh-Hans.json"}) and name != "_build.py"}
-            manifest["__main__.py"] = hashlib.sha256((module / "__main__.py").read_bytes()).hexdigest()
-            expected = hashlib.sha256(b"specroad-dev-payload-v1\0" + json.dumps(
-                manifest, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")).hexdigest()
+            expected = reference_digest(reference_payload(
+                source / "specroad", (module / "__main__.py").read_bytes()))
             result = run_python(["-I", "-S", "-B", str(archive), "version", "--format", "json"], root, capture=True)
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(json.loads(result.stdout)["result"]["build_sha256"], expected)

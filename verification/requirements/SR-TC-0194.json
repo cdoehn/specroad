@@ -49,7 +49,19 @@
     "test_identity.IdentityWorkTests.test_portable_module_and_zipapp_share_the_recorded_payload_hash",
     "test_identity.IdentityRobustnessTests.test_declaration_and_actual_verification_are_distinct",
     "test_identity.IdentityRobustnessTests.test_payload_hash_binds_program_bytes_not_paths_or_timestamps",
-    "test_identity.IdentityRobustnessTests.test_invalid_bundled_records_fail_without_exposing_data"
+    "test_identity.IdentityRobustnessTests.test_invalid_bundled_records_fail_without_exposing_data",
+    "test_payload_identity.PayloadIdentityTests.test_module_and_zipapp_have_complete_reference_inventory",
+    "test_payload_identity.PayloadIdentityTests.test_each_profile_resource_binds_its_actual_bytes",
+    "test_payload_identity.PayloadIdentityTests.test_each_language_resource_binds_its_actual_bytes",
+    "test_payload_identity.PayloadIdentityTests.test_same_size_resource_edit_with_restored_mtime_changes_identity",
+    "test_payload_identity.PayloadIdentityTests.test_json_whitespace_is_bound_even_when_values_are_unchanged",
+    "test_payload_identity.PayloadIdentityTests.test_relocated_retimestamped_source_preserves_identity",
+    "test_payload_identity.PayloadIdentityTests.test_unregistered_files_do_not_enter_distribution_or_hash",
+    "test_payload_identity.PayloadIdentityTests.test_generated_build_record_is_excluded_and_source_record_is_inert",
+    "test_payload_identity.PayloadIdentityTests.test_relative_program_path_remains_part_of_the_hash",
+    "test_payload_identity.PayloadIdentityTests.test_build_keeps_all_source_bytes_unchanged",
+    "test_payload_identity.PayloadIdentityTests.test_reference_inventory_cannot_silently_drop_required_resources",
+    "test_payload_identity.PayloadIdentityTests.test_actual_hash_rejects_incomplete_or_wrong_byte_expectations"
   ],
   "open_items": [
     "Release-bound cross-runtime verification and final distribution assembly remain in milestone 20."

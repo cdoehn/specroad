@@ -22,7 +22,7 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 165
 last_completed_plan_commit: 4.m.C
 next_plan_commit: 4.n.W
-last_completed_numbered_bundle: 17
+last_completed_numbered_bundle: 18
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -93,6 +93,25 @@ mehr verwendet. `tools/run_ci_tests.py` bleibt der CI-interne Dualmodus.
 Die Testpolicy-Anpassung erfolgt getrennt als OFF-PLAN `TEST-POLICY.a.W/R/C` und
 zählt keine Produktposition hoch. Die ursprüngliche Testmigration bei 42/885
 bleibt historische Grundlage. Anleitung und Audit: [Testentwicklung](../development/Testing.md).
+
+## 4.j.W-FIX1 – CI-Buildhash-Nachweis korrigieren (Bundle 018)
+
+- [x] **4.j.W-FIX1** – `Fix: 4.j.W-FIX1 test(build): Profilressourcen im Buildhash-Nachweis berücksichtigen`
+
+Der CI-Lauf für 444708919d391eba123c1f49871133eacf0349b4 zeigt in allen fünf
+Python-Versionen denselben Fehler des unabhängigen Buildhash-Tests. Der Builder
+bindet die in 4.j.W hinzugefügten vier Profil-JSON-Dateien ein; die Testinventur
+berücksichtigte sie bisher nicht. Der Fix korrigiert die Testinventur und ergänzt
+Rohbyte-/Dateimengenregressionen, ohne Builder, Produktdateien oder Hashvertrag
+zu verändern. Keine Test-Skips, keine Hochstufung von Anforderungsreife.
+
+Genau ein separat getesteter Fix-Commit; Produktfortschritt unverändert 165/885,
+letzter Plan-Commit 4.m.C, nächster 4.n.W. Lokale Ausführung ausschließlich der
+benannten Testdateien mit vier Workern; am Abschluss volle parallele GitHub-CI.
+Bei Lieferressourcenänderungen sind test_identity.py und test_payload_identity.py
+fortan Teil der gezielten lokalen Regressionsauswahl. Die Änderung der
+abgeschlossenen Bundle-Nummer auf 18 erfolgt erst nach dem erfolgreichen Gate.
+Details: [`CI_Payload_Identity_Repair.md`](../development/CI_Payload_Identity_Repair.md).
 
 ## PY310-REPAIR – OFF-PLAN-Portabilitaetskorrektur (Bundle 012)
 

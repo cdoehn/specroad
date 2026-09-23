@@ -144,3 +144,15 @@ Alle 292 ursprünglichen Verhaltenstests bleiben vorhanden. Hinzu kommen 55 Test
 Isolation, Framework-Integration und Nachweisprüfung, insgesamt 347 gesammelte Tests.
 Untertests werden ihren übergeordneten Testfällen zugeordnet und nicht als zusätzliche
 Plan- oder Requirement-Abdeckung hochgezählt. Keine neuen Produkt-Planpositionen.
+
+
+## Regressionsauswahl bei Lieferressourcen (ab Bundle 018)
+
+Bei Änderungen an Build-/Paketierungsregeln, ausgelieferten Profilen,
+Sprachdateien oder deren Bestandsauswahl müssen `tests/test_identity.py` und
+`tests/test_payload_identity.py` zusätzlich zu den betroffenen Fachtests lokal
+mit vier Workern laufen. Beide prüfen die tatsächlichen Lieferdaten; die
+Erwartungsinventur bleibt unabhängig vom Builder. Eine vollständige
+Katalogsammlung erkennt fehlende Testkennungen, aber keine falschen Assertions.
+Diese zusätzliche Auswahl ist keine lokale Vollsuite. Die vollständige
+Abnahme bleibt in GitHub. Siehe `CI_Payload_Identity_Repair.md`.
