@@ -75,8 +75,6 @@ def _validate_package(value):
     if labels and "labels" not in caps:
         raise LanguagePackageError("labels_capability_required")
 
-
-
     if rules and "literal_lint" not in caps:
         raise LanguagePackageError("literal_lint_capability_required")
     if not rules and "literal_lint" in caps:

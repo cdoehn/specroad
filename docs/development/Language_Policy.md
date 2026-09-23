@@ -14,7 +14,7 @@ Fallback und keine Textinterpretation. `allow` erzeugt keine Diagnose. SRV177
 bleibt ein harter Fehler (Code 3); SRV178/179/181 behalten ihre Policy-Schwere,
 auch wenn `strict` über den bestehenden Schwellwert Code 1 erzeugt.
 
-`language_comparison_key` ist nur die deklarierte S.5-Vergleichsprimitve, noch
+`language_comparison_key` ist nur die deklarierte S.5-Vergleichsprimitiven, noch
 kein Mischungscheck eines Containers. Private und unverifizierte Tags bleiben
 auch im primary-Modus vollständig unterscheidbar. `und`, `mul`, `zxx` sind keine
 konkreten Sprachschlüssel. Die eigentliche Container-/Requirementmenge folgt 4.n.
@@ -81,3 +81,13 @@ Werte. Tests kombinieren software-de und software-en mit unterschiedlichen
 Requirement-Sprachen, ohne globale Gleichheit einzuführen. LiteralPolicy-Begriffe
 und deren exakte Sprache bleiben unverändert. Der Paketbericht erklärt nur die
 Ressourcenverfügbarkeit, keine bereits ausgeführte oder bestandene Lintprüfung.
+
+## Bereinigung 4.m.C
+
+Die Fassade komponiert getrennte Registry-Beobachtung, deklarierte Filter-/
+Vergleichsregeln und Severity-/Exitentscheidung. Derselbe unveränderliche
+Registrybefund wird für Erlaubnisprüfung und Vergleichsschlüssel wiederverwendet;
+keine zweite Registerinterpretation mit eventuell abweichenden Metadaten. Der
+bestehende zentrale Fail-on-Vertrag bleibt maßgeblich. Die Datenverträge und alle
+W/R-Testerwartungen bleiben unverändert. Die Paket-/Projektleseschicht verwendet
+weiterhin dieselbe Fassade und dieselben sicheren Speicherbausteine.

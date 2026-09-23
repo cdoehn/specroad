@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 164
-last_completed_plan_commit: 4.m.R
-next_plan_commit: 4.m.C
-last_completed_numbered_bundle: 16
+implementation_plan_commits_completed: 165
+last_completed_plan_commit: 4.m.C
+next_plan_commit: 4.n.W
+last_completed_numbered_bundle: 17
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2169,7 +2169,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.m.C – Make it Clean
 
-- [ ] **4.m.C** · Position **165/885** · Voraussetzung: `4.m.R`.
+- [x] **4.m.C** · Position **165/885** · Voraussetzung: `4.m.R`.
 **Exakte Commit-Message:** `4.m.C refactor(validation): Sprachzulässigkeit und Paketkomposition bereinigen`
 
 **Bereinigung:** Registry, Sprachfilter und Severityentscheidung getrennt komponieren.
