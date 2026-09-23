@@ -48,7 +48,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "tests/test_language_policy.py::test_basic_filtering_reference_corpus"
+    "tests/test_language_policy.py::test_basic_filtering_reference_corpus",
+    "tests/test_language_policy_right.py::test_no_automatic_alias_or_macro_language_in_package_selection"
   ],
   "open_items": [
     "Integrate the actual config-show, validation/lint command and full project work pipeline; not an approval or linguistic/detector result."

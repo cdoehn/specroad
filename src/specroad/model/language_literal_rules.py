@@ -21,4 +21,11 @@ def parse_literal_rules(values):
         except ModelError as error:
             raise LanguagePackageError("literal_rule_invalid", pointer="/literal_rules/" + str(index) + error.pointer) from error
         rules.append(policy)
+    seen = {}
+    for rule in rules:
+        value = rule.data
+        binding = (value["version"], rule.sha256)
+        if value["policy_id"] in seen and seen[value["policy_id"]] != binding:
+            raise LanguagePackageError("literal_rule_identity_conflict", pointer="/literal_rules")
+        seen[value["policy_id"]] = binding
     return tuple(rules)

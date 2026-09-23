@@ -48,7 +48,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "tests/test_language_policy.py::test_comparison_modes_preserve_registry_and_private_boundaries"
+    "tests/test_language_policy.py::test_comparison_modes_preserve_registry_and_private_boundaries",
+    "tests/test_language_policy_right.py::test_unknown_newer_registry_value_obeys_bound_historical_snapshot"
   ],
   "open_items": [
     "Integrate the actual config-show, validation/lint command and full project work pipeline; not an approval or linguistic/detector result."

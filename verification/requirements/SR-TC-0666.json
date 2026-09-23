@@ -48,7 +48,9 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "tests/test_language_policy.py::test_threshold_and_strict_change_only_exit_not_warning"
+    "tests/test_language_policy.py::test_threshold_and_strict_change_only_exit_not_warning",
+    "tests/test_language_policy_right.py::test_configured_threshold_changes_exit_without_changing_diagnostic",
+    "tests/test_language_policy_right.py::test_invalid_threshold_is_rejected_even_when_strict"
   ],
   "open_items": [
     "Integrate the actual config-show, validation/lint command and full project work pipeline; not an approval or linguistic/detector result."

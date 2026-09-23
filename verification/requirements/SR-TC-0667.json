@@ -49,7 +49,10 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_language_policy.py::test_all_matching_packages_follow_activation_order_not_catalogue_order",
-    "tests/test_language_policy.py::test_named_literal_resources_coalesce_with_provenance_without_execution"
+    "tests/test_language_policy.py::test_named_literal_resources_coalesce_with_provenance_without_execution",
+    "tests/test_language_policy_right.py::test_profiles_allow_different_declared_content_languages",
+    "tests/test_language_policy_right.py::test_only_matching_activated_package_payloads_are_opened",
+    "tests/test_language_policy_right.py::test_bound_register_and_package_versions_change_semantic_profile_hash"
   ],
   "open_items": [
     "Integrate the actual config-show, validation/lint command and full project work pipeline; not an approval or linguistic/detector result."

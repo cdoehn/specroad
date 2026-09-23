@@ -49,7 +49,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_language_policy.py::test_complete_defaults_and_owned_materialization",
-    "tests/test_language_policy.py::test_nested_partial_defaults_without_overwriting_explicit_values"
+    "tests/test_language_policy.py::test_nested_partial_defaults_without_overwriting_explicit_values",
+    "tests/test_language_policy_right.py::test_effective_defaults_are_not_writes_or_locale_defaults"
   ],
   "open_items": [
     "Integrate the actual config-show, validation/lint command and full project work pipeline; not an approval or linguistic/detector result."

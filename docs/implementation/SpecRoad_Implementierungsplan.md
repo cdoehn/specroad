@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 163
-last_completed_plan_commit: 4.m.W
-next_plan_commit: 4.m.R
+implementation_plan_commits_completed: 164
+last_completed_plan_commit: 4.m.R
+next_plan_commit: 4.m.C
 last_completed_numbered_bundle: 16
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2160,7 +2160,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.m.R – Make it Right
 
-- [ ] **4.m.R** · Position **164/885** · Voraussetzung: `4.m.W`.
+- [x] **4.m.R** · Position **164/885** · Voraussetzung: `4.m.W`.
 **Exakte Commit-Message:** `4.m.R feat(validation): Sprachzulässigkeit und Paketkomposition vervollständigen`
 
 **Vervollständigung:** cmn nicht automatisch unter zh zulassen; fehlende Lintcapability als unavailable und Registerwechsel nur über Change Plan.

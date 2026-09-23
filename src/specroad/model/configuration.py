@@ -107,6 +107,9 @@ def _policy_shapes(data):
     for key, value in data.get("resource_limits", {}).items():
         if type(value) is not int or value < 0:
             raise ModelError("invalid_policy_value", pointer="/resource_limits/" + key)
+    from ._language_package_parser import parse_package_key
+    for value in data.get("language_packages", ()):
+        parse_package_key(value)
     for field in ("profiles", "language_packages"):
         for value in data.get(field, ()):
             if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*@[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?(?:\+[A-Za-z0-9.-]+)?", value):
