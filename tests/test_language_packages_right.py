@@ -60,7 +60,7 @@ class LanguagePackageRightTests(unittest.TestCase):
     def test_nonempty_literal_rules_fail_explicitly_not_silently_ignored(self):
         with self.assertRaises(LanguagePackageError) as caught:
             LanguagePackage(encoded(package_data(literal_rules=[{'callback':'os.system'}])))
-        self.assertEqual(caught.exception.reason,'literal_rules_not_supported')
+        self.assertEqual(caught.exception.reason,'literal_rule_invalid')
 
     def test_bad_labels_shape_not_executed(self):
         for labels in ([],None,{'domain':[]},{'domain':{'value':{'callback':'run'}}}):

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 162
-last_completed_plan_commit: 4.l.C
-next_plan_commit: 4.m.W
+implementation_plan_commits_completed: 163
+last_completed_plan_commit: 4.m.W
+next_plan_commit: 4.m.R
 last_completed_numbered_bundle: 16
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2151,7 +2151,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.m.W – Let it Work
 
-- [ ] **4.m.W** · Position **163/885** · Voraussetzung: `4.l.C`.
+- [x] **4.m.W** · Position **163/885** · Voraussetzung: `4.l.C`.
 **Exakte Commit-Message:** `4.m.W feat(validation): Sprachzulässigkeit und Paketkomposition aufbauen`
 
 **Umsetzung:** Vollständige language-policy-v1, Basic Filtering und Sprachpaketauflösung implementieren.

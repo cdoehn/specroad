@@ -98,6 +98,12 @@ def _policy_shapes(data):
     digits = precision.get("decimal_precision", 34)
     if type(digits) is not int or not 1 <= digits <= 1000:
         raise ModelError("invalid_policy_value", pointer="/srx_policy/decimal_precision")
+    if "language_policy" in data:
+        from .language_policy import resolve_language_policy, LanguagePolicyError
+        try:
+            resolve_language_policy(data["language_policy"])
+        except ModelError as error:
+            raise LanguagePolicyError(error.reason, pointer="/language_policy" + error.pointer) from error
     for key, value in data.get("resource_limits", {}).items():
         if type(value) is not int or value < 0:
             raise ModelError("invalid_policy_value", pointer="/resource_limits/" + key)

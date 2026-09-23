@@ -11,6 +11,7 @@ SCHEMA_ID = "urn:specroad:schema:" + SCHEMA_VERSION + ":project-configuration"
 
 def configuration_json_schema():
     from .configuration import REQUIRED_FIELDS, OPTIONAL_FIELDS
+    from .language_policy import language_policy_schema
     text = {"type": "string", "minLength": 1, "pattern": r"^(?=[\s\S]*\S)(?![\s\S]*\x00)"}
     versioned = {"type": "string", "pattern": r"^[A-Za-z0-9][A-Za-z0-9_.-]*@[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?(?:\+[A-Za-z0-9.-]+)?(?![\s\S])"}
     def obj(fields):
@@ -24,6 +25,7 @@ def configuration_json_schema():
         "generated_path": dict(text),
         "profiles": {"type": "array", "items": versioned},
         "language_packages": {"type": "array", "items": versioned},
+        "language_policy": language_policy_schema(),
         "validation_policy": obj({"fail_on": {"enum": ["info", "warning", "error"]},
             "minimum_human_proposal_approvals": {"type": "integer", "minimum": 1, "default": 1},
             "required_relation_review": {"const": "current"}}),

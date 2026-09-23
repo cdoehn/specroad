@@ -78,6 +78,6 @@ class PackageSelection:
                 "unavailable": list(self.unavailable),
                 "content_support": "utf8", "metadata_policy": "not_evaluated",
                 "labels": "available" if any("labels" in p.capabilities for p in self.packages) else "not_available",
-                "lint": "not_available", "detector": "not_available"}
+                "lint": "available" if any(p.data["literal_rules"] for p in self.packages) else "not_available", "detector": "not_available"}
 
 

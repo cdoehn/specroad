@@ -122,9 +122,12 @@ class RequirementRightTests(unittest.TestCase):
     def test_invalid_project_default_is_not_repaired(self):
         for default in (None, "", " ", [], 2):
             with self.subTest(default=default):
-                config=ProjectConfiguration(configuration_value(language_policy={"default_language":default}))
-                value=fields();value.pop("language")
-                with self.assertRaises(ModelError):prepare(value,configuration=config)
+                # The new closed policy rejects bad defaults at configuration
+                # load, before they could reach the requirement constructor.
+                with self.assertRaises(ModelError):
+                    config=ProjectConfiguration(configuration_value(language_policy={"default_language":default}))
+                    value=fields();value.pop("language")
+                    prepare(value,configuration=config)
 
     def test_mutating_caller_config_does_not_change_draft(self):
         config_value=configuration_value(language_policy={"default_language":"ja"})

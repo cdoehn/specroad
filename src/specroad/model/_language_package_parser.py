@@ -63,13 +63,21 @@ def _validate_package(value):
         for key, text in entries.items():
             if not _LABEL_KEY.fullmatch(key) or type(text) is not str or not text:
                 raise LanguagePackageError("invalid_label_entry")
-    if value["literal_rules"] != [] or type(value["literal_rules"]) is not list:
-        raise LanguagePackageError("literal_rules_not_supported")
+    from .language_literal_rules import parse_literal_rules
+    rules = parse_literal_rules(value["literal_rules"])
+    for rule in rules:
+        if not any(range_matches(r, rule.data["language"]) for r in value["language_ranges"]):
+            raise LanguagePackageError("literal_rule_outside_package_ranges")
     caps = value["capabilities"]
-    if (type(caps) is not list or any(type(v) is not str or v not in {"metadata", "labels"} for v in caps)
+    if (type(caps) is not list or any(type(v) is not str or v not in {"metadata", "labels", "literal_lint"} for v in caps)
             or len(set(caps)) != len(caps)):
         raise LanguagePackageError("unsupported_package_capability")
     if labels and "labels" not in caps:
         raise LanguagePackageError("labels_capability_required")
 
 
+
+    if rules and "literal_lint" not in caps:
+        raise LanguagePackageError("literal_lint_capability_required")
+    if not rules and "literal_lint" in caps:
+        raise LanguagePackageError("literal_lint_rules_required")

@@ -32,7 +32,8 @@
     "SR-FIX-SRX-CONFORMANCE-v1",
     "SR-FIX-PROFILES-v1",
     "SR-FIX-PROFILE-COMPOSITION-v1",
-    "SR-FIX-LITERAL-LINT-v1"
+    "SR-FIX-LITERAL-LINT-v1",
+    "SR-FIX-LANGUAGE-POLICY-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -162,6 +163,10 @@
     "SR-FIX-LITERAL-LINT-v1": {
       "provider": "tests/support/literal_lint.py:observe",
       "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval."
+    },
+    "SR-FIX-LANGUAGE-POLICY-v1": {
+      "provider": "tests/test_language_policy.py:package",
+      "kind": "Owned language declarations, exact Basic Filtering cases and named literal-policy resources; no detection, automatic register update or project approval."
     }
   }
 }
