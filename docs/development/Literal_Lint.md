@@ -52,8 +52,19 @@ custom placeholders are added, never substituted for the Core list. Violations
 are SRV033/error; draft and other non-approved records are not reported as violating
 this approved-only rule. Unknown prose is not an undefined term reference.
 
-In the W slice nonempty `references` is explicitly unavailable (not ignored).
-Reference checks are completed in R. Empty reference selection is not_configured.
+`references` contains explicit {pointer, by} selectors, with by=id or by=name.
+This is not a new inline markup syntax. Each selected field is one complete term
+ID or one exact preferred name/permitted synonym in the declared language.
+Name resolution uses the whole field, not substring matching. Unknown prose,
+coincidental ID-shaped text, display IDs and forbidden aliases are not references.
+Missing selected references, invalid reference values, language mismatches and
+ambiguous names produce distinct SRV053 findings. Multiple aliases of the same
+term remain one candidate; ambiguous candidates are sorted and never guessed.
+All supplied terms are available for reference resolution; term_ids selects only
+forbidden-synonym rules. Reference selection does not load files or resolve URLs.
+Empty reference selection is not_configured; inapplicable language is explicitly
+not_applicable. Invalid selection syntax fails even when its language would not
+apply. No actual language-registry validation or detection is claimed.
 A result with no applicable checks has literal_checks_passed=null, not a linguistic
 success. No global strict/fail-on decision or lifecycle gate is implemented here.
 

@@ -44,10 +44,13 @@
     "test_literal_lint.LiteralWorkTests.test_declared_forbidden_synonym_is_diagnosed",
     "test_literal_lint.LiteralWorkTests.test_definition_and_allowed_synonyms_pass",
     "test_literal_lint.LiteralWorkTests.test_only_explicitly_selected_terms_are_checked",
-    "test_literal_lint.LiteralWorkTests.test_other_declared_language_is_not_silently_checked"
+    "test_literal_lint.LiteralWorkTests.test_other_declared_language_is_not_silently_checked",
+    "test_literal_lint_right.LiteralRightTests.test_real_id_resolves_but_display_id_never_does",
+    "test_literal_lint_right.LiteralRightTests.test_undefined_name_is_explicit_reference_not_unknown_prose",
+    "test_literal_lint_right.LiteralRightTests.test_duplicate_names_are_ambiguous_not_chosen_by_file_order",
+    "test_literal_lint_right.LiteralRightTests.test_reference_language_is_not_translated"
   ],
   "open_items": [
-    "Explicit undefined-reference checking is completed in 4.l.R.",
     "Full lint/validation pipeline and CLI integration remain later steps.",
     "Language policy and package composition are implemented in the following language stage, not inferred here.",
     "Full target runtime matrix evidence remains necessary."

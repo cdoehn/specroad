@@ -125,9 +125,17 @@ placeholders. Nothing is extracted from prose, imported, or auto-configured.
                 if group == "term_ids": _term_id(item, at)
                 if item in seen: _fail("literal_duplicate_selection", at)
                 seen.add(item)
-        # The first working slice explicitly rejects unimplemented references.
-        if value["references"]:
-            _fail("literal_reference_checks_not_available", "/references")
+        seen_references = set()
+        for i, reference in enumerate(value["references"]):
+            at = "/references/" + str(i)
+            if type(reference) is not dict or set(reference) != {"pointer", "by"}:
+                _fail("literal_reference_fields", at)
+            _pointer(reference["pointer"], at + "/pointer")
+            if type(reference["by"]) is not str or reference["by"] not in ("id", "name"):
+                _fail("literal_reference_mode", at + "/by")
+            if reference["pointer"] in seen_references:
+                _fail("literal_duplicate_reference_selection", at + "/pointer")
+            seen_references.add(reference["pointer"])
         encoded = canonical_json_bytes(value)
         object.__setattr__(self, "source_bytes", raw)
         object.__setattr__(self, "_encoded", encoded)
@@ -165,6 +173,52 @@ def _occurrences(text, literal):
             return
         yield found, found + len(literal)
         start = found + 1
+
+
+
+def _reference_findings(value, terms, references, declared, path):
+    names = {}
+    for term_id, term in terms.items():
+        if _language(term["language"]) == declared:
+            for name in set([term["term"], *term["synonyms"]]):
+                names.setdefault(name, set()).add(term_id)
+    result = []
+    for reference in references:
+        pointer = reference["pointer"]
+        try:
+            text = resolve_tokens(value, _pointer(pointer, pointer), rule_id="literal-reference", at=pointer)
+        except SrxError as error:
+            raise LiteralLintError("literal_reference_access_error", pointer=pointer) from error
+        candidates = []
+        if text is MISSING:
+            reason = "undefined_term_reference"
+        elif type(text) is not str or not text.strip():
+            reason = "invalid_term_reference"
+        elif reference["by"] == "id":
+            try:
+                _term_id(text, pointer)
+            except LiteralLintError:
+                reason = "invalid_term_reference"
+            else:
+                if text not in terms:
+                    reason = "undefined_term_reference"
+                elif _language(terms[text]["language"]) != declared:
+                    reason = "term_reference_language_mismatch"
+                    candidates = [text]
+                else:
+                    continue
+        else:
+            candidates = sorted(names.get(text, ()))
+            if len(candidates) == 1:
+                continue
+            reason = "ambiguous_term_reference" if candidates else "undefined_term_reference"
+        result.append({"code": "SRV053", "severity": "warning", "reason": reason,
+            "artifact_id": value["id"], "path": path, "pointer": pointer,
+            "start": 0 if type(text) is str else None,
+            "end": len(text) if type(text) is str else None,
+            "offset_unit": "unicode_codepoint", "literal": text if type(text) is str else None,
+            "term_id": None, "candidate_ids": candidates})
+    return result
 
 
 def lint_literals(artifact, *, glossary, policy, path=None):
@@ -215,9 +269,12 @@ The caller owns stability during capture of its mutable JSON argument.
                     "artifact_id": value["id"], "path": path, "pointer": field,
                     "start": start, "end": end, "offset_unit": "unicode_codepoint",
                     "literal": literal, "term_id": term_id, "candidate_ids": []})
+    if applicable:
+        diagnostics.extend(_reference_findings(value, terms, rules["references"], declared, path))
     diagnostics.sort(key=lambda d: (0 if d["severity"] == "error" else 1,
         d["path"] or "", d["artifact_id"], d["pointer"], d["code"],
-        d["start"], d["end"], d["term_id"] or "", d["literal"]))
+        -1 if d["start"] is None else d["start"], -1 if d["end"] is None else d["end"],
+        d["term_id"] or "", d["literal"] or "", d["reason"]))
     return {"format_version": 1, "validation_scope": "selected_literal_fields_only",
         "artifact_id": value["id"], "artifact_sha256": canonical_json_sha256(value),
         "language": value["language"], "language_match": "exact_tag_ignore_case",
@@ -226,8 +283,9 @@ The caller owns stability during capture of its mutable JSON argument.
         "matched_term_ids": selected_terms,
         "checks": {"forbidden_synonyms": "checked" if selected_terms else "not_applicable" if rules["term_ids"] else "not_configured",
                    "approved_placeholders": "checked" if value["maturity"] == "approved" else "not_applicable",
-                   "term_references": "not_configured"},
-        "diagnostics": diagnostics, "literal_checks_passed": (not diagnostics if selected_terms or value["maturity"] == "approved" else None),
+                   "term_references": ("checked" if applicable else "not_applicable") if rules["references"] else "not_configured"},
+        "diagnostics": diagnostics, "literal_checks_passed": (not diagnostics if selected_terms or value["maturity"] == "approved" or (applicable and rules["references"]) else None),
         "linguistic_checks": {"modality": "not_available", "contradiction": "not_available",
                               "translation": "not_available", "single_obligation": "not_available"},
+        "language_registry_checked": False, "language_detection_performed": False,
         "project_complete": False, "approval_granted": False}

@@ -44,7 +44,9 @@
     "test_literal_lint.LiteralWorkTests.test_approved_core_placeholders_cannot_be_removed",
     "test_literal_lint.LiteralWorkTests.test_explicit_placeholder_is_scoped_to_declared_language",
     "test_literal_lint.LiteralWorkTests.test_core_placeholders_apply_even_if_optional_policy_language_does_not_match",
-    "test_literal_lint.LiteralWorkTests.test_unselected_text_is_not_scanned"
+    "test_literal_lint.LiteralWorkTests.test_unselected_text_is_not_scanned",
+    "test_literal_lint_right.LiteralRightTests.test_repeated_placeholder_deduplicates_declarations_not_occurrences",
+    "test_literal_lint_right.LiteralRightTests.test_nonapproved_maturities_do_not_produce_srv033"
   ],
   "open_items": [
     "Full lint/validation pipeline and CLI integration remain later steps.",
