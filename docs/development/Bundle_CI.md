@@ -24,7 +24,7 @@ folgenden Git-Message-Trailern schaltet beim Push die Vollsuite frei:
     SpecRoad-Bundle-Final: true
 
 Zwischencommits tragen `false`. Betreff und W/R/C-Identität bleiben unverändert.
-Alle vier Bundles, also 012, 016 usw., laufen parallel plus seriell mit Vergleich.
+Alle vier Bundles, also 020, 025 usw., laufen parallel plus seriell mit Vergleich.
 Andere Abschlusscommits laufen nur parallel. CI belegt die ausgecheckte exakte
 SHA; fünf Python-Versionen 3.10–3.14 bleiben vorgesehen.
 
@@ -52,3 +52,5 @@ keine Änderung von Remote-URLs, Credentials, Tags oder Branch-Protection.
 Primärquellen: GitHub Docs, Events that trigger workflows (push/workflow_dispatch)
 und Workflow syntax, geprüft am 22.09.2026. Die Workflowdatei ist kein Beweis,
 dass GitHub den Lauf tatsächlich angenommen oder bestanden hat.
+
+Ab Bundle 019: siehe CI_Wait.md; CI-Beobachtung und Fünferzyklus.

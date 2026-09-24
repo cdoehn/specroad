@@ -10,7 +10,7 @@ on:
         required: false
         type: string
       mode:
-        description: 'auto: final bundles 4/8/12... use both modes; otherwise parallel'
+        description: 'auto: final bundles 5/10/15... use both modes; otherwise parallel'
         required: true
         default: auto
         type: choice

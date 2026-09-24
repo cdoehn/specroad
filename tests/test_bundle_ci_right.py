@@ -30,13 +30,13 @@ def test_push_cannot_override_target_revision():
 
 
 def test_manual_cannot_disable_required_dual_mode():
-    result=select_ci('workflow_dispatch','refs/heads/dev',SHA,message(12),mode='auto')
+    result=select_ci('workflow_dispatch','refs/heads/dev',SHA,message(20),mode='auto')
     assert result['mode']=='both'
-    with pytest.raises(ValueError): select_ci('workflow_dispatch','refs/heads/dev',SHA,message(12),mode='parallel')
+    with pytest.raises(ValueError): select_ci('workflow_dispatch','refs/heads/dev',SHA,message(20),mode='parallel')
 
 
-def test_fourth_bundle_intermediate_is_still_manual_only():
-    result=select_ci('push','refs/heads/dev',SHA,message(12,False))
+def test_fifth_bundle_intermediate_is_still_manual_only():
+    result=select_ci('push','refs/heads/dev',SHA,message(20,False))
     assert result['run_full'] is False
 
 

@@ -63,7 +63,7 @@ in die Entwicklungsgruppe. Der Core bleibt ohne diese Laufzeitabhängigkeiten. B
 
 **Neue Nutzerentscheidung vom 22. September 2026, ab Bundle 009:** Auf dem
 Pixel laufen bei JEDEM Commit ausschließlich explizit ausgewählte neue, geänderte
-und risikobezogene Testdateien, automatisch parallel mit vier xdist-Workern.
+und direkt von Änderungen betroffene Testdateien, automatisch parallel mit vier xdist-Workern.
 Keine lokale Vollsuite, auch nicht beim letzten C. `tools/run_selected_tests.py`
 veröffentlicht nur einen gebundenen Teilnachweis (`selected_files_only`), keinen
 vollständigen Katalognachweis und keine Produktfreigabe.
@@ -72,7 +72,7 @@ GitHub: Volltests von Zwischencommits sind manuell über `workflow_dispatch`
 startbar; automatisch nur bei einem gepushten Abschlusscommit auf `dev`.
 Die Commit-Trailer `SpecRoad-Bundle` und `SpecRoad-Bundle-Final` sind reine
 Auslöser, kein Sicherheits- oder Testnachweis. Normalerweise läuft die vollständige
-Suite parallel; jede durch vier teilbare Bundle-Nummer (ab hier 012, 016, ...)
+Suite parallel; jede durch fünf teilbare Bundle-Nummer (ab Bundle 019: 020, 025, ...)
 verlangt parallel PLUS seriell und den vorhandenen Nachweisvergleich. Die CI
 behält CPython 3.10–3.14. Ein beliebiger C-Commit ist NICHT automatisch ein
 Bundle-Abschluss. Historische W/R/C-Vollsuiteangaben werden hinsichtlich des
@@ -93,6 +93,26 @@ mehr verwendet. `tools/run_ci_tests.py` bleibt der CI-interne Dualmodus.
 Die Testpolicy-Anpassung erfolgt getrennt als OFF-PLAN `TEST-POLICY.a.W/R/C` und
 zählt keine Produktposition hoch. Die ursprüngliche Testmigration bei 42/885
 bleibt historische Grundlage. Anleitung und Audit: [Testentwicklung](../development/Testing.md).
+
+## CI-WAIT – Nutzerauftrag vom 24. September 2026, ab Bundle 019
+
+- [x] `CI-WAIT.a.W` – Fünferzyklus, exakte CI-Beobachtung und Result-Logtransport.
+- [ ] `CI-WAIT.a.R` – vollständige Evidence-Artefakte, Wiederholungen und Ausfälle absichern.
+- [ ] `CI-WAIT.a.C` – GitHub-Transport, Beobachtung und Evidence-Kodierung trennen.
+
+Lokal je Commit ausschließlich neue und direkt betroffene Tests, vier Worker.
+Keine vorsorglich breit ausgewählten Regressionen und keine lokale Vollsuite.
+Nach dem letzten Commit: dev pushen, den exakten Push-Run für HEAD, Workflow
+behavior.yml und dev über gh abwarten, Job-/Schrittfortschritt anzeigen. Jede
+fünfte Bundle-Nummer fordert volle parallele PLUS serielle CI samt Vergleich.
+Lokaler Apply, Push, CI-Ergebnis und Evidence-Vollständigkeit bleiben getrennt.
+CI-Ausfälle machen bereits geprüfte lokale Commits nicht ungeschehen.
+
+Vor Ende des Entrypoints werden CI-Metadaten und abrufbare Logs als prüfsummen-
+gebundenes Archiv im erfassten stdout transportiert. Das automatische Result
+enthält sie in logs/execution.log, unabhängig von ignorierten build-Dateien.
+Kein rekursiver bundle-Aufruf, kein nachträgliches Umschreiben der Result-ZIP
+und keine erfundene Core-Anhangs-API. Diagnoseverfahren: docs/development/CI_Wait.md.
 
 ## 4.j.W-FIX1 – CI-Buildhash-Nachweis korrigieren (Bundle 018)
 

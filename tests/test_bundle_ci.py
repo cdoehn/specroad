@@ -28,13 +28,13 @@ def test_manual_intermediate_runs_full_parallel():
     assert select_ci('workflow_dispatch', 'refs/heads/dev', SHA, message(final=False))['run_full'] is True
 
 
-def test_every_fourth_final_uses_both():
-    for number in (4, 8, 12, 16, 1000):
+def test_every_fifth_final_uses_both():
+    for number in (5, 10, 15, 20, 25, 1000):
         assert select_ci('push', 'refs/heads/dev', SHA, message(number))['mode'] == 'both'
 
 
 def test_other_final_bundles_use_parallel():
-    for number in (9, 10, 11, 13):
+    for number in (9, 11, 12, 13, 16, 19, 24):
         assert select_ci('push', 'refs/heads/dev', SHA, message(number))['mode'] == 'parallel'
 
 

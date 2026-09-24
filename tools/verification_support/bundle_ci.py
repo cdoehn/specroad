@@ -41,7 +41,7 @@ def select_ci(event, ref, sha, message, *, mode="auto"):
         run = False
     else:
         run = event == "workflow_dispatch" or final
-    dual = mode == "both" or (final and number % 4 == 0)
+    dual = mode == "both" or (final and number % 5 == 0)
     return {"commit_sha": sha, "run_full": run,
             "mode": "both" if dual else "parallel", "bundle_number": number,
             "bundle_final": final, "trigger": event}

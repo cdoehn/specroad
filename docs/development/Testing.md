@@ -156,3 +156,7 @@ Erwartungsinventur bleibt unabhängig vom Builder. Eine vollständige
 Katalogsammlung erkennt fehlende Testkennungen, aber keine falschen Assertions.
 Diese zusätzliche Auswahl ist keine lokale Vollsuite. Die vollständige
 Abnahme bleibt in GitHub. Siehe `CI_Payload_Identity_Repair.md`.
+
+Nutzerpräzisierung 24.09.2026: Lokal ausschließlich neue und direkt betroffene Tests.
+Keine breite vorsorgliche Regression; CI nach Bundleabschluss voll parallel,
+jede fünfte Nummer zusätzlich seriell mit Vergleich. Siehe CI_Wait.md.
