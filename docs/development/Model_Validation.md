@@ -58,3 +58,15 @@ failures are sanitized rather than leaking arbitrary exception content. A report
 raises on implicit Boolean conversion: callers must inspect `report.passed`,
 `report.complete`, individual stages and actual diagnostics. Missing validators
 are never resolved with no-op default callbacks.
+
+## Clean-stage structure
+
+`values.py` owns immutable source, gate and result contracts. `_model_checks.py`
+owns the single Core applicability policy and known field-reference expansion.
+`core.py` orchestrates the existing structural validators and registered semantic
+services. All integrations call the same `specroad.validation.validate_model`
+facade; they must not implement independent success or missing-gate rules.
+
+These boundaries do not add a CLI command or install dummy specialist validators.
+The product validation package contains no CI polling or evidence transport code;
+the existing development observer under `tools/` is unchanged.

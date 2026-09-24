@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 170
-last_completed_plan_commit: 4.o.R
-next_plan_commit: 4.o.C
-last_completed_numbered_bundle: 19
+implementation_plan_commits_completed: 171
+last_completed_plan_commit: 4.o.C
+next_plan_commit: 4.p.W
+last_completed_numbered_bundle: 20
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2278,7 +2278,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.o.C – Make it Clean
 
-- [ ] **4.o.C** · Position **171/885** · Voraussetzung: `4.o.R`.
+- [x] **4.o.C** · Position **171/885** · Voraussetzung: `4.o.R`.
 **Exakte Commit-Message:** `4.o.C refactor(validation): Struktur- und Modellvalidation bereinigen`
 
 **Bereinigung:** Eine gemeinsame Pipeline für CLI, Planner und Fachadapter verwenden.
