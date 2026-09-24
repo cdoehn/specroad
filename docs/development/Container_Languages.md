@@ -22,3 +22,27 @@ Outputs name all tags, requirement IDs, container occurrence and policy.
 Fail thresholds change exit decisions, not diagnostic severities. Results remain
 `resolved_container_requirements_only`, `project_complete=false`,
 `atomic_snapshot=false`, `approval_granted=false`. No file is written.
+
+## Resolved presentation and configuration boundary
+
+`include_document` traverses the selected document/section, including nested
+sections. Cycles fail without returning a partial success. Every occurrence path
+is a tuple of actual containment/reference relation IDs; repeated inclusion of
+the same document creates independent container checks.
+
+Embedded queries and view tables require `QueryRows` for the exact block and
+occurrence. These rows bind the model hash, selected configuration hash (or null),
+and complete ordered artifact IDs. Missing, unused, duplicate, stale or incomplete
+observations fail. A query's expressions, cell strings, and implicit pages are
+never evaluated or guessed here. Nonrequirement rows do not add languages.
+
+`ResolvedRequirementScope` is a required explicit applicability observation when
+using a configuration. It binds the model, actual configuration resource ID/hash,
+and selected requirement identities, including historical IDs where applicable.
+The projection does not itself calculate applicability. Inconsistent query/scope
+observations are errors. Unconfigured projection has configuration=null.
+
+These supplied resolver results are structurally and content-bound, not external
+attestations. Whole-project/configuration acquisition and actual query execution
+remain responsibilities of their later planned services. No false claim of full
+renderer, atomic project snapshot or source authenticity follows from this check.

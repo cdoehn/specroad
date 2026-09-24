@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Mischungsdiagnosen MÜSSEN die exakte deklarationsbasierte Container-/Requirement-Auswahl aus Anhang S.5 verwenden.",
-    "scope": "Resolved source selections only. Exact requirement membership, declared tag comparison, independent severity and unchanged original data. W adds project and structural references; includes and bound queries follow in R."
+    "scope": "Complete S.5 membership and mixing over explicitly supplied models and resolved configuration/query observations; no physical project inventory, detector, renderer or approval claim."
   },
   "expected_diagnostics": [
     "SRV180",
@@ -47,7 +47,10 @@
   "test_ids": [
     "tests/test_container_languages.py::test_project_membership_excludes_only_historical_requirements",
     "tests/test_container_languages.py::test_presentation_uses_references_not_trace_closure",
-    "tests/test_container_languages.py::test_duplicate_rendered_reference_counts_once"
+    "tests/test_container_languages.py::test_duplicate_rendered_reference_counts_once",
+    "tests/test_container_languages_right.py::test_each_inclusion_path_gets_own_query_result",
+    "tests/test_container_languages_right.py::test_scope_uses_explicit_applicability_not_hidden_defaults",
+    "tests/test_container_languages_right.py::test_query_result_not_cut_at_display_limit"
   ],
   "open_items": [
     "Connect the complete project/configuration inventory and document/query services in their planned steps; no whole-project approval is asserted."

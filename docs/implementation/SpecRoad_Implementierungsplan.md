@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 166
-last_completed_plan_commit: 4.n.W
-next_plan_commit: 4.n.R
+implementation_plan_commits_completed: 167
+last_completed_plan_commit: 4.n.R
+next_plan_commit: 4.n.C
 last_completed_numbered_bundle: 18
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2234,7 +2234,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.n.R – Make it Right
 
-- [ ] **4.n.R** · Position **167/885** · Voraussetzung: `4.n.W`.
+- [x] **4.n.R** · Position **167/885** · Voraussetzung: `4.n.W`.
 **Exakte Commit-Message:** `4.n.R feat(validation): Containerbezogene Sprachmischung vervollständigen`
 
 **Vervollständigung:** Referenzduplikate, Include-Dokumente und primary/exact-Modi korrekt behandeln.
