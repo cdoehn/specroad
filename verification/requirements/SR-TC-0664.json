@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0664",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CONTAINER-LANGUAGES-v1"
+  ],
+  "preconditions": [
+    "An explicit immutable source model and hash-bound registry are supplied."
+  ],
+  "steps": [
+    "Resolve project or contains/artifact_ref presentation membership; evaluate only declared requirement languages."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Mischungsdiagnosen MÜSSEN die exakte deklarationsbasierte Container-/Requirement-Auswahl aus Anhang S.5 verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Resolved source selections only. Exact requirement membership, declared tag comparison, independent severity and unchanged original data. W adds project and structural references; includes and bound queries follow in R."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV180",
+    "SRV181"
+  ],
+  "expected_exit_codes": [
+    0,
+    1,
+    3
+  ],
+  "json_pointers": [
+    "/language",
+    "/language_policy_override/mixed_languages"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_container_languages.py::test_project_membership_excludes_only_historical_requirements",
+    "tests/test_container_languages.py::test_presentation_uses_references_not_trace_closure",
+    "tests/test_container_languages.py::test_duplicate_rendered_reference_counts_once"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Connect the complete project/configuration inventory and document/query services in their planned steps; no whole-project approval is asserted."
   ]
 }

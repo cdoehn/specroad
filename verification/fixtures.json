@@ -33,7 +33,8 @@
     "SR-FIX-PROFILES-v1",
     "SR-FIX-PROFILE-COMPOSITION-v1",
     "SR-FIX-LITERAL-LINT-v1",
-    "SR-FIX-LANGUAGE-POLICY-v1"
+    "SR-FIX-LANGUAGE-POLICY-v1",
+    "SR-FIX-CONTAINER-LANGUAGES-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -167,6 +168,10 @@
     "SR-FIX-LANGUAGE-POLICY-v1": {
       "provider": "tests/test_language_policy.py:package",
       "kind": "Owned language declarations, exact Basic Filtering cases and named literal-policy resources; no detection, automatic register update or project approval."
+    },
+    "SR-FIX-CONTAINER-LANGUAGES-v1": {
+      "provider": "tests/support/containers.py:presentation",
+      "kind": "owned source-bound container models and explicit resolved selection observations; no renderer, detector, complete project inventory or approval"
     }
   }
 }

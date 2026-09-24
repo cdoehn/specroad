@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 165
-last_completed_plan_commit: 4.m.C
-next_plan_commit: 4.n.W
+implementation_plan_commits_completed: 166
+last_completed_plan_commit: 4.n.W
+next_plan_commit: 4.n.R
 last_completed_numbered_bundle: 18
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2225,7 +2225,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.n.W – Let it Work
 
-- [ ] **4.n.W** · Position **166/885** · Voraussetzung: `4.m.C`.
+- [x] **4.n.W** · Position **166/885** · Voraussetzung: `4.m.C`.
 **Exakte Commit-Message:** `4.n.W feat(validation): Containerbezogene Sprachmischung aufbauen`
 
 **Umsetzung:** Exakte deklarationsbasierte Requirementmengen pro Projekt, Dokument und Abschnitt ermitteln.

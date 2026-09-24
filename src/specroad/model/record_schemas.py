@@ -124,10 +124,11 @@ def _type_fields(kind):
                    "permanent_status_reason": text}),
         "document": (("purpose", "audience", "language", "document_role", "render_policy"),
                      {"purpose": text, "audience": {"anyOf": [text, _array(text, nonempty=True)]},
-                      "document_role": {"enum": ["primary_specification", "supporting"]}, "render_policy": obj}),
+                      "document_role": {"enum": ["primary_specification", "supporting"]}, "render_policy": obj,
+                      "language_policy_override": _object({"mixed_languages": {"enum": ["allow", "warning", "error"]}}, ())}),
         # A parent link is stored at its source. The single incoming contains
         # constraint cannot be established from one section's own JSON file.
-        "section": ((), {}),
+        "section": ((), {"language_policy_override": _object({"mixed_languages": {"enum": ["allow", "warning", "error"]}}, ())}),
         "content_block": (("block_kind", "payload"), {"block_kind": {"enum": list(BLOCK_KINDS)}, "payload": obj}),
         "view": (("scope_descriptor", "filter", "columns", "sort", "grouping", "relation_projections", "formats"),
                  {"scope_descriptor": obj, "filter": obj, "columns": _array(obj, nonempty=True),
