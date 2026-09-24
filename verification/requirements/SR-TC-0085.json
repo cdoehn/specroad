@@ -42,7 +42,11 @@
   "test_ids": [
     "test_model_validation.ModelValidationTests.test_explicit_selection_expands_incoming_and_outgoing",
     "test_model_validation.ModelValidationTests.test_gate_dependencies_extend_scope_transitively",
-    "test_model_validation.ModelValidationTests.test_missing_selected_id_is_not_an_empty_success"
+    "test_model_validation.ModelValidationTests.test_missing_selected_id_is_not_an_empty_success",
+    "test_model_validation_right.ModelValidationRightTests.test_interface_field_references_expand_scope",
+    "test_model_validation_right.ModelValidationRightTests.test_review_connects_both_endpoints_to_scope",
+    "test_model_validation_right.ModelValidationRightTests.test_future_gate_missing_cannot_be_optional_for_subset",
+    "test_model_validation_right.ModelValidationRightTests.test_dependency_callback_missing_target_prevents_execution"
   ],
   "open_items": [
     "CLI validate and filesystem inventory adapter are not implemented by 4.o.",

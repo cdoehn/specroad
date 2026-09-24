@@ -39,3 +39,22 @@ Local gates: only the new validation test files, four workers, no full or serial
 suite. The unchanged CI workflow runs the complete suite. Bundle 020 requests
 parallel plus serial and the existing comparison on Python 3.10–3.14. The generic
 CI observer remains development tooling under tools/, not src/specroad/.
+
+## Right-stage coverage and external bindings
+
+Known field references (interface endpoints, verification subjects and slots,
+evidence subjects, configuration parents, review endpoints, provenance and waiver
+reviews) join the stored relation graph. The semantic scope expands in both
+directions; a missing field target never counts as valid structure. The current
+checker does not parse arbitrary prose or extension strings for references.
+
+A gate can additionally carry `resources_sha256` for its explicitly captured
+external inputs; this digest participates in the per-call binding. It is provided
+by the trusted caller, not derived by opening files or authenticated by this API.
+A changed digest, source byte, selection, profile or phase invalidates reuse.
+
+Gate diagnostics cannot name an artifact outside their checked subjects. Callback
+failures are sanitized rather than leaking arbitrary exception content. A report
+raises on implicit Boolean conversion: callers must inspect `report.passed`,
+`report.complete`, individual stages and actual diagnostics. Missing validators
+are never resolved with no-op default callbacks.

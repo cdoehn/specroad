@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 169
-last_completed_plan_commit: 4.o.W
-next_plan_commit: 4.o.R
+implementation_plan_commits_completed: 170
+last_completed_plan_commit: 4.o.R
+next_plan_commit: 4.o.C
 last_completed_numbered_bundle: 19
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2269,7 +2269,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.o.R – Make it Right
 
-- [ ] **4.o.R** · Position **170/885** · Voraussetzung: `4.o.W`.
+- [x] **4.o.R** · Position **170/885** · Voraussetzung: `4.o.W`.
 **Exakte Commit-Message:** `4.o.R feat(validation): Struktur- und Modellvalidation vervollständigen`
 
 **Vervollständigung:** Fehlende Fachvalidatoren nicht durch passed-Stubs ersetzen; neue Baseline-/Evidencegates später verbindlich registrieren.

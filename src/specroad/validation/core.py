@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
 from hashlib import sha256
+import re
 from typing import Callable
 
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
@@ -74,6 +75,12 @@ def _diagnostics(value):
         _text(item.get("reason"), "validation_diagnostic_reason_required")
         if item.get("severity", "error") not in ("info", "warning", "error"):
             raise ModelError("validation_diagnostic_severity_invalid")
+        for key in ("artifact_id", "path"):
+            if key in item and item[key] is not None and type(item[key]) is not str:
+                raise ModelError("validation_diagnostic_location_invalid")
+        if "pointer" in item and (type(item["pointer"]) is not str or
+                                   (item["pointer"] and not item["pointer"].startswith("/"))):
+            raise ModelError("validation_diagnostic_pointer_invalid")
     return canonical_json_bytes(list(items))
 
 
@@ -129,6 +136,7 @@ class ModelGate:
     version: str
     dependencies: Callable
     check: Callable
+    resources_sha256: str | None = None
 
     def __post_init__(self):
         _text(self.gate_id, "validation_gate_id_required")
@@ -137,6 +145,9 @@ class ModelGate:
             raise ModelError("validation_gate_id_reserved_or_unknown")
         if self.gate_id == "extension:":
             raise ModelError("validation_gate_id_required")
+        if self.resources_sha256 is not None and (type(self.resources_sha256) is not str or
+                re.fullmatch(r"[0-9a-f]{64}", self.resources_sha256) is None):
+            raise ModelError("validation_gate_resource_binding_invalid")
         if not callable(self.dependencies) or not callable(self.check):
             raise ModelError("validation_trusted_gate_callable_required")
 
@@ -152,6 +163,10 @@ class GateContext:
     input_sha256: str
     _profile_bytes: bytes | None
     _records: tuple
+    resources_sha256: str | None
+
+    def __init__(self, *args, **kwargs):
+        raise TypeError("Gate contexts are created by the validation pipeline")
 
     @classmethod
     def _create(cls, records, documents, profile, subjects, gate, phase, basis):
@@ -163,7 +178,8 @@ class GateContext:
                             ("gate_id", gate.gate_id), ("version", gate.version),
                             ("phase", phase), ("input_sha256", binding),
                             ("_profile_bytes", profile.canonical_bytes if profile is not None else None),
-                            ("_records", tuple((r.identity.id, r.source_bytes) for r in records))):
+                            ("_records", tuple((r.identity.id, r.source_bytes) for r in records)),
+                            ("resources_sha256", gate.resources_sha256)):
             object.__setattr__(obj, name, value)
         return obj
 
@@ -192,6 +208,12 @@ class GateContext:
 class ValidationReport:
     """Pipeline observation, not permission, inventory authentication or a snapshot."""
     _encoded: bytes
+
+    def __init__(self, *args, **kwargs):
+        raise TypeError("Use validate_model to obtain a report")
+
+    def __bool__(self):
+        raise TypeError("Use report.passed explicitly; an incomplete report is not success")
 
     @classmethod
     def _create(cls, data):
@@ -315,7 +337,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=()):
         "documents": [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents],
         "selection": None if selected is None else list(selected),
         "profile": profile.binding() if profile is not None else None,
-        "gates": [{"id": g.gate_id, "version": g.version} for g in sorted(gates, key=lambda g:g.gate_id)]})
+        "gates": [{"id": g.gate_id, "version": g.version, "resources_sha256": g.resources_sha256}
+                  for g in sorted(gates, key=lambda g:g.gate_id)]})
     stages, records, checked = [], [], ()
 
     def stage(name, diagnostics=(), status=None, ids=()):
@@ -457,7 +480,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=()):
             if (type(outcome) is not GateResult or outcome.input_sha256 != context.input_sha256
                     or outcome.checked_ids != subjects):
                 raise ModelError("validation_gate_result_unbound_or_incomplete")
-            stage(name, outcome.diagnostics, ids=subjects)
+            diagnostics = outcome.diagnostics
+            _diagnostics(diagnostics)
+            if any(d.get("artifact_id") is not None and d["artifact_id"] not in subjects for d in diagnostics):
+                raise ModelError("validation_gate_diagnostic_outside_subjects")
+            stage(name, diagnostics, ids=subjects)
         except ModelError as error:
             stage(name, [_issue(error)], ids=subjects)
         except Exception:

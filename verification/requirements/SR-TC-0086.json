@@ -45,7 +45,12 @@
     "test_model_validation.ModelValidationTests.test_missing_stored_target_fails_before_semantics",
     "test_model_validation.ModelValidationTests.test_missing_lifecycle_validator_is_not_synthetic_pass",
     "test_model_validation.ModelValidationTests.test_missing_evidence_and_baseline_services_are_visible",
-    "test_model_validation.ModelValidationTests.test_gate_with_incomplete_subjects_cannot_claim_success"
+    "test_model_validation.ModelValidationTests.test_gate_with_incomplete_subjects_cannot_claim_success",
+    "test_model_validation_right.ModelValidationRightTests.test_valid_evidence_fields_do_not_prove_freshness",
+    "test_model_validation_right.ModelValidationRightTests.test_sealed_state_maturity_mismatch_fails_schema",
+    "test_model_validation_right.ModelValidationRightTests.test_explicit_profile_lint_cannot_be_ignored",
+    "test_model_validation_right.ModelValidationRightTests.test_gate_cannot_reuse_discovery_binding_as_check_binding",
+    "test_model_validation_right.ModelValidationRightTests.test_report_cannot_accidentally_be_used_as_boolean_success"
   ],
   "open_items": [
     "CLI validate and filesystem inventory adapter are not implemented by 4.o.",

@@ -41,7 +41,10 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_model_validation.ModelValidationTests.test_default_checks_every_loaded_artifact",
-    "test_model_validation.ModelValidationTests.test_source_order_does_not_change_result"
+    "test_model_validation.ModelValidationTests.test_source_order_does_not_change_result",
+    "test_model_validation_right.ModelValidationRightTests.test_multiple_parse_failures_are_retained",
+    "test_model_validation_right.ModelValidationRightTests.test_invalid_schema_in_unselected_source_still_blocks",
+    "test_model_validation_right.ModelValidationRightTests.test_deep_dependency_chain_terminates"
   ],
   "open_items": [
     "CLI validate and filesystem inventory adapter are not implemented by 4.o.",
