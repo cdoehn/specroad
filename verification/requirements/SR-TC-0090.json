@@ -42,7 +42,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_all_seven_origins_remain_distinct",
-    "test_diagnostics.DiagnosticWorkTests.test_invalid_origin_is_not_mislabeled_core"
+    "test_diagnostics.DiagnosticWorkTests.test_invalid_origin_is_not_mislabeled_core",
+    "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_profile_rule_origin_and_pointer_are_preserved"
   ],
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",

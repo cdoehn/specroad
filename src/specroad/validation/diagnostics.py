@@ -18,7 +18,7 @@ _REASON_CODES = {
     "duplicate_relation_id": "SRV013", "missing_relation_target": "SRV020",
     "validation_field_target_missing": "SRV020", "relation_type_pair_forbidden": "SRV021",
     "self_relation_forbidden": "SRV021", "validation_field_target_type": "SRV021",
-    "hierarchy_cycle": "SRV022", "duplicate_external_relation_identity": "SRV147",
+    "hierarchy_cycle": "SRV022", "relation_hierarchy_cycle": "SRV022", "duplicate_external_relation_identity": "SRV147",
     "validation_selected_id_missing": "SRV140",
     "validation_required_gate_unavailable": "VALIDATION_UNAVAILABLE",
     "validation_profile_unavailable": "VALIDATION_UNAVAILABLE",
@@ -26,10 +26,20 @@ _REASON_CODES = {
 _STRUCTURAL = {"parsing", "schema_types_identity_fields", "identities_references", "graph", "scope"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class ValidationAssessment:
     report: ValidationReport
     assessment: object
+
+    def __init__(self, *args, **kwargs):
+        raise TypeError("Use assess_validation to bind a real report")
+
+    @classmethod
+    def _create(cls, report, assessment):
+        result = object.__new__(cls)
+        object.__setattr__(result, "report", report)
+        object.__setattr__(result, "assessment", assessment)
+        return result
 
     @property
     def passed(self):
@@ -87,7 +97,7 @@ def assess_validation(report, *, fail_on="error", strict=False, documents=None):
             path = item.get("path")
             location = item.get("location")
             if location is None:
-                error = ModelError(reason, path=path, pointer=item.get("pointer", ""),
+                error = ModelError(reason, path=path, pointer=item.get("pointer"),
                     position=item.get("position"), line=item.get("line"), column=item.get("column"))
                 location = from_model_error(error, source=sources.get(path), code=code).location
             diagnostics.append(Diagnostic(code, item.get("severity", "error"),
@@ -95,11 +105,15 @@ def assess_validation(report, *, fail_on="error", strict=False, documents=None):
                 item.get("message", "Model validation reported a finding."), origin=origin,
                 rule_id=item.get("rule_id"), artifact_id=item.get("artifact_id") or source_ids.get(path), path=path,
                 location=location, rationale=item.get("rationale", reason),
-                remediation=item.get("remediation"), related_ids=item.get("related_ids", ())))
+                remediation=item.get("remediation"), related_ids=item.get("related_ids", (*item.get("artifact_ids", ()),
+                    *item.get("relation_ids", ())))))
     failure = 3 if any(s["stage"] in _STRUCTURAL and s["status"] == "failed" for s in data["stages"]) else None
+    if any(item["reason"] in ("validation_gate_check_failed", "validation_gate_discovery_failed")
+           for stage in data["stages"] for item in stage["diagnostics"]):
+        failure = 4
     assessment = assess_diagnostics(diagnostics, checked_ids=data["identified_ids"],
         complete=data["checks_complete"], fail_on=fail_on, strict=strict, operational_exit_code=failure)
-    return ValidationAssessment(report, assessment)
+    return ValidationAssessment._create(report, assessment)
 
 
 def validation_command_result(command, observation):

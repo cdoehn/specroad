@@ -45,7 +45,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_schema_failure_retains_supplied_unknown_artifact_id",
-    "test_validation_diagnostics.ValidationDiagnosticWorkTests.test_schema_errors_retain_id_and_pointer"
+    "test_validation_diagnostics.ValidationDiagnosticWorkTests.test_schema_errors_retain_id_and_pointer",
+    "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_unknown_selected_ids_are_not_fabricated_source_locations",
+    "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_cycle_keeps_cycle_code_and_all_related_ids"
   ],
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",

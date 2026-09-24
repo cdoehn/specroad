@@ -45,7 +45,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_json_parse_failure_retains_file_line_and_column",
-    "test_diagnostics.DiagnosticWorkTests.test_utf8_failure_has_byte_position_without_fabricated_columns"
+    "test_diagnostics.DiagnosticWorkTests.test_utf8_failure_has_byte_position_without_fabricated_columns",
+    "test_diagnostics_right.DiagnosticRightTests.test_utf8_coordinates_count_characters_not_bytes"
   ],
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",

@@ -42,7 +42,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_catalog_returns_detached_stable_metadata",
-    "test_diagnostics.DiagnosticWorkTests.test_unknown_code_and_rule_id_are_preserved"
+    "test_diagnostics.DiagnosticWorkTests.test_unknown_code_and_rule_id_are_preserved",
+    "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_all_unknown_selected_ids_are_reported_without_counting_them"
   ],
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",

@@ -49,3 +49,21 @@ betroffene Tests, vier Worker. Vollsuite ausschließlich in CI, parallel und in
 jedem fünften Bundle zusätzlich seriell mit Nachweisvergleich. Keine Tests auf
 Meldungstexte, Farben, Layout oder dieses Dokument. Die gesamte Produktmatrix und
 der lokale Ziel-Apply benötigen weiterhin tatsächliche neue Ausführungsnachweise.
+
+## R: vollständige Beobachtungen, keine erfundenen Fundstellen
+
+Mehrere unbekannte explizite Selektions-IDs werden einzeln erhalten. Sie erhöhen
+nicht die Anzahl tatsächlich identifizierter geprüfter Artefakte. Sämtliche von
+unabhängigen Pipelinephasen gelieferten Befunde bleiben enthalten, auch identische
+Vorkommen. Nach einem strukturellen Fehler blockierte Phasen bleiben als solche
+sichtbar: Die Diagnoseprojektion kann keine noch nicht ausgeführten Prüfungen
+nachholen und behauptet nicht, alle möglichen Fehler des defekten Modells gefunden
+zu haben. Unerwartete Fachprüfer-Ausnahmen bleiben Klasse 4 statt policy class 1.
+
+Die zusätzliche Ordnung nach numerischen Koordinaten, Ursprung, Regel-ID und
+vollständigen Daten dient nur der deterministischen Auflösung von Gleichständen
+nach den spezifizierten Primärschlüsseln. Der API-Transport kann unbekannte Codes
+und Referenz-IDs aufnehmen, ohne sie zu verwerfen, aufzulösen oder als bekannte
+Prüfregeln auszugeben. Unbeobachtete Pointer bleiben null statt fiktivem Root.
+Beim Ergänzen von Byteoffsets müssen bekannte Zeile/Spalte mit den gebundenen
+Originalbytes übereinstimmen. Keine Anzeigegrenze kürzt die Diagnosemenge.

@@ -42,7 +42,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_serialized_contract_has_all_required_fields",
-    "test_diagnostics.DiagnosticWorkTests.test_existing_envelope_uses_same_machine_diagnostics"
+    "test_diagnostics.DiagnosticWorkTests.test_existing_envelope_uses_same_machine_diagnostics",
+    "test_diagnostics_right.DiagnosticRightTests.test_from_dict_requires_exact_known_fields"
   ],
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",

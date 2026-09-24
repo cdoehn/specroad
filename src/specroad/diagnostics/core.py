@@ -64,6 +64,8 @@ def _location(value):
             raise ResultContractError("Invalid location coordinate")
     start = (copy.get("line"), copy.get("column"))
     end = (copy.get("end_line"), copy.get("end_column"))
+    if start[0] is not None and end[0] is not None and end[0] < start[0]:
+        raise ResultContractError("Reversed location lines")
     if all(x is not None for x in (*start, *end)) and end < start:
         raise ResultContractError("Reversed location range")
     return MappingProxyType(copy)
@@ -125,6 +127,9 @@ def diagnostic_key(item):
     pointer = None if item.location is None else item.location.get("pointer")
     return (SEVERITIES.index(item.severity), _optional_key(item.path),
             _optional_key(item.artifact_id), _optional_key(pointer), item.code,
+            tuple(-1 if item.location is None or item.location.get(k) is None else item.location[k]
+                  for k in ("line", "column", "end_line", "end_column", "byte_offset", "character_offset")),
+            item.origin, _optional_key(item.rule_id),
             json.dumps(item.as_dict(), ensure_ascii=True, sort_keys=True, separators=(",", ":")))
 
 
@@ -166,7 +171,15 @@ def from_model_error(error, *, artifact_id=None, source=None, code=None, origin=
                     raise ResultContractError("Source is not UTF-8") from exc
                 if position > len(text):
                     raise ResultContractError("Source does not contain observed position")
-                location["byte_offset"] = len(text[:position].encode("utf-8"))
+                prefix = text[:position]
+                observed_line = prefix.count("\n") + 1
+                observed_column = len(prefix.rsplit("\n", 1)[-1]) + 1
+                if ((error.line is not None and error.line != observed_line) or
+                        (error.column is not None and error.column != observed_column)):
+                    raise ResultContractError("Source coordinates contradict the observed position")
+                location["line"] = observed_line
+                location["column"] = observed_column
+                location["byte_offset"] = len(prefix.encode("utf-8"))
     if code is None:
         code = "SRV001" if error.reason in ("invalid_json", "invalid_utf8", "duplicate_key", "invalid_unicode", "object_required") else "SRV002"
     return Diagnostic(code, "error", "parse" if code == "SRV001" else "model",
@@ -191,6 +204,8 @@ class FailPolicy:
         return "warning" if self.strict else self.fail_on
 
     def reached(self, diagnostics):
+        if type(diagnostics) not in (tuple, list) or any(type(d) is not Diagnostic for d in diagnostics):
+            raise ResultContractError("Expected complete typed diagnostic sequence")
         return any(d.severity == "error" or (self.threshold == "warning" and d.severity == "warning")
                    for d in diagnostics)
 

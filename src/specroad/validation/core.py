@@ -131,8 +131,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=()):
         return report()
     index = {r.identity.id: r for r in records}
     checked = tuple(index) if selected is None else selected
-    if any(identity not in index for identity in checked):
-        stage("scope", [{"reason": "validation_selected_id_missing", "severity": "error"}])
+    missing = [identity for identity in checked if identity not in index]
+    if missing:
+        stage("scope", [{"reason": "validation_selected_id_missing", "severity": "error",
+                         "artifact_id": identity, "related_ids": [identity]}
+                        for identity in missing])
         stage("model_semantics", status="blocked")
         return report()
     adjacency = {identity:set() for identity in index}

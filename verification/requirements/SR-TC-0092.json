@@ -43,7 +43,9 @@
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_sort_prioritizes_severity_before_file",
     "test_diagnostics.DiagnosticWorkTests.test_sort_file_artifact_pointer_code_order",
-    "test_diagnostics.DiagnosticWorkTests.test_input_permutations_have_identical_machine_results"
+    "test_diagnostics.DiagnosticWorkTests.test_input_permutations_have_identical_machine_results",
+    "test_diagnostics_right.DiagnosticRightTests.test_numeric_coordinate_tie_break_is_not_lexical",
+    "test_diagnostics_right.DiagnosticRightTests.test_distinct_unicode_forms_are_not_normalized"
   ],
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",

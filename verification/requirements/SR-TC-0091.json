@@ -42,7 +42,8 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_only_three_severities_are_accepted",
-    "test_diagnostics.DiagnosticWorkTests.test_structural_errors_cannot_be_downgraded"
+    "test_diagnostics.DiagnosticWorkTests.test_structural_errors_cannot_be_downgraded",
+    "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_producer_cannot_downgrade_protected_code"
   ],
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",
