@@ -34,7 +34,8 @@
     "SR-FIX-PROFILE-COMPOSITION-v1",
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-LANGUAGE-POLICY-v1",
-    "SR-FIX-CONTAINER-LANGUAGES-v1"
+    "SR-FIX-CONTAINER-LANGUAGES-v1",
+    "SR-FIX-MODEL-VALIDATION-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -172,6 +173,10 @@
     "SR-FIX-CONTAINER-LANGUAGES-v1": {
       "provider": "tests/support/containers.py:presentation",
       "kind": "owned source-bound container models and explicit resolved selection observations; no renderer, detector, complete project inventory or approval"
+    },
+    "SR-FIX-MODEL-VALIDATION-v1": {
+      "provider": "tests/support/model_validation.py:artifact",
+      "kind": "owned loaded-model bytes and explicitly registered test predicates; no authenticated lifecycle/evidence claims"
     }
   }
 }
