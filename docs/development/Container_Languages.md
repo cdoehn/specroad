@@ -46,3 +46,10 @@ These supplied resolver results are structurally and content-bound, not external
 attestations. Whole-project/configuration acquisition and actual query execution
 remain responsibilities of their later planned services. No false claim of full
 renderer, atomic project snapshot or source authenticity follows from this check.
+
+## Responsibility boundaries after C
+
+`container_values` owns byte snapshots and bound resolver value objects;
+`_container_projection` handles identity-based selection and presentation edges;
+`containers` combines the resulting sets with the existing declared-language
+assessment and severity policy. The W/R behavior tests remain unchanged.

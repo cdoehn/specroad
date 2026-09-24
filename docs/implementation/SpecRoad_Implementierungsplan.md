@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 167
-last_completed_plan_commit: 4.n.R
-next_plan_commit: 4.n.C
-last_completed_numbered_bundle: 18
+implementation_plan_commits_completed: 168
+last_completed_plan_commit: 4.n.C
+next_plan_commit: 4.o.W
+last_completed_numbered_bundle: 19
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2243,7 +2243,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.n.C – Make it Clean
 
-- [ ] **4.n.C** · Position **168/885** · Voraussetzung: `4.n.R`.
+- [x] **4.n.C** · Position **168/885** · Voraussetzung: `4.n.R`.
 **Exakte Commit-Message:** `4.n.C refactor(validation): Containerbezogene Sprachmischung bereinigen`
 
 **Bereinigung:** Mischung auf Scope-/Dokumentprojektion aufsetzen statt Texte zu detektieren.

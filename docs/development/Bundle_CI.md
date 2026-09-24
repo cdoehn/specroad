@@ -7,7 +7,7 @@ Result-Bindung ist maßgeblich, nicht ein älterer noch sauberer Main-Snapshot.
 
 `tools/run_selected_tests.py --test-file tests/test_example.py --expected-tests N
 --outdir build/UNIQUE --workers 4` startet genau die angegebenen vollständigen
-Testdateien parallel. Neue Tests und riskante betroffene Regressionen werden je
+Testdateien parallel. Nur neue Tests und direkt von der Änderung betroffene bestehende Tests werden je
 Commit ausdrücklich benannt. Kein `--sr-gate`, keine lokale Produktsuite und
 keine angeblich vollständige Evidence aus einer Auswahl. Vollständigkeit bezieht
 sich hier nur auf die Auswahl. Auch übersprungene Tests oder fehlende Reports
@@ -24,14 +24,14 @@ folgenden Git-Message-Trailern schaltet beim Push die Vollsuite frei:
     SpecRoad-Bundle-Final: true
 
 Zwischencommits tragen `false`. Betreff und W/R/C-Identität bleiben unverändert.
-Alle vier Bundles, also 020, 025 usw., laufen parallel plus seriell mit Vergleich.
+Alle fünf Bundles, also 020, 025 usw., laufen parallel plus seriell mit Vergleich.
 Andere Abschlusscommits laufen nur parallel. CI belegt die ausgecheckte exakte
 SHA; fünf Python-Versionen 3.10–3.14 bleiben vorgesehen.
 
 Actions → Behavior tests → Run workflow: Workflow-Branch `dev` wählen; optional
 `commit_sha` (40 Hexzeichen) für einen veröffentlichten Zwischencommit angeben.
 Ohne SHA wird der gewählte Dev-Stand geprüft. `mode=both` fordert zusätzlich
-seriell an und kann den verbindlichen Viererzyklus nicht abschwächen. Der Commit
+seriell an und kann den verbindlichen Fünferzyklus nicht abschwächen. Der Commit
 muss in der veröffentlichten `dev`-Historie liegen. Eingaben werden nie als Shell
 Code interpoliert. Kein `pull_request_target`, keine Schreibrechte oder Secrets.
 
