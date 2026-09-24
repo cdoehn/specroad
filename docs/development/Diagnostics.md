@@ -67,3 +67,9 @@ und Referenz-IDs aufnehmen, ohne sie zu verwerfen, aufzulösen oder als bekannte
 Prüfregeln auszugeben. Unbeobachtete Pointer bleiben null statt fiktivem Root.
 Beim Ergänzen von Byteoffsets müssen bekannte Zeile/Spalte mit den gebundenen
 Originalbytes übereinstimmen. Keine Anzeigegrenze kürzt die Diagnosemenge.
+
+Nach C sind die unveränderlichen Diagnosewerte (`values`), die semantische Ordnung
+(`ordering`), Parserprojektion (`projection`), Fail-Auswertung (`policy`) und das
+Schema (`schema`) getrennt. Die bisherigen öffentlichen Imports bleiben gleich.
+Der Envelope-Adapter liegt separat in `validation.result_adapter`; er registriert
+keinen Befehl und startet keine zusätzliche Validierung.

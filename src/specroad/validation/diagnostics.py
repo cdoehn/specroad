@@ -116,13 +116,5 @@ def assess_validation(report, *, fail_on="error", strict=False, documents=None):
     return ValidationAssessment._create(report, assessment)
 
 
-def validation_command_result(command, observation):
-    """Existing versioned envelope adapter, not a registered CLI command."""
-    from ..cli.results import CommandResult, FailureKind
-    if type(observation) is not ValidationAssessment:
-        raise ResultContractError("Expected a validation assessment")
-    kwargs = {"complete": observation.assessment.complete, "diagnostics": observation.diagnostics,
-              "result": observation.as_dict(), "details": observation.summary}
-    if observation.passed:
-        return CommandResult(command, **kwargs)
-    return CommandResult.failed(command, FailureKind(observation.exit_code), **kwargs)
+# Preserve the earlier import path while keeping presentation separate.
+from .result_adapter import validation_command_result
