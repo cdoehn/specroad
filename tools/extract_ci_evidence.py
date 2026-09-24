@@ -2,6 +2,10 @@
 import argparse
 from pathlib import Path
 import zipfile
+import sys
+TOOLS = Path(__file__).resolve().parent
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
 from watch_bundle_ci import recover_evidence
 
 

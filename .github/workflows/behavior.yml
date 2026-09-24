@@ -85,7 +85,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: behavior-${{ matrix.python }}-${{ needs.select.outputs.commit_sha }}
+          name: behavior-${{ matrix.python }}-${{ needs.select.outputs.commit_sha }}-attempt-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/*.json
             ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}-catalog.json

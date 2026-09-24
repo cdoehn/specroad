@@ -20,6 +20,10 @@ import sys
 import time
 import zipfile
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT / 'tools') not in sys.path:
+    sys.path.insert(0, str(ROOT / 'tools'))
+
 REPOSITORY = 'cdoehn/specroad'
 WORKFLOW = '.github/workflows/behavior.yml'
 PYTHONS = ('3.10', '3.11', '3.12', '3.13', '3.14')
@@ -35,12 +39,15 @@ class CIObservationError(ValueError):
 class Request:
     commit: str
     bundle: int
+    source_sha256: str | None = None
 
     def __post_init__(self):
         if type(self.commit) is not str or re.fullmatch('[0-9a-f]{40}', self.commit) is None:
             raise CIObservationError('full_commit_required')
         if type(self.bundle) is not int or self.bundle < 1:
             raise CIObservationError('positive_bundle_required')
+        if self.source_sha256 is not None and (type(self.source_sha256) is not str or re.fullmatch('[0-9a-f]{64}', self.source_sha256) is None):
+            raise CIObservationError('invalid_source_binding')
 
     @property
     def mode(self):
@@ -101,7 +108,8 @@ def exact_run(run, request, *, run_id=None, attempt=None):
     if (run.get('head_sha') != request.commit or run.get('head_branch') != 'dev'
             or run.get('event') != 'push' or run.get('path') != WORKFLOW
             or type(run.get('repository')) is not dict
-            or run['repository'].get('full_name', '').lower() != REPOSITORY):
+            or type(run['repository'].get('full_name')) is not str
+            or run['repository']['full_name'].lower() != REPOSITORY):
         raise CIObservationError('run_binding_mismatch')
     for key in ('id', 'run_attempt'):
         if type(run.get(key)) is not int or run[key] < 1:
@@ -159,7 +167,8 @@ def checked_jobs(client, request, run_id, attempt):
             raise CIObservationError('job_binding_mismatch')
         if job.get('run_attempt', attempt) != attempt:
             raise CIObservationError('job_attempt_mismatch')
-        if type(job.get('steps')) is not list or type(job.get('name')) is not str:
+        if (type(job.get('steps')) is not list or type(job.get('name')) is not str
+                or any(type(step) is not dict for step in job['steps'])):
             raise CIObservationError('invalid_job_document')
     return jobs
 
@@ -188,6 +197,76 @@ def verdict(run, jobs, request):
     if any(job.get('status') != 'completed' or job.get('conclusion') != 'success' for job in jobs):
         return 'incomplete'
     return 'success'
+
+
+def inspect_report_archive(raw, request, version):
+    """Validate passing framework reports, preserving all original archive bytes."""
+    from compare_test_runs import _signature, compare_reports
+    with zipfile.ZipFile(BytesIO(raw)) as archive:
+        members = archive.infolist()
+        if len(members) > 100 or sum(i.file_size for i in members) > MAX_BYTES:
+            raise CIObservationError('oversized_report_archive')
+        reports = {}
+        for name in ('parallel-evidence.json', 'serial-evidence.json', 'summary.json'):
+            matches = [i for i in members if i.filename.rsplit('/', 1)[-1] == name and not i.is_dir()]
+            if len(matches) > 1:
+                raise CIObservationError('ambiguous_report_member')
+            if matches:
+                reports[name] = decode_json(archive.read(matches[0]))
+    required = ['parallel-evidence.json'] + (['serial-evidence.json'] if request.mode == 'both' else [])
+    if not all(name in reports for name in required):
+        raise CIObservationError('missing_test_evidence')
+    for name in required:
+        report = reports[name]
+        _signature(report)  # Existing completeness contract; no second scheduler/oracle.
+        if (request.source_sha256 is not None and report.get('tool_build_sha256') != request.source_sha256):
+            raise CIObservationError('test_source_binding_mismatch')
+        runtime = report.get('runtime', {})
+        execution = report.get('execution', {})
+        if (type(runtime) is not dict or runtime.get('implementation') != 'cpython'
+                or type(runtime.get('python')) is not str or not runtime['python'].startswith(version + '.')
+                or type(execution) is not dict or execution.get('workers') != (0 if name.startswith('serial') else 4)):
+            raise CIObservationError('test_runtime_or_mode_mismatch')
+    comparison = None
+    if request.mode == 'both':
+        comparison = compare_reports([reports[name] for name in required])
+        stored = reports.get('summary.json', {})
+        if (type(stored) is not dict or stored.get('suite_passed') is not True
+                or stored.get('exit_code') != 0 or stored.get('errors') != []
+                or stored.get('comparison') != comparison):
+            raise CIObservationError('missing_or_inconsistent_comparison')
+    return {'python': version, 'mode': request.mode, 'tests_run': reports[required[0]]['tests_run'],
+            'source_bound': request.source_sha256 is not None, 'comparison': comparison}
+
+
+def collect_artifacts(client, request, run_id, attempt, files):
+    """Names include attempt: no reuse of an older run's successful evidence."""
+    artifacts = records(client, f'repos/{REPOSITORY}/actions/runs/{run_id}/artifacts', 'artifacts')
+    files['artifact-index.json'] = json_bytes(artifacts)
+    reports, errors = [], []
+    for version in PYTHONS:
+        name = f'behavior-{version}-{request.commit}-attempt-{attempt}'
+        matches = [a for a in artifacts if a.get('name') == name]
+        try:
+            if len(matches) != 1 or matches[0].get('expired') is not False:
+                raise CIObservationError('missing_ambiguous_or_expired_artifact')
+            artifact = matches[0]
+            binding = artifact.get('workflow_run', {})
+            if (type(binding) is not dict or binding.get('id') != run_id
+                    or binding.get('head_sha') != request.commit or binding.get('head_branch') != 'dev'):
+                raise CIObservationError('artifact_binding_mismatch')
+            raw = client.get(f"repos/{REPOSITORY}/actions/artifacts/{artifact['id']}/zip")
+            expected = artifact.get('digest')
+            if expected is not None and expected != 'sha256:' + sha256(raw).hexdigest():
+                raise CIObservationError('artifact_digest_mismatch')
+            if sum(map(len, files.values())) + len(raw) > MAX_BYTES // 2:
+                raise CIObservationError('total_evidence_limit')
+            # Preserve a failed/partial report as well, before attempting a pass proof.
+            files['reports-' + version + '.zip'] = raw
+            reports.append(inspect_report_archive(raw, request, version))
+        except (CIObservationError, OSError, ValueError, zipfile.BadZipFile, RuntimeError, TypeError, KeyError) as error:
+            errors.append({'phase': 'artifact', 'python': version, 'reason': type(error).__name__ + ': ' + str(error)[:160]})
+    return reports, errors
 
 
 def observe_ci(request, *, client=None, progress=None, sleeper=None, discovery_polls=60, poll_seconds=5):
@@ -253,11 +332,23 @@ def observe_ci(request, *, client=None, progress=None, sleeper=None, discovery_p
             summary['logs_captured'] = True
         except (CIObservationError, OSError, ValueError, zipfile.BadZipFile, RuntimeError) as error:
             summary['errors'].append({'phase': 'logs', 'reason': str(error)[:200]})
-        summary['evidence_complete'] = summary['logs_captured']
+        reports, artifact_errors = collect_artifacts(client, request, run_id, attempt, files)
+        summary['test_reports'] = reports
+        summary['errors'].extend(artifact_errors)
+        summary['test_evidence_verified'] = (len(reports) == len(PYTHONS) and request.source_sha256 is not None)
+        summary['evidence_complete'] = summary['logs_captured'] and len(reports) == len(PYTHONS)
+        # A rerun during capture must not mix attempts or turn earlier evidence green.
+        last = exact_run(retry(lambda: client.document(f'repos/{REPOSITORY}/actions/runs/{run_id}')),
+                         request, run_id=run_id, attempt=attempt)
+        if last['status'] != 'completed' or last.get('conclusion') != run.get('conclusion'):
+            raise CIObservationError('run_changed_during_capture')
     except KeyboardInterrupt:
         summary['ci_status'] = 'observation_interrupted'
         summary['errors'].append({'phase': 'observation', 'reason': 'keyboard_interrupt'})
     except (CIObservationError, OSError) as error:
+        summary['ci_status'] = 'unavailable'
+        summary['evidence_complete'] = False
+        summary['test_evidence_verified'] = False
         summary['errors'].append({'phase': 'observation', 'reason': str(error)[:200]})
     summary['ended_at'] = datetime.now(timezone.utc).isoformat()
     summary['files'] = {name: {'size': len(raw), 'sha256': sha256(raw).hexdigest()} for name, raw in files.items()}
@@ -305,7 +396,7 @@ def recover_evidence(log):
         raise CIObservationError('evidence_chunk_count')
     result = bytearray()
     for index, record in enumerate(records_[1:-1]):
-        if record.get('kind') != 'chunk' or record.get('index') != index or record.get('sha256') != header.get('sha256'):
+        if record.get('kind') != 'chunk' or type(record.get('index')) is not int or record.get('index') != index or record.get('sha256') != header.get('sha256'):
             raise CIObservationError('evidence_chunk_binding')
         try:
             result.extend(base64.b64decode(record['data'], validate=True))
@@ -338,7 +429,8 @@ def main(argv=None):
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--push-failed', action='store_true')
     args = parser.parse_args(argv)
-    request = Request(args.commit, args.bundle)
+    from verification_support.identity import source_identity
+    request = Request(args.commit, args.bundle, source_identity(Path(__file__).resolve().parents[1]))
     if args.push_failed:
         summary = {'format_version': 1, 'local_apply': 'success', 'ci_status': 'not_published',
                    'commit_sha': request.commit, 'bundle_number': request.bundle,
@@ -346,7 +438,13 @@ def main(argv=None):
         files = {'summary.json': json_bytes(summary)}
     else:
         summary, files = observe_ci(request, progress=show_progress)
-    raw = pack_evidence(files)
+    try:
+        raw = pack_evidence(files)
+    except CIObservationError:
+        summary['evidence_complete'] = False
+        summary['errors'] = [*summary.get('errors', []), {'phase': 'transport', 'reason': 'capture_limit'}]
+        # Do not lose the actual CI outcome just because full logs are too large.
+        raw = pack_evidence({'summary.json': json_bytes(summary)})
     # This optional convenience copy is not the Result transport. The captured
     # output below is sufficient even when ignored build files are not bundled.
     try:

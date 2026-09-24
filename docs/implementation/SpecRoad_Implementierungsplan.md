@@ -97,7 +97,7 @@ bleibt historische Grundlage. Anleitung und Audit: [Testentwicklung](../developm
 ## CI-WAIT – Nutzerauftrag vom 24. September 2026, ab Bundle 019
 
 - [x] `CI-WAIT.a.W` – Fünferzyklus, exakte CI-Beobachtung und Result-Logtransport.
-- [ ] `CI-WAIT.a.R` – vollständige Evidence-Artefakte, Wiederholungen und Ausfälle absichern.
+- [x] `CI-WAIT.a.R` – vollständige Evidence-Artefakte, Wiederholungen und Ausfälle absichern.
 - [ ] `CI-WAIT.a.C` – GitHub-Transport, Beobachtung und Evidence-Kodierung trennen.
 
 Lokal je Commit ausschließlich neue und direkt betroffene Tests, vier Worker.

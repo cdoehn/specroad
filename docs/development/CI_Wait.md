@@ -58,3 +58,16 @@ Quellen für den verwendeten Transportvertrag:
 https://cli.github.com/manual/gh_api
 https://docs.github.com/en/rest/actions/workflow-runs
 https://docs.github.com/en/rest/actions/workflow-jobs
+
+## Vollständige Testergebnis-Artefakte (R)
+
+Alle fünf versionierten behavior-Artefakte werden ebenfalls abgerufen. Der Name
+bindet SHA und run_attempt, damit ein Rerun nicht alte Erfolgsberichte verwendet.
+Originale JSON-Reports bleiben im ZIP erhalten. Die vorhandene Vollständigkeits-
+prüfung kontrolliert Testmengen, Ergebniszustände, Python-Version und Workerzahl;
+der Eingangsquellhash muss zum lokalen finalen Stand passen. Im Dualmodus werden
+parallel/serial und die gespeicherte Vergleichszusammenfassung erneut geprüft.
+Ein fehlendes oder defektes Artefakt kann trotz grünem GitHub-Status den separaten
+Evidence-Status unvollständig machen; das wird nicht verschwiegen. Ein fehlender
+abschließender unveränderter Run-/Attempt-Beleg verhindert einen Erfolgsausweis.
+Es werden keine normalen CLI-Texte als Nachweis von Testvollständigkeit geparst.
