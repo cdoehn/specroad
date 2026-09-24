@@ -98,7 +98,7 @@ bleibt historische Grundlage. Anleitung und Audit: [Testentwicklung](../developm
 
 - [x] `CI-WAIT.a.W` – Fünferzyklus, exakte CI-Beobachtung und Result-Logtransport.
 - [x] `CI-WAIT.a.R` – vollständige Evidence-Artefakte, Wiederholungen und Ausfälle absichern.
-- [ ] `CI-WAIT.a.C` – GitHub-Transport, Beobachtung und Evidence-Kodierung trennen.
+- [x] `CI-WAIT.a.C` – GitHub-Transport, Beobachtung und Evidence-Kodierung trennen.
 
 Lokal je Commit ausschließlich neue und direkt betroffene Tests, vier Worker.
 Keine vorsorglich breit ausgewählten Regressionen und keine lokale Vollsuite.

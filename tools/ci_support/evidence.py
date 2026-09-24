@@ -1,0 +1,134 @@
+"""CI archives and checksummed transport in the existing execution log."""
+import base64
+from hashlib import sha256
+from io import BytesIO
+import json
+import re
+import zipfile
+from .contract import (REPOSITORY, PYTHONS, MAX_BYTES, PREFIX, CIObservationError, json_bytes, decode_json)
+from .transport import records
+
+def inspect_report_archive(raw, request, version):
+    """Validate passing framework reports, preserving all original archive bytes."""
+    from compare_test_runs import _signature, compare_reports
+    with zipfile.ZipFile(BytesIO(raw)) as archive:
+        members = archive.infolist()
+        if len(members) > 100 or sum(i.file_size for i in members) > MAX_BYTES:
+            raise CIObservationError('oversized_report_archive')
+        reports = {}
+        for name in ('parallel-evidence.json', 'serial-evidence.json', 'summary.json'):
+            matches = [i for i in members if i.filename.rsplit('/', 1)[-1] == name and not i.is_dir()]
+            if len(matches) > 1:
+                raise CIObservationError('ambiguous_report_member')
+            if matches:
+                reports[name] = decode_json(archive.read(matches[0]))
+    required = ['parallel-evidence.json'] + (['serial-evidence.json'] if request.mode == 'both' else [])
+    if not all(name in reports for name in required):
+        raise CIObservationError('missing_test_evidence')
+    for name in required:
+        report = reports[name]
+        _signature(report)  # Existing completeness contract; no second scheduler/oracle.
+        if (request.source_sha256 is not None and report.get('tool_build_sha256') != request.source_sha256):
+            raise CIObservationError('test_source_binding_mismatch')
+        runtime = report.get('runtime', {})
+        execution = report.get('execution', {})
+        if (type(runtime) is not dict or runtime.get('implementation') != 'cpython'
+                or type(runtime.get('python')) is not str or not runtime['python'].startswith(version + '.')
+                or type(execution) is not dict or execution.get('workers') != (0 if name.startswith('serial') else 4)):
+            raise CIObservationError('test_runtime_or_mode_mismatch')
+    comparison = None
+    if request.mode == 'both':
+        comparison = compare_reports([reports[name] for name in required])
+        stored = reports.get('summary.json', {})
+        if (type(stored) is not dict or stored.get('suite_passed') is not True
+                or stored.get('exit_code') != 0 or stored.get('errors') != []
+                or stored.get('comparison') != comparison):
+            raise CIObservationError('missing_or_inconsistent_comparison')
+    return {'python': version, 'mode': request.mode, 'tests_run': reports[required[0]]['tests_run'],
+            'source_bound': request.source_sha256 is not None, 'comparison': comparison}
+
+
+def collect_artifacts(client, request, run_id, attempt, files):
+    """Names include attempt: no reuse of an older run's successful evidence."""
+    artifacts = records(client, f'repos/{REPOSITORY}/actions/runs/{run_id}/artifacts', 'artifacts')
+    files['artifact-index.json'] = json_bytes(artifacts)
+    reports, errors = [], []
+    for version in PYTHONS:
+        name = f'behavior-{version}-{request.commit}-attempt-{attempt}'
+        matches = [a for a in artifacts if a.get('name') == name]
+        try:
+            if len(matches) != 1 or matches[0].get('expired') is not False:
+                raise CIObservationError('missing_ambiguous_or_expired_artifact')
+            artifact = matches[0]
+            binding = artifact.get('workflow_run', {})
+            if (type(binding) is not dict or binding.get('id') != run_id
+                    or binding.get('head_sha') != request.commit or binding.get('head_branch') != 'dev'):
+                raise CIObservationError('artifact_binding_mismatch')
+            raw = client.get(f"repos/{REPOSITORY}/actions/artifacts/{artifact['id']}/zip")
+            expected = artifact.get('digest')
+            if expected is not None and expected != 'sha256:' + sha256(raw).hexdigest():
+                raise CIObservationError('artifact_digest_mismatch')
+            if sum(map(len, files.values())) + len(raw) > MAX_BYTES // 2:
+                raise CIObservationError('total_evidence_limit')
+            # Preserve a failed/partial report as well, before attempting a pass proof.
+            files['reports-' + version + '.zip'] = raw
+            reports.append(inspect_report_archive(raw, request, version))
+        except (CIObservationError, OSError, ValueError, zipfile.BadZipFile, RuntimeError, TypeError, KeyError) as error:
+            errors.append({'phase': 'artifact', 'python': version, 'reason': type(error).__name__ + ': ' + str(error)[:160]})
+    return reports, errors
+
+
+def pack_evidence(files):
+    """Opaque GitHub archives are never extracted or executed here."""
+    if sum(map(len, files.values())) > MAX_BYTES:
+        raise CIObservationError('total_evidence_limit')
+    out = BytesIO()
+    with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as archive:
+        for name, raw in sorted(files.items()):
+            if type(name) is not str or re.fullmatch(r'[a-zA-Z0-9_.-]+', name) is None or name in ('.', '..'):
+                raise CIObservationError('unsafe_evidence_name')
+            info = zipfile.ZipInfo(name); info.external_attr = 0o100600 << 16
+            info.compress_type = zipfile.ZIP_DEFLATED
+            archive.writestr(info, raw)
+    return out.getvalue()
+
+
+def emit_evidence(raw, stream):
+    """Checked transport inside PatchHarbor's existing captured output channel."""
+    h = sha256(raw).hexdigest()
+    chunk_size = 3072
+    chunks = (len(raw) + chunk_size - 1) // chunk_size
+    stream.write(PREFIX + json.dumps({'kind': 'begin', 'sha256': h, 'bytes': len(raw), 'chunks': chunks}) + '\n')
+    for index in range(chunks):
+        stream.write(PREFIX + json.dumps({'kind': 'chunk', 'sha256': h, 'index': index,
+            'data': base64.b64encode(raw[index * chunk_size:(index + 1) * chunk_size]).decode('ascii')}) + '\n')
+    stream.write(PREFIX + json.dumps({'kind': 'end', 'sha256': h}) + '\n')
+    stream.flush()
+
+
+def recover_evidence(log):
+    """Recover exactly one completed, byte-verified archive from execution.log."""
+    records_ = [decode_json(line[len(PREFIX):].encode()) for line in log.splitlines() if line.startswith(PREFIX)]
+    if not records_ or records_[0].get('kind') != 'begin' or records_[-1].get('kind') != 'end':
+        raise CIObservationError('incomplete_evidence_transport')
+    header = records_[0]
+    if type(header.get('bytes')) is not int or not 0 < header['bytes'] <= MAX_BYTES:
+        raise CIObservationError('invalid_evidence_size')
+    if type(header.get('chunks')) is not int or len(records_) != header['chunks'] + 2:
+        raise CIObservationError('evidence_chunk_count')
+    result = bytearray()
+    for index, record in enumerate(records_[1:-1]):
+        if record.get('kind') != 'chunk' or type(record.get('index')) is not int or record.get('index') != index or record.get('sha256') != header.get('sha256'):
+            raise CIObservationError('evidence_chunk_binding')
+        try:
+            result.extend(base64.b64decode(record['data'], validate=True))
+        except (ValueError, KeyError, TypeError) as error:
+            raise CIObservationError('evidence_chunk_encoding') from error
+        if len(result) > header['bytes']:
+            raise CIObservationError('evidence_overflow')
+    raw = bytes(result)
+    if len(raw) != header['bytes'] or sha256(raw).hexdigest() != header.get('sha256') or records_[-1].get('sha256') != header['sha256']:
+        raise CIObservationError('evidence_integrity')
+    return raw
+
+
