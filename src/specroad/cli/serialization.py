@@ -11,7 +11,7 @@ from .results import FORMAT_VERSION, ResultContractError, ResultStatus, thaw
 
 
 def diagnostic_document(diagnostic):
-    return {name: thaw(getattr(diagnostic, name)) for name in diagnostic.__dataclass_fields__}
+    return diagnostic.as_dict()
 
 
 def envelope_document(outcome):

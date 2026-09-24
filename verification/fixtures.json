@@ -35,7 +35,8 @@
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-LANGUAGE-POLICY-v1",
     "SR-FIX-CONTAINER-LANGUAGES-v1",
-    "SR-FIX-MODEL-VALIDATION-v1"
+    "SR-FIX-MODEL-VALIDATION-v1",
+    "SR-FIX-DIAGNOSTICS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -177,6 +178,10 @@
     "SR-FIX-MODEL-VALIDATION-v1": {
       "provider": "tests/support/model_validation.py:artifact",
       "kind": "owned loaded-model bytes and explicitly registered test predicates; no authenticated lifecycle/evidence claims"
+    },
+    "SR-FIX-DIAGNOSTICS-v1": {
+      "provider": "tests/test_diagnostics.py:finding",
+      "kind": "Owned diagnostic values and bound loaded-model observations; no provenance authentication, automatic lint execution or full project approval."
     }
   }
 }

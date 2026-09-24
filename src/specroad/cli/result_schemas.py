@@ -7,6 +7,7 @@ or schema-document objects stay passive JSON data. No remote resolution exists.
 from ..model._schema import validate_builtin
 from ..model.schema_identity import CATEGORIES, DIALECT, ENVELOPE_ID, RESULT_IDS
 from .results import FORMAT_VERSION, ResultStatus
+from ..diagnostics import diagnostic_schema
 
 
 def _object(properties, required=None, extra=False):
@@ -28,10 +29,7 @@ def _fields(schema_id):
     count = {"type": "integer", "minimum": 0}
     strings = _array(text)
     sha = {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"}
-    diagnostic = _object({**{name: nonempty for name in ("code", "category", "message", "origin")},
-        "severity": {"enum": ["error", "warning", "info"]},
-        **{name: _nullable(nonempty) for name in ("rule_id", "artifact_id", "path", "rationale", "remediation")},
-        "location": _nullable(obj), "related_ids": strings})
+    diagnostic = diagnostic_schema()
     reference = _object({"path": nonempty, "media_type": nonempty, "size": count,
                          "sha256": sha, "result_schema": nonempty})
     surface = {"command_id": nonempty, "words": strings, "aliases": _array(strings),

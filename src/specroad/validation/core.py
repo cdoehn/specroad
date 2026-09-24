@@ -73,6 +73,10 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=()):
         return ValidationReport._create({"format_version": VALIDATION_VERSION,
             "input_sha256": basis, "validation_scope": "loaded_model" if selected is None else "dependency_expanded_loaded_scope",
             "source_count": len(documents), "structural_scope": "all_supplied_documents",
+            "source_bindings": [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents],
+            "identified_ids": sorted({v["id"] for _, v in parsed if type(v.get("id")) is str and v["id"]}),
+            "identified_sources": [{"path": d.path, "artifact_id": v["id"]} for d, v in parsed
+                                   if type(v.get("id")) is str and v["id"]],
             "requested_ids": None if selected is None else list(selected), "checked_ids": list(checked),
             "stages": stages, "checks_complete": complete,
             "model_valid": False if failed else True if complete else None,

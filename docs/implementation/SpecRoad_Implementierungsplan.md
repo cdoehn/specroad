@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 171
-last_completed_plan_commit: 4.o.C
-next_plan_commit: 4.p.W
+implementation_plan_commits_completed: 172
+last_completed_plan_commit: 4.p.W
+next_plan_commit: 4.p.R
 last_completed_numbered_bundle: 20
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2295,7 +2295,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.p.W – Let it Work
 
-- [ ] **4.p.W** · Position **172/885** · Voraussetzung: `4.o.C`.
+- [x] **4.p.W** · Position **172/885** · Voraussetzung: `4.o.C`.
 **Exakte Commit-Message:** `4.p.W feat(validation): Strukturierte Diagnosen und Fail-Policy aufbauen`
 
 **Umsetzung:** Vollständiges Diagnosedatenmodell mit Ursprüngen, Pointern, Severity und fachlicher Sortierung aufbauen.

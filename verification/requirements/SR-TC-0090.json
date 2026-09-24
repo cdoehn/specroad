@@ -4,18 +4,30 @@
   "requirement_id": "SR-REQ-0090",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DIAGNOSTICS-v1"
+  ],
+  "preconditions": [
+    "Explicit diagnostic data and already loaded, source-bound model reports."
+  ],
+  "steps": [
+    "Construct and validate findings; preserve all observed machine locations and identities.",
+    "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der Diagnoseursprung MUSS einen der Werte `core_rule`, `profile_rule`, `import_rule`, `migration_rule`, `merge_rule`, `analyzer_observation` oder `ai_suggestion` besitzen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    1,
+    3,
+    5
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +40,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_diagnostics.DiagnosticWorkTests.test_all_seven_origins_remain_distinct",
+    "test_diagnostics.DiagnosticWorkTests.test_invalid_origin_is_not_mislabeled_core"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "All future validators/commands must use this diagnostic boundary.",
+    "Optional strict lint execution, full source inventory and complete target runtime matrix remain separately evidenced.",
+    "Human presentation/documentation is not an automated oracle (TD-001)."
   ]
 }

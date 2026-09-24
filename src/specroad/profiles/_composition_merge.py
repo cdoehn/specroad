@@ -13,17 +13,7 @@ from .composition_values import _error
 # execution-authority and path failures cannot be downgraded. Semantic review
 # findings (e.g. SRV033/SRV050) remain configurable. SRV027 is protected because
 # its code includes structural failures, not only review_outcome findings.
-CORE_MINIMUM_SEVERITIES = MappingProxyType({key: "error" for key in (
-    "SRV001", "SRV002", "SRV003", "SRV010", "SRV011", "SRV012", "SRV013",
-    "SRV020", "SRV021", "SRV022", "SRV027", "SRV030", "SRV034", "SRV040", "SRV042",
-    "SRV060", "SRV061", "SRV070", "SRV071", "SRV072", "SRV073", "SRV080", "SRV081",
-    "SRV082", "SRV083", "SRV090", "SRV100", "SRV101", "SRV110", "SRV111", "SRV120",
-    "SRV130", "SRV131", "SRV140", "SRV141", "SRV142", "SRV143", "SRV144", "SRV145",
-    "SRV146", "SRV147", "SRV148", "SRV149", "SRV150", "SRV151", "SRV152", "SRV153",
-    "SRV154", "SRV155", "SRV157", "SRV158", "SRV168", "SRV170", "SRV172", "SRV173",
-    "SRV174", "SRV175", "SRV183", "SRV185", "SRV192", "SRV193", "SRV194", "SRV195",
-    "core:requirement-origin", "core:requirement-verification",
-)})
+from ..diagnostics.catalog import CORE_MINIMUM_SEVERITIES
 
 
 

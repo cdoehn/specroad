@@ -16,8 +16,8 @@ import re
 FORMAT_VERSION = "2.0.0"
 
 
-class ResultContractError(ValueError):
-    """A trusted handler attempted to return an invalid or unsupported result."""
+from ..result_contract import ResultContractError
+from ..diagnostics import Diagnostic, diagnostic_key as _diagnostic_key
 
 
 class ResultStatus(str, Enum):
@@ -74,47 +74,6 @@ def thaw(value):
     if isinstance(value, tuple):
         return [thaw(item) for item in value]
     return value
-
-
-@dataclass(frozen=True)
-class Diagnostic:
-    code: str
-    severity: str
-    category: str
-    message: str
-    origin: str = "core"
-    rule_id: str | None = None
-    artifact_id: str | None = None
-    path: str | None = None
-    location: Mapping | None = None
-    rationale: str | None = None
-    remediation: str | None = None
-    related_ids: tuple[str, ...] = ()
-
-    def __post_init__(self):
-        for name in ("code", "category", "message", "origin"):
-            _text(getattr(self, name), name)
-        if self.severity not in ("info", "warning", "error"):
-            raise ResultContractError("Unknown diagnostic severity")
-        for name in ("rule_id", "artifact_id", "path", "rationale", "remediation"):
-            _text(getattr(self, name), name, optional=True)
-        if self.location is not None and not isinstance(self.location, Mapping):
-            raise ResultContractError("Diagnostic location must be an object")
-        object.__setattr__(self, "location", freeze(self.location))
-        if not isinstance(self.related_ids, (list, tuple)):
-            raise ResultContractError("Related identities must be a sequence")
-        for item in self.related_ids:
-            _text(item, "related identity")
-        object.__setattr__(self, "related_ids", tuple(sorted(set(self.related_ids))))
-
-    def as_dict(self):
-        from .serialization import diagnostic_document
-        return diagnostic_document(self)
-
-
-def _diagnostic_key(item):
-    return (item.path or "", item.artifact_id or "", item.code,
-            json.dumps(item.as_dict(), ensure_ascii=True, sort_keys=True, allow_nan=False))
 
 
 class OperationFailure(Exception):
