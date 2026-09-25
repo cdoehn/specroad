@@ -4,140 +4,23 @@ No cache, lock file, journal, output file or repair is created here. Operational
 metadata is observed conservatively: unresolved entries are never interpreted as
 completed transactions. The transaction/lock engines and full CLI preflight have
 their own later contracts. These observations do not authorize writes and are
-not an OS sandbox for explicitly supplied trusted Python validation callbacks.
-"""
+not an OS sandbox for explicitly supplied trusted Python validation callbacks."""
 from __future__ import annotations
-
-from dataclasses import dataclass
 from hashlib import sha256
-
-from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
-from ..model.paths import PathClass, artifact_path
 from ..security import ProjectBoundary, SafetyViolation
-from ..security.resource_access import directory_entries
 from ..profiles.composition import compose_profiles
-from ..profiles.composition_values import ProfileCompositionError
-from ..validation import ModelDocument, validate_model, assess_validation
+from ..validation import validate_model, assess_validation
 from ..lint import Glossary, LiteralPolicy, lint_literals
 from .domain_artifact import DomainArtifact
 from .json_syntax import parse_json_object
-from .project import ProjectSource
-from .resource_discovery import current_json_paths
+from .read_only_values import READ_ONLY_VERSION, ReadOnlyResult
+from ._read_only_reporting import _base, _failure, _blocked
+from ._read_only_inputs import (_operational_metadata, _source, _ready,
+                                 _capture_documents, _record_freshness)
 
-READ_ONLY_VERSION = "project-read-only-v1"
-
-
-@dataclass(frozen=True, init=False)
-class ReadOnlyResult:
-    """Detached report, never a permission to publish or a whole-project approval."""
-    _encoded: bytes
-
-    def __init__(self, *args, **kwargs):
-        raise TypeError("Use the project read-only entry functions")
-
-    @classmethod
-    def _create(cls, value):
-        result = object.__new__(cls)
-        object.__setattr__(result, "_encoded", canonical_json_bytes(value))
-        return result
-
-    @property
-    def data(self):
-        return parse_json_object(self._encoded)
-
-    @property
-    def passed(self):
-        return self.data["passed"] is True
-
-    @property
-    def exit_code(self):
-        return self.data["exit_code"]
-
-    def __bool__(self):
-        raise TypeError("Use result.passed explicitly")
-
-
-def _operational_metadata(boundary):
-    """Only shallow names/types of active locations; no journal/cache contents.
-
-    An empty/absent active namespace permits an observation, not an ownership
-    proof. Unknown operational files can be writer/lock metadata: keep them and
-    block normal reads until the appropriate later resolver can assess them.
-    Completed receipts and caches are not required input to this read path.
-    """
-    entries = directory_entries(boundary, ".specroad", missing_ok=True)
-    observed, unresolved, unknown = [], [], []
-    for name, directory in (() if entries is None else entries):
-        path = ".specroad/" + name
-        observed.append({"path": path, "directory": directory})
-        if directory and name in ("cache", "requests"):
-            continue
-        if directory and name in ("transactions", "recovery"):
-            for child, is_directory in directory_entries(boundary, path):
-                logical = path + "/" + child
-                observed.append({"path": logical, "directory": is_directory})
-                if name == "transactions" and child == "receipts" and is_directory:
-                    continue
-                unresolved.append(logical)
-        else:
-            unknown.append(path)
-    state = "recovery_required" if unresolved else "unknown" if unknown else "consistent"
-    return {"consistency_state": state, "recovery_required": bool(unresolved),
-            "unresolved_paths": sorted(unresolved), "unknown_paths": sorted(unknown),
-            "observed_entries": sorted(observed, key=lambda v: v["path"]),
-            "writer_owner": None, "writer_ownership_verified": False,
-            "journal_contents_loaded": False, "cache_contents_loaded": False,
-            "recovery_performed": False, "model_loaded": False,
-            "inspection_scope": "shallow_operational_entries",
-            "operational_directory_present": entries is not None, "atomic_snapshot": False}
-
-
-def _base(operation):
-    return {"format_version": READ_ONLY_VERSION, "operation": operation,
-            "passed": None, "checks_complete": False, "exit_code": 5, "status": "blocked",
-            "phase": "arguments",
-            "normal_operation_started": False, "model_loaded": False,
-            "project_id": None, "read_only": True, "project_complete": False,
-            "write_authorized": False, "approval_granted": False,
-            "atomic_snapshot": False, "operational": None, "diagnostics": [],
-            "source_bindings": [], "configuration_sha256": None,
-            "freshness_verified": False, "source_observation_sha256": None,
-            "validation": None, "lint": None}
-
-
-def _failure(data, error):
-    if isinstance(error, ModelError):
-        diagnostic = error.diagnostic()
-        if error.reason in ("operational_metadata_changed", "read_only_membership_changed",
-                            "read_only_source_changed", "read_only_project_replaced", "configuration_changed"):
-            code = 5
-        elif isinstance(error, ProfileCompositionError) or data["phase"] in ("arguments", "configuration", "profiles"):
-            code = 2
-        else:
-            code = 3
-    elif isinstance(error, SafetyViolation):
-        diagnostic = {"reason": "unsafe_project_read"}
-        code = 7
-    else:
-        diagnostic = {"reason": "project_read_unavailable", "errno": error.errno}
-        code = 5
-    if "exit_code" in diagnostic and diagnostic["exit_code"] != code:
-        diagnostic["producer_exit_code"] = diagnostic["exit_code"]
-    diagnostic["exit_code"] = code
-    data.update(status="failed", passed=False, exit_code=code, checks_complete=False,
-                freshness_verified=False, source_observation_sha256=None,
-                validation=None, lint=None, diagnostics=[diagnostic])
-    return ReadOnlyResult._create(data)
-
-
-def _blocked(data, observation):
-    data["operational"] = observation
-    data["diagnostics"] = [{"code": "SRV168" if observation["recovery_required"] else "READ_STATE_UNKNOWN",
-        "reason": "recovery_required" if observation["recovery_required"] else "operational_state_unresolved",
-        "severity": "error"}]
-    return ReadOnlyResult._create(data)
-
+__all__ = ["READ_ONLY_VERSION", "ReadOnlyResult", "diagnose_read_only",
+           "validate_project_read_only", "lint_project_read_only"]
 
 def diagnose_read_only(root):
     """Inspect a blocked project's available metadata without loading its model.
@@ -156,81 +39,6 @@ def diagnose_read_only(root):
         return ReadOnlyResult._create(data)
     except (ModelError, OSError, SafetyViolation) as error:
         return _failure(data, error)
-
-
-def _artifact_names(source):
-    return tuple(path for path in current_json_paths(source)
-                 if source.classify(path) is PathClass.ARTIFACT)
-
-
-def _capture_documents(source):
-    names = _artifact_names(source)
-    documents = tuple(ModelDocument(name, source.read_normative(name)) for name in names)
-    # Invalid JSON/schema values are diagnosed by validate_model, not repaired.
-    for document in documents:
-        try:
-            value = parse_json_object(document.content, path=document.path)
-        except ModelError:
-            continue
-        if type(value.get("id")) is str and type(value.get("artifact_type")) is str:
-            expected = artifact_path(value["artifact_type"], value["id"], source.configuration.id_prefix)
-            if expected != document.path:
-                raise ModelError("artifact_path_identity_mismatch", path=document.path)
-    return documents
-
-
-def _fresh(source, operational, documents):
-    source.check_current()
-    if _operational_metadata(source.boundary) != operational:
-        raise ModelError("operational_metadata_changed")
-    if _artifact_names(source) != tuple(document.path for document in documents):
-        raise ModelError("read_only_membership_changed")
-    for document in documents:
-        if source.read_normative(document.path) != document.content:
-            raise ModelError("read_only_source_changed", path=document.path)
-    source.check_current()
-    if _artifact_names(source) != tuple(document.path for document in documents):
-        raise ModelError("read_only_membership_changed")
-    if _operational_metadata(source.boundary) != operational:
-        raise ModelError("operational_metadata_changed")
-
-
-def _source(root, data, expected_project_id):
-    data["phase"] = "operational"
-    boundary = ProjectBoundary(root)
-    observation = _operational_metadata(boundary)
-    data["operational"] = observation
-    if observation["consistency_state"] != "consistent":
-        return None, observation
-    data["phase"] = "configuration"
-    source = ProjectSource(boundary.root, expected_project_id=expected_project_id)
-    # ProjectSource creates its own capability. Reject replacement in between.
-    boundary._check_root()
-    if boundary._root_identity != source.boundary._root_identity:
-        raise ModelError("read_only_project_replaced")
-    data["project_id"] = source.configuration.project_id
-    data["configuration_sha256"] = sha256(source.configuration_bytes).hexdigest()
-    return source, observation
-
-
-def _ready(source, observation, data):
-    """Recheck immediately before the model read, after caller-supplied composition."""
-    source.check_current()
-    current = _operational_metadata(source.boundary)
-    if current != observation:
-        data["operational"] = current
-        if current["consistency_state"] != "consistent":
-            return False
-        raise ModelError("operational_metadata_changed")
-    return True
-
-
-def _record_freshness(source, observation, documents, data):
-    _fresh(source, observation, documents)
-    data["source_observation_sha256"] = canonical_json_sha256({
-        "project_id": data["project_id"], "configuration_sha256": data["configuration_sha256"],
-        "sources": data["source_bindings"], "operational": observation})
-    data["freshness_verified"] = True
 
 
 def validate_project_read_only(root, *, profile_resources, core_key, cli_profiles=(),
@@ -332,3 +140,5 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
         return ReadOnlyResult._create(data)
     except (ModelError, OSError, SafetyViolation) as error:
         return _failure(data, error)
+
+

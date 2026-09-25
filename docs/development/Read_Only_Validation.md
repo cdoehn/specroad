@@ -87,3 +87,12 @@ full N.2 preflight accounting, ownership resolution and persistent transaction
 changes remain in their own planned components. This layer does not declare
 journals committed by reading a string, probe process IDs, or fall back to an old
 cache. It does not attempt to repair permissions after a denied read.
+
+## Internal separation
+
+`read_only.py` exposes the three library operations and re-exports the owned result
+type. `_read_only_inputs.py` owns only observation/capture/recheck operations;
+`_read_only_reporting.py` projects independent failures and blocked-state reports;
+`read_only_values.py` owns immutable detached reports. None is a publisher or a
+future transaction writer. The refactoring changes no file-selection rule, hash
+input, diagnostic decision or side effect; the W/R behavior tests remain intact.
