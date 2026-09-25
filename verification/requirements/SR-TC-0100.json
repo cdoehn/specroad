@@ -4,18 +4,30 @@
   "requirement_id": "SR-REQ-0100",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-READ-ONLY-PROJECT-v1"
+  ],
+  "preconditions": [
+    "Owned existing project root; explicit profile or literal policy. Operational data is never changed."
+  ],
+  "steps": [
+    "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
+    "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    4,
+    5
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +40,36 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_read_only_validation.ReadOnlyValidationTests.test_valid_root_without_cache_is_checked_without_writes",
+    "test_read_only_validation.ReadOnlyValidationTests.test_read_only_permissions_do_not_require_write_probe",
+    "test_read_only_validation.ReadOnlyValidationTests.test_cache_contents_are_not_required_or_rewritten",
+    "test_read_only_validation.ReadOnlyValidationTests.test_generated_attachments_and_archives_are_not_scanned",
+    "test_read_only_validation.ReadOnlyValidationTests.test_real_schema_failure_remains_read_only",
+    "test_read_only_validation.ReadOnlyValidationTests.test_bad_json_is_a_diagnosis_not_a_repair",
+    "test_read_only_validation.ReadOnlyValidationTests.test_selected_target_includes_incoming_dependencies",
+    "test_read_only_validation.ReadOnlyValidationTests.test_absent_semantic_gate_is_not_passed",
+    "test_read_only_validation.ReadOnlyValidationTests.test_profile_conflict_precedes_model_loading",
+    "test_read_only_validation.ReadOnlyValidationTests.test_active_transaction_blocks_before_model_load",
+    "test_read_only_validation.ReadOnlyValidationTests.test_auto_recover_configuration_does_not_authorize_writes",
+    "test_read_only_validation.ReadOnlyValidationTests.test_receipts_alone_do_not_require_active_recovery",
+    "test_read_only_validation.ReadOnlyValidationTests.test_unknown_operational_record_never_means_no_lock",
+    "test_read_only_validation.ReadOnlyValidationTests.test_metadata_diagnosis_works_without_configuration",
+    "test_read_only_validation.ReadOnlyValidationTests.test_diagnosis_does_not_parse_corrupt_configuration",
+    "test_read_only_validation.ReadOnlyValidationTests.test_lint_approved_placeholder_without_output_files",
+    "test_read_only_validation.ReadOnlyValidationTests.test_lint_does_not_invent_applicable_language_checks",
+    "test_read_only_validation.ReadOnlyValidationTests.test_lint_recovery_is_not_a_pass_with_empty_diagnostics",
+    "test_read_only_validation.ReadOnlyValidationTests.test_lint_missing_selection_fails",
+    "test_read_only_validation.ReadOnlyValidationTests.test_wrong_project_identity_is_rejected",
+    "test_read_only_validation.ReadOnlyValidationTests.test_detached_result_cannot_mutate_later_reads",
+    "test_read_only_validation.ReadOnlyValidationTests.test_no_read_result_is_write_or_approval_authority",
+    "test_read_only_validation.ReadOnlyValidationTests.test_mismatched_filename_cannot_select_other_identity",
+    "test_read_only_validation.ReadOnlyValidationTests.test_missing_root_is_not_created"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",
+    "No full transaction-state parser, lock-ownership proof, automatic recovery, preflight-detail cursor or atomic multi-file snapshot is implemented by this layer.",
+    "Trusted application callbacks must themselves respect the read-only contract; this library is not an OS sandbox.",
+    "Complete supported runtime/platform acceptance remains bound to real CI and target results."
   ]
 }
