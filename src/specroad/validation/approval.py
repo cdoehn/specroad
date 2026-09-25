@@ -17,7 +17,7 @@ from ..graph.symmetry import require_canonical_relations
 from ..graph.relation_obligations import RelationObligations
 from ..srx.pointers import parse_pointer, resolve_tokens
 from ..srx.errors import SrxError
-from ..srx.types import MISSING
+from ..lint import Glossary, LiteralPolicy, lint_literals
 from .approval_values import (APPROVAL_VERSION, PREREQUISITES, HUMAN_CRITERIA,
     ApprovalContext, ApprovalPrerequisite, HumanRequirementReview, ReviewVerification,
     ReviewVerifier, ApprovalAssessment)
@@ -93,6 +93,41 @@ def _formal(context):
     else:
         for item in check_composed_fields(context.profile,projected)['diagnostics']:
             issues.append(_finding(context,item['reason'],code='SRV002',pointer=item.get('pointer','')))
+    # Plain Core placeholders in actual normative leaves are formal failures.
+    # This uses the existing literal engine; it is not semantic language detection.
+    fields=[]
+    roots=('title','statement','rationale','scope','actor','trigger','preconditions',
+           'response','object','timing','thresholds','exceptions','deviation_conditions',
+           'deviation_authority')
+    stack=[('/'+name,candidate[name]) for name in roots if name in candidate]
+    while stack:
+        pointer,value=stack.pop()
+        if type(value) is str:
+            fields.append(pointer)
+        elif type(value) is list:
+            stack.extend((pointer+'/'+str(i),item) for i,item in enumerate(value))
+        elif type(value) is dict:
+            stack.extend((pointer+'/'+key.replace('~','~0').replace('/','~1'),item)
+                         for key,item in value.items())
+    if fields:
+        policy=LiteralPolicy.from_value({'format_version':1,'policy_id':'approval:core-placeholders',
+            'version':'1.0.0','language':candidate['language'],'fields':sorted(fields),
+            'term_ids':[],'placeholders':[],'references':[]})
+        report=lint_literals(projected,glossary=Glossary(()),policy=policy)
+        for item in report['diagnostics']:
+            if item['code']=='SRV033':
+                finding=_finding(context,'approval_open_placeholder',code='SRV033',pointer=item['pointer'])
+                finding['diagnostic']['location']['character_offset']=item['start']
+                issues.append(finding)
+    # The current semantic service must still validate configuration and oracles,
+    # but an explicitly incompatible local subject list is already observable.
+    for relation in projected['relations']:
+        if relation['type']=='verified_by':
+            target=index.get(relation['target'])
+            if (target is not None and target.identity.artifact_type=='verification'
+                    and context.requirement_id not in target.data['subjects']):
+                issues.append(_finding(context,'approval_verification_subject_mismatch',code='SRV032',
+                                       pointer='/relations'))
     kind=candidate['requirement_kind']
     if kind=='quality':
         rows=context.data['quality_fields']
@@ -147,7 +182,10 @@ def assess_requirement_approval(context, *, review=None, verifier=None, prerequi
         raise ModelError('approval_human_review_required')
     if verifier is not None and type(verifier) is not ReviewVerifier:
         raise ModelError('approval_review_verifier_required')
-    issues=_formal(context)
+    try:
+        issues=_formal(context)
+    except ModelError as error:
+        issues=[_finding(context,error.reason,code='SRV002',pointer=error.pointer or '',path=error.path)]
     formal_ok=not issues
     observed={p.gate_id:p for p in prerequisites}
     prerequisite_status=[]

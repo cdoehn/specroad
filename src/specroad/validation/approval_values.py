@@ -166,7 +166,7 @@ class HumanRequirementReview:
         for field in ('input_sha256','requirement_sha256','force_statement_sha256'):
             _hash(owned[field])
         actor(owned['reviewer']); UtcTimestamp(owned['reviewed_at'])
-        if owned['decision'] not in ('confirmed', 'rejected') or type(owned['compound']) is not bool:
+        if type(owned['decision']) is not str or owned['decision'] not in ('confirmed', 'rejected') or type(owned['compound']) is not bool:
             raise ModelError('approval_review_decision_invalid')
         criteria=owned['criteria']
         if (type(criteria) is not dict or criteria.keys() - set(HUMAN_CRITERIA)

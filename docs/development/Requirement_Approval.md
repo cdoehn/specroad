@@ -68,3 +68,28 @@ robustness tests. Only these selected files run with four xdist workers. The ful
 catalog is collected separately without executing a complete suite. Full matrix
 runs in GitHub at the last bundle commit; every fifth bundle adds serial and
 comparison. Synthetic service fixtures explicitly do not authenticate real users.
+
+## Robustness additions
+
+Core reuses the existing literal engine on textual leaves of the candidate's
+known normative fields, including nested scope/threshold data. TBD, TODO and
+FIXME block the hypothetical approved state with SRV033. JSON Pointers and
+Unicode character offsets are observations; byte/line coordinates are not
+invented. Arbitrary Extensions remain passive and are not inferred semantics.
+The separate placeholder/profile service must still cover selected project rules.
+
+A directly linked verification artifact whose explicit subject list excludes the
+candidate is already a local SRV032 failure. Existence of a matching subject or a
+test artifact alone still does not establish a valid current verification oracle.
+
+Readiness is conservative: any source-byte, selected-profile, configuration or
+projection change invalidates the old context observation. Stored-mode review
+values are current trusted-service observations, not a new normative review
+file format or a demand to rewrite a historic review. The actual authorization
+and historic-review service must establish their relation to the original human
+decision. A stale or unverifiable claim never produces a human-compound assertion.
+
+There are no restrictions on a legitimate loopback interface beyond the selected
+source/target type contracts. The core quality projection supports comparison
+operators eq/ne/lt/lte/gt/gte and their symbolic forms, scalar target values or
+explicit numeric value/unit pairs. It does not guess other predicate semantics.

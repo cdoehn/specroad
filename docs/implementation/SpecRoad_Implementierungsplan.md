@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 175
-last_completed_plan_commit: 4.q.W
-next_plan_commit: 4.q.R
+implementation_plan_commits_completed: 176
+last_completed_plan_commit: 4.q.R
+next_plan_commit: 4.q.C
 last_completed_numbered_bundle: 21
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2356,7 +2356,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.q.R – Make it Right
 
-- [ ] **4.q.R** · Position **176/885** · Voraussetzung: `4.q.W`.
+- [x] **4.q.R** · Position **176/885** · Voraussetzung: `4.q.W`.
 **Exakte Commit-Message:** `4.q.R feat(validation): Requirement-Approval-Gates vervollständigen`
 
 **Vervollständigung:** Coreprüfung und Detektion nicht als menschlichen Nachweis eines einzelnen prüfbaren Sachverhalts ausgeben.

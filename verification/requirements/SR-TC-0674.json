@@ -37,7 +37,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_requirement_approval.py::test_ai_review_never_replaces_human_judgment",
-    "tests/test_requirement_approval.py::test_explicit_force_not_inferred_from_statement_or_priority"
+    "tests/test_requirement_approval.py::test_explicit_force_not_inferred_from_statement_or_priority",
+    "tests/test_requirement_approval_right.py::test_detector_scores_or_unknown_review_fields_are_rejected",
+    "tests/test_requirement_approval_right.py::test_verifier_must_bind_exact_context_and_review"
   ],
   "open_items": [
     "Integrate trusted authorization/review selection, complete current semantic service results and the write/lifecycle command in their assigned later plan steps. The library never grants write authority."

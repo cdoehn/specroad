@@ -37,7 +37,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_requirement_approval.py::test_each_human_criterion_must_be_confirmed",
-    "tests/test_requirement_approval.py::test_human_review_is_required_even_with_all_services_passed"
+    "tests/test_requirement_approval.py::test_human_review_is_required_even_with_all_services_passed",
+    "tests/test_requirement_approval_right.py::test_false_human_criteria_are_not_truthy_labels",
+    "tests/test_requirement_approval_right.py::test_review_is_stale_after_language_force_or_statement_change"
   ],
   "open_items": [
     "Integrate trusted authorization/review selection, complete current semantic service results and the write/lifecycle command in their assigned later plan steps. The library never grants write authority."
