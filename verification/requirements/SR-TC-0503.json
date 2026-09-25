@@ -4,19 +4,36 @@
   "requirement_id": "SR-REQ-0503",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0012",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CHANGE-PLAN-v1"
+  ],
+  "preconditions": [
+    "Explicit immutable regular Change Plan values and synthetic, field-valid artifact data."
+  ],
+  "steps": [
+    "Construct and parse the actual 1.2.0 plan; preserve ordered operations and bound values.",
+    "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder andere Operationstyp MUSS den für ihn in Kapitel 10 definierten typisierten Operationsvertrag verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure schema, typed-operation and canonical-hash validation only. No patch execution, live preconditions, metadata computation, transaction publication, signature or approval proof."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV070",
+    "SRV146",
+    "SRV174"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/operations",
+    "/result_artifacts",
+    "/change_plan_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +45,16 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_change_plans.py::test_unknown_operation_and_external_loader_declaration_rejected_without_io",
+    "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[evidence]",
+    "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[baseline]",
+    "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[proposal]",
+    "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[relation_review]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate with isolated RFC-6902 execution, ordered operation folding, actual precondition validation, metadata/lifecycle policies and the transaction writer in the scheduled later steps.",
+    "Dedicated evidence/review/proposal services must authenticate authority and compute coupled effects; the parsed workflow name grants no rights.",
+    "Full-runtime CI evidence is required separately; selected local tests are not a complete regression run."
   ]
 }

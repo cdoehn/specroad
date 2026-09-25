@@ -38,7 +38,8 @@
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
-    "SR-FIX-READ-ONLY-PROJECT-v1"
+    "SR-FIX-READ-ONLY-PROJECT-v1",
+    "SR-FIX-CHANGE-PLAN-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -192,6 +193,10 @@
     "SR-FIX-READ-ONLY-PROJECT-v1": {
       "provider": "tests/support/read_only.py:make_project",
       "kind": "owned project bytes with readonly permissions and write-attempt traps; shallow operational observation, not journal completion or lock ownership proof"
+    },
+    "SR-FIX-CHANGE-PLAN-v1": {
+      "provider": "tests/support/change_plans.py:document",
+      "kind": "Synthetic versioned plan and typed operations; no live-state verification, authenticated review or write authority."
     }
   }
 }
