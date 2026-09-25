@@ -93,3 +93,11 @@ There are no restrictions on a legitimate loopback interface beyond the selected
 source/target type contracts. The core quality projection supports comparison
 operators eq/ne/lt/lte/gt/gte and their symbolic forms, scalar target values or
 explicit numeric value/unit pairs. It does not guess other predicate semantics.
+
+## Module boundaries
+
+`approval_values` owns input bindings, reviews and service observations.
+`_approval_formal` checks formal prerequisites; `_approval_review` observes the
+explicitly verified human decision. `_approval_findings` produces shared
+structured findings. The public orchestration combines those independent
+results; it is not a transition writer.

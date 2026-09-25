@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 176
-last_completed_plan_commit: 4.q.R
-next_plan_commit: 4.q.C
-last_completed_numbered_bundle: 21
+implementation_plan_commits_completed: 177
+last_completed_plan_commit: 4.q.C
+next_plan_commit: 4.r.W
+last_completed_numbered_bundle: 22
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2365,7 +2365,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.q.C – Make it Clean
 
-- [ ] **4.q.C** · Position **177/885** · Voraussetzung: `4.q.R`.
+- [x] **4.q.C** · Position **177/885** · Voraussetzung: `4.q.R`.
 **Exakte Commit-Message:** `4.q.C refactor(validation): Requirement-Approval-Gates bereinigen`
 
 **Bereinigung:** Formale Gateprüfung und fachliche Reviewentscheidung getrennt modellieren.
