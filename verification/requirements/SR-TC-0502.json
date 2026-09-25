@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Construct and parse the actual 1.2.0 plan; preserve ordered operations and bound values.",
-    "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections."
+    "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections.",
+    "Verify supplied result ownership, immutable record consistency and non-bypassable generic routes; do not claim that live state was checked."
   ],
   "oracle": {
     "kind": "behavior",
@@ -53,7 +54,9 @@
     "tests/test_change_plans.py::test_each_core_operation_has_a_real_closed_typed_contract[relation_remove]",
     "tests/test_change_plans.py::test_each_core_operation_has_a_real_closed_typed_contract[transition]",
     "tests/test_change_plans.py::test_each_core_operation_has_a_real_closed_typed_contract[retire]",
-    "tests/test_change_plans.py::test_each_core_operation_has_a_real_closed_typed_contract[evidence_record]"
+    "tests/test_change_plans.py::test_each_core_operation_has_a_real_closed_typed_contract[evidence_record]",
+    "tests/test_change_plans_right.py::test_sequential_operations_preserve_order_but_do_not_execute_or_fold",
+    "tests/test_change_plans_right.py::test_missing_or_unclaimed_result_id_is_rejected"
   ],
   "open_items": [
     "Integrate with isolated RFC-6902 execution, ordered operation folding, actual precondition validation, metadata/lifecycle policies and the transaction writer in the scheduled later steps.",

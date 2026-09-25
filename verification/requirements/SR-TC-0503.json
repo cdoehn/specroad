@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Construct and parse the actual 1.2.0 plan; preserve ordered operations and bound values.",
-    "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections."
+    "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections.",
+    "Verify supplied result ownership, immutable record consistency and non-bypassable generic routes; do not claim that live state was checked."
   ],
   "oracle": {
     "kind": "behavior",
@@ -50,7 +51,9 @@
     "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[evidence]",
     "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[baseline]",
     "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[proposal]",
-    "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[relation_review]"
+    "tests/test_change_plans.py::test_generic_create_cannot_fabricate_special_records[relation_review]",
+    "tests/test_change_plans_right.py::test_normalization_cannot_target_immutable_or_operational_files",
+    "tests/test_change_plans_right.py::test_declared_special_workflow_is_not_an_authorization_token"
   ],
   "open_items": [
     "Integrate with isolated RFC-6902 execution, ordered operation folding, actual precondition validation, metadata/lifecycle policies and the transaction writer in the scheduled later steps.",

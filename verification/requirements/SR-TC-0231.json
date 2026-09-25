@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Construct and parse the actual 1.2.0 plan; preserve ordered operations and bound values.",
-    "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections."
+    "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections.",
+    "Verify supplied result ownership, immutable record consistency and non-bypassable generic routes; do not claim that live state was checked."
   ],
   "oracle": {
     "kind": "behavior",
@@ -47,7 +48,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_change_plans.py::test_create_plan_is_bound_and_roundtrips_without_changing_values",
-    "tests/test_change_plans.py::test_shape_validation_never_grants_execution_or_write_authority"
+    "tests/test_change_plans.py::test_shape_validation_never_grants_execution_or_write_authority",
+    "tests/test_change_plans_right.py::test_all_operation_shapes_can_coexist_without_execution",
+    "tests/test_change_plans_right.py::test_no_file_or_process_effects_for_valid_and_invalid_plans"
   ],
   "open_items": [
     "Integrate with isolated RFC-6902 execution, ordered operation folding, actual precondition validation, metadata/lifecycle policies and the transaction writer in the scheduled later steps.",

@@ -45,7 +45,10 @@ def _reference(value, pointer):
         raise ChangePlanError("invalid_artifact_reference", pointer=pointer)
     kind = next((item.artifact_type for item in artifact_types() if item.prefix == parts[1]), None)
     scheme = "legacy-sequential-v1" if re.fullmatch(r"[0-9]{4}", parts[2]) else "random128-v1"
-    return _at(pointer, ArtifactIdentity, value, scheme, kind, parts[0])
+    try:
+        return ArtifactIdentity(value, scheme, kind, parts[0])
+    except ModelError as error:
+        raise ChangePlanError(error.reason, pointer=pointer) from error
 
 
 def _artifact(value, pointer, expected_type=None):
@@ -59,7 +62,10 @@ def _artifact(value, pointer, expected_type=None):
 
 def _generic(identity, pointer):
     if identity.artifact_type in SPECIAL_STATES:
-        _at(pointer, require_generic_mutation, identity.artifact_type, "patch")
+        try:
+            require_generic_mutation(identity.artifact_type, "patch")
+        except ModelError as error:
+            raise ChangePlanError(error.reason, pointer=pointer) from error
 
 
 def _pointer(value, pointer):
@@ -80,7 +86,7 @@ def _patch(items, pointer):
         _pointer(item["path"], at + "/path")
         if item["op"] != "test":
             _mutable_pointer(item["path"], at + "/path")
-        if "from" in item:
+        if item["op"] in ("move", "copy"):
             _pointer(item["from"], at + "/from")
             if item["op"] == "move":
                 _mutable_pointer(item["from"], at + "/from")
@@ -140,6 +146,126 @@ def _validate_operation(value, pointer=""):
     elif kind == "proposal_control":
         if _reference(value["target"], pointer + "/target").artifact_type != "proposal":
             raise ChangePlanError("proposal_target_required", pointer=pointer + "/target")
+    _operation_right(value, pointer)
+    return value
+
+
+def _targets(value):
+    """Declared result owners; not an execution/folding algorithm."""
+    kind = value["op"]
+    if kind == "create":
+        return (value["result_id"],)
+    if kind == "evidence_record":
+        return (value["evidence"]["id"],)
+    if kind == "relation_review_record":
+        return (value["record"]["id"], *(v["target"] for v in value["approval_withdrawals"]))
+    if kind == "representation_normalize":
+        return ()
+    return (value["source"] if kind in ("relation_add", "relation_remove") else value["target"],)
+
+
+def _result_bindings(value):
+    """Check local declarations only; never resolve project paths or revisions."""
+    results = {v["artifact"]["id"]: v for v in value["result_artifacts"]}
+    owners, created, relations = set(), set(), set()
+    counts = {}
+    for op in value["operations"]:
+        for target in _targets(op):
+            counts[target] = counts.get(target, 0) + 1
+    for index, operation in enumerate(value["operations"]):
+        at = "/operations/" + str(index)
+        owners.update(_targets(operation))
+        kind = operation["op"]
+        if kind in ("create", "evidence_record", "relation_review_record"):
+            field = {"create": "artifact", "evidence_record": "evidence", "relation_review_record": "record"}[kind]
+            artifact = operation[field]
+            if artifact["id"] in created:
+                raise ChangePlanError("duplicate_creation_identity", pointer=at, code="SRV146")
+            created.add(artifact["id"])
+            if artifact["id_scheme"] != "random128-v1":
+                raise ChangePlanError("new_identity_requires_random128", pointer=at + "/" + field + "/id_scheme")
+            if (kind != "create" or counts[artifact["id"]] == 1) and artifact["id"] in results:
+                if canonical_json_sha256(artifact) != results[artifact["id"]]["sha256"]:
+                    raise ChangePlanError("immutable_record_result_mismatch" if kind != "create" else "creation_result_mismatch", pointer=at, code="SRV146")
+        if kind == "proposal_control" and operation["target"] in results:
+            final = results[operation["target"]]["artifact"]
+            if (final["content_revision"] != operation["content_revision"]
+                    or final["content_sha256"] != operation["content_sha256"]
+                    or final["proposal_status"] != operation["events"][-1]["to"]):
+                raise ChangePlanError("proposal_control_result_mismatch", pointer=at, code="SRV146")
+        if kind == "relation_add":
+            identity = operation["relation"]["relation_id"]
+            if identity in relations:
+                raise ChangePlanError("duplicate_new_relation_id", pointer=at + "/relation/relation_id")
+            relations.add(identity)
+        if kind == "relation_review_record" and value["actor"]["actor_type"] != "human":
+            raise ChangePlanError("human_review_planner_required", pointer="/actor")
+    if set(results) != owners:
+        raise ChangePlanError("result_owner_set_mismatch", pointer="/result_artifacts", code="SRV146")
+    if not value["operations"] and value["base"]["model_root_sha256"] != value["expected_result"]["model_root_sha256"]:
+        raise ChangePlanError("empty_plan_changed_root", pointer="/expected_result", code="SRV146")
+    # Duplicate assertions cannot hide contradictory conditions behind order.
+    seen = set()
+    for index, condition in enumerate(value["preconditions"]):
+        key = (("artifact", condition["artifact_id"]) if condition["kind"] == "artifact"
+               else ("path", condition["path"]))
+        if key in seen:
+            raise ChangePlanError("duplicate_precondition_target", pointer="/preconditions/" + str(index))
+        seen.add(key)
+
+
+def _normalization_path(value, pointer):
+    _at(pointer, project_path, value)
+    if value == "specroad.json":
+        return
+    parts = value.split("/")
+    if parts[0] in ("profiles", "rules", "mappings") and len(parts) > 1 and value.endswith(".json"):
+        return
+    if len(parts) == 3 and parts[0] == "spec" and parts[2].endswith(".json"):
+        identity = _reference(parts[2][:-5], pointer)
+        _generic(identity, pointer)
+        if identity.path == value:
+            return
+    raise ChangePlanError("normalization_resource_not_supported", pointer=pointer)
+
+
+def _operation_right(value, pointer):
+    """Locally decidable workflow checks. None authenticates a caller."""
+    kind = value["op"]
+    if kind == "representation_normalize":
+        _normalization_path(value["path"], pointer + "/path")
+    elif kind == "transition":
+        if value["from"] == value["to"]:
+            raise ChangePlanError("transition_requires_distinct_states", pointer=pointer + "/to")
+        # No arbitrary core field changes inside the metadata channel.
+        metadata = value["metadata"]
+        if set(metadata) & (_CONTROLLED | {v[0] for v in SPECIAL_STATES.values()}):
+            raise ChangePlanError("controlled_transition_metadata", pointer=pointer + "/metadata")
+    elif kind == "relation_review_record":
+        seen = set()
+        if value["source"] == value["target"]:
+            raise ChangePlanError("relation_self_reference", pointer=pointer + "/target")
+        for index, withdrawal in enumerate(value["approval_withdrawals"]):
+            at = pointer + "/approval_withdrawals/" + str(index)
+            identity = _reference(withdrawal["target"], at + "/target")
+            if identity.artifact_type != "requirement" or identity.id in seen:
+                raise ChangePlanError("invalid_approval_withdrawal_target", pointer=at + "/target")
+            seen.add(identity.id); _text(withdrawal["reason"], at + "/reason")
+    elif kind == "proposal_control":
+        transitions = {
+            "draft": {"validated", "rejected", "stale"},
+            "validated": {"checked", "rejected", "stale"},
+            "checked": {"in_review", "rejected", "stale"},
+            "in_review": {"approved", "rejected", "stale"},
+            "approved": {"applied", "rejected", "stale"},
+        }
+        previous = None
+        for index, event in enumerate(value["events"]):
+            at = pointer + "/events/" + str(index)
+            _text(event["reason"], at + "/reason")
+            if event["to"] not in transitions.get(event["from"], ()) or previous is not None and previous != event["from"]:
+                raise ChangePlanError("invalid_proposal_control_sequence", pointer=at)
+            previous = event["to"]
     return value
 
 
@@ -149,6 +275,9 @@ def _validate_plan(value, *, hash_present=True):
     if value.get("metadata_policy_version") != METADATA_POLICY:
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
     schema = change_plan_schema()
+    # Dispatch tagged operation validation separately for precise diagnostics;
+    # the public schema still exposes the complete union of payload contracts.
+    schema["properties"]["operations"]["items"] = {"type": "object"}
     if not hash_present:
         schema["required"].remove("change_plan_sha256")
         schema["properties"].pop("change_plan_sha256")
@@ -175,6 +304,7 @@ def _validate_plan(value, *, hash_present=True):
         seen.add(identity.id)
         if canonical_json_sha256(result["artifact"]) != result["sha256"]:
             raise ChangePlanError("result_hash_mismatch", pointer=at + "/sha256", code="SRV146")
+    _result_bindings(value)
     if hash_present:
         expected = canonical_json_sha256({k: v for k, v in value.items() if k != "change_plan_sha256"})
         if expected != value["change_plan_sha256"]:
@@ -199,6 +329,14 @@ class ChangeOperation:
     @property
     def op(self):
         return self.data["op"]
+
+    @property
+    def required_workflow(self):
+        return self.op if self.op in {"evidence_record", "relation_review_record", "proposal_control", "representation_normalize"} else "regular"
+
+    @property
+    def result_ids(self):
+        return _targets(self.data)
 
     @property
     def executable(self):

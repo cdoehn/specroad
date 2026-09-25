@@ -48,3 +48,20 @@ The schema is currently exposed as a Python API, not registered as a new CLI com
 Local gates execute only the new change-plan tests with four xdist workers.
 The complete CI stays on the final bundle commit; bundle 024 uses parallel CI,
 bundle 025 again adds the serial reference and evidence comparison.
+
+The robust boundary also checks the **declared result-owner set**: modified
+artifact identities and declared final artifacts must agree. A sole create and
+immutable evidence/review records must match their declared final bytes-by-value
+hash; sequences of mutable operations are not simulated here. Duplicate creation
+IDs, new relation IDs and overlapping precondition targets are errors. Empty
+plans cannot declare a changed model root. These are internal consistency checks,
+not proof that the supplied model root or preconditions describe live storage.
+
+Normalization in this regular data API is limited to project configuration,
+profile/rule/mapping JSON and ordinary artifact paths. Special-record, generated,
+archive, attachment and operational paths are refused. A later specialized
+planner can supply any additional state-aware normalization contract; this API
+does not guess that a proposal or baseline is still editable. Review withdrawal
+owners must be distinct requirements; proposal event sequences must be continuous
+and compatible with the declared final control state. Human actor metadata is
+required where specified, but is never authentication or review authorization.
