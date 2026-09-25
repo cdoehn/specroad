@@ -36,7 +36,8 @@
     "SR-FIX-LANGUAGE-POLICY-v1",
     "SR-FIX-CONTAINER-LANGUAGES-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
-    "SR-FIX-DIAGNOSTICS-v1"
+    "SR-FIX-DIAGNOSTICS-v1",
+    "SR-FIX-REQUIREMENT-APPROVAL-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -182,6 +183,10 @@
     "SR-FIX-DIAGNOSTICS-v1": {
       "provider": "tests/test_diagnostics.py:finding",
       "kind": "Owned diagnostic values and bound loaded-model observations; no provenance authentication, automatic lint execution or full project approval."
+    },
+    "SR-FIX-REQUIREMENT-APPROVAL-v1": {
+      "provider": "tests/support/approval.py:context",
+      "kind": "owned loaded requirements and explicitly synthetic trusted-service/human-review observations; no real identity authentication or write approval"
     }
   }
 }

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 174
-last_completed_plan_commit: 4.p.C
-next_plan_commit: 4.q.W
+implementation_plan_commits_completed: 175
+last_completed_plan_commit: 4.q.W
+next_plan_commit: 4.q.R
 last_completed_numbered_bundle: 21
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2347,7 +2347,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.q.W – Let it Work
 
-- [ ] **4.q.W** · Position **175/885** · Voraussetzung: `4.p.C`.
+- [x] **4.q.W** · Position **175/885** · Voraussetzung: `4.p.C`.
 **Exakte Commit-Message:** `4.q.W feat(validation): Requirement-Approval-Gates aufbauen`
 
 **Umsetzung:** Formale Pflichtdaten, messbare Qualitätsfelder, Interfacegrenzen und menschliche Reviewbindung vor Freigabe prüfen.
