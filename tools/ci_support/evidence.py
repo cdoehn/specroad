@@ -48,9 +48,12 @@ def inspect_report_archive(raw, request, version):
             'source_bound': request.source_sha256 is not None, 'comparison': comparison}
 
 
-def collect_artifacts(client, request, run_id, attempt, files):
+def collect_artifacts(client, request, run_id, attempt, files, *, retry=None):
     """Names include attempt: no reuse of an older run's successful evidence."""
-    artifacts = records(client, f'repos/{REPOSITORY}/actions/runs/{run_id}/artifacts', 'artifacts')
+    # Retry only GET/collection transport; never retry away an integrity failure.
+    retry = (lambda call: call()) if retry is None else retry
+    artifacts = retry(lambda: records(client,
+        f'repos/{REPOSITORY}/actions/runs/{run_id}/artifacts', 'artifacts'))
     files['artifact-index.json'] = json_bytes(artifacts)
     reports, errors = [], []
     for version in PYTHONS:
@@ -64,7 +67,8 @@ def collect_artifacts(client, request, run_id, attempt, files):
             if (type(binding) is not dict or binding.get('id') != run_id
                     or binding.get('head_sha') != request.commit or binding.get('head_branch') != 'dev'):
                 raise CIObservationError('artifact_binding_mismatch')
-            raw = client.get(f"repos/{REPOSITORY}/actions/artifacts/{artifact['id']}/zip")
+            raw = retry(lambda: client.get(
+                f"repos/{REPOSITORY}/actions/artifacts/{artifact['id']}/zip"))
             expected = artifact.get('digest')
             if expected is not None and expected != 'sha256:' + sha256(raw).hexdigest():
                 raise CIObservationError('artifact_digest_mismatch')

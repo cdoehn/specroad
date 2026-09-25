@@ -72,7 +72,7 @@ def observe_ci(request, *, client=None, progress=None, sleeper=None, discovery_p
             summary['logs_captured'] = True
         except (CIObservationError, OSError, ValueError, zipfile.BadZipFile, RuntimeError) as error:
             summary['errors'].append({'phase': 'logs', 'reason': str(error)[:200]})
-        reports, artifact_errors = collect_artifacts(client, request, run_id, attempt, files)
+        reports, artifact_errors = collect_artifacts(client, request, run_id, attempt, files, retry=retry)
         summary['test_reports'] = reports
         summary['errors'].extend(artifact_errors)
         summary['test_evidence_verified'] = (len(reports) == len(PYTHONS) and request.source_sha256 is not None)
