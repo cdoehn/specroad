@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 182
-last_completed_plan_commit: 5.a.R
-next_plan_commit: 5.a.C
-last_completed_numbered_bundle: 23
+implementation_plan_commits_completed: 183
+last_completed_plan_commit: 5.a.C
+next_plan_commit: 5.b.W
+last_completed_numbered_bundle: 24
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2447,7 +2447,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.a.C – Make it Clean
 
-- [ ] **5.a.C** · Position **183/885** · Voraussetzung: `5.a.R`.
+- [x] **5.a.C** · Position **183/885** · Voraussetzung: `5.a.R`.
 **Exakte Commit-Message:** `5.a.C refactor(changes): Change-Plan-Schema und Operationen bereinigen`
 
 **Bereinigung:** Planmodell und Fachoperationsadapter über ein explizites Register trennen.

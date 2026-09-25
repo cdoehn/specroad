@@ -65,3 +65,10 @@ does not guess that a proposal or baseline is still editable. Review withdrawal
 owners must be distinct requirements; proposal event sequences must be continuous
 and compatible with the declared final control state. Human actor metadata is
 required where specified, but is never authentication or review authorization.
+
+The Clean state uses one fixed operation registry tying each tag to its fresh
+schema provider, domain validator, result-owner projection and workflow label.
+There is no registration API and data cannot name executable providers. The
+plan-envelope/result-binding checks and immutable values are separate from these
+adapters. Public plan and operation payloads, canonical hashes, original bytes
+and structured rejections are unchanged by this internal refactoring.
