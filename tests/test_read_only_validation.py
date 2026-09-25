@@ -172,7 +172,7 @@ class ReadOnlyValidationTests(unittest.TestCase):
         before = inventory(self.root)
         with no_write_attempts():
             r = lint_project_read_only(self.root, policy=literal_policy(), selected_ids=(a["id"],))
-        self.assertEqual(r.exit_code, 3)
+        self.assertEqual(r.exit_code, 1)
         self.assertEqual(r.data["lint"]["diagnostics"][0]["code"], "SRV033")
         self.assertEqual(inventory(self.root), before)
 

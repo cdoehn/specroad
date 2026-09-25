@@ -62,3 +62,28 @@ fifth bundle. Spec, existing CI workflow, observer and dependencies are unchange
 
 Source-bound observations must not be reused as transaction write authorization.
 The later planner/writer must independently revalidate state under its own lock.
+
+## Completion and failure contracts
+
+The reader rechecks operational metadata immediately before starting the normal
+model read, after profile composition. Creation of recovery metadata at that
+boundary blocks model loading. Configuration and complete artifact membership
+are checked before and after the final content pass; the source observation
+binds exact config bytes and source hashes, not only mtimes or file sizes.
+`freshness_verified` certifies only these repeated observations. It is not an
+atomic snapshot or reusable write token. Recognized changes discard the proposed
+successful validation/lint result; no stale success body is returned.
+
+Facade exit codes follow the operation boundary: usage/configuration/profile
+conflicts 2, malformed model 3, I/O/recovery/unavailable checks 5, unsafe paths 7,
+and a reached lint threshold 1. Producer-specific diagnostics are retained, with
+an explicitly named producer exit code when their narrow library classification
+differs from this facade. Missing applicable lint checks yield `passed=null` and
+`status=incomplete`; a successful metadata diagnostic has no model-pass claim.
+Warning severity is not raised by `strict`, only the failure threshold changes.
+
+No project-path output parameter is exposed here. Explicit report-file outputs,
+full N.2 preflight accounting, ownership resolution and persistent transaction
+changes remain in their own planned components. This layer does not declare
+journals committed by reading a string, probe process IDs, or fall back to an old
+cache. It does not attempt to repair permissions after a denied read.

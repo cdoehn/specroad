@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from hashlib import sha256
 
-from ..model.canonical import canonical_json_bytes
+from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..model.paths import PathClass, artifact_path
 from ..security import ProjectBoundary, SafetyViolation
@@ -89,30 +89,44 @@ def _operational_metadata(boundary):
             "writer_owner": None, "writer_ownership_verified": False,
             "journal_contents_loaded": False, "cache_contents_loaded": False,
             "recovery_performed": False, "model_loaded": False,
-            "inspection_scope": "shallow_operational_entries", "atomic_snapshot": False}
+            "inspection_scope": "shallow_operational_entries",
+            "operational_directory_present": entries is not None, "atomic_snapshot": False}
 
 
 def _base(operation):
     return {"format_version": READ_ONLY_VERSION, "operation": operation,
             "passed": None, "checks_complete": False, "exit_code": 5, "status": "blocked",
+            "phase": "arguments",
             "normal_operation_started": False, "model_loaded": False,
             "project_id": None, "read_only": True, "project_complete": False,
             "write_authorized": False, "approval_granted": False,
             "atomic_snapshot": False, "operational": None, "diagnostics": [],
-            "source_bindings": [], "validation": None, "lint": None}
+            "source_bindings": [], "configuration_sha256": None,
+            "freshness_verified": False, "source_observation_sha256": None,
+            "validation": None, "lint": None}
 
 
 def _failure(data, error):
     if isinstance(error, ModelError):
         diagnostic = error.diagnostic()
-        code = 3
+        if error.reason in ("operational_metadata_changed", "read_only_membership_changed",
+                            "read_only_source_changed", "read_only_project_replaced", "configuration_changed"):
+            code = 5
+        elif isinstance(error, ProfileCompositionError) or data["phase"] in ("arguments", "configuration", "profiles"):
+            code = 2
+        else:
+            code = 3
     elif isinstance(error, SafetyViolation):
         diagnostic = {"reason": "unsafe_project_read"}
-        code = 5
+        code = 7
     else:
         diagnostic = {"reason": "project_read_unavailable", "errno": error.errno}
         code = 5
-    data.update(status="failed", passed=False, exit_code=code,
+    if "exit_code" in diagnostic and diagnostic["exit_code"] != code:
+        diagnostic["producer_exit_code"] = diagnostic["exit_code"]
+    diagnostic["exit_code"] = code
+    data.update(status="failed", passed=False, exit_code=code, checks_complete=False,
+                freshness_verified=False, source_observation_sha256=None,
                 validation=None, lint=None, diagnostics=[diagnostic])
     return ReadOnlyResult._create(data)
 
@@ -133,6 +147,7 @@ def diagnose_read_only(root):
     """
     data = _base("diagnose")
     try:
+        data["phase"] = "operational"
         boundary = ProjectBoundary(root)
         first = _operational_metadata(boundary)
         if _operational_metadata(boundary) != first:
@@ -174,23 +189,48 @@ def _fresh(source, operational, documents):
         if source.read_normative(document.path) != document.content:
             raise ModelError("read_only_source_changed", path=document.path)
     source.check_current()
+    if _artifact_names(source) != tuple(document.path for document in documents):
+        raise ModelError("read_only_membership_changed")
     if _operational_metadata(source.boundary) != operational:
         raise ModelError("operational_metadata_changed")
 
 
 def _source(root, data, expected_project_id):
+    data["phase"] = "operational"
     boundary = ProjectBoundary(root)
     observation = _operational_metadata(boundary)
     data["operational"] = observation
     if observation["consistency_state"] != "consistent":
         return None, observation
+    data["phase"] = "configuration"
     source = ProjectSource(boundary.root, expected_project_id=expected_project_id)
     # ProjectSource creates its own capability. Reject replacement in between.
     boundary._check_root()
     if boundary._root_identity != source.boundary._root_identity:
         raise ModelError("read_only_project_replaced")
     data["project_id"] = source.configuration.project_id
+    data["configuration_sha256"] = sha256(source.configuration_bytes).hexdigest()
     return source, observation
+
+
+def _ready(source, observation, data):
+    """Recheck immediately before the model read, after caller-supplied composition."""
+    source.check_current()
+    current = _operational_metadata(source.boundary)
+    if current != observation:
+        data["operational"] = current
+        if current["consistency_state"] != "consistent":
+            return False
+        raise ModelError("operational_metadata_changed")
+    return True
+
+
+def _record_freshness(source, observation, documents, data):
+    _fresh(source, observation, documents)
+    data["source_observation_sha256"] = canonical_json_sha256({
+        "project_id": data["project_id"], "configuration_sha256": data["configuration_sha256"],
+        "sources": data["source_bindings"], "operational": observation})
+    data["freshness_verified"] = True
 
 
 def validate_project_read_only(root, *, profile_resources, core_key, cli_profiles=(),
@@ -210,15 +250,20 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         source, observation = _source(root, data, expected_project_id)
         if source is None:
             return _blocked(data, observation)
+        data["phase"] = "profiles"
         profile = compose_profiles(profile_resources, core_key=core_key,
             project_profiles=source.configuration.data["profiles"], cli_profiles=cli_profiles)
+        data["phase"] = "operational"
+        if not _ready(source, observation, data):
+            return _blocked(data, data["operational"])
+        data["phase"] = "model"
         data["normal_operation_started"] = True
         documents = _capture_documents(source)
         data["model_loaded"] = True
         data["source_bindings"] = [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents]
         report = validate_model(documents, profile=profile, selected_ids=selected_ids, gates=gates)
         assessment = assess_validation(report, fail_on=fail_on, strict=strict, documents=documents)
-        _fresh(source, observation, documents)
+        _record_freshness(source, observation, documents, data)
         data.update(status="completed", passed=assessment.passed, exit_code=assessment.exit_code,
                     checks_complete=report.complete, validation=assessment.as_dict())
         return ReadOnlyResult._create(data)
@@ -248,6 +293,10 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
         source, observation = _source(root, data, expected_project_id)
         if source is None:
             return _blocked(data, observation)
+        data["phase"] = "operational"
+        if not _ready(source, observation, data):
+            return _blocked(data, data["operational"])
+        data["phase"] = "model"
         data["normal_operation_started"] = True
         documents = _capture_documents(source)
         data["model_loaded"] = True
@@ -270,13 +319,13 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
                 raise ModelError("read_only_selected_id_missing")
             document, value = indexed[identity]
             results.append(lint_literals(value, glossary=glossary, policy=policy, path=document.path))
-        _fresh(source, observation, documents)
+        _record_freshness(source, observation, documents, data)
         findings = [finding for result in results for finding in result["diagnostics"]]
         threshold = {"info": 0, "warning": 1, "error": 2}["warning" if strict else fail_on]
         failure = any({"info": 0, "warning": 1, "error": 2}[f["severity"]] >= threshold for f in findings)
         applicable = all(r["literal_checks_passed"] is not None for r in results)
-        data.update(status="completed", passed=(not failure if applicable else None),
-                    checks_complete=applicable, exit_code=3 if failure else 0,
+        data.update(status="completed" if applicable else "incomplete", passed=(not failure if applicable else None),
+                    checks_complete=applicable, exit_code=(1 if failure else 0) if applicable else 5,
                     lint={"scope": "selected_literal_fields_only", "checked_ids": list(selected_ids),
                           "policy_sha256": policy.sha256, "glossary_sha256": glossary.sha256,
                           "reports": results, "diagnostics": findings})
