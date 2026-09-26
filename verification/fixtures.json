@@ -39,7 +39,8 @@
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-READ-ONLY-PROJECT-v1",
-    "SR-FIX-CHANGE-PLAN-v1"
+    "SR-FIX-CHANGE-PLAN-v1",
+    "SR-FIX-JSON-PATCH-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -197,6 +198,10 @@
     "SR-FIX-CHANGE-PLAN-v1": {
       "provider": "tests/support/change_plans.py:document",
       "kind": "Synthetic versioned plan and typed operations; no live-state verification, authenticated review or write authority."
+    },
+    "SR-FIX-JSON-PATCH-v1": {
+      "provider": "tests/data/json-patch-rfc6902-v1.json",
+      "kind": "RFC 6902 value vectors and owned synthetic artifact update inputs; no live transaction or CLI proof"
     }
   }
 }

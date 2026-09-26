@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0232",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-JSON-PATCH-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1"
+  ],
+  "preconditions": [
+    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash."
+  ],
+  "steps": [
+    "Apply real RFC-6902 operations in order on an isolated value snapshot.",
+    "Compile ordered set/unset inputs without implicit parent creation or type conversion.",
+    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad artifact update <ID>` MUSS RFC-6902-Patches sowie die Komfortoptionen `--set <JSON-POINTER>=<JSON-VALUE>` und `--unset <JSON-POINTER>` unterstützen und eine erwartete Revision oder einen erwarteten Hash verlangen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure RFC-6902 value execution and guarded artifact candidates. No live storage reads, full Change Plan folding, metadata advancement, lifecycle approval, CLI command or publication."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV070",
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/patch",
+    "/target",
+    "/expected_revision",
+    "/expected_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,17 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_json_patch.py::test_comfort_options_preserve_order_and_use_assignment_not_array_insertion",
+    "tests/test_json_patch.py::test_preview_update_requires_matching_explicit_preconditions",
+    "tests/test_json_patch.py::test_revision_and_hash_when_both_supplied_must_both_match",
+    "tests/test_json_patch.py::test_update_without_precondition_is_never_allowed",
+    "tests/test_json_patch.py::test_noop_patch_does_not_claim_new_revision_or_write_authority"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Wire artifact-update CLI and planner to the same preview/normalization path in the scheduled authoring step.",
+    "Apply full Change Plan folding, metadata advancement, profile/lifecycle validation and transaction-bound live preconditions in later steps.",
+    "Proposal planning must include both revision and hash; this authoring input API accepts either and checks both when supplied.",
+    "Full supported Python matrix is evaluated by CI; local selected tests are not complete suite evidence."
   ]
 }

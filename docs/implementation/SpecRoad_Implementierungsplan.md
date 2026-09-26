@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 183
-last_completed_plan_commit: 5.a.C
-next_plan_commit: 5.b.W
+implementation_plan_commits_completed: 184
+last_completed_plan_commit: 5.b.W
+next_plan_commit: 5.b.R
 last_completed_numbered_bundle: 24
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2464,7 +2464,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.b.W – Let it Work
 
-- [ ] **5.b.W** · Position **184/885** · Voraussetzung: `5.a.C`.
+- [x] **5.b.W** · Position **184/885** · Voraussetzung: `5.a.C`.
 **Exakte Commit-Message:** `5.b.W feat(changes): RFC-6902 und Komfortpatches aufbauen`
 
 **Umsetzung:** JSON-Patch sowie set/unset nach JSON Pointer auf einem isolierten Stand auswerten.

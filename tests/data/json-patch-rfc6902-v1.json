@@ -1,0 +1,315 @@
+{
+  "format_version": 1,
+  "source": "RFC 6902 Appendix A; RFC 6901 pointer semantics",
+  "reference": "https://www.rfc-editor.org/rfc/rfc6902",
+  "cases": [
+    {
+      "id": "A1",
+      "document": {
+        "foo": "bar"
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/baz",
+          "value": "qux"
+        }
+      ],
+      "expected": {
+        "foo": "bar",
+        "baz": "qux"
+      }
+    },
+    {
+      "id": "A2",
+      "document": {
+        "foo": [
+          "bar",
+          "baz"
+        ]
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/foo/1",
+          "value": "qux"
+        }
+      ],
+      "expected": {
+        "foo": [
+          "bar",
+          "qux",
+          "baz"
+        ]
+      }
+    },
+    {
+      "id": "A3",
+      "document": {
+        "baz": "qux",
+        "foo": "bar"
+      },
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/baz"
+        }
+      ],
+      "expected": {
+        "foo": "bar"
+      }
+    },
+    {
+      "id": "A4",
+      "document": {
+        "foo": [
+          "bar",
+          "qux",
+          "baz"
+        ]
+      },
+      "patch": [
+        {
+          "op": "remove",
+          "path": "/foo/1"
+        }
+      ],
+      "expected": {
+        "foo": [
+          "bar",
+          "baz"
+        ]
+      }
+    },
+    {
+      "id": "A5",
+      "document": {
+        "baz": "qux",
+        "foo": "bar"
+      },
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/baz",
+          "value": "boo"
+        }
+      ],
+      "expected": {
+        "baz": "boo",
+        "foo": "bar"
+      }
+    },
+    {
+      "id": "A6",
+      "document": {
+        "foo": {
+          "bar": "baz",
+          "waldo": "fred"
+        },
+        "qux": {
+          "corge": "grault"
+        }
+      },
+      "patch": [
+        {
+          "op": "move",
+          "from": "/foo/waldo",
+          "path": "/qux/thud"
+        }
+      ],
+      "expected": {
+        "foo": {
+          "bar": "baz"
+        },
+        "qux": {
+          "corge": "grault",
+          "thud": "fred"
+        }
+      }
+    },
+    {
+      "id": "A7",
+      "document": {
+        "foo": [
+          "all",
+          "grass",
+          "cows",
+          "eat"
+        ]
+      },
+      "patch": [
+        {
+          "op": "move",
+          "from": "/foo/1",
+          "path": "/foo/3"
+        }
+      ],
+      "expected": {
+        "foo": [
+          "all",
+          "cows",
+          "eat",
+          "grass"
+        ]
+      }
+    },
+    {
+      "id": "A8",
+      "document": {
+        "baz": "qux",
+        "foo": [
+          "a",
+          2,
+          "c"
+        ]
+      },
+      "patch": [
+        {
+          "op": "test",
+          "path": "/baz",
+          "value": "qux"
+        },
+        {
+          "op": "test",
+          "path": "/foo/1",
+          "value": 2
+        }
+      ],
+      "expected": {
+        "baz": "qux",
+        "foo": [
+          "a",
+          2,
+          "c"
+        ]
+      }
+    },
+    {
+      "id": "A10",
+      "document": {
+        "foo": "bar"
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/child",
+          "value": {
+            "grandchild": {}
+          }
+        }
+      ],
+      "expected": {
+        "foo": "bar",
+        "child": {
+          "grandchild": {}
+        }
+      }
+    },
+    {
+      "id": "A11",
+      "document": {
+        "foo": "bar"
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/baz",
+          "value": "qux",
+          "xyz": 123
+        }
+      ],
+      "expected": {
+        "foo": "bar",
+        "baz": "qux"
+      }
+    },
+    {
+      "id": "A14",
+      "document": {
+        "/": 9,
+        "~1": 10
+      },
+      "patch": [
+        {
+          "op": "test",
+          "path": "/~01",
+          "value": 10
+        }
+      ],
+      "expected": {
+        "/": 9,
+        "~1": 10
+      }
+    },
+    {
+      "id": "A16",
+      "document": {
+        "foo": [
+          "bar"
+        ]
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/foo/-",
+          "value": [
+            "abc",
+            "def"
+          ]
+        }
+      ],
+      "expected": {
+        "foo": [
+          "bar",
+          [
+            "abc",
+            "def"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "A9",
+      "document": {
+        "baz": "qux"
+      },
+      "patch": [
+        {
+          "op": "test",
+          "path": "/baz",
+          "value": "bar"
+        }
+      ],
+      "error": "test_failed"
+    },
+    {
+      "id": "A12",
+      "document": {
+        "foo": "bar"
+      },
+      "patch": [
+        {
+          "op": "add",
+          "path": "/baz/bat",
+          "value": "qux"
+        }
+      ],
+      "error": "pointer_missing"
+    },
+    {
+      "id": "A15",
+      "document": {
+        "/": 9,
+        "~1": 10
+      },
+      "patch": [
+        {
+          "op": "test",
+          "path": "/~01",
+          "value": "10"
+        }
+      ],
+      "error": "test_failed"
+    }
+  ]
+}

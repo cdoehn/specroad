@@ -5,3 +5,8 @@ from .errors import ChangePlanError
 
 __all__ = ["ChangePlan", "ChangeOperation", "prepare_change_plan", "change_plan_schema",
            "operation_schema", "OPERATION_TYPES", "ChangePlanError"]
+
+from .patching import (JsonPatch, JsonPatchError, PatchResult, UpdatePreview,
+                       apply_json_patch, compile_field_patch, preview_update)
+__all__ += ["JsonPatch", "JsonPatchError", "PatchResult", "UpdatePreview",
+            "apply_json_patch", "compile_field_patch", "preview_update"]

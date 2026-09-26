@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0160",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0012",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-JSON-PATCH-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1"
+  ],
+  "preconditions": [
+    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash."
+  ],
+  "steps": [
+    "Apply real RFC-6902 operations in order on an isolated value snapshot.",
+    "Compile ordered set/unset inputs without implicit parent creation or type conversion.",
+    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine `update`-Operation MUSS einen RFC-6902-kompatiblen JSON Patch verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure RFC-6902 value execution and guarded artifact candidates. No live storage reads, full Change Plan folding, metadata advancement, lifecycle approval, CLI command or publication."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV070",
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/patch",
+    "/target",
+    "/expected_revision",
+    "/expected_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,18 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_json_patch.py::test_rfc6902_examples",
+    "tests/test_json_patch.py::test_array_operations_use_the_previous_operation_result",
+    "tests/test_json_patch.py::test_root_removal_is_absent_not_null",
+    "tests/test_json_patch.py::test_failure_stops_before_later_operations_and_keeps_original",
+    "tests/test_json_patch.py::test_copy_then_edit_does_not_change_source",
+    "tests/test_json_patch.py::test_final_candidate_schema_is_checked_after_the_patch"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Wire artifact-update CLI and planner to the same preview/normalization path in the scheduled authoring step.",
+    "Apply full Change Plan folding, metadata advancement, profile/lifecycle validation and transaction-bound live preconditions in later steps.",
+    "Proposal planning must include both revision and hash; this authoring input API accepts either and checks both when supplied.",
+    "Full supported Python matrix is evaluated by CI; local selected tests are not complete suite evidence."
   ]
 }
