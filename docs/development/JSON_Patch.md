@@ -47,3 +47,34 @@ by its stronger contract; accepting either is the separate authoring input rule.
 Local gates: only new/directly affected tests, four xdist workers. Full matrix
 belongs to CI; Bundle 025 requires both parallel and serial full tests plus their
 bound result comparison. CI observation and capture are unchanged under tools/.
+
+## Robust adapters and error behavior
+
+`JsonPatch.from_bytes` accepts the complete original UTF-8 patch array. It keeps
+these bytes separately from its owned values, rejects duplicate members, invalid
+Unicode, trailing values and number precision loss using the existing strict JSON
+reader. Wrapper-relative line/byte positions are not fabricated as source positions.
+A Python-value input cannot reconstruct numeric precision already lost by an
+external JSON parser; use this raw-byte API for untrusted encoded patches.
+
+`preview_update_bytes` similarly preserves both supplied original artifact and
+operation bytes. `preview_field_update` binds the explicitly supplied revision/hash
+before attempting any set/unset option. Missing and explicit null guard arguments
+are different; invalid null is never interpreted as permission to omit a guard.
+Controlled destinations are checked before comfort operations are simulated.
+The normalized patch and its expected conditions remain in the returned typed
+operation. No result claims a persisted revision, live freshness or authorization.
+
+Root removal in the generic engine has a distinct absent-document result. It
+can be followed by root add (or a generic set converted to add), but not by a
+read/test/remove/replace of a fabricated null. Artifact preview rejects all root
+writes, even a replace that would end up restoring the original identity.
+The exact failure includes its patch-operation index and document pointer; no
+operand contents are included in structured diagnostics.
+
+The conformance cases cover the RFC 6902 Appendix A value examples (the duplicate
+`op` member in A.13 is tested through the raw parser), all array move positions
+for lengths 1–15 and 100 independent 25-operation list-splicing examples. These
+are bounded independent checks, not a claim of exhaustive verification of every
+possible JSON document. Deep value copies and equality do not use recursive
+Python calls; the existing raw parser can conservatively reject excessive depth.

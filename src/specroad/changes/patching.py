@@ -4,7 +4,7 @@ The generic engine has no artifact policy. Artifact callers must use
 preview_update, which enforces the existing controlled-field and identity gates.
 """
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import re
 from ..srx._json_values import JsonSnapshot
 from ..srx.comparisons import _equal
@@ -49,6 +49,7 @@ def _tokens(value, at):
 class JsonPatch:
     """Owned RFC-6902 operations. Unknown operation members remain passive."""
     _value: JsonSnapshot
+    source_bytes: bytes | None
 
     def __init__(self, operations):
         owned = _snapshot(operations, "/patch")
@@ -67,6 +68,15 @@ class JsonPatch:
             if item["op"] in ("move", "copy"):
                 _tokens(item.get("from"), at + "/from")
         object.__setattr__(self, "_value", owned)
+        object.__setattr__(self, "source_bytes", None)
+
+    @classmethod
+    def from_bytes(cls, raw):
+        """Parse supplied bytes only; never interpret text as a file to open."""
+        operations = _raw_value(raw, "/patch")
+        result = cls(operations)
+        object.__setattr__(result, "source_bytes", raw)
+        return result
 
     @property
     def data(self):
@@ -206,19 +216,32 @@ def apply_json_patch(document, patch):
     return PatchResult(None if current is _ABSENT else _snapshot(current), len(operations))
 
 
+def _raw_value(raw, at):
+    if type(raw) is not bytes:
+        raise JsonPatchError("bytes_required", pointer=at)
+    try:
+        raw.decode("utf-8")
+        parsed = parse_json_object(b'{"value":' + raw + b'}')
+    except (ModelError, UnicodeError) as error:
+        reason = error.reason if isinstance(error, ModelError) else "invalid_utf8"
+        pointer = getattr(error, "pointer", "")
+        pointer = at + pointer[len("/value"):] if pointer == "/value" or pointer.startswith("/value/") else at
+        # The object reader's wrapper-relative coordinates are deliberately not
+        # passed off as coordinates in the original input byte sequence.
+        raise JsonPatchError(reason, pointer=pointer) from None
+    if set(parsed) != {"value"}:
+        raise JsonPatchError("one_json_value_required", pointer=at)
+    return parsed["value"]
+
+
 def _strict_value(text, at):
     if type(text) is not str:
         raise JsonPatchError("json_text_required", pointer=at)
     try:
-        # The strict existing object reader supplies duplicate-key, Unicode and
-        # decimal-roundtrip checks. The closed wrapper rejects injected siblings.
         raw = text.encode("utf-8")
-        parsed = parse_json_object(b'{"value":' + raw + b'}')
-        if set(parsed) != {"value"}:
-            raise JsonPatchError("one_json_value_required", pointer=at)
-        return parsed["value"]
-    except (ModelError, UnicodeError) as error:
-        raise JsonPatchError("invalid_json_value", pointer=at) from None
+    except UnicodeError:
+        raise JsonPatchError("invalid_unicode", pointer=at) from None
+    return _raw_value(raw, at)
 
 
 def compile_field_patch(document, options):
@@ -246,7 +269,7 @@ def compile_field_patch(document, options):
             def fail(reason):
                 raise JsonPatchError(reason, pointer=at, document_pointer=pointer)
             if not tokens:
-                kind = "replace"
+                kind = "add" if current is _ABSENT else "replace"
             else:
                 parent = _read(current, tokens[:-1], fail)
                 key = tokens[-1]
@@ -277,6 +300,8 @@ class UpdatePreview:
     _candidate: JsonSnapshot
     base_sha256: str
     candidate_sha256: str
+    source_bytes: bytes | None = None
+    operation_bytes: bytes | None = None
 
     @property
     def candidate(self):
@@ -326,3 +351,52 @@ def preview_update(artifact, operation):
     _artifact(candidate, "/candidate", expected_type=identity.artifact_type)
     after = _at("/candidate", canonical_json_sha256, candidate)
     return UpdatePreview(op, _snapshot(candidate), before, after)
+
+
+def preview_update_bytes(artifact_bytes, operation_bytes):
+    """Byte-preserving adapter. Expects an object update with explicit conditions."""
+    for raw, pointer in ((artifact_bytes, "/artifact"), (operation_bytes, "/operation")):
+        if type(raw) is not bytes:
+            raise JsonPatchError("bytes_required", pointer=pointer)
+    artifact = _at("/artifact", parse_json_object, artifact_bytes)
+    operation = _at("/operation", parse_json_object, operation_bytes)
+    result = preview_update(artifact, operation)
+    return replace(result, source_bytes=artifact_bytes, operation_bytes=operation_bytes)
+
+
+_UNSPECIFIED = object()
+
+
+def preview_field_update(artifact, options, *, expected_revision=_UNSPECIFIED,
+                         expected_sha256=_UNSPECIFIED):
+    """Normalize authoring flags only after checking explicitly supplied guards.
+
+    Passing None is not the same as omitting a guard. Neither revision nor hash
+    is generated implicitly to turn a stale/unguarded edit into an accepted one.
+    """
+    base = _snapshot(artifact, "/artifact").data
+    identity = _artifact(base, "/artifact")
+    value = {"op": "update", "target": identity.id, "patch": []}
+    if expected_revision is not _UNSPECIFIED:
+        value["expected_revision"] = expected_revision
+    if expected_sha256 is not _UNSPECIFIED:
+        value["expected_sha256"] = expected_sha256
+    preview_update(base, value)  # Check preconditions before parsing/editing.
+    if type(options) not in (list, tuple):
+        raise JsonPatchError("ordered_options_required", pointer="/options")
+    for index, pair in enumerate(options):
+        at = "/options/" + str(index)
+        if type(pair) not in (list, tuple) or len(pair) != 2 or any(type(v) is not str for v in pair):
+            raise JsonPatchError("option_pair_required", pointer=at)
+        option, argument = pair
+        if option == "--set":
+            pointer, delimiter, _ = argument.partition("=")
+            if not delimiter:
+                raise JsonPatchError("set_assignment_required", pointer=at)
+        elif option == "--unset":
+            pointer = argument
+        else:
+            raise JsonPatchError("unknown_field_option", pointer=at)
+        _mutable_pointer(pointer, at)
+    value["patch"] = compile_field_patch(base, options).data
+    return preview_update(base, value)

@@ -53,7 +53,11 @@
     "tests/test_json_patch.py::test_root_removal_is_absent_not_null",
     "tests/test_json_patch.py::test_failure_stops_before_later_operations_and_keeps_original",
     "tests/test_json_patch.py::test_copy_then_edit_does_not_change_source",
-    "tests/test_json_patch.py::test_final_candidate_schema_is_checked_after_the_patch"
+    "tests/test_json_patch.py::test_final_candidate_schema_is_checked_after_the_patch",
+    "tests/test_json_patch_right.py::test_raw_patch_rejects_duplicate_members_without_source_mutation",
+    "tests/test_json_patch_right.py::test_move_array_indices_match_independent_list_oracle",
+    "tests/test_json_patch_right.py::test_deep_values_do_not_require_python_recursion",
+    "tests/test_json_patch_right.py::test_strict_raw_inputs_never_silently_round_numbers"
   ],
   "open_items": [
     "Wire artifact-update CLI and planner to the same preview/normalization path in the scheduled authoring step.",

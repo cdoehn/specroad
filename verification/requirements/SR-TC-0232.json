@@ -52,7 +52,10 @@
     "tests/test_json_patch.py::test_preview_update_requires_matching_explicit_preconditions",
     "tests/test_json_patch.py::test_revision_and_hash_when_both_supplied_must_both_match",
     "tests/test_json_patch.py::test_update_without_precondition_is_never_allowed",
-    "tests/test_json_patch.py::test_noop_patch_does_not_claim_new_revision_or_write_authority"
+    "tests/test_json_patch.py::test_noop_patch_does_not_claim_new_revision_or_write_authority",
+    "tests/test_json_patch_right.py::test_comfort_update_binds_actual_base_and_retains_source_bytes",
+    "tests/test_json_patch_right.py::test_base_preconditions_fail_before_comfort_execution",
+    "tests/test_json_patch_right.py::test_controlled_parent_writes_cannot_be_hidden_by_later_restore"
   ],
   "open_items": [
     "Wire artifact-update CLI and planner to the same preview/normalization path in the scheduled authoring step.",

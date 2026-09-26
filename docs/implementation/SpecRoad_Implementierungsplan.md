@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 184
-last_completed_plan_commit: 5.b.W
-next_plan_commit: 5.b.R
+implementation_plan_commits_completed: 185
+last_completed_plan_commit: 5.b.R
+next_plan_commit: 5.b.C
 last_completed_numbered_bundle: 24
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2473,7 +2473,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.b.R – Make it Right
 
-- [ ] **5.b.R** · Position **185/885** · Voraussetzung: `5.b.W`.
+- [x] **5.b.R** · Position **185/885** · Voraussetzung: `5.b.W`.
 **Exakte Commit-Message:** `5.b.R feat(changes): RFC-6902 und Komfortpatches vervollständigen`
 
 **Vervollständigung:** Erwartete Revision/Hash, Arraygrenzen, fehlende Pointer und geschützte Felder prüfen.
