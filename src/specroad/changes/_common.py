@@ -8,9 +8,9 @@ from ..model.record_contracts import RECORD_TYPES, SPECIAL_STATES
 from ..model.record_schemas import validate_record_fields, require_generic_mutation
 from ..model.domain_schemas import validate_domain_fields
 from .errors import ChangePlanError
+from ._patch_pointer import _pointer
+from ._patch_policy import _CONTROLLED, _mutable_pointer, _patch
 
-_CONTROLLED = frozenset({"id", "id_scheme", "artifact_type", "schema_version", "maturity", "revision",
-    "created_at", "created_by", "updated_at", "updated_by", "relations"})
 
 def _at(pointer, fn, *args, **kwargs):
     try:
@@ -53,26 +53,8 @@ def _generic(identity, pointer):
         except ModelError as error:
             raise ChangePlanError(error.reason, pointer=pointer) from error
 
-def _pointer(value, pointer):
-    if type(value) is not str or (value and not value.startswith("/")) or re.search(r"~(?![01])", value):
-        raise ChangePlanError("invalid_json_pointer", pointer=pointer)
-    return [p.replace("~1", "/").replace("~0", "~") for p in value.split("/")[1:]]
 
-def _mutable_pointer(value, pointer):
-    parts = _pointer(value, pointer)
-    if not parts or parts[0] in _CONTROLLED or parts[0] in {v[0] for v in SPECIAL_STATES.values()}:
-        raise ChangePlanError("controlled_field_mutation", pointer=pointer)
 
-def _patch(items, pointer):
-    for index, item in enumerate(items):
-        at = pointer + "/" + str(index)
-        _pointer(item["path"], at + "/path")
-        if item["op"] != "test":
-            _mutable_pointer(item["path"], at + "/path")
-        if item["op"] in ("move", "copy"):
-            _pointer(item["from"], at + "/from")
-            if item["op"] == "move":
-                _mutable_pointer(item["from"], at + "/from")
 
 def _normalization_path(value, pointer):
     _at(pointer, project_path, value)

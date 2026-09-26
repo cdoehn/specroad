@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 185
-last_completed_plan_commit: 5.b.R
-next_plan_commit: 5.b.C
-last_completed_numbered_bundle: 24
+implementation_plan_commits_completed: 186
+last_completed_plan_commit: 5.b.C
+next_plan_commit: 5.c.W
+last_completed_numbered_bundle: 25
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2482,7 +2482,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.b.C – Make it Clean
 
-- [ ] **5.b.C** · Position **186/885** · Voraussetzung: `5.b.R`.
+- [x] **5.b.C** · Position **186/885** · Voraussetzung: `5.b.R`.
 **Exakte Commit-Message:** `5.b.C refactor(changes): RFC-6902 und Komfortpatches bereinigen`
 
 **Bereinigung:** Patchengine von CLI-Konvertierung und Spezialfeldschutz entkoppeln.

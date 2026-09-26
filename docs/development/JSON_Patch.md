@@ -78,3 +78,13 @@ for lengths 1–15 and 100 independent 25-operation list-splicing examples. Thes
 are bounded independent checks, not a claim of exhaustive verification of every
 possible JSON document. Deep value copies and equality do not use recursive
 Python calls; the existing raw parser can conservatively reject excessive depth.
+
+## Clean layering
+
+`json_patch` owns only the pure execution engine. `field_patches` converts ordered
+comfort options through that engine. `update_preview` owns explicit artifact
+preconditions and candidate validation. `_patch_pointer` provides shared pointer
+syntax, and `_patch_policy` keeps the controlled-field rules shared with the
+existing ChangeOperation/ChangePlan validators. `patching` remains a stable facade.
+No new execution hooks or writer adapters are introduced by this split. All W/R
+behavior tests, expectations, raw vectors and requirement mappings are unchanged.
