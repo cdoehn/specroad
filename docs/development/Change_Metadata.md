@@ -69,3 +69,12 @@ einen zuständigen Fachplanner und ist in der normalen Metadatenpolicy verboten.
 W/R-Funktionsgrenze: die vier normalen Faltoperationen und die reine K.2-Policy.
 Vollständige Merge-/Migrationspläne, Spezialworkflows und Bytepublikation sind
 nicht enthalten. Anforderungsnachweise bleiben daher partial, nicht passed.
+
+## C: Explizite Policy-Schnittstelle
+
+Die reguläre Policy ist als feste, interne Strategie von der Ergebnismaterialisierung
+getrennt. Eingaben liefern nur eine bekannte Versionskennung und gebundene Daten,
+keinen Funktionsnamen, Importpfad oder Callback. Unbekannte, Merge- und Migrations-
+kennungen bleiben abgewiesen. Spätere Strategien benötigen ihre eigenen gebundenen
+Historieneingaben und dürfen nicht still die K.2-Regeln wiederverwenden.
+Die öffentlichen Funktionssignaturen und alle W-/R-Verhaltenstests bleiben erhalten.

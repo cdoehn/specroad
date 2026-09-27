@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 191
-last_completed_plan_commit: 5.d.R
-next_plan_commit: 5.d.C
-last_completed_numbered_bundle: 26
+implementation_plan_commits_completed: 192
+last_completed_plan_commit: 5.d.C
+next_plan_commit: 5.e.W
+last_completed_numbered_bundle: 27
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2552,7 +2552,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.d.C – Make it Clean
 
-- [ ] **5.d.C** · Position **192/885** · Voraussetzung: `5.d.R`.
+- [x] **5.d.C** · Position **192/885** · Voraussetzung: `5.d.R`.
 **Exakte Commit-Message:** `5.d.C refactor(changes): Gebundene Metadatenpolicy bereinigen`
 
 **Bereinigung:** Reguläre Policy über eine explizite Schnittstelle für spätere Merge-/Migrationspolicies bereitstellen.
