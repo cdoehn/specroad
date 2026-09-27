@@ -1,6 +1,6 @@
 # Ordered Change Plan field candidates
 
-Plan step 5.c; implementation W/R. The pure `fold_operations` entrypoint applies
+Plan step 5.c; implementation W/R/C. The pure `fold_operations` entrypoint applies
 `create`, `update`, `relation_add` and `relation_remove` in the declared array order to private intermediate values.
 `fold_plan_fields` additionally binds an immutable self-hashed plan to explicitly
 supplied scope/root observations. Observations are not authenticated live reads.
@@ -55,3 +55,12 @@ The supported four reducers do not pretend to implement the other eight workflow
 families. Lifecycle/retire, attachments, evidence, normalization, review and
 proposal control operations explicitly require their specialized planner. This
 is an extensible-by-code boundary, not dynamic code registration from plan data.
+
+## Clean separation
+
+Private source/precondition processing, fixed reducers and final one-per-owner
+materialization are separate pure helpers. The public orchestration still
+performs each operation in declared order and catches its first error before
+calling another reducer. Candidate hashing happens after the sequence, distinct
+from intermediate revision/hash precondition checks. W/R test expectations are
+unchanged by this structural separation.
