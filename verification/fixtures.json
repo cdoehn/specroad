@@ -43,7 +43,8 @@
     "SR-FIX-JSON-PATCH-v1",
     "SR-FIX-ORDERED-FOLD-v1",
     "SR-FIX-CHANGE-METADATA-v1",
-    "SR-FIX-CHANGE-LIFECYCLE-v1"
+    "SR-FIX-CHANGE-LIFECYCLE-v1",
+    "SR-FIX-CHANGE-TARGET-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -217,6 +218,10 @@
     "SR-FIX-CHANGE-LIFECYCLE-v1": {
       "provider": "tests/test_change_lifecycle.py:approved",
       "kind": "owned synthetic standard-artifact lifecycle candidates; no actual approval, authentication, storage or historic inventory"
+    },
+    "SR-FIX-CHANGE-TARGET-v1": {
+      "provider": "tests/support/targets.py:model",
+      "kind": "owned exact-byte project inventory, explicit effective profile and synthetic trusted gates; no live inventory, authorization or prepared transaction proof"
     }
   }
 }

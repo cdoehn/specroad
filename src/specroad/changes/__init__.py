@@ -34,3 +34,7 @@ __all__ += ['prepare_change_lifecycle', 'lifecycle_content_sha256', 'LIFECYCLE_P
 
 from .lifecycle import prepare_plan_lifecycle, prepare_change_lifecycle_bytes
 __all__ += ['prepare_plan_lifecycle', 'prepare_change_lifecycle_bytes']
+
+from .target import TargetModel, assess_change_target
+from .target_values import TargetPolicy, TargetAssessment, TargetError
+__all__ += ['TargetModel', 'TargetPolicy', 'TargetAssessment', 'TargetError', 'assess_change_target']

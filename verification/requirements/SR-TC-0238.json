@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0238",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CHANGE-TARGET-v1"
+  ],
+  "preconditions": [
+    "Explicit closed project inventory, original configuration/resource bytes, bound effective profile and registered trusted model/command gates."
+  ],
+  "steps": [
+    "Recompute ordered lifecycle candidates and their metadata, verify saved plan/base/target hashes, validate every supplied target artifact and inspect diff and direct impact."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS den vollständigen geplanten Endstand einschließlich aller abhängigen Regeln vor `prepared` gegen seine befehlsspezifischen Gates validieren; die eng begrenzte Review-Ergebnisausnahme ist ausschließlich in Kapitel 11.13 definiert.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Complete isolated target evaluation over a supplied closed project; missing core/command gates and dependent errors fail closed. Real plan/resource/base/result hashes are checked. No physical prepared transaction or write permission is issued."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    0,
+    3,
+    4
+  ],
+  "json_pointers": [
+    "/base/model_root_sha256",
+    "/expected_result/model_root_sha256",
+    "/result_artifacts"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,18 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_change_target.py::test_entire_unchanged_target_is_given_to_every_registered_gate",
+    "tests/test_change_target.py::test_error_in_unmodified_dependent_artifact_blocks_target",
+    "tests/test_change_target.py::test_missing_command_gate_is_not_success",
+    "tests/test_change_target.py::test_missing_core_lifecycle_gate_is_not_optional",
+    "tests/test_change_target.py::test_target_hierarchy_error_is_found_by_the_shared_pipeline",
+    "tests/test_change_target.py::test_registered_checker_failure_never_produces_valid_target",
+    "tests/test_change_target.py::test_true_warning_threshold_preserves_warning_severity"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Actual inventory completeness, resource freshness under locks, durable prepared storage and final write authorization remain future transaction/CLI integration.",
+    "Specialized operation families, configured/partial scopes and new approval transitions need their dedicated trusted services.",
+    "Registered Python gates are trusted code, not authenticated or sandboxed by this adapter."
   ]
 }
