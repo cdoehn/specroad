@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 200
-last_completed_plan_commit: 5.g.R
-next_plan_commit: 5.g.C
-last_completed_numbered_bundle: 29
+implementation_plan_commits_completed: 201
+last_completed_plan_commit: 5.g.C
+next_plan_commit: 5.h.W
+last_completed_numbered_bundle: 30
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2657,7 +2657,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.g.C – Make it Clean
 
-- [ ] **5.g.C** · Position **201/885** · Voraussetzung: `5.g.R`.
+- [x] **5.g.C** · Position **201/885** · Voraussetzung: `5.g.R`.
 **Exakte Commit-Message:** `5.g.C refactor(changes): Dry-Run und Change-Apply bereinigen`
 
 **Bereinigung:** Planung, Ausgabe und Veröffentlichung als getrennte Phasen führen.

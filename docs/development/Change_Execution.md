@@ -74,3 +74,11 @@ Rückgabewert ohne passende gebundene Receipt-Struktur ist kein Erfolg. Der Beri
 wird erst nach erfolgreich geschlossenem Transaktionskontext zurückgegeben.
 Fehler beim Abschluss können bereits veröffentlichte Daten hinterlassen: unknown,
 kein automatischer zweiter Publish und kein Zurücksetzen bestehender Dateien.
+
+## Struktur nach dem Clean-Schritt
+
+`execution.py` orchestriert die öffentlichen direkten und gespeicherten Aufrufe.
+`execution_values.py` hält unveränderliche Pläne, Bindungen und Ergebnisprojektion.
+`_execution_publication.py` kapselt ausschließlich die delegierte Veröffentlichung
+und ihre Frische-/Rückgabeprüfung. Keine neue Writerimplementierung entsteht durch
+Refactoring; die vorherigen W-/R-Verhaltenstests bleiben unverändert.
