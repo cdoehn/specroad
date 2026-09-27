@@ -54,3 +54,23 @@ Vollsuite/serielle Vollsuite. Katalogsammlung ist kein Lauf von Testkörpern. Am
 von Bundle 030 startet die GitHub-Vollsuite parallel und seriell mit Vergleich,
 für CPython 3.10–3.14. Der vorhandene CI-Beobachter und Resulttransport bleiben
 unverändert. Meldungstexte, Layout, Farben und Dokumentation sind keine Testoracles.
+
+## Ergänzte Fehler- und Frischegrenzen
+
+`execute_change_plan_bytes` akzeptiert ausschließlich tatsächliche Bytes. Es
+öffnet weder Dateipfade noch stdin und behält exakt die eingelesene Plandatei.
+Semantisch gleiche Einrückungen dürfen nicht den Planhash ändern. Explizite
+Planvorbedingungen auf Dateibytes bleiben davon unabhängig.
+
+Backend und Publisher erhalten eigene unveränderliche Handoff-Objekte. Änderungen
+an einer solchen Bindung führen zum Fehler. Unmittelbar nach den erneuten Gates
+wird die Quelle unter der vom Host gehaltenen Transaktionsgrenze nochmals gelesen.
+Reine Umformatierung, geänderte Reservierungen oder eine andere lokale Instanz
+sind dabei nicht mit dem ursprünglich beobachteten Basiszustand gleichzusetzen.
+
+Nach einem Publish werden ALLE gelieferten Zielartefakte sowie unveränderte
+Ressourcen verglichen, nicht nur die Liste der geänderten Artefakte. Ein erfolgreicher
+Rückgabewert ohne passende gebundene Receipt-Struktur ist kein Erfolg. Der Bericht
+wird erst nach erfolgreich geschlossenem Transaktionskontext zurückgegeben.
+Fehler beim Abschluss können bereits veröffentlichte Daten hinterlassen: unknown,
+kein automatischer zweiter Publish und kein Zurücksetzen bestehender Dateien.

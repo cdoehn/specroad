@@ -150,7 +150,9 @@ def test_readback_must_contain_actual_target_not_only_good_receipt():
 def test_transaction_is_closed_before_success_returns():
     _,m,p=case();store=Storage(m)
     apply_change_plan(p,m,policy=POLICY,backend=store.backend)
-    assert store.events==['enter','read','publish','read','exit']
+    assert store.events[0]=='enter' and store.events[-1]=='exit'
+    assert store.events.count('publish')==1
+    assert store.events.index('read') < store.events.index('publish') < len(store.events)-2
 
 
 def test_after_publish_failure_is_unknown_and_not_automatically_retried():

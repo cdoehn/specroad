@@ -115,6 +115,15 @@ class PublicationRequest:
         object.__setattr__(obj, 'documents', changed)
         return obj
 
+    def detached(self):
+        # No caller-owned mutable mappings or backend-retained request objects.
+        from ..validation import ModelDocument
+        obj = object.__new__(PublicationRequest)
+        object.__setattr__(obj, '_encoded', self._encoded)
+        object.__setattr__(obj, '_plan_bytes', self._plan_bytes)
+        object.__setattr__(obj, 'documents', tuple(ModelDocument(d.path, d.content) for d in self.documents))
+        return obj
+
     @property
     def data(self): return parse_json_object(self._encoded)
     @property
@@ -200,6 +209,12 @@ def dry_run_change(plan, model, *, policy, gates=(), strict=False, fail_on_chang
     return ChangeExecutionResult._create(assessment, dry_run=True, fail_on_change=fail_on_change)
 
 
+def _same_handoff(actual, expected):
+    if (type(actual) is not PublicationRequest or actual._encoded != expected._encoded or
+            actual._plan_bytes != expected._plan_bytes or actual.documents != expected.documents):
+        raise ChangeExecutionError('publication_request_changed', exit_code=6)
+
+
 def apply_change_plan(plan, model, *, policy, backend=None, gates=(), strict=False):
     """Revalidate the SAME plan inside a host transaction and check its readback.
 
@@ -215,8 +230,10 @@ def apply_change_plan(plan, model, *, policy, backend=None, gates=(), strict=Fal
         raise ChangeExecutionError('transaction_backend_required')
     request = PublicationRequest._create(checked, model)
     completed = None
+    handoff = request.detached()
     try:
-        with backend.transaction(request) as transaction:
+        with backend.transaction(handoff) as transaction:
+            _same_handoff(handoff, request)
             current = transaction.read_model()
             if type(current) is not TargetModel:
                 raise ChangeExecutionError('backend_model_required')
@@ -229,7 +246,17 @@ def apply_change_plan(plan, model, *, policy, backend=None, gates=(), strict=Fal
             fresh_request = PublicationRequest._create(fresh, current)
             if fresh_request.sha256 != request.sha256:
                 raise ChangeExecutionError('publication_assessment_changed', exit_code=6)
-            receipt = transaction.publish(fresh_request)
+            # Gates are trusted, but their result cannot hide a changed source.
+            latest = transaction.read_model()
+            if type(latest) is not TargetModel or _source_binding(latest.snapshot()) != request.data['base']:
+                raise ChangeExecutionError('publication_base_changed', exit_code=6)
+            _same_handoff(handoff, request)
+            outgoing = fresh_request.detached()
+            receipt = transaction.publish(outgoing)
+            _same_handoff(outgoing, request)
+            if type(receipt) is PublicationReceipt:
+                receipt = PublicationReceipt(receipt.request_sha256, receipt.target_root_sha256,
+                    receipt.request_id, receipt.published_paths, receipt.receipt_id)
             if (type(receipt) is not PublicationReceipt or
                     receipt.request_sha256 != request.sha256 or
                     receipt.target_root_sha256 != request.data['target_root_sha256'] or
@@ -271,9 +298,28 @@ def execute_change_request(model, operations, *, dry_run, policy, backend=None,
         raise ChangeExecutionError('fail_on_change_requires_dry_run', exit_code=2)
     if type(gates) not in (tuple, list) or type(strict) is not bool:
         raise ChangeExecutionError('explicit_gate_sequence_and_boolean_required', exit_code=2)
+    required = {'change_plan_id', 'request_id', 'actor', 'planned_at',
+                'scope_descriptor', 'metadata_policy_version'}
+    if not required <= set(plan_fields) or set(plan_fields) - required - {'preconditions'}:
+        raise ChangeExecutionError('explicit_plan_fields_required', exit_code=2)
     assessment = prepare_change_target(model, operations, policy=policy, gates=tuple(gates),
                                        strict=strict, **plan_fields)
     if dry_run:
         return ChangeExecutionResult._create(assessment, dry_run=True, fail_on_change=fail_on_change)
     return apply_change_plan(assessment.plan, model, policy=policy, backend=backend,
                              gates=tuple(gates), strict=strict)
+
+
+def execute_change_plan_bytes(raw, model, *, dry_run, policy, backend=None,
+                              gates=(), strict=False, fail_on_change=False):
+    """No implicit path/stdin reads. Preserve exact input bytes through both modes."""
+    if type(raw) is not bytes or type(dry_run) is not bool or type(fail_on_change) is not bool:
+        raise ChangeExecutionError('explicit_plan_bytes_and_modes_required', exit_code=2)
+    if fail_on_change and not dry_run:
+        raise ChangeExecutionError('fail_on_change_requires_dry_run', exit_code=2)
+    plan = ChangePlan(raw)
+    if dry_run:
+        return dry_run_change(plan, model, policy=policy, gates=gates,
+                              strict=strict, fail_on_change=fail_on_change)
+    return apply_change_plan(plan, model, policy=policy, backend=backend,
+                             gates=gates, strict=strict)

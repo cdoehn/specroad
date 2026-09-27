@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Option `--dry-run` MUSS den vollständigen gebundenen Change Plan, semantischen Diff, direkten Impact, Diagnosen und die erwartete Modellwurzel ausgeben.",
-    "scope": "Shared full target/plan/diff/impact/diagnostic projection; dry-run never enters any publication backend or writes a receipt. Exact supplied readback is verified after trusted publication, without claiming independent durability proof."
+    "scope": "Shared full target/plan/diff/impact/diagnostic projection; dry-run never enters any publication backend or writes a receipt. Exact supplied readback is verified after trusted publication, without claiming independent durability proof. Exact raw plan bytes are retained; source state is read again after locked revalidation. Detached callback handoffs, full post-publication file sets and controlled unknown outcomes are checked."
   },
   "expected_diagnostics": [
     "SRV146"
@@ -51,7 +51,10 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_change_execution.py::test_dry_run_and_apply_retain_identical_plan_target_diff",
-    "tests/test_change_execution.py::test_invalid_target_never_enters_backend"
+    "tests/test_change_execution.py::test_invalid_target_never_enters_backend",
+    "tests/test_change_execution_right.py::test_arbitrary_plan_whitespace_survives_dryrun_and_apply",
+    "tests/test_change_execution_right.py::test_large_complete_diff_is_not_truncated",
+    "tests/test_change_execution_right.py::test_internal_gate_exception_beats_fail_on_change"
   ],
   "open_items": [
     "Native CLI wiring and the safe filesystem transaction backend with real authorization, locks, journals, request receipts and fsync are later plan steps. The injected backend is trusted host code, not sandboxed or authenticated by its registration.",

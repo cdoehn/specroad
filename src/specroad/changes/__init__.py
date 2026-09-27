@@ -47,3 +47,6 @@ from .execution import (ChangeBackend, PublicationRequest, PublicationReceipt,
 __all__ += ['ChangeBackend', 'PublicationRequest', 'PublicationReceipt',
     'ChangeExecutionResult', 'ChangeExecutionError', 'dry_run_change',
     'apply_change_plan', 'execute_change_request']
+
+from .execution import execute_change_plan_bytes
+__all__ += ['execute_change_plan_bytes']
