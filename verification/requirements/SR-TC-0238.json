@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS den vollständigen geplanten Endstand einschließlich aller abhängigen Regeln vor `prepared` gegen seine befehlsspezifischen Gates validieren; die eng begrenzte Review-Ergebnisausnahme ist ausschließlich in Kapitel 11.13 definiert.",
-    "scope": "Complete isolated target evaluation over a supplied closed project; missing core/command gates and dependent errors fail closed. Real plan/resource/base/result hashes are checked. No physical prepared transaction or write permission is issued."
+    "scope": "Complete isolated target evaluation over a supplied closed project; missing core/command gates and dependent errors fail closed. Real plan/resource/base/result hashes are checked. No physical prepared transaction or write permission is issued. Direct preparation uses the same checked saved-plan path; whole-target command/resource gates also cover empty targets. Explicit historical reservations remain bound."
   },
   "expected_diagnostics": [
     "SRV146"
@@ -51,7 +51,13 @@
     "tests/test_change_target.py::test_missing_core_lifecycle_gate_is_not_optional",
     "tests/test_change_target.py::test_target_hierarchy_error_is_found_by_the_shared_pipeline",
     "tests/test_change_target.py::test_registered_checker_failure_never_produces_valid_target",
-    "tests/test_change_target.py::test_true_warning_threshold_preserves_warning_severity"
+    "tests/test_change_target.py::test_true_warning_threshold_preserves_warning_severity",
+    "tests/test_change_target_right.py::test_unmodified_foreign_field_reference_error_blocks_whole_target",
+    "tests/test_change_target_right.py::test_profile_constraints_on_unmodified_artifact_are_not_skipped",
+    "tests/test_change_target_right.py::test_partial_gate_result_is_not_a_success",
+    "tests/test_change_target_right.py::test_empty_target_still_executes_required_command_gates",
+    "tests/test_change_target_right.py::test_rule_resource_integrity_needs_explicit_service_even_without_artifacts",
+    "tests/test_change_target_right.py::test_authoring_and_saved_plan_paths_produce_identical_observations"
   ],
   "open_items": [
     "Actual inventory completeness, resource freshness under locks, durable prepared storage and final write authorization remain future transaction/CLI integration.",

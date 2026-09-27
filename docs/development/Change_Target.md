@@ -43,3 +43,32 @@ lokale Vollsuite und keine serielle Vollsuite. Der Katalogcheck sammelt lediglic
 alle Testkennungen. Vollsuite auf GitHub am Bundle-Ende, jedes fünfte Bundle
 zusätzlich seriell plus Nachweisvergleich. Menschliche Darstellung ist kein
 Testorakel. Die Source- und Reportbindungen werden nicht zu Releasefreigaben.
+
+## Direkte Planung und Robustheit (R)
+
+`prepare_change_target` nimmt explizite, bereits vorbereitete Operationen sowie
+Plan-ID, Request-ID, Akteur, Zeitpunkt, Scope, Metadatenpolicy und Befehlspolicy
+entgegen. Sie erzeugt einen regulären gespeicherten Plan und verwendet danach
+EXAKT dieselbe Zielbewertung wie `assess_change_target`. Es gibt keinen zweiten
+vereinfacht grünen direkten Schreibweg. Create-Payloads müssen zum bestehenden
+Planvertrag passen, insbesondere ihre expliziten Erstellungsmetadaten. Dies ist
+noch kein Komfort-Authoring für unvollständige CLI-Entwürfe.
+
+Der übergebene Bestand wird vor jedem Aufruf erneut aus seinen Originalbytes
+aufgebaut. Abgeleitete Ressourcenmetadaten ersetzen nie die Quelldateien.
+Sprachpakete werden aus ihren tatsächlichen Bytes neu gebunden. Ausdrücklich
+bekannte historische und reservierte Artefakt-/Relations-IDs fließen in die
+Prüfung und Ergebnisbindung ein; eine vollständige Historie wird nicht behauptet.
+
+Alle registrierten Whole-Target-Extension-Gates laufen auch bei einem leeren
+Artefaktbestand. Fehlende erforderliche Gates verhindern einen vollständigen
+Abschluss. Rohe Regel-/Mappingressourcen benötigen zusätzlich den ausdrücklich
+registrierten vertrauenswürdigen Prüfer `extension:target-resources`; ihre
+Hashform allein ist keine semantische Integritätsprüfung. Der Prüfer bindet
+seine tatsächlichen Ressourcen über die bestehenden Gate-Verträge. Wie bei den
+anderen Python-Gates bleibt dies eine explizite Vertrauensgrenze.
+
+Ein fehlerhafter Gesamtbestand liefert keine Freigabe, auch wenn alle unmittelbar
+bearbeiteten Artefakte einzeln gültig erscheinen. Warnings und Fail-Schwellen
+bleiben getrennt. Ein alter Gate-Nachweis passt nicht zu einem anderen Plan,
+Befehl, Ressourcensatz oder Reservierungsbestand.

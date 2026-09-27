@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 196
-last_completed_plan_commit: 5.f.W
-next_plan_commit: 5.f.R
+implementation_plan_commits_completed: 197
+last_completed_plan_commit: 5.f.R
+next_plan_commit: 5.f.C
 last_completed_numbered_bundle: 28
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2613,7 +2613,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.f.R – Make it Right
 
-- [ ] **5.f.R** · Position **197/885** · Voraussetzung: `5.f.W`.
+- [x] **5.f.R** · Position **197/885** · Voraussetzung: `5.f.W`.
 **Exakte Commit-Message:** `5.f.R feat(changes): Zielvalidation, Diff und Impact vervollständigen`
 
 **Vervollständigung:** Ungültiges Gesamtziel und manipulierte Planmetadaten verhindern prepared.
