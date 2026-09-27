@@ -65,3 +65,11 @@ Approved-only field obligations are evaluated against the pending proposed
 candidate. Intermediate revision/hash/from guards still see the actual ordered
 values. The private validation projection never changes the input or silently
 relaxes the common field contracts.
+
+## Responsibility boundary after C
+
+The fixed transition table, six-field content projection and final lifecycle
+postconditions live in `_lifecycle_policy.py`. The public planner owns ordered
+operation orchestration, explicit history observations and raw/saved-plan
+adapters. The unchanged metadata materializer stamps only the already decided
+candidate. No filesystem writer is aware of the lifecycle policy.
