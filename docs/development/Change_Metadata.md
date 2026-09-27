@@ -47,3 +47,25 @@ unterliegt weiterhin den ursprünglichen Vorbedingungen.
 Lokal nur die neuen, direkt betroffenen Testdateien, vier xdist-Worker.
 Vollständige Suite und Fünferzyklus bleiben in GitHub. Keine Tests auf
 Darstellung oder Dokumentation und keine neue Core-/Entwicklungsabhängigkeit.
+
+## R: Gespeicherte Pläne und ursprüngliche Ressourcen
+
+`prepare_plan_metadata` prüft einen bereits selbstgehashten `ChangePlan` erneut
+gegen die ausdrücklich gelieferten Basiswurzel- und Scopebeobachtungen. Danach
+vergleicht es die gesamten resultierenden Artefaktwerte einschließlich Revision,
+Zeit und Actor mit den deklarierten Ressourcenhashes. Falsche Metadaten ergeben
+`SRV174`, keinen teilweise erfolgreichen Plan. Bei Übereinstimmung wird
+`declared_artifacts_verified=true`; die vollständige Zielwurzel und Lifecycle-
+Nachbedingungen bleiben ausdrücklich ungeprüft. Der gespeicherte Plan und seine
+Originalbytes ändern sich niemals durch diese Prüfung.
+
+`prepare_change_metadata_bytes` nimmt ausschließlich bereits gelesene Bytes an,
+keine Dateinamen. Die originale Repräsentation wird bei berührten Artefakten
+separat erhalten, auch bei wirkungslosen Operationen. Fehler in einem einzigen
+Eingabedokument verhindern den gesamten vorbereiteten Rückgabewert. Unveränderte
+historische Spezialartefakte bleiben im Bestand; ihre Änderung braucht weiterhin
+einen zuständigen Fachplanner und ist in der normalen Metadatenpolicy verboten.
+
+W/R-Funktionsgrenze: die vier normalen Faltoperationen und die reine K.2-Policy.
+Vollständige Merge-/Migrationspläne, Spezialworkflows und Bytepublikation sind
+nicht enthalten. Anforderungsnachweise bleiben daher partial, nicht passed.

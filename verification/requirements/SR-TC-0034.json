@@ -40,7 +40,8 @@
     "test_audit_right.AuditRightTests.test_historical_revision_is_read_without_recreation_or_increment",
     "test_audit_right.AuditRightTests.test_metadata_fields_cannot_be_used_as_a_policy_override",
     "tests/test_change_metadata.py::test_existing_change_advances_revision_once_and_preserves_creation",
-    "tests/test_change_metadata.py::test_noop_and_reverted_sequence_keep_all_metadata"
+    "tests/test_change_metadata.py::test_noop_and_reverted_sequence_keep_all_metadata",
+    "tests/test_change_metadata_right.py::test_unchanged_historical_special_records_are_not_recreated"
   ],
   "open_items": [
     "Integrate lifecycle postconditions (5.e), final target-model validation and model-root verification (5.f), specialized evidence/control operations, transactional apply and the separate merge/migration policies. Current candidates authorize no write and requirements remain partial."

@@ -23,3 +23,6 @@ from .metadata import prepare_change_metadata, REGULAR_METADATA_POLICY
 from .metadata_values import MetadataResult, MetadataArtifact, MetadataError
 __all__ += ["prepare_change_metadata", "REGULAR_METADATA_POLICY", "MetadataResult",
             "MetadataArtifact", "MetadataError"]
+
+from .metadata import prepare_plan_metadata, prepare_change_metadata_bytes
+__all__ += ["prepare_plan_metadata", "prepare_change_metadata_bytes"]

@@ -35,7 +35,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "tests/test_change_metadata.py::test_all_result_authorizations_stay_false"
+    "tests/test_change_metadata.py::test_all_result_authorizations_stay_false",
+    "tests/test_change_metadata_right.py::test_saved_plan_binding_is_preserved_and_declared_results_are_checked"
   ],
   "open_items": [
     "Integrate lifecycle postconditions (5.e), final target-model validation and model-root verification (5.f), specialized evidence/control operations, transactional apply and the separate merge/migration policies. Current candidates authorize no write and requirements remain partial."
