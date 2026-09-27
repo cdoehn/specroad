@@ -72,3 +72,13 @@ Ein fehlerhafter Gesamtbestand liefert keine Freigabe, auch wenn alle unmittelba
 bearbeiteten Artefakte einzeln gültig erscheinen. Warnings und Fail-Schwellen
 bleiben getrennt. Ein alter Gate-Nachweis passt nicht zu einem anderen Plan,
 Befehl, Ressourcensatz oder Reservierungsbestand.
+
+## Gemeinsame Grenzen (C)
+
+`target_model.py` kapselt ausschließlich unveränderliche Eingabeaufnahme,
+Ressourcen-/Profilbindung und Manifestbildung. `_target_checks.py` verbindet
+registrierte Gesamtziel-Gates und den bestehenden Vorher-/Nachher-Impact.
+`target.py` bietet beide öffentlichen Adapter über einen gemeinsamen
+Validierungspfad. Es gibt keine alternative, schwächer geprüfte Write-Route.
+Die Statusentscheidung bleibt im bestehenden Lifecycle-Planner, nicht in einem
+Dateischreiber. Die Tests aus W und R bleiben bei dieser Trennung unverändert.
