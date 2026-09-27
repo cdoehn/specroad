@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 189
-last_completed_plan_commit: 5.c.C
-next_plan_commit: 5.d.W
+implementation_plan_commits_completed: 190
+last_completed_plan_commit: 5.d.W
+next_plan_commit: 5.d.R
 last_completed_numbered_bundle: 26
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2534,7 +2534,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.d.W – Let it Work
 
-- [ ] **5.d.W** · Position **190/885** · Voraussetzung: `5.c.C`.
+- [x] **5.d.W** · Position **190/885** · Voraussetzung: `5.c.C`.
 **Exakte Commit-Message:** `5.d.W feat(changes): Gebundene Metadatenpolicy aufbauen`
 
 **Umsetzung:** change-metadata-v1 mit planned_at, Actor, IDs und genau einer Revisionsfortschreibung pro Artefakt implementieren.

@@ -7,18 +7,19 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-ARTIFACT-COMMON-v1"
+    "SR-FIX-ARTIFACT-COMMON-v1",
+    "SR-FIX-CHANGE-METADATA-v1"
   ],
   "preconditions": [
-    "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation."
+    "Supply stable explicit base artifacts and ordered operations; bind change-metadata-v1, actor and planned_at. No runtime clock or external state is acquired."
   ],
   "steps": [
-    "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
+    "Fold operations on private intermediate values, assign one final metadata set per changed identity, and compare returned data and canonical hashes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede semantische Änderung an einem Artefakt MUSS die für ihre Operationsart in Anhang K festgelegte Revisionsregel erfüllen; unveränderte Übernahmen einer bestehenden Historienrevision sind keine Neuerzeugung.",
-    "scope": "Shared persisted UTC-Z and typed audit read contracts; existing history revisions and original bytes are preserved."
+    "scope": "Regular K.2 metadata candidates for create/update/relation_add/relation_remove; unchanged/reverted values retain audit data. No lifecycle completion, live state authentication, merge/migration implementation or publication."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,9 +38,11 @@
   "test_ids": [
     "test_audit.AuditTests.test_existing_audit_is_not_reset_to_revision_one",
     "test_audit_right.AuditRightTests.test_historical_revision_is_read_without_recreation_or_increment",
-    "test_audit_right.AuditRightTests.test_metadata_fields_cannot_be_used_as_a_policy_override"
+    "test_audit_right.AuditRightTests.test_metadata_fields_cannot_be_used_as_a_policy_override",
+    "tests/test_change_metadata.py::test_existing_change_advances_revision_once_and_preserves_creation",
+    "tests/test_change_metadata.py::test_noop_and_reverted_sequence_keep_all_metadata"
   ],
   "open_items": [
-    "Operation-specific revision advancement and chronological metadata policies remain for Change Plans, merge and migration; these values authorize no write."
+    "Integrate lifecycle postconditions (5.e), final target-model validation and model-root verification (5.f), specialized evidence/control operations, transactional apply and the separate merge/migration policies. Current candidates authorize no write and requirements remain partial."
   ]
 }

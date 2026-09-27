@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0437",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CHANGE-METADATA-v1"
+  ],
+  "preconditions": [
+    "Supply stable explicit base artifacts and ordered operations; bind change-metadata-v1, actor and planned_at. No runtime clock or external state is acquired."
+  ],
+  "steps": [
+    "Fold operations on private intermediate values, assign one final metadata set per changed identity, and compare returned data and canonical hashes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein vorhandenes semantisch geändertes Artefakt MUSS pro Plan genau eine resultierende Revision gemäß der ausgewählten Policy aus Anhang K erhalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Regular K.2 metadata candidates for create/update/relation_add/relation_remove; unchanged/reverted values retain audit data. No lifecycle completion, live state authentication, merge/migration implementation or publication."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_change_metadata.py::test_existing_change_advances_revision_once_and_preserves_creation",
+    "tests/test_change_metadata.py::test_repeated_preparation_does_not_advance_prepared_revision_again"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate lifecycle postconditions (5.e), final target-model validation and model-root verification (5.f), specialized evidence/control operations, transactional apply and the separate merge/migration policies. Current candidates authorize no write and requirements remain partial."
   ]
 }

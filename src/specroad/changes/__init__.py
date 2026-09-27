@@ -18,3 +18,8 @@ from .folding import fold_operations, fold_plan_fields, SUPPORTED_FOLD_OPERATION
 from .folding_values import OperationFold, FoldedArtifact, FoldError
 __all__ += ["fold_operations", "fold_plan_fields", "SUPPORTED_FOLD_OPERATIONS",
             "OperationFold", "FoldedArtifact", "FoldError"]
+
+from .metadata import prepare_change_metadata, REGULAR_METADATA_POLICY
+from .metadata_values import MetadataResult, MetadataArtifact, MetadataError
+__all__ += ["prepare_change_metadata", "REGULAR_METADATA_POLICY", "MetadataResult",
+            "MetadataArtifact", "MetadataError"]
