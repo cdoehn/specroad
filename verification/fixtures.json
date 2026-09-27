@@ -44,7 +44,8 @@
     "SR-FIX-ORDERED-FOLD-v1",
     "SR-FIX-CHANGE-METADATA-v1",
     "SR-FIX-CHANGE-LIFECYCLE-v1",
-    "SR-FIX-CHANGE-TARGET-v1"
+    "SR-FIX-CHANGE-TARGET-v1",
+    "SR-FIX-CHANGE-EXECUTION-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -222,6 +223,10 @@
     "SR-FIX-CHANGE-TARGET-v1": {
       "provider": "tests/support/targets.py:model",
       "kind": "owned exact-byte project inventory, explicit effective profile and synthetic trusted gates; no live inventory, authorization or prepared transaction proof"
+    },
+    "SR-FIX-CHANGE-EXECUTION-v1": {
+      "provider": "tests/support/execution.py:Storage",
+      "kind": "Owned exact-byte supplied models and explicit test-only publisher, optionally real tempdir files; not production authorization, locking, durability or recovery."
     }
   }
 }

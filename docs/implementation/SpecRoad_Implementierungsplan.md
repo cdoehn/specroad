@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 198
-last_completed_plan_commit: 5.f.C
-next_plan_commit: 5.g.W
+implementation_plan_commits_completed: 199
+last_completed_plan_commit: 5.g.W
+next_plan_commit: 5.g.R
 last_completed_numbered_bundle: 29
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2639,7 +2639,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.g.W – Let it Work
 
-- [ ] **5.g.W** · Position **199/885** · Voraussetzung: `5.f.C`.
+- [x] **5.g.W** · Position **199/885** · Voraussetzung: `5.f.C`.
 **Exakte Commit-Message:** `5.g.W feat(changes): Dry-Run und Change-Apply aufbauen`
 
 **Umsetzung:** Dry-Run und gespeicherten change apply auf denselben gebundenen Plan aufsetzen.

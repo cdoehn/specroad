@@ -40,3 +40,10 @@ from .target_values import TargetPolicy, TargetAssessment, TargetError
 __all__ += ['TargetModel', 'TargetPolicy', 'TargetAssessment', 'TargetError', 'assess_change_target']
 
 __all__ += ['prepare_change_target']
+
+from .execution import (ChangeBackend, PublicationRequest, PublicationReceipt,
+    ChangeExecutionResult, ChangeExecutionError, dry_run_change,
+    apply_change_plan, execute_change_request)
+__all__ += ['ChangeBackend', 'PublicationRequest', 'PublicationReceipt',
+    'ChangeExecutionResult', 'ChangeExecutionError', 'dry_run_change',
+    'apply_change_plan', 'execute_change_request']

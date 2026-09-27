@@ -4,19 +4,40 @@
   "requirement_id": "SR-REQ-0443",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CHANGE-EXECUTION-v1"
+  ],
+  "preconditions": [
+    "Owned TargetModel bytes, explicit immutable plan and command policy. A trusted test-only storage adapter is supplied only to the apply path."
+  ],
+  "steps": [
+    "Compare dry-run/direct/saved results, fail-on-change, fresh transaction inputs, exact receipt/readback binding and actual file effects in owned test storage."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein direkter Authoring-Befehl MUSS intern denselben speicherbaren Change Plan erzeugen wie sein entsprechender Dry-Run.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Shared full target/plan/diff/impact/diagnostic projection; dry-run never enters any publication backend or writes a receipt. Exact supplied readback is verified after trusted publication, without claiming independent durability proof."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "json_pointers": [
+    "/plan",
+    "/expected_model_root",
+    "/write_state",
+    "/backend_receipt"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +49,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_change_execution.py::test_direct_and_saved_entry_use_same_plan_bytes",
+    "tests/test_change_execution.py::test_actual_adapter_file_publication_matches_dry_run",
+    "tests/test_change_execution.py::test_live_base_is_revalidated_under_transaction",
+    "tests/test_change_execution.py::test_mismatched_receipt_never_reports_success"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Native CLI wiring and the safe filesystem transaction backend with real authorization, locks, journals, request receipts and fsync are later plan steps. The injected backend is trusted host code, not sandboxed or authenticated by its registration.",
+    "Current scope is the complete supplied unconfigured project and the six supported ordinary operation families, not independently discovered on-disk completeness.",
+    "The in-test storage adapter checks real effects but is not a production crash-safe implementation. Full native dry-run/apply equivalence remains pending its integration."
   ]
 }
