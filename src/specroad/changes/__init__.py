@@ -13,3 +13,8 @@ __all__ += ["JsonPatch", "JsonPatchError", "PatchResult", "UpdatePreview",
 
 from .patching import preview_update_bytes, preview_field_update
 __all__ += ["preview_update_bytes", "preview_field_update"]
+
+from .folding import fold_operations, fold_plan_fields, SUPPORTED_FOLD_OPERATIONS
+from .folding_values import OperationFold, FoldedArtifact, FoldError
+__all__ += ["fold_operations", "fold_plan_fields", "SUPPORTED_FOLD_OPERATIONS",
+            "OperationFold", "FoldedArtifact", "FoldError"]

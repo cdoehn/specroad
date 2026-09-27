@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0440",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ORDERED-FOLD-v1"
+  ],
+  "preconditions": [
+    "Supply stable, explicit, privately copied model values, ordered operations and base observations."
+  ],
+  "steps": [
+    "Evaluate create/update operations in their array order on intermediate private states; inspect folded candidates and instrument that no later operation executes after failure."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Mehrere Operationen auf demselben Artefakt MÜSSEN vor Hashbildung zu genau einem resultierenden Artefaktzustand gefaltet werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Ordered in-memory field candidates and fail-stop execution only. No metadata advancement, live file checks, specialized lifecycle/evidence/control planners, final target-model validation, declared final-root verification or publication."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_operation_folding.py::test_create_then_update_folds_to_one_final_candidate",
+    "tests/test_operation_folding.py::test_noop_and_reverted_changes_still_have_one_touched_candidate",
+    "tests/test_operation_folding.py::test_no_metadata_or_lifecycle_advancement_is_claimed"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate subsequent specialized planner operations, change-metadata-v1 (5.d), lifecycle gates (5.e), full final-state validation (5.f) and checked publication. All requirements remain partial; a candidate hash is not a confirmed final Change Plan result."
   ]
 }

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 186
-last_completed_plan_commit: 5.b.C
-next_plan_commit: 5.c.W
+implementation_plan_commits_completed: 187
+last_completed_plan_commit: 5.c.W
+next_plan_commit: 5.c.R
 last_completed_numbered_bundle: 25
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2499,7 +2499,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.c.W – Let it Work
 
-- [ ] **5.c.W** · Position **187/885** · Voraussetzung: `5.b.C`.
+- [x] **5.c.W** · Position **187/885** · Voraussetzung: `5.b.C`.
 **Exakte Commit-Message:** `5.c.W feat(changes): Geordnete Auswertung und Faltung aufbauen`
 
 **Umsetzung:** Operationsfolge gegen Zwischenstände anwenden und je Artefakt ein Endresultat falten.
