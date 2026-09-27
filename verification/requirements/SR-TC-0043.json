@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS Reifegradübergänge von Standardartefakten anhand Kapitel 9.6.1 prüfen.",
-    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof."
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
   },
   "expected_diagnostics": [
     "SRV030"
@@ -47,7 +47,9 @@
   "test_ids": [
     "tests/test_change_lifecycle.py::test_pure_transition_to_proposed_is_one_revision",
     "tests/test_change_lifecycle.py::test_retired_cannot_transition_out",
-    "tests/test_change_lifecycle.py::test_approval_not_granted_by_an_actor_label_or_transition_metadata"
+    "tests/test_change_lifecycle.py::test_approval_not_granted_by_an_actor_label_or_transition_metadata",
+    "tests/test_change_lifecycle_right.py::test_all_49_matrix_pairs_match_independent_contract_or_explicit_gate",
+    "tests/test_change_lifecycle_right.py::test_transition_from_is_checked_against_immediate_intermediate_state"
   ],
   "open_items": [
     "Full target validation and live publication are future planner/transaction steps.",

@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Fachinhaltsänderung an einem `approved` Standardartefakt MUSS dessen neue Revision exakt auf `proposed` setzen; reine Lifecycle-Operationen und gemischte Änderungspläne werden nach Kapitel 9.6.3 unterschieden.",
-    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof."
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
   },
   "expected_diagnostics": [
     "SRV030"
@@ -47,7 +47,11 @@
   "test_ids": [
     "tests/test_change_lifecycle.py::test_approved_content_change_proposed_once_before_hashing",
     "tests/test_change_lifecycle.py::test_relation_change_resets_approved_source_not_target",
-    "tests/test_change_lifecycle.py::test_reverted_content_with_retirement_is_pure_lifecycle"
+    "tests/test_change_lifecycle.py::test_reverted_content_with_retirement_is_pure_lifecycle",
+    "tests/test_change_lifecycle_right.py::test_changed_approved_cannot_transition_back_to_approved_in_same_plan",
+    "tests/test_change_lifecycle_right.py::test_saved_plan_without_declared_downgrade_is_rejected",
+    "tests/test_change_lifecycle_right.py::test_saved_conflict_is_model_error_even_with_self_consistent_sha",
+    "tests/test_change_lifecycle_right.py::test_many_owners_and_repeated_operations_each_stamp_once"
   ],
   "open_items": [
     "Full target validation and live publication are future planner/transaction steps.",

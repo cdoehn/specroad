@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Wechsel eines Artefakts auf `superseded` MUSS durch mindestens eine gespeicherte `supersedes`-Beziehung eines Nachfolgeartefakts gleichen Typs auf dieses Artefakt begründet sein.",
-    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof."
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
   },
   "expected_diagnostics": [
     "SRV030"
@@ -47,7 +47,10 @@
   "test_ids": [
     "tests/test_change_lifecycle.py::test_pure_supersession_requires_incoming_same_type_successor",
     "tests/test_change_lifecycle.py::test_successor_can_be_created_later_in_the_same_plan",
-    "tests/test_change_lifecycle.py::test_missing_successor_is_a_failure_not_partial_success"
+    "tests/test_change_lifecycle.py::test_missing_successor_is_a_failure_not_partial_success",
+    "tests/test_change_lifecycle_right.py::test_removed_final_successor_is_not_enough",
+    "tests/test_change_lifecycle_right.py::test_outgoing_supersedes_is_not_a_successor_of_the_source",
+    "tests/test_change_lifecycle_right.py::test_cyclic_successors_cannot_legitimize_supersession"
   ],
   "open_items": [
     "Full target validation and live publication are future planner/transaction steps.",

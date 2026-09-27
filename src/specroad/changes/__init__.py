@@ -31,3 +31,6 @@ from .lifecycle import prepare_change_lifecycle, lifecycle_content_sha256, LIFEC
 from .lifecycle_values import LifecycleResult, LifecycleError
 __all__ += ['prepare_change_lifecycle', 'lifecycle_content_sha256', 'LIFECYCLE_POLICY_VERSION',
             'LifecycleResult', 'LifecycleError']
+
+from .lifecycle import prepare_plan_lifecycle, prepare_change_lifecycle_bytes
+__all__ += ['prepare_plan_lifecycle', 'prepare_change_lifecycle_bytes']

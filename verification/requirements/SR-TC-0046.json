@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Wechsel auf `retired` MUSS einen nichtleeren Grund und einen verantwortlichen Akteur erfassen.",
-    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof."
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
   },
   "expected_diagnostics": [
     "SRV030"
@@ -46,7 +46,9 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_change_lifecycle.py::test_pure_retirement_has_no_following_reset_or_invented_fields",
-    "tests/test_change_lifecycle.py::test_missing_retirement_reason_fails"
+    "tests/test_change_lifecycle.py::test_missing_retirement_reason_fails",
+    "tests/test_change_lifecycle_right.py::test_lifecycle_reason_is_kept_in_audit_not_normative_content",
+    "tests/test_change_lifecycle_right.py::test_retire_hash_and_revision_must_both_match"
   ],
   "open_items": [
     "Full target validation and live publication are future planner/transaction steps.",

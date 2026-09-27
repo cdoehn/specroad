@@ -12,7 +12,7 @@ class LifecycleError(ChangePlanError):
         self.operation_index = operation_index
         # The same contradictory request is usage error in authoring, model
         # error when already stored in a self-hashed plan (section 9.6.3).
-        self.exit_code = 2 if reason == 'content_lifecycle_conflict' and input_kind == 'authoring' else 3
+        self.exit_code = 2 if reason in ('content_lifecycle_conflict', 'transition_requires_distinct_states') and input_kind == 'authoring' else 3
 
     def diagnostic(self):
         return {**super().diagnostic(), 'operation_index': self.operation_index,
@@ -26,6 +26,7 @@ class LifecycleResult:
     _events: JsonSnapshot
     plan_sha256: str | None = None
     declared_artifacts_verified: bool = False
+    _history: JsonSnapshot | None = None
 
     @property
     def artifacts(self): return self._metadata.artifacts
@@ -49,6 +50,8 @@ class LifecycleResult:
     def decisions(self): return self._decisions.data
     @property
     def transition_events(self): return self._events.data
+    @property
+    def previously_approved_ids(self): return [] if self._history is None else self._history.data
     @property
     def validation_scope(self): return 'standard_lifecycle_candidates_only'
     @property

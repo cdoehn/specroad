@@ -36,3 +36,32 @@ field-only and metadata-only APIs retain their explicit narrower contracts.
 Testing follows TD-001/TD-002: only new/directly affected tests locally with four
 xdist workers; the full matrix runs in GitHub, and every fifth bundle includes
 the serial reference. No presentation or documentation tests are introduced.
+
+## Complete candidate verification
+
+`prepare_plan_lifecycle` recomputes final candidate status and audit fields from
+actual supplied base values and ordered operations before comparing every stored
+result hash. Supplied scope/root must match the plan. A self-consistent hash on
+a forged approved result is not sufficient. No final project root is asserted.
+
+`prepare_change_lifecycle_bytes` accepts actual UTF-8 bytes, not path strings,
+and retains exact source bytes on the candidate. Duplicate/malformed JSON fails.
+`previously_approved_ids` is an explicit history observation; known IDs stay
+reserved even outside the current selected scope. The current approved source
+ID is retained when its candidate becomes proposed/retired. The API has no
+physical-delete operation and makes no claim of complete historical discovery.
+
+Successor evidence is checked in the final supplied model; a removed edge or a
+wrong-direction edge cannot satisfy supersession. Protected hierarchy cycles
+are rejected using the existing graph validator. Repeated guarded retirement
+of an already retired value is a no-op; no transition out of retired is allowed.
+
+A pending legal approval edge is checked only after content conflicts, so an
+attempt to reapprove changed base-approved content in the same plan is never
+accepted. Complete approval integration remains a required dedicated gate;
+`human` labels and arbitrary transition metadata cannot supply it.
+
+Approved-only field obligations are evaluated against the pending proposed
+candidate. Intermediate revision/hash/from guards still see the actual ordered
+values. The private validation projection never changes the input or silently
+relaxes the common field contracts.

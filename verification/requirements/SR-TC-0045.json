@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein jemals `approved` gewesenes Artefakt DARF NICHT physisch aus dem normativen Modell entfernt werden.",
-    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof."
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
   },
   "expected_diagnostics": [
     "SRV030"
@@ -45,7 +45,10 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "tests/test_change_lifecycle.py::test_different_artifacts_can_change_content_and_retire_independently"
+    "tests/test_change_lifecycle.py::test_different_artifacts_can_change_content_and_retire_independently",
+    "tests/test_change_lifecycle_right.py::test_history_known_ids_remain_reserved_even_if_absent_from_current_scope",
+    "tests/test_change_lifecycle_right.py::test_observed_approved_identity_survives_retirement_and_content_change",
+    "tests/test_change_lifecycle_right.py::test_delete_not_a_regular_operation_even_for_unapproved_artifacts"
   ],
   "open_items": [
     "Full target validation and live publication are future planner/transaction steps.",
