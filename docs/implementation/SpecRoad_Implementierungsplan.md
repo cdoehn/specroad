@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 187
-last_completed_plan_commit: 5.c.W
-next_plan_commit: 5.c.R
+implementation_plan_commits_completed: 188
+last_completed_plan_commit: 5.c.R
+next_plan_commit: 5.c.C
 last_completed_numbered_bundle: 25
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2508,7 +2508,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.c.R – Make it Right
 
-- [ ] **5.c.R** · Position **188/885** · Voraussetzung: `5.c.W`.
+- [x] **5.c.R** · Position **188/885** · Voraussetzung: `5.c.W`.
 **Exakte Commit-Message:** `5.c.R feat(changes): Geordnete Auswertung und Faltung vervollständigen`
 
 **Vervollständigung:** Nach fehlgeschlagener Operation keine Folgeoperation auswerten.

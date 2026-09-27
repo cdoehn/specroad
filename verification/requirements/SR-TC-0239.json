@@ -13,7 +13,7 @@
     "Supply stable, explicit, privately copied model values, ordered operations and base observations."
   ],
   "steps": [
-    "Evaluate create/update operations in their array order on intermediate private states; inspect folded candidates and instrument that no later operation executes after failure."
+    "Evaluate create/update/relation-add/relation-remove operations in their array order on intermediate private states; inspect folded candidates and instrument that no later operation executes after failure."
   ],
   "oracle": {
     "kind": "behavior",
@@ -38,7 +38,10 @@
     "tests/test_operation_folding.py::test_ordered_updates_use_previous_intermediate",
     "tests/test_operation_folding.py::test_create_then_update_folds_to_one_final_candidate",
     "tests/test_operation_folding.py::test_updates_to_multiple_artifacts_are_not_grouped_before_evaluation",
-    "tests/test_operation_folding.py::test_planwide_guards_check_base_but_operation_guards_check_intermediate"
+    "tests/test_operation_folding.py::test_planwide_guards_check_base_but_operation_guards_check_intermediate",
+    "tests/test_operation_folding_right.py::test_add_relation_then_update_observes_previous_graph_state",
+    "tests/test_operation_folding_right.py::test_relation_targets_must_exist_at_the_actual_operation",
+    "tests/test_operation_folding_right.py::test_create_update_sequences_match_independent_last_assignment_oracle"
   ],
   "open_items": [
     "Integrate subsequent specialized planner operations, change-metadata-v1 (5.d), lifecycle gates (5.e), full final-state validation (5.f) and checked publication. All requirements remain partial; a candidate hash is not a confirmed final Change Plan result."

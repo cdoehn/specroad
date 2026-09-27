@@ -1,7 +1,7 @@
 # Ordered Change Plan field candidates
 
-Plan step 5.c; implementation W. The pure `fold_operations` entrypoint applies
-`create` and `update` in the declared array order to private intermediate values.
+Plan step 5.c; implementation W/R. The pure `fold_operations` entrypoint applies
+`create`, `update`, `relation_add` and `relation_remove` in the declared array order to private intermediate values.
 `fold_plan_fields` additionally binds an immutable self-hashed plan to explicitly
 supplied scope/root observations. Observations are not authenticated live reads.
 
@@ -34,3 +34,24 @@ caller-owned objects; callers must stabilize inputs during snapshot creation.
 Only new/directly affected tests run locally with four xdist workers. Full CI
 runs at the final bundle commit. Requirement manifests retain `partial` until
 the subsequent planner, lifecycle and transaction gates are integrated.
+
+## Relation reducers
+
+Initial stored edges use the existing reference/matrix/symmetry validation.
+Relation additions (including those inside new artifacts) require targets that
+exist at that point, unique relation identities, canonical symmetric direction
+and non-conflicting external identities. A relation removed during this fold
+keeps its ID reserved: a later operation cannot reuse it. Explicit reserved IDs
+represent the caller-supplied historical/reservation inventory, not an inferred
+complete project history. No random generator is called.
+
+Relation removal checks the hash of the complete current relation, including
+its metadata, before replacing the owner's private relation array. A later
+artifact update sees that exact intermediate relation state. Net-no-op folds
+retain their operation history without inventing a revision or audit change.
+Graph-wide cycles, lifecycle duties and authorization remain later target gates.
+
+The supported four reducers do not pretend to implement the other eight workflow
+families. Lifecycle/retire, attachments, evidence, normalization, review and
+proposal control operations explicitly require their specialized planner. This
+is an extensible-by-code boundary, not dynamic code registration from plan data.
