@@ -26,3 +26,8 @@ __all__ += ["prepare_change_metadata", "REGULAR_METADATA_POLICY", "MetadataResul
 
 from .metadata import prepare_plan_metadata, prepare_change_metadata_bytes
 __all__ += ["prepare_plan_metadata", "prepare_change_metadata_bytes"]
+
+from .lifecycle import prepare_change_lifecycle, lifecycle_content_sha256, LIFECYCLE_POLICY_VERSION
+from .lifecycle_values import LifecycleResult, LifecycleError
+__all__ += ['prepare_change_lifecycle', 'lifecycle_content_sha256', 'LIFECYCLE_POLICY_VERSION',
+            'LifecycleResult', 'LifecycleError']

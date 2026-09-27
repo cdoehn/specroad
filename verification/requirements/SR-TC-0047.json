@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0047",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0004",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CHANGE-LIFECYCLE-v1"
+  ],
+  "preconditions": [
+    "Owned standard-artifact values and ordered operations; explicit bound actor and time."
+  ],
+  "steps": [
+    "Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Wechsel eines Artefakts auf `superseded` MUSS durch mindestens eine gespeicherte `supersedes`-Beziehung eines Nachfolgeartefakts gleichen Typs auf dieses Artefakt begründet sein.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV030"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3
+  ],
+  "json_pointers": [
+    "/maturity",
+    "/revision",
+    "/operations"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,14 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_change_lifecycle.py::test_pure_supersession_requires_incoming_same_type_successor",
+    "tests/test_change_lifecycle.py::test_successor_can_be_created_later_in_the_same_plan",
+    "tests/test_change_lifecycle.py::test_missing_successor_is_a_failure_not_partial_success"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Full target validation and live publication are future planner/transaction steps.",
+    "Dedicated complete approval gates are required for transitions to approved; this adapter refuses them.",
+    "Historical completeness and specialized lifecycles are not established by this regular adapter."
   ]
 }
