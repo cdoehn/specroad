@@ -7,7 +7,6 @@ mutex; only explicit recovery may consider an unverifiable owner's risk.
 from __future__ import annotations
 from hashlib import sha256
 import os
-from pathlib import Path
 import sys
 from uuid import UUID
 from .lock_values import OwnerIdentity, ProjectLockError

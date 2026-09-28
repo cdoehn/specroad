@@ -1,7 +1,6 @@
 """Versioned operational lock data, not model identity or write permission."""
 from __future__ import annotations
 from dataclasses import dataclass
-from enum import Enum
 from hashlib import sha256
 from uuid import UUID
 from ..model.audit_fields import _valid_utc
@@ -28,23 +27,7 @@ class ProjectLockError(ModelError):
                 'mutation_possible': self.mutation_possible}
 
 
-class LockKind(str, Enum):
-    WRITER = 'writer'
-    RECOVERY = 'recovery'
-    OPERATIONAL = 'operational'
-
-
-COMMANDS = {
-    LockKind.WRITER: frozenset(('change apply', 'format', 'artifact create', 'artifact update',
-        'relation add', 'relation remove', 'relation review', 'lifecycle transition',
-        'document create', 'section add', 'section move', 'section remove',
-        'block add', 'block update', 'block remove', 'view create', 'evidence record',
-        'evidence import', 'baseline create', 'proposal create', 'proposal change',
-        'proposal review start', 'proposal review', 'proposal apply', 'import apply',
-        'migrate apply', 'merge apply')),
-    LockKind.RECOVERY: frozenset(('recover run', 'recover discard', 'recover restore')),
-    LockKind.OPERATIONAL: frozenset(('lock recover',)),
-}
+from ._lock_kinds import LockKind, COMMANDS
 
 
 def text(value, *, optional=False):

@@ -15,26 +15,9 @@ from .authoring import normalize_request_id
 from .lock_values import (LockKind, LockRecord, LockStatus, OwnerIdentity,
                           ProjectLockError, LOCK_VERSION, text, kind_and_command)
 from ._lock_process import LinuxOwnerProbe
+from ._lock_owner_policy import observe_owner, _recovery_permitted
 from ._lock_files import LockFiles, identity
 
-
-def observe_owner(record, probe):
-    owner = record.owner
-    host = probe.host_id()
-    if host is None or owner.host_id is None:
-        return 'unverifiable'
-    if host != owner.host_id:
-        return 'foreign'
-    if owner.process_start_id is None:
-        return 'unverifiable'
-    state, start = probe.process(owner.process_id)
-    if state == 'absent':
-        return 'dead'
-    if state not in ('alive', 'dead') or start is None:
-        return 'unverifiable'
-    if start != owner.process_start_id:
-        return 'pid_reused'
-    return state
 
 
 def _bound(record, files, project_id):
@@ -162,14 +145,6 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
                 finally:
                     guard._active = False
 
-
-def _recovery_permitted(record, probe, accept_remote_risk):
-    state = observe_owner(record, probe)
-    if state == 'alive':
-        raise ProjectLockError('live_owner_recovery_denied', exit_code=7)
-    if state != 'dead' and not accept_remote_risk:
-        raise ProjectLockError('accept_remote_risk_required', exit_code=7)
-    return state
 
 
 def recover_project_lock(root, *, project_id, expected_lock_sha256, actor, reason,
