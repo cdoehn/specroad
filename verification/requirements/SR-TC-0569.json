@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0569",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-LOCK-v1"
+  ],
+  "preconditions": [
+    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests."
+  ],
+  "steps": [
+    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein neuer Hostname oder eine erneut vergebene Prozessnummer DARF NICHT allein die Übernahme eines unbekannten Lock-Eigentümers rechtfertigen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native lock and read-only observation libraries plus explicit audited recovery; no complete CLI integration, authorization or durable transaction engine."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_locks_right.py::test_inaccessible_proc_never_claims_dead_from_pid_number_alone",
+    "tests/test_project_locks_right.py::test_unknown_host_observation_stays_unknown_not_hostname_fallback",
+    "tests/test_project_locks_right.py::test_owner_becoming_live_on_final_observation_prevents_removal"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",
+    "Native Linux local-filesystem scope is not a distributed/NFS lock or authenticated host identity."
   ]
 }

@@ -10,15 +10,15 @@
     "SR-FIX-PROJECT-LOCK-v1"
   ],
   "preconditions": [
-    "Owned project roots on a local Linux filesystem; cooperating processes use the same native project-root mutex."
+    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests."
   ],
   "steps": [
-    "Acquire writer/recovery guards, observe owner records, exercise competing child processes and verify owned release."
+    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Normative Writes und Recovery-Writes MÜSSEN die ihrer Befehlsklasse zugeordnete exklusive Projektlockart nach Kapitel 11.7 verwenden.",
-    "scope": "Native library locking and conservative read-only status; no CLI commands, transaction engine, distributed lock or authorization claim."
+    "scope": "Native lock and read-only observation libraries plus explicit audited recovery; no complete CLI integration, authorization or durable transaction engine."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,10 +38,12 @@
     "tests/test_project_locks.py::test_real_writer_lock_and_release",
     "tests/test_project_locks.py::test_same_process_second_open_cannot_bypass_mutex",
     "tests/test_project_locks.py::test_exception_releases_only_owned_record",
-    "tests/test_project_locks.py::test_recovery_uses_same_mutex_without_normal_model_loading"
+    "tests/test_project_locks.py::test_recovery_uses_same_mutex_without_normal_model_loading",
+    "tests/test_project_locks_right.py::test_simultaneous_child_contenders_cannot_both_enter",
+    "tests/test_project_locks_right.py::test_fork_child_cannot_release_parent_mutex_or_owner_record"
   ],
   "open_items": [
-    "Integrate the complete command/transaction and journal-recovery engines; verify remaining supported target runtimes and filesystem assumptions.",
-    "Explicit orphan recovery and its audited risk policy follow in 5.i.R."
+    "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",
+    "Native Linux local-filesystem scope is not a distributed/NFS lock or authenticated host identity."
   ]
 }

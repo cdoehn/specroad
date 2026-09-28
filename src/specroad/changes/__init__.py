@@ -58,7 +58,7 @@ __all__ += ['AuthoringError', 'NormativeRequestId', 'AuthoringRequest',
     'normalize_request_id', 'normalize_authoring_actor', 'prepare_authoring_request',
     'bind_plan_authoring']
 
-from .locking import (project_lock, inspect_project_lock, HeldProjectLock,
+from .locking import (project_lock, inspect_project_lock, recover_project_lock, HeldProjectLock,
                       ProjectLockError, LockKind, LockRecord, OwnerIdentity)
-__all__ += ['project_lock', 'inspect_project_lock', 'HeldProjectLock',
+__all__ += ['project_lock', 'inspect_project_lock', 'recover_project_lock', 'HeldProjectLock',
             'ProjectLockError', 'LockKind', 'LockRecord', 'OwnerIdentity']

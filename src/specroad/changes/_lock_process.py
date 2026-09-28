@@ -60,7 +60,15 @@ class LinuxOwnerProbe:
                 _proc_stat(_read('/proc/self/stat'), os.getpid())
             except (OSError, ValueError):
                 return 'unknown', None
-            return 'absent', None
+            # hidepid can hide a live process even while our own proc entry is
+            # readable. Signal 0 is a nonmutating existence/permission probe.
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                return 'absent', None
+            except OSError:
+                return 'unknown', None
+            return 'unknown', None
         except (OSError, ValueError, UnicodeError):
             return 'unknown', None
 

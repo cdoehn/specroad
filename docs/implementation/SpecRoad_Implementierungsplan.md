@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 205
-last_completed_plan_commit: 5.i.W
-next_plan_commit: 5.i.R
+implementation_plan_commits_completed: 206
+last_completed_plan_commit: 5.i.R
+next_plan_commit: 5.i.C
 last_completed_numbered_bundle: 31
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2718,7 +2718,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.i.R – Make it Right
 
-- [ ] **5.i.R** · Position **206/885** · Voraussetzung: `5.i.W`.
+- [x] **5.i.R** · Position **206/885** · Voraussetzung: `5.i.W`.
 **Exakte Commit-Message:** `5.i.R feat(changes): Exklusiver Projektlock vervollständigen`
 
 **Vervollständigung:** Lebender Eigentümer, fremder/unprüfbarer Host und PID-Wiederverwendung verhindern unbegründete Übernahme.

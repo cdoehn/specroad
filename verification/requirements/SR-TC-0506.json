@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0506",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-LOCK-v1"
+  ],
+  "preconditions": [
+    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests."
+  ],
+  "steps": [
+    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Lock-Recovery-Befehl DARF NICHT ein vorhandenes Transaktionsjournal umgehen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native lock and read-only observation libraries plus explicit audited recovery; no complete CLI integration, authorization or durable transaction engine."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_locks_right.py::test_recovery_rechecks_journals_after_persisting_intent",
+    "tests/test_project_locks_right.py::test_busy_native_recovery_never_creates_an_audit_file"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",
+    "Native Linux local-filesystem scope is not a distributed/NFS lock or authenticated host identity."
   ]
 }

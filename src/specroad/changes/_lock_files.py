@@ -192,6 +192,30 @@ class LockFiles:
             os.unlink('project.json', dir_fd=directory)
             os.fsync(directory)
 
+    def append_audit(self, event_id, phase, raw):
+        """Create one immutable operational audit event; never replace history."""
+        from uuid import UUID
+        if str(UUID(event_id)) != event_id or phase not in ('intent', 'completed'):
+            raise ProjectLockError('invalid_lock_audit_identity', exit_code=2)
+        if type(raw) is not bytes or not 0 < len(raw) <= MAX_LOCK_BYTES:
+            raise ProjectLockError('invalid_lock_audit_data', exit_code=2)
+        self.require_held()
+        with self.directory(('.specroad', 'recovery', 'lock-audit'), create=True) as directory:
+            name = event_id + '.' + phase + '.json'
+            fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | getattr(os, 'O_CLOEXEC', 0), 0o600, dir_fd=directory)
+            try:
+                offset = 0
+                while offset < len(raw):
+                    n = os.write(fd, raw[offset:])
+                    if n <= 0:
+                        raise ProjectLockError('lock_audit_write_incomplete', mutation_possible=True)
+                    offset += n
+                os.fsync(fd)
+                os.fsync(directory)
+            finally:
+                os.close(fd)
+        return '.specroad/recovery/lock-audit/' + name
+
     def journal_entries(self):
         found = []
         with self.directory(('.specroad',)) as directory:

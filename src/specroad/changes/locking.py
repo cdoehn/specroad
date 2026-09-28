@@ -10,6 +10,7 @@ import os
 from uuid import uuid4
 from ..model.canonical import canonical_json_bytes
 from ..storage.project import ProjectSource
+from ..security import SafetyViolation
 from .authoring import normalize_request_id
 from .lock_values import (LockKind, LockRecord, LockStatus, OwnerIdentity,
                           ProjectLockError, LOCK_VERSION, text, kind_and_command)
@@ -160,3 +161,82 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
                     files.remove_record(record, inode)
                 finally:
                     guard._active = False
+
+
+def _recovery_permitted(record, probe, accept_remote_risk):
+    state = observe_owner(record, probe)
+    if state == 'alive':
+        raise ProjectLockError('live_owner_recovery_denied', exit_code=7)
+    if state != 'dead' and not accept_remote_risk:
+        raise ProjectLockError('accept_remote_risk_required', exit_code=7)
+    return state
+
+
+def recover_project_lock(root, *, project_id, expected_lock_sha256, actor, reason,
+                         force=False, accept_remote_risk=False, owner_probe=None):
+    """Explicit audited orphan removal, never a transaction recovery or takeover.
+
+    A held native mutex, active same-host owner, unexpected root/owner bytes or
+    pending journal always blocks removal. Consent only resolves owner-identity
+    uncertainty; it never overrides these other checks. Host/PID observations
+    are fresh kernel observations, not authenticated distributed ownership.
+    """
+    from .authoring import normalize_authoring_actor
+    text(project_id); text(reason)
+    if type(force) is not bool or type(accept_remote_risk) is not bool or not force:
+        raise ProjectLockError('explicit_lock_recovery_force_required', exit_code=2)
+    if (type(expected_lock_sha256) is not str or len(expected_lock_sha256) != 64
+            or any(c not in '0123456789abcdef' for c in expected_lock_sha256)):
+        raise ProjectLockError('expected_lock_sha256_required', exit_code=2)
+    actor = normalize_authoring_actor(actor)
+    # The explicit trusted adapter exists for embedded applications and tests;
+    # the ordinary path only reads the local native kernel, never project code.
+    probe = owner_probe if owner_probe is not None else LinuxOwnerProbe()
+    attempted = False
+    try:
+        with LockFiles(root) as files:
+            files.acquire()
+            record, inode = files.read_record()
+            if record is None:
+                raise ProjectLockError('lock_record_missing', exit_code=6)
+            _bound(record, files, project_id)
+            if record.sha256 != expected_lock_sha256:
+                raise ProjectLockError('lock_owner_changed', exit_code=6)
+            if files.journal_entries():
+                raise ProjectLockError('transaction_journal_blocks_lock')
+            state = _recovery_permitted(record, probe, accept_remote_risk)
+            event_id = str(uuid4())
+            base = {'format_version': LOCK_VERSION, 'event_id': event_id,
+                'command': 'lock recover', 'actor': actor.as_fields(), 'reason': reason,
+                'force': True, 'accept_remote_risk': accept_remote_risk,
+                'old_record': record.data, 'old_record_sha256': record.sha256,
+                'observed_owner_state': state,
+                'recoverer': LinuxOwnerProbe().current().as_dict(),
+                'actor_authenticated': False, 'journal_recovery_performed': False,
+                'write_authorized': False}
+            def audit(phase):
+                data = {**base, 'phase': phase,
+                    'record_removed': phase == 'completed',
+                    'observed_at': datetime.now(timezone.utc).isoformat(timespec='microseconds').replace('+00:00', 'Z')}
+                return files.append_audit(event_id, phase, canonical_json_bytes(data))
+            # Persist intention first. It explicitly does not claim completion.
+            attempted = True
+            intent_path = audit('intent')
+            current, current_inode = files.read_record()
+            if current is None or current.source_bytes != record.source_bytes or current_inode != inode:
+                raise ProjectLockError('lock_owner_changed', exit_code=6)
+            _bound(current, files, project_id)
+            _recovery_permitted(current, probe, accept_remote_risk)
+            if files.journal_entries():
+                raise ProjectLockError('transaction_journal_blocks_lock')
+            files.remove_record(record, inode)
+            completion_path = audit('completed')
+            return LockStatus.create({**base, 'record_removed': True,
+                'intent_path': intent_path, 'completion_path': completion_path,
+                'new_lock_acquired': False, 'atomic_snapshot': False})
+    except ProjectLockError as error:
+        if attempted:
+            error.mutation_possible = True
+        raise
+    except (OSError, SafetyViolation) as error:
+        raise ProjectLockError('lock_recovery_io_failure', mutation_possible=attempted) from error

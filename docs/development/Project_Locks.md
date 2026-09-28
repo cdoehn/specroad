@@ -35,3 +35,44 @@ repair, process termination or automatic request receipts are introduced here.
 All working data and temporary project roots in the tests are private to the
 test. The selected W gate includes the new lock tests plus the two directly
 changed read-only-validation test files; it does not execute a full suite.
+
+## Explicit recovery (5.i.R)
+
+`recover_project_lock` requires the exact observed lock-byte SHA-256, project
+identity, explicit force, actor and reason. It first obtains the SAME root-inode
+mutex. A busy mutex can never be bypassed, including with risk acknowledgement.
+Alive same-host process/start observations always refuse removal. Foreign or
+unverifiable host/start observations and PID reuse additionally require explicit
+`accept_remote_risk=True`. A missing proc record alone does not prove death:
+hidepid/permission cases stay unknown unless a nonmutating process existence
+probe also proves absence. New hostnames are not an ownership proof.
+
+The library does not remove another machine's actual kernel lock or kill any
+process. Risk consent is only about uncertain *orphan metadata* on the local
+filesystem; it cannot override an active local kernel holder, bad path, changed
+root/owner, or a transaction journal. The probe parameter is a trusted embedded
+application adapter, never configured/imported from project files. Actor data is
+an audit declaration, not authentication.
+
+An immutable 0600 intent event is written under
+`.specroad/recovery/lock-audit/<event-id>.intent.json` **before** removing the
+orphan. Owner bytes/inode, start observation and journal presence are rechecked.
+Only afterwards is a separate completion event created. Intent never claims
+removal. Interrupted audit/removal/completion produces an error with
+`mutation_possible=true`; existing events and any remaining owner are preserved.
+No automatic retry/rollback rewrites audit history. Recovery does not itself
+acquire a new writer lock and does not modify or interpret journals.
+
+Descriptor-relative nofollow I/O rejects symlinks, hardlinked owner records,
+special files and nested roots. Root/directory/record changes are rechecked.
+This is protection for cooperating local clients with trusted kernel/filesystem
+semantics, not an OS compare-and-swap guarantee against a hostile concurrent
+filesystem actor. The lock kind is not a privilege or a completed native writer.
+The new three-way mutual exclusion and forced-orphan recovery are not yet wired
+into every later CLI command or the unimplemented durable transaction backend.
+
+Selected R/C gates: both lock test files plus the two directly affected read-only
+validation files. Real competing processes, abrupt exit, forked handles, active
+journals, reused PIDs, unknown hosts, changing records, I/O failures and portable
+distributions are tested. There is no artificial test/suite timeout and no test
+that compares human-readable output or documentation layout.
