@@ -49,7 +49,7 @@ class PublicationReceipt:
     """Backend attestation, not independently authenticated/durable-file evidence."""
     request_sha256: str
     target_root_sha256: str
-    request_id: str
+    request_id: str | None
     published_paths: tuple
     receipt_id: str
 
@@ -57,7 +57,11 @@ class PublicationReceipt:
         for v in (self.request_sha256, self.target_root_sha256):
             if type(v) is not str or len(v) != 64 or any(c not in '0123456789abcdef' for c in v):
                 raise ChangeExecutionError('invalid_publication_receipt', exit_code=3)
-        if not _text(self.request_id) or not _text(self.receipt_id):
+        from .request_ids import normalize_request_id
+        if self.request_id is not None and type(self.request_id) is not str:
+            raise ChangeExecutionError("invalid_publication_receipt", exit_code=3)
+        normalize_request_id(self.request_id)
+        if not _text(self.receipt_id):
             raise ChangeExecutionError('invalid_publication_receipt', exit_code=3)
         if (type(self.published_paths) is not tuple or
                 any(not _text(p) for p in self.published_paths) or

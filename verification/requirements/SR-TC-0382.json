@@ -19,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder `normative_write` MUSS `--request-id <ID>` nach dem Idempotenzvertrag unterstützen.",
-    "scope": "Single-user policy routing and checked generic apply boundary only. No authenticated review or persistent idempotency claim."
+    "scope": "Single-user policy routing and checked generic apply boundary only. No authenticated review or persistent idempotency claim. Actual direct/saved/raw adapters enforce AI/CI IDs before user callbacks; Human/Tool may omit an ID as explicit null, with no generated receipt or replay claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -45,7 +45,12 @@
   "test_ids": [
     "tests/test_change_authoring.py::test_human_request_is_bound_to_command_actor_and_operation",
     "tests/test_change_authoring.py::test_human_apply_binds_exact_plan_in_backend_request",
-    "tests/test_change_authoring.py::test_analyzer_like_identifiers_do_not_supply_write_context"
+    "tests/test_change_authoring.py::test_analyzer_like_identifiers_do_not_supply_write_context",
+    "tests/test_change_authoring_right.py::test_optional_request_id_is_null_through_plan_and_real_test_receipt[human]",
+    "tests/test_change_authoring_right.py::test_optional_request_id_is_null_through_plan_and_real_test_receipt[tool]",
+    "tests/test_change_authoring_right.py::test_same_request_string_does_not_mask_different_operations",
+    "tests/test_change_authoring_right.py::test_same_saved_plan_formatting_retains_semantic_authoring_binding",
+    "tests/test_change_authoring_right.py::test_foreign_id_object_is_not_converted_even_when_value_would_match"
   ],
   "open_items": [
     "Public normative CLI commands and proposal workflows are not yet wired.",

@@ -8,6 +8,7 @@ from ._common import _at, _text, _reference, _artifact
 from .operation_registry import validate_operation as _validate_operation, result_owners as _targets
 from .schema import METADATA_POLICY, change_plan_schema
 from .errors import ChangePlanError
+from .request_ids import normalize_request_id
 
 def _result_bindings(value):
     """Check local declarations only; never resolve project paths or revisions."""
@@ -71,8 +72,8 @@ def _validate_plan(value, *, hash_present=True):
         schema["required"].remove("change_plan_sha256")
         schema["properties"].pop("change_plan_sha256")
     _at("", validate_builtin, value, schema)
-    for name in ("change_plan_id", "request_id"):
-        _text(value[name], "/" + name)
+    _text(value["change_plan_id"], "/change_plan_id")
+    _at("/request_id", normalize_request_id, value["request_id"])
     _at("/planned_at", UtcTimestamp, value["planned_at"])
     _at("/actor", Actor, **value["actor"])
     _at("/base/scope_descriptor", ScopeDescriptor, value["base"]["scope_descriptor"])

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 202
-last_completed_plan_commit: 5.h.W
-next_plan_commit: 5.h.R
+implementation_plan_commits_completed: 203
+last_completed_plan_commit: 5.h.R
+next_plan_commit: 5.h.C
 last_completed_numbered_bundle: 30
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2683,7 +2683,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.h.R – Make it Right
 
-- [ ] **5.h.R** · Position **203/885** · Voraussetzung: `5.h.W`.
+- [x] **5.h.R** · Position **203/885** · Voraussetzung: `5.h.W`.
 **Exakte Commit-Message:** `5.h.R feat(changes): Akteure, Berechtigung und Request-ID vervollständigen`
 
 **Vervollständigung:** Direkte KI-Änderung ohne as-proposal und AI/CI ohne Request-ID vor Mutation abweisen.

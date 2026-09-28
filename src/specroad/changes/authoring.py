@@ -4,8 +4,6 @@ Caller-declared actors remain audit/policy input. Only trusted application code
 selects the command. A proposal route never authorizes direct target writes.
 """
 from dataclasses import dataclass
-import re
-from .errors import ChangePlanError
 from .values import ChangePlan, ChangeOperation
 from ..model.audit import actor as parse_actor
 from ..model.audit_values import Actor
@@ -14,41 +12,7 @@ from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 
 AUTHORING_VERSION = 'authoring-policy-v1'
-REQUEST_PATTERN = r'[A-Za-z0-9][A-Za-z0-9._:-]{0,127}'
-
-
-class AuthoringError(ChangePlanError):
-    """Usage or policy rejection before invoking a normative writer."""
-    def __init__(self, reason, *, pointer='', exit_code=2):
-        super().__init__(reason, pointer=pointer, code='SRV146')
-        self.exit_code = exit_code
-
-    def diagnostic(self):
-        return {**super().diagnostic(), 'write_state': 'not_committed',
-                'authorization_granted': False}
-
-
-@dataclass(frozen=True)
-class NormativeRequestId:
-    """Caller-assigned write namespace. No strip/casefold/UUID substitution."""
-    value: str
-
-    def __post_init__(self):
-        if type(self.value) is not str or re.fullmatch(REQUEST_PATTERN, self.value) is None:
-            raise AuthoringError('invalid_normative_request_id', pointer='/request_id')
-
-    @property
-    def namespace(self):
-        return 'normative_write'
-
-
-def normalize_request_id(value):
-    if value is None:
-        return None
-    if type(value) is NormativeRequestId:
-        return NormativeRequestId(value.value)
-    # Foreign typed IDs, including analyzer request objects, are never coerced.
-    return NormativeRequestId(value)
+from .request_ids import AuthoringError, NormativeRequestId, normalize_request_id
 
 
 def normalize_authoring_actor(value):

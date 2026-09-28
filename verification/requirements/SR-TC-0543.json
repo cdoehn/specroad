@@ -19,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Für einen tatsächlich ausgeführten `normative_write` eines Akteurs vom Typ `ai` oder `ci` MUSS eine Request-ID vorliegen.",
-    "scope": "Single-user policy routing and checked generic apply boundary only. No authenticated review or persistent idempotency claim."
+    "scope": "Single-user policy routing and checked generic apply boundary only. No authenticated review or persistent idempotency claim. Actual direct/saved/raw adapters enforce AI/CI IDs before user callbacks; Human/Tool may omit an ID as explicit null, with no generated receipt or replay claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -46,7 +46,13 @@
     "tests/test_change_authoring.py::test_ci_apply_with_id_uses_same_backend_boundary",
     "tests/test_change_authoring.py::test_ai_dry_run_is_only_a_preview_without_request_receipt",
     "tests/test_change_authoring.py::test_actual_agent_write_requires_id[ai]",
-    "tests/test_change_authoring.py::test_actual_agent_write_requires_id[ci]"
+    "tests/test_change_authoring.py::test_actual_agent_write_requires_id[ci]",
+    "tests/test_change_authoring_right.py::test_missing_agent_request_id_denied_before_any_publication[direct-ai]",
+    "tests/test_change_authoring_right.py::test_missing_agent_request_id_denied_before_any_publication[direct-ci]",
+    "tests/test_change_authoring_right.py::test_missing_agent_request_id_denied_before_any_publication[saved-ai]",
+    "tests/test_change_authoring_right.py::test_missing_agent_request_id_denied_before_any_publication[saved-ci]",
+    "tests/test_change_authoring_right.py::test_missing_agent_request_id_denied_before_any_publication[bytes-ai]",
+    "tests/test_change_authoring_right.py::test_missing_agent_request_id_denied_before_any_publication[bytes-ci]"
   ],
   "open_items": [
     "Public normative CLI commands and proposal workflows are not yet wired.",

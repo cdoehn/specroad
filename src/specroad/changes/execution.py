@@ -67,16 +67,19 @@ def execute_change_request(model, operations, *, dry_run, policy, backend=None,
         raise ChangeExecutionError('fail_on_change_requires_dry_run', exit_code=2)
     if type(gates) not in (tuple, list) or type(strict) is not bool:
         raise ChangeExecutionError('explicit_gate_sequence_and_boolean_required', exit_code=2)
-    required = {'change_plan_id', 'request_id', 'actor', 'planned_at',
+    required = {'change_plan_id', 'actor', 'planned_at',
                 'scope_descriptor', 'metadata_policy_version'}
-    if not required <= set(plan_fields) or set(plan_fields) - required - {'preconditions'}:
+    if not required <= set(plan_fields) or set(plan_fields) - required - {'preconditions', 'request_id'}:
         raise ChangeExecutionError('explicit_plan_fields_required', exit_code=2)
     request = prepare_authoring_request(command_id="change apply",
-        actor=plan_fields["actor"], operations=operations, request_id=plan_fields["request_id"],
+        actor=plan_fields["actor"], operations=operations, request_id=plan_fields.get("request_id"),
         dry_run=dry_run, as_proposal=as_proposal)
     if not dry_run and request.data["route"] != "direct":
         raise AuthoringError("proposal_workflow_required", exit_code=7)
-    assessment = prepare_change_target(model, operations, policy=policy, gates=tuple(gates),
+    normalized = request.data
+    plan_fields = {**plan_fields, "actor": normalized["actor"],
+                   "request_id": normalized["request_id"]}
+    assessment = prepare_change_target(model, normalized["operations"], policy=policy, gates=tuple(gates),
                                        strict=strict, **plan_fields)
     if dry_run:
         return ChangeExecutionResult._create(assessment, dry_run=True, fail_on_change=fail_on_change)

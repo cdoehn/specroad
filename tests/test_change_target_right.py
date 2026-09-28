@@ -45,7 +45,7 @@ def test_authoring_and_saved_plan_paths_produce_identical_observations():
 
 @pytest.mark.parametrize('key,value',[
     ('metadata_policy_version','unknown'), ('actor',{'actor_type':'human'}),
-    ('planned_at','tomorrow'), ('change_plan_id',''), ('request_id',None)])
+    ('planned_at','tomorrow'), ('change_plan_id',''), ('request_id',' invalid')])
 def test_authoring_metadata_is_explicit_and_not_guessed(key,value):
     with pytest.raises(ModelError): prepare(model([goal()]),[],**{key:value})
 

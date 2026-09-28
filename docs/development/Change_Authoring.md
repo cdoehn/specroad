@@ -45,3 +45,25 @@ Lokale Gates: ausschließlich neue/direkt betroffene Dateien mit vier Workern.
 Vollsuite nur in CI; Bundle 031 parallel, nächster Doppelmodus bei Bundle 035.
 Vor neuen Commits muss der fehlende parallele UND serielle CI-Nachweis des
 bereits lokal abgeschlossenen Bundles 030 vollständig verifiziert sein.
+
+## Vollständige Eingabe- und Applygrenze (R)
+
+Die strikte Request-ID-Grammatik gilt nun auch im gespeicherten Change-Plan
+und beim Zurücklesen. Das Planfeld bleibt explizit erforderlich; `null` ist
+für nicht angegebene optionale Human-/Tool-IDs zulässig. An tatsächlichen
+AI-/CI-Writes wird `null` vor Zielprüfern/Backend als Nutzungsfehler (2)
+abgewiesen. Eine fehlerhafte gespeicherte ID ist ein Schema-/Modellfehler.
+Die bisher pauschal alle null-IDs ablehnende Target-Regression verwendet jetzt
+eine tatsächlich ungültige ID mit Leerzeichen; neue Tests prüfen die in der
+Spezifikation geforderte Human-/Tool-Optionalität einschließlich Testreceipt.
+
+Der direkte API-Aufruf kann die Request-ID auslassen und normiert dies auf
+`null`; er generiert weder Zufalls-IDs noch Ersatzwerte aus Actor/Analyse.
+Eine vorhandene typed Request-ID und ein Actor-Wertobjekt werden vor der
+Planbildung in reine JSON-Werte überführt. Schon gespeicherte Planbytes
+werden nicht nachträglich umgeschrieben oder mit Defaults ergänzt.
+
+Ein Policyergebnis ist weder ein normalisiertes persistentes Erfolgsreceipt
+noch der Beweis, dass eine Request-ID noch nie verwendet wurde. Gleiche IDs
+mit unterschiedlichen Operationen ergeben verschiedene Bindungen; die
+projektweite Konfliktprüfung und dauerhafte Wiederholung kommen erst später.

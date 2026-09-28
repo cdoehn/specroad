@@ -19,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein direkter normativer Authoring-Befehl eines KI-Akteurs MUSS ohne `--as-proposal` mit Exit Code 7 abgewiesen werden, ausgenommen die in Kapitel 11.10 ausdrücklich erlaubte Proposal-Verwaltung und Übernahme eines bereits menschlich freigegebenen Proposals.",
-    "scope": "Single-user policy routing and checked generic apply boundary only. No authenticated review or persistent idempotency claim."
+    "scope": "Single-user policy routing and checked generic apply boundary only. No authenticated review or persistent idempotency claim. Actual direct/saved/raw adapters enforce AI/CI IDs before user callbacks; Human/Tool may omit an ID as explicit null, with no generated receipt or replay claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -46,7 +46,10 @@
     "tests/test_change_authoring.py::test_ai_direct_write_rejected_with_permission_code",
     "tests/test_change_authoring.py::test_ai_as_proposal_is_not_a_direct_permission",
     "tests/test_change_authoring.py::test_denial_precedes_gate_and_transaction_and_creates_no_files",
-    "tests/test_change_authoring.py::test_as_proposal_does_not_route_through_generic_writer"
+    "tests/test_change_authoring.py::test_as_proposal_does_not_route_through_generic_writer",
+    "tests/test_change_authoring_right.py::test_as_proposal_is_never_ordinary_write_for_any_actor[human]",
+    "tests/test_change_authoring_right.py::test_repeated_preview_cannot_change_to_ai_write_permission",
+    "tests/test_change_authoring_right.py::test_noop_agent_request_is_still_a_normative_write"
   ],
   "open_items": [
     "Public normative CLI commands and proposal workflows are not yet wired.",

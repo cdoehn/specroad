@@ -3,6 +3,7 @@ from ..model.artifact_schemas import DIALECT
 from ..model.audit_fields import audit_definitions
 from ._schema_fields import obj, arr, text, digest, revision, expected
 from .operation_registry import OPERATION_TYPES, operation_schema
+from .request_ids import request_id_schema
 
 FORMAT_VERSION = "1.2.0"
 METADATA_POLICY = "change-metadata-v1"
@@ -21,7 +22,7 @@ def change_plan_schema():
     fields = {
         "format_version": {"const": FORMAT_VERSION},
         "metadata_policy_version": {"const": METADATA_POLICY},
-        "change_plan_id": text(), "request_id": text(),
+        "change_plan_id": text(), "request_id": request_id_schema(),
         "planned_at": defs["utc"], "actor": defs["actor"],
         "base": obj({"scope_descriptor": {"type": "object"}, "model_root_sha256": digest()}),
         "operations": arr({"anyOf": [operation_schema(kind) for kind in OPERATION_TYPES]}),
