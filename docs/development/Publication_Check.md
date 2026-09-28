@@ -44,3 +44,25 @@ Workern. Volltests laufen am Bundle-Abschluss in der CI, jede fünfte Nummer
 zusätzlich seriell mit Nachweisvergleich. Keine Darstellungstests oder Testtimeouts.
 Die Testpublisher sind absichtlich einfache owned-tempdir-Fixtures, keine
 Produktimplementierung eines crashsicheren Journal-/Receipt-Backends.
+
+## Vollständigkeit und erneute Berechtigungsentscheidung
+
+Die vorbereitete aktuelle JSON-Dateimenge wird gegen die tatsächlich verwalteten
+Projektverzeichnisse geprüft. Alle ausdrücklich gebundenen Dateien werden bei
+jedem Durchlauf neu gelesen. Sprachpakete brauchen zusätzlich `package_files`
+mit tatsächlichen Pfaden und exakt den bereitgestellten Paketbytes; reine
+Distributions-/Metadatenobjekte ersetzen keine Projektdatei. Ungebundene Archive,
+Historien und Spezialressourcen werden nicht als vollständig inventarisiert
+behauptet. Erlaubte neue Zielverzeichnisse bleiben als fehlend gebunden: Die
+Prüfung erzeugt sie nicht. Erscheinen sie zwischenzeitlich, ist die Vorbereitung
+veraltet; der spätere native Writer muss sein eigenes Staging daran anbinden.
+
+Sowohl fachliche Prüfer als auch die Hostautorisierung werden unter dem realen
+Writer-Lock erneut aufgerufen. Die Hostfunktion ist vertrauenswürdiger Code mit
+einem schreibfreien Prüfvertrag, keine aus Daten geladene Policy oder Garantie
+über fremden Python-Code. Änderungen während dieser Aufrufe werden danach erneut
+geprüft. Wiederholte Aufrufe des Publishers benötigen jedes Mal eine neue
+vollständige Prüfung; der zurückgegebene Befund ist keine wiederverwendbare
+Schreibfähigkeit. Ein geänderter Inode, Rechte, Eigentümer oder Parent wird auch
+bei gleichen Dateibytes erkannt. Reine Zeitstempeländerungen sind bei identischen
+Bytes/Identitäten kein automatisches Rebase.

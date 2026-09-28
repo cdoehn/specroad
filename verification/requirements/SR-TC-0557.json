@@ -44,7 +44,10 @@
   "test_ids": [
     "tests/test_publication_check.py::test_existing_change_apply_can_use_native_last_guard",
     "tests/test_publication_check.py::test_recovery_entry_appears_after_lock_stops_writer",
-    "tests/test_publication_check.py::test_mutation_during_authorization_is_caught_after_callback"
+    "tests/test_publication_check.py::test_mutation_during_authorization_is_caught_after_callback",
+    "tests/test_publication_check_right.py::test_journal_appears_during_authorization_is_not_waived",
+    "tests/test_publication_check_right.py::test_actual_other_process_cannot_enter_during_publication",
+    "tests/test_publication_check_right.py::test_forked_handle_is_not_publication_authority"
   ],
   "open_items": [
     "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",

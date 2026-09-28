@@ -10,7 +10,9 @@ import os
 import stat
 
 from ..model.canonical import canonical_json_bytes
-from ..model.paths import CURRENT_JSON_CLASSES
+from ..model.errors import ModelError
+from ..model.paths import CURRENT_JSON_CLASSES, PathClass
+from ..validation import ModelDocument
 from ..security import SafetyViolation, ProjectBoundary
 from ..security.resource_access import opened_resource
 from ..storage.byte_binding import fingerprint_reader
@@ -64,15 +66,17 @@ class PublicationPreflight:
     _policy: TargetPolicy
     _strict: bool
     _footprint: bytes
+    _package_files: tuple
 
     def __init__(self, *args, **kwargs):
         raise TypeError('Use prepare_publication_check')
 
     @classmethod
-    def _create(cls, request, model, policy, strict, footprint):
+    def _create(cls, request, model, policy, strict, footprint, package_files):
         obj = object.__new__(cls)
         for name, value in (('_request', request.detached()), ('_model', model.snapshot()),
-                ('_policy', policy), ('_strict', strict), ('_footprint', canonical_json_bytes(footprint))):
+                ('_policy', policy), ('_strict', strict), ('_footprint', canonical_json_bytes(footprint)),
+                ('_package_files', tuple(ModelDocument(d.path,d.content) for d in package_files))):
             object.__setattr__(obj, name, value)
         return obj
 
@@ -85,7 +89,7 @@ class PublicationPreflight:
         return {'format_version': CHECK_VERSION, 'phase': 'early_diagnostic',
                 'request_sha256': self._request.sha256,
                 'footprint_sha256': sha256(self._footprint).hexdigest(),
-                'observed_paths': sorted(self._model.source_files),
+                'observed_paths': sorted([*self._model.source_files, *(d.path for d in self._package_files)]),
                 'final_check_required': True, 'write_authorized': False,
                 'project_lock_acquired': False, 'atomic_snapshot': False}
 
@@ -161,38 +165,68 @@ def _rights(fd, path):
         raise PublicationCheckError('publication_mount_read_only', exit_code=7, path=path)
 
 
-def _parent(source, path):
+def _parent(source, path, *, writable=True):
     parent = path.rsplit('/', 1)[0] if '/' in path else ''
     parts = parent.split('/') if parent else []
     observed = {}
-    # Bind every ancestor, not merely the last directory or a pathname string.
+    deepest = ''
     fd = os.open(source.boundary.root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
         root_info = os.fstat(fd)
         if (root_info.st_dev, root_info.st_ino) != source.boundary._root_identity:
             raise PublicationCheckError('publication_root_changed')
         observed[''] = _stamp(root_info)
-        if not parts:
+        if not parts and writable:
             _rights(fd, '')
+        for index in range(len(parts)):
+            relative = '/'.join(parts[:index + 1])
+            try:
+                with opened_resource(source.boundary, relative, directory=True) as (directory, info):
+                    observed[relative] = _stamp(info)
+            except FileNotFoundError:
+                # Absence belongs to the observation; no mkdir or write probe.
+                for j in range(index, len(parts)):
+                    observed['/'.join(parts[:j + 1])] = None
+                break
+            deepest = relative
+        if writable and parts:
+            if deepest:
+                with opened_resource(source.boundary, deepest, directory=True) as (directory, info):
+                    if _stamp(info) != observed[deepest]:
+                        raise PublicationCheckError('publication_parent_changed', path=deepest)
+                    _rights(directory, deepest)
+            else:
+                _rights(fd, '')
     finally:
         os.close(fd)
-    for index in range(len(parts)):
-        relative = '/'.join(parts[:index + 1])
-        with opened_resource(source.boundary, relative, directory=True) as (directory, info):
-            observed[relative] = _stamp(info)
-            if index == len(parts) - 1:
-                _rights(directory, relative)
     return observed
 
 
-def _observe(source, model, request):
+def _package_bindings(source, model, package_files):
+    if type(package_files) not in (tuple, list) or any(type(d) is not ModelDocument for d in package_files):
+        raise PublicationCheckError('explicit_package_file_bindings_required', exit_code=2)
+    files = tuple(ModelDocument(d.path,d.content) for d in package_files)
+    names = [d.path for d in files]
+    if len(set(p.casefold() for p in names)) != len(names) or set(names) & set(model.source_files):
+        raise PublicationCheckError('duplicate_publication_package_path', exit_code=2)
+    if any(source.classify(d.path) not in (PathClass.PROFILE, PathClass.RULE) for d in files):
+        raise PublicationCheckError('publication_package_path_unmanaged', exit_code=7)
+    expected = sorted(sha256(p.source_bytes).hexdigest() for p in model.language_packages)
+    actual = sorted(sha256(d.content).hexdigest() for d in files)
+    if actual != expected:
+        raise PublicationCheckError('live_language_package_bindings_required', exit_code=2)
+    return files
+
+
+def _observe(source, model, request, package_files=()):
     source.check_current()
-    files = model.source_files
+    files = {**model.source_files, **{d.path:d.content for d in package_files}}
     expected_json = tuple(sorted(p for p in files if source.classify(p) in CURRENT_JSON_CLASSES))
     if current_json_paths(source) != expected_json:
         raise PublicationCheckError('publication_inventory_changed')
-    states = {}
+    states, parents = {}, {}
     for path, expected in sorted(files.items()):
+        parents.update(_parent(source, path, writable=False))
         with opened_resource(source.boundary, path) as (fd, info):
             if info.st_nlink != 1:
                 raise PublicationCheckError('linked_publication_input', path=path, exit_code=7)
@@ -200,7 +234,6 @@ def _observe(source, model, request):
             if actual.size != len(expected) or actual.sha256 != sha256(expected).hexdigest():
                 raise PublicationCheckError('publication_base_changed', path=path)
             states[path] = {**_stamp(info), 'size': actual.size, 'sha256': actual.sha256}
-    parents = {}
     for document in request.documents:
         path = document.path
         source.require_write_target(path)
@@ -229,6 +262,9 @@ def _translate(error):
         return PublicationCheckError('publication_permission_denied', exit_code=7)
     if isinstance(error, FileNotFoundError):
         return PublicationCheckError('publication_resource_missing')
+    if isinstance(error, ModelError):
+        code = 6 if error.reason in ('configuration_changed', 'project_identity_mismatch') else 3
+        return PublicationCheckError(error.reason, exit_code=code)
     if isinstance(error, SafetyViolation):
         return PublicationCheckError('unsafe_publication_path', exit_code=7)
     return PublicationCheckError('publication_check_io_failure', exit_code=5)
@@ -240,7 +276,7 @@ def _same_request(actual, expected):
         raise PublicationCheckError('publication_request_changed')
 
 
-def prepare_publication_check(plan, model, *, policy, gates=(), strict=False):
+def prepare_publication_check(plan, model, *, policy, gates=(), strict=False, package_files=()):
     """Early read-only diagnostic. Does not acquire any lock or create paths.
 
     Captures complete current normative JSON names and all explicitly bound raw
@@ -252,19 +288,20 @@ def prepare_publication_check(plan, model, *, policy, gates=(), strict=False):
     if type(gates) not in (list, tuple) or type(strict) is not bool:
         raise PublicationCheckError('publication_explicit_options_required', exit_code=2)
     plan, model = ChangePlan(plan.source_bytes), model.snapshot()
-    if model.language_packages:
-        raise PublicationCheckError('live_language_package_bindings_required', exit_code=2)
     try:
         source = _root(model)
+        package_files = _package_bindings(source, model, package_files)
         checked = assess_change_target(plan, model, policy=policy, gates=tuple(gates), strict=strict)
         if not checked.target_validated:
             raise PublicationCheckError('publication_target_not_validated', exit_code=3)
         request = PublicationRequest._create(checked, model)
-        first = _observe(source, model, request)
-        if first != _observe(source, model, request):
+        first = _observe(source, model, request, package_files)
+        if first != _observe(source, model, request, package_files):
             raise PublicationCheckError('publication_inputs_changed')
-        return PublicationPreflight._create(request, model, policy, strict, first)
-    except (OSError, SafetyViolation, ProjectLockError) as error:
+        return PublicationPreflight._create(request, model, policy, strict, first, package_files)
+    except (OSError, SafetyViolation, ModelError) as error:
+        if isinstance(error, PublicationCheckError):
+            raise
         raise _translate(error) from error
 
 
@@ -283,13 +320,14 @@ def recheck_publication(preflight, request, *, held_lock, transaction_id,
         raise PublicationCheckError('registered_authority_and_gates_required', exit_code=2)
     _same_request(request, preflight._request)
     model, plan = preflight._model.snapshot(), preflight._request.plan
+    package_files = preflight._package_files
     try:
         source = _root(model)
         def lock_check():
             held_lock.require_publication(source, command='change apply',
                 request_id=plan.data['request_id'], transaction_id=transaction_id)
         lock_check()
-        first = _observe(source, model, request)
+        first = _observe(source, model, request, package_files)
         if canonical_json_bytes(first) != preflight._footprint:
             raise PublicationCheckError('publication_footprint_changed')
         checked = assess_change_target(plan, model, policy=preflight._policy,
@@ -298,18 +336,23 @@ def recheck_publication(preflight, request, *, held_lock, transaction_id,
             raise PublicationCheckError('publication_target_not_validated', exit_code=3)
         _same_request(PublicationRequest._create(checked, model), preflight._request)
         handoff = request.detached()
-        allowed = authority.check(handoff)
+        try:
+            allowed = authority.check(handoff)
+        except Exception as error:
+            raise PublicationCheckError('publication_authority_failed', exit_code=7) from error
         _same_request(handoff, preflight._request)
         if type(allowed) is not bool or not allowed:
             raise PublicationCheckError('publication_authorization_denied', exit_code=7)
         lock_check()
         # Last complete read, after callbacks and immediately before the boundary.
-        if canonical_json_bytes(_observe(source, model, request)) != preflight._footprint:
+        if canonical_json_bytes(_observe(source, model, request, package_files)) != preflight._footprint:
             raise PublicationCheckError('publication_footprint_changed')
         _same_request(request, preflight._request)
         lock_check()
         return PublicationRecheck._create(request, held_lock, authority)
-    except (OSError, SafetyViolation, ProjectLockError) as error:
+    except (OSError, SafetyViolation, ModelError) as error:
+        if isinstance(error, PublicationCheckError):
+            raise
         raise _translate(error) from error
 
 

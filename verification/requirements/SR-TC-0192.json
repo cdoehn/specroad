@@ -45,7 +45,9 @@
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[0]",
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[1]",
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[2]",
-    "tests/test_publication_check.py::test_new_normative_json_after_plan_invalidates_inventory"
+    "tests/test_publication_check.py::test_new_normative_json_after_plan_invalidates_inventory",
+    "tests/test_publication_check_right.py::test_same_project_id_in_another_root_is_not_same_lock",
+    "tests/test_publication_check_right.py::test_language_package_changed_after_preflight_stops_writer"
   ],
   "open_items": [
     "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",

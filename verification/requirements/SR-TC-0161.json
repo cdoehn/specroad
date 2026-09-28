@@ -45,7 +45,9 @@
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[0]",
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[1]",
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[2]",
-    "tests/test_publication_check.py::test_expected_revision_is_not_rebased"
+    "tests/test_publication_check.py::test_expected_revision_is_not_rebased",
+    "tests/test_publication_check_right.py::test_gate_that_was_green_is_rerun_under_lock",
+    "tests/test_publication_check_right.py::test_wrong_expected_hash_is_never_rebased_to_live_content"
   ],
   "open_items": [
     "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",

@@ -44,7 +44,10 @@
   "test_ids": [
     "tests/test_publication_check.py::test_deleted_source_is_conflict_not_empty_model",
     "tests/test_publication_check.py::test_same_size_and_reset_mtime_do_not_hide_byte_change",
-    "tests/test_publication_check.py::test_second_invocation_cannot_reuse_early_success_after_first_write"
+    "tests/test_publication_check.py::test_second_invocation_cannot_reuse_early_success_after_first_write",
+    "tests/test_publication_check_right.py::test_valid_create_missing_parent_has_no_early_mkdir",
+    "tests/test_publication_check_right.py::test_readonly_destination_parent_is_not_permission_from_old_preflight",
+    "tests/test_publication_check_right.py::test_no_permission_probe_support_fails_closed"
   ],
   "open_items": [
     "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",

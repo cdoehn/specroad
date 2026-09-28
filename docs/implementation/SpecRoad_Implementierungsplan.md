@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 208
-last_completed_plan_commit: 5.j.W
-next_plan_commit: 5.j.R
+implementation_plan_commits_completed: 209
+last_completed_plan_commit: 5.j.R
+next_plan_commit: 5.j.C
 last_completed_numbered_bundle: 32
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2753,7 +2753,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.j.R – Make it Right
 
-- [ ] **5.j.R** · Position **209/885** · Voraussetzung: `5.j.W`.
+- [x] **5.j.R** · Position **209/885** · Voraussetzung: `5.j.W`.
 **Exakte Commit-Message:** `5.j.R feat(changes): Prüfung unmittelbar vor Veröffentlichung vervollständigen`
 
 **Vervollständigung:** Änderung nach Preflight/Planung führt zu Konflikt ohne stilles Rebase.
