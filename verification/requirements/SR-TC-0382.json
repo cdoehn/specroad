@@ -4,19 +4,33 @@
   "requirement_id": "SR-REQ-0382",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CHANGE-AUTHORING-v1"
+  ],
+  "preconditions": [
+    "Explicit owned plan inputs and a test-only publisher; no persistent receipt store."
+  ],
+  "steps": [
+    "Prepare declared actor and normative request binding.",
+    "Observe routing, a test-backend publication or a pre-write refusal."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder `normative_write` MUSS `--request-id <ID>` nach dem Idempotenzvertrag unterstützen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Single-user policy routing and checked generic apply boundary only. No authenticated review or persistent idempotency claim."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    7
+  ],
+  "json_pointers": [
+    "/actor",
+    "/request_id"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +42,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_change_authoring.py::test_human_request_is_bound_to_command_actor_and_operation",
+    "tests/test_change_authoring.py::test_human_apply_binds_exact_plan_in_backend_request",
+    "tests/test_change_authoring.py::test_analyzer_like_identifiers_do_not_supply_write_context"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Public normative CLI commands and proposal workflows are not yet wired.",
+    "Real authorization, durable request receipts and replay/idempotency belong to later steps."
   ]
 }

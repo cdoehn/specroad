@@ -45,7 +45,8 @@
     "SR-FIX-CHANGE-METADATA-v1",
     "SR-FIX-CHANGE-LIFECYCLE-v1",
     "SR-FIX-CHANGE-TARGET-v1",
-    "SR-FIX-CHANGE-EXECUTION-v1"
+    "SR-FIX-CHANGE-EXECUTION-v1",
+    "SR-FIX-CHANGE-AUTHORING-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -227,6 +228,10 @@
     "SR-FIX-CHANGE-EXECUTION-v1": {
       "provider": "tests/support/execution.py:Storage",
       "kind": "Owned exact-byte supplied models and explicit test-only publisher, optionally real tempdir files; not production authorization, locking, durability or recovery."
+    },
+    "SR-FIX-CHANGE-AUTHORING-v1": {
+      "provider": "tests/test_change_authoring.py:case",
+      "kind": "Explicit single-user actor/request declarations and test-only storage; no real authentication, durable receipts or CLI publication proof."
     }
   }
 }

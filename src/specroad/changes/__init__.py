@@ -50,3 +50,10 @@ __all__ += ['ChangeBackend', 'PublicationRequest', 'PublicationReceipt',
 
 from .execution import execute_change_plan_bytes
 __all__ += ['execute_change_plan_bytes']
+
+from .authoring import (AuthoringError, NormativeRequestId, AuthoringRequest,
+    normalize_request_id, normalize_authoring_actor, prepare_authoring_request,
+    bind_plan_authoring)
+__all__ += ['AuthoringError', 'NormativeRequestId', 'AuthoringRequest',
+    'normalize_request_id', 'normalize_authoring_actor', 'prepare_authoring_request',
+    'bind_plan_authoring']

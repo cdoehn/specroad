@@ -86,6 +86,8 @@ class PublicationRequest:
 
     @classmethod
     def _create(cls, assessment, model):
+        from .authoring import require_direct_authoring
+        authoring = require_direct_authoring(assessment.plan)
         value = assessment.data
         old = {d.path: d.content for d in model.documents}
         if set(old) - {d.path for d in assessment.documents}:
@@ -95,6 +97,7 @@ class PublicationRequest:
                 'plan_bytes_sha256': sha256(assessment.plan.source_bytes).hexdigest(),
                 'request_id': assessment.plan.data['request_id'],
                 'assessment_sha256': assessment.sha256,
+                'authoring_binding': authoring.data, 'authoring_sha256': authoring.sha256,
                 'base': _source_binding(model),
                 'target_root_sha256': value['binding']['target_model_root'],
                 'changed_paths': [d.path for d in changed],

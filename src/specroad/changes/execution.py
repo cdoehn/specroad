@@ -11,6 +11,7 @@ from .target_values import TargetPolicy
 from .execution_values import (EXECUTION_VERSION, ChangeBackend, PublicationRequest,
     PublicationReceipt, ChangeExecutionError, ChangeExecutionResult)
 from ._execution_publication import publish_checked_change
+from .authoring import prepare_authoring_request, require_direct_authoring, AuthoringError
 
 
 def _arguments(plan, model, policy, gates, strict, fail_on_change):
@@ -35,7 +36,7 @@ def dry_run_change(plan, model, *, policy, gates=(), strict=False, fail_on_chang
     return ChangeExecutionResult._create(assessment, dry_run=True, fail_on_change=fail_on_change)
 
 
-def apply_change_plan(plan, model, *, policy, backend=None, gates=(), strict=False):
+def apply_change_plan(plan, model, *, policy, backend=None, gates=(), strict=False, as_proposal=False):
     """Revalidate the SAME plan inside a host transaction and check its readback.
 
     No native publication is available without explicit trusted integration.
@@ -43,6 +44,7 @@ def apply_change_plan(plan, model, *, policy, backend=None, gates=(), strict=Fal
     A receipt is evidence of the adapter's assertion, not an fsync/auth proof.
     """
     plan, model, gates = _arguments(plan, model, policy, gates, strict, False)
+    require_direct_authoring(plan, as_proposal=as_proposal)
     checked = assess_change_target(plan, model, policy=policy, gates=gates, strict=strict)
     if not checked.target_validated:
         return ChangeExecutionResult._create(checked, dry_run=False)
@@ -53,7 +55,7 @@ def apply_change_plan(plan, model, *, policy, backend=None, gates=(), strict=Fal
 
 
 def execute_change_request(model, operations, *, dry_run, policy, backend=None,
-        gates=(), strict=False, fail_on_change=False, **plan_fields):
+        gates=(), strict=False, fail_on_change=False, as_proposal=False, **plan_fields):
     """Direct authoring and dry-run share identical plan construction.
 
     IDs/actor/request/time must be explicitly supplied, never generated here.
@@ -69,24 +71,31 @@ def execute_change_request(model, operations, *, dry_run, policy, backend=None,
                 'scope_descriptor', 'metadata_policy_version'}
     if not required <= set(plan_fields) or set(plan_fields) - required - {'preconditions'}:
         raise ChangeExecutionError('explicit_plan_fields_required', exit_code=2)
+    request = prepare_authoring_request(command_id="change apply",
+        actor=plan_fields["actor"], operations=operations, request_id=plan_fields["request_id"],
+        dry_run=dry_run, as_proposal=as_proposal)
+    if not dry_run and request.data["route"] != "direct":
+        raise AuthoringError("proposal_workflow_required", exit_code=7)
     assessment = prepare_change_target(model, operations, policy=policy, gates=tuple(gates),
                                        strict=strict, **plan_fields)
     if dry_run:
         return ChangeExecutionResult._create(assessment, dry_run=True, fail_on_change=fail_on_change)
     return apply_change_plan(assessment.plan, model, policy=policy, backend=backend,
-                             gates=tuple(gates), strict=strict)
+                             gates=tuple(gates), strict=strict, as_proposal=as_proposal)
 
 
 def execute_change_plan_bytes(raw, model, *, dry_run, policy, backend=None,
-                              gates=(), strict=False, fail_on_change=False):
+                              gates=(), strict=False, fail_on_change=False, as_proposal=False):
     """No implicit path/stdin reads. Preserve exact input bytes through both modes."""
     if type(raw) is not bytes or type(dry_run) is not bool or type(fail_on_change) is not bool:
         raise ChangeExecutionError('explicit_plan_bytes_and_modes_required', exit_code=2)
     if fail_on_change and not dry_run:
         raise ChangeExecutionError('fail_on_change_requires_dry_run', exit_code=2)
     plan = ChangePlan(raw)
+    if type(as_proposal) is not bool:
+        raise AuthoringError("explicit_boolean_options_required")
     if dry_run:
         return dry_run_change(plan, model, policy=policy, gates=gates,
                               strict=strict, fail_on_change=fail_on_change)
     return apply_change_plan(plan, model, policy=policy, backend=backend,
-                             gates=gates, strict=strict)
+                             gates=gates, strict=strict, as_proposal=as_proposal)
