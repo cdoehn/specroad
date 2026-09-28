@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0206",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-LOCK-v1"
+  ],
+  "preconditions": [
+    "Owned project roots on a local Linux filesystem; cooperating processes use the same native project-root mutex."
+  ],
+  "steps": [
+    "Acquire writer/recovery guards, observe owner records, exercise competing child processes and verify owned release."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Lock MUSS mindestens Lock-ID, Prozesskennung, Prozessstartkennung, Hostkennung, Erstellungszeit, Befehl, Request-ID und Transaktions-ID enthalten und ausschließlich durch den in Kapitel 11.2 und Anhang C definierten Recovery-Vertrag entfernbar sein.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native library locking and conservative read-only status; no CLI commands, transaction engine, distributed lock or authorization claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_locks.py::test_record_carries_complete_binding",
+    "tests/test_project_locks.py::test_status_of_alive_writer_never_removes_record"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate the complete command/transaction and journal-recovery engines; verify remaining supported target runtimes and filesystem assumptions.",
+    "Explicit orphan recovery and its audited risk policy follow in 5.i.R."
   ]
 }

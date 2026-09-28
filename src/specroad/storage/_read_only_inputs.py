@@ -29,11 +29,18 @@ def _operational_metadata(boundary):
         observed.append({"path": path, "directory": directory})
         if directory and name in ("cache", "requests"):
             continue
+        if directory and name == "locks":
+            for child, is_directory in directory_entries(boundary, path):
+                logical = path + "/" + child
+                observed.append({"path": logical, "directory": is_directory})
+                unknown.append(logical)
+            continue
         if directory and name in ("transactions", "recovery"):
             for child, is_directory in directory_entries(boundary, path):
                 logical = path + "/" + child
                 observed.append({"path": logical, "directory": is_directory})
-                if name == "transactions" and child == "receipts" and is_directory:
+                if is_directory and ((name == "transactions" and child == "receipts") or
+                                     (name == "recovery" and child == "lock-audit")):
                     continue
                 unresolved.append(logical)
         else:

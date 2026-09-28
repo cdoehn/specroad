@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0205",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-LOCK-v1"
+  ],
+  "preconditions": [
+    "Owned project roots on a local Linux filesystem; cooperating processes use the same native project-root mutex."
+  ],
+  "steps": [
+    "Acquire writer/recovery guards, observe owner records, exercise competing child processes and verify owned release."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Normative Writes und Recovery-Writes MÜSSEN die ihrer Befehlsklasse zugeordnete exklusive Projektlockart nach Kapitel 11.7 verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native library locking and conservative read-only status; no CLI commands, transaction engine, distributed lock or authorization claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,14 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_locks.py::test_real_writer_lock_and_release",
+    "tests/test_project_locks.py::test_same_process_second_open_cannot_bypass_mutex",
+    "tests/test_project_locks.py::test_exception_releases_only_owned_record",
+    "tests/test_project_locks.py::test_recovery_uses_same_mutex_without_normal_model_loading"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate the complete command/transaction and journal-recovery engines; verify remaining supported target runtimes and filesystem assumptions.",
+    "Explicit orphan recovery and its audited risk policy follow in 5.i.R."
   ]
 }

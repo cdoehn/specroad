@@ -46,7 +46,8 @@
     "SR-FIX-CHANGE-LIFECYCLE-v1",
     "SR-FIX-CHANGE-TARGET-v1",
     "SR-FIX-CHANGE-EXECUTION-v1",
-    "SR-FIX-CHANGE-AUTHORING-v1"
+    "SR-FIX-CHANGE-AUTHORING-v1",
+    "SR-FIX-PROJECT-LOCK-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -232,6 +233,10 @@
     "SR-FIX-CHANGE-AUTHORING-v1": {
       "provider": "tests/test_change_authoring.py:case",
       "kind": "Explicit single-user actor/request declarations and test-only storage; no real authentication, durable receipts or CLI publication proof."
+    },
+    "SR-FIX-PROJECT-LOCK-v1": {
+      "provider": "tests/support/project_locks.py",
+      "kind": "owned native Linux project roots with explicit cross-process lock protocols"
     }
   }
 }

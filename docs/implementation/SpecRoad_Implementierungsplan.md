@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 204
-last_completed_plan_commit: 5.h.C
-next_plan_commit: 5.i.W
+implementation_plan_commits_completed: 205
+last_completed_plan_commit: 5.i.W
+next_plan_commit: 5.i.R
 last_completed_numbered_bundle: 31
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2709,7 +2709,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.i.W – Let it Work
 
-- [ ] **5.i.W** · Position **205/885** · Voraussetzung: `5.h.C`.
+- [x] **5.i.W** · Position **205/885** · Voraussetzung: `5.h.C`.
 **Exakte Commit-Message:** `5.i.W feat(changes): Exklusiver Projektlock aufbauen`
 
 **Umsetzung:** Writer- und Recovery-Locks mit vollständiger Eigentümer-/Startbindung einführen.
