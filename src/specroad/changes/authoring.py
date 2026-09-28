@@ -3,15 +3,14 @@
 Caller-declared actors remain audit/policy input. Only trusted application code
 selects the command. A proposal route never authorizes direct target writes.
 """
-from dataclasses import dataclass
 from .values import ChangePlan, ChangeOperation
 from ..model.audit import actor as parse_actor
 from ..model.audit_values import Actor
-from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
-from ..storage.json_syntax import parse_json_object
 
-AUTHORING_VERSION = 'authoring-policy-v1'
+from .authoring_values import AUTHORING_VERSION, AuthoringRequest
+from ._authoring_policy import _COMMANDS, select_route
 from .request_ids import AuthoringError, NormativeRequestId, normalize_request_id
 
 
@@ -22,43 +21,6 @@ def normalize_authoring_actor(value):
         return parse_actor(value)
     except ModelError as error:
         raise AuthoringError(error.reason, pointer='/actor' + error.pointer) from error
-
-
-_DIRECT = frozenset({'change apply', 'format', 'artifact create', 'artifact update',
-    'relation add', 'relation remove', 'lifecycle transition', 'document create',
-    'section add', 'section move', 'section remove', 'block add', 'block update',
-    'block remove', 'view create', 'evidence record', 'evidence import',
-    'baseline create', 'import apply', 'migrate apply', 'merge apply'})
-_PROPOSAL = frozenset({'proposal create', 'proposal change add', 'proposal change update',
-    'proposal change remove', 'proposal change move', 'proposal review start'})
-_HUMAN_REVIEW = frozenset({'proposal review', 'relation review'})
-_COMMANDS = _DIRECT | _PROPOSAL | _HUMAN_REVIEW | {'proposal apply'}
-
-
-@dataclass(frozen=True, init=False)
-class AuthoringRequest:
-    """Bound policy routing result, never a bearer capability for a writer."""
-    _encoded: bytes
-
-    def __init__(self, *args, **kwargs):
-        raise TypeError('Use prepare_authoring_request or bind_plan_authoring')
-
-    @classmethod
-    def _create(cls, data):
-        obj = object.__new__(cls)
-        object.__setattr__(obj, '_encoded', canonical_json_bytes(data))
-        return obj
-
-    @property
-    def data(self):
-        return parse_json_object(self._encoded)
-
-    @property
-    def sha256(self):
-        return canonical_json_sha256(self.data)
-
-    def __bool__(self):
-        raise TypeError('Inspect the route; this object is not a write permission')
 
 
 def prepare_authoring_request(*, command_id, actor, operations, request_id=None,
@@ -75,27 +37,7 @@ def prepare_authoring_request(*, command_id, actor, operations, request_id=None,
         raise AuthoringError('explicit_boolean_options_required')
     actor = normalize_authoring_actor(actor)
     identity = normalize_request_id(request_id)
-    if not dry_run and actor.actor_type in ('ai', 'ci') and identity is None:
-        raise AuthoringError('normative_request_id_required', pointer='/request_id')
-    if not dry_run and command_id in _HUMAN_REVIEW and actor.actor_type != 'human':
-        raise AuthoringError('human_review_required', pointer='/actor', exit_code=7)
-    if (not dry_run and actor.actor_type == 'ai' and command_id in _DIRECT
-            and not as_proposal):
-        raise AuthoringError('ai_requires_proposal', pointer='/as_proposal', exit_code=7)
-    if command_id not in _DIRECT | {'relation review'} and as_proposal:
-        raise AuthoringError('as_proposal_not_applicable', pointer='/as_proposal')
-    if dry_run:
-        route = 'preview'
-    elif as_proposal:
-        route = 'proposal_authoring'
-    elif command_id in _PROPOSAL:
-        route = 'proposal_management'
-    elif command_id == 'proposal apply':
-        route = 'approved_proposal_apply'
-    elif command_id in _HUMAN_REVIEW:
-        route = 'human_review'
-    else:
-        route = 'direct'
+    route = select_route(command_id, actor, identity, dry_run, as_proposal)
     if type(operations) not in (list, tuple):
         raise AuthoringError('explicit_operation_sequence_required', pointer='/operations')
     owned = [ChangeOperation(op).data for op in operations]

@@ -67,3 +67,10 @@ Ein Policyergebnis ist weder ein normalisiertes persistentes Erfolgsreceipt
 noch der Beweis, dass eine Request-ID noch nie verwendet wurde. Gleiche IDs
 mit unterschiedlichen Operationen ergeben verschiedene Bindungen; die
 projektweite Konfliktprüfung und dauerhafte Wiederholung kommen erst später.
+
+## Bereinigung (C)
+
+Feste normative Command-Policy, unveränderliche Authoringwerte und öffentliche
+Bindungsfunktionen sind getrennt. Request-ID-Vertrag und gespeichertes Schema
+verwenden dieselbe Grammatik. Kein Import aus der CLI-Präsentationsschicht oder
+Analyzeridentitäten, keine Änderung der W-/R-Ergebnisse oder Test-Assertions.
