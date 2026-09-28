@@ -1,24 +1,13 @@
-"""Read-only preflight and mandatory last recheck under a real writer lock.
+"""Separate early diagnostics from the mandatory native-lock publication gate.
 
-These checks do not implement a journal or a durable filesystem writer. Only
-explicitly registered trusted code can publish. Early success is NEVER a
-reusable permission; native writers must still check their actual syscalls.
+Each final call reruns plan, authority and live-input checks. Early results and
+final observations are never reusable write capabilities. A trusted backend
+still owns actual publication, journals, receipts and durable readback.
 """
-from dataclasses import dataclass
-from hashlib import sha256
 import os
-import stat
-
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..model.paths import CURRENT_JSON_CLASSES, PathClass
-from ..validation import ModelDocument
-from ..security import SafetyViolation, ProjectBoundary
-from ..security.resource_access import opened_resource
-from ..storage.byte_binding import fingerprint_reader
-from ..storage.json_syntax import parse_json_object
-from ..storage.project import ProjectSource
-from ..storage.resource_discovery import current_json_paths
+from ..security import SafetyViolation
 from .execution_values import ChangeExecutionError, PublicationRequest
 from .locking import HeldProjectLock
 from .lock_values import ProjectLockError
@@ -26,131 +15,11 @@ from .target import assess_change_target
 from .target_model import TargetModel
 from .target_values import TargetPolicy
 from .values import ChangePlan
+from .publication_values import (CHECK_VERSION, PublicationCheckError,
+    PublicationAuthority, PublicationPreflight, PublicationRecheck)
+from ._publication_observation import _root, _package_bindings, observe_publication_files
 
-CHECK_VERSION = 'publication-recheck-v1'
 _ACCESS_SUPPORTED = os.access in os.supports_dir_fd and os.access in os.supports_effective_ids
-
-
-class PublicationCheckError(ChangeExecutionError):
-    """A refusal is not a rollback of earlier staging or a retry instruction."""
-    def __init__(self, reason, *, path=None, exit_code=6, write_state='not_committed'):
-        super().__init__(reason, exit_code=exit_code, write_state=write_state)
-        self.path = path
-
-    def diagnostic(self):
-        return {**super().diagnostic(), 'path': self.path, 'write_authorized': False}
-
-
-@dataclass(frozen=True)
-class PublicationAuthority:
-    """Trusted host registration, NEVER reconstructed from project/plan data.
-
-    check(detached_request) must return an actual bool. The host implements real
-    authentication/authorization; actor labels and this registration are not an
-    authentication mechanism or a sandbox for callback code.
-    """
-    authority_id: str
-    version: str
-    check: object
-
-    def __post_init__(self):
-        if (any(type(v) is not str or not v.strip() or '\0' in v
-                for v in (self.authority_id, self.version)) or not callable(self.check)):
-            raise PublicationCheckError('registered_publication_authority_required', exit_code=2)
-
-
-@dataclass(frozen=True, init=False)
-class PublicationPreflight:
-    _request: PublicationRequest
-    _model: TargetModel
-    _policy: TargetPolicy
-    _strict: bool
-    _footprint: bytes
-    _package_files: tuple
-
-    def __init__(self, *args, **kwargs):
-        raise TypeError('Use prepare_publication_check')
-
-    @classmethod
-    def _create(cls, request, model, policy, strict, footprint, package_files):
-        obj = object.__new__(cls)
-        for name, value in (('_request', request.detached()), ('_model', model.snapshot()),
-                ('_policy', policy), ('_strict', strict), ('_footprint', canonical_json_bytes(footprint)),
-                ('_package_files', tuple(ModelDocument(d.path,d.content) for d in package_files))):
-            object.__setattr__(obj, name, value)
-        return obj
-
-    @property
-    def request(self):
-        return self._request.detached()
-
-    @property
-    def data(self):
-        return {'format_version': CHECK_VERSION, 'phase': 'early_diagnostic',
-                'request_sha256': self._request.sha256,
-                'footprint_sha256': sha256(self._footprint).hexdigest(),
-                'observed_paths': sorted([*self._model.source_files, *(d.path for d in self._package_files)]),
-                'final_check_required': True, 'write_authorized': False,
-                'project_lock_acquired': False, 'atomic_snapshot': False}
-
-    def __bool__(self):
-        raise TypeError('A preflight is not a permission to publish')
-
-
-@dataclass(frozen=True, init=False)
-class PublicationRecheck:
-    _raw: bytes
-
-    def __init__(self, *args, **kwargs):
-        raise TypeError('Use recheck_publication')
-
-    @classmethod
-    def _create(cls, request, held_lock, authority):
-        obj = object.__new__(cls)
-        object.__setattr__(obj, '_raw', canonical_json_bytes({
-            'format_version': CHECK_VERSION, 'phase': 'locked_final_check',
-            'request_sha256': request.sha256, 'plan_sha256': request.plan.sha256,
-            'lock_id': held_lock.record.data['lock_id'],
-            'authority_id': authority.authority_id, 'authority_version': authority.version,
-            'host_authority_allowed': True, 'ready_for_backend': True,
-            'preflight_reused_as_proof': False, 'write_authorized': False,
-            'reusable_capability': False, 'normative_writes': 0,
-            'atomic_snapshot': False, 'durability_verified': False}))
-        return obj
-
-    @property
-    def data(self):
-        return parse_json_object(self._raw)
-
-    def __bool__(self):
-        raise TypeError('A final observation is not a reusable write capability')
-
-
-def _stamp(info):
-    # Timestamps do not establish content identity. Hash every byte on each pass.
-    return {'device': str(info.st_dev), 'inode': str(info.st_ino),
-            'mode': stat.S_IMODE(info.st_mode), 'uid': str(info.st_uid),
-            'gid': str(info.st_gid), 'links': None if stat.S_ISDIR(info.st_mode) else info.st_nlink}
-
-
-def _root(model):
-    root = model.binding.source_root
-    info = os.lstat(root)
-    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
-        raise PublicationCheckError('unsafe_publication_root', exit_code=7)
-    if (info.st_dev, info.st_ino) != model.binding.root_identity:
-        raise PublicationCheckError('publication_root_changed')
-    boundary = ProjectBoundary(root)
-    if boundary.read_bytes('specroad.json') != model.configuration_bytes:
-        raise PublicationCheckError('publication_configuration_changed', path='specroad.json')
-    source = ProjectSource(root, expected_project_id=model.binding.project_id)
-    if (str(source.boundary.root) != root or
-            source.boundary._root_identity != model.binding.root_identity):
-        raise PublicationCheckError('publication_root_changed')
-    if source.configuration_bytes != model.configuration_bytes:
-        raise PublicationCheckError('publication_configuration_changed', path='specroad.json')
-    return source
-
 
 def _rights(fd, path):
     # Advisory even under a cooperating writer lock: actual publication still
@@ -165,92 +34,8 @@ def _rights(fd, path):
         raise PublicationCheckError('publication_mount_read_only', exit_code=7, path=path)
 
 
-def _parent(source, path, *, writable=True):
-    parent = path.rsplit('/', 1)[0] if '/' in path else ''
-    parts = parent.split('/') if parent else []
-    observed = {}
-    deepest = ''
-    fd = os.open(source.boundary.root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-    try:
-        root_info = os.fstat(fd)
-        if (root_info.st_dev, root_info.st_ino) != source.boundary._root_identity:
-            raise PublicationCheckError('publication_root_changed')
-        observed[''] = _stamp(root_info)
-        if not parts and writable:
-            _rights(fd, '')
-        for index in range(len(parts)):
-            relative = '/'.join(parts[:index + 1])
-            try:
-                with opened_resource(source.boundary, relative, directory=True) as (directory, info):
-                    observed[relative] = _stamp(info)
-            except FileNotFoundError:
-                # Absence belongs to the observation; no mkdir or write probe.
-                for j in range(index, len(parts)):
-                    observed['/'.join(parts[:j + 1])] = None
-                break
-            deepest = relative
-        if writable and parts:
-            if deepest:
-                with opened_resource(source.boundary, deepest, directory=True) as (directory, info):
-                    if _stamp(info) != observed[deepest]:
-                        raise PublicationCheckError('publication_parent_changed', path=deepest)
-                    _rights(directory, deepest)
-            else:
-                _rights(fd, '')
-    finally:
-        os.close(fd)
-    return observed
-
-
-def _package_bindings(source, model, package_files):
-    if type(package_files) not in (tuple, list) or any(type(d) is not ModelDocument for d in package_files):
-        raise PublicationCheckError('explicit_package_file_bindings_required', exit_code=2)
-    files = tuple(ModelDocument(d.path,d.content) for d in package_files)
-    names = [d.path for d in files]
-    if len(set(p.casefold() for p in names)) != len(names) or set(names) & set(model.source_files):
-        raise PublicationCheckError('duplicate_publication_package_path', exit_code=2)
-    if any(source.classify(d.path) not in (PathClass.PROFILE, PathClass.RULE) for d in files):
-        raise PublicationCheckError('publication_package_path_unmanaged', exit_code=7)
-    expected = sorted(sha256(p.source_bytes).hexdigest() for p in model.language_packages)
-    actual = sorted(sha256(d.content).hexdigest() for d in files)
-    if actual != expected:
-        raise PublicationCheckError('live_language_package_bindings_required', exit_code=2)
-    return files
-
-
 def _observe(source, model, request, package_files=()):
-    source.check_current()
-    files = {**model.source_files, **{d.path:d.content for d in package_files}}
-    expected_json = tuple(sorted(p for p in files if source.classify(p) in CURRENT_JSON_CLASSES))
-    if current_json_paths(source) != expected_json:
-        raise PublicationCheckError('publication_inventory_changed')
-    states, parents = {}, {}
-    for path, expected in sorted(files.items()):
-        parents.update(_parent(source, path, writable=False))
-        with opened_resource(source.boundary, path) as (fd, info):
-            if info.st_nlink != 1:
-                raise PublicationCheckError('linked_publication_input', path=path, exit_code=7)
-            actual = fingerprint_reader(lambda n: os.read(fd, n), info.st_size)
-            if actual.size != len(expected) or actual.sha256 != sha256(expected).hexdigest():
-                raise PublicationCheckError('publication_base_changed', path=path)
-            states[path] = {**_stamp(info), 'size': actual.size, 'sha256': actual.sha256}
-    for document in request.documents:
-        path = document.path
-        source.require_write_target(path)
-        parents.update(_parent(source, path))
-        if path not in files:
-            try:
-                with opened_resource(source.boundary, path):
-                    pass
-            except FileNotFoundError:
-                pass
-            else:
-                raise PublicationCheckError('publication_create_target_exists', path=path)
-    if current_json_paths(source) != expected_json:
-        raise PublicationCheckError('publication_inventory_changed')
-    source.check_current()
-    return {'files': states, 'parents': parents,
-            'root': _stamp(os.lstat(source.boundary.root))}
+    return observe_publication_files(source, model, request, package_files, check_rights=_rights)
 
 
 def _translate(error):
