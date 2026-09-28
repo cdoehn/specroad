@@ -4,18 +4,31 @@
   "requirement_id": "SR-REQ-0564",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PUBLICATION-RECHECK-v1"
+  ],
+  "preconditions": [
+    "A checked plan, exact supplied TargetModel and owned on-disk files; actual held native writer lock and explicit host authority."
+  ],
+  "steps": [
+    "Recheck original bytes, normative JSON membership, destination ancestry/permissions and lock/recovery state immediately before invoking the trusted publisher."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein erfolgreicher Preflight DARF NICHT als Beweis für die Fortexistenz von Dateien, Berechtigungen oder Ressourcen während eines späteren Verarbeitungsschritts gelten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Live final publication guard on supplied bound inputs; no native journal, atomic multi-file publication or CLI authorization yet."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +41,14 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_publication_check.py::test_deleted_source_is_conflict_not_empty_model",
+    "tests/test_publication_check.py::test_same_size_and_reset_mtime_do_not_hide_byte_change",
+    "tests/test_publication_check.py::test_second_invocation_cannot_reuse_early_success_after_first_write"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",
+    "Existing prepared current-JSON inventory plus all bound resource bytes are checked; no complete archive/history or durable publication proof.",
+    "Native Linux support, actual filesystem/CPython matrix and host authentication require real target/CI verification."
   ]
 }

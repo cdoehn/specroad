@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 207
-last_completed_plan_commit: 5.i.C
-next_plan_commit: 5.j.W
+implementation_plan_commits_completed: 208
+last_completed_plan_commit: 5.j.W
+next_plan_commit: 5.j.R
 last_completed_numbered_bundle: 32
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2744,7 +2744,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.j.W – Let it Work
 
-- [ ] **5.j.W** · Position **208/885** · Voraussetzung: `5.i.C`.
+- [x] **5.j.W** · Position **208/885** · Voraussetzung: `5.i.C`.
 **Exakte Commit-Message:** `5.j.W feat(changes): Prüfung unmittelbar vor Veröffentlichung aufbauen`
 
 **Umsetzung:** Basis, erwartete Ressourcen, Lock und Rechte unter Writer-Lock erneut prüfen.

@@ -62,3 +62,6 @@ from .locking import (project_lock, inspect_project_lock, recover_project_lock, 
                       ProjectLockError, LockKind, LockRecord, OwnerIdentity)
 __all__ += ['project_lock', 'inspect_project_lock', 'recover_project_lock', 'HeldProjectLock',
             'ProjectLockError', 'LockKind', 'LockRecord', 'OwnerIdentity']
+
+from .publication_check import (PublicationCheckError, PublicationAuthority, PublicationPreflight,
+    PublicationRecheck, prepare_publication_check, recheck_publication, publish_after_recheck)

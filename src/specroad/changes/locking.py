@@ -74,6 +74,26 @@ class HeldProjectLock:
             raise ProjectLockError('lock_owner_changed', exit_code=6)
         return True
 
+    def require_publication(self, source, *, command, request_id, transaction_id):
+        """Fresh writer/owner/root/journal gate; never acquire or repair a lock."""
+        if type(source) is not ProjectSource:
+            raise ProjectLockError('publication_project_source_required', exit_code=2)
+        text(transaction_id)
+        self.check()
+        value = self._record.data
+        if (value['kind'] != LockKind.WRITER.value or value['command'] != command
+                or value['request_id'] != request_id or value['transaction_id'] != transaction_id):
+            raise ProjectLockError('publication_lock_request_mismatch', exit_code=6)
+        if (value['project_id'] != source.configuration.project_id
+                or source.boundary.root != self._files.boundary.root
+                or source.boundary._root_identity != self._files.boundary._root_identity):
+            raise ProjectLockError('publication_lock_project_mismatch', exit_code=6)
+        source.check_current()
+        if self._files.journal_entries():
+            raise ProjectLockError('publication_recovery_required', exit_code=5)
+        self.check()
+        return True
+
     def __reduce__(self):
         raise TypeError('Live project locks cannot be serialized')
 
