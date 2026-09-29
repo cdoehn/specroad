@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 212
-last_completed_plan_commit: 5.k.R
-next_plan_commit: 5.k.C
-last_completed_numbered_bundle: 33
+implementation_plan_commits_completed: 213
+last_completed_plan_commit: 5.k.C
+next_plan_commit: 5.l.W
+last_completed_numbered_bundle: 34
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2797,7 +2797,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.k.C – Make it Clean
 
-- [ ] **5.k.C** · Position **213/885** · Voraussetzung: `5.k.R`.
+- [x] **5.k.C** · Position **213/885** · Voraussetzung: `5.k.R`.
 **Exakte Commit-Message:** `5.k.C refactor(changes): Journal und Building-Zustand bereinigen`
 
 **Bereinigung:** Journalcodec, Inventur und transaktionale Zustandsmaschine trennen.

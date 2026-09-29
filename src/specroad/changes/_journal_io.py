@@ -4,7 +4,7 @@ from ..security import SafetyViolation
 from ..security import paths as guards
 from ._lock_files import LockFiles
 from .lock_values import ProjectLockError
-from .journal import JournalError
+from .journal_values import JournalError
 
 
 def _read(parent, name, *, expected_identity=None):
