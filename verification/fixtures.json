@@ -50,7 +50,8 @@
     "SR-FIX-PROJECT-LOCK-v1",
     "SR-FIX-PUBLICATION-RECHECK-v1",
     "SR-FIX-TRANSACTION-JOURNAL-v1",
-    "SR-FIX-TRANSACTION-STAGING-v1"
+    "SR-FIX-TRANSACTION-STAGING-v1",
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -252,6 +253,10 @@
     "SR-FIX-TRANSACTION-STAGING-v1": {
       "provider": "tests/test_transaction_staging.py:begin",
       "kind": "Owned temporary Linux project and still-held native writer lock; exact building journal, real exclusive images, fsync boundaries and prepared metadata. No normative publication or recovery claim."
+    },
+    "SR-FIX-TRANSACTION-COMMITTING-v1": {
+      "provider": "tests/support/committing.py:staged",
+      "kind": "Owned local Linux prepared transactions with native writer lock, real atomic target replacements, journal fsync acknowledgements and preserved before images. Host authority is explicit test-only; no receipts or automatic recovery."
     }
   }
 }

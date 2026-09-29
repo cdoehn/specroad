@@ -72,3 +72,6 @@ from .journal import (BuildingJournal, JournalError, prepare_building_journal,
 # Durable staging remains distinct from publication/commit and recovery.
 from .staging_values import PreparedJournal, StagingError
 from .staging import stage_building_journal, read_prepared_journal, verify_prepared_journal
+
+from .committing_values import CommittingJournal, CommitPublicationError, PublishedFiles
+from .committing import publish_prepared_journal, verify_committing_journal

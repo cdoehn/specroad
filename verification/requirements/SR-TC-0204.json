@@ -4,18 +4,33 @@
   "requirement_id": "SR-REQ-0204",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
+  ],
+  "preconditions": [
+    "Exact independently bound PreparedJournal and PublicationPreflight, current native writer lock, explicit host authority, local same-filesystem rename and fsync support."
+  ],
+  "steps": [
+    "Durably set committing; atomically replace targets in canonical path order and sync each acknowledgement before the next target; recompute the full live target root.",
+    "Inject errors at journal and target boundaries; preserve before images and active recovery blocker; never claim receipts, committed state or automatic rollback."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Prozessabbruch oder interner Fehler während eines normativen Schreibbefehls DARF NICHT einen unvollständigen Zustand als regulär ladbaren Projektstand hinterlassen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native C.2 publication steps 1-4 for supported artifact targets: exact final bytes/root or a blocked recovery state, never a successful mixed model. Full receipt finalization, specialized operations and universal command integration remain open."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +43,29 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_committing.py::test_all_targets_and_live_root_match_request",
+    "tests/test_transaction_committing.py::test_receipt_and_committed_marker_are_not_fabricated",
+    "tests/test_transaction_committing.py::test_before_images_retained_staging_consumed",
+    "tests/test_transaction_committing.py::test_empty_write_set_still_has_committing_journal",
+    "tests/test_transaction_committing.py::test_create_has_exact_bytes_and_no_before_image",
+    "tests/test_transaction_committing.py::test_committing_is_durable_before_target_and_ack_before_next",
+    "tests/test_transaction_committing.py::test_target_file_replacement_is_atomic_for_open_reader",
+    "tests/test_transaction_committing.py::test_stale_source_is_rejected_before_committing",
+    "tests/test_transaction_committing.py::test_authorization_denial_does_not_start_publication",
+    "tests/test_transaction_committing.py::test_missing_lock_rejected",
+    "tests/test_transaction_committing.py::test_reusing_old_prepared_cannot_write_twice",
+    "tests/test_transaction_committing.py::test_additional_recovery_entry_prevents_any_target_write",
+    "tests/test_transaction_committing.py::test_changed_journal_not_overwritten",
+    "tests/test_transaction_committing.py::test_committing_fsync_failure_prevents_first_target",
+    "tests/test_transaction_committing.py::test_lost_target_rename_result_has_no_retry_or_false_rollback",
+    "tests/test_transaction_committing.py::test_ack_failure_prevents_second_target",
+    "tests/test_transaction_committing.py::test_journal_values_are_independent_and_not_success",
+    "tests/test_transaction_committing.py::test_self_consistent_short_inventory_cannot_replace_independent_binding",
+    "tests/test_transaction_committing.py::test_earlier_target_tampering_blocks_next_ack_and_publication"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Durable transaction/request receipts and committed finalization (5.n), full crash recovery and integration of all normative writer commands remain in later plan steps.",
+    "Local native cooperative Linux semantics; actual cross-version CI and underlying hardware determine observed support, not the existence of these tests."
   ]
 }

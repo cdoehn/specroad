@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 216
-last_completed_plan_commit: 5.l.C
-next_plan_commit: 5.m.W
+implementation_plan_commits_completed: 217
+last_completed_plan_commit: 5.m.W
+next_plan_commit: 5.m.R
 last_completed_numbered_bundle: 35
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2849,7 +2849,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.m.W – Let it Work
 
-- [ ] **5.m.W** · Position **217/885** · Voraussetzung: `5.l.C`.
+- [x] **5.m.W** · Position **217/885** · Voraussetzung: `5.l.C`.
 **Exakte Commit-Message:** `5.m.W feat(changes): Committing und atomare Dateiveröffentlichung aufbauen`
 
 **Umsetzung:** Dauerhaft committing setzen und jede atomare Veröffentlichung einzeln quittieren.
