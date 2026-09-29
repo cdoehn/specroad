@@ -50,3 +50,24 @@ Bestandteil dieser Mode-Bindung.
 Lokal werden nur neue und unmittelbar betroffene Verhaltenstests parallel mit
 vier Workern ausgeführt. Volltests bleiben in GitHub, jedes fünfte Bundle
 zusätzlich seriell mit Vergleich. Keine Darstellungstests, keine neuen Timeouts.
+
+## Read-only inspection and failure evidence
+
+`read_committing_journal(ProjectSource(root), transaction_id, expected_sha256=...,
+preflight=...)` observes the acknowledgement prefix, all before images, remaining
+staging images and the corresponding old/new target bytes. It rechecks the exact
+namespaces, original journal bytes and file identities. It never acquires a writer
+lock, makes a receipt, resumes a move, deletes a pending journal or upgrades a
+state. With a preflight it also independently checks the full original inventory.
+
+An unacknowledged move is **not** guessed into an acknowledgement: the reader
+rejects that inconsistent observation and leaves recovery to the later workflow.
+Even an entirely published, hash-correct target remains blocked by the active
+`committing` journal. Receipt persistence must precede `committed` (C.2).
+
+The regression corpus injects failures at every file/journal fsync boundary of a
+two-target publication, lost rename/acknowledgement returns, short writes, replaced
+images and changed unrelated sources. A real child exits immediately after the
+first target rename: the mixed files and before images remain, and normal project
+loading remains blocked. These are observed process/failure tests, not a simulation
+of power loss or an assertion about remote/distributed filesystem durability.

@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from hashlib import sha256
 from ..model.canonical import canonical_json_bytes
+from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .journal_values import BuildingJournal, JournalError
 from ._journal_codec import journal_path
@@ -34,7 +35,10 @@ class CommittingJournal:
     def __init__(self, raw):
         if type(raw) is not bytes:
             raise CommitPublicationError('committing_bytes_required', exit_code=2)
-        value = parse_json_object(raw)
+        try:
+            value = parse_json_object(raw)
+        except ModelError as error:
+            raise CommitPublicationError('invalid_committing_json', exit_code=3) from error
         if value.get('state') != 'committing':
             raise CommitPublicationError('committing_state_required')
         count, entries = value.get('published_count'), value.get('files')
@@ -48,7 +52,10 @@ class CommittingJournal:
                 raise CommitPublicationError('publication_prefix_required')
             entry['published'] = False
         value.update(state='building', published_count=0)
-        BuildingJournal(canonical_json_bytes(value))
+        try:
+            BuildingJournal(canonical_json_bytes(value))
+        except JournalError as error:
+            raise CommitPublicationError(error.reason, path=error.path, exit_code=error.exit_code) from error
         object.__setattr__(self, '_raw', raw)
 
     @property

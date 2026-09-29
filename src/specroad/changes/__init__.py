@@ -75,3 +75,5 @@ from .staging import stage_building_journal, read_prepared_journal, verify_prepa
 
 from .committing_values import CommittingJournal, CommitPublicationError, PublishedFiles
 from .committing import publish_prepared_journal, verify_committing_journal
+
+from .committing_read import read_committing_journal
