@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 221
-last_completed_plan_commit: 5.n.R
-next_plan_commit: 5.n.C
-last_completed_numbered_bundle: 36
+implementation_plan_commits_completed: 222
+last_completed_plan_commit: 5.n.C
+next_plan_commit: 5.o.W
+last_completed_numbered_bundle: 37
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2902,7 +2902,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.n.C – Make it Clean
 
-- [ ] **5.n.C** · Position **222/885** · Voraussetzung: `5.n.R`.
+- [x] **5.n.C** · Position **222/885** · Voraussetzung: `5.n.R`.
 **Exakte Commit-Message:** `5.n.C refactor(changes): Audit und Abschlussreceipts bereinigen`
 
 **Bereinigung:** Belege und entbehrliche Arbeitsreste strikt getrennt verwalten.

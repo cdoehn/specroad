@@ -2,7 +2,7 @@
 from ..model.canonical import canonical_json_bytes
 from .committing import verify_committing_journal
 from .receipt_values import (ReceiptError, TransactionReceipt, RequestReceipt,
-                             CommittedJournal, _result)
+                             CommittedJournal, _result, _created_ids)
 
 
 def prepare_completion_receipts(preflight, journal):
@@ -13,13 +13,7 @@ def prepare_completion_receipts(preflight, journal):
         raise ReceiptError('complete_publication_required')
     request = preflight.request
     authoring = request.data['authoring_binding']
-    ids = []
-    for operation in authoring['operations']:
-        if operation['op'] == 'create':
-            ids.append(operation['artifact']['id'])
-        elif operation['op'] == 'relation_add':
-            ids.append(operation['relation']['relation_id'])
-    ids = sorted(set(ids))
+    ids = _created_ids(authoring['operations'])
     transaction = TransactionReceipt(canonical_json_bytes({
         'format_version': 'transaction-receipt-v1', 'outcome': 'committed',
         'journal': value, 'journal_sha256': journal.sha256,
