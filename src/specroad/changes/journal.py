@@ -71,6 +71,12 @@ def _target_path(value):
         raise JournalError('invalid_journal_target_path') from e
     if any(p.casefold() == '.specroad' for p in value.split('/')):
         raise JournalError('operational_path_is_not_a_target')
+    parts = value.split('/')
+    supported = (value == 'specroad.json' or
+        (parts[0] in ('spec','profiles','rules','mappings') and len(parts)>1 and value.endswith('.json')) or
+        (parts[0] == 'attachments' and len(parts)>1))
+    if not supported:
+        raise JournalError('journal_target_not_current_normative_resource')
     return value
 
 
@@ -242,7 +248,7 @@ def begin_building_journal(preflight, *, held_lock, transaction_id, authority, g
     return journal
 
 
-def read_building_journal(source, transaction_id, *, expected_sha256=None):
+def read_building_journal(source, transaction_id, *, expected_sha256=None, preflight=None):
     """Read an existing record, not a recovery decision or a write capability."""
     if type(source) is not ProjectSource:
         raise JournalError('bound_project_source_required',exit_code=2)
@@ -258,5 +264,7 @@ def read_building_journal(source, transaction_id, *, expected_sha256=None):
         raise JournalError('journal_project_binding_mismatch',exit_code=6,path=path)
     if expected_sha256 is not None and journal.sha256 != expected_sha256:
         raise JournalError('journal_bytes_changed',exit_code=6,path=path)
+    if preflight is not None:
+        verify_building_journal(journal,preflight)
     source.check_current()
     return journal

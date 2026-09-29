@@ -13,7 +13,8 @@
     "Complete explicitly supplied publication preflight and live native writer lock; owned temporary Linux project."
   ],
   "steps": [
-    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal."
+    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal.",
+    "Inject partial writes, fsync failures and process exit; require preserved operational evidence, exact file identity and no normative modification."
   ],
   "oracle": {
     "kind": "behavior",
@@ -46,7 +47,13 @@
     "tests/test_transaction_journal.py::test_prepare_is_pure_and_does_not_stage_or_acquire_lock",
     "tests/test_transaction_journal.py::test_matching_transaction_id_cannot_overwrite_existing_journal",
     "tests/test_transaction_journal.py::test_denied_authority_creates_no_journal",
-    "tests/test_transaction_journal.py::test_changed_base_refuses_before_journal_creation"
+    "tests/test_transaction_journal.py::test_changed_base_refuses_before_journal_creation",
+    "tests/test_transaction_journal_right.py::test_truncated_journal_survives_as_blocker",
+    "tests/test_transaction_journal_right.py::test_zero_write_is_error_not_spin_or_success",
+    "tests/test_transaction_journal_right.py::test_same_bytes_replaced_journal_is_not_original_write",
+    "tests/test_transaction_journal_right.py::test_new_foreign_recovery_entry_during_write_is_preserved",
+    "tests/test_transaction_journal_right.py::test_crash_after_creation_retains_record_and_excludes_new_writer",
+    "tests/test_transaction_journal_right.py::test_portable_distributions_keep_journal_codec_and_creation"
   ],
   "open_items": [
     "Native building journal only: preparation of all staging/before-image bytes, prepared/committing transitions, receipts and recovery remain in their assigned later steps.",

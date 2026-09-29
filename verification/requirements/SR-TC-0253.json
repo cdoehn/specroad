@@ -13,7 +13,8 @@
     "Complete explicitly supplied publication preflight and live native writer lock; owned temporary Linux project."
   ],
   "steps": [
-    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal."
+    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal.",
+    "Inject partial writes, fsync failures and process exit; require preserved operational evidence, exact file identity and no normative modification."
   ],
   "oracle": {
     "kind": "behavior",
@@ -47,7 +48,13 @@
     "tests/test_transaction_journal.py::test_noop_does_not_invent_changed_files",
     "tests/test_transaction_journal.py::test_changed_files_are_ordered_not_operation_order",
     "tests/test_transaction_journal.py::test_missing_inventory_entry_fails_independent_plan_binding",
-    "tests/test_transaction_journal.py::test_journal_data_and_original_bytes_are_independent"
+    "tests/test_transaction_journal.py::test_journal_data_and_original_bytes_are_independent",
+    "tests/test_transaction_journal_right.py::test_consistent_but_false_existence_does_not_override_source",
+    "tests/test_transaction_journal_right.py::test_correct_sha_of_false_inventory_still_fails_bound_read",
+    "tests/test_transaction_journal_right.py::test_hash_and_length_of_every_151_file_is_bound",
+    "tests/test_transaction_journal_right.py::test_journal_copied_to_different_project_instance_is_refused",
+    "tests/test_transaction_journal_right.py::test_read_journal_hardlink_is_rejected_without_deletion",
+    "tests/test_transaction_journal_right.py::test_fifo_record_is_rejected_without_blocking"
   ],
   "open_items": [
     "Native building journal only: preparation of all staging/before-image bytes, prepared/committing transitions, receipts and recovery remain in their assigned later steps.",

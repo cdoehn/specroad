@@ -7,9 +7,11 @@ from .lock_values import ProjectLockError
 from .journal import JournalError
 
 
-def _read(parent, name):
+def _read(parent, name, *, expected_identity=None):
     before=os.stat(name,dir_fd=parent,follow_symlinks=False)
     guards._regular(before)
+    if expected_identity is not None and guards._identity(before)!=expected_identity:
+        raise JournalError('journal_file_replaced',exit_code=6)
     if before.st_nlink != 1:
         raise JournalError('journal_hardlink_refused',exit_code=7)
     fd=os.open(name,os.O_RDONLY|os.O_NOFOLLOW|getattr(os,'O_NONBLOCK',0)|getattr(os,'O_CLOEXEC',0),dir_fd=parent)
@@ -61,14 +63,21 @@ def persist_building_record(journal,held):
             if files.journal_entries():
                 raise JournalError('journal_recovery_required',exit_code=5,path=path)
             os.mkdir(txn,mode=0o700,dir_fd=parent)  # Never reuse an existing namespace.
+            created=os.stat(txn,dir_fd=parent,follow_symlinks=False)
+            guards._regular(created,directory=True)
             os.fsync(parent)
             with files.directory(('.specroad','transactions',txn)) as directory:
                 held.check()
+                if guards._identity(os.fstat(directory))!=guards._identity(created):
+                    raise JournalError('journal_directory_replaced',exit_code=6,path=path)
+                if files.journal_entries()!=('.specroad/transactions/'+txn,):
+                    raise JournalError('journal_recovery_set_changed',exit_code=6,path=path)
                 if os.listdir(directory):
                     raise JournalError('journal_namespace_not_empty',exit_code=6,path=path)
                 fd=os.open('journal.json',os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW|
                            getattr(os,'O_CLOEXEC',0),0o600,dir_fd=directory)
                 try:
+                    identity=guards._identity(os.fstat(fd))
                     raw=journal.source_bytes; offset=0
                     while offset<len(raw):
                         n=os.write(fd,raw[offset:])
@@ -79,9 +88,13 @@ def persist_building_record(journal,held):
                         raise JournalError('journal_write_incomplete',exit_code=5,path=path)
                 finally:os.close(fd)
                 os.fsync(directory)
-                if _read(directory,'journal.json')!=raw:
+                if _read(directory,'journal.json',expected_identity=identity)!=raw:
                     raise JournalError('journal_readback_mismatch',exit_code=6,path=path)
                 held.check()
+                if files.journal_entries()!=('.specroad/transactions/'+txn,):
+                    raise JournalError('journal_recovery_set_changed',exit_code=6,path=path)
+                if sorted(os.listdir(directory))!=['journal.json']:
+                    raise JournalError('journal_namespace_changed',exit_code=6,path=path)
         held.check()
     except JournalError as e:
         e.mutation_possible |= possible

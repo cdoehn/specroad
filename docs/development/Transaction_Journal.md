@@ -48,3 +48,22 @@ Sandbox gegen fremde absichtlich unkooperative Schreiber.
 Lokal: nur neue/direkt betroffene Tests mit vier Workern; Volltests in GitHub,
 jede fünfte Bundle-Nummer zusätzlich seriell. Keine Darstellungstests, keine
 künstlichen Testtimeouts. Keine neue Core- oder Entwicklungsabhängigkeit.
+
+## Fehler- und Bindungsgrenzen
+
+Der Leseweg kann zusätzlich den ursprünglichen Preflight verlangen und damit
+die vollständige Inventur unabhängig nachrechnen. Eine selbstkonsistente
+Prüfsumme auf einer falschen oder unvollständigen Liste genügt dann nicht.
+Abweichende Rootinstanzen, fremde Transaktionspfade und nichtnormative Ziele
+werden nicht als gleichwertig behandelt. Nicht unterstützte Zustände bleiben
+explizit abgewiesen; die Codecprüfung startet niemals Recovery.
+
+Die Dateiveröffentlichung des Journals verifiziert auch die Identität der
+tatsächlich exklusiv erzeugten Datei. Eine anschließend mit identischen Bytes
+ersetzte Datei ist nicht mehr derselbe Write. Während der Anlage beobachtete
+zusätzliche Journal-/Recoveryeinträge oder Namespaceänderungen lassen den
+Vorgang fehlschlagen und bleiben erhalten. Kurze Writes werden vervollständigt;
+ein Null-Write oder eine verweigerte Synchronisierung wird kein Erfolg.
+Die fsync-Aufrufe garantieren keine stärkere Dauerhaftigkeit, als Dateisystem
+und Datenträger tatsächlich bereitstellen. Keine automatische Wiederholung,
+kein Entfernen unvollständiger Dateien und keine Lockerung des Writer-Locks.
