@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 219
-last_completed_plan_commit: 5.m.C
-next_plan_commit: 5.n.W
+implementation_plan_commits_completed: 220
+last_completed_plan_commit: 5.n.W
+next_plan_commit: 5.n.R
 last_completed_numbered_bundle: 36
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2884,7 +2884,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.n.W – Let it Work
 
-- [ ] **5.n.W** · Position **220/885** · Voraussetzung: `5.m.C`.
+- [x] **5.n.W** · Position **220/885** · Voraussetzung: `5.m.C`.
 **Exakte Commit-Message:** `5.n.W feat(changes): Audit und Abschlussreceipts aufbauen`
 
 **Umsetzung:** Unveränderbare Transaktions-/Auditbelege nach dauerhaftem Ergebnis anlegen.

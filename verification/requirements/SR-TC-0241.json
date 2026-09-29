@@ -4,18 +4,33 @@
   "requirement_id": "SR-REQ-0241",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+  ],
+  "preconditions": [
+    "Owned local Linux project; exact independent publication request and native writer lock."
+  ],
+  "steps": [
+    "Publish verified target files using the existing transaction phases.",
+    "Create bound receipts, synchronize them and only then persist committed.",
+    "Assert normative inputs are not written again and failed completion retains evidence."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder tatsächlich ausgeführte oder abgewiesene `normative_write` MUSS den Auditbericht seiner Befehlsklasse nach Kapitel 11.7 ausgeben; ein noch offener Arbeitsschritt weist statt eines Erfolgsreceipts den Fortsetzungsstand aus.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +43,31 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_receipts.py::test_complete_receipts_bind_plan_actor_source_target_and_operations",
+    "tests/test_transaction_receipts.py::test_receipts_are_synced_before_committed_marker",
+    "tests/test_transaction_receipts.py::test_no_normative_write_no_revision_bump_no_cleanup",
+    "tests/test_transaction_receipts.py::test_no_request_id_does_not_create_request_receipt",
+    "tests/test_transaction_receipts.py::test_empty_plan_has_real_completion_without_fake_targets",
+    "tests/test_transaction_receipts.py::test_created_ids_record_actual_plan_identities",
+    "tests/test_transaction_receipts.py::test_existing_transaction_receipt_is_not_overwritten",
+    "tests/test_transaction_receipts.py::test_existing_request_receipt_blocks_before_transaction_receipt_write",
+    "tests/test_transaction_receipts.py::test_denied_authority_produces_no_receipt",
+    "tests/test_transaction_receipts.py::test_target_changed_before_completion_is_not_attested",
+    "tests/test_transaction_receipts.py::test_unchanged_resource_changed_before_completion_is_not_attested",
+    "tests/test_transaction_receipts.py::test_incomplete_publication_is_not_finalizable",
+    "tests/test_transaction_receipts.py::test_projection_only_never_writes_files",
+    "tests/test_transaction_receipts.py::test_returned_data_is_independent",
+    "tests/test_transaction_receipts.py::test_private_file_modes",
+    "tests/test_transaction_receipts.py::test_request_path_is_case_sensitive_and_path_safe",
+    "tests/test_transaction_receipts.py::test_reusing_old_finalization_input_never_repeats_target_write",
+    "tests/test_transaction_receipts.py::test_foreign_journal_blocks_completion",
+    "tests/test_transaction_receipts.py::test_modified_journal_binding_is_rejected",
+    "tests/test_transaction_receipts.py::test_prepared_is_not_complete"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "All normative command audit adapters and rolled-back receipts remain assigned to later integrations.",
+    "Full Request-ID retry dispatch follows 5.o; native full ChangeBackend, authentication and crash recovery are not claimed.",
+    "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]
 }
