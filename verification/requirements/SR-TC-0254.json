@@ -4,18 +4,32 @@
   "requirement_id": "SR-REQ-0254",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-STAGING-v1"
+  ],
+  "preconditions": [
+    "Explicit independently checked publication preflight and live own writer lock; no other journal or recovery blocker. Native local Linux files and directory fsync support."
+  ],
+  "steps": [
+    "Stage exact before/after bytes to new transaction-local files; sync each file and parent, hash and read back every image.",
+    "Recheck current source, authority and complete image set; durably replace only the building journal with prepared and retain recovery data on failure."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Vor dem Wechsel in `prepared` MUSS SpecRoad alle neuen Dateien und erforderlichen Before Images vollständig schreiben, hashen, gegen den Change Plan prüfen und auf der Referenzplattform mittels `fsync` dauerhaft synchronisieren.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Real native building-to-prepared effects, all required bytes durable before prepared publication, unchanged normative model and controlled incomplete states. No later commit/recovery integration claimed."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +42,27 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_staging.py::test_prepare_writes_images_and_only_changes_journal_state",
+    "tests/test_transaction_staging.py::test_new_file_has_no_before_image",
+    "tests/test_transaction_staging.py::test_noop_prepared_has_no_phantom_images",
+    "tests/test_transaction_staging.py::test_multiple_changes_bind_all_bytes",
+    "tests/test_transaction_staging.py::test_value_independence_and_no_success_coercion",
+    "tests/test_transaction_staging.py::test_self_consistent_missing_inventory_is_not_a_proof",
+    "tests/test_transaction_staging.py::test_authority_denial_preserves_building",
+    "tests/test_transaction_staging.py::test_existing_staging_is_not_reused_or_deleted",
+    "tests/test_transaction_staging.py::test_saved_prepared_marker_does_not_prove_images",
+    "tests/test_transaction_staging.py::test_expired_writer_handle_is_refused",
+    "tests/test_transaction_staging.py::test_wrong_plan_binding_cannot_stage",
+    "tests/test_transaction_staging.py::test_changed_source_refuses_before_payload_creation",
+    "tests/test_transaction_staging.py::test_images_and_parents_synced_before_prepared_replace",
+    "tests/test_transaction_staging.py::test_read_is_read_only_and_requires_matching_hash",
+    "tests/test_transaction_staging.py::test_late_authority_denial_keeps_images_and_building",
+    "tests/test_transaction_staging.py::test_modified_image_during_last_authorization_is_refused",
+    "tests/test_transaction_staging.py::test_fsync_failure_after_journal_replace_is_not_success_or_rollback"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Universal integration of every normative write, specialized payload families, committing, receipts and crash recovery remain in their later plan steps.",
+    "These library tests validate native fsync/rename boundaries, not power-loss guarantees stronger than the underlying filesystem/hardware; complete target CPython matrix requires actual CI."
   ]
 }

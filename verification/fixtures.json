@@ -49,7 +49,8 @@
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-PROJECT-LOCK-v1",
     "SR-FIX-PUBLICATION-RECHECK-v1",
-    "SR-FIX-TRANSACTION-JOURNAL-v1"
+    "SR-FIX-TRANSACTION-JOURNAL-v1",
+    "SR-FIX-TRANSACTION-STAGING-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -247,6 +248,10 @@
     "SR-FIX-TRANSACTION-JOURNAL-v1": {
       "provider": "tests/test_transaction_journal.py:record",
       "kind": "Owned bound project, explicit checked publication plan and real native lock; building journal writes only, no prepared payload or normative publication claim."
+    },
+    "SR-FIX-TRANSACTION-STAGING-v1": {
+      "provider": "tests/test_transaction_staging.py:begin",
+      "kind": "Owned temporary Linux project and still-held native writer lock; exact building journal, real exclusive images, fsync boundaries and prepared metadata. No normative publication or recovery claim."
     }
   }
 }

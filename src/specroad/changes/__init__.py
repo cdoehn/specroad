@@ -68,3 +68,7 @@ from .publication_check import (PublicationCheckError, PublicationAuthority, Pub
 
 from .journal import (BuildingJournal, JournalError, prepare_building_journal,
     verify_building_journal, begin_building_journal, read_building_journal, journal_path)
+
+# Durable staging remains distinct from publication/commit and recovery.
+from .staging_values import PreparedJournal, StagingError
+from .staging import stage_building_journal, read_prepared_journal, verify_prepared_journal

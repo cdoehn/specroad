@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 213
-last_completed_plan_commit: 5.k.C
-next_plan_commit: 5.l.W
+implementation_plan_commits_completed: 214
+last_completed_plan_commit: 5.l.W
+next_plan_commit: 5.l.R
 last_completed_numbered_bundle: 34
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2814,7 +2814,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.l.W – Let it Work
 
-- [ ] **5.l.W** · Position **214/885** · Voraussetzung: `5.k.C`.
+- [x] **5.l.W** · Position **214/885** · Voraussetzung: `5.k.C`.
 **Exakte Commit-Message:** `5.l.W feat(changes): Staging, Before Images und Prepared aufbauen`
 
 **Umsetzung:** Alle Zieldaten und nötigen Before Images vollständig schreiben, hashen und dauerhaft synchronisieren.
