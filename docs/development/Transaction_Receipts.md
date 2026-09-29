@@ -45,3 +45,41 @@ https://docs.python.org/3.10/library/os.html (fsync/open/replace).
 Lokal nur neue und direkt betroffene Tests parallel mit vier Workern. GitHub führt
 am Bundle-Ende die Vollsuite aus, jedes fünfte Bundle zusätzlich seriell mit Vergleich.
 Keine Tests auf Meldungstexte, Farben, Dokumentation oder Layout; keine neuen Timeouts.
+
+## Abschluss rekonstruieren und Arbeitsreste entsorgen
+
+`read_transaction_completion(ProjectSource(...), transaction_id)` ist rein lesend.
+Er verlangt ein committed-Journal oder dessen archivierte byteidentische Fassung
+und alle durch exakte Bytehashes gebundenen Receipts. Receipts allein, eine
+Konsolenmeldung oder ein noch `committing`-Journal genügen nicht. Mit dem ursprünglichen
+`PublicationPreflight` werden darüber hinaus der komplette Auftrag und die heutigen
+Ziel-/Ressourcenbytes erneut geprüft. Ohne ihn wird nur historische lokale
+Belegkonsistenz bestätigt, ausdrücklich nicht heutige Modellgültigkeit oder Echtheit.
+Ein verlorener Rückgabewert nach dem Journal-Rename kann so ohne zweiten Fachwrite
+aufgeklärt werden. Die Rootidentität verhindert die Verwendung einer anderen Kopie.
+
+`cleanup_completed_transaction` ist ein gesonderter, ausdrücklich autorisierter
+Aufruf unter demselben Writer-Lock. Vor der ersten Entfernung synchronisiert er
+zusätzlich eine unveränderliche Fassung des committed-Journals unter
+`transactions/receipts/<transaktionshash>/committed.json`. Transaktionsbeleg,
+Requestbeleg und dieser Abschlussmarker bleiben erhalten; nur geprüfte Before
+Images, leere Stagingverzeichnisse und das aktive Arbeitsjournal werden entfernt.
+Unbekannte Dateien, fremde Journale, veränderte Images/Receipts oder verlorene
+Bindungen verhindern ein vermeintlich erfolgreiches Aufräumen. Es wird niemals
+rekursiv ein ungeprüftes Verzeichnis gelöscht.
+
+Ein spätes Cleanupversagen kann `commit_completed=true` und zugleich
+`cleanup_completed=false` liefern, jedoch nur solange die ursprünglichen
+Abschlussbelege weiterhin überprüfbar sind. Ein beschädigter Beleg verbietet auch
+diese Erfolgsaussage. Bereits entstandene Reste bleiben bestehen; lediglich die
+kontrollierte Bereinigung darf erneut aufgerufen werden. Das ist kein Request-Retry-
+Dispatcher und keine automatische Wiederholung des normativen Änderungsplans.
+Fehlende Arbeitspfade nach einem früheren Cleanupversuch sind nur mit unverändertem
+archiviertem Abschlussmarker zulässig. Lock-Eigentümerreste nach einem Prozesscrash
+werden von diesem Reader nicht entfernt oder als geklärt ausgegeben.
+
+Die R-Regressionsprüfungen decken alle zehn Synchronisationsgrenzen des regulären
+Ein-Datei-Abschlusses und alle sieben Synchronisationsgrenzen seiner Bereinigung
+ab, daneben echte Prozessabbrüche, verlorene Rückmeldungen, Teilwrites und
+unveränderte normative Dateibytes. Diese Fehler-Injektionen sind keine Simulation
+eines vollständigen Datenträger-Stromausfalls.

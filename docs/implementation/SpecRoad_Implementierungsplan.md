@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 220
-last_completed_plan_commit: 5.n.W
-next_plan_commit: 5.n.R
+implementation_plan_commits_completed: 221
+last_completed_plan_commit: 5.n.R
+next_plan_commit: 5.n.C
 last_completed_numbered_bundle: 36
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2893,7 +2893,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.n.R – Make it Right
 
-- [ ] **5.n.R** · Position **221/885** · Voraussetzung: `5.n.W`.
+- [x] **5.n.R** · Position **221/885** · Voraussetzung: `5.n.W`.
 **Exakte Commit-Message:** `5.n.R feat(changes): Audit und Abschlussreceipts vervollständigen`
 
 **Vervollständigung:** Verlorene Ausgabe oder spätes Cleanupversagen erzeugen keinen zweiten Fachwrite.

@@ -86,3 +86,6 @@ from .receipt_finalization import finalize_committing_journal
 __all__ += ['ReceiptError', 'TransactionReceipt', 'RequestReceipt', 'CommittedJournal',
             'TransactionCompletion', 'transaction_receipt_path', 'request_receipt_path',
             'completion_marker_path', 'prepare_completion_receipts', 'finalize_committing_journal']
+from .receipt_read import read_transaction_completion
+from .receipt_cleanup import cleanup_completed_transaction
+__all__ += ['read_transaction_completion', 'cleanup_completed_transaction']

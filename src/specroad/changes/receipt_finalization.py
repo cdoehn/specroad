@@ -31,6 +31,27 @@ from .receipt_values import ReceiptError, TransactionCompletion
 from .receipt_projection import prepare_completion_receipts
 
 
+def _target_snapshot(source, expected):
+    source.check_current()
+    expected_json = tuple(sorted(p for p in expected if source.classify(p) in CURRENT_JSON_CLASSES))
+    if current_json_paths(source) != expected_json:
+        raise ReceiptError('completion_target_inventory_changed', exit_code=6)
+    states, parents = {}, {}
+    for path, raw in sorted(expected.items()):
+        parents.update(_parent(source, path, check_rights=lambda *args: None, writable=False))
+        with opened_resource(source.boundary, path) as (fd, info):
+            if info.st_nlink != 1:
+                raise ReceiptError('completion_hardlink_refused', path=path, exit_code=7)
+            observed = fingerprint_reader(lambda n: os.read(fd, n), info.st_size)
+            if observed.size != len(raw) or observed.sha256 != sha256(raw).hexdigest():
+                raise ReceiptError('completion_target_changed', path=path, exit_code=6)
+            states[path] = {**_stamp(info), 'size': info.st_size, 'sha256': observed.sha256}
+    source.check_current()
+    if current_json_paths(source) != expected_json:
+        raise ReceiptError('completion_target_inventory_changed', exit_code=6)
+    return canonical_json_bytes({'files': states, 'parents': parents})
+
+
 class _ReceiptSession:
     def __init__(self, preflight, journal, held, authority, gates):
         self.preflight, self.journal, self.held = preflight, journal, held
@@ -58,24 +79,7 @@ class _ReceiptSession:
         self.check()
 
     def observe_target(self):
-        self.source.check_current()
-        expected_json = tuple(sorted(p for p in self.expected if self.source.classify(p) in CURRENT_JSON_CLASSES))
-        if current_json_paths(self.source) != expected_json:
-            raise ReceiptError('completion_target_inventory_changed', exit_code=6)
-        states, parents = {}, {}
-        for path, raw in sorted(self.expected.items()):
-            parents.update(_parent(self.source, path, check_rights=lambda *args: None, writable=False))
-            with opened_resource(self.source.boundary, path) as (fd, info):
-                if info.st_nlink != 1:
-                    raise ReceiptError('completion_hardlink_refused', path=path, exit_code=7)
-                observed = fingerprint_reader(lambda n: os.read(fd, n), info.st_size)
-                if observed.size != len(raw) or observed.sha256 != sha256(raw).hexdigest():
-                    raise ReceiptError('completion_target_changed', path=path, exit_code=6)
-                states[path] = {**_stamp(info), 'size': info.st_size, 'sha256': observed.sha256}
-        self.source.check_current()
-        if current_json_paths(self.source) != expected_json:
-            raise ReceiptError('completion_target_inventory_changed', exit_code=6)
-        return canonical_json_bytes({'files': states, 'parents': parents})
+        return _target_snapshot(self.source, self.expected)
 
     def check(self):
         _own_lock(self.held, self.source, self.journal)
@@ -179,6 +183,8 @@ def finalize_committing_journal(preflight, journal, *, held_lock, authority, gat
             if record is None: continue
             with session.files.directory(tuple(record.path.split('/')[:-1])) as directory:
                 if directory is not None:
+                    if record is transaction and os.listdir(directory):
+                        raise ReceiptError('completion_receipt_already_exists', path=record.path, exit_code=6)
                     try:
                         os.stat(record.path.rsplit('/', 1)[-1], dir_fd=directory, follow_symlinks=False)
                     except FileNotFoundError:

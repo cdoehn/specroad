@@ -62,6 +62,14 @@ def _full_journal(value):
     return journal
 
 
+def _created_ids(operations):
+    values = []
+    for operation in operations:
+        if operation['op'] == 'create': values.append(operation['artifact']['id'])
+        elif operation['op'] == 'relation_add': values.append(operation['relation']['relation_id'])
+    return sorted(set(values))
+
+
 def _result(journal, created_ids):
     data = journal.data
     return {'exit_code': 0, 'status': 'success', 'write_state': 'committed',
@@ -95,7 +103,8 @@ class TransactionReceipt:
             raise ReceiptError('receipt_binding_mismatch')
         ids = value['created_ids']
         if (type(ids) is not list or any(type(i) is not str or not i for i in ids)
-                or ids != sorted(set(ids)) or value['result_object'] != _result(journal, ids)):
+                or ids != _created_ids(operations)
+                or canonical_json_bytes(value['result_object']) != canonical_json_bytes(_result(journal, ids))):
             raise ReceiptError('invalid_receipt_result')
         object.__setattr__(self, '_raw', raw)
 
@@ -123,9 +132,13 @@ class RequestReceipt:
         if (set(value) != fields or value['format_version'] != 'request-receipt-v1'
                 or value['namespace'] != 'normative_write' or value['result'] != 'committed'):
             raise ReceiptError('invalid_request_receipt_schema')
-        request_receipt_path(value['request_id'])
         from .authoring import normalize_authoring_actor
-        normalize_authoring_actor(value['actor'])
+        try:
+            request_receipt_path(value['request_id'])
+            normalize_authoring_actor(value['actor'])
+            _transaction(value['transaction_id'])
+        except (ModelError, TypeError, ValueError) as error:
+            raise ReceiptError('invalid_request_receipt_identity') from error
         ref = value['transaction_receipt']
         if (type(ref) is not dict or set(ref) != {'path', 'sha256'}
                 or ref['path'] != transaction_receipt_path(value['transaction_id'])
@@ -136,12 +149,23 @@ class RequestReceipt:
         ids, result = value['created_ids'], value['result_object']
         if (type(ids) is not list or any(type(i) is not str or not i for i in ids)
                 or ids != sorted(set(ids)) or type(result) is not dict
-                or result.get('write_state') != 'committed' or result.get('exit_code') != 0
+                or set(result) != {'exit_code', 'status', 'write_state', 'transaction_id', 'request_id',
+                                    'target_model_root_sha256', 'published_paths', 'created_ids'}
+                or result.get('status') != 'success' or result.get('write_state') != 'committed'
+                or type(result.get('exit_code')) is not int or result['exit_code'] != 0
+                or type(result.get('published_paths')) is not list
+                or any(type(p) is not str for p in result['published_paths'])
+                or result['published_paths'] != sorted(set(result['published_paths']))
                 or result.get('request_id') != value['request_id']
                 or result.get('transaction_id') != value['transaction_id']
                 or result.get('target_model_root_sha256') != value['target_model_root_sha256']
                 or result.get('created_ids') != ids):
             raise ReceiptError('invalid_request_receipt_result')
+        from ._journal_codec import _target_path
+        try:
+            for path in result['published_paths']: _target_path(path)
+        except (ModelError, ChangeExecutionError) as error:
+            raise ReceiptError('invalid_request_receipt_result') from error
         object.__setattr__(self, '_raw', raw)
 
     @property
@@ -214,7 +238,8 @@ class TransactionCompletion:
             'current_target_verified': live, 'cleanup_completed': cleanup,
             'cleanup_required': not cleanup, 'warnings': list(warnings),
             'normative_writes': 0, 'write_authorized': False,
-            'idempotency_guaranteed': False, 'atomic_snapshot': False}))
+            'idempotency_guaranteed': False, 'atomic_snapshot': False,
+            'authenticity_verified': False, 'retry_dispatch_performed': False}))
         return obj
 
     def __init__(self, *args, **kwargs): raise TypeError('Use a verified completion path')
