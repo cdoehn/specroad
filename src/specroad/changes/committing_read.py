@@ -3,7 +3,6 @@
 A move ahead of its acknowledgement is deliberately refused, not guessed into
 an updated journal. Full recovery decides such states in a later workflow.
 """
-from hashlib import sha256
 import os
 from ..model.errors import ModelError
 from ..security import SafetyViolation

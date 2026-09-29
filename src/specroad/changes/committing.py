@@ -6,7 +6,6 @@ Supported targets are the artifact writes in the existing PublicationRequest.
 """
 from hashlib import sha256
 import os
-import stat
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..model.paths import CURRENT_JSON_CLASSES
@@ -21,7 +20,7 @@ from ..validation import ModelDocument, validate_model, assess_validation
 from .journal_values import JournalError
 from ._journal_io import _read
 from ._journal_inventory import prepare_building_journal
-from .staging_values import PreparedJournal, StagingError
+from .staging_values import PreparedJournal
 from .staging import verify_prepared_journal, _own_lock, _recheck, _materialized_target
 from ._staging_files import _image, _write_new, _names
 from .publication_values import PublicationPreflight, PublicationAuthority
@@ -31,21 +30,7 @@ from .locking import HeldProjectLock
 from .execution_values import ChangeExecutionError
 from ._target_checks import _gates, _empty_target_gates
 from .committing_values import CommittingJournal, CommitPublicationError, PublishedFiles
-
-
-def _initial_committing(prepared):
-    value = prepared.data
-    value['state'] = 'committing'
-    return CommittingJournal(canonical_json_bytes(value))
-
-
-def _acknowledge(journal, index):
-    value = journal.data
-    if index != value['published_count'] or index >= len(value['files']):
-        raise CommitPublicationError('out_of_order_publication_acknowledgement')
-    value['files'][index]['published'] = True
-    value['published_count'] += 1
-    return CommittingJournal(canonical_json_bytes(value))
+from ._committing_state import _initial_committing, _acknowledge, next_publication
 
 
 def verify_committing_journal(journal, preflight):
@@ -282,7 +267,7 @@ def publish_prepared_journal(preflight, journal, *, held_lock, authority, gates=
         verify_prepared_journal(journal,preflight)
         session = _Publisher(preflight,journal,held_lock,authority,tuple(gates))
         session.save(_initial_committing(journal))
-        for index in range(len(session.entries)):
+        while (index := next_publication(session.journal)) is not None:
             session.publish(index)
         root = session.target_root()
         return PublishedFiles._create(session.journal,root)

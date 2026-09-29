@@ -71,3 +71,10 @@ images and changed unrelated sources. A real child exits immediately after the
 first target rename: the mixed files and before images remain, and normal project
 loading remains blocked. These are observed process/failure tests, not a simulation
 of power loss or an assertion about remote/distributed filesystem durability.
+
+## State ownership
+
+The pure `_committing_state` successor table determines the next canonical target
+from the current acknowledged prefix. The native publisher cannot advance to the
+next target until its newly persisted journal has advanced that prefix. Receipt
+and committed successors remain absent rather than fabricating finalization.
