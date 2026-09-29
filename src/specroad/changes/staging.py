@@ -8,6 +8,7 @@ from hashlib import sha256
 import os
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
+from ..result_contract import ResultContractError
 from ..security import SafetyViolation
 from ..security import paths as guards
 from ..storage.project import ProjectSource
@@ -24,6 +25,9 @@ from .publication_check import _observe, _same_request
 from ._publication_observation import _root
 from .execution_values import PublicationRequest, ChangeExecutionError
 from .target import assess_change_target
+from ._target_checks import _gates, _empty_target_gates
+from ..validation import ModelDocument, validate_model, assess_validation
+from ..storage.json_syntax import parse_json_object
 from .staging_values import PreparedJournal, StagingError
 
 _BLOCK = 65536
@@ -165,6 +169,9 @@ def _translate(error, *, possible, prepared):
         return StagingError(error.reason, path=getattr(error, 'path', None),
             exit_code=getattr(error, 'exit_code', 3), mutation_possible=possible,
             prepared_possible=prepared)
+    if isinstance(error, ResultContractError):
+        return StagingError('staging_validation_contract_invalid', exit_code=4,
+                            mutation_possible=possible, prepared_possible=prepared)
     if isinstance(error, SafetyViolation):
         return StagingError('unsafe_staging_path', exit_code=7,
                             mutation_possible=possible, prepared_possible=prepared)
@@ -194,6 +201,45 @@ def _images_on_disk(files, journal, identities=None):
                 _image(fd, path.rsplit('/', 1)[-1], entry[size_key], entry[hash_key],
                        identity=None if identities is None else identities[path])
 
+
+
+def _materialized_target(files, journal, preflight, gates):
+    """Reconstruct the entire target from actual staged bytes and bound unchanged sources.
+
+    Only changed files come from staging. Do not execute the plan a second time
+    on its own result or silently validate just the changed subset. Use the
+    established model-manifest and whole-target validation contracts.
+    """
+    model = preflight._model.snapshot()
+    request = preflight.request
+    documents = {d.path: d for d in model.documents}
+    for entry in journal.data['files']:
+        path = entry['staging_path']
+        with files.directory(tuple(path.split('/')[:-1])) as parent:
+            if parent is None:
+                raise StagingError('staging_directory_missing', exit_code=5)
+            name = path.rsplit('/', 1)[-1]
+            identity = _image(parent, name, entry['after_size'], entry['after_sha256'])
+            raw = _read(parent, name, expected_identity=identity)
+            if len(raw) != entry['after_size'] or sha256(raw).hexdigest() != entry['after_sha256']:
+                raise StagingError('staging_image_changed', path=path, exit_code=6)
+        documents[entry['path']] = ModelDocument(entry['path'], raw)
+    ordered = tuple(documents[p] for p in sorted(documents))
+    actual_files = [{'path': d.path, 'sha256': sha256(d.content).hexdigest()} for d in ordered]
+    if actual_files != request.data['target_files']:
+        raise StagingError('staging_target_inventory_mismatch', exit_code=6)
+    artifacts = [parse_json_object(d.content) for d in ordered]
+    manifest = model.manifest(artifacts, request.plan.data['base']['scope_descriptor'])
+    if manifest.sha256 != journal.data['target_model_root_sha256']:
+        raise StagingError('staging_target_root_mismatch', exit_code=6)
+    registered, missing = _gates(gates, preflight._policy, request.plan, model)
+    report = validate_model(ordered, profile=model.profile, gates=registered)
+    report = _empty_target_gates(report, registered, model.profile)
+    assessment = assess_validation(report,
+        fail_on=model.configuration.data['validation_policy'].get('fail_on', 'error'),
+        strict=preflight._strict, documents=ordered)
+    if missing or not report.complete or not assessment.passed:
+        raise StagingError('staging_materialized_target_invalid', exit_code=3)
 
 def stage_building_journal(preflight, journal, *, held_lock, authority, gates=()):
     """building -> prepared without a single normative target write.
@@ -256,6 +302,8 @@ def stage_building_journal(preflight, journal, *, held_lock, authority, gates=()
                     identities[path] = _write_new(parent, path.rsplit('/', 1)[-1], raw)
                 same()
             _images_on_disk(files, prepared, identities)
+            # The complete target is validated from the bytes read back from staging.
+            _materialized_target(files, prepared, preflight, gates)
             # Fresh authority/target checks cannot hide later tampering of images.
             _recheck(preflight, journal, held_lock, authority, gates)
             same()
@@ -284,7 +332,7 @@ def stage_building_journal(preflight, journal, *, held_lock, authority, gates=()
                 raise StagingError('staging_source_changed', exit_code=6)
         held_lock.check()
         return prepared
-    except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
+    except (OSError, SafetyViolation, ModelError, ChangeExecutionError, ResultContractError) as error:
         raise _translate(error, possible=possible, prepared=replaced) from error
 
 
@@ -321,7 +369,10 @@ def read_prepared_journal(source, transaction_id, *, expected_sha256=None, prefl
                 if _read(directory, 'journal.json', expected_identity=ident) != raw:
                     raise StagingError('prepared_journal_bytes_changed', exit_code=6)
                 _names(directory, ('journal.json', 'staging', 'before'))
+                _images_on_disk(files, journal)
+                if _read(directory, 'journal.json', expected_identity=ident) != raw:
+                    raise StagingError('prepared_journal_bytes_changed', exit_code=6)
         source.check_current()
         return journal
-    except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
+    except (OSError, SafetyViolation, ModelError, ChangeExecutionError, ResultContractError) as error:
         raise _translate(error, possible=False, prepared=False) from error

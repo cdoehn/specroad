@@ -22,6 +22,15 @@ Kurze Writes werden vervollständigt. Sämtliche Bytes, Größen, Hashes und
 Dateiidentitäten werden kontrolliert. Jede vollständige Datei und ihr Verzeichnis
 werden synchronisiert. Eine ursprünglich leere Änderungsmenge bleibt leer.
 
+Der vollständige Zielbestand wird aus den tatsächlichen zurückgelesenen
+Stagingbytes und den gebundenen unveränderten Quelldateien materialisiert.
+Dateimenge und Bytedigests müssen dem geprüften Auftrag entsprechen. Die
+vorhandene Modellmanifestfunktion berechnet daraus die Zielmodellwurzel erneut;
+die vollständige bestehende Modellvalidierung und registrierte Fachprüfer
+prüfen diese konkreten Dokumente, auch die unveränderten. Bei einem leeren Ziel
+laufen ausdrücklich erforderliche Command-Gates trotzdem. Die nachfolgende
+Frischeprüfung kontrolliert außerdem Änderungen während dieser Fachprüfer.
+
 Erst wenn alle Images vollständig vorliegen und mit dem Change Plan
 übereinstimmen, wird ein privater Prepared-Journalnachfolger geschrieben,
 synchronisiert und atomar über das weiterhin identische Building-Journal
