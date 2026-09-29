@@ -12,13 +12,11 @@ from ..result_contract import ResultContractError
 from ..security import SafetyViolation
 from ..security import paths as guards
 from ..storage.project import ProjectSource
-from ..storage.byte_binding import fingerprint_reader
 from ._journal_codec import _hash, journal_path
 from ._journal_inventory import prepare_building_journal, verify_building_journal
 from ._journal_io import _read
 from ._lock_files import LockFiles
 from .journal_values import BuildingJournal, JournalError
-from .lock_values import ProjectLockError
 from .locking import HeldProjectLock
 from .publication_values import PublicationPreflight, PublicationAuthority
 from .publication_check import _observe, _same_request
@@ -29,8 +27,8 @@ from ._target_checks import _gates, _empty_target_gates
 from ..validation import ModelDocument, validate_model, assess_validation
 from ..storage.json_syntax import parse_json_object
 from .staging_values import PreparedJournal, StagingError
+from ._staging_files import _image, _write_new, _names, _images_on_disk
 
-_BLOCK = 65536
 _PENDING = 'journal.prepared'
 
 
@@ -110,56 +108,6 @@ def _recheck(preflight, journal, held, authority, gates):
     return source
 
 
-def _image(parent, name, size, digest, *, identity=None):
-    """Hash the complete current regular file through a freshly verified descriptor."""
-    before = os.stat(name, dir_fd=parent, follow_symlinks=False)
-    guards._regular(before)
-    if before.st_nlink != 1:
-        raise StagingError('staging_hardlink_refused', path=name, exit_code=7)
-    if before.st_size != size or (identity is not None and guards._identity(before) != identity):
-        raise StagingError('staging_image_changed', path=name, exit_code=6)
-    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0)
-                 | getattr(os, 'O_CLOEXEC', 0), dir_fd=parent)
-    try:
-        first = os.fstat(fd)
-        guards._regular(first)
-        if guards._signature(first) != guards._signature(before):
-            raise StagingError('staging_image_changed', path=name, exit_code=6)
-        observed = fingerprint_reader(lambda n: os.read(fd, n), size)
-        after = os.stat(name, dir_fd=parent, follow_symlinks=False)
-        if (observed.size != size or observed.sha256 != digest
-                or guards._signature(first) != guards._signature(after)
-                or guards._signature(first) != guards._signature(os.fstat(fd))):
-            raise StagingError('staging_image_changed', path=name, exit_code=6)
-        return guards._identity(first)
-    finally:
-        os.close(fd)
-
-
-def _write_new(parent, name, raw):
-    """Exclusive private file, complete bounded writes, fsync, stable readback."""
-    fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
-                 | getattr(os, 'O_CLOEXEC', 0), 0o600, dir_fd=parent)
-    try:
-        identity = guards._identity(os.fstat(fd))
-        view = memoryview(raw)
-        offset = 0
-        while offset < len(view):
-            chunk = view[offset:offset + _BLOCK]
-            count = os.write(fd, chunk)
-            if type(count) is not int or not 0 < count <= len(chunk):
-                raise StagingError('staging_short_write', path=name, exit_code=5)
-            offset += count
-        os.fsync(fd)
-        if os.fstat(fd).st_size != len(raw):
-            raise StagingError('staging_incomplete_write', path=name, exit_code=5)
-    finally:
-        os.close(fd)
-    os.fsync(parent)
-    _image(parent, name, len(raw), sha256(raw).hexdigest(), identity=identity)
-    return identity
-
-
 def _translate(error, *, possible, prepared):
     if isinstance(error, StagingError):
         error.mutation_possible |= possible
@@ -177,30 +125,6 @@ def _translate(error, *, possible, prepared):
                             mutation_possible=possible, prepared_possible=prepared)
     return StagingError('staging_io_failure', exit_code=5,
                         mutation_possible=possible, prepared_possible=prepared)
-
-
-def _names(directory, wanted):
-    if set(os.listdir(directory)) != set(wanted):
-        raise StagingError('staging_namespace_changed', exit_code=6)
-
-
-def _images_on_disk(files, journal, identities=None):
-    """Complete exact image namespace, including a deliberately empty before set."""
-    entries = journal.data['files']
-    prefix = tuple(journal.path.split('/')[:-1])
-    for folder, path_key, size_key, hash_key in (
-            ('staging', 'staging_path', 'after_size', 'after_sha256'),
-            ('before', 'before_image_path', 'before_size', 'before_sha256')):
-        values = [e for e in entries if e[path_key] is not None]
-        with files.directory((*prefix, folder)) as fd:
-            if fd is None:
-                raise StagingError('staging_directory_missing', exit_code=5)
-            _names(fd, [e[path_key].rsplit('/', 1)[-1] for e in values])
-            for entry in values:
-                path = entry[path_key]
-                _image(fd, path.rsplit('/', 1)[-1], entry[size_key], entry[hash_key],
-                       identity=None if identities is None else identities[path])
-
 
 
 def _materialized_target(files, journal, preflight, gates):

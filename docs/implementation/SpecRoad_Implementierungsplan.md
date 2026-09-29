@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 215
-last_completed_plan_commit: 5.l.R
-next_plan_commit: 5.l.C
-last_completed_numbered_bundle: 34
+implementation_plan_commits_completed: 216
+last_completed_plan_commit: 5.l.C
+next_plan_commit: 5.m.W
+last_completed_numbered_bundle: 35
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2832,7 +2832,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.l.C – Make it Clean
 
-- [ ] **5.l.C** · Position **216/885** · Voraussetzung: `5.l.R`.
+- [x] **5.l.C** · Position **216/885** · Voraussetzung: `5.l.R`.
 **Exakte Commit-Message:** `5.l.C refactor(changes): Staging, Before Images und Prepared bereinigen`
 
 **Bereinigung:** Sichere Dateiprimitiven mit expliziten dauerhaften Grenzen kapseln.

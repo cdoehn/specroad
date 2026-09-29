@@ -64,3 +64,7 @@ Lokal nur neue und direkt betroffene Verhaltenstests mit vier Workern. Die volle
 Suite läuft in GitHub; Bundle 035 verlangt dort parallel, seriell und Vergleich.
 Keine Text-/Layout-/Dokumentationstests, keine neuen Testtimeouts, keine neuen
 Abhängigkeiten. Die CI-Beobachtung bleibt unverändert unter tools/.
+
+Die C-Bereinigung kapselt die unveränderten nativen Lese-/Schreib-,
+Hash- und Namensmengenprimitiven in `changes/_staging_files.py`.
+Die Anwendungsfolge und alle W-/R-Verhaltenstests bleiben unverändert.
