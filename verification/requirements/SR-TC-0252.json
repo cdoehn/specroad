@@ -4,18 +4,31 @@
   "requirement_id": "SR-REQ-0252",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-JOURNAL-v1"
+  ],
+  "preconditions": [
+    "Complete explicitly supplied publication preflight and live native writer lock; owned temporary Linux project."
+  ],
+  "steps": [
+    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS vor der ersten normativen Veröffentlichung ein Journal nach Anhang C unter `.specroad/transactions/<TRANSACTION-ID>/journal.json` anlegen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Exact changed artifact file list and complete byte hashes bound to the checked plan; preserved recovery blockers and no normative writes during building."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +41,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_journal.py::test_create_is_complete_synced_journal_only",
+    "tests/test_transaction_journal.py::test_prepare_is_pure_and_does_not_stage_or_acquire_lock",
+    "tests/test_transaction_journal.py::test_matching_transaction_id_cannot_overwrite_existing_journal",
+    "tests/test_transaction_journal.py::test_denied_authority_creates_no_journal",
+    "tests/test_transaction_journal.py::test_changed_base_refuses_before_journal_creation"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Native building journal only: preparation of all staging/before-image bytes, prepared/committing transitions, receipts and recovery remain in their assigned later steps.",
+    "Universal integration into every normative_write and the actual target filesystem/Python matrix remain unproven by these library tests."
   ]
 }

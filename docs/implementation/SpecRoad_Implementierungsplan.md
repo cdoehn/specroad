@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 210
-last_completed_plan_commit: 5.j.C
-next_plan_commit: 5.k.W
+implementation_plan_commits_completed: 211
+last_completed_plan_commit: 5.k.W
+next_plan_commit: 5.k.R
 last_completed_numbered_bundle: 33
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2779,7 +2779,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.k.W – Let it Work
 
-- [ ] **5.k.W** · Position **211/885** · Voraussetzung: `5.j.C`.
+- [x] **5.k.W** · Position **211/885** · Voraussetzung: `5.j.C`.
 **Exakte Commit-Message:** `5.k.W feat(changes): Journal und Building-Zustand aufbauen`
 
 **Umsetzung:** Journal mit Dateiinventur, Vorher-/Nachherhashes und Stagingbezügen vor erstem normativen Write erzeugen.

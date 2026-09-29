@@ -48,7 +48,8 @@
     "SR-FIX-CHANGE-EXECUTION-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-PROJECT-LOCK-v1",
-    "SR-FIX-PUBLICATION-RECHECK-v1"
+    "SR-FIX-PUBLICATION-RECHECK-v1",
+    "SR-FIX-TRANSACTION-JOURNAL-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -242,6 +243,10 @@
     "SR-FIX-PUBLICATION-RECHECK-v1": {
       "provider": "tests/support/publication.py:prepared",
       "kind": "Owned local Linux roots and real writer locks; explicit test-only authority/publication callbacks. No production journal/durability/authentication proof."
+    },
+    "SR-FIX-TRANSACTION-JOURNAL-v1": {
+      "provider": "tests/test_transaction_journal.py:record",
+      "kind": "Owned bound project, explicit checked publication plan and real native lock; building journal writes only, no prepared payload or normative publication claim."
     }
   }
 }

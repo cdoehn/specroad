@@ -65,3 +65,6 @@ __all__ += ['project_lock', 'inspect_project_lock', 'recover_project_lock', 'Hel
 
 from .publication_check import (PublicationCheckError, PublicationAuthority, PublicationPreflight,
     PublicationRecheck, prepare_publication_check, recheck_publication, publish_after_recheck)
+
+from .journal import (BuildingJournal, JournalError, prepare_building_journal,
+    verify_building_journal, begin_building_journal, read_building_journal, journal_path)

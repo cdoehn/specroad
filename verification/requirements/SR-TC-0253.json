@@ -4,18 +4,31 @@
   "requirement_id": "SR-REQ-0253",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-JOURNAL-v1"
+  ],
+  "preconditions": [
+    "Complete explicitly supplied publication preflight and live native writer lock; owned temporary Linux project."
+  ],
+  "steps": [
+    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Das Transaktionsjournal MUSS für jede betroffene Datei logischen Pfad, Existenz vor der Operation, Vorher-Hash, Nachher-Hash, Staging-Pfad, optionalen Before-Image-Pfad und Veröffentlichungsstatus enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Exact changed artifact file list and complete byte hashes bound to the checked plan; preserved recovery blockers and no normative writes during building."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +41,16 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_journal.py::test_inventory_binds_actual_before_and_after_bytes",
+    "tests/test_transaction_journal.py::test_new_file_has_no_before_image",
+    "tests/test_transaction_journal.py::test_noop_does_not_invent_changed_files",
+    "tests/test_transaction_journal.py::test_changed_files_are_ordered_not_operation_order",
+    "tests/test_transaction_journal.py::test_missing_inventory_entry_fails_independent_plan_binding",
+    "tests/test_transaction_journal.py::test_journal_data_and_original_bytes_are_independent"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Native building journal only: preparation of all staging/before-image bytes, prepared/committing transitions, receipts and recovery remain in their assigned later steps.",
+    "Universal integration into every normative_write and the actual target filesystem/Python matrix remain unproven by these library tests."
   ]
 }
