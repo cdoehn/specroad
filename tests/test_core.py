@@ -10,6 +10,7 @@ SOURCE = Path(__file__).resolve().parents[1] / "src"
 
 
 from support import run_core
+from support.virtualenvs import create_no_pip_venv
 
 
 class CoreHarness:
@@ -130,11 +131,9 @@ assert specroad.check_runtime() is None
             self.assertEqual(r.returncode, 0, r.stderr)
 
     def test_unactivated_virtual_environment_without_pip(self):
-        import venv
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            venv.EnvBuilder(with_pip=False).create(root / 'env')
-            python = root / 'env' / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+            python = create_no_pip_venv(root / 'env')
             project = root / 'project'
             project.mkdir()
             r = self.run_core("import specroad;specroad.check_runtime()", project, python=python)
