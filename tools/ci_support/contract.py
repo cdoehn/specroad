@@ -13,6 +13,21 @@ PREFIX = 'SPECRoad-CI-EVIDENCE-V1 '
 class CIObservationError(ValueError):
     """Unavailable/mismatched external observation, not a local apply failure."""
 
+    def __init__(self, reason, *, http_status=None, returncode=None):
+        super().__init__(reason)
+        # Only numeric transport metadata is retained, never raw gh diagnostics.
+        self.http_status = http_status if type(http_status) is int and 100 <= http_status <= 599 else None
+        self.returncode = returncode if type(returncode) is int else None
+
+
+def error_record(phase, error):
+    record = {'phase': phase, 'reason': str(error)[:200]}
+    if isinstance(error, CIObservationError):
+        for key in ('http_status', 'returncode'):
+            if getattr(error, key) is not None:
+                record[key] = getattr(error, key)
+    return record
+
 
 @dataclass(frozen=True)
 class Request:

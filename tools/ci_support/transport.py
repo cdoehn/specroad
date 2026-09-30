@@ -1,5 +1,6 @@
 """Fixed-host gh GET requests and complete exact-run collections."""
 import os
+import re
 import subprocess
 from .contract import (REPOSITORY, MAX_BYTES, CIObservationError, decode_json, exact_run)
 
@@ -23,7 +24,10 @@ class GhClient:
             raise CIObservationError('gh_unavailable_or_api_timeout') from error
         if result.returncode:
             # Do not copy credential diagnostics or arbitrary environment text.
-            raise CIObservationError('gh_api_exit_' + str(result.returncode))
+            status = re.search(rb'\(HTTP ([1-5][0-9]{2})\)', result.stderr)
+            raise CIObservationError('gh_api_exit_' + str(result.returncode),
+                http_status=None if status is None else int(status.group(1)),
+                returncode=result.returncode)
         if len(result.stdout) > MAX_BYTES:
             raise CIObservationError('evidence_capture_limit')
         return result.stdout

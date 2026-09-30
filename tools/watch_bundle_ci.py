@@ -3,6 +3,7 @@
 GitHub outcome and local commit success remain separate. No test bodies run here.
 """
 import argparse
+from hashlib import sha256
 import json
 from pathlib import Path
 import sys
@@ -31,15 +32,57 @@ def show_progress(event):
         print('CI: ' + event['phase'] + ' …', flush=True)
 
 
+def parse_recovery_binding(value):
+    """Use the earlier Result's exact source/run/attempt, not current source bytes."""
+    fields = {'repository', 'branch', 'workflow_path', 'commit_sha', 'bundle_number',
+              'run_id', 'run_attempt', 'source_sha256'}
+    if (type(value) is not dict or set(value) != fields
+            or value['repository'] != REPOSITORY or value['branch'] != 'dev'
+            or value['workflow_path'] != WORKFLOW or value['source_sha256'] is None
+            or any(type(value[key]) is not int or value[key] < 1 for key in ('run_id', 'run_attempt'))):
+        raise CIObservationError('invalid_prior_ci_binding')
+    request = Request(value['commit_sha'], value['bundle_number'], value['source_sha256'])
+    return request, value['run_id'], value['run_attempt']
+
+
+def attach_prior_evidence(summary, files, prior_summary, prior_files):
+    """Keep independent run evidence in one existing Result transport frame."""
+    summary['prior_ci'] = {key: prior_summary.get(key) for key in (
+        'repository', 'branch', 'workflow_path', 'commit_sha', 'bundle_number', 'source_sha256',
+        'run_id', 'run_attempt', 'run_binding_confirmed', 'github_conclusion', 'ci_status',
+        'started_at', 'ended_at', 'evidence_complete', 'test_evidence_verified',
+        'observed_failures', 'errors')}
+    summary['prior_ci']['evidence_file'] = None
+    raw = pack_evidence(prior_files)
+    files['prior-ci-evidence.zip'] = raw
+    summary['prior_ci']['evidence_file'] = 'prior-ci-evidence.zip'
+    summary['files'] = {name: {'size': len(value), 'sha256': sha256(value).hexdigest()}
+                       for name, value in files.items() if name != 'summary.json'}
+    files['summary.json'] = json_bytes(summary)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--commit', required=True)
     parser.add_argument('--bundle', type=int, required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--push-failed', action='store_true')
+    parser.add_argument('--recover-prior', type=Path,
+                        help='Closed JSON binding from an earlier Result; read-only exact-attempt recovery')
     args = parser.parse_args(argv)
     from verification_support.identity import source_identity
     request = Request(args.commit, args.bundle, source_identity(Path(__file__).resolve().parents[1]))
+    previous_binding = None
+    prior = None
+    if args.recover_prior is not None:
+        try:
+            raw_binding = args.recover_prior.read_bytes()
+            if len(raw_binding) > 16 * 1024:
+                raise CIObservationError('oversized_prior_ci_binding')
+            previous, run_id, attempt = parse_recovery_binding(decode_json(raw_binding))
+        except (CIObservationError, OSError) as error:
+            parser.error(str(error))
+        previous_binding = previous, run_id, attempt
     if args.push_failed:
         summary = {'format_version': 1, 'local_apply': 'success', 'ci_status': 'not_published',
                    'commit_sha': request.commit, 'bundle_number': request.bundle,
@@ -47,10 +90,26 @@ def main(argv=None):
         files = {'summary.json': json_bytes(summary)}
     else:
         summary, files = observe_ci(request, progress=show_progress)
+    if previous_binding is not None:
+        if summary['ci_status'] == 'observation_interrupted':
+            summary['prior_recovery_skipped'] = 'observation_interrupted'
+            files['summary.json'] = json_bytes(summary)
+        else:
+            previous, run_id, attempt = previous_binding
+            print(f'CI recovery: bundle {previous.bundle:03d}, run {run_id}, attempt {attempt}', flush=True)
+            prior = observe_ci(previous, progress=show_progress,
+                               pinned_run_id=run_id, pinned_attempt=attempt)
     try:
+        if prior is not None:
+            attach_prior_evidence(summary, files, *prior)
         raw = pack_evidence(files)
     except CIObservationError:
-        summary['evidence_complete'] = False
+        summary.update(evidence_complete=False, test_evidence_verified=False,
+                       logs_captured=False, capture_complete=False, job_logs_captured=[])
+        summary['transport_dropped_files'] = sorted(name for name in files if name != 'summary.json')
+        summary['files'] = {}
+        if 'prior_ci' in summary:
+            summary['prior_ci']['evidence_file'] = None
         summary['errors'] = [*summary.get('errors', []), {'phase': 'transport', 'reason': 'capture_limit'}]
         # Do not lose the actual CI outcome just because full logs are too large.
         raw = pack_evidence({'summary.json': json_bytes(summary)})

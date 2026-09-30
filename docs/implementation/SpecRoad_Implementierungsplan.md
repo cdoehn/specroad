@@ -22,7 +22,7 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 225
 last_completed_plan_commit: 5.o.C
 next_plan_commit: 5.p.W
-last_completed_numbered_bundle: 38
+last_completed_numbered_bundle: 39
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP

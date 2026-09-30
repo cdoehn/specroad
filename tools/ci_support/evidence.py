@@ -5,7 +5,7 @@ from io import BytesIO
 import json
 import re
 import zipfile
-from .contract import (REPOSITORY, PYTHONS, MAX_BYTES, PREFIX, CIObservationError, json_bytes, decode_json)
+from .contract import (REPOSITORY, PYTHONS, MAX_BYTES, PREFIX, CIObservationError, json_bytes, decode_json, error_record)
 from .transport import records
 
 def inspect_report_archive(raw, request, version):
@@ -136,3 +136,45 @@ def recover_evidence(log):
     return raw
 
 
+def capture_attempt_files(client, request, run_id, attempt, jobs, files, summary, *, retry):
+    """Preserve exact-attempt archives; a failed report is evidence, not a pass.
+
+    When a complete run archive is unavailable, already confirmed completed job
+    IDs can still provide useful logs. These are explicitly partial, never an
+    invented complete archive. No user files or archive members are extracted.
+    """
+    try:
+        raw = retry(lambda: client.get(
+            f'repos/{REPOSITORY}/actions/runs/{run_id}/attempts/{attempt}/logs'))
+        with zipfile.ZipFile(BytesIO(raw)) as archive:
+            if (not archive.infolist() or sum(i.file_size for i in archive.infolist()) > MAX_BYTES
+                    or archive.testzip() is not None):
+                raise CIObservationError('invalid_or_oversized_log_archive')
+        if sum(map(len, files.values())) + len(raw) > MAX_BYTES // 2:
+            raise CIObservationError('total_evidence_limit')
+        files['logs.zip'] = raw
+        summary['logs_captured'] = True
+    except (CIObservationError, OSError, ValueError, zipfile.BadZipFile, RuntimeError) as error:
+        summary['errors'].append(error_record('logs', error))
+        for job in jobs:
+            if job.get('status') != 'completed':
+                continue
+            job_id = job['id']  # Already checked by checked_jobs/records.
+            try:
+                raw = retry(lambda: client.get(
+                    f'repos/{REPOSITORY}/actions/jobs/{job_id}/logs'))
+                if not raw or sum(map(len, files.values())) + len(raw) > MAX_BYTES // 2:
+                    raise CIObservationError('empty_or_oversized_job_log')
+                files[f'job-{job_id}-attempt-{attempt}.log'] = raw
+                summary['job_logs_captured'].append(job_id)
+            except (CIObservationError, OSError) as job_error:
+                item = error_record('job_logs', job_error)
+                item['job_id'] = job_id
+                summary['errors'].append(item)
+    reports, artifact_errors = collect_artifacts(client, request, run_id, attempt, files, retry=retry)
+    summary['test_reports'] = reports
+    summary['errors'].extend(artifact_errors)
+    summary['test_evidence_verified'] = len(reports) == len(PYTHONS) and request.source_sha256 is not None
+    summary['evidence_complete'] = summary['logs_captured'] and len(reports) == len(PYTHONS)
+    summary['capture_complete'] = summary['logs_captured'] and all(
+        'reports-' + version + '.zip' in files for version in PYTHONS)
