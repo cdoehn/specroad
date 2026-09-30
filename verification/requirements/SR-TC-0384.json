@@ -51,7 +51,9 @@
     "tests/test_normative_idempotency.py::test_identical_retry_returns_exact_stored_result_without_any_write",
     "tests/test_normative_idempotency.py::test_created_ids_are_reused_not_allocated_again",
     "tests/test_normative_idempotency.py::test_retry_survives_completed_work_cleanup",
-    "tests/test_normative_idempotency.py::test_native_new_writer_cannot_reuse_a_completed_request_id"
+    "tests/test_normative_idempotency.py::test_native_new_writer_cannot_reuse_a_completed_request_id",
+    "tests/test_normative_idempotency_preplanning.py::test_replay_needs_no_plan_id_time_basis_or_current_target_model",
+    "tests/test_normative_idempotency_preplanning.py::test_saved_plan_and_preplanning_intent_have_identical_results"
   ],
   "open_items": [
     "Public normative CLI and specialist command wiring remain in their assigned later plan steps."

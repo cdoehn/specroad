@@ -17,7 +17,7 @@ from ._publication_observation import _root
 from .publication_values import PublicationPreflight
 from .execution_values import ChangeExecutionError
 from .receipt_values import (ReceiptError, CommittedJournal, TransactionReceipt,
-    RequestReceipt, TransactionCompletion, completion_marker_path)
+    RequestReceipt, TransactionCompletion, completion_marker_path, request_receipt_path)
 from .receipt_projection import prepare_completion_receipts, request_for_transaction
 from .receipt_finalization import _target_snapshot
 
@@ -145,3 +145,43 @@ def read_transaction_completion(source, transaction_id, *, preflight=None):
         raise ReceiptError(getattr(error, 'reason', 'completion_read_failed'),
             path=getattr(error, 'path', None),
             exit_code=getattr(error, 'exit_code', 7 if isinstance(error, SafetyViolation) else 5)) from error
+
+
+def _request_bytes(files, path):
+    """A descriptor-bound hint; completion proof is checked separately."""
+    with files.directory(tuple(path.split('/')[:-1])) as directory:
+        if directory is None:
+            return None
+        name = path.rsplit('/', 1)[-1]
+        try:
+            info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+        except FileNotFoundError:
+            return None
+        identity = (info.st_dev, info.st_ino)
+        raw = _read(directory, name, expected_identity=identity)
+        return raw, identity
+
+
+def _read_confirmed_request(source, identity):
+    path = request_receipt_path(identity)
+    source.check_current()
+    with LockFiles(source.boundary.root) as files:
+        if files.boundary._root_identity != source.boundary._root_identity:
+            raise ReceiptError('request_root_changed', exit_code=6)
+        first = _request_bytes(files, path)
+        if first is None:
+            source.check_current()
+            if _request_bytes(files, path) is not None:
+                raise ReceiptError('request_receipt_changed', exit_code=6, path=path)
+            return None
+        receipt = RequestReceipt(first[0])
+        if (receipt.path != path or receipt.data['request_id'] != identity
+                or receipt.data['project_id'] != source.configuration.project_id):
+            raise ReceiptError('request_project_binding_mismatch', exit_code=6, path=path)
+        proof = read_transaction_completion(source, receipt.data['transaction_id'])
+        if proof.data['receipts']['request'] != {'path': path, 'sha256': receipt.sha256}:
+            raise ReceiptError('request_completion_link_mismatch', exit_code=6, path=path)
+        if _request_bytes(files, path) != first:
+            raise ReceiptError('request_receipt_changed', exit_code=6, path=path)
+        source.check_current()
+        return receipt

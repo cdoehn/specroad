@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 224
-last_completed_plan_commit: 5.o.R
-next_plan_commit: 5.o.C
-last_completed_numbered_bundle: 37
+implementation_plan_commits_completed: 225
+last_completed_plan_commit: 5.o.C
+next_plan_commit: 5.p.W
+last_completed_numbered_bundle: 38
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -2937,7 +2937,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.o.C – Make it Clean
 
-- [ ] **5.o.C** · Position **225/885** · Voraussetzung: `5.o.R`.
+- [x] **5.o.C** · Position **225/885** · Voraussetzung: `5.o.R`.
 **Exakte Commit-Message:** `5.o.C refactor(changes): Normative Idempotenz bereinigen`
 
 **Bereinigung:** Idempotenzentscheidung vor neuer Planung mit bereits bestätigtem Receipt ermöglichen.

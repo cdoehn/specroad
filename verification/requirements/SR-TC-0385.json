@@ -51,7 +51,8 @@
     "tests/test_normative_idempotency_right.py::test_conflict_reports_both_hashes_and_no_recovery_or_write",
     "tests/test_normative_idempotency_right.py::test_count_hash_and_revision_prove_exactly_one_model_write",
     "tests/test_normative_idempotency_right.py::test_operation_order_is_significant",
-    "tests/test_normative_idempotency_right.py::test_analysis_correlation_object_is_not_coerced"
+    "tests/test_normative_idempotency_right.py::test_analysis_correlation_object_is_not_coerced",
+    "tests/test_normative_idempotency_preplanning.py::test_conflict_is_decided_before_attempting_a_new_plan"
   ],
   "open_items": [
     "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
