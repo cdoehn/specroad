@@ -90,5 +90,5 @@ from .receipt_read import read_transaction_completion
 from .receipt_cleanup import cleanup_completed_transaction
 __all__ += ['read_transaction_completion', 'cleanup_completed_transaction']
 
-from .idempotency import RequestResolution, resolve_normative_request
-__all__ += ["RequestResolution", "resolve_normative_request"]
+from .idempotency import RequestIdConflict, RequestResolution, resolve_normative_request
+__all__ += ["RequestIdConflict", "RequestResolution", "resolve_normative_request"]

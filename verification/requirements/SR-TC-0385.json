@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0385",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+  ],
+  "preconditions": [
+    "Completed native request receipt with linked committed proof in the original project root."
+  ],
+  "steps": [
+    "Replay an identical normalized operation sequence.",
+    "Reuse the same ID with different operations and inspect the code-6 conflict.",
+    "Compare real publication count, file hashes and artifact revision."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Wiederverwendung einer Request-ID im normativen Schreibnamensraum mit einem anderen Operationshash MUSS mit Exit Code 6 als Idempotenzkonflikt abgewiesen werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Confirmed native retries and code-6 conflicts. Malformed receipts are errors, never absence; analysis correlation cannot enter the typed normative API."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/request_id",
+    "/expected_operations_sha256",
+    "/received_operations_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_normative_idempotency_right.py::test_conflict_reports_both_hashes_and_no_recovery_or_write",
+    "tests/test_normative_idempotency_right.py::test_count_hash_and_revision_prove_exactly_one_model_write",
+    "tests/test_normative_idempotency_right.py::test_operation_order_is_significant",
+    "tests/test_normative_idempotency_right.py::test_analysis_correlation_object_is_not_coerced"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
   ]
 }

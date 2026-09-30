@@ -27,3 +27,8 @@ Concurrent callers still use the existing lock and recovery contracts.
 This is the native changes API. It does not install a second generic writer,
 a CLI service, automatic recovery or an analyzer receipt store. Public command
 wiring remains at its assigned implementation-plan steps.
+
+A changed operations hash raises `RequestIdConflict` (exit code 6). Its
+machine-readable diagnostic binds expected/received operation hashes and
+distinguishes the prior committed request from the refused current write.
+That conflict alone does not require recovery and never authorizes rollback.

@@ -19,6 +19,22 @@ from .receipt_read import read_transaction_completion
 from .receipt_values import ReceiptError, RequestReceipt, request_receipt_path
 
 
+class RequestIdConflict(ReceiptError):
+    """A different operation sequence reused an already committed request ID."""
+    def __init__(self, identity, expected_hash, received_hash, *, path):
+        super().__init__('request_operations_conflict', exit_code=6, path=path)
+        self.write_state = 'not_committed'
+        self.request_id = identity
+        self.expected_hash, self.received_hash = expected_hash, received_hash
+
+    def diagnostic(self):
+        return {**super().diagnostic(), 'request_id': self.request_id,
+                'expected_operations_sha256': self.expected_hash,
+                'received_operations_sha256': self.received_hash,
+                'existing_request_committed': True, 'receipt_verified': True,
+                'recovery_required': False, 'write_authorized': False}
+
+
 @dataclass(frozen=True, init=False)
 class RequestResolution:
     """Owned historical result or non-authorizing absence observation."""
@@ -41,7 +57,7 @@ class RequestResolution:
                  'original_request': saved, 'normative_writes': 0,
                  'write_authorized': False, 'atomic_snapshot': False,
                  'current_target_verified': False, 'authenticity_verified': False,
-                 'locked_recheck_required': saved is None}
+                 'locked_recheck_required': applicable and saved is None}
         object.__setattr__(obj, '_raw', canonical_json_bytes(value))
         return obj
 
@@ -103,11 +119,17 @@ def resolve_normative_request(source, request):
     """
     if type(source) is not ProjectSource or type(request) is not AuthoringRequest:
         raise ReceiptError('typed_normative_request_and_source_required', exit_code=2)
-    data = request.data
     try:
+        data = request.data
+        if data.get('namespace') != 'normative_write':
+            raise ReceiptError('normative_request_namespace_required', exit_code=2)
         normalized = prepare_authoring_request(command_id=data['command_id'], actor=data['actor'],
             operations=data['operations'], request_id=data['request_id'],
             dry_run=data['dry_run'], as_proposal=data['as_proposal']).data
+        extra = set(data) - set(normalized)
+        plan_fields = {'plan_sha256', 'base_model_root_sha256', 'scope_descriptor'}
+        if extra and extra != plan_fields:
+            raise ReceiptError('normative_request_fields_invalid', exit_code=2)
         if any(data.get(key) != value for key, value in normalized.items()):
             raise ReceiptError('normative_request_binding_changed', exit_code=2)
         identity = normalized['request_id']
@@ -115,7 +137,8 @@ def resolve_normative_request(source, request):
             return RequestResolution._create(identity, applicable=False)
         receipt = _confirmed_receipt(source, identity)
         if receipt is not None and receipt.data['operations_sha256'] != normalized['operation_sequence_sha256']:
-            raise ReceiptError('request_operations_conflict', exit_code=6, path=receipt.path)
+            raise RequestIdConflict(identity, receipt.data['operations_sha256'],
+                                    normalized['operation_sequence_sha256'], path=receipt.path)
         return RequestResolution._create(identity, receipt)
     except (OSError, ModelError, SafetyViolation, ChangeExecutionError) as error:
         if isinstance(error, ReceiptError):
@@ -123,3 +146,5 @@ def resolve_normative_request(source, request):
         raise ReceiptError(getattr(error, 'reason', 'request_receipt_read_failed'),
             exit_code=getattr(error, 'exit_code', 7 if isinstance(error, SafetyViolation) else 5),
             path=getattr(error, 'path', None)) from error
+    except (KeyError, TypeError, ValueError) as error:
+        raise ReceiptError('normative_request_fields_invalid', exit_code=2) from error
