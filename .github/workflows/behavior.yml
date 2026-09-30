@@ -1,32 +1,33 @@
-name: Behavior tests
+name: Full regression (manual)
+run-name: Full regression · ${{ inputs.commit_sha || github.sha }}
 
 on:
-  push:
-    branches: [dev]
   workflow_dispatch:
     inputs:
       commit_sha:
-        description: 'Optional full commit SHA from dev (e.g. an intermediate W/R/C commit)'
+        description: 'Optional full SHA reachable from dev; empty tests the exact dispatch revision'
         required: false
         type: string
-      mode:
-        description: 'auto: final bundles 5/10/15... use both modes; otherwise parallel'
+      runner:
+        description: 'Fresh Hetzner availability check, with explicit Ubuntu 24.04 fallback'
         required: true
         default: auto
         type: choice
-        options: [auto, both]
+        options: [auto, hetzner, github-hosted]
 
-# Automatic bundles carry a just-probed fixed runner choice in their final
-# commit. An unavailable/busy/unreadable Hetzner probe selects ubuntu-24.04.
-# The selector itself follows that choice: no hosted bootstrap minutes needed.
+# No push, pull_request, schedule or bundle-number trigger. The small hosted
+# selector can check an offline self-hosted runner without queueing on it.
+# Optional SPECROAD_RUNNER_READ_TOKEN: repository Administration:read.
+# An unavailable/unauthorized probe falls back explicitly; no success is invented
+# if hosted Actions cannot run either. The probe is not a runner reservation.
 permissions:
   contents: read
+  actions: read
 
 jobs:
   select:
-    name: Select exact bundle revision (no full tests)
-    runs-on: >-
-      ${{ fromJSON(((github.event_name == 'push' && contains(github.event.head_commit.message, 'SpecRoad-CI-Runner: hetzner')) || (github.event_name == 'workflow_dispatch' && inputs.runner == 'hetzner')) && '["self-hosted","Linux","X64","specroad","hetzner"]' || '["ubuntu-24.04"]') }}
+    name: Select exact manual revision and available runner (no full tests)
+    runs-on: ubuntu-24.04
     outputs:
       runner: ${{ steps.selection.outputs.runner }}
       commit_sha: ${{ steps.selection.outputs.commit_sha }}
@@ -41,17 +42,27 @@ jobs:
         with:
           python-version: '3.13'
       - id: selection
-        name: Select full gate only for final commits or manual requests
+        name: Bind manual full run and probe Hetzner availability
         env:
+          GH_TOKEN: ${{ secrets.SPECROAD_RUNNER_READ_TOKEN || github.token }}
           SR_CI_RUNNER: ${{ inputs.runner }}
           SR_COMMIT_SHA: ${{ inputs.commit_sha }}
-          SR_CI_MODE: ${{ inputs.mode || 'auto' }}
+          SR_CI_MODE: both
+          SR_SELECTION_REPORT: ${{ runner.temp }}/specroad-selection-${{ github.run_id }}-${{ github.run_attempt }}.json
         run: python -I -B tools/select_bundle_ci.py
+      - name: Preserve runner selection
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: selection-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/specroad-selection-${{ github.run_id }}-${{ github.run_attempt }}.json
+          if-no-files-found: warn
+          retention-days: 14
 
   behavior:
     needs: select
     if: needs.select.outputs.run_full == 'true'
-    name: CPython ${{ matrix.python }} / ${{ needs.select.outputs.mode }}
+    name: CPython ${{ matrix.python }} / both
     runs-on: ${{ fromJSON(needs.select.outputs.runner) }}
     strategy:
       fail-fast: false
@@ -65,6 +76,30 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
+      - name: Record exact test and workflow revisions
+        env:
+          SR_TEST_SHA: ${{ needs.select.outputs.commit_sha }}
+          SR_WORKFLOW_SHA: ${{ github.sha }}
+          SR_MATRIX_PYTHON: ${{ matrix.python }}
+          SR_RUNNER_NAME: ${{ runner.name }}
+          SR_RUNS_ON: ${{ needs.select.outputs.runner }}
+          SR_CONTEXT: ${{ runner.temp }}/specroad-context-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/run-context.json
+        run: |
+          python -I -B - <<'PY'
+          import json, os, pathlib, subprocess
+          e = os.environ
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if head != e['SR_TEST_SHA'] or e['GITHUB_EVENT_NAME'] != 'workflow_dispatch' or e['GITHUB_REF'] != 'refs/heads/dev':
+              raise SystemExit('Manual test revision binding mismatch')
+          context = dict(format_version=1, repository=e['GITHUB_REPOSITORY'], branch='dev',
+              event=e['GITHUB_EVENT_NAME'], test_commit_sha=head, workflow_commit_sha=e['SR_WORKFLOW_SHA'],
+              run_id=int(e['GITHUB_RUN_ID']), run_attempt=int(e['GITHUB_RUN_ATTEMPT']),
+              python=e['SR_MATRIX_PYTHON'], mode='both', runner_name=e['SR_RUNNER_NAME'],
+              runs_on=json.loads(e['SR_RUNS_ON']))
+          path = pathlib.Path(e['SR_CONTEXT']); path.parent.mkdir(exist_ok=False)
+          with path.open('x', encoding='utf-8') as f:
+              json.dump(context, f, sort_keys=True); f.write('\n')
+          PY
       - name: Install isolated development dependencies
         run: |
           python -m pip install uv==0.12.7
@@ -74,16 +109,7 @@ jobs:
         env:
           SR_CATALOG: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}-catalog.json
         run: .venv/bin/python -I -B tools/check_test_catalog.py --output "$SR_CATALOG"
-      - name: Full parallel regression
-        if: needs.select.outputs.mode == 'parallel'
-        env:
-          SR_OUT: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
-          PYTHONHASHSEED: '117'
-        run: |
-          mkdir -- "$SR_OUT"
-          .venv/bin/python -I -B tools/run_tests.py --workers 4 --evidence "$SR_OUT/parallel-evidence.json"
       - name: Full parallel and serial regression with evidence comparison
-        if: needs.select.outputs.mode == 'both'
         env:
           SR_OUT: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
         run: .venv/bin/python -I -B tools/run_ci_tests.py --workers 4 --outdir "$SR_OUT"
@@ -95,5 +121,6 @@ jobs:
           path: |
             ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/*.json
             ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}-catalog.json
+            ${{ runner.temp }}/specroad-context-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}/run-context.json
           if-no-files-found: error
           retention-days: 14

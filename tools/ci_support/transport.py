@@ -64,21 +64,21 @@ def records(client, path, field):
 
 def find_run(client, request):
     runs = records(client, 'repos/' + REPOSITORY + '/actions/workflows/behavior.yml/runs'
-        + '?branch=dev&event=push&head_sha=' + request.commit, 'workflow_runs')
+        + '?branch=dev&event=' + request.event + '&head_sha=' + request.run_commit, 'workflow_runs')
     candidates = []
     for run in runs:
         # API filtering is checked, not trusted to select an unrelated run.
         exact_run(run, request)
         candidates.append(run)
     if len(candidates) > 1:
-        raise CIObservationError('ambiguous_push_runs')
+        raise CIObservationError('ambiguous_ci_runs')
     return candidates[0] if candidates else None
 
 
 def checked_jobs(client, request, run_id, attempt):
     jobs = records(client, f'repos/{REPOSITORY}/actions/runs/{run_id}/attempts/{attempt}/jobs', 'jobs')
     for job in jobs:
-        if job.get('run_id') != run_id or job.get('head_sha') != request.commit:
+        if job.get('run_id') != run_id or job.get('head_sha') != request.run_commit:
             raise CIObservationError('job_binding_mismatch')
         if job.get('run_attempt', attempt) != attempt:
             raise CIObservationError('job_attempt_mismatch')

@@ -59,7 +59,7 @@ class ArtifactClient(Client):
 @pytest.mark.parametrize('mode,bundle',[('parallel',19),('both',20)])
 def test_complete_matrix_reports_and_logs_are_preserved(mode,bundle):
     client=ArtifactClient(mode)
-    summary,files=observe_ci(Request(SHA,bundle,SOURCE),client=client,sleeper=lambda _:None)
+    summary,files=observe_ci(Request(SHA,bundle,SOURCE, event='push', expected_mode=mode),client=client,sleeper=lambda _:None)
     assert summary['ci_status']=='success' and summary['evidence_complete'] and summary['test_evidence_verified']
     assert len(summary['test_reports'])==5
     assert all(x['tests_run']==1 for x in summary['test_reports'])
@@ -72,11 +72,11 @@ def test_complete_matrix_reports_and_logs_are_preserved(mode,bundle):
     {'runtime':{'implementation':'cpython','python':'3.14.1'}}, {'execution':{'workers':8}},
     {'test_outcomes':{'tests/test_synthetic.py::test_ok':'skipped'}}])
 def test_bad_reports_never_become_verified(change):
-    with pytest.raises(ValueError):inspect_report_archive(report_zip(changes=change),Request(SHA,19,SOURCE),'3.10')
+    with pytest.raises(ValueError):inspect_report_archive(report_zip(changes=change),Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),'3.10')
 
 
 def test_missing_artifacts_keep_actual_ci_conclusion_but_not_evidence_success():
-    summary,files=observe_ci(Request(SHA,19,SOURCE),client=Client(),sleeper=lambda _:None)
+    summary,files=observe_ci(Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),client=Client(),sleeper=lambda _:None)
     assert summary['ci_status']=='success' and summary['github_conclusion']=='success'
     assert not summary['evidence_complete'] and not summary['test_evidence_verified']
     assert len(summary['errors'])==5 and 'logs.zip' in files
@@ -86,14 +86,14 @@ def test_missing_artifacts_keep_actual_ci_conclusion_but_not_evidence_success():
     {'workflow_run':{'id':52,'head_sha':SHA,'head_branch':'dev'}}, {'name':f'behavior-3.10-{SHA}-attempt-2'}])
 def test_expired_tampered_or_wrong_attempt_artifact_not_substituted(change):
     client=ArtifactClient();client.artifacts[0].update(change)
-    summary,_=observe_ci(Request(SHA,19,SOURCE),client=client,sleeper=lambda _:None)
+    summary,_=observe_ci(Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),client=client,sleeper=lambda _:None)
     assert not summary['evidence_complete'] and not summary['test_evidence_verified']
     assert len(summary['test_reports'])==4
 
 
 def test_duplicate_matching_artifact_not_arbitrarily_selected():
     client=ArtifactClient();a=deepcopy(client.artifacts[0]);a['id']=601;client.artifacts.append(a)
-    summary,_=observe_ci(Request(SHA,19,SOURCE),client=client,sleeper=lambda _:None)
+    summary,_=observe_ci(Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),client=client,sleeper=lambda _:None)
     assert not summary['test_evidence_verified']
 
 
@@ -117,7 +117,7 @@ def test_run_attempt_change_during_capture_is_not_green():
                 self.n+=1
                 return run_value(run_attempt=1 if self.n==1 else 2)
             return super().document(path)
-    summary,files=observe_ci(Request(SHA,19,SOURCE),client=Changed(),sleeper=lambda _:None)
+    summary,files=observe_ci(Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),client=Changed(),sleeper=lambda _:None)
     assert summary['ci_status']=='unavailable' and not summary['evidence_complete']
     assert 'logs.zip' in files and summary['errors'][-1]['reason']=='run_attempt_changed'
 
@@ -126,31 +126,31 @@ def test_api_failure_retry_retains_no_false_success():
     class Broken(Client):
         def document(self,path):raise CIObservationError('gh_api_exit_1')
     sleeps=[]
-    summary,files=observe_ci(Request(SHA,19),client=Broken(),sleeper=sleeps.append)
+    summary,files=observe_ci(Request(SHA,19, event='push', expected_mode='parallel'),client=Broken(),sleeper=sleeps.append)
     assert summary['ci_status']=='unavailable' and len(sleeps)==2
-    assert json.loads(files['summary.json'])['local_apply']=='success'
+    assert json.loads(files['summary.json'])['local_apply']=='not_observed'
 
 
 def test_interrupted_observer_does_not_cancel_github_or_change_commits():
     class Interrupted(Client):
         def document(self,path):raise KeyboardInterrupt()
-    summary,files=observe_ci(Request(SHA,19),client=Interrupted(),sleeper=lambda _:None)
+    summary,files=observe_ci(Request(SHA,19, event='push', expected_mode='parallel'),client=Interrupted(),sleeper=lambda _:None)
     assert summary['ci_status']=='observation_interrupted'
-    assert 'summary.json' in files and summary['local_apply']=='success'
+    assert 'summary.json' in files and summary['local_apply']=='not_observed'
 
 
 def test_failed_ci_archives_failed_reports_without_claiming_a_pass():
     client=ArtifactClient(run=run_value(conclusion='failure'))
     raw=report_zip(changes={'suite_passed':False});client.archives[101]=raw
     client.artifacts[0]['digest']='sha256:'+sha256(raw).hexdigest()
-    summary,files=observe_ci(Request(SHA,19,SOURCE),client=client,sleeper=lambda _:None)
+    summary,files=observe_ci(Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),client=client,sleeper=lambda _:None)
     assert summary['ci_status']=='failed' and not summary['test_evidence_verified']
     assert files['reports-3.10.zip']==raw
 
 
 def test_invalid_logs_report_missing_capture_separately():
     client=ArtifactClient();client.logs=b'not zip'
-    summary,_=observe_ci(Request(SHA,19,SOURCE),client=client,sleeper=lambda _:None)
+    summary,_=observe_ci(Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),client=client,sleeper=lambda _:None)
     assert summary['ci_status']=='success' and not summary['logs_captured'] and not summary['evidence_complete']
 
 
@@ -162,18 +162,18 @@ def test_missing_gh_and_communication_timeout_are_explicit():
 
 
 def test_empty_missing_serial_or_false_comparison_is_rejected():
-    with pytest.raises(CIObservationError):inspect_report_archive(zip_bytes(),Request(SHA,20,SOURCE),'3.10')
-    with pytest.raises(CIObservationError):inspect_report_archive(report_zip(),Request(SHA,20,SOURCE),'3.10')
+    with pytest.raises(CIObservationError):inspect_report_archive(zip_bytes(),Request(SHA,20,SOURCE, event='push', expected_mode='both'),'3.10')
+    with pytest.raises(CIObservationError):inspect_report_archive(report_zip(),Request(SHA,20,SOURCE, event='push', expected_mode='both'),'3.10')
     p=report_value();s=report_value(workers=0)
     raw=zip_bytes({'parallel-evidence.json':json.dumps(p).encode(),'serial-evidence.json':json.dumps(s).encode(),
                    'summary.json':b'{"suite_passed":true,"comparison":{"equivalent":false}}'})
-    with pytest.raises(CIObservationError):inspect_report_archive(raw,Request(SHA,20,SOURCE),'3.10')
+    with pytest.raises(CIObservationError):inspect_report_archive(raw,Request(SHA,20,SOURCE, event='push', expected_mode='both'),'3.10')
 
 
 def test_opaque_archive_member_path_is_not_extracted(tmp_path,monkeypatch):
     monkeypatch.chdir(tmp_path)
     raw=zip_bytes({'../../outside':b'never write','parallel-evidence.json':json.dumps(report_value()).encode()})
-    assert inspect_report_archive(raw,Request(SHA,19,SOURCE),'3.10')['tests_run']==1
+    assert inspect_report_archive(raw,Request(SHA,19,SOURCE, event='push', expected_mode='parallel'),'3.10')['tests_run']==1
     assert list(tmp_path.iterdir())==[]
 
 
@@ -188,17 +188,18 @@ def test_evidence_multiple_chunks_survive_and_corruption_is_rejected():
     with pytest.raises(CIObservationError):recover_evidence(changed)
 
 
-def test_isolated_cli_push_failure_keeps_local_success_and_result_evidence(tmp_path):
+def test_isolated_cli_missing_publication_does_not_assert_local_success(tmp_path):
     from pathlib import Path
     import sys
     root=Path(__file__).resolve().parents[1]
     result=subprocess.run([sys.executable,'-I','-B',str(root/'tools/watch_bundle_ci.py'),
-        '--commit',SHA,'--bundle','19','--push-failed','--output-dir',str(tmp_path/'local')],
+        '--commit',SHA,'--bundle','19','--source-sha256',SOURCE,'--push-failed','--output-dir',str(tmp_path/'local')],
         cwd=tmp_path,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True)
     raw=recover_evidence(result.stdout.decode())
     assert raw==(tmp_path/'local/ci-evidence.zip').read_bytes()
     with zipfile.ZipFile(BytesIO(raw)) as z:
         assert json.loads(z.read('summary.json'))['ci_status']=='not_published'
+        assert json.loads(z.read('summary.json'))['local_apply']=='not_observed'
     archive=tmp_path/'result.zip'
     with zipfile.ZipFile(archive,'w') as z:z.writestr('logs/execution.log',result.stdout)
     out=tmp_path/'restored.zip'

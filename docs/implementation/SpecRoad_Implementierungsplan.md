@@ -22,7 +22,7 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 225
 last_completed_plan_commit: 5.o.C
 next_plan_commit: 5.p.W
-last_completed_numbered_bundle: 40
+last_completed_numbered_bundle: 41
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -61,58 +61,78 @@ Nutzerentscheidung vom 15. September 2026: `pytest` und `pytest-xdist` gehören 
 in die Entwicklungsgruppe. Der Core bleibt ohne diese Laufzeitabhängigkeiten. Bestehende
 `unittest.TestCase`-Tests werden durch pytest eingesammelt, nicht pauschal neu geschrieben.
 
-**Neue Nutzerentscheidung vom 22. September 2026, ab Bundle 009:** Auf dem
-Pixel laufen bei JEDEM Commit ausschließlich explizit ausgewählte neue, geänderte
-und direkt von Änderungen betroffene Testdateien, automatisch parallel mit vier xdist-Workern.
-Keine lokale Vollsuite, auch nicht beim letzten C. `tools/run_selected_tests.py`
-veröffentlicht nur einen gebundenen Teilnachweis (`selected_files_only`), keinen
-vollständigen Katalognachweis und keine Produktfreigabe.
+**Neue verbindliche Nutzerentscheidung vom 30. September 2026, ab Bundle 041:**
+Auf dem Pixel pro Commit ausschließlich neue und direkt betroffene Tests, sichtbar
+benannt, parallel mit pytest-xdist und maximal vier Workern. Keine Vollsuite,
+keine vorsorglich breite Auswahl, keine serielle lokale Vergleichssuite und kein
+serieller Fallback. Gezielte Teilnachweise sind keine vollständige Produktabnahme.
 
-GitHub: Volltests von Zwischencommits sind manuell über `workflow_dispatch`
-startbar; automatisch nur bei einem gepushten Abschlusscommit auf `dev`.
-Die Commit-Trailer `SpecRoad-Bundle` und `SpecRoad-Bundle-Final` sind reine
-Auslöser, kein Sicherheits- oder Testnachweis. Normalerweise läuft die vollständige
-Suite parallel; jede durch fünf teilbare Bundle-Nummer (ab Bundle 019: 020, 025, ...)
-verlangt parallel PLUS seriell und den vorhandenen Nachweisvergleich. Die CI
-behält CPython 3.10–3.14. Ein beliebiger C-Commit ist NICHT automatisch ein
-Bundle-Abschluss. Historische W/R/C-Vollsuiteangaben werden hinsichtlich des
-Ausführungsortes durch diese explizite Nutzerregel ersetzt, nicht als erfolgte
-Abnahme ausgegeben.
+Nach dem letzten erfolgreichen lokalen Commit normaler Push der exakten SHA nach
+origin/dev. **Keine automatische GitHub-Test-CI, kein Runner-Probe und kein
+CI-Warten/Evidence-Sammeln im normalen Bundle.** LOCAL APPLY, PUSH und
+FULL CI: NOT RUN (manual only) bleiben getrennt. Ein späterer Netzwerkfehler
+setzt erfolgreiche lokale Commits nicht zurück.
+
+**Full Regression ausschließlich manuell über workflow_dispatch:** alle fünf
+Python-Versionen 3.10–3.14, jeweils vollständige parallele Suite, vollständige
+serielle Suite und vorhandener Nachweisvergleich. Keine tägliche Zeitsteuerung.
+**Die Fünferregel entfällt vollständig.** Bundle-Trailer bleiben Metadaten und
+lösen keine Tests aus. Auch manuelle Zwischenstände erhalten immer beide Modi.
+
+Die manuelle Runnerauswahl prüft Hetzner online/frei mit allen erforderlichen
+Labels über einen kleinen Ubuntu-24.04-Select-Job. Ohne Verfügbarkeit/Leserecht
+expliziter Hosted-Fallback, niemals gemischte Alternativlabels oder Scheinerfolg.
+GitHub-Button-Registrierung im Defaultbranch und optionales Runner-Lese-Secret
+sind externe Voraussetzungen; das Bundle ändert weder main noch Secrets.
+Details: [Bundle-CI](../development/Bundle_CI.md).
 
 Nur pytest-xdist verteilt Tests. Kein eigener Scheduler, keine stillen Skips,
 keine kosmetischen Tests und keine künstlichen Einzeltest-/Suite-Timeouts.
 Kleine isolierte Framework-Regressionsprozesse bleiben erhalten. Ein erfolgreicher
-lokaler Commit bzw. Apply bestätigt nur die ausgewählten Gates; CI-Abschluss und
-Produktfreigabe sind davon strikt getrennt. Ein fehlgeschlagener CI-Lauf benötigt
-anschließend Reparatur, niemals nachträgliches Umschreiben seines Ergebnisses.
+lokaler Commit bestätigt nur seine Auswahl; der tatsächliche manuelle Full-Run
+und die Produktfreigabe sind davon strikt getrennt.
 
-Die vorhandene Vollsuite-Schnittstelle `tools/run_tests.py` bleibt für CI und
-bewusst angeforderte Diagnose verfügbar, wird aber von lokalen Bundles nicht
-mehr verwendet. `tools/run_ci_tests.py` bleibt der CI-interne Dualmodus.
+`tools/run_tests.py` und `tools/run_ci_tests.py` bleiben für explizite manuelle
+Full-CI erhalten, werden aber nicht aus normalen Pixel-Bundles aufgerufen.
+Historische Vollsuite-/Fünfer-Anweisungen in abgeschlossenen Abschnitten gelten
+nur als damalige Historie, nicht als aktuelle Ausführungspflicht.
+Anleitung: [Testentwicklung](../development/Testing.md).
 
-Die Testpolicy-Anpassung erfolgt getrennt als OFF-PLAN `TEST-POLICY.a.W/R/C` und
-zählt keine Produktposition hoch. Die ursprüngliche Testmigration bei 42/885
-bleibt historische Grundlage. Anleitung und Audit: [Testentwicklung](../development/Testing.md).
+## CI-WAIT – historische Implementierung, aktive Verwendung ab Bundle 041 manuell
 
-## CI-WAIT – Nutzerauftrag vom 24. September 2026, ab Bundle 019
-
-- [x] `CI-WAIT.a.W` – Fünferzyklus, exakte CI-Beobachtung und Result-Logtransport.
+- [x] `CI-WAIT.a.W` – damaliger Fünferzyklus, exakte CI-Beobachtung und Result-Logtransport.
 - [x] `CI-WAIT.a.R` – vollständige Evidence-Artefakte, Wiederholungen und Ausfälle absichern.
 - [x] `CI-WAIT.a.C` – GitHub-Transport, Beobachtung und Evidence-Kodierung trennen.
 
-Lokal je Commit ausschließlich neue und direkt betroffene Tests, vier Worker.
-Keine vorsorglich breit ausgewählten Regressionen und keine lokale Vollsuite.
-Nach dem letzten Commit: dev pushen, den exakten Push-Run für HEAD, Workflow
-behavior.yml und dev über gh abwarten, Job-/Schrittfortschritt anzeigen. Jede
-fünfte Bundle-Nummer fordert volle parallele PLUS serielle CI samt Vergleich.
-Lokaler Apply, Push, CI-Ergebnis und Evidence-Vollständigkeit bleiben getrennt.
-CI-Ausfälle machen bereits geprüfte lokale Commits nicht ungeschehen.
+Die damals automatischen Aufrufe und der Fünferzyklus sind durch die neue TD-002
+abgelöst. Bestehende read-only Observer bleiben für ausdrücklich angeforderte
+manuelle Full-Runs und historische Recovery erhalten. Sie binden Ereignis,
+Test-/Workflow-SHA, Repository, Branch, Run-ID und Attempt. Alte Push-Nachweise
+verlangen einen explizit aus ihrem Result übernommenen Modus; die Bundle-Nummer
+entscheidet auch beim Nachlesen nicht mehr darüber.
 
-Vor Ende des Entrypoints werden CI-Metadaten und abrufbare Logs als prüfsummen-
-gebundenes Archiv im erfassten stdout transportiert. Das automatische Result
-enthält sie in logs/execution.log, unabhängig von ignorierten build-Dateien.
-Kein rekursiver bundle-Aufruf, kein nachträgliches Umschreiben der Result-ZIP
-und keine erfundene Core-Anhangs-API. Diagnoseverfahren: docs/development/CI_Wait.md.
+Manuelle CI und lokale Anwendung bleiben getrennt. Ein eigenständiger Observer
+behauptet keinen erfolgreichen Pixel-Apply. Logs, Reports, Dateihashes und
+Capture-/Nachweis-Vollständigkeit bleiben erhalten. Keine Rollbacks, keine
+rekursiven Bundle-Aufrufe und keine erfundene Core-Anhangs-API.
+Details: [CI-Nachweise](../development/CI_Wait.md).
+
+## OFF-PLAN Bundle 041 – Venv-Fix und manuelle Full-Strategie
+
+Zwei getrennte Änderungen mit jeweiligem gezielten Testgate vor dem Commit:
+
+- `CI-VENV-RUNTIME`: `test: Basisinterpreter für isolierte Venv-Tests erhalten`.
+  Frische no-pip-Venvs verwenden auf POSIX die normale symlinkbasierte Basisbindung;
+  `-I -S -B` und die enge Prozessumgebung bleiben unverändert. Neue echte Venv-/
+  Isolationstests, keine gelöschten oder übersprungenen Fehlerfälle.
+- `CI-MANUAL-FULL`: `ci: Volltests ausschließlich manuell ausführen`.
+  Normale Pixel-Bundles nur gezielt testen und pushen. Full-CI nur per manuellem
+  Button, stets parallel + seriell + Vergleich; bindungsgeprüfte manuelle Evidence.
+
+Produktstand unverändert 225/885, letzter Produktcommit 5.o.C, nächster 5.p.W.
+Der auf Python 3.10 beobachtete Startfehler muss im nächsten bewusst gestarteten
+Full-Run bestätigt korrigiert sein; vorbereitende Tests sind kein Zielsystemnachweis.
+Bundle 041 startet diesen Full-Run nicht automatisch.
 
 ## 4.j.W-FIX1 – CI-Buildhash-Nachweis korrigieren (Bundle 018)
 

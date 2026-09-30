@@ -10,7 +10,7 @@ from .evidence import capture_attempt_files
 
 def observe_ci(request, *, client=None, progress=None, sleeper=None, discovery_polls=60,
                poll_seconds=5, pinned_run_id=None, pinned_attempt=None):
-    """Wait for an exact push run or recover an explicitly pinned historical attempt.
+    """Wait for an exact manual run or recover an explicitly pinned historical attempt.
 
     Normal observation detects a changing latest attempt. Explicit recovery uses
     the historical attempt endpoint throughout, never a newer successful rerun.
@@ -28,9 +28,10 @@ def observe_ci(request, *, client=None, progress=None, sleeper=None, discovery_p
     files, jobs = {}, []
     capture_started = False
     run_verified = False
-    summary = {'format_version': 1, 'local_apply': 'success', 'ci_status': 'unavailable',
+    summary = {'format_version': 1, 'local_apply': 'not_observed', 'ci_status': 'unavailable',
         'repository': REPOSITORY, 'workflow_path': WORKFLOW, 'branch': 'dev',
         'commit_sha': request.commit, 'bundle_number': request.bundle, 'expected_mode': request.mode,
+        'trigger_event': request.event, 'workflow_commit_sha': request.run_commit,
         'source_sha256': request.source_sha256, 'python_matrix': list(PYTHONS),
         'run_id': pinned_run_id, 'run_attempt': pinned_attempt, 'pinned_attempt': pinned,
         'run_binding_confirmed': False, 'github_conclusion': None, 'observed_failures': [],
@@ -92,6 +93,13 @@ def observe_ci(request, *, client=None, progress=None, sleeper=None, discovery_p
         summary['ci_status'] = verdict(run, jobs, request)
         capture_started = True
         capture_attempt_files(client, request, run_id, attempt, jobs, files, summary, retry=retry)
+        # A dispatch can select a different test SHA. A green workflow alone
+        # cannot prove that the requested revision was tested in both modes.
+        if (request.event == 'workflow_dispatch' and summary['ci_status'] == 'success'
+                and not summary['test_evidence_verified']):
+            summary['ci_status'] = 'incomplete'
+            summary['errors'].append({'phase': 'binding',
+                'reason': 'manual_test_binding_or_full_evidence_unverified'})
         # Normal observation still rejects a changing latest attempt. Explicit
         # recovery rechecks the pinned historical attempt, not that latest run.
         last = exact_run(retry(lambda: client.document(run_path)), request,

@@ -1,10 +1,13 @@
-# Aktive Testpolicy ab Bundle 009
+# Aktive Testpolicy ab Bundle 041
 
-Die Nutzerregel vom 22.09.2026 ersetzt frühere lokale Vollsuite-Anweisungen:
-Pixel nur neue und direkt betroffene Tests parallel je Commit, GitHub-Vollsuite automatisch am
-Bundleabschluss; jedes fünfte Bundle parallel plus seriell samt Vergleich.
-Details: [Bundle-CI](Bundle_CI.md). Ältere Vollsuite-Befehle unten sind nur
-Referenz für CI bzw. ausdrücklich beauftragte Diagnosen, keine lokalen Patch-Gates.
+Nutzerentscheidung vom 30.09.2026: Pixel pro Commit nur neue und direkt betroffene
+Tests, parallel mit höchstens vier Workern. Keine lokale Vollsuite und keine
+breiten vorsorglichen Regressionen. Normale Bundles committen und pushen, starten
+oder beobachten aber keine GitHub-Test-CI. Full Regression ausschließlich manuell:
+Python 3.10–3.14, jeweils parallel UND seriell mit Vergleich. Kein Fünferzyklus,
+keine täglichen automatischen Läufe. Details: [Bundle-CI](Bundle_CI.md).
+Ältere Vollsuite-Befehle unten sind Referenz für bewusst manuell gestartete CI,
+nicht lokale Patch-Gates. Die historischen Migrationsberichte bleiben unverändert.
 
 # SpecRoad: parallele Testentwicklung
 
@@ -111,9 +114,8 @@ aus. Lokal wird dieser Starter nicht verwendet. Sein GitHub-Umgebungscheck ist n
 ein Schutz vor versehentlichem Start, keine Ausführungs-Sandbox. Ein serielles
 Scheitern darf einen vorherigen parallelen Fehler niemals als Erfolg überschreiben.
 
-Die Python-Matrix 3.10–3.14 bleibt vorbereitet; ein GitHub-Repository und ein Push
-werden erst in einem späteren separaten Auftrag eingerichtet. Erst ein dortiger
-Workflowlauf kann den CI-Erfolg bestätigen. Ein lokaler paralleler Testlauf genügt
+Die Python-Matrix 3.10–3.14 läuft im ausschließlich manuell gestarteten Workflow.
+Erst der exakt gebundene tatsächliche Workflowlauf kann den CI-Erfolg bestätigen. Ein lokaler paralleler Testlauf genügt
 nicht als Nachweis der seriellen oder plattformübergreifenden Abnahme.
 
 Historisch verglich die Migrations-Abnahme seriell/2/4/auto mit verschiedenen
@@ -157,6 +159,7 @@ Katalogsammlung erkennt fehlende Testkennungen, aber keine falschen Assertions.
 Diese zusätzliche Auswahl ist keine lokale Vollsuite. Die vollständige
 Abnahme bleibt in GitHub. Siehe `CI_Payload_Identity_Repair.md`.
 
-Nutzerpräzisierung 24.09.2026: Lokal ausschließlich neue und direkt betroffene Tests.
-Keine breite vorsorgliche Regression; CI nach Bundleabschluss voll parallel,
-jede fünfte Nummer zusätzlich seriell mit Vergleich. Siehe CI_Wait.md.
+Nutzerpräzisierung 30.09.2026: Lokal ausschließlich neue und direkt betroffene Tests.
+Keine breite vorsorgliche Regression. Nach dem Bundle nur Push, keine Test-CI.
+Full Regression ausschließlich manuell, immer parallel plus seriell samt Vergleich.
+Kein Fünferzyklus. Siehe CI_Wait.md.

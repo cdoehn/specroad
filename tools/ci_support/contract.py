@@ -32,20 +32,37 @@ def error_record(phase, error):
 @dataclass(frozen=True)
 class Request:
     commit: str
-    bundle: int
+    bundle: int | None = None
     source_sha256: str | None = None
+    event: str = 'workflow_dispatch'
+    expected_mode: str = 'both'
+    workflow_commit: str | None = None
 
     def __post_init__(self):
         if type(self.commit) is not str or re.fullmatch('[0-9a-f]{40}', self.commit) is None:
             raise CIObservationError('full_commit_required')
-        if type(self.bundle) is not int or self.bundle < 1:
+        if self.bundle is not None and (type(self.bundle) is not int or self.bundle < 1):
             raise CIObservationError('positive_bundle_required')
         if self.source_sha256 is not None and (type(self.source_sha256) is not str or re.fullmatch('[0-9a-f]{64}', self.source_sha256) is None):
             raise CIObservationError('invalid_source_binding')
+        if self.event not in ('workflow_dispatch', 'push'):
+            raise CIObservationError('invalid_workflow_event')
+        if self.expected_mode not in ('parallel', 'both') or (self.event == 'workflow_dispatch' and self.expected_mode != 'both'):
+            raise CIObservationError('invalid_expected_mode')
+        if self.workflow_commit is not None and (type(self.workflow_commit) is not str or re.fullmatch('[0-9a-f]{40}', self.workflow_commit) is None):
+            raise CIObservationError('full_workflow_commit_required')
+        if self.event == 'push' and (self.bundle is None or self.run_commit != self.commit):
+            raise CIObservationError('invalid_historical_push_binding')
 
     @property
     def mode(self):
-        return 'both' if self.bundle % 5 == 0 else 'parallel'
+        # Historical push evidence needs an EXPLICIT mode from its own Result.
+        # Bundle numbers never select execution modes, including during recovery.
+        return self.expected_mode
+
+    @property
+    def run_commit(self):
+        return self.workflow_commit or self.commit
 
 
 def json_bytes(value):
@@ -70,8 +87,8 @@ def decode_json(raw):
 def exact_run(run, request, *, run_id=None, attempt=None):
     if type(run) is not dict:
         raise CIObservationError('invalid_run_document')
-    if (run.get('head_sha') != request.commit or run.get('head_branch') != 'dev'
-            or run.get('event') != 'push' or run.get('path') != WORKFLOW
+    if (run.get('head_sha') != request.run_commit or run.get('head_branch') != 'dev'
+            or run.get('event') != request.event or run.get('path') != WORKFLOW
             or type(run.get('repository')) is not dict
             or type(run['repository'].get('full_name')) is not str
             or run['repository']['full_name'].lower() != REPOSITORY):

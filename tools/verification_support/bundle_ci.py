@@ -1,4 +1,4 @@
-"""Bundle completion is a scheduling hint, never a test or security verdict."""
+"""Bundle trailers are descriptive metadata, never an automatic CI trigger."""
 import re
 
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -31,17 +31,18 @@ def bundle_metadata(message):
     return int(number), final == "true"
 
 
-def select_ci(event, ref, sha, message, *, mode="auto"):
+def select_ci(event, ref, sha, message, *, mode="both"):
+    """Only an explicit manual request runs full regression, always both modes.
+
+    The old UI value 'auto' is accepted for already registered dispatch forms;
+    it is an alias for 'both', never a bundle-number-dependent decision.
+    Bundle trailers remain descriptive metadata, not a scheduling trigger.
+    """
     sha = commit_sha(sha)
     if event not in ("push", "workflow_dispatch") or mode not in ("auto", "both"):
         raise ValueError("Unsupported CI event or mode")
     metadata = bundle_metadata(message)
     number, final = metadata if metadata else (None, False)
-    if event == "push" and ref != "refs/heads/dev":
-        run = False
-    else:
-        run = event == "workflow_dispatch" or final
-    dual = mode == "both" or (final and number % 5 == 0)
-    return {"commit_sha": sha, "run_full": run,
-            "mode": "both" if dual else "parallel", "bundle_number": number,
+    return {"commit_sha": sha, "run_full": event == "workflow_dispatch",
+            "mode": "both", "bundle_number": number,
             "bundle_final": final, "trigger": event}

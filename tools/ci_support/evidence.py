@@ -8,7 +8,7 @@ import zipfile
 from .contract import (REPOSITORY, PYTHONS, MAX_BYTES, PREFIX, CIObservationError, json_bytes, decode_json, error_record)
 from .transport import records
 
-def inspect_report_archive(raw, request, version):
+def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
     """Validate passing framework reports, preserving all original archive bytes."""
     from compare_test_runs import _signature, compare_reports
     with zipfile.ZipFile(BytesIO(raw)) as archive:
@@ -16,12 +16,24 @@ def inspect_report_archive(raw, request, version):
         if len(members) > 100 or sum(i.file_size for i in members) > MAX_BYTES:
             raise CIObservationError('oversized_report_archive')
         reports = {}
-        for name in ('parallel-evidence.json', 'serial-evidence.json', 'summary.json'):
+        for name in ('parallel-evidence.json', 'serial-evidence.json', 'summary.json', 'run-context.json'):
             matches = [i for i in members if i.filename.rsplit('/', 1)[-1] == name and not i.is_dir()]
             if len(matches) > 1:
                 raise CIObservationError('ambiguous_report_member')
             if matches:
                 reports[name] = decode_json(archive.read(matches[0]))
+    context = reports.get('run-context.json')
+    if request.event == 'workflow_dispatch':
+        if (type(context) is not dict or context.get('format_version') != 1
+                or context.get('repository') != REPOSITORY or context.get('branch') != 'dev'
+                or context.get('event') != request.event or context.get('mode') != 'both'
+                or context.get('test_commit_sha') != request.commit
+                or context.get('workflow_commit_sha') != request.run_commit
+                or context.get('python') != version
+                or any(type(context.get(k)) is not int or context[k] < 1 for k in ('run_id', 'run_attempt'))
+                or (run_id is not None and context['run_id'] != run_id)
+                or (attempt is not None and context['run_attempt'] != attempt)):
+            raise CIObservationError('manual_test_context_mismatch')
     required = ['parallel-evidence.json'] + (['serial-evidence.json'] if request.mode == 'both' else [])
     if not all(name in reports for name in required):
         raise CIObservationError('missing_test_evidence')
@@ -45,7 +57,8 @@ def inspect_report_archive(raw, request, version):
                 or stored.get('comparison') != comparison):
             raise CIObservationError('missing_or_inconsistent_comparison')
     return {'python': version, 'mode': request.mode, 'tests_run': reports[required[0]]['tests_run'],
-            'source_bound': request.source_sha256 is not None, 'comparison': comparison}
+            'source_bound': request.source_sha256 is not None, 'comparison': comparison,
+            'run_context': context}
 
 
 def collect_artifacts(client, request, run_id, attempt, files, *, retry=None):
@@ -65,7 +78,7 @@ def collect_artifacts(client, request, run_id, attempt, files, *, retry=None):
             artifact = matches[0]
             binding = artifact.get('workflow_run', {})
             if (type(binding) is not dict or binding.get('id') != run_id
-                    or binding.get('head_sha') != request.commit or binding.get('head_branch') != 'dev'):
+                    or binding.get('head_sha') != request.run_commit or binding.get('head_branch') != 'dev'):
                 raise CIObservationError('artifact_binding_mismatch')
             raw = retry(lambda: client.get(
                 f"repos/{REPOSITORY}/actions/artifacts/{artifact['id']}/zip"))
@@ -76,7 +89,7 @@ def collect_artifacts(client, request, run_id, attempt, files, *, retry=None):
                 raise CIObservationError('total_evidence_limit')
             # Preserve a failed/partial report as well, before attempting a pass proof.
             files['reports-' + version + '.zip'] = raw
-            reports.append(inspect_report_archive(raw, request, version))
+            reports.append(inspect_report_archive(raw, request, version, run_id=run_id, attempt=attempt))
         except (CIObservationError, OSError, ValueError, zipfile.BadZipFile, RuntimeError, TypeError, KeyError) as error:
             errors.append({'phase': 'artifact', 'python': version, 'reason': type(error).__name__ + ': ' + str(error)[:160]})
     return reports, errors

@@ -19,7 +19,7 @@ def test_pinned_attempt_ignores_a_different_latest_attempt_and_never_discovers()
             assert '/workflows/' not in path and not path.endswith('/runs/51')
             return super().document(path)
     client = Historical()
-    summary, files = observe_ci(Request(SHA, 38, SOURCE), client=client,
+    summary, files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=client,
         sleeper=lambda _: None, pinned_run_id=51, pinned_attempt=1)
     assert summary['ci_status'] == 'success' and summary['evidence_complete']
     assert summary['run_binding_confirmed'] is True and summary['pinned_attempt'] is True
@@ -34,7 +34,7 @@ def test_pinned_attempt_ignores_a_different_latest_attempt_and_never_discovers()
 def test_invalid_or_half_pins_are_rejected_before_transport(run_id, attempt):
     client = Client()
     with pytest.raises(CIObservationError):
-        observe_ci(Request(SHA, 38), client=client, sleeper=lambda _: None,
+        observe_ci(Request(SHA, 38, event='push', expected_mode='parallel'), client=client, sleeper=lambda _: None,
                    pinned_run_id=run_id, pinned_attempt=attempt)
     assert client.calls == []
 
@@ -43,7 +43,7 @@ def test_invalid_or_half_pins_are_rejected_before_transport(run_id, attempt):
     dict(head_branch='main'), dict(repository={'full_name': 'wrong/repo'})])
 def test_wrong_pinned_response_is_not_recovered_or_replaced(changes):
     client = Client(run=run_value(**changes))
-    summary, files = observe_ci(Request(SHA, 38, SOURCE), client=client,
+    summary, files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=client,
         sleeper=lambda _: None, pinned_run_id=51, pinned_attempt=1)
     assert summary['ci_status'] == 'unavailable' and not summary['run_binding_confirmed']
     assert not any(name.endswith('.zip') for name in files)
@@ -56,7 +56,7 @@ def test_missing_pinned_attempt_keeps_the_requested_binding_without_claiming_it_
             self.calls.append(path)
             raise CIObservationError('gh_api_exit_1')
     client = Missing()
-    summary, files = observe_ci(Request(SHA, 38, SOURCE), client=client,
+    summary, files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=client,
         sleeper=lambda _: None, pinned_run_id=51, pinned_attempt=1)
     assert summary['ci_status'] == 'unavailable' and not summary['run_binding_confirmed']
     assert (summary['run_id'], summary['run_attempt']) == (51, 1)
@@ -100,7 +100,7 @@ class PollOutage(ArtifactClient):
 
 def test_transport_outage_salvages_known_failed_job_and_available_failed_report():
     client = PollOutage()
-    summary, files = observe_ci(Request(SHA, 38, SOURCE), client=client, sleeper=lambda _: None)
+    summary, files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=client, sleeper=lambda _: None)
     assert summary['ci_status'] == 'unavailable' and summary['github_conclusion'] is None
     assert not summary['evidence_complete'] and not summary['test_evidence_verified']
     assert summary['observed_failures'][0]['job_id'] == 1
@@ -117,7 +117,7 @@ def test_transport_outage_salvages_known_failed_job_and_available_failed_report(
 
 def test_integrity_change_does_not_trigger_transport_salvage_or_mix_attempts():
     client = PollOutage(identity_change=True)
-    summary, files = observe_ci(Request(SHA, 38, SOURCE), client=client, sleeper=lambda _: None)
+    summary, files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=client, sleeper=lambda _: None)
     assert summary['ci_status'] == 'unavailable' and not summary['evidence_complete']
     assert not any(p.endswith('/logs') or '/artifacts' in p for p in client.calls)
     assert summary['observed_failures'][0]['job_id'] == 1
@@ -130,7 +130,7 @@ def test_run_snapshot_is_saved_even_when_jobs_cannot_be_loaded():
             if '/jobs?' in path:
                 raise CIObservationError('gh_api_exit_1')
             return super().document(path)
-    summary, files = observe_ci(Request(SHA, 38, SOURCE), client=JobsOutage(), sleeper=lambda _: None)
+    summary, files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=JobsOutage(), sleeper=lambda _: None)
     assert summary['ci_status'] == 'unavailable'
     assert json.loads(files['run.json'])['head_sha'] == SHA
     assert 'jobs.json' not in files and 'logs.zip' in files
@@ -139,7 +139,7 @@ def test_run_snapshot_is_saved_even_when_jobs_cannot_be_loaded():
 
 def test_pinned_failed_attempt_remains_failed_with_full_logs():
     client = ArtifactClient(run=run_value(conclusion='failure'))
-    summary, files = observe_ci(Request(SHA, 38, SOURCE), client=client,
+    summary, files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=client,
         sleeper=lambda _: None, pinned_run_id=51, pinned_attempt=1)
     assert summary['ci_status'] == 'failed' and summary['github_conclusion'] == 'failure'
     assert files['logs.zip'] == client.logs
@@ -159,7 +159,7 @@ def test_http_status_is_retained_without_credentials_or_raw_gh_diagnostics(http_
 def test_error_summary_preserves_only_structured_transport_metadata():
     client = GhClient(lambda *a, **k: SimpleNamespace(returncode=1, stdout=b'',
         stderr=b'secret-token (HTTP 403)'))
-    summary, files = observe_ci(Request(SHA, 38), client=client, sleeper=lambda _: None,
+    summary, files = observe_ci(Request(SHA, 38, event='push', expected_mode='parallel'), client=client, sleeper=lambda _: None,
                                pinned_run_id=51, pinned_attempt=1)
     assert summary['errors'][0]['http_status'] == 403
     assert summary['errors'][0]['returncode'] == 1
@@ -168,13 +168,14 @@ def test_error_summary_preserves_only_structured_transport_metadata():
 
 def recovery_binding():
     return {'repository': REPO, 'branch': 'dev', 'workflow_path': '.github/workflows/behavior.yml',
-            'commit_sha': SHA, 'bundle_number': 38, 'run_id': 51, 'run_attempt': 1, 'source_sha256': SOURCE}
+            'commit_sha': SHA, 'bundle_number': 38, 'run_id': 51, 'run_attempt': 1, 'source_sha256': SOURCE, 'trigger_event': 'push',
+            'expected_mode': 'parallel', 'workflow_commit_sha': SHA}
 
 
 def test_prior_binding_keeps_old_source_independent_of_current_source():
     from watch_bundle_ci import parse_recovery_binding
     request, run_id, attempt = parse_recovery_binding(recovery_binding())
-    assert request == Request(SHA, 38, SOURCE) and (run_id, attempt) == (51, 1)
+    assert request == Request(SHA, 38, SOURCE, event='push', expected_mode='parallel', workflow_commit=SHA) and (run_id, attempt) == (51, 1)
 
 
 @pytest.mark.parametrize('change', [{'source_sha256': None}, {'run_id': True}, {'run_attempt': 0},
@@ -189,9 +190,9 @@ def test_unbound_prior_context_rejected(change):
 
 def test_prior_and_current_evidence_use_one_existing_result_frame():
     from watch_bundle_ci import attach_prior_evidence
-    prior, old_files = observe_ci(Request(SHA, 38, SOURCE), client=ArtifactClient(run=run_value(conclusion='failure')),
+    prior, old_files = observe_ci(Request(SHA, 38, SOURCE, event='push', expected_mode='parallel'), client=ArtifactClient(run=run_value(conclusion='failure')),
         sleeper=lambda _: None, pinned_run_id=51, pinned_attempt=1)
-    current, files = observe_ci(Request(SHA, 39, SOURCE), client=ArtifactClient(), sleeper=lambda _: None)
+    current, files = observe_ci(Request(SHA, 39, SOURCE, event='push', expected_mode='parallel'), client=ArtifactClient(), sleeper=lambda _: None)
     before = pack_evidence(old_files)
     attach_prior_evidence(current, files, prior, old_files)
     assert current['ci_status'] == 'success' and current['bundle_number'] == 39
@@ -211,7 +212,7 @@ def test_prior_capture_failure_never_changes_current_verdict():
     from watch_bundle_ci import attach_prior_evidence
     prior = {'bundle_number': 38, 'commit_sha': SHA, 'run_id': 51, 'run_attempt': 1,
              'ci_status': 'unavailable', 'evidence_complete': False}
-    current, files = observe_ci(Request(SHA, 39), client=Client(), sleeper=lambda _: None)
+    current, files = observe_ci(Request(SHA, 39, event='push', expected_mode='parallel'), client=Client(), sleeper=lambda _: None)
     attach_prior_evidence(current, files, prior, {'summary.json': json.dumps(prior).encode()})
     assert current['ci_status'] == 'success' and current['prior_ci']['ci_status'] == 'unavailable'
 
@@ -220,7 +221,7 @@ def cli_arguments(tmp_path, *, push_failed=False):
     binding = tmp_path / 'previous.json'
     binding.write_text(json.dumps(recovery_binding()), encoding='utf-8')
     args = ['--commit', SHA, '--bundle', '39', '--output-dir', str(tmp_path / 'out'),
-            '--recover-prior', str(binding)]
+            '--recover-prior', str(binding), '--event', 'push', '--mode', 'parallel', '--source-sha256', SOURCE]
     return args + (['--push-failed'] if push_failed else [])
 
 

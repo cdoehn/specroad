@@ -11,9 +11,9 @@ def message(number=9, final=True):
     return f'feat: example\n\nSpecRoad-Bundle: {number:03d}\nSpecRoad-Bundle-Final: {str(final).lower()}\n'
 
 
-def test_final_dev_commit_automatically_runs_parallel():
-    assert select_ci('push', 'refs/heads/dev', SHA, message())['mode'] == 'parallel'
-    assert select_ci('push', 'refs/heads/dev', SHA, message())['run_full'] is True
+def test_final_dev_commit_never_starts_automatic_full_tests():
+    assert select_ci('push', 'refs/heads/dev', SHA, message())['mode'] == 'both'
+    assert select_ci('push', 'refs/heads/dev', SHA, message())['run_full'] is False
 
 
 def test_intermediate_commit_has_no_automatic_full_run():
@@ -24,18 +24,18 @@ def test_main_does_not_trigger_product_ci():
     assert select_ci('push', 'refs/heads/main', SHA, message())['run_full'] is False
 
 
-def test_manual_intermediate_runs_full_parallel():
+def test_manual_intermediate_runs_both_full_modes():
     assert select_ci('workflow_dispatch', 'refs/heads/dev', SHA, message(final=False))['run_full'] is True
 
 
-def test_every_fifth_final_uses_both():
+def test_fifth_bundle_numbers_do_not_trigger_full_tests():
     for number in (5, 10, 15, 20, 25, 1000):
-        assert select_ci('push', 'refs/heads/dev', SHA, message(number))['mode'] == 'both'
+        assert select_ci('push', 'refs/heads/dev', SHA, message(number))['run_full'] is False
 
 
-def test_other_final_bundles_use_parallel():
+def test_manual_other_final_bundles_also_use_both():
     for number in (9, 11, 12, 13, 16, 19, 24):
-        assert select_ci('push', 'refs/heads/dev', SHA, message(number))['mode'] == 'parallel'
+        assert select_ci('workflow_dispatch', 'refs/heads/dev', SHA, message(number))['mode'] == 'both'
 
 
 def test_unmarked_push_has_no_automatic_full_run():
@@ -63,7 +63,7 @@ def test_ambiguous_trailers_rejected():
 
 def test_resolver_passes_exact_sha_without_shell():
     env = {'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_REF':'refs/heads/dev',
-           'GITHUB_SHA':'b'*40, 'SR_COMMIT_SHA':SHA, 'SR_CI_MODE':'auto'}
+           'GITHUB_SHA':'b'*40, 'SR_COMMIT_SHA':SHA, 'SR_CI_MODE':'auto', 'SR_CI_RUNNER':'github-hosted'}
     before = copy.deepcopy(env); calls = []
     def runner(cmd, **kwargs):
         calls.append((cmd,kwargs))

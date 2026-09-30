@@ -47,17 +47,17 @@ def test_failure_to_prove_dev_ancestry_stops_selection():
         if cmd[1]=='merge-base':raise subprocess.CalledProcessError(1,cmd)
         return SimpleNamespace(stdout=(SHA+'\n').encode())
     with pytest.raises(subprocess.CalledProcessError):
-        resolve_selection({'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA},runner=runner)
+        resolve_selection({'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA, 'GITHUB_REF':'refs/heads/dev', 'SR_CI_RUNNER':'github-hosted'},runner=runner)
     assert len(calls)==2
 
 
 def test_resolved_revision_cannot_change():
     with pytest.raises(ValueError):
-        resolve_selection({'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA},
+        resolve_selection({'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA, 'GITHUB_REF':'refs/heads/dev', 'SR_CI_RUNNER':'github-hosted'},
                           runner=lambda *a,**k:SimpleNamespace(stdout=b'b'*40+b'\n'))
 
 
 def test_manual_without_sha_uses_event_revision_not_moving_dev_tip():
     def runner(cmd,**kw):
         return SimpleNamespace(stdout=(SHA+'\n' if cmd[1]=='rev-parse' else message() if cmd[1]=='show' else '').encode())
-    assert resolve_selection({'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA},runner=runner)['commit_sha']==SHA
+    assert resolve_selection({'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA, 'GITHUB_REF':'refs/heads/dev', 'SR_CI_RUNNER':'github-hosted'},runner=runner)['commit_sha']==SHA

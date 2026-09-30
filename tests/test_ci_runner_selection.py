@@ -78,9 +78,11 @@ def test_selection_passes_an_actual_runner_alternative(choice):
     def git(cmd, **kwargs):
         text = SHA+'\n' if cmd[1]=='rev-parse' else (message(38)+'SpecRoad-CI-Runner: '+choice+'\n') if cmd[1]=='show' else ''
         return SimpleNamespace(stdout=text.encode())
-    value=resolve_selection({'GITHUB_EVENT_NAME':'push','GITHUB_SHA':SHA,'GITHUB_REF':'refs/heads/dev'},runner=git)
+    value=resolve_selection({'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA,'GITHUB_REF':'refs/heads/dev'},
+        runner=git, probe=lambda: {'format_version':1,'repository':'cdoehn/specroad',
+            'reservation':False,'choice':choice,'runs_on':runner_labels(choice)})
     assert json.loads(value['runner'])==runner_labels(choice)
-    assert value['run_full'] and value['mode']=='parallel'
+    assert value['run_full'] and value['mode']=='both'
 
 
 def test_manual_historical_revision_does_not_inherit_a_stale_hetzner_probe():
@@ -88,7 +90,9 @@ def test_manual_historical_revision_does_not_inherit_a_stale_hetzner_probe():
         text = SHA+'\n' if cmd[1]=='rev-parse' else message(38)+'SpecRoad-CI-Runner: hetzner\n' if cmd[1]=='show' else ''
         return SimpleNamespace(stdout=text.encode())
     env={'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_SHA':SHA,'GITHUB_REF':'refs/heads/dev'}
-    value=resolve_selection(env, runner=git)
+    value=resolve_selection(env, runner=git, probe=lambda: {'format_version':1,
+        'repository':'cdoehn/specroad','reservation':False,'choice':'github-hosted',
+        'runs_on':list(HOSTED),'reason':'runner_query_unavailable'})
     assert json.loads(value['runner'])==list(HOSTED)
 
 

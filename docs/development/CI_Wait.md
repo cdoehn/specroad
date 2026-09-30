@@ -1,73 +1,99 @@
-# Bundleabschluss: gh-Beobachtung, Fünferzyklus und Result-Evidence
+# CI-Beobachtung: manuelle Full-Runs und historische Nachweise
 
-Ab Bundle 019 gilt der Nutzerauftrag vom 24.09.2026. Der Produktzähler wird durch
-CI-WAIT.a.W/R/C nicht erhöht. Lokal laufen nur neue und direkt von der Änderung
-betroffene Tests, vier xdist-Worker. Keine lokale Vollsuite, kein serieller Volllauf.
+Aktive Nutzerentscheidung ab Bundle 041: **keine automatische Test-CI und kein
+CI-Warten nach normalen Bundles**. Es bleiben gezielte lokale Paralleltests und
+der normale Push. Full-Tests starten ausschließlich bewusst manuell und führen
+stets CPython 3.10–3.14 parallel UND seriell samt Vergleich aus. Es gibt keinen
+Fünferzyklus und keine tägliche Zeitsteuerung. Siehe [Bundle-CI](Bundle_CI.md).
 
-`behavior.yml` prüft am gepushten Abschlusscommit die vollständige parallele
-Produktsuite (CPython 3.10–3.14). Jede fünfte Bundle-Nummer, zunächst 020, dann
-025 und 030, verlangt zusätzlich seriell und den vorhandenen Vergleich. Die
-bisherige Viererregel ist ersetzt. Zwischencommits bleiben manuell prüfbar.
+## Exakte, rein lesende Beobachtung
 
-Der Entrypoint veröffentlicht nach lokalen Gates die abgeschlossenen Commits
-auf dev, ohne Force/Tags/main. Danach führt er `tools/watch_bundle_ci.py` mit
-exaktem HEAD und Bundle-Nummer aus. gh muss im gleichen Ubuntu/Termux-Kontext
-vorhanden und für Actions-Lesezugriff auf cdoehn/specroad angemeldet sein. Das
-Werkzeug installiert gh nicht, zeigt keine Tokens und verändert keine Anmeldung.
+`tools/watch_bundle_ci.py` startet oder wiederholt keine CI und verändert weder
+Commits noch Branches. Es kann nach einem ausdrücklich manuellen Start zusätzlich
+aufgerufen werden. Der Default ist `event=workflow_dispatch`, `mode=both`.
+`--bundle` ist optionale Metadaten, kein Modusschalter. Der Workflow-Dateiname
+bleibt `behavior.yml`, damit bestehende Registrierung und historische Links gelten.
 
-Die Beobachtung nutzt ausschließlich `gh api --method GET --hostname github.com`.
-Sie wartet auf den Push-Run von dev für genau diesen Commit und behavior.yml.
-Ein anderer Workflow, ein manueller Lauf oder eine andere SHA sind kein Ersatz.
-Run-ID und Versuch werden gebunden. Während der Wartephase erscheinen Status,
-Jobs und laufende Schritte. Laufende Tests werden von diesem Werkzeug nicht
-abgebrochen; die vorhandene äußere PatchHarbor-Ausführungsfrist bleibt bestehen.
-API-Aufrufe haben nur eine technische Kommunikationsfrist (90 Sekunden).
-Ein noch nicht sichtbarer Run wird bis zu 60-mal mit fünf Sekunden Abstand gesucht;
-Netzwerkfehler werden dreimal versucht. Danach bleibt die CI unverifiziert.
+Für einen Full-Run des gegenwärtig ausgecheckten unveränderten Commits:
 
-Lokaler Apply, Push, GitHub-Ergebnis, tatsächliche Vollmatrix und Evidence-
-Vollständigkeit sind verschiedene Angaben. Ein grüner Auswahljob allein ist kein
-Volltest. Alle fünf Python-Jobs und der zum Modus passende Volltests-/Vergleichs-
-Schritt müssen erfolgreich sein. Fehlgeschlagene/abgebrochene/skipped Läufe werden
-nicht als bestanden umgedeutet. CI-Ausfall löscht oder verändert keine Commits.
+```sh
+python3 -I -B tools/watch_bundle_ci.py \
+  --commit FULL_TEST_COMMIT_SHA \
+  --run-id EXACT_RUN_ID --attempt EXACT_ATTEMPT \
+  --output-dir /tmp/specroad-ci-UNIQUE
+```
 
-## Transport im automatisch erzeugten Result
+Die Großbuchstaben sind zu ersetzende Werte, keine ausführbaren Beispiel-SHAs.
+Das frische Ausgabeziel darf noch nicht existieren. Tests werden nicht gestartet.
+Bei unterschiedlichen Test- und Workflowrevisionen zusätzlich die vollständige
+`--workflow-commit`-SHA angeben. Der Observer bindet den Run an die Dispatch-SHA,
+den Report dagegen an die tatsächlich getestete SHA. `run-context.json` bestätigt
+beide Revisionen, Ereignis, Branch, Repository, Run-ID, Attempt, Python und beide Modi.
+Ein grüner Run ohne diese Bindung darf keinen erfolgreichen manuellen Full-Nachweis
+für eine andere ausgewählte SHA liefern.
 
-Der vorhandene PatchHarbor-Core bietet hier keine bestätigte Zusatzanhangs-API.
-Deshalb nutzt der Entrypoint dessen bestehendes, bytegetreu erfasstes stdout:
-CI-Zusammenfassung, Run-/Jobdaten und verfügbare komplette Logs werden als ZIP
-gepackt und in nummerierten Base64-Datenzeilen mit SHA-256 im execution.log
-transportiert. Die JSON-Strukturen sind maschinenlesbar. Das ist kein zweites
-Patch-Bundle und kein Eingriff in Registry, Replay oder Result-Veröffentlichung.
+Ohne `--source-sha256` muss HEAD exakt der Test-SHA entsprechen; nur dann wird
+`source_identity` des aktuellen Baums verwendet. Für ältere Testrevisionen den
+bereits verifizierten Quellhash aus dem zugehörigen Result ausdrücklich übergeben.
+Bei mehreren passenden manuellen Runs ist eine Run-ID-/Attempt-Bindung nötig;
+der Observer nimmt nicht willkürlich den neuesten grünen Run. Halb angegebene
+Pins, wechselnde Attempts, andere Repositories/Branches und fremde Artefakte
+werden zurückgewiesen.
 
-Damit ist das Archiv im anschließenden Result unter `logs/execution.log` enthalten,
-auch bei sauberem Working Tree und auch wenn ignorierte build-Dateien fehlen.
-`tools/extract_ci_evidence.py RESULT.zip --output ci-evidence.zip` kann es später
-bytegenau wiederherstellen (neue Ausgabedatei, kein Überschreiben). Der Chat kann
-es direkt aus dem hochgeladenen Result lesen. Ein fehlender Endmarker oder falscher
-Hash ist unvollständige Evidence, kein Erfolg. Zusätzlich bleibt eine lokale
-Komfortkopie im ignorierten build-Verzeichnis. Ein manuell später neu erzeugtes
-Result ohne das Ausführungslog enthält dieses CI-Archiv nicht automatisch.
+Ein selbständig gestarteter Observer kennt keinen Pixel-Apply. Er meldet
+`local_apply: not_observed`, nicht fälschlich LOCAL APPLY SUCCESS. Sein Exitcode 0
+bedeutet abgeschlossene Beobachtung; `ci_status` und Evidence-Felder enthalten
+das tatsächliche Ergebnis. CI- oder Netzwerkfehler lösen niemals Rollbacks aus.
 
-Die unveränderten GitHub-Logarchive werden nicht ausgeführt oder in beliebige
-Projektpfade entpackt. Evidence ist auf 64 MiB begrenzt; Überschreitungen werden
-als fehlender Nachweis ausgewiesen, nicht als fehlgeschlagene Produkttests.
-Ein unabhängiger GitHub-Lauf ist in der Chat-Prüfumgebung nicht nachgewiesen.
+## Alte Push-Läufe rein lesend nachholen
 
-Quellen für den verwendeten Transportvertrag:
-https://cli.github.com/manual/gh_api
-https://docs.github.com/en/rest/actions/workflow-runs
-https://docs.github.com/en/rest/actions/workflow-jobs
+Historische Push-Nachweise bleiben lesbar, aber nur mit ausdrücklich aus dem
+alten Result übernommenem `--event push --mode parallel|both` und dessen Bundle,
+SHA und Quellenhash. Der Modus wird **nicht mehr aus der Bundle-Nummer berechnet**.
+`--recover-prior` akzeptiert genau diese Felder:
 
-## Vollständige Testergebnis-Artefakte (R)
+```json
+{
+  "repository": "cdoehn/specroad",
+  "branch": "dev",
+  "workflow_path": ".github/workflows/behavior.yml",
+  "commit_sha": "FULL_TEST_COMMIT_SHA",
+  "bundle_number": 40,
+  "source_sha256": "FULL_SOURCE_SHA256",
+  "run_id": 36742807853,
+  "run_attempt": 1,
+  "trigger_event": "push",
+  "expected_mode": "both",
+  "workflow_commit_sha": "FULL_TEST_COMMIT_SHA"
+}
+```
 
-Alle fünf versionierten behavior-Artefakte werden ebenfalls abgerufen. Der Name
-bindet SHA und run_attempt, damit ein Rerun nicht alte Erfolgsberichte verwendet.
-Originale JSON-Reports bleiben im ZIP erhalten. Die vorhandene Vollständigkeits-
-prüfung kontrolliert Testmengen, Ergebniszustände, Python-Version und Workerzahl;
-der Eingangsquellhash muss zum lokalen finalen Stand passen. Im Dualmodus werden
-parallel/serial und die gespeicherte Vergleichszusammenfassung erneut geprüft.
-Ein fehlendes oder defektes Artefakt kann trotz grünem GitHub-Status den separaten
-Evidence-Status unvollständig machen; das wird nicht verschwiegen. Ein fehlender
-abschließender unveränderter Run-/Attempt-Beleg verhindert einen Erfolgsausweis.
-Es werden keine normalen CLI-Texte als Nachweis von Testvollständigkeit geparst.
+Dieses Schema ist eine Vorlage, keine gebundene Diagnose; die Platzhalter müssen
+mit Werten des betreffenden Result ersetzt werden. Historische Archive werden
+nicht umgeschrieben. Ohne konkrete Beauftragung findet auch diese Nachholung
+nicht im normalen Bundle statt.
+
+## Evidence und Result-Transport
+
+Gesichert werden run.json, jobs.json, vollständige verfügbare Attempt-Logs,
+Artefaktindex, beide Reports/Comparison pro Version sowie Größen und SHA-256 aller
+gesicherten Dateien. Fehlgeschlagene Reports bleiben erhalten, auch wenn sie den
+strengen Passing-Vergleich nicht bestehen. Capture-Vollständigkeit, bestätigter
+Testnachweis und tatsächliche GitHub-Conclusion sind getrennte Felder.
+Bei Transportfehlern werden bereits bestätigte abgeschlossene Joblogs nach Möglichkeit
+gesichert; fehlende Dateien werden nicht erfunden. GitHub-Artefakte werden nicht als
+unvertrauenswürdige Pfade ins Repository extrahiert.
+
+Der vorhandene `SPECRoad-CI-EVIDENCE-V1`-Transport kann das komprimierte, geprüfte
+Archiv in erfasstem stdout transportieren. Wird ein expliziter Observer innerhalb
+einer PatchHarbor-Ausführung aufgerufen, kann deren Result es im execution.log
+enthalten. **Ein normaler Bundle-041-Apply ruft keinen Observer auf und sammelt
+keine manuelle CI automatisch ein.** Eine separat aufgerufene Beobachtung speichert
+ci-evidence.zip und ci-summary.json im angegebenen frischen Verzeichnis; diese
+Dateien müssen zur weiteren Analyse gesondert bereitgestellt werden.
+Kein rekursives `patchharbor bundle`, keine Änderung einer erzeugten Result-ZIP.
+
+Historie: Die CI-WAIT.a.W/R/C-Implementierung ab Bundle 019 begründete die exakte
+Bindung und den Archivtransport. Deren automatische Aufrufe und Fünferregel sind
+seit Bundle 041 abgelöst; die ursprünglichen Fehler-/Testnachweise bleiben gültige
+historische Aussagen, keine aktuellen automatischen Ausführungsanweisungen.

@@ -1,8 +1,9 @@
 """Point-in-time Hetzner selection, with an explicit hosted alternative.
 
-Run with the local authenticated gh account BEFORE the final commit/push. A
-GITHUB_TOKEN is not presumed to grant Administration:read. This avoids needing
-a hosted bootstrap job (and hosted minutes) to select the self-hosted runner.
+The manual workflow probes from a small hosted selector. An optional
+SPECROAD_RUNNER_READ_TOKEN needs repository Administration:read. With no
+usable permission, an unavailable API or an offline/busy runner, the explicit
+ubuntu-24.04 alternative is chosen; no success is inferred from that choice.
 The API observation is not a reservation or migration of already queued jobs.
 """
 from datetime import datetime, timezone
