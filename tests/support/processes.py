@@ -10,8 +10,14 @@ SOURCE = Path(__file__).resolve().parents[2] / "src"
 
 def run_python(arguments, cwd, *, python=None, capture=False):
     """Run trusted Python with closed stdin and no shell or harness timeout."""
-    environment = {key: os.environ[key] for key in ("SystemRoot", "WINDIR", "TEMP", "TMP", "TMPDIR")
-                   if key in os.environ}
+    # setup-python's shared Linux runtimes need this loader path even with
+    # -I/-S. Preserve that named runtime input, not the whole parent environment
+    # (in particular no credentials, PYTHONPATH, LD_PRELOAD or LD_AUDIT).
+    environment = {
+        key: os.environ[key]
+        for key in ("SystemRoot", "WINDIR", "TEMP", "TMP", "TMPDIR", "LD_LIBRARY_PATH")
+        if key in os.environ
+    }
     environment["PATH"] = ""
     return subprocess.run(
         [str(python or sys.executable), *arguments], cwd=cwd, env=environment,
