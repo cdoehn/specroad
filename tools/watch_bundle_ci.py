@@ -17,6 +17,7 @@ from ci_support.transport import GhClient, records, find_run, checked_jobs
 from ci_support.evidence import (inspect_report_archive, collect_artifacts, pack_evidence,
                                  emit_evidence, recover_evidence)
 from ci_support.observer import observe_ci
+from ci_support.runners import terminal_ci_status
 
 def show_progress(event):
     if event['phase'] == 'running':
@@ -67,7 +68,7 @@ def main(argv=None):
     emit_evidence(raw, sys.stdout)
     print('CI-SUMMARY: ' + json_bytes(summary).decode().strip(), flush=True)
     color = '32' if summary['ci_status'] == 'success' else '31' if summary['ci_status'] == 'failed' else '33'
-    print(f"\033[{color}mLOCAL APPLY: SUCCESS | CI: {summary['ci_status'].upper()}\033[0m", flush=True)
+    print(f"\033[{color}mLOCAL APPLY: SUCCESS | CI: {terminal_ci_status(summary['ci_status'])}\033[0m", flush=True)
     # Exit 0 describes a completed observation. ci_status carries the CI result.
     return 0
 

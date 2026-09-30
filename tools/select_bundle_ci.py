@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 from verification_support.bundle_ci import commit_sha, select_ci
+from ci_support.runners import commit_runner, runner_labels
 
 
 def resolve_selection(environment, *, runner=None):
@@ -28,14 +29,19 @@ def resolve_selection(environment, *, runner=None):
         raise ValueError("Revision did not resolve exactly")
     git("merge-base", "--is-ancestor", sha, "origin/dev")
     message = git("show", "-s", "--format=%B", sha)
-    return select_ci(event, ref, sha, message, mode=environment.get("SR_CI_MODE", "auto"))
+    selection = select_ci(event, ref, sha, message, mode=environment.get("SR_CI_MODE", "auto"))
+    choice = ((environment.get("SR_CI_RUNNER") or "github-hosted")
+              if event == "workflow_dispatch" else commit_runner(message))
+    selection["runner_choice"] = choice
+    selection["runner"] = json.dumps(runner_labels(choice), separators=(",", ":"))
+    return selection
 
 
 def main():
     try:
         selection = resolve_selection(os.environ)
         with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as stream:
-            for key in ("commit_sha", "mode"):
+            for key in ("commit_sha", "mode", "runner"):
                 stream.write(key + "=" + selection[key] + "\n")
             stream.write("run_full=" + str(selection["run_full"]).lower() + "\n")
         print(json.dumps(selection, sort_keys=True))

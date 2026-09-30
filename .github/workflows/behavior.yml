@@ -16,14 +16,19 @@ on:
         type: choice
         options: [auto, both]
 
+# Automatic bundles carry a just-probed fixed runner choice in their final
+# commit. An unavailable/busy/unreadable Hetzner probe selects ubuntu-24.04.
+# The selector itself follows that choice: no hosted bootstrap minutes needed.
 permissions:
   contents: read
 
 jobs:
   select:
     name: Select exact bundle revision (no full tests)
-    runs-on: ubuntu-24.04
+    runs-on: >-
+      ${{ fromJSON(((github.event_name == 'push' && contains(github.event.head_commit.message, 'SpecRoad-CI-Runner: hetzner')) || (github.event_name == 'workflow_dispatch' && inputs.runner == 'hetzner')) && '["self-hosted","Linux","X64","specroad","hetzner"]' || '["ubuntu-24.04"]') }}
     outputs:
+      runner: ${{ steps.selection.outputs.runner }}
       commit_sha: ${{ steps.selection.outputs.commit_sha }}
       run_full: ${{ steps.selection.outputs.run_full }}
       mode: ${{ steps.selection.outputs.mode }}
@@ -38,6 +43,7 @@ jobs:
       - id: selection
         name: Select full gate only for final commits or manual requests
         env:
+          SR_CI_RUNNER: ${{ inputs.runner }}
           SR_COMMIT_SHA: ${{ inputs.commit_sha }}
           SR_CI_MODE: ${{ inputs.mode || 'auto' }}
         run: python -I -B tools/select_bundle_ci.py
@@ -46,7 +52,7 @@ jobs:
     needs: select
     if: needs.select.outputs.run_full == 'true'
     name: CPython ${{ matrix.python }} / ${{ needs.select.outputs.mode }}
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(needs.select.outputs.runner) }}
     strategy:
       fail-fast: false
       matrix:
