@@ -90,6 +90,20 @@ def prepare_publication_check(plan, model, *, policy, gates=(), strict=False, pa
         raise _translate(error) from error
 
 
+def _require_uncompleted_request(source, request):
+    # A prior absence observation never reserves an ID. Repeat under the real
+    # writer lock, including after trusted callbacks, before any journal/write.
+    from .authoring import bind_plan_authoring
+    from .idempotency import resolve_normative_request
+    from .receipt_values import ReceiptError
+    try:
+        decision = resolve_normative_request(source, bind_plan_authoring(request.plan))
+    except ReceiptError as error:
+        raise PublicationCheckError(error.reason, exit_code=error.exit_code, path=error.path) from error
+    if decision.data['action'] == 'replay':
+        raise PublicationCheckError('completed_request_requires_replay', exit_code=6)
+
+
 def recheck_publication(preflight, request, *, held_lock, transaction_id,
                         authority, gates=()):
     """Recompute under the SAME native writer lock, never silently rebase.
@@ -112,6 +126,7 @@ def recheck_publication(preflight, request, *, held_lock, transaction_id,
             held_lock.require_publication(source, command='change apply',
                 request_id=plan.data['request_id'], transaction_id=transaction_id)
         lock_check()
+        _require_uncompleted_request(source, request)
         first = _observe(source, model, request, package_files)
         if canonical_json_bytes(first) != preflight._footprint:
             raise PublicationCheckError('publication_footprint_changed')
@@ -129,6 +144,7 @@ def recheck_publication(preflight, request, *, held_lock, transaction_id,
         if type(allowed) is not bool or not allowed:
             raise PublicationCheckError('publication_authorization_denied', exit_code=7)
         lock_check()
+        _require_uncompleted_request(source, request)
         # Last complete read, after callbacks and immediately before the boundary.
         if canonical_json_bytes(_observe(source, model, request, package_files)) != preflight._footprint:
             raise PublicationCheckError('publication_footprint_changed')

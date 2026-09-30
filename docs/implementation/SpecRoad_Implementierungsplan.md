@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 222
-last_completed_plan_commit: 5.n.C
-next_plan_commit: 5.o.W
+implementation_plan_commits_completed: 223
+last_completed_plan_commit: 5.o.W
+next_plan_commit: 5.o.R
 last_completed_numbered_bundle: 37
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2919,7 +2919,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.o.W – Let it Work
 
-- [ ] **5.o.W** · Position **223/885** · Voraussetzung: `5.n.C`.
+- [x] **5.o.W** · Position **223/885** · Voraussetzung: `5.n.C`.
 **Exakte Commit-Message:** `5.o.W feat(changes): Normative Idempotenz aufbauen`
 
 **Umsetzung:** Request-Receipt mit Operationshash, Actor, Basis, Ergebnis und erzeugten IDs speichern und auswerten.
