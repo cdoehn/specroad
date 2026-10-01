@@ -26,6 +26,7 @@ from ._journal_io import _read
 from ._recovery_inputs import _parse, _read_journal
 from ._recovery_target import prove_complete_target
 from ._staging_files import _image, _write_new
+from ._publication_io import replace_bound_image
 
 _BLOCK = 65536
 
@@ -205,20 +206,14 @@ def _copy_before(files, journal, entry, index, target_token):
                 raise RecoveryError('recovery_target_parent_missing', path=entry['path'], exit_code=6)
             if os.fstat(target).st_dev != os.fstat(rollback).st_dev:
                 raise RecoveryError('recovery_cross_device', path=entry['path'], exit_code=7)
-            _rights(target, entry['path'])
-            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_CLOEXEC', 0), dir_fd=rollback)
-            try:
-                if guards._identity(os.fstat(fd)) != identity:
-                    raise RecoveryError('recovery_image_changed', path=entry['path'], exit_code=6)
-                if target_token['mode'] & 0o7000:
-                    raise RecoveryError('unsafe_recovery_mode', path=entry['path'], exit_code=7)
-                os.fchmod(fd, target_token['mode'])
-                os.fsync(fd)
-            finally:
-                os.close(fd)
-            os.replace(name, parts[-1], src_dir_fd=rollback, dst_dir_fd=target)
-            os.fsync(target); os.fsync(rollback)
-            _image(target, parts[-1], entry['before_size'], entry['before_sha256'])
+            if target_token['mode'] & 0o7000:
+                raise RecoveryError('unsafe_recovery_mode', path=entry['path'], exit_code=7)
+            replace_bound_image(rollback, name, target, parts[-1],
+                size=entry['before_size'], digest=entry['before_sha256'], identity=identity,
+                mode=target_token['mode'],
+                source_changed=lambda: RecoveryError(
+                    'recovery_image_changed', path=entry['path'], exit_code=6),
+                before_open=lambda: _rights(target, entry['path']))
 
 
 def _remove_created(files, journal, entry, index, target_token):
@@ -240,10 +235,11 @@ def _remove_created(files, journal, entry, index, target_token):
                 pass
             else:
                 raise RecoveryError('recovery_rollback_stash_collision', path=entry['path'], exit_code=6)
-            os.replace(parts[-1], name, src_dir_fd=target, dst_dir_fd=rollback)
-            os.fsync(target); os.fsync(rollback)
-            _image(rollback, name, entry['after_size'], entry['after_sha256'],
-                   identity=target_token['identity'])
+            replace_bound_image(target, parts[-1], rollback, name,
+                size=entry['after_size'], digest=entry['after_sha256'],
+                identity=target_token['identity'],
+                source_changed=lambda: RecoveryError(
+                    'recovery_target_changed', path=entry['path'], exit_code=6))
 
 
 def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,

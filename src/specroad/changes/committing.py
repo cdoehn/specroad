@@ -23,6 +23,7 @@ from ._journal_inventory import prepare_building_journal
 from .staging_values import PreparedJournal
 from .staging import verify_prepared_journal, _own_lock, _recheck, _materialized_target
 from ._staging_files import _image, _write_new, _names
+from ._publication_io import replace_bound_image
 from .publication_values import PublicationPreflight, PublicationAuthority
 from .publication_check import _rights
 from ._publication_observation import _stamp
@@ -203,29 +204,29 @@ class _Publisher:
                 mode = self.states[entry['path']]['mode'] if entry['existed_before'] else 0o644
                 if mode & 0o7000:
                     raise CommitPublicationError('unsafe_publication_mode',exit_code=7)
-                fd = os.open(name,os.O_RDONLY|os.O_NOFOLLOW|getattr(os,'O_CLOEXEC',0),dir_fd=stage)
-                try:
-                    if guards._identity(os.fstat(fd)) != identity:
-                        raise CommitPublicationError('publication_image_replaced',exit_code=6)
+                def before_mutation():
                     self.mutation = True
-                    os.fchmod(fd,mode)
-                    os.fsync(fd)
-                    info = os.fstat(fd)
+
+                def before_replace():
                     self.check()
-                    _rights(target,entry['path'])
+                    _rights(target, entry['path'])
                     self.publication = True
-                    os.replace(name,entry['path'].rsplit('/',1)[-1],src_dir_fd=stage,dst_dir_fd=target)
-                    self.renamed = index+1
+
+                def after_replace(info):
+                    self.renamed = index + 1
                     self.states[entry['path']] = {**_stamp(info), 'size':entry['after_size'],
-                                                   'sha256':entry['after_sha256']}
-                    self.expected_bytes[entry['path']] = next(d.content for d in self.preflight.request.documents
-                                                             if d.path == entry['path'])
-                    os.fsync(target)
-                    os.fsync(stage)
-                    _image(target,entry['path'].rsplit('/',1)[-1],entry['after_size'],entry['after_sha256'],
-                           identity=identity)
-                finally:
-                    os.close(fd)
+                                                  'sha256':entry['after_sha256']}
+                    self.expected_bytes[entry['path']] = next(
+                        d.content for d in self.preflight.request.documents
+                        if d.path == entry['path'])
+
+                replace_bound_image(stage, name, target, entry['path'].rsplit('/', 1)[-1],
+                    size=entry['after_size'], digest=entry['after_sha256'], identity=identity,
+                    mode=mode,
+                    source_changed=lambda: CommitPublicationError(
+                        'publication_image_replaced', exit_code=6),
+                    before_mutation=before_mutation, before_replace=before_replace,
+                    after_replace=after_replace)
         self.check()
         self.save(_acknowledge(self.journal,index))
 
