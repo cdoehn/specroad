@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 228
-last_completed_plan_commit: 5.p.C
-next_plan_commit: 5.q.W
+implementation_plan_commits_completed: 229
+last_completed_plan_commit: 5.q.W
+next_plan_commit: 5.q.R
 last_completed_numbered_bundle: 42
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -3009,7 +3009,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.q.W – Let it Work
 
-- [ ] **5.q.W** · Position **229/885** · Voraussetzung: `5.p.C`.
+- [x] **5.q.W** · Position **229/885** · Voraussetzung: `5.p.C`.
 **Exakte Commit-Message:** `5.q.W feat(changes): Recovery auf vollständiges Ziel aufbauen`
 
 **Umsetzung:** Vollständig veröffentlichte Nachherhashes erkennen und fehlende Receipts rekonstruieren.

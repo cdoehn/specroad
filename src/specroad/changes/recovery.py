@@ -164,3 +164,146 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
     except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
         raise RecoveryError(getattr(error, 'reason', 'recovery_discard_failed'),
             exit_code=getattr(error, 'exit_code', 5), mutation_possible=attempted) from error
+
+
+def _completion_lock(held, journal):
+    if type(held) is not HeldProjectLock:
+        raise RecoveryError('native_recovery_lock_required', exit_code=7)
+    held.check()
+    lock, data = held.record.data, journal.data
+    if (lock['kind'] != 'recovery' or lock['command'] != 'recover run'
+            or lock['transaction_id'] != data['transaction_id']
+            or lock['project_id'] != data['project_id']
+            or lock['request_id'] != data['request_id']):
+        raise RecoveryError('recovery_lock_binding_mismatch', exit_code=6)
+
+
+def _complete_target(files, journal):
+    """Prove every journal-bound target file without loading the project model."""
+    tokens = {}
+    for item in journal.data['target_inventory']:
+        parts = tuple(item['path'].split('/'))
+        with files.directory(parts[:-1]) as directory:
+            if directory is None:
+                raise RecoveryError('recovery_target_missing', path=item['path'], exit_code=6)
+            try:
+                identity = _image(directory, parts[-1], item['size'], item['sha256'])
+            except (ChangeExecutionError, OSError, SafetyViolation) as error:
+                raise RecoveryError('recovery_target_mismatch', path=item['path'], exit_code=6) from error
+            tokens[item['path']] = {'identity': identity, 'size': item['size'], 'sha256': item['sha256']}
+    return tokens
+
+
+def _fully_published(journal):
+    from .committing_values import CommittingJournal
+    value = journal.data
+    value['published_count'] = len(value['files'])
+    for entry in value['files']:
+        entry['published'] = True
+    return CommittingJournal(canonical_json_bytes(value))
+
+
+def _new_recovery_record(files, record):
+    parts, name = tuple(record.path.split('/')[:-1]), record.path.rsplit('/', 1)[-1]
+    with files.directory(parts, create=True) as directory:
+        try:
+            os.stat(name, dir_fd=directory, follow_symlinks=False)
+        except FileNotFoundError:
+            return _write_new(directory, name, record.source_bytes)
+        raise RecoveryError('recovery_receipt_already_exists', path=record.path, exit_code=6)
+
+
+def complete_published_transaction(transaction_id, *, held_lock, authority,
+                                   expected_journal_sha256):
+    """Finish an interrupted transaction only when the complete target is proven.
+
+    No plan is rebuilt and no normative target is written. The original journal
+    carries the exact authoring binding needed to reconstruct the normal receipt
+    bytes. W deliberately refuses pre-existing receipt files; resumable receipt
+    reconciliation belongs to the robustness step.
+    """
+    from .committing_values import CommittingJournal
+    from .receipt_projection import prepare_recovery_receipts
+    from .receipt_values import TransactionCompletion
+    _transaction(transaction_id)
+    if not _hash(expected_journal_sha256):
+        raise RecoveryError('expected_recovery_journal_sha256_required', exit_code=2)
+    if type(authority) is not RecoveryAuthority:
+        raise RecoveryError('recovery_authority_required', exit_code=2)
+    if type(held_lock) is not HeldProjectLock:
+        raise RecoveryError('native_recovery_lock_required', exit_code=7)
+    mutated = False
+    try:
+        files = held_lock._files
+        raw, directory_identity = _read_journal(files, transaction_id)
+        journal = _parse(raw, transaction_id, files)
+        if type(journal) is not CommittingJournal:
+            raise RecoveryError('recovery_full_target_requires_committing', exit_code=6)
+        _completion_lock(held_lock, journal)
+        if journal.sha256 != expected_journal_sha256:
+            raise RecoveryError('recovery_journal_changed', exit_code=6)
+        active = files.journal_entries()
+        if '.specroad/transactions/' + transaction_id not in active:
+            raise RecoveryError('recovery_active_set_unproven', exit_code=6)
+        target = _complete_target(files, journal)
+        request = {'action': 'complete', 'transaction_id': transaction_id,
+                   'project_id': journal.data['project_id'],
+                   'request_id': journal.data['request_id'],
+                   'journal_sha256': journal.sha256,
+                   'base_model_root_sha256': journal.data['base_model_root_sha256'],
+                   'target_model_root_sha256': journal.data['target_model_root_sha256']}
+        request_raw = canonical_json_bytes(request)
+        try:
+            allowed = authority.check(request)
+        except Exception as error:
+            raise RecoveryError('recovery_authority_failed', exit_code=7) from error
+        if canonical_json_bytes(request) != request_raw or type(allowed) is not bool or not allowed:
+            raise RecoveryError('recovery_not_authorized', exit_code=7)
+        _completion_lock(held_lock, journal)
+        if files.journal_entries() != active or _read_journal(files, transaction_id) != (raw, directory_identity):
+            raise RecoveryError('recovery_journal_changed', exit_code=6)
+        if _complete_target(files, journal) != target:
+            raise RecoveryError('recovery_target_changed', exit_code=6)
+        recovered = _fully_published(journal)
+        transaction, request_receipt, committed = prepare_recovery_receipts(recovered)
+        for record in (transaction, request_receipt):
+            if record is None:
+                continue
+            parts, name = tuple(record.path.split('/')[:-1]), record.path.rsplit('/', 1)[-1]
+            with files.directory(parts) as directory:
+                if directory is not None:
+                    try:
+                        os.stat(name, dir_fd=directory, follow_symlinks=False)
+                    except FileNotFoundError:
+                        pass
+                    else:
+                        raise RecoveryError('recovery_receipt_already_exists', path=record.path, exit_code=6)
+        mutated = True
+        _new_recovery_record(files, transaction)
+        if request_receipt is not None:
+            _new_recovery_record(files, request_receipt)
+        _completion_lock(held_lock, journal)
+        if _complete_target(files, journal) != target:
+            raise RecoveryError('recovery_target_changed', exit_code=6)
+        prefix = tuple(journal.path.split('/')[:-1])
+        with files.directory(prefix) as directory:
+            if directory is None or guards._identity(os.fstat(directory)) != directory_identity:
+                raise RecoveryError('recovery_work_changed', exit_code=6)
+            if _read_journal(files, transaction_id)[0] != raw:
+                raise RecoveryError('recovery_journal_changed', exit_code=6)
+            identity = _write_new(directory, 'journal.complete', committed.source_bytes)
+            _image(directory, 'journal.complete', len(committed.source_bytes), committed.sha256,
+                   identity=identity)
+            os.replace('journal.complete', 'journal.json', src_dir_fd=directory, dst_dir_fd=directory)
+            os.fsync(directory)
+        _completion_lock(held_lock, journal)
+        if _complete_target(files, recovered) != target:
+            raise RecoveryError('recovery_target_changed', exit_code=6)
+        return TransactionCompletion._create(committed, live=True)
+    except RecoveryError as error:
+        error.mutation_possible |= mutated
+        raise
+    except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
+        raise RecoveryError(getattr(error, 'reason', 'recovery_completion_failed'),
+            path=getattr(error, 'path', None), exit_code=getattr(error, 'exit_code', 5),
+            mutation_possible=mutated) from error

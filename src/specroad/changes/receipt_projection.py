@@ -5,14 +5,10 @@ from .receipt_values import (ReceiptError, TransactionReceipt, RequestReceipt,
                              CommittedJournal, _result, _created_ids)
 
 
-def prepare_completion_receipts(preflight, journal):
-    """Prepare data only. The native finalizer must check disk before persisting it."""
-    verify_committing_journal(journal, preflight)
+def _project_completion_receipts(journal, authoring):
     value = journal.data
     if value['published_count'] != len(value['files']):
         raise ReceiptError('complete_publication_required')
-    request = preflight.request
-    authoring = request.data['authoring_binding']
     ids = _created_ids(authoring['operations'])
     transaction = TransactionReceipt(canonical_json_bytes({
         'format_version': 'transaction-receipt-v1', 'outcome': 'committed',
@@ -27,6 +23,20 @@ def prepare_completion_receipts(preflight, journal):
             'request': None if receipt is None else {'path': receipt.path, 'sha256': receipt.sha256}}
     return transaction, receipt, CommittedJournal(canonical_json_bytes({**value,
         'state': 'committed', 'receipts': refs}))
+
+
+def prepare_completion_receipts(preflight, journal):
+    """Prepare data only. The native finalizer must check disk before persisting it."""
+    verify_committing_journal(journal, preflight)
+    return _project_completion_receipts(journal, preflight.request.data['authoring_binding'])
+
+
+def prepare_recovery_receipts(journal):
+    """Rebuild the same receipts solely from a fully verified recovery journal."""
+    from .committing_values import CommittingJournal
+    if type(journal) is not CommittingJournal:
+        raise ReceiptError('committing_journal_required', exit_code=2)
+    return _project_completion_receipts(journal, journal.data['authoring_binding'])
 
 
 def request_for_transaction(transaction):

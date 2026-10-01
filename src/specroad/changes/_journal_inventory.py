@@ -23,6 +23,10 @@ def prepare_building_journal(preflight, *, transaction_id):
     if len({d.path for d in documents}) != len(documents) or set(data['changed_paths']) != {d.path for d in documents}:
         raise JournalError('publication_inventory_mismatch')
     target = {item['path']:item['sha256'] for item in data['target_files']}
+    expected_target = {**model.source_files, **{d.path:d.content for d in request.documents},
+                       **{d.path:d.content for d in preflight._package_files}}
+    target_inventory = [{'path':path, 'size':len(raw), 'sha256':sha256(raw).hexdigest()}
+                        for path, raw in sorted(expected_target.items())]
     entries=[]; prefix='.specroad/transactions/'+transaction_id
     for i,d in enumerate(documents):
         before = old.get(d.path)
@@ -40,8 +44,11 @@ def prepare_building_journal(preflight, *, transaction_id):
            'change_plan_id':pv['change_plan_id'],'request_id':pv['request_id'],
            'actor':pv['actor'],'planned_at':pv['planned_at'],'plan_sha256':p.sha256,
            'plan_bytes_sha256':sha256(p.source_bytes).hexdigest(),'request_sha256':request.sha256,
+           'authoring_binding':data['authoring_binding'],
+           'authoring_sha256':data['authoring_sha256'],
            'base_model_root_sha256':pv['base']['model_root_sha256'],
            'target_model_root_sha256':data['target_root_sha256'],
+           'target_inventory':target_inventory,
            'files':entries,'published_count':0}
     return BuildingJournal(canonical_json_bytes(value))
 
