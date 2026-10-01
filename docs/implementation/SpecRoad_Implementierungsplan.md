@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 230
-last_completed_plan_commit: 5.q.R
-next_plan_commit: 5.q.C
-last_completed_numbered_bundle: 42
+implementation_plan_commits_completed: 231
+last_completed_plan_commit: 5.q.C
+next_plan_commit: 5.r.W
+last_completed_numbered_bundle: 43
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
@@ -3027,7 +3027,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.q.C – Make it Clean
 
-- [ ] **5.q.C** · Position **231/885** · Voraussetzung: `5.q.R`.
+- [x] **5.q.C** · Position **231/885** · Voraussetzung: `5.q.R`.
 **Exakte Commit-Message:** `5.q.C refactor(changes): Recovery auf vollständiges Ziel bereinigen`
 
 **Bereinigung:** Zielerkennung, Receiptreparatur und Abschlussfolge getrennt testen und strukturieren.
