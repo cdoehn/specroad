@@ -91,3 +91,12 @@ während der Beobachtung sowie Fehler beim Synchronisieren und Archivieren.
 Abgelehnte Vorprüfungen schreiben keinen Audit. Fehler nach Mutationsbeginn
 behalten den tatsächlichen Arbeitsstand und behaupten weder Erfolg noch einen
 automatischen Rollback. Auch ein vorhandener Audit wird niemals überschrieben.
+
+## C: Struktur ohne neue Fachfunktion
+
+`recovery_read.py` bietet ausschließlich die schreibfreie Diagnose an;
+`recovery.py` enthält nur die explizite Mutation und eine kompatible
+Weiterexportierung der Diagnose. `_recovery_inputs.py` bündelt die gemeinsamen
+read-only Beobachtungen. Öffentliche API, Zustände, Abwehrbedingungen, Audit-
+Reihenfolge und Fehlerfolgen bleiben gegenüber W/R unverändert. Die W-/R-
+Testfälle und ihre erwarteten Werte werden dafür nicht angepasst.

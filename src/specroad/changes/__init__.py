@@ -94,6 +94,7 @@ from .idempotency import RequestIdConflict, RequestResolution, resolve_normative
 __all__ += ["RequestIdConflict", "RequestResolution", "resolve_normative_request"]
 
 from .recovery_values import RecoveryError, RecoveryAuthority, RecoveryObservation, DiscardedJournal
-from .recovery import inspect_recovery, discard_unpublished_transaction
+from .recovery_read import inspect_recovery
+from .recovery import discard_unpublished_transaction
 __all__ += ['RecoveryError', 'RecoveryAuthority', 'RecoveryObservation', 'DiscardedJournal',
             'inspect_recovery', 'discard_unpublished_transaction']
