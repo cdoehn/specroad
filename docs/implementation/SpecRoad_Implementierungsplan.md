@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 225
-last_completed_plan_commit: 5.o.C
-next_plan_commit: 5.p.W
+implementation_plan_commits_completed: 226
+last_completed_plan_commit: 5.p.W
+next_plan_commit: 5.p.R
 last_completed_numbered_bundle: 41
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2974,7 +2974,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.p.W – Let it Work
 
-- [ ] **5.p.W** · Position **226/885** · Voraussetzung: `5.o.C`.
+- [x] **5.p.W** · Position **226/885** · Voraussetzung: `5.o.C`.
 **Exakte Commit-Message:** `5.p.W feat(changes): Recoverystatus und Building-Discard aufbauen`
 
 **Umsetzung:** Journalzustand und zulässige Aktionen ohne regulären Modellload bestimmen; unveröffentlichte Vorbereitung verwerfen.

@@ -4,19 +4,39 @@
   "requirement_id": "SR-REQ-0257",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECOVERY-v1"
+  ],
+  "preconditions": [
+    "Owned pending transaction, independently bound base/source bytes and native local Linux filesystem."
+  ],
+  "steps": [
+    "Read journal status without normal model loading.",
+    "Under a held recovery lock, compare the complete live base inventory and preserve all original preparation bytes in an immutable audit on discard."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine Transaktion in `building` oder `prepared` MUSS ohne Veröffentlichung verworfen werden können.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Read-only status and audited explicit discard for proven unchanged standalone building/prepared base; no normative writes or loss of evidence."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/state",
+    "/journal_sha256",
+    "/base_model_root_sha256",
+    "/permitted_actions",
+    "/discard_completed"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +48,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_recovery.py::test_discard_preserves_base_and_archives_all_evidence[building]",
+    "tests/test_transaction_recovery.py::test_discard_preserves_base_and_archives_all_evidence[prepared]",
+    "tests/test_transaction_recovery.py::test_discard_noop_has_no_normative_or_request_write"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Public recovery CLI, restart-time independent proof reconstruction, and automatic transaction preflight remain in their assigned later plan steps.",
+    "Interrupted preparation inventories and extended refusal/race cases are completed in 5.p.R."
   ]
 }

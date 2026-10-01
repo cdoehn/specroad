@@ -4,19 +4,39 @@
   "requirement_id": "SR-REQ-0262",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECOVERY-v1"
+  ],
+  "preconditions": [
+    "Owned pending transaction, independently bound base/source bytes and native local Linux filesystem."
+  ],
+  "steps": [
+    "Read journal status without normal model loading.",
+    "Under a held recovery lock, compare the complete live base inventory and preserve all original preparation bytes in an immutable audit on discard."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad recover status` MUSS Zustand, Journalhash, Basiswurzel, erwartete Zielwurzel, veröffentlichte Einträge und zulässige Recovery-Aktionen jeder unvollständigen Transaktion ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Read-only status and audited explicit discard for proven unchanged standalone building/prepared base; no normative writes or loss of evidence."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/state",
+    "/journal_sha256",
+    "/base_model_root_sha256",
+    "/permitted_actions",
+    "/discard_completed"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +48,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_recovery.py::test_status_is_read_only_and_reports_bound_unpublished_state[building]",
+    "tests/test_transaction_recovery.py::test_status_is_read_only_and_reports_bound_unpublished_state[prepared]",
+    "tests/test_transaction_recovery.py::test_status_without_base_proof_does_not_grant_discard",
+    "tests/test_transaction_recovery.py::test_status_does_not_load_even_broken_configuration",
+    "tests/test_transaction_recovery.py::test_corrupt_journal_is_visible_and_never_removed"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Public recovery CLI, restart-time independent proof reconstruction, and automatic transaction preflight remain in their assigned later plan steps.",
+    "Interrupted preparation inventories and extended refusal/race cases are completed in 5.p.R."
   ]
 }

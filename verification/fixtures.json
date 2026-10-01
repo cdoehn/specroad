@@ -52,7 +52,8 @@
     "SR-FIX-TRANSACTION-JOURNAL-v1",
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-TRANSACTION-COMMITTING-v1",
-    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+    "SR-FIX-TRANSACTION-RECEIPTS-v1",
+    "SR-FIX-TRANSACTION-RECOVERY-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -258,6 +259,10 @@
     "SR-FIX-TRANSACTION-COMMITTING-v1": {
       "provider": "tests/support/committing.py:staged",
       "kind": "Owned local Linux prepared transactions with native writer lock, real atomic target replacements, journal fsync acknowledgements and preserved before images. Host authority is explicit test-only; no receipts or automatic recovery."
+    },
+    "SR-FIX-TRANSACTION-RECOVERY-v1": {
+      "provider": "tests/support/recovery.py:pending",
+      "kind": "Owned native Linux pending building/prepared journal and complete independent preflight; explicit test-only authority, real recovery lock, immutable audit and unchanged normative files."
     }
   }
 }

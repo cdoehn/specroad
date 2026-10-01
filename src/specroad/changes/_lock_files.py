@@ -234,7 +234,7 @@ class LockFiles:
                     guards._regular(info, directory=stat.S_ISDIR(info.st_mode))
                     # Only the explicit completed receipt / lock-audit namespaces
                     # are outside active journals; no self-declared terminal state.
-                    reserved = (folder == 'transactions' and name == 'receipts') or (folder == 'recovery' and name == 'lock-audit')
+                    reserved = (folder == 'transactions' and name == 'receipts') or (folder == 'recovery' and name in ('lock-audit', 'transaction-audit'))
                     if reserved and stat.S_ISDIR(info.st_mode):
                         continue
                     found.append('.specroad/' + folder + '/' + name)

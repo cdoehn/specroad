@@ -40,7 +40,7 @@ def _operational_metadata(boundary):
                 logical = path + "/" + child
                 observed.append({"path": logical, "directory": is_directory})
                 if is_directory and ((name == "transactions" and child == "receipts") or
-                                     (name == "recovery" and child == "lock-audit")):
+                                     (name == "recovery" and child in ("lock-audit", "transaction-audit"))):
                     continue
                 unresolved.append(logical)
         else:
