@@ -65,3 +65,29 @@ Lokale Gates verwenden nur neue/direkt betroffene Verhaltenstests, parallel mit
 maximal vier Workern auf dem Pixel. Keine lokale Vollsuite oder Fünferregel.
 Vollständige Python-Matrix einschließlich seriell/parallel/Vergleich bleibt
 bewusst manuell. Darstellungs- oder Dokumentationstests werden nicht eingeführt.
+
+## R: Unterbrechungen und Abwehrgrenzen
+
+Building-Work darf nun fehlende Verzeichnisse, Teilmengen und kurze Präfixe der
+unabhängig erwarteten Before-/Staging-Bytes enthalten. Auch ein teilweise
+geschriebenes `journal.prepared` wird nur als passendes Präfix akzeptiert und
+vollständig archiviert. Fremde Namen, ungebundene Bytes oder überlange Images
+bleiben Blocker. Prepared verlangt weiterhin die vollständigen Images. Die
+Intent-Datei bindet zusätzlich Länge und SHA-256 jedes tatsächlich vorgefundenen
+Work-Files; die Abschlusskontrolle verifiziert die archivierten Bytes erneut.
+
+Eine ausgewählte Vorbereitung kann neben anderen aktiven Einträgen verworfen
+werden, sofern die vollständige Basis unverändert ist. Alle anderen Einträge
+bleiben bytegleich und aktive Blocker; die aktive Menge wird erneut geprüft.
+Status zeigt auch beobachtete spätere Zustände, aber markiert noch nicht
+implementierte Journalschemata ausdrücklich als nicht validiert und gewährt
+keine Mutation. `state_actions` sind zustandsabhängige *bedingte* Aktionen aus
+Anhang C.3, `permitted_actions` enthält nur einen unabhängig bewiesenen Discard-
+Kandidaten. Beides ist keine aktuelle Schreibberechtigung.
+
+Die R-Tests erzeugen echte veröffentlichte Zielbytes, falsche Basisdateien,
+gefälschte Zähler/Inventuren, harte und symbolische Links, Journal-/Imagewechsel
+während der Beobachtung sowie Fehler beim Synchronisieren und Archivieren.
+Abgelehnte Vorprüfungen schreiben keinen Audit. Fehler nach Mutationsbeginn
+behalten den tatsächlichen Arbeitsstand und behaupten weder Erfolg noch einen
+automatischen Rollback. Auch ein vorhandener Audit wird niemals überschrieben.

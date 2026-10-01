@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 226
-last_completed_plan_commit: 5.p.W
-next_plan_commit: 5.p.R
+implementation_plan_commits_completed: 227
+last_completed_plan_commit: 5.p.R
+next_plan_commit: 5.p.C
 last_completed_numbered_bundle: 41
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -2983,7 +2983,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.p.R – Make it Right
 
-- [ ] **5.p.R** · Position **227/885** · Voraussetzung: `5.p.W`.
+- [x] **5.p.R** · Position **227/885** · Voraussetzung: `5.p.W`.
 **Exakte Commit-Message:** `5.p.R feat(changes): Recoverystatus und Building-Discard vervollständigen`
 
 **Vervollständigung:** Nach erfolgter Veröffentlichung oder Basisabweichung discard sperren.

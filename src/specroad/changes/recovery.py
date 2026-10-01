@@ -48,7 +48,8 @@ def _read_journal(files, transaction_id):
 
 def _parse(raw, transaction_id, files, expected_project_id=None):
     value = parse_json_object(raw)
-    cls = _KNOWN.get(value.get('state'))
+    state = value.get('state')
+    cls = _KNOWN.get(state) if type(state) is str else None
     if cls is None:
         raise RecoveryError('recovery_journal_state_unsupported')
     journal = cls(raw)
@@ -79,34 +80,72 @@ def _unchanged_base(preflight, journal, files):
                                     preflight._package_files, check_rights=lambda fd, path: None)
 
 
-def _work(files, journal, *, raw=None, prefix=None):
-    """Closed, hash-bound work inventory. No recursive deletion or path guessing."""
+def _work(files, journal, *, raw=None, prefix=None, preflight=None):
+    """Closed work inventory, including proven prefixes of interrupted writes.
+
+    Prepared images remain complete. Building may have missing directories,
+    subsets and short before/staging files, but only bytes of independently
+    expected images. Even partial evidence is archived, never silently removed.
+    """
     data = journal.data
+    building = data['state'] == 'building'
     prefix = tuple(journal.path.split('/')[:-1]) if prefix is None else prefix
     with files.directory(prefix) as directory:
         if directory is None:
             raise RecoveryError('recovery_work_missing', exit_code=6)
         names = set(os.listdir(directory))
-        required = {'journal.json'} if data['state'] == 'building' else {'journal.json', 'before', 'staging'}
-        if names != required:
+        permitted = {'journal.json', 'before', 'staging'}
+        if building: permitted.add('journal.prepared')
+        if ('journal.json' not in names or not names <= permitted
+                or (not building and names != permitted)):
             raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
         actual = _read(directory, 'journal.json')
         if actual != (journal.source_bytes if raw is None else raw):
             raise RecoveryError('recovery_journal_changed', exit_code=6)
         result = {'': guards._identity(os.fstat(directory)), 'journal.json': sha256(actual).hexdigest()}
-    if data['state'] == 'prepared':
-        for folder, path_key, size_key, hash_key in (
-                ('staging', 'staging_path', 'after_size', 'after_sha256'),
-                ('before', 'before_image_path', 'before_size', 'before_sha256')):
-            entries = [e for e in data['files'] if e[path_key] is not None]
-            with files.directory((*prefix, folder)) as fd:
-                if fd is None or set(os.listdir(fd)) != {e[path_key].rsplit('/', 1)[-1] for e in entries}:
-                    raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
-                result[folder] = guards._identity(os.fstat(fd))
-                for entry in entries:
-                    name = entry[path_key].rsplit('/', 1)[-1]
-                    result[folder + '/' + name] = _image(fd, name, entry[size_key], entry[hash_key])
+        if 'journal.prepared' in names:
+            expected = journal.data; expected['state'] = 'prepared'
+            content = canonical_json_bytes(expected)
+            result['journal.prepared'] = _prefix_image(directory, 'journal.prepared', content)
+    target = {} if preflight is None else {d.path: d.content for d in preflight.request.documents}
+    original = {} if preflight is None else preflight._model.source_files
+    for folder, path_key, size_key, hash_key in (
+            ('staging', 'staging_path', 'after_size', 'after_sha256'),
+            ('before', 'before_image_path', 'before_size', 'before_sha256')):
+        if folder not in names:
+            continue
+        entries = {e[path_key].rsplit('/', 1)[-1]: e for e in data['files'] if e[path_key] is not None}
+        with files.directory((*prefix, folder)) as fd:
+            if fd is None:
+                raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
+            found = set(os.listdir(fd))
+            if not found <= set(entries) or (not building and found != set(entries)):
+                raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
+            result[folder] = guards._identity(os.fstat(fd))
+            for name in sorted(found):
+                entry = entries[name]
+                if building:
+                    content = (target if folder == 'staging' else original).get(entry['path'])
+                    if content is None:
+                        raise RecoveryError('recovery_image_source_unproven', exit_code=6)
+                    result[folder + '/' + name] = _prefix_image(fd, name, content)
+                else:
+                    inode = _image(fd, name, entry[size_key], entry[hash_key])
+                    result[folder + '/' + name] = {'identity': inode, 'size': entry[size_key],
+                                                'sha256': entry[hash_key]}
     return result
+
+
+def _prefix_image(directory, name, expected):
+    """Allow only a bounded prefix of an independently known interrupted write."""
+    info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    guards._regular(info)
+    if info.st_size > len(expected):
+        raise RecoveryError('recovery_partial_image_oversized', exit_code=6)
+    digest = sha256(expected[:info.st_size]).hexdigest()
+    inode = _image(directory, name, info.st_size, digest,
+                   identity=guards._identity(info))
+    return {'identity': inode, 'size': info.st_size, 'sha256': digest}
 
 
 def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, preflight=None):
@@ -125,7 +164,8 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
             selected = ('.specroad/transactions/' + transaction_id,) if transaction_id is not None else active
             rows, captured = [], {}
             for path in selected:
-                row = {'path': path + '/journal.json', 'state': 'unknown',
+                row = {'path': path + '/journal.json', 'state': 'unknown', 'observed_state': None,
+                       'journal_schema_validated': False, 'state_actions': [],
                        'journal_sha256': None, 'base_model_root_sha256': None,
                        'target_model_root_sha256': None, 'published_count': None,
                        'published_entries': [], 'permitted_actions': [],
@@ -137,7 +177,29 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                     raw, ident = _read_journal(files, txn)
                     captured[txn] = (raw, ident)
                     row['journal_sha256'] = sha256(raw).hexdigest()
+                    observed = parse_json_object(raw)
+                    observed_state = observed.get('state')
+                    row['observed_state'] = observed_state if type(observed_state) is str else None
+                    # Report state even when a later state's full codec is not
+                    # implemented here. No permission follows from these claims.
+                    if observed_state in ('building', 'prepared', 'committing', 'committed',
+                                          'rolling_back', 'rolled_back', 'corrupt'):
+                        row['state'] = observed_state
+                        row['state_actions'] = ({'building': ['discard'], 'prepared': ['discard'],
+                            'committing': ['recover'], 'rolling_back': ['recover'],
+                            'corrupt': ['restore_with_verified_plan']}.get(observed_state, []))
+                        for key in ('base_model_root_sha256', 'target_model_root_sha256'):
+                            if _hash(observed.get(key)): row[key] = observed[key]
+                    entries = observed.get('files')
+                    count = observed.get('published_count')
+                    if (type(entries) is list and type(count) is int and 0 <= count <= len(entries)
+                            and all(type(e) is dict and type(e.get('published')) is bool
+                                    and type(e.get('path')) is str for e in entries)
+                            and sum(e['published'] for e in entries) == count):
+                        row['published_count'] = count
+                        row['published_entries'] = [e['path'] for e in entries if e['published']]
                     journal = _parse(raw, txn, files, expected_project_id)
+                    row['journal_schema_validated'] = True
                     d = journal.data
                     row.update(state=d['state'], transaction_id=d['transaction_id'], project_id=d['project_id'], base_model_root_sha256=d['base_model_root_sha256'],
                                target_model_root_sha256=d['target_model_root_sha256'],
@@ -148,11 +210,10 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                             row['diagnostic'] = 'recovery_base_preflight_required'
                         else:
                             before = _unchanged_base(preflight, journal, files)
-                            _work(files, journal)
+                            _work(files, journal, preflight=preflight)
                             if _unchanged_base(preflight, journal, files) != before:
                                 raise RecoveryError('recovery_base_changed', exit_code=6)
-                            row.update(base_verified=True, permitted_actions=['discard'] if active == (path,) else [])
-                            if active != (path,): row['diagnostic'] = 'recovery_active_set_unproven'
+                            row.update(base_verified=True, permitted_actions=['discard'])
                 except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
                     row['diagnostic'] = getattr(error, 'reason', 'recovery_input_unreadable')
                 rows.append(row)
@@ -211,15 +272,16 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
             raise RecoveryError('recovery_journal_changed', exit_code=6)
         base = _unchanged_base(preflight, journal, files)
         active = files.journal_entries()
-        if active != ('.specroad/transactions/' + transaction_id,):
+        selected_path = '.specroad/transactions/' + transaction_id
+        if selected_path not in active:
             raise RecoveryError('recovery_active_set_unproven', exit_code=6)
-        work = _work(files, journal)
+        work = _work(files, journal, preflight=preflight)
 
         def guard(*, terminal_raw=None, expected_work=work):
             _held(held_lock, journal)
             if files.journal_entries() != active:
                 raise RecoveryError('recovery_active_set_changed', exit_code=6)
-            if _work(files, journal, raw=terminal_raw) != expected_work:
+            if _work(files, journal, raw=terminal_raw, preflight=preflight) != expected_work:
                 raise RecoveryError('recovery_work_changed', exit_code=6)
             if _unchanged_base(preflight, journal, files) != base:
                 raise RecoveryError('recovery_base_changed', exit_code=6)
@@ -230,14 +292,21 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
                    'base_model_root_sha256': journal.data['base_model_root_sha256'],
                    'target_model_root_sha256': journal.data['target_model_root_sha256']}
         request_raw = canonical_json_bytes(request)
-        allowed = authority.check(request)
+        try:
+            allowed = authority.check(request)
+        except Exception as error:
+            raise RecoveryError('recovery_authority_failed', exit_code=7) from error
         if canonical_json_bytes(request) != request_raw or type(allowed) is not bool or not allowed:
             raise RecoveryError('recovery_not_authorized', exit_code=7)
         guard()
         event = str(uuid4()); audit_path = AUDIT_ROOT + '/' + event
+        work_files = [{'path': 'journal.json', 'size': len(raw), 'sha256': journal.sha256}]
+        work_files.extend({'path': path, 'size': token['size'], 'sha256': token['sha256']}
+                          for path, token in sorted(work.items()) if type(token) is dict)
         intent = canonical_json_bytes({'format_version': 'recovery-audit-v1',
             'event_id': event, 'phase': 'intent', **parse_json_object(request_raw),
             'previous_state': journal.data['state'], 'normative_writes': 0,
+            'work_files': sorted(work_files, key=lambda item: item['path']),
             'authority_id': authority.authority_id, 'authority_version': authority.version,
             'created_at': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')})
         value = journal.data
@@ -277,7 +346,7 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
                 os.rename(transaction_id, 'work', src_dir_fd=parent, dst_dir_fd=audit)
                 os.fsync(parent); os.fsync(audit)
             if _work(files, journal, raw=terminal.source_bytes,
-                     prefix=(*tuple(audit_path.split('/')), 'work')) != terminal_work:
+                     prefix=(*tuple(audit_path.split('/')), 'work'), preflight=preflight) != terminal_work:
                 raise RecoveryError('recovery_archive_changed', exit_code=6)
             if _unchanged_base(preflight, journal, files) != base:
                 raise RecoveryError('recovery_base_changed', exit_code=6)
@@ -288,11 +357,18 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
                 'base_model_root_sha256': journal.data['base_model_root_sha256'],
                 'archive_path': audit_path + '/work', 'normative_writes': 0}
             _write_new(audit, 'completed.json', canonical_json_bytes(completed))
+            _image(audit, 'journal.before.json', len(raw), journal.sha256)
+            _image(audit, 'intent.json', len(intent), sha256(intent).hexdigest())
+            if _work(files, journal, raw=terminal.source_bytes,
+                     prefix=(*tuple(audit_path.split('/')), 'work'), preflight=preflight) != terminal_work:
+                raise RecoveryError('recovery_archive_changed', exit_code=6)
         _held(held_lock, journal)
-        if files.journal_entries() or _unchanged_base(preflight, journal, files) != base:
+        remaining = tuple(path for path in active if path != selected_path)
+        if files.journal_entries() != remaining or _unchanged_base(preflight, journal, files) != base:
             raise RecoveryError('recovery_final_observation_changed', exit_code=6)
         return RecoveryObservation._create({**completed, 'discard_completed': True,
             'evidence_preserved': True, 'audit_path': audit_path, 'model_loaded': False,
+            'remaining_active_paths': list(remaining),
             'write_authorized': False, 'atomic_snapshot': False})
     except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
         raise RecoveryError(getattr(error, 'reason', 'recovery_discard_failed'),

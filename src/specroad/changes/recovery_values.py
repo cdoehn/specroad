@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 from uuid import UUID
 from ..model.canonical import canonical_json_bytes
+from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .execution_values import ChangeExecutionError
 from .journal_values import BuildingJournal, JournalError
@@ -78,7 +79,7 @@ class DiscardedJournal:
                 raise ValueError('invalid audit path')
             value['state'] = 'building'
             BuildingJournal(canonical_json_bytes(value))
-        except (ValueError, TypeError, KeyError, ChangeExecutionError) as error:
+        except (ValueError, TypeError, KeyError, ModelError, ChangeExecutionError) as error:
             raise RecoveryError('invalid_discarded_journal') from error
         object.__setattr__(self, '_raw', raw)
 

@@ -14,12 +14,13 @@
   ],
   "steps": [
     "Read journal status without normal model loading.",
-    "Under a held recovery lock, compare the complete live base inventory and preserve all original preparation bytes in an immutable audit on discard."
+    "Under a held recovery lock, compare the complete live base inventory and preserve all original preparation bytes in an immutable audit on discard.",
+    "Exercise real publication, partial work, forged metadata, concurrent changes and durability failures; verify unchanged normative data and preserved evidence."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Transaktion in `building` oder `prepared` MUSS ohne Veröffentlichung verworfen werden können.",
-    "scope": "Read-only status and audited explicit discard for proven unchanged standalone building/prepared base; no normative writes or loss of evidence."
+    "scope": "Read-only state diagnosis and audited discard of unchanged building/prepared bases including interrupted known prefixes; published targets, mismatched bases, linked or changed evidence remain protected. Later journal codecs/CLI/restart integration are not claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -51,10 +52,12 @@
   "test_ids": [
     "tests/test_transaction_recovery.py::test_discard_preserves_base_and_archives_all_evidence[building]",
     "tests/test_transaction_recovery.py::test_discard_preserves_base_and_archives_all_evidence[prepared]",
-    "tests/test_transaction_recovery.py::test_discard_noop_has_no_normative_or_request_write"
+    "tests/test_transaction_recovery.py::test_discard_noop_has_no_normative_or_request_write",
+    "tests/test_transaction_recovery_right.py::test_building_partial_images_are_archived_not_lost[staging-0]",
+    "tests/test_transaction_recovery_right.py::test_interrupted_prepared_marker_is_preserved[19]",
+    "tests/test_transaction_recovery_right.py::test_one_of_multiple_preparations_is_discarded_without_touching_others"
   ],
   "open_items": [
-    "Public recovery CLI, restart-time independent proof reconstruction, and automatic transaction preflight remain in their assigned later plan steps.",
-    "Interrupted preparation inventories and extended refusal/race cases are completed in 5.p.R."
+    "Public recovery CLI, restart-time independent proof reconstruction, and automatic transaction preflight remain in their assigned later plan steps."
   ]
 }
