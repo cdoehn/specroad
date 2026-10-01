@@ -153,3 +153,13 @@ Read-only-Diagnose erzeugt keinen Audit, da sie keine Recovery-Aktion ausführt.
 Tatsächliche Discard-/Completion-/Rollback-Aktionen behalten ihre bestehenden
 Audit- und Journalnachweise. Vollquellen-Restore wird nicht aus diesem Inventar
 erfunden und bleibt Meilenstein 15 vorbehalten.
+
+## 5.s.C: Eine gemeinsame Ressourcenkennzeichnung
+
+`model/operational_paths.py` hält die recoverykritischen Namensräume, die
+Receipt-/Auditrollen und die exakt passiven Verzeichnisse an einer Stelle.
+Pfadklassifikation, Lock-Scan, schreibfreier Betriebs-Preflight und
+Schutzinventur nutzen dieselbe Kennzeichnung. Die tatsächliche Verzeichnistyp-
+und Byteprüfung bleibt bei den bestehenden Sicherheitsgrenzen. Gegenüber W/R
+ändern sich weder Ressourcenrollen noch Blocker, zulässige Kandidaten,
+Nebenwirkungen oder Testerwartungen. Es entsteht keine Restore-Funktion.

@@ -11,6 +11,7 @@ import os
 import stat
 import sys
 from ..security import ProjectBoundary, SafetyViolation
+from ..model.operational_paths import OPERATIONAL_DIRECTORIES, passive_journal_directory
 from ..security import paths as guards
 from .lock_values import ProjectLockError, LockRecord, MAX_LOCK_BYTES, LOCK_PATH
 
@@ -223,7 +224,7 @@ class LockFiles:
                 for name in sorted(os.listdir(directory)):
                     info = os.stat(name, dir_fd=directory, follow_symlinks=False)
                     guards._regular(info, directory=stat.S_ISDIR(info.st_mode))
-                    if name not in ('locks', 'transactions', 'recovery', 'cache', 'requests') or not stat.S_ISDIR(info.st_mode):
+                    if name not in OPERATIONAL_DIRECTORIES or not stat.S_ISDIR(info.st_mode):
                         found.append('.specroad/' + name)
         for folder in ('transactions', 'recovery'):
             with self.directory(('.specroad', folder)) as directory:
@@ -234,7 +235,7 @@ class LockFiles:
                     guards._regular(info, directory=stat.S_ISDIR(info.st_mode))
                     # Only the explicit completed receipt / lock-audit namespaces
                     # are outside active journals; no self-declared terminal state.
-                    reserved = (folder == 'transactions' and name == 'receipts') or (folder == 'recovery' and name in ('lock-audit', 'transaction-audit'))
+                    reserved = passive_journal_directory(folder, name)
                     if reserved and stat.S_ISDIR(info.st_mode):
                         continue
                     found.append('.specroad/' + folder + '/' + name)

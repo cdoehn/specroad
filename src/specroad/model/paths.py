@@ -8,6 +8,7 @@ from ..security import SafetyViolation
 from ..security.paths import _parts
 from .errors import ModelError
 from .artifact_types import artifact_types
+from .operational_paths import recovery_resource_role, CACHE_ROOT
 
 # Compatibility view derived from the same registry used by artifact schemas.
 ARTIFACT_PATHS = MappingProxyType({
@@ -75,11 +76,12 @@ def classify_path(path, configuration):
         return PathClass.CONFIGURATION
     if _under(path, configuration.generated_path):
         return PathClass.GENERATED
-    if _under(path, ".specroad/transactions/receipts") or _under(path, ".specroad/requests"):
+    recovery_role = recovery_resource_role(path)
+    if recovery_role in ('transaction_receipt', 'request_receipt'):
         return PathClass.RECEIPT
-    if _under(path, ".specroad/transactions") or _under(path, ".specroad/recovery"):
+    if recovery_role is not None:
         return PathClass.RECOVERY
-    if _under(path, ".specroad/cache"):
+    if _under(path, CACHE_ROOT):
         return PathClass.CACHE
     if _under(path, ".specroad"):
         return PathClass.OPERATIONAL

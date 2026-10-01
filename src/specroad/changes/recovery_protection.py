@@ -15,24 +15,7 @@ from .execution_values import ChangeExecutionError
 from .recovery_values import RecoveryError, RecoveryObservation
 from .recovery_read import inspect_recovery
 
-PROTECTED_ROOTS = ('.specroad/transactions', '.specroad/recovery', '.specroad/requests')
-
-
-def recovery_resource_role(path):
-    """Role of an already normalized path; even unknown evidence is retained."""
-    if path == '.specroad/requests' or path.startswith('.specroad/requests/'):
-        return 'request_receipt'
-    if path == '.specroad/transactions/receipts' or path.startswith('.specroad/transactions/receipts/'):
-        return 'transaction_receipt'
-    if path == '.specroad/recovery' or path.startswith('.specroad/recovery/'):
-        return 'recovery_audit'
-    if path == '.specroad/transactions' or path.startswith('.specroad/transactions/'):
-        if path.endswith('/journal.json'): return 'journal'
-        if '/before/' in path: return 'before_image'
-        if '/staging/' in path: return 'staging'
-        if '/rollback/' in path: return 'rollback_evidence'
-        return 'unclassified_transaction_evidence'
-    return None
+from ..model.operational_paths import PROTECTED_ROOTS, CACHE_ROOT, recovery_resource_role
 
 
 def inspect_recovery_protection(root):
@@ -113,7 +96,7 @@ def check_cache_removal(root, paths):
     if len(set(names)) != len(names):
         raise RecoveryError('duplicate_cache_path', exit_code=2)
     for path in names:
-        if not path.startswith('.specroad/cache/') or recovery_resource_role(path) is not None:
+        if not path.startswith(CACHE_ROOT + '/') or recovery_resource_role(path) is not None:
             raise RecoveryError('cache_removal_protected_path', path=path, exit_code=7)
     candidates = []
     with LockFiles(root) as files:

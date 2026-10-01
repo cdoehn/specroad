@@ -7,6 +7,7 @@ from hashlib import sha256
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
 from ..model.paths import PathClass, artifact_path
+from ..model.operational_paths import PASSIVE_ROOTS, passive_journal_directory
 from ..security import ProjectBoundary
 from ..security.resource_access import directory_entries
 from ..validation import ModelDocument
@@ -27,7 +28,7 @@ def _operational_metadata(boundary):
     for name, directory in (() if entries is None else entries):
         path = ".specroad/" + name
         observed.append({"path": path, "directory": directory})
-        if directory and name in ("cache", "requests"):
+        if directory and path in PASSIVE_ROOTS:
             continue
         if directory and name == "locks":
             for child, is_directory in directory_entries(boundary, path):
@@ -39,8 +40,7 @@ def _operational_metadata(boundary):
             for child, is_directory in directory_entries(boundary, path):
                 logical = path + "/" + child
                 observed.append({"path": logical, "directory": is_directory})
-                if is_directory and ((name == "transactions" and child == "receipts") or
-                                     (name == "recovery" and child in ("lock-audit", "transaction-audit"))):
+                if is_directory and passive_journal_directory(name, child):
                     continue
                 unresolved.append(logical)
         else:
