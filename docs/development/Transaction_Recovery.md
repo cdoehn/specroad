@@ -100,3 +100,24 @@ Weiterexportierung der Diagnose. `_recovery_inputs.py` bündelt die gemeinsamen
 read-only Beobachtungen. Öffentliche API, Zustände, Abwehrbedingungen, Audit-
 Reihenfolge und Fehlerfolgen bleiben gegenüber W/R unverändert. Die W-/R-
 Testfälle und ihre erwarteten Werte werden dafür nicht angepasst.
+
+## 5.s.W: Schreibfreie Corrupt-Diagnose
+
+Der Status kennzeichnet fehlende oder ungültige aktive Journale sowie fehlende,
+veränderte oder unsichere Pflichtimages einer `prepared`-Transaktion als
+beobachtetes `corrupt`. `observed_state` bleibt die ursprüngliche Behauptung;
+`blockers` enthält konkrete logische Pfade und maschinenlesbare Gründe.
+`critical_resources` bindet erwartete und beobachtete Längen/Hashes.
+
+Die Diagnose schreibt keinen Marker, löscht keine Betriebsdaten und lädt kein
+normales Modell. Der bestehende aktive Transaktionsbereich blockiert normale
+Modellzugriffe und Writer unabhängig von der behaupteten Journalgültigkeit.
+Ein fehlendes ausdrücklich ausgewähltes, aber nicht aktives Journal wird nicht
+als neue Projektkorruption ausgegeben. `critical_inputs_verified` gilt nur für
+den angegebenen `integrity_scope`, nie als allgemeine Modellfreigabe.
+
+Unvollständige Building-Vorbereitung wird nicht allein aufgrund fehlender Images
+als korrupt behandelt. Andere Zustände sind im W-Integritätsausschnitt noch
+ausdrücklich `not_assessed`. Vollquellen-Restore bleibt Meilenstein 15; die
+spätere autorisierte automatische Preflight-Recovery gehört zu 5.t. Bestehende
+mutierende Recovery-APIs behalten ihre eigenen Lock-, Audit- und Recheckregeln.

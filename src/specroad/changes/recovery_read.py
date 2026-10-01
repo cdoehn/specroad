@@ -8,6 +8,7 @@ from ._lock_files import LockFiles
 from ._journal_codec import _hash, _text, _transaction
 from .recovery_values import RecoveryError, RecoveryObservation
 from ._recovery_inputs import _read_journal, _parse, _unchanged_base, _work
+from ._recovery_integrity import inspect_critical_inputs
 
 
 def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, preflight=None):
@@ -31,7 +32,10 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                        'journal_sha256': None, 'base_model_root_sha256': None,
                        'target_model_root_sha256': None, 'published_count': None,
                        'published_entries': [], 'permitted_actions': [],
-                       'base_verified': False, 'diagnostic': None}
+                       'base_verified': False, 'diagnostic': None, 'blockers': [],
+                       'critical_resources': [], 'critical_inputs_verified': False,
+                       'integrity_scope': 'journal_only', 'normal_access_blocked': path in active}
+                phase = 'journal_read'
                 try:
                     if not path.startswith('.specroad/transactions/'):
                         raise RecoveryError('unknown_recovery_entry')
@@ -39,6 +43,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                     raw, ident = _read_journal(files, txn)
                     captured[txn] = (raw, ident)
                     row['journal_sha256'] = sha256(raw).hexdigest()
+                    phase = 'journal_parse'
                     observed = parse_json_object(raw)
                     observed_state = observed.get('state')
                     row['observed_state'] = observed_state if type(observed_state) is str else None
@@ -60,6 +65,8 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                             and sum(e['published'] for e in entries) == count):
                         row['published_count'] = count
                         row['published_entries'] = [e['path'] for e in entries if e['published']]
+                    if observed_state == 'corrupt':
+                        raise RecoveryError('recovery_journal_marked_corrupt')
                     journal = _parse(raw, txn, files, expected_project_id)
                     row['journal_schema_validated'] = True
                     d = journal.data
@@ -67,7 +74,17 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                                target_model_root_sha256=d['target_model_root_sha256'],
                                published_count=d['published_count'],
                                published_entries=[e['path'] for e in d['files'] if e['published']])
-                    if d['state'] in ('building', 'prepared'):
+                    phase = 'critical_inputs'
+                    integrity = inspect_critical_inputs(files, journal)
+                    row.update(critical_resources=integrity['resources'],
+                               blockers=integrity['blockers'],
+                               critical_inputs_verified=integrity['critical_inputs_verified'],
+                               integrity_scope=integrity['scope'])
+                    if row['blockers']:
+                        row.update(state='corrupt', state_actions=['restore_with_verified_plan'],
+                                   diagnostic=row['blockers'][0]['reason'])
+                    phase = 'base_preflight'
+                    if not row['blockers'] and d['state'] in ('building', 'prepared'):
                         if preflight is None:
                             row['diagnostic'] = 'recovery_base_preflight_required'
                         else:
@@ -78,6 +95,15 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                             row.update(base_verified=True, permitted_actions=['discard'])
                 except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
                     row['diagnostic'] = getattr(error, 'reason', 'recovery_input_unreadable')
+                    # A caller's wrong expected project is not proof of corrupt bytes.
+                    invalid = (phase in ('journal_read', 'journal_parse')
+                               and row['diagnostic'] != 'recovery_journal_binding_mismatch'
+                               and path in active)
+                    if invalid:
+                        row.update(state='corrupt', state_actions=['restore_with_verified_plan'],
+                                   permitted_actions=[], critical_inputs_verified=False)
+                        row['blockers'] = [{'path': row['path'], 'role': 'journal',
+                                            'reason': row['diagnostic']}]
                 rows.append(row)
             for txn, observation in captured.items():
                 if _read_journal(files, txn) != observation:
@@ -87,6 +113,8 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
             return RecoveryObservation._create({'format_version': 'recovery-status-v1',
                 'transactions': rows, 'active_paths': list(active),
                 'recovery_required': bool(active), 'model_loaded': False,
+                'normal_access_blocked': bool(active),
+                'corrupt_detected': any(row['state'] == 'corrupt' for row in rows),
                 'observation_only': True, 'write_authorized': False,
                 'exclusive_access_proven': False, 'atomic_snapshot': False})
     except RecoveryError: raise
