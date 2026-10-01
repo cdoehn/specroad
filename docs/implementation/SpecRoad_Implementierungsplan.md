@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 232
-last_completed_plan_commit: 5.r.W
-next_plan_commit: 5.r.R
+implementation_plan_commits_completed: 233
+last_completed_plan_commit: 5.r.R
+next_plan_commit: 5.r.C
 last_completed_numbered_bundle: 43
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -3053,7 +3053,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.r.R – Make it Right
 
-- [ ] **5.r.R** · Position **233/885** · Voraussetzung: `5.r.W`.
+- [x] **5.r.R** · Position **233/885** · Voraussetzung: `5.r.W`.
 **Exakte Commit-Message:** `5.r.R feat(changes): Deterministischer Rollback vervollständigen`
 
 **Vervollständigung:** Wiederholte Unterbrechung beim Rollback bleibt erneut fortsetzbar.

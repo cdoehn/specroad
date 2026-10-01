@@ -151,6 +151,29 @@ def _journal_successor(journal, *, initial=False, terminal=False):
     return RollingBackJournal(canonical_json_bytes(data))
 
 
+def _ensure_exact_file(directory, name, raw, *, reason):
+    """Create once or resume an exact durable operational file after interruption."""
+    digest = sha256(raw).hexdigest()
+    try:
+        info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    except FileNotFoundError:
+        identity = _write_new(directory, name, raw)
+    else:
+        try:
+            guards._regular(info)
+            if info.st_nlink != 1:
+                raise RecoveryError(reason, exit_code=7)
+            identity = guards._identity(info)
+            if _read(directory, name, expected_identity=identity) != raw:
+                raise RecoveryError(reason, exit_code=6)
+        except (SafetyViolation, ChangeExecutionError) as error:
+            if isinstance(error, RecoveryError):
+                raise
+            raise RecoveryError(reason, exit_code=6) from error
+    _image(directory, name, len(raw), digest, identity=identity)
+    return identity
+
+
 def _replace_journal(files, journal, successor, directory_identity):
     prefix = tuple(journal.path.split('/')[:-1])
     with files.directory(prefix) as directory:
@@ -158,9 +181,8 @@ def _replace_journal(files, journal, successor, directory_identity):
             raise RecoveryError('recovery_work_changed', exit_code=6)
         if _read(directory, 'journal.json') != journal.source_bytes:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
-        identity = _write_new(directory, 'journal.rollback', successor.source_bytes)
-        _image(directory, 'journal.rollback', len(successor.source_bytes), successor.sha256,
-               identity=identity)
+        _ensure_exact_file(directory, 'journal.rollback', successor.source_bytes,
+                           reason='recovery_journal_successor_conflict')
         os.replace('journal.rollback', 'journal.json', src_dir_fd=directory, dst_dir_fd=directory)
         os.fsync(directory)
 
@@ -175,8 +197,8 @@ def _copy_before(files, journal, entry, index, target_token):
         raw = _read(before, before_name)
     with files.directory((*prefix, 'rollback'), create=True) as rollback:
         name = str(index) + '.bin'
-        identity = _write_new(rollback, name, raw)
-        _image(rollback, name, entry['before_size'], entry['before_sha256'], identity=identity)
+        identity = _ensure_exact_file(rollback, name, raw,
+                                      reason='recovery_restore_stage_conflict')
         parts = tuple(entry['path'].split('/'))
         with files.directory(parts[:-1]) as target:
             if target is None:
