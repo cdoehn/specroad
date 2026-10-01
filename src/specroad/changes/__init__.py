@@ -93,8 +93,11 @@ __all__ += ['read_transaction_completion', 'cleanup_completed_transaction']
 from .idempotency import RequestIdConflict, RequestResolution, resolve_normative_request
 __all__ += ["RequestIdConflict", "RequestResolution", "resolve_normative_request"]
 
-from .recovery_values import RecoveryError, RecoveryAuthority, RecoveryObservation, DiscardedJournal
+from .recovery_values import (RecoveryError, RecoveryAuthority, RecoveryObservation,
+    DiscardedJournal, RollingBackJournal, RolledBackJournal)
 from .recovery_read import inspect_recovery
-from .recovery import discard_unpublished_transaction, complete_published_transaction
+from .recovery import (discard_unpublished_transaction, complete_published_transaction,
+    rollback_interrupted_transaction)
 __all__ += ['RecoveryError', 'RecoveryAuthority', 'RecoveryObservation', 'DiscardedJournal',
-            'inspect_recovery', 'discard_unpublished_transaction', 'complete_published_transaction']
+            'inspect_recovery', 'discard_unpublished_transaction', 'complete_published_transaction',
+            'RollingBackJournal', 'RolledBackJournal', 'rollback_interrupted_transaction']

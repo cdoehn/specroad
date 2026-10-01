@@ -14,8 +14,14 @@ AUDIT_ROOT = '.specroad/recovery/transaction-audit'
 
 class RecoveryError(JournalError):
     """A failed operational action preserves evidence; never infer a rollback."""
+    def __init__(self, reason, *, path=None, exit_code=3, mutation_possible=False,
+                 normative_writes_by_recovery=0):
+        super().__init__(reason, path=path, exit_code=exit_code, mutation_possible=mutation_possible)
+        self.normative_writes_by_recovery = normative_writes_by_recovery
+
     def diagnostic(self):
-        return {**super().diagnostic(), 'normative_writes_by_recovery': 0,
+        return {**super().diagnostic(),
+                'normative_writes_by_recovery': self.normative_writes_by_recovery,
                 'discard_completed': False, 'recovery_required': True}
 
 
@@ -92,3 +98,81 @@ class DiscardedJournal:
     @property
     def path(self): return journal_path(self.data['transaction_id'])
     def __bool__(self): raise TypeError('A terminal record still needs audit verification')
+
+
+@dataclass(frozen=True, init=False)
+class RollingBackJournal:
+    """Durable reverse cursor. ``published_count`` means entries still to restore."""
+    _raw: bytes
+
+    def __init__(self, raw):
+        try:
+            if type(raw) is not bytes:
+                raise ValueError('bytes required')
+            value = parse_json_object(raw)
+            if value.get('state') != 'rolling_back':
+                raise ValueError('rolling_back required')
+            rollback = value.pop('rollback')
+            if (type(rollback) is not dict or set(rollback) != {
+                    'started_from_sha256', 'started_from_published_count'}
+                    or not _hash(rollback['started_from_sha256'])
+                    or type(rollback['started_from_published_count']) is not int):
+                raise ValueError('invalid rollback binding')
+            count = value.get('published_count')
+            entries = value.get('files')
+            if (type(count) is not int or type(entries) is not list
+                    or not 0 <= count <= len(entries)
+                    or not 0 <= rollback['started_from_published_count'] <= len(entries)):
+                raise ValueError('invalid rollback cursor')
+            for index, entry in enumerate(entries):
+                if type(entry) is not dict or entry.get('published') is not (index < count):
+                    raise ValueError('invalid rollback prefix')
+            value['state'] = 'committing'
+            from .committing_values import CommittingJournal
+            CommittingJournal(canonical_json_bytes(value))
+        except (ValueError, TypeError, KeyError, ModelError, ChangeExecutionError) as error:
+            raise RecoveryError('invalid_rolling_back_journal') from error
+        object.__setattr__(self, '_raw', raw)
+
+    @property
+    def data(self): return parse_json_object(self._raw)
+    @property
+    def source_bytes(self): return self._raw
+    @property
+    def sha256(self): return sha256(self._raw).hexdigest()
+    @property
+    def path(self): return journal_path(self.data['transaction_id'])
+    def __bool__(self): raise TypeError('Rollback progress is not a completed recovery')
+
+
+@dataclass(frozen=True, init=False)
+class RolledBackJournal:
+    """Terminal deterministic rollback record retaining the original binding."""
+    _raw: bytes
+
+    def __init__(self, raw):
+        try:
+            if type(raw) is not bytes:
+                raise ValueError('bytes required')
+            value = parse_json_object(raw)
+            if value.get('state') != 'rolled_back' or 'discard' in value:
+                raise ValueError('rolled_back transaction required')
+            if value.get('published_count') != 0 or any(
+                    type(entry) is not dict or entry.get('published') is not False
+                    for entry in value.get('files', ())):
+                raise ValueError('rollback not complete')
+            value['state'] = 'rolling_back'
+            RollingBackJournal(canonical_json_bytes(value))
+        except (ValueError, TypeError, KeyError, ModelError, ChangeExecutionError) as error:
+            raise RecoveryError('invalid_rolled_back_journal') from error
+        object.__setattr__(self, '_raw', raw)
+
+    @property
+    def data(self): return parse_json_object(self._raw)
+    @property
+    def source_bytes(self): return self._raw
+    @property
+    def sha256(self): return sha256(self._raw).hexdigest()
+    @property
+    def path(self): return journal_path(self.data['transaction_id'])
+    def __bool__(self): raise TypeError('Inspect the rollback completion explicitly')

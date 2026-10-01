@@ -18,11 +18,12 @@ from ._journal_io import _read
 from ._journal_inventory import prepare_building_journal
 from ._publication_observation import _root, observe_publication_files
 from ._staging_files import _image
-from .recovery_values import RecoveryError, DiscardedJournal
+from .recovery_values import (RecoveryError, DiscardedJournal, RollingBackJournal,
+                              RolledBackJournal)
 
 _KNOWN = {'building': BuildingJournal, 'prepared': PreparedJournal,
           'committing': CommittingJournal, 'committed': CommittedJournal,
-          'rolled_back': DiscardedJournal}
+          'rolling_back': RollingBackJournal}
 
 
 def _read_journal(files, transaction_id):
@@ -38,7 +39,10 @@ def _read_journal(files, transaction_id):
 def _parse(raw, transaction_id, files, expected_project_id=None):
     value = parse_json_object(raw)
     state = value.get('state')
-    cls = _KNOWN.get(state) if type(state) is str else None
+    if state == 'rolled_back':
+        cls = DiscardedJournal if 'discard' in value else RolledBackJournal
+    else:
+        cls = _KNOWN.get(state) if type(state) is str else None
     if cls is None:
         raise RecoveryError('recovery_journal_state_unsupported')
     journal = cls(raw)

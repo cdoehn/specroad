@@ -178,3 +178,11 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         write_new=_write_new,
         replace=os.replace,
     )
+
+
+def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
+                                     expected_journal_sha256):
+    """Restore an interrupted commit to its complete journal-bound basis."""
+    from ._recovery_rollback import rollback_interrupted_transaction as rollback
+    return rollback(transaction_id, held_lock=held_lock, authority=authority,
+                    expected_journal_sha256=expected_journal_sha256)

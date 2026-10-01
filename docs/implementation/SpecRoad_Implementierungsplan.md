@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 231
-last_completed_plan_commit: 5.q.C
-next_plan_commit: 5.r.W
+implementation_plan_commits_completed: 232
+last_completed_plan_commit: 5.r.W
+next_plan_commit: 5.r.R
 last_completed_numbered_bundle: 43
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -3044,7 +3044,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.r.W – Let it Work
 
-- [ ] **5.r.W** · Position **232/885** · Voraussetzung: `5.q.C`.
+- [x] **5.r.W** · Position **232/885** · Voraussetzung: `5.q.C`.
 **Exakte Commit-Message:** `5.r.W feat(changes): Deterministischer Rollback aufbauen`
 
 **Umsetzung:** Unvollständiges committing/rolling_back aus gesicherten Before Images vollständig auf Basis zurückführen.
