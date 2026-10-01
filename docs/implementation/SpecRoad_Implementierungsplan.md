@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 1
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 235
-last_completed_plan_commit: 5.s.W
-next_plan_commit: 5.s.R
+implementation_plan_commits_completed: 236
+last_completed_plan_commit: 5.s.R
+next_plan_commit: 5.s.C
 last_completed_numbered_bundle: 44
 implementation_state: in_progress
 plan_setup_kind: OFF-PLAN
@@ -3088,7 +3088,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.s.R – Make it Right
 
-- [ ] **5.s.R** · Position **236/885** · Voraussetzung: `5.s.W`.
+- [x] **5.s.R** · Position **236/885** · Voraussetzung: `5.s.W`.
 **Exakte Commit-Message:** `5.s.R feat(changes): Corrupt-Erkennung und Schutzinventur vervollständigen`
 
 **Vervollständigung:** Cachepflege darf Journale, Before Images oder Belege nicht beseitigen.

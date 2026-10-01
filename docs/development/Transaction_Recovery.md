@@ -121,3 +121,35 @@ als korrupt behandelt. Andere Zustände sind im W-Integritätsausschnitt noch
 ausdrücklich `not_assessed`. Vollquellen-Restore bleibt Meilenstein 15; die
 spätere autorisierte automatische Preflight-Recovery gehört zu 5.t. Bestehende
 mutierende Recovery-APIs behalten ihre eigenen Lock-, Audit- und Recheckregeln.
+
+## 5.s.R: Pflichtbytes und unverlierbare Schutzinventur
+
+Die Integritätsprüfung unterscheidet nun Building-Präfixe, vollständige
+Prepared-Images, verbrauchte Stages, auf Basis oder Ziel beobachtete Dateien,
+benötigte Rollback-Before-Images und dauerhafte Commit-Receipts. Ein vollständig
+belegtes Ziel wird nicht wegen regulär verbrauchter Stages als corrupt gemeldet.
+Ein fehlendes Before Image für einen tatsächlich zurückzuführenden Zielstand
+bleibt hingegen ein konkreter Blocker. Hashgültige vollständige Building-Images
+werden geprüft; kurze Images sind ohne unabhängige Basis nur unbestätigte
+Präfixe. Alle Eingaben werden erneut beobachtet, ohne Atomsnapshot zu versprechen.
+
+`inspect_recovery_protection(root)` inventarisiert Journale, Before Images,
+Staging, Rollbackreste, unbekannte Transaktionsdateien, Receipts und Recovery-
+Audits. Die gesamten drei Namensräume bleiben geschützt, auch bei fehlendem
+Journal oder einer unbewiesenen terminalen Behauptung. Fehlende Pflichtpfade
+bleiben mit unbekannten Bytes sichtbar. Links werden nicht verfolgt.
+
+`check_cache_removal(root, paths)` ist die schreibfreie Policy-Grenze für eine
+explizite Cache-Dateiauswahl. Recovery- und Belegpfade, ihre Eltern, Verzeichnisse,
+Symlinks und Hardlinks sind keine Cache-Löschkandidaten. Nur einzeln benannte
+reguläre Dateien unter `.specroad/cache/` können die Auswahlprüfung bestehen.
+Sie erteilt keine Schreibberechtigung, löscht selbst nichts und verlangt bei
+einer späteren autorisierten Wartungsoperation einen frischen Write-Recheck.
+Eine allgemeine Cache-Löschfunktion oder ein CLI-Befehl wird hier nicht
+eingeführt. Die bestehende receipt-gebundene Work-Bereinigung ist ausdrücklich
+keine Cachebereinigung und behält ihre eigenen strengen Abschlussnachweise.
+
+Read-only-Diagnose erzeugt keinen Audit, da sie keine Recovery-Aktion ausführt.
+Tatsächliche Discard-/Completion-/Rollback-Aktionen behalten ihre bestehenden
+Audit- und Journalnachweise. Vollquellen-Restore wird nicht aus diesem Inventar
+erfunden und bleibt Meilenstein 15 vorbehalten.

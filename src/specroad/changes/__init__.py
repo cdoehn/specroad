@@ -101,3 +101,6 @@ from .recovery import (discard_unpublished_transaction, complete_published_trans
 __all__ += ['RecoveryError', 'RecoveryAuthority', 'RecoveryObservation', 'DiscardedJournal',
             'inspect_recovery', 'discard_unpublished_transaction', 'complete_published_transaction',
             'RollingBackJournal', 'RolledBackJournal', 'rollback_interrupted_transaction']
+
+from .recovery_protection import inspect_recovery_protection, check_cache_removal
+__all__ += ['inspect_recovery_protection', 'check_cache_removal']

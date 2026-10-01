@@ -25,7 +25,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
         with LockFiles(root) as files:
             active = files.journal_entries()
             selected = ('.specroad/transactions/' + transaction_id,) if transaction_id is not None else active
-            rows, captured = [], {}
+            rows, captured, input_captures = [], {}, {}
             for path in selected:
                 row = {'path': path + '/journal.json', 'state': 'unknown', 'observed_state': None,
                        'journal_schema_validated': False, 'state_actions': [],
@@ -76,10 +76,12 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                                published_entries=[e['path'] for e in d['files'] if e['published']])
                     phase = 'critical_inputs'
                     integrity = inspect_critical_inputs(files, journal)
+                    input_captures[txn] = (journal, integrity)
                     row.update(critical_resources=integrity['resources'],
                                blockers=integrity['blockers'],
                                critical_inputs_verified=integrity['critical_inputs_verified'],
-                               integrity_scope=integrity['scope'])
+                               integrity_scope=integrity['scope'],
+                               complete_target_verified=integrity['complete_target_verified'])
                     if row['blockers']:
                         row.update(state='corrupt', state_actions=['restore_with_verified_plan'],
                                    diagnostic=row['blockers'][0]['reason'])
@@ -105,6 +107,9 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                         row['blockers'] = [{'path': row['path'], 'role': 'journal',
                                             'reason': row['diagnostic']}]
                 rows.append(row)
+            for txn, (journal, integrity) in input_captures.items():
+                if inspect_critical_inputs(files, journal) != integrity:
+                    raise RecoveryError('recovery_status_changed', exit_code=6)
             for txn, observation in captured.items():
                 if _read_journal(files, txn) != observation:
                     raise RecoveryError('recovery_status_changed', exit_code=6)
