@@ -4,6 +4,7 @@ No normal model load, guessed profile selection or new semantic root. Exact
 membership and bytes preserve the roots independently checked at publication
 preflight. Unreferenced payloads and operational data remain outside the model.
 """
+from contextlib import contextmanager
 from hashlib import sha256
 
 from ..model.paths import CURRENT_JSON_CLASSES
@@ -47,3 +48,11 @@ def check_membership(files, journal, *, phase='target'):
     source.check_current()
     files.check_root()
     return tuple(sorted(observed))
+
+
+@contextmanager
+def verified_membership(files, journal, *, phase='target'):
+    """Keep the same complete-membership checks around a caller's byte proof."""
+    check_membership(files, journal, phase=phase)
+    yield
+    check_membership(files, journal, phase=phase)

@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 47
+last_completed_numbered_bundle: 49
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-01.C
+next_audit_step: AUDIT-REC-02.U
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -62,7 +62,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 
 | Befund | Einordnung / Priorität | Ursprünglicher Bezug | Zuständige Nacharbeit | Stand dieser Planrevision |
 |---|---|---|---|---|
-| F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | W/R umgesetzt; C offen |
+| F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | offen |
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | offen |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | Untersuchungsverdacht / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511 | AUDIT-REC-04.U | offen; Reparatur nur nach Bestätigung |
@@ -89,7 +89,7 @@ Eine U-Position ist eine Untersuchungsentscheidung, kein künstlicher W/R/C-Prod
 
 - [x] **AUDIT-REC-01.W:** Aktuelle vollständige Pfadmenge und Bytes der bereits unterstützten normativen Ressourcen gegen gebundene Basis-/Zielinventur prüfen. **Abnahme:** Ein zusätzliches gültiges Artefakt verhindert bei sonst passenden Journaldateien den falschen Vollziel-/Basisnachweis; der unveränderte Positivfall ergibt exakt die unabhängig bestimmte gebundene Wurzel. Fremde Dateien bleiben erhalten.
 - [x] **AUDIT-REC-01.R:** Fehlende, zusätzliche und veränderte Ressourcen sowie beobachtete Änderungen zwischen Prüfung und Abschluss einbeziehen. **Abnahme:** Zielabschluss, Rollback und Corruptdiagnose liefern konsistente Vollständigkeitsentscheidungen; kein Erfolg durch bloße Wiederholung derselben unvollständigen Inventur, kein geratener Ersatz und kein regulärer Modellload trotz aktivem Recoveryblocker.
-- [ ] **AUDIT-REC-01.C:** Gemeinsame Inventur-/Wurzelprüfung strukturell zusammenführen. **Abnahme:** W-/R-Ergebnisse, Fehlerklassen, Beweiserhalt und Seiteneffekte unverändert.
+- [x] **AUDIT-REC-01.C:** Gemeinsame Inventur-/Wurzelprüfung strukturell zusammenführen. **Abnahme:** W-/R-Ergebnisse, Fehlerklassen, Beweiserhalt und Seiteneffekte unverändert.
 
 
 **W-Umsetzung (Bundle 048, OFF-PLAN `AUDIT-REC-01.W`):** Die unabhängig
@@ -117,6 +117,21 @@ Verhaltenstests: `tests/test_recovery_inventory_right.py`; die zugehörigen
 SR-TC-0258/0459/0511-Manifeste beschreiben ausschließlich diesen Teilnachweis.
 Commit: `fix(recovery): align inventory diagnosis and retry guards`.
 Receipt-/Cleanup-Lücken, automatische Recovery und Restore bleiben offen.
+
+
+**C-Umsetzung (Fortsetzung in Bundle 049, OFF-PLAN `AUDIT-REC-01.C`):** Gemeinsame
+Inventurgrenzen stehen in `_recovery_inventory.py`, die unveränderte sichere
+Bytebeobachtung in `_recovery_bytes.py`. Ziel-, Basis- und Zwischenbeweise nutzen
+denselben Vor-/Nachcheck; Diagnose importiert den Bytebeobachter direkt statt
+aus dem mutierenden Rollbackmodul. W-/R-Tests und fachliche Verträge bleiben
+unverändert. Commit: `refactor(recovery): share inventory observation boundaries`.
+Bundle 048 hat W und R nach jeweils beiden erfolgreichen Volltests committed.
+Der vorbereitete C-Zustand bestand ebenfalls beide Volltests; sein Commit
+wurde jedoch wegen zusätzlicher Leerzeilen am Ende von `_recovery_bytes.py`
+durch die Git-Whitespace-Prüfung verhindert. Bundle 049 entfernt diese
+Leerzeilen, erhält die gestagten C-Änderungen und wiederholt vor dem
+C-Commit beide Volltests. Nach erfolgreichem Abschluss dieser Fortsetzung folgt
+`AUDIT-REC-02.U`. Der Produktzähler bleibt 237/885; 5.t bleibt gesperrt.
 
 ### AUDIT-REC-02 – vollständiger terminaler Abschluss und Rollbackbelege
 
@@ -11923,7 +11938,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-01.C`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-02.U`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

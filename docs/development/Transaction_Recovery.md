@@ -162,3 +162,40 @@ Schutzinventur nutzen dieselbe Kennzeichnung. Die tatsächliche Verzeichnistyp-
 und Byteprüfung bleibt bei den bestehenden Sicherheitsgrenzen. Gegenüber W/R
 ändern sich weder Ressourcenrollen noch Blocker, zulässige Kandidaten,
 Nebenwirkungen oder Testerwartungen. Es entsteht keine Restore-Funktion.
+
+
+## AUDIT-REC-01: vollständige aktuelle Recovery-Inventur
+
+Zielabschluss, Rollback und die Diagnose ab `committing` prüfen die vollständige
+aktuelle JSON-Pfadmenge in den konfigurierten normativen Bäumen. Zuerst werden
+die Bytes von `specroad.json` gegen die Journalbindung geprüft; eine geänderte
+Konfiguration darf den betrachteten Bereich nicht verkleinern. Danach folgen
+sichere Enumeration, vollständige Byteprüfung und erneute Inventurbeobachtung.
+Die unterstützten Sprachpaketdateien und ausdrücklich gebundenen Nicht-JSON-
+Ressourcen, etwa Anhänge und Sprachregistry, behalten ihre vollständige Bytebindung.
+Unreferenzierte Payloads, generierte Daten und fremde nichtverwaltete Dateien
+werden weder zur Modellinventur hinzugerechnet noch zur Reparatur entfernt.
+
+Das Vollziel verlangt alle Zielpfade. Die Vollbasis schließt ausschließlich
+bekannte, durch die Transaktion neu angelegte Pfade aus. Ein rückführbarer
+Zwischenzustand enthält alle Basispfade und optional bekannte neue Zielpfade;
+jede vorhandene Ressource muss dabei den gebundenen Basis- oder Zielbytes
+entsprechen. Unbekannte Pfade oder veränderte unveränderte Ressourcen verhindern
+eine Recoverymutation. Technische Fehler einer Zielprüfung sind kein Beweis für
+eine Teilveröffentlichung und dürfen keinen Rollback eines Vollziels auswählen.
+
+Vollständige Pfad- und Bytegleichheit bindet transitiv die im geprüften
+PublicationPreflight unabhängig bestimmten Modellwurzeln. Recovery rekonstruiert
+dafür weder eine ungespeicherte Profilauswahl noch lädt es ein reguläres Modell.
+Die Journalbindung bleibt Voraussetzung; ein bloß selbstkonsistent manipuliertes
+Journal authentifiziert seinen Ursprung nicht. Wiederholte Prüfungen erkennen
+beobachtete Änderungen, versprechen aber kein atomares Snapshot gegen fremde
+nichtkooperierende Writer.
+
+Die Verhaltenstests `test_recovery_inventory.py` und
+`test_recovery_inventory_right.py` prüfen zusätzliche/fehlende/veränderte Dateien,
+unabhängige Basis-/Zieloracles, Änderungen während Autorisierung und Abschluss,
+terminale Wiederaufrufe sowie schreibfreie Corruptdiagnose und Beweiserhalt.
+Die SR-TC-0258/0459/0511-Manifeste weisen diesen Umfang als Teilnachweis aus.
+Receiptabschluss, Cleanupzugang und die weiteren Audit-Nacharbeiten bleiben
+gesondert offen. Die automatische Recovery aus 5.t wird hier nicht eingeführt.

@@ -14,7 +14,6 @@ from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..security import paths as guards
-from ..storage.byte_binding import fingerprint_reader
 from .committing_values import CommittingJournal
 from .execution_values import ChangeExecutionError
 from .locking import HeldProjectLock
@@ -24,11 +23,10 @@ from .recovery_values import (RecoveryAuthority, RecoveryError,
 from ._journal_codec import _hash, _transaction
 from ._journal_io import _read
 from ._recovery_inputs import _parse, _read_journal
-from ._recovery_inventory import check_membership
+from ._recovery_inventory import verified_membership
+from ._recovery_bytes import fingerprint_recovery_file as _fingerprint
 from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
-
-_BLOCK = 65536
 
 
 def _rollback_lock(held, journal):
@@ -62,42 +60,6 @@ def _authorize(authority, journal):
         raise RecoveryError('recovery_not_authorized', exit_code=7)
 
 
-def _fingerprint(files, logical_path):
-    parts = tuple(logical_path.split('/'))
-    try:
-        with files.directory(parts[:-1]) as directory:
-            if directory is None:
-                return None
-            try:
-                before = os.stat(parts[-1], dir_fd=directory, follow_symlinks=False)
-            except FileNotFoundError:
-                return None
-            guards._regular(before)
-            if before.st_nlink != 1:
-                raise RecoveryError('recovery_linked_target_refused', path=logical_path, exit_code=7)
-            fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW |
-                         getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_CLOEXEC', 0),
-                         dir_fd=directory)
-            try:
-                first = os.fstat(fd)
-                guards._regular(first)
-                if first.st_nlink != 1 or guards._signature(first) != guards._signature(before):
-                    raise RecoveryError('recovery_target_changed', path=logical_path, exit_code=6)
-                observed = fingerprint_reader(lambda n: os.read(fd, n), first.st_size)
-                after = os.stat(parts[-1], dir_fd=directory, follow_symlinks=False)
-                if (guards._signature(first) != guards._signature(after)
-                        or guards._signature(first) != guards._signature(os.fstat(fd))):
-                    raise RecoveryError('recovery_target_changed', path=logical_path, exit_code=6)
-                return {'identity': guards._identity(first), 'size': observed.size,
-                        'sha256': observed.sha256, 'mode': first.st_mode & 0o7777}
-            finally:
-                os.close(fd)
-    except RecoveryError:
-        raise
-    except SafetyViolation as error:
-        raise RecoveryError('unsafe_recovery_target', path=logical_path, exit_code=7) from error
-
-
 def _state(files, entry):
     token = _fingerprint(files, entry['path'])
     if token is None:
@@ -114,38 +76,36 @@ def _state(files, entry):
 
 
 def _prove_basis(files, journal):
-    check_membership(files, journal, phase='base')
-    changed = {entry['path']: entry for entry in journal.data['files']}
-    for item in journal.data['target_inventory']:
-        entry = changed.get(item['path'])
-        if entry is not None:
-            state, _ = _state(files, entry)
-            if state != 'base':
-                raise RecoveryError('recovery_basis_not_restored', path=item['path'], exit_code=6)
-            continue
-        token = _fingerprint(files, item['path'])
-        if token is None or (token['size'], token['sha256']) != (item['size'], item['sha256']):
-            raise RecoveryError('recovery_basis_unchanged_resource_mismatch', path=item['path'], exit_code=6)
-    check_membership(files, journal, phase='base')
-    return journal.data['base_model_root_sha256']
+    with verified_membership(files, journal, phase='base'):
+        changed = {entry['path']: entry for entry in journal.data['files']}
+        for item in journal.data['target_inventory']:
+            entry = changed.get(item['path'])
+            if entry is not None:
+                state, _ = _state(files, entry)
+                if state != 'base':
+                    raise RecoveryError('recovery_basis_not_restored', path=item['path'], exit_code=6)
+                continue
+            token = _fingerprint(files, item['path'])
+            if token is None or (token['size'], token['sha256']) != (item['size'], item['sha256']):
+                raise RecoveryError('recovery_basis_unchanged_resource_mismatch', path=item['path'], exit_code=6)
+        return journal.data['base_model_root_sha256']
 
 
 def _prove_rollback_inputs(files, journal):
     """Reject an unrestorable inventory before altering any recovery state."""
-    check_membership(files, journal, phase='intermediate')
-    changed = {entry['path']: entry for entry in journal.data['files']}
-    tokens = {}
-    for item in journal.data['target_inventory']:
-        entry = changed.get(item['path'])
-        if entry is not None:
-            _, tokens[item['path']] = _state(files, entry)
-            continue
-        token = _fingerprint(files, item['path'])
-        if token is None or (token['size'], token['sha256']) != (item['size'], item['sha256']):
-            raise RecoveryError('recovery_basis_unchanged_resource_mismatch', path=item['path'], exit_code=6)
-        tokens[item['path']] = token
-    check_membership(files, journal, phase='intermediate')
-    return tokens
+    with verified_membership(files, journal, phase='intermediate'):
+        changed = {entry['path']: entry for entry in journal.data['files']}
+        tokens = {}
+        for item in journal.data['target_inventory']:
+            entry = changed.get(item['path'])
+            if entry is not None:
+                _, tokens[item['path']] = _state(files, entry)
+                continue
+            token = _fingerprint(files, item['path'])
+            if token is None or (token['size'], token['sha256']) != (item['size'], item['sha256']):
+                raise RecoveryError('recovery_basis_unchanged_resource_mismatch', path=item['path'], exit_code=6)
+            tokens[item['path']] = token
+        return tokens
 
 
 def _journal_successor(journal, *, initial=False, terminal=False):

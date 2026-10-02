@@ -1,5 +1,5 @@
 """Read-only proof of necessary recovery bytes, not a recovery write grant."""
-from ._recovery_rollback import _fingerprint
+from ._recovery_bytes import fingerprint_recovery_file as _fingerprint
 from .execution_values import ChangeExecutionError
 from ..security import SafetyViolation
 from ..model.errors import ModelError
