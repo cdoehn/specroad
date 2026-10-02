@@ -2,6 +2,8 @@
 from ._recovery_rollback import _fingerprint
 from .execution_values import ChangeExecutionError
 from ..security import SafetyViolation
+from ..model.errors import ModelError
+from ._recovery_inventory import check_membership
 
 
 def inspect_critical_inputs(files, journal):
@@ -49,10 +51,22 @@ def inspect_critical_inputs(files, journal):
         return record
 
     complete_target = False
+    inventory_paths = None
+    membership_verified = True
+    if state in ('committing', 'rolling_back', 'committed', 'rolled_back'):
+        phase = ('base' if state == 'rolled_back' else
+                 'target' if state == 'committed' else 'intermediate')
+        try:
+            inventory_paths = check_membership(files, journal, phase=phase)
+        except (ChangeExecutionError, SafetyViolation, ModelError, OSError) as error:
+            membership_verified = False
+            blockers.append({'path': getattr(error, 'path', None) or journal.path,
+                             'role': 'inventory',
+                             'reason': getattr(error, 'reason', 'recovery_inventory_unreadable')})
     live = {}
     if state in ('committing', 'rolling_back', 'committed', 'rolled_back'):
         live = {item['path']: observe(item['path']) for item in data['target_inventory']}
-        complete_target = all(exact(live[item['path']], item['size'], item['sha256'])
+        complete_target = membership_verified and all(exact(live[item['path']], item['size'], item['sha256'])
                               for item in data['target_inventory'])
         changed = {entry['path']: entry for entry in data['files']}
         for item in data['target_inventory']:
@@ -98,6 +112,7 @@ def inspect_critical_inputs(files, journal):
             size = token['size'] if token is not None and 'error' not in token else None
             image(path, 'audit', size, digest, True)
     return {'resources': resources, 'blockers': blockers, 'tokens': tokens,
+            'inventory_paths': inventory_paths,
             'critical_inputs_verified': not blockers and state != 'building',
             'complete_target_verified': complete_target,
             'scope': 'prepared_images' if state == 'prepared' else 'state_required_inputs'}

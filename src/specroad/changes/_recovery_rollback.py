@@ -24,7 +24,6 @@ from .recovery_values import (RecoveryAuthority, RecoveryError,
 from ._journal_codec import _hash, _transaction
 from ._journal_io import _read
 from ._recovery_inputs import _parse, _read_journal
-from ._recovery_target import prove_complete_target
 from ._recovery_inventory import check_membership
 from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
@@ -293,15 +292,13 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
         if type(journal) is CommittingJournal:
             _rollback_lock(held_lock, journal)
             observed = _prove_rollback_inputs(files, journal)
-            try:
-                prove_complete_target(files, journal)
-            except RecoveryError:
-                pass
-            else:
+            # Only proven base/target bytes can select rollback. A failed
+            # target read is NOT proof of partial publication.
+            if all(observed[item['path']] is not None
+                   and (observed[item['path']]['size'], observed[item['path']]['sha256'])
+                   == (item['size'], item['sha256'])
+                   for item in journal.data['target_inventory']):
                 raise RecoveryError('recovery_full_target_requires_completion', exit_code=6)
-            # Refuse unknown bytes before changing the journal.
-            for entry in journal.data['files']:
-                _state(files, entry)
             _authorize(authority, journal)
             _rollback_lock(held_lock, journal)
             if _prove_rollback_inputs(files, journal) != observed:

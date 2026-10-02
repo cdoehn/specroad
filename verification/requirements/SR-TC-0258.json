@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0258",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
+  ],
+  "preconditions": [
+    "Owned native Linux transaction and independently checked publication model, plan and complete file inventories."
+  ],
+  "steps": [
+    "Interrupt a real publication and observe the complete current normative membership and exact bytes.",
+    "Complete the bound full target or restore the bound basis; preserve foreign files and all recovery evidence.",
+    "Reject additional, missing, changed and concurrently observed resources; compare mutation and read-only diagnosis."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the existing checked journal contract. Explicit Recovery API and observation only; no independent profile reconstruction, automatic recovery, cleanup or complete requirement acceptance is claimed."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    5,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/complete_target_verified",
+    "/critical_inputs_verified",
+    "/blockers",
+    "/base_model_root_sha256",
+    "/target_model_root_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_recovery_inventory.py::test_completion_rejects_additional_valid_normative_artifact",
+    "tests/test_recovery_inventory.py::test_completion_matches_independently_bound_full_target_bytes_and_root",
+    "tests/test_recovery_inventory_right.py::test_failed_target_check_never_selects_rollback_of_proven_full_target",
+    "tests/test_recovery_inventory_right.py::test_extra_member_after_receipt_creation_preserves_receipts_and_reports_mutation",
+    "tests/test_recovery_inventory_right.py::test_extra_member_after_rollback_terminal_write_cannot_be_reported_as_success"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Receipt/audit completion and cleanup remain AUDIT-REC-02; receipt-error mutation accounting remains AUDIT-REC-03.",
+    "Interrupted auxiliary recovery writes remain AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }

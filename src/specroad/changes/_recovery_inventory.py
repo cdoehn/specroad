@@ -42,6 +42,8 @@ def check_membership(files, journal, *, phase='target'):
     difference = (required - observed) | (observed - allowed)
     if difference:
         raise RecoveryError('recovery_inventory_mismatch', path=sorted(difference)[0], exit_code=6)
+    if set(current_json_paths(source)) != observed:
+        raise RecoveryError('recovery_inventory_changed', exit_code=6)
     source.check_current()
     files.check_root()
     return tuple(sorted(observed))
