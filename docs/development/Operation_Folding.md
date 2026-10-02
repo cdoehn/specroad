@@ -31,8 +31,8 @@ caller-owned objects; callers must stabilize inputs during snapshot creation.
 
 ## Verification
 
-Only new/directly affected tests run locally with four xdist workers. Full CI
-runs at the final bundle commit. Requirement manifests retain `partial` until
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. Requirement manifests retain `partial` until
 the subsequent planner, lifecycle and transaction gates are integrated.
 
 ## Relation reducers

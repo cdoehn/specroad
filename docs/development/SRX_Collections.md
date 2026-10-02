@@ -18,11 +18,9 @@ Graphoperatoren oder vollständige Regel-/Profilintegration.
 
 ## Entwicklung und CI
 
-Lokal/Pixel: vollständige Verhaltenstests ausschließlich parallel, vier Worker.
-Kein zusätzlicher serieller Clean-Lauf. Serielle Vollreferenz und gebundener
-Parallelvergleich sind ausschließlich für die vorbereitete GitHub-CI vorgesehen.
-Kleine Prozess-Regressionsfixtures bleiben Teil der parallelen Testsuite; sie sind
-kein zweiter serieller Produkt-Volltest. Keine Ausgabe- oder Dokumentationstests.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Kleine Prozess-Regressionsfixtures bleiben
+Teil der Testsuite und ersetzen keinen vollständigen Testlauf.
 
 Die R-Abnahme umfasst leere/Unicode-Werte, Missing-Suchwerte, strikte Operandentypen,
 linksläufige Argumentauswertung, JSON-Fremdobjektabwehr, tiefe Strukturen und portable

@@ -30,9 +30,8 @@ published result/envelope field schemas. Command request descriptions and catalo
 requests use the same ParameterContract definitions. Bootstrap model exports are
 loaded lazily so version/help do not import filesystem safety subsystems.
 
-No new Core or development dependency is introduced. Development tests remain
-parallel via xdist; C includes a serial reference and bound evidence comparison.
-No human output/layout/doc tests and no suite/individual-test timeout are added.
+No new Core or development dependency is introduced. Test execution follows
+the local `AGENTS.md`; see [Testing.md](Testing.md) for the technical commands.
 A target-device apply or the full supported CPython matrix is not inferred from
 local validation. This file is not a release record.
 

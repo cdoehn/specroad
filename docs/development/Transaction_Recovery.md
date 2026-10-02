@@ -61,10 +61,9 @@ oder vollständiger ChangeBackend. Eine Rekonstruktion des unabhängigen
 Basisnachweises nach Prozessneustart, automatischer Transaktions-Preflight,
 Zielabschluss, Restore und Rollback bleiben in ihren späteren Planabschnitten.
 
-Lokale Gates verwenden nur neue/direkt betroffene Verhaltenstests, parallel mit
-maximal vier Workern auf dem Pixel. Keine lokale Vollsuite oder Fünferregel.
-Vollständige Python-Matrix einschließlich seriell/parallel/Vergleich bleibt
-bewusst manuell. Darstellungs- oder Dokumentationstests werden nicht eingeführt.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Die Recovery-Verhaltensfälle bleiben Teil
+der Testsuite und begründen keine eigene Apply-Testauswahl.
 
 ## R: Unterbrechungen und Abwehrgrenzen
 

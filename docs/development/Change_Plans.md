@@ -45,9 +45,10 @@ metadata (5.d), lifecycle (5.e) and transaction gates. Stored target hashes here
 are assertions for those later stages, not proof of an observed project state.
 The schema is currently exposed as a Python API, not registered as a new CLI command.
 
-Local gates execute only the new change-plan tests with four xdist workers.
-The complete CI stays on the final bundle commit; bundle 024 uses parallel CI,
-bundle 025 again adds the serial reference and evidence comparison.
+The change-plan tests contain the behavioral evidence for this section.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. The CI triggers and modes for Bundles 024/025
+were historical rules and no longer govern future runs.
 
 The robust boundary also checks the **declared result-owner set**: modified
 artifact identities and declared final artifacts must agree. A sole create and

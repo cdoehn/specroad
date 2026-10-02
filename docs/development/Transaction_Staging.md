@@ -60,10 +60,10 @@ ChangeBackend oder CLI-Schalter. Diese Stufe unterstützt die bereits vom
 PublicationRequest abgedeckten geänderten Artefaktdateien; Anhangs-/Spezialwrites
 werden nicht durch erfundene Inventoryeinträge vorgetäuscht.
 
-Lokal nur neue und direkt betroffene Verhaltenstests mit vier Workern. Die volle
-Suite läuft in GitHub; Bundle 035 verlangt dort parallel, seriell und Vergleich.
-Keine Text-/Layout-/Dokumentationstests, keine neuen Testtimeouts, keine neuen
-Abhängigkeiten. Die CI-Beobachtung bleibt unverändert unter tools/.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Der Doppelmodus für Bundle 035 ist eine
+historische, abgelöste Ausführungsregel. Dieser Abschnitt führt keine neuen
+Abhängigkeiten ein; die CI-Beobachtung liegt weiterhin unter tools/.
 
 Die C-Bereinigung kapselt die unveränderten nativen Lese-/Schreib-,
 Hash- und Namensmengenprimitiven in `changes/_staging_files.py`.

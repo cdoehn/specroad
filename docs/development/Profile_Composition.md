@@ -59,9 +59,9 @@ claim that a real project's language dependencies are resolved. A future project
 consumer must supply its actual required bindings; it may not omit them and
 claim a fully validated project. No package is found via locale, I/O or fallback.
 These inputs do not change stored content language or translate any artifact.
-Local bundle gates run selected files with four xdist workers, never a full
-serial or parallel suite. Full CI belongs to the final commit of Bundle 015.
-Bundle 016 retains the periodic serial plus parallel reference.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. The CI triggers and modes described for Bundles
+015/016 were historical rules and no longer govern future runs.
 
 
 ## Module boundaries after 4.k.C

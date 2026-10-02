@@ -38,11 +38,9 @@ nötig. Sie werden durch den Hash allein nicht bewiesen.
 
 ## Tests
 
-Pixel: nur neue und direkt betroffene Testdateien mit vier xdist-Workern. Keine
-lokale Vollsuite und keine serielle Vollsuite. Der Katalogcheck sammelt lediglich
-alle Testkennungen. Vollsuite auf GitHub am Bundle-Ende, jedes fünfte Bundle
-zusätzlich seriell plus Nachweisvergleich. Menschliche Darstellung ist kein
-Testorakel. Die Source- und Reportbindungen werden nicht zu Releasefreigaben.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Der Katalogcheck sammelt Testkennungen und
+ersetzt keinen Testlauf. Source- und Reportbindungen sind keine Releasefreigabe.
 
 ## Direkte Planung und Robustheit (R)
 

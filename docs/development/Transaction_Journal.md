@@ -45,9 +45,9 @@ muss an den vollständigen Transaktionsvertrag gebunden werden. Kein bestehender
 Sicherheitscheck wird hierfür gelockert. Der kooperative native Lock ist keine
 Sandbox gegen fremde absichtlich unkooperative Schreiber.
 
-Lokal: nur neue/direkt betroffene Tests mit vier Workern; Volltests in GitHub,
-jede fünfte Bundle-Nummer zusätzlich seriell. Keine Darstellungstests, keine
-künstlichen Testtimeouts. Keine neue Core- oder Entwicklungsabhängigkeit.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Dieser Abschnitt führt keine neue Core-
+oder Entwicklungsabhängigkeit ein.
 
 ## Fehler- und Bindungsgrenzen
 

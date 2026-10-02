@@ -44,11 +44,10 @@ zusätzlichen stabilen Codes `MODEL_VALIDATION` (nicht feiner klassifizierter
 Pipelinebefund) und `VALIDATION_UNAVAILABLE` (fehlender erforderlicher Prüfer)
 werden nicht willkürlich einem fachlichen SRV-Code gleichgesetzt.
 
-Lokale Abnahme: nur neue oder unmittelbar durch den gemeinsamen Diagnosevertrag
-betroffene Tests, vier Worker. Vollsuite ausschließlich in CI, parallel und in
-jedem fünften Bundle zusätzlich seriell mit Nachweisvergleich. Keine Tests auf
-Meldungstexte, Farben, Layout oder dieses Dokument. Die gesamte Produktmatrix und
-der lokale Ziel-Apply benötigen weiterhin tatsächliche neue Ausführungsnachweise.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Die Diagnose-Verhaltenstests bleiben Teil der
+Testsuite. Ziel-Apply und Python-Matrix benötigen ihre tatsächlichen
+Ausführungsnachweise; eine Katalogzuordnung ersetzt diese nicht.
 
 ## R: vollständige Beobachtungen, keine erfundenen Fundstellen
 

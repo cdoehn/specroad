@@ -1,5 +1,10 @@
 # Python-3.10-Kompatibilitaet: Missing-Kopien und I/O-Testschutz
 
+Die hier beschriebenen Testauswahl-, CI-Ausloese- und Volltestmodusregeln gehoeren
+zu den historischen Bundles 011–012 und sind ausser Kraft. Fuer die aktuelle
+Testausfuehrung gilt die lokale `AGENTS.md`; die technische Anleitung steht in
+[Testing.md](Testing.md). Die damaligen Befunde und Nachweisgrenzen bleiben erhalten.
+
 ## Beobachteter CI-Lauf
 
 Das vom Nutzer bereitgestellte Archiv `logs_96733892513.zip` gehoert zum

@@ -46,10 +46,10 @@ Containerdiagnose, Analyzer-Ausführung, Schreibtransaktion oder Projektfreigabe
 Noch kein Register-Updater; ein fachlicher Registerwechsel bleibt der späteren
 Change-Plan-Engine vorbehalten, keine implizite neue Distributionskopie.
 
-Lokal je W/R/C nur ausgewählte Dateien mit vier Workern und vorgeschalteter echter
-Katalogsammlung. Keine lokale Vollsuite/serielle Referenz. Bundle 017 fordert die
-parallele GitHub-Vollsuite an; der nächste Dualmodus ist Bundle 020. Erfolgreiche
-Teiltests oder ein Push sind keine CI- oder Releasefreigabe.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Die damalige CI-Auslösung und Moduswahl für
+Bundle 017/020 sind historisch und keine aktuelle Ausführungsregel. Lokale
+Testergebnisse oder ein Push belegen keinen GitHub-Lauf und keine Releasefreigabe.
 
 ## Projektgebundene Lesebeobachtung
 

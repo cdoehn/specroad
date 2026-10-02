@@ -33,9 +33,9 @@ kein beim Produktstart geladener Datensatz. Die Empfehlungen sind menschliche
 Darstellung; Tests fixieren ihre Formulierung nicht. Automatisiert geprueft
 werden Datentypen, Fehlerfelder und Reparaturkategorien.
 
-Lokal laufen ausschliesslich ausgewaehlte Testdateien parallel mit vier Workern.
-Vollsuite und serielle Referenz gehoeren in die GitHub-CI. Eine neue lokale
-Vorpruefung ersetzt weder einen Pixel-Apply noch einen vollstaendigen CI-Lauf.
+Fuer die Testausfuehrung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Eine Vorpruefung in der Entwicklungskopie
+ersetzt weder den Ziel-Apply noch einen tatsaechlichen GitHub-Lauf.
 
 ## 4.i.R – Prozessdefaults, Reihenfolgen und Fehlergrenzen
 

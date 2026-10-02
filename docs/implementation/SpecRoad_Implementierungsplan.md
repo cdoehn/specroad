@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 1 · **Stand:** 14. September 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.7
+**Planrevision:** 2 · **Stand:** 2. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.7
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 295 Schritte und 885 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -17,21 +17,165 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 1
+plan_revision: 2
 implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 45
+last_completed_numbered_bundle: 47
 implementation_state: in_progress
+audit_followup_status: open
+next_audit_step: AUDIT-REC-01.W
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 ```
 
-Der separate OFF-PLAN-Commit legt ausschließlich dieses Dokument an. Er erhöht den Implementierungszähler nicht. Alle nachfolgenden Checkboxen starten offen. Ein erzeugtes ZIP oder ein hier formulierter Test ist kein abgeschlossener Commit und keine Test-Evidence.
+Der ursprüngliche OFF-PLAN-Setup legte dieses Dokument mit offenen Produktpositionen an. Revision 2 ergänzt die Audit-Nacharbeiten und bereinigt überholte Testanweisungen als **OFF-PLAN / AUDIT-PLAN-UPDATE**, Commit-Message `docs(plan): Audit-Nacharbeiten vor 5.t konkretisieren`. Sie implementiert keine Produktreparatur und erhöht den Produktzähler nicht. Die Bundle-Nummer 047 bezeichnet diese Übergabe und zählt keine zusätzliche Produktposition. Ein erzeugtes ZIP oder ein hier formulierter Test ist kein abgeschlossener Commit und keine Test-Evidence; maßgeblich sind der tatsächlich entstandene Commit und sein Apply-Result.
 
-Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird dessen Checkbox im selben Git-Commit gesetzt und der Kopfzähler angepasst. Ein fehlgeschlagener Commit bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+<a id="audit-nacharbeiten"></a>
+## Audit-Nacharbeiten vor Fortsetzung mit 5.t
+
+### Grundlage, Geltung und Fortschritt
+
+Der Grobaudit vom 2. Oktober 2026 bewertet den bis **5.s.C** abgeschlossenen Produktstand insgesamt als **AUFFÄLLIG**. Die Grundlagen, Graph- und SRX-Kerne sowie große Teile des Schreibpfads erscheinen schlüssig; insbesondere die vollständige Recovery-Inventur und der Rollbackabschluss erfüllen aber bereits zugesagte Verträge nicht vollständig. Diese Nacharbeiten sind Bestandteil dieses einzigen Implementierungsplans. Der externe Prüfbericht bleibt eine unveränderte Befundquelle, kein zweiter Arbeitsplan.
+
+| Bindung der Auditgrundlage | Wert |
+|---|---|
+| Result | `specroad-apply_Result_151409_1002_817f46.zip` |
+| Geprüfter HEAD | `f5534e50e74a701b4a5b29cdcfc39e792e21e542` |
+| Result-SHA-256 | `b7a8aec9356fa50f2bd6f895078485501528bf16e8a19404ca66ae81fc619229` |
+| Prüfbericht im Exchange unter `reports/` | `SpecRoad_Grobaudit_2026-10-02_f5534e50.md` |
+| Bericht-SHA-256 | `b9776b86d52851b02d2b116f88e1f817e90eda90504fb3c3c1e387ed982f4079` |
+
+Die Prüfung war statisch; sie führte keine Tests aus. Das Result enthält keine Execution-Logs einer Apply-Ausführung und keine historischen W/R/C-Zwischenstände. Die Bindung oben dokumentiert den untersuchten Ausgangsstand; jedes Reparaturbundle verwendet ausschließlich die Bindung aus seinem dann neuesten Result.
+
+**Aktueller Arbeitsauftrag:** zuerst die unten geordneten Nacharbeiten. **Nächster regulärer Produktpunkt:** weiterhin `5.t.W`, bis zum Abschluss von `AUDIT-CLOSE` gesperrt. Die 885 ursprünglichen Produktpositionen, ihre Kennungen, Reihenfolge und historischen Checkboxen bleiben erhalten; der Zähler bleibt während der Nacharbeiten bei **237/885**. Eine gesetzte alte Checkbox beseitigt keinen hier ausdrücklich offenen Befund.
+
+Die Kennungen `AUDIT-*` sind Nacharbeitskennungen außerhalb der 885 Produktpositionen. Bei Umsetzung wird eine genau einem ursprünglichen Plan-Commit zuordenbare Reparatur als `FIX` mit dessen Kennung geführt; übergreifende Korrekturen werden als `OFF-PLAN` geführt. Die tatsächlichen Commitkennungen und Messages werden vor der jeweiligen Auslieferung passend zum dann aktuellen Result festgelegt und mit dem Nacharbeitsschritt verknüpft. Es gibt keine durch diese Liste vorgeschriebene Bundleanzahl. Mehrere geordnete Commits dürfen in einem Bundle liegen.
+
+Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen **AGENTS.md des Codex-Arbeitsbereichs** gepflegt. Technische Testaufrufe beschreibt [Testing.md](../development/Testing.md). Die folgenden Abnahmen beschreiben fachliches Verhalten, keine gezielte Apply-Testauswahl und keine zusätzlichen Testausführungsregeln. C erhält jeweils die Ergebnisse, Fehlerverträge und erlaubten Seiteneffekte aus W/R. Ein fehlender sinnvoller C-Delta wird nachvollziehbar dokumentiert, wie bereits im W/R/C-Abschnitt geregelt; es entsteht kein Alibi-Commit.
+
+### Befunde und eindeutige Zuständigkeit
+
+| Befund | Einordnung / Priorität | Ursprünglicher Bezug | Zuständige Nacharbeit | Stand dieser Planrevision |
+|---|---|---|---|---|
+| F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | offen |
+| F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | offen |
+| F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | offen |
+| F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | Untersuchungsverdacht / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511 | AUDIT-REC-04.U | offen; Reparatur nur nach Bestätigung |
+| F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | offen |
+| F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | offen |
+| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01.U | offen; keine pauschale Gesamtimplementierung zugesagt |
+| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02.U | offen; legitime spätere Adapter abgrenzen |
+| F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
+| F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
+
+Ein vorhandener Testverweis oder der Katalogstatus `partial` beweist keine vollständige Erfüllung. Die 293 als `partial` und 437 als `open` erfassten Anforderungen des Auditstands werden durch diese Planung nicht hochgestuft. Für jede spätere Schließung werden tatsächlicher Result-/Commitbezug, betroffene Testkennungen und beobachtete Abnahme dokumentiert; geplante Läufe zählen nicht als Nachweis.
+
+### Verbindliche Bearbeitungsreihenfolge
+
+`AUDIT-REC-01` → `AUDIT-REC-02.U` → `AUDIT-REC-02.W/R/C` → `AUDIT-REC-03` → `AUDIT-REC-04.U` mit gegebenenfalls bestätigter Korrektur → `AUDIT-REC-05.U` mit gegebenenfalls bestätigter Korrektur → `AUDIT-CONTRACT-01` → `AUDIT-CONTRACT-02` → `AUDIT-VALIDATION-01.U` → `AUDIT-VALIDATION-02.U` → `AUDIT-VALIDATION-03.U` → bestätigte und konkretisierte Validierungskorrekturen → `AUDIT-EVIDENCE-01` → `AUDIT-CLOSE`.
+
+Eine U-Position ist eine Untersuchungsentscheidung, kein künstlicher W/R/C-Produktcommit. Ihr Ergebnis lautet **bestätigt**, **widerlegt** oder **nachweislich einer konkreten späteren Planposition zugehörig**. Bei Bestätigung werden die unten beschriebenen bedingten W/R/C-Schritte auf den tatsächlich festgestellten Fall eingegrenzt. Bei Widerlegung wird der Gegenbeleg dokumentiert; eine Produktänderung entfällt. Eine bereits fällige Abnahme darf nicht durch bloßes Verschieben auf einen späteren Schritt verschwinden. Wesentliche ungelöste Vertragswidersprüche bleiben offen und sperren `AUDIT-CLOSE`.
+
+### AUDIT-REC-01 – vollständige Recovery-Inventur und Wurzelbindung
+
+**F01; Voraussetzung:** 5.s.C. **Bezug:** 5.q/5.r/5.s; SR-REQ-0258/0459/0511; SR-VER-0019/0031; SR-TC-0258/0459/0511; Spezifikation §10.7 und Anhang C.3.
+
+**Istgrenze:** `_recovery_target.py` prüft nur `target_inventory`; `_recovery_rollback.py` gibt nach vergleichbarer Teilprüfung die gespeicherte Basiswurzel zurück. Ein zusätzliches normatives Artefakt kann damit aus dem Vollständigkeitsnachweis fallen. Betroffene Nachweise: `test_transaction_recovery_completion_right.py` und `test_transaction_recovery_rollback*.py`.
+
+- [ ] **AUDIT-REC-01.W:** Aktuelle vollständige Pfadmenge und Bytes der bereits unterstützten normativen Ressourcen gegen gebundene Basis-/Zielinventur prüfen. **Abnahme:** Ein zusätzliches gültiges Artefakt verhindert bei sonst passenden Journaldateien den falschen Vollziel-/Basisnachweis; der unveränderte Positivfall ergibt exakt die unabhängig bestimmte gebundene Wurzel. Fremde Dateien bleiben erhalten.
+- [ ] **AUDIT-REC-01.R:** Fehlende, zusätzliche und veränderte Ressourcen sowie beobachtete Änderungen zwischen Prüfung und Abschluss einbeziehen. **Abnahme:** Zielabschluss, Rollback und Corruptdiagnose liefern konsistente Vollständigkeitsentscheidungen; kein Erfolg durch bloße Wiederholung derselben unvollständigen Inventur, kein geratener Ersatz und kein regulärer Modellload trotz aktivem Recoveryblocker.
+- [ ] **AUDIT-REC-01.C:** Gemeinsame Inventur-/Wurzelprüfung strukturell zusammenführen. **Abnahme:** W-/R-Ergebnisse, Fehlerklassen, Beweiserhalt und Seiteneffekte unverändert.
+
+### AUDIT-REC-02 – vollständiger terminaler Abschluss und Rollbackbelege
+
+**F02; Voraussetzung:** AUDIT-REC-01. **Bezug:** 5.n/5.q/5.r/5.s; SR-REQ-0258/0259/0462; SR-VER-0019/0031; SR-TC-0258/0259/0462; §10.7 und Anhang N.2.
+
+**Istgrenze:** Ein dauerhafter terminaler `RolledBackJournal` mit Ursprungsbindung existiert bereits. Es fehlen jedoch der vorgeschriebene Receipt unter `.specroad/transactions/receipts/` und ein nutzbarer Abschluss-/Bereinigungspfad; das aktive Verzeichnis blockiert neue Writer. Betroffen: `_recovery_rollback.py`, `receipt_read.py`, `receipt_cleanup.py`, `_receipt_work.py`, `locking.py` und `test_transaction_recovery_rollback*.py`.
+
+- [ ] **AUDIT-REC-02.U:** Zusätzlich den Zielabschluss nach Ende des ursprünglichen Writerprozesses über öffentliche Recovery-/Cleanup-APIs verfolgen. **Entscheidung:** Ist der erforderliche Lock trotz aktivem Abschlussjournal erreichbar? Kann der Vorgang ohne fortlebenden alten Writerlock oder private Umgehung bis zum normalen Folgezugriff abgeschlossen werden? Receiptort beim Discard und Recoveryaktionsnachweis beim Zielabschluss gegen SR-REQ-0259/0462 prüfen. Bestätigte gemeinsame Lücken in die folgende Abschlusskorrektur aufnehmen; genügende Wege durch Gegenbeleg erhalten.
+- [ ] **AUDIT-REC-02.W:** Den erfolgreichen Rollback durch vollständigen Basisnachweis, unveränderlichen Abschlussreceipt am Pflichtort, Recoveryaktionsbeleg und kontrollierten expliziten Abschluss der Arbeitsreste führen. **Abnahme:** Nach partieller Veröffentlichung wird die exakte Basis erreicht; Abschlussbeweise bleiben erhalten; ein neuer normaler Leser beziehungsweise autorisierter Writer kann wieder beginnen. Wiederaufruf erzeugt keine zweite normative Rückführung. Einen in U bestätigten gemeinsamen Cleanup-Zugangsfehler auf demselben Abschlussweg beheben.
+- [ ] **AUDIT-REC-02.R:** Verlorene Rückgaben und Fehler bei Beleganlage, Archivierung und Bereinigung absichern. **Abnahme:** Wiederaufnahme erhält bereits bewiesene Ergebnisse, Belegbindungen und fremde aktive Blocker; kein zweiter Fachwrite und keine Entsperrung durch bloßes Entfernen unbewiesener Journale. Teilweise Bereinigung darf keinen falschen vollständigen Erfolg ausgeben.
+- [ ] **AUDIT-REC-02.C:** Terminale Ergebnisnachweise und entbehrliche Arbeitsreste strukturell konsistent verwalten. **Abnahme:** Commit- und Rollbackresultate bleiben fachlich unterscheidbar; W-/R-Verträge und Byteerhalt ändern sich nicht.
+
+**Grenze:** Explizite bestehende Bibliotheks-/Recoverywege; kein automatischer Preflight, keine anschließende neue Fachoperation im selben Lauf, keine allgemeine Cachelösch- oder Restorefunktion.
+
+### AUDIT-REC-03 – wahrheitsgemäßer Mutationsstatus bei Receiptfehlern
+
+**F03; Voraussetzung:** abgestimmte Abschlussfolge aus AUDIT-REC-02. **Bezug:** 5.q.R/5.n.R; SR-REQ-0258; SR-VER-0019; SR-TC-0258 und bestehender `RecoveryError`-Vertrag.
+
+**Istgrenze:** `_recovery_completion.py` setzt `mutated` erst nach erfolgreicher Rückkehr aus `ensure_recovery_record`; `_recovery_receipts.py` und `_staging_files.py` können vorher bereits Betriebsdateien anlegen. Betroffen: `test_transaction_recovery_completion_right.py`.
+
+- [ ] **AUDIT-REC-03.W:** Mögliche Betriebsdateimutationen auch bei Fehler im ersten Receiptaufruf korrekt bilanzieren. **Abnahme:** Fehler nach Dateianlage, während Schreiben oder `fsync` ergeben keinen falschen `mutation_possible=False`-Befund; zurückgelassene Betriebsdateien bleiben erhalten.
+- [ ] **AUDIT-REC-03.R:** Verzeichnisanlage, Teilwrite, vollständiger Write mit Synchronisationsfehler und spätere Markerfehler abdecken. **Abnahme:** Ablehnung vor Mutationsbeginn bleibt von möglichen Dateieffekten unterscheidbar; normative Zielwrites oder Erfolg werden nicht erfunden.
+- [ ] **AUDIT-REC-03.C:** Mutationsbilanz und Fehlerübersetzung zusammenführen. **Abnahme:** Strukturierte Fehler und reale Dateieffekte aus W/R bleiben gleich.
+
+### AUDIT-REC-04 – kurze eigene Recovery-Hilfsdateien untersuchen
+
+**F04; Voraussetzung:** AUDIT-REC-02/03. **Bezug:** 5.q.R/5.r.R; SR-REQ-0258/0459/0511; SR-VER-0019/0031; zugehörige SR-TC-Manifeste. Betroffen: `_recovery_rollback.py`, `_recovery_receipts.py`, `_recovery_completion.py` und Recovery-Right-Tests.
+
+- [ ] **AUDIT-REC-04.U:** Unterbrechungen während eigener `journal.rollback`-, Rollbackkopie-, Receipt- und Abschlussmarkerwrites prüfen. **Entscheidung:** Ist ein eindeutig gebundener eigener Teilzustand trotz intakter Quelle regulär nicht mehr fortsetzbar, oder ist die Ablehnung aufgrund des tatsächlichen Vertrags erforderlich? Kurze eigene Präfixe und fremde widersprüchliche Bytes getrennt nachweisen.
+
+**Nur bei bestätigter Lücke:** W macht den kleinsten nachgewiesenen Fall sicher fortsetzbar; R ergänzt die weiteren bestätigten Varianten und erneute Unterbrechung; C trennt Bindungsnachweis, Wiederaufnahme und Konfliktklassifikation. **Abnahme:** Der erneute explizite Aufruf erreicht die gebundene Basis oder das belegte Vollziel ohne zweiten Fachwrite; Originalbeweise bleiben erhalten, fremde beziehungsweise ungebundene Bytes bleiben Blocker. Die bedingten Positionen heißen `AUDIT-REC-04.W/R/C` und werden erst nach U als konkrete offene Commitfolge eingetragen. Die umfassende Fault-Injection-Matrix aus 5.v wird nicht vorgezogen.
+
+### AUDIT-REC-05 – unveröffentlichter Discard nach echtem Neustart
+
+**Detailauditpunkt, kein bestätigter Fehler; Voraussetzung:** AUDIT-REC-01 bis 04. **Bezug:** 5.p.W/R; SR-REQ-0257/0262/0458; SR-VER-0019/0031; SR-TC-0257/0262/0458; §10.7 und Anhang C.3. Betroffen: `recovery.py`, `_recovery_inputs.py` und die vorhandenen Discardtests.
+
+- [ ] **AUDIT-REC-05.U:** Building/Prepared in einem Prozess erzeugen und den Folgeprozess ausschließlich mit persistenten Eingaben starten. **Entscheidung:** Woher kommt der unabhängige `PublicationPreflight`, wie ist dessen vollständige Basisinventur gebunden und welche bereits vorgesehene öffentliche Integration rekonstruiert ihn? Ein zwischen Tests weitergereichtes Speicherobjekt genügt nicht. Einen tatsächlich später geplanten Adapter mit genauer Planposition belegen; ein für 5.p bereits nötiger Nachweis bleibt andernfalls offene Nacharbeit.
+
+**Nur bei bestätigter bereits fälliger Lücke:** `AUDIT-REC-05.W/R/C` konkretisieren. W ermöglicht einen belegten expliziten Neustart-/Discardfall; R behandelt beide unveröffentlichten Zustände und bestätigte unterbrochene Vorbereitungen; C trennt Nachweisrekonstruktion, Diagnose und Mutation. **Abnahme:** Unveränderte vollständige Basis und null Veröffentlichungen erlauben Discard unter Beweiserhalt; Publikation, Basisabweichung oder unzureichende Eingaben verhindern ihn. Kein automatischer Preflight oder Vollquellen-Restore.
+
+### AUDIT-CONTRACT-01 – aktuelle maschinenlesbare Selbstbeschreibung
+
+**F05; Voraussetzung:** Recovery-Nacharbeiten entschieden und bestätigte Lücken behoben. **Bezug:** 1.i/1.n/2.q; SR-REQ-0194/0376/0392; SR-VER-0013/0027; zugehörige SR-TC-Manifeste. Betroffen: `_metadata.py`, `runtime/identity.py`, `cli/capabilities.py`, `model/versions.py`; `test_identity.py`, `test_capabilities.py`.
+
+- [ ] **AUDIT-CONTRACT-01.W:** Die bereits verfügbare Schemaunterstützung korrekt in Version-/Capabilities-Verträgen veröffentlichen. **Abnahme:** Vorhandene Artefaktschemas werden nicht mehr als leere Schemaunterstützung beschrieben; Testoracles prüfen den real implementierten Umfang.
+- [ ] **AUDIT-CONTRACT-01.R:** Die Reichweite von Bibliotheksfähigkeit, abrufbarem Schema und ausführbarem CLI-Befehl aus den bestehenden Verträgen bestimmen, insbesondere für SRX. **Abnahme:** Alle Angaben widerspruchsfrei; keine Werbung für noch nicht verfügbare Produktbefehle. Erforderliche Korrekturen bleiben innerhalb vorhandener Fähigkeiten; die Agentenintegration 18.m wird nicht vorgezogen.
+- [ ] **AUDIT-CONTRACT-01.C:** Quellen der Versions-/Fähigkeitsangaben konsolidieren. **Abnahme:** Dieselben fachlichen Listen, Werte und Ablehnungsgrenzen wie nach R, ohne neue Abhängigkeit des portablen Core.
+
+### AUDIT-CONTRACT-02 – vorhandenes Change-Plan-Schema im Katalog
+
+**F06; Voraussetzung:** AUDIT-CONTRACT-01. **Bezug:** 2.q/5.a; SR-REQ-0377/0378; SR-VER-0027; SR-TC-0377/0378. Betroffen: `changes/schema.py`, `changes/plan_contract.py`, `model/schema_sources.py`, `schema_identity.py`, `schema_catalog.py`; `test_schema_catalog.py`.
+
+- [ ] **AUDIT-CONTRACT-02.W:** Das tatsächlich verwendete `urn:specroad:schema:1.2.0:change-plan` über den bestehenden Schemakatalog anbieten. **Abnahme:** Listing und Lookup liefern den vom Change-Plan-Validator verwendeten strukturellen Vertrag.
+- [ ] **AUDIT-CONTRACT-02.R:** Kennungs-/Versionsbehandlung, unabhängige zurückgegebene Schemaobjekte und alle inzwischen verfügbaren öffentlichen strukturellen Schemas abgleichen. **Abnahme:** Unbekannte Kennungen bleiben Fehler; keine veraltete oder nur deklarierte Schemafamilie wird als implementiert ausgegeben.
+- [ ] **AUDIT-CONTRACT-02.C:** Katalogintegration und Schemaidentitäten strukturell bereinigen. **Abnahme:** Stabile Kennungen, Listeninhalte, validierte Daten und Fehlerverträge bleiben erhalten.
+
+### AUDIT-VALIDATION-01 bis 03 – fällige M4-Abdeckung konkret entscheiden
+
+**Voraussetzung:** AUDIT-CONTRACT-02. Die vorhandenen Kerne und ihre ehrlichen `unavailable`-/Teilumfangsresultate bleiben Ausgangsbasis. Fehlende zukünftige CLI-, Baseline-, Dokument-, Konfigurations- oder Evidencefunktionen werden nicht pauschal zum Fehler eines abgeschlossenen Grundlagenkerns erklärt.
+
+- [ ] **AUDIT-VALIDATION-01.U / F07:** SR-REQ-0096, SR-VER-0007, SR-TC-0096 gegen 4.l/4.o/4.r verfolgen. `lint/core.py` und `storage/read_only.py` bieten bisher vor allem Literalprüfungen. **Entscheidung:** Für fehlende Begründung, Verifikation und Mindestbeziehungen jeweils tatsächlichen Diagnosepfad, positive/negative Verhaltensnachweise und ursprüngliche Abnahme bestimmen. Ein bestehender Approval-/Relationskern allein beweist den Lintpfad nicht. Bereits geschuldete fehlende Core-Lintdiagnosen zur Korrektur eintragen; echte spätere Integration mit konkreter offener Position belegen.
+- [ ] **AUDIT-VALIDATION-02.U / F08:** SR-REQ-0086/0100, SR-VER-0007, SR-TC-0086/0100 gegen 4.o–4.r und 5.f/5.g verfolgen. Ein reales Requirementprojekt mit ausgeliefertem Softwareprofil durch die vorhandenen öffentlichen Bibliotheksgrenzen prüfen. **Entscheidung:** Tatsächliche Adapter für Sprachpolicy, Profil-SRX, Approval und Diagnoseauswertung von vertrauenswürdigen Testgates unterscheiden. `test_model_validation.py` und `test_read_only_validation.py` belegen bisher auch Nichtverfügbarkeit. Für jede fehlende Verbindung festhalten, ob sie bereits fällig oder konkret später vorgesehen ist; keine Vollvalidierung allein aus injizierten immer erfolgreichen Gates ableiten.
+- [ ] **AUDIT-VALIDATION-03.U / Diagnoseaggregation:** 4.p.R und die dort zugeordneten SR-REQ-0087–0092/0098–0099 samt SR-TC-Manifeste und SR-VER-0007 prüfen. `graph/references.py` und `validation/core.py` beenden bei fehlendem Relationsziel den betreffenden Pfad. **Entscheidung:** Verlangt die bestehende Abnahme mehrere unabhängig fehlende Ziele gemeinsam, oder setzt sie einen erfolgreichen Strukturabschnitt voraus? Mehrere konkrete gleichzeitige Fehler und die strukturierte Diagnosemenge vergleichen; kein bloßes Fortsetzungsversprechen ohne Vertrag ergänzen.
+
+**Nur für bestätigte, bereits geschuldete Lücken** konkrete `AUDIT-VALIDATION-01/02/03.W/R/C` eintragen: W liefert den kleinsten nutzbaren fehlenden Diagnose-/Adapterpfad; R vervollständigt dessen Negativ-, Mehrfachfehler-, Frische- und Ressourcenbindungen; C konsolidiert vorhandene Kerne. **Gemeinsame Abnahme:** Echte Daten ergeben die verlangten strukturierten Befunde; fehlende Voraussetzungen werden weiter ehrlich ausgewiesen, Lesen bleibt schreibfrei, bereits bestehende fachliche Grenzen werden nicht abgeschwächt. Keine vorgezogene vollständige CLI- oder spätere Produktintegration.
+
+### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
+
+**AUDIT-DOC-01 / F09:** Diese Planrevision ersetzt aktive überholte Testausführungsanweisungen durch Verweise auf die zentrale lokale AGENTS.md und die technische Testanleitung. Historische Bundle-/CI-Abläufe werden als historische, außer Kraft gesetzte Vorgaben kenntlich gehalten, nicht als nachträglich anders ausgeführte Tests umgeschrieben. Dies ändert weder Runner noch GitHub-Workflow. Die Abschlusskontrolle erfolgt in AUDIT-CLOSE, ohne Dokumentations- oder Darstellungstests einzuführen.
+
+**AUDIT-EVIDENCE-01 / F10; Voraussetzung:** alle obigen Untersuchungsentscheidungen und bestätigten Korrekturen. **Bezug:** insbesondere 3.h–3.j, 4.e/4.g/4.i, 5.n; SR-REQ-0288/0412 sowie SR-TC-0241/0259/0383/0384/0385; SR-VER-0022/0029 und die jeweiligen Receipt-Nachweise.
+
+- [ ] **AUDIT-EVIDENCE-01.W:** Überholte `scope`-/`open_items`-Angaben in SR-TC-0288 und SR-TC-0412 mit tatsächlichen Kernen und Tests abgleichen; die fehlende Beschreibung von `SR-FIX-TRANSACTION-RECEIPTS-v1` anhand ihres realen Providers ergänzen. **Abnahme:** Referenzen zeigen auf existierende fachliche Nachweise; nicht ausgeführte beziehungsweise noch unvollständige Abnahmen bleiben erkennbar offen.
+- [ ] **AUDIT-EVIDENCE-01.R:** Alle von den Nacharbeiten betroffenen Requirementmanifeste, Tests und Fixturebezüge konsistent fortschreiben. **Abnahme:** Formale Sammlung und Bindung passen zur echten Testmenge; jeder Behauptung steht ihr tatsächlich geprüfter Teilumfang gegenüber. Keine pauschale Hochstufung von `partial` und keine erfundenen alten W/R/C-Erfolge.
+- [ ] **AUDIT-EVIDENCE-01.C:** Gemeinsame Beschreibungen und Verweise konsolidieren, ohne Nachweisumfang oder Ausnahmen zu ändern. **Abnahme:** Inhaltliche Befundzuordnung und maschinenlesbare Katalogverträge bleiben wie nach R. Keine Tests auf Wortlaut, Markdown oder Dokumentation.
+
+### AUDIT-CLOSE – Abschlussentscheidung vor 5.t
+
+- [ ] Für F01 bis F10 sowie die zusätzlichen Recovery-/Diagnosefragen eine abschließende Entscheidung mit aktuellem Result-/Commitbezug dokumentieren. Bestätigte Fehler brauchen beobachtbare Verhaltensnachweise; widerlegte Verdachtsstellen brauchen ihren Gegenbeleg. Tatsächlich spätere Arbeit braucht eine genaue offene Planposition und die Begründung, warum sie keine schon fällige Abnahme ersetzt.
+- [ ] Die betroffenen fachlichen Verträge nach den Korrekturen erneut prüfen, insbesondere vollständige Recoverywurzel, dauerhafte Abschlussbeweise und normaler Folgezugriff. Die tatsächlichen erfolgreichen Apply-Prüfungen anhand ihrer Results feststellen; dieses Planungsbundle belegt noch keine Reparatur.
+- [ ] Aktuelle Testanweisungen auf Konsistenz zur zentralen Arbeitsregel prüfen. Historische Ausführungsaussagen und nicht verfügbare Nachweise bleiben historisch beziehungsweise offen; es werden keine vergangenen Testläufe nachträglich behauptet.
+- [ ] Im Fortschrittsblock `audit_followup_status` erst nach erfüllter Abschlussentscheidung auf `closed` und `next_audit_step` auf `null` setzen. Der Produktzähler bleibt 237/885; erst der danach tatsächlich umgesetzte und abgenommene reguläre Schritt 5.t.W erhöht ihn. Solange fällige Korrekturen oder wesentliche Vertragsfragen offen sind, bleibt die Sperre bestehen.
+
+### Rückverweise auf abgeschlossene Produktpositionen
+
+Die Nacharbeiten präzisieren den heutigen Korrekturbedarf an diesen historischen Abschlüssen: 1.i/1.n → F05; 2.q/5.a → F06; 3.h–3.j und 4.e/4.g/4.i → F10; 4.l/4.o–4.r/5.f/5.g → F07/F08 und Diagnosefrage; 5.n/5.p–5.s → F01–F04 und Neustart-/Abschlussfragen. Die ursprünglichen Fachabnahmen und Requirementbezüge werden dadurch nicht still umdefiniert. Neue Produktanforderungen, automatische Recovery aus 5.t, die vollständige Crashmatrix aus 5.v und Vollquellen-Restore aus M15 bleiben ihren regulären Positionen vorbehalten.
 
 ## W/R/C und die Grenze jedes Commits
 
@@ -41,7 +185,7 @@ Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstest
 
 **C – Make it Clean:** die konkret genannte Struktur verbessern, ohne fachliche Verträge, Daten, Nebenwirkungen oder Testerwartungen zu verändern. Vorhandene Verhaltenstests laufen weiter; zusätzliche strukturelle Tests oder Tests auf interne Funktionsnamen sind kein Selbstzweck. Neue Anforderungen gehören nicht in C. Gibt es nach der tatsächlichen Umsetzung keinen sinnvollen Clean-Delta, wird der Plan nachvollziehbar angepasst statt einen leeren Alibi-Commit zu erfinden; nicht still einen geplanten Commit als erledigt markieren.
 
-Die Kennungen bleiben `Meilenstein.kleinbuchstabe.W|R|C`. Alle Schritte dieser Revision passen in a bis z. Exakte Commitnachrichten und absolute Positionen stehen direkt bei jedem Commit. Größe und Zeilenanzahl müssen zwischen W, R und C nicht gleich sein. Die Reihenfolge lautet W, R, C, niemals alphabetisch C, R, W.
+Für die ursprünglichen 885 Produktpositionen bleiben die Kennungen `Meilenstein.kleinbuchstabe.W|R|C`; ihre Schritte passen in a bis z, und exakte Commitnachrichten sowie absolute Positionen stehen direkt beim jeweiligen Produktcommit. Die zusätzlichen `AUDIT-*`-Kennungen und ihre Commitzuordnung sind oben geregelt. Größe und Zeilenanzahl müssen zwischen W, R und C nicht gleich sein. Die Reihenfolge lautet W, R, C, niemals alphabetisch C, R, W.
 
 ## TD-001 – Verhalten testen, nicht Ausgabe oder Dokumentation
 
@@ -57,37 +201,18 @@ Die CLI wird dennoch von Anfang an **farbig, übersichtlich und ansprechend** um
 
 ## TD-002 – Laptop-Volltests und ausschließlich manuelle GitHub-CI
 
-Im PatchHarbor-Apply-Repository wird für jeden zukünftigen W/R/C-Zustand zuerst
-immer die vollständige Testsuite parallel und danach immer die vollständige
-Testsuite seriell ausgeführt. Beide Volltests müssen erfolgreich sein, bevor der
-jeweilige Commit erstellt wird. Keine gezielte Testauswahl als Apply-Regel.
-W, R und C bleiben getrennte Zustände: Änderung → beide Volltests → Commit.
+Die Nutzerentscheidung vom 2. Oktober 2026 ersetzt die frühere Testauswahl und
+CI-Auslösung. Ihre operative Pflege erfolgt zentral in der lokalen AGENTS.md
+des Codex-Arbeitsbereichs; ausführbare Aufrufe und Infrastruktur beschreibt
+[Testing.md](../development/Testing.md), den manuellen Workflow
+[Bundle_CI.md](../development/Bundle_CI.md). Dieser Plan enthält die fachlichen
+Abnahmen und die expliziten Spezifikationsausnahmen aus TD-001.
 
-```sh
-.venv/bin/python -I -B tools/run_tests.py --workers 4
-.venv/bin/python -I -B tools/run_tests.py --workers 0
-```
-
-GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
-manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
-parallel auf Python 3.10–3.14 aus. In GitHub gibt es keinen seriellen Volltest.
-Die frühere 5er-Bundle-Regel bleibt entfernt.
-
-Getestet werden Verhalten und maschinenlesbare fachliche Verträge. Keine Tests
-auf GUI, menschlich lesbare Konsolenausgabe, Farben, ANSI, Tabellenlayout,
-Spinner, README, Markdowndarstellung oder Dokumentation. Sonst keine weitere
-Testregel.
-
-Entwicklung ausschließlich in specroad-codex; kein Push aus dieser Kopie.
-Commit-Erzeugung und Übergabe nach specroad-apply ausschließlich durch PatchHarbor.
-Fehler erhalten erfolgreiche frühere Commits und den tatsächlichen Arbeitszustand.
-
-pytest und pytest-xdist bleiben Entwicklungsabhängigkeiten. Der Produktplan-
-Zähler bleibt unverändert; diese Migration ist OFF-PLAN und beginnt nicht 5.t.
-Historische Testauswahl-/CI-Angaben in abgeschlossenen Abschnitten dokumentieren
-nur die damalige Ausführung und sind keine aktuelle Apply-Regel.
-Details: [Bundle-CI](../development/Bundle_CI.md),
-[Testentwicklung](../development/Testing.md).
+Historische Testauswahl-/CI-Angaben in den folgenden abgeschlossenen Abschnitten
+dokumentieren ausschließlich den damaligen Auftrag oder Ablauf. Sie sind keine
+aktuellen Apply-Regeln und verlangen weder Teiltests anstelle der verbindlichen
+Volltests noch automatische oder serielle GitHub-Läufe. Die frühere Fünferregel
+bleibt aufgehoben. Kein historischer Text ersetzt tatsächliche Ausführungsnachweise.
 
 ## CI-WAIT – historische Implementierung, aktive Verwendung ab Bundle 041 manuell
 
@@ -108,17 +233,17 @@ Capture-/Nachweis-Vollständigkeit bleiben erhalten. Keine Rollbacks, keine
 rekursiven Bundle-Aufrufe und keine erfundene Core-Anhangs-API.
 Details: [CI-Nachweise](../development/CI_Wait.md).
 
-## OFF-PLAN Bundle 041 – Venv-Fix und manuelle Full-Strategie
+## OFF-PLAN Bundle 041 – historischer Venv-Fix und damalige Full-Strategie
 
-Zwei getrennte Änderungen mit jeweiligem gezielten Testgate vor dem Commit:
+Damals zwei getrennte Änderungen mit jeweiligem gezielten Testgate vor dem Commit; diese Ausführungsregel ist durch TD-002 aufgehoben:
 
 - `CI-VENV-RUNTIME`: `test: Basisinterpreter für isolierte Venv-Tests erhalten`.
   Frische no-pip-Venvs verwenden auf POSIX die normale symlinkbasierte Basisbindung;
   `-I -S -B` und die enge Prozessumgebung bleiben unverändert. Neue echte Venv-/
   Isolationstests, keine gelöschten oder übersprungenen Fehlerfälle.
 - `CI-MANUAL-FULL`: `ci: Volltests ausschließlich manuell ausführen`.
-  Normale Pixel-Bundles nur gezielt testen und pushen. Full-CI nur per manuellem
-  Button, stets parallel + seriell + Vergleich; bindungsgeprüfte manuelle Evidence.
+  Damalige Vorgabe: normale Pixel-Bundles gezielt testen und pushen; Full-CI
+  manuell, damals parallel + seriell + Vergleich; bindungsgeprüfte Evidence.
 
 Produktstand unverändert 225/885, letzter Produktcommit 5.o.C, nächster 5.p.W.
 Der auf Python 3.10 beobachtete Startfehler muss im nächsten bewusst gestarteten
@@ -137,10 +262,10 @@ Rohbyte-/Dateimengenregressionen, ohne Builder, Produktdateien oder Hashvertrag
 zu verändern. Keine Test-Skips, keine Hochstufung von Anforderungsreife.
 
 Genau ein separat getesteter Fix-Commit; Produktfortschritt unverändert 165/885,
-letzter Plan-Commit 4.m.C, nächster 4.n.W. Lokale Ausführung ausschließlich der
+letzter Plan-Commit 4.m.C, nächster 4.n.W. Damals lokale Ausführung ausschließlich der
 benannten Testdateien mit vier Workern; am Abschluss volle parallele GitHub-CI.
 Bei Lieferressourcenänderungen sind test_identity.py und test_payload_identity.py
-fortan Teil der gezielten lokalen Regressionsauswahl. Die Änderung der
+damals Teil der gezielten lokalen Regressionsauswahl; diese Auswahlregel ist durch TD-002 aufgehoben. Die Änderung der
 abgeschlossenen Bundle-Nummer auf 18 erfolgt erst nach dem erfolgreichen Gate.
 Details: [`CI_Payload_Identity_Repair.md`](../development/CI_Payload_Identity_Repair.md).
 
@@ -155,7 +280,7 @@ Der Produktzaehler bleibt bei 150/885, naechster Plan-Commit 4.i.W.
 - [x] `PY310-REPAIR.a.R`: Identitaet, verschachtelte Kopien und wirksame I/O-Sperren absichern.
 - [x] `PY310-REPAIR.a.C`: Gemeinsame I/O-Testschutzfunktion extrahieren, Verhalten erhalten.
 
-Lokal nur explizite Testdateien mit vier Workern; der bestehende Katalogcheck
+Damals lokal nur explizite Testdateien mit vier Workern; der bestehende Katalogcheck
 sammelt zusaetzlich, fuehrt aber keine Vollsuite aus. Bundle 012 fordert ueber
 die vorhandenen Trailer in GitHub parallel PLUS seriell und Nachweisvergleich.
 Die betroffenen Tests und Python 3.10 bleiben aktiv, keine Versions-Skips.
@@ -174,8 +299,8 @@ Der genaue externe Netzwerk-/API-Grund ist nicht aus diesem Fehlercode beweisbar
   ZIP-Downloads. Integritäts-/Reportfehler werden nicht durch Wiederholen
   verdeckt. Kein CI-Rerun und keine Ersetzung durch einen anderen Versuch.
 
-Der Produktzähler bleibt durch diesen Zwischencommit bei 174/885. Lokal laufen
-nur neue und unmittelbar betroffene Beobachtertests. Details:
+Der Produktzähler blieb durch diesen Zwischencommit bei 174/885. Die damalige
+Vorgabe sah nur neue und unmittelbar betroffene Beobachtertests vor. Details:
 [`CI_Evidence_Retry.md`](../development/CI_Evidence_Retry.md).
 
 ## CI-REPAIR – OFF-PLAN-Korrektur der Testzuordnung (Bundle 011)
@@ -195,11 +320,12 @@ Katalogcheck ist kein Volltestnachweis. Einzelheiten und Abnahmegrenzen:
 `CI-REPAIR.a.R` sichert den Abbruch vor Testkörpern, exakte Berichtsverträge
 und vollständige Fehlerbeobachtungen auch bei direkter xdist-Ausführung ab.
 `CI-REPAIR.a.C` trennt die stabilen Testidentitäten und Berichtsverträge von
-Sammlung, Prozessstart und pytest-Hooks. Alle lokalen Gates bleiben Teiltests.
+Sammlung, Prozessstart und pytest-Hooks. Die damals verwendeten lokalen Gates
+waren Teiltests; ihre Auswahlregel ist durch TD-002 aufgehoben.
 
 ## BD-001 – flexible Anzahl eigenständiger Commits pro Bundle
 
-**Der Nutzer autorisiert ausdrücklich, dass der implementierende Chatbot selbst entscheidet, wie viele aufeinanderfolgende Plan-Commits ein späteres PatchHarbor-Bundle enthält.** Es gibt keine feste Anzahl, kein künstliches Ein-Commit-Limit, kein verpflichtendes Dreierpaket und keine Pflicht, einen ganzen Schritt oder Meilenstein auf einmal fertigzustellen. Diese projektspezifische Ausnahme ersetzt ausschließlich für solche ausdrücklich beauftragten Implementierungsbündel die allgemeine Ein-Commit-Vorgabe der beiliegenden PatchHarbor-Chatvorlage. Alle Format-, Zustands-, Integritäts- und Sicherheitspflichten gelten unverändert. Die statische PatchHarbor-Vorlage selbst wird dadurch nicht umgeschrieben.
+Die Nutzerfreigabe mehrerer Commits und W/R/C-Folgen pro Bundle gilt fortlaufend und wird in der lokalen AGENTS.md gepflegt. Die gewählte Strecke muss zum Auftrag und den tatsächlichen Abhängigkeiten dieses Plans passen. Für die Audit-Nacharbeiten gilt die vorgeschaltete Reihenfolge oben; danach folgt die reguläre Produktfolge. Bundlegröße und Produktfortschritt werden getrennt geführt.
 
 Der Chatbot wählt eine sichere zusammenhängende Strecke ab der nächsten offenen Kennung anhand Umfang, Kopplung, Testkosten, Kontext und tatsächlicher Ausführbarkeit. Er kann mehrere Schritte gemeinsam liefern oder mitten in W/R/C nach einem grünen Commit enden. Die gewählte erste/letzte Kennung, Anzahl und die exakten Einzelmessages werden vor Auslieferung genannt. Kein Squash und keine Umnummerierung nur wegen der Bündelgröße. Verschiedene Meilensteine dürfen nur bei erfüllten vorausgehenden Gates zusammen im selben Bundle liegen.
 
@@ -207,7 +333,7 @@ Der Chatbot wählt eine sichere zusammenhängende Strecke ab der nächsten offen
 
 Bei Fehlern stoppt die Sequenz vor dem Commit des fehlerhaften Schritts. Zuvor in diesem Bundle tatsächlich grün abgeschlossene Commits bleiben erhalten; kein destruktives Rollback. Der Result-Zustand wird ausgewertet und ein gebundener FIX beziehungsweise Restauftrag erstellt. Die Aussage „bei Fehler kein Commit“ gilt für den gerade fehlgeschlagenen Commit, nicht als erfundene globale Transaktion über bereits bestätigte Commits. FIX-Commits verändern den Planzähler nicht. Auf einen noch nicht geprüften aktuellen Result-Zustand wird kein Folgepaket geraten.
 
-**Dieses plananlegende Paket bleibt dagegen genau ein OFF-PLAN-Commit.** Noch keine der 885 Implementierungspositionen wird mitgeliefert oder als erledigt markiert.
+**Die Planaktualisierung AUDIT-PLAN-UPDATE bleibt genau ein OFF-PLAN-Commit.** Sie verändert keine der 885 Produktpositionen und führt keine der neu geplanten Reparaturen aus.
 
 ## BN-001 – sichtbare fortlaufende Bundle-Nummer
 
@@ -237,7 +363,7 @@ Die strikt lineare Commitposition ist der ausführbare Standard: jeder Commit se
 
 Wichtige Staffelung: Datenmodelle und Mehrsprachigkeit M2; Graph/Scopes und reine Diff-/Impactkerne M3; gemeinsame Validierung M4; alle normativen Writes über M5; Workunterbau M6 vor den großen Featureabläufen. Lokale/Git-Quellen M8, echte Baselinequelle M10, Bundlequelle M15. Release-Baselines sind in M10 ohne echtes Readiness-Gate blockiert und werden erst mit M12/M13 vollständig freigeschaltet. Dokument-/Viewanbieter für Verifikation und Roadmap wachsen in M12/M13 hinzu. Der sichere Archivkern entsteht für Work früh und wird in M14/M15 zu vollständigen Fachformaten ergänzt; XML-Sicherheit entsteht für Evidence in M12 und wird bei ReqIF wiederverwendet. Legacy-Originalreader werden in M16 wirklich implementiert. Der generische Analyzer und der **reale** erste Sprachadapter sind beide Pflichtumfang in M19.
 
-Je W/R/C laufen die konkret benannten vorhandenen Verhaltenstests. Bei breitem, riskantem oder schichtenübergreifendem Delta zusätzlich die vollständige bisher vorhandene Suite; am Ende jedes Meilensteins dessen Integrationsgate und die komplette verfügbare Suite. Ein zielruntimeabhängiger Referenztest wird auf passender Plattform ausgeführt; ein Pixel-/aarch64-Lauf ist kein x86-64-Nachweis. Nicht verfügbare Nachweise bleiben offen. Fachliche Runtime-/Budgettests sind keine künstlichen Testharness-Abbrüche. Für den Pixel-/Termux-Workflow gelten **keine künstlichen Einzeltest- oder Gesamtsuite-Timeouts**; echte intern zu prüfende Timeout-/Abbruchsverträge bleiben bestehen.
+Die je Schritt benannten Verhaltenstests konkretisieren dessen fachliche Abnahme; sie sind keine Auswahlregel für Apply. Für die Testausführung gilt die zentrale lokale AGENTS.md, für technische Aufrufe [Testing.md](../development/Testing.md). Ein zielruntimeabhängiger Referenznachweis erfordert die passende Plattform; ein Pixel-/aarch64-Lauf ist kein x86-64-Nachweis. Nicht verfügbare Nachweise bleiben offen. Fachliche Runtime-/Budget-/Abbruchsverträge bleiben Teil der jeweiligen Produktabnahme.
 
 Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen Produktanforderungen. Kein pauschales git add -A, reset --hard oder git clean. Beabsichtigte Pfade stagen, Fremdänderungen erhalten, Exitstatus und reale Dateieffekte prüfen. Entwicklungstests dürfen Testakteure simulieren; produktive menschliche Freigaben dürfen daraus nicht abgeleitet werden.
 
@@ -11770,13 +11896,16 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** `1.a.W` (Position 1/885). Den aktuellen Result-Zustand nach dem Plan-Setup lesen, nicht die ursprüngliche Planungsbasis wiederverwenden. Eine sichere zusammenhängende Anzahl weiterer Commits darf nach BD-001 hinzugenommen werden. Alle ausgewählten Kennungen, Messages und Checks müssen vor dem Git-Commit zu den tatsächlichen Teilständen passen.
+**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-01.W`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
-Der Plan-Setup-Patch ändert nur `docs/implementation/SpecRoad_Implementierungsplan.md`. Die Spezifikation und der Prüfbericht bleiben byteidentisch. Für diese reine Planablage existiert noch keine Produktsuite; der Entrypoint prüft ausschließlich sichere Git-/Basis-/Payload-/Scopebindungen und erzeugt danach den einen OFF-PLAN-Commit. Er führt keine Darstellungs- oder Dokumentationstests aus, erzeugt keine Produktfreigabe und ruft weder PatchHarbor rekursiv noch externe Backupdienste vom Entwicklungsrechner aus auf.
+Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Offen bleibt die gesamte Produktumsetzung: 885 Plan-Commits.** Umfangreiche feine Planung ist keine Zusage über notwendige Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Offen bleiben 648 reguläre Produktpositionen sowie die ausdrücklich offenen Audit-Nacharbeiten.** Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
-## Testpolicy-Nachtrag vom 21. September 2026
+## Historischer Testpolicy-Nachtrag vom 21. September 2026
+
+Die folgenden damaligen Ausführungsvorgaben sind durch TD-002 abgelöst; die
+beschriebenen historischen Ergebnisse werden nicht nachträglich umgedeutet.
 
 `TEST-POLICY.a.W` setzt den lokalen Vier-Worker-Standard und den CI-Starter um.
 `TEST-POLICY.a.R` sichert Fehlerfälle und isolierte CI-Nachweise ab.
@@ -11793,7 +11922,10 @@ Ein gemeinsamer summary.json wird nur vom Controller veröffentlicht.
 CI-Referenzsteuerung und CLI-Argumente sind getrennt; lokaler Runner und CI-
 Starter verwenden denselben Vier-Worker-Default. Der einzige Scheduler bleibt xdist.
 
-## Zusatzauftrag BUNDLE-CI (Bundle 009)
+## Historischer Zusatzauftrag BUNDLE-CI (Bundle 009)
+
+Die damalige Testauswahl, automatische CI-Auslösung und serielle GitHub-Referenz
+sind aufgehoben. Aktuelle Ausführung siehe TD-002 und lokale AGENTS.md.
 
 - BUNDLE-CI.a.W: gezielte lokale Testauswahl und Dev-Abschlussauslösung implementiert; OFF-PLAN, Produktzähler unverändert.
 - BUNDLE-CI.a.R: ungültige Revisionen, Duplikate, unvollständige Teilnachweise und unsichere Berichtspfade abgesichert; keine Zählererhöhung.
@@ -11801,4 +11933,4 @@ Starter verwenden denselben Vier-Worker-Default. Der einzige Scheduler bleibt xd
 
 ### Bundle 009 – lokaler Abschluss und CI-Übergabe
 
-Die sechs Zwischenstände wurden jeweils durch die dokumentierte Auswahl kompletter Testdateien parallel mit vier Workern geprüft. Dies ist kein Vollsuite-, CI- oder Release-Nachweis. Der Abschlusscommit trägt `SpecRoad-Bundle: 009` und `SpecRoad-Bundle-Final: true`; frühere Commits tragen `false`. Erst die Veröffentlichung auf `dev` kann die automatische parallele GitHub-Vollprüfung auslösen. Bundle 012 ist der nächste automatische Parallel-/Seriell-Vergleich.
+Die sechs Zwischenstände wurden damals jeweils durch die dokumentierte Auswahl kompletter Testdateien parallel mit vier Workern geprüft. Dies ist kein Vollsuite-, CI- oder Release-Nachweis. Der damalige Abschlusscommit trägt `SpecRoad-Bundle: 009` und `SpecRoad-Bundle-Final: true`; frühere Commits tragen `false`. Die damalige Planung sah nach Veröffentlichung auf `dev` automatische parallele GitHub-Vollprüfung und für Bundle 012 einen automatischen Parallel-/Seriell-Vergleich vor. Das sind keine aktuellen Ausführungsanweisungen und keine Behauptung, dass diese geplanten Läufe tatsächlich erfolgreich waren.

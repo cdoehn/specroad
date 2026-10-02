@@ -39,9 +39,10 @@ Resources ship in the module tree, Zipapp and package-data configuration. Their
 bytes participate in the existing distribution build identity. No new runtime
 or development dependency, CLI command, network loader or writer is introduced.
 
-Local gates use selected behavior-test files with four workers; the complete
-catalog is collected without test execution. Full tests belong to GitHub CI.
-Bundle 014 uses parallel CI only; the next dual-mode bundle is 016.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. Catalog collection does not execute test bodies.
+The CI triggers and modes for Bundles 014/016 were historical rules and no
+longer govern future runs.
 
 ## Project reads and robust boundaries
 

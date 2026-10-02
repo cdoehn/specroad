@@ -145,7 +145,7 @@ unittest-Untertests. Die Prüfung wertet ausschließlich strukturierte Ergebniss
 Exitcodes aus. Diese kleinen Framework-Regressionsfälle benötigen auch beim äußeren
 seriellen Referenzlauf xdist. Fehlende Abhängigkeiten führen zu Fehlern, niemals zu Skips.
 
-## OFF-PLAN-Commitfolge dieses Umbaus
+## Historische OFF-PLAN-Commitfolge der pytest-Migration
 
 | Kennung | Zweck |
 |---|---|

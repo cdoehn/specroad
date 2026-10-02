@@ -56,9 +56,9 @@ The new behavior tests compare source/operational/generated inventories and trap
 write attempts even when the runner can bypass POSIX mode restrictions. They also
 exercise readonly file and directory modes, real parsing/model/literal results,
 recovery blocking and metadata-only diagnosis. Text layout and documentation are
-not test oracles. The local gate selects only these new tests with four workers.
-Whole-suite and serial acceptance remain CI-only, serial plus comparison at every
-fifth bundle. Spec, existing CI workflow, observer and dependencies are unchanged.
+not test oracles. Test execution follows the local `AGENTS.md`; see
+[Testing.md](Testing.md) for the technical commands. These behavior cases remain
+part of the suite and do not define a separate Apply selection.
 
 Source-bound observations must not be reused as transaction write authorization.
 The later planner/writer must independently revalidate state under its own lock.

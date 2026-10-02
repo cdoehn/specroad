@@ -64,9 +64,9 @@ Berechnung erteilt keine Review-, Release-, Schreib- oder Transaktionsfreigabe.
 ## Tests
 
 Verhaltenstests prüfen tatsächliche Mengen, Datenbindungen, Fehlzustände,
-Deduplizierung und erhaltene Eingabedaten, nicht menschliche Ausgaben. Der
-parallele Entwicklungsstandard und die serielle Vergleichsprüfung bleiben
-unverändert. Keine Test-/Suite-Timeouts, keine übersprungenen Pflichtprüfungen.
+Deduplizierung und erhaltene Eingabedaten, nicht menschliche Ausgaben. Für die
+Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung steht in
+[Testing.md](Testing.md).
 
 ## Ergänzte Robustheit und Wiederprüfung
 

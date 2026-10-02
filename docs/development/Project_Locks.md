@@ -33,8 +33,9 @@ reader until its owner is resolved.
 No native transaction backend, CLI lock commands, journal parser, implicit
 repair, process termination or automatic request receipts are introduced here.
 All working data and temporary project roots in the tests are private to the
-test. The selected W gate includes the new lock tests plus the two directly
-changed read-only-validation test files; it does not execute a full suite.
+test. The lock tests and the two related read-only-validation test files contain
+the behavioral evidence for this section. Test execution follows the local
+`AGENTS.md`; see [Testing.md](Testing.md) for the technical commands.
 
 ## Explicit recovery (5.i.R)
 
@@ -71,8 +72,9 @@ filesystem actor. The lock kind is not a privilege or a completed native writer.
 The new three-way mutual exclusion and forced-orphan recovery are not yet wired
 into every later CLI command or the unimplemented durable transaction backend.
 
-Selected R/C gates: both lock test files plus the two directly affected read-only
-validation files. Real competing processes, abrupt exit, forked handles, active
-journals, reused PIDs, unknown hosts, changing records, I/O failures and portable
+Both lock test files and the related read-only-validation files remain part of
+the full suite, without a separate Apply selection. Real competing processes,
+abrupt exit, forked handles, active journals, reused PIDs, unknown hosts,
+changing records, I/O failures and portable
 distributions are tested. There is no artificial test/suite timeout and no test
 that compares human-readable output or documentation layout.

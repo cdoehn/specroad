@@ -47,9 +47,9 @@ Editoren. Stromausfallsicherheit wird nicht stärker als die darunterliegenden
 fsync-/Rename-Garantien behauptet. Native ACL-/Eigentümerübernahme ist nicht
 Bestandteil dieser Mode-Bindung.
 
-Lokal werden nur neue und unmittelbar betroffene Verhaltenstests parallel mit
-vier Workern ausgeführt. Volltests bleiben in GitHub, jedes fünfte Bundle
-zusätzlich seriell mit Vergleich. Keine Darstellungstests, keine neuen Timeouts.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Die Publikations- und Unterbrechungsfälle
+bleiben fachliche Verhaltenstests innerhalb der Testsuite.
 
 ## Read-only inspection and failure evidence
 

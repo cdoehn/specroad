@@ -41,10 +41,9 @@ mit Exactly-once-Zusage, keine neuen Projektlocks oder Dateisystemwriter.
 Die tatsächliche Autorisierung und Livezustandsprüfung bleiben Aufgabe der
 vertrauenswürdigen Anbindung. Spezialoperationen sind keine freien Fieldpatches.
 
-Lokale Gates: ausschließlich neue/direkt betroffene Dateien mit vier Workern.
-Vollsuite nur in CI; Bundle 031 parallel, nächster Doppelmodus bei Bundle 035.
-Vor neuen Commits muss der fehlende parallele UND serielle CI-Nachweis des
-bereits lokal abgeschlossenen Bundles 030 vollständig verifiziert sein.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Die damalige Auswahlregel und CI-Abhängigkeit
+von Bundle 030/031/035 sind historisch und keine aktuelle Commitvoraussetzung.
 
 ## Vollständige Eingabe- und Applygrenze (R)
 

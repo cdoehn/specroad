@@ -26,9 +26,9 @@ Errors retain SRV110, rule identity and expression JSON Pointer. Resource/work
 policies, graph operators and rule-consumer integration are later steps. No
 new CLI command, structural budget, checkpoint or writing workflow is added.
 
-Development and bundle gates run the full suite only in parallel (four workers).
-The existing GitHub CI template keeps the serial reference and comparison;
-no repository is created and no CI execution is claimed here.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. A successful GitHub run requires actual evidence
+from the manually started workflow.
 
 R regressions cover all nine pairs of nested quantifiers over a bounded exhaustive
 Boolean corpus, deep expressions, complete ordered iteration, recovery after

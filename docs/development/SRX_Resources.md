@@ -62,7 +62,8 @@ kann sichere Fortsetzungspunkte außerhalb der Operatorsemantik anbinden.
 Kein CLI-Fachbefehl, keine OS-Sandbox, kein Dateizugriff und kein automatisches
 Lockern harter Grenzen. Vollständige Profilkomposition, beobachtete Hostquoten
 und persistente Work-/Checkpoint-Protokolle folgen in ihren Planschritten.
-Lokal nur ausgewählte vier-Worker-Gates, Volltests und serielle Referenzen in CI.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md).
 
 ## Fehlersicht und Sicherheitsabnahme
 

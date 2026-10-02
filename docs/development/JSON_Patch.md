@@ -44,9 +44,9 @@ Change Plan operation folding is implemented. Those are later 5.c/5.d/transactio
 steps. In particular proposal planning must add both revision and hash as required
 by its stronger contract; accepting either is the separate authoring input rule.
 
-Local gates: only new/directly affected tests, four xdist workers. Full matrix
-belongs to CI; Bundle 025 requires both parallel and serial full tests plus their
-bound result comparison. CI observation and capture are unchanged under tools/.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. Bundle 025's dual CI mode was a historical rule
+and no longer governs future runs. CI observation and capture remain under tools/.
 
 ## Robust adapters and error behavior
 

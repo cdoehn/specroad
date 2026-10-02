@@ -94,9 +94,8 @@ Fehlerklassen und Nebenwirkungsgrenzen bleiben identisch.
 
 ## Entwicklungsabnahme
 
-Standard sind vollständige parallele Verhaltenstests mit pytest-xdist und ein
-serieller Referenzlauf samt Vergleich der gebundenen Ergebnisse an jedem
-Clean-Commit. Darstellung und Dokumentation sind nach TD-001 keine Oracles.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md).
 Die lokale CPython-3.13-Vorprüfung ist kein Nachweis der gesamten 3.10–3.14-
 Matrix und ersetzt nicht den Pixel-Apply. Die lokalen Upstream-Entwicklungsbuilds
 von xdist/execnet gehören nicht zum ausgelieferten Core oder Patchpaket.

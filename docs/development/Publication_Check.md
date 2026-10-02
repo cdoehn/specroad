@@ -39,9 +39,8 @@ verweigerte Hostentscheidung Code 7; ungelöste Recoveryzustände und I/O-Proble
 bleiben getrennte Fehler. Nach Aufruf eines fehlerhaften Publishers bleiben
 Schreibfolgen unbekannt. Keine automatische Wiederholung und kein Rollback.
 
-Lokale Entwicklung prüft nur neue/direkt betroffene Verhaltenstests mit vier
-Workern. Volltests laufen am Bundle-Abschluss in der CI, jede fünfte Nummer
-zusätzlich seriell mit Nachweisvergleich. Keine Darstellungstests oder Testtimeouts.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md).
 Die Testpublisher sind absichtlich einfache owned-tempdir-Fixtures, keine
 Produktimplementierung eines crashsicheren Journal-/Receipt-Backends.
 

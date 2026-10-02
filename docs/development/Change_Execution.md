@@ -49,11 +49,11 @@ Ausgang später mit echten Transaktionsbelegen auflösen.
 
 ## Tests und CI
 
-Lokal nur die neuen `test_change_execution*.py`-Dateien, vier Worker. Keine lokale
-Vollsuite/serielle Vollsuite. Katalogsammlung ist kein Lauf von Testkörpern. Am Ende
-von Bundle 030 startet die GitHub-Vollsuite parallel und seriell mit Vergleich,
-für CPython 3.10–3.14. Der vorhandene CI-Beobachter und Resulttransport bleiben
-unverändert. Meldungstexte, Layout, Farben und Dokumentation sind keine Testoracles.
+`test_change_execution*.py` enthält die fachlichen Nachweise dieses Abschnitts,
+keine eigenständige Apply-Testauswahl. Für die Testausführung gilt die lokale
+`AGENTS.md`; die technische Anleitung steht in [Testing.md](Testing.md).
+Die frühere CI-Auslösung und der Doppelmodus von Bundle 030 sind historisch und
+keine aktuelle Ausführungsregel. Katalogsammlung ist kein Lauf von Testkörpern.
 
 ## Ergänzte Fehler- und Frischegrenzen
 

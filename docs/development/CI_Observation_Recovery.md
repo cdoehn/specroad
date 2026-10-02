@@ -1,5 +1,10 @@
 # Bundle 039: gebundene CI-Diagnose nach Beobachtungsabbruch
 
+Die hier beschriebenen Testauswahl-, CI-Auslöse- und Volltestmodusregeln gehören
+zu den historischen Bundles 038–040 und sind außer Kraft. Für die aktuelle
+Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung steht in
+[Testing.md](Testing.md). Die damaligen Befunde und Nachweisgrenzen bleiben erhalten.
+
 ## Anlass und Grenze
 
 Quelle ist `specroad_Result_105336_0930_3ce5ab.zip`, nicht ein vermuteter aktueller GitHub-Stand.

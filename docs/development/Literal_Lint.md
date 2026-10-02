@@ -70,11 +70,11 @@ success. No global strict/fail-on decision or lifecycle gate is implemented here
 
 ## Development evidence
 
-Every W/R/C commit runs only its selected files with four xdist workers on Pixel.
-The collection preflight checks all catalog identities without executing test
-bodies. No full local suite or serial local suite. Bundle 016's final commit
-requests both full modes and their comparison in the existing GitHub matrix.
-Local selected evidence is not full CI or release evidence.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. The collection preflight checks catalog identities
+without executing test bodies. Bundle 016's CI trigger and dual mode were
+historical rules and no longer govern future runs. Local evidence does not
+establish a GitHub run or a release approval.
 
 ## Responsibility split
 

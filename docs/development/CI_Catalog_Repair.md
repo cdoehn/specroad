@@ -1,5 +1,10 @@
 # CI-Korrektur: echte Testidentitäten und Katalogvorprüfung
 
+Die hier beschriebenen Testauswahl-, CI-Auslöse- und Volltestmodusregeln gehören
+zu den historischen Bundles 010–012 und sind außer Kraft. Für die aktuelle
+Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung steht in
+[Testing.md](Testing.md). Die damaligen Befunde und Nachweisgrenzen bleiben erhalten.
+
 ## Befund vom 22. September 2026
 
 Das Result `specroad_Result_094144_0922_666714.zip` bestätigt Bundle 010

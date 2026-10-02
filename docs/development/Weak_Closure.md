@@ -32,8 +32,8 @@ an approval. No normative Scope-Hash/model root, CLI command, persistent cache,
 IO, resource/profile discovery or write authorization is added here.
 
 Tests use owned data and observe membership, values, hashes and errors, not
-terminal output, translations, formatting or documentation. The existing
-parallel development gate and explicit serial reference remain unchanged.
+terminal output, translations, formatting or documentation. Test execution follows
+the local `AGENTS.md`; see [Testing.md](Testing.md) for the technical commands.
 
 ## Exact partial-reference validation
 

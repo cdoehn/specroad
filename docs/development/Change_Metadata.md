@@ -44,9 +44,9 @@ auch bei anderer Laufzeit, Locale oder Decimal-Konfiguration. Das ist keine
 Replay-Freigabe: erneut gegen das bereits geänderte Live-Modell anzuwenden
 unterliegt weiterhin den ursprünglichen Vorbedingungen.
 
-Lokal nur die neuen, direkt betroffenen Testdateien, vier xdist-Worker.
-Vollständige Suite und Fünferzyklus bleiben in GitHub. Keine Tests auf
-Darstellung oder Dokumentation und keine neue Core-/Entwicklungsabhängigkeit.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Die fachlichen Metadatenregressionen bleiben
+Teil der Testsuite. Dieser Abschnitt führt keine neue Abhängigkeit ein.
 
 ## R: Gespeicherte Pläne und ursprüngliche Ressourcen
 

@@ -35,10 +35,10 @@ inapplicable). It concerns the supplied loaded model, not filesystem completenes
 A reusable CLI/planner/adapter facade is separate from the later diagnostic UI and
 failure-threshold policy. Structural prerequisite failures block semantic gates.
 
-Local gates: only the new validation test files, four workers, no full or serial
-suite. The unchanged CI workflow runs the complete suite. Bundle 020 requests
-parallel plus serial and the existing comparison on Python 3.10–3.14. The generic
-CI observer remains development tooling under tools/, not src/specroad/.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. Bundle 020's dual CI mode was a historical rule
+and no longer governs future runs. The generic CI observer remains development
+tooling under tools/, not src/specroad/.
 
 ## Right-stage coverage and external bindings
 

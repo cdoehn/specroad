@@ -1,5 +1,10 @@
 # CI-Reparatur: Laufzeitpfad isolierter Python-Unterprozesse
 
+Die hier beschriebenen Testauswahl-, CI-Auslöse- und Volltestmodusregeln gehören
+zum historischen Bundle 040 und sind außer Kraft. Für die aktuelle Testausführung
+gilt die lokale `AGENTS.md`; die technische Anleitung steht in
+[Testing.md](Testing.md). Die damaligen Befunde und Nachweisgrenzen bleiben erhalten.
+
 ## Anlass und Bindung
 
 OFF-PLAN `CI-SUBPROCESS-RUNTIME`, Bundle **040**. Der Produktstand bleibt

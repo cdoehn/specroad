@@ -33,9 +33,8 @@ lifecycle_checked describe candidate construction, not write authorization,
 history completeness, final model-root verification or product approval. Earlier
 field-only and metadata-only APIs retain their explicit narrower contracts.
 
-Testing follows TD-001/TD-002: only new/directly affected tests locally with four
-xdist workers; the full matrix runs in GitHub, and every fifth bundle includes
-the serial reference. No presentation or documentation tests are introduced.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands.
 
 ## Complete candidate verification
 

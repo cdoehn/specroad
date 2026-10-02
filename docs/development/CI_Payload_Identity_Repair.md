@@ -1,5 +1,10 @@
 # CI-Payload-Identität: Korrektur 4.j.W-FIX1 (Bundle 018)
 
+Die hier beschriebenen Testauswahl-, CI-Auslöse- und Volltestmodusregeln gehören
+zu den historischen Bundles 017–020 und sind außer Kraft. Für die aktuelle
+Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung steht in
+[Testing.md](Testing.md). Die damaligen Befunde und Nachweisgrenzen bleiben erhalten.
+
 ## Geprüfte Eingaben und tatsächlicher Zustand
 
 - Result: `specroad_Result_181711_0923_6458d6.zip`, SHA-256 `04951d8c72daa24f24b7b41a0a09f4afcd4d007dd0d1e86914f355ca566f8679`.
@@ -93,11 +98,11 @@ Release-Abhängigkeiten des Projekts noch die Pixel-Umgebung. Ein dortiger Apply
 und die erneut grüne CI-Matrix können erst durch ihre wirklichen Läufe bestätigt
 werden. Die Fehlerprotokolle des alten CI-Laufs werden nicht umgedeutet.
 
-## Weiterarbeit
+## Damals vorgesehene Weiterarbeit
 
 Ein einziges separates Korrekturbundle mit einem Fix-Commit. Produktzähler
 unverändert 165/885, nächster geplanter Commit 4.n.W. Erst die Korrektur-CI
 abnehmen, dann die containerbezogene Sprachmischung implementieren.
-Bei künftigen Änderungen an Lieferressourcen, Profilen, Sprachdaten oder
-Buildregeln gehören tests/test_identity.py und tests/test_payload_identity.py
-zwingend zur lokalen Auswahl, zusätzlich zu den jeweiligen Fachtests.
+`tests/test_identity.py` und `tests/test_payload_identity.py` bleiben fachliche
+Nachweise für Lieferressourcen, Profile, Sprachdaten und Buildregeln innerhalb
+der vollständigen Suite; sie begründen keine zusätzliche lokale Auswahlregel.

@@ -39,7 +39,9 @@ Beispiel:
 
 ## Entwicklung
 
-Verhaltenstests: Richtungen, Mengen, Zielauswahl, explizite Tiefe, Typ-/Modellfehler und unveränderte Eingaben. Keine Ausgabe-/Dokumentationstests. Jeder W/R/C-Stand erhält einen vollständigen parallelen Testlauf mit vier xdist-Workern. Die serielle Vollreferenz bleibt ausschließlich in der vorbereiteten GitHub-CI.
+Verhaltenstests prüfen Richtungen, Mengen, Zielauswahl, explizite Tiefe,
+Typ-/Modellfehler und unveränderte Eingaben. Für die Testausführung gilt die
+lokale `AGENTS.md`; die technische Anleitung steht in [Testing.md](Testing.md).
 
 ## Robustheit (4.f.R)
 

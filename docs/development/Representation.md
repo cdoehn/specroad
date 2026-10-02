@@ -91,7 +91,7 @@ Es gibt keine automatisierten Einrückungs-, Schlüsselreihenfolgen-, Header-,
 HTML-/Markdown- oder Dokumentationstests. Die sichtbare Normalform und Kennzeichnung
 unterliegen TD-001. SR-TC-0021 bleibt daher ohne künstlichen automatisierten Pass.
 
-Die normale vollständige Prüfung verwendet unverändert pytest-xdist; der
-Clean-Schritt erhält zusätzlich einen seriellen Lauf und Nachweisvergleich.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md).
 Keine neuen Core- oder Entwicklungsabhängigkeiten. Ein erfolgreiches lokales
 Entwicklungs-Resultat ist keine Zielsystem-, Python-Matrix- oder Releasefreigabe.

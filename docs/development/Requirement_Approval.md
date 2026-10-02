@@ -63,11 +63,11 @@ transition or complete product approval.
 
 ## Tests
 
-Local W: `tests/test_requirement_approval.py`; local R/C add the directly related
-robustness tests. Only these selected files run with four xdist workers. The full
-catalog is collected separately without executing a complete suite. Full matrix
-runs in GitHub at the last bundle commit; every fifth bundle adds serial and
-comparison. Synthetic service fixtures explicitly do not authenticate real users.
+`tests/test_requirement_approval.py` and the related robustness tests contain
+the behavioral evidence for this section, not a separate Apply test selection.
+Test execution follows the local `AGENTS.md`; see [Testing.md](Testing.md)
+for the technical commands. Catalog collection does not execute test bodies.
+Synthetic service fixtures explicitly do not authenticate real users.
 
 ## Robustness additions
 

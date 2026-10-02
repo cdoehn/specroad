@@ -42,9 +42,9 @@ Mehrdatei-Atomizität noch eine stärkere Stromausfallgarantie als die darunterl
 Dateisysteme. Die Python-Synchronisations-/Dateiprimitiven sind beschrieben unter
 https://docs.python.org/3.10/library/os.html (fsync/open/replace).
 
-Lokal nur neue und direkt betroffene Tests parallel mit vier Workern. GitHub führt
-am Bundle-Ende die Vollsuite aus, jedes fünfte Bundle zusätzlich seriell mit Vergleich.
-Keine Tests auf Meldungstexte, Farben, Dokumentation oder Layout; keine neuen Timeouts.
+Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
+steht in [Testing.md](Testing.md). Die Receipt- und Fehlergrenzentests bleiben
+fachliche Nachweise innerhalb der Testsuite.
 
 ## Abschluss rekonstruieren und Arbeitsreste entsorgen
 
