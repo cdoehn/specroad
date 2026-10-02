@@ -35,7 +35,7 @@ class Request:
     bundle: int | None = None
     source_sha256: str | None = None
     event: str = 'workflow_dispatch'
-    expected_mode: str = 'both'
+    expected_mode: str = 'parallel'
     workflow_commit: str | None = None
 
     def __post_init__(self):
@@ -47,7 +47,7 @@ class Request:
             raise CIObservationError('invalid_source_binding')
         if self.event not in ('workflow_dispatch', 'push'):
             raise CIObservationError('invalid_workflow_event')
-        if self.expected_mode not in ('parallel', 'both') or (self.event == 'workflow_dispatch' and self.expected_mode != 'both'):
+        if self.expected_mode not in ('parallel', 'both'):
             raise CIObservationError('invalid_expected_mode')
         if self.workflow_commit is not None and (type(self.workflow_commit) is not str or re.fullmatch('[0-9a-f]{40}', self.workflow_commit) is None):
             raise CIObservationError('full_workflow_commit_required')

@@ -24,24 +24,22 @@ def test_ci_guard_is_explicit(tmp_path, value):
     assert not (tmp_path / "run").exists()
 
 
-@pytest.mark.parametrize("fault", ["missing", "invalid_json", "duplicate_key", "nonfinite", "nonobject", "different_source", "different_ids", "repeated_run"])
-def test_invalid_current_evidence_fails_comparison(tmp_path, fault):
-    first = evidence(); calls = []
+@pytest.mark.parametrize("fault", ["missing", "invalid_json", "duplicate_key", "nonfinite", "nonobject", "invalid_binding", "different_ids", "failed_outcome"])
+def test_invalid_current_parallel_evidence_fails_gate(tmp_path, fault):
+    calls = []
     def execute(command, **kwargs):
         path = Path(command[command.index("--evidence") + 1])
-        data = first if not calls else evidence()
-        if calls:
-            if fault == "missing":
-                calls.append(command); return SimpleNamespace(returncode=0)
-            if fault == "different_source": data["tool_build_sha256"] = "b" * 64
-            if fault == "different_ids": data["observation"]["nodeids"] = ["other"]
-            if fault == "repeated_run": data["run_id"] = first["run_id"]
-            if fault == "nonobject": data = None
+        data = evidence()
+        if fault == "missing":
+            calls.append(command); return SimpleNamespace(returncode=0)
+        if fault == "invalid_binding": data["tool_build_sha256"] = "invalid"
+        if fault == "different_ids": data["observation"]["nodeids"] = ["other"]
+        if fault == "failed_outcome": data["test_outcomes"]["stable.a"] = "failed"
+        if fault == "nonobject": data = None
         raw = json.dumps(data)
-        if calls:
-            if fault == "invalid_json": raw = "{"
-            if fault == "duplicate_key": raw = raw[:-1] + ', "suite_passed": true}'
-            if fault == "nonfinite": raw = raw[:-1] + ', "unsafe": NaN}'
+        if fault == "invalid_json": raw = "{"
+        if fault == "duplicate_key": raw = raw[:-1] + ', "suite_passed": true}'
+        if fault == "nonfinite": raw = raw[:-1] + ', "unsafe": NaN}'
         path.write_text(raw, encoding="utf-8"); calls.append(command)
         return SimpleNamespace(returncode=0)
     target = tmp_path / "run"
@@ -57,11 +55,11 @@ def test_interpreter_launch_error_is_not_a_green_run(tmp_path):
         calls.append(command)
         raise OSError("interpreter unavailable")
     result = run_reference(tmp_path / "run", environment={"GITHUB_ACTIONS": "true"}, runner=execute)
-    assert len(calls) == 2 and not result["suite_passed"]
-    assert [check["exit_code"] for check in result["checks"]] == [4, 4]
+    assert len(calls) == 1 and not result["suite_passed"]
+    assert [check["exit_code"] for check in result["checks"]] == [4]
 
 
-def test_signal_exit_remains_a_failure_even_if_serial_passes(tmp_path):
+def test_signal_exit_remains_a_failure(tmp_path):
     result = run_reference(tmp_path / "run", environment={"GITHUB_ACTIONS": "true"}, runner=fake_runner([], codes=(-9, 0)))
     assert result["exit_code"] == 1 and result["checks"][0]["exit_code"] == -9
 
@@ -90,7 +88,7 @@ def test_existing_summary_is_not_overwritten(tmp_path):
     target = tmp_path/"run"; calls=[];delegate=fake_runner(calls)
     def execute(command, **kwargs):
         value=delegate(command, **kwargs)
-        if len(calls)==2: (target/"summary.json").write_bytes(b"keep")
+        if len(calls)==1: (target/"summary.json").write_bytes(b"keep")
         return value
     with pytest.raises(FileExistsError):
         run_reference(target, environment={"GITHUB_ACTIONS":"true"},runner=execute)
@@ -101,6 +99,6 @@ def test_two_ci_invocations_never_share_evidence(tmp_path):
     for name in ("one","two"):
         result=run_reference(tmp_path/name,environment={"GITHUB_ACTIONS":"true"},runner=fake_runner([]))
         assert result["suite_passed"]
-    first=json.loads((tmp_path/"one/serial-evidence.json").read_text())
-    second=json.loads((tmp_path/"two/serial-evidence.json").read_text())
+    first=json.loads((tmp_path/"one/parallel-evidence.json").read_text())
+    second=json.loads((tmp_path/"two/parallel-evidence.json").read_text())
     assert first["run_id"]!=second["run_id"]

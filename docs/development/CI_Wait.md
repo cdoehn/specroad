@@ -1,16 +1,35 @@
-# CI-Beobachtung: manuelle Full-Runs und historische Nachweise
+# Aktive Laptop-Teststrategie ab 2. Oktober 2026
 
-Aktive Nutzerentscheidung ab Bundle 041: **keine automatische Test-CI und kein
-CI-Warten nach normalen Bundles**. Es bleiben gezielte lokale Paralleltests und
-der normale Push. Full-Tests starten ausschließlich bewusst manuell und führen
-stets CPython 3.10–3.14 parallel UND seriell samt Vergleich aus. Es gibt keinen
-Fünferzyklus und keine tägliche Zeitsteuerung. Siehe [Bundle-CI](Bundle_CI.md).
+Im PatchHarbor-Apply-Repository wird für jeden zukünftigen W/R/C-Zustand zuerst
+immer die vollständige Testsuite parallel und danach immer die vollständige
+Testsuite seriell ausgeführt. Beide Volltests müssen erfolgreich sein, bevor der
+jeweilige Commit erstellt wird. Keine gezielte Testauswahl als Apply-Regel.
+W, R und C bleiben getrennte Zustände: Änderung → beide Volltests → Commit.
+
+```sh
+.venv/bin/python -I -B tools/run_tests.py --workers 4
+.venv/bin/python -I -B tools/run_tests.py --workers 0
+```
+
+GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
+manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
+parallel auf Python 3.10–3.14 aus. In GitHub gibt es keinen seriellen Volltest.
+Die frühere 5er-Bundle-Regel bleibt entfernt.
+
+Getestet werden Verhalten und maschinenlesbare fachliche Verträge. Keine Tests
+auf GUI, menschlich lesbare Konsolenausgabe, Farben, ANSI, Tabellenlayout,
+Spinner, README, Markdowndarstellung oder Dokumentation. Sonst keine weitere
+Testregel.
+
+Entwicklung ausschließlich in specroad-codex; kein Push aus dieser Kopie.
+Commit-Erzeugung und Übergabe nach specroad-apply ausschließlich durch PatchHarbor.
+Fehler erhalten erfolgreiche frühere Commits und den tatsächlichen Arbeitszustand.
 
 ## Exakte, rein lesende Beobachtung
 
 `tools/watch_bundle_ci.py` startet oder wiederholt keine CI und verändert weder
 Commits noch Branches. Es kann nach einem ausdrücklich manuellen Start zusätzlich
-aufgerufen werden. Der Default ist `event=workflow_dispatch`, `mode=both`.
+aufgerufen werden. Der Default ist `event=workflow_dispatch`, `mode=parallel`.
 `--bundle` ist optionale Metadaten, kein Modusschalter. Der Workflow-Dateiname
 bleibt `behavior.yml`, damit bestehende Registrierung und historische Links gelten.
 
@@ -28,7 +47,7 @@ Das frische Ausgabeziel darf noch nicht existieren. Tests werden nicht gestartet
 Bei unterschiedlichen Test- und Workflowrevisionen zusätzlich die vollständige
 `--workflow-commit`-SHA angeben. Der Observer bindet den Run an die Dispatch-SHA,
 den Report dagegen an die tatsächlich getestete SHA. `run-context.json` bestätigt
-beide Revisionen, Ereignis, Branch, Repository, Run-ID, Attempt, Python und beide Modi.
+beide Revisionen, Ereignis, Branch, Repository, Run-ID, Attempt, Python und Ausführungsmodus.
 Ein grüner Run ohne diese Bindung darf keinen erfolgreichen manuellen Full-Nachweis
 für eine andere ausgewählte SHA liefern.
 
@@ -76,7 +95,7 @@ nicht im normalen Bundle statt.
 ## Evidence und Result-Transport
 
 Gesichert werden run.json, jobs.json, vollständige verfügbare Attempt-Logs,
-Artefaktindex, beide Reports/Comparison pro Version sowie Größen und SHA-256 aller
+Artefaktindex, paralleler Report pro Version (bei historischen dualen Läufen beide Reports/Comparison) sowie Größen und SHA-256 aller
 gesicherten Dateien. Fehlgeschlagene Reports bleiben erhalten, auch wenn sie den
 strengen Passing-Vergleich nicht bestehen. Capture-Vollständigkeit, bestätigter
 Testnachweis und tatsächliche GitHub-Conclusion sind getrennte Felder.

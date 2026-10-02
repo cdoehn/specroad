@@ -55,48 +55,39 @@ Fachliche Dokumentmodelle, vollständige ausgewählte Daten und sichere Verarbei
 
 Die CLI wird dennoch von Anfang an **farbig, übersichtlich und ansprechend** umgesetzt: austauschbare Präsentationsschicht, deutlich erkennbare Phasen, fortlaufender Fortschritt, klare Warnungen und kompakter Abschluss. Es gibt keinen nachträglichen Riesenschritt, der sämtliche Bedienbarkeit erst am Ende erzeugt. Terminalbreite, TTY-/Plain-Modus, NO_COLOR und quiet werden bei der Implementierung berücksichtigt, aber ihre Darstellung nicht automatisiert festgeschrieben.
 
-## TD-002 – pytest-xdist als paralleler Entwicklungsstandard
+## TD-002 – Laptop-Volltests und ausschließlich manuelle GitHub-CI
 
-Nutzerentscheidung vom 15. September 2026: `pytest` und `pytest-xdist` gehören ausschließlich
-in die Entwicklungsgruppe. Der Core bleibt ohne diese Laufzeitabhängigkeiten. Bestehende
-`unittest.TestCase`-Tests werden durch pytest eingesammelt, nicht pauschal neu geschrieben.
+Im PatchHarbor-Apply-Repository wird für jeden zukünftigen W/R/C-Zustand zuerst
+immer die vollständige Testsuite parallel und danach immer die vollständige
+Testsuite seriell ausgeführt. Beide Volltests müssen erfolgreich sein, bevor der
+jeweilige Commit erstellt wird. Keine gezielte Testauswahl als Apply-Regel.
+W, R und C bleiben getrennte Zustände: Änderung → beide Volltests → Commit.
 
-**Neue verbindliche Nutzerentscheidung vom 30. September 2026, ab Bundle 041:**
-Auf dem Pixel pro Commit ausschließlich neue und direkt betroffene Tests, sichtbar
-benannt, parallel mit pytest-xdist und maximal vier Workern. Keine Vollsuite,
-keine vorsorglich breite Auswahl, keine serielle lokale Vergleichssuite und kein
-serieller Fallback. Gezielte Teilnachweise sind keine vollständige Produktabnahme.
+```sh
+.venv/bin/python -I -B tools/run_tests.py --workers 4
+.venv/bin/python -I -B tools/run_tests.py --workers 0
+```
 
-Nach dem letzten erfolgreichen lokalen Commit normaler Push der exakten SHA nach
-origin/dev. **Keine automatische GitHub-Test-CI, kein Runner-Probe und kein
-CI-Warten/Evidence-Sammeln im normalen Bundle.** LOCAL APPLY, PUSH und
-FULL CI: NOT RUN (manual only) bleiben getrennt. Ein späterer Netzwerkfehler
-setzt erfolgreiche lokale Commits nicht zurück.
+GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
+manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
+parallel auf Python 3.10–3.14 aus. In GitHub gibt es keinen seriellen Volltest.
+Die frühere 5er-Bundle-Regel bleibt entfernt.
 
-**Full Regression ausschließlich manuell über workflow_dispatch:** alle fünf
-Python-Versionen 3.10–3.14, jeweils vollständige parallele Suite, vollständige
-serielle Suite und vorhandener Nachweisvergleich. Keine tägliche Zeitsteuerung.
-**Die Fünferregel entfällt vollständig.** Bundle-Trailer bleiben Metadaten und
-lösen keine Tests aus. Auch manuelle Zwischenstände erhalten immer beide Modi.
+Getestet werden Verhalten und maschinenlesbare fachliche Verträge. Keine Tests
+auf GUI, menschlich lesbare Konsolenausgabe, Farben, ANSI, Tabellenlayout,
+Spinner, README, Markdowndarstellung oder Dokumentation. Sonst keine weitere
+Testregel.
 
-Die manuelle Runnerauswahl prüft Hetzner online/frei mit allen erforderlichen
-Labels über einen kleinen Ubuntu-24.04-Select-Job. Ohne Verfügbarkeit/Leserecht
-expliziter Hosted-Fallback, niemals gemischte Alternativlabels oder Scheinerfolg.
-GitHub-Button-Registrierung im Defaultbranch und optionales Runner-Lese-Secret
-sind externe Voraussetzungen; das Bundle ändert weder main noch Secrets.
-Details: [Bundle-CI](../development/Bundle_CI.md).
+Entwicklung ausschließlich in specroad-codex; kein Push aus dieser Kopie.
+Commit-Erzeugung und Übergabe nach specroad-apply ausschließlich durch PatchHarbor.
+Fehler erhalten erfolgreiche frühere Commits und den tatsächlichen Arbeitszustand.
 
-Nur pytest-xdist verteilt Tests. Kein eigener Scheduler, keine stillen Skips,
-keine kosmetischen Tests und keine künstlichen Einzeltest-/Suite-Timeouts.
-Kleine isolierte Framework-Regressionsprozesse bleiben erhalten. Ein erfolgreicher
-lokaler Commit bestätigt nur seine Auswahl; der tatsächliche manuelle Full-Run
-und die Produktfreigabe sind davon strikt getrennt.
-
-`tools/run_tests.py` und `tools/run_ci_tests.py` bleiben für explizite manuelle
-Full-CI erhalten, werden aber nicht aus normalen Pixel-Bundles aufgerufen.
-Historische Vollsuite-/Fünfer-Anweisungen in abgeschlossenen Abschnitten gelten
-nur als damalige Historie, nicht als aktuelle Ausführungspflicht.
-Anleitung: [Testentwicklung](../development/Testing.md).
+pytest und pytest-xdist bleiben Entwicklungsabhängigkeiten. Der Produktplan-
+Zähler bleibt unverändert; diese Migration ist OFF-PLAN und beginnt nicht 5.t.
+Historische Testauswahl-/CI-Angaben in abgeschlossenen Abschnitten dokumentieren
+nur die damalige Ausführung und sind keine aktuelle Apply-Regel.
+Details: [Bundle-CI](../development/Bundle_CI.md),
+[Testentwicklung](../development/Testing.md).
 
 ## CI-WAIT – historische Implementierung, aktive Verwendung ab Bundle 041 manuell
 

@@ -21,7 +21,7 @@ def resolve_selection(environment, *, runner=None, probe=None):
         raise ValueError("Only a manual run accepts an explicit revision")
     workflow_sha = commit_sha(environment.get("GITHUB_SHA", ""))
     sha = commit_sha(requested or workflow_sha)
-    mode = environment.get("SR_CI_MODE") or "both"
+    mode = environment.get("SR_CI_MODE") or "parallel"
     if event == "push":
         # Defense in depth for old/default-branch push workflows: no git lookup,
         # runner probe or suite, even for a final or fifth-numbered bundle.

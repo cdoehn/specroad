@@ -29,10 +29,10 @@ def test_push_cannot_override_target_revision():
     with pytest.raises(ValueError): resolve_selection({'GITHUB_EVENT_NAME':'push','SR_COMMIT_SHA':SHA})
 
 
-def test_manual_cannot_disable_required_dual_mode():
+def test_manual_legacy_modes_resolve_to_parallel():
     result=select_ci('workflow_dispatch','refs/heads/dev',SHA,message(20),mode='auto')
-    assert result['mode']=='both'
-    with pytest.raises(ValueError): select_ci('workflow_dispatch','refs/heads/dev',SHA,message(20),mode='parallel')
+    assert result['mode']=='parallel'
+    assert select_ci('workflow_dispatch','refs/heads/dev',SHA,message(20),mode='parallel')['mode'] == 'parallel'
 
 
 def test_fifth_bundle_intermediate_is_still_manual_only():

@@ -47,7 +47,7 @@ jobs:
           GH_TOKEN: ${{ secrets.SPECROAD_RUNNER_READ_TOKEN || github.token }}
           SR_CI_RUNNER: ${{ inputs.runner }}
           SR_COMMIT_SHA: ${{ inputs.commit_sha }}
-          SR_CI_MODE: both
+          SR_CI_MODE: parallel
           SR_SELECTION_REPORT: ${{ runner.temp }}/specroad-selection-${{ github.run_id }}-${{ github.run_attempt }}.json
         run: python -I -B tools/select_bundle_ci.py
       - name: Preserve runner selection
@@ -62,7 +62,7 @@ jobs:
   behavior:
     needs: select
     if: needs.select.outputs.run_full == 'true'
-    name: CPython ${{ matrix.python }} / both
+    name: CPython ${{ matrix.python }} / parallel
     runs-on: ${{ fromJSON(needs.select.outputs.runner) }}
     strategy:
       fail-fast: false
@@ -94,7 +94,7 @@ jobs:
           context = dict(format_version=1, repository=e['GITHUB_REPOSITORY'], branch='dev',
               event=e['GITHUB_EVENT_NAME'], test_commit_sha=head, workflow_commit_sha=e['SR_WORKFLOW_SHA'],
               run_id=int(e['GITHUB_RUN_ID']), run_attempt=int(e['GITHUB_RUN_ATTEMPT']),
-              python=e['SR_MATRIX_PYTHON'], mode='both', runner_name=e['SR_RUNNER_NAME'],
+              python=e['SR_MATRIX_PYTHON'], mode='parallel', runner_name=e['SR_RUNNER_NAME'],
               runs_on=json.loads(e['SR_RUNS_ON']))
           path = pathlib.Path(e['SR_CONTEXT']); path.parent.mkdir(exist_ok=False)
           with path.open('x', encoding='utf-8') as f:
@@ -109,7 +109,7 @@ jobs:
         env:
           SR_CATALOG: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}-catalog.json
         run: .venv/bin/python -I -B tools/check_test_catalog.py --output "$SR_CATALOG"
-      - name: Full parallel and serial regression with evidence comparison
+      - name: Full parallel regression
         env:
           SR_OUT: ${{ runner.temp }}/specroad-ci-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
         run: .venv/bin/python -I -B tools/run_ci_tests.py --workers 4 --outdir "$SR_OUT"

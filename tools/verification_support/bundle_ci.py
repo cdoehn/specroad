@@ -31,18 +31,18 @@ def bundle_metadata(message):
     return int(number), final == "true"
 
 
-def select_ci(event, ref, sha, message, *, mode="both"):
-    """Only an explicit manual request runs full regression, always both modes.
+def select_ci(event, ref, sha, message, *, mode="parallel"):
+    """Only an explicit manual request runs full regression, in parallel.
 
     The old UI value 'auto' is accepted for already registered dispatch forms;
-    it is an alias for 'both', never a bundle-number-dependent decision.
+    it is an alias for 'parallel', never a bundle-number-dependent decision.
     Bundle trailers remain descriptive metadata, not a scheduling trigger.
     """
     sha = commit_sha(sha)
-    if event not in ("push", "workflow_dispatch") or mode not in ("auto", "both"):
+    if event not in ("push", "workflow_dispatch") or mode not in ("auto", "both", "parallel"):
         raise ValueError("Unsupported CI event or mode")
     metadata = bundle_metadata(message)
     number, final = metadata if metadata else (None, False)
     return {"commit_sha": sha, "run_full": event == "workflow_dispatch",
-            "mode": "both", "bundle_number": number,
+            "mode": "parallel", "bundle_number": number,
             "bundle_final": final, "trigger": event}

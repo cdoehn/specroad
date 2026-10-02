@@ -1,6 +1,6 @@
 """Observe an explicitly started full CI run; never trigger tests or assert an apply.
 
-Manual runs default to both modes. Historical push recovery requires explicit mode.
+Manual runs default to parallel mode. Historical push recovery requires explicit mode.
 """
 import argparse
 from hashlib import sha256
@@ -71,7 +71,7 @@ def main(argv=None):
     parser.add_argument('--commit', required=True)
     parser.add_argument('--bundle', type=int)
     parser.add_argument('--event', choices=('workflow_dispatch', 'push'), default='workflow_dispatch')
-    parser.add_argument('--mode', choices=('both', 'parallel'), default='both')
+    parser.add_argument('--mode', choices=('both', 'parallel'), default='parallel')
     parser.add_argument('--workflow-commit', help='Dispatch revision when testing an older exact commit')
     parser.add_argument('--run-id', type=int)
     parser.add_argument('--attempt', type=int)

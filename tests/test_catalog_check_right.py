@@ -161,7 +161,7 @@ def test_real_four_worker_gate_accepts_mixed_native_and_legacy_identities(tmp_pa
     assert not observation["errors"] and len(effects(root)) == 4
 
 
-def test_small_ci_fixture_preserves_parallel_serial_evidence_comparison(tmp_path):
+def test_small_ci_fixture_preserves_full_parallel_evidence(tmp_path):
     root = make_catalog_project(tmp_path)
     assert check(root)[0] == 0
     outdir = root / "build/ci-reference"
@@ -169,6 +169,8 @@ def test_small_ci_fixture_preserves_parallel_serial_evidence_comparison(tmp_path
                    environment={"GITHUB_ACTIONS": "true"})
     assert proc.returncode == 0
     report = json.loads((outdir / "summary.json").read_text())
-    assert report["suite_passed"] and report["comparison"]["equivalent"]
-    assert [item["workers"] for item in report["checks"]] == [4, 0]
-    assert report["comparison"]["tests"] == 4
+    assert report["suite_passed"] and report["comparison"] is None
+    assert [item["workers"] for item in report["checks"]] == [4]
+    evidence = json.loads((outdir / "parallel-evidence.json").read_text())
+    assert evidence["tests_run"] == 4
+    assert not (outdir / "serial-evidence.json").exists()

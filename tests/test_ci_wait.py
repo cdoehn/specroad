@@ -83,7 +83,7 @@ def test_explicit_historical_dual_mode_requires_dual_full_step():
 
 @pytest.mark.parametrize('bundle', [None, 1, 19, 20, 39, 40, 41, 45, 1000])
 def test_manual_mode_is_both_independent_of_bundle_metadata(bundle):
-    assert Request(SHA, bundle).mode == 'both'
+    assert Request(SHA, bundle).mode == 'parallel'
 
 
 @pytest.mark.parametrize('changes', [dict(head_sha='b'*40), dict(head_branch='main'), dict(event='workflow_dispatch'),

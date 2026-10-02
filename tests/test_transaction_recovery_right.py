@@ -84,7 +84,11 @@ def test_later_states_never_authorize_discard_even_with_matching_hash(tmp_path, 
     value = j.data; value['state'] = state
     raw = canonical_json_bytes(value); (tmp_path / j.path).write_bytes(raw)
     row = inspect_recovery(tmp_path, preflight=c).data['transactions'][0]
-    assert row['state'] == state and row['observed_state'] == state
+    # Changing only the state does not create a valid rollback journal;
+    # missing rollback metadata is reported as corruption, with the claimed
+    # state retained separately for diagnosis. Discard remains forbidden.
+    expected_state = 'corrupt' if state in ('rolling_back', 'rolled_back') else state
+    assert row['state'] == expected_state and row['observed_state'] == state
     assert row['permitted_actions'] == []
     with project_lock(tmp_path, **recovery_options(c)) as held:
         before = tree(tmp_path)

@@ -82,7 +82,7 @@ def test_selection_passes_an_actual_runner_alternative(choice):
         runner=git, probe=lambda: {'format_version':1,'repository':'cdoehn/specroad',
             'reservation':False,'choice':choice,'runs_on':runner_labels(choice)})
     assert json.loads(value['runner'])==runner_labels(choice)
-    assert value['run_full'] and value['mode']=='both'
+    assert value['run_full'] and value['mode']=='parallel'
 
 
 def test_manual_historical_revision_does_not_inherit_a_stale_hetzner_probe():

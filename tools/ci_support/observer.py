@@ -94,7 +94,7 @@ def observe_ci(request, *, client=None, progress=None, sleeper=None, discovery_p
         capture_started = True
         capture_attempt_files(client, request, run_id, attempt, jobs, files, summary, retry=retry)
         # A dispatch can select a different test SHA. A green workflow alone
-        # cannot prove that the requested revision was tested in both modes.
+        # cannot prove that the requested revision was tested in the requested mode.
         if (request.event == 'workflow_dispatch' and summary['ci_status'] == 'success'
                 and not summary['test_evidence_verified']):
             summary['ci_status'] = 'incomplete'

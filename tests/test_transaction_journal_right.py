@@ -20,9 +20,15 @@ from test_transaction_journal import record, begin, altered
 @pytest.mark.parametrize('field',['plan_sha256','plan_bytes_sha256','request_sha256',
                                    'base_model_root_sha256','target_model_root_sha256'])
 def test_rehashed_but_wrong_plan_binding_is_refused(tmp_path,field):
-    m,p,c=prepared(tmp_path);j=BuildingJournal(altered(record(c),lambda v:v.update({field:'0'*64})))
-    with pytest.raises(JournalError) as e:verify_building_journal(j,c)
-    assert e.value.reason=='journal_plan_inventory_mismatch'
+    m,p,c=prepared(tmp_path)
+    # Authoring consistency is checked during decoding, before independent
+    # plan verification. Either boundary must reject the hostile binding.
+    with pytest.raises(JournalError) as e:
+        j=BuildingJournal(altered(record(c),lambda v:v.update({field:'0'*64})))
+        verify_building_journal(j,c)
+    expected = ('invalid_journal_authoring_binding' if field in
+                ('plan_sha256','base_model_root_sha256') else 'journal_plan_inventory_mismatch')
+    assert e.value.reason==expected
 
 
 def test_consistent_but_false_existence_does_not_override_source(tmp_path):
@@ -61,8 +67,10 @@ def test_hash_and_length_of_every_151_file_is_bound(tmp_path):
     m,p,c=prepared(tmp_path,artifacts=originals,operations=[edit(a,'New') for a in originals])
     j=record(c); assert len(j.data['files'])==151
     assert len({e['staging_path'] for e in j.data['files']})==151
-    bad=BuildingJournal(altered(j,lambda v:v['files'][79].update(after_size=17)))
-    with pytest.raises(JournalError):verify_building_journal(bad,c)
+    with pytest.raises(JournalError) as error:
+        bad=BuildingJournal(altered(j,lambda v:v['files'][79].update(after_size=17)))
+        verify_building_journal(bad,c)
+    assert error.value.reason=='journal_target_inventory_mismatch'
     with project_lock(tmp_path,**options(c)) as h:saved=begin(c,h)
     assert read_building_journal(ProjectSource(tmp_path),TRANSACTION,preflight=c).data==saved.data
 

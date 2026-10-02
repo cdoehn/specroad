@@ -75,7 +75,7 @@ def test_requested_hetzner_still_requires_fresh_available_runner(choice):
         'GITHUB_REF':'refs/heads/dev', 'GITHUB_SHA':SHA, 'SR_CI_RUNNER':choice},
         runner=git_runner, probe=probe)
     assert count == [1] and selection['runner_choice'] == 'github-hosted'
-    assert selection['mode'] == 'both' and selection['run_full'] is True
+    assert selection['mode'] == 'parallel' and selection['run_full'] is True
 
 
 def test_explicit_hosted_selection_does_not_probe_or_require_administration_token():
@@ -97,7 +97,7 @@ def test_malformed_probe_does_not_become_an_unchecked_runner_expression(bad):
 
 def test_complete_manual_dual_matrix_is_bound_to_test_and_workflow_sha_separately():
     client = manual_client(workflow_sha=WORKFLOW_SHA)
-    request = Request(SHA, 41, SOURCE, workflow_commit=WORKFLOW_SHA)
+    request = Request(SHA, 41, SOURCE, expected_mode="both", workflow_commit=WORKFLOW_SHA)
     summary, files = observe_ci(request, client=client, sleeper=lambda _:None,
                                pinned_run_id=51, pinned_attempt=1)
     assert summary['ci_status'] == 'success' and summary['evidence_complete']
@@ -111,7 +111,7 @@ def test_complete_manual_dual_matrix_is_bound_to_test_and_workflow_sha_separatel
 
 def test_manual_discovery_filters_dispatch_revision_and_event_not_moving_branch():
     client = manual_client(workflow_sha=WORKFLOW_SHA)
-    summary, _ = observe_ci(Request(SHA, None, SOURCE, workflow_commit=WORKFLOW_SHA),
+    summary, _ = observe_ci(Request(SHA, None, SOURCE, expected_mode="both", workflow_commit=WORKFLOW_SHA),
                             client=client, sleeper=lambda _:None)
     assert summary['ci_status'] == 'success'
     discovery = next(p for p in client.calls if '/workflows/' in p)
@@ -126,7 +126,7 @@ def test_multiple_manual_runs_require_a_pin_not_the_latest_green_run():
                 return {'total_count':2,'workflow_runs':[run_value(event='workflow_dispatch'),
                     run_value(id=52,event='workflow_dispatch')]}
             return super().document(path)
-    summary, _ = observe_ci(Request(SHA,41,SOURCE),client=Multiple(),sleeper=lambda _:None)
+    summary, _ = observe_ci(Request(SHA,41,SOURCE,expected_mode="both"),client=Multiple(),sleeper=lambda _:None)
     assert summary['ci_status'] == 'unavailable' and not summary['run_binding_confirmed']
 
 
@@ -140,19 +140,19 @@ def test_manual_context_cannot_be_borrowed_from_other_revision_run_attempt_or_mo
     value = json.loads(files['run-context.json']); value.update(change)
     files['run-context.json'] = json.dumps(value).encode()
     with pytest.raises(CIObservationError, match='manual_test_context_mismatch'):
-        inspect_report_archive(zip_bytes(files),Request(SHA,41,SOURCE,workflow_commit=WORKFLOW_SHA),
+        inspect_report_archive(zip_bytes(files),Request(SHA,41,SOURCE,expected_mode="both",workflow_commit=WORKFLOW_SHA),
             '3.10',run_id=51,attempt=1)
 
 
 def test_manual_reports_require_context_but_explicit_historical_reports_remain_readable():
     raw = report_zip(mode='both')
     with pytest.raises(CIObservationError):
-        inspect_report_archive(raw,Request(SHA,40,SOURCE),'3.10')
+        inspect_report_archive(raw,Request(SHA,40,SOURCE,expected_mode="both"),'3.10')
     result = inspect_report_archive(raw,Request(SHA,40,SOURCE,event='push',expected_mode='both'),'3.10')
     assert result['comparison']['equivalent'] is True
 
 
-@pytest.mark.parametrize('options', [dict(expected_mode='parallel'), dict(event='schedule'),
+@pytest.mark.parametrize('options', [dict(expected_mode='invalid'), dict(event='schedule'),
     dict(workflow_commit='abc'), dict(event='push',bundle=None),
     dict(event='push',bundle=41,workflow_commit=WORKFLOW_SHA)])
 def test_invalid_or_ambiguous_request_contract(options):
@@ -179,7 +179,7 @@ def test_standalone_observer_forwards_explicit_manual_pin_without_asserting_appl
             pinned_run_id=options['pinned_run_id'],pinned_attempt=options['pinned_attempt'])
     monkeypatch.setattr(tool,'observe_ci',observe)
     assert tool.main(['--commit',SHA,'--workflow-commit',WORKFLOW_SHA,'--source-sha256',SOURCE,
-        '--run-id','51','--attempt','1','--output-dir',str(tmp_path/'out')]) == 0
+        '--mode','both','--run-id','51','--attempt','1','--output-dir',str(tmp_path/'out')]) == 0
     saved=json.loads((tmp_path/'out'/'ci-summary.json').read_text())
     assert saved['ci_status']=='success' and saved['local_apply']=='not_observed'
     assert calls[0][0].mode=='both' and calls[0][0].event=='workflow_dispatch'
@@ -188,7 +188,23 @@ def test_standalone_observer_forwards_explicit_manual_pin_without_asserting_appl
 
 def test_green_dispatch_for_unproven_input_is_not_a_success_for_requested_test_sha():
     client = manual_client(test_sha='d'*40, workflow_sha=WORKFLOW_SHA)
-    summary, files = observe_ci(Request(SHA,41,SOURCE,workflow_commit=WORKFLOW_SHA),
+    summary, files = observe_ci(Request(SHA,41,SOURCE,expected_mode="both",workflow_commit=WORKFLOW_SHA),
         client=client, sleeper=lambda _:None, pinned_run_id=51, pinned_attempt=1)
     assert summary['github_conclusion']=='success' and summary['ci_status']=='incomplete'
     assert not summary['test_evidence_verified'] and not summary['evidence_complete']
+
+
+def test_current_parallel_manual_evidence_needs_no_serial_report():
+    client = manual_client()
+    with zipfile.ZipFile(BytesIO(client.archives[101])) as archive:
+        files = {name: archive.read(name) for name in archive.namelist()
+                 if name not in ("serial-evidence.json", "summary.json")}
+    context = json.loads(files["run-context.json"])
+    context["mode"] = "parallel"
+    files["run-context.json"] = json.dumps(context).encode()
+    request = Request(SHA, 46, SOURCE, expected_mode="parallel")
+    result = inspect_report_archive(zip_bytes(files), request, "3.10", run_id=51, attempt=1)
+    assert result["mode"] == "parallel" and result["comparison"] is None
+    files.pop("parallel-evidence.json")
+    with pytest.raises(CIObservationError, match="missing_test_evidence"):
+        inspect_report_archive(zip_bytes(files), request, "3.10", run_id=51, attempt=1)

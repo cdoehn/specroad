@@ -26,7 +26,7 @@ def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
     if request.event == 'workflow_dispatch':
         if (type(context) is not dict or context.get('format_version') != 1
                 or context.get('repository') != REPOSITORY or context.get('branch') != 'dev'
-                or context.get('event') != request.event or context.get('mode') != 'both'
+                or context.get('event') != request.event or context.get('mode') != request.mode
                 or context.get('test_commit_sha') != request.commit
                 or context.get('workflow_commit_sha') != request.run_commit
                 or context.get('python') != version

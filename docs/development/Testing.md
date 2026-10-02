@@ -1,13 +1,31 @@
-# Aktive Testpolicy ab Bundle 041
+# Aktive Laptop-Teststrategie ab 2. Oktober 2026
 
-Nutzerentscheidung vom 30.09.2026: Pixel pro Commit nur neue und direkt betroffene
-Tests, parallel mit höchstens vier Workern. Keine lokale Vollsuite und keine
-breiten vorsorglichen Regressionen. Normale Bundles committen und pushen, starten
-oder beobachten aber keine GitHub-Test-CI. Full Regression ausschließlich manuell:
-Python 3.10–3.14, jeweils parallel UND seriell mit Vergleich. Kein Fünferzyklus,
-keine täglichen automatischen Läufe. Details: [Bundle-CI](Bundle_CI.md).
-Ältere Vollsuite-Befehle unten sind Referenz für bewusst manuell gestartete CI,
-nicht lokale Patch-Gates. Die historischen Migrationsberichte bleiben unverändert.
+Im PatchHarbor-Apply-Repository wird für jeden zukünftigen W/R/C-Zustand zuerst
+immer die vollständige Testsuite parallel und danach immer die vollständige
+Testsuite seriell ausgeführt. Beide Volltests müssen erfolgreich sein, bevor der
+jeweilige Commit erstellt wird. Keine gezielte Testauswahl als Apply-Regel.
+W, R und C bleiben getrennte Zustände: Änderung → beide Volltests → Commit.
+`tools/run_apply_tests.py` orchestriert genau diese beiden Volltests, auch wenn
+der parallele Lauf fehlschlägt; nur zwei erfolgreiche Läufe ergeben Exitcode 0.
+
+```sh
+.venv/bin/python -I -B tools/run_tests.py --workers 4
+.venv/bin/python -I -B tools/run_tests.py --workers 0
+```
+
+GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
+manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
+parallel auf Python 3.10–3.14 aus. In GitHub gibt es keinen seriellen Volltest.
+Die frühere 5er-Bundle-Regel bleibt entfernt.
+
+Getestet werden Verhalten und maschinenlesbare fachliche Verträge. Keine Tests
+auf GUI, menschlich lesbare Konsolenausgabe, Farben, ANSI, Tabellenlayout,
+Spinner, README, Markdowndarstellung oder Dokumentation. Sonst keine weitere
+Testregel.
+
+Entwicklung ausschließlich in specroad-codex; kein Push aus dieser Kopie.
+Commit-Erzeugung und Übergabe nach specroad-apply ausschließlich durch PatchHarbor.
+Fehler erhalten erfolgreiche frühere Commits und den tatsächlichen Arbeitszustand.
 
 # SpecRoad: parallele Testentwicklung
 
@@ -34,7 +52,7 @@ schon. Die Testausführung selbst installiert nichts und braucht kein Netzwerk. 
 vorherige Abhängigkeitsinstallation benötigt verfügbare Pakete oder einen gefüllten Cache.
 
 Lokal gilt seit dem 21. September 2026 der Standard von vier Workern.
-Die vollständige serielle Referenz ist der CI vorbehalten, nicht jedem Clean-Commit.
+Die vollständige serielle Suite folgt lokal nach jedem parallelen Volltest vor dem Commit.
 Nur explizites `auto` lässt xdist die Workerzahl bestimmen. Explizite Zahlen und
 `PYTEST_XDIST_AUTO_NUM_WORKERS` erlauben die Anpassung an vorhandene CPU-/Speicherressourcen.
 Es gibt keinen stillen seriellen Fallback, keine automatische Wiederholung abgestürzter
@@ -109,17 +127,16 @@ Unterschiedliche Worker-Zuordnung ist erlaubt; fehlende oder doppelte Tests sind
 
 Der Workflow `.github/workflows/behavior.yml` ruft in GitHub Actions
 `tools/run_ci_tests.py --outdir <frisches-Verzeichnis>` auf. Er führt je Python-
-Version erst die vollständige Suite parallel, danach seriell und den Nachweisvergleich
-aus. Lokal wird dieser Starter nicht verwendet. Sein GitHub-Umgebungscheck ist nur
-ein Schutz vor versehentlichem Start, keine Ausführungs-Sandbox. Ein serielles
-Scheitern darf einen vorherigen parallelen Fehler niemals als Erfolg überschreiben.
+Version ausschließlich die vollständige Suite parallel aus. Der lokale Apply
+führt dagegen parallel und anschließend seriell aus. Beide lokalen Volltests
+müssen vor dem Commit erfolgreich sein.
 
 Die Python-Matrix 3.10–3.14 läuft im ausschließlich manuell gestarteten Workflow.
 Erst der exakt gebundene tatsächliche Workflowlauf kann den CI-Erfolg bestätigen. Ein lokaler paralleler Testlauf genügt
-nicht als Nachweis der seriellen oder plattformübergreifenden Abnahme.
+nicht als Nachweis der plattformübergreifenden Abnahme.
 
 Historisch verglich die Migrations-Abnahme seriell/2/4/auto mit verschiedenen
-Hash-Seeds. Künftige vollständige Vergleiche gehören ausschließlich in die CI.
+Hash-Seeds. Diese historischen Vergleiche sind keine aktuelle Ausführungsregel.
 
 Regressionsfälle starten absichtlich eigene pytest-Prozesse mit lokalen Mini-Fixtures:
 ein absichtlicher Worker-Absturz, unterschiedliche Worker-Sammlungen, Collection-Fehler,
@@ -148,18 +165,8 @@ Untertests werden ihren übergeordneten Testfällen zugeordnet und nicht als zus
 Plan- oder Requirement-Abdeckung hochgezählt. Keine neuen Produkt-Planpositionen.
 
 
-## Regressionsauswahl bei Lieferressourcen (ab Bundle 018)
+## Historische Testauswahl
 
-Bei Änderungen an Build-/Paketierungsregeln, ausgelieferten Profilen,
-Sprachdateien oder deren Bestandsauswahl müssen `tests/test_identity.py` und
-`tests/test_payload_identity.py` zusätzlich zu den betroffenen Fachtests lokal
-mit vier Workern laufen. Beide prüfen die tatsächlichen Lieferdaten; die
-Erwartungsinventur bleibt unabhängig vom Builder. Eine vollständige
-Katalogsammlung erkennt fehlende Testkennungen, aber keine falschen Assertions.
-Diese zusätzliche Auswahl ist keine lokale Vollsuite. Die vollständige
-Abnahme bleibt in GitHub. Siehe `CI_Payload_Identity_Repair.md`.
-
-Nutzerpräzisierung 30.09.2026: Lokal ausschließlich neue und direkt betroffene Tests.
-Keine breite vorsorgliche Regression. Nach dem Bundle nur Push, keine Test-CI.
-Full Regression ausschließlich manuell, immer parallel plus seriell samt Vergleich.
-Kein Fünferzyklus. Siehe CI_Wait.md.
+Die frühere gezielte Auswahl einschließlich zusätzlicher Lieferdatenregressionen
+ist als Apply-Regel aufgehoben. `run_selected_tests.py` bleibt ein Hilfsmittel
+für die Entwicklung; Teiltests ersetzen keinen der beiden lokalen Volltests.

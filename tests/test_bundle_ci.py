@@ -12,7 +12,7 @@ def message(number=9, final=True):
 
 
 def test_final_dev_commit_never_starts_automatic_full_tests():
-    assert select_ci('push', 'refs/heads/dev', SHA, message())['mode'] == 'both'
+    assert select_ci('push', 'refs/heads/dev', SHA, message())['mode'] == 'parallel'
     assert select_ci('push', 'refs/heads/dev', SHA, message())['run_full'] is False
 
 
@@ -35,7 +35,7 @@ def test_fifth_bundle_numbers_do_not_trigger_full_tests():
 
 def test_manual_other_final_bundles_also_use_both():
     for number in (9, 11, 12, 13, 16, 19, 24):
-        assert select_ci('workflow_dispatch', 'refs/heads/dev', SHA, message(number))['mode'] == 'both'
+        assert select_ci('workflow_dispatch', 'refs/heads/dev', SHA, message(number))['mode'] == 'parallel'
 
 
 def test_unmarked_push_has_no_automatic_full_run():
@@ -48,7 +48,7 @@ def test_manual_historical_commit_is_supported():
 
 
 def test_manual_can_request_both():
-    assert select_ci('workflow_dispatch', 'refs/heads/dev', SHA, message(9, False), mode='both')['mode'] == 'both'
+    assert select_ci('workflow_dispatch', 'refs/heads/dev', SHA, message(9, False), mode='both')['mode'] == 'parallel'
 
 
 def test_full_sha_is_required():

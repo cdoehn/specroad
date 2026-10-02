@@ -69,27 +69,27 @@ def test_ci_refuses_accidental_local_invocation(tmp_path):
     assert not calls and not target.exists()
 
 
-def test_ci_runs_both_modes_and_compares_owned_evidence(tmp_path):
+def test_ci_runs_only_parallel_with_owned_evidence(tmp_path):
     calls = []
     result = run_reference(tmp_path / "run", environment={"GITHUB_ACTIONS": "true"}, runner=fake_runner(calls))
     assert result["suite_passed"] is True and result["exit_code"] == 0
-    assert result["comparison"] == {"equivalent": True, "runs": 2, "tests": 1}
-    assert [c[c.index("--workers")+1] for c, kw in calls] == ["4", "0"]
-    assert len({kw["env"]["PYTHONHASHSEED"] for c, kw in calls}) == 2
+    assert result["comparison"] is None
+    assert [c[c.index("--workers")+1] for c, kw in calls] == ["4"]
+    assert len({kw["env"]["PYTHONHASHSEED"] for c, kw in calls}) == 1
     assert all("timeout" not in kw and "shell" not in kw for c, kw in calls)
 
 
-def test_parallel_failure_cannot_be_hidden_by_serial_success(tmp_path):
+def test_parallel_failure_is_not_retried(tmp_path):
     calls = []
     result = run_reference(tmp_path / "run", environment={"GITHUB_ACTIONS": "true"},
                            runner=fake_runner(calls, codes=(1, 0)))
-    assert len(calls) == 2 and result["exit_code"] != 0
+    assert len(calls) == 1 and result["exit_code"] != 0
     assert result["suite_passed"] is False and result["comparison"] is None
 
 
-def test_serial_failure_prevents_ci_success(tmp_path):
+def test_nonzero_parallel_exit_prevents_ci_success(tmp_path):
     result = run_reference(tmp_path / "run", environment={"GITHUB_ACTIONS": "true"},
-                           runner=fake_runner([], codes=(0, 1)))
+                           runner=fake_runner([], codes=(2,)))
     assert result["exit_code"] != 0 and result["suite_passed"] is False
 
 
@@ -117,8 +117,32 @@ def test_ci_processes_do_not_inherit_worker_identity_or_pytest_addopts(tmp_path)
         assert "PYTEST_XDIST_WORKER" not in kw["env"] and "PYTEST_ADDOPTS" not in kw["env"]
 
 
-def test_serial_option_is_preserved_for_ci_reference():
+def test_serial_option_is_preserved_for_laptop_gate():
     with patch.object(run_tests.subprocess, "run", return_value=SimpleNamespace(returncode=0)) as start:
         assert run_tests.main(["--workers", "0"]) == 0
     command = start.call_args.args[0]
     assert "-n" not in command and "xdist.plugin" not in command
+
+
+@pytest.mark.parametrize("codes", [(0, 0), (1, 0), (0, 1), (1, 1)])
+def test_laptop_always_runs_both_full_gates_before_reporting_success(codes):
+    import run_apply_tests
+    calls = []
+    def execute(command, **kwargs):
+        calls.append(command)
+        return SimpleNamespace(returncode=codes[len(calls) - 1])
+    with patch.object(run_apply_tests.subprocess, "run", side_effect=execute):
+        assert run_apply_tests.main([]) == (0 if codes == (0, 0) else 1)
+    assert [c[c.index("--workers") + 1] for c in calls] == ["4", "0"]
+    assert all(Path(c[3]).name == "run_tests.py" for c in calls)
+
+
+@pytest.mark.parametrize("code,write", [(0, True), (1, True), (0, False)])
+def test_current_github_gate_runs_only_parallel_and_requires_complete_evidence(tmp_path, code, write):
+    calls = []
+    result = run_reference(tmp_path / "parallel", environment={"GITHUB_ACTIONS": "true"}, runner=fake_runner(calls, codes=(code,), write=write))
+    assert len(calls) == 1
+    assert calls[0][0][calls[0][0].index("--workers") + 1] == "4"
+    assert result["suite_passed"] is (code == 0 and write)
+    assert result["comparison"] is None
+    assert not (tmp_path / "parallel" / "serial-evidence.json").exists()

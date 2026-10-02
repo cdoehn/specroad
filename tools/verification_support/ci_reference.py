@@ -7,7 +7,7 @@ import stat
 import subprocess
 import sys
 
-from compare_test_runs import compare_reports
+from compare_test_runs import _signature
 from .process_environment import test_environment
 from .execution_policy import DEFAULT_WORKERS
 
@@ -33,7 +33,7 @@ def _load_report(path):
 
 
 def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=None):
-    """Run two independent whole-suite gates, never retry or hide failures.
+    """Run one complete parallel gate, never retry or hide failures.
 
     The environment flag prevents an accidental local reference run. It is not
     authentication. Evidence is always created in a new caller-owned directory.
@@ -41,7 +41,7 @@ def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=N
     """
     environment = dict(os.environ if environment is None else environment)
     if environment.get("GITHUB_ACTIONS") != "true":
-        raise ValueError("Full serial references are reserved for GitHub Actions")
+        raise ValueError("CI full runs require GitHub Actions")
     if type(workers) is not int or workers <= 0:
         raise ValueError("The parallel reference needs a positive worker count")
     outdir = Path(outdir).absolute()
@@ -49,7 +49,7 @@ def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=N
     runner = subprocess.run if runner is None else runner
     checks = []
     paths = []
-    for name, count, seed in (("parallel", workers, "117"), ("serial", 0, "901")):
+    for name, count, seed in (("parallel", workers, "117"),):
         path = outdir / (name + "-evidence.json")
         paths.append(path)
         env = test_environment(environment)
@@ -63,17 +63,20 @@ def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=N
             code = 4
         checks.append({"mode": name, "workers": count, "exit_code": code})
     comparison = None
+    passed = False
     errors = []
     if all(check["exit_code"] == 0 for check in checks):
         try:
-            comparison = compare_reports([_load_report(path) for path in paths])
+            reports = [_load_report(path) for path in paths]
+            _signature(reports[0])
+            passed = True
         except (OSError, ValueError, TypeError, KeyError, AttributeError, RecursionError):
             errors.append("invalid_or_non_equivalent_evidence")
     else:
         errors.append("gate_failed")
     result = {"format_version": 1, "checks": checks, "comparison": comparison,
-              "errors": errors, "suite_passed": comparison is not None,
-              "exit_code": 0 if comparison is not None else 1}
+              "errors": errors, "suite_passed": passed,
+              "exit_code": 0 if passed else 1}
     # Only this controller publishes the summary, without replacing any artifact.
     with (outdir / "summary.json").open("x", encoding="utf-8") as stream:
         json.dump(result, stream, sort_keys=True, allow_nan=False)

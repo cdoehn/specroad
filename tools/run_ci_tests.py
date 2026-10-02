@@ -1,4 +1,4 @@
-"""Run full parallel/serial references in GitHub CI, never in local bundles."""
+"""Run the full parallel suite in manually dispatched GitHub CI."""
 
 import argparse
 import json
