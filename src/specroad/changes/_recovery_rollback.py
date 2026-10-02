@@ -25,6 +25,7 @@ from ._journal_codec import _hash, _transaction
 from ._journal_io import _read
 from ._recovery_inputs import _parse, _read_journal
 from ._recovery_target import prove_complete_target
+from ._recovery_inventory import check_membership
 from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
 
@@ -114,6 +115,7 @@ def _state(files, entry):
 
 
 def _prove_basis(files, journal):
+    check_membership(files, journal, phase='base')
     changed = {entry['path']: entry for entry in journal.data['files']}
     for item in journal.data['target_inventory']:
         entry = changed.get(item['path'])
@@ -125,7 +127,26 @@ def _prove_basis(files, journal):
         token = _fingerprint(files, item['path'])
         if token is None or (token['size'], token['sha256']) != (item['size'], item['sha256']):
             raise RecoveryError('recovery_basis_unchanged_resource_mismatch', path=item['path'], exit_code=6)
+    check_membership(files, journal, phase='base')
     return journal.data['base_model_root_sha256']
+
+
+def _prove_rollback_inputs(files, journal):
+    """Reject an unrestorable inventory before altering any recovery state."""
+    check_membership(files, journal, phase='intermediate')
+    changed = {entry['path']: entry for entry in journal.data['files']}
+    tokens = {}
+    for item in journal.data['target_inventory']:
+        entry = changed.get(item['path'])
+        if entry is not None:
+            _, tokens[item['path']] = _state(files, entry)
+            continue
+        token = _fingerprint(files, item['path'])
+        if token is None or (token['size'], token['sha256']) != (item['size'], item['sha256']):
+            raise RecoveryError('recovery_basis_unchanged_resource_mismatch', path=item['path'], exit_code=6)
+        tokens[item['path']] = token
+    check_membership(files, journal, phase='intermediate')
+    return tokens
 
 
 def _journal_successor(journal, *, initial=False, terminal=False):
@@ -271,6 +292,7 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                 'model_loaded': False, 'write_authorized': False, 'atomic_snapshot': False})
         if type(journal) is CommittingJournal:
             _rollback_lock(held_lock, journal)
+            observed = _prove_rollback_inputs(files, journal)
             try:
                 prove_complete_target(files, journal)
             except RecoveryError:
@@ -282,6 +304,8 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                 _state(files, entry)
             _authorize(authority, journal)
             _rollback_lock(held_lock, journal)
+            if _prove_rollback_inputs(files, journal) != observed:
+                raise RecoveryError('recovery_basis_changed', exit_code=6)
             successor = _journal_successor(journal, initial=True)
             mutated = True
             _replace_journal(files, journal, successor, directory_identity)
@@ -290,9 +314,14 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
         if type(journal) is not RollingBackJournal:
             raise RecoveryError('recovery_rollback_state_required', exit_code=6)
         _rollback_lock(held_lock, journal)
+        observed = _prove_rollback_inputs(files, journal)
         _authorize(authority, journal)
+        _rollback_lock(held_lock, journal)
+        if _prove_rollback_inputs(files, journal) != observed:
+            raise RecoveryError('recovery_basis_changed', exit_code=6)
         while journal.data['published_count']:
             _rollback_lock(held_lock, journal)
+            _prove_rollback_inputs(files, journal)
             index = journal.data['published_count'] - 1
             entry = journal.data['files'][index]
             state, token = _state(files, entry)

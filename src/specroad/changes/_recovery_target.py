@@ -5,10 +5,12 @@ from .committing_values import CommittingJournal
 from .execution_values import ChangeExecutionError
 from .recovery_values import RecoveryError
 from ._staging_files import _image
+from ._recovery_inventory import check_membership
 
 
 def prove_complete_target(files, journal):
     """Prove every journal-bound target file without loading the project model."""
+    check_membership(files, journal)
     tokens = {}
     for item in journal.data['target_inventory']:
         parts = tuple(item['path'].split('/'))
@@ -24,6 +26,7 @@ def prove_complete_target(files, journal):
                 'size': item['size'],
                 'sha256': item['sha256'],
             }
+    check_membership(files, journal)
     return tokens
 
 
