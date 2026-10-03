@@ -15,7 +15,7 @@ from ..security import paths as guards
 from .execution_values import ChangeExecutionError
 from ._journal_codec import _text
 from ._journal_io import _read
-from ._recovery_receipts import ensure_recovery_record, existing_recovery_record
+from ._recovery_receipts import ensure_recovery_record, existing_recovery_record, recheck_recovery_record
 from ._staging_files import _write_new
 from .receipt_values import transaction_receipt_path
 from .recovery_values import AUDIT_ROOT, RecoveryError
@@ -53,17 +53,43 @@ def read_evidence(files, path):
                               expected_identity=guards._identity(info)))
 
 
+def sync_evidence(files, record, token):
+    """Retry an unconfirmed fsync without replacing any already exact bytes."""
+    files.require_held()
+    parts = tuple(record.path.split('/'))
+    recheck_recovery_record(files, record, token)
+    with files.directory(parts[:-1]) as directory:
+        if directory is None:
+            raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
+        fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0),
+                     dir_fd=directory)
+        try:
+            if guards._identity(os.fstat(fd)) != token[1]:
+                raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    for count in range(len(parts) - 1, -1, -1):
+        with files.directory(parts[:count]) as directory:
+            if directory is None:
+                raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
+            os.fsync(directory)
+    recheck_recovery_record(files, record, token)
+    return token
+
+
 def persist_evidence(files, record, *, write_new=_write_new):
     # Refuse a conflicting pre-existing record before entering the write path.
     token = existing_recovery_record(files, record)
-    if token is not None:
-        return token
+    creating = token is None
     try:
-        return ensure_recovery_record(files, record, write_new=write_new)[0]
+        if creating:
+            token = ensure_recovery_record(files, record, write_new=write_new)[0]
+        return sync_evidence(files, record, token)
     except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
         raise RecoveryError(getattr(error, 'reason', 'recovery_evidence_write_failed'),
             path=record.path, exit_code=getattr(error, 'exit_code', 5),
-            mutation_possible=True) from error
+            mutation_possible=creating) from error
 
 
 def _action_fields(journal, action):
@@ -93,6 +119,8 @@ def recovery_action(files, journal, action, *, authority=None, write_new=_write_
                 or any(data.get(key) != value for key, value in fields.items())
                 or not _text(data.get('authority_id')) or not _text(data.get('authority_version'))):
             raise RecoveryError('recovery_action_conflict', path=path, exit_code=6)
+        if authority is not None:
+            persist_evidence(files, record, write_new=write_new)
         return record
     if authority is None:
         raise RecoveryError('recovery_action_missing', path=path, exit_code=6)
@@ -112,11 +140,16 @@ def rollback_receipt(journal, action_record, *, action='rollback'):
 
 
 def rollback_evidence(files, journal, *, authority=None):
+    previous = read_evidence(files, evidence_root(journal.data['transaction_id']) + '/rollback.json')
     action = recovery_action(files, journal, 'rollback', authority=authority)
     receipt = rollback_receipt(journal, action)
     if authority is None:
         if existing_recovery_record(files, receipt) is None:
             raise RecoveryError('recovery_receipt_missing', path=receipt.path, exit_code=6)
     else:
-        persist_evidence(files, receipt)
+        try:
+            persist_evidence(files, receipt)
+        except RecoveryError as error:
+            error.mutation_possible |= previous is None
+            raise
     return action, receipt

@@ -26,6 +26,7 @@ from ._recovery_receipts import existing_recovery_record, recheck_recovery_recor
 from ._recovery_rollback import _prove_basis
 from ._recovery_target import prove_complete_target
 from ._staging_files import _image
+from ._recovery_barrier import barrier_path, barrier_record, remove_barrier
 
 
 def _marker_path(transaction_id, journal):
@@ -158,6 +159,8 @@ def cleanup_recovered_transaction(transaction_id, *, held_lock, authority, expec
         if work is not None and archived is not None:
             raise RecoveryError('recovery_archive_collision', exit_code=6)
         expected_work = work if work is not None else archived
+        if expected_work is None and barrier_path(transaction_id, 'cleanup') in active:
+            raise RecoveryError('recovery_cleanup_work_missing', exit_code=6)
         _authorize(authority, journal)
 
         def guard(expected_active, work_prefix, inventory):
@@ -193,15 +196,34 @@ def cleanup_recovered_transaction(transaction_id, *, held_lock, authority, expec
             else:
                 record = EvidenceRecord(audit_path + '/intent.json', canonical_json_bytes({**fields,
                     'authority_id': authority.authority_id, 'authority_version': authority.version}))
+            completed = EvidenceRecord(audit_path + '/completed.json', canonical_json_bytes({
+                **fields, 'phase': 'completed', 'intent_sha256': record.sha256}))
+            barrier = barrier_record(journal, record, 'cleanup')
+            done_token = existing_recovery_record(files, completed)
+            pending_token = existing_recovery_record(files, barrier)
+            if _work(files, journal, archive) != archived:
+                raise RecoveryError('recovery_archive_changed', exit_code=6)
             mutated = True
             marker_token = persist_evidence(files, marker)
             audit_token = persist_evidence(files, record)
             guard(active, prefix if work is not None else archive, expected_work)
             recheck_recovery_record(files, marker, marker_token)
             recheck_recovery_record(files, record, audit_token)
+            # A completed retry needs no new pending event. All other paths
+            # stay visible to ordinary readers/writers until final proof.
+            pending = work is not None or done_token is None or pending_token is not None
+            if pending:
+                pending_token = persist_evidence(files, barrier)
+                observed_active = files.journal_entries()
+                if set(observed_active) != set(active) | {barrier.path}:
+                    raise RecoveryError('recovery_active_set_changed', exit_code=6)
+                active = observed_active
+                guard(active, prefix if work is not None else archive, expected_work)
             if work is not None:
                 with files.directory(tuple(audit_path.split('/'))) as audit:
                     with files.directory(('.specroad', 'transactions')) as parent:
+                        if audit is None or parent is None:
+                            raise RecoveryError('recovery_work_changed', exit_code=6)
                         if (guards._identity(os.stat(transaction_id, dir_fd=parent,
                                                     follow_symlinks=False)) != work['']
                                 or 'work' in os.listdir(audit)):
@@ -209,14 +231,23 @@ def cleanup_recovered_transaction(transaction_id, *, held_lock, authority, expec
                         os.rename(transaction_id, 'work', src_dir_fd=parent, dst_dir_fd=audit)
                         os.fsync(parent)
                         os.fsync(audit)
+            else:
+                # A rename may have completed before an unconfirmed fsync.
+                for parts in (('.specroad', 'transactions'), tuple(audit_path.split('/'))):
+                    with files.directory(parts) as directory:
+                        if directory is None:
+                            raise RecoveryError('recovery_work_changed', exit_code=6)
+                        os.fsync(directory)
             remaining = tuple(path for path in active if path != selected)
             guard(remaining, archive, expected_work)
-            completed = EvidenceRecord(audit_path + '/completed.json', canonical_json_bytes({
-                **fields, 'phase': 'completed', 'intent_sha256': record.sha256}))
             completed_token = persist_evidence(files, completed)
             guard(remaining, archive, expected_work)
             for item, token in ((marker, marker_token), (record, audit_token), (completed, completed_token)):
                 recheck_recovery_record(files, item, token)
+            if pending:
+                remove_barrier(files, barrier, pending_token)
+                remaining = tuple(path for path in remaining if path != barrier.path)
+                guard(remaining, archive, expected_work)
         else:
             if existing_recovery_record(files, marker) is None:
                 raise RecoveryError('recovery_terminal_proof_missing', exit_code=6)

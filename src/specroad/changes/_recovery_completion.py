@@ -20,7 +20,7 @@ from ._recovery_receipts import (
 )
 from ._recovery_target import fully_published, prove_complete_target
 from ._staging_files import _image
-from ._recovery_evidence import recovery_action
+from ._recovery_evidence import EvidenceRecord, recovery_action, sync_evidence
 
 
 def _completion_lock(held, journal):
@@ -80,6 +80,10 @@ def _verify_committed_recovery(files, journal, held_lock, authority, *, write_ne
         raise RecoveryError('recovery_target_changed', exit_code=6)
     if _read_journal(files, journal.data['transaction_id']) != observed_journal:
         raise RecoveryError('recovery_journal_changed', exit_code=6)
+    for record, token in tokens:
+        sync_evidence(files, record, token)
+    marker = EvidenceRecord(journal.path, journal.source_bytes)
+    sync_evidence(files, marker, existing_recovery_record(files, marker))
     recovery_action(files, journal, 'complete', authority=authority, write_new=write_new)
     _completion_lock(held_lock, journal)
     if prove_complete_target(files, predecessor) != target:

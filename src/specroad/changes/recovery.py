@@ -20,8 +20,7 @@ from ._staging_files import _write_new, _image
 from .recovery_values import (AUDIT_ROOT, RecoveryAuthority, RecoveryError,
                               RecoveryObservation, DiscardedJournal)
 from ._recovery_inputs import _read_journal, _parse, _unchanged_base, _work
-from ._recovery_evidence import EvidenceRecord, persist_evidence, rollback_receipt
-from ._recovery_receipts import recheck_recovery_record
+from ._discard_completion import archived_discard, finish_discard
 # Preserve the initial module import surface; the implementation is read-only.
 from .recovery_read import inspect_recovery
 
@@ -58,8 +57,18 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
     attempted = False
     try:
         files = held_lock._files
-        raw, ident = _read_journal(files, transaction_id)
-        journal = _parse(raw, transaction_id, files)
+        try:
+            raw, ident = _read_journal(files, transaction_id)
+        except RecoveryError as error:
+            if error.reason != 'recovery_journal_missing':
+                raise
+            journal = archived_discard(files, transaction_id)
+        else:
+            journal = _parse(raw, transaction_id, files)
+        if type(journal) is DiscardedJournal:
+            return finish_discard(preflight, journal, held_lock=held_lock,
+                authority=authority, actor=actor, reason=reason,
+                expected_journal_sha256=expected_journal_sha256)
         _held(held_lock, journal)
         if journal.sha256 != expected_journal_sha256:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
@@ -128,50 +137,13 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
                     raise RecoveryError('recovery_base_changed', exit_code=6)
                 os.replace('journal.discard', 'journal.json', src_dir_fd=directory, dst_dir_fd=directory)
                 os.fsync(directory)
-            terminal_work = {**work, 'journal.json': terminal.sha256}
-            guard(terminal_raw=terminal.source_bytes, expected_work=terminal_work)
-            _image(audit, 'journal.before.json', len(raw), journal.sha256)
-            _image(audit, 'intent.json', len(intent), sha256(intent).hexdigest())
-            receipt = rollback_receipt(terminal,
-                EvidenceRecord(audit_path + '/intent.json', intent), action='discard')
-            receipt_token = persist_evidence(files, receipt, write_new=_write_new)
-            guard(terminal_raw=terminal.source_bytes, expected_work=terminal_work)
-            with files.directory(('.specroad', 'transactions')) as parent:
-                if guards._identity(os.stat(transaction_id, dir_fd=parent, follow_symlinks=False)) != ident:
-                    raise RecoveryError('recovery_work_changed', exit_code=6)
-                if 'work' in os.listdir(audit): raise RecoveryError('recovery_audit_collision', exit_code=6)
-                os.rename(transaction_id, 'work', src_dir_fd=parent, dst_dir_fd=audit)
-                os.fsync(parent); os.fsync(audit)
-            if _work(files, journal, raw=terminal.source_bytes,
-                     prefix=(*tuple(audit_path.split('/')), 'work'), preflight=preflight) != terminal_work:
-                raise RecoveryError('recovery_archive_changed', exit_code=6)
-            if _unchanged_base(preflight, journal, files) != base:
-                raise RecoveryError('recovery_base_changed', exit_code=6)
-            completed = {'format_version': 'recovery-audit-v1', 'event_id': event,
-                'phase': 'completed', 'action': 'discard', 'state': 'rolled_back',
-                'transaction_id': transaction_id, 'journal_before_sha256': journal.sha256,
-                'journal_sha256': terminal.sha256, 'intent_sha256': sha256(intent).hexdigest(),
-                'base_model_root_sha256': journal.data['base_model_root_sha256'],
-                'archive_path': audit_path + '/work', 'normative_writes': 0}
-            _write_new(audit, 'completed.json', canonical_json_bytes(completed))
-            _image(audit, 'journal.before.json', len(raw), journal.sha256)
-            _image(audit, 'intent.json', len(intent), sha256(intent).hexdigest())
-            if _work(files, journal, raw=terminal.source_bytes,
-                     prefix=(*tuple(audit_path.split('/')), 'work'), preflight=preflight) != terminal_work:
-                raise RecoveryError('recovery_archive_changed', exit_code=6)
-        _held(held_lock, journal)
-        recheck_recovery_record(files, receipt, receipt_token)
-        remaining = tuple(path for path in active if path != selected_path)
-        if files.journal_entries() != remaining or _unchanged_base(preflight, journal, files) != base:
-            raise RecoveryError('recovery_final_observation_changed', exit_code=6)
-        return RecoveryObservation._create({**completed, 'discard_completed': True,
-            'receipt': receipt.reference,
-            'evidence_preserved': True, 'audit_path': audit_path, 'model_loaded': False,
-            'remaining_active_paths': list(remaining),
-            'write_authorized': False, 'atomic_snapshot': False})
+        return finish_discard(preflight, terminal, held_lock=held_lock,
+            authority=authority, actor=actor, reason=reason,
+            expected_journal_sha256=terminal.sha256, authorized=True)
     except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
         raise RecoveryError(getattr(error, 'reason', 'recovery_discard_failed'),
-            exit_code=getattr(error, 'exit_code', 5), mutation_possible=attempted) from error
+            exit_code=getattr(error, 'exit_code', 5),
+            mutation_possible=attempted or getattr(error, 'mutation_possible', False)) from error
 
 
 def complete_published_transaction(transaction_id, *, held_lock, authority,

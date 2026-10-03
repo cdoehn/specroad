@@ -7,18 +7,22 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-PROJECT-LOCK-v1"
+    "SR-FIX-PROJECT-LOCK-v1",
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
   ],
   "preconditions": [
-    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests."
+    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests.",
+    "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle."
   ],
   "steps": [
-    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal."
+    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal.",
+    "Keep ordinary forced lock recovery blocked by a real crashed writer journal; use separately authorized transaction-bound takeover only for journal recovery and terminal cleanup.",
+    "Retain journals after ownership transfer alone and preserve foreign blockers across repeated real process stops."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Lock-Recovery-Befehl DARF NICHT ein vorhandenes Transaktionsjournal umgehen.",
-    "scope": "Native lock and read-only observation libraries plus explicit audited recovery; no complete CLI integration, authorization or durable transaction engine."
+    "scope": "Native lock and read-only observation libraries, journal-vetoed ordinary lock recovery and explicit transaction-bound audited recovery access. Ownership transfer alone does not remove any transaction or foreign blocker and cannot bypass an occupied native mutex. Full CLI/backend integration remains later work."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -36,7 +40,20 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_project_locks_right.py::test_recovery_rechecks_journals_after_persisting_intent",
-    "tests/test_project_locks_right.py::test_busy_native_recovery_never_creates_an_audit_file"
+    "tests/test_project_locks_right.py::test_busy_native_recovery_never_creates_an_audit_file",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[committed]",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[partial]",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[target]",
+    "tests/test_transaction_recovery_lock.py::test_real_mutex_cannot_be_overridden_by_fabricated_dead_probe",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[archive]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[completed]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[intent]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[owner]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[alive]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[foreign]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[pid_reused]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[unverifiable]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_rechecks_journal_after_authorization"
   ],
   "open_items": [
     "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",

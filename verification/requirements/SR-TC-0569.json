@@ -7,18 +7,22 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-PROJECT-LOCK-v1"
+    "SR-FIX-PROJECT-LOCK-v1",
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
   ],
   "preconditions": [
-    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests."
+    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests.",
+    "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle."
   ],
   "steps": [
-    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal."
+    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal.",
+    "Apply existing risk-consent gates to transaction-bound takeover and reject live owners even with risk consent.",
+    "Recheck the current owner at the atomic transfer boundary and retain a replacement owner instead of overwriting it."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein neuer Hostname oder eine erneut vergebene Prozessnummer DARF NICHT allein die Übernahme eines unbekannten Lock-Eigentümers rechtfertigen.",
-    "scope": "Native lock and read-only observation libraries plus explicit audited recovery; no complete CLI integration, authorization or durable transaction engine."
+    "scope": "Native owner observations and audited transaction-bound takeover retain explicit risk consent for foreign, unverifiable and reused-PID observations. Live owners and occupied native mutexes remain forbidden; a changed owner at the final transfer boundary is preserved. Full CLI integration and authenticated host identity are not claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,7 +41,13 @@
   "test_ids": [
     "tests/test_project_locks_right.py::test_inaccessible_proc_never_claims_dead_from_pid_number_alone",
     "tests/test_project_locks_right.py::test_unknown_host_observation_stays_unknown_not_hostname_fallback",
-    "tests/test_project_locks_right.py::test_owner_becoming_live_on_final_observation_prevents_removal"
+    "tests/test_project_locks_right.py::test_owner_becoming_live_on_final_observation_prevents_removal",
+    "tests/test_transaction_recovery_lock.py::test_changed_owner_at_transfer_boundary_is_preserved",
+    "tests/test_transaction_recovery_lock.py::test_real_mutex_cannot_be_overridden_by_fabricated_dead_probe",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[alive]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[foreign]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[pid_reused]",
+    "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[unverifiable]"
   ],
   "open_items": [
     "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",

@@ -27,7 +27,8 @@ from ._recovery_inventory import verified_membership
 from ._recovery_bytes import fingerprint_recovery_file as _fingerprint
 from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
-from ._recovery_evidence import rollback_evidence
+from ._recovery_evidence import EvidenceRecord, rollback_evidence, sync_evidence
+from ._recovery_receipts import existing_recovery_record
 
 
 def _rollback_lock(held, journal):
@@ -245,6 +246,10 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
             _rollback_lock(held_lock, journal)
             _authorize(authority, journal)
             root = _prove_basis(files, journal)
+            if _read_journal(files, transaction_id) != (raw, directory_identity):
+                raise RecoveryError('recovery_journal_changed', exit_code=6)
+            marker = EvidenceRecord(journal.path, journal.source_bytes)
+            sync_evidence(files, marker, existing_recovery_record(files, marker))
             action, receipt = rollback_evidence(files, journal, authority=authority)
             _rollback_lock(held_lock, journal)
             if (_read_journal(files, transaction_id) != (raw, directory_identity)

@@ -9,11 +9,13 @@
   "fixture_ids": [
     "SR-FIX-TRANSACTION-RECEIPTS-v1",
     "SR-FIX-TRANSACTION-COMMITTING-v1",
-    "SR-FIX-TRANSACTION-RECOVERY-v1"
+    "SR-FIX-TRANSACTION-RECOVERY-v1",
+    "SR-FIX-PROJECT-LOCK-v1"
   ],
   "preconditions": [
     "Owned local Linux project; exact independent publication request and native writer lock.",
-    "Released original writer lock; current transaction-bound recovery lock and explicit host authority for terminal cleanup."
+    "Released original writer lock; current transaction-bound recovery lock and explicit host authority for terminal cleanup.",
+    "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle."
   ],
   "steps": [
     "Publish verified target files using the existing transaction phases.",
@@ -21,12 +23,15 @@
     "Assert normative inputs are not written again and failed completion retains evidence.",
     "Restore a partially published transaction and verify its canonical immutable rollback receipt; verify the canonical discard receipt separately.",
     "In independent processes complete or roll back, verify terminal evidence, explicitly archive the closed work inventory, then permit a normal reader and new writer.",
-    "Retry without normative writes; reject changed evidence, live bytes, unsafe images and unknown work while retaining unrelated active blockers."
+    "Retry without normative writes; reject changed evidence, live bytes, unsafe images and unknown work while retaining unrelated active blockers.",
+    "Inject receipt, marker, intent, archive and barrier failures; repeat the selected terminal action and cleanup without replacing immutable evidence or rewriting normative files.",
+    "Repeat an interrupted terminal discard using the independent preflight and original event binding; preserve short or conflicting receipts.",
+    "Abruptly stop writer and recovery processes; explicitly acquire audited transaction recovery access, then verify completion and retained foreign blockers."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine erfolgreich abgeschlossene oder zurückgerollte Transaktion MUSS einen unveränderbaren Abschlussbeleg unter `.specroad/transactions/receipts/` hinterlassen und danach das Entfernen temporärer Payloads erlauben.",
-    "scope": "Native committed finalization/readback, immutable rolled-back/discarded receipts and explicit recovery-lock cleanup after original writer release. Cleanup preserves every checked work byte in a bound passive archive. No whole CLI, orphan-lock takeover, restore or complete failure/restart coverage is claimed."
+    "scope": "Native committed finalization/readback, immutable rolled-back/discarded receipts and explicit recovery-lock cleanup after writer release or audited orphan takeover. Lost terminal evidence, rename and synchronization responses preserve exact bytes; a bound pending marker keeps interrupted archival active. No whole CLI, restore or complete failure/restart coverage is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -133,10 +138,50 @@
     "tests/test_terminal_recovery.py::test_cleanup_rechecks_work_after_authorization",
     "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[complete]",
     "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[normal_committed]",
-    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[rollback]"
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[rollback]",
+    "tests/test_terminal_recovery_right.py::test_changed_receipt_during_cleanup_completion_never_clears_pending",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[barrier-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[barrier-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[completed-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[completed-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[intent-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[intent-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[marker-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[marker-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[parent_sync-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[parent_sync-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[rename_after-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[rename_after-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[rename_before-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[rename_before-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[unlink_after-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[unlink_after-rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[unlink_before-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[unlink_before-rollback]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[completed-building]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[completed-prepared]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[receipt-building]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[receipt-prepared]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[rename-building]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[rename-prepared]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[terminal-building]",
+    "tests/test_terminal_recovery_right.py::test_discard_reuses_original_event_after_lost_completion[terminal-prepared]",
+    "tests/test_terminal_recovery_right.py::test_lost_archive_then_tampered_evidence_keeps_pending_and_foreign_blockers",
+    "tests/test_terminal_recovery_right.py::test_short_terminal_evidence_stays_blocked_and_is_not_overwritten[rollback.json]",
+    "tests/test_terminal_recovery_right.py::test_short_terminal_evidence_stays_blocked_and_is_not_overwritten[transaction.json]",
+    "tests/test_terminal_recovery_right.py::test_terminal_evidence_fsync_loss_resumes_without_normative_rewrite[complete.json]",
+    "tests/test_terminal_recovery_right.py::test_terminal_evidence_fsync_loss_resumes_without_normative_rewrite[rollback.json]",
+    "tests/test_terminal_recovery_right.py::test_terminal_evidence_fsync_loss_resumes_without_normative_rewrite[transaction.json]",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[committed]",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[partial]",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[target]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[archive]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[completed]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[intent]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[owner]"
   ],
   "open_items": [
-    "Terminal receipt/archive/cleanup error hardening and explicit orphan-lock access remain AUDIT-REC-02.R/C.",
+    "Terminal recovery structure consolidation remains AUDIT-REC-02.C; first-receipt mutation accounting and short auxiliary-write restart investigation remain AUDIT-REC-03/04.",
     "Discard still requires the independent preflight; restart reconstruction remains AUDIT-REC-05. Full command/authentication/restore integration remains later work.",
     "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]

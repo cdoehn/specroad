@@ -246,8 +246,66 @@ Cleanup-Prozesse bei bereits freigegebenem altem Lock. Sie prüfen anschließend
 normales Lesen und den Erwerb eines neuen Writerlocks, unveränderte normative
 Bytes, kanonische Rollback-/Discard-Receipts, Auditbindung und schreibfreie
 Ablehnung unbewiesener Eingaben. Die Requirementmanifeste bleiben Teilnachweise.
-Verlorene Rückgaben, die weitergehende Fehlerabsicherung sowie der explizite
-Zugang bei einem abrupt beendeten Writer mit verwaistem Lock folgen in
-`AUDIT-REC-02.R`. Discard benötigt weiterhin seinen unabhängigen Preflight;
-dessen Rekonstruktion bleibt `AUDIT-REC-05`. Es entsteht kein neuer CLI- oder
-automatischer Preflightablauf.
+Die Fehlerabsicherung und der Zugang bei einem abrupt beendeten Writer sind
+im folgenden R-Abschnitt beschrieben. Discard benötigt weiterhin seinen
+unabhängigen Preflight; dessen Rekonstruktion bleibt `AUDIT-REC-05`.
+
+## AUDIT-REC-02.R: wiederholbarer Abschluss und explizite Lockübernahme
+
+Bereits vollständig vorhandene Belege werden bei einer Wiederholung byte- und
+inodegebunden geprüft und erneut synchronisiert. Ein verlorener Write-, Rename-
+oder Synchronisationsrückgabewert begründet keinen zweiten Fachwrite. Kurze oder
+widersprüchliche Belege bleiben erhalten und blockieren den Abschluss; sie werden
+nicht überschrieben. Die Untersuchung gebundener eigener Teilwrites bleibt
+`AUDIT-REC-04`, die Bilanzierung des ursprünglichen ersten Completion-Receipt-
+Fehlers bleibt `AUDIT-REC-03`.
+
+Vor dem Archivieren von terminaler Arbeit entsteht ein aktiver, an Journal und
+Intent gebundener Marker unter `.specroad/recovery/pending-<action>-<txn-hash>.json`.
+Er bleibt bei unterbrochener Archivierung oder fehlendem Abschlussbeweis ein
+Blocker für normale Zugriffe. Erst nach erneuter Prüfung und Synchronisation der
+Belege, Archivbytes und aktuellen Basis-/Zielbytes wird genau dieser Marker
+entfernt. Fremde aktive Pfade bleiben erhalten. Ein bereits abgeschlossener
+Wiederaufruf erzeugt keinen neuen Marker und schreibt keine Belegbytes erneut.
+
+Ein unterbrochener Discard wird mit demselben unabhängigen Preflight und entweder
+dem ursprünglichen oder dem terminalen Journalhash erneut explizit aufgerufen.
+Der Folgeaufruf prüft den originalen Audit-Intent und dessen vollständige
+Work-Inventur, erhält die Event-ID und ursprüngliche Autoritätszuordnung und
+beendet nur den belegten Abschluss. Bei bereits archivierter Arbeit wählt er
+ausschließlich den kanonischen Transaktionsreceipt; er durchsucht keine Historie.
+
+Für einen abrupt beendeten Writer bietet die Bibliothek den Contextmanager
+`transaction_recovery_lock(root, transaction_id, project_id=..., request_id=...,
+expected_lock_sha256=..., expected_journal_sha256=..., authority=..., actor=...,
+reason=..., force=True, command="recover run", accept_remote_risk=False)`.
+`command="recover discard"` unterstützt den ausdrücklich angeforderten Discard.
+Die beiden erwarteten Hashes müssen den aktuell beobachteten Lock und das
+ausgewählte Journal bezeichnen. Nach bereits erfolgter Archivierung kann ein
+kanonischer terminaler Marker beziehungsweise Discardreceipt das Journal binden.
+
+Die Übernahme verlangt den echten nativen Mutex, exakte Projekt-, Root-, Request-
+und Transaktionsbindung sowie eine aktuelle Host-Autorisierung für `takeover`.
+Lebende Eigentümer werden auch mit Risikozustimmung abgewiesen. Fremde,
+unprüfbare oder mit wiedervergebener PID beobachtete Eigentümer benötigen die
+bestehende ausdrückliche Risikozustimmung; ein Hostname oder eine PID allein
+beweist keinen beendeten Eigentümer. Der optionale `owner_probe` ist derselbe
+vertrauenswürdige Beobachtungsadapter wie in der bestehenden Lockbibliothek.
+
+Das Originaljournal und ein unveränderlicher Übernahme-Intent binden alten und
+neuen Eigentümer, Autorität und Risikoentscheidung. Erst nach ihrer dauerhaften
+Anlage und erneuter Eigentümerprüfung ersetzt ein atomarer Rename den alten
+Lock durch den vollständig vorbereiteten Recoverylock. Ein Abschlussbeleg
+bestätigt die Übernahme. Bei einer Unterbrechung bleiben der tatsächliche Lock
+und alle Belege erhalten; ein Folgeprozess kann den nun beobachteten Stand
+erneut ausdrücklich übernehmen. Der Contextmanager gibt ausschließlich den
+eigenen unveränderten Lock frei. Er entfernt kein Journal und startet keine
+normale Fachoperation. `recover_project_lock(..., force=True)` behält sein
+uneingeschränktes Veto bei vorhandenen Transaktionsjournalen.
+
+Die R-Verhaltenstests prüfen verlorene Rückgaben, Synchronisationsfehler,
+konfligierende und kurze Belege sowie echte Prozessabbrüche bei Übernahme und
+Archivierung. Sie vergleichen unabhängig vorbereitete normative Bytes und
+verifizieren die erhaltenen Belege und Fremdblocker. Dies bleibt native lokale
+Linux-Recovery; CLI-Verdrahtung, automatischer Preflight, die vollständige
+Fault-Injection-Matrix und Restore sind weiterhin spätere Planpositionen.

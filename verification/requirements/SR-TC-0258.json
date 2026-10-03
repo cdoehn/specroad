@@ -7,20 +7,24 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-TRANSACTION-COMMITTING-v1"
+    "SR-FIX-TRANSACTION-COMMITTING-v1",
+    "SR-FIX-PROJECT-LOCK-v1"
   ],
   "preconditions": [
-    "Owned native Linux transaction and independently checked publication model, plan and complete file inventories."
+    "Owned native Linux transaction and independently checked publication model, plan and complete file inventories.",
+    "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle."
   ],
   "steps": [
     "Interrupt a real publication and observe the complete current normative membership and exact bytes.",
     "Complete the bound full target or restore the bound basis; preserve foreign files and all recovery evidence.",
-    "Reject additional, missing, changed and concurrently observed resources; compare mutation and read-only diagnosis."
+    "Reject additional, missing, changed and concurrently observed resources; compare mutation and read-only diagnosis.",
+    "Resume proved terminal completion after lost synchronization or archive responses without another normative write; retain pending and foreign blockers until full cleanup proof.",
+    "Recover an abruptly stopped writer through the native mutex and explicit transaction-bound authority; preserve the ordinary lock-recover journal veto."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen.",
-    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence; explicit terminal cleanup works after writer release and across processes. No automatic recovery, orphan-lock takeover or full fault-injection acceptance is claimed."
+    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence; terminal cleanup and explicit audited orphan takeover retain exact target bytes across real process stops and lost durability responses. No automatic recovery or full fault-injection acceptance is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -57,10 +61,26 @@
     "tests/test_terminal_recovery.py::test_conflicting_recovery_action_is_never_replaced",
     "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[complete]",
     "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[normal_committed]",
-    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[rollback]"
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[rollback]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[barrier-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[completed-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[intent-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[marker-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[parent_sync-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[rename_after-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[rename_before-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[unlink_after-complete]",
+    "tests/test_terminal_recovery_right.py::test_cleanup_durable_boundaries_resume_with_preserved_bytes[unlink_before-complete]",
+    "tests/test_terminal_recovery_right.py::test_terminal_evidence_fsync_loss_resumes_without_normative_rewrite[complete.json]",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[committed]",
+    "tests/test_transaction_recovery_lock.py::test_real_crashed_writer_can_recover_and_cleanup_with_audited_transfer[target]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[archive]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[completed]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[intent]",
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[owner]"
   ],
   "open_items": [
-    "Terminal recovery error/retry hardening and orphan-lock access remain AUDIT-REC-02.R/C; existing receipt-error mutation accounting remains AUDIT-REC-03.",
-    "Interrupted auxiliary recovery writes remain AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
+    "Terminal recovery structure consolidation remains AUDIT-REC-02.C; existing first-receipt error mutation accounting remains AUDIT-REC-03.",
+    "Short auxiliary recovery writes remain blocked and preserved; their restart investigation remains AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }
