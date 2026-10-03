@@ -1,29 +1,16 @@
-# Aktive Laptop-Teststrategie ab 2. Oktober 2026
+# Aktive Teststrategie ab 3. Oktober 2026
 
-Im PatchHarbor-Apply-Repository wird für jeden zukünftigen W/R/C-Zustand zuerst
-immer die vollständige Testsuite parallel und danach immer die vollständige
-Testsuite seriell ausgeführt. Beide Volltests müssen erfolgreich sein, bevor der
-jeweilige Commit erstellt wird. Keine gezielte Testauswahl als Apply-Regel.
-W, R und C bleiben getrennte Zustände: Änderung → beide Volltests → Commit.
-
-```sh
-.venv/bin/python -I -B tools/run_tests.py --workers 4
-.venv/bin/python -I -B tools/run_tests.py --workers 0
-```
+In `specroad-codex` läuft die vollständige Testsuite ausschließlich parallel.
+In `specroad-apply` führt `tools/run_apply_tests.py` den parallelen Volltest aus.
+Beim letzten Bundle-Zustand fügt `--final-bundle-state` anschließend einen seriellen
+Volltest hinzu. Nur der Erfolg aller vorgesehenen Läufe erlaubt den W/R/C-Commit.
+Die technischen Aufrufe stehen in [Testing.md](Testing.md). Die zentrale lokale
+Arbeitsanweisung ist `AGENTS.md`.
 
 GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
 manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
 parallel auf Python 3.10–3.14 aus. In GitHub gibt es keinen seriellen Volltest.
 Die frühere 5er-Bundle-Regel bleibt entfernt.
-
-Getestet werden Verhalten und maschinenlesbare fachliche Verträge. Keine Tests
-auf GUI, menschlich lesbare Konsolenausgabe, Farben, ANSI, Tabellenlayout,
-Spinner, README, Markdowndarstellung oder Dokumentation. Sonst keine weitere
-Testregel.
-
-Entwicklung ausschließlich in specroad-codex; kein Push aus dieser Kopie.
-Commit-Erzeugung und Übergabe nach specroad-apply ausschließlich durch PatchHarbor.
-Fehler erhalten erfolgreiche frühere Commits und den tatsächlichen Arbeitszustand.
 
 ## Exakte, rein lesende Beobachtung
 

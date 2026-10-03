@@ -1,17 +1,36 @@
-# Aktive Laptop-Teststrategie ab 2. Oktober 2026
+# Aktive Teststrategie ab 3. Oktober 2026
 
-Im PatchHarbor-Apply-Repository wird für jeden zukünftigen W/R/C-Zustand zuerst
-immer die vollständige Testsuite parallel und danach immer die vollständige
-Testsuite seriell ausgeführt. Beide Volltests müssen erfolgreich sein, bevor der
-jeweilige Commit erstellt wird. Keine gezielte Testauswahl als Apply-Regel.
-W, R und C bleiben getrennte Zustände: Änderung → beide Volltests → Commit.
-`tools/run_apply_tests.py` orchestriert genau diese beiden Volltests, auch wenn
-der parallele Lauf fehlschlägt; nur zwei erfolgreiche Läufe ergeben Exitcode 0.
+Die aktualisierte Nutzeranweisung legt folgende Testmodi fest:
+In `specroad-codex` läuft die vollständige Suite ausschließlich parallel.
+Der geprüfte Zwischenstand wird über PatchHarbor an `specroad-apply` übergeben;
+dort läuft vor jedem Commit die vollständige parallele Suite. Beim letzten
+Zustand des Bundles folgt zusätzlich ein vollständiger serieller Lauf.
+W, R und C bleiben getrennte Zustände mit jeweils eigener Prüfung und eigenem
+Apply-Commit. Keine gezielte Testauswahl als Apply-Regel.
+
+Entwicklung in `specroad-codex`:
 
 ```sh
 .venv/bin/python -I -B tools/run_tests.py --workers 4
-.venv/bin/python -I -B tools/run_tests.py --workers 0
 ```
+
+Apply-Entrypoint in `specroad-apply`, für einen Zwischenstand vor dem letzten:
+
+```sh
+.venv/bin/python -I -B tools/run_apply_tests.py
+```
+
+Der Apply-Runner startet dabei genau einen vollständigen Lauf mit `--workers 4`.
+Für den letzten Zustand des Bundles (auch bei einem Bundle mit nur einem Zustand):
+
+```sh
+.venv/bin/python -I -B tools/run_apply_tests.py --final-bundle-state
+```
+
+Dieser Aufruf startet zuerst den vollständigen Paralleltest und danach zusätzlich
+den vollständigen seriellen Test mit `--workers 0`, auch nach einem fehlgeschlagenen
+parallelen Lauf. Nur der Erfolg aller vorgesehenen Läufe ergibt Exitcode 0.
+Es gibt keine Wiederholung und keinen Fallback auf einen anderen Testmodus.
 
 GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
 manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
@@ -52,7 +71,9 @@ schon. Die Testausführung selbst installiert nichts und braucht kein Netzwerk. 
 vorherige Abhängigkeitsinstallation benötigt verfügbare Pakete oder einen gefüllten Cache.
 
 Lokal gilt seit dem 21. September 2026 der Standard von vier Workern.
-Die vollständige serielle Suite folgt lokal nach jedem parallelen Volltest vor dem Commit.
+In der Codex-Entwicklung folgt kein serieller Volltest. Der zusätzliche serielle
+Volltest gehört ausschließlich zum letzten Zustand des späteren PatchHarbor-Bundles
+im Apply und läuft vor dessen abschließendem Commit.
 Nur explizites `auto` lässt xdist die Workerzahl bestimmen. Explizite Zahlen und
 `PYTEST_XDIST_AUTO_NUM_WORKERS` erlauben die Anpassung an vorhandene CPU-/Speicherressourcen.
 Es gibt keinen stillen seriellen Fallback, keine automatische Wiederholung abgestürzter
@@ -101,9 +122,11 @@ prozessübergreifenden Singletons.
 
 ## Verifikationsgrenzen
 
-Der Patch prüft Zwischenstände einzeln. Tatsächliche serielle und parallele Ergebnisse
-sind dem Apply-Protokoll und den zugehörigen aktuellen Berichten zu entnehmen, nicht aus
-dieser Anleitung abzuleiten. Ein lokaler CPython-Lauf ist kein Nachweis für Pixel/PRoot
+Der Patch prüft Zwischenstände einzeln. Die Entwicklungsumgebung liefert nur
+parallele Ergebnisse; das spätere Apply-Protokoll belegt die dortigen Paralleltests
+und den zusätzlichen seriellen Abschlusslauf. Maßgeblich sind diese Protokolle
+und die zugehörigen aktuellen Berichte; diese Anleitung ist kein Ausführungsnachweis.
+Ein lokaler CPython-Lauf ist kein Nachweis für Pixel/PRoot
 oder die ganze CI-Matrix. Keine pauschale Behauptung über alle zukünftigen Tests.
 
 Automatisiert werden ausschließlich Verhalten und maschinenlesbare Datenverträge geprüft.

@@ -19,12 +19,13 @@
     "Complete the bound full target or restore the bound basis; preserve foreign files and all recovery evidence.",
     "Reject additional, missing, changed and concurrently observed resources; compare mutation and read-only diagnosis.",
     "Resume proved terminal completion after lost synchronization or archive responses without another normative write; retain pending and foreign blockers until full cleanup proof.",
-    "Recover an abruptly stopped writer through the native mutex and explicit transaction-bound authority; preserve the ordinary lock-recover journal veto."
+    "Recover an abruptly stopped writer through the native mutex and explicit transaction-bound authority; preserve the ordinary lock-recover journal veto.",
+    "Fail the first recovery receipt after creation, a partial write and a complete write with lost fsync response; assert truthful mutation diagnostics, retained bytes and unchanged normative target. Reject an existing conflicting receipt without mutation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen.",
-    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence; terminal cleanup and explicit audited orphan takeover retain exact target bytes across real process stops and lost durability responses. No automatic recovery or full fault-injection acceptance is claimed."
+    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence; terminal cleanup and explicit audited orphan takeover retain exact target bytes across real process stops and lost durability responses. No automatic recovery or full fault-injection acceptance is claimed. First-receipt creation/write/synchronization failures report possible operational mutation without claiming a normative write or completion."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -77,10 +78,14 @@
     "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[archive]",
     "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[completed]",
     "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[intent]",
-    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[owner]"
+    "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[owner]",
+    "tests/test_recovery_mutation_accounting.py::test_first_receipt_failure_retains_bytes_and_reports_mutation[created]",
+    "tests/test_recovery_mutation_accounting.py::test_first_receipt_failure_retains_bytes_and_reports_mutation[partial]",
+    "tests/test_recovery_mutation_accounting.py::test_first_receipt_failure_retains_bytes_and_reports_mutation[synced]",
+    "tests/test_recovery_mutation_accounting.py::test_first_receipt_conflict_remains_a_write_free_rejection"
   ],
   "open_items": [
-    "Existing first-receipt error mutation accounting remains AUDIT-REC-03.",
+    "Extended directory and later-marker mutation accounting boundaries and structural consolidation remain AUDIT-REC-03.R/C.",
     "Short auxiliary recovery writes remain blocked and preserved; their restart investigation remains AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }

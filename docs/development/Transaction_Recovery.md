@@ -331,3 +331,21 @@ Belegbytes, Fehlerverträge, normative Ergebnisse und erlaubte Seiteneffekte
 bleiben gegenüber W/R unverändert. Die bestehenden Verhaltenstests werden
 unverändert weiterverwendet; die Requirementmanifeste bleiben Teilnachweise.
 Die weiteren Audit-Nacharbeiten beginnen mit `AUDIT-REC-03.W`.
+
+## AUDIT-REC-03.W: Mutationsstatus vor der ersten Receiptanlage
+
+Der Zielabschluss merkt mögliche Betriebsdateimutationen unmittelbar vor dem
+Anlegen eines fehlenden Receipts einschließlich seiner Elternverzeichnisse vor.
+Ein Fehler nach Dateianlage, während eines Teilwrites oder nach vollständigem
+Write mit verlorener Synchronisationsrückgabe liefert dadurch
+`mutation_possible=true`. Zurückgelassene Bytes bleiben erhalten; es gibt keine
+automatische Löschung, Wiederholung oder zusätzliche normative Veröffentlichung.
+
+Die schreibfreie Prüfung eines bereits vorhandenen Receipts liegt vor dieser
+Grenze. Ein dort festgestellter Konflikt bleibt `mutation_possible=false`, wenn
+dieser Aufruf noch keinen anderen Receipt angelegt hat. Das Flag bezeichnet die
+Möglichkeit einer Betriebsdateimutation, keine Behauptung eines Fachwrites oder
+erfolgreichen Abschlusses. Die Verhaltenstests vergleichen die erhaltenen
+Receiptbytes, den unveränderten Journalstand und unabhängig erwartete Zielbytes.
+Die erweiterte Abdeckung von Verzeichnis- und späteren Markerfehlern folgt in
+`AUDIT-REC-03.R`; der Wiederanlauf kurzer Hilfsdateien bleibt `AUDIT-REC-04`.

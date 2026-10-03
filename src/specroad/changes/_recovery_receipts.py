@@ -32,12 +32,14 @@ def recheck_recovery_record(files, record, token):
         raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
 
 
-def ensure_recovery_record(files, record, *, write_new):
-    """Reuse exact evidence or write only the absent expected receipt."""
+def ensure_recovery_record(files, record, *, write_new, before_create=None):
+    """Reuse exact evidence; announce possible writes before creating its parents."""
     token = existing_recovery_record(files, record)
     if token is not None:
         return token, False
     parts, name = tuple(record.path.split('/')[:-1]), record.path.rsplit('/', 1)[-1]
+    if before_create is not None:
+        before_create()
     with files.directory(parts, create=True) as directory:
         identity = write_new(directory, name, record.source_bytes)
     token = existing_recovery_record(files, record)

@@ -1,6 +1,7 @@
 """Observe execution/data contracts, not CLI text or workflow formatting."""
 import json
 import subprocess
+import sys
 import uuid
 from types import SimpleNamespace
 from pathlib import Path
@@ -124,17 +125,70 @@ def test_serial_option_is_preserved_for_laptop_gate():
     assert "-n" not in command and "xdist.plugin" not in command
 
 
+@pytest.mark.parametrize("code", [0, 1, 2, 4])
+def test_intermediate_apply_runs_only_full_parallel_without_retry(code, capsys):
+    import run_apply_tests
+    calls = []
+    def execute(command, **kwargs):
+        calls.append((command, kwargs))
+        return SimpleNamespace(returncode=code)
+    with patch.object(run_apply_tests.subprocess, "run", side_effect=execute):
+        assert run_apply_tests.main([]) == (0 if code == 0 else 1)
+    assert len(calls) == 1
+    command, options = calls[0]
+    assert command == [sys.executable, "-I", "-B", str(run_apply_tests.ROOT / "tools/run_tests.py"),
+                       "--workers", "4"]
+    assert options == {"cwd": run_apply_tests.ROOT, "stdin": subprocess.DEVNULL, "check": False}
+    assert json.loads(capsys.readouterr().out) == {
+        "checks": [{"mode": "parallel", "exit_code": code}], "suite_passed": code == 0}
+
+
 @pytest.mark.parametrize("codes", [(0, 0), (1, 0), (0, 1), (1, 1)])
-def test_laptop_always_runs_both_full_gates_before_reporting_success(codes):
+def test_final_apply_adds_serial_even_after_parallel_failure(codes, capsys):
+    import run_apply_tests
+    calls = []
+    def execute(command, **kwargs):
+        calls.append((command, kwargs))
+        return SimpleNamespace(returncode=codes[len(calls) - 1])
+    with patch.object(run_apply_tests.subprocess, "run", side_effect=execute):
+        assert run_apply_tests.main(["--final-bundle-state"]) == (0 if codes == (0, 0) else 1)
+    assert len(calls) == 2
+    for (command, options), workers in zip(calls, ("4", "0")):
+        assert command == [sys.executable, "-I", "-B", str(run_apply_tests.ROOT / "tools/run_tests.py"),
+                           "--workers", workers]
+        assert options == {"cwd": run_apply_tests.ROOT, "stdin": subprocess.DEVNULL, "check": False}
+    assert json.loads(capsys.readouterr().out) == {
+        "checks": [{"mode": "parallel", "exit_code": codes[0]},
+                   {"mode": "serial", "exit_code": codes[1]}],
+        "suite_passed": codes == (0, 0)}
+
+
+@pytest.mark.parametrize("final,failed_start", [(False, 0), (True, 0), (True, 1)])
+def test_apply_start_failure_preserves_required_remaining_checks(final, failed_start, capsys):
     import run_apply_tests
     calls = []
     def execute(command, **kwargs):
         calls.append(command)
-        return SimpleNamespace(returncode=codes[len(calls) - 1])
+        if len(calls) - 1 == failed_start:
+            raise OSError('cannot start')
+        return SimpleNamespace(returncode=0)
     with patch.object(run_apply_tests.subprocess, "run", side_effect=execute):
-        assert run_apply_tests.main([]) == (0 if codes == (0, 0) else 1)
-    assert [c[c.index("--workers") + 1] for c in calls] == ["4", "0"]
-    assert all(Path(c[3]).name == "run_tests.py" for c in calls)
+        assert run_apply_tests.main(["--final-bundle-state"] if final else []) == 1
+    modes = ["parallel", "serial"] if final else ["parallel"]
+    assert [c[c.index("--workers") + 1] for c in calls] == (["4", "0"] if final else ["4"])
+    assert json.loads(capsys.readouterr().out) == {
+        "checks": [{"mode": mode, "exit_code": 4 if i == failed_start else 0}
+                   for i, mode in enumerate(modes)],
+        "suite_passed": False}
+
+
+def test_apply_rejects_unknown_gate_options_before_starting_tests():
+    import run_apply_tests
+    with patch.object(run_apply_tests.subprocess, "run") as start:
+        with pytest.raises(SystemExit) as failure:
+            run_apply_tests.main(["--workers", "0"])
+    assert failure.value.code == 2
+    start.assert_not_called()
 
 
 @pytest.mark.parametrize("code,write", [(0, True), (1, True), (0, False)])

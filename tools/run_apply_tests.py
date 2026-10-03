@@ -1,4 +1,5 @@
-"""Run both complete laptop gates in order; commit orchestration stays with Apply."""
+"""Run full parallel Apply tests, adding serial tests for the final bundle state."""
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -8,8 +9,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--final-bundle-state", action="store_true")
+    args = parser.parse_args(argv)
+    modes = [("parallel", "4")]
+    if args.final_bundle_state:
+        modes.append(("serial", "0"))
     checks = []
-    for mode, workers in (("parallel", "4"), ("serial", "0")):
+    for mode, workers in modes:
         command = [sys.executable, "-I", "-B", str(ROOT / "tools/run_tests.py"),
                    "--workers", workers]
         try:

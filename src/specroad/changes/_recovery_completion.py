@@ -147,10 +147,16 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         recovered = fully_published(journal)
         transaction, request_receipt, committed = prepare_recovery_receipts(recovered)
         tokens = {}
+
+        def receipt_creation_started():
+            nonlocal mutated
+            mutated = True
+
         for record in (transaction, request_receipt):
             if record is None:
                 continue
-            token, wrote = ensure_recovery_record(files, record, write_new=write_new)
+            token, wrote = ensure_recovery_record(files, record, write_new=write_new,
+                                                  before_create=receipt_creation_started)
             mutated |= wrote
             tokens[record.path] = (record, token)
         _completion_lock(held_lock, journal)
