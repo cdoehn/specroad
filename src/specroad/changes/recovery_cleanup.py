@@ -13,102 +13,16 @@ from ..security import paths as guards
 from ..storage.json_syntax import parse_json_object
 from .execution_values import ChangeExecutionError
 from .locking import HeldProjectLock
-from .receipt_projection import prepare_recovery_receipts
-from .receipt_values import CommittedJournal, completion_marker_path
-from .recovery_values import RecoveryAuthority, RecoveryError, RecoveryObservation, RolledBackJournal
-from ._journal_codec import _hash, _transaction, _text, journal_path
-from ._journal_io import _read
-from ._recovery_completion import _completion_lock
+from .recovery_values import RecoveryAuthority, RecoveryError, RecoveryObservation
+from ._journal_codec import _hash, _transaction, _text
+from ._recovery_binding import check_run_lock as _completion_lock
 from ._recovery_evidence import (EvidenceRecord, evidence_root, persist_evidence,
-                                 read_evidence, rollback_evidence)
-from ._recovery_inputs import _parse
+                                 read_evidence)
 from ._recovery_receipts import existing_recovery_record, recheck_recovery_record
-from ._recovery_rollback import _prove_basis
-from ._recovery_target import prove_complete_target
-from ._staging_files import _image
-from ._recovery_barrier import barrier_path, barrier_record, remove_barrier
-
-
-def _marker_path(transaction_id, journal):
-    path = completion_marker_path(transaction_id)
-    return path if type(journal) is CommittedJournal else path.replace('/committed.json', '/rolled_back.json')
-
-
-def _terminal(files, transaction_id):
-    active = read_evidence(files, journal_path(transaction_id))
-    committed_path = completion_marker_path(transaction_id)
-    markers = [read_evidence(files, committed_path),
-               read_evidence(files, committed_path.replace('/committed.json', '/rolled_back.json'))]
-    present = [record for record in markers if record is not None]
-    if len(present) > 1:
-        raise RecoveryError('recovery_terminal_markers_disagree', exit_code=6)
-    record = active if active is not None else next(iter(present), None)
-    if record is None:
-        raise RecoveryError('recovery_terminal_proof_missing', exit_code=6)
-    journal = _parse(record.source_bytes, transaction_id, files)
-    if type(journal) not in (CommittedJournal, RolledBackJournal):
-        raise RecoveryError('recovery_terminal_state_required', exit_code=6)
-    if present and (present[0].source_bytes != journal.source_bytes
-                    or present[0].path != _marker_path(transaction_id, journal)):
-        raise RecoveryError('recovery_terminal_markers_disagree', exit_code=6)
-    return journal
-
-
-def _proof(files, journal):
-    if type(journal) is CommittedJournal:
-        transaction, request, expected = prepare_recovery_receipts(journal.predecessor)
-        if expected.source_bytes != journal.source_bytes:
-            raise RecoveryError('recovery_committed_binding_mismatch', exit_code=6)
-        records = [record for record in (transaction, request) if record is not None]
-        live = prove_complete_target(files, journal.predecessor)
-    else:
-        records = list(rollback_evidence(files, journal))
-        live = _prove_basis(files, journal)
-    tokens = []
-    for record in records:
-        token = existing_recovery_record(files, record)
-        if token is None:
-            raise RecoveryError('recovery_receipt_missing', path=record.path, exit_code=6)
-        tokens.append((record, token))
-    return live, tokens
-
-
-def _work(files, journal, prefix):
-    """A closed subset of known terminal images; every retained byte is checked."""
-    with files.directory(prefix) as directory:
-        if directory is None:
-            return None
-        names = set(os.listdir(directory))
-        if not names <= {'journal.json', 'before', 'staging', 'rollback'}:
-            raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
-        result = {'': guards._identity(os.fstat(directory))}
-        if 'journal.json' in names:
-            if _read(directory, 'journal.json') != journal.source_bytes:
-                raise RecoveryError('recovery_journal_changed', exit_code=6)
-            result['journal.json'] = {'identity': _image(directory, 'journal.json',
-                len(journal.source_bytes), journal.sha256), 'size': len(journal.source_bytes),
-                'sha256': journal.sha256}
-    images = {'before': {}, 'staging': {}, 'rollback': {}}
-    for index, entry in enumerate(journal.data['files']):
-        for folder, key, size, digest in (
-                ('before', 'before_image_path', 'before_size', 'before_sha256'),
-                ('staging', 'staging_path', 'after_size', 'after_sha256')):
-            if entry[key] is not None:
-                images[folder][entry[key].rsplit('/', 1)[-1]] = (entry[size], entry[digest])
-        if type(journal) is RolledBackJournal:
-            suffix, size, digest = (('bin', 'before_size', 'before_sha256') if entry['existed_before']
-                                    else ('removed', 'after_size', 'after_sha256'))
-            images['rollback'][str(index) + '.' + suffix] = (entry[size], entry[digest])
-    for folder in sorted(names - {'journal.json'}):
-        with files.directory((*prefix, folder)) as directory:
-            if directory is None or not set(os.listdir(directory)) <= set(images[folder]):
-                raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
-            result[folder] = guards._identity(os.fstat(directory))
-            for name in sorted(os.listdir(directory)):
-                size, digest = images[folder][name]
-                result[folder + '/' + name] = {'identity': _image(directory, name, size, digest),
-                                               'size': size, 'sha256': digest}
-    return result
+from ._recovery_barrier import barrier_path, barrier_record, persist_barrier, remove_barrier
+from ._recovery_terminal import (terminal_marker_path as _marker_path,
+    read_terminal_journal as _terminal, prove_terminal_result as _proof)
+from ._recovery_work import read_terminal_work as _work, work_file_inventory
 
 
 def _authorize(authority, journal):
@@ -178,8 +92,7 @@ def cleanup_recovered_transaction(transaction_id, *, held_lock, authority, expec
         marker = EvidenceRecord(_marker_path(transaction_id, journal), journal.source_bytes)
         # An already fully cleaned normal completion needs no new recovery write.
         if expected_work is not None:
-            entries = [{'path': path, 'size': token['size'], 'sha256': token['sha256']}
-                       for path, token in sorted(expected_work.items()) if type(token) is dict]
+            entries = work_file_inventory(expected_work)
             fields = {'format_version': 'terminal-cleanup-v1', 'action': 'cleanup',
                 'transaction_id': transaction_id, 'journal_sha256': journal.sha256,
                 'outcome': journal.data['state'], 'archive_path': audit_path + '/work',
@@ -213,11 +126,7 @@ def cleanup_recovered_transaction(transaction_id, *, held_lock, authority, expec
             # stay visible to ordinary readers/writers until final proof.
             pending = work is not None or done_token is None or pending_token is not None
             if pending:
-                pending_token = persist_evidence(files, barrier)
-                observed_active = files.journal_entries()
-                if set(observed_active) != set(active) | {barrier.path}:
-                    raise RecoveryError('recovery_active_set_changed', exit_code=6)
-                active = observed_active
+                pending_token, active = persist_barrier(files, barrier, active)
                 guard(active, prefix if work is not None else archive, expected_work)
             if work is not None:
                 with files.directory(tuple(audit_path.split('/'))) as audit:

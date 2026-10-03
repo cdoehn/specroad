@@ -9,7 +9,9 @@ from ..security import paths as guards
 from ._recovery_inputs import _parse, _unchanged_base, _work
 from ._recovery_evidence import EvidenceRecord, read_evidence, persist_evidence, rollback_receipt
 from ._recovery_receipts import existing_recovery_record, recheck_recovery_record
-from ._recovery_barrier import barrier_record, remove_barrier
+from ._recovery_barrier import barrier_record, persist_barrier, remove_barrier
+from ._recovery_binding import check_discard_lock as _held
+from ._recovery_work import work_file_inventory
 from .receipt_values import transaction_receipt_path
 from .recovery_values import RecoveryError, RecoveryObservation, DiscardedJournal
 
@@ -29,7 +31,6 @@ def archived_discard(files, transaction_id):
 
 def _finish_discard(preflight, terminal, *, held_lock, authority, actor, reason,
                    expected_journal_sha256, attempted, authorized=False):
-    from .recovery import _held
     files = held_lock._files
     data = terminal.data
     transaction_id = data['transaction_id']
@@ -67,8 +68,7 @@ def _finish_discard(preflight, terminal, *, held_lock, authority, actor, reason,
     location = prefix if active_work else archive
     work = _work(files, journal, raw=terminal.source_bytes, prefix=location, preflight=preflight)
     expected_files = [{'path': 'journal.json', 'size': len(journal.source_bytes), 'sha256': journal.sha256}]
-    expected_files.extend({'path': path, 'size': token['size'], 'sha256': token['sha256']}
-                          for path, token in sorted(work.items()) if type(token) is dict)
+    expected_files.extend(work_file_inventory(work))
     if value.get('work_files') != sorted(expected_files, key=lambda item: item['path']):
         raise RecoveryError('recovery_discard_inventory_mismatch', exit_code=6)
     tokens = [(record, existing_recovery_record(files, record)) for record in (original, intent)]
@@ -115,11 +115,7 @@ def _finish_discard(preflight, terminal, *, held_lock, authority, actor, reason,
         persist_evidence(files, record)
     receipt_token = persist_evidence(files, receipt)
     if pending:
-        barrier_token = persist_evidence(files, barrier)
-        observed_active = files.journal_entries()
-        if set(observed_active) != set(active) | {barrier.path}:
-            raise RecoveryError('recovery_active_set_changed', exit_code=6)
-        active = observed_active
+        barrier_token, active = persist_barrier(files, barrier, active)
     guard(active, location)
     recheck_recovery_record(files, receipt, receipt_token)
     with files.directory(tuple(audit_path.split('/'))) as audit:

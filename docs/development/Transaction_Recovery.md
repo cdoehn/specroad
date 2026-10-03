@@ -309,3 +309,25 @@ Archivierung. Sie vergleichen unabhängig vorbereitete normative Bytes und
 verifizieren die erhaltenen Belege und Fremdblocker. Dies bleibt native lokale
 Linux-Recovery; CLI-Verdrahtung, automatischer Preflight, die vollständige
 Fault-Injection-Matrix und Restore sind weiterhin spätere Planpositionen.
+
+## AUDIT-REC-02.C: gemeinsame Abschluss- und Lockprüfungen
+
+`_recovery_binding.py` hält die identische Prüfung des nativen Recoverylocks
+gegen Kommando, Projekt, Request und Transaktion. Zielabschluss, Rollback und
+Cleanup verwenden die feste `recover run`-Bindung; Discard verwendet weiterhin
+`recover discard`. Die Aufrufer behalten ihre bisherigen Vorprüfungen und
+Zeitpunkte für erneute Beobachtungen.
+
+`_recovery_terminal.py` bündelt die schreibfreie Auswahl kanonischer terminaler
+Journale sowie deren Receipt- und Ergebnisnachweis. Cleanup und Lockübernahme
+verwenden dieselbe Journal-/Markerauflösung. `_recovery_work.py` prüft die
+bekannten terminalen Arbeitsreste und bildet die unveränderte Datei-Inventur
+für Cleanup- und Discardbelege. `_recovery_barrier.py` enthält die gemeinsame
+Anlage und aktive Mengenprüfung des Pending-Markers.
+
+Die mutierenden Abläufe behalten ihre Reihenfolge für Autorisierung, Beleganlage,
+Synchronisation, Archivierung und Markerentfernung. Öffentliche APIs,
+Belegbytes, Fehlerverträge, normative Ergebnisse und erlaubte Seiteneffekte
+bleiben gegenüber W/R unverändert. Die bestehenden Verhaltenstests werden
+unverändert weiterverwendet; die Requirementmanifeste bleiben Teilnachweise.
+Die weiteren Audit-Nacharbeiten beginnen mit `AUDIT-REC-03.W`.

@@ -3,7 +3,7 @@ from hashlib import sha256
 import os
 
 from ..model.canonical import canonical_json_bytes
-from ._recovery_evidence import EvidenceRecord, read_evidence
+from ._recovery_evidence import EvidenceRecord, read_evidence, persist_evidence
 from ._recovery_receipts import recheck_recovery_record
 from .recovery_values import RecoveryError
 
@@ -19,6 +19,15 @@ def barrier_record(journal, intent, action):
         'transaction_id': data['transaction_id'], 'project_id': data['project_id'],
         'root_identity': data['root_identity'], 'journal_sha256': journal.sha256,
         'intent': intent.reference}))
+
+
+def persist_barrier(files, record, active):
+    """Keep the observed blocker order and reject every unrelated set change."""
+    token = persist_evidence(files, record)
+    observed = files.journal_entries()
+    if set(observed) != set(active) | {record.path}:
+        raise RecoveryError('recovery_active_set_changed', exit_code=6)
+    return token, observed
 
 
 def remove_barrier(files, record, token):

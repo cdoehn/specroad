@@ -26,6 +26,7 @@ from ._recovery_evidence import (EvidenceRecord, evidence_root, read_evidence,
                                  persist_evidence, rollback_receipt)
 from ._recovery_receipts import existing_recovery_record, recheck_recovery_record
 from ._staging_files import _image
+from ._recovery_terminal import read_terminal_journal, terminal_marker_path
 
 
 def _selected_journal(files, transaction_id, project_id):
@@ -33,10 +34,9 @@ def _selected_journal(files, transaction_id, project_id):
     if record is None:
         # Terminal cleanup may already have moved the active journal. Select
         # only this transaction's canonical evidence, never scan audit history.
-        from .recovery_cleanup import _terminal, _marker_path
         try:
-            journal = _terminal(files, transaction_id)
-            record = read_evidence(files, _marker_path(transaction_id, journal))
+            journal = read_terminal_journal(files, transaction_id)
+            record = read_evidence(files, terminal_marker_path(transaction_id, journal))
         except RecoveryError as error:
             if error.reason != 'recovery_terminal_proof_missing':
                 raise

@@ -15,26 +15,16 @@ from ..storage.json_syntax import parse_json_object
 from .authoring import normalize_authoring_actor
 from .execution_values import ChangeExecutionError
 from .locking import HeldProjectLock
+from ._recovery_binding import check_discard_lock as _held
 from ._journal_codec import _hash, _text, _transaction
 from ._staging_files import _write_new, _image
 from .recovery_values import (AUDIT_ROOT, RecoveryAuthority, RecoveryError,
                               RecoveryObservation, DiscardedJournal)
 from ._recovery_inputs import _read_journal, _parse, _unchanged_base, _work
 from ._discard_completion import archived_discard, finish_discard
+from ._recovery_work import work_file_inventory
 # Preserve the initial module import surface; the implementation is read-only.
 from .recovery_read import inspect_recovery
-
-
-def _held(held, journal):
-    if type(held) is not HeldProjectLock:
-        raise RecoveryError('native_recovery_lock_required', exit_code=7)
-    held.check()
-    lock, data = held.record.data, journal.data
-    if (lock['kind'] != 'recovery' or lock['command'] != 'recover discard'
-            or lock['transaction_id'] != data['transaction_id']
-            or lock['project_id'] != data['project_id']
-            or lock['request_id'] != data['request_id']):
-        raise RecoveryError('recovery_lock_binding_mismatch', exit_code=6)
 
 
 def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
@@ -103,8 +93,7 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
         guard()
         event = str(uuid4()); audit_path = AUDIT_ROOT + '/' + event
         work_files = [{'path': 'journal.json', 'size': len(raw), 'sha256': journal.sha256}]
-        work_files.extend({'path': path, 'size': token['size'], 'sha256': token['sha256']}
-                          for path, token in sorted(work.items()) if type(token) is dict)
+        work_files.extend(work_file_inventory(work))
         intent = canonical_json_bytes({'format_version': 'recovery-audit-v1',
             'event_id': event, 'phase': 'intent', **parse_json_object(request_raw),
             'previous_state': journal.data['state'], 'normative_writes': 0,

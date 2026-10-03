@@ -17,6 +17,7 @@ from ..security import paths as guards
 from .committing_values import CommittingJournal
 from .execution_values import ChangeExecutionError
 from .locking import HeldProjectLock
+from ._recovery_binding import check_run_lock as _rollback_lock
 from .publication_check import _rights
 from .recovery_values import (RecoveryAuthority, RecoveryError,
     RecoveryObservation, RolledBackJournal, RollingBackJournal)
@@ -29,18 +30,6 @@ from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
 from ._recovery_evidence import EvidenceRecord, rollback_evidence, sync_evidence
 from ._recovery_receipts import existing_recovery_record
-
-
-def _rollback_lock(held, journal):
-    if type(held) is not HeldProjectLock:
-        raise RecoveryError('native_recovery_lock_required', exit_code=7)
-    held.check()
-    lock, data = held.record.data, journal.data
-    if (lock['kind'] != 'recovery' or lock['command'] != 'recover run'
-            or lock['transaction_id'] != data['transaction_id']
-            or lock['project_id'] != data['project_id']
-            or lock['request_id'] != data['request_id']):
-        raise RecoveryError('recovery_lock_binding_mismatch', exit_code=6)
 
 
 def _authorize(authority, journal):

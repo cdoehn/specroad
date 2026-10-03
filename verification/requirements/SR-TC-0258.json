@@ -80,7 +80,7 @@
     "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[owner]"
   ],
   "open_items": [
-    "Terminal recovery structure consolidation remains AUDIT-REC-02.C; existing first-receipt error mutation accounting remains AUDIT-REC-03.",
+    "Existing first-receipt error mutation accounting remains AUDIT-REC-03.",
     "Short auxiliary recovery writes remain blocked and preserved; their restart investigation remains AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }
