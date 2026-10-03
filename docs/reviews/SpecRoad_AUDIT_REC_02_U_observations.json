@@ -1,0 +1,287 @@
+{
+  "apply_test_success_claimed": false,
+  "audit_step": "AUDIT-REC-02.U",
+  "context": {
+    "base_commit": "33461a60ca916d78210939e99268501095d515a6",
+    "bundle_suffix": "",
+    "created_at": "2026-10-02T20:21:35Z",
+    "dirty": false,
+    "fingerprint_algorithm": "patchharbor-state-v1",
+    "repo_id": "a33ed6cf-0a97-4b73-b11a-d4239e7a2145",
+    "state_fingerprint": "7c9d2a24e397e0e5"
+  },
+  "decision": "confirmed",
+  "format_version": "specroad-audit-observations-v1",
+  "observations": {
+    "abrupt": {
+      "all_file_bytes_unchanged": true,
+      "child_returncode": 23,
+      "followup": {
+        "reader": {
+          "exit_code": 5,
+          "model_loaded": false,
+          "normal_operation_started": false,
+          "status": "blocked"
+        },
+        "writer": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "reason": "lock_recovery_required",
+          "returned": false
+        }
+      },
+      "journal_paths": [
+        ".specroad/transactions/txn-publish-test"
+      ],
+      "lock_recovery": {
+        "error_type": "ProjectLockError",
+        "exit_code": 5,
+        "reason": "transaction_journal_blocks_lock",
+        "returned": false
+      },
+      "owner_state": "dead",
+      "recovery_lock": {
+        "error_type": "ProjectLockError",
+        "exit_code": 5,
+        "reason": "lock_recovery_required",
+        "returned": false
+      }
+    },
+    "cleanup_with_recovery_lock_and_retained_preflight": {
+      "all_file_bytes_unchanged": true,
+      "attempt": {
+        "error_type": "ReceiptError",
+        "exit_code": 6,
+        "reason": "cleanup_lock_binding_mismatch",
+        "returned": false
+      }
+    },
+    "discard_with_retained_preflight": {
+      "active_journal_present": false,
+      "completion": {
+        "action": "discard",
+        "archive_path": ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e/work",
+        "atomic_snapshot": false,
+        "audit_path": ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e",
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "discard_completed": true,
+        "event_id": "9a89324c-b838-4335-9b9b-02513697cc4e",
+        "evidence_preserved": true,
+        "format_version": "recovery-audit-v1",
+        "intent_sha256": "db7d9c780761d08a84025eea8f117a8d1d080570073b6176d047596eb1d96106",
+        "journal_before_sha256": "6f062a275daebd10514599c92efbb3139ed31fda822acbe4e6c0a0053d7b8ccd",
+        "journal_sha256": "90cd0c39271e0e889a84d0f9ea699340454206f917f6c0c8c5a622a3e93bf93e",
+        "model_loaded": false,
+        "normative_writes": 0,
+        "phase": "completed",
+        "remaining_active_paths": [],
+        "state": "rolled_back",
+        "transaction_id": "txn-publish-test",
+        "write_authorized": false
+      },
+      "followup": {
+        "reader": {
+          "exit_code": 0,
+          "model_loaded": true,
+          "normal_operation_started": true,
+          "status": "completed"
+        },
+        "writer": {
+          "result": {
+            "acquired": true
+          },
+          "returned": true
+        }
+      },
+      "normative_bytes_unchanged": true,
+      "recovery_audits": [
+        ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e/completed.json",
+        ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e/intent.json",
+        ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e/journal.before.json",
+        ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e/work/before/0.bin",
+        ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e/work/journal.json",
+        ".specroad/recovery/transaction-audit/9a89324c-b838-4335-9b9b-02513697cc4e/work/staging/0.bin"
+      ],
+      "transaction_receipts": []
+    },
+    "ordinary_cleanup_control": {
+      "cleanup_completed": true,
+      "followup": {
+        "reader": {
+          "exit_code": 0,
+          "model_loaded": true,
+          "normal_operation_started": true,
+          "status": "completed"
+        },
+        "writer": {
+          "result": {
+            "acquired": true
+          },
+          "returned": true
+        }
+      },
+      "recovery_audits": [],
+      "transaction_receipts": [
+        ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/committed.json",
+        ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json"
+      ]
+    },
+    "ordinary_commit_after_writer_exit": {
+      "child_returncode": 0,
+      "followup": {
+        "reader": {
+          "exit_code": 5,
+          "model_loaded": false,
+          "normal_operation_started": false,
+          "status": "blocked"
+        },
+        "writer": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        }
+      },
+      "recovery_audits": [],
+      "state": "committed",
+      "transaction_receipts": [
+        ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json"
+      ]
+    },
+    "orphan_no_journal": {
+      "all_file_bytes_unchanged": false,
+      "child_returncode": 23,
+      "followup": {
+        "reader": {
+          "exit_code": 0,
+          "model_loaded": true,
+          "normal_operation_started": true,
+          "status": "completed"
+        },
+        "writer": {
+          "result": {
+            "acquired": true
+          },
+          "returned": true
+        }
+      },
+      "journal_paths": [],
+      "lock_recovery": {
+        "result": {
+          "journal_recovery_performed": false,
+          "new_lock_acquired": false,
+          "observed_owner_state": "dead",
+          "record_removed": true
+        },
+        "returned": true
+      },
+      "owner_state": "dead",
+      "recovery_lock": {
+        "error_type": "ProjectLockError",
+        "exit_code": 5,
+        "reason": "lock_recovery_required",
+        "returned": false
+      }
+    },
+    "rollback_after_writer_exit": {
+      "active_journal_present": true,
+      "basis_bytes_restored": true,
+      "child_returncode": 0,
+      "completion": {
+        "atomic_snapshot": false,
+        "base_model_root_sha256": "996a985239c8f2394a7ca35f4c6c8cfc917f8c55cda4a9e40ce4ec2eb8d3673d",
+        "format_version": "recovery-rollback-v1",
+        "journal_sha256": "f7edea38769a0bd9e937073524ac0fbbcfa06e6d39191c8ba807fed0d726a81f",
+        "model_loaded": false,
+        "normative_writes": 1,
+        "rollback_completed": true,
+        "state": "rolled_back",
+        "transaction_id": "txn-publish-test",
+        "write_authorized": false
+      },
+      "followup": {
+        "reader": {
+          "exit_code": 5,
+          "model_loaded": false,
+          "normal_operation_started": false,
+          "status": "blocked"
+        },
+        "writer": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        }
+      },
+      "recovery_audits": [],
+      "retry_all_file_bytes_unchanged": true,
+      "retry_normative_writes": 0,
+      "transaction_receipts": []
+    },
+    "target_after_writer_exit": {
+      "active_journal_present": true,
+      "child_returncode": 0,
+      "completion": {
+        "atomic_snapshot": false,
+        "authenticity_verified": false,
+        "cleanup_completed": false,
+        "cleanup_required": true,
+        "commit_completed": true,
+        "current_target_verified": true,
+        "format_version": "transaction-completion-v1",
+        "idempotency_guaranteed": false,
+        "journal_sha256": "c29f62bba03ca5b3fe891b2080ee806fc4fd73163884ba85edcb4539c54673e8",
+        "normative_writes": 0,
+        "project_id": "sample",
+        "receipt_verified": true,
+        "receipts": {
+          "request": {
+            "path": ".specroad/requests/19f1064b619d49d35392eac7261cd7266c720671fc594f4b226f32bf0bee74ba.json",
+            "sha256": "aa9e6581cb22a4aef5e814569a92f32ffba2161b196ec75e99edb442c8538e10"
+          },
+          "transaction": {
+            "path": ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json",
+            "sha256": "dc4b136106fa262f6730be5347bc0f00dc776b11fe7bf4e2af82d42f8793d4dc"
+          }
+        },
+        "request_id": "request-1",
+        "retry_dispatch_performed": false,
+        "state": "committed",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+        "transaction_id": "txn-publish-test",
+        "warnings": [],
+        "write_authorized": false
+      },
+      "followup": {
+        "reader": {
+          "exit_code": 5,
+          "model_loaded": false,
+          "normal_operation_started": false,
+          "status": "blocked"
+        },
+        "writer": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        }
+      },
+      "normative_bytes_unchanged": true,
+      "recovery_audits": [],
+      "transaction_receipts": [
+        ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json"
+      ]
+    }
+  },
+  "probe_sha256": "095c7f30093e9ef3035cbfed9fbe748365e64523fd00e34320fc9c4b9b005e55",
+  "product_repair_performed": false,
+  "recorded_at": "2026-10-03T12:30:11.484321+00:00",
+  "result_filename": "specroad-apply_Result_202135_1002_5d8e5f.zip",
+  "result_sha256": "6b4c8e9149c0119ff3a52d418b637ed1bb090af8bc0aab930acf8a88010c3d31",
+  "runtime": {
+    "python": "3.14.4",
+    "system": "Linux"
+  },
+  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "synthetic_authority": true
+}

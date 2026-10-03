@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 49
+last_completed_numbered_bundle: 50
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-02.U
+next_audit_step: AUDIT-REC-02.W
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -63,7 +63,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | Befund | Einordnung / Priorität | Ursprünglicher Bezug | Zuständige Nacharbeit | Stand dieser Planrevision |
 |---|---|---|---|---|
 | F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | offen |
+| F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W/R/C offen |
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | offen |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | Untersuchungsverdacht / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511 | AUDIT-REC-04.U | offen; Reparatur nur nach Bestätigung |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | offen |
@@ -139,10 +139,46 @@ C-Commit beide Volltests. Nach erfolgreichem Abschluss dieser Fortsetzung folgt
 
 **Istgrenze:** Ein dauerhafter terminaler `RolledBackJournal` mit Ursprungsbindung existiert bereits. Es fehlen jedoch der vorgeschriebene Receipt unter `.specroad/transactions/receipts/` und ein nutzbarer Abschluss-/Bereinigungspfad; das aktive Verzeichnis blockiert neue Writer. Betroffen: `_recovery_rollback.py`, `receipt_read.py`, `receipt_cleanup.py`, `_receipt_work.py`, `locking.py` und `test_transaction_recovery_rollback*.py`.
 
-- [ ] **AUDIT-REC-02.U:** Zusätzlich den Zielabschluss nach Ende des ursprünglichen Writerprozesses über öffentliche Recovery-/Cleanup-APIs verfolgen. **Entscheidung:** Ist der erforderliche Lock trotz aktivem Abschlussjournal erreichbar? Kann der Vorgang ohne fortlebenden alten Writerlock oder private Umgehung bis zum normalen Folgezugriff abgeschlossen werden? Receiptort beim Discard und Recoveryaktionsnachweis beim Zielabschluss gegen SR-REQ-0259/0462 prüfen. Bestätigte gemeinsame Lücken in die folgende Abschlusskorrektur aufnehmen; genügende Wege durch Gegenbeleg erhalten.
+- [x] **AUDIT-REC-02.U:** Zusätzlich den Zielabschluss nach Ende des ursprünglichen Writerprozesses über öffentliche Recovery-/Cleanup-APIs verfolgen. **Entscheidung:** Bestätigt; terminaler Cleanup ist nach Freigabe des ursprünglichen Writerlocks nicht erreichbar, Zielabschluss und Rollback besitzen keinen eigenen Recoveryaktionsbeleg, Rollback und Discard keinen Abschlussreceipt am Pflichtort. Ein echter abrupt beendeter Writer mit aktivem Journal blockiert bereits den öffentlichen Recoveryzugang. Der unten gebundene Bericht enthält Prozessnachweise und funktionierende Gegenproben; W/R/C bleiben offen.
 - [ ] **AUDIT-REC-02.W:** Den erfolgreichen Rollback durch vollständigen Basisnachweis, unveränderlichen Abschlussreceipt am Pflichtort, Recoveryaktionsbeleg und kontrollierten expliziten Abschluss der Arbeitsreste führen. **Abnahme:** Nach partieller Veröffentlichung wird die exakte Basis erreicht; Abschlussbeweise bleiben erhalten; ein neuer normaler Leser beziehungsweise autorisierter Writer kann wieder beginnen. Wiederaufruf erzeugt keine zweite normative Rückführung. Einen in U bestätigten gemeinsamen Cleanup-Zugangsfehler auf demselben Abschlussweg beheben.
 - [ ] **AUDIT-REC-02.R:** Verlorene Rückgaben und Fehler bei Beleganlage, Archivierung und Bereinigung absichern. **Abnahme:** Wiederaufnahme erhält bereits bewiesene Ergebnisse, Belegbindungen und fremde aktive Blocker; kein zweiter Fachwrite und keine Entsperrung durch bloßes Entfernen unbewiesener Journale. Teilweise Bereinigung darf keinen falschen vollständigen Erfolg ausgeben.
 - [ ] **AUDIT-REC-02.C:** Terminale Ergebnisnachweise und entbehrliche Arbeitsreste strukturell konsistent verwalten. **Abnahme:** Commit- und Rollbackresultate bleiben fachlich unterscheidbar; W-/R-Verträge und Byteerhalt ändern sich nicht.
+
+**U-Ergebnis (Bundle 050, OFF-PLAN `AUDIT-REC-02.U`):**
+[Untersuchung und Reproduktion](../reviews/SpecRoad_AUDIT_REC_02_U.md), gebunden
+an Result `specroad-apply_Result_202135_1002_5d8e5f.zip` und dessen vollständigen
+Basiscommit `33461a60ca916d78210939e99268501095d515a6`. Acht isolierte
+Untersuchungsfälle verwenden öffentliche APIs, temporäre Projekte und echte
+Folgeprozesse; Testautorisierungen sind synthetisch. Der positive Discardfall
+verwendet weiterhin einen erhaltenen Preflight und schließt `AUDIT-REC-05.U`
+ausdrücklich nicht ab. Der Bericht ist ein Befundnachweis, keine Produktreparatur
+und keine Hochstufung der Requirementmanifeste. Commit-Message:
+`docs(recovery): document terminal recovery audit and repair scope`.
+Der U-Status und Bundleabschluss werden erst mit dem tatsächlich nach beiden
+Volltests erstellten Apply-Commit zum Übergabenachweis. Der nächste Schritt ist
+`AUDIT-REC-02.W`; der Produktzähler bleibt 237/885.
+
+**Konkretisierung der offenen Abschlusskorrektur aus U:**
+
+- **W:** Zuerst den expliziten Abschluss bei bereits freigegebenem altem Lock
+  ermöglichen: Rollbackreceipt am Pflichtort, unveränderlicher Recoveryaktionsbeleg
+  für Rollback und Zielabschluss, passender Receipt für Discard sowie ein öffentlich
+  erreichbarer Cleanup unter korrekt gebundenem Recoverylock. Der Abschluss muss
+  ohne fortlebenden ursprünglichen Writerlock bis zum normalen Folgezugriff führen.
+  Ein normaler `committed`-Stand mit unterbrochener Bereinigung benutzt denselben
+  beleggeprüften Abschlussweg. Recovery-Cleanup darf keinen neuen Fachwrite ausführen.
+- **R:** Neben Beleg-/Archivierungs-/Bereinigungsfehlern und verlorenen Rückgaben
+  den in U bestätigten Fall eines abrupt beendeten Writers mit erhaltenem Lock
+  behandeln. Ein expliziter, transaktionsgebundener Recoveryzugang muss echten
+  nativen Mutex, vollständige Eigentümer-/Root-/Journalbindung und unveränderlichen
+  Übernahmebeleg prüfen. Die Abnahme aus 5.i.R, dass `lock recover --force` kein
+  Journal umgeht, bleibt erhalten: kein pauschales Entfernen von Locks oder Journals,
+  keine automatische Übernahme, keine Abschwächung bei lebenden, fremden oder
+  unprüfbaren Eigentümern. Vorhandene Risiko- und Autorisierungsgrenzen bleiben
+  wirksam. Wiederholte Unterbrechungen dürfen weder Fremdblocker freigeben noch
+  einen bereits belegten Fachwrite wiederholen.
+- **C:** Erst nach diesen Verhaltensänderungen gemeinsame Abschlussbeweis-,
+  Arbeitsrest- und Lockbindungsprüfungen konsolidieren; keine neue Recoverypolicy.
 
 **Grenze:** Explizite bestehende Bibliotheks-/Recoverywege; kein automatischer Preflight, keine anschließende neue Fachoperation im selben Lauf, keine allgemeine Cachelösch- oder Restorefunktion.
 
@@ -11938,7 +11974,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-02.U`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-02.W`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
