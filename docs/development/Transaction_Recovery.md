@@ -349,3 +349,31 @@ erfolgreichen Abschlusses. Die Verhaltenstests vergleichen die erhaltenen
 Receiptbytes, den unveränderten Journalstand und unabhängig erwartete Zielbytes.
 Die erweiterte Abdeckung von Verzeichnis- und späteren Markerfehlern folgt in
 `AUDIT-REC-03.R`; der Wiederanlauf kurzer Hilfsdateien bleibt `AUDIT-REC-04`.
+
+## AUDIT-REC-03.R: Verzeichnisse, Abschlussmarker und terminaler Wiederanlauf
+
+`mutation_possible` bilanziert die möglichen Betriebsdateieffekte des aktuellen
+Aufrufs. Die schreibfreie Prüfung eines vorhandenen Abschlussmarkers setzt das
+Flag nicht. Waren beide Receipts bereits exakt vorhanden, bleibt ein Konflikt
+vor Markeranlage oder Journalersetzung deshalb schreibfrei. Wurde zuvor ein
+Receipt angelegt, bleibt diese Mutation auch bei einem späteren Konflikt erhalten.
+Markeranlage und Journalersetzung setzen das Flag vor dem jeweiligen Schreibzweig.
+
+Fehler bei Verzeichnisanlage, Elternsynchronisation, dem zweiten Receipt oder
+einem Markerwrite erhalten die tatsächlichen Verzeichnisse und Bytes. Ein Fehler
+vor der Journalersetzung erhält das ursprüngliche Journal und den vorhandenen
+Marker; eine verlorene Rückgabe nach Ersetzung erhält das bereits abgeschlossene
+Journal. Die Fehler behaupten keinen erfolgreichen Abschluss des Aufrufs und
+keinen normativen Recovery-Write.
+
+Die Anlage einer fehlenden terminalen Auditdatei meldet den Mutationsbeginn an
+den gesamten Abschlussaufruf zurück. Dadurch bleibt sie bei einer späteren
+fehlgeschlagenen Prüfung bilanziert. Exakte vorhandene Auditdateien werden
+wiederverwendet; fremde Dateien vor dem Schreibzweig werden erhalten und zählen
+nicht als eigene Mutation. Eine spätere explizite Wiederholung bestätigt den
+gebundenen Endstand ohne erneute normative Veröffentlichung.
+
+Die Verhaltenstests in `test_recovery_mutation_accounting_right.py` vergleichen
+Dateibytes, Verzeichnisse, Mutationseinstufung und unveränderte normative Zielbytes.
+Die Strukturkonsolidierung folgt in `AUDIT-REC-03.C`; eine Reparatur kurzer
+Hilfsdateien bleibt Gegenstand von `AUDIT-REC-04`.

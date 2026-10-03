@@ -20,12 +20,13 @@
     "Reject additional, missing, changed and concurrently observed resources; compare mutation and read-only diagnosis.",
     "Resume proved terminal completion after lost synchronization or archive responses without another normative write; retain pending and foreign blockers until full cleanup proof.",
     "Recover an abruptly stopped writer through the native mutex and explicit transaction-bound authority; preserve the ordinary lock-recover journal veto.",
-    "Fail the first recovery receipt after creation, a partial write and a complete write with lost fsync response; assert truthful mutation diagnostics, retained bytes and unchanged normative target. Reject an existing conflicting receipt without mutation."
+    "Fail the first recovery receipt after creation, a partial write and a complete write with lost fsync response; assert truthful mutation diagnostics, retained bytes and unchanged normative target. Reject an existing conflicting receipt without mutation.",
+    "Fail receipt directory creation, parent synchronization, the second receipt and completion-marker creation/replacement. Distinguish write-free conflicts from earlier receipt mutations; retain a newly created terminal audit in later failure diagnostics and preserve foreign evidence that appears before creation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen.",
-    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence; terminal cleanup and explicit audited orphan takeover retain exact target bytes across real process stops and lost durability responses. No automatic recovery or full fault-injection acceptance is claimed. First-receipt creation/write/synchronization failures report possible operational mutation without claiming a normative write or completion."
+    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence; terminal cleanup and explicit audited orphan takeover retain exact target bytes across real process stops and lost durability responses. No automatic recovery or full fault-injection acceptance is claimed. First-receipt creation/write/synchronization failures report possible operational mutation without claiming a normative write or completion. Operational directory, receipt, marker and terminal audit effects are retained and attributed to the current invocation; read-only conflicts do not imply our mutation."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -82,10 +83,34 @@
     "tests/test_recovery_mutation_accounting.py::test_first_receipt_failure_retains_bytes_and_reports_mutation[created]",
     "tests/test_recovery_mutation_accounting.py::test_first_receipt_failure_retains_bytes_and_reports_mutation[partial]",
     "tests/test_recovery_mutation_accounting.py::test_first_receipt_failure_retains_bytes_and_reports_mutation[synced]",
-    "tests/test_recovery_mutation_accounting.py::test_first_receipt_conflict_remains_a_write_free_rejection"
+    "tests/test_recovery_mutation_accounting.py::test_first_receipt_conflict_remains_a_write_free_rejection",
+    "tests/test_recovery_mutation_accounting_right.py::test_foreign_audit_appearing_before_creation_is_not_our_mutation",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_conflict_distinguishes_prior_receipt_writes[False]",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_conflict_distinguishes_prior_receipt_writes[True]",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_failure_reports_retained_operational_state[created]",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_failure_reports_retained_operational_state[parent_sync]",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_failure_reports_retained_operational_state[partial]",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_failure_reports_retained_operational_state[replace_after]",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_failure_reports_retained_operational_state[replace_before]",
+    "tests/test_recovery_mutation_accounting_right.py::test_marker_failure_reports_retained_operational_state[synced]",
+    "tests/test_recovery_mutation_accounting_right.py::test_receipt_directory_failure_preserves_created_directory[mkdir-request]",
+    "tests/test_recovery_mutation_accounting_right.py::test_receipt_directory_failure_preserves_created_directory[mkdir-transaction]",
+    "tests/test_recovery_mutation_accounting_right.py::test_receipt_directory_failure_preserves_created_directory[parent_sync-request]",
+    "tests/test_recovery_mutation_accounting_right.py::test_receipt_directory_failure_preserves_created_directory[parent_sync-transaction]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_conflict_reports_only_this_calls_writes[False]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_conflict_reports_only_this_calls_writes[True]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_failure_preserves_receipts_and_original_journal[created-False]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_failure_preserves_receipts_and_original_journal[created-True]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_failure_preserves_receipts_and_original_journal[partial-False]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_failure_preserves_receipts_and_original_journal[partial-True]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_failure_preserves_receipts_and_original_journal[synced-False]",
+    "tests/test_recovery_mutation_accounting_right.py::test_request_failure_preserves_receipts_and_original_journal[synced-True]",
+    "tests/test_recovery_mutation_accounting_right.py::test_terminal_retry_rejects_foreign_audit_without_mutation",
+    "tests/test_recovery_mutation_accounting_right.py::test_terminal_retry_retains_audit_creation_in_later_error[False]",
+    "tests/test_recovery_mutation_accounting_right.py::test_terminal_retry_retains_audit_creation_in_later_error[True]"
   ],
   "open_items": [
-    "Extended directory and later-marker mutation accounting boundaries and structural consolidation remain AUDIT-REC-03.R/C.",
+    "Mutation accounting and error translation still require structural consolidation in AUDIT-REC-03.C.",
     "Short auxiliary recovery writes remain blocked and preserved; their restart investigation remains AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }

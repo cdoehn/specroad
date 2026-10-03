@@ -78,18 +78,27 @@ def sync_evidence(files, record, token):
     return token
 
 
-def persist_evidence(files, record, *, write_new=_write_new):
+def persist_evidence(files, record, *, write_new=_write_new, before_create=None):
     # Refuse a conflicting pre-existing record before entering the write path.
     token = existing_recovery_record(files, record)
     creating = token is None
+    mutated = False
+
+    def creation_started():
+        nonlocal mutated
+        mutated = True
+        if before_create is not None:
+            before_create()
+
     try:
         if creating:
-            token = ensure_recovery_record(files, record, write_new=write_new)[0]
+            token = ensure_recovery_record(files, record, write_new=write_new,
+                                            before_create=creation_started)[0]
         return sync_evidence(files, record, token)
     except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
         raise RecoveryError(getattr(error, 'reason', 'recovery_evidence_write_failed'),
             path=record.path, exit_code=getattr(error, 'exit_code', 5),
-            mutation_possible=creating) from error
+            mutation_possible=mutated or getattr(error, 'mutation_possible', False)) from error
 
 
 def _action_fields(journal, action):
@@ -104,7 +113,8 @@ def _action_fields(journal, action):
                 'target_model_root_sha256' if action == 'complete' else 'base_model_root_sha256']}
 
 
-def recovery_action(files, journal, action, *, authority=None, write_new=_write_new):
+def recovery_action(files, journal, action, *, authority=None, write_new=_write_new,
+                    before_create=None):
     """Verify an existing action or, when authorized, persist its terminal result.
 
     A repeat caller does not replace the original authority attribution. This
@@ -120,13 +130,13 @@ def recovery_action(files, journal, action, *, authority=None, write_new=_write_
                 or not _text(data.get('authority_id')) or not _text(data.get('authority_version'))):
             raise RecoveryError('recovery_action_conflict', path=path, exit_code=6)
         if authority is not None:
-            persist_evidence(files, record, write_new=write_new)
+            persist_evidence(files, record, write_new=write_new, before_create=before_create)
         return record
     if authority is None:
         raise RecoveryError('recovery_action_missing', path=path, exit_code=6)
     record = EvidenceRecord(path, canonical_json_bytes({**fields,
         'authority_id': authority.authority_id, 'authority_version': authority.version}))
-    persist_evidence(files, record, write_new=write_new)
+    persist_evidence(files, record, write_new=write_new, before_create=before_create)
     return record
 
 

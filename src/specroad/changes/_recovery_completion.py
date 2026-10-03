@@ -43,7 +43,8 @@ def _authorize_completion(authority, journal):
         raise RecoveryError('recovery_not_authorized', exit_code=7)
 
 
-def _verify_committed_recovery(files, journal, held_lock, authority, *, write_new):
+def _verify_committed_recovery(files, journal, held_lock, authority, *, write_new,
+                               before_create):
     """Verify completion; preserve or finish its immutable recovery action record."""
     predecessor = journal.predecessor
     _completion_lock(held_lock, predecessor)
@@ -73,7 +74,8 @@ def _verify_committed_recovery(files, journal, held_lock, authority, *, write_ne
         sync_evidence(files, record, token)
     marker = EvidenceRecord(journal.path, journal.source_bytes)
     sync_evidence(files, marker, existing_recovery_record(files, marker))
-    recovery_action(files, journal, 'complete', authority=authority, write_new=write_new)
+    recovery_action(files, journal, 'complete', authority=authority, write_new=write_new,
+                    before_create=before_create)
     _completion_lock(held_lock, journal)
     if prove_complete_target(files, predecessor) != target:
         raise RecoveryError('recovery_target_changed', exit_code=6)
@@ -85,7 +87,7 @@ def _verify_committed_recovery(files, journal, held_lock, authority, *, write_ne
 
 
 def _commit_recovered_journal(files, journal, committed, directory_identity, *,
-                              write_new, replace):
+                              write_new, replace, before_mutation):
     prefix = tuple(journal.path.split('/')[:-1])
     with files.directory(prefix) as directory:
         if directory is None or guards._identity(os.fstat(directory)) != directory_identity:
@@ -96,6 +98,7 @@ def _commit_recovered_journal(files, journal, committed, directory_identity, *,
         try:
             info = os.stat(pending, dir_fd=directory, follow_symlinks=False)
         except FileNotFoundError:
+            before_mutation()
             identity = write_new(directory, pending, committed.source_bytes)
         else:
             guards._regular(info)
@@ -107,6 +110,7 @@ def _commit_recovered_journal(files, journal, committed, directory_identity, *,
             if existing != committed.source_bytes:
                 raise RecoveryError('recovery_completion_marker_conflict', exit_code=6)
         _image(directory, pending, len(committed.source_bytes), committed.sha256, identity=identity)
+        before_mutation()
         replace(pending, 'journal.json', src_dir_fd=directory, dst_dir_fd=directory)
         os.fsync(directory)
 
@@ -122,6 +126,11 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
     if type(held_lock) is not HeldProjectLock:
         raise RecoveryError('native_recovery_lock_required', exit_code=7)
     mutated = False
+
+    def mutation_started():
+        nonlocal mutated
+        mutated = True
+
     try:
         files = held_lock._files
         raw, directory_identity = _read_journal(files, transaction_id)
@@ -130,7 +139,8 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
             raise RecoveryError('recovery_journal_changed', exit_code=6)
         if type(journal) is CommittedJournal:
             return _verify_committed_recovery(files, journal, held_lock, authority,
-                                               write_new=write_new)
+                                               write_new=write_new,
+                                               before_create=mutation_started)
         if type(journal) is not CommittingJournal:
             raise RecoveryError('recovery_full_target_requires_committing', exit_code=6)
         _completion_lock(held_lock, journal)
@@ -148,15 +158,11 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         transaction, request_receipt, committed = prepare_recovery_receipts(recovered)
         tokens = {}
 
-        def receipt_creation_started():
-            nonlocal mutated
-            mutated = True
-
         for record in (transaction, request_receipt):
             if record is None:
                 continue
             token, wrote = ensure_recovery_record(files, record, write_new=write_new,
-                                                  before_create=receipt_creation_started)
+                                                  before_create=mutation_started)
             mutated |= wrote
             tokens[record.path] = (record, token)
         _completion_lock(held_lock, journal)
@@ -166,9 +172,9 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
             raise RecoveryError('recovery_target_changed', exit_code=6)
         for record, token in tokens.values():
             recheck_recovery_record(files, record, token)
-        mutated = True
         _commit_recovered_journal(files, journal, committed, directory_identity,
-                                  write_new=write_new, replace=replace)
+                                  write_new=write_new, replace=replace,
+                                  before_mutation=mutation_started)
         current_raw, current_identity = _read_journal(files, transaction_id)
         if current_identity != directory_identity or current_raw != committed.source_bytes:
             raise RecoveryError('recovery_committed_marker_changed', exit_code=6)
@@ -178,7 +184,8 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
             raise RecoveryError('recovery_target_changed', exit_code=6)
         for record, token in tokens.values():
             recheck_recovery_record(files, record, token)
-        recovery_action(files, current, 'complete', authority=authority, write_new=write_new)
+        recovery_action(files, current, 'complete', authority=authority, write_new=write_new,
+                        before_create=mutation_started)
         _completion_lock(held_lock, current)
         if prove_complete_target(files, current.predecessor) != target:
             raise RecoveryError('recovery_target_changed', exit_code=6)
