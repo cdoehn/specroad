@@ -27,6 +27,7 @@ from ._recovery_inventory import verified_membership
 from ._recovery_bytes import fingerprint_recovery_file as _fingerprint
 from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
+from ._recovery_evidence import rollback_evidence
 
 
 def _rollback_lock(held, journal):
@@ -244,10 +245,17 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
             _rollback_lock(held_lock, journal)
             _authorize(authority, journal)
             root = _prove_basis(files, journal)
+            action, receipt = rollback_evidence(files, journal, authority=authority)
+            _rollback_lock(held_lock, journal)
+            if (_read_journal(files, transaction_id) != (raw, directory_identity)
+                    or _prove_basis(files, journal) != root):
+                raise RecoveryError('recovery_basis_changed', exit_code=6)
             return RecoveryObservation._create({'format_version': 'recovery-rollback-v1',
                 'state': 'rolled_back', 'transaction_id': transaction_id,
                 'journal_sha256': journal.sha256, 'base_model_root_sha256': root,
                 'rollback_completed': True, 'normative_writes': 0,
+                'receipt': receipt.reference, 'recovery_audit': action.reference,
+                'cleanup_completed': False, 'cleanup_required': True,
                 'model_loaded': False, 'write_authorized': False, 'atomic_snapshot': False})
         if type(journal) is CommittingJournal:
             _rollback_lock(held_lock, journal)
@@ -306,10 +314,17 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
             raise RecoveryError('recovery_rolled_back_marker_changed', exit_code=6)
         if _prove_basis(files, current) != root:
             raise RecoveryError('recovery_basis_changed', exit_code=6)
+        action, receipt = rollback_evidence(files, current, authority=authority)
+        _rollback_lock(held_lock, current)
+        if (_read_journal(files, transaction_id) != (raw, directory_identity)
+                or _prove_basis(files, current) != root):
+            raise RecoveryError('recovery_basis_changed', exit_code=6)
         return RecoveryObservation._create({'format_version': 'recovery-rollback-v1',
             'state': 'rolled_back', 'transaction_id': transaction_id,
             'journal_sha256': current.sha256, 'base_model_root_sha256': root,
             'rollback_completed': True, 'normative_writes': writes,
+            'receipt': receipt.reference, 'recovery_audit': action.reference,
+            'cleanup_completed': False, 'cleanup_required': True,
             'model_loaded': False, 'write_authorized': False, 'atomic_snapshot': False})
     except RecoveryError as error:
         error.mutation_possible |= mutated

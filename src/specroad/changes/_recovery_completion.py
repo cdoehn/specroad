@@ -20,6 +20,7 @@ from ._recovery_receipts import (
 )
 from ._recovery_target import fully_published, prove_complete_target
 from ._staging_files import _image
+from ._recovery_evidence import recovery_action
 
 
 def _completion_lock(held, journal):
@@ -53,10 +54,11 @@ def _authorize_completion(authority, journal):
         raise RecoveryError('recovery_not_authorized', exit_code=7)
 
 
-def _verify_committed_recovery(files, journal, held_lock, authority):
-    """Verify an already completed recovery without writing any byte again."""
+def _verify_committed_recovery(files, journal, held_lock, authority, *, write_new):
+    """Verify completion; preserve or finish its immutable recovery action record."""
     predecessor = journal.predecessor
     _completion_lock(held_lock, predecessor)
+    observed_journal = _read_journal(files, journal.data['transaction_id'])
     target = prove_complete_target(files, predecessor)
     _authorize_completion(authority, predecessor)
     _completion_lock(held_lock, predecessor)
@@ -65,6 +67,7 @@ def _verify_committed_recovery(files, journal, held_lock, authority):
     transaction, request_receipt, expected = prepare_recovery_receipts(predecessor)
     if expected.source_bytes != journal.source_bytes:
         raise RecoveryError('recovery_committed_binding_mismatch', exit_code=6)
+    tokens = []
     for record in (transaction, request_receipt):
         if record is None:
             continue
@@ -72,8 +75,19 @@ def _verify_committed_recovery(files, journal, held_lock, authority):
         if token is None:
             raise RecoveryError('recovery_receipt_missing', path=record.path, exit_code=6)
         recheck_recovery_record(files, record, token)
+        tokens.append((record, token))
     if prove_complete_target(files, predecessor) != target:
         raise RecoveryError('recovery_target_changed', exit_code=6)
+    if _read_journal(files, journal.data['transaction_id']) != observed_journal:
+        raise RecoveryError('recovery_journal_changed', exit_code=6)
+    recovery_action(files, journal, 'complete', authority=authority, write_new=write_new)
+    _completion_lock(held_lock, journal)
+    if prove_complete_target(files, predecessor) != target:
+        raise RecoveryError('recovery_target_changed', exit_code=6)
+    if _read_journal(files, journal.data['transaction_id']) != observed_journal:
+        raise RecoveryError('recovery_journal_changed', exit_code=6)
+    for record, token in tokens:
+        recheck_recovery_record(files, record, token)
     return TransactionCompletion._create(journal, live=True)
 
 
@@ -122,7 +136,8 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         if journal.sha256 != expected_journal_sha256:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
         if type(journal) is CommittedJournal:
-            return _verify_committed_recovery(files, journal, held_lock, authority)
+            return _verify_committed_recovery(files, journal, held_lock, authority,
+                                               write_new=write_new)
         if type(journal) is not CommittingJournal:
             raise RecoveryError('recovery_full_target_requires_committing', exit_code=6)
         _completion_lock(held_lock, journal)
@@ -162,6 +177,14 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         _completion_lock(held_lock, current.predecessor)
         if prove_complete_target(files, current.predecessor) != target:
             raise RecoveryError('recovery_target_changed', exit_code=6)
+        for record, token in tokens.values():
+            recheck_recovery_record(files, record, token)
+        recovery_action(files, current, 'complete', authority=authority, write_new=write_new)
+        _completion_lock(held_lock, current)
+        if prove_complete_target(files, current.predecessor) != target:
+            raise RecoveryError('recovery_target_changed', exit_code=6)
+        if _read_journal(files, transaction_id) != (current_raw, current_identity):
+            raise RecoveryError('recovery_journal_changed', exit_code=6)
         for record, token in tokens.values():
             recheck_recovery_record(files, record, token)
         return TransactionCompletion._create(current, live=True)

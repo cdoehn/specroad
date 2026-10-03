@@ -197,5 +197,57 @@ Die Verhaltenstests `test_recovery_inventory.py` und
 unabhängige Basis-/Zieloracles, Änderungen während Autorisierung und Abschluss,
 terminale Wiederaufrufe sowie schreibfreie Corruptdiagnose und Beweiserhalt.
 Die SR-TC-0258/0459/0511-Manifeste weisen diesen Umfang als Teilnachweis aus.
-Receiptabschluss, Cleanupzugang und die weiteren Audit-Nacharbeiten bleiben
-gesondert offen. Die automatische Recovery aus 5.t wird hier nicht eingeführt.
+Die weiteren Audit-Nacharbeiten bleiben gesondert offen. Die automatische
+Recovery aus 5.t wird hier nicht eingeführt.
+
+## AUDIT-REC-02.W: terminale Belege und Abschluss nach Writerende
+
+Ein erfolgreicher Rollback schreibt einen unveränderlichen
+`recovery-transaction-receipt-v1` unter
+`.specroad/transactions/receipts/<transaktionshash>/transaction.json`. Er bindet
+das vollständige terminale Journal, dessen Bytehash, die wiederhergestellte
+Basiswurzel und den Recoveryaktionsbeleg. `outcome=rolled_back` ist ausdrücklich
+kein erfolgreicher Request-Receipt. Discard verwendet dasselbe Receiptformat
+mit `action=discard` und einer Hashreferenz auf seinen erhaltenen Audit-Intent.
+
+Rollback und Zielabschluss schreiben außerdem einen unveränderlichen
+`terminal-recovery-audit-v1` unter
+`.specroad/recovery/transaction-audit/<transaktionshash>/<rollback|complete>.json`.
+Dieser bindet Aktion, terminalen Journalhash, Projekt-/Request-/Rootidentität,
+Basis-/Ziel-/Ergebniswurzel und die Host-Autorisierung. Ein Wiederaufruf prüft
+den vorhandenen Nachweis und erhält seine ursprüngliche Autoritätszuordnung;
+er erzeugt keine zweite normative Rückführung oder Veröffentlichung. Der Beleg
+bestätigt das terminale Ergebnis, nicht die Anzahl zuvor unterbrochener Writes.
+
+Nach Freigabe des ursprünglichen Writerlocks ist
+`cleanup_recovered_transaction(transaction_id, held_lock=..., authority=...,
+expected_journal_sha256=...)` öffentlich aufrufbar. Er verlangt einen aktuell
+gehaltenen nativen Recoverylock mit `kind=recovery`, `command="recover run"`
+und exakter Projekt-, Request- und Transaktionsbindung sowie eine registrierte
+`RecoveryAuthority`, deren Callback die Aktion `cleanup` autorisiert. Der
+Hash bezeichnet das jetzt terminale Journal. Es ist kein ursprüngliches
+Preflightobjekt erforderlich. Ein normal abgeschlossener `committed`-Stand mit
+verbliebener Arbeit benutzt denselben Weg.
+
+Vor dem Archivieren werden der vollständige aktuelle Basis-/Zielstand, alle
+Abschlussbelege und sämtliche vorhandenen bekannten Arbeitsdateien bytegenau
+geprüft. Ein unveränderlicher `committed.json`- beziehungsweise
+`rolled_back.json`-Marker am Receiptort und ein Cleanup-Intent werden dauerhaft
+angelegt. Danach verschiebt ein atomarer Verzeichnis-Rename die geprüfte Arbeit
+nach `transaction-audit/<transaktionshash>/cleanup-<journalhash>/work`; der
+Abschlussbeleg bindet die dort erhaltene Inventur. Es wird nichts rekursiv
+gelöscht. `cleanup_completed=true` bestätigt das Entfernen dieser Arbeit aus
+dem aktiven Bereich. Fremde aktive Einträge bleiben erhalten und erscheinen in
+`remaining_active_paths`; `recovery_required` bleibt dann wahr. Ein Folgeaufruf
+prüft die Belege und Archivbytes ohne erneuten Fachwrite.
+
+Die neuen Verhaltenstests verwenden unabhängige Writer-, Recovery- und
+Cleanup-Prozesse bei bereits freigegebenem altem Lock. Sie prüfen anschließendes
+normales Lesen und den Erwerb eines neuen Writerlocks, unveränderte normative
+Bytes, kanonische Rollback-/Discard-Receipts, Auditbindung und schreibfreie
+Ablehnung unbewiesener Eingaben. Die Requirementmanifeste bleiben Teilnachweise.
+Verlorene Rückgaben, die weitergehende Fehlerabsicherung sowie der explizite
+Zugang bei einem abrupt beendeten Writer mit verwaistem Lock folgen in
+`AUDIT-REC-02.R`. Discard benötigt weiterhin seinen unabhängigen Preflight;
+dessen Rekonstruktion bleibt `AUDIT-REC-05`. Es entsteht kein neuer CLI- oder
+automatischer Preflightablauf.

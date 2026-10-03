@@ -20,6 +20,8 @@ from ._staging_files import _write_new, _image
 from .recovery_values import (AUDIT_ROOT, RecoveryAuthority, RecoveryError,
                               RecoveryObservation, DiscardedJournal)
 from ._recovery_inputs import _read_journal, _parse, _unchanged_base, _work
+from ._recovery_evidence import EvidenceRecord, persist_evidence, rollback_receipt
+from ._recovery_receipts import recheck_recovery_record
 # Preserve the initial module import surface; the implementation is read-only.
 from .recovery_read import inspect_recovery
 
@@ -130,6 +132,10 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
             guard(terminal_raw=terminal.source_bytes, expected_work=terminal_work)
             _image(audit, 'journal.before.json', len(raw), journal.sha256)
             _image(audit, 'intent.json', len(intent), sha256(intent).hexdigest())
+            receipt = rollback_receipt(terminal,
+                EvidenceRecord(audit_path + '/intent.json', intent), action='discard')
+            receipt_token = persist_evidence(files, receipt, write_new=_write_new)
+            guard(terminal_raw=terminal.source_bytes, expected_work=terminal_work)
             with files.directory(('.specroad', 'transactions')) as parent:
                 if guards._identity(os.stat(transaction_id, dir_fd=parent, follow_symlinks=False)) != ident:
                     raise RecoveryError('recovery_work_changed', exit_code=6)
@@ -154,10 +160,12 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
                      prefix=(*tuple(audit_path.split('/')), 'work'), preflight=preflight) != terminal_work:
                 raise RecoveryError('recovery_archive_changed', exit_code=6)
         _held(held_lock, journal)
+        recheck_recovery_record(files, receipt, receipt_token)
         remaining = tuple(path for path in active if path != selected_path)
         if files.journal_entries() != remaining or _unchanged_base(preflight, journal, files) != base:
             raise RecoveryError('recovery_final_observation_changed', exit_code=6)
         return RecoveryObservation._create({**completed, 'discard_completed': True,
+            'receipt': receipt.reference,
             'evidence_preserved': True, 'audit_path': audit_path, 'model_loaded': False,
             'remaining_active_paths': list(remaining),
             'write_authorized': False, 'atomic_snapshot': False})

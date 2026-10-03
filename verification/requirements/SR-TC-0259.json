@@ -7,20 +7,26 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+    "SR-FIX-TRANSACTION-RECEIPTS-v1",
+    "SR-FIX-TRANSACTION-COMMITTING-v1",
+    "SR-FIX-TRANSACTION-RECOVERY-v1"
   ],
   "preconditions": [
-    "Owned local Linux project; exact independent publication request and native writer lock."
+    "Owned local Linux project; exact independent publication request and native writer lock.",
+    "Released original writer lock; current transaction-bound recovery lock and explicit host authority for terminal cleanup."
   ],
   "steps": [
     "Publish verified target files using the existing transaction phases.",
     "Create bound receipts, synchronize them and only then persist committed.",
-    "Assert normative inputs are not written again and failed completion retains evidence."
+    "Assert normative inputs are not written again and failed completion retains evidence.",
+    "Restore a partially published transaction and verify its canonical immutable rollback receipt; verify the canonical discard receipt separately.",
+    "In independent processes complete or roll back, verify terminal evidence, explicitly archive the closed work inventory, then permit a normal reader and new writer.",
+    "Retry without normative writes; reject changed evidence, live bytes, unsafe images and unknown work while retaining unrelated active blockers."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine erfolgreich abgeschlossene oder zurückgerollte Transaktion MUSS einen unveränderbaren Abschlussbeleg unter `.specroad/transactions/receipts/` hinterlassen und danach das Entfernen temporärer Payloads erlauben.",
-    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim."
+    "scope": "Native committed finalization/readback, immutable rolled-back/discarded receipts and explicit recovery-lock cleanup after original writer release. Cleanup preserves every checked work byte in a bound passive archive. No whole CLI, orphan-lock takeover, restore or complete failure/restart coverage is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -104,11 +110,34 @@
     "tests/test_transaction_receipts_right.py::test_authority_changing_receipt_prevents_cleanup",
     "tests/test_transaction_receipts_right.py::test_original_request_must_match_when_rechecking_current_completion",
     "tests/test_transaction_receipts_right.py::test_new_reader_inputs_are_explicit_and_not_converted",
-    "tests/test_transaction_receipts_right.py::test_unknown_result_fields_and_unsafe_output_paths_fail_closed"
+    "tests/test_transaction_receipts_right.py::test_unknown_result_fields_and_unsafe_output_paths_fail_closed",
+    "tests/test_terminal_recovery.py::test_rollback_receipt_and_action_bind_exact_restored_basis",
+    "tests/test_terminal_recovery.py::test_discard_persists_canonical_receipt_bound_to_preserved_audit[building]",
+    "tests/test_terminal_recovery.py::test_discard_persists_canonical_receipt_bound_to_preserved_audit[prepared]",
+    "tests/test_terminal_recovery.py::test_explicit_cleanup_archives_all_work_and_allows_new_writer[complete]",
+    "tests/test_terminal_recovery.py::test_explicit_cleanup_archives_all_work_and_allows_new_writer[rollback]",
+    "tests/test_terminal_recovery.py::test_cleanup_repeat_checks_archive_without_writes[complete]",
+    "tests/test_terminal_recovery.py::test_cleanup_repeat_checks_archive_without_writes[rollback]",
+    "tests/test_terminal_recovery.py::test_cleanup_refuses_unproved_bytes_without_moving_any_work[image]",
+    "tests/test_terminal_recovery.py::test_cleanup_refuses_unproved_bytes_without_moving_any_work[live]",
+    "tests/test_terminal_recovery.py::test_cleanup_refuses_unproved_bytes_without_moving_any_work[receipt]",
+    "tests/test_terminal_recovery.py::test_cleanup_refuses_unproved_bytes_without_moving_any_work[symlink]",
+    "tests/test_terminal_recovery.py::test_cleanup_refuses_unproved_bytes_without_moving_any_work[work]",
+    "tests/test_terminal_recovery.py::test_cleanup_requires_explicit_authority_and_exact_lock_and_journal[command]",
+    "tests/test_terminal_recovery.py::test_cleanup_requires_explicit_authority_and_exact_lock_and_journal[denied]",
+    "tests/test_terminal_recovery.py::test_cleanup_requires_explicit_authority_and_exact_lock_and_journal[hash]",
+    "tests/test_terminal_recovery.py::test_cleanup_requires_explicit_authority_and_exact_lock_and_journal[request]",
+    "tests/test_terminal_recovery.py::test_cleanup_preserves_other_active_blockers",
+    "tests/test_terminal_recovery.py::test_rollback_retry_preserves_receipt_and_original_authority",
+    "tests/test_terminal_recovery.py::test_cleanup_cannot_remove_an_unfinished_transaction",
+    "tests/test_terminal_recovery.py::test_cleanup_rechecks_work_after_authorization",
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[complete]",
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[normal_committed]",
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[rollback]"
   ],
   "open_items": [
-    "All normative command audit adapters and rolled-back receipts remain assigned to later integrations.",
-    "Full Request-ID retry dispatch follows 5.o; native full ChangeBackend, authentication and crash recovery are not claimed.",
+    "Terminal receipt/archive/cleanup error hardening and explicit orphan-lock access remain AUDIT-REC-02.R/C.",
+    "Discard still requires the independent preflight; restart reconstruction remains AUDIT-REC-05. Full command/authentication/restore integration remains later work.",
     "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]
 }

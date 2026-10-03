@@ -98,9 +98,11 @@ from .recovery_values import (RecoveryError, RecoveryAuthority, RecoveryObservat
 from .recovery_read import inspect_recovery
 from .recovery import (discard_unpublished_transaction, complete_published_transaction,
     rollback_interrupted_transaction)
+from .recovery_cleanup import cleanup_recovered_transaction
 __all__ += ['RecoveryError', 'RecoveryAuthority', 'RecoveryObservation', 'DiscardedJournal',
             'inspect_recovery', 'discard_unpublished_transaction', 'complete_published_transaction',
-            'RollingBackJournal', 'RolledBackJournal', 'rollback_interrupted_transaction']
+            'RollingBackJournal', 'RolledBackJournal', 'rollback_interrupted_transaction',
+            'cleanup_recovered_transaction']
 
 from .recovery_protection import inspect_recovery_protection, check_cache_removal
 __all__ += ['inspect_recovery_protection', 'check_cache_removal']

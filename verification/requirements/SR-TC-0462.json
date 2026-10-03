@@ -4,18 +4,35 @@
   "requirement_id": "SR-REQ-0462",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECOVERY-v1",
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
+  ],
+  "preconditions": [
+    "Owned native Linux project with checked journal, released original writer lock and a transaction-bound recovery lock; synthetic explicit host authorization."
+  ],
+  "steps": [
+    "Complete a full target or roll back a partial publication; verify immutable authority-attributed action evidence.",
+    "Discard an unpublished preparation and check its receipt link to retained audit bytes.",
+    "Explicitly archive terminal work; verify action, journal, intent and complete retained file-inventory bindings.",
+    "Retry under a second authorized caller without replacing the first audit attribution; refuse conflicting existing evidence."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jede ausgeführte Recovery-Aktion MUSS einen unveränderbaren lokalen Auditdatensatz einschließlich der für Restore nach Kapitel 10.7.1 gebundenen Quellen-, Erhaltungs- und Zielinventur erzeugen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Terminal action evidence for explicit complete-target recovery, rollback, unpublished discard and selected work cleanup under native locks. Hash consistency is not authentication. Restore source/preservation/target inventories and complete interrupted-action coverage are not implemented here."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +45,18 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_terminal_recovery.py::test_rollback_receipt_and_action_bind_exact_restored_basis",
+    "tests/test_terminal_recovery.py::test_complete_target_action_is_immutable_across_authorized_retries",
+    "tests/test_terminal_recovery.py::test_discard_persists_canonical_receipt_bound_to_preserved_audit[building]",
+    "tests/test_terminal_recovery.py::test_discard_persists_canonical_receipt_bound_to_preserved_audit[prepared]",
+    "tests/test_terminal_recovery.py::test_explicit_cleanup_archives_all_work_and_allows_new_writer[complete]",
+    "tests/test_terminal_recovery.py::test_explicit_cleanup_archives_all_work_and_allows_new_writer[rollback]",
+    "tests/test_terminal_recovery.py::test_rollback_retry_preserves_receipt_and_original_authority",
+    "tests/test_terminal_recovery.py::test_conflicting_recovery_action_is_never_replaced"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Interrupted terminal receipt/audit/archive writes and orphan-lock takeover remain AUDIT-REC-02.R/C and subsequent audited fixes.",
+    "Restore and its qualified source, preservation and target inventories remain assigned to the later restore implementation; no complete SR-REQ-0462 acceptance is claimed."
   ]
 }

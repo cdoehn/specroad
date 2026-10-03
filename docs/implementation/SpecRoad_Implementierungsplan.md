@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 50
+last_completed_numbered_bundle: 51
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-02.W
+next_audit_step: AUDIT-REC-02.R
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -63,7 +63,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | Befund | Einordnung / Priorität | Ursprünglicher Bezug | Zuständige Nacharbeit | Stand dieser Planrevision |
 |---|---|---|---|---|
 | F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W/R/C offen |
+| F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W umgesetzt; R/C offen |
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | offen |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | Untersuchungsverdacht / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511 | AUDIT-REC-04.U | offen; Reparatur nur nach Bestätigung |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | offen |
@@ -140,7 +140,7 @@ C-Commit beide Volltests. Nach erfolgreichem Abschluss dieser Fortsetzung folgt
 **Istgrenze:** Ein dauerhafter terminaler `RolledBackJournal` mit Ursprungsbindung existiert bereits. Es fehlen jedoch der vorgeschriebene Receipt unter `.specroad/transactions/receipts/` und ein nutzbarer Abschluss-/Bereinigungspfad; das aktive Verzeichnis blockiert neue Writer. Betroffen: `_recovery_rollback.py`, `receipt_read.py`, `receipt_cleanup.py`, `_receipt_work.py`, `locking.py` und `test_transaction_recovery_rollback*.py`.
 
 - [x] **AUDIT-REC-02.U:** Zusätzlich den Zielabschluss nach Ende des ursprünglichen Writerprozesses über öffentliche Recovery-/Cleanup-APIs verfolgen. **Entscheidung:** Bestätigt; terminaler Cleanup ist nach Freigabe des ursprünglichen Writerlocks nicht erreichbar, Zielabschluss und Rollback besitzen keinen eigenen Recoveryaktionsbeleg, Rollback und Discard keinen Abschlussreceipt am Pflichtort. Ein echter abrupt beendeter Writer mit aktivem Journal blockiert bereits den öffentlichen Recoveryzugang. Der unten gebundene Bericht enthält Prozessnachweise und funktionierende Gegenproben; W/R/C bleiben offen.
-- [ ] **AUDIT-REC-02.W:** Den erfolgreichen Rollback durch vollständigen Basisnachweis, unveränderlichen Abschlussreceipt am Pflichtort, Recoveryaktionsbeleg und kontrollierten expliziten Abschluss der Arbeitsreste führen. **Abnahme:** Nach partieller Veröffentlichung wird die exakte Basis erreicht; Abschlussbeweise bleiben erhalten; ein neuer normaler Leser beziehungsweise autorisierter Writer kann wieder beginnen. Wiederaufruf erzeugt keine zweite normative Rückführung. Einen in U bestätigten gemeinsamen Cleanup-Zugangsfehler auf demselben Abschlussweg beheben.
+- [x] **AUDIT-REC-02.W:** Den erfolgreichen Rollback durch vollständigen Basisnachweis, unveränderlichen Abschlussreceipt am Pflichtort, Recoveryaktionsbeleg und kontrollierten expliziten Abschluss der Arbeitsreste führen. **Abnahme:** Nach partieller Veröffentlichung wird die exakte Basis erreicht; Abschlussbeweise bleiben erhalten; ein neuer normaler Leser beziehungsweise autorisierter Writer kann wieder beginnen. Wiederaufruf erzeugt keine zweite normative Rückführung. Einen in U bestätigten gemeinsamen Cleanup-Zugangsfehler auf demselben Abschlussweg beheben.
 - [ ] **AUDIT-REC-02.R:** Verlorene Rückgaben und Fehler bei Beleganlage, Archivierung und Bereinigung absichern. **Abnahme:** Wiederaufnahme erhält bereits bewiesene Ergebnisse, Belegbindungen und fremde aktive Blocker; kein zweiter Fachwrite und keine Entsperrung durch bloßes Entfernen unbewiesener Journale. Teilweise Bereinigung darf keinen falschen vollständigen Erfolg ausgeben.
 - [ ] **AUDIT-REC-02.C:** Terminale Ergebnisnachweise und entbehrliche Arbeitsreste strukturell konsistent verwalten. **Abnahme:** Commit- und Rollbackresultate bleiben fachlich unterscheidbar; W-/R-Verträge und Byteerhalt ändern sich nicht.
 
@@ -181,6 +181,21 @@ Volltests erstellten Apply-Commit zum Übergabenachweis. Der nächste Schritt is
   Arbeitsrest- und Lockbindungsprüfungen konsolidieren; keine neue Recoverypolicy.
 
 **Grenze:** Explizite bestehende Bibliotheks-/Recoverywege; kein automatischer Preflight, keine anschließende neue Fachoperation im selben Lauf, keine allgemeine Cachelösch- oder Restorefunktion.
+
+**W-Ergebnis (Bundle 051, OFF-PLAN `AUDIT-REC-02.W`):** Rollback und Discard
+erhalten unveränderliche Receipts am Pflichtort; Rollback und Zielabschluss
+erhalten gebundene Recoveryaktionsbelege. Der öffentliche
+`cleanup_recovered_transaction` prüft vollständige Basis-/Zielbytes und
+Abschlussbelege unter einem exakt gebundenen Recoverylock. Er archiviert die
+geprüften Arbeitsreste erhaltend, führt keinen neuen Fachwrite aus und lässt
+fremde aktive Blocker bestehen. Derselbe Weg schließt normale `committed`-Reste
+ab. Unabhängige Folgeprozesse prüfen den Weg vom bereits beendeten Writer über
+Recovery und Cleanup bis zum normalen Lesen und neuen Writerlock. API und
+Grenzen: [Transaction_Recovery.md](../development/Transaction_Recovery.md).
+Commit-Message: `fix(recovery): persist terminal evidence and enable explicit cleanup`.
+Der W-Status und Bundleabschluss werden erst mit dem nach beiden erfolgreichen
+Volltests erzeugten Apply-Commit zum Übergabenachweis. R/C bleiben offen; die
+Produktzählung bleibt 237/885, der nächste Auditschritt ist `AUDIT-REC-02.R`.
 
 ### AUDIT-REC-03 – wahrheitsgemäßer Mutationsstatus bei Receiptfehlern
 
@@ -11974,7 +11989,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-02.W`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-02.R`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

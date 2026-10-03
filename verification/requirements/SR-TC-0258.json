@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen.",
-    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the existing checked journal contract. Explicit Recovery API and observation only; no independent profile reconstruction, automatic recovery, cleanup or complete requirement acceptance is claimed."
+    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence; explicit terminal cleanup works after writer release and across processes. No automatic recovery, orphan-lock takeover or full fault-injection acceptance is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -52,10 +52,15 @@
     "tests/test_recovery_inventory.py::test_completion_matches_independently_bound_full_target_bytes_and_root",
     "tests/test_recovery_inventory_right.py::test_failed_target_check_never_selects_rollback_of_proven_full_target",
     "tests/test_recovery_inventory_right.py::test_extra_member_after_receipt_creation_preserves_receipts_and_reports_mutation",
-    "tests/test_recovery_inventory_right.py::test_extra_member_after_rollback_terminal_write_cannot_be_reported_as_success"
+    "tests/test_recovery_inventory_right.py::test_extra_member_after_rollback_terminal_write_cannot_be_reported_as_success",
+    "tests/test_terminal_recovery.py::test_complete_target_action_is_immutable_across_authorized_retries",
+    "tests/test_terminal_recovery.py::test_conflicting_recovery_action_is_never_replaced",
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[complete]",
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[normal_committed]",
+    "tests/test_terminal_recovery.py::test_released_writer_completion_and_cleanup_work_in_independent_processes[rollback]"
   ],
   "open_items": [
-    "Receipt/audit completion and cleanup remain AUDIT-REC-02; receipt-error mutation accounting remains AUDIT-REC-03.",
+    "Terminal recovery error/retry hardening and orphan-lock access remain AUDIT-REC-02.R/C; existing receipt-error mutation accounting remains AUDIT-REC-03.",
     "Interrupted auxiliary recovery writes remain AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }
