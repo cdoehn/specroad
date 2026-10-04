@@ -40,6 +40,8 @@ def verify_committing_journal(journal, preflight):
         raise CommitPublicationError('committing_journal_required', exit_code=2)
     expected = prepare_building_journal(preflight,
         transaction_id=journal.data['transaction_id']).data
+    if 'discard_basis' not in journal.data:
+        expected.pop('discard_basis')
     count = journal.data['published_count']
     expected.update(state='committing', published_count=count)
     for index, entry in enumerate(expected['files']):

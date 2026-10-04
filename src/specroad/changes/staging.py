@@ -39,6 +39,8 @@ def verify_prepared_journal(journal, preflight):
     expected = prepare_building_journal(preflight,
         transaction_id=journal.data['transaction_id']).data
     expected['state'] = 'prepared'
+    if 'discard_basis' not in journal.data:
+        expected.pop('discard_basis')
     if canonical_json_bytes(expected) != canonical_json_bytes(journal.data):
         raise StagingError('prepared_plan_inventory_mismatch', exit_code=6, path=journal.path)
 

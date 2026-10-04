@@ -58,8 +58,12 @@ def validate_building_document(value):
               'plan_bytes_sha256', 'request_sha256', 'authoring_binding',
               'authoring_sha256', 'base_model_root_sha256',
               'target_model_root_sha256', 'target_inventory', 'files', 'published_count'}
-    if type(value) is not dict or set(value) != fields or value['format_version'] != JOURNAL_VERSION:
+    if (type(value) is not dict or set(value) not in (fields, fields | {'discard_basis'})
+            or value['format_version'] != JOURNAL_VERSION):
         raise JournalError('invalid_journal_schema')
+    if 'discard_basis' in value:
+        from ._discard_basis_contract import validate_discard_basis
+        validate_discard_basis(value['discard_basis'])
     txn = _transaction(value['transaction_id'])
     require_building(value['state'], value['published_count'])
     if not all(_text(value[k]) for k in ('project_id','change_plan_id')) or not _valid_utc(value['planned_at']):
@@ -164,5 +168,4 @@ def validate_building_document(value):
         if any(unicodedata.normalize('NFC','/'.join(parts[:i])).casefold() in aliases
                for i in range(1,len(parts))):
             raise JournalError('journal_target_parent_collision')
-
 

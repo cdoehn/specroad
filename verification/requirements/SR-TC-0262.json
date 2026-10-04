@@ -7,7 +7,8 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-TRANSACTION-RECOVERY-v1"
+    "SR-FIX-TRANSACTION-RECOVERY-v1",
+    "SR-FIX-DISCARD-RESTART-v1"
   ],
   "preconditions": [
     "Owned pending transaction, independently bound base/source bytes and native local Linux filesystem."
@@ -15,12 +16,13 @@
   "steps": [
     "Read journal status without normal model loading.",
     "Under a held recovery lock, compare the complete live base inventory and preserve all original preparation bytes in an immutable audit on discard.",
-    "Exercise real publication, partial work, forged metadata, concurrent changes and durability failures; verify unchanged normative data and preserved evidence."
+    "Exercise real publication, partial work, forged metadata, concurrent changes and durability failures; verify unchanged normative data and preserved evidence.",
+    "In separate fresh writer and recovery processes, reconstruct the prepared basis from product-persisted inputs, diagnose it, authorize discard under a new native lock, and verify original evidence, zero native normative writes and successful next-writer access."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad recover status` MUSS Zustand, Journalhash, Basiswurzel, erwartete Zielwurzel, veröffentlichte Einträge und zulässige Recovery-Aktionen jeder unvollständigen Transaktion ausgeben.",
-    "scope": "Read-only state diagnosis and audited discard of unchanged building/prepared bases including interrupted known prefixes; published targets, mismatched bases, linked or changed evidence remain protected. These tests retain the independently prepared PublicationPreflight. Restart reconstruction from the product-persisted transaction inputs remains a confirmed gap under AUDIT-REC-05.W/R/C; the historical U probe is not requirement acceptance."
+    "scope": "Existing retained-preflight building/prepared discard and its protection boundaries remain supported. AUDIT-REC-05.W additionally reconstructs the complete prepared basis from current project files and persisted profile/resource selection, without a Change Plan or regular model load. Both normal writer exit and audited native takeover after actual process death are covered; independent full-root calculation, byte preservation, immutable audit/receipt and next-writer access are observed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -57,10 +59,20 @@
     "tests/test_transaction_recovery.py::test_corrupt_journal_is_visible_and_never_removed",
     "tests/test_transaction_recovery_right.py::test_later_states_never_authorize_discard_even_with_matching_hash[rolling_back]",
     "tests/test_transaction_recovery_right.py::test_status_refuses_a_journal_changed_during_observation",
-    "tests/test_transaction_recovery_right.py::test_malformed_state_is_diagnosed_without_raw_type_error[None]"
+    "tests/test_transaction_recovery_right.py::test_malformed_state_is_diagnosed_without_raw_type_error[None]",
+    "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[update-released]",
+    "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[create-abrupt]",
+    "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[noop-released]",
+    "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[resources-abrupt]",
+    "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[package-released]",
+    "tests/test_discard_restart.py::test_preparation_is_read_only_detached_and_not_authority",
+    "tests/test_discard_restart.py::test_self_consistent_before_hashes_do_not_replace_independent_basis_root",
+    "tests/test_discard_restart.py::test_changed_inputs_are_rejected_without_recovery_writes[additional]",
+    "tests/test_discard_restart.py::test_detached_preflight_never_skips_fresh_mutation_guards[authority]",
+    "tests/test_discard_restart.py::test_unproven_or_out_of_scope_restart_is_not_guessed[legacy]"
   ],
   "open_items": [
-    "AUDIT-REC-05.U confirmed the missing public reconstruction of the independent discard proof from persisted transaction inputs after process restart. AUDIT-REC-05.W/R/C addresses this already due 5.p acceptance; an extra externally retained original plan with a fixture-only adapter is not product integration.",
+    "AUDIT-REC-05.R must extend restart reconstruction to building/interrupted preparation and interrupted discard completion; AUDIT-REC-05.C retains the resulting behavior while consolidating structure. Legacy journals without persisted selection are not silently upgraded. The comprehensive crash/environment matrix and general CLI integration are not claimed.",
     "Public recovery CLI integration and automatic transaction preflight are not claimed; automatic preflight remains in 5.t."
   ]
 }

@@ -57,12 +57,11 @@ sie sind kein Sandbox- oder CAS-Versprechen gegen böswillige gleichzeitige
 Dateisystemmanipulation. Ein Ergebnis behauptet daher kein atomares Modellsnapshot.
 
 Dies ist die fachliche Bibliotheksgrundlage, noch kein neu verdrahteter CLI-Befehl
-oder vollständiger ChangeBackend. Die fehlende Rekonstruktion des unabhängigen
-Discard-Basisnachweises aus dem eigenen persistenten Transaktionsbestand ist als
-bereits fällige Nacharbeit in `AUDIT-REC-05.W/R/C` eingegrenzt; siehe den
-[Neustartbefund](../reviews/SpecRoad_AUDIT_REC_05_U.md). Ein zusätzlich gespeicherter
-Originalplan mit einem fixturebegrenzten Adapter ermöglicht einen neuen Preflight,
-belegt aber keine vorhandene allgemeine Produktintegration. Zielabschluss und
+oder vollständiger ChangeBackend. Der
+[Neustartbefund](../reviews/SpecRoad_AUDIT_REC_05_U.md) beschrieb die fehlende
+Rekonstruktion des unabhängigen Discard-Basisnachweises. `AUDIT-REC-05.W` ergänzt
+nun den unten beschriebenen öffentlichen Prepared-Neustartweg; Building und
+unterbrochene Vorbereitung bleiben `AUDIT-REC-05.R`. Zielabschluss und
 Rollback sind in den folgenden Abschnitten beschrieben; automatischer
 Transaktionspreflight (5.t) und Vollquellen-Restore (15.j) bleiben getrennte Aufgaben.
 
@@ -483,4 +482,51 @@ Vorgängerbelegprüfungen erfolgen weiterhin in der jeweiligen Recovery-Operatio
 Ergebnisse, Fehlerverträge, Mutationsbilanz und Dateieffekte entsprechen W/R;
 deren Verhaltenstests bleiben unverändert. Die anschließende Untersuchung
 `AUDIT-REC-05.U` bestätigt die oben eingegrenzte Discard-Neustartlücke;
-`AUDIT-REC-05.W` ist der nächste Korrekturschritt.
+der folgende W-Schritt implementiert den vollständigen Prepared-Fall.
+
+## AUDIT-REC-05.W: Prepared-Discard aus persistenten Eingaben
+
+Neue native Journale enthalten zusätzlich `discard_basis` mit Format
+`discard-basis-v1`, einer geordneten `profile_chain`, vollständigen
+`attachments`-Deskriptoren und geordneten `language_package_paths`. Die bestehenden
+vollständigen Inventuren, Bytehashes und die Basiswurzel binden diese Eingaben.
+Die Auswahl wird beim ursprünglichen Journalaufbau aus dem geprüften
+PublicationPreflight gewonnen und mit dem Journal dauerhaft geschrieben.
+Kein Change Plan, Gate-Callback oder Pythonobjekt wird dafür serialisiert.
+
+Ein neuer Prozess ruft
+`prepare_discard_recovery(root, transaction_id, expected_project_id=...,
+expected_journal_sha256=...)` auf. Die Funktion akzeptiert einen vollständigen
+unveröffentlichten `prepared`-Bestand. Sie zählt die aktuellen normativen
+JSON-Pfade unabhängig vom Journal auf, prüft die gebundenen unveränderten
+Basisdateien und die vollständigen Before-/Staging-Images. Sie komponiert die
+Profile und Sprachressourcen aus den tatsächlichen Bytes und berechnet die
+Basiswurzel mit dem vorhandenen Manifestkern neu. Anhänge bleiben an ihre
+vollständigen Bytes und Deklarationen gebunden. Dies ist eine Recoveryprüfung
+der benötigten Ressourcen; sie lädt kein reguläres Modell als gültigen
+Arbeitsstand, führt keine Fachplanung aus und verändert keine Datei.
+
+Die zurückgegebene `DiscardPreflight` kann zur Diagnose an
+`inspect_recovery(..., preflight=proof)` und zur expliziten Ausführung als erstes
+Argument an `discard_unpublished_transaction(proof, ...)` übergeben werden.
+Ihr Datenformat `discard-preflight-v1` nennt die beobachteten Pfade, Basiswurzel
+und Journalbindung; es weist ausdrücklich weder Schreibberechtigung noch einen
+gehaltenen Projektlock aus. Die Mutation verlangt weiterhin den nativen
+Recoverylock, frische Hostautorisierung, Akteur, Grund und erwarteten Journalhash.
+Vor eigenen Writes und während des Abschlusses werden die vollständige
+Basisbindung und der tatsächliche Workbestand erneut geprüft. Der vorhandene
+Audit-/Receipt-/Archivierungsweg erhält Originaljournal und Images und erlaubt
+nach erfolgreichem Abschluss einen neuen Writer. Es gibt keinen normativen Write.
+
+Ein tatsächlich verwaister Writerlock benötigt weiterhin die explizite auditierte
+`transaction_recovery_lock`-Übernahme. Die Vorbereitung übernimmt keinen Lock
+und entfernt keine Blocker. Fehler behalten den tatsächlichen Bestand.
+
+Das zusätzliche Journalfeld ist optional für das Lesen historischer v1-Journale;
+wenn vorhanden, gilt sein geschlossenes Schema. Ein alter Bestand ohne Auswahl
+wird vom neuen Einstieg mit `discard_restart_basis_required` abgewiesen. Der
+bisherige, unabhängig gebundene PublicationPreflight-Weg bleibt verwendbar.
+Building und terminale Wiederaufnahme im neuen Prozess gehören zu R; weder eine
+Profilauswahl noch fehlende Bytes werden aus Vermutungen ergänzt. Die vollständige
+Crashmatrix, automatische Recovery, allgemeine CLI-Integration und Restore werden
+durch diesen W-Schritt nicht behauptet.

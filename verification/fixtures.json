@@ -53,7 +53,8 @@
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-TRANSACTION-COMMITTING-v1",
     "SR-FIX-TRANSACTION-RECEIPTS-v1",
-    "SR-FIX-TRANSACTION-RECOVERY-v1"
+    "SR-FIX-TRANSACTION-RECOVERY-v1",
+    "SR-FIX-DISCARD-RESTART-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -263,6 +264,10 @@
     "SR-FIX-TRANSACTION-RECOVERY-v1": {
       "provider": "tests/support/recovery.py:pending",
       "kind": "Owned native Linux pending building/prepared journal and complete independent preflight; explicit test-only authority, real recovery lock, immutable audit and unchanged normative files."
+    },
+    "SR-FIX-DISCARD-RESTART-v1": {
+      "provider": "tests/support/discard_restart.py:child",
+      "kind": "Owned native Linux writer and recovery subprocesses. Prepared update/create/noop and profile/attachment/language-package inputs persist in the project and journal; no original plan or preflight object crosses processes. Recovery uses independent byte/root oracles, explicit synthetic authority, native lock acquisition or audited dead-owner takeover, preserved evidence, native normative-write observation and a new writer."
     }
   }
 }

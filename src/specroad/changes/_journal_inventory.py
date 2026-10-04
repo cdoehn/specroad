@@ -4,6 +4,7 @@ from ..model.canonical import canonical_json_bytes
 from .publication_values import PublicationPreflight
 from .journal_values import BuildingJournal,JournalError,JOURNAL_VERSION
 from ._journal_codec import _transaction
+from ._discard_basis_contract import discard_basis_descriptor
 
 def prepare_building_journal(preflight, *, transaction_id):
     """Pure complete file inventory derived from the checked publication request.
@@ -48,6 +49,7 @@ def prepare_building_journal(preflight, *, transaction_id):
            'authoring_sha256':data['authoring_sha256'],
            'base_model_root_sha256':pv['base']['model_root_sha256'],
            'target_model_root_sha256':data['target_root_sha256'],
+           'discard_basis':discard_basis_descriptor(preflight),
            'target_inventory':target_inventory,
            'files':entries,'published_count':0}
     return BuildingJournal(canonical_json_bytes(value))
@@ -58,8 +60,10 @@ def verify_building_journal(journal, preflight):
     if type(journal) is not BuildingJournal:
         raise JournalError('building_journal_required', exit_code=2)
     expected = prepare_building_journal(preflight,transaction_id=journal.data['transaction_id'])
-    if canonical_json_bytes(journal.data) != canonical_json_bytes(expected.data):
+    value = expected.data
+    if 'discard_basis' not in journal.data:
+        value.pop('discard_basis')
+    if canonical_json_bytes(journal.data) != canonical_json_bytes(value):
         raise JournalError('journal_plan_inventory_mismatch',exit_code=6,path=journal.path)
     return None
-
 

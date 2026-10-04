@@ -56,6 +56,9 @@ def _parse(raw, transaction_id, files, expected_project_id=None):
 
 def _unchanged_base(preflight, journal, files):
     """Independent inventory plus every live source byte, never journal hashes alone."""
+    from .discard_preflight import DiscardPreflight
+    if type(preflight) is DiscardPreflight:
+        return preflight._check(files, journal)
     if type(preflight) is not PublicationPreflight:
         raise RecoveryError('recovery_base_preflight_required', exit_code=2)
     data = journal.data
@@ -63,6 +66,8 @@ def _unchanged_base(preflight, journal, files):
         raise RecoveryError('discard_state_forbidden', exit_code=6)
     expected = prepare_building_journal(preflight, transaction_id=data['transaction_id']).data
     expected['state'] = data['state']
+    if 'discard_basis' not in data:
+        expected.pop('discard_basis')
     if data != expected:
         raise RecoveryError('recovery_inventory_unproven', exit_code=6)
     model = preflight._model.snapshot()
@@ -100,8 +105,8 @@ def _work(files, journal, *, raw=None, prefix=None, preflight=None):
             expected = journal.data; expected['state'] = 'prepared'
             content = canonical_json_bytes(expected)
             result['journal.prepared'] = _prefix_image(directory, 'journal.prepared', content)
-    target = {} if preflight is None else {d.path: d.content for d in preflight.request.documents}
-    original = {} if preflight is None else preflight._model.source_files
+    target = {} if not building or preflight is None else {d.path: d.content for d in preflight.request.documents}
+    original = {} if not building or preflight is None else preflight._model.source_files
     for folder, path_key, size_key, hash_key in (
             ('staging', 'staging_path', 'after_size', 'after_sha256'),
             ('before', 'before_image_path', 'before_size', 'before_sha256')):
@@ -139,4 +144,3 @@ def _prefix_image(directory, name, expected):
     inode = _image(directory, name, info.st_size, digest,
                    identity=guards._identity(info))
     return {'identity': inode, 'size': info.st_size, 'sha256': digest}
-
