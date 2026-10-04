@@ -73,5 +73,34 @@ persistent schema cache, project registration or extensible plugin scheduler.
 
 The Clean step does not change schema IDs, defaults, field assertions, examples,
 scopes, categories or fingerprints. Later milestones must add actual resources
-and validators together, not placeholder schemas. Product plan reaches 93/885;
+and validators together, not placeholder schemas. The original 2.q.C product step reached 93/885;
 platform evidence, full semantic checks and overall release readiness stay open.
+
+## Change Plan catalog audit
+
+`AUDIT-CONTRACT-02.R` compares the complete current catalog with every existing
+standalone schema factory: `artifact_common_schema`, `domain_schema`,
+`record_schema`, `configuration_json_schema`, `change_plan_schema`,
+`request_schema` for each installed command and `result_json_schema` for each
+implemented result (including the envelope and local SARIF projection).
+The comparison checks exact resource membership, complete documents and their
+canonical hashes. The audit found no additional missing standalone resource.
+
+`operation_schema`, preconditions, Request-ID, diagnostic, language-policy,
+parameter and shared field schemas are embedded contracts. Their containing
+resources include them, but they have no independent published schema ID.
+The storage `ResourceSchema` descriptor and procedural SRX, transaction and
+recovery validators are not separately published JSON Schema documents. The
+catalog does not invent resource IDs for them or for future exchange mappings.
+
+Only the exact Change Plan ID with format version `1.2.0` is available. Older,
+future, model-version and latest aliases remain unknown, as do case changes,
+whitespace and fragment/path suffixes. Changing returned nested operations,
+local definitions or catalog metadata cannot alter subsequent retrieval,
+canonical hashes or validation. All twelve current typed operation branches
+remain present and reject unknown or missing operation fields. The metadata
+policy stays `change-metadata-v1`; catalog availability grants no write authority.
+
+These checks extend regression evidence without changing the existing factories,
+SchemaResource capture or catalog lookup behavior. Requirement records remain
+partial; broader semantic checks and platform/release evidence remain separate.

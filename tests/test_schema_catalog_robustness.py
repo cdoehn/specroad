@@ -273,6 +273,8 @@ def guard(event,args):
 sys.addaudithook(guard)
 assert dispatch_result(['schema','list']).exit_code==0
 assert dispatch_result(['schema','show','json-envelope-v2']).exit_code==0
+assert dispatch_result(['schema','show','urn:specroad:schema:1.2.0:change-plan']).exit_code==0
+assert dispatch_result(['schema','show','urn:specroad:schema:1.1.0:change-plan']).exit_code==2
 assert dispatch_result(['schema','show','https://invalid.test/schema']).exit_code==2
 '''
         with tempfile.TemporaryDirectory() as tmp:

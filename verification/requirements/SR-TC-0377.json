@@ -19,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad schema list --format json` MUSS alle verfügbaren Artefakt-, Konfigurations-, Mapping-, Ergebnis- und Austauschschemas mit Kennung, Version und Stabilitätsstatus auflisten.",
-    "scope": "Available structural schema catalog and actual project-free CLI/API retrieval, including the real Change Plan 1.2.0 factory and its typed field acceptance/rejection; field validation is distinct from integrity, lifecycle, graph and publication authorization."
+    "scope": "Available structural schema catalog and actual project-free CLI/API retrieval, including the real Change Plan 1.2.0 factory and its typed field acceptance/rejection; field validation is distinct from integrity, lifecycle, graph and publication authorization. Full current public factory inventory, exact Change Plan identity/version lookup, detached nested schemas, typed operation closure and project-free retrieval are covered."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -52,10 +52,19 @@
     "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_resource_is_the_existing_structural_contract",
     "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_cli_and_structured_lookup_return_the_same_schema",
     "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_catalog_validates_real_positive_and_negative_fields",
-    "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_field_schema_does_not_replace_integrity_checks"
+    "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_field_schema_does_not_replace_integrity_checks",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_public_factory_inventory_equals_retrievable_catalog",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_change_plan_versions_do_not_alias_model_or_latest_versions",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_change_plan_ids_are_not_normalized_or_resolved",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_typed_schema_id_does_not_invoke_caller_conversion",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_nested_return_values_cannot_poison_readers_or_validation",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_all_typed_operations_retain_their_field_boundaries",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_change_plan_resource_rejects_metadata_and_reference_mismatches",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_embedded_and_future_contracts_do_not_create_catalog_entries",
+    "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_empty_command_registry_preserves_change_plan_resource"
   ],
   "open_items": [
     "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas.",
-    "AUDIT-CONTRACT-02.R must complete the version/identity and detached-object regression matrix and inventory other public structural schema producers; C then consolidates schema identities."
+    "AUDIT-CONTRACT-02.C remains open for structural identity consolidation; R found no additional missing standalone schema factory. Embedded field schemas and procedural validators do not acquire fabricated resource IDs."
   ]
 }
