@@ -1,12 +1,11 @@
-"""First receipt failures retain real evidence and report possible mutation."""
-import os
-from pathlib import Path
+"""First receipt failures retain original evidence and report possible mutation."""
 
 import pytest
 
 from specroad.changes import RecoveryError, complete_published_transaction, project_lock
 from specroad.changes.receipt_projection import prepare_recovery_receipts
 from support.publication import TRANSACTION, files
+from support.recovery_writes import RecoveryWriteFault
 from test_transaction_recovery_completion import RECOVER, crash_after_last_target, recovery_options
 from test_transaction_recovery_completion_right import promoted, snapshot
 
@@ -17,38 +16,14 @@ def test_first_receipt_failure_retains_bytes_and_reports_mutation(tmp_path, monk
     transaction, request, committed = prepare_recovery_receipts(promoted(journal))
     receipt_path = tmp_path / transaction.path
     before = snapshot(tmp_path)
-    native_write, native_sync = os.write, os.fsync
-    writes, failures = [], []
-
-    def selected(fd):
-        return Path(os.readlink('/proc/self/fd/' + str(fd))) == receipt_path
-
-    def write(fd, data):
-        if selected(fd) and boundary in ('created', 'partial'):
-            if boundary == 'partial' and not writes:
-                writes.append(True)
-                return native_write(fd, data[:17])
-            failures.append(True)
-            raise OSError(28, 'injected receipt write failure')
-        return native_write(fd, data)
-
-    def sync(fd):
-        native_sync(fd)
-        if selected(fd) and boundary == 'synced':
-            failures.append(True)
-            raise OSError(5, 'injected receipt sync response loss')
-
     with project_lock(tmp_path, **recovery_options(journal)) as held:
-        with monkeypatch.context() as fault:
-            fault.setattr(os, 'write', write)
-            fault.setattr(os, 'fsync', sync)
+        mode = {'created': 'empty', 'partial': 'prefix', 'synced': 'file_sync'}[boundary]
+        with RecoveryWriteFault(tmp_path, 'completion_transaction', mode) as fault:
             with pytest.raises(RecoveryError) as failure:
                 complete_published_transaction(TRANSACTION, held_lock=held, authority=RECOVER,
                                                 expected_journal_sha256=journal.sha256)
-    kept = transaction.source_bytes[:{'created': 0, 'partial': 17,
-                                      'synced': len(transaction.source_bytes)}[boundary]]
-    assert failures and receipt_path.read_bytes() == kept
-    assert snapshot(tmp_path) == {**before, transaction.path: kept}
+    assert fault.fired and fault.path == receipt_path and not receipt_path.exists()
+    assert snapshot(tmp_path) == before
     assert files(tmp_path) == target
     diagnostic = failure.value.diagnostic()
     assert diagnostic['mutation_possible'] is True

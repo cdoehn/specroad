@@ -79,14 +79,15 @@ def sync_evidence(files, record, token):
     return token
 
 
-def persist_evidence(files, record, *, write_new=_write_new, before_create=None):
+def persist_evidence(files, record, *, write_new=_write_new, before_create=None,
+                      before_publish=None):
     # Refuse a conflicting pre-existing record before entering the write path.
     token = existing_recovery_record(files, record)
     mutation = RecoveryMutation(before_create)
     try:
         if token is None:
             token = ensure_recovery_record(files, record, write_new=write_new,
-                                            before_create=mutation.start)[0]
+                before_create=mutation.start, before_publish=before_publish)[0]
         return sync_evidence(files, record, token)
     except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
         raise recovery_failure(error, reason='recovery_evidence_write_failed', path=record.path,
@@ -106,7 +107,7 @@ def _action_fields(journal, action):
 
 
 def recovery_action(files, journal, action, *, authority=None, write_new=_write_new,
-                    before_create=None):
+                    before_create=None, before_publish=None):
     """Verify an existing action or, when authorized, persist its terminal result.
 
     A repeat caller does not replace the original authority attribution. This
@@ -122,13 +123,15 @@ def recovery_action(files, journal, action, *, authority=None, write_new=_write_
                 or not _text(data.get('authority_id')) or not _text(data.get('authority_version'))):
             raise RecoveryError('recovery_action_conflict', path=path, exit_code=6)
         if authority is not None:
-            persist_evidence(files, record, write_new=write_new, before_create=before_create)
+            persist_evidence(files, record, write_new=write_new, before_create=before_create,
+                             before_publish=before_publish)
         return record
     if authority is None:
         raise RecoveryError('recovery_action_missing', path=path, exit_code=6)
     record = EvidenceRecord(path, canonical_json_bytes({**fields,
         'authority_id': authority.authority_id, 'authority_version': authority.version}))
-    persist_evidence(files, record, write_new=write_new, before_create=before_create)
+    persist_evidence(files, record, write_new=write_new, before_create=before_create,
+                     before_publish=before_publish)
     return record
 
 
@@ -141,16 +144,26 @@ def rollback_receipt(journal, action_record, *, action='rollback'):
             'result_model_root_sha256': journal.data['base_model_root_sha256']}))
 
 
-def rollback_evidence(files, journal, *, authority=None):
+def rollback_evidence(files, journal, *, authority=None, write_new=_write_new,
+                       before_publish=None):
     previous = read_evidence(files, evidence_root(journal.data['transaction_id']) + '/rollback.json')
-    action = recovery_action(files, journal, 'rollback', authority=authority)
+    action = recovery_action(files, journal, 'rollback', authority=authority,
+                             write_new=write_new, before_publish=before_publish)
     receipt = rollback_receipt(journal, action)
     if authority is None:
         if existing_recovery_record(files, receipt) is None:
             raise RecoveryError('recovery_receipt_missing', path=receipt.path, exit_code=6)
     else:
         try:
-            persist_evidence(files, receipt)
+            action_token = existing_recovery_record(files, action)
+            if action_token is None:
+                raise RecoveryError('recovery_action_missing', path=action.path, exit_code=6)
+            def check():
+                before_publish()
+                recheck_recovery_record(files, action, action_token)
+            persist_evidence(files, receipt, write_new=write_new,
+                             before_publish=check if before_publish is not None else None)
+            recheck_recovery_record(files, action, action_token)
         except RecoveryError as error:
             error.mutation_possible |= previous is None
             raise

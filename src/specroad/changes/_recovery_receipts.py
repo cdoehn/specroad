@@ -32,7 +32,8 @@ def recheck_recovery_record(files, record, token):
         raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
 
 
-def ensure_recovery_record(files, record, *, write_new, before_create=None):
+def ensure_recovery_record(files, record, *, write_new, before_create=None,
+                           before_publish=None):
     """Reuse exact evidence; announce possible writes before creating its parents."""
     token = existing_recovery_record(files, record)
     if token is not None:
@@ -41,7 +42,16 @@ def ensure_recovery_record(files, record, *, write_new, before_create=None):
     if before_create is not None:
         before_create()
     with files.directory(parts, create=True) as directory:
-        identity = write_new(directory, name, record.source_bytes)
+        if before_publish is None:
+            identity = write_new(directory, name, record.source_bytes)
+        else:
+            parent_identity = guards._identity(os.fstat(directory))
+            def check():
+                before_publish()
+                with files.directory(parts) as current:
+                    if current is None or guards._identity(os.fstat(current)) != parent_identity:
+                        raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
+            identity = write_new(directory, name, record.source_bytes, before_publish=check)
     token = existing_recovery_record(files, record)
     if token is None or token[1] != identity:
         raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)

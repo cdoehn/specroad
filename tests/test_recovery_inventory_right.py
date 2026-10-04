@@ -165,22 +165,21 @@ def test_extra_member_after_enumeration_cannot_use_an_old_inventory(tmp_path, mo
 
 
 def test_extra_member_after_receipt_creation_preserves_receipts_and_reports_mutation(tmp_path, monkeypatch):
-    from specroad.changes import recovery
-
     _, _, _, journal, target = crash_after_last_target(tmp_path)
     transaction, request, _ = prepare_recovery_receipts(promoted(journal))
-    original = recovery._write_new
+    original = os.link
     before = _without_lock(tmp_path)
     fired = []
 
-    def write_then_add(directory, name, raw):
-        result = original(directory, name, raw)
-        if raw == transaction.source_bytes:
+    def link_then_add(source, name, **kwargs):
+        result = original(source, name, **kwargs)
+        path = Path(os.readlink('/proc/self/fd/' + str(kwargs['dst_dir_fd']))) / name
+        if path == tmp_path / transaction.path:
             _damage(tmp_path, 'extra_artifact')
             fired.append(True)
         return result
 
-    monkeypatch.setattr(recovery, '_write_new', write_then_add)
+    monkeypatch.setattr(os, 'link', link_then_add)
     with pytest.raises(RecoveryError) as error:
         _invoke(tmp_path, journal, 'complete')
     assert fired == [True] and error.value.mutation_possible

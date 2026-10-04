@@ -139,12 +139,13 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
                                    expected_journal_sha256):
     """Finish or verify a complete interrupted transaction without target writes."""
     from ._recovery_completion import complete_published_transaction as complete
+    from ._recovery_initial import write_recovery_file
     return complete(
         transaction_id,
         held_lock=held_lock,
         authority=authority,
         expected_journal_sha256=expected_journal_sha256,
-        write_new=_write_new,
+        write_new=write_recovery_file,
         replace=os.replace,
     )
 

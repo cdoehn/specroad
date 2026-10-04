@@ -138,7 +138,7 @@ def test_retry_after_completed_recovery_performs_no_second_write(tmp_path):
     first = recover(tmp_path, journal)
     committed = CommittedJournal(Path(tmp_path, journal.path).read_bytes())
     with project_lock(tmp_path, **recovery_options(committed.predecessor)) as held:
-        with patch('specroad.changes.recovery._write_new', side_effect=AssertionError('no write')), \
+        with patch('os.write', side_effect=AssertionError('no write')), \
              patch('specroad.changes.recovery.os.replace', side_effect=AssertionError('no replace')):
             second = complete_published_transaction(TRANSACTION, held_lock=held, authority=RECOVER,
                 expected_journal_sha256=committed.sha256)

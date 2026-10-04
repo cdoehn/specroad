@@ -9,6 +9,7 @@ from specroad.changes import _recovery_completion as completion
 from specroad.changes._recovery_evidence import evidence_root
 from specroad.changes.receipt_projection import prepare_recovery_receipts
 from support.publication import TRANSACTION, files
+from support.recovery_writes import RecoveryWriteFault
 from test_transaction_recovery_completion import RECOVER, crash_after_last_target, recover, recovery_options
 from test_transaction_recovery_completion_right import promoted, snapshot
 
@@ -24,27 +25,14 @@ def fd_path(fd):
 
 
 def interrupt_file(fault, path, boundary):
-    native_write, native_sync = os.write, os.fsync
-    written, fired = [], []
-
-    def write(fd, raw):
-        if fd_path(fd) == path and boundary in ('created', 'partial'):
-            if boundary == 'partial' and not written:
-                written.append(True)
-                return native_write(fd, raw[:17])
-            fired.append(True)
-            raise OSError(28, 'injected file write failure')
-        return native_write(fd, raw)
-
-    def sync(fd):
-        native_sync(fd)
-        if fd_path(fd) == path and boundary == 'synced':
-            fired.append(True)
-            raise OSError(5, 'injected file synchronization response loss')
-
-    fault.setattr(os, 'write', write)
-    fault.setattr(os, 'fsync', sync)
-    return fired
+    root = Path(*path.parts[:path.parts.index('.specroad')])
+    site = 'completion_marker' if path.name == 'journal.complete' else 'completion_request'
+    mode = {'created': 'empty', 'partial': 'prefix', 'synced': 'file_sync'}[boundary]
+    interruption = RecoveryWriteFault(root, site, mode)
+    for name, function in (('open', interruption.opening), ('write', interruption.writing),
+                           ('fsync', interruption.syncing), ('link', interruption.linking)):
+        fault.setattr(os, name, function)
+    return interruption
 
 
 def check_failure(error, mutation):
@@ -117,12 +105,10 @@ def test_request_failure_preserves_receipts_and_original_journal(tmp_path, monke
             with pytest.raises(RecoveryError) as failure:
                 complete_published_transaction(TRANSACTION, held_lock=held, authority=RECOVER,
                     expected_journal_sha256=journal.sha256)
-    assert fired
+    assert fired.fired
     check_failure(failure.value, True)
-    kept = request.source_bytes[:{'created': 0, 'partial': 17,
-                                  'synced': len(request.source_bytes)}[boundary]]
-    assert snapshot(tmp_path) == {**before, transaction.path: transaction.source_bytes,
-                                 request.path: kept}
+    assert not (tmp_path / request.path).exists()
+    assert snapshot(tmp_path) == {**before, transaction.path: transaction.source_bytes}
     assert files(tmp_path) == target
     if existing_transaction:
         assert (tmp_path / transaction.path).stat().st_ino == inode
@@ -209,15 +195,16 @@ def test_marker_failure_reports_retained_operational_state(tmp_path, monkeypatch
             with pytest.raises(RecoveryError) as failure:
                 complete_published_transaction(TRANSACTION, held_lock=held, authority=RECOVER,
                     expected_journal_sha256=journal.sha256)
-    assert fired
+    assert fired.fired if isinstance(fired, RecoveryWriteFault) else fired
     check_failure(failure.value, True)
     expected = dict(before)
     if replaced:
         expected[journal.path] = committed.source_bytes
         expected.pop(pending.relative_to(tmp_path).as_posix(), None)
+    elif boundary == 'replace_before':
+        expected[pending.relative_to(tmp_path).as_posix()] = committed.source_bytes
     else:
-        size = {'created': 0, 'partial': 17}.get(boundary, len(committed.source_bytes))
-        expected[pending.relative_to(tmp_path).as_posix()] = committed.source_bytes[:size]
+        assert not pending.exists()
     assert snapshot(tmp_path) == expected and files(tmp_path) == target
 
 

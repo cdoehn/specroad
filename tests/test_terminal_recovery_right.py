@@ -11,6 +11,7 @@ from specroad.changes import (RecoveryError, RolledBackJournal, CommittedJournal
     complete_published_transaction, transaction_receipt_path)
 from support.publication import TRANSACTION, files
 from support.recovery import pending, discard, recovery_options as discard_options, tree
+from support.recovery_writes import RecoveryWriteFault
 from test_terminal_recovery import terminal, cleanup, writer, RECOVER
 from test_transaction_recovery_completion import crash_after_last_target, recovery_options
 from test_transaction_recovery_rollback import partial_commit
@@ -146,22 +147,15 @@ def test_discard_reuses_original_event_after_lost_completion(tmp_path, monkeypat
 @pytest.mark.parametrize('name', ['rollback.json', 'transaction.json'])
 def test_short_terminal_evidence_stays_blocked_and_is_not_overwritten(tmp_path, monkeypatch, name):
     model, plan, journal = partial_commit(tmp_path)
-    native = os.write
-    partial = []
-    def short(fd, data):
-        if fd_path(fd).name == name:
-            if partial:
-                raise OSError(28, 'no space for evidence')
-            partial.append(fd_path(fd))
-            return native(fd, data[:17])
-        return native(fd, data)
+    site = 'rollback_audit' if name == 'rollback.json' else 'rollback_receipt'
     with project_lock(tmp_path, **recovery_options(journal)) as held:
-        with monkeypatch.context() as faults:
-            faults.setattr(os, 'write', short)
+        with RecoveryWriteFault(tmp_path, site, 'prefix') as fault:
             with pytest.raises(RecoveryError) as failure:
                 rollback_interrupted_transaction(TRANSACTION, held_lock=held, authority=RECOVER,
                                                   expected_journal_sha256=journal.sha256)
-    assert failure.value.mutation_possible and len(partial[0].read_bytes()) == 17
+    assert fault.fired and failure.value.mutation_possible and not fault.path.exists()
+    # An independently placed matching prefix is still unbound foreign evidence.
+    fault.path.write_bytes(fault.expected[:17])
     current = RolledBackJournal(Path(tmp_path, journal.path).read_bytes())
     before = tree(tmp_path)
     with project_lock(tmp_path, **recovery_options(current)) as held:

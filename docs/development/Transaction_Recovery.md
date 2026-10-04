@@ -426,3 +426,37 @@ Retry ohne weiteren normativen Effekt und den vorhandenen Cleanup. Fehlerfälle
 prüfen Konflikte, Quellenänderung, Stagingintegrität und fehlende Hostfunktionen.
 W gilt ausschließlich für den initialen Rollbacknachfolger; spätere Cursor-/Endjournale,
 Rollbackkopien, Receipts und Aktionsbelege bleiben `AUDIT-REC-04.R`.
+
+## AUDIT-REC-04.R: fortsetzbare übrige Recovery-Hilfswrites
+
+Das in W geprüfte Verfahren gilt nun auch für Rollbackkopien, spätere
+`journal.rollback`-Nachfolger, Transaktions-/Requestreceipts, `journal.complete`,
+terminale Aktionsbelege und Rollbackreceipts. Erst ein vollständig geschriebener,
+synchronisierter und stabil zurückgelesener Inhalt wird exklusiv verlinkt.
+Ein Fehler vor dem Link hinterlässt keinen kurzen benannten Rest. Nach einem
+erfolgreichen Link bleibt die vollständige Datei für den nächsten expliziten
+Aufruf erhalten. Bereits vorhandene vollständige Inhalte werden erneut geprüft
+und synchronisiert; sie werden nicht als neuer Versuch überschrieben.
+
+Vor dem Link werden nativer Lock, aktuelle Journalbindung, vollständige normative
+Inventur und benötigte Quellen frisch geprüft. Rollbackkopien prüfen ihr
+Originalimage auch nach dem Staging erneut. Receipts prüfen ihre vorhergehenden
+Belege und das aktuelle Ziel; das Rollbackreceipt bleibt an den unveränderten
+Aktionsbeleg gebunden. Die finale Journalersetzung folgt erst nach erneuter
+Prüfung des vollständigen Nachfolgers. Fehler erhalten das tatsächliche Journal,
+alle veröffentlichten Belege und bereits restaurierte normative Dateien.
+
+Ein späterer Aufruf lädt den vorhandenen Journalzustand und verwendet vollständige
+Belege einschließlich ihrer ursprünglichen Autoritätszuordnung weiter. Schon
+restaurierte oder veröffentlichte normative Bytes werden nicht erneut ersetzt.
+Der bisherige erhaltende Cleanup kann danach den geschlossenen Arbeitsbestand
+archivieren und den normalen Writerzugriff wieder freigeben.
+
+`test_recovery_auxiliary_writes.py` prüft alle neun zusätzlichen Schreibstellen
+mit wiederholten nativen Unterbrechungen, echten Prozessabbrüchen, auditierter
+Lockübernahme, Fremdpräfixen, unsicheren Dateitypen, konkurrierender Anlage und
+veränderten Quellen beziehungsweise Locks. Die getrennten Mutationsbilanztests
+prüfen weiterhin den Fehlervertrag; eigene namenlose Teilbytes werden dabei
+nicht mehr als dauerhaft sichtbarer benannter Rest erwartet. Fremde kurze
+Dateien bleiben unverändert Blocker. Die Linux-Voraussetzungen aus W gelten
+weiter; Discard- und Cleanup-Schreibprotokolle behalten ihr bisheriges Verhalten.

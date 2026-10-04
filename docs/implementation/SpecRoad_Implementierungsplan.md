@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 59
+last_completed_numbered_bundle: 60
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-04.R
+next_audit_step: AUDIT-REC-04.C
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -65,7 +65,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; initialer Rollbackjournalschritt W umgesetzt; R/C offen |
+| F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R umgesetzt; Strukturkonsolidierung C offen |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | offen |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | offen |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01.U | offen; keine pauschale Gesamtimplementierung zugesagt |
@@ -334,7 +334,7 @@ wird. Bereits vorhandene zweifelhafte Reste bleiben ohne zusätzlichen belastbar
 Nachweis Blocker. Originalimages, Journale und abgeschlossene Belege bleiben erhalten.
 
 - [x] **AUDIT-REC-04.W:** Den kleinsten bestätigten Fall am initialen `journal.rollback`-Write unter exakt gebundenem Recoverylock sicher fortsetzbar machen. **Abnahme:** Unterbrechung nach exklusiver Anlage und während des Writes lässt einen erneuten expliziten Aufruf mit intakten Quellen auf die vollständige gebundene Basis abschließen; ein weiterer Aufruf schreibt keine normativen Bytes. Fremde, widersprüchliche oder nur präfixgleiche ungebundene Dateien werden weder übernommen noch überschrieben. Der eigene Schreibversuch braucht einen überprüfbaren Herkunfts-/Inhaltsnachweis oder eine Veröffentlichung, die solche ungebundenen Teilzustände vermeidet; die konkrete Umsetzung wird im W-Commit begründet.
-- [ ] **AUDIT-REC-04.R:** Die übrigen bestätigten Varianten vervollständigen: Rollbackkopie, Cursorjournal nach bereits erfolgter Restauration, terminales Rollbackjournal, Transaktions-/Requestreceipt, `journal.complete` sowie terminale Recoveryaktionsbelege und Rollbackreceipt. **Abnahme:** Erneute Unterbrechung bleibt fortsetzbar; bereits restaurierte beziehungsweise veröffentlichte normative Bytes werden nicht erneut geschrieben. Basis/Vollziel, Originalbelege und frühere Autoritätszuordnung bleiben gebunden. Veränderte Quellen, fremde beziehungsweise ungebundene Reste und unsichere Dateitypen bleiben Blocker; bereits vollständige Dateien behalten ihre geprüfte Wiederverwendung. Zulässige eigene Arbeitsreste müssen mit dem vorhandenen beleggeprüften Abschluss-/Bereinigungspfad vereinbar sein.
+- [x] **AUDIT-REC-04.R:** Die übrigen bestätigten Varianten vervollständigen: Rollbackkopie, Cursorjournal nach bereits erfolgter Restauration, terminales Rollbackjournal, Transaktions-/Requestreceipt, `journal.complete` sowie terminale Recoveryaktionsbelege und Rollbackreceipt. **Abnahme:** Erneute Unterbrechung bleibt fortsetzbar; bereits restaurierte beziehungsweise veröffentlichte normative Bytes werden nicht erneut geschrieben. Basis/Vollziel, Originalbelege und frühere Autoritätszuordnung bleiben gebunden. Veränderte Quellen, fremde beziehungsweise ungebundene Reste und unsichere Dateitypen bleiben Blocker; bereits vollständige Dateien behalten ihre geprüfte Wiederverwendung. Zulässige eigene Arbeitsreste müssen mit dem vorhandenen beleggeprüften Abschluss-/Bereinigungspfad vereinbar sein.
 - [ ] **AUDIT-REC-04.C:** Nach W/R gemeinsame Bindungsprüfung, Hilfsdatei-Wiederaufnahme und Konfliktklassifikation strukturieren. **Abnahme:** Fachresultate, strukturierte Fehler, Mutationsbilanz, Beweiserhalt und zulässige Seiteneffekte bleiben gegenüber R unverändert; kein neues Reparaturverhalten.
 
 Der U-Commit verändert keine Produktlogik und stuft keine Requirementabnahme hoch.
@@ -375,6 +375,43 @@ bleibt 237/885. Commit-Message:
 `Fix: publish initial rollback successors only after complete staging`.
 Als Nächstes folgt `AUDIT-REC-04.R`; die übrigen bestätigten Schreibstellen und
 die umfassende Crashmatrix bleiben offen.
+
+**R-Ergebnis (Bundle 060, OFF-PLAN `AUDIT-REC-04.R`):**
+Die übrigen neun bestätigten Schreibstellen verwenden jetzt dieselbe vollständige
+namenlose Vorbereitung wie W: Rollbackkopie, Cursor-/Terminaljournal,
+Transaktions-/Requestreceipt, Abschlussmarker, beide terminalen Aktionsbelege und
+Rollbackreceipt. Native Writes, Dateisynchronisation und stabiler Readback gehen
+dem exklusiven Link voraus; eigene leere oder kurze Dateien werden nicht unter
+ihrem späteren Hilfsdateinamen sichtbar. Vollständige vorhandene Dateien werden
+exakt geprüft und vor ihrer Verwendung erneut synchronisiert.
+
+Vor der Veröffentlichung werden nativer Lock, Vorgängerjournal, aktuelle
+vollständige Projektbytes und benötigte Quellen erneut geprüft. Rollbackkopien
+halten ihr Originalimage an Bytes und Inode gebunden; Receipts prüfen bereits
+gebundene Vorgängerbelege. Fremde Präfixe, unsichere Dateitypen und konkurrierende
+Anlagen bleiben Blocker. Vollständige Aktionsbelege behalten Bytes, Inode und
+Autoritätszuordnung bei einem späteren autorisierten Aufruf.
+
+205 zusätzliche Verhaltenstests binden die neun Schreibstellen: wiederholte
+native Write-/Synchronisations-/Linkfehler, 18 echte Prozessabbrüche mit nativer
+auditierter Lockübernahme, fremde Präfixe und Dateitypen, Quellen-/Lockänderungen,
+Readbackintegrität und ungültige Write-Rückgaben. Wiederaufnahme erreicht die
+unabhängig bestimmte Basis beziehungsweise das Vollziel ohne doppelte normative
+Ersetzung. Der bestehende Cleanup erhält den Arbeitsbestand und ermöglicht den
+nächsten Writer. Die bisherigen Mutationsbilanztests injizieren ihre Fehler an
+den neuen realen Schreibgrenzen; die Erwartung eines eigenen kurzen benannten
+Rests entfällt, die Fremdrest-Gegenprobe bleibt erhalten.
+
+Die Korrektur betrifft 5.q.R, 5.r.R und terminale Belege aus AUDIT-REC-02 und wird
+deshalb gemeinsam als OFF-PLAN geführt. Die fünf betroffenen SR-TC-Manifeste
+bleiben `partial`; der Produktzähler bleibt 237/885. Linux-`O_TMPFILE` und ein
+nutzbarer `/proc/self/fd`-Link bleiben Voraussetzung; fehlende Hostunterstützung
+führt zu Code 5 ohne unsicheren Ersatzwrite. Discard-/Cleanup-Schreibprotokolle,
+automatischer Preflight, Vollquellen-Restore und die umfassende Crashmatrix werden
+nicht auf diesen Ausschnitt vorgezogen.
+Commit-Message: `fix(recovery): resume all bound auxiliary writes after interruptions`.
+Als Nächstes folgt `AUDIT-REC-04.C`: gemeinsame Bindungsprüfung, Wiederaufnahme
+und Konfliktbehandlung strukturieren, bei unveränderten W-/R-Verträgen.
 
 ### AUDIT-REC-05 – unveröffentlichter Discard nach echtem Neustart
 
@@ -12152,7 +12189,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-04.R`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-04.C`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

@@ -30,7 +30,7 @@ from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
 from ._recovery_evidence import EvidenceRecord, rollback_evidence, sync_evidence
 from ._recovery_receipts import existing_recovery_record
-from ._recovery_initial import write_initial_successor
+from ._recovery_initial import write_initial_successor, write_recovery_file
 
 
 def _authorize(authority, journal):
@@ -100,6 +100,17 @@ def _prove_rollback_inputs(files, journal):
         return tokens
 
 
+def _rollback_guard(files, journal, directory_identity, held_lock):
+    observed = _prove_rollback_inputs(files, journal)
+    def check():
+        _rollback_lock(held_lock, journal)
+        if _read_journal(files, journal.data['transaction_id']) != (journal.source_bytes, directory_identity):
+            raise RecoveryError('recovery_journal_changed', exit_code=6)
+        if _prove_rollback_inputs(files, journal) != observed:
+            raise RecoveryError('recovery_basis_changed', exit_code=6)
+    return check
+
+
 def _journal_successor(journal, *, initial=False, terminal=False):
     data = journal.data
     if initial:
@@ -144,51 +155,76 @@ def _ensure_exact_file(directory, name, raw, *, reason, write_new=None):
                 raise
             raise RecoveryError(reason, exit_code=6) from error
     _image(directory, name, len(raw), digest, identity=identity)
+    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0),
+                 dir_fd=directory)
+    try:
+        if guards._identity(os.fstat(fd)) != identity:
+            raise RecoveryError(reason, exit_code=6)
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    os.fsync(directory)
+    _image(directory, name, len(raw), digest, identity=identity)
     return identity
 
 
-def _replace_journal(files, journal, successor, directory_identity, *, before_initial_publish=None):
+def _replace_journal(files, journal, successor, directory_identity, *, before_publish):
     prefix = tuple(journal.path.split('/')[:-1])
     with files.directory(prefix) as directory:
         if directory is None or guards._identity(os.fstat(directory)) != directory_identity:
             raise RecoveryError('recovery_work_changed', exit_code=6)
         if _read(directory, 'journal.json') != journal.source_bytes:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
-        create = None
-        if before_initial_publish is not None:
-            def unchanged():
-                before_initial_publish()
-                with files.directory(prefix) as current:
-                    if current is None or guards._identity(os.fstat(current)) != directory_identity:
-                        raise RecoveryError('recovery_work_changed', exit_code=6)
-                    if _read(current, 'journal.json') != journal.source_bytes:
-                        raise RecoveryError('recovery_journal_changed', exit_code=6)
+        def unchanged():
+            before_publish()
+            with files.directory(prefix) as current:
+                if current is None or guards._identity(os.fstat(current)) != directory_identity:
+                    raise RecoveryError('recovery_work_changed', exit_code=6)
+                if _read(current, 'journal.json') != journal.source_bytes:
+                    raise RecoveryError('recovery_journal_changed', exit_code=6)
 
-            def create(parent, name, raw):
+        def create(parent, name, raw):
+            if type(journal) is CommittingJournal:
                 return write_initial_successor(parent, name, raw, before_publish=unchanged)
+            return write_recovery_file(parent, name, raw, before_publish=unchanged,
+                                       conflict_reason='recovery_journal_successor_conflict')
 
         identity = _ensure_exact_file(directory, 'journal.rollback', successor.source_bytes,
                                       reason='recovery_journal_successor_conflict', write_new=create)
-        if before_initial_publish is not None:
-            unchanged()
-            _image(directory, 'journal.rollback', len(successor.source_bytes),
-                   successor.sha256, identity=identity)
+        unchanged()
+        _image(directory, 'journal.rollback', len(successor.source_bytes),
+               successor.sha256, identity=identity)
         os.replace('journal.rollback', 'journal.json', src_dir_fd=directory, dst_dir_fd=directory)
         os.fsync(directory)
 
 
-def _copy_before(files, journal, entry, index, target_token):
+def _copy_before(files, journal, entry, index, target_token, *, before_publish):
     prefix = tuple(journal.path.split('/')[:-1])
     before_name = entry['before_image_path'].rsplit('/', 1)[-1]
     with files.directory((*prefix, 'before')) as before:
         if before is None:
             raise RecoveryError('recovery_before_image_missing', path=entry['path'], exit_code=6)
-        _image(before, before_name, entry['before_size'], entry['before_sha256'])
+        source_identity = _image(before, before_name, entry['before_size'], entry['before_sha256'])
         raw = _read(before, before_name)
     with files.directory((*prefix, 'rollback'), create=True) as rollback:
         name = str(index) + '.bin'
+        parent_identity = guards._identity(os.fstat(rollback))
+        def check():
+            before_publish()
+            with files.directory((*prefix, 'before')) as source:
+                if source is None:
+                    raise RecoveryError('recovery_before_image_missing', path=entry['path'], exit_code=6)
+                _image(source, before_name, entry['before_size'], entry['before_sha256'],
+                       identity=source_identity)
+            with files.directory((*prefix, 'rollback')) as current:
+                if current is None or guards._identity(os.fstat(current)) != parent_identity:
+                    raise RecoveryError('recovery_work_changed', exit_code=6)
+        def create(parent, filename, content):
+            return write_recovery_file(parent, filename, content, before_publish=check,
+                                       conflict_reason='recovery_restore_stage_conflict')
         identity = _ensure_exact_file(rollback, name, raw,
-                                      reason='recovery_restore_stage_conflict')
+                                      reason='recovery_restore_stage_conflict', write_new=create)
+        check()
         parts = tuple(entry['path'].split('/'))
         with files.directory(parts[:-1]) as target:
             if target is None:
@@ -257,7 +293,9 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                 raise RecoveryError('recovery_journal_changed', exit_code=6)
             marker = EvidenceRecord(journal.path, journal.source_bytes)
             sync_evidence(files, marker, existing_recovery_record(files, marker))
-            action, receipt = rollback_evidence(files, journal, authority=authority)
+            action, receipt = rollback_evidence(files, journal, authority=authority,
+                write_new=write_recovery_file,
+                before_publish=_rollback_guard(files, journal, directory_identity, held_lock))
             _rollback_lock(held_lock, journal)
             if (_read_journal(files, transaction_id) != (raw, directory_identity)
                     or _prove_basis(files, journal) != root):
@@ -290,7 +328,7 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                     raise RecoveryError('recovery_basis_changed', exit_code=6)
             mutated = True
             _replace_journal(files, journal, successor, directory_identity,
-                             before_initial_publish=initial_guard)
+                             before_publish=initial_guard)
             raw, directory_identity = _read_journal(files, transaction_id)
             journal = _parse(raw, transaction_id, files)
         if type(journal) is not RollingBackJournal:
@@ -310,7 +348,8 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
             if state == 'target':
                 mutated = True
                 if entry['existed_before']:
-                    _copy_before(files, journal, entry, index, token)
+                    _copy_before(files, journal, entry, index, token,
+                        before_publish=_rollback_guard(files, journal, directory_identity, held_lock))
                 else:
                     _remove_created(files, journal, entry, index, token)
                 writes += 1
@@ -318,20 +357,24 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                     raise RecoveryError('recovery_basis_write_unverified', path=entry['path'], exit_code=6)
             successor = _journal_successor(journal)
             mutated = True
-            _replace_journal(files, journal, successor, directory_identity)
+            _replace_journal(files, journal, successor, directory_identity,
+                before_publish=_rollback_guard(files, journal, directory_identity, held_lock))
             raw, directory_identity = _read_journal(files, transaction_id)
             journal = _parse(raw, transaction_id, files)
         root = _prove_basis(files, journal)
         terminal = _journal_successor(journal, terminal=True)
         mutated = True
-        _replace_journal(files, journal, terminal, directory_identity)
-        raw, _ = _read_journal(files, transaction_id)
+        _replace_journal(files, journal, terminal, directory_identity,
+            before_publish=_rollback_guard(files, journal, directory_identity, held_lock))
+        raw, directory_identity = _read_journal(files, transaction_id)
         current = _parse(raw, transaction_id, files)
         if type(current) is not RolledBackJournal or current.source_bytes != terminal.source_bytes:
             raise RecoveryError('recovery_rolled_back_marker_changed', exit_code=6)
         if _prove_basis(files, current) != root:
             raise RecoveryError('recovery_basis_changed', exit_code=6)
-        action, receipt = rollback_evidence(files, current, authority=authority)
+        action, receipt = rollback_evidence(files, current, authority=authority,
+            write_new=write_recovery_file,
+            before_publish=_rollback_guard(files, current, directory_identity, held_lock))
         _rollback_lock(held_lock, current)
         if (_read_journal(files, transaction_id) != (raw, directory_identity)
                 or _prove_basis(files, current) != root):
