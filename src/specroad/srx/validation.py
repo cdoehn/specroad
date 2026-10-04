@@ -1,11 +1,11 @@
 """Private SRX components; no host or project execution."""
 
+from .._metadata import SRX_LANGUAGE_VERSION as VERSION
 from .errors import SrxError
 from ._json_values import json_type
 from .operators import OPERATOR_FIELDS, SUPPORTED_OPERATORS, UNARY_OPERATORS, BINARY_OPERATORS, QUANTIFIER_OPERATORS
 
 LANGUAGE = "srx"
-VERSION = "1.0"
 CONTEXT_NAMES = ("artifact", "configuration", "project", "relations")
 
 
@@ -40,7 +40,7 @@ def _validate_document(data, rule_id, *, structure_limits=None):
                        expected="srx", actual=json_type(data["language"]))
     if type(data["version"]) is not str or data["version"] != VERSION:
         raise SrxError("unsupported_version", rule_id=rule_id, pointer="/version",
-                       expected="1.0", actual=json_type(data["version"]))
+                       expected=VERSION, actual=json_type(data["version"]))
     return _validate_expression(data["expression"], rule_id, structure_limits=structure_limits)
 
 
@@ -139,5 +139,4 @@ def _validate_context(data, rule_id):
             raise SrxError("effective_values_required", rule_id=rule_id,
                            pointer="/configuration/effective_values", expected="object",
                            actual=json_type(configuration["effective_values"]), subject="context")
-
 

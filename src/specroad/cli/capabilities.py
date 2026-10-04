@@ -7,7 +7,7 @@ support from executable registry commands. Model/SRX versions describe the
 existing Core validators/evaluator, not the presence of a command or a schema ID.
 """
 
-from .._metadata import SUPPORTED_SRX_VERSIONS
+from .._metadata import PYTHON_CAPABILITY_IDS, SUPPORTED_SRX_VERSIONS
 from .results import FORMAT_VERSION
 from .self_description import (DESCRIPTION_VERSION, command_surface,
                                output_formats, published_contract)
@@ -32,7 +32,7 @@ def capabilities(registry):
         "program_version": identity["program_version"],
         "distribution": {key: identity[key] for key in ("distribution_kind", "build_id", "build_sha256", "build_hash_scope")},
         "capability_ids": sorted(["cli." + cmd["command_id"] for cmd in commands] +
-                                 ["python.structured-request", "python.srx.evaluate"]),
+                                 list(PYTHON_CAPABILITY_IDS)),
         "commands": commands,
         "command_groups": sorted({cmd["command_id"].split(".")[0] for cmd in commands}),
         "command_classes": sorted({cmd["command_class"] for cmd in commands}),

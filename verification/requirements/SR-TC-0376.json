@@ -82,6 +82,6 @@
   ],
   "open_items": [
     "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release.",
-    "AUDIT-CONTRACT-01.C consolidates version/capability sources; complete Proposal/exchange/agent workflows remain in their regular future milestones, particularly 18.m."
+    "Complete Proposal/exchange/agent workflows remain in their regular future milestones, particularly 18.m."
   ]
 }

@@ -39,3 +39,11 @@ Declared Python versions remain separate from measured release evidence.
 CLI/request rejection, schema validation and isolated module/zipapp execution.
 The full future agent workflow of 18.m remains open. Test execution follows the
 local `AGENTS.md` and [Testing.md](Testing.md).
+
+The C step shares the model and SRX version identities through the pure static
+`_metadata` module. The model version facade, SRX parser, view filter field
+schema and supported-version declarations use those same values. Bootstrap
+self-description reads these constants without importing the evaluator or
+loading any model. The Python capability IDs are declared alongside them;
+CLI capability IDs continue to come from the active registry. Existing result
+values, schema documents, version rejections and W/R behavior tests are unchanged.

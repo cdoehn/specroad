@@ -7,6 +7,7 @@ Loading an approved/recorded value never means that its provenance is verified.
 
 import re
 
+from .._metadata import SRX_LANGUAGE_VERSION
 from ._schema import validate_builtin, _json_equal
 from .artifact_schemas import artifact_common_schema, validate_common_fields
 from .artifact_types import artifact_types
@@ -199,7 +200,7 @@ def record_schema(kind, version=SCHEMA_VERSION):
         schema["properties"]["anchor"] = {"type": "object", "not": {"const": {}}}
     if kind == "view":
         schema["properties"]["filter"] = _object({
-            "language": {"const": "srx"}, "version": {"const": "1.0"}, "expression": {"type": "object"},
+            "language": {"const": "srx"}, "version": {"const": SRX_LANGUAGE_VERSION}, "expression": {"type": "object"},
         })
     schema["allOf"] = conditions
     return schema
