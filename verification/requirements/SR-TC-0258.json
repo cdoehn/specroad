@@ -110,6 +110,6 @@
     "tests/test_recovery_mutation_accounting_right.py::test_terminal_retry_retains_audit_creation_in_later_error[True]"
   ],
   "open_items": [
-    "Short auxiliary recovery writes remain blocked and preserved; their restart investigation remains AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
+    "AUDIT-REC-04.U confirmed blocked retries after own short helper writes. Safe restart corrections for bound own attempts remain AUDIT-REC-04.W/R/C; foreign or unbound bytes remain blockers. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }

@@ -56,6 +56,6 @@
     "tests/test_recovery_inventory_right.py::test_extra_member_after_rollback_terminal_write_cannot_be_reported_as_success"
   ],
   "open_items": [
-    "Interrupted auxiliary recovery writes remain AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
+    "AUDIT-REC-04.U confirmed short rollback helper and completion restart gaps; safe own-attempt corrections remain AUDIT-REC-04.W/R/C. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }

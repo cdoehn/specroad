@@ -115,7 +115,7 @@
     "tests/test_transaction_recovery_lock.py::test_takeover_rechecks_journal_after_authorization"
   ],
   "open_items": [
-    "Short auxiliary-write restart investigation and discard preflight reconstruction remain AUDIT-REC-04/05.",
+    "AUDIT-REC-04.U confirmed short terminal action and receipt restart gaps; safe own-attempt corrections remain AUDIT-REC-04.W/R/C. Discard preflight reconstruction remains AUDIT-REC-05.",
     "Restore and its qualified source, preservation and target inventories remain assigned to the later restore implementation; no complete SR-REQ-0462 acceptance is claimed."
   ]
 }

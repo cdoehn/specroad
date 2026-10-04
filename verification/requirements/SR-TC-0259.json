@@ -181,7 +181,7 @@
     "tests/test_transaction_recovery_lock.py::test_repeated_real_process_stops_resume_without_removing_foreign_blockers[owner]"
   ],
   "open_items": [
-    "Short auxiliary-write restart investigation remains AUDIT-REC-04.",
+    "AUDIT-REC-04.U confirmed short terminal helper and receipt restart gaps; safe own-attempt corrections remain AUDIT-REC-04.W/R/C.",
     "Discard still requires the independent preflight; restart reconstruction remains AUDIT-REC-05. Full command/authentication/restore integration remains later work.",
     "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]
