@@ -377,3 +377,18 @@ Die Verhaltenstests in `test_recovery_mutation_accounting_right.py` vergleichen
 Dateibytes, Verzeichnisse, Mutationseinstufung und unveränderte normative Zielbytes.
 Die Strukturkonsolidierung folgt in `AUDIT-REC-03.C`; eine Reparatur kurzer
 Hilfsdateien bleibt Gegenstand von `AUDIT-REC-04`.
+
+## AUDIT-REC-03.C: gemeinsame Mutationsbilanz und Fehlerübersetzung
+
+`_recovery_mutation.py` enthält den gemeinsamen lokalen Mutationszustand für
+Abschluss und Belegpersistenz. Sein Schreibbeginn-Callback setzt zuerst die
+lokale Bilanz und benachrichtigt anschließend einen vorhandenen umgebenden
+Abschlussaufruf. Die Aufrufer verwenden ihn an den bisherigen W/R-Grenzen.
+
+Die gemeinsame Fehlerübersetzung erhält Fehlergrund, Pfad und Exitcode. Die
+Aufrufer behalten ihre bisherige Entscheidung über Mutationsflags und
+Pfadzuordnung: Vorhandene Abschlussfehler werden weitergereicht, übersetzte
+Belegfehler bleiben an den Belegpfad gebunden. Autorisierung, Prüfungen,
+Dateiwrites, Synchronisation und Wiederanlauf folgen derselben Reihenfolge.
+Die W/R-Verhaltenstests bleiben unverändert. Die nächste Audit-Nacharbeit ist
+`AUDIT-REC-04.U`, die Untersuchung kurzer eigener Recovery-Hilfsdateien.

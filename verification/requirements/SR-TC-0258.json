@@ -110,7 +110,6 @@
     "tests/test_recovery_mutation_accounting_right.py::test_terminal_retry_retains_audit_creation_in_later_error[True]"
   ],
   "open_items": [
-    "Mutation accounting and error translation still require structural consolidation in AUDIT-REC-03.C.",
     "Short auxiliary recovery writes remain blocked and preserved; their restart investigation remains AUDIT-REC-04. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }

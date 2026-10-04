@@ -15,6 +15,7 @@ from ..security import paths as guards
 from .execution_values import ChangeExecutionError
 from ._journal_codec import _text
 from ._journal_io import _read
+from ._recovery_mutation import RecoveryMutation, recovery_failure
 from ._recovery_receipts import ensure_recovery_record, existing_recovery_record, recheck_recovery_record
 from ._staging_files import _write_new
 from .receipt_values import transaction_receipt_path
@@ -81,24 +82,15 @@ def sync_evidence(files, record, token):
 def persist_evidence(files, record, *, write_new=_write_new, before_create=None):
     # Refuse a conflicting pre-existing record before entering the write path.
     token = existing_recovery_record(files, record)
-    creating = token is None
-    mutated = False
-
-    def creation_started():
-        nonlocal mutated
-        mutated = True
-        if before_create is not None:
-            before_create()
-
+    mutation = RecoveryMutation(before_create)
     try:
-        if creating:
+        if token is None:
             token = ensure_recovery_record(files, record, write_new=write_new,
-                                            before_create=creation_started)[0]
+                                            before_create=mutation.start)[0]
         return sync_evidence(files, record, token)
     except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
-        raise RecoveryError(getattr(error, 'reason', 'recovery_evidence_write_failed'),
-            path=record.path, exit_code=getattr(error, 'exit_code', 5),
-            mutation_possible=mutated or getattr(error, 'mutation_possible', False)) from error
+        raise recovery_failure(error, reason='recovery_evidence_write_failed', path=record.path,
+            mutation_possible=mutation.possible or getattr(error, 'mutation_possible', False)) from error
 
 
 def _action_fields(journal, action):

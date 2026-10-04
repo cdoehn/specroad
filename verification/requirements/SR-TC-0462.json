@@ -115,7 +115,7 @@
     "tests/test_transaction_recovery_lock.py::test_takeover_rechecks_journal_after_authorization"
   ],
   "open_items": [
-    "First-receipt mutation accounting, short-write investigation and discard preflight reconstruction remain AUDIT-REC-03/04/05.",
+    "Short auxiliary-write restart investigation and discard preflight reconstruction remain AUDIT-REC-04/05.",
     "Restore and its qualified source, preservation and target inventories remain assigned to the later restore implementation; no complete SR-REQ-0462 acceptance is claimed."
   ]
 }

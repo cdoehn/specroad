@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 56
+last_completed_numbered_bundle: 57
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-03.C
+next_audit_step: AUDIT-REC-04.U
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -64,7 +64,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 |---|---|---|---|---|
 | F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R umgesetzt; C offen |
+| F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | Untersuchungsverdacht / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511 | AUDIT-REC-04.U | offen; Reparatur nur nach Bestätigung |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | offen |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | offen |
@@ -246,7 +246,7 @@ bestehen. Der Produktzähler bleibt bei 237/885.
 
 - [x] **AUDIT-REC-03.W:** Mögliche Betriebsdateimutationen auch bei Fehler im ersten Receiptaufruf korrekt bilanzieren. **Abnahme:** Fehler nach Dateianlage, während Schreiben oder `fsync` ergeben keinen falschen `mutation_possible=False`-Befund; zurückgelassene Betriebsdateien bleiben erhalten.
 - [x] **AUDIT-REC-03.R:** Verzeichnisanlage, Teilwrite, vollständiger Write mit Synchronisationsfehler und spätere Markerfehler abdecken. **Abnahme:** Ablehnung vor Mutationsbeginn bleibt von möglichen Dateieffekten unterscheidbar; normative Zielwrites oder Erfolg werden nicht erfunden.
-- [ ] **AUDIT-REC-03.C:** Mutationsbilanz und Fehlerübersetzung zusammenführen. **Abnahme:** Strukturierte Fehler und reale Dateieffekte aus W/R bleiben gleich.
+- [x] **AUDIT-REC-03.C:** Mutationsbilanz und Fehlerübersetzung zusammenführen. **Abnahme:** Strukturierte Fehler und reale Dateieffekte aus W/R bleiben gleich.
 
 **W-Ergebnis (Bundle 055, OFF-PLAN `AUDIT-REC-03.W`):** Der Zielabschluss
 merkt eine mögliche Betriebsdateimutation nach der schreibfreien Receiptprüfung
@@ -288,6 +288,24 @@ SR-TC-0258 bleibt Teilnachweis; kurze Hilfsdateien und die vollständige später
 Fault-Injection-Matrix werden nicht als erledigt ausgegeben.
 Commit-Message: `fix(recovery): preserve mutation accounting across completion boundaries`.
 Als Nächstes folgt `AUDIT-REC-03.C`; der Produktzähler bleibt 237/885.
+
+**C-Ergebnis (Bundle 057, OFF-PLAN `AUDIT-REC-03.C`):**
+`_recovery_mutation.py` bündelt die lokale Mutationsbilanz, die Weitergabe des
+Mutationsbeginns an den umgebenden Abschlussaufruf und die Übersetzung von
+Fehlergrund, Pfad und Exitcode. Abschluss und Belegpersistenz verwenden diesen
+gemeinsamen Helfer an denselben Schreibgrenzen wie in W/R. Ihre bisherigen
+Unterschiede bleiben ausdrücklich erhalten: Der Abschluss reicht vorhandene
+`RecoveryError`-Objekte mit ergänzter Mutationsbilanz weiter; die Belegpersistenz
+bindet übersetzte Fehler weiterhin an den ausgewählten Belegpfad und erhält
+bereits gemeldete Mutationen.
+
+Fachliche Ergebnisse, Belegbytes, Fehlerverträge, Prüf-/Schreibreihenfolge und
+zulässige Dateieffekte bleiben erhalten. Die vorhandenen W/R-Verhaltenstests
+werden unverändert verwendet. Die betroffenen Requirementmanifeste führen
+AUDIT-REC-02/03 nicht länger als offene Nacharbeit, behalten aber ihren
+Teilnachweisstatus und die übrigen offenen Abnahmen.
+Commit-Message: `refactor(recovery): centralize mutation state and error translation`.
+Als Nächstes folgt `AUDIT-REC-04.U`; der Produktzähler bleibt 237/885.
 
 ### AUDIT-REC-04 – kurze eigene Recovery-Hilfsdateien untersuchen
 
@@ -12073,7 +12091,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-03.C`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-04.U`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

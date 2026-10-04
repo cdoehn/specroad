@@ -14,6 +14,7 @@ from .recovery_values import RecoveryAuthority, RecoveryError
 from ._journal_codec import _hash, _transaction
 from ._journal_io import _read
 from ._recovery_inputs import _read_journal, _parse
+from ._recovery_mutation import RecoveryMutation, recovery_failure
 from ._recovery_receipts import (
     ensure_recovery_record,
     existing_recovery_record,
@@ -125,12 +126,7 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         raise RecoveryError('recovery_authority_required', exit_code=2)
     if type(held_lock) is not HeldProjectLock:
         raise RecoveryError('native_recovery_lock_required', exit_code=7)
-    mutated = False
-
-    def mutation_started():
-        nonlocal mutated
-        mutated = True
-
+    mutation = RecoveryMutation()
     try:
         files = held_lock._files
         raw, directory_identity = _read_journal(files, transaction_id)
@@ -140,7 +136,7 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         if type(journal) is CommittedJournal:
             return _verify_committed_recovery(files, journal, held_lock, authority,
                                                write_new=write_new,
-                                               before_create=mutation_started)
+                                               before_create=mutation.start)
         if type(journal) is not CommittingJournal:
             raise RecoveryError('recovery_full_target_requires_committing', exit_code=6)
         _completion_lock(held_lock, journal)
@@ -162,8 +158,8 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
             if record is None:
                 continue
             token, wrote = ensure_recovery_record(files, record, write_new=write_new,
-                                                  before_create=mutation_started)
-            mutated |= wrote
+                                                  before_create=mutation.start)
+            mutation.possible |= wrote
             tokens[record.path] = (record, token)
         _completion_lock(held_lock, journal)
         if files.journal_entries() != active or _read_journal(files, transaction_id) != (raw, directory_identity):
@@ -174,7 +170,7 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
             recheck_recovery_record(files, record, token)
         _commit_recovered_journal(files, journal, committed, directory_identity,
                                   write_new=write_new, replace=replace,
-                                  before_mutation=mutation_started)
+                                  before_mutation=mutation.start)
         current_raw, current_identity = _read_journal(files, transaction_id)
         if current_identity != directory_identity or current_raw != committed.source_bytes:
             raise RecoveryError('recovery_committed_marker_changed', exit_code=6)
@@ -185,7 +181,7 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         for record, token in tokens.values():
             recheck_recovery_record(files, record, token)
         recovery_action(files, current, 'complete', authority=authority, write_new=write_new,
-                        before_create=mutation_started)
+                        before_create=mutation.start)
         _completion_lock(held_lock, current)
         if prove_complete_target(files, current.predecessor) != target:
             raise RecoveryError('recovery_target_changed', exit_code=6)
@@ -195,12 +191,10 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
             recheck_recovery_record(files, record, token)
         return TransactionCompletion._create(current, live=True)
     except RecoveryError as error:
-        error.mutation_possible |= mutated
+        error.mutation_possible |= mutation.possible
         raise
     except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
-        raise RecoveryError(
-            getattr(error, 'reason', 'recovery_completion_failed'),
-            path=getattr(error, 'path', None),
-            exit_code=getattr(error, 'exit_code', 5),
-            mutation_possible=mutated,
+        raise recovery_failure(
+            error, reason='recovery_completion_failed',
+            mutation_possible=mutation.possible,
         ) from error
