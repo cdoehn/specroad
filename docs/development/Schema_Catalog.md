@@ -6,12 +6,20 @@ URLs or executable plugins. Existing projects, profiles and caches are not read
 or modified. The result uses the existing 2.0.0 envelope, with independently
 versioned `schema-catalog-v1` and `schema-document-v1` payloads (1.0.0).
 
-The current catalog contains 70 resources: 28 common artifact schemas, 13 domain
-schemas, 14 record schemas, 1 project configuration schema, 7 result schemas,
-6 structured request schemas and 1 local SARIF projection schema. Mapping schema
+The current catalog contains the implemented common, domain and record artifact
+schemas, project configuration, result and structured request schemas, the local
+SARIF projection and the regular Change Plan schema. Mapping schema
 count is zero because no mapping implementation is installed. The SARIF resource
 is the local emitted subset, not the complete third-party SARIF metaschema.
 Neither its existence nor the serializer enables SARIF on unsupported commands.
+
+`urn:specroad:schema:1.2.0:change-plan` is an `exchange` resource with the explicit
+scope `change_plan_fields_only`. The catalog calls the existing
+`changes.schema.change_plan_schema()` factory also used by the Change Plan
+validator. No copied schema, latest-version alias or execution permission is
+introduced. Structural validation does not replace self-hash, operation/result
+bindings, live base checks or publication authorization. The Change Plan format
+version `1.2.0` is independent of the supported model schema `0.2.0`.
 
 Each entry binds the exact schema ID, independent version, experimental stability,
 category, explicit validation scope and SHA-256 of its RFC-8785 canonical schema

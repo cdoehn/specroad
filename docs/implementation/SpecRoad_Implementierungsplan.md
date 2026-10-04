@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 69
+last_completed_numbered_bundle: 70
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-CONTRACT-02.W
+next_audit_step: AUDIT-CONTRACT-02.R
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -67,7 +67,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | offen |
+| F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W umgesetzt; R/C offen; Apply-Nachweis maßgeblich |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01.U | offen; keine pauschale Gesamtimplementierung zugesagt |
 | F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02.U | offen; legitime spätere Adapter abgrenzen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
@@ -697,9 +697,35 @@ Erst das erfolgreiche Apply-Result bestätigt den C-Abschluss. Nächster Schritt
 
 **F06; Voraussetzung:** AUDIT-CONTRACT-01. **Bezug:** 2.q/5.a; SR-REQ-0377/0378; SR-VER-0027; SR-TC-0377/0378. Betroffen: `changes/schema.py`, `changes/plan_contract.py`, `model/schema_sources.py`, `schema_identity.py`, `schema_catalog.py`; `test_schema_catalog.py`.
 
-- [ ] **AUDIT-CONTRACT-02.W:** Das tatsächlich verwendete `urn:specroad:schema:1.2.0:change-plan` über den bestehenden Schemakatalog anbieten. **Abnahme:** Listing und Lookup liefern den vom Change-Plan-Validator verwendeten strukturellen Vertrag.
+- [x] **AUDIT-CONTRACT-02.W:** Das tatsächlich verwendete `urn:specroad:schema:1.2.0:change-plan` über den bestehenden Schemakatalog anbieten. **Abnahme:** Listing und Lookup liefern den vom Change-Plan-Validator verwendeten strukturellen Vertrag.
 - [ ] **AUDIT-CONTRACT-02.R:** Kennungs-/Versionsbehandlung, unabhängige zurückgegebene Schemaobjekte und alle inzwischen verfügbaren öffentlichen strukturellen Schemas abgleichen. **Abnahme:** Unbekannte Kennungen bleiben Fehler; keine veraltete oder nur deklarierte Schemafamilie wird als implementiert ausgegeben.
 - [ ] **AUDIT-CONTRACT-02.C:** Katalogintegration und Schemaidentitäten strukturell bereinigen. **Abnahme:** Stabile Kennungen, Listeninhalte, validierte Daten und Fehlerverträge bleiben erhalten.
+
+**W-Umsetzung (Bundle 070, OFF-PLAN `AUDIT-CONTRACT-02.W`):** Das Result
+`specroad-apply_Result_204811_1004_642827.zip` bestätigt den C-Abschluss von Bundle
+069 mit Commit `7468a78a696b5a9a0b248dcf9e0acd813dfcf968`, sauberem Zustand und
+je 5.714 bestandenen parallelen/seriellen Apply-Tests. Seine 1.444 Snapshotdateien
+stimmen vor dieser Änderung bytegenau mit der Entwicklung überein.
+
+Der bestehende Schemakatalog registriert nun die tatsächlich implementierte
+Kennung `urn:specroad:schema:1.2.0:change-plan` als `exchange` mit dem expliziten
+Prüfumfang `change_plan_fields_only`. Der Provider ruft dieselbe
+`change_plan_schema()`-Funktion auf, die der Change-Plan-Validator verwendet;
+Schemafelder und fachliche Planvalidierung werden nicht dupliziert oder geändert.
+`schema list`, `schema show` und strukturierter Schemaabruf liefern den echten
+vollständigen Feldvertrag einschließlich seiner Metadaten und Hashbindung.
+
+Vier zusätzliche Verhaltenstests prüfen den eindeutigen Katalogeintrag, CLI-/
+Requestgleichheit, einen tatsächlich vorbereiteten Change Plan und abgewiesene
+Format-/Policy-/Operations-/Actorwerte. Ein absichtlich veränderter Plan-Selbsthash
+zeigt weiterhin die Grenze: Das Feldschema ersetzt keine Integritätsprüfung
+oder Ausführungsberechtigung. Der bestehende portable Test ruft das Schema
+zusätzlich in isolierten Modul- und Zipapp-Distributionen ab und prüft Byteerhalt.
+SR-TC-0377/0378 verknüpfen die echten Fixtures und Tests; sie bleiben `partial`.
+
+Commit-Message: `fix(model): expose the existing change plan schema in the catalog`.
+Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster Schritt:
+`AUDIT-CONTRACT-02.R`; Produktstand 237/885 und Sperre von 5.t.W bleiben bestehen.
 
 ### AUDIT-VALIDATION-01 bis 03 – fällige M4-Abdeckung konkret entscheiden
 

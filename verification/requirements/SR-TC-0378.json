@@ -7,7 +7,8 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-SCHEMA-CATALOG-v1"
+    "SR-FIX-SCHEMA-CATALOG-v1",
+    "SR-FIX-CHANGE-PLAN-v1"
   ],
   "preconditions": [
     "Use implemented distribution schemas; no project, network, schema plugin or user file is a schema provider."
@@ -18,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad schema show <SCHEMA-ID> --format json` MUSS das vollständige Schema einschließlich Beschreibungen, Defaults, Beispielen, Enumwerten und deprecation-Hinweisen ausgeben.",
-    "scope": "Complete available structural schema catalog and actual project-free CLI/API retrieval. Field schemas are not lifecycle, graph or evidence approval."
+    "scope": "Available structural schema catalog and actual project-free CLI/API retrieval, including the real Change Plan 1.2.0 factory and its typed field acceptance/rejection; field validation is distinct from integrity, lifecycle, graph and publication authorization."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -51,9 +52,14 @@
     "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_request_examples_remain_executable_input_contracts",
     "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_multi_positional_dependencies_match_actual_request_binding",
     "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_remote_reference_in_schema_is_never_resolved",
-    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_catalog_retrieval_does_not_grant_lifecycle_or_write_approval"
+    "test_schema_catalog_robustness.SchemaCatalogRobustnessTests.test_catalog_retrieval_does_not_grant_lifecycle_or_write_approval",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_resource_is_the_existing_structural_contract",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_cli_and_structured_lookup_return_the_same_schema",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_catalog_validates_real_positive_and_negative_fields",
+    "test_schema_catalog.SchemaCatalogWorkTests.test_change_plan_field_schema_does_not_replace_integrity_checks"
   ],
   "open_items": [
-    "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas."
+    "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas.",
+    "AUDIT-CONTRACT-02.R must complete the version/identity and detached-object regression matrix and inventory other public structural schema producers; C then consolidates schema identities."
   ]
 }

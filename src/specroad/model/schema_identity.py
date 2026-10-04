@@ -25,6 +25,7 @@ def identity_metadata(schema_id):
         "artifact-domain": ("artifact", "domain_fields_only"),
         "artifact-record": ("artifact", "record_fields_only"),
         "project-configuration": ("configuration", "configuration_fields_only"),
+        "change-plan": ("exchange", "change_plan_fields_only"),
         "request": ("request", "request_fields_only")}
     family = parts[4].split(":", 1)[0]
     if family not in category_scopes:

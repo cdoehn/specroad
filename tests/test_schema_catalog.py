@@ -10,6 +10,8 @@ from unittest.mock import patch
 from specroad.cli.application import dispatch_result, execute_request
 from specroad.cli.commands import builtin_registry
 from specroad.cli.results import CommandResult, FailureKind, serialize_result, sarif_document
+from specroad.changes import ChangePlan, ChangePlanError, prepare_change_plan
+from specroad.changes.schema import change_plan_schema
 from specroad.model.schema_catalog import SchemaCatalog, SchemaLookupError
 from specroad.model.artifact_types import artifact_types
 from specroad.model.artifact_schemas import artifact_common_schema, validate_common_fields
@@ -23,6 +25,7 @@ from support.artifacts import common_artifact
 from support.domain import domain_value
 from support.records import record_value
 from support.model import configuration_value
+from support.change_plans import document as change_plan_document
 from support.portable import build_distribution, files_under
 from support.processes import run_core, run_python
 
@@ -67,7 +70,55 @@ class SchemaCatalogWorkTests(unittest.TestCase):
         self.assertEqual(sum(data['categories'].values()), len(data['schemas']))
         self.assertEqual(data['categories']['artifact'], 56)
         self.assertEqual(data['categories']['configuration'], 1)
-        self.assertEqual(data['categories']['exchange'], 1)
+        self.assertEqual(data['categories']['exchange'], 2)
+
+    def test_change_plan_resource_is_the_existing_structural_contract(self):
+        schema_id = 'urn:specroad:schema:1.2.0:change-plan'
+        rows = [row for row in self.catalog.list()['schemas'] if row['schema_id'] == schema_id]
+        self.assertEqual(len(rows), 1)
+        resource = self.catalog.get(schema_id)
+        self.assertEqual(resource.metadata(), rows[0])
+        self.assertEqual(resource.version, '1.2.0')
+        self.assertEqual(resource.category, 'exchange')
+        self.assertEqual(resource.validation_scope, 'change_plan_fields_only')
+        self.assertEqual(resource.schema, change_plan_schema())
+
+    def test_change_plan_cli_and_structured_lookup_return_the_same_schema(self):
+        schema_id = 'urn:specroad:schema:1.2.0:change-plan'
+        listed = dispatch_result(['schema', 'list', '--format=json'])
+        self.assertEqual(listed.exit_code, 0)
+        self.assertIn(schema_id, [row['schema_id'] for row in listed.as_dict()['result']['schemas']])
+        outcomes = (dispatch_result(['schema', 'show', schema_id, '--format=json']),
+                    execute_request({'command_id': 'schema.show',
+                                     'arguments': {'schema_id': schema_id}}).result)
+        for outcome in outcomes:
+            self.assertEqual(outcome.exit_code, 0)
+            self.assertIsNone(outcome.project)
+            self.assertEqual(outcome.as_dict()['result'], self.catalog.show(schema_id))
+
+    def test_change_plan_catalog_validates_real_positive_and_negative_fields(self):
+        schema_id = 'urn:specroad:schema:1.2.0:change-plan'
+        plan = prepare_change_plan(change_plan_document())
+        self.catalog.validate(schema_id, plan.data)
+        self.assertEqual(ChangePlan(plan.canonical_bytes).data, plan.data)
+        for name, value in (('format_version', '1.0.0'), ('metadata_policy_version', 'invented'),
+                            ('operations', [{'op': 'execute', 'command': 'never'}]),
+                            ('actor', {'actor_type': 'invented', 'actor_id': 'x'})):
+            with self.subTest(field=name):
+                invalid = plan.data; invalid[name] = value
+                with self.assertRaises(ModelError):
+                    self.catalog.validate(schema_id, invalid)
+                with self.assertRaises(ChangePlanError):
+                    ChangePlan(canonical_json_bytes(invalid))
+
+    def test_change_plan_field_schema_does_not_replace_integrity_checks(self):
+        value = prepare_change_plan(change_plan_document()).data
+        value['change_plan_sha256'] = '0' * 64
+        self.catalog.validate('urn:specroad:schema:1.2.0:change-plan', value)
+        with self.assertRaises(ChangePlanError) as caught:
+            ChangePlan(canonical_json_bytes(value))
+        self.assertEqual(caught.exception.reason, 'change_plan_hash_mismatch')
+        self.assertEqual(dispatch_result(['change', 'apply']).exit_code, 2)
 
     def test_hash_binds_the_full_jcs_schema_not_a_local_path(self):
         for item in self.catalog.list()['schemas']:
@@ -209,7 +260,8 @@ class SchemaCatalogWorkTests(unittest.TestCase):
                 run = run_python(['-I','-S','-B',str(target),'schema','list','--format=json'],project,capture=True)
                 self.assertEqual(run.returncode, 0, run.stderr)
                 snapshots.append(json.loads(run.stdout)['result'])
-                show = run_python(['-I','-S','-B',str(target),'schema','show',SCHEMA_ID,'--format=json'],project,capture=True)
-                self.assertEqual(show.returncode, 0, show.stderr)
-                self.assertEqual(json.loads(show.stdout)['result'], self.catalog.show(SCHEMA_ID))
+                for schema_id in (SCHEMA_ID, 'urn:specroad:schema:1.2.0:change-plan'):
+                    show = run_python(['-I','-S','-B',str(target),'schema','show',schema_id,'--format=json'],project,capture=True)
+                    self.assertEqual(show.returncode, 0, show.stderr)
+                    self.assertEqual(json.loads(show.stdout)['result'], self.catalog.show(schema_id))
             self.assertEqual(snapshots[0], snapshots[1]); self.assertEqual(files_under(root), before)
