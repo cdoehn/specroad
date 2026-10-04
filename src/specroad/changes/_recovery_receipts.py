@@ -2,6 +2,7 @@
 import os
 from ..security import paths as guards
 from ._journal_io import _read
+from ._recovery_binding import check_directory_binding
 from .execution_values import ChangeExecutionError
 from .recovery_values import RecoveryError
 
@@ -49,8 +50,8 @@ def ensure_recovery_record(files, record, *, write_new, before_create=None,
             def check():
                 before_publish()
                 with files.directory(parts) as current:
-                    if current is None or guards._identity(os.fstat(current)) != parent_identity:
-                        raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
+                    check_directory_binding(current, parent_identity,
+                        reason='recovery_receipt_changed', path=record.path)
             identity = write_new(directory, name, record.source_bytes, before_publish=check)
     token = existing_recovery_record(files, record)
     if token is None or token[1] != identity:

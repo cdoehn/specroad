@@ -8,6 +8,8 @@ from .committing_values import CommittingJournal
 from .execution_values import ChangeExecutionError
 from .locking import HeldProjectLock
 from ._recovery_binding import check_run_lock as _completion_lock
+from ._recovery_binding import check_journal_binding
+from ._recovery_files import sync_recovery_file
 from .receipt_projection import prepare_recovery_receipts
 from .receipt_values import CommittedJournal, TransactionCompletion
 from .recovery_values import RecoveryAuthority, RecoveryError
@@ -108,10 +110,7 @@ def _commit_recovered_journal(files, journal, committed, directory_identity, *,
                               write_new, replace, before_mutation, before_publish):
     prefix = tuple(journal.path.split('/')[:-1])
     with files.directory(prefix) as directory:
-        if directory is None or guards._identity(os.fstat(directory)) != directory_identity:
-            raise RecoveryError('recovery_work_changed', exit_code=6)
-        if _read(directory, 'journal.json') != journal.source_bytes:
-            raise RecoveryError('recovery_journal_changed', exit_code=6)
+        check_journal_binding(directory, journal, directory_identity)
         pending = 'journal.complete'
         try:
             info = os.stat(pending, dir_fd=directory, follow_symlinks=False)
@@ -129,15 +128,8 @@ def _commit_recovered_journal(files, journal, committed, directory_identity, *,
             if existing != committed.source_bytes:
                 raise RecoveryError('recovery_completion_marker_conflict', exit_code=6)
         _image(directory, pending, len(committed.source_bytes), committed.sha256, identity=identity)
-        fd = os.open(pending, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0),
-                     dir_fd=directory)
-        try:
-            if guards._identity(os.fstat(fd)) != identity:
-                raise RecoveryError('recovery_completion_marker_conflict', exit_code=6)
-            os.fsync(fd)
-        finally:
-            os.close(fd)
-        os.fsync(directory)
+        sync_recovery_file(directory, pending, identity,
+                           reason='recovery_completion_marker_conflict')
         before_publish()
         _image(directory, pending, len(committed.source_bytes), committed.sha256, identity=identity)
         before_mutation()

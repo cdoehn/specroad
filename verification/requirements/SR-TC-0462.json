@@ -184,7 +184,7 @@
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-rollback_receipt]"
   ],
   "open_items": [
-    "AUDIT-REC-04.W/R cover the ten confirmed derivative writes; structural consolidation remains AUDIT-REC-04.C. Automatic preflight, the comprehensive fault-injection matrix, discard restart reconstruction and full-source restore remain in their separate plan positions.",
+    "Automatic preflight, the comprehensive fault-injection matrix, discard restart reconstruction and full-source restore remain in their separate plan positions.",
     "Restore and its qualified source, preservation and target inventories remain assigned to the later restore implementation; no complete SR-REQ-0462 acceptance is claimed."
   ]
 }

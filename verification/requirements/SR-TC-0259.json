@@ -321,7 +321,7 @@
     "tests/test_recovery_auxiliary_writes.py::test_existing_completion_marker_is_synced_before_journal_replacement"
   ],
   "open_items": [
-    "AUDIT-REC-04.W/R cover the ten confirmed derivative writes; structural consolidation remains AUDIT-REC-04.C. Automatic preflight, the comprehensive fault-injection matrix, discard restart reconstruction and full-source restore remain in their separate plan positions.",
+    "Automatic preflight, the comprehensive fault-injection matrix, discard restart reconstruction and full-source restore remain in their separate plan positions.",
     "Discard still requires the independent preflight; restart reconstruction remains AUDIT-REC-05. Full command/authentication/restore integration remains later work.",
     "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]

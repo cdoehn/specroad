@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 60
+last_completed_numbered_bundle: 62
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-04.C
+next_audit_step: AUDIT-REC-05.U
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -65,7 +65,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F01 – Recovery prüft nur journalbekannte Dateien | statisch nachgewiesene Lücke / hoch | 5.q–5.s; SR-REQ-0258/0459/0511 | AUDIT-REC-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R umgesetzt; Strukturkonsolidierung C offen |
+| F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | offen |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | offen |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01.U | offen; keine pauschale Gesamtimplementierung zugesagt |
@@ -335,7 +335,7 @@ Nachweis Blocker. Originalimages, Journale und abgeschlossene Belege bleiben erh
 
 - [x] **AUDIT-REC-04.W:** Den kleinsten bestätigten Fall am initialen `journal.rollback`-Write unter exakt gebundenem Recoverylock sicher fortsetzbar machen. **Abnahme:** Unterbrechung nach exklusiver Anlage und während des Writes lässt einen erneuten expliziten Aufruf mit intakten Quellen auf die vollständige gebundene Basis abschließen; ein weiterer Aufruf schreibt keine normativen Bytes. Fremde, widersprüchliche oder nur präfixgleiche ungebundene Dateien werden weder übernommen noch überschrieben. Der eigene Schreibversuch braucht einen überprüfbaren Herkunfts-/Inhaltsnachweis oder eine Veröffentlichung, die solche ungebundenen Teilzustände vermeidet; die konkrete Umsetzung wird im W-Commit begründet.
 - [x] **AUDIT-REC-04.R:** Die übrigen bestätigten Varianten vervollständigen: Rollbackkopie, Cursorjournal nach bereits erfolgter Restauration, terminales Rollbackjournal, Transaktions-/Requestreceipt, `journal.complete` sowie terminale Recoveryaktionsbelege und Rollbackreceipt. **Abnahme:** Erneute Unterbrechung bleibt fortsetzbar; bereits restaurierte beziehungsweise veröffentlichte normative Bytes werden nicht erneut geschrieben. Basis/Vollziel, Originalbelege und frühere Autoritätszuordnung bleiben gebunden. Veränderte Quellen, fremde beziehungsweise ungebundene Reste und unsichere Dateitypen bleiben Blocker; bereits vollständige Dateien behalten ihre geprüfte Wiederverwendung. Zulässige eigene Arbeitsreste müssen mit dem vorhandenen beleggeprüften Abschluss-/Bereinigungspfad vereinbar sein.
-- [ ] **AUDIT-REC-04.C:** Nach W/R gemeinsame Bindungsprüfung, Hilfsdatei-Wiederaufnahme und Konfliktklassifikation strukturieren. **Abnahme:** Fachresultate, strukturierte Fehler, Mutationsbilanz, Beweiserhalt und zulässige Seiteneffekte bleiben gegenüber R unverändert; kein neues Reparaturverhalten.
+- [x] **AUDIT-REC-04.C:** Nach W/R gemeinsame Bindungsprüfung, Hilfsdatei-Wiederaufnahme und Konfliktklassifikation strukturieren. **Abnahme:** Fachresultate, strukturierte Fehler, Mutationsbilanz, Beweiserhalt und zulässige Seiteneffekte bleiben gegenüber R unverändert; kein neues Reparaturverhalten.
 
 Der U-Commit verändert keine Produktlogik und stuft keine Requirementabnahme hoch.
 Commit-Message: `docs(recovery): confirm interrupted helper restart gaps`.
@@ -412,6 +412,40 @@ nicht auf diesen Ausschnitt vorgezogen.
 Commit-Message: `fix(recovery): resume all bound auxiliary writes after interruptions`.
 Als Nächstes folgt `AUDIT-REC-04.C`: gemeinsame Bindungsprüfung, Wiederaufnahme
 und Konfliktbehandlung strukturieren, bei unveränderten W-/R-Verträgen.
+
+**C-Ergebnis (Bundle 062, OFF-PLAN `AUDIT-REC-04.C`):**
+Das gemeinsame Modul `_recovery_files.py` bündelt die namenlose Vorbereitung,
+die exakte Wiederverwendung von Rollbackhilfsdateien und die Synchronisation
+einer gebundenen Inode mit ihrem Verzeichniseintrag. Rollback und Completion
+verwenden dieselbe Synchronisationsfunktion. Ihre jeweils davor und danach
+liegenden Inhalts- und Veröffentlichungsprüfungen behalten die bisherige
+Reihenfolge. Der initiale Rollbacknachfolger delegiert mit seinen unveränderten
+W-Fehlerkennungen an den gemeinsamen Writer.
+
+`_recovery_binding.py` bündelt zusätzlich die Verzeichnisidentitätsprüfung und
+die Prüfung des exakten Vorgängerjournals. Journalwechsel, Rollbackkopien und
+Receiptveröffentlichung verwenden diese Prüfungen mit ihren bisherigen
+Fehlergründen und Pfaden. Operationsspezifische Inventur-, Lock-, Quellen- und
+Vorgängerbelegprüfungen bleiben an ihren bisherigen Aufrufgrenzen.
+
+Die vorhandenen W/R-Verhaltenstests bleiben bytegleich. Das Refactoring erhält
+Fachresultate, Belegbytes und Autoritätszuordnung, Fehlercodes und Mutationsbilanz
+sowie die zulässigen Dateieffekte. Die fünf betroffenen Requirementmanifeste
+führen die Strukturkonsolidierung nicht länger als offene Nacharbeit; ihre
+Teilnachweise und übrigen offenen Abnahmen bleiben erhalten. Dieser Schritt
+führt kein neues Reparaturverhalten ein und erhöht den Produktzähler nicht.
+
+**Korrektur der Übergabe 061:** Das Result
+`specroad-apply_Result_104253_1004_8ac543.zip` bestätigt jeweils 5.545 bestandene
+Tests parallel und seriell. Danach scheiterte `git diff --cached --check` an
+einer zusätzlichen Leerzeile am Ende der neuen `_recovery_files.py`.
+Es entstand kein Commit; die 14 vorgesehenen Dateien blieben im Index erhalten.
+Bundle 062 bindet diesen tatsächlichen Zustand und korrigiert die Leerzeile
+sowie den Bundle-Verweis. Die gesamte C-Änderung bleibt derselbe Commitumfang;
+der Abschluss folgt erst nach erneuten erfolgreichen vorgeschriebenen Tests.
+
+Commit-Message: `refactor(recovery): centralize auxiliary file bindings and durability`.
+Als Nächstes folgt `AUDIT-REC-05.U`; der Produktzähler bleibt 237/885.
 
 ### AUDIT-REC-05 – unveröffentlichter Discard nach echtem Neustart
 

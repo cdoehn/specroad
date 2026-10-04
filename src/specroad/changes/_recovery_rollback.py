@@ -7,7 +7,6 @@ Newly-created target bytes are atomically moved into the transaction rollback
 area instead of being destroyed.  A durable journal decrement follows each
 observed/restored basis member.
 """
-from hashlib import sha256
 import os
 
 from ..model.canonical import canonical_json_bytes
@@ -18,6 +17,7 @@ from .committing_values import CommittingJournal
 from .execution_values import ChangeExecutionError
 from .locking import HeldProjectLock
 from ._recovery_binding import check_run_lock as _rollback_lock
+from ._recovery_binding import check_directory_binding, check_journal_binding
 from .publication_check import _rights
 from .recovery_values import (RecoveryAuthority, RecoveryError,
     RecoveryObservation, RolledBackJournal, RollingBackJournal)
@@ -26,11 +26,12 @@ from ._journal_io import _read
 from ._recovery_inputs import _parse, _read_journal
 from ._recovery_inventory import verified_membership
 from ._recovery_bytes import fingerprint_recovery_file as _fingerprint
-from ._staging_files import _image, _write_new
+from ._staging_files import _image
 from ._publication_io import replace_bound_image
 from ._recovery_evidence import EvidenceRecord, rollback_evidence, sync_evidence
 from ._recovery_receipts import existing_recovery_record
-from ._recovery_initial import write_initial_successor, write_recovery_file
+from ._recovery_initial import write_initial_successor
+from ._recovery_files import ensure_exact_recovery_file, write_recovery_file
 
 
 def _authorize(authority, journal):
@@ -135,53 +136,14 @@ def _journal_successor(journal, *, initial=False, terminal=False):
     return RollingBackJournal(canonical_json_bytes(data))
 
 
-def _ensure_exact_file(directory, name, raw, *, reason, write_new=None):
-    """Create once or resume an exact durable operational file after interruption."""
-    digest = sha256(raw).hexdigest()
-    try:
-        info = os.stat(name, dir_fd=directory, follow_symlinks=False)
-    except FileNotFoundError:
-        identity = (write_new or _write_new)(directory, name, raw)
-    else:
-        try:
-            guards._regular(info)
-            if info.st_nlink != 1:
-                raise RecoveryError(reason, exit_code=7)
-            identity = guards._identity(info)
-            if _read(directory, name, expected_identity=identity) != raw:
-                raise RecoveryError(reason, exit_code=6)
-        except (SafetyViolation, ChangeExecutionError) as error:
-            if isinstance(error, RecoveryError):
-                raise
-            raise RecoveryError(reason, exit_code=6) from error
-    _image(directory, name, len(raw), digest, identity=identity)
-    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0),
-                 dir_fd=directory)
-    try:
-        if guards._identity(os.fstat(fd)) != identity:
-            raise RecoveryError(reason, exit_code=6)
-        os.fsync(fd)
-    finally:
-        os.close(fd)
-    os.fsync(directory)
-    _image(directory, name, len(raw), digest, identity=identity)
-    return identity
-
-
 def _replace_journal(files, journal, successor, directory_identity, *, before_publish):
     prefix = tuple(journal.path.split('/')[:-1])
     with files.directory(prefix) as directory:
-        if directory is None or guards._identity(os.fstat(directory)) != directory_identity:
-            raise RecoveryError('recovery_work_changed', exit_code=6)
-        if _read(directory, 'journal.json') != journal.source_bytes:
-            raise RecoveryError('recovery_journal_changed', exit_code=6)
+        check_journal_binding(directory, journal, directory_identity)
         def unchanged():
             before_publish()
             with files.directory(prefix) as current:
-                if current is None or guards._identity(os.fstat(current)) != directory_identity:
-                    raise RecoveryError('recovery_work_changed', exit_code=6)
-                if _read(current, 'journal.json') != journal.source_bytes:
-                    raise RecoveryError('recovery_journal_changed', exit_code=6)
+                check_journal_binding(current, journal, directory_identity)
 
         def create(parent, name, raw):
             if type(journal) is CommittingJournal:
@@ -189,8 +151,9 @@ def _replace_journal(files, journal, successor, directory_identity, *, before_pu
             return write_recovery_file(parent, name, raw, before_publish=unchanged,
                                        conflict_reason='recovery_journal_successor_conflict')
 
-        identity = _ensure_exact_file(directory, 'journal.rollback', successor.source_bytes,
-                                      reason='recovery_journal_successor_conflict', write_new=create)
+        identity = ensure_exact_recovery_file(
+            directory, 'journal.rollback', successor.source_bytes,
+            reason='recovery_journal_successor_conflict', write_new=create)
         unchanged()
         _image(directory, 'journal.rollback', len(successor.source_bytes),
                successor.sha256, identity=identity)
@@ -217,13 +180,12 @@ def _copy_before(files, journal, entry, index, target_token, *, before_publish):
                 _image(source, before_name, entry['before_size'], entry['before_sha256'],
                        identity=source_identity)
             with files.directory((*prefix, 'rollback')) as current:
-                if current is None or guards._identity(os.fstat(current)) != parent_identity:
-                    raise RecoveryError('recovery_work_changed', exit_code=6)
+                check_directory_binding(current, parent_identity)
         def create(parent, filename, content):
             return write_recovery_file(parent, filename, content, before_publish=check,
                                        conflict_reason='recovery_restore_stage_conflict')
-        identity = _ensure_exact_file(rollback, name, raw,
-                                      reason='recovery_restore_stage_conflict', write_new=create)
+        identity = ensure_exact_recovery_file(
+            rollback, name, raw, reason='recovery_restore_stage_conflict', write_new=create)
         check()
         parts = tuple(entry['path'].split('/'))
         with files.directory(parts[:-1]) as target:

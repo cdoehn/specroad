@@ -1,4 +1,8 @@
-"""One native lock binding check for explicit transaction recovery actions."""
+"""Native lock, working directory and predecessor bindings for recovery writes."""
+import os
+
+from ..security import paths as guards
+from ._journal_io import _read
 from .locking import HeldProjectLock
 from .recovery_values import RecoveryError
 
@@ -21,3 +25,16 @@ def check_run_lock(held, journal):
 
 def check_discard_lock(held, journal):
     _check_recovery_lock(held, journal, 'recover discard')
+
+
+def check_directory_binding(directory, identity, *, reason='recovery_work_changed', path=None):
+    """Keep a reopened directory bound, with the caller's existing conflict path."""
+    if directory is None or guards._identity(os.fstat(directory)) != identity:
+        raise RecoveryError(reason, path=path, exit_code=6)
+
+
+def check_journal_binding(directory, journal, directory_identity):
+    """Check the work directory before reading its exact journal predecessor."""
+    check_directory_binding(directory, directory_identity)
+    if _read(directory, 'journal.json') != journal.source_bytes:
+        raise RecoveryError('recovery_journal_changed', exit_code=6)

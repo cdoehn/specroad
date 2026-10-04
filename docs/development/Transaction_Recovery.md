@@ -460,3 +460,21 @@ prüfen weiterhin den Fehlervertrag; eigene namenlose Teilbytes werden dabei
 nicht mehr als dauerhaft sichtbarer benannter Rest erwartet. Fremde kurze
 Dateien bleiben unverändert Blocker. Die Linux-Voraussetzungen aus W gelten
 weiter; Discard- und Cleanup-Schreibprotokolle behalten ihr bisheriges Verhalten.
+
+## AUDIT-REC-04.C: gemeinsame Bindungs- und Dateifunktionen
+
+`_recovery_files.py` enthält den gemeinsamen Writer für vollständig vorbereitete
+namenlose Hilfsdateien, die exakte Wiederaufnahme von Rollbackhilfsdateien und
+die Synchronisation einer gebundenen Datei samt Verzeichniseintrag. Der initiale
+Rollbacknachfolger bleibt ein dünner Aufrufer mit seinen bisherigen Fehlerkennungen.
+Rollback und Completion teilen die Synchronisation; ihre Inhaltsprüfungen und
+Veröffentlichungsprüfungen bleiben davor beziehungsweise danach an derselben Stelle.
+Die Elternkettensynchronisation unveränderbarer Belege bleibt getrennt.
+
+`_recovery_binding.py` prüft neben dem nativen Lock die Identität eines erneut
+geöffneten Arbeitsverzeichnisses und das exakte Vorgängerjournal. Die Aufrufer
+behalten ihre Konfliktgründe und betroffenen Pfade. Quellen-, Vollinventur- und
+Vorgängerbelegprüfungen erfolgen weiterhin in der jeweiligen Recovery-Operation.
+Ergebnisse, Fehlerverträge, Mutationsbilanz und Dateieffekte entsprechen W/R;
+deren Verhaltenstests bleiben unverändert. Nächster Schritt ist die Untersuchung
+des unveröffentlichten Discards nach Prozessneustart in `AUDIT-REC-05.U`.
