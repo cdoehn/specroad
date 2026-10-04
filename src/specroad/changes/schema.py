@@ -1,13 +1,12 @@
 """Closed, detached schema for regular Change Plans, format 1.2.0."""
-from ..model.artifact_schemas import DIALECT
+from ..model.schema_identity import (DIALECT, CHANGE_PLAN_VERSION as FORMAT_VERSION,
+                                     CHANGE_PLAN_ID as SCHEMA_ID, CHANGE_PLAN_SCOPE)
 from ..model.audit_fields import audit_definitions
 from ._schema_fields import obj, arr, text, digest, revision, expected
 from .operation_registry import OPERATION_TYPES, operation_schema
 from .request_ids import request_id_schema
 
-FORMAT_VERSION = "1.2.0"
 METADATA_POLICY = "change-metadata-v1"
-SCHEMA_ID = "urn:specroad:schema:1.2.0:change-plan"
 
 def precondition_schema():
     return {"anyOf": [
@@ -32,6 +31,5 @@ def change_plan_schema():
         "change_plan_sha256": digest(),
     }
     return {**obj(fields), "$defs": defs, "$schema": DIALECT, "$id": SCHEMA_ID,
-            "x-specroad-validation-scope": "change_plan_fields_only",
+            "x-specroad-validation-scope": CHANGE_PLAN_SCOPE,
             "description": "Regular typed Change Plan. No execution, state validation or write authorization."}
-

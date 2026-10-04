@@ -68,7 +68,6 @@
     "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_empty_command_registry_preserves_change_plan_resource"
   ],
   "open_items": [
-    "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas.",
-    "AUDIT-CONTRACT-02.C remains open for structural identity consolidation; R found no additional missing standalone schema factory. Embedded field schemas and procedural validators do not acquire fabricated resource IDs."
+    "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas."
   ]
 }

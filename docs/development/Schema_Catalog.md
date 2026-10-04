@@ -64,7 +64,12 @@ relation requirement intentionally demonstrates this boundary.
 
 ## Shared resources and boundaries
 
-`schema_identity` owns only identity metadata. `schema_sources` references the
+`schema_identity` owns only identity metadata, including the shared Change Plan
+format version, family, exact ID and field-validation scope. The Change Plan
+factory retains its public `FORMAT_VERSION` and `SCHEMA_ID` names as imports of
+those values. Provider discovery uses the same identity without importing the
+Change Plan package; actual schema retrieval still invokes its trusted factory.
+`schema_sources` references the
 existing validators' trusted resource factories; it contains no duplicated schema
 content. `SchemaResource` owns canonical bytes, validates their binding and
 supplies both detached schema retrieval and assertion evaluation from those same

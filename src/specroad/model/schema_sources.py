@@ -8,7 +8,8 @@ from .domain_schemas import DOMAIN_TYPES, domain_schema
 from .record_schemas import RECORD_TYPES, record_schema
 from .configuration_schema import SCHEMA_ID, configuration_json_schema
 from .versions import SCHEMA_VERSION
-from .schema_identity import RESULT_IDS, identity_metadata
+from .schema_identity import (RESULT_IDS, CHANGE_PLAN_FAMILY, CHANGE_PLAN_ID,
+                              CHANGE_PLAN_VERSION, identity_metadata)
 
 
 @dataclass(frozen=True)
@@ -20,7 +21,6 @@ class SchemaProvider:
 
 
 def providers_for(registry):
-    from ..changes.schema import FORMAT_VERSION as CHANGE_PLAN_VERSION, SCHEMA_ID as CHANGE_PLAN_ID
     providers = {}
     for entry in artifact_types():
         providers[entry.schema_id] = SchemaProvider("artifact", SCHEMA_VERSION, "common", entry.artifact_type)
@@ -29,7 +29,7 @@ def providers_for(registry):
     for kind in RECORD_TYPES:
         providers["urn:specroad:schema:" + SCHEMA_VERSION + ":artifact-record:" + kind] = SchemaProvider("artifact", SCHEMA_VERSION, "record", kind)
     providers[SCHEMA_ID] = SchemaProvider("configuration", SCHEMA_VERSION, "configuration", None)
-    providers[CHANGE_PLAN_ID] = SchemaProvider("exchange", CHANGE_PLAN_VERSION, "change-plan", None)
+    providers[CHANGE_PLAN_ID] = SchemaProvider("exchange", CHANGE_PLAN_VERSION, CHANGE_PLAN_FAMILY, None)
     for schema_id in RESULT_IDS:
         version, category, _ = identity_metadata(schema_id)
         providers[schema_id] = SchemaProvider(category, version, "result", schema_id)
@@ -50,7 +50,7 @@ def provider_document(provider, registry):
         return record_schema(key)
     if family == "configuration":
         return configuration_json_schema()
-    if family == "change-plan":
+    if family == CHANGE_PLAN_FAMILY:
         from ..changes.schema import change_plan_schema
         return change_plan_schema()
     if family == "result":

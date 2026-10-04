@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 71
+last_completed_numbered_bundle: 72
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-CONTRACT-02.C
+next_audit_step: AUDIT-VALIDATION-01.U
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -67,7 +67,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R umgesetzt; C offen; Apply-Nachweis maßgeblich |
+| F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01.U | offen; keine pauschale Gesamtimplementierung zugesagt |
 | F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02.U | offen; legitime spätere Adapter abgrenzen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
@@ -699,7 +699,7 @@ Erst das erfolgreiche Apply-Result bestätigt den C-Abschluss. Nächster Schritt
 
 - [x] **AUDIT-CONTRACT-02.W:** Das tatsächlich verwendete `urn:specroad:schema:1.2.0:change-plan` über den bestehenden Schemakatalog anbieten. **Abnahme:** Listing und Lookup liefern den vom Change-Plan-Validator verwendeten strukturellen Vertrag.
 - [x] **AUDIT-CONTRACT-02.R:** Kennungs-/Versionsbehandlung, unabhängige zurückgegebene Schemaobjekte und alle inzwischen verfügbaren öffentlichen strukturellen Schemas abgleichen. **Abnahme:** Unbekannte Kennungen bleiben Fehler; keine veraltete oder nur deklarierte Schemafamilie wird als implementiert ausgegeben.
-- [ ] **AUDIT-CONTRACT-02.C:** Katalogintegration und Schemaidentitäten strukturell bereinigen. **Abnahme:** Stabile Kennungen, Listeninhalte, validierte Daten und Fehlerverträge bleiben erhalten.
+- [x] **AUDIT-CONTRACT-02.C:** Katalogintegration und Schemaidentitäten strukturell bereinigen. **Abnahme:** Stabile Kennungen, Listeninhalte, validierte Daten und Fehlerverträge bleiben erhalten.
 
 **W-Umsetzung (Bundle 070, OFF-PLAN `AUDIT-CONTRACT-02.W`):** Das Result
 `specroad-apply_Result_204811_1004_642827.zip` bestätigt den C-Abschluss von Bundle
@@ -755,6 +755,30 @@ die fachlichen Regressionsnachweise, ohne Ressourcen oder Laufzeitverhalten zu
 Commit-Message: `test(model): harden catalog identity and isolation coverage`.
 Erst das erfolgreiche Apply-Result bestätigt diesen R-Abschluss. Nächster Schritt:
 `AUDIT-CONTRACT-02.C`; Produktstand 237/885 und Sperre von 5.t.W bleiben bestehen.
+
+**C-Umsetzung (Bundle 072, OFF-PLAN `AUDIT-CONTRACT-02.C`):** Das Result
+`specroad-apply_Result_222356_1004_4cafee.zip` bestätigt den R-Abschluss mit Commit
+`cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33`, sauberem Zustand und je 5.727
+bestandenen parallelen/seriellen Apply-Tests. Alle 1.445 Snapshotdateien stimmen
+vor dieser Änderung bytegenau mit dem Entwicklungsstand überein.
+
+Die bestehende `model/schema_identity.py` hält nun die gemeinsame Change-Plan-
+Formatversion, Familie, daraus zusammengesetzte Ressourcenkennung und den
+Prüfumfang. Schema-Fabrik, Ressourcenmetadaten und Provider verwenden diese
+Identität. Die bisherigen öffentlichen Namen `changes.schema.FORMAT_VERSION`
+und `SCHEMA_ID` bleiben als Importe mit identischen Werten verfügbar. Die
+Providerinventur benötigt für diese reinen Identitätsdaten keinen Import des
+Change-Plan-Pakets; die reale Schema-Fabrik wird weiterhin erst beim Abruf geladen.
+
+Alle veröffentlichten Schemawerte, Katalogeinträge, Hashbindungen, Fehlerverträge
+und Annahme-/Ablehnungsgrenzen bleiben erhalten. W-/R-Verhaltenstests werden
+unverändert übernommen; es entstehen keine Struktur- oder Dokumentationstests.
+SR-TC-0377/0378 behalten ihren tatsächlichen Teilumfang und Status `partial`.
+
+Commit-Message: `refactor(model): share change plan schema identity`.
+Erst das erfolgreiche Apply-Result bestätigt diesen C-Abschluss. Danach folgt
+`AUDIT-VALIDATION-01.U`; der Produktzähler bleibt 237/885, und 5.t.W bleibt bis
+`AUDIT-CLOSE` gesperrt.
 
 ### AUDIT-VALIDATION-01 bis 03 – fällige M4-Abdeckung konkret entscheiden
 

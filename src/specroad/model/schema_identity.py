@@ -6,6 +6,10 @@ CATEGORIES = ("artifact", "configuration", "mapping", "result", "exchange", "req
 ENVELOPE_ID = "json-envelope-v2"
 RESULT_IDS = (ENVELOPE_ID, "help-v1", "version-info-v1", "command-description-v1",
               "capabilities-v1", "schema-catalog-v1", "schema-document-v1", "sarif-specroad-v1")
+CHANGE_PLAN_VERSION = "1.2.0"
+CHANGE_PLAN_FAMILY = "change-plan"
+CHANGE_PLAN_ID = "urn:specroad:schema:" + CHANGE_PLAN_VERSION + ":" + CHANGE_PLAN_FAMILY
+CHANGE_PLAN_SCOPE = "change_plan_fields_only"
 
 
 def identity_metadata(schema_id):
@@ -25,7 +29,7 @@ def identity_metadata(schema_id):
         "artifact-domain": ("artifact", "domain_fields_only"),
         "artifact-record": ("artifact", "record_fields_only"),
         "project-configuration": ("configuration", "configuration_fields_only"),
-        "change-plan": ("exchange", "change_plan_fields_only"),
+        CHANGE_PLAN_FAMILY: ("exchange", CHANGE_PLAN_SCOPE),
         "request": ("request", "request_fields_only")}
     family = parts[4].split(":", 1)[0]
     if family not in category_scopes:
