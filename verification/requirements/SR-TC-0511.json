@@ -10,17 +10,20 @@
     "SR-FIX-TRANSACTION-COMMITTING-v1"
   ],
   "preconditions": [
-    "Owned native Linux transaction and independently checked publication model, plan and complete file inventories."
+    "Owned native Linux transaction and independently checked publication model, plan and complete file inventories.",
+    "Initial successor publication requires native Linux O_TMPFILE support and a usable /proc/self/fd link; unavailable host operations fail without a named-write fallback."
   ],
   "steps": [
     "Interrupt a real publication and observe the complete current normative membership and exact bytes.",
     "Complete the bound full target or restore the bound basis; preserve foreign files and all recovery evidence.",
-    "Reject additional, missing, changed and concurrently observed resources; compare mutation and read-only diagnosis."
+    "Reject additional, missing, changed and concurrently observed resources; compare mutation and read-only diagnosis.",
+    "Interrupt the initial rollback successor after anonymous allocation or partial writing, including real process stops and audited native lock takeover; resume to independently bound basis bytes, retry without another normative effect, and complete preserving cleanup.",
+    "Retain foreign empty/short/conflicting/linked helpers and publication-time collisions. Reject changed journal or target inputs, damaged staged content and unavailable anonymous staging; resume exact complete successors after lost synchronization or link responses."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Transaktion in `committing` MUSS anhand der Hashes deterministisch vollständig zurückgerollt werden, sofern der vollständige Zielstand nicht nachweisbar veröffentlicht ist.",
-    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the existing checked journal contract. Explicit Recovery API and observation only; no independent profile reconstruction, automatic recovery, cleanup or complete requirement acceptance is claimed."
+    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the existing checked journal contract. Explicit Recovery API and observation only; no independent profile reconstruction, automatic recovery, cleanup or complete requirement acceptance is claimed. Initial committing-to-rolling_back successor publication exposes only complete byte-verified content. Native write/process interruptions retain the original journal and images; an explicit retry reaches the independent basis, and another retry performs no normative replacement. Foreign or unbound helpers remain blockers. Other short auxiliary writes remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -52,9 +55,33 @@
     "tests/test_recovery_inventory.py::test_rollback_matches_independently_bound_full_basis_bytes_and_root",
     "tests/test_recovery_inventory_right.py::test_failed_target_check_never_selects_rollback_of_proven_full_target",
     "tests/test_recovery_inventory_right.py::test_extra_member_after_receipt_creation_preserves_receipts_and_reports_mutation",
-    "tests/test_recovery_inventory_right.py::test_extra_member_after_rollback_terminal_write_cannot_be_reported_as_success"
+    "tests/test_recovery_inventory_right.py::test_extra_member_after_rollback_terminal_write_cannot_be_reported_as_success",
+    "tests/test_recovery_initial_successor.py::test_foreign_initial_successor_appearing_at_link_is_not_replaced[False]",
+    "tests/test_recovery_initial_successor.py::test_foreign_initial_successor_appearing_at_link_is_not_replaced[True]",
+    "tests/test_recovery_initial_successor.py::test_initial_publication_rechecks_bound_inputs_after_staging[journal]",
+    "tests/test_recovery_initial_successor.py::test_initial_publication_rechecks_bound_inputs_after_staging[target]",
+    "tests/test_recovery_initial_successor.py::test_initial_staged_content_is_verified_before_publication[changed]",
+    "tests/test_recovery_initial_successor.py::test_initial_staged_content_is_verified_before_publication[truncated]",
+    "tests/test_recovery_initial_successor.py::test_initial_write_interruption_resumes_basis_without_second_effect[empty]",
+    "tests/test_recovery_initial_successor.py::test_initial_write_interruption_resumes_basis_without_second_effect[file_sync]",
+    "tests/test_recovery_initial_successor.py::test_initial_write_interruption_resumes_basis_without_second_effect[link_after]",
+    "tests/test_recovery_initial_successor.py::test_initial_write_interruption_resumes_basis_without_second_effect[link_before]",
+    "tests/test_recovery_initial_successor.py::test_initial_write_interruption_resumes_basis_without_second_effect[parent_sync]",
+    "tests/test_recovery_initial_successor.py::test_initial_write_interruption_resumes_basis_without_second_effect[prefix]",
+    "tests/test_recovery_initial_successor.py::test_real_initial_process_stop_resumes_with_audited_native_takeover[empty]",
+    "tests/test_recovery_initial_successor.py::test_real_initial_process_stop_resumes_with_audited_native_takeover[prefix]",
+    "tests/test_recovery_initial_successor.py::test_unavailable_initial_atomic_staging_preserves_project[filesystem]",
+    "tests/test_recovery_initial_successor.py::test_unavailable_initial_atomic_staging_preserves_project[flag]",
+    "tests/test_recovery_initial_successor.py::test_unavailable_initial_atomic_staging_preserves_project[proc_link]",
+    "tests/test_recovery_initial_successor.py::test_unbound_existing_initial_successor_is_preserved[conflict]",
+    "tests/test_recovery_initial_successor.py::test_unbound_existing_initial_successor_is_preserved[empty]",
+    "tests/test_recovery_initial_successor.py::test_unbound_existing_initial_successor_is_preserved[extended]",
+    "tests/test_recovery_initial_successor.py::test_unbound_existing_initial_successor_is_preserved[hardlink]",
+    "tests/test_recovery_initial_successor.py::test_unbound_existing_initial_successor_is_preserved[prefix]",
+    "tests/test_recovery_initial_successor.py::test_unbound_existing_initial_successor_is_preserved[symlink]",
+    "tests/test_recovery_initial_successor.py::test_changed_published_initial_helper_never_replaces_original_journal"
   ],
   "open_items": [
-    "AUDIT-REC-04.U confirmed short rollback helper restart gaps; safe own-attempt corrections remain AUDIT-REC-04.W/R/C. Automatic preflight, full fault injection and restore stay in their original later plan positions."
+    "AUDIT-REC-04.W covers the initial rollback successor. Rollback copies, later cursor/terminal journals, receipts, action evidence and repeated interruptions remain AUDIT-REC-04.R/C. Automatic preflight, full fault injection and restore stay in their original later plan positions."
   ]
 }

@@ -392,3 +392,37 @@ Belegfehler bleiben an den Belegpfad gebunden. Autorisierung, Prüfungen,
 Dateiwrites, Synchronisation und Wiederanlauf folgen derselben Reihenfolge.
 Die W/R-Verhaltenstests bleiben unverändert. Die nächste Audit-Nacharbeit ist
 `AUDIT-REC-04.U`, die Untersuchung kurzer eigener Recovery-Hilfsdateien.
+
+## AUDIT-REC-04.W: vollständiger initialer Rollbacknachfolger
+
+Der erste Wechsel `committing` → `rolling_back` bereitet `journal.rollback`
+in einer namenlosen Datei desselben Dateisystems vor. Ein vollständiger Write,
+`fsync`, Readback und erneute Lock-/Inventar-/Journalbindung gehen der Veröffentlichung
+voraus. Ein atomarer Link macht ausschließlich die geprüfte Inode sichtbar und
+ersetzt keinen vorhandenen Pfad. Es folgt die bisherige Ersetzung von `journal.json`.
+Der veröffentlichte Nachfolger hat genau einen Link; Projekt-Symlinks und Dateien
+mit mehreren Links werden weiterhin abgelehnt.
+
+Dies verwendet das Linux-Verfahren
+[`O_TMPFILE` mit anschließender Veröffentlichung über `/proc/self/fd`](https://man7.org/linux/man-pages/man2/open.2.html)
+und die Standardbibliotheksfunktion
+[`os.link` mit gebundenem Zielverzeichnis](https://docs.python.org/3/library/os.html#os.link).
+Ein Abbruch vor der Veröffentlichung lässt das Originaljournal und die Images
+unverändert und keinen kurzen Hilfsdateinamen zurück. Ein Abbruch nach dem Link
+erhält den vollständigen Nachfolger für die explizite Wiederholung. Die namenlose
+abgeleitete Datei wird beim Schließen ihres letzten Deskriptors freigegeben;
+Originalquellen und veröffentlichte Beweise werden nicht gelöscht.
+
+Das Dateisystem muss `O_TMPFILE` unterstützen und der Prozess seinen eigenen
+Deskriptor über `/proc/self/fd` verlinken können. Ein tatsächlicher Hostblocker
+ergibt Code 5; es gibt keinen benannten Ersatzwrite. Bereits vorhandene kurze
+Dateien werden ohne Herkunftsnachweis weiterhin abgelehnt, auch wenn sie dem
+erwarteten Präfix gleichen. Vorhandene vollständig passende Nachfolger behalten
+ihre bytegeprüfte Wiederverwendung.
+
+`test_recovery_initial_successor.py` prüft Teilwrites, harte Prozessabbrüche mit
+anschließender auditierter nativer Lockübernahme, vollständigen Basisabschluss,
+Retry ohne weiteren normativen Effekt und den vorhandenen Cleanup. Fehlerfälle
+prüfen Konflikte, Quellenänderung, Stagingintegrität und fehlende Hostfunktionen.
+W gilt ausschließlich für den initialen Rollbacknachfolger; spätere Cursor-/Endjournale,
+Rollbackkopien, Receipts und Aktionsbelege bleiben `AUDIT-REC-04.R`.

@@ -30,6 +30,7 @@ from ._staging_files import _image, _write_new
 from ._publication_io import replace_bound_image
 from ._recovery_evidence import EvidenceRecord, rollback_evidence, sync_evidence
 from ._recovery_receipts import existing_recovery_record
+from ._recovery_initial import write_initial_successor
 
 
 def _authorize(authority, journal):
@@ -123,13 +124,13 @@ def _journal_successor(journal, *, initial=False, terminal=False):
     return RollingBackJournal(canonical_json_bytes(data))
 
 
-def _ensure_exact_file(directory, name, raw, *, reason):
+def _ensure_exact_file(directory, name, raw, *, reason, write_new=None):
     """Create once or resume an exact durable operational file after interruption."""
     digest = sha256(raw).hexdigest()
     try:
         info = os.stat(name, dir_fd=directory, follow_symlinks=False)
     except FileNotFoundError:
-        identity = _write_new(directory, name, raw)
+        identity = (write_new or _write_new)(directory, name, raw)
     else:
         try:
             guards._regular(info)
@@ -146,15 +147,32 @@ def _ensure_exact_file(directory, name, raw, *, reason):
     return identity
 
 
-def _replace_journal(files, journal, successor, directory_identity):
+def _replace_journal(files, journal, successor, directory_identity, *, before_initial_publish=None):
     prefix = tuple(journal.path.split('/')[:-1])
     with files.directory(prefix) as directory:
         if directory is None or guards._identity(os.fstat(directory)) != directory_identity:
             raise RecoveryError('recovery_work_changed', exit_code=6)
         if _read(directory, 'journal.json') != journal.source_bytes:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
-        _ensure_exact_file(directory, 'journal.rollback', successor.source_bytes,
-                           reason='recovery_journal_successor_conflict')
+        create = None
+        if before_initial_publish is not None:
+            def unchanged():
+                before_initial_publish()
+                with files.directory(prefix) as current:
+                    if current is None or guards._identity(os.fstat(current)) != directory_identity:
+                        raise RecoveryError('recovery_work_changed', exit_code=6)
+                    if _read(current, 'journal.json') != journal.source_bytes:
+                        raise RecoveryError('recovery_journal_changed', exit_code=6)
+
+            def create(parent, name, raw):
+                return write_initial_successor(parent, name, raw, before_publish=unchanged)
+
+        identity = _ensure_exact_file(directory, 'journal.rollback', successor.source_bytes,
+                                      reason='recovery_journal_successor_conflict', write_new=create)
+        if before_initial_publish is not None:
+            unchanged()
+            _image(directory, 'journal.rollback', len(successor.source_bytes),
+                   successor.sha256, identity=identity)
         os.replace('journal.rollback', 'journal.json', src_dir_fd=directory, dst_dir_fd=directory)
         os.fsync(directory)
 
@@ -266,8 +284,13 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
             if _prove_rollback_inputs(files, journal) != observed:
                 raise RecoveryError('recovery_basis_changed', exit_code=6)
             successor = _journal_successor(journal, initial=True)
+            def initial_guard():
+                _rollback_lock(held_lock, journal)
+                if _prove_rollback_inputs(files, journal) != observed:
+                    raise RecoveryError('recovery_basis_changed', exit_code=6)
             mutated = True
-            _replace_journal(files, journal, successor, directory_identity)
+            _replace_journal(files, journal, successor, directory_identity,
+                             before_initial_publish=initial_guard)
             raw, directory_identity = _read_journal(files, transaction_id)
             journal = _parse(raw, transaction_id, files)
         if type(journal) is not RollingBackJournal:
