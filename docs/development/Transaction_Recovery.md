@@ -57,9 +57,14 @@ sie sind kein Sandbox- oder CAS-Versprechen gegen böswillige gleichzeitige
 Dateisystemmanipulation. Ein Ergebnis behauptet daher kein atomares Modellsnapshot.
 
 Dies ist die fachliche Bibliotheksgrundlage, noch kein neu verdrahteter CLI-Befehl
-oder vollständiger ChangeBackend. Eine Rekonstruktion des unabhängigen
-Basisnachweises nach Prozessneustart, automatischer Transaktions-Preflight,
-Zielabschluss, Restore und Rollback bleiben in ihren späteren Planabschnitten.
+oder vollständiger ChangeBackend. Die fehlende Rekonstruktion des unabhängigen
+Discard-Basisnachweises aus dem eigenen persistenten Transaktionsbestand ist als
+bereits fällige Nacharbeit in `AUDIT-REC-05.W/R/C` eingegrenzt; siehe den
+[Neustartbefund](../reviews/SpecRoad_AUDIT_REC_05_U.md). Ein zusätzlich gespeicherter
+Originalplan mit einem fixturebegrenzten Adapter ermöglicht einen neuen Preflight,
+belegt aber keine vorhandene allgemeine Produktintegration. Zielabschluss und
+Rollback sind in den folgenden Abschnitten beschrieben; automatischer
+Transaktionspreflight (5.t) und Vollquellen-Restore (15.j) bleiben getrennte Aufgaben.
 
 Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
 steht in [Testing.md](Testing.md). Die Recovery-Verhaltensfälle bleiben Teil
@@ -476,5 +481,6 @@ geöffneten Arbeitsverzeichnisses und das exakte Vorgängerjournal. Die Aufrufer
 behalten ihre Konfliktgründe und betroffenen Pfade. Quellen-, Vollinventur- und
 Vorgängerbelegprüfungen erfolgen weiterhin in der jeweiligen Recovery-Operation.
 Ergebnisse, Fehlerverträge, Mutationsbilanz und Dateieffekte entsprechen W/R;
-deren Verhaltenstests bleiben unverändert. Nächster Schritt ist die Untersuchung
-des unveröffentlichten Discards nach Prozessneustart in `AUDIT-REC-05.U`.
+deren Verhaltenstests bleiben unverändert. Die anschließende Untersuchung
+`AUDIT-REC-05.U` bestätigt die oben eingegrenzte Discard-Neustartlücke;
+`AUDIT-REC-05.W` ist der nächste Korrekturschritt.

@@ -1,0 +1,2241 @@
+{
+  "binding": {
+    "audited_files_sha256": {
+      "src/specroad/changes/_discard_completion.py": "35c6c920c77905df4b142ae3f0436bcc39a6b636e617e4ae38ab639cbe872a50",
+      "src/specroad/changes/_journal_inventory.py": "38cc495676254cdebf00b8e67f65c66dfd332202983fbdda7a98a759c0a9d435",
+      "src/specroad/changes/_publication_observation.py": "44dc5abfa69fd508138960e39771d5f31a1c6366c6d3ce27b2ab2cd61841f1b9",
+      "src/specroad/changes/_recovery_inputs.py": "fd0c8e978a8457414c99381dd5ded9f04a79ae9e9611f796958f2dc0f9f365d9",
+      "src/specroad/changes/publication_check.py": "6dd40a01cd797ed5e5e3947880fde522500f31dd5fd616b6f74270510556bab7",
+      "src/specroad/changes/publication_values.py": "c560aad7eb1596b6bfbdc37b157553a24432630af7cccad330e933d904a34cb1",
+      "src/specroad/changes/recovery.py": "c46b694276026255b209f4538f558f482e906e1dde7b639b81ba79e563cadb5b",
+      "src/specroad/changes/recovery_cleanup.py": "650afed4b45bfcbb6fb6faba2ee1ac9eb14b14f0722785e0205ba45f387cb259",
+      "src/specroad/changes/recovery_lock.py": "be0b33c9264fdc25603eea8836d7f798894c71dcf721f1dfb212e39fd59ac6f7",
+      "src/specroad/changes/recovery_read.py": "2abb0023f70791123714c175ca13aa42db5da0b8d26e05171f7a6a879f2972cb",
+      "src/specroad/storage/project.py": "5922b4a76b9c2d3b2fadcd0721b853c4aa1a1fbd82380caf5d136d7bc6dff726",
+      "src/specroad/storage/read_only.py": "6d778554282c5ffc7908f90f881e7abfdbc9eeca32700dbb91d3331b0e9fbb13",
+      "src/specroad/storage/resource_discovery.py": "37b7e41c951cc714213929bc366e3be2bf48299c2f4d26b6051304ff31071e31",
+      "tests/support/folds.py": "612afb824317267c46e4ea3fdfada68f29f8a0b4220d15931c8595add3770c92",
+      "tests/support/publication.py": "d4887ce6d66b251aa29e6801732033efdf35387c6cc87c4d2e86e035c9a31f22",
+      "tests/support/targets.py": "866a224ef32a7b8e15039713053b2d41bc1634de6d677960cd26de73e34231a1",
+      "tests/test_transaction_recovery.py": "d139d2e5a59d759638852099286bc45c04f5c27437ea555e63d179d1a1ac1ccb",
+      "tests/test_transaction_recovery_right.py": "2e8eb465b9d635b895bdde5948f29c9fc43073cab6c34496159d11988e0a25b5"
+    },
+    "base_commit": "762f8900ec183c5870ffba9b118fe50b6af913d0",
+    "bundle_suffix": "",
+    "created_at": "2026-10-04T13:11:24Z",
+    "dirty": false,
+    "fingerprint_algorithm": "patchharbor-state-v1",
+    "manifest_sha256": "fb95b1a6e8b64269296140793857df03c6c4a9fa70e2dbd2a67d257ae59d7596",
+    "probe_log_sha256": "7b498ea98335fb37b4172433656bf89d9e369230e2539442a310dec7948fb4e3",
+    "probe_sha256": "9e1146deac4e003d4e40b1cea711253ab08925c6a69fa8e3e49e4d4c693a3804",
+    "repo_id": "a33ed6cf-0a97-4b73-b11a-d4239e7a2145",
+    "result_filename": "specroad-apply_Result_131124_1004_93e82b.zip",
+    "result_sha256": "9ab58d3a5772bf9f8ef7edd6ff8fd291e3aca172357b851f3797f3cb97729c6a",
+    "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+    "state_fingerprint": "7c9d2a24e397e0e5"
+  },
+  "decision": {
+    "actual_abrupt_writer_exits": 6,
+    "all_normative_bytes_unchanged_by_recovery": true,
+    "all_original_work_preserved": true,
+    "classification": "confirmed",
+    "extra_saved_plan_fixture_adapter_success_cases": 5,
+    "negative_counterexamples_blocked_cases": 6,
+    "next_step": "AUDIT-REC-05.W",
+    "product_behavior_changed": false,
+    "product_inputs_only_blocked_cases": 5,
+    "requirement_acceptance_claimed": false,
+    "scope": "Missing public restart reconstruction of the independent discard proof from product-persisted transaction inputs.",
+    "separate_fresh_processes_per_case": 2,
+    "simulated_power_loss_claimed": false
+  },
+  "execution": {
+    "case_count": 16,
+    "engine": "pytest-xdist",
+    "pytest_exit_code": 0,
+    "reported_duration_seconds": 6.32,
+    "workers": 4
+  },
+  "observations": [
+    {
+      "alteration": "unchanged",
+      "case": "building--abrupt--journal_only--unchanged",
+      "ending": "abrupt",
+      "inputs": "journal_only",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "error_type": "RecoveryError",
+          "exit_code": 2,
+          "mutation_possible": false,
+          "reason": "recovery_base_preflight_required",
+          "returned": false
+        },
+        "discard_file_bytes_unchanged": true,
+        "input_journal_sha256": "e87b2ef4cbb456c477e5e22b31b08a60e4b8950cae681d0908b201275c0f54d4",
+        "input_state": "building",
+        "lock_mode": "audited_native_takeover",
+        "new_writer_allowed": false,
+        "new_writer_error": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "mutation_possible": false,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        },
+        "owner_state_before_lock": "dead",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "attempted": false,
+          "original_plan_supplied": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "e87b2ef4cbb456c477e5e22b31b08a60e4b8950cae681d0908b201275c0f54d4",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building",
+      "separate_fresh_processes": true,
+      "worker": "gw1",
+      "writer_exit_code": 23
+    },
+    {
+      "alteration": "unchanged",
+      "case": "building--abrupt--saved_plan--unchanged",
+      "ending": "abrupt",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "result": {
+            "action": "discard",
+            "archive_path": ".specroad/recovery/transaction-audit/1ed081d4-3f13-48b4-8c37-c70de598c6bf/work",
+            "atomic_snapshot": false,
+            "audit_path": ".specroad/recovery/transaction-audit/1ed081d4-3f13-48b4-8c37-c70de598c6bf",
+            "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+            "discard_completed": true,
+            "event_id": "1ed081d4-3f13-48b4-8c37-c70de598c6bf",
+            "evidence_preserved": true,
+            "format_version": "recovery-audit-v1",
+            "intent_sha256": "ae179d65a5f4d2f1c6736dd60c2c74311133894cb344b61f80ddb02f8d8c1b40",
+            "journal_before_sha256": "ba6413550a5a6ea5ecf382b2124a29e90d8354ea8344e025bb3740b1735b0f0b",
+            "journal_sha256": "62e21840f56c237a866d523f3ee8db4dd45fd699454e67e7f244e2d4f5323811",
+            "model_loaded": false,
+            "normative_writes": 0,
+            "phase": "completed",
+            "receipt": {
+              "path": ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json",
+              "sha256": "c75d5d0e8cf36f334734d02184a12fd97617893cdb76300c7fcb1c17003efcf6"
+            },
+            "remaining_active_paths": [],
+            "state": "rolled_back",
+            "transaction_id": "txn-publish-test",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "discard_file_bytes_unchanged": false,
+        "input_journal_sha256": "ba6413550a5a6ea5ecf382b2124a29e90d8354ea8344e025bb3740b1735b0f0b",
+        "input_state": "building",
+        "lock_mode": "audited_native_takeover",
+        "new_writer_allowed": true,
+        "owner_state_before_lock": "dead",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "independent_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "preflight": {
+            "atomic_snapshot": false,
+            "final_check_required": true,
+            "footprint_sha256": "177b0efef5b65ae7ae7a60397effde81022d42b21bfd798c1e7ba431e0c57d99",
+            "format_version": "publication-recheck-v1",
+            "observed_paths": [
+              "profiles/core.json",
+              "spec/goals/SR-GOAL-00000000000000000000000000.json",
+              "specroad.json"
+            ],
+            "phase": "early_diagnostic",
+            "project_lock_acquired": false,
+            "request_sha256": "9c02adecb60be1f58b12d3e9b5507afc9c71ec98099a1e9ea701f7683e425353",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "status_read_only": true,
+        "status_with_reconstructed_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": true,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": null,
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "ba6413550a5a6ea5ecf382b2124a29e90d8354ea8344e025bb3740b1735b0f0b",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [
+            "discard"
+          ],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        },
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "ba6413550a5a6ea5ecf382b2124a29e90d8354ea8344e025bb3740b1735b0f0b",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building",
+      "separate_fresh_processes": true,
+      "worker": "gw1",
+      "writer_exit_code": 23
+    },
+    {
+      "alteration": "unchanged",
+      "case": "building--released--journal_only--unchanged",
+      "ending": "released",
+      "inputs": "journal_only",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "discard": {
+          "error_type": "RecoveryError",
+          "exit_code": 2,
+          "mutation_possible": false,
+          "reason": "recovery_base_preflight_required",
+          "returned": false
+        },
+        "discard_file_bytes_unchanged": true,
+        "input_journal_sha256": "df00bb97eaa1694513c05d870f299946f820f342f740ce7bad66d5f319abd5a7",
+        "input_state": "building",
+        "lock_mode": "new_native_recovery_lock",
+        "new_writer_allowed": false,
+        "new_writer_error": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "mutation_possible": false,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        },
+        "owner_state_before_lock": "absent",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "attempted": false,
+          "original_plan_supplied": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "df00bb97eaa1694513c05d870f299946f820f342f740ce7bad66d5f319abd5a7",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building",
+      "separate_fresh_processes": true,
+      "worker": "gw0",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "additional_artifact",
+      "case": "building--released--saved_plan--additional_artifact",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": false,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "input_journal_sha256": "a72e37bf2cdb03efeb7846a697405dcd69c02c75e687f13ab19e5a25015ae75c",
+        "input_state": "building",
+        "phase": "reconstruction",
+        "published_count": 0,
+        "reconstruction": {
+          "error_type": "PublicationCheckError",
+          "exit_code": 3,
+          "independent_model_root_sha256": "31831bbc65f0ef3bba596e27ea4caf4678dc2d215c6a11a7e13f0bab71bfdad2",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "spec/goals/SR-GOAL-00000000000000000000000002.json",
+            "specroad.json"
+          ],
+          "mutation_possible": null,
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "reason": "target_base_root_mismatch",
+          "returned": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "a72e37bf2cdb03efeb7846a697405dcd69c02c75e687f13ab19e5a25015ae75c",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building",
+      "separate_fresh_processes": true,
+      "worker": "gw3",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "changed_base",
+      "case": "building--released--saved_plan--changed_base",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": false,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "input_journal_sha256": "ef20dd17cb2ae305cd3fc40e9979aef0fcae7aa3bb90d81d883974334103eb45",
+        "input_state": "building",
+        "phase": "reconstruction",
+        "published_count": 0,
+        "reconstruction": {
+          "error_type": "PublicationCheckError",
+          "exit_code": 3,
+          "independent_model_root_sha256": "0b963008aaa29172e395593fd391f34ee7b0d09b62ef97bdabe2f51b272eeada",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "mutation_possible": null,
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "reason": "target_base_root_mismatch",
+          "returned": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "ef20dd17cb2ae305cd3fc40e9979aef0fcae7aa3bb90d81d883974334103eb45",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building",
+      "separate_fresh_processes": true,
+      "worker": "gw2",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "unchanged",
+      "case": "building--released--saved_plan--unchanged",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "result": {
+            "action": "discard",
+            "archive_path": ".specroad/recovery/transaction-audit/1f99665b-20b0-4525-a83e-d9d7002c0856/work",
+            "atomic_snapshot": false,
+            "audit_path": ".specroad/recovery/transaction-audit/1f99665b-20b0-4525-a83e-d9d7002c0856",
+            "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+            "discard_completed": true,
+            "event_id": "1f99665b-20b0-4525-a83e-d9d7002c0856",
+            "evidence_preserved": true,
+            "format_version": "recovery-audit-v1",
+            "intent_sha256": "fe7b1a0fdd85c8a90485042291c6bf4df88cf6b52dd217d73308278dd963c3d1",
+            "journal_before_sha256": "216c2aaeb16e67d2901870b88d86046ca6b5944f7f7de99bd1dc00696228a142",
+            "journal_sha256": "50eaec896be86aab00acf680118ddff4e7cddb7b607c148d456c92777e3d9c3e",
+            "model_loaded": false,
+            "normative_writes": 0,
+            "phase": "completed",
+            "receipt": {
+              "path": ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json",
+              "sha256": "06c8e0daffd3e1c3424a382e2cbf9f33a6eb80cdce6f96f8851d78d2defff800"
+            },
+            "remaining_active_paths": [],
+            "state": "rolled_back",
+            "transaction_id": "txn-publish-test",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "discard_file_bytes_unchanged": false,
+        "input_journal_sha256": "216c2aaeb16e67d2901870b88d86046ca6b5944f7f7de99bd1dc00696228a142",
+        "input_state": "building",
+        "lock_mode": "new_native_recovery_lock",
+        "new_writer_allowed": true,
+        "owner_state_before_lock": "absent",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "independent_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "preflight": {
+            "atomic_snapshot": false,
+            "final_check_required": true,
+            "footprint_sha256": "dc77e7baac91c4cf8dbc76b6710b9c2993425c1547f536a901cbf5106bc08c3f",
+            "format_version": "publication-recheck-v1",
+            "observed_paths": [
+              "profiles/core.json",
+              "spec/goals/SR-GOAL-00000000000000000000000000.json",
+              "specroad.json"
+            ],
+            "phase": "early_diagnostic",
+            "project_lock_acquired": false,
+            "request_sha256": "1c454ad956eddd048b29c25828b2f7d08db128e5a156a49eeca707e81829de32",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "status_read_only": true,
+        "status_with_reconstructed_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": true,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": null,
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "216c2aaeb16e67d2901870b88d86046ca6b5944f7f7de99bd1dc00696228a142",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [
+            "discard"
+          ],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        },
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "216c2aaeb16e67d2901870b88d86046ca6b5944f7f7de99bd1dc00696228a142",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building",
+      "separate_fresh_processes": true,
+      "worker": "gw0",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "wrong_plan",
+      "case": "building--released--saved_plan--wrong_plan",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "discard": {
+          "error_type": "RecoveryError",
+          "exit_code": 6,
+          "mutation_possible": false,
+          "reason": "recovery_inventory_unproven",
+          "returned": false
+        },
+        "discard_file_bytes_unchanged": true,
+        "input_journal_sha256": "6f53f6ba67fa885e4de9a49a43d74eeb2ebe95a7394fa5a5f7758fc3cd243f23",
+        "input_state": "building",
+        "lock_mode": "new_native_recovery_lock",
+        "new_writer_allowed": false,
+        "new_writer_error": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "mutation_possible": false,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        },
+        "owner_state_before_lock": "absent",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "independent_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "plan_sha256": "d16536f290ed579393f3bb5bc767e26562ef1ba612e2b0b0259f312ed5b572da",
+          "preflight": {
+            "atomic_snapshot": false,
+            "final_check_required": true,
+            "footprint_sha256": "f53922a8f3b3c53a319c13d94f5184ccaf1960578476ebd103b0d69ab4f0ed80",
+            "format_version": "publication-recheck-v1",
+            "observed_paths": [
+              "profiles/core.json",
+              "spec/goals/SR-GOAL-00000000000000000000000000.json",
+              "specroad.json"
+            ],
+            "phase": "early_diagnostic",
+            "project_lock_acquired": false,
+            "request_sha256": "e9d12c588c56b339ec1dd53d06531c1de0d784c70e957ae431e883d0fffae34f",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "status_read_only": true,
+        "status_with_reconstructed_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_inventory_unproven",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "6f53f6ba67fa885e4de9a49a43d74eeb2ebe95a7394fa5a5f7758fc3cd243f23",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        },
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "missing"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": null,
+              "observed_size": null,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "missing"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "6f53f6ba67fa885e4de9a49a43d74eeb2ebe95a7394fa5a5f7758fc3cd243f23",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building",
+      "separate_fresh_processes": true,
+      "worker": "gw1",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "unchanged",
+      "case": "building_prefix--abrupt--journal_only--unchanged",
+      "ending": "abrupt",
+      "inputs": "journal_only",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "error_type": "RecoveryError",
+          "exit_code": 2,
+          "mutation_possible": false,
+          "reason": "recovery_base_preflight_required",
+          "returned": false
+        },
+        "discard_file_bytes_unchanged": true,
+        "input_journal_sha256": "fcbd9f4e2ee58dacb5172e9bfdd125a02753294f097b76a1d051d9cce0336360",
+        "input_state": "building",
+        "lock_mode": "audited_native_takeover",
+        "new_writer_allowed": false,
+        "new_writer_error": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "mutation_possible": false,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        },
+        "owner_state_before_lock": "dead",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "attempted": false,
+          "original_plan_supplied": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "5a513758b059c8bc450a8d15a8d93297f4830b34e11555cdb7f8a04dde7decb9",
+              "observed_size": 17,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "partial_unverified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "fcbd9f4e2ee58dacb5172e9bfdd125a02753294f097b76a1d051d9cce0336360",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building_prefix",
+      "separate_fresh_processes": true,
+      "worker": "gw1",
+      "writer_exit_code": 23
+    },
+    {
+      "alteration": "unchanged",
+      "case": "building_prefix--abrupt--saved_plan--unchanged",
+      "ending": "abrupt",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "result": {
+            "action": "discard",
+            "archive_path": ".specroad/recovery/transaction-audit/ca42b89d-54fb-4a7a-87c1-ed1e9a5e4354/work",
+            "atomic_snapshot": false,
+            "audit_path": ".specroad/recovery/transaction-audit/ca42b89d-54fb-4a7a-87c1-ed1e9a5e4354",
+            "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+            "discard_completed": true,
+            "event_id": "ca42b89d-54fb-4a7a-87c1-ed1e9a5e4354",
+            "evidence_preserved": true,
+            "format_version": "recovery-audit-v1",
+            "intent_sha256": "a2f4f0d7f02185804e80624704624be502db3383b8e06accd2dd020fd25f52f7",
+            "journal_before_sha256": "e7e96adfddcaee49c811ed4a7b7becc7496072fd1b04c358c7e573113fde4495",
+            "journal_sha256": "7c9efd6fae514a7664fd9162acdad419c08f37c658e64b2bfedbe704e0e52509",
+            "model_loaded": false,
+            "normative_writes": 0,
+            "phase": "completed",
+            "receipt": {
+              "path": ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json",
+              "sha256": "bd286c33a6eabce4753c9ada647d568b34f757259e684a3f236392905722cc07"
+            },
+            "remaining_active_paths": [],
+            "state": "rolled_back",
+            "transaction_id": "txn-publish-test",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "discard_file_bytes_unchanged": false,
+        "input_journal_sha256": "e7e96adfddcaee49c811ed4a7b7becc7496072fd1b04c358c7e573113fde4495",
+        "input_state": "building",
+        "lock_mode": "audited_native_takeover",
+        "new_writer_allowed": true,
+        "owner_state_before_lock": "dead",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "independent_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "preflight": {
+            "atomic_snapshot": false,
+            "final_check_required": true,
+            "footprint_sha256": "27a88a26c194be6cf6f81f7684ca18ae6582cfb78577f4dbce066aaca3cef7f6",
+            "format_version": "publication-recheck-v1",
+            "observed_paths": [
+              "profiles/core.json",
+              "spec/goals/SR-GOAL-00000000000000000000000000.json",
+              "specroad.json"
+            ],
+            "phase": "early_diagnostic",
+            "project_lock_acquired": false,
+            "request_sha256": "6ba38190937266954e715b7b134797b2358554cbb11202376f752316424c9130",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "status_read_only": true,
+        "status_with_reconstructed_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": true,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "5a513758b059c8bc450a8d15a8d93297f4830b34e11555cdb7f8a04dde7decb9",
+              "observed_size": 17,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "partial_unverified"
+            }
+          ],
+          "diagnostic": null,
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "e7e96adfddcaee49c811ed4a7b7becc7496072fd1b04c358c7e573113fde4495",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [
+            "discard"
+          ],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        },
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": false,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "5a513758b059c8bc450a8d15a8d93297f4830b34e11555cdb7f8a04dde7decb9",
+              "observed_size": 17,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": false,
+              "role": "staging",
+              "status": "partial_unverified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "state_required_inputs",
+          "journal_schema_validated": true,
+          "journal_sha256": "e7e96adfddcaee49c811ed4a7b7becc7496072fd1b04c358c7e573113fde4495",
+          "normal_access_blocked": true,
+          "observed_state": "building",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "building",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "building_prefix",
+      "separate_fresh_processes": true,
+      "worker": "gw0",
+      "writer_exit_code": 23
+    },
+    {
+      "alteration": "unchanged",
+      "case": "prepared--abrupt--journal_only--unchanged",
+      "ending": "abrupt",
+      "inputs": "journal_only",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "error_type": "RecoveryError",
+          "exit_code": 2,
+          "mutation_possible": false,
+          "reason": "recovery_base_preflight_required",
+          "returned": false
+        },
+        "discard_file_bytes_unchanged": true,
+        "input_journal_sha256": "ba662941cbb82c8cb7f85f9e646f82fe49ebd6541a3fe71732349a80909dbdb4",
+        "input_state": "prepared",
+        "lock_mode": "audited_native_takeover",
+        "new_writer_allowed": false,
+        "new_writer_error": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "mutation_possible": false,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        },
+        "owner_state_before_lock": "dead",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "attempted": false,
+          "original_plan_supplied": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "ba662941cbb82c8cb7f85f9e646f82fe49ebd6541a3fe71732349a80909dbdb4",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "prepared",
+      "separate_fresh_processes": true,
+      "worker": "gw3",
+      "writer_exit_code": 23
+    },
+    {
+      "alteration": "unchanged",
+      "case": "prepared--abrupt--saved_plan--unchanged",
+      "ending": "abrupt",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "result": {
+            "action": "discard",
+            "archive_path": ".specroad/recovery/transaction-audit/a1a07e4f-8386-49fb-9b53-a6949fba7874/work",
+            "atomic_snapshot": false,
+            "audit_path": ".specroad/recovery/transaction-audit/a1a07e4f-8386-49fb-9b53-a6949fba7874",
+            "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+            "discard_completed": true,
+            "event_id": "a1a07e4f-8386-49fb-9b53-a6949fba7874",
+            "evidence_preserved": true,
+            "format_version": "recovery-audit-v1",
+            "intent_sha256": "dd8491b802915d015cf273adb74a2112d6f0cdb4168a8f1dd1d1f93c17055f6f",
+            "journal_before_sha256": "58fc41cd9566214a21dc4af67a0b20b7e5d8139988bcd7bebbced4713f241b2c",
+            "journal_sha256": "3e6fdb5fc27d831762fedd296935638ee1c76a38d3460c183976530944800c19",
+            "model_loaded": false,
+            "normative_writes": 0,
+            "phase": "completed",
+            "receipt": {
+              "path": ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json",
+              "sha256": "6dac788fda11c93ac9903a823bbcb92389c2b56d9af244eabc8c138a0a1f6f27"
+            },
+            "remaining_active_paths": [],
+            "state": "rolled_back",
+            "transaction_id": "txn-publish-test",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "discard_file_bytes_unchanged": false,
+        "input_journal_sha256": "58fc41cd9566214a21dc4af67a0b20b7e5d8139988bcd7bebbced4713f241b2c",
+        "input_state": "prepared",
+        "lock_mode": "audited_native_takeover",
+        "new_writer_allowed": true,
+        "owner_state_before_lock": "dead",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "independent_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "preflight": {
+            "atomic_snapshot": false,
+            "final_check_required": true,
+            "footprint_sha256": "8ad42aef6db91e6ee57b934497eaf0c4bed45f02a76c27b9b43187a969e1fbe6",
+            "format_version": "publication-recheck-v1",
+            "observed_paths": [
+              "profiles/core.json",
+              "spec/goals/SR-GOAL-00000000000000000000000000.json",
+              "specroad.json"
+            ],
+            "phase": "early_diagnostic",
+            "project_lock_acquired": false,
+            "request_sha256": "703886293165751a5b04788d5c2df7c664e46a1db3d217987709bb80bc01dc0e",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "status_read_only": true,
+        "status_with_reconstructed_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": true,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": null,
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "58fc41cd9566214a21dc4af67a0b20b7e5d8139988bcd7bebbced4713f241b2c",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [
+            "discard"
+          ],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        },
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "58fc41cd9566214a21dc4af67a0b20b7e5d8139988bcd7bebbced4713f241b2c",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "prepared",
+      "separate_fresh_processes": true,
+      "worker": "gw3",
+      "writer_exit_code": 23
+    },
+    {
+      "alteration": "unchanged",
+      "case": "prepared--released--journal_only--unchanged",
+      "ending": "released",
+      "inputs": "journal_only",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "discard": {
+          "error_type": "RecoveryError",
+          "exit_code": 2,
+          "mutation_possible": false,
+          "reason": "recovery_base_preflight_required",
+          "returned": false
+        },
+        "discard_file_bytes_unchanged": true,
+        "input_journal_sha256": "08815bc0708012c1fede54e8f9729e4d64e6e22e77fda8dfc73686d454a6fb39",
+        "input_state": "prepared",
+        "lock_mode": "new_native_recovery_lock",
+        "new_writer_allowed": false,
+        "new_writer_error": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "mutation_possible": false,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        },
+        "owner_state_before_lock": "absent",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "attempted": false,
+          "original_plan_supplied": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "08815bc0708012c1fede54e8f9729e4d64e6e22e77fda8dfc73686d454a6fb39",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "prepared",
+      "separate_fresh_processes": true,
+      "worker": "gw2",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "additional_artifact",
+      "case": "prepared--released--saved_plan--additional_artifact",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": false,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "input_journal_sha256": "a1b7df568c9307a5b725bbc2a3d26bf172cd5f6ce982c232f224b51f13f63ef8",
+        "input_state": "prepared",
+        "phase": "reconstruction",
+        "published_count": 0,
+        "reconstruction": {
+          "error_type": "PublicationCheckError",
+          "exit_code": 3,
+          "independent_model_root_sha256": "31831bbc65f0ef3bba596e27ea4caf4678dc2d215c6a11a7e13f0bab71bfdad2",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "spec/goals/SR-GOAL-00000000000000000000000002.json",
+            "specroad.json"
+          ],
+          "mutation_possible": null,
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "reason": "target_base_root_mismatch",
+          "returned": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "a1b7df568c9307a5b725bbc2a3d26bf172cd5f6ce982c232f224b51f13f63ef8",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "prepared",
+      "separate_fresh_processes": true,
+      "worker": "gw2",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "changed_base",
+      "case": "prepared--released--saved_plan--changed_base",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": false,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "input_journal_sha256": "4c851a1ff788980a9c2e2d1aaf7a462efec1036dc22eb82903581477333a0bf2",
+        "input_state": "prepared",
+        "phase": "reconstruction",
+        "published_count": 0,
+        "reconstruction": {
+          "error_type": "PublicationCheckError",
+          "exit_code": 3,
+          "independent_model_root_sha256": "0b963008aaa29172e395593fd391f34ee7b0d09b62ef97bdabe2f51b272eeada",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "mutation_possible": null,
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "reason": "target_base_root_mismatch",
+          "returned": false
+        },
+        "status_read_only": true,
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "4c851a1ff788980a9c2e2d1aaf7a462efec1036dc22eb82903581477333a0bf2",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "prepared",
+      "separate_fresh_processes": true,
+      "worker": "gw0",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "unchanged",
+      "case": "prepared--released--saved_plan--unchanged",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": false,
+        "discard": {
+          "result": {
+            "action": "discard",
+            "archive_path": ".specroad/recovery/transaction-audit/ddbcd997-45ef-45d8-a1ac-b802211c572f/work",
+            "atomic_snapshot": false,
+            "audit_path": ".specroad/recovery/transaction-audit/ddbcd997-45ef-45d8-a1ac-b802211c572f",
+            "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+            "discard_completed": true,
+            "event_id": "ddbcd997-45ef-45d8-a1ac-b802211c572f",
+            "evidence_preserved": true,
+            "format_version": "recovery-audit-v1",
+            "intent_sha256": "a472869aaad9fa496725e8a563752bfef6166e80bd22300923a0a2f393b1392c",
+            "journal_before_sha256": "d5848ccadf4a3d7c06a2f33474745ea3d04eb5614609157e853494f4affdd085",
+            "journal_sha256": "df95edfb495909aca81f287eb1724d26ad4836806a59668da4a4e9515be55a7f",
+            "model_loaded": false,
+            "normative_writes": 0,
+            "phase": "completed",
+            "receipt": {
+              "path": ".specroad/transactions/receipts/45030dc9ffe19daf0d68fd03542966678bd97dfce95c18f74680c8036098d7e2/transaction.json",
+              "sha256": "b8a62eff59af84aac5593925bf7a26f37c6936e53f6f599c5297b1dd2b2d5258"
+            },
+            "remaining_active_paths": [],
+            "state": "rolled_back",
+            "transaction_id": "txn-publish-test",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "discard_file_bytes_unchanged": false,
+        "input_journal_sha256": "d5848ccadf4a3d7c06a2f33474745ea3d04eb5614609157e853494f4affdd085",
+        "input_state": "prepared",
+        "lock_mode": "new_native_recovery_lock",
+        "new_writer_allowed": true,
+        "owner_state_before_lock": "absent",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "independent_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+          "preflight": {
+            "atomic_snapshot": false,
+            "final_check_required": true,
+            "footprint_sha256": "9d2720db0314342ec18e762372f0f2aff0da15d082e2e9b70841db162d8bba16",
+            "format_version": "publication-recheck-v1",
+            "observed_paths": [
+              "profiles/core.json",
+              "spec/goals/SR-GOAL-00000000000000000000000000.json",
+              "specroad.json"
+            ],
+            "phase": "early_diagnostic",
+            "project_lock_acquired": false,
+            "request_sha256": "d21d09d6f23554ab2292075c67aa489953b186ea5bec8ccc929de59f26f4027f",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "status_read_only": true,
+        "status_with_reconstructed_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": true,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": null,
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "d5848ccadf4a3d7c06a2f33474745ea3d04eb5614609157e853494f4affdd085",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [
+            "discard"
+          ],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        },
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "d5848ccadf4a3d7c06a2f33474745ea3d04eb5614609157e853494f4affdd085",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "prepared",
+      "separate_fresh_processes": true,
+      "worker": "gw2",
+      "writer_exit_code": 0
+    },
+    {
+      "alteration": "wrong_plan",
+      "case": "prepared--released--saved_plan--wrong_plan",
+      "ending": "released",
+      "inputs": "saved_plan",
+      "normative_bytes_unchanged_by_recovery": true,
+      "oracle": {
+        "base_files": {
+          "profiles/core.json": "c9f18c99460ddb4ed38f490f12f1c70b35785f1db472808918863ff12165167f",
+          "spec/goals/SR-GOAL-00000000000000000000000000.json": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+          "specroad.json": "fcd2dbe39d254eaecdc7150718f70530430477fe0cc3bf9d98eb4caa0f380c01"
+        },
+        "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+        "plan_bytes_sha256": "0b012aa3aae1ae7748bc47315b1e484b6f65638e737b6a4f465e73771c0abd62",
+        "plan_sha256": "55ed4f7054bc68c4a47593483858b9eaa17ebb7d0db6283785c799b8452e4cad",
+        "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512"
+      },
+      "original_basis_retained": true,
+      "original_work_preserved": true,
+      "outcome": {
+        "all_file_bytes_unchanged": true,
+        "discard": {
+          "error_type": "RecoveryError",
+          "exit_code": 6,
+          "mutation_possible": false,
+          "reason": "recovery_inventory_unproven",
+          "returned": false
+        },
+        "discard_file_bytes_unchanged": true,
+        "input_journal_sha256": "56fb42a5042628128fe353a9a3011642c1bc4981e36d9f7be0be5abb7a1cb196",
+        "input_state": "prepared",
+        "lock_mode": "new_native_recovery_lock",
+        "new_writer_allowed": false,
+        "new_writer_error": {
+          "error_type": "ProjectLockError",
+          "exit_code": 5,
+          "mutation_possible": false,
+          "reason": "transaction_journal_blocks_lock",
+          "returned": false
+        },
+        "owner_state_before_lock": "absent",
+        "phase": "discard",
+        "preparation_read_only": true,
+        "published_count": 0,
+        "reconstruction": {
+          "independent_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "inventory": [
+            "profiles/core.json",
+            "spec/goals/SR-GOAL-00000000000000000000000000.json",
+            "specroad.json"
+          ],
+          "plan_sha256": "d16536f290ed579393f3bb5bc767e26562ef1ba612e2b0b0259f312ed5b572da",
+          "preflight": {
+            "atomic_snapshot": false,
+            "final_check_required": true,
+            "footprint_sha256": "6de1d6bf62ad37cf2551ad734e5f1f14a1053f43f1a5d944a69fa65b8d319463",
+            "format_version": "publication-recheck-v1",
+            "observed_paths": [
+              "profiles/core.json",
+              "spec/goals/SR-GOAL-00000000000000000000000000.json",
+              "specroad.json"
+            ],
+            "phase": "early_diagnostic",
+            "project_lock_acquired": false,
+            "request_sha256": "77fd114da68ba562d7fb1f85f4535c5a9ab6b119f5f406434b4e47e28a6e5c13",
+            "write_authorized": false
+          },
+          "returned": true
+        },
+        "status_read_only": true,
+        "status_with_reconstructed_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_inventory_unproven",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "56fb42a5042628128fe353a9a3011642c1bc4981e36d9f7be0be5abb7a1cb196",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        },
+        "status_without_preflight": {
+          "base_model_root_sha256": "545bb6febf672b1fde681bf854a54f50bfb7d3481ea5e3b91d846e55682c60b5",
+          "base_verified": false,
+          "blockers": [],
+          "complete_target_verified": false,
+          "critical_inputs_verified": true,
+          "critical_resources": [
+            {
+              "expected_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "expected_size": 445,
+              "observed_sha256": "2544aa0c0eafb4ae1a064700cecc6a4c29cec21eae81d398154f081ad99f8cb7",
+              "observed_size": 445,
+              "path": ".specroad/transactions/txn-publish-test/before/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "before_image",
+              "status": "verified"
+            },
+            {
+              "expected_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "expected_size": 428,
+              "observed_sha256": "2a94618600c5ce14e9cc95e2211edd4a2cfb14ff04363044185bede0600f22e5",
+              "observed_size": 428,
+              "path": ".specroad/transactions/txn-publish-test/staging/0.bin",
+              "recovery_critical": true,
+              "required": true,
+              "role": "staging",
+              "status": "verified"
+            }
+          ],
+          "diagnostic": "recovery_base_preflight_required",
+          "integrity_scope": "prepared_images",
+          "journal_schema_validated": true,
+          "journal_sha256": "56fb42a5042628128fe353a9a3011642c1bc4981e36d9f7be0be5abb7a1cb196",
+          "normal_access_blocked": true,
+          "observed_state": "prepared",
+          "path": ".specroad/transactions/txn-publish-test/journal.json",
+          "permitted_actions": [],
+          "project_id": "sample",
+          "published_count": 0,
+          "published_entries": [],
+          "state": "prepared",
+          "state_actions": [
+            "discard"
+          ],
+          "target_model_root_sha256": "ca07c272652b0ff3af496d359f9dd3fd6ba4551f98c45b361a6da858f8ab7512",
+          "transaction_id": "txn-publish-test"
+        }
+      },
+      "preparation": "prepared",
+      "separate_fresh_processes": true,
+      "worker": "gw3",
+      "writer_exit_code": 0
+    }
+  ],
+  "probe": "AUDIT-REC-05.U",
+  "python": "3.14.4",
+  "synthetic_authority": true
+}

@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad recover status` MUSS Zustand, Journalhash, Basiswurzel, erwartete Zielwurzel, veröffentlichte Einträge und zulässige Recovery-Aktionen jeder unvollständigen Transaktion ausgeben.",
-    "scope": "Read-only state diagnosis and audited discard of unchanged building/prepared bases including interrupted known prefixes; published targets, mismatched bases, linked or changed evidence remain protected. Later journal codecs/CLI/restart integration are not claimed."
+    "scope": "Read-only state diagnosis and audited discard of unchanged building/prepared bases including interrupted known prefixes; published targets, mismatched bases, linked or changed evidence remain protected. These tests retain the independently prepared PublicationPreflight. Restart reconstruction from the product-persisted transaction inputs remains a confirmed gap under AUDIT-REC-05.W/R/C; the historical U probe is not requirement acceptance."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -60,6 +60,7 @@
     "tests/test_transaction_recovery_right.py::test_malformed_state_is_diagnosed_without_raw_type_error[None]"
   ],
   "open_items": [
-    "Public recovery CLI, restart-time independent proof reconstruction, and automatic transaction preflight remain in their assigned later plan steps."
+    "AUDIT-REC-05.U confirmed the missing public reconstruction of the independent discard proof from persisted transaction inputs after process restart. AUDIT-REC-05.W/R/C addresses this already due 5.p acceptance; an extra externally retained original plan with a fixture-only adapter is not product integration.",
+    "Public recovery CLI integration and automatic transaction preflight are not claimed; automatic preflight remains in 5.t."
   ]
 }
