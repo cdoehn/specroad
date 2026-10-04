@@ -577,3 +577,20 @@ aktive, fremde, nicht nachweisbare oder PID-wiederverwendete Eigentümer bleiben
 an die bestehenden Übernahmegrenzen gebunden. Historische v1-Prepared-Journale
 und der unabhängige PublicationPreflight-Weg bleiben unterstützt. Fehlende Daten
 werden nicht geraten. C konsolidiert anschließend ausschließlich die Struktur.
+
+## AUDIT-REC-05.C: Gemeinsame schreibfreie Discard-Prüfungen
+
+`_discard_inputs.py` enthält die gemeinsamen Leseprüfungen für Originaljournal,
+Intent und terminale beziehungsweise noch nicht übernommene Discardmarker sowie
+die reine Projektion des Abschlussbelegs. Die Auswahl des bestehenden aktiven
+oder archivierten Workbestands und die kanonische Inventurprüfung werden von
+Neustartdiagnose und mutierendem Abschluss gemeinsam verwendet. Der initiale
+Intent verwendet dieselbe Inventurprojektion einschließlich des Originaljournals.
+
+Diese Helfer erwerben keine Autorisierung und schreiben keine Dateien. Die
+unabhängige Basis-/Zielrekonstruktion bleibt in `_discard_basis.py`, die öffentliche
+schreibfreie Vorbereitung in `discard_preflight.py` und die autorisierte Mutation
+in `recovery.py`/`_discard_completion.py`. Die native Schreibreihenfolge, frischen
+Guard-Prüfungen, Formatversionen, Fehlerverträge und W/R-Dateieffekte bleiben erhalten.
+Die unveränderten bestehenden Verhaltenstests prüfen weiterhin die öffentlichen
+Recoverywege und tatsächlichen Bytes, ohne die Modulaufteilung festzuschreiben.

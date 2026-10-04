@@ -7,29 +7,16 @@ from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..storage.json_syntax import parse_json_object
 from ..security import paths as guards
-from ._recovery_inputs import _parse, _unchanged_base, _work
-from ._recovery_evidence import EvidenceRecord, read_evidence, persist_evidence, rollback_receipt
+from ._recovery_inputs import _unchanged_base, _work
+from ._recovery_evidence import EvidenceRecord, persist_evidence, rollback_receipt
 from ._recovery_receipts import existing_recovery_record, recheck_recovery_record
 from ._recovery_barrier import barrier_record, persist_barrier, remove_barrier
 from ._recovery_binding import check_discard_lock as _held
-from ._recovery_work import work_file_inventory
 from ._recovery_files import write_recovery_file, sync_recovery_file
 from ._staging_files import _image
-from .receipt_values import transaction_receipt_path
-from .recovery_values import RecoveryError, RecoveryObservation, DiscardedJournal
-
-
-def archived_discard(files, transaction_id):
-    receipt = read_evidence(files, transaction_receipt_path(transaction_id))
-    if receipt is None:
-        raise RecoveryError('recovery_journal_missing', exit_code=5)
-    value = parse_json_object(receipt.source_bytes)
-    if value.get('format_version') != 'recovery-transaction-receipt-v1' or value.get('action') != 'discard':
-        raise RecoveryError('discard_state_forbidden', exit_code=6)
-    journal = _parse(canonical_json_bytes(value.get('journal')), transaction_id, files)
-    if type(journal) is not DiscardedJournal or value.get('journal_sha256') != journal.sha256:
-        raise RecoveryError('recovery_receipt_conflict', exit_code=6)
-    return journal
+from .recovery_values import RecoveryError, RecoveryObservation
+from ._discard_inputs import (archived_discard, pending_discard, original_discard,
+    discard_completion_record, verify_discard_inventory, discard_work_location)
 
 
 def write_discard_file(directory, name, raw, **kwargs):
@@ -38,58 +25,6 @@ def write_discard_file(directory, name, raw, **kwargs):
     sync_recovery_file(directory, name, identity, reason='recovery_discard_file_changed')
     _image(directory, name, len(raw), sha256(raw).hexdigest(), identity=identity)
     return identity
-
-
-def pending_discard(files, journal):
-    record = read_evidence(files, journal.path.rsplit('/', 1)[0] + '/journal.discard')
-    if record is None:
-        return None
-    terminal = _parse(record.source_bytes, journal.data['transaction_id'], files, journal.data['project_id'])
-    if type(terminal) is not DiscardedJournal:
-        raise RecoveryError('recovery_discard_audit_mismatch', exit_code=6)
-    original, _ = original_discard(files, terminal)
-    if original.source_bytes != journal.source_bytes:
-        raise RecoveryError('recovery_discard_audit_mismatch', exit_code=6)
-    return terminal
-
-
-def original_discard(files, terminal):
-    """Bind terminal metadata to the entire original journal and immutable intent."""
-    data = terminal.data
-    audit_path = data['discard']['audit_path']
-    original = read_evidence(files, audit_path + '/journal.before.json')
-    intent = read_evidence(files, audit_path + '/intent.json')
-    if (original is None or intent is None
-            or original.sha256 != data['discard']['journal_before_sha256']
-            or intent.sha256 != data['discard']['intent_sha256']):
-        raise RecoveryError('recovery_discard_audit_mismatch', exit_code=6)
-    journal = _parse(original.source_bytes, data['transaction_id'], files, data['project_id'])
-    expected = journal.data
-    expected.update(state='rolled_back', discard=data['discard'])
-    value = parse_json_object(intent.source_bytes)
-    fields = {'action': 'discard', 'phase': 'intent', 'format_version': 'recovery-audit-v1',
-        'event_id': data['discard']['event_id'], 'transaction_id': data['transaction_id'],
-        'project_id': data['project_id'], 'journal_sha256': journal.sha256,
-        'previous_state': journal.data['state'], 'normative_writes': 0,
-        'base_model_root_sha256': journal.data['base_model_root_sha256'],
-        'target_model_root_sha256': journal.data['target_model_root_sha256']}
-    if (journal.data['state'] not in ('building', 'prepared') or data != expected
-            or data['discard']['previous_state'] != journal.data['state']
-            or any(value.get(key) != item for key, item in fields.items())):
-        raise RecoveryError('recovery_discard_audit_mismatch', exit_code=6)
-    return journal, intent
-
-
-def discard_completion_record(terminal, original, intent):
-    data = terminal.data
-    audit_path = data['discard']['audit_path']
-    return EvidenceRecord(audit_path + '/completed.json', canonical_json_bytes({
-        'format_version': 'recovery-audit-v1', 'event_id': data['discard']['event_id'],
-        'phase': 'completed', 'action': 'discard', 'state': 'rolled_back',
-        'transaction_id': data['transaction_id'], 'journal_before_sha256': original.sha256,
-        'journal_sha256': terminal.sha256, 'intent_sha256': intent.sha256,
-        'base_model_root_sha256': data['base_model_root_sha256'],
-        'archive_path': audit_path + '/work', 'normative_writes': 0}))
 
 
 def _finish_discard(preflight, terminal, *, held_lock, authority, actor, reason,
@@ -110,22 +45,11 @@ def _finish_discard(preflight, terminal, *, held_lock, authority, actor, reason,
     existing_recovery_record(files, receipt)
     selected = journal.path.rsplit('/', 1)[0]
     prefix, archive = tuple(selected.split('/')), tuple((audit_path + '/work').split('/'))
-    with files.directory(prefix) as directory:
-        active_work = directory is not None
-    with files.directory(archive) as directory:
-        archived_work = directory is not None
-    if active_work == archived_work:
-        raise RecoveryError('recovery_discard_work_unproven', exit_code=6)
-    if pending_marker and not active_work:
-        raise RecoveryError('recovery_discard_work_unproven', exit_code=6)
-    location = prefix if active_work else archive
+    active_work, location = discard_work_location(files, prefix, archive, pending_marker=pending_marker)
     work_raw = journal.source_bytes if pending_marker else terminal.source_bytes
     pending_raw = terminal.source_bytes if pending_marker else None
     work = _work(files, journal, raw=work_raw, prefix=location, preflight=preflight, pending=pending_raw)
-    expected_files = [{'path': 'journal.json', 'size': len(journal.source_bytes), 'sha256': journal.sha256}]
-    expected_files.extend(work_file_inventory(work))
-    if value.get('work_files') != sorted(expected_files, key=lambda item: item['path']):
-        raise RecoveryError('recovery_discard_inventory_mismatch', exit_code=6)
+    verify_discard_inventory(journal, value, work)
     tokens = [(record, existing_recovery_record(files, record)) for record in (original, intent)]
     active = files.journal_entries()
 

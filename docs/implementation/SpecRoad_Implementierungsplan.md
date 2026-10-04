@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 65
+last_completed_numbered_bundle: 66
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-05.C
+next_audit_step: AUDIT-CONTRACT-01.W
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -485,7 +485,7 @@ Der U-Abschluss wird erst mit dem passenden erfolgreichen Apply-Result zum
 
 - [x] **AUDIT-REC-05.W:** Einen öffentlich nutzbaren expliziten Neustartweg für eine vollständig vorbereitete unveröffentlichte Transaktion bereitstellen. Der neue Prozess erhält ausschließlich die dokumentierten persistenten Recoveryeingaben und eine frische Hostautorisierung; kein erhaltener oder serialisierter `PublicationPreflight`, kein nur vom Test ergänzter Originalplan. Benötigte zusätzliche Nachweisdaten müssen Bestandteil des definierten persistenten Transaktionsvertrags sein. **Abnahme:** Vollständige aktuelle Basisinventur und Basiswurzel unabhängig vom bloßen Journalanspruch prüfen, Journal-/Projekt-/Quellenbindung vor Mutation erneut sichern, unter neuem nativen Recoverylock verwerfen, alle ursprünglichen Beweise erhalten und einen neuen Writer erlauben. Normative Bytes bleiben unverändert. Ein aktives Journal wird nicht durch einen regulären Modellload umgangen; keine erneute Fachplanung als versteckte Discardvoraussetzung.
 - [x] **AUDIT-REC-05.R:** Beide unveröffentlichten Zustände, die bestätigte unterbrochene Building-Vorbereitung mit eigenem kurzem Stagingrest sowie Wiederanläufe nach unterbrochenem Discardabschluss behandeln. **Abnahme:** Getrennte Prozesse mit freigegebenem oder tatsächlich verwaistem Writerlock; vollständige Basisbindung auch bei zusätzlichem gültigem Artefakt, geänderten/fehlenden Ressourcen und widersprüchlichen persistenten Eingaben. Publikation, falsche Bindung, unvollständiger Nachweis, fremde Workreste oder unzulässige Eigentümer bleiben Blocker. Originalbytes, abgeschlossene Belege und tatsächliche Zwischenzustände bleiben bei Fehler erhalten; eine Wiederholung führt keinen normativen Write aus.
-- [ ] **AUDIT-REC-05.C:** Nachweisrekonstruktion, schreibfreie Diagnose und autorisierte Mutation strukturell trennen beziehungsweise gemeinsame Prüfungen konsolidieren. **Abnahme:** Die W-/R-Ergebnisse, Fehlerverträge, Autoritätsgrenzen und zulässigen Dateieffekte bleiben unverändert; kein neues Fachverhalten.
+- [x] **AUDIT-REC-05.C:** Nachweisrekonstruktion, schreibfreie Diagnose und autorisierte Mutation strukturell trennen beziehungsweise gemeinsame Prüfungen konsolidieren. **Abnahme:** Die W-/R-Ergebnisse, Fehlerverträge, Autoritätsgrenzen und zulässigen Dateieffekte bleiben unverändert; kein neues Fachverhalten.
 
 **Grenze:** Expliziter Bibliotheks-/Recoveryweg und dessen persistente Nachweise.
 Kein automatischer Preflight, Vollquellen-Restore oder Vorziehen eines allgemeinen
@@ -570,6 +570,31 @@ nicht vorgezogen. Commit-Message:
 `fix(recovery): resume unpublished discard across interrupted preparation`.
 Erst das passende erfolgreiche Apply-Result bestätigt den R-Abschluss.
 Nächster Schritt: `AUDIT-REC-05.C`; Produktzähler unverändert 237/885.
+
+**C-Umsetzung (Bundle 066, OFF-PLAN `AUDIT-REC-05.C`):** Result
+`specroad-apply_Result_171714_1004_7b5c41.zip` bestätigt den R-Abschluss von Bundle
+065 mit Commit `d79a5beb5be80bef87b70074a5f27e6b1398031a`, sauberem Zustand und
+je 5.703 bestandenen parallelen/seriellen Apply-Tests. Seine 1.441 Snapshotdateien
+bilden die vollständige unveränderte Ausgangsbasis dieses C-Schritts.
+
+`_discard_inputs.py` fasst die bisherigen schreibfreien Prüfungen für archivierte
+und noch nicht übernommene Discardmarker, Originaljournal und Intent sowie die
+reine Projektion des Abschlussbelegs zusammen. Die vier extrahierten Funktionen
+behalten ihre Prüfungen unverändert. Neustartdiagnose und mutierender Abschluss
+teilen nun außerdem dieselbe Auswahl zwischen aktivem und archiviertem Workbestand
+und dieselbe kanonische Inventurprüfung. Auch die initiale Intentanlage nutzt diese
+Inventurprojektion. Autorisierung, frische Basis-/Lock-/Byteprüfungen, native
+Schreiboperationen und deren Reihenfolge bleiben beim bisherigen Mutationspfad.
+
+Die bestehenden 5.703 Verhaltenstests, einschließlich aller W/R-Prozessabbrüche,
+bleiben unverändert. Es entsteht kein neues Fachverhalten und kein Test der
+Modulstruktur oder Dokumentation. Formatversionen, Diagnosefelder, Fehlergrenzen,
+zulässige Dateieffekte und Byteerhalt werden beibehalten. Die drei Requirement-
+manifeste bleiben wegen der späteren CLI-/Preflight- und umfassenden Umgebungs-
+integration `partial`. Commit-Message:
+`refactor(recovery): share read-only discard evidence checks`.
+Der erfolgreiche Apply-Commit bestätigt erst den C-Abschluss. Nächster Schritt:
+`AUDIT-CONTRACT-01.W`; Produktstand 237/885 und Sperre von 5.t.W bleiben bestehen.
 
 ### AUDIT-CONTRACT-01 – aktuelle maschinenlesbare Selbstbeschreibung
 

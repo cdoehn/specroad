@@ -81,12 +81,11 @@ def prepare_discard_recovery(root, transaction_id, *, expected_project_id, expec
 def _observe_restart(files, transaction_id, project_id, expected_hash):
     from ._recovery_inputs import _parse, _work
     from ._journal_codec import journal_path
-    from ._discard_completion import (archived_discard, original_discard,
-        pending_discard, discard_completion_record)
+    from ._discard_inputs import (archived_discard, original_discard, pending_discard,
+        discard_completion_record, verify_discard_inventory, discard_work_location)
     from ._recovery_evidence import EvidenceRecord, read_evidence, rollback_receipt
     from ._recovery_receipts import existing_recovery_record
     from ._recovery_barrier import barrier_record
-    from ._recovery_work import work_file_inventory
     from .recovery_values import DiscardedJournal
     from .receipt_values import transaction_receipt_path
 
@@ -112,19 +111,11 @@ def _observe_restart(files, transaction_id, project_id, expected_hash):
         prefix = tuple(journal.path.split('/')[:-1])
         audit_path = terminal.data['discard']['audit_path']
         archive = tuple((audit_path + '/work').split('/'))
-        with files.directory(prefix) as directory:
-            active_work = directory is not None
-        with files.directory(archive) as directory:
-            archived_work = directory is not None
-        if active_work == archived_work or (pending and not active_work):
-            raise RecoveryError('recovery_discard_work_unproven', exit_code=6)
+        _, location = discard_work_location(files, prefix, archive, pending_marker=pending)
         work = _work(files, journal, raw=journal.source_bytes if pending else terminal.source_bytes,
-            prefix=prefix if active_work else archive, preflight=proof,
+            prefix=location, preflight=proof,
             pending=terminal.source_bytes if pending else None)
-        inventory = [{'path': 'journal.json', 'size': len(journal.source_bytes), 'sha256': journal.sha256}]
-        inventory.extend(work_file_inventory(work))
-        if parse_json_object(intent.source_bytes).get('work_files') != sorted(inventory, key=lambda i: i['path']):
-            raise RecoveryError('recovery_discard_inventory_mismatch', exit_code=6)
+        verify_discard_inventory(journal, parse_json_object(intent.source_bytes), work)
         records = [intent, EvidenceRecord(audit_path + '/journal.before.json', journal.source_bytes),
             rollback_receipt(terminal, intent, action='discard'), barrier_record(terminal, intent, 'discard'),
             discard_completion_record(terminal, journal, intent)]

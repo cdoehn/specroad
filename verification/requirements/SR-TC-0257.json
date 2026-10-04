@@ -83,7 +83,7 @@
     "tests/test_discard_restart_right.py::test_self_consistent_staging_hash_cannot_contradict_the_bound_target_root"
   ],
   "open_items": [
-    "AUDIT-REC-05.C retains the W/R behavior while consolidating structure. Journals without explicit basis selection and building-v1 without persisted staging proof are not silently upgraded. The comprehensive crash/environment matrix and general CLI integration are not claimed.",
+    "AUDIT-REC-05.W/R/C provide explicit persisted-input restart and preserved discard completion. Journals without explicit basis selection and building-v1 without persisted staging proof are not silently upgraded. The comprehensive crash/environment matrix and general CLI integration are not claimed.",
     "Public recovery CLI integration and automatic transaction preflight are not claimed; automatic preflight remains in 5.t."
   ]
 }

@@ -21,9 +21,8 @@ from ._staging_files import _image
 from .recovery_values import (AUDIT_ROOT, RecoveryAuthority, RecoveryError,
                               RecoveryObservation, DiscardedJournal)
 from ._recovery_inputs import _read_journal, _parse, _unchanged_base, _work
-from ._discard_completion import (archived_discard, finish_discard, pending_discard,
-                                  write_discard_file as _write_new)
-from ._recovery_work import work_file_inventory
+from ._discard_completion import finish_discard, write_discard_file as _write_new
+from ._discard_inputs import archived_discard, pending_discard, discard_work_inventory
 # Preserve the initial module import surface; the implementation is read-only.
 from .recovery_read import inspect_recovery
 
@@ -98,12 +97,11 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
             raise RecoveryError('recovery_not_authorized', exit_code=7)
         guard()
         event = str(uuid4()); audit_path = AUDIT_ROOT + '/' + event
-        work_files = [{'path': 'journal.json', 'size': len(raw), 'sha256': journal.sha256}]
-        work_files.extend(work_file_inventory(work))
+        work_files = discard_work_inventory(journal, work)
         intent = canonical_json_bytes({'format_version': 'recovery-audit-v1',
             'event_id': event, 'phase': 'intent', **parse_json_object(request_raw),
             'previous_state': journal.data['state'], 'normative_writes': 0,
-            'work_files': sorted(work_files, key=lambda item: item['path']),
+            'work_files': work_files,
             'authority_id': authority.authority_id, 'authority_version': authority.version,
             'created_at': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')})
         value = journal.data
