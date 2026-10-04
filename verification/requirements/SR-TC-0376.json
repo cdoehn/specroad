@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad capabilities --format json` MUSS Toolversion, Capability-IDs, Befehlsgruppen, aktivierte Ausgabe- und Austauschformate, unterstützte Schema-, SRX- und Proposal-Versionen sowie Laufzeitgrenzen maschinenlesbar ausgeben.",
-    "scope": "Registry-derived active capabilities, implemented Core model schema 0.2.0 matched to version and retrievable artifact/configuration schemas, portable self-description, and fresh known/unlimited/unknown process-limit observations; no host/cgroup or future command claims."
+    "scope": "Registry-derived CLI capabilities and formats are distinct from executable public SRX 1.0 library support, retrievable structural schemas and serializers; Core model schema 0.2.0, detached results, portable execution and process-limit observations are verified without future workflow or release claims."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -31,7 +31,9 @@
   ],
   "json_pointers": [
     "/result",
-    "/result/semantic/supported_versions/schema"
+    "/result/semantic/supported_versions/schema",
+    "/result/semantic/supported_versions/srx",
+    "/result/semantic/capability_ids"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -67,10 +69,19 @@
     "test_capabilities.CapabilitiesRobustnessTests.test_no_claim_is_made_for_a_handler_without_a_machine_contract",
     "test_capabilities.CapabilitiesRobustnessTests.test_relocated_module_and_zipapp_self_description_remains_executable",
     "test_capabilities.CapabilitiesRobustnessTests.test_bootstrap_limit_observation_never_changes_process_limits",
-    "test_capabilities.CapabilitiesWorkTests.test_advertised_model_versions_match_retrievable_schema_contracts"
+    "test_capabilities.CapabilitiesWorkTests.test_advertised_model_versions_match_retrievable_schema_contracts",
+    "test_capability_scope.CapabilityScopeTests.test_advertised_srx_versions_execute_through_the_public_library",
+    "test_capability_scope.CapabilityScopeTests.test_unadvertised_srx_versions_remain_structured_failures",
+    "test_capability_scope.CapabilityScopeTests.test_library_support_does_not_register_product_commands",
+    "test_capability_scope.CapabilityScopeTests.test_library_claim_survives_an_empty_command_registry",
+    "test_capability_scope.CapabilityScopeTests.test_proposal_record_schema_is_not_an_executable_proposal_workflow",
+    "test_capability_scope.CapabilityScopeTests.test_library_versions_do_not_invent_schema_catalog_ids",
+    "test_capability_scope.CapabilityScopeTests.test_schema_and_output_format_versions_do_not_enable_other_model_versions",
+    "test_capability_scope.CapabilityScopeTests.test_library_sarif_serializer_is_distinct_from_active_cli_formats",
+    "test_capability_scope.CapabilityScopeTests.test_portable_srx_capability_executes_without_project_or_external_packages"
   ],
   "open_items": [
     "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release.",
-    "AUDIT-CONTRACT-01.R must resolve the scope of SRX library support versus executable CLI commands and retrievable schemas; subsequent C consolidates version/capability sources."
+    "AUDIT-CONTRACT-01.C consolidates version/capability sources; complete Proposal/exchange/agent workflows remain in their regular future milestones, particularly 18.m."
   ]
 }

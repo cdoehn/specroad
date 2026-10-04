@@ -32,7 +32,8 @@
     "/result/build_sha256",
     "/result/runtime",
     "/result/python_support",
-    "/result/supported_schema_versions"
+    "/result/supported_schema_versions",
+    "/result/supported_output_format_versions"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -65,7 +66,9 @@
     "test_payload_identity.PayloadIdentityTests.test_actual_hash_rejects_incomplete_or_wrong_byte_expectations",
     "test_identity.IdentityWorkTests.test_only_implemented_formats_and_schemas_are_advertised",
     "test_identity.IdentityWorkTests.test_advertised_schema_versions_validate_current_model_resources",
-    "test_identity.IdentityRobustnessTests.test_returned_data_cannot_mutate_later_identity_results"
+    "test_identity.IdentityRobustnessTests.test_returned_data_cannot_mutate_later_identity_results",
+    "test_capability_scope.CapabilityScopeTests.test_schema_and_output_format_versions_do_not_enable_other_model_versions",
+    "test_capability_scope.CapabilityScopeTests.test_library_sarif_serializer_is_distinct_from_active_cli_formats"
   ],
   "open_items": [
     "Release-bound cross-runtime verification and final distribution assembly remain in milestone 20."

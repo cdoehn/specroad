@@ -2,8 +2,12 @@
 
 The semantic payload is deterministic. Host observations never join it, and
 an existing serializer is not mistaken for a format accepted by a command.
+The ``python.`` and ``cli.`` capability namespaces distinguish public library
+support from executable registry commands. Model/SRX versions describe the
+existing Core validators/evaluator, not the presence of a command or a schema ID.
 """
 
+from .._metadata import SUPPORTED_SRX_VERSIONS
 from .results import FORMAT_VERSION
 from .self_description import (DESCRIPTION_VERSION, command_surface,
                                output_formats, published_contract)
@@ -27,13 +31,15 @@ def capabilities(registry):
     semantic = {
         "program_version": identity["program_version"],
         "distribution": {key: identity[key] for key in ("distribution_kind", "build_id", "build_sha256", "build_hash_scope")},
-        "capability_ids": sorted(["cli." + cmd["command_id"] for cmd in commands] + ["python.structured-request"]),
+        "capability_ids": sorted(["cli." + cmd["command_id"] for cmd in commands] +
+                                 ["python.structured-request", "python.srx.evaluate"]),
         "commands": commands,
         "command_groups": sorted({cmd["command_id"].split(".")[0] for cmd in commands}),
         "command_classes": sorted({cmd["command_class"] for cmd in commands}),
         "output_formats": sorted(active_formats),
         "exchange_formats": [],
-        "supported_versions": {"schema": identity["supported_schema_versions"], "srx": [], "proposal": [],
+        "supported_versions": {"schema": identity["supported_schema_versions"],
+            "srx": list(SUPPORTED_SRX_VERSIONS), "proposal": [],
             "json_envelope": [FORMAT_VERSION], "command_description": [DESCRIPTION_VERSION],
             "capabilities": [CAPABILITIES_VERSION]},
         "python_support": identity["python_support"],

@@ -7,3 +7,5 @@ MINIMUM_PYTHON = (3, 10)
 DECLARED_CPYTHON_MINORS = ("3.10", "3.11", "3.12", "3.13", "3.14")
 # Implemented Core model schema versions; result/request formats are separate.
 SUPPORTED_SCHEMA_VERSIONS = ("0.2.0",)
+# Public Core evaluator support; this does not register a CLI command.
+SUPPORTED_SRX_VERSIONS = ("1.0",)

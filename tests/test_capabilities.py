@@ -21,7 +21,8 @@ class CapabilitiesWorkTests(unittest.TestCase):
         registry = builtin_registry(); document = capabilities(registry); semantic = document['semantic']
         ids = {command.command_id for command in registry.commands}
         self.assertEqual({item['command_id'] for item in semantic['commands']}, ids)
-        self.assertEqual(set(semantic['capability_ids']), {'cli.' + item for item in ids} | {'python.structured-request'})
+        self.assertEqual(set(semantic['capability_ids']), {'cli.' + item for item in ids} |
+                         {'python.structured-request', 'python.srx.evaluate'})
         self.assertEqual(set(semantic['command_groups']), {item.split('.')[0] for item in ids})
         self.assertEqual(semantic['command_classes'], ['read_only'])
         for item in semantic['commands']:
@@ -35,8 +36,8 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertNotIn('sarif', semantic['output_formats'])
         self.assertEqual(semantic['exchange_formats'], [])
         self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
-        for kind in ('srx', 'proposal'):
-            self.assertEqual(semantic['supported_versions'][kind], [])
+        self.assertEqual(semantic['supported_versions']['srx'], ['1.0'])
+        self.assertEqual(semantic['supported_versions']['proposal'], [])
         self.assertFalse(semantic['work']['engine_available'])
         self.assertEqual(semantic['work']['checkpoint_algorithms'], [])
         self.assertIsNone(semantic['work']['budget_policy_version'])
@@ -88,6 +89,8 @@ class CapabilitiesWorkTests(unittest.TestCase):
     def test_returned_data_cannot_mutate_next_capability_query(self):
         registry = builtin_registry(); first = capabilities(registry); original = capabilities(registry)
         first['semantic']['commands'].clear(); first['semantic']['supported_versions']['schema'].append('fake')
+        first['semantic']['supported_versions']['srx'].clear()
+        first['semantic']['capability_ids'].clear()
         first['runtime']['interpreter']['python_version'] = 'fake'
         self.assertEqual(capabilities(registry), original)
 
@@ -270,6 +273,8 @@ class CapabilitiesRobustnessTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 semantic = json.loads(result.stdout)['result']['semantic']
                 self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
+                self.assertEqual(semantic['supported_versions']['srx'], ['1.0'])
+                self.assertIn('python.srx.evaluate', semantic['capability_ids'])
                 semantics.append(semantic)
                 for command in semantic['commands']:
                     description = run_python(['-I', '-S', '-B', str(target), 'command', 'describe',
