@@ -19,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad version --format json` MUSS mindestens Programmversion, Buildkennung, tatsächlich verwendete Python-Version, niedrigste unterstützte Python-Version, unterstützte Schema-Versionen und unterstützte Ausgabeformatversionen ausgeben.",
-    "scope": "Actual runtime and build identity; no release or tested-matrix assertion from declarations."
+    "scope": "Actual runtime and build identity, implemented Core model schema 0.2.0 matched to accepting artifact/configuration validators and portable version output; no release or tested-matrix assertion from declarations."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -31,7 +31,8 @@
     "/result/program_version",
     "/result/build_sha256",
     "/result/runtime",
-    "/result/python_support"
+    "/result/python_support",
+    "/result/supported_schema_versions"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -61,7 +62,10 @@
     "test_payload_identity.PayloadIdentityTests.test_relative_program_path_remains_part_of_the_hash",
     "test_payload_identity.PayloadIdentityTests.test_build_keeps_all_source_bytes_unchanged",
     "test_payload_identity.PayloadIdentityTests.test_reference_inventory_cannot_silently_drop_required_resources",
-    "test_payload_identity.PayloadIdentityTests.test_actual_hash_rejects_incomplete_or_wrong_byte_expectations"
+    "test_payload_identity.PayloadIdentityTests.test_actual_hash_rejects_incomplete_or_wrong_byte_expectations",
+    "test_identity.IdentityWorkTests.test_only_implemented_formats_and_schemas_are_advertised",
+    "test_identity.IdentityWorkTests.test_advertised_schema_versions_validate_current_model_resources",
+    "test_identity.IdentityRobustnessTests.test_returned_data_cannot_mutate_later_identity_results"
   ],
   "open_items": [
     "Release-bound cross-runtime verification and final distribution assembly remain in milestone 20."

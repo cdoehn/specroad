@@ -51,9 +51,29 @@ class IdentityWorkTests(unittest.TestCase):
     def test_only_implemented_formats_and_schemas_are_advertised(self):
         from specroad.cli.results import FORMAT_VERSION
         result = version_info()
-        self.assertEqual(result["supported_schema_versions"], [])
+        self.assertEqual(result["supported_schema_versions"], ["0.2.0"])
         self.assertEqual(result["supported_output_format_versions"]["json"], [FORMAT_VERSION])
         self.assertEqual(result["supported_output_format_versions"]["sarif"], ["2.1.0"])
+
+    def test_advertised_schema_versions_validate_current_model_resources(self):
+        from specroad.model.artifact_types import artifact_types
+        from specroad.model.artifact_schemas import validate_common_fields
+        from specroad.model.configuration import ProjectConfiguration
+        from support.artifacts import common_artifact
+        from support.model import configuration_value
+
+        result = dispatch_result(["version", "--format=json"])
+        self.assertEqual(result.exit_code, 0)
+        versions = result.as_dict()["result"]["supported_schema_versions"]
+        self.assertEqual(versions, ["0.2.0"])
+        for version in versions:
+            for item in artifact_types():
+                with self.subTest(version=version, artifact_type=item.artifact_type):
+                    value = common_artifact(item.artifact_type, item.prefix,
+                                            schema_version=version)
+                    validate_common_fields(value)
+            config = ProjectConfiguration(configuration_value(schema_version=version))
+            self.assertEqual(config.data["schema_version"], version)
 
     def test_portable_module_and_zipapp_share_the_recorded_payload_hash(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -65,6 +85,7 @@ class IdentityWorkTests(unittest.TestCase):
                 completed = run_python(["-I", "-S", "-B", str(entry), "version", "--format", "json"], root, capture=True)
                 self.assertEqual(completed.returncode, 0, completed.stderr)
                 values.append(json.loads(completed.stdout)["result"])
+                self.assertEqual(values[-1]["supported_schema_versions"], ["0.2.0"])
             self.assertEqual(values[0]["distribution_kind"], "module")
             self.assertEqual(values[1]["distribution_kind"], "zipapp")
             self.assertEqual(values[0]["build_sha256"], values[1]["build_sha256"])
@@ -180,9 +201,11 @@ class IdentityRobustnessTests(unittest.TestCase):
         first = version_info()
         first["python_support"]["declared_minors"].clear()
         first["supported_output_format_versions"]["json"].append("fake")
+        first["supported_schema_versions"].clear()
         second = version_info()
         self.assertEqual(len(second["python_support"]["declared_minors"]), 5)
         self.assertNotIn("fake", second["supported_output_format_versions"]["json"])
+        self.assertEqual(second["supported_schema_versions"], ["0.2.0"])
 
     def test_display_policy_does_not_change_version_identity(self):
         plain = dispatch_result(["version"])

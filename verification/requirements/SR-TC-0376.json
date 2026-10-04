@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad capabilities --format json` MUSS Toolversion, Capability-IDs, Befehlsgruppen, aktivierte Ausgabe- und Austauschformate, unterstützte Schema-, SRX- und Proposal-Versionen sowie Laufzeitgrenzen maschinenlesbar ausgeben.",
-    "scope": "Registry-derived active capabilities, portable self-description, and fresh known/unlimited/unknown process-limit observations; no host/cgroup or future feature claims."
+    "scope": "Registry-derived active capabilities, implemented Core model schema 0.2.0 matched to version and retrievable artifact/configuration schemas, portable self-description, and fresh known/unlimited/unknown process-limit observations; no host/cgroup or future command claims."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -30,7 +30,8 @@
     5
   ],
   "json_pointers": [
-    "/result"
+    "/result",
+    "/result/semantic/supported_versions/schema"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -65,9 +66,11 @@
     "test_capabilities.CapabilitiesRobustnessTests.test_bootstrap_succeeds_without_current_directory_lookup",
     "test_capabilities.CapabilitiesRobustnessTests.test_no_claim_is_made_for_a_handler_without_a_machine_contract",
     "test_capabilities.CapabilitiesRobustnessTests.test_relocated_module_and_zipapp_self_description_remains_executable",
-    "test_capabilities.CapabilitiesRobustnessTests.test_bootstrap_limit_observation_never_changes_process_limits"
+    "test_capabilities.CapabilitiesRobustnessTests.test_bootstrap_limit_observation_never_changes_process_limits",
+    "test_capabilities.CapabilitiesWorkTests.test_advertised_model_versions_match_retrievable_schema_contracts"
   ],
   "open_items": [
-    "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release."
+    "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release.",
+    "AUDIT-CONTRACT-01.R must resolve the scope of SRX library support versus executable CLI commands and retrievable schemas; subsequent C consolidates version/capability sources."
   ]
 }

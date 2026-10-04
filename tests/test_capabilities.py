@@ -34,11 +34,34 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertEqual(semantic['output_formats'], ['json', 'pretty'])
         self.assertNotIn('sarif', semantic['output_formats'])
         self.assertEqual(semantic['exchange_formats'], [])
-        for kind in ('schema', 'srx', 'proposal'):
+        self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
+        for kind in ('srx', 'proposal'):
             self.assertEqual(semantic['supported_versions'][kind], [])
         self.assertFalse(semantic['work']['engine_available'])
         self.assertEqual(semantic['work']['checkpoint_algorithms'], [])
         self.assertIsNone(semantic['work']['budget_policy_version'])
+
+    def test_advertised_model_versions_match_retrievable_schema_contracts(self):
+        outcomes = [dispatch_result(argv) for argv in (
+            ['version', '--format=json'], ['capabilities', '--format=json'],
+            ['schema', 'list', '--format=json'])]
+        for outcome in outcomes:
+            self.assertEqual(outcome.exit_code, 0)
+        identity, available, catalog = [outcome.as_dict()['result'] for outcome in outcomes]
+        versions = available['semantic']['supported_versions']['schema']
+        self.assertEqual(versions, ['0.2.0'])
+        self.assertEqual(identity['supported_schema_versions'], versions)
+        model_rows = [row for row in catalog['schemas']
+                      if row['category'] in ('artifact', 'configuration')]
+        self.assertEqual({row['category'] for row in model_rows},
+                         {'artifact', 'configuration'})
+        self.assertEqual(sorted({row['version'] for row in model_rows}), versions)
+        for row in model_rows:
+            with self.subTest(schema_id=row['schema_id']):
+                result = dispatch_result(['schema', 'show', row['schema_id'], '--format=json'])
+                self.assertEqual(result.exit_code, 0)
+                schema = result.as_dict()['result']['schema']
+                self.assertEqual(schema['properties']['schema_version']['const'], row['version'])
 
     def test_actual_cli_json_and_python_entry_deliver_the_same_semantics(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -246,6 +269,7 @@ class CapabilitiesRobustnessTests(unittest.TestCase):
                 result = run_python(['-I', '-S', '-B', str(target), 'capabilities', '--format=json'], project, capture=True)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 semantic = json.loads(result.stdout)['result']['semantic']
+                self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
                 semantics.append(semantic)
                 for command in semantic['commands']:
                     description = run_python(['-I', '-S', '-B', str(target), 'command', 'describe',

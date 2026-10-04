@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 66
+last_completed_numbered_bundle: 67
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-CONTRACT-01.W
+next_audit_step: AUDIT-CONTRACT-01.R
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -66,7 +66,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | offen |
+| F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | Schemaangabe in W korrigiert; R/C offen; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | offen |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01.U | offen; keine pauschale Gesamtimplementierung zugesagt |
 | F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02.U | offen; legitime spätere Adapter abgrenzen |
@@ -600,9 +600,36 @@ Der erfolgreiche Apply-Commit bestätigt erst den C-Abschluss. Nächster Schritt
 
 **F05; Voraussetzung:** Recovery-Nacharbeiten entschieden und bestätigte Lücken behoben. **Bezug:** 1.i/1.n/2.q; SR-REQ-0194/0376/0392; SR-VER-0013/0027; zugehörige SR-TC-Manifeste. Betroffen: `_metadata.py`, `runtime/identity.py`, `cli/capabilities.py`, `model/versions.py`; `test_identity.py`, `test_capabilities.py`.
 
-- [ ] **AUDIT-CONTRACT-01.W:** Die bereits verfügbare Schemaunterstützung korrekt in Version-/Capabilities-Verträgen veröffentlichen. **Abnahme:** Vorhandene Artefaktschemas werden nicht mehr als leere Schemaunterstützung beschrieben; Testoracles prüfen den real implementierten Umfang.
+- [x] **AUDIT-CONTRACT-01.W:** Die bereits verfügbare Schemaunterstützung korrekt in Version-/Capabilities-Verträgen veröffentlichen. **Abnahme:** Vorhandene Artefaktschemas werden nicht mehr als leere Schemaunterstützung beschrieben; Testoracles prüfen den real implementierten Umfang.
 - [ ] **AUDIT-CONTRACT-01.R:** Die Reichweite von Bibliotheksfähigkeit, abrufbarem Schema und ausführbarem CLI-Befehl aus den bestehenden Verträgen bestimmen, insbesondere für SRX. **Abnahme:** Alle Angaben widerspruchsfrei; keine Werbung für noch nicht verfügbare Produktbefehle. Erforderliche Korrekturen bleiben innerhalb vorhandener Fähigkeiten; die Agentenintegration 18.m wird nicht vorgezogen.
 - [ ] **AUDIT-CONTRACT-01.C:** Quellen der Versions-/Fähigkeitsangaben konsolidieren. **Abnahme:** Dieselben fachlichen Listen, Werte und Ablehnungsgrenzen wie nach R, ohne neue Abhängigkeit des portablen Core.
+
+**W-Umsetzung (Bundle 067, OFF-PLAN `AUDIT-CONTRACT-01.W`):** Das Result
+`specroad-apply_Result_181602_1004_102394.zip` bestätigt den C-Abschluss von Bundle
+066 mit Commit `2074a970a03281819435430dd4e6fe99a516654e`, sauberem Zustand und
+je 5.703 bestandenen parallelen/seriellen Apply-Tests. Sämtliche 1.442 Dateien
+dieses Snapshots stimmen vor der Änderung bytegenau mit der Entwicklung überein.
+
+Die bisher leere Modell-Schemaliste in `_metadata.py` nennt nun die bereits
+implementierte Version `0.2.0`. `version` und `capabilities` veröffentlichen
+diese Angabe über ihre vorhandene gemeinsame Versionsabfrage. Die Aussage
+betrifft das Core-Modellschema; separat versionierte Request-/Ergebnisformate
+sind keine zusätzlichen Modellversionen. Alte Oracles für eine leere
+Schemaunterstützung werden durch den tatsächlich implementierten Umfang ersetzt.
+
+Zwei zusätzliche Verhaltenstests gleichen die Angabe mit der Annahme aller 28
+Common-Artefakttypen und der Projektkonfiguration sowie mit `schema list/show`
+für alle vorhandenen Artefakt-/Konfigurationsschemas ab. Bestehende Tests prüfen
+die Angabe zusätzlich in isolierten Modul-/Zipapp-Distributionen und ihren
+Erhalt nach Manipulation eines vorher zurückgegebenen Ergebnisobjekts. Die
+Requirementmanifeste SR-TC-0194 und SR-TC-0376 binden diesen Teilumfang und bleiben
+`partial`. SRX-/Proposal-Reichweite und die spätere vollständige Integration
+werden dadurch nicht als abgeschlossen behauptet.
+
+Commit-Message: `fix(core): advertise implemented model schema support`.
+Erst das passende erfolgreiche Apply-Result bestätigt diesen W-Abschluss.
+Nächster Schritt: `AUDIT-CONTRACT-01.R`; Produktzähler 237/885 und Sperre von
+5.t.W bleiben unverändert.
 
 ### AUDIT-CONTRACT-02 – vorhandenes Change-Plan-Schema im Katalog
 
