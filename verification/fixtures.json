@@ -267,7 +267,7 @@
     },
     "SR-FIX-DISCARD-RESTART-v1": {
       "provider": "tests/support/discard_restart.py:child",
-      "kind": "Owned native Linux writer and recovery subprocesses. Prepared update/create/noop and profile/attachment/language-package inputs persist in the project and journal; no original plan or preflight object crosses processes. Recovery uses independent byte/root oracles, explicit synthetic authority, native lock acquisition or audited dead-owner takeover, preserved evidence, native normative-write observation and a new writer."
+      "kind": "Owned native Linux writer and recovery subprocesses for building/prepared, incomplete preparation, and repeated discard completion. Independent byte/root oracles, actual partial native staging writes and abrupt process exits, original audit/receipt preservation, native normative-write observation, fresh authority and dead-owner takeover. Persistent v1 selection and v2 exact staging bytes are versioned; no original Change Plan or preflight crosses processes."
     }
   }
 }

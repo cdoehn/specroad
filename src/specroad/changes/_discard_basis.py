@@ -1,4 +1,4 @@
-"""Read-only independent manifest reconstruction for prepared discard recovery.
+"""Read-only independent manifest reconstruction for unpublished discard recovery.
 
 No ordinary model loader, target planner, host policy or implicit profile
 selection. The journal supplies explicit selection and expected bindings; live
@@ -22,13 +22,15 @@ from ._staging_files import _image
 from .recovery_values import RecoveryError
 
 
-def observe_prepared_basis(files, journal):
+def observe_discard_basis(files, journal, *, include_images=False):
     data = journal.data
-    if data['state'] != 'prepared':
+    if data['state'] not in ('building', 'prepared'):
         raise RecoveryError('discard_restart_prepared_required', exit_code=6)
     selection = data.get('discard_basis')
     if selection is None:
         raise RecoveryError('discard_restart_basis_required', exit_code=2)
+    if data['state'] == 'building' and selection['format_version'] != 'discard-basis-v2':
+        raise RecoveryError('discard_restart_images_required', exit_code=2)
     with verified_membership(files, journal, phase='base'):
         inventory = {item['path']: item for item in data['target_inventory']}
         for entry in data['files']:
@@ -58,6 +60,11 @@ def observe_prepared_basis(files, journal):
         root_hash = _manifest(source, raw_files, selection, data['authoring_binding']['scope_descriptor'])
         if root_hash != data['base_model_root_sha256']:
             raise RecoveryError('discard_basis_root_mismatch', exit_code=6)
+        if selection['format_version'] == 'discard-basis-v2':
+            from ._discard_basis_contract import staging_images
+            target = {**raw_files, **staging_images(selection)}
+            if _manifest(source, target, selection, data['authoring_binding']['scope_descriptor']) != data['target_model_root_sha256']:
+                raise RecoveryError('discard_staging_root_mismatch', exit_code=6)
         # Every byte observation, not merely the configuration, must still hold
         # after profile composition and semantic projection.
         for path, item in sorted(inventory.items()):
@@ -67,7 +74,11 @@ def observe_prepared_basis(files, journal):
                     raise RecoveryError('discard_basis_file_missing', path=path, exit_code=6)
                 _image(parent, parts[-1], item['size'], item['sha256'], identity=tokens[path]['identity'])
         source.check_current()
-    return {'files': tokens, 'base_model_root_sha256': root_hash}
+    observation = {'files': tokens, 'base_model_root_sha256': root_hash}
+    if include_images:
+        from ._discard_basis_contract import staging_images
+        return observation, raw_files, staging_images(selection)
+    return observation
 
 
 def _manifest(source, raw_files, selection, scope):

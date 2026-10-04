@@ -96,7 +96,7 @@ def test_codec_rejects_wrong_state_and_publication(tmp_path,field,value):
 
 def test_self_consistent_missing_inventory_is_not_a_proof(tmp_path):
     m,p,c=prepared(tmp_path)
-    v=prepare_building_journal(c,transaction_id=TRANSACTION).data;v.update(state='prepared',files=[])
+    v=prepare_building_journal(c,transaction_id=TRANSACTION).data;v.update(state='prepared',files=[]);v['discard_basis']['staging_images']=[]
     with pytest.raises(StagingError) as e:verify_prepared_journal(PreparedJournal(canonical_json_bytes(v)),c)
     assert e.value.exit_code==6
 

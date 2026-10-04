@@ -4,6 +4,7 @@ No lock acquisition, authorization callback, new planning or mutation lives in
 this module. Diagnostic results are never reusable write capabilities.
 """
 from hashlib import sha256
+from ._discard_basis_contract import match_basis_version
 import os
 from ..model.canonical import canonical_json_bytes
 from ..security import paths as guards
@@ -66,8 +67,7 @@ def _unchanged_base(preflight, journal, files):
         raise RecoveryError('discard_state_forbidden', exit_code=6)
     expected = prepare_building_journal(preflight, transaction_id=data['transaction_id']).data
     expected['state'] = data['state']
-    if 'discard_basis' not in data:
-        expected.pop('discard_basis')
+    match_basis_version(expected, data)
     if data != expected:
         raise RecoveryError('recovery_inventory_unproven', exit_code=6)
     model = preflight._model.snapshot()
@@ -78,7 +78,7 @@ def _unchanged_base(preflight, journal, files):
                                     preflight._package_files, check_rights=lambda fd, path: None)
 
 
-def _work(files, journal, *, raw=None, prefix=None, preflight=None):
+def _work(files, journal, *, raw=None, prefix=None, preflight=None, pending=None):
     """Closed work inventory, including proven prefixes of interrupted writes.
 
     Prepared images remain complete. Building may have missing directories,
@@ -94,6 +94,7 @@ def _work(files, journal, *, raw=None, prefix=None, preflight=None):
         names = set(os.listdir(directory))
         permitted = {'journal.json', 'before', 'staging'}
         if building: permitted.add('journal.prepared')
+        if pending is not None: permitted.add('journal.discard')
         if ('journal.json' not in names or not names <= permitted
                 or (not building and names != permitted)):
             raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
@@ -101,12 +102,18 @@ def _work(files, journal, *, raw=None, prefix=None, preflight=None):
         if actual != (journal.source_bytes if raw is None else raw):
             raise RecoveryError('recovery_journal_changed', exit_code=6)
         result = {'': guards._identity(os.fstat(directory)), 'journal.json': sha256(actual).hexdigest()}
+        if pending is not None:
+            _image(directory, 'journal.discard', len(pending), sha256(pending).hexdigest())
         if 'journal.prepared' in names:
             expected = journal.data; expected['state'] = 'prepared'
             content = canonical_json_bytes(expected)
             result['journal.prepared'] = _prefix_image(directory, 'journal.prepared', content)
-    target = {} if not building or preflight is None else {d.path: d.content for d in preflight.request.documents}
-    original = {} if not building or preflight is None else preflight._model.source_files
+    from .discard_preflight import DiscardPreflight
+    if building and type(preflight) is DiscardPreflight:
+        _, original, target = preflight._check(files, journal, include_images=True)
+    else:
+        target = {} if not building or preflight is None else {d.path: d.content for d in preflight.request.documents}
+        original = {} if not building or preflight is None else preflight._model.source_files
     for folder, path_key, size_key, hash_key in (
             ('staging', 'staging_path', 'after_size', 'after_sha256'),
             ('before', 'before_image_path', 'before_size', 'before_sha256')):

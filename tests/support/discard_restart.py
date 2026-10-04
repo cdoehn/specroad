@@ -7,7 +7,8 @@ import subprocess
 import sys
 from unittest.mock import patch
 
-from specroad.changes import (PreparedJournal, RecoveryAuthority, TargetModel,
+from specroad.changes import (PreparedJournal, BuildingJournal, DiscardedJournal, RecoveryError, StagingError,
+    RecoveryAuthority, TargetModel,
     begin_building_journal, stage_building_journal, prepare_publication_check,
     prepare_discard_recovery, discard_unpublished_transaction, inspect_recovery,
     project_lock, transaction_recovery_lock, LockRecord)
@@ -67,21 +68,61 @@ def fixture(root, variant):
     return m, p, check
 
 
-def writer(root, ending, variant):
+def writer(root, ending, variant, state='prepared'):
     m, p, check = fixture(root, variant)
     with project_lock(root, **options(check)) as held:
         journal = begin_building_journal(check, held_lock=held, transaction_id=TRANSACTION, authority=ALLOW)
-        journal = stage_building_journal(check, journal, held_lock=held, authority=ALLOW)
-        print(json.dumps({'pid': os.getpid(), 'journal_sha256': journal.sha256,
-            'base_model_root_sha256': m.manifest(m.artifacts, SCOPE).sha256,
-            'files': {p: sha256(b).hexdigest() for p, b in files(root).items()}}), flush=True)
+        def report():
+            print(json.dumps({'pid': os.getpid(), 'journal_sha256': journal.sha256,
+                'base_model_root_sha256': m.manifest(m.artifacts, SCOPE).sha256,
+                'files': {p: sha256(b).hexdigest() for p, b in files(root).items()}}), flush=True)
+        if state == 'prepared':
+            journal = stage_building_journal(check, journal, held_lock=held, authority=ALLOW)
+        elif state != 'building':
+            native_write = os.write
+            fired = []
+            def interrupted(fd, raw):
+                path = Path(os.readlink('/proc/self/fd/' + str(fd)))
+                selected = ((state == 'before_prefix' and path.parent.name == 'before')
+                    or (state == 'staging_prefix' and path.parent.name == 'staging')
+                    or (state in ('prepared_prefix', 'complete_images') and path.name == 'journal.prepared'))
+                if not fired and selected:
+                    fired.append(True)
+                    if state != 'complete_images':
+                        assert native_write(fd, raw[:17]) == 17
+                    if ending == 'abrupt':
+                        report()
+                        os._exit(23)
+                    raise OSError(5, 'Interrupted original preparation')
+                return native_write(fd, raw)
+            with patch.object(os, 'write', side_effect=interrupted):
+                try:
+                    stage_building_journal(check, journal, held_lock=held, authority=ALLOW)
+                except StagingError:
+                    assert fired
+                else:
+                    raise AssertionError('Preparation interruption was not reached')
+        report()
         if ending == 'abrupt':
             os._exit(23)
         assert ending == 'released'
 
 
-def recover(root):
-    journal = PreparedJournal((root / '.specroad/transactions' / TRANSACTION / 'journal.json').read_bytes())
+def journal_at(root):
+    path = root / '.specroad/transactions' / TRANSACTION / 'journal.json'
+    if path.exists():
+        raw = path.read_bytes()
+    else:
+        from specroad.changes import transaction_receipt_path
+        raw = json.dumps(json.loads((root / transaction_receipt_path(TRANSACTION)).read_bytes())['journal']).encode()
+        from specroad.model.canonical import canonical_json_bytes
+        raw = canonical_json_bytes(json.loads(raw))
+    cls = {'building': BuildingJournal, 'prepared': PreparedJournal, 'rolled_back': DiscardedJournal}
+    return cls[json.loads(raw)['state']](raw)
+
+
+def recover(root, fault_site='', fault_mode='', ending='released'):
+    journal = journal_at(root)
     # Observe actual native write calls as well as comparing resulting bytes.
     native = {name: getattr(os, name) for name in ('open', 'replace', 'rename', 'unlink')}
     writes = []
@@ -132,11 +173,24 @@ def recover(root):
         before = files(root)
         proof = prepare_discard_recovery(root, TRANSACTION, expected_project_id='sample',
                                          expected_journal_sha256=journal.sha256)
-        status = inspect_recovery(root, preflight=proof).data['transactions'][0]
-        with lock_context as held:
-            result = discard_unpublished_transaction(proof, TRANSACTION, held_lock=held,
-                authority=authority, actor=ACTOR, reason='Explicit restart discard',
-                expected_journal_sha256=journal.sha256).data
+        rows = inspect_recovery(root, preflight=proof).data['transactions']
+        status = next((row for row in rows if row.get('transaction_id') == TRANSACTION), None)
+        from contextlib import nullcontext
+        from support.discard_faults import DiscardFault
+        fault = DiscardFault(root, fault_site, fault_mode, process_stop=ending == 'abrupt') if fault_site else None
+        try:
+            with lock_context as held, fault if fault is not None else nullcontext():
+                result = discard_unpublished_transaction(proof, TRANSACTION, held_lock=held,
+                    authority=authority, actor=ACTOR, reason='Explicit restart discard',
+                    expected_journal_sha256=journal.sha256).data
+        except RecoveryError as error:
+            if fault is None or not fault.fired:
+                raise
+            assert files(root) == before
+            print(json.dumps({'pid': os.getpid(), 'failure': error.diagnostic(),
+                              'native_normative_writes': writes}))
+            return
+        assert fault is None, 'Requested recovery interruption was not reached'
         assert files(root) == before
     with project_lock(root, kind='writer', project_id='sample', request_id='next-request',
                       transaction_id='next-transaction', command='change apply'):

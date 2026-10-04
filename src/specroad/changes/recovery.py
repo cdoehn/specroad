@@ -17,11 +17,12 @@ from .execution_values import ChangeExecutionError
 from .locking import HeldProjectLock
 from ._recovery_binding import check_discard_lock as _held
 from ._journal_codec import _hash, _text, _transaction
-from ._staging_files import _write_new, _image
+from ._staging_files import _image
 from .recovery_values import (AUDIT_ROOT, RecoveryAuthority, RecoveryError,
                               RecoveryObservation, DiscardedJournal)
 from ._recovery_inputs import _read_journal, _parse, _unchanged_base, _work
-from ._discard_completion import archived_discard, finish_discard
+from ._discard_completion import (archived_discard, finish_discard, pending_discard,
+                                  write_discard_file as _write_new)
 from ._recovery_work import work_file_inventory
 # Preserve the initial module import surface; the implementation is read-only.
 from .recovery_read import inspect_recovery
@@ -62,6 +63,11 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
         _held(held_lock, journal)
         if journal.sha256 != expected_journal_sha256:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
+        pending = pending_discard(files, journal)
+        if pending is not None:
+            return finish_discard(preflight, pending, held_lock=held_lock,
+                authority=authority, actor=actor, reason=reason,
+                expected_journal_sha256=expected_journal_sha256, pending_marker=True)
         base = _unchanged_base(preflight, journal, files)
         active = files.journal_entries()
         selected_path = '.specroad/transactions/' + transaction_id

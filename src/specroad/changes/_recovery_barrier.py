@@ -21,9 +21,9 @@ def barrier_record(journal, intent, action):
         'intent': intent.reference}))
 
 
-def persist_barrier(files, record, active):
+def persist_barrier(files, record, active, *, write_new=None):
     """Keep the observed blocker order and reject every unrelated set change."""
-    token = persist_evidence(files, record)
+    token = persist_evidence(files, record, **({} if write_new is None else {'write_new': write_new}))
     observed = files.journal_entries()
     if set(observed) != set(active) | {record.path}:
         raise RecoveryError('recovery_active_set_changed', exit_code=6)

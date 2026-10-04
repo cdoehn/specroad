@@ -5,6 +5,7 @@ never cleans up operational bytes, retries a transaction or publishes a target.
 No on-disk prepared flag is trusted without rechecking its images and bindings.
 """
 from hashlib import sha256
+from ._discard_basis_contract import match_basis_version
 import os
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
@@ -39,8 +40,7 @@ def verify_prepared_journal(journal, preflight):
     expected = prepare_building_journal(preflight,
         transaction_id=journal.data['transaction_id']).data
     expected['state'] = 'prepared'
-    if 'discard_basis' not in journal.data:
-        expected.pop('discard_basis')
+    match_basis_version(expected, journal.data)
     if canonical_json_bytes(expected) != canonical_json_bytes(journal.data):
         raise StagingError('prepared_plan_inventory_mismatch', exit_code=6, path=journal.path)
 

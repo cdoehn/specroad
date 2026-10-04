@@ -41,7 +41,7 @@ def test_consistent_but_false_existence_does_not_override_source(tmp_path):
 def test_correct_sha_of_false_inventory_still_fails_bound_read(tmp_path):
     m,p,c=prepared(tmp_path)
     with project_lock(tmp_path,**options(c)) as h:j=begin(c,h)
-    other=BuildingJournal(altered(j,lambda v:v.update(files=[])))
+    other=BuildingJournal(altered(j,lambda v:(v.update(files=[]),v['discard_basis'].update(staging_images=[]))))
     (tmp_path/j.path).write_bytes(other.source_bytes)
     with pytest.raises(JournalError) as e:
         read_building_journal(ProjectSource(tmp_path),TRANSACTION,expected_sha256=other.sha256,preflight=c)

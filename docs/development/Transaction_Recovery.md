@@ -530,3 +530,50 @@ Building und terminale Wiederaufnahme im neuen Prozess gehören zu R; weder eine
 Profilauswahl noch fehlende Bytes werden aus Vermutungen ergänzt. Die vollständige
 Crashmatrix, automatische Recovery, allgemeine CLI-Integration und Restore werden
 durch diesen W-Schritt nicht behauptet.
+
+## AUDIT-REC-05.R: Building und wiederaufgenommener Discard
+
+Der aktuelle native Journalwriter erzeugt `discard-basis-v2`. Das zusätzliche
+Feld `staging_images` enthält exakt einen Eintrag je geänderter Datei, geordnet
+nach Projektpfad, mit `path` und kanonischem `bytes_base64`. Diese Originalzielbytes
+werden mit dem Building-Journal vor der ersten Imagevorbereitung dauerhaft
+gebunden. Die Decoder prüfen Inventur, Länge und SHA-256 gegen die Dateieinträge;
+die Neustartprüfung rekonstruiert zusätzlich die semantische Zielwurzel. Eine
+bloße Hashbehauptung qualifiziert keinen fremden kurzen Stagingrest.
+
+`prepare_discard_recovery` akzeptiert nun `building` und `prepared`. Building
+verlangt v2 für seinen unabhängig prüfbaren Präfixnachweis. Noch fehlende eigene
+Imageverzeichnisse, Teilinventuren und exakte kurze Präfixe sind zulässig;
+Prepared verlangt weiterhin vollständige Images. Die aktuelle vollständige
+Basisinventur und Basiswurzel werden vor und während der Mutation erneut geprüft.
+Before-Präfixe werden gegen die aktuellen, vollständig gebundenen Basisbytes
+geprüft; Stagingpräfixe gegen die im Journal gebundenen Zielbytes. Die vollständigen
+Bytes eines begonnenen Prepared-Markers ergeben sich aus dem gebundenen Journal.
+
+Nach einem begonnenen Discard bezeichnet `expected_journal_sha256` den aktuell
+beobachteten Journalhash; nach Archivierung ist es der terminale Hash aus dem
+Transaktionsreceipt. Der Einstieg liest nur die direkt gebundenen Belege, keinen
+unbeschränkten Auditscan. `journal_sha256` in der Diagnose bezeichnet diesen
+aktuellen Stand, `original_journal_sha256` das geprüfte unveröffentlichte Journal.
+Originaljournal, Intent, vollständige terminale Felder, Workinventur und vorhandene
+Receipts, Barrier und Abschlussbeleg müssen übereinstimmen. Ein vollständig
+gebundener, noch nicht übernommener `journal.discard` kann wiederaufgenommen werden;
+ein kurzer fremder Marker bleibt blockiert.
+
+Alle neuen Discard-Ableitungen verwenden den vorhandenen atomaren Recoverywriter:
+vollständig schreiben und synchronisieren, erst dann benennen und den benannten
+Inode erneut synchronisieren. Verlorene Rückgaben an Marker, Receipt, Barrier,
+Archivierung, Abschlussbeleg oder Barrierentfernung können im neuen Prozess
+fortgesetzt werden. Abgeschlossene Belege, Originaljournal und Images bleiben
+bytegleich erhalten. Vor der terminalen Übernahme abgebrochene Auditvorbereitungen
+bleiben ebenfalls erhalten; ohne gebundenen terminalen Marker darf ein neuer
+explizit autorisierter Versuch einen neuen Auditintent anlegen. Kein Discard
+schreibt normative Zieldateien; eine Wiederholung eines abgeschlossenen Discards
+verändert auch die vorhandenen Belegbytes nicht.
+
+Der Einstieg bleibt schreibfrei und verleiht keine Berechtigung. Ein neuer nativer
+Recoverylock und frische Hostautorisierung sind für jede Mutation erforderlich;
+aktive, fremde, nicht nachweisbare oder PID-wiederverwendete Eigentümer bleiben
+an die bestehenden Übernahmegrenzen gebunden. Historische v1-Prepared-Journale
+und der unabhängige PublicationPreflight-Weg bleiben unterstützt. Fehlende Daten
+werden nicht geraten. C konsolidiert anschließend ausschließlich die Struktur.

@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 64
+last_completed_numbered_bundle: 65
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-REC-05.R
+next_audit_step: AUDIT-REC-05.C
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -484,7 +484,7 @@ Der U-Abschluss wird erst mit dem passenden erfolgreichen Apply-Result zum
 **Konkretisierte Korrektur, in dieser Reihenfolge:**
 
 - [x] **AUDIT-REC-05.W:** Einen öffentlich nutzbaren expliziten Neustartweg für eine vollständig vorbereitete unveröffentlichte Transaktion bereitstellen. Der neue Prozess erhält ausschließlich die dokumentierten persistenten Recoveryeingaben und eine frische Hostautorisierung; kein erhaltener oder serialisierter `PublicationPreflight`, kein nur vom Test ergänzter Originalplan. Benötigte zusätzliche Nachweisdaten müssen Bestandteil des definierten persistenten Transaktionsvertrags sein. **Abnahme:** Vollständige aktuelle Basisinventur und Basiswurzel unabhängig vom bloßen Journalanspruch prüfen, Journal-/Projekt-/Quellenbindung vor Mutation erneut sichern, unter neuem nativen Recoverylock verwerfen, alle ursprünglichen Beweise erhalten und einen neuen Writer erlauben. Normative Bytes bleiben unverändert. Ein aktives Journal wird nicht durch einen regulären Modellload umgangen; keine erneute Fachplanung als versteckte Discardvoraussetzung.
-- [ ] **AUDIT-REC-05.R:** Beide unveröffentlichten Zustände, die bestätigte unterbrochene Building-Vorbereitung mit eigenem kurzem Stagingrest sowie Wiederanläufe nach unterbrochenem Discardabschluss behandeln. **Abnahme:** Getrennte Prozesse mit freigegebenem oder tatsächlich verwaistem Writerlock; vollständige Basisbindung auch bei zusätzlichem gültigem Artefakt, geänderten/fehlenden Ressourcen und widersprüchlichen persistenten Eingaben. Publikation, falsche Bindung, unvollständiger Nachweis, fremde Workreste oder unzulässige Eigentümer bleiben Blocker. Originalbytes, abgeschlossene Belege und tatsächliche Zwischenzustände bleiben bei Fehler erhalten; eine Wiederholung führt keinen normativen Write aus.
+- [x] **AUDIT-REC-05.R:** Beide unveröffentlichten Zustände, die bestätigte unterbrochene Building-Vorbereitung mit eigenem kurzem Stagingrest sowie Wiederanläufe nach unterbrochenem Discardabschluss behandeln. **Abnahme:** Getrennte Prozesse mit freigegebenem oder tatsächlich verwaistem Writerlock; vollständige Basisbindung auch bei zusätzlichem gültigem Artefakt, geänderten/fehlenden Ressourcen und widersprüchlichen persistenten Eingaben. Publikation, falsche Bindung, unvollständiger Nachweis, fremde Workreste oder unzulässige Eigentümer bleiben Blocker. Originalbytes, abgeschlossene Belege und tatsächliche Zwischenzustände bleiben bei Fehler erhalten; eine Wiederholung führt keinen normativen Write aus.
 - [ ] **AUDIT-REC-05.C:** Nachweisrekonstruktion, schreibfreie Diagnose und autorisierte Mutation strukturell trennen beziehungsweise gemeinsame Prüfungen konsolidieren. **Abnahme:** Die W-/R-Ergebnisse, Fehlerverträge, Autoritätsgrenzen und zulässigen Dateieffekte bleiben unverändert; kein neues Fachverhalten.
 
 **Grenze:** Expliziter Bibliotheks-/Recoveryweg und dessen persistente Nachweise.
@@ -528,6 +528,48 @@ OFF-PLAN geführt. Commit-Message:
 `fix(recovery): reconstruct prepared discard proof after restart`.
 Der Abschluss wird erst durch den passenden erfolgreichen Apply-Commit bestätigt.
 Nächster Schritt: `AUDIT-REC-05.R`; Produktzähler unverändert 237/885.
+
+**R-Umsetzung (Bundle 065, OFF-PLAN `AUDIT-REC-05.R`):** Result
+`specroad-apply_Result_162511_1004_801033.zip` bestätigt Bundle 064 mit Commit
+`ee3f10f0d72159a40816b8e89fd2b64d590850d6`, sauberem Zustand und je 5.579
+bestandenen parallelen und seriellen Apply-Tests. Der vollständige Snapshot
+enthält 1.439 Dateien und entspricht der Entwicklungsbasis.
+
+Neue Journale verwenden `discard-basis-v2`: Neben der expliziten Ressourcenauswahl
+speichern sie die vorbereiteten Zielbytes als geschlossene, nach Pfad geordnete
+Base64-Inventur. Pfade, Größen und Hashes müssen genau den Dateieinträgen entsprechen.
+Die Recovery rekonstruiert unabhängig die vollständige Basiswurzel und prüft die
+persistierten Zielbytes gegen die Zielwurzel. Sie führt keine neue Fachplanung aus.
+Damit sind auch `building`, fehlende noch nicht geschriebene Images und eigene
+kurze Before-/Staging-/Prepared-Marker nachweisbar. Fremde oder überlange Präfixe,
+zusätzliche Ressourcen und widersprüchliche Nachweisdaten bleiben gesperrt.
+
+Der explizite Neustarteinstieg prüft auch angefangene oder archivierte Discards:
+Originaljournal, vollständige terminale Bindung, unveränderlicher Intent, Workinventur
+und vorhandene Receipts/Abschlussbelege werden schreibfrei geprüft. Ein vollständig
+gebundener `journal.discard` kann unter frischem Lock und frischer Autorisierung
+übernommen werden. Discard-Hilfsdateien werden mit dem vorhandenen namenlosen
+Recoverywriter vollständig gestaged, bevor sie einen Namen erhalten. Abbrüche
+hinterlassen keine eigenen kurzen benannten Ableitungen. Bereits vorhandene fremde
+oder unvollständige Belege werden niemals überschrieben. Eine Wiederholung erhält
+den ursprünglichen Abschlussevent und schreibt keine normativen Dateien erneut.
+
+Getrennte Writer-/Recoveryprozesse decken freigegebene und tatsächlich verwaiste
+Locks, beide unveröffentlichten Zustände, native kurze Stagingwrites, 15 Grenzen
+des Discardabschlusses und wiederholten Abschluss ab. Die Tests beobachten echte
+native Writes und prüfen unveränderte normative Bytes, Originalbeweise und erneuten
+Writerzugang. Negativfälle sichern Ressourcen, Links, Belegkonflikte, vollständige
+Zielbindung, fremde Workreste, frische Autorisierung und Eigentümergrenzen.
+Prepared-Journale mit `discard-basis-v1` bleiben rekonstruierbar; alte Journale ohne
+Auswahl und Building-v1 ohne vollständigen Präfixnachweis werden nicht aufgewertet.
+Der unabhängig gebundene historische PublicationPreflight-Weg bleibt erhalten.
+
+Die drei Requirementmanifeste bleiben `partial`; der automatische Preflight aus
+5.t, der allgemeine CLI-Adapter und die umfassende Umgebungs-/Crashmatrix werden
+nicht vorgezogen. Commit-Message:
+`fix(recovery): resume unpublished discard across interrupted preparation`.
+Erst das passende erfolgreiche Apply-Result bestätigt den R-Abschluss.
+Nächster Schritt: `AUDIT-REC-05.C`; Produktzähler unverändert 237/885.
 
 ### AUDIT-CONTRACT-01 – aktuelle maschinenlesbare Selbstbeschreibung
 

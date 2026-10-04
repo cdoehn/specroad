@@ -111,7 +111,7 @@ def test_self_consistent_before_hashes_do_not_replace_independent_basis_root(tmp
     assert tree(tmp_path) == before
 
 
-@pytest.mark.parametrize('scope', ['building', 'committing', 'legacy'])
+@pytest.mark.parametrize('scope', ['committing', 'legacy'])
 def test_unproven_or_out_of_scope_restart_is_not_guessed(tmp_path, scope):
     m, p, check, journal = pending(tmp_path, 'building' if scope == 'building' else 'prepared')
     if scope != 'building':

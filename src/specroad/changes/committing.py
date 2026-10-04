@@ -5,6 +5,7 @@ No retry, rollback, journal deletion, or committed marker is performed here.
 Supported targets are the artifact writes in the existing PublicationRequest.
 """
 from hashlib import sha256
+from ._discard_basis_contract import match_basis_version
 import os
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
@@ -40,8 +41,7 @@ def verify_committing_journal(journal, preflight):
         raise CommitPublicationError('committing_journal_required', exit_code=2)
     expected = prepare_building_journal(preflight,
         transaction_id=journal.data['transaction_id']).data
-    if 'discard_basis' not in journal.data:
-        expected.pop('discard_basis')
+    match_basis_version(expected, journal.data)
     count = journal.data['published_count']
     expected.update(state='committing', published_count=count)
     for index, entry in enumerate(expected['files']):

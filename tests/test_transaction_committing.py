@@ -236,7 +236,7 @@ def test_invalid_acknowledgement_counts_rejected(tmp_path,value):
 
 def test_self_consistent_short_inventory_cannot_replace_independent_binding(tmp_path):
     with staged(tmp_path) as (m,p,f,h,j):
-        v=j.data;v.update(state='committing',files=[])
+        v=j.data;v.update(state='committing',files=[]);v['discard_basis']['staging_images']=[]
         with pytest.raises(CommitPublicationError):verify_committing_journal(CommittingJournal(canonical_json_bytes(v)),f)
 
 

@@ -168,4 +168,5 @@ def validate_building_document(value):
         if any(unicodedata.normalize('NFC','/'.join(parts[:i])).casefold() in aliases
                for i in range(1,len(parts))):
             raise JournalError('journal_target_parent_collision')
-
+    from ._discard_basis_contract import verify_staging_bindings
+    verify_staging_bindings(value)

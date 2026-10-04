@@ -22,7 +22,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`recover discard` DARF nur für `building` oder `prepared` ohne veröffentlichte Ziele und bei unveränderter Basiswurzel ausgeführt werden.",
-    "scope": "Existing retained-preflight building/prepared discard and its protection boundaries remain supported. AUDIT-REC-05.W additionally reconstructs the complete prepared basis from current project files and persisted profile/resource selection, without a Change Plan or regular model load. Both normal writer exit and audited native takeover after actual process death are covered; independent full-root calculation, byte preservation, immutable audit/receipt and next-writer access are observed."
+    "scope": "Existing retained-preflight building/prepared discard and its protection boundaries remain supported. AUDIT-REC-05.W additionally reconstructs the complete prepared basis from current project files and persisted profile/resource selection, without a Change Plan or regular model load. Both normal writer exit and audited native takeover after actual process death are covered; independent full-root calculation, byte preservation, immutable audit/receipt and next-writer access are observed. AUDIT-REC-05.R covers persisted building prefixes and fresh-process resumption across discard marker, receipt, barrier, archive and completion boundaries; contradictory roots/evidence, changed resources and unsafe owners remain blocked without normative writes."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -69,10 +69,23 @@
     "tests/test_discard_restart.py::test_self_consistent_before_hashes_do_not_replace_independent_basis_root",
     "tests/test_discard_restart.py::test_changed_inputs_are_rejected_without_recovery_writes[additional]",
     "tests/test_discard_restart.py::test_detached_preflight_never_skips_fresh_mutation_guards[authority]",
-    "tests/test_discard_restart.py::test_unproven_or_out_of_scope_restart_is_not_guessed[legacy]"
+    "tests/test_discard_restart.py::test_unproven_or_out_of_scope_restart_is_not_guessed[legacy]",
+    "tests/test_discard_restart_right.py::test_building_restart_accepts_only_its_bound_preparation_bytes[staging_prefix-abrupt]",
+    "tests/test_discard_restart_right.py::test_building_restart_handles_full_resource_selection[noop-released]",
+    "tests/test_discard_restart_right.py::test_fresh_process_resumes_each_discard_completion_boundary[replace-before-staging_prefix-abrupt]",
+    "tests/test_discard_restart_right.py::test_fresh_process_resumes_each_discard_completion_boundary[rename-after-prepared-abrupt]",
+    "tests/test_discard_restart_right.py::test_fresh_process_resumes_each_discard_completion_boundary[completed-prefix-prepared-released]",
+    "tests/test_discard_restart_right.py::test_changed_full_resource_basis_blocks_restart_without_mutation[missing-resources-staging_prefix]",
+    "tests/test_discard_restart_right.py::test_unproven_building_images_remain_blocked[foreign_prefix]",
+    "tests/test_discard_restart_right.py::test_conflicting_discard_completion_evidence_is_never_repaired[terminal]",
+    "tests/test_discard_restart_right.py::test_staging_proof_has_closed_inventory_and_exact_bytes[hash]",
+    "tests/test_discard_restart_right.py::test_v1_prepared_restart_and_independent_journal_verification_remain_supported",
+    "tests/test_discard_restart_right.py::test_terminal_restart_rechecks_audit_after_authorization",
+    "tests/test_discard_restart_right.py::test_restart_proof_does_not_authorize_an_unsafe_owner_takeover[foreign-building]",
+    "tests/test_discard_restart_right.py::test_self_consistent_staging_hash_cannot_contradict_the_bound_target_root"
   ],
   "open_items": [
-    "AUDIT-REC-05.R must extend restart reconstruction to building/interrupted preparation and interrupted discard completion; AUDIT-REC-05.C retains the resulting behavior while consolidating structure. Legacy journals without persisted selection are not silently upgraded. The comprehensive crash/environment matrix and general CLI integration are not claimed.",
+    "AUDIT-REC-05.C retains the W/R behavior while consolidating structure. Journals without explicit basis selection and building-v1 without persisted staging proof are not silently upgraded. The comprehensive crash/environment matrix and general CLI integration are not claimed.",
     "Public recovery CLI integration and automatic transaction preflight are not claimed; automatic preflight remains in 5.t."
   ]
 }

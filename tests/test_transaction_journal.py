@@ -130,7 +130,7 @@ def test_malformed_building_records_are_not_success(tmp_path,change):
 
 def test_missing_inventory_entry_fails_independent_plan_binding(tmp_path):
     m,p,c=prepared(tmp_path);j=record(c)
-    incomplete=BuildingJournal(altered(j,lambda v:v.update(files=[])))
+    incomplete=BuildingJournal(altered(j,lambda v:(v.update(files=[]),v['discard_basis'].update(staging_images=[]))))
     with pytest.raises(JournalError) as e:verify_building_journal(incomplete,c)
     assert e.value.exit_code==6
 

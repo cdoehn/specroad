@@ -4,7 +4,7 @@ from ..model.canonical import canonical_json_bytes
 from .publication_values import PublicationPreflight
 from .journal_values import BuildingJournal,JournalError,JOURNAL_VERSION
 from ._journal_codec import _transaction
-from ._discard_basis_contract import discard_basis_descriptor
+from ._discard_basis_contract import discard_basis_descriptor, match_basis_version
 
 def prepare_building_journal(preflight, *, transaction_id):
     """Pure complete file inventory derived from the checked publication request.
@@ -61,8 +61,7 @@ def verify_building_journal(journal, preflight):
         raise JournalError('building_journal_required', exit_code=2)
     expected = prepare_building_journal(preflight,transaction_id=journal.data['transaction_id'])
     value = expected.data
-    if 'discard_basis' not in journal.data:
-        value.pop('discard_basis')
+    match_basis_version(value, journal.data)
     if canonical_json_bytes(journal.data) != canonical_json_bytes(value):
         raise JournalError('journal_plan_inventory_mismatch',exit_code=6,path=journal.path)
     return None
