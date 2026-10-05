@@ -7,26 +7,40 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-LITERAL-LINT-v1"
+    "SR-FIX-LITERAL-LINT-v1",
+    "SR-FIX-CORE-LINT-v1"
   ],
   "preconditions": [
-    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory."
+    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory.",
+    "Owned complete relation sources, selected IDs and explicit bundled Core/software profile resources; stored approved values are not human review evidence."
   ],
   "steps": [
     "Capture and validate owned records and exact selections.",
-    "Run literal checks on unchanged selected text and inspect structured findings and coverage."
+    "Run literal checks on unchanged selected text and inspect structured findings and coverage.",
+    "Run the actual public Core and read-only project lint paths with complete data and missing rationale, origin, verification or active profile minimum; verify bound findings and absence of writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die eingebauten Lint-Regeln MÜSSEN fehlende Begründung, fehlende Verifikation, explizit konfigurierte literale Glossar-/Platzhalterverletzungen und fehlende Mindestbeziehungen diagnostizieren; semantische Modalitäts- oder Mehrdeutigkeitserkennung ist kein Core-Passkriterium.",
-    "scope": "Selected literal fields and Term schema only; no complete project, language quality or approval proof."
+    "scope": "Selected Core rationale and relation minima plus unchanged literal lint over supplied or observed project sources. Actual shipped profile minima are composed explicitly. No complete schema/model/profile, review, language understanding or approval proof."
   },
   "expected_diagnostics": [
+    "SRV002",
+    "SRV023",
+    "SRV031",
+    "SRV032",
     "SRV033",
     "SRV053"
   ],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    1,
+    2,
+    3
+  ],
   "json_pointers": [
+    "/rationale",
+    "/relations",
     "/statement"
   ],
   "required_environment": {
@@ -44,11 +58,25 @@
     "test_literal_lint.LiteralWorkTests.test_declared_forbidden_synonym_is_diagnosed",
     "test_literal_lint.LiteralWorkTests.test_approved_core_placeholders_cannot_be_removed",
     "test_literal_lint_right.LiteralRightTests.test_absent_reference_field_is_diagnosed_not_silently_skipped",
-    "test_literal_lint_right.LiteralRightTests.test_forbidden_synonym_is_not_an_allowed_reference_alias"
+    "test_literal_lint_right.LiteralRightTests.test_forbidden_synonym_is_not_an_allowed_reference_alias",
+    "test_core_lint.CoreLintWorkTests.test_complete_minima_and_rationale_are_clear_but_not_approval",
+    "test_core_lint.CoreLintWorkTests.test_missing_rationale_has_its_own_bound_diagnostic",
+    "test_core_lint.CoreLintWorkTests.test_invalid_rationale_uses_the_existing_field_contract",
+    "test_core_lint.CoreLintWorkTests.test_missing_verification_has_actual_minimum_and_identity",
+    "test_core_lint.CoreLintWorkTests.test_missing_origin_is_separate_from_verification",
+    "test_core_lint.CoreLintWorkTests.test_approved_need_uses_its_own_rationale_rule",
+    "test_core_lint.CoreLintWorkTests.test_draft_does_not_inherit_approved_obligations",
+    "test_core_lint.CoreLintWorkTests.test_shipped_profile_minimum_is_observed_with_its_binding",
+    "test_core_lint.ProjectCoreLintWorkTests.test_complete_project_read_has_no_writes_or_approval",
+    "test_core_lint.ProjectCoreLintWorkTests.test_project_reader_exposes_each_missing_core_obligation",
+    "test_core_lint.ProjectCoreLintWorkTests.test_project_profile_minimum_uses_activated_resources",
+    "test_core_lint.ProjectCoreLintWorkTests.test_core_findings_preserve_literal_findings",
+    "test_core_lint.ProjectCoreLintWorkTests.test_activated_profile_without_resources_cannot_pass",
+    "test_core_lint.ProjectCoreLintWorkTests.test_unresolved_relation_cannot_satisfy_a_minimum"
   ],
   "open_items": [
-    "Full lint/validation pipeline and CLI integration remain later steps.",
-    "Language policy and package composition are implemented in the following language stage, not inferred here.",
-    "Full target runtime matrix evidence remains necessary."
+    "AUDIT-VALIDATION-01.R/C: complete multi-error, incoming/outgoing profile minima, selection, unavailable-resource, maturity, freshness and fail-policy coverage, then consolidate shared observations.",
+    "AUDIT-VALIDATION-02.W/R/C separately connects already due production language/SRX/approval observations to model validation. Literal/Core lint is not full model approval.",
+    "Full CLI integration and the complete target runtime matrix remain separate evidence scopes."
   ]
 }

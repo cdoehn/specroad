@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 75
+last_completed_numbered_bundle: 76
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-01.W
+next_audit_step: AUDIT-VALIDATION-01.R
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -68,7 +68,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R/C konkretisiert und offen |
+| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W umgesetzt, R/C offen |
 | F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt und eingegrenzt; W/R/C offen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
 | F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
@@ -809,7 +809,7 @@ Lücke ist keine behauptete Vollfreigabe. Die Requirementmatrix ordnet SR-REQ-00
 bereits 4.l ohne spätere Sekundärposition zu. Seine nichtliteralen Anteile bleiben
 fällig und erhalten die folgenden konkreten Korrekturen.
 
-- [ ] **AUDIT-VALIDATION-01.W:** Fehlende Begründung sowie fehlende Verifikation,
+- [x] **AUDIT-VALIDATION-01.W:** Fehlende Begründung sowie fehlende Verifikation,
   Herkunfts- und sonstige anwendbare Mindestbeziehungen über den öffentlichen
   Core-/Read-only-Lintpfad diagnostizieren. Bestehende Feld-/Relationsregeln mit
   ihren Reife-/Profilgrenzen wiederverwenden. **Abnahme:** Die bestätigten
@@ -952,6 +952,50 @@ Reparaturen und verändern keine Produktquelle oder Regressionsprüfung.
 Commit-Message: `docs(validation): record incomplete reference diagnostic sets`.
 Erst das erfolgreiche Apply-Result bestätigt den U-Commit. Nächster Schritt ist
 `AUDIT-VALIDATION-01.W`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
+
+### AUDIT-VALIDATION-01.W – fehlende Core-Lintdiagnosen (Bundle 076)
+
+Basis ist das vollständig geprüfte erfolgreiche Result
+`specroad-apply_Result_012756_1005_eb54a4.zip`, Commit
+`804cdedf915805db3d14e9788dca2957d71a0a48`. Es bestätigt den vorherigen
+Untersuchungszustand mit 5727 parallelen und 5727 seriellen Apply-Tests.
+Die drei U-Untersuchungen sind damit durch ihre tatsächlichen Apply-Results
+bestätigt; die historischen Beobachtungen bleiben unverändert.
+
+Der öffentliche `lint_core` beobachtet jetzt die bestehenden Begründungsregeln
+für approved Requirement/Need sowie Core- und explizit komponierte
+Profil-Relationsminima. Er verwendet dieselben reifeabhängigen Pflichtfelder
+und Feldschemas wie die Domainprüfung und dieselben `RelationObligations` wie
+der Relationskern. Fehlende beziehungsweise ungültige Begründungen erhalten
+SRV002 am Pointer `/rationale`, fehlende Herkunft SRV031, fehlende Verifikation
+SRV032 und Profilminima SRV023 an `/relations`, jeweils mit Artefakt-/Pfadbindung.
+Relationsbefunde enthalten Regelkennung, tatsächliche Anzahl und Minimum.
+Die eigentliche Domain-Schemaausgabe wird durch die geteilte Pflichtfeldtabelle
+nicht geändert.
+
+`lint_project_read_only` verbindet diese Beobachtungen mit seinen unveränderten
+Literalberichten und der bestehenden abschließenden Frischekontrolle.
+Aktivierte Profile benötigen explizite Ressourcen; fehlende Ressourcen oder
+nicht auflösbare Referenzen können keinen erfolgreichen Gesamtbefund ergeben.
+Gebundene vollständige positive Eingaben bleiben befundfrei, Draft erbt keine
+approved-Pflichten, und gleichzeitige Literalbefunde gehen nicht verloren.
+Vierzehn neue Verhaltensfälle sichern den W-Umfang über die öffentlichen APIs
+mit echten Profilen und Schreibversuchssperren ab. SR-TC-0096 und sein neuer
+Fixturebezug beschreiben genau diesen Umfang und bleiben `partial`.
+
+Die Core-Minima sind keine Prüfung aktueller Relationsreviews oder vollständiger
+Verifikationsverträge; ebenso wenig wird aus dieser Beobachtung eine Freigabe,
+ein vollständiger Schema-/Profilnachweis oder Sprachverständnis abgeleitet.
+Die bereits vorhandene Unvollständigkeit bei nicht anwendbarer Literalpolicy
+bleibt sichtbar. Vollständige Mehrfach-/Randfall-, Selektions-, Ressourcen- und
+Frischeabnahmen folgen in R, die Konsolidierung in C. Die Adapterkorrekturen aus
+AUDIT-VALIDATION-02 und die Referenz-Diagnoseaggregation aus AUDIT-VALIDATION-03
+werden durch diesen W-Zustand nicht als erledigt verbucht.
+
+Commit-Message: `fix(lint): report missing rationale and relation minima`.
+Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster
+Schritt: `AUDIT-VALIDATION-01.R`; Produktzähler 237/885 und Sperre von 5.t.W
+bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 
@@ -12695,7 +12739,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit, derzeit `AUDIT-REC-04.C`. Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit (`next_audit_step`). Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

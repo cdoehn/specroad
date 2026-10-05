@@ -33,6 +33,18 @@ class NormativeForce(str, Enum):
 NORMATIVE_FORCES = tuple(item.value for item in NormativeForce)
 
 
+def approved_required_fields(kind):
+    """Instance-local maturity obligations shared by schema and lint readers."""
+    return {
+        "goal": ("success_criterion",), "need": ("rationale", "priority"),
+        "capability": ("outcome", "priority"), "requirement": ("rationale",),
+        "scenario": ("preconditions", "postconditions", "exceptions"),
+        "decision": ("alternatives", "consequences"),
+        "assumption": ("validation_method", "reevaluation_condition"),
+        "release": ("scope_descriptor",), "milestone": ("done_criteria",),
+    }.get(kind, ())
+
+
 def reference_schema(prefix):
     # Reading permits both current and preserved legacy identities. Generating
     # new identifiers and resolving graph targets belong to their later services.

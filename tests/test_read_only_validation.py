@@ -173,7 +173,7 @@ class ReadOnlyValidationTests(unittest.TestCase):
         with no_write_attempts():
             r = lint_project_read_only(self.root, policy=literal_policy(), selected_ids=(a["id"],))
         self.assertEqual(r.exit_code, 1)
-        self.assertEqual(r.data["lint"]["diagnostics"][0]["code"], "SRV033")
+        self.assertIn("SRV033", [d["code"] for d in r.data["lint"]["diagnostics"]])
         self.assertEqual(inventory(self.root), before)
 
     def test_lint_does_not_invent_applicable_language_checks(self):

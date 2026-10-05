@@ -9,7 +9,7 @@ from ._schema import validate_builtin
 from .artifact_schemas import artifact_common_schema, validate_common_fields
 from .domain_fields import (
     IMPLEMENTATION_STATUSES, VERIFICATION_PLAN_STATUSES, REQUIREMENT_KINDS,
-    PRIORITIES, CRITICALITIES, NORMATIVE_FORCES, field_schemas,
+    PRIORITIES, CRITICALITIES, NORMATIVE_FORCES, field_schemas, approved_required_fields,
     reference_schema as _reference,
 )
 from .errors import ModelError
@@ -108,16 +108,9 @@ def domain_schema(kind, version=SCHEMA_VERSION):
     # Only instance-local mandatory data are checked here. For example, a
     # risk's mitigation and a task's implementation link may be INCOMING edges;
     # their absence cannot be decided from this file alone.
-    approved_fields = {
-        "goal": ("success_criterion",), "need": ("rationale", "priority"),
-        "capability": ("outcome", "priority"), "requirement": ("rationale",),
-        "scenario": ("preconditions", "postconditions", "exceptions"),
-        "decision": ("alternatives", "consequences"),
-        "assumption": ("validation_method", "reevaluation_condition"),
-        "release": ("scope_descriptor",), "milestone": ("done_criteria",),
-    }
-    if kind in approved_fields:
-        conditions.append(_required_when("maturity", "approved", approved_fields[kind]))
+    approved_fields = approved_required_fields(kind)
+    if approved_fields:
+        conditions.append(_required_when("maturity", "approved", approved_fields))
     if kind == "interface":
         conditions.append({"anyOf": [
             {"properties": {"maturity": {"not": {"const": "approved"}}}},

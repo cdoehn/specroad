@@ -54,7 +54,8 @@
     "SR-FIX-TRANSACTION-COMMITTING-v1",
     "SR-FIX-TRANSACTION-RECEIPTS-v1",
     "SR-FIX-TRANSACTION-RECOVERY-v1",
-    "SR-FIX-DISCARD-RESTART-v1"
+    "SR-FIX-DISCARD-RESTART-v1",
+    "SR-FIX-CORE-LINT-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -268,6 +269,10 @@
     "SR-FIX-DISCARD-RESTART-v1": {
       "provider": "tests/support/discard_restart.py:child",
       "kind": "Owned native Linux writer and recovery subprocesses for building/prepared, incomplete preparation, and repeated discard completion. Independent byte/root oracles, actual partial native staging writes and abrupt process exits, original audit/receipt preservation, native normative-write observation, fresh authority and dead-owner takeover. Persistent v1 selection and v2 exact staging bytes are versioned; no original Change Plan or preflight crosses processes."
+    },
+    "SR-FIX-CORE-LINT-v1": {
+      "provider": "tests/support/core_lint.py:requirement_graph",
+      "kind": "Owned approved requirement, origin and verification sources with deliberate omissions; actual public lint and shipped profile minima, project write traps; no human approval or evidence authenticity."
     }
   }
 }

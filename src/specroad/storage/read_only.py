@@ -11,7 +11,8 @@ from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
 from ..profiles.composition import compose_profiles
 from ..validation import validate_model, assess_validation
-from ..lint import Glossary, LiteralPolicy, lint_literals
+from ..lint import Glossary, LiteralPolicy, lint_literals, lint_core
+from ..graph.relations import SourceRelations
 from .domain_artifact import DomainArtifact
 from .json_syntax import parse_json_object
 from .read_only_values import READ_ONLY_VERSION, ReadOnlyResult
@@ -80,11 +81,13 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
 
 
 def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", strict=False,
-                           expected_project_id=None):
-    """Run only explicit literal lint over selected IDs and stored glossary terms.
+                           expected_project_id=None, profile_resources=None,
+                           core_key=None, cli_profiles=()):
+    """Run Core minima/rationale and explicit literal lint over selected IDs.
 
     All current sources are captured to avoid silently incomplete references.
     A nonmatching language policy is not a passed whole-project lint run.
+    Active project profiles require explicit resources; omission has no fallback.
     No optional analyzer, locale resolution or executable project input is used.
     """
     data = _base("lint")
@@ -101,6 +104,14 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
         source, observation = _source(root, data, expected_project_id)
         if source is None:
             return _blocked(data, observation)
+        data["phase"] = "profiles"
+        profile = None
+        if profile_resources is None:
+            if core_key is not None or cli_profiles or source.configuration.data["profiles"]:
+                raise ModelError("read_only_lint_profile_resources_required")
+        else:
+            profile = compose_profiles(profile_resources, core_key=core_key,
+                project_profiles=source.configuration.data["profiles"], cli_profiles=cli_profiles)
         data["phase"] = "operational"
         if not _ready(source, observation, data):
             return _blocked(data, data["operational"])
@@ -127,18 +138,23 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
                 raise ModelError("read_only_selected_id_missing")
             document, value = indexed[identity]
             results.append(lint_literals(value, glossary=glossary, policy=policy, path=document.path))
+        core = lint_core(tuple(SourceRelations(d.content, path=d.path) for d in documents),
+                         selected_ids=selected_ids, profile=profile)
         _record_freshness(source, observation, documents, data)
         findings = [finding for result in results for finding in result["diagnostics"]]
+        findings.extend(core["diagnostics"])
+        findings.sort(key=lambda d: ({"error": 0, "warning": 1, "info": 2}[d["severity"]],
+            d["path"] or "", d["artifact_id"], d["pointer"], d["code"],
+            d.get("rule_id", ""), -1 if d.get("start") is None else d["start"]))
         threshold = {"info": 0, "warning": 1, "error": 2}["warning" if strict else fail_on]
         failure = any({"info": 0, "warning": 1, "error": 2}[f["severity"]] >= threshold for f in findings)
         applicable = all(r["literal_checks_passed"] is not None for r in results)
         data.update(status="completed" if applicable else "incomplete", passed=(not failure if applicable else None),
                     checks_complete=applicable, exit_code=(1 if failure else 0) if applicable else 5,
-                    lint={"scope": "selected_literal_fields_only", "checked_ids": list(selected_ids),
+                    lint={"scope": "selected_core_and_literal_lint", "checked_ids": list(selected_ids),
                           "policy_sha256": policy.sha256, "glossary_sha256": glossary.sha256,
-                          "reports": results, "diagnostics": findings})
+                          "reports": results, "core": core, "diagnostics": findings})
         return ReadOnlyResult._create(data)
     except (ModelError, OSError, SafetyViolation) as error:
         return _failure(data, error)
-
 
