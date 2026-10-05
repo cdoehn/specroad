@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 72
+last_completed_numbered_bundle: 73
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-01.U
+next_audit_step: AUDIT-VALIDATION-02.U
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -68,7 +68,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01.U | offen; keine pauschale Gesamtimplementierung zugesagt |
+| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R/C konkretisiert und offen |
 | F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02.U | offen; legitime spätere Adapter abgrenzen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
 | F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
@@ -784,11 +784,56 @@ Erst das erfolgreiche Apply-Result bestätigt diesen C-Abschluss. Danach folgt
 
 **Voraussetzung:** AUDIT-CONTRACT-02. Die vorhandenen Kerne und ihre ehrlichen `unavailable`-/Teilumfangsresultate bleiben Ausgangsbasis. Fehlende zukünftige CLI-, Baseline-, Dokument-, Konfigurations- oder Evidencefunktionen werden nicht pauschal zum Fehler eines abgeschlossenen Grundlagenkerns erklärt.
 
-- [ ] **AUDIT-VALIDATION-01.U / F07:** SR-REQ-0096, SR-VER-0007, SR-TC-0096 gegen 4.l/4.o/4.r verfolgen. `lint/core.py` und `storage/read_only.py` bieten bisher vor allem Literalprüfungen. **Entscheidung:** Für fehlende Begründung, Verifikation und Mindestbeziehungen jeweils tatsächlichen Diagnosepfad, positive/negative Verhaltensnachweise und ursprüngliche Abnahme bestimmen. Ein bestehender Approval-/Relationskern allein beweist den Lintpfad nicht. Bereits geschuldete fehlende Core-Lintdiagnosen zur Korrektur eintragen; echte spätere Integration mit konkreter offener Position belegen.
+- [x] **AUDIT-VALIDATION-01.U / F07:** SR-REQ-0096, SR-VER-0007, SR-TC-0096 gegen 4.l/4.o/4.r verfolgen. `lint/core.py` und `storage/read_only.py` bieten bisher vor allem Literalprüfungen. **Entscheidung:** Für fehlende Begründung, Verifikation und Mindestbeziehungen jeweils tatsächlichen Diagnosepfad, positive/negative Verhaltensnachweise und ursprüngliche Abnahme bestimmen. Ein bestehender Approval-/Relationskern allein beweist den Lintpfad nicht. Bereits geschuldete fehlende Core-Lintdiagnosen zur Korrektur eintragen; echte spätere Integration mit konkreter offener Position belegen.
 - [ ] **AUDIT-VALIDATION-02.U / F08:** SR-REQ-0086/0100, SR-VER-0007, SR-TC-0086/0100 gegen 4.o–4.r und 5.f/5.g verfolgen. Ein reales Requirementprojekt mit ausgeliefertem Softwareprofil durch die vorhandenen öffentlichen Bibliotheksgrenzen prüfen. **Entscheidung:** Tatsächliche Adapter für Sprachpolicy, Profil-SRX, Approval und Diagnoseauswertung von vertrauenswürdigen Testgates unterscheiden. `test_model_validation.py` und `test_read_only_validation.py` belegen bisher auch Nichtverfügbarkeit. Für jede fehlende Verbindung festhalten, ob sie bereits fällig oder konkret später vorgesehen ist; keine Vollvalidierung allein aus injizierten immer erfolgreichen Gates ableiten.
 - [ ] **AUDIT-VALIDATION-03.U / Diagnoseaggregation:** 4.p.R und die dort zugeordneten SR-REQ-0087–0092/0098–0099 samt SR-TC-Manifeste und SR-VER-0007 prüfen. `graph/references.py` und `validation/core.py` beenden bei fehlendem Relationsziel den betreffenden Pfad. **Entscheidung:** Verlangt die bestehende Abnahme mehrere unabhängig fehlende Ziele gemeinsam, oder setzt sie einen erfolgreichen Strukturabschnitt voraus? Mehrere konkrete gleichzeitige Fehler und die strukturierte Diagnosemenge vergleichen; kein bloßes Fortsetzungsversprechen ohne Vertrag ergänzen.
 
 **Nur für bestätigte, bereits geschuldete Lücken** konkrete `AUDIT-VALIDATION-01/02/03.W/R/C` eintragen: W liefert den kleinsten nutzbaren fehlenden Diagnose-/Adapterpfad; R vervollständigt dessen Negativ-, Mehrfachfehler-, Frische- und Ressourcenbindungen; C konsolidiert vorhandene Kerne. **Gemeinsame Abnahme:** Echte Daten ergeben die verlangten strukturierten Befunde; fehlende Voraussetzungen werden weiter ehrlich ausgewiesen, Lesen bleibt schreibfrei, bereits bestehende fachliche Grenzen werden nicht abgeschwächt. Keine vorgezogene vollständige CLI- oder spätere Produktintegration.
+
+**U-Ergebnis zu F07 (Bundle 073, OFF-PLAN `AUDIT-VALIDATION-01.U`): bestätigt.**
+[Untersuchungsbericht](../reviews/SpecRoad_AUDIT_VALIDATION_01_U.md),
+[paralleles Reproduktionsprogramm](../reviews/SpecRoad_AUDIT_VALIDATION_01_U_probe.py)
+und [gebundene Beobachtungen](../reviews/SpecRoad_AUDIT_VALIDATION_01_U_observations.json)
+beziehen sich auf Result `specroad-apply_Result_230658_1004_9dff6c.zip`, Commit
+`ee91f34df4bee63ea983680afa5412e601ba8185`. Dieses Result bestätigt Bundle 072
+mit sauberem Zustand und je 5.727 erfolgreichen parallelen/seriellen Apply-Tests.
+Alle 1.445 Snapshotdateien stimmen vor der Untersuchung mit der Entwicklung überein.
+
+Acht parallel ausgeführte Fälle zeigen: Der öffentliche Lintpfad diagnostiziert
+fehlende Begründung, Verifikation und Herkunftsrelation nicht, auch mit `strict`.
+Bestehende Feld-/Relationsprüfungen erkennen diese Fehler; vollständige Minima,
+Literalplatzhalter und konfigurierte Glossarverstöße bilden die Gegenproben.
+Alle Projektbytes und Modi bleiben erhalten, kein Schreibversuch wird beobachtet.
+Der vorhandene Lintumfang bleibt ehrlich `selected_literal_fields_only`; die
+Lücke ist keine behauptete Vollfreigabe. Die Requirementmatrix ordnet SR-REQ-0096
+bereits 4.l ohne spätere Sekundärposition zu. Seine nichtliteralen Anteile bleiben
+fällig und erhalten die folgenden konkreten Korrekturen.
+
+- [ ] **AUDIT-VALIDATION-01.W:** Fehlende Begründung sowie fehlende Verifikation,
+  Herkunfts- und sonstige anwendbare Mindestbeziehungen über den öffentlichen
+  Core-/Read-only-Lintpfad diagnostizieren. Bestehende Feld-/Relationsregeln mit
+  ihren Reife-/Profilgrenzen wiederverwenden. **Abnahme:** Die bestätigten
+  Negativfälle liefern getrennte maschinenlesbare Befunde; vollständige positive
+  Eingaben bleiben befundfrei; bestehende Literaldiagnosen bleiben erhalten.
+- [ ] **AUDIT-VALIDATION-01.R:** Gleichzeitige Fehler, eingehende/ausgehende
+  Profilminima, Teilselektion, fehlende Zielressourcen, Reifegrenzen, unverfügbare
+  Voraussetzungen und Änderungen während des Lesens einbeziehen. **Abnahme:**
+  Vollständige Diagnosemenge und Code-/Pointer-/Artefaktbindung, konsistente
+  Fail-Policy und ehrlicher Prüfumfang; unveränderte Projektbytes und keine
+  neue Freigabe- oder Sprachverständnisbehauptung.
+- [ ] **AUDIT-VALIDATION-01.C:** Gemeinsame Feld-/Relationsbeobachtung und
+  Diagnoseprojektion konsolidieren. **Abnahme:** W-/R-Ergebnisse, Fehlerverträge,
+  anwendbare Regeln und schreibfreie Wirkung bleiben erhalten.
+
+Diese Korrekturen beginnen erst nach den weiterhin offenen Untersuchungen
+`AUDIT-VALIDATION-02.U` und `AUDIT-VALIDATION-03.U`. Dieses U-Bundle verändert
+keine Produktquelle, Regressionsprüfung oder Requirementbewertung. Nicht
+registrierte Fachgates bleiben sichtbar unverfügbar; ihr Integrationsbefund wird
+nicht durch die funktionierende Relationsstufe vorweggenommen.
+
+Commit-Message: `docs(validation): record missing nonliteral lint diagnostics`.
+Erst das erfolgreiche Apply-Result bestätigt den U-Commit. Nächster Schritt ist
+`AUDIT-VALIDATION-02.U`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 

@@ -1,0 +1,4513 @@
+{
+  "audit": "AUDIT-VALIDATION-01.U",
+  "binding": {
+    "base_commit": "ee91f34df4bee63ea983680afa5412e601ba8185",
+    "base_files_verified": 1445,
+    "probe_sha256": "f2b90ce00d0b0714ef11f9d07e7cb0ee1e1f8588ce11cedc9c0f8a19525a9307",
+    "repo_id": "a33ed6cf-0a97-4b73-b11a-d4239e7a2145",
+    "result": "specroad-apply_Result_230658_1004_9dff6c.zip",
+    "result_sha256": "33122b5e7275a4ab8fd102721f5386a295209c0f540ed2b9016dfc58efa33e3e",
+    "source_sha256": "e2bd79784f7751265045553c4bb821719f60b5e24abd4f830c7d0b01b56fa548",
+    "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93"
+  },
+  "cases": [
+    {
+      "case": "complete_minima",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "data": null,
+        "returned": true
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "7598cab71b7634bd2fd17fb80ed8ef4ac95103f1f7127ccc00ecb0507c887ab2",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "c60178a7e61493080be620877e48e27682f28c5e95394d80b0af306219ac96e7",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "checked",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": true,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-origin",
+              "satisfied": true
+            },
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-verification",
+              "satisfied": true
+            }
+          ],
+          "diagnostics": [],
+          "requirements_satisfied": true,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "c60178a7e61493080be620877e48e27682f28c5e95394d80b0af306219ac96e7",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "c60178a7e61493080be620877e48e27682f28c5e95394d80b0af306219ac96e7",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 5,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            }
+          ],
+          "exit_code": 5,
+          "fail_on": "error",
+          "input_sha256": "4fca68202651499bc54319aebe69e092774ab418dfee9357a22ade29a3f6a41c",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "4fca68202651499bc54319aebe69e092774ab418dfee9357a22ade29a3f6a41c",
+            "model_valid": null,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "7598cab71b7634bd2fd17fb80ed8ef4ac95103f1f7127ccc00ecb0507c887ab2"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "schema_types_identity_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "identities_references",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "graph",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "scope",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "profiles",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "minimum_relations",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "stored_lifecycle_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "baseline_integrity",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "configuration",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "document_model",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "evidence_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "evidence_currentness",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "external_resources",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "language_policy",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "language_policy",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "lifecycle",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "lifecycle",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "profile_lint",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "review_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "review_currentness",
+                "status": "unavailable"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 4,
+            "diagnostics_by_severity": {
+              "error": 4,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    },
+    {
+      "case": "missing_rationale",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "diagnostic": {
+          "column": null,
+          "highest_supported": null,
+          "line": null,
+          "path": null,
+          "pointer": "",
+          "position": null,
+          "reason": "schema_any_of"
+        },
+        "pointer": "",
+        "reason": "schema_any_of",
+        "returned": false
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "1bb801ff13d4d23188c1d73e98ff3e6943e0245450e57cd8d1e97d3d6e955a5e",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "06623dad4e5f5067ecca49df0bbf15b0c66d82fbede330fe7a760a2fa5128aff",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "checked",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": true,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-origin",
+              "satisfied": true
+            },
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-verification",
+              "satisfied": true
+            }
+          ],
+          "diagnostics": [],
+          "requirements_satisfied": true,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "06623dad4e5f5067ecca49df0bbf15b0c66d82fbede330fe7a760a2fa5128aff",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "06623dad4e5f5067ecca49df0bbf15b0c66d82fbede330fe7a760a2fa5128aff",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 3,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "category": "model",
+              "code": "SRV002",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": ""
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+              "rationale": "schema_any_of",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            }
+          ],
+          "exit_code": 3,
+          "fail_on": "error",
+          "input_sha256": "092ad428b29f33882f1442ddc7ede369ba07198a4ff932dac81b92903994f107",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "092ad428b29f33882f1442ddc7ede369ba07198a4ff932dac81b92903994f107",
+            "model_valid": false,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "1bb801ff13d4d23188c1d73e98ff3e6943e0245450e57cd8d1e97d3d6e955a5e"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "artifact_id": "SR-REQ-00000000000000000000000000",
+                    "column": null,
+                    "highest_supported": null,
+                    "line": null,
+                    "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                    "pointer": "",
+                    "position": null,
+                    "reason": "schema_any_of",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "schema_types_identity_fields",
+                "status": "failed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "model_dependencies",
+                "status": "blocked"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 1,
+            "diagnostics_by_severity": {
+              "error": 1,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    },
+    {
+      "case": "missing_verification",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "data": null,
+        "returned": true
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "6d9d84e25c9e340841ca50c30437cbc794a832c9525be979a5a012e7370ccb59",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "70f695f68f0e632bf1d7a16c0c3cfdf3385ec5ada11e37ed0e6758e22d85011c",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "checked",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": true,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-origin",
+              "satisfied": true
+            },
+            {
+              "actual": 0,
+              "minimum": 1,
+              "rule_id": "core:requirement-verification",
+              "satisfied": false
+            }
+          ],
+          "diagnostics": [
+            {
+              "actual": 0,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "direction": "outgoing",
+              "endpoint_ids": [],
+              "minimum": 1,
+              "reason": "missing_required_relation",
+              "relation_ids": [],
+              "relation_types": [
+                "verified_by"
+              ],
+              "rule_id": "core:requirement-verification",
+              "severity": "error"
+            }
+          ],
+          "requirements_satisfied": false,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "70f695f68f0e632bf1d7a16c0c3cfdf3385ec5ada11e37ed0e6758e22d85011c",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "70f695f68f0e632bf1d7a16c0c3cfdf3385ec5ada11e37ed0e6758e22d85011c",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 5,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "category": "model",
+              "code": "MODEL_VALIDATION",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "missing_required_relation",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": "core:requirement-verification",
+              "severity": "error"
+            }
+          ],
+          "exit_code": 5,
+          "fail_on": "error",
+          "input_sha256": "7ebef24bde2abc9c68561a2b7a7d4f5ef1eadcea9b50c8762fd02148c1a637b4",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "7ebef24bde2abc9c68561a2b7a7d4f5ef1eadcea9b50c8762fd02148c1a637b4",
+            "model_valid": false,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "6d9d84e25c9e340841ca50c30437cbc794a832c9525be979a5a012e7370ccb59"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "schema_types_identity_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "identities_references",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "graph",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "scope",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "profiles",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "actual": 0,
+                    "artifact_id": "SR-REQ-00000000000000000000000000",
+                    "direction": "outgoing",
+                    "endpoint_ids": [],
+                    "minimum": 1,
+                    "reason": "missing_required_relation",
+                    "relation_ids": [],
+                    "relation_types": [
+                      "verified_by"
+                    ],
+                    "rule_id": "core:requirement-verification",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "minimum_relations",
+                "status": "failed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "stored_lifecycle_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "baseline_integrity",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "configuration",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "document_model",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "evidence_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "evidence_currentness",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "external_resources",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "language_policy",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "language_policy",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "lifecycle",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "lifecycle",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "profile_lint",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "review_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "review_currentness",
+                "status": "unavailable"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 5,
+            "diagnostics_by_severity": {
+              "error": 5,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    },
+    {
+      "case": "missing_origin",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "data": null,
+        "returned": true
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "b5edd52531ba67b95e0c14145b5d58b724b3b06fc0caefb177dc4087d2e3774c",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "f7ca93acdc05592854b5da6692ecc6d1c95978f8f5ce061b9f85ca0182c34194",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "checked",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": true,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [
+            {
+              "actual": 0,
+              "minimum": 1,
+              "rule_id": "core:requirement-origin",
+              "satisfied": false
+            },
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-verification",
+              "satisfied": true
+            }
+          ],
+          "diagnostics": [
+            {
+              "actual": 0,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "direction": "outgoing",
+              "endpoint_ids": [],
+              "minimum": 1,
+              "reason": "missing_required_relation",
+              "relation_ids": [],
+              "relation_types": [
+                "addresses",
+                "derived_from",
+                "refines"
+              ],
+              "rule_id": "core:requirement-origin",
+              "severity": "error"
+            }
+          ],
+          "requirements_satisfied": false,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "f7ca93acdc05592854b5da6692ecc6d1c95978f8f5ce061b9f85ca0182c34194",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "f7ca93acdc05592854b5da6692ecc6d1c95978f8f5ce061b9f85ca0182c34194",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 5,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "category": "model",
+              "code": "MODEL_VALIDATION",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "missing_required_relation",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": "core:requirement-origin",
+              "severity": "error"
+            }
+          ],
+          "exit_code": 5,
+          "fail_on": "error",
+          "input_sha256": "9503456d51d65f13703bc756c4e23f616684cf01ca07da760eb9652766343070",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "9503456d51d65f13703bc756c4e23f616684cf01ca07da760eb9652766343070",
+            "model_valid": false,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "b5edd52531ba67b95e0c14145b5d58b724b3b06fc0caefb177dc4087d2e3774c"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "schema_types_identity_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "identities_references",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "graph",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "scope",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "profiles",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "actual": 0,
+                    "artifact_id": "SR-REQ-00000000000000000000000000",
+                    "direction": "outgoing",
+                    "endpoint_ids": [],
+                    "minimum": 1,
+                    "reason": "missing_required_relation",
+                    "relation_ids": [],
+                    "relation_types": [
+                      "addresses",
+                      "derived_from",
+                      "refines"
+                    ],
+                    "rule_id": "core:requirement-origin",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "minimum_relations",
+                "status": "failed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "stored_lifecycle_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "baseline_integrity",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "configuration",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "document_model",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "evidence_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "evidence_currentness",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "external_resources",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "language_policy",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "language_policy",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "lifecycle",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "lifecycle",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "profile_lint",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "review_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "review_currentness",
+                "status": "unavailable"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 5,
+            "diagnostics_by_severity": {
+              "error": 5,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    },
+    {
+      "case": "missing_both_relations",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "data": null,
+        "returned": true
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "ab0ade6a05cd9bf5623a52f19d7dd2c988805ebdb4705278b1c020be138885e2",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "296bc520833d1ed8be8ecc844865bd3abd4df501a29c5b4c01340c4499cb1de9",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "checked",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": true,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [
+            {
+              "actual": 0,
+              "minimum": 1,
+              "rule_id": "core:requirement-origin",
+              "satisfied": false
+            },
+            {
+              "actual": 0,
+              "minimum": 1,
+              "rule_id": "core:requirement-verification",
+              "satisfied": false
+            }
+          ],
+          "diagnostics": [
+            {
+              "actual": 0,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "direction": "outgoing",
+              "endpoint_ids": [],
+              "minimum": 1,
+              "reason": "missing_required_relation",
+              "relation_ids": [],
+              "relation_types": [
+                "addresses",
+                "derived_from",
+                "refines"
+              ],
+              "rule_id": "core:requirement-origin",
+              "severity": "error"
+            },
+            {
+              "actual": 0,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "direction": "outgoing",
+              "endpoint_ids": [],
+              "minimum": 1,
+              "reason": "missing_required_relation",
+              "relation_ids": [],
+              "relation_types": [
+                "verified_by"
+              ],
+              "rule_id": "core:requirement-verification",
+              "severity": "error"
+            }
+          ],
+          "requirements_satisfied": false,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "296bc520833d1ed8be8ecc844865bd3abd4df501a29c5b4c01340c4499cb1de9",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "296bc520833d1ed8be8ecc844865bd3abd4df501a29c5b4c01340c4499cb1de9",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 5,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "category": "model",
+              "code": "MODEL_VALIDATION",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "missing_required_relation",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": "core:requirement-origin",
+              "severity": "error"
+            },
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "category": "model",
+              "code": "MODEL_VALIDATION",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "missing_required_relation",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": "core:requirement-verification",
+              "severity": "error"
+            }
+          ],
+          "exit_code": 5,
+          "fail_on": "error",
+          "input_sha256": "04049691c9b51cf877d6fe6722d5444c7c5d3175af90665628f0ec7003d9170f",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "04049691c9b51cf877d6fe6722d5444c7c5d3175af90665628f0ec7003d9170f",
+            "model_valid": false,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "ab0ade6a05cd9bf5623a52f19d7dd2c988805ebdb4705278b1c020be138885e2"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "schema_types_identity_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "identities_references",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "graph",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "scope",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "profiles",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "actual": 0,
+                    "artifact_id": "SR-REQ-00000000000000000000000000",
+                    "direction": "outgoing",
+                    "endpoint_ids": [],
+                    "minimum": 1,
+                    "reason": "missing_required_relation",
+                    "relation_ids": [],
+                    "relation_types": [
+                      "addresses",
+                      "derived_from",
+                      "refines"
+                    ],
+                    "rule_id": "core:requirement-origin",
+                    "severity": "error"
+                  },
+                  {
+                    "actual": 0,
+                    "artifact_id": "SR-REQ-00000000000000000000000000",
+                    "direction": "outgoing",
+                    "endpoint_ids": [],
+                    "minimum": 1,
+                    "reason": "missing_required_relation",
+                    "relation_ids": [],
+                    "relation_types": [
+                      "verified_by"
+                    ],
+                    "rule_id": "core:requirement-verification",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "minimum_relations",
+                "status": "failed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "stored_lifecycle_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "baseline_integrity",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "configuration",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "document_model",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "evidence_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "evidence_currentness",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "external_resources",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "language_policy",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "language_policy",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "lifecycle",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "lifecycle",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "profile_lint",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "review_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "review_currentness",
+                "status": "unavailable"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 6,
+            "diagnostics_by_severity": {
+              "error": 6,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    },
+    {
+      "case": "core_placeholder",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "data": null,
+        "returned": true
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "4b7726de9cd3a3561256670c938cd8593198cab39313cdaee912e2ca48c63068",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "21be2b7b418706e2bc9c24758c3d34c94220853dc269f931efd4703866d4dea6",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "checked",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "candidate_ids": [],
+              "code": "SRV033",
+              "end": 4,
+              "literal": "TODO",
+              "offset_unit": "unicode_codepoint",
+              "path": null,
+              "pointer": "/statement",
+              "reason": "open_placeholder",
+              "severity": "error",
+              "start": 0,
+              "term_id": null
+            }
+          ],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": false,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-origin",
+              "satisfied": true
+            },
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-verification",
+              "satisfied": true
+            }
+          ],
+          "diagnostics": [],
+          "requirements_satisfied": true,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 1,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "candidate_ids": [],
+              "code": "SRV033",
+              "end": 4,
+              "literal": "TODO",
+              "offset_unit": "unicode_codepoint",
+              "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+              "pointer": "/statement",
+              "reason": "open_placeholder",
+              "severity": "error",
+              "start": 0,
+              "term_id": null
+            }
+          ],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "21be2b7b418706e2bc9c24758c3d34c94220853dc269f931efd4703866d4dea6",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [
+                {
+                  "artifact_id": "SR-REQ-00000000000000000000000000",
+                  "candidate_ids": [],
+                  "code": "SRV033",
+                  "end": 4,
+                  "literal": "TODO",
+                  "offset_unit": "unicode_codepoint",
+                  "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                  "pointer": "/statement",
+                  "reason": "open_placeholder",
+                  "severity": "error",
+                  "start": 0,
+                  "term_id": null
+                }
+              ],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": false,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 1,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "candidate_ids": [],
+              "code": "SRV033",
+              "end": 4,
+              "literal": "TODO",
+              "offset_unit": "unicode_codepoint",
+              "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+              "pointer": "/statement",
+              "reason": "open_placeholder",
+              "severity": "error",
+              "start": 0,
+              "term_id": null
+            }
+          ],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "21be2b7b418706e2bc9c24758c3d34c94220853dc269f931efd4703866d4dea6",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [
+                {
+                  "artifact_id": "SR-REQ-00000000000000000000000000",
+                  "candidate_ids": [],
+                  "code": "SRV033",
+                  "end": 4,
+                  "literal": "TODO",
+                  "offset_unit": "unicode_codepoint",
+                  "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                  "pointer": "/statement",
+                  "reason": "open_placeholder",
+                  "severity": "error",
+                  "start": 0,
+                  "term_id": null
+                }
+              ],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": false,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 5,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            }
+          ],
+          "exit_code": 5,
+          "fail_on": "error",
+          "input_sha256": "80c895b84debc248b3efc1fd67d3eb091028074747ec771c22ab113187fe193c",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "80c895b84debc248b3efc1fd67d3eb091028074747ec771c22ab113187fe193c",
+            "model_valid": null,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "4b7726de9cd3a3561256670c938cd8593198cab39313cdaee912e2ca48c63068"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "schema_types_identity_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "identities_references",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "graph",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "scope",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "profiles",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "minimum_relations",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "stored_lifecycle_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "baseline_integrity",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "configuration",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "document_model",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "evidence_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "evidence_currentness",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "external_resources",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "language_policy",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "language_policy",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "lifecycle",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "lifecycle",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "profile_lint",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "review_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "review_currentness",
+                "status": "unavailable"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 4,
+            "diagnostics_by_severity": {
+              "error": 4,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    },
+    {
+      "case": "forbidden_literal",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "data": null,
+        "returned": true
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "a96b3200e7a28653528ce7777d0146b59bc70d865b5861ba7b089e6f051b72d2",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "565792b9d7f3f8cc18004e2eeddaac1c4e36c5d065932f0b49b6b8d39f2e11fb",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "checked",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "candidate_ids": [],
+              "code": "SRV053",
+              "end": 13,
+              "literal": "Magic box",
+              "offset_unit": "unicode_codepoint",
+              "path": null,
+              "pointer": "/statement",
+              "reason": "forbidden_synonym",
+              "severity": "warning",
+              "start": 4,
+              "term_id": "SR-TERM-00000000000000000000000000"
+            }
+          ],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": false,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-origin",
+              "satisfied": true
+            },
+            {
+              "actual": 1,
+              "minimum": 1,
+              "rule_id": "core:requirement-verification",
+              "satisfied": true
+            }
+          ],
+          "diagnostics": [],
+          "requirements_satisfied": true,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "candidate_ids": [],
+              "code": "SRV053",
+              "end": 13,
+              "literal": "Magic box",
+              "offset_unit": "unicode_codepoint",
+              "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+              "pointer": "/statement",
+              "reason": "forbidden_synonym",
+              "severity": "warning",
+              "start": 4,
+              "term_id": "SR-TERM-00000000000000000000000000"
+            }
+          ],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "565792b9d7f3f8cc18004e2eeddaac1c4e36c5d065932f0b49b6b8d39f2e11fb",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [
+                {
+                  "artifact_id": "SR-REQ-00000000000000000000000000",
+                  "candidate_ids": [],
+                  "code": "SRV053",
+                  "end": 13,
+                  "literal": "Magic box",
+                  "offset_unit": "unicode_codepoint",
+                  "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                  "pointer": "/statement",
+                  "reason": "forbidden_synonym",
+                  "severity": "warning",
+                  "start": 4,
+                  "term_id": "SR-TERM-00000000000000000000000000"
+                }
+              ],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": false,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 1,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [
+            {
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "candidate_ids": [],
+              "code": "SRV053",
+              "end": 13,
+              "literal": "Magic box",
+              "offset_unit": "unicode_codepoint",
+              "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+              "pointer": "/statement",
+              "reason": "forbidden_synonym",
+              "severity": "warning",
+              "start": 4,
+              "term_id": "SR-TERM-00000000000000000000000000"
+            }
+          ],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "565792b9d7f3f8cc18004e2eeddaac1c4e36c5d065932f0b49b6b8d39f2e11fb",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "checked",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [
+                {
+                  "artifact_id": "SR-REQ-00000000000000000000000000",
+                  "candidate_ids": [],
+                  "code": "SRV053",
+                  "end": 13,
+                  "literal": "Magic box",
+                  "offset_unit": "unicode_codepoint",
+                  "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                  "pointer": "/statement",
+                  "reason": "forbidden_synonym",
+                  "severity": "warning",
+                  "start": 4,
+                  "term_id": "SR-TERM-00000000000000000000000000"
+                }
+              ],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": false,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 5,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            }
+          ],
+          "exit_code": 5,
+          "fail_on": "error",
+          "input_sha256": "cfe3d43e87ac193e47407ee0bd59d32536c3f11ccc51ed20fa19f42b3bebcc63",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "cfe3d43e87ac193e47407ee0bd59d32536c3f11ccc51ed20fa19f42b3bebcc63",
+            "model_valid": null,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "a96b3200e7a28653528ce7777d0146b59bc70d865b5861ba7b089e6f051b72d2"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "schema_types_identity_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "identities_references",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "graph",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "scope",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "profiles",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "minimum_relations",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "stored_lifecycle_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "baseline_integrity",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "configuration",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "document_model",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "evidence_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "evidence_currentness",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "external_resources",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "language_policy",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "language_policy",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "lifecycle",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "lifecycle",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "profile_lint",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "review_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "review_currentness",
+                "status": "unavailable"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 4,
+            "diagnostics_by_severity": {
+              "error": 4,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    },
+    {
+      "case": "draft_missing_rationale_and_relations",
+      "core_profile_sha256": "9f9270a0eb84c22d5d5a9add559c922aa026abfc595e181f34bdee7b33065622",
+      "domain_fields": {
+        "data": null,
+        "returned": true
+      },
+      "input_file_sha256": {
+        "spec/goals/SR-GOAL-00000000000000000000000000.json": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a",
+        "spec/requirements/SR-REQ-00000000000000000000000000.json": "21c69a365ff28d4702df7eab22bc216c02994ed618cb8cb37d48e22e580d8327",
+        "spec/terms/SR-TERM-00000000000000000000000000.json": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0",
+        "spec/verifications/SR-VER-00000000000000000000000000.json": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658",
+        "specroad.json": "047e95f518efc0ad743b8b49440ced5c966412f1e3b210fe3975b1f7dc61064f"
+      },
+      "literal_api": {
+        "data": {
+          "approval_granted": false,
+          "artifact_id": "SR-REQ-00000000000000000000000000",
+          "artifact_sha256": "f3896eaea6e4e48646a3bdc8322a221d611062f777d3ddcebb413d54d287c311",
+          "checked_fields": [
+            "/statement"
+          ],
+          "checks": {
+            "approved_placeholders": "not_applicable",
+            "forbidden_synonyms": "checked",
+            "term_references": "not_configured"
+          },
+          "diagnostics": [],
+          "format_version": 1,
+          "glossary_scope": "supplied_terms_only",
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "language": "en",
+          "language_detection_performed": false,
+          "language_match": "exact_tag_ignore_case",
+          "language_registry_checked": false,
+          "linguistic_checks": {
+            "contradiction": "not_available",
+            "modality": "not_available",
+            "single_obligation": "not_available",
+            "translation": "not_available"
+          },
+          "literal_checks_passed": true,
+          "matched_term_ids": [
+            "SR-TERM-00000000000000000000000000"
+          ],
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "project_complete": false,
+          "validation_scope": "selected_literal_fields_only"
+        },
+        "returned": true
+      },
+      "minimum_relations": {
+        "data": {
+          "checks": [],
+          "diagnostics": [],
+          "requirements_satisfied": true,
+          "scope": "minimum_relations_over_supplied_records"
+        },
+        "returned": true
+      },
+      "project_inventory_unchanged": true,
+      "public_lint": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "f3896eaea6e4e48646a3bdc8322a221d611062f777d3ddcebb413d54d287c311",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "not_applicable",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_lint_strict": {
+        "approval_granted": false,
+        "checks_complete": true,
+        "diagnostics": [],
+        "exit_code": 0,
+        "lint": {
+          "checked_ids": [
+            "SR-REQ-00000000000000000000000000"
+          ],
+          "diagnostics": [],
+          "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+          "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+          "reports": [
+            {
+              "approval_granted": false,
+              "artifact_id": "SR-REQ-00000000000000000000000000",
+              "artifact_sha256": "f3896eaea6e4e48646a3bdc8322a221d611062f777d3ddcebb413d54d287c311",
+              "checked_fields": [
+                "/statement"
+              ],
+              "checks": {
+                "approved_placeholders": "not_applicable",
+                "forbidden_synonyms": "checked",
+                "term_references": "not_configured"
+              },
+              "diagnostics": [],
+              "format_version": 1,
+              "glossary_scope": "supplied_terms_only",
+              "glossary_sha256": "95b212c6f37f5028524d62d1d5ab81cea3b0adda1cdd001f6744fdb9ad6199f2",
+              "language": "en",
+              "language_detection_performed": false,
+              "language_match": "exact_tag_ignore_case",
+              "language_registry_checked": false,
+              "linguistic_checks": {
+                "contradiction": "not_available",
+                "modality": "not_available",
+                "single_obligation": "not_available",
+                "translation": "not_available"
+              },
+              "literal_checks_passed": true,
+              "matched_term_ids": [
+                "SR-TERM-00000000000000000000000000"
+              ],
+              "policy_sha256": "f0c4ac4a813ab286440c8bb80f2fbfeadbd2b40d189bb2d037865592da2b065a",
+              "project_complete": false,
+              "validation_scope": "selected_literal_fields_only"
+            }
+          ],
+          "scope": "selected_literal_fields_only"
+        },
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": true,
+        "project_complete": false,
+        "status": "completed",
+        "validation": null,
+        "write_authorized": false
+      },
+      "public_validation": {
+        "approval_granted": false,
+        "checks_complete": false,
+        "diagnostics": [],
+        "exit_code": 5,
+        "lint": null,
+        "model_loaded": true,
+        "normal_operation_started": true,
+        "passed": false,
+        "project_complete": false,
+        "status": "completed",
+        "validation": {
+          "approval_granted": false,
+          "checked_ids": [
+            "SR-GOAL-00000000000000000000000000",
+            "SR-REQ-00000000000000000000000000",
+            "SR-TERM-00000000000000000000000000",
+            "SR-VER-00000000000000000000000000"
+          ],
+          "checks_complete": false,
+          "diagnostic_format_version": 1,
+          "diagnostics": [
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            },
+            {
+              "artifact_id": null,
+              "category": "model",
+              "code": "VALIDATION_UNAVAILABLE",
+              "location": {
+                "byte_offset": null,
+                "character_offset": null,
+                "column": null,
+                "line": null,
+                "pointer": null
+              },
+              "message": "Model validation reported a finding.",
+              "origin": "core_rule",
+              "path": null,
+              "rationale": "validation_required_gate_unavailable",
+              "related_ids": [],
+              "remediation": null,
+              "rule_id": null,
+              "severity": "error"
+            }
+          ],
+          "exit_code": 5,
+          "fail_on": "error",
+          "input_sha256": "bec9e221a4648a68c5c4acc6b2db3d9c876936de1da44c5cf7ecd1f22242e853",
+          "optional_lint_started": false,
+          "source_report": {
+            "approval_granted": false,
+            "atomic_snapshot": false,
+            "checked_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "checks_complete": false,
+            "format_version": "model-validation-v1",
+            "identified_ids": [
+              "SR-GOAL-00000000000000000000000000",
+              "SR-REQ-00000000000000000000000000",
+              "SR-TERM-00000000000000000000000000",
+              "SR-VER-00000000000000000000000000"
+            ],
+            "identified_sources": [
+              {
+                "artifact_id": "SR-GOAL-00000000000000000000000000",
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-REQ-00000000000000000000000000",
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-TERM-00000000000000000000000000",
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json"
+              },
+              {
+                "artifact_id": "SR-VER-00000000000000000000000000",
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json"
+              }
+            ],
+            "input_sha256": "bec9e221a4648a68c5c4acc6b2db3d9c876936de1da44c5cf7ecd1f22242e853",
+            "model_valid": null,
+            "project_files_verified": false,
+            "requested_ids": null,
+            "source_bindings": [
+              {
+                "path": "spec/goals/SR-GOAL-00000000000000000000000000.json",
+                "sha256": "cde8d2b2a79a3d9b3750b9c7aac7c1aedeb160cafacfb6a2f9e7da613b8a1d9a"
+              },
+              {
+                "path": "spec/requirements/SR-REQ-00000000000000000000000000.json",
+                "sha256": "21c69a365ff28d4702df7eab22bc216c02994ed618cb8cb37d48e22e580d8327"
+              },
+              {
+                "path": "spec/terms/SR-TERM-00000000000000000000000000.json",
+                "sha256": "4244390e222b0118dcbf248113602e98ddfecf82a63e13a485f850fc947c0ae0"
+              },
+              {
+                "path": "spec/verifications/SR-VER-00000000000000000000000000.json",
+                "sha256": "4b1d36f9217b7dfd020d7a0f386c6b796ec581f731e62a7c0f75727ca4511658"
+              }
+            ],
+            "source_count": 4,
+            "stages": [
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "parsing",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "schema_types_identity_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "identities_references",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "graph",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "scope",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "profiles",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "minimum_relations",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [
+                  "SR-GOAL-00000000000000000000000000",
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000",
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [],
+                "stage": "stored_lifecycle_fields",
+                "status": "passed"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "baseline_integrity",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "configuration",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "document_model",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-VER-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "evidence_currentness",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "evidence_currentness",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "external_resources",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [
+                  "SR-REQ-00000000000000000000000000",
+                  "SR-TERM-00000000000000000000000000"
+                ],
+                "diagnostics": [
+                  {
+                    "gate_id": "language_policy",
+                    "reason": "validation_required_gate_unavailable",
+                    "severity": "error"
+                  }
+                ],
+                "stage": "language_policy",
+                "status": "unavailable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "lifecycle",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "profile_lint",
+                "status": "not_applicable"
+              },
+              {
+                "checked_ids": [],
+                "diagnostics": [],
+                "stage": "review_currentness",
+                "status": "not_applicable"
+              }
+            ],
+            "structural_scope": "all_supplied_documents",
+            "validation_scope": "loaded_model",
+            "write_authorized": false
+          },
+          "status": "failed",
+          "strict_requested": false,
+          "summary": {
+            "checked_artifacts": 4,
+            "diagnostic_count": 2,
+            "diagnostics_by_severity": {
+              "error": 2,
+              "info": 0,
+              "warning": 0
+            }
+          },
+          "validation_scope": "loaded_model",
+          "write_authorized": false
+        },
+        "write_authorized": false
+      },
+      "write_attempts": 0
+    }
+  ],
+  "execution": {
+    "captured_at": "2026-10-04T23:37:09.111342+00:00",
+    "implementation": "CPython",
+    "mode": "parallel",
+    "product_sources_changed": false,
+    "python": "3.14.4",
+    "regression_test": false,
+    "workers": 4
+  },
+  "workers": 4
+}
