@@ -11,7 +11,7 @@ from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
 from ..profiles.composition import compose_profiles
 from ..validation import validate_model, assess_validation
-from ..lint import Glossary, LiteralPolicy, lint_literals, lint_core
+from ..lint import Glossary, LiteralPolicy, LiteralLintError, lint_literals, lint_core
 from ..graph.relations import SourceRelations
 from .domain_artifact import DomainArtifact
 from .json_syntax import parse_json_object
@@ -89,6 +89,7 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
     A nonmatching language policy is not a passed whole-project lint run.
     Active project profiles require explicit resources; omission has no fallback.
     No optional analyzer, locale resolution or executable project input is used.
+    Missing literal prerequisites leave the Core findings visible but incomplete.
     """
     data = _base("lint")
     try:
@@ -100,6 +101,8 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
             raise ModelError("read_only_lint_selection_required")
         if type(fail_on) is not str or fail_on not in ("error", "warning") or type(strict) is not bool:
             raise ModelError("read_only_fail_policy_invalid")
+        if type(cli_profiles) not in (tuple, list) or any(type(k) is not str for k in cli_profiles):
+            raise ModelError("read_only_lint_profile_selection_required")
         selected_ids = tuple(sorted(selected_ids))
         source, observation = _source(root, data, expected_project_id)
         if source is None:
@@ -132,14 +135,26 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
             if value.get("artifact_type") == "term":
                 terms.append(DomainArtifact(document.content, expected_type="term", path=document.path))
         glossary = Glossary(terms)
-        results = []
         for identity in selected_ids:
             if identity not in indexed:
                 raise ModelError("read_only_selected_id_missing")
-            document, value = indexed[identity]
-            results.append(lint_literals(value, glossary=glossary, policy=policy, path=document.path))
         core = lint_core(tuple(SourceRelations(d.content, path=d.path) for d in documents),
-                         selected_ids=selected_ids, profile=profile)
+                         selected_ids=selected_ids, profile=profile, fail_on=fail_on, strict=strict)
+        results, unavailable = [], []
+        for identity in selected_ids:
+            document, value = indexed[identity]
+            try:
+                result = lint_literals(value, glossary=glossary, policy=policy, path=document.path)
+            except LiteralLintError as error:
+                if error.reason not in ("literal_declared_language_required", "literal_selected_term_missing"):
+                    raise
+                unavailable.append({"artifact_id": identity, "path": document.path,
+                    "reason": error.reason, "pointer": error.pointer, "scope": "literal_checks"})
+                continue
+            results.append(result)
+            if result["literal_checks_passed"] is None:
+                unavailable.append({"artifact_id": identity, "path": document.path,
+                    "reason": "no_applicable_literal_checks", "pointer": "", "scope": "literal_checks"})
         _record_freshness(source, observation, documents, data)
         findings = [finding for result in results for finding in result["diagnostics"]]
         findings.extend(core["diagnostics"])
@@ -148,13 +163,15 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
             d.get("rule_id", ""), -1 if d.get("start") is None else d["start"]))
         threshold = {"info": 0, "warning": 1, "error": 2}["warning" if strict else fail_on]
         failure = any({"info": 0, "warning": 1, "error": 2}[f["severity"]] >= threshold for f in findings)
-        applicable = all(r["literal_checks_passed"] is not None for r in results)
-        data.update(status="completed" if applicable else "incomplete", passed=(not failure if applicable else None),
+        applicable = not unavailable
+        data.update(status="completed" if applicable else "incomplete",
+                    passed=(False if failure else True if applicable else None),
                     checks_complete=applicable, exit_code=(1 if failure else 0) if applicable else 5,
                     lint={"scope": "selected_core_and_literal_lint", "checked_ids": list(selected_ids),
                           "policy_sha256": policy.sha256, "glossary_sha256": glossary.sha256,
+                          "unavailable": unavailable, "findings_passed": not failure,
+                          "failure_threshold": "warning" if strict else fail_on,
                           "reports": results, "core": core, "diagnostics": findings})
         return ReadOnlyResult._create(data)
     except (ModelError, OSError, SafetyViolation) as error:
         return _failure(data, error)
-

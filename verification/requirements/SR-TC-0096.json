@@ -17,12 +17,14 @@
   "steps": [
     "Capture and validate owned records and exact selections.",
     "Run literal checks on unchanged selected text and inspect structured findings and coverage.",
-    "Run the actual public Core and read-only project lint paths with complete data and missing rationale, origin, verification or active profile minimum; verify bound findings and absence of writes."
+    "Run the actual public Core and read-only project lint paths with complete data and missing rationale, origin, verification or active profile minimum; verify bound findings and absence of writes.",
+    "Observe simultaneous selected findings, incoming/outgoing/both profile minima, exact endpoint counts, maturity and field obligations, selection and fail thresholds.",
+    "Supply unavailable literal resources and invalid references, mutate configuration/source/membership/operational state during real reads, and verify incomplete/failed outcomes without writes or fabricated coverage."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die eingebauten Lint-Regeln MÜSSEN fehlende Begründung, fehlende Verifikation, explizit konfigurierte literale Glossar-/Platzhalterverletzungen und fehlende Mindestbeziehungen diagnostizieren; semantische Modalitäts- oder Mehrdeutigkeitserkennung ist kein Core-Passkriterium.",
-    "scope": "Selected Core rationale and relation minima plus unchanged literal lint over supplied or observed project sources. Actual shipped profile minima are composed explicitly. No complete schema/model/profile, review, language understanding or approval proof."
+    "scope": "Selected schema-defined rationale fields and Core/profile relation minima plus literal lint over supplied or observed project sources. Explicit profile composition, diagnostic bindings, threshold semantics and read freshness are covered. Missing literal prerequisites retain known Core findings while remaining incomplete; invalid structural/reference prerequisites stop evaluation. No complete model/schema/profile, review, language understanding or approval proof."
   },
   "expected_diagnostics": [
     "SRV002",
@@ -36,7 +38,9 @@
     0,
     1,
     2,
-    3
+    3,
+    5,
+    7
   ],
   "json_pointers": [
     "/rationale",
@@ -72,11 +76,43 @@
     "test_core_lint.ProjectCoreLintWorkTests.test_project_profile_minimum_uses_activated_resources",
     "test_core_lint.ProjectCoreLintWorkTests.test_core_findings_preserve_literal_findings",
     "test_core_lint.ProjectCoreLintWorkTests.test_activated_profile_without_resources_cannot_pass",
-    "test_core_lint.ProjectCoreLintWorkTests.test_unresolved_relation_cannot_satisfy_a_minimum"
+    "test_core_lint.ProjectCoreLintWorkTests.test_unresolved_relation_cannot_satisfy_a_minimum",
+    "test_core_lint_right.CoreLintRightTests.test_all_independent_missing_obligations_are_retained",
+    "test_core_lint_right.CoreLintRightTests.test_source_and_selection_order_do_not_change_the_report",
+    "test_core_lint_right.CoreLintRightTests.test_selection_keeps_targets_but_omits_unselected_field_findings",
+    "test_core_lint_right.CoreLintRightTests.test_incoming_minimum_observes_the_opposite_endpoint",
+    "test_core_lint_right.CoreLintRightTests.test_both_direction_counts_one_stored_symmetric_edge_once",
+    "test_core_lint_right.CoreLintRightTests.test_outgoing_minimum_counts_distinct_relations_to_one_endpoint",
+    "test_core_lint_right.CoreLintRightTests.test_maturity_filters_do_not_promote_nonapproved_requirements",
+    "test_core_lint_right.CoreLintRightTests.test_present_optional_rationale_still_obeys_its_field_contract",
+    "test_core_lint_right.CoreLintRightTests.test_unconditional_rationale_contracts_apply_before_approval",
+    "test_core_lint_right.CoreLintRightTests.test_warning_fail_policy_changes_pass_status_not_severity",
+    "test_core_lint_right.CoreLintRightTests.test_profile_overrides_cannot_lower_intrinsic_core_errors",
+    "test_core_lint_right.CoreLintRightTests.test_invalid_inputs_have_controlled_errors",
+    "test_core_lint_right.CoreLintRightTests.test_diagnostic_source_labels_are_unambiguous",
+    "test_core_lint_right.CoreLintRightTests.test_invalid_references_never_count_as_satisfied_minima",
+    "test_core_lint_right.CoreLintRightTests.test_source_bytes_and_relation_policy_have_independent_bindings",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_independent_core_and_literal_occurrences_are_not_collapsed",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_partial_selection_uses_full_references_without_claiming_full_model",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_incoming_profile_checks_work_for_selected_task",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_missing_declared_language_retains_core_findings_and_incompleteness",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_missing_selected_glossary_resource_does_not_hide_core_errors",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_no_applicable_literals_does_not_erase_known_profile_failure",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_warning_threshold_is_consistent_in_core_and_reader",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_invalid_falsy_profile_selection_does_not_start_reading",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_explicit_profile_resources_and_cli_selection_have_no_fallback",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_invalid_unselected_bytes_are_not_hidden_by_selection",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_missing_or_wrong_relation_targets_leave_no_false_completed_report",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_same_size_source_change_with_restored_mtime_invalidates_read",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_created_or_deleted_sources_during_core_check_invalidate_read",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_configuration_change_after_core_check_invalidates_findings",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_operational_change_after_core_check_invalidates_findings",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_recovery_during_profile_composition_blocks_before_model_load",
+    "test_core_lint_right.ProjectCoreLintRightTests.test_unavailable_or_unsafe_source_is_never_repaired"
   ],
   "open_items": [
-    "AUDIT-VALIDATION-01.R/C: complete multi-error, incoming/outgoing profile minima, selection, unavailable-resource, maturity, freshness and fail-policy coverage, then consolidate shared observations.",
-    "AUDIT-VALIDATION-02.W/R/C separately connects already due production language/SRX/approval observations to model validation. Literal/Core lint is not full model approval.",
-    "Full CLI integration and the complete target runtime matrix remain separate evidence scopes."
+    "AUDIT-VALIDATION-01.C: consolidate the now covered field/relation observations and diagnostic/fail-policy projection without changing behavior.",
+    "AUDIT-VALIDATION-02.W/R/C connects due production language/SRX/approval observations to model validation; AUDIT-VALIDATION-03.W/R/C collects independent reference errors behind safe structural prerequisites.",
+    "Full CLI integration and the complete target runtime matrix remain separate evidence scopes; no full schema, review or human approval result is inferred from lint."
   ]
 }

@@ -9,12 +9,13 @@ from ..graph.relations import SourceRelations
 from ..graph.relation_obligations import RelationObligations
 from ..model._schema import validate_builtin
 from ..model.domain_fields import approved_required_fields
-from ..model.domain_schemas import domain_schema
+from ..model.domain_schemas import DOMAIN_TYPES, domain_schema
+from ..model.record_schemas import record_schema
 from ..model.errors import ModelError
 from ..profiles.composition_values import EffectiveProfile
 
 
-def lint_core(sources, *, selected_ids=None, profile=None):
+def lint_core(sources, *, selected_ids=None, profile=None, fail_on="error", strict=False):
     """Reuse current maturity/field and minimum rules without granting approval.
 
     All supplied references must resolve before their minima can be counted.
@@ -26,6 +27,13 @@ def lint_core(sources, *, selected_ids=None, profile=None):
         raise ModelError("core_lint_sources_required")
     if profile is not None and type(profile) is not EffectiveProfile:
         raise ModelError("core_lint_effective_profile_required")
+    if type(fail_on) is not str or fail_on not in ("error", "warning") or type(strict) is not bool:
+        raise ModelError("core_lint_fail_policy_invalid")
+    if any(s.path is not None and (type(s.path) is not str or not s.path) for s in sources):
+        raise ModelError("core_lint_source_path_required")
+    paths = [s.path for s in sources if s.path is not None]
+    if len(paths) != len(set(paths)):
+        raise ModelError("core_lint_duplicate_source_path")
     records = tuple(SourceRelations(s.source_bytes, path=s.path) for s in sources)
     rules = () if profile is None else profile.minimum_relation_rules()
     obligations = RelationObligations(records, profile_rules=rules)
@@ -45,13 +53,16 @@ def lint_core(sources, *, selected_ids=None, profile=None):
         source = index[identity]
         value = source.data
         kind = value["artifact_type"]
-        if value["maturity"] != "approved" or "rationale" not in approved_required_fields(kind):
+        schema = (domain_schema if kind in DOMAIN_TYPES else record_schema)(kind, value["schema_version"])
+        if "rationale" not in schema["properties"]:
             continue
         reason = None
+        required = ("rationale" in schema["required"] or
+                    (value["maturity"] == "approved" and "rationale" in approved_required_fields(kind)))
         if "rationale" not in value:
-            reason = "missing_rationale"
+            if required:
+                reason = "missing_rationale"
         else:
-            schema = domain_schema(kind, value["schema_version"])
             try:
                 validate_builtin(value["rationale"],
                     {"$defs": schema["$defs"], **schema["properties"]["rationale"]})
@@ -74,9 +85,13 @@ def lint_core(sources, *, selected_ids=None, profile=None):
             "path": index[check.artifact_id].path, "pointer": "/relations"})
     diagnostics.sort(key=lambda d: ({"error": 0, "warning": 1, "info": 2}[d["severity"]],
         d["path"] or "", d["artifact_id"], d["pointer"], d["code"], d["rule_id"]))
+    threshold = "warning" if strict else fail_on
+    failed = any(d["severity"] == "error" or
+                 (d["severity"] == "warning" and threshold == "warning") for d in diagnostics)
     return {"format_version": 1, "validation_scope": "selected_core_lint_over_supplied_records",
         "checked_ids": list(selected), "checks_complete": True,
-        "core_checks_passed": not diagnostics, "diagnostics": diagnostics,
+        "core_checks_passed": not failed, "diagnostics": diagnostics,
+        "failure_threshold": threshold,
         "source_bindings": [{"artifact_id": r.identity.id, "path": r.path,
                              "sha256": sha256(r.source_bytes).hexdigest()}
                             for r in sorted(records, key=lambda r: r.identity.id)],

@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 76
+last_completed_numbered_bundle: 77
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-01.R
+next_audit_step: AUDIT-VALIDATION-01.C
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -68,7 +68,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W umgesetzt, R/C offen |
+| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R umgesetzt, C offen |
 | F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt und eingegrenzt; W/R/C offen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
 | F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
@@ -815,7 +815,7 @@ fällig und erhalten die folgenden konkreten Korrekturen.
   ihren Reife-/Profilgrenzen wiederverwenden. **Abnahme:** Die bestätigten
   Negativfälle liefern getrennte maschinenlesbare Befunde; vollständige positive
   Eingaben bleiben befundfrei; bestehende Literaldiagnosen bleiben erhalten.
-- [ ] **AUDIT-VALIDATION-01.R:** Gleichzeitige Fehler, eingehende/ausgehende
+- [x] **AUDIT-VALIDATION-01.R:** Gleichzeitige Fehler, eingehende/ausgehende
   Profilminima, Teilselektion, fehlende Zielressourcen, Reifegrenzen, unverfügbare
   Voraussetzungen und Änderungen während des Lesens einbeziehen. **Abnahme:**
   Vollständige Diagnosemenge und Code-/Pointer-/Artefaktbindung, konsistente
@@ -995,6 +995,50 @@ werden durch diesen W-Zustand nicht als erledigt verbucht.
 Commit-Message: `fix(lint): report missing rationale and relation minima`.
 Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster
 Schritt: `AUDIT-VALIDATION-01.R`; Produktzähler 237/885 und Sperre von 5.t.W
+bleiben erhalten.
+
+### AUDIT-VALIDATION-01.R – Diagnoseumfang und Lesebindung (Bundle 077)
+
+Basis ist das vollständig geprüfte erfolgreiche Result
+`specroad-apply_Result_022149_1005_95d2e5.zip`, Commit
+`60bcd2e75b2cb44c559568a6aa28f3141026ade9`. Die 1457 Snapshot-Dateien stimmen
+mit dem W-Stand überein. Jeweils 5741 parallele und serielle Apply-Tests
+bestätigen dessen tatsächlichen Commit.
+
+Der Core-Lintstatus beachtet nun denselben Fail-Schwellwert wie der Projektleser;
+Warnungen bleiben Warnungen, auch wenn `strict` oder `fail_on=warning` sie zum
+Fehlschlag machen. Intrinsische Core-Fehler können durch Profilüberschreibungen
+nicht abgesenkt werden. Pflicht und Inhalt von `rationale` kommen aus den
+vorhandenen Domain-/Record-Schemas: fehlende optionale Felder werden nicht zu
+Pflichtfeldern; vorhandene optionale Werte werden trotzdem geprüft, und die
+unbedingten Decision-/Proposal-Pflichten gelten schon vor `approved`.
+Ungültige beziehungsweise doppelte Quelllabels und falsche Selektionsargumente
+liefern kontrollierte Fehler.
+
+Fehlende deklarierte Sprache oder ausdrücklich ausgewählte, aber nicht geladene
+Glossarbegriffe lassen sichere Core-Befunde im Read-only-Bericht sichtbar. Die
+Literalvoraussetzung bleibt artefakt-/pfadgebunden unter `unavailable` und die
+Gesamtprüfung unvollständig mit Code 5. Bekannte Fachfehler behalten dabei
+`passed=false`; ohne solche Befunde bleibt das Ergebnis unentschieden. Eine
+nicht anwendbare Literalprüfung wird ebenfalls nicht als bestanden ausgegeben.
+Andere ungültige strukturelle Eingaben, insbesondere defekte Zielreferenzen,
+stoppen weiterhin vor einem abgeschlossenen Lintbericht. Die separate vollständige
+Referenz-Diagnoseaggregation bleibt AUDIT-VALIDATION-03 zugeordnet.
+
+32 zusätzliche Verhaltensfälle prüfen vollständige unabhängige Befundmengen,
+mehrfache Literalvorkommen, Eingangs-/Ausgangs-/beidseitige Profilminima,
+Relationsidentitäten und Endpunktfilter, Teilselektion mit vollständigen
+Referenzquellen, alle Reifegrade, Schwellen und Bindungen. Kontrollierte Änderungen
+an Quellbytes bei gleicher Größe und wiederhergestellter mtime, Mitgliedschaft,
+Konfiguration und Betriebszustand verwerfen den alten Bericht. Nicht verfügbare
+oder unsichere Ressourcen werden nicht repariert; Schreibversuchssperren und
+Byte-/Inventarvergleiche sichern den Lesevertrag. SR-TC-0096 bleibt `partial`,
+weil daraus weder Vollmodell-/Profilprüfung noch spätere CLI-/Runtime-Abnahme
+abgeleitet wird.
+
+Commit-Message: `fix(lint): preserve bound findings and incomplete coverage`.
+Erst das erfolgreiche Apply-Result bestätigt diesen R-Abschluss. Nächster
+Schritt: `AUDIT-VALIDATION-01.C`; Produktzähler 237/885 und Sperre von 5.t.W
 bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
