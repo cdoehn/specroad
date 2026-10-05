@@ -14,12 +14,13 @@
   ],
   "steps": [
     "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
-    "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state."
+    "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state.",
+    "Execute actual bound language, profile-SRX and formal-approval observations in the project reader with a write-attempt trap, including valid and invalid inputs."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
-    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance."
+    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -105,7 +106,11 @@
     "test_read_only_validation_right.ReadOnlyRobustnessTests.test_module_and_zipapp_read_without_project_side_effects",
     "test_read_only_validation_right.ReadOnlyRobustnessTests.test_profile_conflict_is_configuration_exit_not_a_model_success",
     "test_read_only_validation_right.ReadOnlyRobustnessTests.test_absent_literal_checks_return_incomplete_not_success_exit",
-    "test_read_only_validation_right.ReadOnlyRobustnessTests.test_lint_warning_threshold_retains_the_original_severity"
+    "test_read_only_validation_right.ReadOnlyRobustnessTests.test_lint_warning_threshold_retains_the_original_severity",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_real_project_draft_passes_without_writes_or_test_gates",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_actual_language_failure",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_actual_profile_failure",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_formal_approval_failure_without_approval"
   ],
   "open_items": [
     "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",

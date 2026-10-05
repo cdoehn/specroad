@@ -84,6 +84,7 @@ class TargetModel:
     resources: tuple
     profile: EffectiveProfile
     language_packages: tuple
+    language_registry: LanguageRegistry | None
     attachment_descriptors: tuple
     reserved_artifact_ids: tuple
     reserved_relation_ids: tuple
@@ -169,7 +170,7 @@ class TargetModel:
         for name, value in (('configuration_bytes', configuration_bytes), ('configuration', configuration),
                 ('binding', binding), ('documents', tuple(sorted(documents, key=lambda d:d.path))),
                 ('resource_files', tuple(sorted(files, key=lambda d:d.path))), ('resources', tuple(resources)),
-                ('profile', rebuilt), ('language_packages', packages),
+                ('profile', rebuilt), ('language_packages', packages), ('language_registry', registry),
                 ('attachment_descriptors', descriptions), *reservations.items()):
             object.__setattr__(self, name, value)
         # Reuse the canonical manifest's cross-resource identity checks now.

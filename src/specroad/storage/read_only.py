@@ -10,7 +10,7 @@ from hashlib import sha256
 from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
 from ..profiles.composition import compose_profiles
-from ..validation import validate_model, assess_validation
+from ..validation import validate_model, assess_validation, ValidationResources
 from ..lint import Glossary, LiteralPolicy, LiteralLintError, lint_literals, lint_core
 from ..lint.reporting import lint_findings_report
 from ..graph.relations import SourceRelations
@@ -20,6 +20,7 @@ from .read_only_values import READ_ONLY_VERSION, ReadOnlyResult
 from ._read_only_reporting import _base, _failure, _blocked
 from ._read_only_inputs import (_operational_metadata, _source, _ready,
                                  _capture_documents, _record_freshness)
+from .language_registry import read_language_registry, require_registry_current
 
 __all__ = ["READ_ONLY_VERSION", "ReadOnlyResult", "diagnose_read_only",
            "validate_project_read_only", "lint_project_read_only"]
@@ -60,9 +61,14 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         source, observation = _source(root, data, expected_project_id)
         if source is None:
             return _blocked(data, observation)
+        data["phase"] = "language_resources"
+        registry = (read_language_registry(source)
+                    if source.configuration.data.get("language_registry") is not None else None)
+        resources = ValidationResources(source.configuration_bytes, registry=registry)
         data["phase"] = "profiles"
         profile = compose_profiles(profile_resources, core_key=core_key,
-            project_profiles=source.configuration.data["profiles"], cli_profiles=cli_profiles)
+            project_profiles=source.configuration.data["profiles"], cli_profiles=cli_profiles,
+            language_registry=registry)
         data["phase"] = "operational"
         if not _ready(source, observation, data):
             return _blocked(data, data["operational"])
@@ -71,8 +77,11 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         documents = _capture_documents(source)
         data["model_loaded"] = True
         data["source_bindings"] = [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents]
-        report = validate_model(documents, profile=profile, selected_ids=selected_ids, gates=gates)
+        report = validate_model(documents, profile=profile, selected_ids=selected_ids,
+                                gates=gates, resources=resources)
         assessment = assess_validation(report, fail_on=fail_on, strict=strict, documents=documents)
+        if registry is not None:
+            require_registry_current(source, registry)
         _record_freshness(source, observation, documents, data)
         data.update(status="completed", passed=assessment.passed, exit_code=assessment.exit_code,
                     checks_complete=report.complete, validation=assessment.as_dict())

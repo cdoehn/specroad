@@ -7,7 +7,7 @@ from hashlib import sha256
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.paths import artifact_path
 from ..storage.json_syntax import parse_json_object
-from ..validation import ModelDocument, validate_model, assess_validation
+from ..validation import ModelDocument, validate_model, assess_validation, ValidationResources
 from .values import ChangePlan
 from .lifecycle import prepare_plan_lifecycle, prepare_change_lifecycle
 from .core import prepare_change_plan
@@ -46,7 +46,8 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         documents.append(ModelDocument(artifact_path(artifact['artifact_type'],artifact['id'],model.configuration.id_prefix), raw))
     documents = tuple(sorted(documents,key=lambda d:d.path))
     registered, missing = _gates(gates,policy,plan,model)
-    report = validate_model(documents, profile=model.profile, gates=registered)
+    resources = ValidationResources(model.configuration_bytes, registry=model.language_registry)
+    report = validate_model(documents, profile=model.profile, gates=registered, resources=resources)
     report = _empty_target_gates(report, registered, model.profile)
     assessment = assess_validation(report, fail_on=model.configuration.data['validation_policy'].get('fail_on','error'),
                                    strict=strict, documents=documents)

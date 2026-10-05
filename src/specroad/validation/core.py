@@ -25,9 +25,11 @@ from .values import (
     GateDependencies, GateResult, ValidationReport, _sequence, _ids, _diagnostics,
 )
 from ._model_checks import _issue, _applies, _foreign_edges
+from .resources import ValidationResources
+from .production import production_gates, formal_findings
 
 
-def validate_model(documents, *, profile=None, selected_ids=None, gates=()):
+def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -53,7 +55,17 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=()):
     gate_index = {g.gate_id: g for g in gates}
     if len(gate_index) != len(gates):
         raise ModelError("duplicate_validation_gate")
+    if resources is not None:
+        if type(resources) is not ValidationResources:
+            raise ModelError("validation_resources_required")
+        resources = resources.snapshot()
+        builtins = production_gates(resources, profile)
+        if any(g.gate_id in gate_index for g in builtins):
+            raise ModelError("validation_builtin_gate_override")
+        gates += builtins
+        gate_index.update((g.gate_id, g) for g in builtins)
     basis = canonical_json_sha256({"version": VALIDATION_VERSION,
+        **({"resources_sha256": resources.sha256} if resources is not None else {}),
         "documents": [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents],
         "selection": None if selected is None else list(selected),
         "profile": profile.binding() if profile is not None else None,
@@ -190,6 +202,10 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=()):
     # The local schema already checked maturity, revision/actor/time value types
     # and special-state couplings. It did NOT verify historical authorization.
     stage("stored_lifecycle_fields", ids=checked)
+    if resources is not None:
+        findings, formal_ids = formal_findings(documents, records, checked, profile, resources)
+        stage("approval_formal", findings, ids=formal_ids,
+              status=None if formal_ids else "not_applicable")
     names = sorted(set(HOOK_NAMES) | set(gate_index))
     for name in names:
         subjects = tuple(identity for identity in checked if _applies(name, index[identity].data, profile))

@@ -13,15 +13,21 @@
     "Explicit loaded bytes, exact effective profile and trusted semantic validators; no hidden resource discovery."
   ],
   "steps": [
-    "Run the shared pipeline and compare structure, dependency coverage, unavailability and actual gate outcomes."
+    "Run the shared pipeline and compare structure, dependency coverage, unavailability and actual gate outcomes.",
+    "Supply actual configuration, bound offline registry and shipped software profiles; execute production language/SRX/formal-approval checks through model, project and target adapters without successful substitute gates."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Validierung MUSS mindestens JSON-Parsing, JSON Schema, Typen, IDs, Referenzen, Relation Rules, Zyklen, Lifecycle, Profile, Baseline-Integrität und Evidence-Aktualität abdecken.",
-    "scope": "Loaded-model structure and dependency-expanded semantic dispatch only; no permission or whole-product release claim."
+    "scope": "Loaded-model structure, dependency-expanded semantic dispatch and actual bound language policy, profile SRX and formal Requirement approval observations. Project and target adapters reuse the kernels; absent review/evidence/history services remain unavailable. No permission or whole-product release claim."
   },
   "expected_diagnostics": [
-    "validation_required_gate_unavailable"
+    "validation_required_gate_unavailable",
+    "SRV179",
+    "PROFILE_LINT",
+    "SRV110",
+    "SRV033",
+    "SRV032"
   ],
   "expected_exit_codes": [],
   "json_pointers": [
@@ -50,11 +56,31 @@
     "test_model_validation_right.ModelValidationRightTests.test_sealed_state_maturity_mismatch_fails_schema",
     "test_model_validation_right.ModelValidationRightTests.test_explicit_profile_lint_cannot_be_ignored",
     "test_model_validation_right.ModelValidationRightTests.test_gate_cannot_reuse_discovery_binding_as_check_binding",
-    "test_model_validation_right.ModelValidationRightTests.test_report_cannot_accidentally_be_used_as_boolean_success"
+    "test_model_validation_right.ModelValidationRightTests.test_report_cannot_accidentally_be_used_as_boolean_success",
+    "test_production_validation.ProductionValidationWorkTests.test_shipped_software_draft_passes_actual_model_gates",
+    "test_production_validation.ProductionValidationWorkTests.test_german_named_software_profile_does_not_invent_content_language",
+    "test_production_validation.ProductionValidationWorkTests.test_disallowed_language_has_bound_code_artifact_and_pointer",
+    "test_production_validation.ProductionValidationWorkTests.test_false_profile_predicate_is_a_finding_not_an_invalid_expression",
+    "test_production_validation.ProductionValidationWorkTests.test_profile_evaluates_actual_project_configuration",
+    "test_production_validation.ProductionValidationWorkTests.test_non_boolean_profile_result_cannot_pass",
+    "test_production_validation.ProductionValidationWorkTests.test_formal_placeholder_is_in_common_diagnostics",
+    "test_production_validation.ProductionValidationWorkTests.test_formal_verification_subject_mismatch_is_retained",
+    "test_production_validation.ProductionValidationWorkTests.test_formal_success_leaves_real_reviews_evidence_and_history_unavailable",
+    "test_production_validation.ProductionValidationWorkTests.test_absent_registry_has_no_distribution_fallback",
+    "test_production_validation.ProductionValidationWorkTests.test_supplied_gate_cannot_replace_available_production_check",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_real_project_draft_passes_without_writes_or_test_gates",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_actual_language_failure",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_actual_profile_failure",
+    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_formal_approval_failure_without_approval",
+    "test_production_validation.TargetProductionValidationWorkTests.test_actual_shipped_draft_target_and_dry_run_pass",
+    "test_production_validation.TargetProductionValidationWorkTests.test_language_error_in_unchanged_requirement_blocks_goal_change",
+    "test_production_validation.TargetProductionValidationWorkTests.test_actual_profile_rule_blocks_target",
+    "test_production_validation.TargetProductionValidationWorkTests.test_formal_error_in_unchanged_requirement_blocks_target"
   ],
   "open_items": [
     "CLI validate and filesystem inventory adapter are not implemented by 4.o.",
-    "Baseline integrity, evidence freshness, historical lifecycle, language/document/configuration services require their real applicable gates; absence is incomplete, not passed.",
-    "The loaded model and trusted gate inputs are not authenticated or an atomic project snapshot."
+    "Baseline integrity, evidence freshness, historical lifecycle, human review and document/configuration services still require their real applicable gates; absence is incomplete, not passed.",
+    "The loaded model and trusted gate inputs are not authenticated or an atomic project snapshot.",
+    "AUDIT-VALIDATION-02.R/C completes productive adapter resource freshness, failure, selection and simultaneous finding coverage; W conservatively retains the whole supplied dependency model."
   ]
 }

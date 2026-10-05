@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 78
+last_completed_numbered_bundle: 79
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-02.W
+next_audit_step: AUDIT-VALIDATION-02.R
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -69,7 +69,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R/C umgesetzt, Audit-CLOSE offen |
-| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt und eingegrenzt; W/R/C offen |
+| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt; W umgesetzt, R/C offen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
 | F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
 
@@ -862,7 +862,7 @@ synthetisch bestehen. Vollständiges Lifecycleauthoring bleibt 7.f, Relationsrev
 Die tatsächliche Schreibfreiheit von SR-REQ-0100 wird durch diesen Befund nicht
 widerlegt. Fehlende oder spätere Fachdienste sind weiter ehrlich unverfügbar.
 
-- [ ] **AUDIT-VALIDATION-02.W:** Vorhandene Sprachpolicy- und Profil-SRX-Prüfer
+- [x] **AUDIT-VALIDATION-02.W:** Vorhandene Sprachpolicy- und Profil-SRX-Prüfer
   über produktive, an echte Konfiguration und Ressourcen gebundene Adapter an
   Modell-, Read-only- und Zielvalidierung anschließen; vorhandene formale
   Approvalbefunde in deren gemeinsame Diagnosemenge übernehmen. **Abnahme:**
@@ -1070,6 +1070,51 @@ Commit-Message: `refactor(lint): share finding assessment and rule projection`.
 Erst das erfolgreiche Apply-Result bestätigt den C-Abschluss und damit diese
 W/R/C-Folge. Nächster Schritt: `AUDIT-VALIDATION-02.W`; Produktzähler 237/885
 und Sperre von 5.t.W bleiben erhalten.
+
+### AUDIT-VALIDATION-02.W – produktive Prüfadapter (Bundle 079)
+
+Basis ist das vollständig geprüfte erfolgreiche Result
+`specroad-apply_Result_035946_1005_5a5f8b.zip`, Commit
+`c48f8e581f4ba83cf925671e94ceffd1eb0f0b70`. Alle 1458 Snapshot-Dateien stimmen
+mit dem bestätigten Stand überein. Je 5773 parallele und serielle Apply-Tests
+bestätigen den tatsächlichen Abschluss von AUDIT-VALIDATION-01.C.
+
+`ValidationResources` bindet exakte Projektkonfigurationsbytes und ein tatsächlich
+vorliegendes, durch diese Konfiguration gebundenes Offline-Sprachregister. Der
+Modellprüfer führt damit die vorhandene Sprachpolicy einschließlich der aktiven
+Requirement-Sprachmischung und die tatsächlich komponierten Profil-SRX-Regeln aus.
+SRX erhält die reale Projektkonfiguration, keinen ausgewählten Konfigurationsraum
+und den vollständigen geladenen Relationsgraphen. Regeltyp und Reifegrad werden
+beachtet; ein falsches Prädikat ist ein Profilbefund, ein nichtboolesches Ergebnis
+ein SRX-Vertragsfehler. Ein bereitgestelltes Gate kann diese verfügbaren
+Produktprüfer nicht ersetzen. Die W-Abhängigkeitsprojektion ist konservativ:
+Sprach- und Profilprüfungen behalten das gesamte geladene Modell als Abhängigkeit.
+
+Der Read-only-Projektleser bindet das explizite Register und prüft dessen Bytes
+nach der Beobachtung erneut. Die Zielvalidierung baut ihre Ressourcen erneut aus
+dem vorhandenen unveränderlichen Quellinventar auf; Direktauswertung und Dry-Run
+benutzen denselben Modellpfad. Fehlendes Register hat keinen Distributionsfallback.
+Explizit bereitgestellte Profilwerte bleiben Eingaben des Aufrufers, keine Aussage
+über unveränderte Profildateien auf dem Datenträger.
+
+Vorhandene formale Approvalbefunde werden über denselben Kern wie die bisherige
+Approval-API übernommen. Platzhalter und unpassende Verification-Subjects sind
+so in der gemeinsamen Diagnosemenge sichtbar. Eine bestandene Formalprüfung
+ersetzt weder menschliche Reviews noch Evidence-Aktualität oder Historienprüfung;
+die entsprechenden fehlenden Dienste bleiben unverfügbar. Sprachqualität,
+optionale Analyzer, Freigabe und Schreibberechtigung werden nicht behauptet.
+
+19 neue Verhaltenstests prüfen tatsächliche Softwareprofile, Sprachfehler,
+falsche und nichtboolesche SRX-Prädikate, reale Projektwerte, formale Approvalfehler,
+fehlende Dienste sowie die schreibfreie Projekt-/Ziel-/Dry-Run-Integration.
+SR-TC-0086 und SR-TC-0100 bleiben mit ihrem abgegrenzten Nachweis `partial`.
+Die vollständige Suite wird für diesen W-Zustand parallel geprüft; R ergänzt
+Ressourcenfehler, Aktualitäts- und Auswahlgrenzen sowie Mehrfachbefunde.
+
+Commit-Message: `fix(validation): connect productive language profile and approval checks`.
+Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster
+Schritt: `AUDIT-VALIDATION-02.R`; Produktzähler 237/885 und Sperre von 5.t.W
+bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 

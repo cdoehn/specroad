@@ -9,6 +9,16 @@ from ._approval_formal import _formal
 from ._approval_review import observe_human_review
 
 
+def formal_requirement_findings(context):
+    """Observe existing formal prerequisites without claiming human approval."""
+    if type(context) is not ApprovalContext:
+        raise ModelError('approval_context_required')
+    try:
+        return _formal(context)
+    except ModelError as error:
+        return [_finding(context,error.reason,code='SRV002',pointer=error.pointer or '',path=error.path)]
+
+
 def assess_requirement_approval(context, *, review=None, verifier=None, prerequisites=()):
     """Check readiness for the human in_review -> approved step, never perform it.
 
@@ -28,10 +38,7 @@ def assess_requirement_approval(context, *, review=None, verifier=None, prerequi
         raise ModelError('approval_human_review_required')
     if verifier is not None and type(verifier) is not ReviewVerifier:
         raise ModelError('approval_review_verifier_required')
-    try:
-        issues=_formal(context)
-    except ModelError as error:
-        issues=[_finding(context,error.reason,code='SRV002',pointer=error.pointer or '',path=error.path)]
+    issues=formal_requirement_findings(context)
     formal_ok=not issues
     observed={p.gate_id:p for p in prerequisites}
     prerequisite_status=[]
