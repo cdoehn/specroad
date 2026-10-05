@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 74
+last_completed_numbered_bundle: 75
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-03.U
+next_audit_step: AUDIT-VALIDATION-01.W
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -786,7 +786,7 @@ Erst das erfolgreiche Apply-Result bestätigt diesen C-Abschluss. Danach folgt
 
 - [x] **AUDIT-VALIDATION-01.U / F07:** SR-REQ-0096, SR-VER-0007, SR-TC-0096 gegen 4.l/4.o/4.r verfolgen. `lint/core.py` und `storage/read_only.py` bieten bisher vor allem Literalprüfungen. **Entscheidung:** Für fehlende Begründung, Verifikation und Mindestbeziehungen jeweils tatsächlichen Diagnosepfad, positive/negative Verhaltensnachweise und ursprüngliche Abnahme bestimmen. Ein bestehender Approval-/Relationskern allein beweist den Lintpfad nicht. Bereits geschuldete fehlende Core-Lintdiagnosen zur Korrektur eintragen; echte spätere Integration mit konkreter offener Position belegen.
 - [x] **AUDIT-VALIDATION-02.U / F08:** SR-REQ-0086/0100, SR-VER-0007, SR-TC-0086/0100 gegen 4.o–4.r und 5.f/5.g verfolgen. Ein reales Requirementprojekt mit ausgeliefertem Softwareprofil durch die vorhandenen öffentlichen Bibliotheksgrenzen prüfen. **Entscheidung:** Tatsächliche Adapter für Sprachpolicy, Profil-SRX, Approval und Diagnoseauswertung von vertrauenswürdigen Testgates unterscheiden. `test_model_validation.py` und `test_read_only_validation.py` belegen bisher auch Nichtverfügbarkeit. Für jede fehlende Verbindung festhalten, ob sie bereits fällig oder konkret später vorgesehen ist; keine Vollvalidierung allein aus injizierten immer erfolgreichen Gates ableiten.
-- [ ] **AUDIT-VALIDATION-03.U / Diagnoseaggregation:** 4.p.R und die dort zugeordneten SR-REQ-0087–0092/0098–0099 samt SR-TC-Manifeste und SR-VER-0007 prüfen. `graph/references.py` und `validation/core.py` beenden bei fehlendem Relationsziel den betreffenden Pfad. **Entscheidung:** Verlangt die bestehende Abnahme mehrere unabhängig fehlende Ziele gemeinsam, oder setzt sie einen erfolgreichen Strukturabschnitt voraus? Mehrere konkrete gleichzeitige Fehler und die strukturierte Diagnosemenge vergleichen; kein bloßes Fortsetzungsversprechen ohne Vertrag ergänzen.
+- [x] **AUDIT-VALIDATION-03.U / Diagnoseaggregation:** 4.p.R und die dort zugeordneten SR-REQ-0087–0092/0098–0099 samt SR-TC-Manifeste und SR-VER-0007 prüfen. `graph/references.py` und `validation/core.py` beenden bei fehlendem Relationsziel den betreffenden Pfad. **Entscheidung:** Verlangt die bestehende Abnahme mehrere unabhängig fehlende Ziele gemeinsam, oder setzt sie einen erfolgreichen Strukturabschnitt voraus? Mehrere konkrete gleichzeitige Fehler und die strukturierte Diagnosemenge vergleichen; kein bloßes Fortsetzungsversprechen ohne Vertrag ergänzen.
 
 **Nur für bestätigte, bereits geschuldete Lücken** konkrete `AUDIT-VALIDATION-01/02/03.W/R/C` eintragen: W liefert den kleinsten nutzbaren fehlenden Diagnose-/Adapterpfad; R vervollständigt dessen Negativ-, Mehrfachfehler-, Frische- und Ressourcenbindungen; C konsolidiert vorhandene Kerne. **Gemeinsame Abnahme:** Echte Daten ergeben die verlangten strukturierten Befunde; fehlende Voraussetzungen werden weiter ehrlich ausgewiesen, Lesen bleibt schreibfrei, bereits bestehende fachliche Grenzen werden nicht abgeschwächt. Keine vorgezogene vollständige CLI- oder spätere Produktintegration.
 
@@ -890,8 +890,68 @@ Produktquelle, Regressionsprüfung oder Requirementbewertung. Die konkrete
 Mehrfachfehlerfrage aus 4.p.R bleibt Gegenstand von U03.
 
 Commit-Message: `docs(validation): record missing production gate adapters`.
+Erst das erfolgreiche Apply-Result bestätigt den U-Commit. Die damalige Folgeposition
+ist `AUDIT-VALIDATION-03.U`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
+
+**U-Ergebnis zur Diagnoseaggregation (Bundle 075, OFF-PLAN `AUDIT-VALIDATION-03.U`): begrenzte Lücke bestätigt.**
+[Untersuchungsbericht](../reviews/SpecRoad_AUDIT_VALIDATION_03_U.md),
+[paralleles Reproduktionsprogramm](../reviews/SpecRoad_AUDIT_VALIDATION_03_U_probe.py)
+und [gebundene Beobachtungen](../reviews/SpecRoad_AUDIT_VALIDATION_03_U_observations.json)
+beziehen sich auf Result `specroad-apply_Result_004435_1005_821734.zip`, Commit
+`06d514f4f413e3bb595b911be51a2fc06e4be947`. Dieses Result bestätigt Bundle 074
+mit sauberem Zustand und je 5.727 erfolgreichen parallelen/seriellen Apply-Tests.
+Alle 1.451 Snapshotdateien stimmen vor der Untersuchung mit der Entwicklung überein.
+
+Zwölf parallele Fälle zeigen: Fehlende Ziele mehrerer Relationen oder
+Interfacefelder werden bei vollständig lesbaren, strukturell gültigen und
+eindeutig identifizierbaren Quellen nur bis zur ersten Fundstelle ermittelt.
+Eine unabhängige typwidrige Relation bleibt hinter dem ersten fehlenden Ziel
+verborgen; isoliert liefert sie tatsächlich SRV021. Der vorhandene Aggregator
+erhält zwei tatsächlich gelieferte SRV020-Befunde dagegen vollständig.
+Parse-/Schemafehler aus mehreren Dateien und mehrere unbekannte Auswahl-IDs
+werden bereits gemeinsam gemeldet. Ein geschlossener Graph mit sieben
+Artefakten besteht. Direkte und öffentliche Projektbewertung sowie umgekehrte
+Dokumentreihenfolge liefern jeweils identische Assessments. Alle Projektbytes
+und Modi bleiben erhalten, ohne versuchten Write.
+
+4.p.R verlangt bereits vollständige gleichzeitige Befunde und Abnahme ihrer
+Mengen. Die Korrektur betrifft die Ermittlung unabhängiger Referenzbefunde,
+nicht einen anderen Summaryzähler oder unbeschränktes Weiterrechnen nach
+kaputten Eingaben. Ein unlesbarer möglicher Zielbestand bleibt eine gesperrte
+Voraussetzung, kein bewiesenes fehlendes Ziel. Die SR-TC-Manifeste 0087–0092
+und 0098–0099 bleiben unverändert partial; ihr bestehender Diagnosekern wird
+nicht durch eine vollständige Produktabnahme ersetzt.
+
+- [ ] **AUDIT-VALIDATION-03.W:** Alle unabhängig fehlenden Relations- und
+  bekannten Feldziele einer strukturell gültigen, eindeutig indexierbaren
+  Eingabemenge vor dem Abbruch der Referenzstufe sammeln. **Abnahme:** Zwei
+  Quellen, zwei Kanten derselben Quelle und beide Componentfelder eines
+  Interfaces liefern alle Fundstellen mit bestehendem Code, Artefakt, Datei
+  und Pointer. Graph-/Fachstufen bleiben gesperrt; kein ungültiger Teilgraph
+  wird als aufgelöster gültiger Relationswert angeboten.
+- [ ] **AUDIT-VALIDATION-03.R:** Gemischte fehlende/typwidrige Ziele,
+  Identitätskonflikte, mehrere Fundstellen desselben fehlenden Ziels,
+  Relations-/Feldkombinationen und Auswahlgrenzen vervollständigen. **Abnahme:**
+  Deterministische vollständige Mengen sicher bewertbarer Befunde ohne
+  erfundene Zielidentitäten; gleiche öffentliche Projekt-/Zielbewertung,
+  stabile Codes und Orte, passende Summary und Code 3. Unlesbare, schemawidrige
+  oder mehrdeutige Eingaben behalten ihre erforderlichen Abbruchgrenzen;
+  Lesen bleibt schreibfrei und erzeugt keine Freigabe.
+- [ ] **AUDIT-VALIDATION-03.C:** Referenzbeobachtung, Fehlerprojektion und strikte
+  Graphkonstruktion ohne doppelte Fachregeln strukturieren. **Abnahme:** W-/R-
+  Diagnosemengen, Reihenfolge, Fehlerverträge und erlaubte Wirkungen bleiben
+  gleich; eine gescheiterte Referenzprüfung erzeugt weiterhin keinen gültigen
+  Gesamtgraphen.
+
+Alle drei U-Untersuchungen sind damit fachlich ausgewertet. Nach erfolgreichem
+Apply dieses Bundles folgen in der bestehenden Reihenfolge
+`AUDIT-VALIDATION-01.W/R/C`, `AUDIT-VALIDATION-02.W/R/C` und
+`AUDIT-VALIDATION-03.W/R/C`. Die Untersuchungen implementieren keine dieser
+Reparaturen und verändern keine Produktquelle oder Regressionsprüfung.
+
+Commit-Message: `docs(validation): record incomplete reference diagnostic sets`.
 Erst das erfolgreiche Apply-Result bestätigt den U-Commit. Nächster Schritt ist
-`AUDIT-VALIDATION-03.U`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
+`AUDIT-VALIDATION-01.W`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 
