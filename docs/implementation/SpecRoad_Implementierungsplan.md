@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 73
+last_completed_numbered_bundle: 74
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-02.U
+next_audit_step: AUDIT-VALIDATION-03.U
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -69,7 +69,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R/C konkretisiert und offen |
-| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02.U | offen; legitime spätere Adapter abgrenzen |
+| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt und eingegrenzt; W/R/C offen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
 | F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
 
@@ -785,7 +785,7 @@ Erst das erfolgreiche Apply-Result bestätigt diesen C-Abschluss. Danach folgt
 **Voraussetzung:** AUDIT-CONTRACT-02. Die vorhandenen Kerne und ihre ehrlichen `unavailable`-/Teilumfangsresultate bleiben Ausgangsbasis. Fehlende zukünftige CLI-, Baseline-, Dokument-, Konfigurations- oder Evidencefunktionen werden nicht pauschal zum Fehler eines abgeschlossenen Grundlagenkerns erklärt.
 
 - [x] **AUDIT-VALIDATION-01.U / F07:** SR-REQ-0096, SR-VER-0007, SR-TC-0096 gegen 4.l/4.o/4.r verfolgen. `lint/core.py` und `storage/read_only.py` bieten bisher vor allem Literalprüfungen. **Entscheidung:** Für fehlende Begründung, Verifikation und Mindestbeziehungen jeweils tatsächlichen Diagnosepfad, positive/negative Verhaltensnachweise und ursprüngliche Abnahme bestimmen. Ein bestehender Approval-/Relationskern allein beweist den Lintpfad nicht. Bereits geschuldete fehlende Core-Lintdiagnosen zur Korrektur eintragen; echte spätere Integration mit konkreter offener Position belegen.
-- [ ] **AUDIT-VALIDATION-02.U / F08:** SR-REQ-0086/0100, SR-VER-0007, SR-TC-0086/0100 gegen 4.o–4.r und 5.f/5.g verfolgen. Ein reales Requirementprojekt mit ausgeliefertem Softwareprofil durch die vorhandenen öffentlichen Bibliotheksgrenzen prüfen. **Entscheidung:** Tatsächliche Adapter für Sprachpolicy, Profil-SRX, Approval und Diagnoseauswertung von vertrauenswürdigen Testgates unterscheiden. `test_model_validation.py` und `test_read_only_validation.py` belegen bisher auch Nichtverfügbarkeit. Für jede fehlende Verbindung festhalten, ob sie bereits fällig oder konkret später vorgesehen ist; keine Vollvalidierung allein aus injizierten immer erfolgreichen Gates ableiten.
+- [x] **AUDIT-VALIDATION-02.U / F08:** SR-REQ-0086/0100, SR-VER-0007, SR-TC-0086/0100 gegen 4.o–4.r und 5.f/5.g verfolgen. Ein reales Requirementprojekt mit ausgeliefertem Softwareprofil durch die vorhandenen öffentlichen Bibliotheksgrenzen prüfen. **Entscheidung:** Tatsächliche Adapter für Sprachpolicy, Profil-SRX, Approval und Diagnoseauswertung von vertrauenswürdigen Testgates unterscheiden. `test_model_validation.py` und `test_read_only_validation.py` belegen bisher auch Nichtverfügbarkeit. Für jede fehlende Verbindung festhalten, ob sie bereits fällig oder konkret später vorgesehen ist; keine Vollvalidierung allein aus injizierten immer erfolgreichen Gates ableiten.
 - [ ] **AUDIT-VALIDATION-03.U / Diagnoseaggregation:** 4.p.R und die dort zugeordneten SR-REQ-0087–0092/0098–0099 samt SR-TC-Manifeste und SR-VER-0007 prüfen. `graph/references.py` und `validation/core.py` beenden bei fehlendem Relationsziel den betreffenden Pfad. **Entscheidung:** Verlangt die bestehende Abnahme mehrere unabhängig fehlende Ziele gemeinsam, oder setzt sie einen erfolgreichen Strukturabschnitt voraus? Mehrere konkrete gleichzeitige Fehler und die strukturierte Diagnosemenge vergleichen; kein bloßes Fortsetzungsversprechen ohne Vertrag ergänzen.
 
 **Nur für bestätigte, bereits geschuldete Lücken** konkrete `AUDIT-VALIDATION-01/02/03.W/R/C` eintragen: W liefert den kleinsten nutzbaren fehlenden Diagnose-/Adapterpfad; R vervollständigt dessen Negativ-, Mehrfachfehler-, Frische- und Ressourcenbindungen; C konsolidiert vorhandene Kerne. **Gemeinsame Abnahme:** Echte Daten ergeben die verlangten strukturierten Befunde; fehlende Voraussetzungen werden weiter ehrlich ausgewiesen, Lesen bleibt schreibfrei, bereits bestehende fachliche Grenzen werden nicht abgeschwächt. Keine vorgezogene vollständige CLI- oder spätere Produktintegration.
@@ -825,15 +825,73 @@ fällig und erhalten die folgenden konkreten Korrekturen.
   Diagnoseprojektion konsolidieren. **Abnahme:** W-/R-Ergebnisse, Fehlerverträge,
   anwendbare Regeln und schreibfreie Wirkung bleiben erhalten.
 
-Diese Korrekturen beginnen erst nach den weiterhin offenen Untersuchungen
-`AUDIT-VALIDATION-02.U` und `AUDIT-VALIDATION-03.U`. Dieses U-Bundle verändert
+Diese Korrekturen beginnen erst nach den Untersuchungen
+`AUDIT-VALIDATION-02.U` und `AUDIT-VALIDATION-03.U`. Bundle 073 verändert
 keine Produktquelle, Regressionsprüfung oder Requirementbewertung. Nicht
 registrierte Fachgates bleiben sichtbar unverfügbar; ihr Integrationsbefund wird
 nicht durch die funktionierende Relationsstufe vorweggenommen.
 
 Commit-Message: `docs(validation): record missing nonliteral lint diagnostics`.
+Erst das erfolgreiche Apply-Result bestätigt den U-Commit. Die damalige Folgeposition
+ist `AUDIT-VALIDATION-02.U`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
+
+**U-Ergebnis zu F08 (Bundle 074, OFF-PLAN `AUDIT-VALIDATION-02.U`): bestätigt und eingegrenzt.**
+[Untersuchungsbericht](../reviews/SpecRoad_AUDIT_VALIDATION_02_U.md),
+[paralleles Reproduktionsprogramm](../reviews/SpecRoad_AUDIT_VALIDATION_02_U_probe.py)
+und [gebundene Beobachtungen](../reviews/SpecRoad_AUDIT_VALIDATION_02_U_observations.json)
+beziehen sich auf Result `specroad-apply_Result_235051_1004_72af87.zip`, Commit
+`b669fe16663eb88b48543cb55288cbecf494040d`. Dieses Result bestätigt Bundle 073
+mit sauberem Zustand und je 5.727 erfolgreichen parallelen/seriellen Apply-Tests.
+Alle 1.448 Snapshotdateien stimmen vor der Untersuchung mit der Entwicklung überein.
+
+Zwölf parallele Fälle lesen echte temporäre Projekte mit den ausgelieferten
+Core-/Softwareprofilen und ausdrücklich gebundenem Offline-Sprachregister.
+Schon gültige Draft-Requirements bleiben wegen unverfügbarer Sprach- und
+Profil-SRX-Gates unvollständig. Einzelprüfer liefern echte Sprachpolicybefunde
+und SRX-Ergebnisse; vorhandene formale Approvalbefunde zu Platzhaltern und
+Verification-Subjects erreichen die gemeinsame Pipeline ebenfalls nicht.
+Dagegen sind Schema, Profilfelder, Mindestbeziehungen und Diagnoseauswertung
+bereits angeschlossen. Zielprüfung und Dry-Run stimmen in allen elf strukturell
+geeigneten Fällen überein; ein fehlendes Statement verhindert schon die Planung.
+Kein Projektwrite wird versucht, alle Bytes und Modi bleiben erhalten.
+
+Die M4-Adapter sind im vorhandenen fachlichen Umfang bereits fällig. Echte
+menschliche Review-/Historyvoraussetzungen bleiben erforderlich und dürfen nicht
+synthetisch bestehen. Vollständiges Lifecycleauthoring bleibt 7.f, Relationsreview
+7.g/7.h/7.j, Baselineintegration 10.d.C und Evidenceintegration 12.t.W zugeordnet.
+Die tatsächliche Schreibfreiheit von SR-REQ-0100 wird durch diesen Befund nicht
+widerlegt. Fehlende oder spätere Fachdienste sind weiter ehrlich unverfügbar.
+
+- [ ] **AUDIT-VALIDATION-02.W:** Vorhandene Sprachpolicy- und Profil-SRX-Prüfer
+  über produktive, an echte Konfiguration und Ressourcen gebundene Adapter an
+  Modell-, Read-only- und Zielvalidierung anschließen; vorhandene formale
+  Approvalbefunde in deren gemeinsame Diagnosemenge übernehmen. **Abnahme:**
+  Ein geeigneter gültiger Draftfall mit ausgeliefertem Softwareprofil besteht
+  ohne immer erfolgreiche Testgates; unzulässige Sprache, falsche Profilregel
+  und bereits prüfbarer Approvalfehler werden fachlich diagnostiziert. Fehlende
+  menschliche Reviews, Evidence oder Historie bleiben sichtbar unverfügbar;
+  formale Befunde verleihen keine Freigabe- oder Schreibberechtigung.
+- [ ] **AUDIT-VALIDATION-02.R:** Dieselben Adapter um Regelanwendbarkeit,
+  abhängige Teilselektion, gleichzeitige Befunde, Severity-/Strict-Entscheidungen,
+  ungültige oder fehlende Ressourcen und Änderungen während der Prüfung
+  vervollständigen. **Abnahme:** Keine veraltete oder fremde Profil-, Register-,
+  Konfigurations-, Artefakt- oder Reviewbeobachtung wird wiederverwendet;
+  Projektprüfung, Zielprüfung und Dry-Run erhalten dieselben fachlichen
+  Ergebnisse, erforderlichen Abhängigkeiten und ehrlichen Reichweitengrenzen.
+  Kein neuer Persistenzvertrag, impliziter Reviewer oder optionaler Analyzer.
+- [ ] **AUDIT-VALIDATION-02.C:** Gemeinsame Ressourcenbindung, Fachbeobachtung
+  und Diagnoseprojektion konsolidieren. **Abnahme:** Alle W-/R-Ergebnisse,
+  Fehlerverträge und schreibfreien Wirkungen bleiben unverändert; vorhandene
+  Kerne werden wiederverwendet und spätere Fachgates nicht durch Stubs ersetzt.
+
+Diese Korrekturen beginnen nach `AUDIT-VALIDATION-03.U` und den zuvor angeordneten
+Korrekturen aus `AUDIT-VALIDATION-01`. Dieses U-Bundle verändert keine
+Produktquelle, Regressionsprüfung oder Requirementbewertung. Die konkrete
+Mehrfachfehlerfrage aus 4.p.R bleibt Gegenstand von U03.
+
+Commit-Message: `docs(validation): record missing production gate adapters`.
 Erst das erfolgreiche Apply-Result bestätigt den U-Commit. Nächster Schritt ist
-`AUDIT-VALIDATION-02.U`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
+`AUDIT-VALIDATION-03.U`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 
