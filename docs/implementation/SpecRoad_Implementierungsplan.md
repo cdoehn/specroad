@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 77
+last_completed_numbered_bundle: 78
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-01.C
+next_audit_step: AUDIT-VALIDATION-02.W
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -68,7 +68,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R umgesetzt, C offen |
+| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R/C umgesetzt, Audit-CLOSE offen |
 | F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt und eingegrenzt; W/R/C offen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
 | F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
@@ -821,7 +821,7 @@ fällig und erhalten die folgenden konkreten Korrekturen.
   Vollständige Diagnosemenge und Code-/Pointer-/Artefaktbindung, konsistente
   Fail-Policy und ehrlicher Prüfumfang; unveränderte Projektbytes und keine
   neue Freigabe- oder Sprachverständnisbehauptung.
-- [ ] **AUDIT-VALIDATION-01.C:** Gemeinsame Feld-/Relationsbeobachtung und
+- [x] **AUDIT-VALIDATION-01.C:** Gemeinsame Feld-/Relationsbeobachtung und
   Diagnoseprojektion konsolidieren. **Abnahme:** W-/R-Ergebnisse, Fehlerverträge,
   anwendbare Regeln und schreibfreie Wirkung bleiben erhalten.
 
@@ -1040,6 +1040,36 @@ Commit-Message: `fix(lint): preserve bound findings and incomplete coverage`.
 Erst das erfolgreiche Apply-Result bestätigt diesen R-Abschluss. Nächster
 Schritt: `AUDIT-VALIDATION-01.C`; Produktzähler 237/885 und Sperre von 5.t.W
 bleiben erhalten.
+
+### AUDIT-VALIDATION-01.C – gemeinsame Lintprojektion (Bundle 078)
+
+Basis ist das vollständig geprüfte erfolgreiche Result
+`specroad-apply_Result_031556_1005_64501e.zip`, Commit
+`b1f6b1ee52e23f768e75e0361dfb9d9762c315bc`. Alle 1458 Snapshot-Dateien stimmen
+mit dem R-Stand überein. Jeweils 5773 parallele und serielle Apply-Tests
+bestätigen den tatsächlichen R-Commit.
+
+Die gemeinsame reine Projektion in `lint/reporting.py` sortiert vorhandene
+Core-/kombinierte Befunde und bewertet ihren bereits validierten Fail-Schwellwert.
+Core und Projektleser verwenden damit dieselbe Bewertung. Ob alle Prüfungen
+verfügbar sind und ob die Quellen noch aktuell sind, entscheiden weiterhin die
+bisherigen Aufrufer; aus der Befundprojektion entsteht keine zusätzliche
+Freigabe. Der bestehende eigenständige Literalbericht bleibt erhalten.
+
+`lint/nonliteral.py` trennt die rationale Feldbeobachtung und die Projektion der
+vorhandenen Relationsprüfungen in kleine private Funktionen. Die öffentliche
+Orchestrierung behält Eingabeprüfungen, deren Reihenfolge, Auswahl, Quelldigests
+und Profilbindung bei. Regeln, Diagnosewerte und Reihenfolge, Fehlerschwellen,
+unverfügbare Voraussetzungen und zulässige Seiteneffekte entsprechen dem
+R-Zustand. Die vorhandenen 46 W-/R-Verhaltensfälle bleiben unverändert Teil der
+5773 Tests umfassenden Suite; es werden keine neuen Fachregeln oder Abnahmen
+behauptet. SR-TC-0096 bleibt mit seinen noch offenen Integrations- und
+Runtime-Abnahmen `partial`.
+
+Commit-Message: `refactor(lint): share finding assessment and rule projection`.
+Erst das erfolgreiche Apply-Result bestätigt den C-Abschluss und damit diese
+W/R/C-Folge. Nächster Schritt: `AUDIT-VALIDATION-02.W`; Produktzähler 237/885
+und Sperre von 5.t.W bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 

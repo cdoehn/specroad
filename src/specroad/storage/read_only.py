@@ -12,6 +12,7 @@ from ..security import ProjectBoundary, SafetyViolation
 from ..profiles.composition import compose_profiles
 from ..validation import validate_model, assess_validation
 from ..lint import Glossary, LiteralPolicy, LiteralLintError, lint_literals, lint_core
+from ..lint.reporting import lint_findings_report
 from ..graph.relations import SourceRelations
 from .domain_artifact import DomainArtifact
 from .json_syntax import parse_json_object
@@ -158,20 +159,16 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
         _record_freshness(source, observation, documents, data)
         findings = [finding for result in results for finding in result["diagnostics"]]
         findings.extend(core["diagnostics"])
-        findings.sort(key=lambda d: ({"error": 0, "warning": 1, "info": 2}[d["severity"]],
-            d["path"] or "", d["artifact_id"], d["pointer"], d["code"],
-            d.get("rule_id", ""), -1 if d.get("start") is None else d["start"]))
-        threshold = {"info": 0, "warning": 1, "error": 2}["warning" if strict else fail_on]
-        failure = any({"info": 0, "warning": 1, "error": 2}[f["severity"]] >= threshold for f in findings)
+        assessment = lint_findings_report(findings, fail_on=fail_on, strict=strict)
+        failure = not assessment["findings_passed"]
         applicable = not unavailable
         data.update(status="completed" if applicable else "incomplete",
                     passed=(False if failure else True if applicable else None),
                     checks_complete=applicable, exit_code=(1 if failure else 0) if applicable else 5,
                     lint={"scope": "selected_core_and_literal_lint", "checked_ids": list(selected_ids),
                           "policy_sha256": policy.sha256, "glossary_sha256": glossary.sha256,
-                          "unavailable": unavailable, "findings_passed": not failure,
-                          "failure_threshold": "warning" if strict else fail_on,
-                          "reports": results, "core": core, "diagnostics": findings})
+                          "unavailable": unavailable, "reports": results, "core": core,
+                          **assessment})
         return ReadOnlyResult._create(data)
     except (ModelError, OSError, SafetyViolation) as error:
         return _failure(data, error)

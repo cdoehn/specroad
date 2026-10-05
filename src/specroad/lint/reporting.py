@@ -1,10 +1,25 @@
-"""Deterministic literal observations, explicitly NOT linguistic approval.
+"""Deterministic lint observations, explicitly NOT linguistic approval.
 
 This is the single reporting boundary for future adapters. Inapplicable checks
 remain distinct from passed checks; no full-inventory or language-quality claim
 can be inferred from an empty diagnostic list.
 """
 from ..model.canonical import canonical_json_sha256
+
+
+def lint_findings_report(findings, *, fail_on, strict):
+    """Project already observed findings under a caller-validated fail policy.
+
+    This shared Core/reader projection does not decide check availability or
+    source freshness. Those remain explicit responsibilities of each caller.
+    """
+    rank = {"info": 0, "warning": 1, "error": 2}
+    threshold = "warning" if strict else fail_on
+    diagnostics = sorted(findings, key=lambda d: (-rank[d["severity"]],
+        d["path"] or "", d["artifact_id"], d["pointer"], d["code"],
+        d.get("rule_id", ""), -1 if d.get("start") is None else d["start"]))
+    return {"diagnostics": diagnostics, "failure_threshold": threshold,
+            "findings_passed": not any(rank[d["severity"]] >= rank[threshold] for d in diagnostics)}
 
 
 def _diagnostic_order(d):
@@ -32,4 +47,3 @@ def literal_report(value, rules, glossary, policy, applicable, selected_terms, f
                               "translation": "not_available", "single_obligation": "not_available"},
         "language_registry_checked": False, "language_detection_performed": False,
         "project_complete": False, "approval_granted": False}
-

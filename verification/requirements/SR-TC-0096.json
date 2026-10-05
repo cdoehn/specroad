@@ -111,7 +111,6 @@
     "test_core_lint_right.ProjectCoreLintRightTests.test_unavailable_or_unsafe_source_is_never_repaired"
   ],
   "open_items": [
-    "AUDIT-VALIDATION-01.C: consolidate the now covered field/relation observations and diagnostic/fail-policy projection without changing behavior.",
     "AUDIT-VALIDATION-02.W/R/C connects due production language/SRX/approval observations to model validation; AUDIT-VALIDATION-03.W/R/C collects independent reference errors behind safe structural prerequisites.",
     "Full CLI integration and the complete target runtime matrix remain separate evidence scopes; no full schema, review or human approval result is inferred from lint."
   ]

@@ -13,6 +13,51 @@ from ..model.domain_schemas import DOMAIN_TYPES, domain_schema
 from ..model.record_schemas import record_schema
 from ..model.errors import ModelError
 from ..profiles.composition_values import EffectiveProfile
+from .reporting import lint_findings_report
+
+
+def _rationale_findings(index, selected):
+    diagnostics = []
+    for identity in selected:
+        source = index[identity]
+        value = source.data
+        kind = value["artifact_type"]
+        schema = (domain_schema if kind in DOMAIN_TYPES else record_schema)(kind, value["schema_version"])
+        if "rationale" not in schema["properties"]:
+            continue
+        reason = None
+        required = ("rationale" in schema["required"] or
+                    (value["maturity"] == "approved" and "rationale" in approved_required_fields(kind)))
+        if "rationale" not in value:
+            if required:
+                reason = "missing_rationale"
+        else:
+            try:
+                validate_builtin(value["rationale"],
+                    {"$defs": schema["$defs"], **schema["properties"]["rationale"]})
+            except ModelError:
+                reason = "invalid_rationale"
+        if reason is not None:
+            diagnostics.append({"code": "SRV002", "severity": "error", "reason": reason,
+                "origin": "core_rule", "rule_id": "core:" + kind + "-rationale",
+                "artifact_id": identity, "path": source.path, "pointer": "/rationale"})
+    return diagnostics
+
+
+def _minimum_findings(checks, index, selected, profile):
+    diagnostics = []
+    for check in checks:
+        if check.artifact_id not in selected or check.satisfied:
+            continue
+        code = {"core:requirement-origin": "SRV031",
+                "core:requirement-verification": "SRV032"}.get(check.rule_id, "SRV023")
+        severity = check.severity
+        if profile is not None and not check.rule_id.startswith("core:"):
+            severity = profile.severity_for(check.rule_id, severity)
+        diagnostics.append({**check.diagnostic(), "code": code, "severity": severity,
+            "origin": "core_rule" if check.rule_id.startswith("core:") else "profile_rule",
+            "path": index[check.artifact_id].path, "pointer": "/relations"})
+    return diagnostics
 
 
 def lint_core(sources, *, selected_ids=None, profile=None, fail_on="error", strict=False):
@@ -48,50 +93,13 @@ def lint_core(sources, *, selected_ids=None, profile=None, fail_on="error", stri
         selected = tuple(sorted(selected_ids))
         if any(i not in index for i in selected):
             raise ModelError("core_lint_selected_id_missing")
-    diagnostics = []
-    for identity in selected:
-        source = index[identity]
-        value = source.data
-        kind = value["artifact_type"]
-        schema = (domain_schema if kind in DOMAIN_TYPES else record_schema)(kind, value["schema_version"])
-        if "rationale" not in schema["properties"]:
-            continue
-        reason = None
-        required = ("rationale" in schema["required"] or
-                    (value["maturity"] == "approved" and "rationale" in approved_required_fields(kind)))
-        if "rationale" not in value:
-            if required:
-                reason = "missing_rationale"
-        else:
-            try:
-                validate_builtin(value["rationale"],
-                    {"$defs": schema["$defs"], **schema["properties"]["rationale"]})
-            except ModelError:
-                reason = "invalid_rationale"
-        if reason is not None:
-            diagnostics.append({"code": "SRV002", "severity": "error", "reason": reason,
-                "origin": "core_rule", "rule_id": "core:" + kind + "-rationale",
-                "artifact_id": identity, "path": source.path, "pointer": "/rationale"})
-    for check in obligations.checks:
-        if check.artifact_id not in selected or check.satisfied:
-            continue
-        code = {"core:requirement-origin": "SRV031",
-                "core:requirement-verification": "SRV032"}.get(check.rule_id, "SRV023")
-        severity = check.severity
-        if profile is not None and not check.rule_id.startswith("core:"):
-            severity = profile.severity_for(check.rule_id, severity)
-        diagnostics.append({**check.diagnostic(), "code": code, "severity": severity,
-            "origin": "core_rule" if check.rule_id.startswith("core:") else "profile_rule",
-            "path": index[check.artifact_id].path, "pointer": "/relations"})
-    diagnostics.sort(key=lambda d: ({"error": 0, "warning": 1, "info": 2}[d["severity"]],
-        d["path"] or "", d["artifact_id"], d["pointer"], d["code"], d["rule_id"]))
-    threshold = "warning" if strict else fail_on
-    failed = any(d["severity"] == "error" or
-                 (d["severity"] == "warning" and threshold == "warning") for d in diagnostics)
+    findings = _rationale_findings(index, selected)
+    findings.extend(_minimum_findings(obligations.checks, index, selected, profile))
+    assessment = lint_findings_report(findings, fail_on=fail_on, strict=strict)
     return {"format_version": 1, "validation_scope": "selected_core_lint_over_supplied_records",
         "checked_ids": list(selected), "checks_complete": True,
-        "core_checks_passed": not failed, "diagnostics": diagnostics,
-        "failure_threshold": threshold,
+        "core_checks_passed": assessment["findings_passed"],
+        "diagnostics": assessment["diagnostics"], "failure_threshold": assessment["failure_threshold"],
         "source_bindings": [{"artifact_id": r.identity.id, "path": r.path,
                              "sha256": sha256(r.source_bytes).hexdigest()}
                             for r in sorted(records, key=lambda r: r.identity.id)],
