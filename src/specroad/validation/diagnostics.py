@@ -108,6 +108,10 @@ def assess_validation(report, *, fail_on="error", strict=False, documents=None):
                 remediation=item.get("remediation"), related_ids=item.get("related_ids", (*item.get("artifact_ids", ()),
                     *item.get("relation_ids", ())))))
     failure = 3 if any(s["stage"] in _STRUCTURAL and s["status"] == "failed" for s in data["stages"]) else None
+    if any(s["stage"] in ("profile_lint", "language_policy") and
+           any(d.get("code") in ("SRV110", "SRV111", "SRV177", "SRV197") for d in s["diagnostics"])
+           for s in data["stages"]):
+        failure = 3  # Invalid executable data/structure is not a false policy predicate.
     if any(item["reason"] in ("validation_gate_check_failed", "validation_gate_discovery_failed")
            for stage in data["stages"] for item in stage["diagnostics"]):
         failure = 4

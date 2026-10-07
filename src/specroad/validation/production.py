@@ -4,9 +4,12 @@ from ..languages import evaluate_language
 from ..languages.containers import evaluate_project_languages
 from ..languages.container_values import ContainerModel
 from ..model.language_policy import LanguagePolicy
+from ..model.canonical import canonical_json_sha256
+from ..profiles.fields import _applies as rule_applies
 from ..srx import SrxProgram, EvaluationContext, evaluate
 from ..srx.errors import SrxError
 from ..srx.graph import LoadedGraph
+from ..srx.resources import ResourcePolicy
 from .approval import formal_requirement_findings
 from .approval_values import ApprovalContext
 from .values import ModelGate
@@ -16,6 +19,10 @@ def _dependencies(context):
     # Both project mixing and SRX graph queries may inspect outside the selected
     # component. W conservatively retains the entire supplied model dependency.
     return context.dependency_result({identity: list(context.all_ids) for identity in context.subjects})
+
+
+def profile_applies(profile, artifact):
+    return any(rule_applies(rule, artifact) for rule in profile["merge"]["lint_rules"])
 
 
 def _paths(context):
@@ -48,13 +55,19 @@ def _profile(context, resources):
         graph = LoadedGraph(sources, rule_id=rule_id)
         for identity in context.subjects:
             artifact = context.artifact(identity)
-            if (artifact["artifact_type"] not in rule["artifact_types"]
-                    or rule["maturities"] and artifact["maturity"] not in rule["maturities"]):
+            if not rule_applies(rule, artifact):
                 continue
             common = {"artifact_id": identity, "path": paths[identity],
-                      "rule_id": rule_id, "origin": "profile_rule"}
+                      "rule_id": rule_id, "origin": "profile_rule", "rule_version": rule["version"],
+                      "rule_sha256": canonical_json_sha256(rule)}
             try:
-                roots = graph.candidate_roots({"project": resources.configuration.data,
+                project = resources.configuration.data
+                current = ResourcePolicy.from_project(project, rule_id=rule_id).structure
+                for key, default in (("srx_nodes", current.ast_nodes), ("srx_depth", current.ast_depth)):
+                    if key in context.profile_data["merge"]["hard_limits"]:
+                        project.setdefault("resource_limits", {})[key] = min(
+                            default, context.profile_data["merge"]["hard_limits"][key])
+                roots = graph.candidate_roots({"project": project,
                     "configuration": None}, identity, rule_id=rule_id)
                 result = evaluate(SrxProgram(rule["program"], rule_id=rule_id),
                     EvaluationContext(roots, rule_id=rule_id, graph=graph))

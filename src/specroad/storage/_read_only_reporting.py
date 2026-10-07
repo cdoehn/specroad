@@ -13,6 +13,7 @@ def _base(operation):
             "write_authorized": False, "approval_granted": False,
             "atomic_snapshot": False, "operational": None, "diagnostics": [],
             "source_bindings": [], "configuration_sha256": None,
+            "resource_bindings": [], "resource_files_verified": False,
             "freshness_verified": False, "source_observation_sha256": None,
             "validation": None, "lint": None}
 
@@ -20,8 +21,12 @@ def _base(operation):
 def _failure(data, error):
     if isinstance(error, ModelError):
         diagnostic = error.diagnostic()
-        if error.reason in ("operational_metadata_changed", "read_only_membership_changed",
-                            "read_only_source_changed", "read_only_project_replaced", "configuration_changed"):
+        if error.reason == "unsafe_registry_resource":
+            code = 7
+        elif error.reason in ("operational_metadata_changed", "read_only_membership_changed",
+                            "read_only_source_changed", "read_only_project_replaced", "configuration_changed",
+                            "read_only_resource_changed", "read_only_profile_observation_changed",
+                            "registry_changed", "registry_observation_changed"):
             code = 5
         elif isinstance(error, ProfileCompositionError) or data["phase"] in ("arguments", "configuration", "profiles"):
             code = 2
@@ -38,6 +43,7 @@ def _failure(data, error):
     diagnostic["exit_code"] = code
     data.update(status="failed", passed=False, exit_code=code, checks_complete=False,
                 freshness_verified=False, source_observation_sha256=None,
+                resource_files_verified=False,
                 validation=None, lint=None, diagnostics=[diagnostic])
     return ReadOnlyResult._create(data)
 
@@ -48,5 +54,3 @@ def _blocked(data, observation):
         "reason": "recovery_required" if observation["recovery_required"] else "operational_state_unresolved",
         "severity": "error"}]
     return ReadOnlyResult._create(data)
-
-

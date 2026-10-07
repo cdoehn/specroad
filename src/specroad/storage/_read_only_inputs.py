@@ -127,7 +127,7 @@ def _record_freshness(source, observation, documents, data):
     _fresh(source, observation, documents)
     data["source_observation_sha256"] = canonical_json_sha256({
         "project_id": data["project_id"], "configuration_sha256": data["configuration_sha256"],
-        "sources": data["source_bindings"], "operational": observation})
+        "sources": data["source_bindings"], "resources": data["resource_bindings"],
+        "operational": observation})
     data["freshness_verified"] = True
-
 

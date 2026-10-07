@@ -26,7 +26,7 @@ from .values import (
 )
 from ._model_checks import _issue, _applies, _foreign_edges
 from .resources import ValidationResources
-from .production import production_gates, formal_findings
+from .production import production_gates, formal_findings, profile_applies
 
 
 def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None):
@@ -59,6 +59,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         if type(resources) is not ValidationResources:
             raise ModelError("validation_resources_required")
         resources = resources.snapshot()
+        profile = resources.checked_profile(profile)
         builtins = production_gates(resources, profile)
         if any(g.gate_id in gate_index for g in builtins):
             raise ModelError("validation_builtin_gate_override")
@@ -72,6 +73,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         "gates": [{"id": g.gate_id, "version": g.version, "resources_sha256": g.resources_sha256}
                   for g in sorted(gates, key=lambda g:g.gate_id)]})
     stages, records, checked = [], [], ()
+
+    def applies(name, value):
+        if name == "profile_lint" and resources is not None:
+            return profile is not None and profile_applies(profile.data, value)
+        return _applies(name, value, profile)
 
     def stage(name, diagnostics=(), status=None, ids=()):
         diagnostics = list(diagnostics)
@@ -158,7 +164,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     # arriving from an outside artifact. The result must be explicitly complete.
     dependency_errors = []
     for gate in sorted(gates, key=lambda g:g.gate_id):
-        subjects = tuple(r.identity.id for r in records if _applies(gate.gate_id, r.data, profile))
+        subjects = tuple(r.identity.id for r in records if applies(gate.gate_id, r.data))
         if not subjects:
             continue
         context = GateContext._create(records, documents, profile, subjects, gate, "dependencies", basis)
@@ -208,7 +214,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
               status=None if formal_ids else "not_applicable")
     names = sorted(set(HOOK_NAMES) | set(gate_index))
     for name in names:
-        subjects = tuple(identity for identity in checked if _applies(name, index[identity].data, profile))
+        subjects = tuple(identity for identity in checked if applies(name, index[identity].data))
         if not subjects:
             stage(name, status="not_applicable")
             continue

@@ -14,12 +14,13 @@
   ],
   "steps": [
     "Run the shared pipeline and compare structure, dependency coverage, unavailability and actual gate outcomes.",
-    "Supply actual configuration, bound offline registry and shipped software profiles; execute production language/SRX/formal-approval checks through model, project and target adapters without successful substitute gates."
+    "Supply actual configuration, bound offline registry and shipped software profiles; execute production language/SRX/formal-approval checks through model, project and target adapters without successful substitute gates.",
+    "Recompose actual profile bytes against exact configuration/CLI selection; reject changed resource bindings and observe all applicable language/SRX/formal findings under expanded selection and fail thresholds."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Validierung MUSS mindestens JSON-Parsing, JSON Schema, Typen, IDs, Referenzen, Relation Rules, Zyklen, Lifecycle, Profile, Baseline-Integrität und Evidence-Aktualität abdecken.",
-    "scope": "Loaded-model structure, dependency-expanded semantic dispatch and actual bound language policy, profile SRX and formal Requirement approval observations. Project and target adapters reuse the kernels; absent review/evidence/history services remain unavailable. No permission or whole-product release claim."
+    "scope": "Loaded-model structure, dependency-expanded semantic dispatch and actual bound language policy, profile SRX and formal Requirement approval observations. Project and target adapters reuse the kernels; absent review/evidence/history services remain unavailable. No permission or whole-product release claim. Actual adapter coverage includes profile applicability, concurrent findings, conservative full-model dependencies, SRX structure limits, bound resource reconstruction, and project/target/dry-run threshold parity."
   },
   "expected_diagnostics": [
     "validation_required_gate_unavailable",
@@ -75,12 +76,50 @@
     "test_production_validation.TargetProductionValidationWorkTests.test_actual_shipped_draft_target_and_dry_run_pass",
     "test_production_validation.TargetProductionValidationWorkTests.test_language_error_in_unchanged_requirement_blocks_goal_change",
     "test_production_validation.TargetProductionValidationWorkTests.test_actual_profile_rule_blocks_target",
-    "test_production_validation.TargetProductionValidationWorkTests.test_formal_error_in_unchanged_requirement_blocks_target"
+    "test_production_validation.TargetProductionValidationWorkTests.test_formal_error_in_unchanged_requirement_blocks_target",
+    "test_production_validation_right.ProductionValidationRightTests.test_nonmatching_profile_types_are_not_claimed_checked",
+    "test_production_validation_right.ProductionValidationRightTests.test_rule_maturity_filter_uses_the_actual_stored_state",
+    "test_production_validation_right.ProductionValidationRightTests.test_selection_keeps_outside_language_and_profile_dependencies",
+    "test_production_validation_right.ProductionValidationRightTests.test_profile_srx_observes_actual_incoming_relations",
+    "test_production_validation_right.ProductionValidationRightTests.test_independent_language_and_profile_findings_are_all_preserved",
+    "test_production_validation_right.ProductionValidationRightTests.test_source_and_selection_order_do_not_change_findings",
+    "test_production_validation_right.ProductionValidationRightTests.test_warning_and_strict_change_threshold_only",
+    "test_production_validation_right.ProductionValidationRightTests.test_profile_severity_override_is_used_by_actual_predicate",
+    "test_production_validation_right.ProductionValidationRightTests.test_project_mixing_retains_full_active_requirement_membership",
+    "test_production_validation_right.ProductionValidationRightTests.test_registry_and_unspecified_findings_are_independent",
+    "test_production_validation_right.ProductionValidationRightTests.test_nonboolean_and_runtime_type_errors_are_input_failures",
+    "test_production_validation_right.ProductionValidationRightTests.test_stricter_profile_srx_structure_limit_is_enforced",
+    "test_production_validation_right.ProductionValidationRightTests.test_soft_srx_work_target_does_not_become_a_failure",
+    "test_production_validation_right.ProductionValidationRightTests.test_formal_errors_and_language_errors_do_not_hide_missing_reviews",
+    "test_production_validation_right.ProductionValidationRightTests.test_foreign_effective_profile_is_rejected_against_actual_bytes",
+    "test_production_validation_right.ProductionValidationRightTests.test_configured_profile_selection_cannot_reuse_previous_composition",
+    "test_production_validation_right.ProductionValidationRightTests.test_explicit_cli_profile_selection_is_bound_and_replaces_project_selection",
+    "test_production_validation_right.ProductionValidationRightTests.test_changed_owned_configuration_cannot_reuse_resource_binding",
+    "test_production_validation_right.ProductionValidationRightTests.test_missing_profile_bytes_cannot_be_replaced_by_a_hash_label",
+    "test_production_validation_right.ProductionValidationRightTests.test_registry_cached_metadata_is_rebuilt_from_actual_bound_bytes",
+    "test_production_validation_right.ProductionValidationRightTests.test_foreign_registry_bytes_cannot_match_the_project_binding",
+    "test_production_validation_right.ProductionValidationRightTests.test_gate_observation_cannot_be_replayed_after_configuration_change",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_explicit_project_profiles_and_registry_are_rechecked_without_writes",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_supplied_profile_values_do_not_claim_disk_freshness",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_stale_profile_bytes_are_rejected_even_when_canonical_hash_matches",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_all_selected_profile_paths_are_required_and_unambiguous",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_profile_change_during_real_srx_check_invalidates_the_read",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_registry_change_during_real_srx_check_invalidates_the_read",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_configuration_change_during_real_check_discards_observations",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_artifact_change_during_real_check_discards_observations",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_missing_or_damaged_configured_registry_is_input_error_without_fallback",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_missing_profile_file_is_not_recreated",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_linked_profile_resource_is_refused_without_following_or_repair",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_linked_registry_resource_is_a_security_refusal",
+    "test_production_validation_right.TargetProductionValidationRightTests.test_warning_strict_parity_across_project_target_and_dry_run",
+    "test_production_validation_right.TargetProductionValidationRightTests.test_target_keeps_simultaneous_actual_profile_and_language_findings",
+    "test_production_validation_right.TargetProductionValidationRightTests.test_changed_target_profile_source_cannot_reuse_manifest",
+    "test_production_validation_right.TargetProductionValidationRightTests.test_target_rebuilds_registry_instead_of_using_derived_metadata"
   ],
   "open_items": [
     "CLI validate and filesystem inventory adapter are not implemented by 4.o.",
     "Baseline integrity, evidence freshness, historical lifecycle, human review and document/configuration services still require their real applicable gates; absence is incomplete, not passed.",
     "The loaded model and trusted gate inputs are not authenticated or an atomic project snapshot.",
-    "AUDIT-VALIDATION-02.R/C completes productive adapter resource freshness, failure, selection and simultaneous finding coverage; W conservatively retains the whole supplied dependency model."
+    "Explicit project profile paths permit exact observed-file checks; supplied profile values alone do not assert disk freshness. No atomic snapshot or external reviewer authentication is introduced."
   ]
 }

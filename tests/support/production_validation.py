@@ -13,11 +13,12 @@ from .model import configuration_value, put
 from .profile_composition import profile
 
 
-def inputs(values, *, software="software-en@0.2.0", rules=(), registry_present=True, **config):
-    registry = bundled_language_registry() if registry_present else None
+def inputs(values, *, software="software-en@0.2.0", rules=(), registry_present=True,
+           supplied_registry=None, local_profile=None, **config):
+    registry = (supplied_registry if supplied_registry is not None else bundled_language_registry()) if registry_present else None
     profiles = [load_bundled_profile("core@0.2.0"), load_bundled_profile(software)]
-    if rules:
-        profiles.append(profile("local", lint_rules=list(rules)))
+    if rules or local_profile is not None:
+        profiles.append(profile("local", **{**(local_profile or {}), "lint_rules": list(rules)}))
     configuration = configuration_value(profiles=[p.key for p in profiles[1:]],
         language_policy={"allowed_ranges": ["en"]},
         **({"language_registry": registry_binding(registry)} if registry is not None else {}))
@@ -32,7 +33,8 @@ def inputs(values, *, software="software-en@0.2.0", rules=(), registry_present=T
         files.append(ModelDocument(configuration["language_registry"]["path"], registry.source_bytes))
     return SimpleNamespace(configuration=configuration, configuration_bytes=raw, documents=documents,
         profile=effective, profiles=profiles, files=tuple(files), registry=registry,
-        resources=ValidationResources(raw, registry=registry))
+        resources=ValidationResources(raw, registry=registry, profile_resources=profiles,
+                                      core_key=profiles[0].key))
 
 
 def write_project(root, data):

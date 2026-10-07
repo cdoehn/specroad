@@ -46,7 +46,10 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         documents.append(ModelDocument(artifact_path(artifact['artifact_type'],artifact['id'],model.configuration.id_prefix), raw))
     documents = tuple(sorted(documents,key=lambda d:d.path))
     registered, missing = _gates(gates,policy,plan,model)
-    resources = ValidationResources(model.configuration_bytes, registry=model.language_registry)
+    resources = ValidationResources(model.configuration_bytes, registry=model.language_registry,
+        profile_resources=model.profile_resources,
+        core_key=model.profile.profile_chain[0], cli_profiles=model.profile.profile_chain[1:],
+        language_packages=model.language_packages)
     report = validate_model(documents, profile=model.profile, gates=registered, resources=resources)
     report = _empty_target_gates(report, registered, model.profile)
     assessment = assess_validation(report, fail_on=model.configuration.data['validation_policy'].get('fail_on','error'),

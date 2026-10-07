@@ -15,12 +15,13 @@
   "steps": [
     "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
     "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state.",
-    "Execute actual bound language, profile-SRX and formal-approval observations in the project reader with a write-attempt trap, including valid and invalid inputs."
+    "Execute actual bound language, profile-SRX and formal-approval observations in the project reader with a write-attempt trap, including valid and invalid inputs.",
+    "Bind explicit selected profile paths, recheck profiles and registry around real semantic checks, and reject concurrent source/configuration changes, missing/corrupt resources and symlinks without repair."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
-    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry."
+    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -110,7 +111,19 @@
     "test_production_validation.ProjectProductionValidationWorkTests.test_real_project_draft_passes_without_writes_or_test_gates",
     "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_actual_language_failure",
     "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_actual_profile_failure",
-    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_formal_approval_failure_without_approval"
+    "test_production_validation.ProjectProductionValidationWorkTests.test_project_reader_reports_formal_approval_failure_without_approval",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_explicit_project_profiles_and_registry_are_rechecked_without_writes",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_supplied_profile_values_do_not_claim_disk_freshness",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_stale_profile_bytes_are_rejected_even_when_canonical_hash_matches",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_all_selected_profile_paths_are_required_and_unambiguous",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_profile_change_during_real_srx_check_invalidates_the_read",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_registry_change_during_real_srx_check_invalidates_the_read",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_configuration_change_during_real_check_discards_observations",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_artifact_change_during_real_check_discards_observations",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_missing_or_damaged_configured_registry_is_input_error_without_fallback",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_missing_profile_file_is_not_recreated",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_linked_profile_resource_is_refused_without_following_or_repair",
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_linked_registry_resource_is_a_security_refusal"
   ],
   "open_items": [
     "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",

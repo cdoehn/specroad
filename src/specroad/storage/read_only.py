@@ -21,6 +21,7 @@ from ._read_only_reporting import _base, _failure, _blocked
 from ._read_only_inputs import (_operational_metadata, _source, _ready,
                                  _capture_documents, _record_freshness)
 from .language_registry import read_language_registry, require_registry_current
+from ._validation_resources import capture_profile_files, require_profile_files_current
 
 __all__ = ["READ_ONLY_VERSION", "ReadOnlyResult", "diagnose_read_only",
            "validate_project_read_only", "lint_project_read_only"]
@@ -46,13 +47,15 @@ def diagnose_read_only(root):
 
 def validate_project_read_only(root, *, profile_resources, core_key, cli_profiles=(),
                                selected_ids=None, gates=(), fail_on="error", strict=False,
-                               expected_project_id=None):
+                               expected_project_id=None, profile_paths=None):
     """Validate current artifact sources with no project/operational writes.
 
     Profiles and semantic gates are explicitly supplied, never auto-discovered
     Python code. Composition occurs before artifact loading. This is a library
     reader; CLI selection, full resource/profile discovery and lock ownership
     resolution are not silently emulated. Missing semantic gates remain missing.
+    Optional profile_paths binds every selected profile key to its explicit
+    project path. Without it, supplied profile bytes make no disk freshness claim.
     """
     data = _base("validate")
     try:
@@ -64,11 +67,18 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         data["phase"] = "language_resources"
         registry = (read_language_registry(source)
                     if source.configuration.data.get("language_registry") is not None else None)
-        resources = ValidationResources(source.configuration_bytes, registry=registry)
         data["phase"] = "profiles"
         profile = compose_profiles(profile_resources, core_key=core_key,
             project_profiles=source.configuration.data["profiles"], cli_profiles=cli_profiles,
             language_registry=registry)
+        resources = ValidationResources(source.configuration_bytes, registry=registry,
+            profile_resources=profile_resources, core_key=core_key, cli_profiles=cli_profiles)
+        profile_files = capture_profile_files(source, resources.profile_resources, profile, profile_paths)
+        data["resource_bindings"] = [{"kind": "profile", "path": d.path,
+            "sha256": sha256(d.content).hexdigest()} for d in profile_files or ()]
+        if registry is not None:
+            data["resource_bindings"].append({"kind": "language_registry",
+                "path": source.configuration.data["language_registry"]["path"], "sha256": registry.sha256})
         data["phase"] = "operational"
         if not _ready(source, observation, data):
             return _blocked(data, data["operational"])
@@ -83,6 +93,12 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         if registry is not None:
             require_registry_current(source, registry)
         _record_freshness(source, observation, documents, data)
+        require_profile_files_current(source, profile_files)
+        if registry is not None:
+            require_registry_current(source, registry)
+        if not _ready(source, observation, data):
+            raise ModelError("operational_metadata_changed")
+        data["resource_files_verified"] = profile_files is not None
         data.update(status="completed", passed=assessment.passed, exit_code=assessment.exit_code,
                     checks_complete=report.complete, validation=assessment.as_dict())
         return ReadOnlyResult._create(data)
