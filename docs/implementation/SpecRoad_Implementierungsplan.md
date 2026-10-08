@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 238
-last_completed_plan_commit: 5.t.W
-next_plan_commit: 5.t.R
-last_completed_numbered_bundle: 89
+implementation_plan_commits_completed: 239
+last_completed_plan_commit: 5.t.R
+next_plan_commit: 5.t.C
+last_completed_numbered_bundle: 90
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4643,12 +4643,50 @@ der nächste Zustand ist 5.t.R. Technische Nutzung:
 
 #### 5.t.R – Make it Right
 
-- [ ] **5.t.R** · Position **239/885** · Voraussetzung: `5.t.W`.
+- [x] **5.t.R** · Position **239/885** · Voraussetzung: `5.t.W`.
 **Exakte Commit-Message:** `5.t.R feat(changes): Schreibfreie und automatische Preflight-Recovery vervollständigen`
 
 **Vervollständigung:** Normaler Fachauftrag darf nach Recovery nicht ungeprüft mit alter Basis weiterlaufen.
 
 **Verhaltensabnahme:** Getrennte Aufrufe beweisen erneute Kontext-/Basisprüfung vor Fachänderung. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Stand / Bundle 090:** Das Result
+`specroad-apply_Result_114426_1008_52f802.zip` bestätigt W mit Commit
+`0cc543b92007c1dd2499e29081a69f55a53c3da6`, 5915 parallelen Apply-Tests in
+401,73 Sekunden und sauberem Arbeitsbaum. Alle 1474 Snapshotdateien und die
+14 W-Payloads sind gegen Result, Entwicklungsdateien und Apply-Commit geprüft.
+
+Die automatische Auswahl erkennt jetzt einen exakt gebundenen einzelnen
+Pending-Abschluss derselben Transaktion, vor oder nach der Archivverschiebung.
+Begrenztes Metadatenlesen, kanonische Belegstellen und die vorhandenen nativen
+Discard-/Cleanup-Verträge erhalten Journal, Intent und alte Receipts.
+Beschädigte oder fremde Bindungen ermöglichen keinen Write. Eine neue
+Request-ID, die die alte Transaktions-Request-ID wiederverwendet, endet vor
+Recovery mit Code 6; sie wird nicht als unbegonnener Auftrag behandelt.
+
+33 zusätzliche Verhaltenstests prüfen getrennte Recovery-/Normalprozesse,
+erneute vollständige Basisprüfung, neue Autorisierung und tatsächliche native
+Veröffentlichung des neuen Auftrags. Alte PublicationPreflights scheitern an
+geänderten Bytes oder Dateibindungen unter dem neuen Writerlock. Unterbrochene
+Archivierung vor und nach dem Rename wird mit erhaltenen Intentbytes/Inodes
+fortgesetzt. Manipulierte Marker, zusätzliche Transaktionen, Kontextwechsel
+im Autorisierer und fremde/unklare/wiederverwendete Eigentümer bleiben gesperrt.
+Die schreibfreien W-Verträge bleiben Bestandteil derselben Vollsuite.
+
+Der erste Dev-Volltest erfasste 5941 erfolgreiche und sieben fehlgeschlagene
+Fälle. Vier neue Oracles prüften irrtümlich `title` statt des tatsächlich
+beauftragten `statement`; drei weitere belegten einen Reihenfolgefehler beim
+Vergleich von aktivem Journal und Pending-Marker. Die Korrektur prüft das
+richtige Fachfeld samt unverändertem Titel und vergleicht unter Lock dieselbe
+vollständige geordnete Pfadmenge. Fehlgeschlagener Lauf und Kandidatenbytes
+bleiben erhalten; maßgeblich ist erst der nachfolgende erfolgreiche Volltest.
+
+Die Nachweise erweitern die Partial-Bindungen von 0256/0558/0559/0560;
+registrierte Projekt-CLI-Befehle, allgemeine Detailfortsetzung (6.a),
+Betriebsdiagnose (6.b) und vollständige Crashmatrix (5.v) bleiben offen.
+Dieser R-Zustand benötigt seinen eigenen vollständigen parallelen Dev-/Apply-
+Test vor seinem Commit. Nach erfolgreichem Result gilt Position 239/885;
+als Nächstes folgt die strukturelle Trennung in 5.t.C.
 
 #### 5.t.C – Make it Clean
 
@@ -13299,11 +13337,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `5.t.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `5.t.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Offen bleiben 648 reguläre Produktpositionen sowie die ausdrücklich offenen Audit-Nacharbeiten.** Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem R-Result bleiben 646 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 

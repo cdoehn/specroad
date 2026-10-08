@@ -14,7 +14,7 @@ from .targets import POLICY, model, plan
 
 
 @contextmanager
-def writer(root, state='prepared', *, auto_recover=True):
+def writer(root, state='prepared', *, auto_recover=True, on_basis=None):
     root.mkdir(parents=True, exist_ok=True)
     inode = root.stat()
     policy = {} if auto_recover is None else {'auto_recover': auto_recover}
@@ -22,6 +22,8 @@ def writer(root, state='prepared', *, auto_recover=True):
         binding=ProjectReadBinding('sample', str(root), (inode.st_dev, inode.st_ino)))
     for path, raw in source.source_files.items():
         put(root, path, raw)
+    if on_basis is not None:
+        on_basis(source)
     change = plan(source, [edit(source.artifacts[0], 'First target'), edit(source.artifacts[1], 'Second target')])
     check = prepare_publication_check(change, source, policy=POLICY)
     expected = dict(source.source_files)
@@ -60,3 +62,38 @@ def writer(root, state='prepared', *, auto_recover=True):
 def pending(root, state='prepared', *, auto_recover=True):
     with writer(root, state, auto_recover=auto_recover) as values:
         return values
+
+
+def current_model(root):
+    """Fresh actual bytes for this fixture's complete two-artifact project."""
+    from specroad.changes import TargetModel
+    from specroad.profiles import ProfileResource, compose_profiles
+    from specroad.storage.project import ProjectSource
+    from specroad.validation import ModelDocument
+    source = ProjectSource(root, expected_project_id='sample')
+    raw = source.read_normative('profiles/core.json')
+    profile = ProfileResource(raw)
+    documents = [ModelDocument(p.relative_to(root).as_posix(), p.read_bytes())
+                 for p in sorted((root / 'spec').rglob('*.json'))]
+    return TargetModel(source.configuration_bytes,
+        ProjectReadBinding('sample', str(root), source.boundary._root_identity), documents,
+        profile=compose_profiles([profile], core_key=profile.key),
+        resource_files=[ModelDocument('profiles/core.json', raw)])
+
+
+def fresh_process(root, body, *arguments):
+    """New interpreter, explicit source/test imports and one JSON observation."""
+    import json
+    from pathlib import Path
+    import subprocess
+    import sys
+    repository = Path(__file__).resolve().parents[2]
+    bootstrap = '''import sys, json, os
+from pathlib import Path
+sys.path[:0] = [str(Path(sys.argv[1])/p) for p in ('src','tests')]
+root = Path(sys.argv[2])
+'''
+    child = subprocess.run([sys.executable, '-I', '-B', '-c', bootstrap + body,
+        str(repository), str(root), *arguments], capture_output=True, text=True, check=False)
+    assert child.returncode == 0, child.stderr
+    return json.loads(child.stdout)

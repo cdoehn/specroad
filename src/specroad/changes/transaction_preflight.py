@@ -30,6 +30,7 @@ from ._journal_codec import _text
 from ._lock_files import LockFiles
 from ._recovery_inputs import _read_journal, _parse
 from ._recovery_integrity import inspect_critical_inputs
+from ._preflight_selection import select_recovery, selected_journal
 
 
 @dataclass(frozen=True, init=False)
@@ -57,8 +58,8 @@ class TransactionPreflight:
         raise TypeError('A transaction preflight is not write authorization')
 
 
-def _configuration(boundary, available):
-    with opened_resource(boundary, 'specroad.json') as (fd, info):
+def _metadata(boundary, path, available):
+    with opened_resource(boundary, path) as (fd, info):
         if info.st_size > available:
             raise RecoveryError('automatic_recovery_policy_requires_explicit_inspection', exit_code=5)
         chunks, remaining = [], info.st_size
@@ -70,9 +71,7 @@ def _configuration(boundary, available):
             remaining -= len(raw)
         if os.read(fd, 1):
             raise RecoveryError('preflight_configuration_changed', exit_code=6)
-    raw = b''.join(chunks)
-    resource = JsonResource(raw, configuration_schema(), path='specroad.json')
-    return raw, ProjectConfiguration(resource.data)
+    return b''.join(chunks)
 
 
 def _authorize(authority, request):
@@ -124,12 +123,12 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
         if command_class is not CommandClass.NORMATIVE_WRITE or dry_run:
             return TransactionPreflight._create(data)
         paths = observed['unresolved_paths']
-        if (not observed['inspection_complete'] or len(paths) != 1
-                or not paths[0].startswith('.specroad/transactions/')
+        if (not observed['inspection_complete'] or not 1 <= len(paths) <= 2
                 or any(p != '.specroad/locks/project.json' for p in observed['unknown_paths'])):
             data['reason'] = 'explicit_recovery_selection_required'
             return TransactionPreflight._create(data)
-        raw_config, config = _configuration(boundary, MAX_METADATA_BYTES - data['metadata_bytes_read'])
+        raw_config = _metadata(boundary, 'specroad.json', MAX_METADATA_BYTES - data['metadata_bytes_read'])
+        config = ProjectConfiguration(JsonResource(raw_config, configuration_schema(), path='specroad.json').data)
         data['metadata_bytes_read'] += len(raw_config)
         data['configuration_sha256'] = sha256(raw_config).hexdigest()
         if expected_project_id is not None and config.project_id != expected_project_id:
@@ -137,10 +136,15 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
         if config.data.get('transaction_policy', {}).get('auto_recover') is not True:
             data['reason'] = 'automatic_recovery_disabled'
             return TransactionPreflight._create(data)
+        def metadata(path):
+            raw = _metadata(boundary, path, MAX_METADATA_BYTES - data['metadata_bytes_read'])
+            data['metadata_bytes_read'] += len(raw)
+            return raw
+
+        transaction_id, barrier = select_recovery(observed, config.project_id, boundary, metadata)
         if type(authority) is not RecoveryAuthority or request_id is None:
             raise RecoveryError('automatic_recovery_authority_and_request_required', exit_code=7)
         actor = normalize_authoring_actor(actor).as_fields()
-        transaction_id = paths[0].rsplit('/', 1)[-1]
         _authorize(authority, {'action': 'automatic_recovery', 'actor': actor,
             'project_id': config.project_id, 'transaction_id': transaction_id,
             'normal_request_id': request_id, 'configuration_sha256': data['configuration_sha256']})
@@ -161,8 +165,9 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
             data.update(reason='automatic_recovery_owner_unproven', owner_state=owner['owner_state'])
             return TransactionPreflight._create(data)
         with LockFiles(boundary.root) as files:
-            raw, _ = _read_journal(files, transaction_id)
-            journal = _parse(raw, transaction_id, files, config.project_id)
+            journal = selected_journal(files, transaction_id, config.project_id, barrier)
+            if request_id == journal.data['request_id']:
+                raise RecoveryError('preflight_request_id_conflicts_with_recovery', exit_code=6)
             integrity = inspect_critical_inputs(files, journal)
         if integrity['blockers']:
             raise RecoveryError(integrity['blockers'][0]['reason'], exit_code=6)
@@ -192,14 +197,22 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
         with lock as held:
             current_policy()
             held.check()
-            if held._files.journal_entries() != tuple(paths):
+            if tuple(sorted(held._files.journal_entries())) != tuple(paths):
                 raise RecoveryError('preflight_active_transactions_changed', exit_code=6)
+            if selected_journal(held._files, transaction_id, config.project_id, barrier).source_bytes != journal.source_bytes:
+                raise RecoveryError('recovery_journal_changed', exit_code=6)
 
             if discard:
                 result = discard_unpublished_transaction(proof, transaction_id, held_lock=held,
                     authority=guarded, actor=actor, reason='Authorized preflight recovery',
                     expected_journal_sha256=journal.sha256).data
                 cleanup = None
+            elif barrier is not None:
+                # The terminal marker and immutable intent select only cleanup;
+                # the original work may already have moved to its bound archive.
+                cleanup = cleanup_recovered_transaction(transaction_id, held_lock=held, authority=guarded,
+                    expected_journal_sha256=journal.sha256).data
+                result = cleanup
             else:
                 complete = state == 'committed' or (state == 'committing' and integrity['complete_target_verified'])
                 action = complete_published_transaction if complete else rollback_interrupted_transaction

@@ -29,8 +29,10 @@ wird nicht als Zustimmung gelesen. Die Konfiguration wird innerhalb des
 Metadatenbudgets von 1 MiB gelesen. Ein lebender, fremder oder nicht sicher
 beurteilbarer Eigentümer wird nicht automatisch übernommen. Ein nachweislich
 beendeter lokaler Writer wird nur unter dem nativen Mutex und mit dauerhaftem
-Übernahmebeleg übernommen. Mehrere oder unklare aktive Einträge verlangen eine
-explizite Auswahl; die automatische Funktion rät keine Transaktion.
+Übernahmebeleg übernommen. Mehrere oder unklare Transaktionen verlangen eine
+explizite Auswahl; die automatische Funktion rät keine Transaktion. Die neue
+Request-ID darf nicht mit der Request-ID der ausgewählten alten Transaktion
+übereinstimmen; dieser Konflikt endet vor Lockanlage und Recovery mit Code 6.
 
 Nach dieser Entscheidung beginnt eine ausgewiesene Recoveryphase. Sie darf die
 dafür nötigen vollständigen Journal-/Ressourcenbeweise lesen. Die vorhandenen
@@ -38,6 +40,15 @@ APIs verwerfen bewiesene Building-/Prepared-Vorbereitungen, schließen ein
 vollständig veröffentlichtes Ziel ab oder rollen einen bewiesenen Teilstand
 zurück. Dauerhafte Receipts und explizite Bereinigung erhalten die Belege.
 Projektpolicy und native Bindungen werden vor der Mutation erneut geprüft.
+
+Ein einzelner nativer `pending-cleanup`- oder `pending-discard`-Deskriptor darf
+dieselbe Transaktion auswählen, auch wenn ihr Arbeitsverzeichnis bereits ins
+Archiv verschoben wurde. Sein Lesen bleibt im kurzen Metadatenbudget. Root,
+Projekt, Transaktion, Journalhash und unveränderlicher Intent müssen zusammen
+passen; fremde Referenzpfade werden nicht verfolgt. Die Recovery liest nur die
+aus dem verifizierten Journal abgeleiteten kanonischen Belegstellen und nutzt
+den vorhandenen Abschlussweg. Beschädigte Belege und weitere aktive
+Transaktionen bleiben gesperrt; historische Receipts werden nicht durchsucht.
 
 Auch nach erfolgreicher Recovery liefert dieser Aufruf Exit 5:
 `recovery_completed=true`, `normal_operation_started=false`,
@@ -47,9 +58,16 @@ Transaktion. Der Host muss einen neuen Aufruf mit aktuellen Eingaben beginnen;
 eine frühere Beobachtung ist keine wiederverwendbare Schreibberechtigung.
 Fehler behalten den tatsächlichen Teilabschluss und mögliche Writes sichtbar.
 
-Der W-Stand deckt native lokale Linux-Transaktionen und die explizite
-Bibliotheksintegration ab. Weitere Wiederaufruf-/Unterbrechungsgrenzen folgen
-in 5.t.R. Allgemeine Preflightprofile und Detailfortsetzung bleiben 6.a,
+Der W-/R-Stand deckt native lokale Linux-Transaktionen und die explizite
+Bibliotheksintegration ab. Tests in getrennten Interpretern verfolgen Recovery
+und danach eine frisch geplante, erneut autorisierte native Veröffentlichung.
+Ein vor Recovery erstellter PublicationPreflight wird unter dem neuen
+Writerlock gegen die aktuellen Bytes und Dateibindungen geprüft. Die klare
+Transaktionsbeobachtung kann diese Prüfung oder die neue Berechtigung nicht
+ersetzen. Die Wiederaufnahme einer unterbrochenen Archivierung behält den
+ursprünglichen Intent und alle alten Ergebnisbelege.
+Allgemeine Preflightprofile und Detailfortsetzung bleiben 6.a,
 `environment check` bleibt 6.b, die vollständige Crashmatrix bleibt 5.v.
-Die Verhaltenstests stehen in `test_transaction_preflight.py`; die technische
+Die Verhaltenstests stehen in `test_transaction_preflight.py` und
+`test_transaction_preflight_right.py`; die technische
 Testausführung richtet sich nach [Testing.md](Testing.md) und der lokalen AGENTS.md.

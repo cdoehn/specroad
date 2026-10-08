@@ -291,7 +291,7 @@
     },
     "SR-FIX-AUTOMATIC-RECOVERY-v1": {
       "provider": "tests/support/automatic_recovery.py:pending",
-      "kind": "Owned native Linux project with auto_recover policy bound before plan/publication preparation; real building/prepared/partial/complete/committed transactions, independent expected source/target bytes, actual native locks and durable receipts. The companion writer supports a real abrupt process exit. Host authorization is test-only; no new operation, public CLI or full crash-matrix claim."
+      "kind": "Owned native Linux project with policy bound before plan/publication preparation; real building/prepared/partial/complete/committed transactions, independent expected bytes, native locks and durable receipts. Companion helpers capture an old publication observation, load current actual model bytes and launch separate interpreters. Real abrupt writers and selected archival interruptions preserve evidence. Host authorization is test-only; no public CLI or full crash-matrix claim."
     }
   }
 }

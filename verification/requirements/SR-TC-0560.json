@@ -43,7 +43,7 @@
     "tests/test_transaction_preflight.py::test_more_than_sixteen_active_entries_block_without_full_scan_or_journal_read"
   ],
   "open_items": [
-    "Further stale-context, interrupted automatic-phase and selection/ownership boundaries belong to 5.t.R; current W tests do not claim the full transaction crash matrix from 5.v.",
+    "The native library W/R scope is supported by actual invocation, ownership and selected archival-interruption cases. The complete transaction/host-abort crash matrix belongs to 5.v; these selected cases do not close it.",
     "General preflight profiles/detail continuation belong to 6.a and environment checks to 6.b; complete registered project command integration and runtime/filesystem evidence remain unproved. No CLI or release approval is inferred.",
     "Human presentation/documentation is not an automated oracle (TD-001)."
   ]
