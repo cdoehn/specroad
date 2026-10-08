@@ -93,10 +93,10 @@ class PublicationRequest:
         from .authoring import require_direct_authoring
         authoring = require_direct_authoring(assessment.plan)
         value = assessment.data
-        old = {d.path: d.content for d in model.documents}
-        if set(old) - {d.path for d in assessment.documents}:
+        old = model.source_files
+        if {d.path for d in model.documents} - {d.path for d in assessment.documents}:
             raise ChangeExecutionError('deletion_requires_specialized_backend', exit_code=3)
-        changed = tuple(d for d in assessment.documents if old.get(d.path) != d.content)
+        changed = tuple(d for d in assessment.publication_documents if old.get(d.path) != d.content)
         data = {'version': EXECUTION_VERSION, 'plan_sha256': assessment.plan.sha256,
                 'plan_bytes_sha256': sha256(assessment.plan.source_bytes).hexdigest(),
                 'request_id': assessment.plan.data['request_id'],
@@ -106,7 +106,7 @@ class PublicationRequest:
                 'target_root_sha256': value['binding']['target_model_root'],
                 'changed_paths': [d.path for d in changed],
                 'target_files': [{'path': d.path, 'sha256': sha256(d.content).hexdigest()}
-                                 for d in assessment.documents]}
+                                 for d in assessment.publication_documents]}
         obj = object.__new__(cls)
         object.__setattr__(obj, '_encoded', canonical_json_bytes(data))
         object.__setattr__(obj, '_plan_bytes', assessment.plan.source_bytes)

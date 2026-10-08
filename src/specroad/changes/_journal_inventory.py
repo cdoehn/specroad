@@ -9,8 +9,8 @@ from ._discard_basis_contract import discard_basis_descriptor, match_basis_versi
 def prepare_building_journal(preflight, *, transaction_id):
     """Pure complete file inventory derived from the checked publication request.
 
-    Only the current adapter's changed artifact bytes are supported. No phantom
-    entries for unchanged sources; no assumed delete or specialized operations.
+    Includes the current adapter's artifact changes and byte-only resource
+    normalization. No phantom unchanged entries or assumed delete operations.
     No live reads, no staging, no time/identity generation and no write permission.
     """
     if type(preflight) is not PublicationPreflight:
@@ -65,4 +65,3 @@ def verify_building_journal(journal, preflight):
     if canonical_json_bytes(journal.data) != canonical_json_bytes(value):
         raise JournalError('journal_plan_inventory_mismatch',exit_code=6,path=journal.path)
     return None
-

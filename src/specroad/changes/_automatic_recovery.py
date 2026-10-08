@@ -43,6 +43,8 @@ def recover_selected_transaction(decision: RecoveryDecision, data):
         integrity = inspect_critical_inputs(files, journal)
     if integrity['blockers']:
         raise RecoveryError(integrity['blockers'][0]['reason'], exit_code=6)
+    decision = decision.for_transaction(journal)
+    current_policy = decision.check_policy
     state = journal.data['state']
     discard = state in ('building', 'prepared') or type(journal) is DiscardedJournal
     command = 'recover discard' if discard else 'recover run'

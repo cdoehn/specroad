@@ -8,18 +8,20 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-NORMALIZATION-TRANSACTION-v1"
+    "SR-FIX-NORMALIZATION-TRANSACTION-v1",
+    "SR-FIX-NORMALIZATION-SCOPE-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Owned temporary project with complete supplied target sources and explicit current generic artifact paths; native transaction tests use an explicit trusted test-only authority."
+    "Complete supplied project model in an owned temporary root; native tests use explicit trusted test-only authorization and resource gates, never default production approval."
   ],
   "steps": [
-    "Prepare and assess the same byte-bound normalization plan via direct and saved APIs; observe exact values/hashes, write-free checks and real native transaction effects."
+    "Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad format --check` DARF NICHT Projekt- oder Betriebsdateien verändern.",
-    "scope": "Read-only candidates plus checked normalization-only Change Plans for current generic artifacts, full supplied-target validation and native journal/publication/receipts/recovery. Exact values and source/target bytes are the oracles; no layout, CLI or full format-scope claim."
+    "scope": "Library-level complete current JSON format selection and normalization-only transactions. Exact full values, source/target bytes, semantic roots and native journal/receipt/recovery effects are checked; human layout is excluded. Protected records are omitted by scope selection and rejected explicitly. Public format/check CLI and real host services remain later integration."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,9 +39,11 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "tests/test_normalization_target.py::test_direct_and_saved_check_share_plan_and_are_strictly_read_only",
-    "tests/test_normalization_target.py::test_normalized_input_has_no_byte_change_or_fail_on_change"
+    "tests/test_normalization_target.py::test_normalized_input_has_no_byte_change_or_fail_on_change",
+    "tests/test_normalization_scope.py::test_complete_format_check_never_creates_project_or_operational_files",
+    "tests/test_normalization_scope_transactions.py::test_second_format_plan_is_a_real_noop_after_native_publication"
   ],
   "open_items": [
-    "Extend the transactional scope to configuration, profiles, rules, mappings and mutable special artifacts in 5.u.R, with exact current byte bindings through readback and recovery. Mixed semantic/representation operations remain unsupported. Register the later format/check CLI; no full command or release approval is claimed."
+    "Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed."
   ]
 }

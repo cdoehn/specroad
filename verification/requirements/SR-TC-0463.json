@@ -8,18 +8,20 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-NORMALIZATION-TRANSACTION-v1"
+    "SR-FIX-NORMALIZATION-TRANSACTION-v1",
+    "SR-FIX-NORMALIZATION-SCOPE-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Owned temporary project with complete supplied target sources and explicit current generic artifact paths; native transaction tests use an explicit trusted test-only authority."
+    "Complete supplied project model in an owned temporary root; native tests use explicit trusted test-only authorization and resource gates, never default production approval."
   ],
   "steps": [
-    "Prepare and assess the same byte-bound normalization plan via direct and saved APIs; observe exact values/hashes, write-free checks and real native transaction effects."
+    "Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad format` MUSS seinen Dateiumfang exakt nach Kapitel 10.17 bestimmen.",
-    "scope": "Read-only candidates plus checked normalization-only Change Plans for current generic artifacts, full supplied-target validation and native journal/publication/receipts/recovery. Exact values and source/target bytes are the oracles; no layout, CLI or full format-scope claim."
+    "scope": "Library-level complete current JSON format selection and normalization-only transactions. Exact full values, source/target bytes, semantic roots and native journal/receipt/recovery effects are checked; human layout is excluded. Protected records are omitted by scope selection and rejected explicitly. Public format/check CLI and real host services remain later integration."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,12 +40,28 @@
   "test_ids": [
     "tests/test_normalization_transactions.py::test_native_writer_normalizes_only_selected_artifact_and_finalizes_real_receipts",
     "tests/test_normalization_target.py::test_mixed_operations_and_duplicate_paths_are_not_partially_applied",
-    "tests/test_normalization_target.py::test_resource_writer_is_explicitly_unsupported_without_partial_artifact_target[mappings/m.json]",
-    "tests/test_normalization_target.py::test_resource_writer_is_explicitly_unsupported_without_partial_artifact_target[profiles/core.json]",
-    "tests/test_normalization_target.py::test_resource_writer_is_explicitly_unsupported_without_partial_artifact_target[rules/r.json]",
-    "tests/test_normalization_target.py::test_resource_writer_is_explicitly_unsupported_without_partial_artifact_target[specroad.json]"
+    "tests/test_normalization_target.py::test_resource_normalization_requires_exact_sources_without_partial_artifact_target[mappings/m.json]",
+    "tests/test_normalization_target.py::test_resource_normalization_requires_exact_sources_without_partial_artifact_target[profiles/core.json]",
+    "tests/test_normalization_target.py::test_resource_normalization_requires_exact_sources_without_partial_artifact_target[rules/r.json]",
+    "tests/test_normalization_target.py::test_resource_normalization_requires_exact_sources_without_partial_artifact_target[specroad.json]",
+    "tests/test_normalization_scope.py::test_complete_scope_has_exact_bytehashes_and_preserves_every_value",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[mappings/sample.json]",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[profiles/core.json]",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[rules/sample.json]",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[specroad.json]",
+    "tests/test_normalization_scope.py::test_nonformat_resources_remain_byte_exact_and_are_not_scanned_as_model[.specroad/cache/local.json]",
+    "tests/test_normalization_scope.py::test_nonformat_resources_remain_byte_exact_and_are_not_scanned_as_model[archive/note.json]",
+    "tests/test_normalization_scope.py::test_nonformat_resources_remain_byte_exact_and_are_not_scanned_as_model[attachments/unreferenced.json]",
+    "tests/test_normalization_scope.py::test_nonformat_resources_remain_byte_exact_and_are_not_scanned_as_model[generated/output.json]",
+    "tests/test_normalization_scope.py::test_nonformat_resources_remain_byte_exact_and_are_not_scanned_as_model[notes.json]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[baseline-None-None]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[evidence-None-None]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-applied-approved]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-rejected-rejected]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-stale-retired]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[relation_review-None-None]"
   ],
   "open_items": [
-    "Extend the transactional scope to configuration, profiles, rules, mappings and mutable special artifacts in 5.u.R, with exact current byte bindings through readback and recovery. Mixed semantic/representation operations remain unsupported. Register the later format/check CLI; no full command or release approval is claimed."
+    "Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed."
   ]
 }

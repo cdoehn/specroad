@@ -113,3 +113,6 @@ __all__ += ['DiscardPreflight', 'prepare_discard_recovery']
 
 from .transaction_preflight import TransactionPreflight, transaction_preflight
 __all__ += ['TransactionPreflight', 'transaction_preflight']
+
+from .formatting import prepare_format_target
+__all__ += ['prepare_format_target']

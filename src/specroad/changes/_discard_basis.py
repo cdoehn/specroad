@@ -55,7 +55,10 @@ def observe_discard_basis(files, journal, *, include_images=False):
         if (source.configuration_bytes != raw_files.get('specroad.json')
                 or source.boundary._root_identity != files.boundary._root_identity):
             raise RecoveryError('discard_basis_root_changed', exit_code=6)
-        if any(source.classify(e['path']) is not PathClass.ARTIFACT for e in data['files']):
+        operations = data['authoring_binding']['operations']
+        if any(op['op'] == 'representation_normalize' for op in operations):
+            _normalization_images(source, data, raw_files)
+        elif any(source.classify(e['path']) is not PathClass.ARTIFACT for e in data['files']):
             raise RecoveryError('discard_basis_operation_unsupported', exit_code=6)
         root_hash = _manifest(source, raw_files, selection, data['authoring_binding']['scope_descriptor'])
         if root_hash != data['base_model_root_sha256']:
@@ -79,6 +82,32 @@ def observe_discard_basis(files, journal, *, include_images=False):
         from ._discard_basis_contract import staging_images
         return observation, raw_files, staging_images(selection)
     return observation
+
+
+def _normalization_images(source, data, original):
+    """Prove byte-only effects independently, including config/resource originals."""
+    from ..model.paths import CURRENT_JSON_CLASSES
+    from ..model.representation import NormalizationCandidate
+    from ..storage.representation import _validate_format_input
+    from ._discard_basis_contract import staging_images
+    images = staging_images(data.get('discard_basis', {}))
+    expected, seen = {}, set()
+    for op in data['authoring_binding']['operations']:
+        if op['op'] != 'representation_normalize':
+            raise RecoveryError('discard_basis_operation_unsupported', exit_code=6)
+        path = op['path']
+        if path in seen or path not in original or source.classify(path) not in CURRENT_JSON_CLASSES:
+            raise RecoveryError('discard_normalization_source_unbound', exit_code=6)
+        seen.add(path)
+        _validate_format_input(source.configuration, path, original[path], source.classify(path))
+        candidate = NormalizationCandidate(path, original[path])
+        if (candidate.expected_byte_sha256 != op['expected_byte_sha256'] or
+                candidate.result_byte_sha256 != op['target_byte_sha256']):
+            raise RecoveryError('discard_normalization_bytes_unbound', exit_code=6)
+        if candidate.change_required:
+            expected[path] = candidate.normalized_bytes
+    if images != expected:
+        raise RecoveryError('discard_normalization_images_unbound', exit_code=6)
 
 
 def _manifest(source, raw_files, selection, scope):

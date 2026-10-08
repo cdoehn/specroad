@@ -8,6 +8,7 @@ from .execution_values import (ChangeBackend, PublicationRequest, PublicationRec
     ChangeExecutionError, ChangeExecutionResult, _source_binding)
 from .target_model import TargetModel
 from .target import assess_change_target
+from ._target_materialization import materialize_target
 
 
 def _same_handoff(actual, expected):
@@ -56,10 +57,9 @@ def publish_checked_change(plan, model, *, policy, gates, strict, backend, check
             if type(after) is not TargetModel:
                 raise ChangeExecutionError('backend_model_required')
             after = after.snapshot()
-            expected_files = dict(current.source_files)
-            expected_files.update({d.path: d.content for d in fresh.documents})
-            if (after.binding != current.binding or after.source_files != expected_files or
-                    after.resources_sha256 != current.resources_sha256 or
+            expected = materialize_target(current, fresh.publication_documents)
+            if (after.binding != current.binding or after.source_files != expected.source_files or
+                    after.resources_sha256 != expected.resources_sha256 or
                     after.manifest(after.artifacts, plan.data['base']['scope_descriptor']).sha256 != request.data['target_root_sha256']):
                 raise ChangeExecutionError('publication_target_mismatch')
             completed = ChangeExecutionResult._create(fresh, dry_run=False, receipt=receipt, backend=backend)
@@ -72,4 +72,3 @@ def publish_checked_change(plan, model, *, policy, gates, strict, backend, check
         reason = error.reason if type(error) is ChangeExecutionError else 'transaction_backend_error'
         code = error.exit_code if type(error) is ChangeExecutionError else 5
         raise ChangeExecutionError(reason, exit_code=code, write_state='unknown') from error
-

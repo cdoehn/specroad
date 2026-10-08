@@ -65,8 +65,10 @@ def _normalization_path(value, pointer):
         return
     if len(parts) == 3 and parts[0] == "spec" and parts[2].endswith(".json"):
         identity = _reference(parts[2][:-5], pointer)
-        _generic(identity, pointer)
+        # A proposal's actual stored state decides mutability. The path alone
+        # must not turn all active proposals into immutable originals.
+        if identity.artifact_type != 'proposal':
+            _generic(identity, pointer)
         if identity.path == value:
             return
     raise ChangePlanError("normalization_resource_not_supported", pointer=pointer)
-

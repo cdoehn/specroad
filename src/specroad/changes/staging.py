@@ -25,6 +25,7 @@ from ._publication_observation import _root
 from .execution_values import PublicationRequest, ChangeExecutionError
 from .target import assess_change_target
 from ._target_checks import _gates, _empty_target_gates
+from ._target_materialization import materialize_target, validation_resources
 from ..validation import ModelDocument, validate_model, assess_validation
 from ..storage.json_syntax import parse_json_object
 from .staging_values import PreparedJournal, StagingError
@@ -138,7 +139,8 @@ def _materialized_target(files, journal, preflight, gates):
     """
     model = preflight._model.snapshot()
     request = preflight.request
-    documents = {d.path: d for d in model.documents}
+    documents = {e['path']: ModelDocument(e['path'], model.source_files[e['path']])
+                 for e in request.data['target_files'] if e['path'] in model.source_files}
     for entry in journal.data['files']:
         path = entry['staging_path']
         with files.directory(tuple(path.split('/')[:-1])) as parent:
@@ -154,16 +156,17 @@ def _materialized_target(files, journal, preflight, gates):
     actual_files = [{'path': d.path, 'sha256': sha256(d.content).hexdigest()} for d in ordered]
     if actual_files != request.data['target_files']:
         raise StagingError('staging_target_inventory_mismatch', exit_code=6)
-    artifacts = [parse_json_object(d.content) for d in ordered]
-    manifest = model.manifest(artifacts, request.plan.data['base']['scope_descriptor'])
+    target = materialize_target(model, ordered)
+    manifest = target.manifest(target.artifacts, request.plan.data['base']['scope_descriptor'])
     if manifest.sha256 != journal.data['target_model_root_sha256']:
         raise StagingError('staging_target_root_mismatch', exit_code=6)
-    registered, missing = _gates(gates, preflight._policy, request.plan, model)
-    report = validate_model(ordered, profile=model.profile, gates=registered)
-    report = _empty_target_gates(report, registered, model.profile)
+    registered, missing = _gates(gates, preflight._policy, request.plan, target)
+    report = validate_model(target.documents, profile=target.profile, gates=registered,
+                            resources=validation_resources(target))
+    report = _empty_target_gates(report, registered, target.profile)
     assessment = assess_validation(report,
-        fail_on=model.configuration.data['validation_policy'].get('fail_on', 'error'),
-        strict=preflight._strict, documents=ordered)
+        fail_on=target.configuration.data['validation_policy'].get('fail_on', 'error'),
+        strict=preflight._strict, documents=target.documents)
     if missing or not report.complete or not assessment.passed:
         raise StagingError('staging_materialized_target_invalid', exit_code=3)
 

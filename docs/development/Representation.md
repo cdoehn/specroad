@@ -1,10 +1,11 @@
-# Repräsentation ohne Fachänderung – Entwicklungsstand 5.u.W
+# Repräsentation ohne Fachänderung – Entwicklungsstand 5.u.R
 
 ## Grenzen
 
 Die Kandidaten-APIs aus 2.k erzeugen **Vorschläge im Speicher**, keine Schreibberechtigung.
-Seit 5.u.W können reine `representation_normalize`-Pläne für aktuelle generische
-Artefakte über die bestehende Zielprüfung und native Transaktionsengine laufen.
+Reine `representation_normalize`-Pläne können für Konfiguration, Profile, Regeln,
+Mappings und aktuelle veränderbare Artefakte über die bestehende Zielprüfung und
+native Transaktionsengine laufen. 5.u.R vervollständigt den Artefaktausschnitt aus W.
 Der Host muss den vollständigen Projektbestand, alle erforderlichen Zielgates,
 die expliziten Planfelder und eine echte Schreibberechtigung bereitstellen.
 Revisionen, Fachwerte und Zeit-/Akteursmetadaten bleiben unverändert.
@@ -48,7 +49,7 @@ Das erkennt beobachtete Änderungen, ersetzt jedoch **keinen Lock und keinen ato
 Mehrdateisnapshot**. Der Writer überprüft unmittelbar vor Veröffentlichung alle
 Bedingungen unter der gemeinsamen Transaktionsgrenze erneut.
 
-## Transaktionaler W-Ausschnitt
+## Transaktionale Normalisierung
 
 `prepare_change_target` und `assess_change_target` akzeptieren dieselbe reguläre
 Operation mit `path`, `expected_byte_sha256` und `target_byte_sha256`. Der Plan
@@ -66,20 +67,36 @@ Die gemeinsame Dry-run-Ausführung setzt deshalb `would_change` und bei
 normalisierte Bytes ergeben Code 0. Diese Vorschau erzeugt weder Lock, Journal,
 Receipt noch Projekt-/Betriebsdateien.
 
-Die normale `PublicationRequest` übergibt die geänderten Artefaktbytes an denselben
+Die normale `PublicationRequest` übergibt die geänderten JSON-Bytes an denselben
 Journal-, Staging-, Publish-, Receipt- und Cleanup-Weg wie fachliche Änderungen.
 Originalbytes bleiben als Before-Images erhalten. Native Recovery kann ein
 vollständiges Byteziel abschließen oder eine unterbrochene Mehrdateinormalisierung
 auf die exakten Originalbytes zurückführen, obwohl Basis- und Zielmodellwurzel
 gleich sind. Es gibt keinen separaten Format-Schreibbackend.
 
-Der W-Ausschnitt weist doppelte Pfade, gemischte fachliche/Normalisierungsoperationen
-und den noch nicht unterstützten Ressourcen-Schreibbereich vollständig zurück.
-In 5.u.R folgen `specroad.json`, Profile, Regeln, Mappings und die zulässigen
-veränderbaren Spezialartefakte samt Schutz ihrer Endstände. Ihre geänderten
-Bytebindungen müssen auch Rücklesen, Konfigurationsfrische und Recovery abdecken.
-Die bereits vorhandene schreibfreie Kandidaten-API behält ihren größeren
-Dateiumfang; dies ist noch keine transaktionale Freigabe dieses Gesamtumfangs.
+Doppelte Pfade und gemischte fachliche/Normalisierungsoperationen werden weiterhin
+vollständig abgewiesen. `prepare_format_target(model, **plan_inputs)` wählt aus dem
+vollständig gelieferten Modell den zulässigen aktuellen JSON-Dateiumfang. Geschützte
+Originalrecords werden ausgelassen; explizite Operationen dagegen scheitern.
+Ungültige aktuelle Ressourcen werden nicht als erfolgreiche Teilmenge übersprungen.
+Gepinnte Registrybytes sind keine normalisierbaren Profil-/Regelressourcen.
+
+`TargetAssessment.documents` und `.artifacts` behalten ihren Artefaktvertrag.
+`.resource_documents` enthält ausgewählte Konfigurations-/Ressourcenfassungen,
+`.publication_documents` die gemeinsam geprüfte Ausgabemenge. Geänderte Raw-Hashes
+von Ressourcen sind erwartete Zielbindungen; beim Rücklesen müssen sie genau mit
+den vorbereiteten Zielbytes übereinstimmen. Profile werden aus diesen Bytes erneut
+komponiert. Regeln und Mappings benötigen weiterhin den ausdrücklich registrierten
+vertrauenswürdigen Ganzmodell-Service `extension:target-resources`.
+
+Nach der eigenen nativen Ersetzung von `specroad.json` bindet der Writer seinen
+Reader an exakt die vorbereiteten Zielbytes. Auch Receipt und Cleanup verlangen
+diese Zielkonfiguration; die allgemeine Frischeprüfung von `ProjectSource` bleibt
+streng. Recovery erlaubt je nach Phase nur den gebundenen Original- oder Zielhash
+und prüft zusätzlich die identische vollständige Normalform. Weder andere
+Einrückungsbytes noch geänderte Policies werden dadurch still übernommen.
+Unveröffentlichte Ressourcenimages werden bei Discard aus ihren unabhängigen
+Originalbytes und Operationshashes erneut geprüft.
 
 ## Schutzbereich aus Spezifikation 10.17
 
@@ -126,13 +143,18 @@ Es gibt keine automatisierten Einrückungs-, Schlüsselreihenfolgen-, Header-,
 HTML-/Markdown- oder Dokumentationstests. Die sichtbare Normalform und Kennzeichnung
 unterliegen TD-001. SR-TC-0021 bleibt daher ohne künstlichen automatisierten Pass.
 
-`test_normalization_target.py` und `test_normalization_transactions.py` ergänzen
-25 Fälle zu direkten/gespeicherten Plänen, unveränderten Vollwerten, Bytehash-
+`test_normalization_target.py` und `test_normalization_transactions.py` enthalten
+die W-Fälle zu direkten/gespeicherten Plänen, unveränderten Vollwerten, Bytehash-
 Konflikten, wirklicher Schreibfreiheit, vollständigen Zielgates, nativen Receipts,
 Stagingmanipulation und Completion/Rollback bei gleicher semantischer Wurzel.
-Die Anforderungsmanifeste bleiben hinsichtlich CLI und Gesamtumfang ausdrücklich
-partiell; die noch ausstehende Schutzbereichsvervollständigung wird nicht als
-erledigte Produktabnahme ausgegeben.
+`test_normalization_scope.py` und `test_normalization_scope_transactions.py` ergänzen
+38 R-Fälle zu Ressourcen, aktiven Proposals und geschützten Endständen, kompletten
+schreibfreien Checks sowie nativer Veröffentlichung und Recovery in neuen Prozessen.
+Der vorübergehende W-Ablehnungstest für den Ressourcenbereich prüft nun die dort
+ebenfalls zwingenden Quell-/Zielhashes. Seine vier konkreten Cases werden weiter
+ausgeführt; vorhandene W-Wert-, Frische-, Atomizitäts- und Recovery-Oracles bleiben.
+Die Anforderungsmanifeste bleiben wegen der späteren öffentlichen CLI-Integration
+partiell. Testhost-Gates sind keine Produktfreigabe fachlicher Ressourcenservices.
 
 Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
 steht in [Testing.md](Testing.md).

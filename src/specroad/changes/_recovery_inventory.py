@@ -5,12 +5,12 @@ membership and bytes preserve the roots independently checked at publication
 preflight. Unreferenced payloads and operational data remain outside the model.
 """
 from contextlib import contextmanager
-from hashlib import sha256
 
 from ..model.paths import CURRENT_JSON_CLASSES
 from ..storage.project import ProjectSource
 from ..storage.resource_discovery import current_json_paths
 from .recovery_values import RecoveryError
+from ._normalization_configuration import check_configuration
 
 
 def check_membership(files, journal, *, phase='target'):
@@ -24,12 +24,8 @@ def check_membership(files, journal, *, phase='target'):
         raise ValueError('Unknown recovery inventory phase')
     data = journal.data
     inventory = {item['path']: item for item in data['target_inventory']}
-    configuration = inventory.get('specroad.json')
-    if configuration is None:
-        raise RecoveryError('recovery_configuration_unbound', path='specroad.json', exit_code=6)
     raw = files.boundary.read_bytes('specroad.json')
-    if (len(raw), sha256(raw).hexdigest()) != (configuration['size'], configuration['sha256']):
-        raise RecoveryError('recovery_configuration_changed', path='specroad.json', exit_code=6)
+    check_configuration(raw, journal, phase=phase)
     source = ProjectSource(files.boundary.root, expected_project_id=data['project_id'])
     if (source.boundary._root_identity != files.boundary._root_identity
             or source.configuration_bytes != raw):

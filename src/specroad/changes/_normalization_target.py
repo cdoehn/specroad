@@ -1,11 +1,6 @@
-"""Byte-bound artifact normalization inside the existing target/write pipeline.
-
-This first writer slice accepts normalization-only plans for current generic
-artifacts. Resource/configuration writes and mixed semantic operations remain
-explicitly unsupported; no partial target or alternate write path is returned.
-"""
+"""Byte-bound current JSON normalization inside the existing target/write pipeline."""
 from ..model.errors import ModelError
-from ..model.paths import PathClass, classify_path
+from ..model.paths import PathClass, CURRENT_JSON_CLASSES, classify_path
 from ..model.representation import NormalizationCandidate
 from ..storage.representation import _validate_format_input
 from ..validation import ModelDocument
@@ -20,8 +15,9 @@ def normalization_mode(operations):
 
 
 def normalization_documents(model, operations):
-    originals = {d.path: d.content for d in model.documents}
-    target = dict(originals)
+    originals = model.source_files
+    target = {d.path: d.content for d in model.documents}
+    resources = {}
     seen, files, changed = set(), [], []
     for index, operation in enumerate(operations):
         pointer = '/operations/' + str(index)
@@ -30,8 +26,10 @@ def normalization_documents(model, operations):
             raise TargetError('normalization_duplicate_path', pointer=pointer + '/path')
         seen.add(path)
         kind = classify_path(path, model.configuration)
-        if kind is not PathClass.ARTIFACT or path not in originals:
-            raise TargetError('normalization_artifact_source_required', pointer=pointer + '/path')
+        if kind not in CURRENT_JSON_CLASSES or path not in originals:
+            raise TargetError('normalization_current_source_required', pointer=pointer + '/path')
+        if model.language_registry is not None and path == model.configuration.data['language_registry']['path']:
+            raise TargetError('normalization_protected_byte_resource', pointer=pointer + '/path')
         try:
             _validate_format_input(model.configuration, path, originals[path], kind)
             candidate = NormalizationCandidate(path, originals[path])
@@ -43,12 +41,12 @@ def normalization_documents(model, operations):
         if operation['target_byte_sha256'] != candidate.result_byte_sha256:
             raise TargetError('normalization_target_hash_mismatch',
                               pointer=pointer + '/target_byte_sha256')
-        target[path] = candidate.normalized_bytes
+        (target if kind is PathClass.ARTIFACT else resources)[path] = candidate.normalized_bytes
         if candidate.change_required:
             changed.append(path)
         files.append({'path': path, 'expected_byte_sha256': candidate.expected_byte_sha256,
                       'target_byte_sha256': candidate.result_byte_sha256,
                       'value_sha256': candidate.value_sha256})
     documents = tuple(ModelDocument(p, b) for p, b in sorted(target.items()))
-    return documents, {'files': sorted(files, key=lambda item: item['path']),
-                       'changed_paths': sorted(changed)}
+    return documents, tuple(ModelDocument(p, b) for p, b in sorted(resources.items())), {
+        'files': sorted(files, key=lambda item: item['path']), 'changed_paths': sorted(changed)}

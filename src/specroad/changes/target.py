@@ -7,7 +7,7 @@ from hashlib import sha256
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.paths import artifact_path
 from ..storage.json_syntax import parse_json_object
-from ..validation import ModelDocument, validate_model, assess_validation, ValidationResources
+from ..validation import ModelDocument, validate_model, assess_validation
 from .values import ChangePlan
 from .lifecycle import prepare_plan_lifecycle, prepare_change_lifecycle
 from .core import prepare_change_plan
@@ -15,6 +15,7 @@ from .target_values import TargetError, TargetPolicy, TargetAssessment, TARGET_V
 from .target_model import TargetModel, _sequence, _project_scope
 from ._target_checks import _gates, _empty_target_gates, _describe
 from ._normalization_target import normalization_mode, normalization_documents
+from ._target_materialization import materialize_target, validation_resources
 
 def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     """Recompute every result and validate ALL target artifacts, not touched IDs.
@@ -56,16 +57,18 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         documents.append(ModelDocument(artifact_path(artifact['artifact_type'],artifact['id'],model.configuration.id_prefix), raw))
     documents = tuple(sorted(documents,key=lambda d:d.path))
     representation = {}
+    resource_documents = ()
+    target_model = model
     if normalize:
-        documents, representation = normalization_documents(model, value['operations'])
-    registered, missing = _gates(gates,policy,plan,model)
-    resources = ValidationResources(model.configuration_bytes, registry=model.language_registry,
-        profile_resources=model.profile_resources,
-        core_key=model.profile.profile_chain[0], cli_profiles=model.profile.profile_chain[1:],
-        language_packages=model.language_packages)
-    report = validate_model(documents, profile=model.profile, gates=registered, resources=resources)
-    report = _empty_target_gates(report, registered, model.profile)
-    assessment = assess_validation(report, fail_on=model.configuration.data['validation_policy'].get('fail_on','error'),
+        documents, resource_documents, representation = normalization_documents(model, value['operations'])
+        target_model = materialize_target(model, documents + resource_documents)
+        if target_model.manifest(target_model.artifacts, scope).sha256 != target.sha256:
+            raise TargetError('normalization_semantic_root_changed')
+    registered, missing = _gates(gates,policy,plan,target_model)
+    report = validate_model(documents, profile=target_model.profile, gates=registered,
+                            resources=validation_resources(target_model))
+    report = _empty_target_gates(report, registered, target_model.profile)
+    assessment = assess_validation(report, fail_on=target_model.configuration.data['validation_policy'].get('fail_on','error'),
                                    strict=strict, documents=documents)
     diff, impact = _describe(model, artifacts)
     valid = assessment.passed and report.complete and not missing
@@ -85,7 +88,8 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
                      'history_complete':False, 'previously_approved_ids':folded.previously_approved_ids},
         'validation_scope':'complete_supplied_project_target', 'project_files_verified':False,
         'atomic_snapshot':False, 'transaction_prepared':False, 'execution_ready':False,
-        'approval_granted':False, 'write_authorized':False},plan,documents)
+        'approval_granted':False, 'write_authorized':False},plan,documents,
+        resource_documents=resource_documents)
 
 
 def prepare_change_target(model, operations, *, change_plan_id, request_id, actor,

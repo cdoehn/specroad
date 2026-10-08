@@ -20,6 +20,7 @@ from ._publication_observation import _root, _stamp, _parent
 from ._journal_io import _read
 from ._staging_files import _write_new, _image, _names
 from ._target_checks import _gates, _empty_target_gates
+from ._target_materialization import materialize_target, validation_resources, publication_target
 from .publication_check import _same_request
 from .publication_values import PublicationPreflight, PublicationAuthority
 from .committing_values import CommittingJournal
@@ -57,7 +58,7 @@ class _ReceiptSession:
         self.preflight, self.journal, self.held = preflight, journal, held
         self.authority, self.gates = authority, tuple(gates)
         self.files = held._files
-        self.source = _root(preflight._model)
+        self.source = _root(publication_target(preflight))
         _own_lock(held, self.source, journal)
         self.prefix = tuple(journal.path.split('/')[:-1])
         self.image_ids, self.receipts, self.receipt_dirs = {}, {}, {}
@@ -108,15 +109,16 @@ class _ReceiptSession:
         request = preflight.request
         documents = tuple(ModelDocument(e['path'], self.source.boundary.read_bytes(e['path']))
                           for e in request.data['target_files'])
-        root = model.manifest([parse_json_object(d.content) for d in documents],
+        target = materialize_target(model, documents)
+        root = target.manifest(target.artifacts,
                               request.plan.data['base']['scope_descriptor']).sha256
         if root != request.data['target_root_sha256']:
             raise ReceiptError('completion_target_root_mismatch', exit_code=6)
-        registered, missing = _gates(self.gates, preflight._policy, request.plan, model)
-        report = _empty_target_gates(validate_model(documents, profile=model.profile, gates=registered),
-                                     registered, model.profile)
-        decision = assess_validation(report, fail_on=model.configuration.data['validation_policy'].get('fail_on', 'error'),
-                                     strict=preflight._strict, documents=documents)
+        registered, missing = _gates(self.gates, preflight._policy, request.plan, target)
+        report = _empty_target_gates(validate_model(target.documents, profile=target.profile, gates=registered,
+                                      resources=validation_resources(target)), registered, target.profile)
+        decision = assess_validation(report, fail_on=target.configuration.data['validation_policy'].get('fail_on', 'error'),
+                                     strict=preflight._strict, documents=target.documents)
         if missing or not report.complete or not decision.passed:
             raise ReceiptError('completion_target_not_validated')
         detached = request.detached()

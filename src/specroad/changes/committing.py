@@ -2,7 +2,7 @@
 
 An active journal remains until later receipt/finalization code completes C.2.
 No retry, rollback, journal deletion, or committed marker is performed here.
-Supported targets are the artifact writes in the existing PublicationRequest.
+Supported targets are the checked writes in the existing PublicationRequest.
 """
 from hashlib import sha256
 from ._discard_basis_contract import match_basis_version
@@ -27,10 +27,11 @@ from ._staging_files import _image, _write_new, _names
 from ._publication_io import replace_bound_image
 from .publication_values import PublicationPreflight, PublicationAuthority
 from .publication_check import _rights
-from ._publication_observation import _stamp
+from ._publication_observation import _stamp, _root
 from .locking import HeldProjectLock
 from .execution_values import ChangeExecutionError
 from ._target_checks import _gates, _empty_target_gates
+from ._target_materialization import materialize_target, validation_resources
 from .committing_values import CommittingJournal, CommitPublicationError, PublishedFiles
 from ._committing_state import _initial_committing, _acknowledge, next_publication
 
@@ -221,6 +222,13 @@ class _Publisher:
                     self.expected_bytes[entry['path']] = next(
                         d.content for d in self.preflight.request.documents
                         if d.path == entry['path'])
+                    if entry['path'] == 'specroad.json':
+                        # Rebind only our exact planned replacement, after the
+                        # guarded native move. Arbitrary fresh config is never
+                        # accepted, even if it parses to the same project ID.
+                        target_model = materialize_target(self.preflight._model,
+                            (ModelDocument('specroad.json', self.expected_bytes['specroad.json']),))
+                        self.source = _root(target_model)
 
                 replace_bound_image(stage, name, target, entry['path'].rsplit('/', 1)[-1],
                     size=entry['after_size'], digest=entry['after_sha256'], identity=identity,
@@ -240,15 +248,17 @@ class _Publisher:
         documents = tuple(ModelDocument(path,self.source.boundary.read_bytes(path)) for path in paths)
         if [{'path':d.path,'sha256':sha256(d.content).hexdigest()} for d in documents] != self.preflight.request.data['target_files']:
             raise CommitPublicationError('published_target_inventory_mismatch',exit_code=6)
-        root = model.manifest([parse_json_object(d.content) for d in documents],
+        target = materialize_target(model, documents)
+        root = target.manifest(target.artifacts,
                              self.preflight.request.plan.data['base']['scope_descriptor']).sha256
         if root != self.journal.data['target_model_root_sha256']:
             raise CommitPublicationError('published_target_root_mismatch',exit_code=6)
-        registered, missing = _gates(self.gates,self.preflight._policy,self.preflight.request.plan,model)
-        report = validate_model(documents,profile=model.profile,gates=registered)
-        report = _empty_target_gates(report,registered,model.profile)
-        result = assess_validation(report,fail_on=model.configuration.data['validation_policy'].get('fail_on','error'),
-                                   strict=self.preflight._strict,documents=documents)
+        registered, missing = _gates(self.gates,self.preflight._policy,self.preflight.request.plan,target)
+        report = validate_model(target.documents,profile=target.profile,gates=registered,
+                                resources=validation_resources(target))
+        report = _empty_target_gates(report,registered,target.profile)
+        result = assess_validation(report,fail_on=target.configuration.data['validation_policy'].get('fail_on','error'),
+                                   strict=self.preflight._strict,documents=target.documents)
         if missing or not report.complete or not result.passed:
             raise CommitPublicationError('published_target_validation_failed')
         self.check()

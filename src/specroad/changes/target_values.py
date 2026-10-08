@@ -52,16 +52,18 @@ class TargetAssessment:
     _encoded: bytes
     _plan: bytes
     _documents: tuple
+    _resource_documents: tuple
 
     def __init__(self, *args, **kwargs):
         raise TypeError('Use assess_change_target to obtain a bound observation')
 
     @classmethod
-    def _create(cls, value, plan, documents):
+    def _create(cls, value, plan, documents, *, resource_documents=()):
         obj = object.__new__(cls)
         object.__setattr__(obj, '_encoded', canonical_json_bytes(value))
         object.__setattr__(obj, '_plan', plan.source_bytes)
         object.__setattr__(obj, '_documents', tuple(documents))
+        object.__setattr__(obj, '_resource_documents', tuple(resource_documents))
         return obj
 
     @property
@@ -76,6 +78,11 @@ class TargetAssessment:
         return ChangePlan(self._plan)
     @property
     def documents(self): return self._documents
+    @property
+    def resource_documents(self): return self._resource_documents
+    @property
+    def publication_documents(self):
+        return tuple(sorted(self._documents + self._resource_documents, key=lambda d: d.path))
     @property
     def artifacts(self): return [parse_json_object(d.content) for d in self._documents]
     @property

@@ -73,8 +73,8 @@ class TargetModel:
     """Owned complete supplied inventory. Completeness on disk is not attested.
 
     Sources are real bytes, not paths to open. Resource and profile identities
-    are recomputed from those bytes. Resources are unchanged by this adapter;
-    resource-editing operation families remain explicitly unsupported.
+    are recomputed from those bytes. Semantic resource editing remains
+    unsupported; the normalization planner can rebuild value-identical bytes.
     """
     configuration_bytes: bytes
     configuration: ProjectConfiguration

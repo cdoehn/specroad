@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0466",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-NORMALIZATION-SCOPE-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "preconditions": [
+    "Complete supplied project model in an owned temporary root; native tests use explicit trusted test-only authorization and resource gates, never default production approval."
+  ],
+  "steps": [
+    "Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Recorded Evidence, sealed Baselines, recorded Relationsreviews und unveränderbare Proposal-Endstände DÜRFEN NICHT formatiert werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Library-level complete current JSON format selection and normalization-only transactions. Exact full values, source/target bytes, semantic roots and native journal/receipt/recovery effects are checked; human layout is excluded. Protected records are omitted by scope selection and rejected explicitly. Public format/check CLI and real host services remain later integration."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,20 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_normalization_scope.py::test_active_proposals_preserve_control_and_content_metadata[approved-approved]",
+    "tests/test_normalization_scope.py::test_active_proposals_preserve_control_and_content_metadata[checked-proposed]",
+    "tests/test_normalization_scope.py::test_active_proposals_preserve_control_and_content_metadata[draft-draft]",
+    "tests/test_normalization_scope.py::test_active_proposals_preserve_control_and_content_metadata[in_review-in_review]",
+    "tests/test_normalization_scope.py::test_active_proposals_preserve_control_and_content_metadata[validated-proposed]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[baseline-None-None]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[evidence-None-None]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-applied-approved]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-rejected-rejected]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-stale-retired]",
+    "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[relation_review-None-None]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 241
-last_completed_plan_commit: 5.u.W
-next_plan_commit: 5.u.R
-last_completed_numbered_bundle: 92
+implementation_plan_commits_completed: 242
+last_completed_plan_commit: 5.u.R
+next_plan_commit: 5.u.C
+last_completed_numbered_bundle: 93
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4763,7 +4763,7 @@ gilt Position 241/885. Nächster Zustand ist 5.u.R.
 
 #### 5.u.R – Make it Right
 
-- [ ] **5.u.R** · Position **242/885** · Voraussetzung: `5.u.W`.
+- [x] **5.u.R** · Position **242/885** · Voraussetzung: `5.u.W`.
 **Exakte Commit-Message:** `5.u.R feat(changes): Repräsentationsnormalisierung über Transaktionen vervollständigen`
 
 **Vervollständigung:** Evidence, Baselines, Reviews und immutable Proposal-Endstände ausschließen; check bleibt schreibfrei.
@@ -4776,6 +4776,33 @@ bleiben. Gemischte Operationen nur mit explizit geprüfter Reihenfolge zulassen;
 eine Ablehnung darf keinen Teilbestand schreiben.
 
 **Verhaltensabnahme:** Hash-/Wertinventur belegt Scope und Unveränderbarkeit, nicht Einrückung oder Formattext. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Stand / Bundle 093:** Das vollständig geprüfte Result
+`specroad-apply_Result_130627_1008_429d49.zip` bestätigt 5.u.W mit Commit
+`deb4f237c5b6ea0acfae72b460a8c61f22482fa3`, 5.973 erfolgreichen parallelen
+Apply-Tests und sauberem Arbeitsbaum. R erweitert denselben Writer auf
+`specroad.json`, Profile, Regeln, Mappings und veränderbare Proposals.
+`prepare_format_target` wählt den erlaubten Umfang aus dem vollständig gelieferten
+Modell. Geschützte Records und ausgeschlossene Pfadklassen bleiben bytegleich;
+explizite unzulässige Operationen und gemischte Fach-/Normalisierungspläne scheitern.
+
+Artefakt- und Ressourcen-Zielbytes bleiben getrennt beobachtbar, werden aber im
+gleichen PublicationRequest und Journal übergeben. Zielmodell, Ressourcenhashes,
+Profilkomposition und sämtliche notwendigen Ganzmodellgates werden erneut
+geprüft. Writer, Receipt und Cleanup nehmen nach eigener Config-Ersetzung nur die
+vorbereiteten Zielbytes an. Recovery bindet Original/Ziel an Operationshashes und
+identische Vollwerte; fremde Repräsentationen oder Policies sind keine Alternative.
+Discard rekonstruiert auch Konfigurations-/Ressourcenimages unabhängig aus der Basis.
+
+38 neue Verhaltensfälle ergänzen W um vollständigen Dateiumfang, aktive und
+geschützte Proposalzustände, fremde Config-Änderungen, schreibfreie Checks,
+Ressourcen-Readback, native Receipts/Cleanup und neue Prozesse mit echten Abbrüchen
+in building, prepared, Teilveröffentlichung, nach Config-Ersetzung und committed.
+Der vorübergehende W-Test für ununterstützte Ressourcen prüft nun deren zwingende
+Bytevorbedingungen; die vier Cases bleiben erhalten. Alle übrigen W-Oracles bleiben.
+CLI und reale Hostimplementierungen der fachlichen Ressourcenservices werden nicht
+vorgezogen; die Anforderungsmanifeste bleiben partiell. Erst nach erfolgreichem
+parallelem Dev-/Apply-Volltest und Commit gilt Position 242/885. Danach folgt 5.u.C.
 
 #### 5.u.C – Make it Clean
 
@@ -13391,7 +13418,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `5.u.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `5.u.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

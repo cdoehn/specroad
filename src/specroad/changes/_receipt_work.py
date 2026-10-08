@@ -8,6 +8,7 @@ from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..security import paths as guards
 from ._publication_observation import _root
+from ._target_materialization import publication_target
 from ._journal_io import _read
 from ._staging_files import _write_new, _image
 from .publication_check import _same_request
@@ -22,7 +23,7 @@ from .receipt_finalization import _target_snapshot
 class _CleanupSession:
     def __init__(self, preflight, transaction_id, held, authority):
         self.preflight, self.transaction_id, self.held = preflight, transaction_id, held
-        self.files, self.source = held._files, _root(preflight._model)
+        self.files, self.source = held._files, _root(publication_target(preflight))
         self.proof = _CompletionProof(self.files, self.source, transaction_id, preflight=preflight)
         self.journal = self.proof.journal
         self.prefix = tuple(self.journal.path.split('/')[:-1])
@@ -147,4 +148,3 @@ class _CleanupSession:
                 del self.remaining[path]
                 os.fsync(parent)
             self.guard()
-

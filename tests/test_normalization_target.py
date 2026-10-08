@@ -110,13 +110,15 @@ def test_common_preconditions_are_not_bypassed(tmp_path, kind):
 
 
 @pytest.mark.parametrize('path', ['specroad.json', 'profiles/core.json', 'rules/r.json', 'mappings/m.json'])
-def test_resource_writer_is_explicitly_unsupported_without_partial_artifact_target(tmp_path, path):
+def test_resource_normalization_requires_exact_sources_without_partial_artifact_target(tmp_path, path):
     m, p, _ = prepared(tmp_path)
     ops = [*p.data['operations'], {**p.data['operations'][0], 'path': path}]
     before = inventory(tmp_path)
     with no_write_attempts(), pytest.raises(TargetError) as error:
         prepare_change_target(m, ops, policy=POLICY, **FIELDS)
-    assert error.value.reason == 'normalization_artifact_source_required'
+    expected = ('normalization_source_hash_mismatch' if path in m.source_files
+                else 'normalization_current_source_required')
+    assert error.value.reason == expected
     assert inventory(tmp_path) == before
 
 

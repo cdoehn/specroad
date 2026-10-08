@@ -1,5 +1,5 @@
 """Bounded automatic-recovery decision; no lock or recovery write is acquired."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from hashlib import sha256
 import os
 
@@ -31,11 +31,27 @@ class RecoveryDecision:
     authority: RecoveryAuthority
     actor: dict
     request_id: str
+    _configuration_journal: object = None
 
     def check_policy(self):
-        if self.boundary.read_bytes('specroad.json') != self.configuration_bytes:
-            raise RecoveryError('preflight_configuration_changed', exit_code=6)
+        raw = self.boundary.read_bytes('specroad.json')
+        if raw != self.configuration_bytes:
+            from ._normalization_configuration import check_configuration
+            from ..model.representation import normal_json_bytes
+            if self._configuration_journal is None:
+                raise RecoveryError('preflight_configuration_changed', exit_code=6)
+            check_configuration(raw, self._configuration_journal, phase='intermediate')
+            if normal_json_bytes(raw) != normal_json_bytes(self.configuration_bytes):
+                raise RecoveryError('preflight_configuration_changed', exit_code=6)
         self.boundary._check_root()
+
+    def for_transaction(self, journal):
+        """Permit only the exact journal-bound alternative of the same policy."""
+        from ._normalization_configuration import configuration_normalization, check_configuration
+        if configuration_normalization(journal) is None:
+            return self
+        check_configuration(self.configuration_bytes, journal, phase='intermediate')
+        return replace(self, _configuration_journal=journal)
 
     def authorize(self, request):
         self.check_policy()
