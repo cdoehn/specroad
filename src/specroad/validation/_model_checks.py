@@ -6,6 +6,7 @@ known validated contracts; arbitrary strings never cause dependency discovery.
 from __future__ import annotations
 
 from ..model.errors import ModelError
+from ..graph.references import _check_endpoints
 
 def _issue(error, artifact_id=None, path=None):
     return {**error.diagnostic(), "artifact_id": artifact_id,
@@ -66,40 +67,67 @@ def _field_targets(record, relations=None):
     return candidates
 
 
-def _missing_reference_issues(records):
-    """Observe absent targets only when stored identities have an unambiguous index.
+def _reference_issues(records):
+    """Collect safe reference observations before any graph-dependent work.
 
-    This preflight returns diagnostics, never a resolved graph. Identity conflicts
-    retain the strict constructor's error contract; unreadable/schema-invalid
-    inputs must have stopped before this point. Review endpoint dependencies are
-    checked only after their underlying stored relations resolve successfully.
+    Source or relation identity conflicts stop target lookup for the entire
+    supplied inventory. Each independent target error retains its own source
+    location; no missing target is synthesized as an ArtifactIdentity.
     """
-    index = {record.identity.id: record for record in records}
-    if len(index) != len(records) or len({r.identity.id_prefix for r in records}) > 1:
-        return []
+    index, issues = {}, []
+    prefix = records[0].identity.id_prefix if records else None
+    for record in records:
+        if record.identity.id_prefix != prefix:
+            issues.append(_issue(ModelError("mixed_project_prefix", path=record.path), record.identity.id))
+        if record.identity.id in index:
+            issues.append(_issue(ModelError("duplicate_artifact_id", path=record.path, pointer="/id"),
+                                 record.identity.id))
+        index[record.identity.id] = record
+    if issues:
+        return issues
     relation_ids, external_keys = set(), set()
     for record in records:
-        for relation in record.relations:
+        for position, relation in enumerate(record.relations):
+            pointer = "/relations/" + str(position)
             if relation.identity.id in relation_ids:
-                return []
+                issues.append(_issue(ModelError("duplicate_relation_id", path=record.path,
+                    pointer=pointer + "/relation_id"), record.identity.id))
             relation_ids.add(relation.identity.id)
-            for external in relation.data["external_identities"]:
+            for external_position, external in enumerate(relation.data["external_identities"]):
                 key = tuple(external[name] for name in ("source_system", "source_document", "external_id"))
                 if key in external_keys:
-                    return []
+                    issues.append(_issue(ModelError("duplicate_external_relation_identity", path=record.path,
+                        pointer=pointer + "/external_identities/" + str(external_position)), record.identity.id))
                 external_keys.add(key)
-    issues = []
+    if issues:
+        return issues
     for record in records:
         for position, relation in enumerate(record.relations):
-            if relation.target not in index:
-                error = ModelError("missing_relation_target", path=record.path,
-                                   pointer="/relations/" + str(position) + "/target")
+            target = index.get(relation.target)
+            try:
+                if target is None:
+                    raise ModelError("missing_relation_target", pointer="/target")
+                _check_endpoints(relation, record.identity, target.identity)
+            except ModelError as error:
+                error.path = record.path
+                error.pointer = "/relations/" + str(position) + error.pointer
                 issues.append(_issue(error, record.identity.id))
     for record in records:
-        for target, pointer, _ in _field_targets(record):
+        data = record.data
+        # Missing review relations are independent facts. A present relation's
+        # endpoints are checked above; an invalid one never creates a secondary
+        # missing-review or fabricated endpoint finding.
+        if data["artifact_type"] == "relation_review" and data["relation_id"] not in relation_ids:
+            issues.append(_issue(ModelError("validation_review_relation_missing", path=record.path,
+                pointer="/relation_id"), record.identity.id))
+        for target, pointer, target_kind in _field_targets(record):
+            reason = None
             if target not in index:
-                error = ModelError("validation_field_target_missing", path=record.path, pointer=pointer)
-                issues.append(_issue(error, record.identity.id))
+                reason = "validation_field_target_missing"
+            elif target_kind is not None and index[target].identity.artifact_type != target_kind:
+                reason = "validation_field_target_type"
+            if reason is not None:
+                issues.append(_issue(ModelError(reason, path=record.path, pointer=pointer), record.identity.id))
     return issues
 
 

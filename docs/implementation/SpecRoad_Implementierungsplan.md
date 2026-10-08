@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 82
+last_completed_numbered_bundle: 83
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-03.R
+next_audit_step: AUDIT-VALIDATION-03.C
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -929,7 +929,7 @@ nicht durch eine vollständige Produktabnahme ersetzt.
   Interfaces liefern alle Fundstellen mit bestehendem Code, Artefakt, Datei
   und Pointer. Graph-/Fachstufen bleiben gesperrt; kein ungültiger Teilgraph
   wird als aufgelöster gültiger Relationswert angeboten.
-- [ ] **AUDIT-VALIDATION-03.R:** Gemischte fehlende/typwidrige Ziele,
+- [x] **AUDIT-VALIDATION-03.R:** Gemischte fehlende/typwidrige Ziele,
   Identitätskonflikte, mehrere Fundstellen desselben fehlenden Ziels,
   Relations-/Feldkombinationen und Auswahlgrenzen vervollständigen. **Abnahme:**
   Deterministische vollständige Mengen sicher bewertbarer Befunde ohne
@@ -1240,6 +1240,42 @@ vollständigen Produktabnahme hochgestuft; 5.t.W bleibt gesperrt.
 Commit-Message: `fix(validation): collect independently missing reference targets`.
 Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster
 Schritt: `AUDIT-VALIDATION-03.R`; Produktstand weiterhin 237/885.
+
+### AUDIT-VALIDATION-03.R – vollständige sichere Referenzbefunde (Bundle 083)
+
+Basis ist Result `specroad-apply_Result_083435_1008_5486e2.zip`, Commit
+`7b0814660666f8f71584d13ab250c7ca7d2803e5`. Der vollständig geprüfte Apply-Lauf
+bestätigt Bundle 082 mit 5837 erfolgreichen parallelen Tests und sauberem
+Abschluss. Alle 1465 Snapshotdateien, vier Payloads, Elterncommit und Message
+stimmen mit Apply und Entwicklung überein.
+
+Die Referenzbeobachtung prüft zunächst eindeutige Artefakt-, Relations- und
+externe Relationsidentitäten sowie den gemeinsamen Projektpräfix. Konflikte
+werden vor jeder Zielzuordnung gemeldet, auch wenn eine frühere Quelle bereits
+ein fehlendes Ziel enthält. Ein mehrdeutiger Bestand erzeugt keine erfundenen
+Zielidentitäten oder daraus abgeleiteten fehlenden Ziele.
+
+Bei eindeutiger Struktur werden alle unabhängig fehlenden, typwidrigen und
+unzulässigen Selbstziele gemeinsam ermittelt. Die Quell-/Zielregeln stammen
+weiterhin aus derselben strikten Relationsprüfung. Bekannte Feldziele und
+fehlende gespeicherte Review-Relationen kommen mit ihren bisherigen Codes und
+Fundstellen hinzu. Eine vorhandene, aber nicht auflösbare Relation erzeugt
+keinen zusätzlichen vermeintlich fehlenden Review-Verweis. Schemawidrige
+Feldtyp-IDs bleiben vor der Referenzstufe gesperrt.
+
+37 zusätzliche Verhaltensfälle prüfen gemischte Quellen und Kanten, wiederholt
+fehlende Ziele an verschiedenen Orten, Relations-/Feldkombinationen, Review-
+Abhängigkeiten, Identitätskonflikte und Parse-/Schemabarrieren. Die vollständige
+sowie auf betroffene oder unabhängige Artefakte eingeschränkte öffentliche
+Projektbewertung liefern dieselben vollständigen Diagnosemengen wie die direkte
+Prüfung. Reihenfolge, Summary und Code 3 bleiben deterministisch; Projektbytes
+und Modi bleiben schreibfrei. Graph-/Fachprüfungen bleiben nach Fehlern gesperrt,
+und die strikte Graphkonstruktion akzeptiert weiterhin keinen ungültigen Bestand.
+
+Commit-Message: `fix(validation): complete reference diagnostic sets`.
+Erst das erfolgreiche Apply-Result bestätigt diesen R-Abschluss. Nächster
+Schritt: `AUDIT-VALIDATION-03.C`; Produktstand 237/885 und Sperre von 5.t.W
+bleiben erhalten. Die SR-TC-Manifeste behalten ihren bisherigen Teilumfang.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 
