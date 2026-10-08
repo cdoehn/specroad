@@ -262,6 +262,10 @@
       "provider": "tests/support/committing.py:staged",
       "kind": "Owned local Linux prepared transactions with native writer lock, real atomic target replacements, journal fsync acknowledgements and preserved before images. Host authority is explicit test-only; no receipts or automatic recovery."
     },
+    "SR-FIX-TRANSACTION-RECEIPTS-v1": {
+      "provider": "tests/support/receipts.py:published",
+      "kind": "Owned native Linux projects with a still-held writer lock, fully published targets and a committing journal. The companion finish helper performs real durable transaction/request receipt finalization under explicit test-only authority; no public CLI, authentic actor identity or complete crash-matrix proof."
+    },
     "SR-FIX-TRANSACTION-RECOVERY-v1": {
       "provider": "tests/support/recovery.py:pending",
       "kind": "Owned native Linux pending building/prepared journal and complete independent preflight; explicit test-only authority, real recovery lock, immutable audit and unchanged normative files."

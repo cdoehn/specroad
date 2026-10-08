@@ -7,22 +7,31 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-STRONG-CLOSURE-v1"
+    "SR-FIX-STRONG-CLOSURE-v1",
+    "SR-FIX-WEAK-BOUNDARY-v1",
+    "SR-FIX-SCOPE-CONTROL-v1",
+    "SR-FIX-SCOPE-COMPARISON-v1"
   ],
   "preconditions": [
     "Bound ScopeSeeds and ScopeSeedInputs; explicit usage/review selections and attachment observations, with no inference of completeness from missing providers."
   ],
   "steps": [
     "Compute the strong reachable fixed point, resolving typed relations and known schema dependency fields; reject missing or stale observations.",
-    "Compare the fixed point with an independent exhaustive reachability oracle, revalidate observations, and run the same pure operation in moved portable distributions."
+    "Compare the fixed point with an independent exhaustive reachability oracle, revalidate observations, and run the same pure operation in moved portable distributions.",
+    "Resolve closed weak dependencies or exact partial boundaries while preserving strong dependency requirements and permanent specification-control exclusions.",
+    "Fingerprint the revalidated supplied scope and compare semantic changes, boundary target hashes and the existing canonical manifest contract."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Scope-Closure MUSS den kleinsten zulässigen Fixpunkt aus starken Relationen und Ressourcenbindungen unter Beachtung der permanenten Ausschlüsse und der Fehlerregeln aus Kapitel 10.8 berechnen.",
-    "scope": "Least strong closure over explicitly supplied resources and observations, retained retired/rejected targets, no missing-provider fallback and no full closure/approval claim."
+    "scope": "Least closure over supplied bound inventories and resource/review observations, including closed/partial weak-edge policy, permanent control exclusions and semantic Scope-Hash projection. Missing providers fail closed; complete live inventory, actual configuration applicability, atomic snapshots and approval are not established by these pure kernel fixtures."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_diagnostics": [
+    "SRV140"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -52,10 +61,22 @@
     "test_strong_closure_right.StrongClosureRightTests.test_query_page_order_is_retained_but_dependencies_are_canonical",
     "test_strong_closure_right.StrongClosureRightTests.test_changed_current_review_selection_invalidates_old_result",
     "test_strong_closure_right.StrongClosureRightTests.test_shared_attachment_is_deduplicated_across_evidences",
-    "test_strong_closure_right.StrongClosureRightTests.test_portable_module_and_zipapp_execute_real_strong_closure"
+    "test_strong_closure_right.StrongClosureRightTests.test_portable_module_and_zipapp_execute_real_strong_closure",
+    "test_scope_closure.ScopeClosureTests.test_partial_records_all_seven_boundary_fields",
+    "test_scope_closure.ScopeClosureTests.test_closed_continues_through_weak_and_strong_edges",
+    "test_scope_closure.ScopeClosureTests.test_closed_includes_resources_used_by_weak_target",
+    "test_boundary_references.BoundaryValidationTests.test_missing_strong_target_cannot_use_weak_boundary",
+    "test_scope_controls.ScopeControlTests.test_control_artifacts_remain_excluded_from_seeds_and_members",
+    "test_scope_controls.ScopeControlTests.test_direct_proposal_reference_has_complete_diagnostic",
+    "test_scope_controls.ScopeControlTests.test_partial_policy_does_not_downgrade_strong_control_dependency",
+    "test_scope_controls.ScopeControlTests.test_partial_weak_control_dependency_retains_boundary",
+    "test_scope_comparison.ScopeComparisonTests.test_scope_hash_binds_transitive_members",
+    "test_scope_comparison.ScopeComparisonTests.test_boundary_target_hash_changes_partial_scope_hash",
+    "test_scope_comparison.ScopeComparisonTests.test_scope_hash_preserves_existing_manifest_contract",
+    "test_scope_comparison.ScopeComparisonTests.test_result_is_detached_and_not_a_write_authorization"
   ],
   "open_items": [
-    "Weak-edge boundary policy (3.h), complete exclusion diagnostics (3.i), full scope hash (3.j), actual configuration applicability, profile/mapping use resolution and review freshness evaluation remain in their assigned steps.",
-    "This pure fixed-point engine consumes explicit bound observations. It is neither an automatic complete live-project reader nor an atomic snapshot or authorization."
+    "Actual configuration applicability and its integration before closure (9.c/9.d), plus end-to-end live resource-use discovery and current-review selection, still need their assigned product integration evidence.",
+    "These kernels consume explicit bound observations. Their tests do not establish complete live-project inventory, authenticated provider freshness, an atomic snapshot or authorization."
   ]
 }

@@ -10,22 +10,27 @@
     "SR-FIX-SRX-CONTEXT-v1",
     "SR-FIX-SRX-LOGIC-v1",
     "SR-FIX-SRX-COLLECTIONS-v1",
-    "SR-FIX-SRX-QUANTIFIERS-v1"
+    "SR-FIX-SRX-QUANTIFIERS-v1",
+    "SR-FIX-SRX-NUMERIC-v1",
+    "SR-FIX-SRX-CONFORMANCE-v1"
   ],
   "preconditions": [
     "Explicit SRX program and owned JSON-only context."
   ],
   "steps": [
     "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit.",
-    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
+    "Evaluate exact add/subtract/multiply/divide, nested arithmetic and arithmetic inside a quantifier using explicit numeric policy and Appendix U decision vectors.",
+    "Run the versioned positive, negative, boundary and error vectors through public SRX APIs; compare exact values, Missing and structured diagnostic locations."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SRX 1.0 MUSS mindestens die Operatoren `literal`, `field`, `exists`, `not`, `and`, `or`, `eq`, `ne`, `lt`, `lte`, `gt`, `gte`, `in`, `contains`, `starts_with`, `ends_with`, `length`, `count`, `any`, `all`, `none`, `add`, `subtract`, `multiply` und `divide` definieren.",
-    "scope": "Field, logic, comparison and sequence families; quantifiers/arithmetic and full integration pending."
+    "scope": "Core literal/field, Boolean/comparison, collection, quantifier and exact arithmetic operators over supplied SRX contexts, including versioned conformance and Appendix U numeric vectors. This library scope does not establish every public command consumer or complete live-context integration."
   },
   "expected_diagnostics": [
-    "SRV110"
+    "SRV110",
+    "SRV197"
   ],
   "expected_exit_codes": [],
   "json_pointers": [
@@ -54,9 +59,17 @@
     "test_srx_collections_right.SrxCollectionsRightTests.test_full_arrays_are_not_truncated_by_display_limits",
     "test_srx_quantifiers.SrxQuantifierTests.test_any_finds_matching_element",
     "test_srx_quantifiers.SrxQuantifierTests.test_all_requires_every_element",
-    "test_srx_quantifiers.SrxQuantifierTests.test_none_is_negated_any"
+    "test_srx_quantifiers.SrxQuantifierTests.test_none_is_negated_any",
+    "tests/test_srx_arithmetic.py::test_normative_decision_vectors",
+    "tests/test_srx_arithmetic.py::test_nested_arithmetic_returns_plain_json_number",
+    "tests/test_srx_arithmetic.py::test_arithmetic_inside_quantifier",
+    "tests/test_srx_arithmetic.py::test_missing_is_not_zero",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_positive_vectors",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_negative_vectors",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_boundary_vectors",
+    "test_srx_conformance.SrxConformanceWorkTests.test_operator_error_vectors_and_pointers"
   ],
   "open_items": [
-    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
+    "Public query/filter consumers (8.b) and document query/table consumers (11.f) still need their planned integration evidence against selected model contexts and effective policies. Existing operator and validation-adapter coverage is not full consumer or release evidence."
   ]
 }

@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 84
+last_completed_numbered_bundle: 85
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-EVIDENCE-01.W
+next_audit_step: AUDIT-EVIDENCE-01.R
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -1312,9 +1312,48 @@ bleiben erhalten. Die bestehenden SR-TC-Teilumfänge ändern sich nicht.
 
 **AUDIT-EVIDENCE-01 / F10; Voraussetzung:** alle obigen Untersuchungsentscheidungen und bestätigten Korrekturen. **Bezug:** insbesondere 3.h–3.j, 4.e/4.g/4.i, 5.n; SR-REQ-0288/0412 sowie SR-TC-0241/0259/0383/0384/0385; SR-VER-0022/0029 und die jeweiligen Receipt-Nachweise.
 
-- [ ] **AUDIT-EVIDENCE-01.W:** Überholte `scope`-/`open_items`-Angaben in SR-TC-0288 und SR-TC-0412 mit tatsächlichen Kernen und Tests abgleichen; die fehlende Beschreibung von `SR-FIX-TRANSACTION-RECEIPTS-v1` anhand ihres realen Providers ergänzen. **Abnahme:** Referenzen zeigen auf existierende fachliche Nachweise; nicht ausgeführte beziehungsweise noch unvollständige Abnahmen bleiben erkennbar offen.
+- [x] **AUDIT-EVIDENCE-01.W:** Überholte `scope`-/`open_items`-Angaben in SR-TC-0288 und SR-TC-0412 mit tatsächlichen Kernen und Tests abgleichen; die fehlende Beschreibung von `SR-FIX-TRANSACTION-RECEIPTS-v1` anhand ihres realen Providers ergänzen. **Abnahme:** Referenzen zeigen auf existierende fachliche Nachweise; nicht ausgeführte beziehungsweise noch unvollständige Abnahmen bleiben erkennbar offen.
 - [ ] **AUDIT-EVIDENCE-01.R:** Alle von den Nacharbeiten betroffenen Requirementmanifeste, Tests und Fixturebezüge konsistent fortschreiben. **Abnahme:** Formale Sammlung und Bindung passen zur echten Testmenge; jeder Behauptung steht ihr tatsächlich geprüfter Teilumfang gegenüber. Keine pauschale Hochstufung von `partial` und keine erfundenen alten W/R/C-Erfolge.
 - [ ] **AUDIT-EVIDENCE-01.C:** Gemeinsame Beschreibungen und Verweise konsolidieren, ohne Nachweisumfang oder Ausnahmen zu ändern. **Abnahme:** Inhaltliche Befundzuordnung und maschinenlesbare Katalogverträge bleiben wie nach R. Keine Tests auf Wortlaut, Markdown oder Dokumentation.
+
+### AUDIT-EVIDENCE-01.W – aktuelle Kernnachweise und Receipt-Fixture (Bundle 085)
+
+Basis ist Result `specroad-apply_Result_092722_1008_f55178.zip`, Commit
+`9fbbe807695b971bb874e852aca852f03f50c91a`. Der vollständig geprüfte Apply-Lauf
+bestätigt Bundle 084 mit 5874 erfolgreichen parallelen Tests und sauberem
+Abschluss. Alle 1467 Snapshotdateien und vier Payloads stimmen mit dem
+Eltern-/Abschlusscommit und der Entwicklung überein.
+
+SR-TC-0288 beschreibt die vorhandenen Quantoren und die exakte Arithmetik
+einschließlich Anhang-U- und Konformitätsvektoren. Acht zusätzliche Verweise
+binden bereits vorhandene Verhaltenstests. Die noch offenen öffentlichen
+Query-/Filter- und Dokumentverbraucher bleiben ihren Positionen 8.b und 11.f
+zugeordnet; Kernnachweise ersetzen keine vollständige Verbraucherintegration.
+
+SR-TC-0412 berücksichtigt die vorhandenen schwachen Scope-Grenzen,
+Kontrollausschlüsse und semantischen Scope-Hashes. Zwölf zusätzliche Verweise
+belegen diese Kerne anhand vorhandener Tests. Tatsächliche Anwendbarkeit und
+ihre Einbindung vor der Closure bleiben in 9.c/9.d offen. Explizit gebundene
+Beobachtungen sind weiterhin kein Beleg für ein vollständiges Live-Inventar,
+authentische Providerfrische, einen atomaren Snapshot oder eine Freigabe.
+
+Der bereits verwendete Fixture-Identifier `SR-FIX-TRANSACTION-RECEIPTS-v1`
+erhält seine fehlende Definition mit dem realen Provider
+`tests/support/receipts.py:published`. Die Beschreibung trennt dessen gesperrten,
+publizierten Transaktionszustand von der dauerhaften Receipt-Finalisierung im
+zugehörigen `finish`-Helper und hält die reine Testautorität ausdrücklich fest.
+
+Beide Requirementmanifeste bleiben `partial`; die Spezifikationsbindung und
+sämtliche bestehenden Tests bleiben erhalten. Die 20 ergänzten Testidentitäten
+sind in der tatsächlichen erfolgreichen Testsammlung von Bundle 084 vorhanden.
+Das neue Bundle benötigt zusätzlich seinen eigenen vollständigen parallelen
+Dev-/Apply-Nachweis. Es entstehen keine Tests auf Beschreibungswortlaut oder
+Dokumentation und keine neue fachliche Implementierung.
+
+Commit-Message: `docs(verification): align operator and scope evidence`.
+Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster
+Schritt: `AUDIT-EVIDENCE-01.R`; Produktstand 237/885 und Sperre von 5.t.W
+bleiben erhalten.
 
 ### AUDIT-CLOSE – Abschlussentscheidung vor 5.t
 
