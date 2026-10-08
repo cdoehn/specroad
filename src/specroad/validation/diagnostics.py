@@ -4,12 +4,11 @@ The original source report is retained alongside normalized diagnostics. Detaile
 producer-specific fields are not lost or mistaken for verified provenance.
 """
 from dataclasses import dataclass
-from hashlib import sha256
 
 from ..diagnostics import Diagnostic, assess_diagnostics, from_model_error
 from ..model.errors import ModelError
 from ..result_contract import ResultContractError
-from .values import ModelDocument, ValidationReport
+from .values import ModelDocument, ValidationReport, _document_bindings
 
 _REASON_CODES = {
     "invalid_json": "SRV001", "invalid_utf8": "SRV001", "duplicate_key": "SRV001",
@@ -66,6 +65,50 @@ class ValidationAssessment:
         raise TypeError("Use assessment.passed explicitly")
 
 
+def _bound_sources(data, documents):
+    if documents is None:
+        return {}
+    if type(documents) not in (tuple, list) or any(type(d) is not ModelDocument for d in documents):
+        raise ResultContractError("Expected model documents")
+    if len({d.path for d in documents}) != len(documents):
+        raise ResultContractError("Duplicate source label")
+    if sorted(_document_bindings(documents), key=lambda v: v["path"]) != data["source_bindings"]:
+        raise ResultContractError("Diagnostic source bytes do not match the checked model")
+    return {d.path: d.content for d in documents}
+
+
+def _project_diagnostic(stage, item, sources, source_ids):
+    reason = item["reason"]
+    code = item.get("code", _REASON_CODES.get(reason,
+        "SRV002" if stage == "schema_types_identity_fields" else "MODEL_VALIDATION"))
+    origin = item.get("origin", "profile_rule" if stage == "profiles" else "core_rule")
+    path = item.get("path")
+    location = item.get("location")
+    if location is None:
+        error = ModelError(reason, path=path, pointer=item.get("pointer"),
+            position=item.get("position"), line=item.get("line"), column=item.get("column"))
+        location = from_model_error(error, source=sources.get(path), code=code).location
+    return Diagnostic(code, item.get("severity", "error"),
+        item.get("category", "parse" if stage == "parsing" else "model"),
+        item.get("message", "Model validation reported a finding."), origin=origin,
+        rule_id=item.get("rule_id"), artifact_id=item.get("artifact_id") or source_ids.get(path), path=path,
+        location=location, rationale=item.get("rationale", reason),
+        remediation=item.get("remediation"), related_ids=item.get("related_ids", (*item.get("artifact_ids", ()),
+            *item.get("relation_ids", ()))))
+
+
+def _operational_failure(stages):
+    failure = 3 if any(s["stage"] in _STRUCTURAL and s["status"] == "failed" for s in stages) else None
+    if any(s["stage"] in ("profile_lint", "language_policy") and
+           any(d.get("code") in ("SRV110", "SRV111", "SRV177", "SRV197") for d in s["diagnostics"])
+           for s in stages):
+        failure = 3  # Invalid executable data/structure is not a false policy predicate.
+    if any(item["reason"] in ("validation_gate_check_failed", "validation_gate_discovery_failed")
+           for stage in stages for item in stage["diagnostics"]):
+        failure = 4
+    return failure
+
+
 def assess_validation(report, *, fail_on="error", strict=False, documents=None):
     """Normalize all emitted findings. Unavailable/blocked phases stay incomplete.
 
@@ -76,47 +119,13 @@ def assess_validation(report, *, fail_on="error", strict=False, documents=None):
     if type(report) is not ValidationReport:
         raise ResultContractError("Expected an actual validation report")
     data = report.data
-    sources = {}
-    if documents is not None:
-        if type(documents) not in (tuple, list) or any(type(d) is not ModelDocument for d in documents):
-            raise ResultContractError("Expected model documents")
-        if len({d.path for d in documents}) != len(documents):
-            raise ResultContractError("Duplicate source label")
-        bindings = sorted(({"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents), key=lambda v:v["path"])
-        if bindings != data["source_bindings"]:
-            raise ResultContractError("Diagnostic source bytes do not match the checked model")
-        sources = {d.path: d.content for d in documents}
+    sources = _bound_sources(data, documents)
     source_ids = {v["path"]: v["artifact_id"] for v in data["identified_sources"]}
-    diagnostics = []
-    for stage in data["stages"]:
-        for item in stage["diagnostics"]:
-            reason = item["reason"]
-            code = item.get("code", _REASON_CODES.get(reason,
-                "SRV002" if stage["stage"] == "schema_types_identity_fields" else "MODEL_VALIDATION"))
-            origin = item.get("origin", "profile_rule" if stage["stage"] == "profiles" else "core_rule")
-            path = item.get("path")
-            location = item.get("location")
-            if location is None:
-                error = ModelError(reason, path=path, pointer=item.get("pointer"),
-                    position=item.get("position"), line=item.get("line"), column=item.get("column"))
-                location = from_model_error(error, source=sources.get(path), code=code).location
-            diagnostics.append(Diagnostic(code, item.get("severity", "error"),
-                item.get("category", "parse" if stage["stage"] == "parsing" else "model"),
-                item.get("message", "Model validation reported a finding."), origin=origin,
-                rule_id=item.get("rule_id"), artifact_id=item.get("artifact_id") or source_ids.get(path), path=path,
-                location=location, rationale=item.get("rationale", reason),
-                remediation=item.get("remediation"), related_ids=item.get("related_ids", (*item.get("artifact_ids", ()),
-                    *item.get("relation_ids", ())))))
-    failure = 3 if any(s["stage"] in _STRUCTURAL and s["status"] == "failed" for s in data["stages"]) else None
-    if any(s["stage"] in ("profile_lint", "language_policy") and
-           any(d.get("code") in ("SRV110", "SRV111", "SRV177", "SRV197") for d in s["diagnostics"])
-           for s in data["stages"]):
-        failure = 3  # Invalid executable data/structure is not a false policy predicate.
-    if any(item["reason"] in ("validation_gate_check_failed", "validation_gate_discovery_failed")
-           for stage in data["stages"] for item in stage["diagnostics"]):
-        failure = 4
+    diagnostics = [_project_diagnostic(stage["stage"], item, sources, source_ids)
+                   for stage in data["stages"] for item in stage["diagnostics"]]
     assessment = assess_diagnostics(diagnostics, checked_ids=data["identified_ids"],
-        complete=data["checks_complete"], fail_on=fail_on, strict=strict, operational_exit_code=failure)
+        complete=data["checks_complete"], fail_on=fail_on, strict=strict,
+        operational_exit_code=_operational_failure(data["stages"]))
     return ValidationAssessment._create(report, assessment)
 
 

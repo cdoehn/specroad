@@ -6,7 +6,6 @@ An unavailable required service is not a successful stub or publication approval
 from __future__ import annotations
 
 from collections import deque
-from hashlib import sha256
 
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
@@ -23,6 +22,7 @@ from ..graph.relation_obligations import RelationObligations
 from .values import (
     VALIDATION_VERSION, HOOK_NAMES, ModelDocument, ModelGate, GateContext,
     GateDependencies, GateResult, ValidationReport, _sequence, _ids, _diagnostics,
+    _document_bindings,
 )
 from ._model_checks import _issue, _applies, _foreign_edges
 from .resources import ValidationResources
@@ -67,7 +67,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         gate_index.update((g.gate_id, g) for g in builtins)
     basis = canonical_json_sha256({"version": VALIDATION_VERSION,
         **({"resources_sha256": resources.sha256} if resources is not None else {}),
-        "documents": [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents],
+        "documents": _document_bindings(documents),
         "selection": None if selected is None else list(selected),
         "profile": profile.binding() if profile is not None else None,
         "gates": [{"id": g.gate_id, "version": g.version, "resources_sha256": g.resources_sha256}
@@ -91,7 +91,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         return ValidationReport._create({"format_version": VALIDATION_VERSION,
             "input_sha256": basis, "validation_scope": "loaded_model" if selected is None else "dependency_expanded_loaded_scope",
             "source_count": len(documents), "structural_scope": "all_supplied_documents",
-            "source_bindings": [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents],
+            "source_bindings": _document_bindings(documents),
             "identified_ids": sorted({v["id"] for _, v in parsed if type(v.get("id")) is str and v["id"]}),
             "identified_sources": [{"path": d.path, "artifact_id": v["id"]} for d, v in parsed
                                    if type(v.get("id")) is str and v["id"]],

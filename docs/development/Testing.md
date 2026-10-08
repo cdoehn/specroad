@@ -1,10 +1,10 @@
-# Aktive Teststrategie ab 3. Oktober 2026
+# Aktive Teststrategie ab 7. Oktober 2026
 
 Die aktualisierte Nutzeranweisung legt folgende Testmodi fest:
 In `specroad-codex` läuft die vollständige Suite ausschließlich parallel.
 Der geprüfte Zwischenstand wird über PatchHarbor an `specroad-apply` übergeben;
-dort läuft vor jedem Commit die vollständige parallele Suite. Beim letzten
-Zustand des Bundles folgt zusätzlich ein vollständiger serieller Lauf.
+dort läuft vor jedem Commit die vollständige parallele Suite. Das gilt auch für
+den letzten Zustand des Bundles; es folgt kein zusätzlicher serieller Lauf.
 W, R und C bleiben getrennte Zustände mit jeweils eigener Prüfung und eigenem
 Apply-Commit. Keine gezielte Testauswahl als Apply-Regel.
 
@@ -14,27 +14,22 @@ Entwicklung in `specroad-codex`:
 .venv/bin/python -I -B tools/run_tests.py --workers 4
 ```
 
-Apply-Entrypoint in `specroad-apply`, für einen Zwischenstand vor dem letzten:
+Apply-Entrypoint in `specroad-apply`, für jeden Zwischenstand:
 
 ```sh
 .venv/bin/python -I -B tools/run_apply_tests.py
 ```
 
-Der Apply-Runner startet dabei genau einen vollständigen Lauf mit `--workers 4`.
-Für den letzten Zustand des Bundles (auch bei einem Bundle mit nur einem Zustand):
-
-```sh
-.venv/bin/python -I -B tools/run_apply_tests.py --final-bundle-state
-```
-
-Dieser Aufruf startet zuerst den vollständigen Paralleltest und danach zusätzlich
-den vollständigen seriellen Test mit `--workers 0`, auch nach einem fehlgeschlagenen
-parallelen Lauf. Nur der Erfolg aller vorgesehenen Läufe ergibt Exitcode 0.
-Es gibt keine Wiederholung und keinen Fallback auf einen anderen Testmodus.
+Der Apply-Runner startet genau einen vollständigen Lauf mit `--workers 4`.
+Das ältere Argument `--final-bundle-state` bleibt für bestehende Entrypoints
+akzeptiert und startet denselben einzelnen parallelen Lauf. Nur dessen Erfolg
+ergibt Exitcode 0. Es gibt keine Wiederholung und keinen Fallback auf einen
+anderen Testmodus, auch bei einem Fehler oder fehlgeschlagenen Prozessstart.
 
 GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
-manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
-parallel auf Python 3.10–3.14 aus. In GitHub gibt es keinen seriellen Volltest.
+vom Nutzer manuell per `workflow_dispatch` gestartet und führt die vollständige
+Testsuite parallel auf Python 3.10–3.14 aus. Codex startet keine CI-Workflows.
+In GitHub gibt es keinen seriellen Volltest.
 Die frühere 5er-Bundle-Regel bleibt entfernt.
 
 Getestet werden Verhalten und maschinenlesbare fachliche Verträge. Keine Tests
@@ -60,7 +55,7 @@ uv venv --python python3 --no-python-downloads .venv
 uv pip install --python .venv/bin/python --link-mode copy --group dev
 .venv/bin/python -I -B tools/run_tests.py
 .venv/bin/python -I -B tools/run_tests.py --workers 4
-.venv/bin/python -m pytest
+.venv/bin/python -m pytest -n 4
 .venv/bin/python -m pytest -n 4 tests/test_core.py
 ```
 
@@ -71,9 +66,8 @@ schon. Die Testausführung selbst installiert nichts und braucht kein Netzwerk. 
 vorherige Abhängigkeitsinstallation benötigt verfügbare Pakete oder einen gefüllten Cache.
 
 Lokal gilt seit dem 21. September 2026 der Standard von vier Workern.
-In der Codex-Entwicklung folgt kein serieller Volltest. Der zusätzliche serielle
-Volltest gehört ausschließlich zum letzten Zustand des späteren PatchHarbor-Bundles
-im Apply und läuft vor dessen abschließendem Commit.
+Sowohl in der Codex-Entwicklung als auch im PatchHarbor-Apply laufen alle
+Zwischenstände ausschließlich parallel, einschließlich des letzten Zustands.
 Nur explizites `auto` lässt xdist die Workerzahl bestimmen. Explizite Zahlen und
 `PYTEST_XDIST_AUTO_NUM_WORKERS` erlauben die Anpassung an vorhandene CPU-/Speicherressourcen.
 Es gibt keinen stillen seriellen Fallback, keine automatische Wiederholung abgestürzter
@@ -123,8 +117,8 @@ prozessübergreifenden Singletons.
 ## Verifikationsgrenzen
 
 Der Patch prüft Zwischenstände einzeln. Die Entwicklungsumgebung liefert nur
-parallele Ergebnisse; das spätere Apply-Protokoll belegt die dortigen Paralleltests
-und den zusätzlichen seriellen Abschlusslauf. Maßgeblich sind diese Protokolle
+parallele Ergebnisse; das spätere Apply-Protokoll belegt die dortigen Paralleltests.
+Maßgeblich sind diese Protokolle
 und die zugehörigen aktuellen Berichte; diese Anleitung ist kein Ausführungsnachweis.
 Ein lokaler CPython-Lauf ist kein Nachweis für Pixel/PRoot
 oder die ganze CI-Matrix. Keine pauschale Behauptung über alle zukünftigen Tests.
@@ -151,8 +145,8 @@ Unterschiedliche Worker-Zuordnung ist erlaubt; fehlende oder doppelte Tests sind
 Der Workflow `.github/workflows/behavior.yml` ruft in GitHub Actions
 `tools/run_ci_tests.py --outdir <frisches-Verzeichnis>` auf. Er führt je Python-
 Version ausschließlich die vollständige Suite parallel aus. Der lokale Apply
-führt dagegen parallel und anschließend seriell aus. Beide lokalen Volltests
-müssen vor dem Commit erfolgreich sein.
+führt ebenfalls genau einen vollständigen parallelen Lauf je Zwischenstand aus.
+Der jeweilige Lauf muss vor dem Commit erfolgreich sein.
 
 Die Python-Matrix 3.10–3.14 läuft im ausschließlich manuell gestarteten Workflow.
 Erst der exakt gebundene tatsächliche Workflowlauf kann den CI-Erfolg bestätigen. Ein lokaler paralleler Testlauf genügt
@@ -165,8 +159,8 @@ Regressionsfälle starten absichtlich eigene pytest-Prozesse mit lokalen Mini-Fi
 ein absichtlicher Worker-Absturz, unterschiedliche Worker-Sammlungen, Collection-Fehler,
 Setup-/Teardown-Fehler, Skip/XFail/Unexpected Success sowie fehlgeschlagene/übersprungene
 unittest-Untertests. Die Prüfung wertet ausschließlich strukturierte Ergebnisse und
-Exitcodes aus. Diese kleinen Framework-Regressionsfälle benötigen auch beim äußeren
-seriellen Referenzlauf xdist. Fehlende Abhängigkeiten führen zu Fehlern, niemals zu Skips.
+Exitcodes aus. Diese kleinen Framework-Regressionsfälle benötigen ebenfalls xdist.
+Fehlende Abhängigkeiten führen zu Fehlern, niemals zu Skips.
 
 ## Historische OFF-PLAN-Commitfolge der pytest-Migration
 
@@ -192,4 +186,4 @@ Plan- oder Requirement-Abdeckung hochgezählt. Keine neuen Produkt-Planpositione
 
 Die frühere gezielte Auswahl einschließlich zusätzlicher Lieferdatenregressionen
 ist als Apply-Regel aufgehoben. `run_selected_tests.py` bleibt ein Hilfsmittel
-für die Entwicklung; Teiltests ersetzen keinen der beiden lokalen Volltests.
+für die Entwicklung; Teiltests ersetzen keinen vorgeschriebenen Volltest.

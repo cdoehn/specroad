@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 80
+last_completed_numbered_bundle: 81
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-02.C
+next_audit_step: AUDIT-VALIDATION-03.W
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -69,7 +69,7 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R/C umgesetzt, Audit-CLOSE offen |
-| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt; W/R umgesetzt, C offen |
+| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt; W/R/C umgesetzt, Audit-CLOSE offen |
 | F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
 | F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
 
@@ -879,7 +879,7 @@ widerlegt. Fehlende oder spätere Fachdienste sind weiter ehrlich unverfügbar.
   Projektprüfung, Zielprüfung und Dry-Run erhalten dieselben fachlichen
   Ergebnisse, erforderlichen Abhängigkeiten und ehrlichen Reichweitengrenzen.
   Kein neuer Persistenzvertrag, impliziter Reviewer oder optionaler Analyzer.
-- [ ] **AUDIT-VALIDATION-02.C:** Gemeinsame Ressourcenbindung, Fachbeobachtung
+- [x] **AUDIT-VALIDATION-02.C:** Gemeinsame Ressourcenbindung, Fachbeobachtung
   und Diagnoseprojektion konsolidieren. **Abnahme:** Alle W-/R-Ergebnisse,
   Fehlerverträge und schreibfreien Wirkungen bleiben unverändert; vorhandene
   Kerne werden wiederverwendet und spätere Fachgates nicht durch Stubs ersetzt.
@@ -1167,6 +1167,46 @@ SR-TC-0086 und SR-TC-0100 bleiben `partial`; die komplette Suite umfasst jetzt
 Commit-Message: `fix(validation): harden resource binding and adapter coverage`.
 Erst das erfolgreiche Apply-Result bestätigt diesen R-Abschluss. Nächster
 Schritt: `AUDIT-VALIDATION-02.C`; Produktzähler 237/885 und Sperre von 5.t.W
+bleiben erhalten.
+
+### AUDIT-VALIDATION-02.C – gemeinsame gebundene Beobachtungen (Bundle 081)
+
+Basis ist das vollständig geprüfte manuelle Result
+`specroad-apply_Result_061427_1008_89b33f.zip`, Commit
+`5080638795d9fd828b5ceb0b00b107c4980aea22`. Alle 1464 Snapshot-Dateien stimmen
+mit Apply und der Entwicklung überein. Das Result erfasst den sauberen Zustand;
+es behauptet keinen neuen Testlauf. Der ursprüngliche Apply-Lauf
+`3e23c672-6bc8-48c1-a10c-d8f962308d5c` bestätigt Bundle 080 mit Exitcode 0,
+5830 bestandenen parallelen Tests und dem damals zusätzlich ausgeführten
+seriellen Lauf mit ebenfalls 5830 bestandenen Tests. Dessen fehlgeschlagener
+Result-Export ist durch den frischen, vollständig geprüften Snapshot ergänzt;
+Patchhash, Elterncommit, alle 15 Payload-Dateien und der Abschlusscommit passen.
+
+Modellprüfung, Read-only-Validierung, Ressourcenbeobachtung und Diagnoseprojektion
+verwenden dieselbe Bindung logischer Quellpfade an ihre tatsächlich gelesenen
+Bytes. Die jeweilige etablierte Reihenfolge bleibt erhalten; vorhandene
+Input-Hashes und Aktualitätsprüfungen ändern sich nicht. Die produktiven
+Sprach-/Profiladapter gewinnen Quellen und Pfadzuordnung gemeinsam. Der SRX-Graph
+verwendet diese bereits erfassten Quellen; Projektpolicy und komponierte harte
+Grenzen werden weiterhin auf frischen abgelösten Konfigurationswerten kombiniert.
+
+Die Diagnoseprojektion trennt Quellenabgleich, einzelne Befundprojektion und
+operationelle Fehlerpriorität. Codes, Pointer, Ursprünge, Severity, Strict,
+Befundreihenfolge und die Priorität der Exitcodes bleiben unverändert.
+Alle W-/R-Fälle und die schreibfreien Wirkungen bleiben erhalten. Es entstehen
+keine neuen Fachgates, Reviews, Evidence- oder Freigabebehauptungen;
+SR-TC-0086 und SR-TC-0100 bleiben mit ihrem bisherigen Teilumfang `partial`.
+
+Die bereits beauftragte technische Testpolicy-Korrektur entfernt zugleich den
+seriellen Zusatzstart aus `tools/run_apply_tests.py`. Das bisherige Final-Argument
+bleibt kompatibel und führt denselben einzelnen parallelen Volltest aus.
+Die Prozess-/Fehlerregressionen prüfen Erfolg, Fehlschlag und Startfehler ohne
+Wiederholung oder Moduswechsel. Die technischen Bedienungsanleitungen beschreiben
+den aktuellen Runner; historische Testnachweise bleiben unverändert.
+
+Commit-Message: `refactor(validation): consolidate bound resource observations`.
+Erst das erfolgreiche Apply-Result bestätigt diesen C-Abschluss. Nächster
+Schritt: `AUDIT-VALIDATION-03.W`; Produktzähler 237/885 und Sperre von 5.t.W
 bleiben erhalten.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten

@@ -1,15 +1,17 @@
-# Aktive Teststrategie ab 3. Oktober 2026
+# Aktive Teststrategie ab 7. Oktober 2026
 
 In `specroad-codex` läuft die vollständige Testsuite ausschließlich parallel.
 In `specroad-apply` führt `tools/run_apply_tests.py` den parallelen Volltest aus.
-Beim letzten Bundle-Zustand fügt `--final-bundle-state` anschließend einen seriellen
-Volltest hinzu. Nur der Erfolg aller vorgesehenen Läufe erlaubt den W/R/C-Commit.
+Auch beim letzten Bundle-Zustand läuft ausschließlich der parallele Volltest.
+`--final-bundle-state` bleibt kompatibel und startet denselben einzelnen Lauf.
+Nur dessen Erfolg erlaubt den W/R/C-Commit.
 Die technischen Aufrufe stehen in [Testing.md](Testing.md). Die zentrale lokale
 Arbeitsanweisung ist `AGENTS.md`.
 
 GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
-manuell per `workflow_dispatch` gestartet und führt die vollständige Testsuite
-parallel auf Python 3.10–3.14 aus. In GitHub gibt es keinen seriellen Volltest.
+vom Nutzer manuell per `workflow_dispatch` gestartet und führt die vollständige
+Testsuite parallel auf Python 3.10–3.14 aus. Codex startet keine CI-Workflows.
+In GitHub gibt es keinen seriellen Volltest.
 Die frühere 5er-Bundle-Regel bleibt entfernt.
 
 ## Manueller Full-Test: ausschließlich parallel

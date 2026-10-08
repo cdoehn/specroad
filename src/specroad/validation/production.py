@@ -25,14 +25,15 @@ def profile_applies(profile, artifact):
     return any(rule_applies(rule, artifact) for rule in profile["merge"]["lint_rules"])
 
 
-def _paths(context):
-    return {r.identity.id: r.path for r in
-            (SourceRelations(d.content, path=d.path) for d in context.documents)}
+def _observed_sources(context):
+    sources = tuple(SourceRelations(d.content, path=d.path) for d in context.documents)
+    return sources, {source.identity.id: source.path for source in sources}
 
 
 def _language(context, resources):
     policy = LanguagePolicy(resources.configuration.data.get("language_policy", {}))
-    paths, findings = _paths(context), []
+    _, paths = _observed_sources(context)
+    findings = []
     for identity in context.subjects:
         value = context.artifact(identity)
         report = evaluate_language(value["language"], policy=policy, registry=resources.registry)
@@ -47,9 +48,26 @@ def _language(context, resources):
     return context.result(findings)
 
 
+def _rule_project(resources, profile, rule_id):
+    """Combine actual project policy and composed hard limits on detached data."""
+    project = resources.configuration.data
+    current = ResourcePolicy.from_project(project, rule_id=rule_id).structure
+    limits = profile["merge"]["hard_limits"]
+    for key, default in (("srx_nodes", current.ast_nodes), ("srx_depth", current.ast_depth)):
+        if key in limits:
+            project.setdefault("resource_limits", {})[key] = min(default, limits[key])
+    return project
+
+
+def _profile_origin(rule, identity, path):
+    return {"artifact_id": identity, "path": path, "rule_id": rule["rule_id"],
+            "origin": "profile_rule", "rule_version": rule["version"],
+            "rule_sha256": canonical_json_sha256(rule)}
+
+
 def _profile(context, resources):
-    paths, findings = _paths(context), []
-    sources = tuple(SourceRelations(d.content, path=d.path) for d in context.documents)
+    sources, paths = _observed_sources(context)
+    findings = []
     for rule in context.profile_data["merge"]["lint_rules"]:
         rule_id = rule["rule_id"]
         graph = LoadedGraph(sources, rule_id=rule_id)
@@ -57,16 +75,9 @@ def _profile(context, resources):
             artifact = context.artifact(identity)
             if not rule_applies(rule, artifact):
                 continue
-            common = {"artifact_id": identity, "path": paths[identity],
-                      "rule_id": rule_id, "origin": "profile_rule", "rule_version": rule["version"],
-                      "rule_sha256": canonical_json_sha256(rule)}
+            common = _profile_origin(rule, identity, paths[identity])
             try:
-                project = resources.configuration.data
-                current = ResourcePolicy.from_project(project, rule_id=rule_id).structure
-                for key, default in (("srx_nodes", current.ast_nodes), ("srx_depth", current.ast_depth)):
-                    if key in context.profile_data["merge"]["hard_limits"]:
-                        project.setdefault("resource_limits", {})[key] = min(
-                            default, context.profile_data["merge"]["hard_limits"][key])
+                project = _rule_project(resources, context.profile_data, rule_id)
                 roots = graph.candidate_roots({"project": project,
                     "configuration": None}, identity, rule_id=rule_id)
                 result = evaluate(SrxProgram(rule["program"], rule_id=rule_id),

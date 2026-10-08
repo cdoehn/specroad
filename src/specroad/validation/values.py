@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from hashlib import sha256
 import re
 from typing import Callable
 
@@ -49,6 +50,12 @@ class ModelDocument:
         _text(self.path, "validation_source_label_required")
         if type(self.content) is not bytes:
             raise ModelError("validation_source_bytes_required", path=self.path)
+
+
+def _document_bindings(documents):
+    """Bind exact observed bytes, preserving the caller's established order."""
+    return [{"path": document.path, "sha256": sha256(document.content).hexdigest()}
+            for document in documents]
 
 
 def _diagnostics(value):
@@ -220,5 +227,4 @@ class ValidationReport:
     @property
     def diagnostics(self):
         return tuple(item for stage in self.data["stages"] for item in stage["diagnostics"])
-
 

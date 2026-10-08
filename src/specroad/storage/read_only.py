@@ -6,11 +6,11 @@ completed transactions. The transaction/lock engines and full CLI preflight have
 their own later contracts. These observations do not authorize writes and are
 not an OS sandbox for explicitly supplied trusted Python validation callbacks."""
 from __future__ import annotations
-from hashlib import sha256
 from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
 from ..profiles.composition import compose_profiles
 from ..validation import validate_model, assess_validation, ValidationResources
+from ..validation.values import _document_bindings
 from ..lint import Glossary, LiteralPolicy, LiteralLintError, lint_literals, lint_core
 from ..lint.reporting import lint_findings_report
 from ..graph.relations import SourceRelations
@@ -74,8 +74,8 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         resources = ValidationResources(source.configuration_bytes, registry=registry,
             profile_resources=profile_resources, core_key=core_key, cli_profiles=cli_profiles)
         profile_files = capture_profile_files(source, resources.profile_resources, profile, profile_paths)
-        data["resource_bindings"] = [{"kind": "profile", "path": d.path,
-            "sha256": sha256(d.content).hexdigest()} for d in profile_files or ()]
+        data["resource_bindings"] = [{"kind": "profile", **binding}
+            for binding in _document_bindings(profile_files or ())]
         if registry is not None:
             data["resource_bindings"].append({"kind": "language_registry",
                 "path": source.configuration.data["language_registry"]["path"], "sha256": registry.sha256})
@@ -86,7 +86,7 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         data["normal_operation_started"] = True
         documents = _capture_documents(source)
         data["model_loaded"] = True
-        data["source_bindings"] = [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents]
+        data["source_bindings"] = _document_bindings(documents)
         report = validate_model(documents, profile=profile, selected_ids=selected_ids,
                                 gates=gates, resources=resources)
         assessment = assess_validation(report, fail_on=fail_on, strict=strict, documents=documents)
@@ -148,7 +148,7 @@ def lint_project_read_only(root, *, policy, selected_ids, fail_on="error", stric
         data["normal_operation_started"] = True
         documents = _capture_documents(source)
         data["model_loaded"] = True
-        data["source_bindings"] = [{"path": d.path, "sha256": sha256(d.content).hexdigest()} for d in documents]
+        data["source_bindings"] = _document_bindings(documents)
         indexed, terms = {}, []
         for document in documents:
             value = parse_json_object(document.content, path=document.path)
