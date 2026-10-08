@@ -21,7 +21,7 @@ def _help(invocation) -> CommandResult:
                      for cmd in invocation.registry.commands],
         "exit_codes": {"0": "completed", "2": "invalid usage", "4": "internal error", "5": "I/O failure"},
         "examples": ["specroad --help", "specroad version --format json"],
-        "scope": "Core bootstrap; project commands are not implemented yet.",
+        "scope": "Core bootstrap and environment diagnosis; model operations remain separate.",
     })
 
 
@@ -68,6 +68,24 @@ def _schema_list(invocation) -> CommandResult:
 
 def _schema_show(invocation) -> CommandResult:
     return _schema_result(invocation, invocation.arguments["schema_id"])
+
+
+def _environment(invocation) -> CommandResult:
+    from ..runtime.environment import environment_report
+    from ..diagnostics import Diagnostic
+    payload, code = environment_report(invocation)
+    validate_result_document(invocation.command.protocol.result_schema, payload)
+    diagnostics = ()
+    if payload['metadata'] is not None and payload['metadata']['preflight_detail_required']:
+        diagnostics = (Diagnostic('SRV167', 'info', 'preflight_detail_required',
+                                 'Additional bounded metadata phases were required.'),)
+    if code:
+        kind = FailureKind(code)
+        return CommandResult.failed(invocation.command.command_id, kind, complete=True,
+            result=payload, diagnostics=(*diagnostics,
+                Diagnostic('CORE_' + kind.name, 'error', kind.name.lower(),
+                           'A requested environment prerequisite is blocked.')))
+    return CommandResult(invocation.command.command_id, result=payload, diagnostics=diagnostics)
 
 
 def builtin_registry() -> CommandRegistry:
@@ -128,4 +146,17 @@ def builtin_registry() -> CommandRegistry:
             "command_id": "schema.show", "arguments": {"schema_id": "json-envelope-v2"},
             "options": {"--format": "json"}},
             work=WorkContract("schema_lookup", ("distribution_schemas",))),
+    ), CommandSpec(
+        command_id='environment.check', words=('environment', 'check'),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.PROJECT_METADATA,
+        effect_scope=EffectScope.NONE, handler=_environment, configuration_schema_required=True,
+        options=(OptionSpec('--project', takes_value=True), OptionSpec('--for-command', takes_value=True),
+                 OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
+                 OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                 OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('environment-v1', {
+            'command_id': 'environment.check', 'options': {'--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 5, 6, 7),
+            diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
+            work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
     )))

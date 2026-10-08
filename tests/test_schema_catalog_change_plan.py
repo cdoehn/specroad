@@ -54,6 +54,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         schemas += [result_json_schema(name) for name in (
             'json-envelope-v2', 'help-v1', 'version-info-v1', 'command-description-v1',
             'capabilities-v1', 'schema-catalog-v1', 'schema-document-v1', 'sarif-specroad-v1',
+            'environment-v1',
         )]
         expected = {schema['$id']: schema for schema in schemas}
         self.assertEqual(len(expected), len(schemas))

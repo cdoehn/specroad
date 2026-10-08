@@ -141,6 +141,7 @@ class CommandSpec:
     budget_policy_version: str | None = None
     positionals: tuple[PositionalSpec, ...] = ()
     protocol: CommandProtocol | None = None
+    configuration_schema_required: bool = False
 
     def __post_init__(self) -> None:
         if not isinstance(self.command_id, str) or not re.fullmatch(r"[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)*", self.command_id):
@@ -162,7 +163,8 @@ class CommandSpec:
         for words in (self.words, *self.aliases):
             if not words or not all(isinstance(word, str) and re.fullmatch(r"(?:[a-z][a-z0-9-]*|--help|-h)", word) for word in words):
                 raise CommandUsageError("Invalid command spelling")
-        if any(type(value) is not bool for value in (self.requires_project, self.requires_git)):
+        if any(type(value) is not bool for value in (self.requires_project, self.requires_git,
+                                                    self.configuration_schema_required)):
             raise CommandUsageError("Requirements must be booleans")
         if not all(isinstance(option, OptionSpec) for option in self.options):
             raise CommandUsageError("Invalid option contract")
@@ -210,6 +212,9 @@ class CommandSpec:
         if (self.preflight_profile in (PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE)
                 and not self.requires_project):
             raise CommandUsageError("Project read/write preflights require a current project")
+        if (self.configuration_schema_required and self.preflight_profile not in
+                (PreflightProfile.PROJECT_METADATA, PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE)):
+            raise CommandUsageError("Configuration schema checks require a project profile")
         if self.budget_policy_version is not None and (not isinstance(self.budget_policy_version, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", self.budget_policy_version)):
             raise CommandUsageError("Invalid budget policy version")
 
@@ -222,6 +227,11 @@ class CommandSpec:
         if (self.preflight_profile is PreflightProfile.PROJECT_WRITE
                 and options.get('--dry-run') is True):
             return PreflightProfile.PROJECT_READ
+        if (self.preflight_profile is PreflightProfile.PROJECT_METADATA
+                and not self.requires_project and not self.requires_git
+                and not self.requires_write_paths and self.effect_scope is EffectScope.NONE
+                and '--project' not in options):
+            return PreflightProfile.BOOTSTRAP
         return self.preflight_profile
 
 

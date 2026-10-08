@@ -11,7 +11,7 @@ from .contracts import PreflightProfile
 from .option_values import OptionResolutionError, _text
 
 
-def _read_configuration(path: Path, *, project_read=False, preflight=None) -> dict:
+def _read_configuration(path: Path, *, project_read=False, schema_required=False, preflight=None) -> dict:
     """Read one regular configuration file; never follow a config-file link."""
     metadata = MetadataPhases()
     observed = {'profile': 'project_read' if project_read else 'project_metadata',
@@ -37,7 +37,7 @@ def _read_configuration(path: Path, *, project_read=False, preflight=None) -> di
     except OptionResolutionError:
         raise
     except (UnicodeError, ValueError, RecursionError) as error:
-        if project_read:
+        if project_read or schema_required:
             from .results import FailureKind, OperationFailure
             raise OperationFailure(FailureKind.MODEL, "Invalid project configuration.",
                 details={'preflight': {**details()['preflight'],
@@ -52,6 +52,16 @@ def _read_configuration(path: Path, *, project_read=False, preflight=None) -> di
         check_project_declarations(data)
     except SafetyViolation as error:
         raise OptionResolutionError("Project execution or root declaration is not allowed", 7, details=details()) from error
+    if schema_required and not project_read:
+        from ..model.errors import ModelError
+        from ..storage.json_reader import JsonResource, configuration_schema
+        from .results import FailureKind, OperationFailure
+        try:
+            JsonResource(raw, configuration_schema(), path='specroad.json')
+        except ModelError as error:
+            raise OperationFailure(FailureKind.MODEL, 'Invalid project configuration.',
+                details={'preflight': {**details()['preflight'], 'reason': error.reason,
+                                       'model_error': error.diagnostic()}}) from error
     if project_read:
         from ..runtime.preflight import require_project_read_preflight
         observed = require_project_read_preflight(boundary, raw, metadata)
@@ -82,7 +92,8 @@ def select_project(command, options, cwd, *, preflight=None):
                 raise OptionResolutionError("Explicit project path is not a directory")
             config = root / "specroad.json"
             config.lstat()
-            return root, "cli", _read_configuration(config, project_read=project_read, preflight=preflight)
+            return root, "cli", _read_configuration(config, project_read=project_read,
+                schema_required=command.configuration_schema_required, preflight=preflight)
         start = (Path.cwd() if cwd is None else Path(cwd)).resolve(strict=True)
         if not start.is_dir():
             raise OptionResolutionError("Search origin is not a directory")
@@ -92,7 +103,8 @@ def select_project(command, options, cwd, *, preflight=None):
                 config.lstat()
             except FileNotFoundError:
                 continue
-            return root, "discovery", _read_configuration(config, project_read=project_read, preflight=preflight)
+            return root, "discovery", _read_configuration(config, project_read=project_read,
+                schema_required=command.configuration_schema_required, preflight=preflight)
     except OptionResolutionError:
         raise
     except FileNotFoundError as error:

@@ -84,7 +84,8 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
     if preflight is not None:
         outcome = replace(outcome, details={**outcome.details, 'preflight': preflight})
     observation = outcome.details.get('preflight')
-    if isinstance(observation, Mapping) and observation.get('preflight_detail_required'):
+    if (isinstance(observation, Mapping) and observation.get('preflight_detail_required')
+            and not any(d.code == 'SRV167' for d in outcome.diagnostics)):
         outcome = replace(outcome, diagnostics=(*outcome.diagnostics,
             Diagnostic('SRV167', 'info', 'preflight_detail_required',
                        'Additional bounded metadata phases were required.')))

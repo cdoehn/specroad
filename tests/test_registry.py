@@ -66,7 +66,7 @@ class RegistryWorkTests(unittest.TestCase):
             replace(command, handler=None)
         with self.assertRaises(CommandUsageError):
             builtin_registry().resolve("init")
-        self.assertEqual({c.command_id for c in builtin_registry().commands}, {"help", "version", "command.describe", "capabilities", "schema.list", "schema.show"})
+        self.assertEqual({c.command_id for c in builtin_registry().commands}, {"help", "version", "command.describe", "capabilities", "schema.list", "schema.show", "environment.check"})
 
     def test_side_effect_limits_cannot_contradict_read_only_or_bootstrap(self):
         command = read_command(lambda invocation: 0)

@@ -229,7 +229,12 @@ class DescriptionRobustnessTests(unittest.TestCase):
         for command in registry.commands:
             document = describe_command(registry, command.command_id)
             accepted = {option['flag'] for option in document['options']}
-            for flag in ('--work-dir', '--resume', '--request-id', '--dry-run', '--actor-id', '--project'):
+            rejected = ('--work-dir', '--resume', '--request-id', '--dry-run', '--actor-id')
+            if command.command_id == 'environment.check':
+                self.assertIn('--project', accepted)
+            else:
+                rejected += ('--project',)
+            for flag in rejected:
                 self.assertNotIn(flag, accepted)
                 example = document['examples'][0]
                 example['options'][flag] = 'unavailable'

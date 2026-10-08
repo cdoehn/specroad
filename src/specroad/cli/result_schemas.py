@@ -96,7 +96,27 @@ def _fields(schema_id):
             "runtime": _object({"interpreter": runtime, "limits": limits})})
     if schema_id == "schema-catalog-v1":
         return _object({"format_version": {"const": "1.0.0"}, "schemas": _array(entry),
-            "categories": _object({name: count for name in CATEGORIES})})
+                "categories": _object({name: count for name in CATEGORIES})})
+    if schema_id == 'environment-v1':
+        observation = _object({'value': _nullable(count), 'unit': nonempty, 'source': nonempty,
+            'state': {'enum': ['observed', 'unknown']}, 'scope': nonempty})
+        check = _object({'check_id': nonempty, 'required': boolean,
+            'state': {'enum': ['passed', 'failed', 'unknown', 'not_applicable']}, 'reason': nonempty,
+            'exit_code': {'type': 'integer', 'minimum': 0, 'maximum': 7}})
+        budget = _object({'value': count, 'unit': nonempty, 'origin': nonempty,
+                          'limit_class': {'const': 'soft_work_target'}})
+        return _object({'environment_format_version': {'const': '1.0.0'},
+            'compatible': _nullable(boolean),
+            'operation_readiness': {'enum': ['not_requested', 'ready', 'blocked', 'unknown']},
+            'python': obj, 'distribution': obj, 'checks': _array(check),
+            'recovery_required': _nullable(boolean),
+            'resource_policy': _object({'policy_version': {'const': 'runtime-budget-v2'},
+                'profile': {'enum': ['constrained', 'standard']}, 'profile_source': {'enum': ['default', 'cli']},
+                'scope': {'const': 'declared_soft_work_targets'}, 'budget_engine_available': {'const': False},
+                'effective_budgets': {'type': 'object', 'additionalProperties': budget}}),
+            'observations': _object({name: observation for name in ('cpu_capacity', 'memory_limit', 'storage_capacity')}),
+            'semantic_validation_performed': {'const': False}, 'target_command_id': _nullable(nonempty),
+            'metadata': _nullable(obj)})
     if schema_id == "schema-document-v1":
         return _object({"format_version": {"const": "1.0.0"}, "metadata": entry,
             "schema": _object({"$schema": {"const": DIALECT}, "$id": nonempty}, extra=True)})

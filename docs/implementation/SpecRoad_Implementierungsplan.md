@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 249
-last_completed_plan_commit: 6.a.C
-next_plan_commit: 6.b.W
-last_completed_numbered_bundle: 100
+implementation_plan_commits_completed: 250
+last_completed_plan_commit: 6.b.W
+next_plan_commit: 6.b.R
+last_completed_numbered_bundle: 101
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5066,12 +5066,42 @@ Position 249/885; anschließend folgt 6.b.W.
 
 #### 6.b.W – Let it Work
 
-- [ ] **6.b.W** · Position **250/885** · Voraussetzung: `6.a.C`.
+- [x] **6.b.W** · Position **250/885** · Voraussetzung: `6.a.C`.
 **Exakte Commit-Message:** `6.b.W feat(work): Environment-Check ohne Nebenwirkungen aufbauen`
 
 **Umsetzung:** environment check mit bekannten Rechten, Runtimevoraussetzungen und explizit unbekannten Hostgrenzen implementieren.
 
 **Verhaltensabnahme:** Diagnose funktioniert auch ohne gültigen Fachmodellzustand.
+
+**Umsetzung / Bundle 101:** `environment check` ist als tatsächlicher lesender
+Registry-Befehl mit JSON-Vertrag `environment-v1` verfügbar. Ohne `--project`
+bleibt sein wirksamer Preflight projektlos; mit explizitem Root werden gültige
+aktuelle Konfiguration und begrenzte Betriebsmetadaten diagnostiziert. Kaputte
+Artefakte, Profile und historische Bestände werden nicht geladen. Aktiver
+Recoverybedarf wird mit Code 5 und vollständigem Bericht ausgewiesen, ohne
+eine Reparatur oder Fachoperation auszuführen.
+
+`--for-command` löst den aktuellen Command-Vertrag einschließlich registrierter
+Aliase auf. Der Zielhandler bleibt unberührt; fehlende Argumente, explizite
+Projektauswahl, Git- oder Schreibnachweise erzeugen begründetes `unknown`.
+Unbekannte erforderliche Voraussetzungen ergeben `compatible=null`, Code 0
+und unbekannte Bereitschaft. Optionale unermittelbare Quoten sind kein Fehler.
+Ein endliches Prozessadressraumlimit wird ausschließlich mit diesem begrenzten
+Geltungsbereich gemeldet; CPU-Zuteilung und Speicherquoten werden nicht erfunden.
+
+Die Diagnose projiziert constrained/standard und ihre weichen Anhang-O-Ziele
+mit Herkunft. Eine Budget-Engine wird ausdrücklich nicht behauptet; deren
+Auflösung und Integration bleiben 6.c zugeordnet. Schema-Katalog, Capability-
+und Command-Auskunft enthalten den realen neuen Befehl. Die bisherigen Registry-,
+Options- und Schema-Inventar-Orakel werden um diesen Vertrag ergänzt; nicht
+implementierte Befehle bleiben abgelehnt. 32 neue Verhaltensfälle prüfen reale Aufrufwege, projektlosen
+Kaltstart, ungültigen Fachmodellzustand, Betriebsblocker, Ressourcenbeobachtung,
+unbekannte Voraussetzungen und aktuelle Fehlerklassen ohne verbotene Effekte.
+
+SR-TC-0565/0566/0567 erhalten die implementierte Teilabnahme. Weitere Rechte-,
+Quoten- und Fehlergrenzen folgen in R; Budget-/Work-Integration und die vollständige
+Runtime-/Plattformmatrix bleiben offen. Erst nach erfolgreichen vollständigen
+parallelen Dev-/Apply-Tests und Commit gilt Position 250/885; danach folgt 6.b.R.
 
 #### 6.b.R – Make it Right
 
@@ -13579,11 +13609,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `6.b.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `6.b.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem C-Result bleiben 636 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem W-Result bleiben 635 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 
