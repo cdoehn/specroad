@@ -32,6 +32,7 @@ from ._recovery_evidence import EvidenceRecord, rollback_evidence, sync_evidence
 from ._recovery_receipts import existing_recovery_record
 from ._recovery_initial import write_initial_successor
 from ._recovery_files import ensure_exact_recovery_file, write_recovery_file
+from ._writer_pending import writer_next
 
 
 def _authorize(authority, journal):
@@ -103,12 +104,15 @@ def _prove_rollback_inputs(files, journal):
 
 def _rollback_guard(files, journal, directory_identity, held_lock):
     observed = _prove_rollback_inputs(files, journal)
+    pending = writer_next(files, journal)
     def check():
         _rollback_lock(held_lock, journal)
         if _read_journal(files, journal.data['transaction_id']) != (journal.source_bytes, directory_identity):
             raise RecoveryError('recovery_journal_changed', exit_code=6)
         if _prove_rollback_inputs(files, journal) != observed:
             raise RecoveryError('recovery_basis_changed', exit_code=6)
+        if writer_next(files, journal) != pending:
+            raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
     return check
 
 
@@ -247,9 +251,12 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
         journal = _parse(raw, transaction_id, files)
         if journal.sha256 != expected_journal_sha256:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
+        pending = writer_next(files, journal)
         if type(journal) is RolledBackJournal:
             _rollback_lock(held_lock, journal)
             _authorize(authority, journal)
+            if writer_next(files, journal) != pending:
+                raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
             root = _prove_basis(files, journal)
             if _read_journal(files, transaction_id) != (raw, directory_identity):
                 raise RecoveryError('recovery_journal_changed', exit_code=6)
@@ -280,6 +287,8 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                    for item in journal.data['target_inventory']):
                 raise RecoveryError('recovery_full_target_requires_completion', exit_code=6)
             _authorize(authority, journal)
+            if writer_next(files, journal) != pending:
+                raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
             _rollback_lock(held_lock, journal)
             if _prove_rollback_inputs(files, journal) != observed:
                 raise RecoveryError('recovery_basis_changed', exit_code=6)
@@ -288,6 +297,8 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                 _rollback_lock(held_lock, journal)
                 if _prove_rollback_inputs(files, journal) != observed:
                     raise RecoveryError('recovery_basis_changed', exit_code=6)
+                if writer_next(files, journal) != pending:
+                    raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
             mutated = True
             _replace_journal(files, journal, successor, directory_identity,
                              before_publish=initial_guard)
@@ -298,6 +309,8 @@ def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
         _rollback_lock(held_lock, journal)
         observed = _prove_rollback_inputs(files, journal)
         _authorize(authority, journal)
+        if writer_next(files, journal) != pending:
+            raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
         _rollback_lock(held_lock, journal)
         if _prove_rollback_inputs(files, journal) != observed:
             raise RecoveryError('recovery_basis_changed', exit_code=6)

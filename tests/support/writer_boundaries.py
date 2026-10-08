@@ -9,26 +9,28 @@ from contextlib import ExitStack
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 from unittest.mock import patch
 
 from specroad.changes import (BuildingJournal, PreparedJournal, CommittingJournal,
-    CommittedJournal, LockRecord, project_lock, begin_building_journal,
+    CommittedJournal, RollingBackJournal, RolledBackJournal, DiscardedJournal,
+    LockRecord, project_lock, begin_building_journal,
     stage_building_journal, publish_prepared_journal, finalize_committing_journal,
     cleanup_completed_transaction, prepare_publication_check,
     prepare_discard_recovery, discard_unpublished_transaction,
     complete_published_transaction, rollback_interrupted_transaction,
     cleanup_recovered_transaction, transaction_recovery_lock,
-    transaction_preflight, completion_marker_path)
+    transaction_preflight, completion_marker_path, transaction_receipt_path)
 from specroad.cli.contracts import CommandClass
 from specroad.model.model_manifest import ProjectReadBinding
 from .automatic_recovery import current_model
-from .folds import goal, edit
+from .folds import goal, edit, create
 from .model import configuration_value, put
 from .publication import ALLOW, TRANSACTION, options, files
 from .recovery import RECOVER, tree
-from .targets import ACTOR, POLICY, SCOPE, model, plan
+from .targets import ACTOR, TIME, POLICY, SCOPE, model, plan
 
 PHASES = ('building', 'staging', 'publishing', 'receipts', 'cleanup')
 CRASH_EXIT = 23
@@ -49,13 +51,20 @@ class WriterBoundaryProbe:
         self.counts = {}
 
     def path(self, name, directory=None):
+        if not isinstance(name, int) and re.fullmatch(r'/proc/self/fd/[0-9]+', os.fsdecode(name)):
+            name = int(os.fsdecode(name).rsplit('/', 1)[-1])
         if isinstance(name, int):
             value = Path(os.readlink('/proc/self/fd/' + str(name)))
         else:
             parent = Path.cwd() if directory is None else Path(
                 os.readlink('/proc/self/fd/' + str(directory)))
             value = parent / os.fsdecode(name)
-        return value.relative_to(self.root).as_posix()
+        relative = value.relative_to(self.root).as_posix()
+        # Recovery uses real anonymous inodes and fresh audit identities. Keep
+        # their path roles stable across independent processes, not their IDs.
+        relative = re.sub(r'#[0-9]+ \(deleted\)$', '<anonymous>', relative)
+        relative = re.sub(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', '<uuid>', relative)
+        return re.sub(r'(?<![0-9a-f])[0-9a-f]{64}(?![0-9a-f])', '<sha256>', relative)
 
     def boundary(self, operation, paths):
         index = self.counts.get(self.phase, 0)
@@ -88,21 +97,27 @@ class WriterBoundaryProbe:
         return self.stack.__exit__(*exception)
 
 
-def fixture(root):
+def fixture(root, variant='single'):
+    assert variant in ('single', 'multi')
     root.mkdir(parents=True, exist_ok=True)
     inode = root.stat()
-    source = model([goal(1), goal(2)],
+    source = model([goal(1), goal(2)] if variant == 'single' else [goal(1), goal(2), goal(3)],
         config=configuration_value(transaction_policy={'auto_recover': True}),
         binding=ProjectReadBinding('sample', str(root), (inode.st_dev, inode.st_ino)))
     for path, raw in source.source_files.items():
         put(root, path, raw)
     put(root, SENTINEL, SENTINEL_BYTES)
-    change = plan(source, [edit(source.artifacts[0], 'Durable target')])
+    operations = [edit(source.artifacts[0], 'Durable target')]
+    if variant == 'multi':
+        operations += [edit(source.artifacts[1], 'Second durable target'),
+            create(goal(0, revision=1, created_at=TIME, updated_at=TIME,
+                        created_by=ACTOR, updated_by=ACTOR))]
+    change = plan(source, operations)
     return source, change, prepare_publication_check(change, source, policy=POLICY)
 
 
-def writer(root, phase='', ordinal='-1'):
-    source, change, check = fixture(root)
+def writer(root, phase='', ordinal='-1', variant='single'):
+    source, change, check = fixture(root, variant)
     before = {**source.source_files, SENTINEL: SENTINEL_BYTES}
     after = {**before, **{d.path: d.content for d in check.request.documents}}
     print(json.dumps({'pid': os.getpid(),
@@ -138,14 +153,26 @@ def journal_at(root):
     if not path.exists():
         path = root / completion_marker_path(TRANSACTION)
     if not path.exists():
-        return None
+        path = path.with_name('rolled_back.json')
+    if not path.exists():
+        path = root / transaction_receipt_path(TRANSACTION)
+        if not path.exists():
+            return None
+        value = json.loads(path.read_bytes())
+        assert value['action'] == 'discard'
+        from specroad.model.canonical import canonical_json_bytes
+        return DiscardedJournal(canonical_json_bytes(value['journal']))
     raw = path.read_bytes()
+    value = json.loads(raw)
+    if value['state'] == 'rolled_back' and 'discard' in value:
+        return DiscardedJournal(raw)
     cls = {'building': BuildingJournal, 'prepared': PreparedJournal,
-           'committing': CommittingJournal, 'committed': CommittedJournal}
-    return cls[json.loads(raw)['state']](raw)
+           'committing': CommittingJournal, 'committed': CommittedJournal,
+           'rolling_back': RollingBackJournal, 'rolled_back': RolledBackJournal}
+    return cls[value['state']](raw)
 
 
-def recover(root):
+def recover_once(root):
     """Only persisted bytes enter this interpreter; no original plan/check."""
     journal = journal_at(root)
     if journal is None:
@@ -159,15 +186,20 @@ def recover(root):
         outcome = 'blocked_before_journal'
     else:
         original = journal.data['state']
-        unpublished = original in ('building', 'prepared')
+        unpublished = original in ('building', 'prepared') or type(journal) is DiscardedJournal
         proof = (prepare_discard_recovery(root, TRANSACTION, expected_project_id='sample',
             expected_journal_sha256=journal.sha256) if unpublished else None)
-        lock = LockRecord((root / '.specroad/locks/project.json').read_bytes())
-        with transaction_recovery_lock(root, TRANSACTION, project_id='sample',
-                request_id=journal.data['request_id'],
-                command='recover discard' if unpublished else 'recover run',
+        lock_path = root / '.specroad/locks/project.json'
+        common = dict(project_id='sample', request_id=journal.data['request_id'],
+                      command='recover discard' if unpublished else 'recover run')
+        if lock_path.exists():
+            lock = LockRecord(lock_path.read_bytes())
+            context = transaction_recovery_lock(root, TRANSACTION, **common,
                 expected_lock_sha256=lock.sha256, expected_journal_sha256=journal.sha256,
-                authority=RECOVER, actor=ACTOR, reason='Native writer boundary test', force=True) as held:
+                authority=RECOVER, actor=ACTOR, reason='Native writer boundary test', force=True)
+        else:
+            context = project_lock(root, kind='recovery', transaction_id=TRANSACTION, **common)
+        with context as held:
             if unpublished:
                 result = discard_unpublished_transaction(proof, TRANSACTION, held_lock=held,
                     authority=RECOVER, actor=ACTOR, reason='Native writer boundary test',
@@ -178,8 +210,9 @@ def recover(root):
                 from specroad.changes._recovery_integrity import inspect_critical_inputs
                 integrity = inspect_critical_inputs(held._files, journal)
                 assert not integrity['blockers'], integrity['blockers']
-                complete = original == 'committed' or integrity['complete_target_verified']
-                if original != 'committed':
+                complete = original == 'committed' or (original == 'committing'
+                    and integrity['complete_target_verified'])
+                if original not in ('committed', 'rolled_back') or (root / journal.path).exists():
                     action = complete_published_transaction if complete else rollback_interrupted_transaction
                     result = action(TRANSACTION, held_lock=held, authority=RECOVER,
                         expected_journal_sha256=journal.sha256).data
@@ -194,9 +227,18 @@ def recover(root):
         assert gate['exit_code'] == 0 and not gate['recovery_required'], gate
     # Independently reconstruct the actual normative model after recovery.
     current = current_model(root)
-    print(json.dumps({'pid': os.getpid(), 'outcome': outcome,
+    return {'pid': os.getpid(), 'outcome': outcome,
         'files': {p: b.hex() for p, b in files(root).items()},
-        'model_root': current.manifest(current.artifacts, SCOPE).sha256}), flush=True)
+        'model_root': current.manifest(current.artifacts, SCOPE).sha256}
+
+
+def recover(root, phase='', ordinal='-1'):
+    with WriterBoundaryProbe(root, phase, int(ordinal)) as probe:
+        probe.phase = 'recovery'
+        result = recover_once(root)
+    assert not phase, 'Selected recovery boundary was not reached'
+    result['events'] = probe.events
+    print(json.dumps(result), flush=True)
 
 
 def child(root, action, *arguments, exit_code=0):

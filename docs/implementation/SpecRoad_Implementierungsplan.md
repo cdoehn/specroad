@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 244
-last_completed_plan_commit: 5.v.W
-next_plan_commit: 5.v.R
-last_completed_numbered_bundle: 95
+implementation_plan_commits_completed: 245
+last_completed_plan_commit: 5.v.R
+next_plan_commit: 5.v.C
+last_completed_numbered_bundle: 96
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4875,12 +4875,33 @@ bestätigen Position 244/885. Danach folgt 5.v.R.
 
 #### 5.v.R – Make it Right
 
-- [ ] **5.v.R** · Position **245/885** · Voraussetzung: `5.v.W`.
+- [x] **5.v.R** · Position **245/885** · Voraussetzung: `5.v.W`.
 **Exakte Commit-Message:** `5.v.R feat(changes): Fault-Injection über jede dauerhafte Grenze vervollständigen`
 
 **Vervollständigung:** Mehrdateiwrites, Receiptverlust und wiederholte Recoveryabbrüche in dieselbe Matrix aufnehmen.
 
 **Verhaltensabnahme:** Kein Fall hinterlässt einen als gültig akzeptierten Mischzustand oder verlorene Nutzerdatei. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Stand / Bundle 096:** Das Result
+`specroad-apply_Result_143556_1008_48f0cb.zip` bestätigt W mit Commit
+`922b610692c17d05f798d01993f20cbf86e66815`, 6.029 erfolgreichen parallelen
+Apply-Tests und sauberem Arbeitsbaum. R erweitert dieselbe native Matrix auf
+zwei Änderungen und eine Neuanlage, verlorene Receipts und wiederholte
+Recoveryabbrüche. Jede beobachtete Writer-/Recoverygrenze wird in einem
+frischen Prozess unterbrochen; nach einem weiteren Recoveryabbruch muss ein
+neuer Prozess den vollständigen gebundenen Zustand herstellen.
+
+Mischzustände bleiben für normale Befehle gesperrt. Entfernte Neuanlagen und
+bekannte Writer-Nachfolger bleiben als Nachweise im Recoveryarchiv. Der
+ursprüngliche Vorwärtscursor von `journal.next` wird auch während Rollback
+über den gespeicherten Ausgangshash unabhängig rekonstruiert und erneut
+geprüft. Fremde oder später geänderte Bindungen werden vor weiteren
+Recoveryeffekten abgewiesen. Fehlende Receipts vor committed werden bytegleich
+ergänzt; beschädigte bestätigte Receipts bleiben ein gesperrter Integritätsfall.
+Die W-Oracles gelten weiter. Testhooks bleiben außerhalb des Produktbaums;
+reale Prozessabbrüche ersetzen keinen Stromausfall- oder Plattformnachweis.
+Erst nach vollständigen parallelen Dev-/Apply-Tests und Commit gilt Position
+245/885; danach folgt 5.v.C.
 
 #### 5.v.C – Make it Clean
 
@@ -13461,11 +13482,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `5.v.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `5.v.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem W-Result bleiben 641 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem R-Result bleiben 640 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 

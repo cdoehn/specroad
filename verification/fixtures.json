@@ -306,7 +306,7 @@
     },
     "SR-FIX-WRITER-BOUNDARIES-v1": {
       "provider": "tests/support/writer_boundaries.py:fixture",
-      "kind": "owned native single-artifact writer, real syscall interruption without finalizers, fresh-process recovery and independent complete byte/model-root oracles; test authority only"
+      "kind": "owned native single/multi-artifact writers, real syscall interruption without finalizers, receipt loss and repeated fresh-process recovery; independent complete byte/model-root oracles and explicit test authority only"
     }
   }
 }

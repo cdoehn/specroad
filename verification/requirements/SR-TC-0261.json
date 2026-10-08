@@ -16,12 +16,15 @@
   ],
   "steps": [
     "Observe every successful native filesystem boundary in an uninterrupted single-artifact writer, then terminate a fresh writer after each boundary without finalizers and recover solely from persisted bytes.",
-    "Retain the independently bound initial/final journal.next derivative during recovery and prove that foreign content, another cursor, unsafe links, size changes and authority-time mutation cannot be adopted."
+    "Retain the independently bound initial/final journal.next derivative during recovery and prove that foreign content, another cursor, unsafe links, size changes and authority-time mutation cannot be adopted.",
+    "Run the same every-boundary writer matrix for two updates plus one creation; refuse intermediate mixed states and retain removed created bytes as recovery evidence.",
+    "Reconstruct missing pre-commit receipts exactly; preserve damaged post-commit receipt evidence while blocking new writes.",
+    "Interrupt each observed discard, rollback and full-target recovery boundary, then interrupt the following recovery again and require a fresh consumer to reach the exact bound base/target and clear the gate."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Referenztests MÜSSEN einen kontrollierten Prozessabbruch nach jeder dauerhaften Journal- und Dateisystemgrenze injizieren und nach Recovery jeweils exakt die Basis- oder die vollständige Zielmodellwurzel nachweisen.",
-    "scope": "Exact complete basis or target bytes and independently rebuilt model root after every observed journal/staging/publication/receipt/cleanup boundary. Recoverable journals must clear the transaction gate. Pre-journal namespace cuts must retain the exact basis and all evidence while remaining blocked; they are not successful recovery. No power-loss or platform-matrix claim."
+    "scope": "Exact complete basis or target bytes and independently rebuilt model root after every observed journal/staging/publication/receipt/cleanup boundary. Recoverable journals must clear the transaction gate. Pre-journal namespace cuts must retain the exact basis and all evidence while remaining blocked; they are not successful recovery. No power-loss or platform-matrix claim. R adds multi-file publication, incomplete receipt acknowledgement, ownership-transfer/recovery boundaries and repeated real process exits. Pending writer acknowledgements remain bound to the original forward cursor during rollback; no mixed model or user-data loss is accepted."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -43,6 +46,24 @@
     "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[publishing]",
     "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[receipts]",
     "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[staging]",
+    "tests/test_writer_boundaries_right.py::test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence[foreign-request]",
+    "tests/test_writer_boundaries_right.py::test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence[foreign-transaction]",
+    "tests/test_writer_boundaries_right.py::test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence[missing-request]",
+    "tests/test_writer_boundaries_right.py::test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence[missing-transaction]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[complete]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[discard]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[rollback]",
+    "tests/test_writer_boundaries_right.py::test_missing_receipts_before_committed_marker_are_reconstructed_exactly[both]",
+    "tests/test_writer_boundaries_right.py::test_missing_receipts_before_committed_marker_are_reconstructed_exactly[request]",
+    "tests/test_writer_boundaries_right.py::test_missing_receipts_before_committed_marker_are_reconstructed_exactly[transaction]",
+    "tests/test_writer_boundaries_right.py::test_multi_file_writer_boundaries_never_accept_a_mixed_model[building]",
+    "tests/test_writer_boundaries_right.py::test_multi_file_writer_boundaries_never_accept_a_mixed_model[cleanup]",
+    "tests/test_writer_boundaries_right.py::test_multi_file_writer_boundaries_never_accept_a_mixed_model[publishing]",
+    "tests/test_writer_boundaries_right.py::test_multi_file_writer_boundaries_never_accept_a_mixed_model[receipts]",
+    "tests/test_writer_boundaries_right.py::test_multi_file_writer_boundaries_never_accept_a_mixed_model[staging]",
+    "tests/test_writer_boundaries_right.py::test_partial_writer_successor_cannot_be_adopted_after_its_binding_changes[authority_prefix]",
+    "tests/test_writer_boundaries_right.py::test_partial_writer_successor_cannot_be_adopted_after_its_binding_changes[foreign]",
+    "tests/test_writer_boundaries_right.py::test_partial_writer_successor_cannot_be_adopted_after_its_binding_changes[rollback_binding]",
     "tests/test_writer_pending_recovery.py::test_exact_pending_writer_record_is_preserved_in_recovery_archive[committing]",
     "tests/test_writer_pending_recovery.py::test_exact_pending_writer_record_is_preserved_in_recovery_archive[prepared]",
     "tests/test_writer_pending_recovery.py::test_pending_writer_record_is_rechecked_after_recovery_authorization",
@@ -58,6 +79,6 @@
     "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[symlink-prepared]"
   ],
   "open_items": [
-    "5.v.R: extend the same native matrix to multiple changed files, receipt loss and repeated recovery interruptions. Later 20.e covers the complete transaction/customer matrix; unmeasured filesystems, real power loss and future restore clients are not approved by this local process-interruption proof."
+    "5.v.C: isolate test injection/observation from scenario orchestration while retaining every behavior oracle. Later 20.e covers the complete transaction/customer matrix; unmeasured filesystems, real power loss and future restore clients are not approved by this local process-interruption proof."
   ]
 }

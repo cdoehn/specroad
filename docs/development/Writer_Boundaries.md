@@ -1,4 +1,4 @@
-# Native Writer-Grenzen – 5.v.W
+# Native Writer- und Recovery-Grenzen – 5.v.W/R
 
 `tests/support/writer_boundaries.py` führt den vorhandenen nativen Writer in
 einem eigenen Interpreter aus. Ein Testadapter beobachtet echte erfolgreiche
@@ -33,12 +33,38 @@ keinen Fortschrittszähler: Der tatsächliche Modellstand entscheidet weiterhin
 seinen Originalbytes im Recoveryarchiv. Unpassende Bytes, ein anderer Cursor,
 Überlänge, Symlinks, Hardlinks oder Änderungen während der Autorisierung
 verhindern den Abschluss. Dieser W-Stand bindet den initialen Nachfolger und
-die letzte Ein-Datei-Bestätigung; Zwischenbestätigungen bei Mehrdateiwrites
-gehören zur R-Erweiterung.
+die letzte Ein-Datei-Bestätigung. R ergänzt Zwischenbestätigungen bei
+Mehrdateiwrites: Auch während des Rückwärtscursors bleibt der ursprüngliche
+Vorwärtscursor über den gespeicherten Ausgangshash gebunden. Recovery prüft
+das unverändert erhaltene `journal.next` vor und nach Autorisierung sowie vor
+jeder Veröffentlichung und erhält es im Abschlussarchiv.
+
+## R-Matrix
+
+Die Mehrdateivariante ändert zwei vorhandene Artefakte, erzeugt ein weiteres
+und erhält einen unveränderten Datensatz sowie die Nutzerdatei. Wiederum wird
+jede tatsächlich beobachtete Writer-Grenze unterbrochen. Während einer
+Teilveröffentlichung muss der schreibfreie Transaktionspreflight sperren;
+nach Recovery muss das Byteinventar exakt Basis oder vollständiges Ziel sein.
+Ein zurückgenommenes neues Artefakt bleibt als `.removed` im Recoveryarchiv.
+
+Bei einem vollständigen Ziel vor dem `committed`-Marker werden fehlende
+Transaktions-/Requestreceipts aus dem gebundenen Journal bytegleich ergänzt.
+Ein beschädigter bestätigter Receiptbestand nach diesem Marker bleibt
+unter Erhalt von Ziel und Nachweisen gesperrt und ist kein stiller Reparaturfall.
+
+Die Recoverymatrix beginnt jeweils mit echtem gestopptem Writer im
+unveröffentlichten, teilweise veröffentlichten oder vollständigen Zielzustand.
+Ein Kontrolllauf erfasst alle nativen Grenzen einschließlich Ownership-Transfer,
+anonymer Dateistaging-Schritte, Receipts und Archivierung. Für jede Grenze
+folgt ein neuer Abbruch, danach ein weiterer Abbruch der folgenden Recovery.
+Ein letzter frischer Prozess muss den gebundenen Zustand abschließen und das
+Transaktionsgate freigeben. Dynamische Auditkennungen und anonyme Inoden werden
+ausschließlich in den Testbeobachtungen als Pfadrollen abgebildet; sämtliche
+echten Dateisystemoperationen und Produktbindungen bleiben aktiv.
 
 Die Nachweise betreffen reale Prozessabbrüche auf dem aktuell geprüften
 Linux-Dateisystem. Sie simulieren keinen Stromverlust und belegen keine
-Dateisystem- oder Plattformmatrix. Mehrdateiwrites, verlorene Receipts und
-wiederholt unterbrochene Recovery gehören zum anschließenden R-Zustand.
+Dateisystem- oder Plattformmatrix.
 Die übergreifende Kunden-/Restore-Matrix bleibt den weiteren Planpunkten
 zugeordnet; `SR-REQ-0261` erhält einen partiellen Verhaltensnachweis.
