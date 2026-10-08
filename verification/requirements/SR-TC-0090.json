@@ -46,8 +46,8 @@
     "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_profile_rule_origin_and_pointer_are_preserved"
   ],
   "open_items": [
-    "All future validators/commands must use this diagnostic boundary.",
-    "Optional strict lint execution, full source inventory and complete target runtime matrix remain separately evidenced.",
+    "Future validator and public command adapters must preserve this existing diagnostic contract; current model and read-only project integrations do not establish all command consumers.",
+    "Full command-level lint dispatch and the complete supported runtime/target filesystem matrix require their own actual evidence; bound library and observed project coverage remain limited to their collected tests.",
     "Human presentation/documentation is not an automated oracle (TD-001)."
   ]
 }

@@ -7,7 +7,9 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-MODEL-VALIDATION-v1"
+    "SR-FIX-MODEL-VALIDATION-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1",
+    "SR-FIX-REFERENCE-FINDINGS-v1"
   ],
   "preconditions": [
     "Explicit loaded bytes, exact effective profile and trusted semantic validators; no hidden resource discovery."
@@ -15,12 +17,13 @@
   "steps": [
     "Run the shared pipeline and compare structure, dependency coverage, unavailability and actual gate outcomes.",
     "Supply actual configuration, bound offline registry and shipped software profiles; execute production language/SRX/formal-approval checks through model, project and target adapters without successful substitute gates.",
-    "Recompose actual profile bytes against exact configuration/CLI selection; reject changed resource bindings and observe all applicable language/SRX/formal findings under expanded selection and fail thresholds."
+    "Recompose actual profile bytes against exact configuration/CLI selection; reject changed resource bindings and observe all applicable language/SRX/formal findings under expanded selection and fail thresholds.",
+    "Collect independent missing, matrix, self, field and review reference errors only after parsing, typed fields and source/relation/external identity barriers; compare direct and read-only project findings under full and partial selections."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Validierung MUSS mindestens JSON-Parsing, JSON Schema, Typen, IDs, Referenzen, Relation Rules, Zyklen, Lifecycle, Profile, Baseline-Integrität und Evidence-Aktualität abdecken.",
-    "scope": "Loaded-model structure, dependency-expanded semantic dispatch and actual bound language policy, profile SRX and formal Requirement approval observations. Project and target adapters reuse the kernels; absent review/evidence/history services remain unavailable. No permission or whole-product release claim. Actual adapter coverage includes profile applicability, concurrent findings, conservative full-model dependencies, SRX structure limits, bound resource reconstruction, and project/target/dry-run threshold parity."
+    "scope": "Loaded-model structure, dependency-expanded semantic dispatch and actual bound language policy, profile SRX and formal Requirement approval observations. Project and target adapters reuse the kernels; absent review/evidence/history services remain unavailable. No permission or whole-product release claim. Actual adapter coverage includes profile applicability, concurrent findings, conservative full-model dependencies, SRX structure limits, bound resource reconstruction, and project/target/dry-run threshold parity. Safe independent reference findings are collected without constructing an invalid resolved graph. Structural failures block downstream semantics; loading all required valid targets restores successful graph validation."
   },
   "expected_diagnostics": [
     "validation_required_gate_unavailable",
@@ -28,7 +31,13 @@
     "PROFILE_LINT",
     "SRV110",
     "SRV033",
-    "SRV032"
+    "SRV032",
+    "SRV020",
+    "SRV021",
+    "SRV010",
+    "SRV013",
+    "SRV147",
+    "MODEL_VALIDATION"
   ],
   "expected_exit_codes": [],
   "json_pointers": [
@@ -114,10 +123,55 @@
     "test_production_validation_right.TargetProductionValidationRightTests.test_warning_strict_parity_across_project_target_and_dry_run",
     "test_production_validation_right.TargetProductionValidationRightTests.test_target_keeps_simultaneous_actual_profile_and_language_findings",
     "test_production_validation_right.TargetProductionValidationRightTests.test_changed_target_profile_source_cannot_reuse_manifest",
-    "test_production_validation_right.TargetProductionValidationRightTests.test_target_rebuilds_registry_instead_of_using_derived_metadata"
+    "test_production_validation_right.TargetProductionValidationRightTests.test_target_rebuilds_registry_instead_of_using_derived_metadata",
+    "tests/test_validation_missing_references.py::test_ambiguous_source_index_retains_its_strict_boundary[duplicate]",
+    "tests/test_validation_missing_references.py::test_ambiguous_source_index_retains_its_strict_boundary[prefix]",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[interface_fields]",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[two_edges]",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[two_sources]",
+    "tests/test_validation_missing_references.py::test_loading_all_real_targets_restores_complete_valid_graph",
+    "tests/test_validation_missing_references.py::test_unreadable_or_invalid_target_inventory_cannot_prove_absence[json]",
+    "tests/test_validation_missing_references.py::test_unreadable_or_invalid_target_inventory_cannot_prove_absence[schema]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[artifact]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[external]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[prefix]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[relation]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-unrelated]",
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[json]",
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[schema]",
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[typed_field]"
   ],
   "open_items": [
-    "CLI validate and filesystem inventory adapter are not implemented by 4.o.",
+    "The bound model and read-only project inventory adapters are implemented library scopes; public validate command integration and remaining command consumers still need their assigned integration evidence.",
     "Baseline integrity, evidence freshness, historical lifecycle, human review and document/configuration services still require their real applicable gates; absence is incomplete, not passed.",
     "The loaded model and trusted gate inputs are not authenticated or an atomic project snapshot.",
     "Explicit project profile paths permit exact observed-file checks; supplied profile values alone do not assert disk freshness. No atomic snapshot or external reviewer authentication is introduced."

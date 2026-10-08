@@ -25,7 +25,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Recovery aus `committing` oder `rolling_back` MUSS exakt die vollständige Basis- oder Zielwurzel herstellen.",
-    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the existing checked journal contract. Explicit Recovery API and observation only; no independent profile reconstruction, automatic recovery, cleanup or complete requirement acceptance is claimed. Initial committing-to-rolling_back successor publication exposes only complete byte-verified content. Native write/process interruptions retain the original journal and images; an explicit retry reaches the independent basis, and another retry performs no normative replacement. Foreign or unbound helpers remain blockers. AUDIT-REC-04.R extends complete-before-visible publication to rollback copies, cursor/terminal journals, completion receipts/marker and terminal action/rollback receipts. Repeated native errors and real process stops remain explicitly resumable; foreign or altered bindings block publication, and complete old evidence retains its bytes and authority. Initial allocation/write failures expose no short canonical helper; mutation diagnostics still report possible operational changes. This is not the later full fault-injection or restore acceptance."
+    "scope": "Complete supported resource membership and exact byte equality bind the independently prepared basis/target roots through the existing checked journal contract. Explicit Recovery API and bound observation, including preserving terminal cleanup after the tested completion paths; no general independent profile reconstruction, automatic preflight or complete requirement acceptance is claimed. Initial committing-to-rolling_back successor publication exposes only complete byte-verified content. Native write/process interruptions retain the original journal and images; an explicit retry reaches the independent basis, and another retry performs no normative replacement. Foreign or unbound helpers remain blockers. AUDIT-REC-04.R extends complete-before-visible publication to rollback copies, cursor/terminal journals, completion receipts/marker and terminal action/rollback receipts. Repeated native errors and real process stops remain explicitly resumable; foreign or altered bindings block publication, and complete old evidence retains its bytes and authority. Initial allocation/write failures expose no short canonical helper; mutation diagnostics still report possible operational changes. This is not the later full fault-injection or restore acceptance."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -290,6 +290,6 @@
     "tests/test_recovery_auxiliary_writes.py::test_existing_completion_marker_is_synced_before_journal_replacement"
   ],
   "open_items": [
-    "Automatic preflight, the comprehensive fault-injection matrix, discard restart reconstruction and full-source restore remain in their separate plan positions."
+    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations."
   ]
 }

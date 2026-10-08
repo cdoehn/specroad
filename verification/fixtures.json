@@ -55,7 +55,9 @@
     "SR-FIX-TRANSACTION-RECEIPTS-v1",
     "SR-FIX-TRANSACTION-RECOVERY-v1",
     "SR-FIX-DISCARD-RESTART-v1",
-    "SR-FIX-CORE-LINT-v1"
+    "SR-FIX-CORE-LINT-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1",
+    "SR-FIX-REFERENCE-FINDINGS-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -131,8 +133,8 @@
       "kind": "Synthetic bound control dependencies and passive mentions; no live project completeness, proposal authorization or actual writes."
     },
     "SR-FIX-SCOPE-COMPARISON-v1": {
-      "provider": "tests/test_scope_comparison.py:snapshot",
-      "kind": "Owned value comparisons and explicitly supplied dependency observations; no real world semantic interpretation, source authenticity or writes."
+      "provider": "tests/test_scope_comparison.py",
+      "kind": "Owned semantic scope fingerprints through resolved/fingerprint helpers and value comparisons through snapshot, with explicit bound dependency observations; no live inventory authenticity, atomic snapshot, permission or writes."
     },
     "SR-FIX-RELATION-OBLIGATIONS-v1": {
       "provider": "tests/test_relation_obligations.py:satisfied_fixture",
@@ -277,6 +279,14 @@
     "SR-FIX-CORE-LINT-v1": {
       "provider": "tests/support/core_lint.py:requirement_graph",
       "kind": "Owned approved requirement, origin and verification sources with deliberate omissions; actual public lint and shipped profile minima, project write traps; no human approval or evidence authenticity."
+    },
+    "SR-FIX-PRODUCTION-VALIDATION-v1": {
+      "provider": "tests/support/production_validation.py:inputs",
+      "kind": "Owned artifact/configuration bytes, actual shipped Core/software profiles and explicit language-registry resources for real language, profile SRX and formal-approval adapters. Companion helpers create observed projects and target models; no authenticated review/evidence service, atomic snapshot or write authority."
+    },
+    "SR-FIX-REFERENCE-FINDINGS-v1": {
+      "provider": "tests/test_validation_reference_sets.py:reference_case",
+      "kind": "Owned source documents with independent expected missing-target, relation-matrix, field and review findings; the companion missing-reference cases use the same model helpers. Real model/read-only API comparisons preserve selection, deterministic findings and strict identity barriers; no invalid resolved graph or approval/write authority."
     }
   }
 }

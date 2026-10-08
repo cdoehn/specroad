@@ -107,8 +107,8 @@
     "tests/test_transaction_receipts_right.py::test_unknown_result_fields_and_unsafe_output_paths_fail_closed"
   ],
   "open_items": [
-    "All normative command audit adapters and rolled-back receipts remain assigned to later integrations.",
-    "Full Request-ID retry dispatch follows 5.o; native full ChangeBackend, authentication and crash recovery are not claimed.",
+    "Public normative command audit adapters must still cover every executed or refused command and continuation outcome; these collected receipt tests establish the complete-target finalization library scope only.",
+    "Immutable recovery evidence and confirmed native Request-ID replay already have separate partial evidence in SR-TC-0259/0462 and SR-TC-0383/0384/0385. Full command dispatch, authentic authorization and end-to-end ChangeBackend integration remain open.",
     "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]
 }

@@ -7,7 +7,9 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-READ-ONLY-PROJECT-v1"
+    "SR-FIX-READ-ONLY-PROJECT-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1",
+    "SR-FIX-REFERENCE-FINDINGS-v1"
   ],
   "preconditions": [
     "Owned existing project root; explicit profile or literal policy. Operational data is never changed."
@@ -16,14 +18,19 @@
     "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
     "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state.",
     "Execute actual bound language, profile-SRX and formal-approval observations in the project reader with a write-attempt trap, including valid and invalid inputs.",
-    "Bind explicit selected profile paths, recheck profiles and registry around real semantic checks, and reject concurrent source/configuration changes, missing/corrupt resources and symlinks without repair."
+    "Bind explicit selected profile paths, recheck profiles and registry around real semantic checks, and reject concurrent source/configuration changes, missing/corrupt resources and symlinks without repair.",
+    "Compare complete structured reference findings and counts with direct model validation, including unrelated selections and invalid inventory, while trapping writes and preserving the full owned project inventory."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
-    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write."
+    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write. Complete safe reference sets and invalid-inventory barriers are observed through the real read-only project adapter with direct-model parity and unchanged project bytes."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV020",
+    "SRV021",
+    "MODEL_VALIDATION"
+  ],
   "expected_exit_codes": [
     0,
     1,
@@ -123,7 +130,43 @@
     "test_production_validation_right.ProjectProductionValidationRightTests.test_missing_or_damaged_configured_registry_is_input_error_without_fallback",
     "test_production_validation_right.ProjectProductionValidationRightTests.test_missing_profile_file_is_not_recreated",
     "test_production_validation_right.ProjectProductionValidationRightTests.test_linked_profile_resource_is_refused_without_following_or_repair",
-    "test_production_validation_right.ProjectProductionValidationRightTests.test_linked_registry_resource_is_a_security_refusal"
+    "test_production_validation_right.ProjectProductionValidationRightTests.test_linked_registry_resource_is_a_security_refusal",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[interface_fields]",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[two_edges]",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[two_sources]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-unrelated]",
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[json]",
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[schema]",
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[typed_field]"
   ],
   "open_items": [
     "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",

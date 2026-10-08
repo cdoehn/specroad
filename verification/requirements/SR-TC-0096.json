@@ -111,7 +111,7 @@
     "test_core_lint_right.ProjectCoreLintRightTests.test_unavailable_or_unsafe_source_is_never_repaired"
   ],
   "open_items": [
-    "AUDIT-VALIDATION-02.W/R/C connects due production language/SRX/approval observations to model validation; AUDIT-VALIDATION-03.W/R/C collects independent reference errors behind safe structural prerequisites.",
+    "Production language/SRX/formal-approval validation is evidenced separately by SR-TC-0086 and SR-TC-0100; reference aggregation is evidenced by the diagnostic manifests. Those adapters do not establish human review, complete evidence freshness or full command-level lint integration.",
     "Full CLI integration and the complete target runtime matrix remain separate evidence scopes; no full schema, review or human approval result is inferred from lint."
   ]
 }

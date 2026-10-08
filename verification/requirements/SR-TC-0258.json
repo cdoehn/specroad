@@ -207,6 +207,6 @@
     "tests/test_recovery_auxiliary_writes.py::test_existing_completion_marker_is_synced_before_journal_replacement"
   ],
   "open_items": [
-    "Automatic preflight, the comprehensive fault-injection matrix, discard restart reconstruction and full-source restore remain in their separate plan positions."
+    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations."
   ]
 }

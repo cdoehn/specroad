@@ -10,7 +10,8 @@
     "SR-FIX-TRANSACTION-RECEIPTS-v1",
     "SR-FIX-TRANSACTION-COMMITTING-v1",
     "SR-FIX-TRANSACTION-RECOVERY-v1",
-    "SR-FIX-PROJECT-LOCK-v1"
+    "SR-FIX-PROJECT-LOCK-v1",
+    "SR-FIX-DISCARD-RESTART-v1"
   ],
   "preconditions": [
     "Owned local Linux project; exact independent publication request and native writer lock.",
@@ -29,12 +30,13 @@
     "Repeat an interrupted terminal discard using the independent preflight and original event binding; preserve short or conflicting receipts.",
     "Abruptly stop writer and recovery processes; explicitly acquire audited transaction recovery access, then verify completion and retained foreign blockers.",
     "Interrupt the remaining nine bound recovery derivative writes, repeat native interruptions and abruptly stop processes; resume with audited native lock takeover, retain original images and prove independent basis/full-target bytes without a second normative replacement.",
-    "Reject foreign empty/short/conflicting or unsafe files and concurrent prefix collisions; recheck journal, lock, live normative bytes and prior evidence before publication. Reuse complete records without changing their authority attribution; finish existing preserving cleanup."
+    "Reject foreign empty/short/conflicting or unsafe files and concurrent prefix collisions; recheck journal, lock, live normative bytes and prior evidence before publication. Reuse complete records without changing their authority attribution; finish existing preserving cleanup.",
+    "In fresh writer/recovery processes, reconstruct explicit building/prepared discard inputs and retain the original immutable audit and receipt through selected interrupted completion boundaries; compare independent basis bytes, repeated results and next-writer access."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine erfolgreich abgeschlossene oder zurückgerollte Transaktion MUSS einen unveränderbaren Abschlussbeleg unter `.specroad/transactions/receipts/` hinterlassen und danach das Entfernen temporärer Payloads erlauben.",
-    "scope": "Native committed finalization/readback, immutable rolled-back/discarded receipts and explicit recovery-lock cleanup after writer release or audited orphan takeover. Lost terminal evidence, rename and synchronization responses preserve exact bytes; a bound pending marker keeps interrupted archival active. No whole CLI, restore or complete failure/restart coverage is claimed. AUDIT-REC-04.R extends complete-before-visible publication to rollback copies, cursor/terminal journals, completion receipts/marker and terminal action/rollback receipts. Repeated native errors and real process stops remain explicitly resumable; foreign or altered bindings block publication, and complete old evidence retains its bytes and authority. Initial allocation/write failures expose no short canonical helper; mutation diagnostics still report possible operational changes. This is not the later full fault-injection or restore acceptance."
+    "scope": "Native committed finalization/readback, immutable rolled-back/discarded receipts and explicit recovery-lock cleanup after writer release or audited orphan takeover. Lost terminal evidence, rename and synchronization responses preserve exact bytes; a bound pending marker keeps interrupted archival active. No whole CLI, restore or complete failure/restart coverage is claimed. AUDIT-REC-04.R extends complete-before-visible publication to rollback copies, cursor/terminal journals, completion receipts/marker and terminal action/rollback receipts. Repeated native errors and real process stops remain explicitly resumable; foreign or altered bindings block publication, and complete old evidence retains its bytes and authority. Initial allocation/write failures expose no short canonical helper; mutation diagnostics still report possible operational changes. This is not the later full fault-injection or restore acceptance. Selected persisted-input discard restart cases retain the original audit/receipt and complete basis without normative writes; interrupted completion resumes in a fresh process and preserves conflicting evidence."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -318,11 +320,20 @@
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-completion_transaction]",
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-rollback_audit]",
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-rollback_receipt]",
-    "tests/test_recovery_auxiliary_writes.py::test_existing_completion_marker_is_synced_before_journal_replacement"
+    "tests/test_recovery_auxiliary_writes.py::test_existing_completion_marker_is_synced_before_journal_replacement",
+    "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[update-released]",
+    "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[resources-abrupt]",
+    "tests/test_discard_restart_right.py::test_building_restart_accepts_only_its_bound_preparation_bytes[staging_prefix-abrupt]",
+    "tests/test_discard_restart_right.py::test_fresh_process_resumes_each_discard_completion_boundary[replace-before-staging_prefix-abrupt]",
+    "tests/test_discard_restart_right.py::test_fresh_process_resumes_each_discard_completion_boundary[rename-after-prepared-abrupt]",
+    "tests/test_discard_restart_right.py::test_fresh_process_resumes_each_discard_completion_boundary[completed-prefix-prepared-released]",
+    "tests/test_discard_restart_right.py::test_interrupted_audit_preparation_preserves_prior_evidence[prefix-intent]",
+    "tests/test_discard_restart_right.py::test_conflicting_discard_completion_evidence_is_never_repaired[terminal]",
+    "tests/test_discard_restart_right.py::test_terminal_restart_rechecks_audit_after_authorization"
   ],
   "open_items": [
-    "Automatic preflight, the comprehensive fault-injection matrix, discard restart reconstruction and full-source restore remain in their separate plan positions.",
-    "Discard still requires the independent preflight; restart reconstruction remains AUDIT-REC-05. Full command/authentication/restore integration remains later work.",
+    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations.",
+    "Persisted-input building/prepared discard restart is implemented and has selected process-interruption evidence. Journals without explicit basis selection and building-v1 journals without persisted staging proof remain unsupported for reconstruction; full command/authentication integration and the complete environment matrix remain open.",
     "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]
 }

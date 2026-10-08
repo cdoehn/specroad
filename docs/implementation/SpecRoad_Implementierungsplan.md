@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 85
+last_completed_numbered_bundle: 86
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-EVIDENCE-01.R
+next_audit_step: AUDIT-EVIDENCE-01.C
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -1313,7 +1313,7 @@ bleiben erhalten. Die bestehenden SR-TC-Teilumfänge ändern sich nicht.
 **AUDIT-EVIDENCE-01 / F10; Voraussetzung:** alle obigen Untersuchungsentscheidungen und bestätigten Korrekturen. **Bezug:** insbesondere 3.h–3.j, 4.e/4.g/4.i, 5.n; SR-REQ-0288/0412 sowie SR-TC-0241/0259/0383/0384/0385; SR-VER-0022/0029 und die jeweiligen Receipt-Nachweise.
 
 - [x] **AUDIT-EVIDENCE-01.W:** Überholte `scope`-/`open_items`-Angaben in SR-TC-0288 und SR-TC-0412 mit tatsächlichen Kernen und Tests abgleichen; die fehlende Beschreibung von `SR-FIX-TRANSACTION-RECEIPTS-v1` anhand ihres realen Providers ergänzen. **Abnahme:** Referenzen zeigen auf existierende fachliche Nachweise; nicht ausgeführte beziehungsweise noch unvollständige Abnahmen bleiben erkennbar offen.
-- [ ] **AUDIT-EVIDENCE-01.R:** Alle von den Nacharbeiten betroffenen Requirementmanifeste, Tests und Fixturebezüge konsistent fortschreiben. **Abnahme:** Formale Sammlung und Bindung passen zur echten Testmenge; jeder Behauptung steht ihr tatsächlich geprüfter Teilumfang gegenüber. Keine pauschale Hochstufung von `partial` und keine erfundenen alten W/R/C-Erfolge.
+- [x] **AUDIT-EVIDENCE-01.R:** Alle von den Nacharbeiten betroffenen Requirementmanifeste, Tests und Fixturebezüge konsistent fortschreiben. **Abnahme:** Formale Sammlung und Bindung passen zur echten Testmenge; jeder Behauptung steht ihr tatsächlich geprüfter Teilumfang gegenüber. Keine pauschale Hochstufung von `partial` und keine erfundenen alten W/R/C-Erfolge.
 - [ ] **AUDIT-EVIDENCE-01.C:** Gemeinsame Beschreibungen und Verweise konsolidieren, ohne Nachweisumfang oder Ausnahmen zu ändern. **Abnahme:** Inhaltliche Befundzuordnung und maschinenlesbare Katalogverträge bleiben wie nach R. Keine Tests auf Wortlaut, Markdown oder Dokumentation.
 
 ### AUDIT-EVIDENCE-01.W – aktuelle Kernnachweise und Receipt-Fixture (Bundle 085)
@@ -1354,6 +1354,56 @@ Commit-Message: `docs(verification): align operator and scope evidence`.
 Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster
 Schritt: `AUDIT-EVIDENCE-01.R`; Produktstand 237/885 und Sperre von 5.t.W
 bleiben erhalten.
+
+### AUDIT-EVIDENCE-01.R – konsistente Auditbindungen (Bundle 086)
+
+Basis ist Result `specroad-apply_Result_095456_1008_6973ba.zip`, Commit
+`5ad36d921675f0ecb52ac5bfc10424c7bc3c1943`. Bundle 085 ist durch 5874 erfolgreiche
+parallele Apply-Tests und einen sauberen Abschluss bestätigt. Alle 1467
+Snapshotdateien und vier W-Payloads stimmen mit Commit und Entwicklung überein.
+
+Der Abgleich umfasst die 17 seit der Auditbasis veränderten Requirementmanifeste
+und die zusätzlich betroffenen Diagnose-, Receipt-, SRX-, Scope- und
+Versionsnachweise: SR-TC-0086–0092, 0096, 0098–0100, 0194, 0241, 0257–0259,
+0262, 0288, 0376–0378, 0383–0385, 0392, 0412, 0458–0459, 0462, 0506, 0511
+und 0569. Von diesen 32 Manifesten benötigen 17 Änderungen; die übrigen
+15 behalten ihre zutreffenden Teilumfänge und Verweise.
+
+Die 45 bereits vorhandenen W-/R-Fälle zur Referenzaggregation werden ihren
+tatsächlichen Abnahmen zugeordnet: vollständige sichere Befundmengen,
+Artefakt-/Pfad-/Pointerzuordnung, stabile Codes und Reihenfolge, korrekte
+Zusammenfassungen sowie schreibfreie Projektbeobachtung. Parametrisierte Fälle
+verwenden ihre exakten gesammelten Kennungen. Strukturelle und mehrdeutige
+Identitätsbefunde sperren weiterhin die Folgesemantik; der positive Kontrollfall
+mit allen vorhandenen Zielen belegt den wieder gültigen Graphen. Bestehende
+Fallbackcodes werden nicht nachträglich als neue spezifische Codes ausgegeben.
+
+Neun bestehende Discard-Neustartfälle ergänzen die Receipt- und Auditbindung in
+SR-TC-0259/0462. Sie belegen ausgewählte reale Prozessabbrüche, unveränderte
+Basisbytes, bewahrte Originalnachweise, Wiederholung und normalen Folgezugriff.
+Bereits abgeschlossene Neustartrekonstruktion und Validierungsadapter stehen
+nicht länger als unerledigte Implementierung in den offenen Punkten. Alte
+Journale ohne explizite Basisauswahl und Building-v1 ohne persistierten
+Stagingnachweis bleiben abgegrenzt; bestehende Prepared-v1-Unterstützung wird
+nicht ausgeschlossen. Automatischer Preflight (5.t), vollständige Fault-Injection
+(5.v), Restore (15.j–15.l), öffentliche Befehlsintegration und authentische
+Freigaben bleiben offen.
+
+Zwei zusätzliche Fixturedefinitionen verweisen auf die realen produktiven
+Validierungseingaben und Referenzfehlerfälle. Die Scope-Vergleichsfixture nennt
+das tatsächliche Modul mit seinen getrennten Hash- und Vergleichshelfern.
+Die Receiptdefinition aus W bleibt erhalten. Insgesamt entstehen 243 zusätzliche
+Requirement-Testbindungen zu 54 vorhandenen Tests; keine Testimplementierung
+oder Produktquelle wird geändert. Alle 730 Katalogeinträge werden gegen die
+tatsächlich gesammelten Testidentitäten geprüft. Alle bisherigen
+Requirementstatus und die Spezifikationsbindung bleiben erhalten; vollständige
+Runtime-/Plattformabnahmen werden ausschließlich durch tatsächlich ausgeführte
+Läufe belegt.
+
+Commit-Message: `docs(verification): reconcile audit evidence bindings`.
+Dieser R-Stand benötigt seinen eigenen vollständigen parallelen Dev-/Apply-Lauf;
+erst das erfolgreiche Apply-Result bestätigt den Abschluss. Nächster Schritt:
+`AUDIT-EVIDENCE-01.C`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
 
 ### AUDIT-CLOSE – Abschlussentscheidung vor 5.t
 

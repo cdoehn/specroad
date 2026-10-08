@@ -7,19 +7,21 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-DIAGNOSTICS-v1"
+    "SR-FIX-DIAGNOSTICS-v1",
+    "SR-FIX-REFERENCE-FINDINGS-v1"
   ],
   "preconditions": [
     "Explicit diagnostic data and already loaded, source-bound model reports."
   ],
   "steps": [
     "Construct and validate findings; preserve all observed machine locations and identities.",
-    "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class."
+    "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class.",
+    "Compare independent expected reference findings and their machine locations, codes, order and counts with direct model and read-only project assessments; keep structural identity failures and downstream blocking explicit."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Diagnosen MÜSSEN bei identischen Eingaben in einer stabilen Reihenfolge nach Schwere, Datei, Artefakt-ID, Pfad und Code ausgegeben werden.",
-    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint."
+    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint. Direct and read-only project reference findings retain deterministic machine order under reversed source order, repeated targets and full or partial selections."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -45,11 +47,48 @@
     "test_diagnostics.DiagnosticWorkTests.test_sort_file_artifact_pointer_code_order",
     "test_diagnostics.DiagnosticWorkTests.test_input_permutations_have_identical_machine_results",
     "test_diagnostics_right.DiagnosticRightTests.test_numeric_coordinate_tie_break_is_not_lexical",
-    "test_diagnostics_right.DiagnosticRightTests.test_distinct_unicode_forms_are_not_normalized"
+    "test_diagnostics_right.DiagnosticRightTests.test_distinct_unicode_forms_are_not_normalized",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[interface_fields]",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[two_edges]",
+    "tests/test_validation_missing_references.py::test_every_independent_missing_target_has_its_own_location[two_sources]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_self-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_and_wrong_type-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[missing_review-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_relations_and_fields-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[mixed_same_source-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[relations_and_fields-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_edges-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[same_target_two_sources-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-unrelated]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-project]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-source]",
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-unrelated]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[artifact]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[external]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[prefix]",
+    "tests/test_validation_reference_sets.py::test_identity_conflicts_block_target_lookup_even_after_an_earlier_missing_target[relation]"
   ],
   "open_items": [
-    "All future validators/commands must use this diagnostic boundary.",
-    "Optional strict lint execution, full source inventory and complete target runtime matrix remain separately evidenced.",
+    "Future validator and public command adapters must preserve this existing diagnostic contract; current model and read-only project integrations do not establish all command consumers.",
+    "Full command-level lint dispatch and the complete supported runtime/target filesystem matrix require their own actual evidence; bound library and observed project coverage remain limited to their collected tests.",
     "Human presentation/documentation is not an automated oracle (TD-001)."
   ]
 }
