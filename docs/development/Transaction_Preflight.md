@@ -58,6 +58,15 @@ Transaktion. Der Host muss einen neuen Aufruf mit aktuellen Eingaben beginnen;
 eine frühere Beobachtung ist keine wiederverwendbare Schreibberechtigung.
 Fehler behalten den tatsächlichen Teilabschluss und mögliche Writes sichtbar.
 
+Intern trennt der C-Stand drei Aufgaben: `transaction_preflight` hält die
+öffentliche Aufruf-/Ergebnisgrenze, `_preflight_decision` liest die begrenzten
+Metadaten und bindet die Auswahl in einer internen `RecoveryDecision`,
+`_automatic_recovery` führt ausschließlich die ausgewählte alte Recovery aus.
+Die Entscheidung ist keine Schreibberechtigung. Aktuelle Policy-, Eigentümer-,
+Journal- und Ressourcenprüfungen bleiben im ausführenden Pfad erforderlich.
+Sein tatsächlicher Zwischenfortschritt bleibt auch bei einer späteren Ausnahme
+für dieselbe öffentliche Fehlerantwort erhalten.
+
 Der W-/R-Stand deckt native lokale Linux-Transaktionen und die explizite
 Bibliotheksintegration ab. Tests in getrennten Interpretern verfolgen Recovery
 und danach eine frisch geplante, erneut autorisierte native Veröffentlichung.

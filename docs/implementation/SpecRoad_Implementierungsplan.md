@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 239
-last_completed_plan_commit: 5.t.R
-next_plan_commit: 5.t.C
-last_completed_numbered_bundle: 90
+implementation_plan_commits_completed: 240
+last_completed_plan_commit: 5.t.C
+next_plan_commit: 5.u.W
+last_completed_numbered_bundle: 91
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4690,10 +4690,32 @@ als Nächstes folgt die strukturelle Trennung in 5.t.C.
 
 #### 5.t.C – Make it Clean
 
-- [ ] **5.t.C** · Position **240/885** · Voraussetzung: `5.t.R`.
+- [x] **5.t.C** · Position **240/885** · Voraussetzung: `5.t.R`.
 **Exakte Commit-Message:** `5.t.C refactor(changes): Schreibfreie und automatische Preflight-Recovery bereinigen`
 
 **Bereinigung:** Preflightentscheidung und Recoveryausführung mit klarer Rückgabestruktur entkoppeln.
+
+**C-Stand / Bundle 091:** Das Result
+`specroad-apply_Result_121839_1008_6154f2.zip` bestätigt R mit Commit
+`528228f8a03193b121684ba4537d943de6eb88bf`, 5948 parallelen Apply-Tests in
+414,31 Sekunden und sauberem Arbeitsbaum. Alle 1476 Snapshotdateien und die
+elf R-Payloads stimmen mit Result, Entwicklungsstand und Apply-Commit überein.
+
+Die öffentliche `transaction_preflight`-Grenze behält Argumentprüfung,
+schreibfreie Aufrufentscheidung, unverändertes Resultatobjekt und Fehlerabbildung.
+`_preflight_decision` bündelt die begrenzte Policy-/Auswahlprüfung in einer
+internen `RecoveryDecision`; `_automatic_recovery` führt allein die zuvor
+ausgewählte alte Transaktion mit den bisherigen nativen APIs aus. Die aktuellen
+Policychecks und Hostautorisierungen behalten ihre Reihenfolge. Bei einer
+späteren Ausnahme bleibt der bereits beobachtete Recoveryfortschritt für die
+öffentliche Fehlerantwort erhalten. Die Entscheidung ersetzt keine native
+Schreibberechtigung oder frische Basisprüfung.
+
+Bestehende Verhaltenstests und Anforderungsbindungen bleiben bytegleich;
+keine neuen Fachregeln, Fehlercodes, Rückgabefelder oder Test-Oracles kommen
+hinzu. Der eigene vollständige parallele Dev-/Apply-Test muss den C-Zustand
+vor seinem Commit bestätigen. Nach erfolgreichem Result gilt Position 240/885;
+als Nächstes folgt 5.u.W zur Repräsentationsnormalisierung.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
@@ -13337,11 +13359,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `5.t.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `5.u.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem R-Result bleiben 646 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem C-Result bleiben 645 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 

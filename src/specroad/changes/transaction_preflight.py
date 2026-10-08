@@ -5,32 +5,19 @@ This library neither installs project CLI handlers nor executes a normal change.
 The returned observation is not a write capability or a reusable project lease.
 """
 from dataclasses import dataclass
-from hashlib import sha256
-import os
 
 from ..cli.contracts import CommandClass
 from ..model.canonical import canonical_json_bytes
-from ..model.configuration import ProjectConfiguration
 from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
-from ..security.resource_access import opened_resource
-from ..storage.json_reader import JsonResource, configuration_schema
 from ..storage.json_syntax import parse_json_object
-from ..storage.operational_preflight import observe_operational_preflight, MAX_METADATA_BYTES
-from .authoring import normalize_authoring_actor, normalize_request_id
+from ..storage.operational_preflight import observe_operational_preflight
+from .authoring import normalize_request_id
 from .execution_values import ChangeExecutionError
-from .locking import project_lock, inspect_project_lock
-from .recovery_lock import transaction_recovery_lock
-from .recovery_values import RecoveryAuthority, RecoveryError, DiscardedJournal
-from .recovery import (discard_unpublished_transaction, complete_published_transaction,
-                       rollback_interrupted_transaction)
-from .recovery_cleanup import cleanup_recovered_transaction
-from .discard_preflight import prepare_discard_recovery
+from .recovery_values import RecoveryError
 from ._journal_codec import _text
-from ._lock_files import LockFiles
-from ._recovery_inputs import _read_journal, _parse
-from ._recovery_integrity import inspect_critical_inputs
-from ._preflight_selection import select_recovery, selected_journal
+from ._preflight_decision import prepare_automatic_recovery
+from ._automatic_recovery import recover_selected_transaction
 
 
 @dataclass(frozen=True, init=False)
@@ -56,32 +43,6 @@ class TransactionPreflight:
 
     def __bool__(self):
         raise TypeError('A transaction preflight is not write authorization')
-
-
-def _metadata(boundary, path, available):
-    with opened_resource(boundary, path) as (fd, info):
-        if info.st_size > available:
-            raise RecoveryError('automatic_recovery_policy_requires_explicit_inspection', exit_code=5)
-        chunks, remaining = [], info.st_size
-        while remaining:
-            raw = os.read(fd, min(65536, remaining))
-            if not raw:
-                raise RecoveryError('preflight_configuration_changed', exit_code=6)
-            chunks.append(raw)
-            remaining -= len(raw)
-        if os.read(fd, 1):
-            raise RecoveryError('preflight_configuration_changed', exit_code=6)
-    return b''.join(chunks)
-
-
-def _authorize(authority, request):
-    before = canonical_json_bytes(request)
-    try:
-        allowed = authority.check(request)
-    except Exception as error:
-        raise RecoveryError('automatic_recovery_authority_failed', exit_code=7) from error
-    if type(allowed) is not bool or not allowed or canonical_json_bytes(request) != before:
-        raise RecoveryError('automatic_recovery_not_authorized', exit_code=7)
 
 
 def transaction_preflight(root, *, command_class, dry_run=False, request_id=None,
@@ -122,112 +83,10 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
             return TransactionPreflight._create(data)
         if command_class is not CommandClass.NORMATIVE_WRITE or dry_run:
             return TransactionPreflight._create(data)
-        paths = observed['unresolved_paths']
-        if (not observed['inspection_complete'] or not 1 <= len(paths) <= 2
-                or any(p != '.specroad/locks/project.json' for p in observed['unknown_paths'])):
-            data['reason'] = 'explicit_recovery_selection_required'
-            return TransactionPreflight._create(data)
-        raw_config = _metadata(boundary, 'specroad.json', MAX_METADATA_BYTES - data['metadata_bytes_read'])
-        config = ProjectConfiguration(JsonResource(raw_config, configuration_schema(), path='specroad.json').data)
-        data['metadata_bytes_read'] += len(raw_config)
-        data['configuration_sha256'] = sha256(raw_config).hexdigest()
-        if expected_project_id is not None and config.project_id != expected_project_id:
-            raise RecoveryError('preflight_project_identity_mismatch', exit_code=6)
-        if config.data.get('transaction_policy', {}).get('auto_recover') is not True:
-            data['reason'] = 'automatic_recovery_disabled'
-            return TransactionPreflight._create(data)
-        def metadata(path):
-            raw = _metadata(boundary, path, MAX_METADATA_BYTES - data['metadata_bytes_read'])
-            data['metadata_bytes_read'] += len(raw)
-            return raw
-
-        transaction_id, barrier = select_recovery(observed, config.project_id, boundary, metadata)
-        if type(authority) is not RecoveryAuthority or request_id is None:
-            raise RecoveryError('automatic_recovery_authority_and_request_required', exit_code=7)
-        actor = normalize_authoring_actor(actor).as_fields()
-        _authorize(authority, {'action': 'automatic_recovery', 'actor': actor,
-            'project_id': config.project_id, 'transaction_id': transaction_id,
-            'normal_request_id': request_id, 'configuration_sha256': data['configuration_sha256']})
-
-        def current_policy():
-            if boundary.read_bytes('specroad.json') != raw_config:
-                raise RecoveryError('preflight_configuration_changed', exit_code=6)
-            boundary._check_root()
-
-        # Full journal/resource diagnosis belongs to the explicitly selected
-        # recovery phase, not the short transaction-metadata start check.
-        data['phase'] = 'automatic_recovery'
-        current_policy()
-        if observe_operational_preflight(boundary) != observed:
-            raise RecoveryError('preflight_operational_metadata_changed', exit_code=6)
-        owner = inspect_project_lock(boundary.root, expected_project_id=config.project_id).data
-        if owner['owner_state'] not in ('absent', 'dead'):
-            data.update(reason='automatic_recovery_owner_unproven', owner_state=owner['owner_state'])
-            return TransactionPreflight._create(data)
-        with LockFiles(boundary.root) as files:
-            journal = selected_journal(files, transaction_id, config.project_id, barrier)
-            if request_id == journal.data['request_id']:
-                raise RecoveryError('preflight_request_id_conflicts_with_recovery', exit_code=6)
-            integrity = inspect_critical_inputs(files, journal)
-        if integrity['blockers']:
-            raise RecoveryError(integrity['blockers'][0]['reason'], exit_code=6)
-        state = journal.data['state']
-        discard = state in ('building', 'prepared') or type(journal) is DiscardedJournal
-        command = 'recover discard' if discard else 'recover run'
-        proof = (prepare_discard_recovery(boundary.root, transaction_id,
-            expected_project_id=config.project_id, expected_journal_sha256=journal.sha256) if discard else None)
-        options = dict(command=command, project_id=config.project_id,
-                       request_id=journal.data['request_id'], transaction_id=transaction_id)
-
-        def guarded_authority(request):
-            current_policy()
-            _authorize(authority, request)
-            current_policy()
-            return True
-
-        guarded = RecoveryAuthority(authority.authority_id, authority.version, guarded_authority)
-        if owner['owner_state'] == 'dead':
-            lock = transaction_recovery_lock(boundary.root, **options,
-                expected_lock_sha256=owner['record_sha256'], expected_journal_sha256=journal.sha256,
-                authority=guarded, actor=actor, reason='Authorized preflight recovery', force=True)
-        else:
-            lock = project_lock(boundary.root, kind='recovery', **options)
-        current_policy()
-        data.update(recovery_attempted=True, mutation_possible=True)
-        with lock as held:
-            current_policy()
-            held.check()
-            if tuple(sorted(held._files.journal_entries())) != tuple(paths):
-                raise RecoveryError('preflight_active_transactions_changed', exit_code=6)
-            if selected_journal(held._files, transaction_id, config.project_id, barrier).source_bytes != journal.source_bytes:
-                raise RecoveryError('recovery_journal_changed', exit_code=6)
-
-            if discard:
-                result = discard_unpublished_transaction(proof, transaction_id, held_lock=held,
-                    authority=guarded, actor=actor, reason='Authorized preflight recovery',
-                    expected_journal_sha256=journal.sha256).data
-                cleanup = None
-            elif barrier is not None:
-                # The terminal marker and immutable intent select only cleanup;
-                # the original work may already have moved to its bound archive.
-                cleanup = cleanup_recovered_transaction(transaction_id, held_lock=held, authority=guarded,
-                    expected_journal_sha256=journal.sha256).data
-                result = cleanup
-            else:
-                complete = state == 'committed' or (state == 'committing' and integrity['complete_target_verified'])
-                action = complete_published_transaction if complete else rollback_interrupted_transaction
-                result = action(transaction_id, held_lock=held, authority=guarded,
-                                expected_journal_sha256=journal.sha256).data
-                data['recovery'] = result
-                terminal_raw, _ = _read_journal(held._files, transaction_id)
-                terminal = _parse(terminal_raw, transaction_id, held._files, config.project_id)
-                cleanup = cleanup_recovered_transaction(transaction_id, held_lock=held, authority=guarded,
-                    expected_journal_sha256=terminal.sha256).data
-            data.update(recovery=result, cleanup=cleanup)
-        after = observe_operational_preflight(boundary)
-        data.update(exit_code=5, reason='recovery_completed_reinvoke', recovery_completed=True,
-                    recovery_required=after['consistency_state'] != 'consistent',
-                    requires_new_invocation=True, operational_after=after)
+        decision = prepare_automatic_recovery(boundary, observed, data,
+            expected_project_id=expected_project_id, request_id=request_id, authority=authority, actor=actor)
+        if decision is not None:
+            recover_selected_transaction(decision, data)
         return TransactionPreflight._create(data)
     except (ChangeExecutionError, ModelError, SafetyViolation, OSError) as error:
         data.update(exit_code=getattr(error, 'exit_code', 5),
