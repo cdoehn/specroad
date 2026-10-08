@@ -14,6 +14,7 @@ from .core import prepare_change_plan
 from .target_values import TargetError, TargetPolicy, TargetAssessment, TARGET_VERSION
 from .target_model import TargetModel, _sequence, _project_scope
 from ._target_checks import _gates, _empty_target_gates, _describe
+from ._normalization_target import normalization_mode, normalization_documents
 
 def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     """Recompute every result and validate ALL target artifacts, not touched IDs.
@@ -32,8 +33,17 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     base = model.manifest(model.artifacts, scope)
     if value['base']['model_root_sha256'] != base.sha256:
         raise TargetError('target_base_root_mismatch', pointer='/base/model_root_sha256')
-    folded = prepare_plan_lifecycle(plan, model.artifacts, observed_base_root=base.sha256,
-        observed_scope=scope, source_files=model.source_files, **model.reservations)
+    normalize = normalization_mode(value['operations'])
+    if normalize:
+        # Keep all ordinary source/precondition/history checks, but do not fold
+        # representation changes as artifact edits or stamp revision/metadata.
+        folded = prepare_change_lifecycle(model.artifacts, [],
+            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
+            planned_at=value['planned_at'], preconditions=value['preconditions'],
+            source_files=model.source_files, **model.reservations)
+    else:
+        folded = prepare_plan_lifecycle(plan, model.artifacts, observed_base_root=base.sha256,
+            observed_scope=scope, source_files=model.source_files, **model.reservations)
     artifacts = folded.artifacts
     target = model.manifest(artifacts, scope)
     if target.sha256 != value['expected_result']['model_root_sha256']:
@@ -45,6 +55,9 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         raw = old.content if old is not None and canonical_json_sha256(parse_json_object(old.content)) == canonical_json_sha256(artifact) else canonical_json_bytes(artifact)
         documents.append(ModelDocument(artifact_path(artifact['artifact_type'],artifact['id'],model.configuration.id_prefix), raw))
     documents = tuple(sorted(documents,key=lambda d:d.path))
+    representation = {}
+    if normalize:
+        documents, representation = normalization_documents(model, value['operations'])
     registered, missing = _gates(gates,policy,plan,model)
     resources = ValidationResources(model.configuration_bytes, registry=model.language_registry,
         profile_resources=model.profile_resources,
@@ -67,7 +80,8 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         'target_validated':bool(valid), 'checks_complete':report.complete and not missing,
         'missing_command_gates':missing,
         'validation':assessment.as_dict(), 'diff':diff, 'impact':impact,
-        'lifecycle':{'metadata_applied':folded.metadata_applied, 'decisions':folded.decisions,
+        **({'representation':representation} if normalize else {}),
+        'lifecycle':{'metadata_applied':False if normalize else folded.metadata_applied, 'decisions':folded.decisions,
                      'history_complete':False, 'previously_approved_ids':folded.previously_approved_ids},
         'validation_scope':'complete_supplied_project_target', 'project_files_verified':False,
         'atomic_snapshot':False, 'transaction_prepared':False, 'execution_ready':False,
@@ -92,7 +106,8 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     scope = _project_scope(scope_descriptor)
     operations = [ChangeOperation(v).data for v in _sequence(operations, 'target_operations_required')]
     preconditions = _snapshot(list(_sequence(preconditions, 'target_preconditions_required')), '/preconditions').data
-    folded = prepare_change_lifecycle(model.artifacts, operations,
+    normalize = normalization_mode(operations)
+    folded = prepare_change_lifecycle(model.artifacts, [] if normalize else operations,
         metadata_policy_version=metadata_policy_version, actor=actor, planned_at=planned_at,
         preconditions=preconditions, source_files=model.source_files, **model.reservations)
     plan = prepare_change_plan({'format_version':'1.2.0',

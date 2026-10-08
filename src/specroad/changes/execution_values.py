@@ -142,7 +142,8 @@ class ChangeExecutionResult:
     @classmethod
     def _create(cls, assessment, *, dry_run, fail_on_change=False, receipt=None, backend=None):
         value = assessment.data
-        changed = value['base_manifest'] != value['target_manifest']
+        changed = (value['base_manifest'] != value['target_manifest'] or
+                   bool(value.get('representation', {}).get('changed_paths', [])))
         valid = assessment.target_validated
         exit_code = value['validation']['exit_code']
         if not valid and exit_code == 0:
@@ -183,4 +184,3 @@ class ChangeExecutionResult:
 
     def __bool__(self):
         raise TypeError('Inspect exit_code, target_validated and write_state explicitly')
-

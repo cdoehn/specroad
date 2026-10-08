@@ -4,15 +4,22 @@
   "requirement_id": "SR-REQ-0465",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-NORMALIZATION-TRANSACTION-v1"
+  ],
+  "preconditions": [
+    "Owned temporary project with complete supplied target sources and explicit current generic artifact paths; native transaction tests use an explicit trusted test-only authority."
+  ],
+  "steps": [
+    "Prepare and assess the same byte-bound normalization plan via direct and saved APIs; observe exact values/hashes, write-free checks and real native transaction effects."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad format --check` DARF NICHT Projekt- oder Betriebsdateien verändern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Read-only candidates plus checked normalization-only Change Plans for current generic artifacts, full supplied-target validation and native journal/publication/receipts/recovery. Exact values and source/target bytes are the oracles; no layout, CLI or full format-scope claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +35,11 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_normalization_target.py::test_direct_and_saved_check_share_plan_and_are_strictly_read_only",
+    "tests/test_normalization_target.py::test_normalized_input_has_no_byte_change_or_fail_on_change"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Extend the transactional scope to configuration, profiles, rules, mappings and mutable special artifacts in 5.u.R, with exact current byte bindings through readback and recovery. Mixed semantic/representation operations remain unsupported. Register the later format/check CLI; no full command or release approval is claimed."
   ]
 }

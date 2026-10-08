@@ -12,7 +12,7 @@ from .json_syntax import parse_json_object
 from .project import ProjectSource
 
 
-def _validate_format_input(source, path, raw, kind):
+def _validate_format_input(configuration, path, raw, kind):
     value = parse_json_object(raw, path=path)
     if value.get("schema_version") != SCHEMA_VERSION:
         raise ModelError("unsupported_schema_version", path=path,
@@ -21,7 +21,7 @@ def _validate_format_input(source, path, raw, kind):
         ProjectConfiguration(value)
     elif kind is PathClass.ARTIFACT:
         validate_common_fields(value)
-        expected = artifact_path(value["artifact_type"], value["id"], source.configuration.id_prefix)
+        expected = artifact_path(value["artifact_type"], value["id"], configuration.id_prefix)
         if path != expected:
             raise ModelError("artifact_path_identity_mismatch", path=path)
         artifact_type = value["artifact_type"]
@@ -47,7 +47,7 @@ def prepare_normalization(source: ProjectSource, path: str) -> NormalizationCand
         raise ModelError("resource_not_formatable", path=path)
     raw = source.read_normative(path)
     try:
-        _validate_format_input(source, path, raw, kind)
+        _validate_format_input(source.configuration, path, raw, kind)
         candidate = NormalizationCandidate(path, raw)
     except ModelError as error:
         error.path = path

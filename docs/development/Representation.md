@@ -1,12 +1,14 @@
-# Repräsentation ohne Fachänderung – Entwicklungsstand 2.k
+# Repräsentation ohne Fachänderung – Entwicklungsstand 5.u.W
 
 ## Grenzen
 
-Die APIs dieses Schritts erzeugen **Vorschläge im Speicher**, keine Schreibberechtigung.
-`specroad format`, `format --check`, vollständige Ressourceninventur und die Ausführung
-von `representation_normalize` im Change Plan werden hier nicht vorgezogen. Die
-Transaktionsengine wird in Meilenstein 5 aufgebaut; Fachbefehle integrieren sie später.
-Es werden keine Projektdateien, Revisionen, Akteure oder Zeitwerte geschrieben.
+Die Kandidaten-APIs aus 2.k erzeugen **Vorschläge im Speicher**, keine Schreibberechtigung.
+Seit 5.u.W können reine `representation_normalize`-Pläne für aktuelle generische
+Artefakte über die bestehende Zielprüfung und native Transaktionsengine laufen.
+Der Host muss den vollständigen Projektbestand, alle erforderlichen Zielgates,
+die expliziten Planfelder und eine echte Schreibberechtigung bereitstellen.
+Revisionen, Fachwerte und Zeit-/Akteursmetadaten bleiben unverändert.
+`specroad format` und `format --check` sind noch keine registrierten CLI-Befehle.
 
 `normal_json_bytes(raw)` liest genau ein UTF-8-JSON-Objekt über den strikten Reader.
 Die interne menschenlesbare Normalform verwendet zwei Leerzeichen Einrückung,
@@ -43,8 +45,41 @@ weist auch eine inzwischen erfolgte semantisch gleichwertige Formatänderung zur
 Doppelte/ungültige Pfade werden abgewiesen; ein fehlerhafter Eintrag ergibt keine
 teilweise Erfolgsmenge. Alle Originalbytes werden nach dem Lesen erneut geprüft.
 Das erkennt beobachtete Änderungen, ersetzt jedoch **keinen Lock und keinen atomaren
-Mehrdateisnapshot**. Ein späterer Writer muss unmittelbar vor Veröffentlichung alle
-Bedingungen unter der gemeinsamen Transaktionsgrenze erneut überprüfen.
+Mehrdateisnapshot**. Der Writer überprüft unmittelbar vor Veröffentlichung alle
+Bedingungen unter der gemeinsamen Transaktionsgrenze erneut.
+
+## Transaktionaler W-Ausschnitt
+
+`prepare_change_target` und `assess_change_target` akzeptieren dieselbe reguläre
+Operation mit `path`, `expected_byte_sha256` und `target_byte_sha256`. Der Plan
+behält seine gewöhnliche Selbsthash-, Scope-, Actor-, Request- und Metadatenpolicy-
+Bindung. Datei-/Artefaktvorbedingungen sowie sämtliche Zielgates bleiben aktiv.
+Die Zielbytes werden aus den gebundenen Originalbytes neu berechnet; fremde
+Zielbytes oder ein lediglich semantisch passender alter Dateistand genügen nicht.
+
+Repräsentationsänderungen ergeben keine fachlichen `result_artifacts`, keinen
+Lifecycle-Übergang und keine Revisionserhöhung. Modellwurzel und semantischer Diff
+bleiben gleich. `assessment.representation` enthält die ausgewählten Pfade und
+Byte-/Werthashes; `changed_paths` enthält nur tatsächlich andere Bytes.
+Die gemeinsame Dry-run-Ausführung setzt deshalb `would_change` und bei
+`fail_on_change=True` Code 1 auch bei unveränderter Modellwurzel. Bereits
+normalisierte Bytes ergeben Code 0. Diese Vorschau erzeugt weder Lock, Journal,
+Receipt noch Projekt-/Betriebsdateien.
+
+Die normale `PublicationRequest` übergibt die geänderten Artefaktbytes an denselben
+Journal-, Staging-, Publish-, Receipt- und Cleanup-Weg wie fachliche Änderungen.
+Originalbytes bleiben als Before-Images erhalten. Native Recovery kann ein
+vollständiges Byteziel abschließen oder eine unterbrochene Mehrdateinormalisierung
+auf die exakten Originalbytes zurückführen, obwohl Basis- und Zielmodellwurzel
+gleich sind. Es gibt keinen separaten Format-Schreibbackend.
+
+Der W-Ausschnitt weist doppelte Pfade, gemischte fachliche/Normalisierungsoperationen
+und den noch nicht unterstützten Ressourcen-Schreibbereich vollständig zurück.
+In 5.u.R folgen `specroad.json`, Profile, Regeln, Mappings und die zulässigen
+veränderbaren Spezialartefakte samt Schutz ihrer Endstände. Ihre geänderten
+Bytebindungen müssen auch Rücklesen, Konfigurationsfrische und Recovery abdecken.
+Die bereits vorhandene schreibfreie Kandidaten-API behält ihren größeren
+Dateiumfang; dies ist noch keine transaktionale Freigabe dieses Gesamtumfangs.
 
 ## Schutzbereich aus Spezifikation 10.17
 
@@ -90,6 +125,14 @@ Bytebindungen, fehlende Schreibeffekte und verschobene portable Distributionen.
 Es gibt keine automatisierten Einrückungs-, Schlüsselreihenfolgen-, Header-,
 HTML-/Markdown- oder Dokumentationstests. Die sichtbare Normalform und Kennzeichnung
 unterliegen TD-001. SR-TC-0021 bleibt daher ohne künstlichen automatisierten Pass.
+
+`test_normalization_target.py` und `test_normalization_transactions.py` ergänzen
+25 Fälle zu direkten/gespeicherten Plänen, unveränderten Vollwerten, Bytehash-
+Konflikten, wirklicher Schreibfreiheit, vollständigen Zielgates, nativen Receipts,
+Stagingmanipulation und Completion/Rollback bei gleicher semantischer Wurzel.
+Die Anforderungsmanifeste bleiben hinsichtlich CLI und Gesamtumfang ausdrücklich
+partiell; die noch ausstehende Schutzbereichsvervollständigung wird nicht als
+erledigte Produktabnahme ausgegeben.
 
 Für die Testausführung gilt die lokale `AGENTS.md`; die technische Anleitung
 steht in [Testing.md](Testing.md).

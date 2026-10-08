@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 240
-last_completed_plan_commit: 5.t.C
-next_plan_commit: 5.u.W
-last_completed_numbered_bundle: 91
+implementation_plan_commits_completed: 241
+last_completed_plan_commit: 5.u.W
+next_plan_commit: 5.u.R
+last_completed_numbered_bundle: 92
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4729,12 +4729,37 @@ als Nächstes folgt 5.u.W zur Repräsentationsnormalisierung.
 
 #### 5.u.W – Let it Work
 
-- [ ] **5.u.W** · Position **241/885** · Voraussetzung: `5.t.C`.
+- [x] **5.u.W** · Position **241/885** · Voraussetzung: `5.t.C`.
 **Exakte Commit-Message:** `5.u.W feat(changes): Repräsentationsnormalisierung über Transaktionen aufbauen`
 
 **Umsetzung:** format-Dateiumfang und representation_normalize mit Bytehashvorbedingungen über den Writer umsetzen.
 
 **Verhaltensabnahme:** Formatierung ändert nur zulässige Repräsentation, niemals fachliche Werte oder Revision.
+
+**W-Stand / Bundle 092:** Das Result
+`specroad-apply_Result_123732_1008_f53008.zip` bestätigt 5.t.C mit Commit
+`a49259c3ea66d7dc76471d3432eb3fc900c6f6a8`, 5.948 erfolgreichen parallelen
+Apply-Tests und sauberem Arbeitsbaum. Darauf baut der erste nutzbare Writer-
+Ausschnitt für reine Normalisierungspläne aktueller generischer Artefakte auf.
+Quell-/Zielbytehash, unveränderte Vollwerte, Scope und sämtliche Datei-/Artefakt-
+Vorbedingungen werden erneut geprüft. Die normalen vollständigen Zielgates,
+Schreibberechtigungen und nativen Journal-/Staging-/Publish-/Receipt-/Recovery-
+Wege bleiben verbindlich. Es entsteht kein zweiter Schreibweg.
+
+Modellwurzel, Revision, Zeit-/Akteursfelder und semantischer Diff bleiben gleich;
+die gemeinsame Vorschau meldet dennoch tatsächlichen Byteänderungsbedarf.
+25 neue Verhaltensfälle sichern direkte/gespeicherte Pläne, schreibfreie Checks,
+veraltete Hashes, vollständige Zielprüfung, genaue Pfadauswahl, native Receipts
+und Completion/Rollback trotz gleicher Modellwurzeln ab. Darstellungsmerkmale
+sind kein Test-Oracle.
+
+Der kleinste W-Ausschnitt gibt Konfiguration, Profile, Regeln, Mappings und
+Spezialartefakte noch nicht zum transaktionalen Schreiben frei; diese Erweiterung
+bleibt ausdrücklich in 5.u.R. Ebenso werden gemischte fachliche und reine
+Repräsentationsoperationen sicher abgewiesen. Keine CLI-, vollständige Scope-
+oder Releasefreigabe wird behauptet; Anforderungsmanifeste bleiben offen/partiell.
+Erst nach dem eigenen erfolgreichen parallelen Dev-/Apply-Volltest und Commit
+gilt Position 241/885. Nächster Zustand ist 5.u.R.
 
 #### 5.u.R – Make it Right
 
@@ -4742,6 +4767,13 @@ als Nächstes folgt 5.u.W zur Repräsentationsnormalisierung.
 **Exakte Commit-Message:** `5.u.R feat(changes): Repräsentationsnormalisierung über Transaktionen vervollständigen`
 
 **Vervollständigung:** Evidence, Baselines, Reviews und immutable Proposal-Endstände ausschließen; check bleibt schreibfrei.
+
+Den W-Writer auf den vollständigen zulässigen JSON-Dateiumfang erweitern:
+Konfiguration, Profile, Regeln, Mappings und veränderbare Spezialartefakte.
+Die eigenen bytegleichen Fachwerte müssen auch in Source-/Konfigurationsbindung,
+vollständiger Zielprüfung, Publication-Readback und nativer Recovery erhalten
+bleiben. Gemischte Operationen nur mit explizit geprüfter Reihenfolge zulassen;
+eine Ablehnung darf keinen Teilbestand schreiben.
 
 **Verhaltensabnahme:** Hash-/Wertinventur belegt Scope und Unveränderbarkeit, nicht Einrückung oder Formattext. Die W-Nachweise bleiben zusätzlich grün.
 
@@ -13359,7 +13391,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `5.u.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `5.u.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
