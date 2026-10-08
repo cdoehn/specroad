@@ -60,7 +60,8 @@
     "SR-FIX-REFERENCE-FINDINGS-v1",
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
     "SR-FIX-NORMALIZATION-TRANSACTION-v1",
-    "SR-FIX-NORMALIZATION-SCOPE-v1"
+    "SR-FIX-NORMALIZATION-SCOPE-v1",
+    "SR-FIX-WRITER-BOUNDARIES-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -302,6 +303,10 @@
     "SR-FIX-NORMALIZATION-SCOPE-v1": {
       "provider": "tests/support/normalization_scope.py:prepared",
       "kind": "Complete owned native Linux JSON scope with explicit configuration/profile/rule/mapping/artifact sources, value-preserving normalization and explicit test-host resource gates. Companion crash fixture terminates a real writer process at building/prepared/partial/configuration-move/committed boundaries. No public CLI or production semantic-service approval."
+    },
+    "SR-FIX-WRITER-BOUNDARIES-v1": {
+      "provider": "tests/support/writer_boundaries.py:fixture",
+      "kind": "owned native single-artifact writer, real syscall interruption without finalizers, fresh-process recovery and independent complete byte/model-root oracles; test authority only"
     }
   }
 }

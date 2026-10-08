@@ -13,7 +13,7 @@ def read_terminal_work(files, journal, prefix):
         if directory is None:
             return None
         names = set(os.listdir(directory))
-        if not names <= {'journal.json', 'before', 'staging', 'rollback'}:
+        if not names <= {'journal.json', 'journal.next', 'before', 'staging', 'rollback'}:
             raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
         result = {'': guards._identity(os.fstat(directory))}
         if 'journal.json' in names:
@@ -22,6 +22,9 @@ def read_terminal_work(files, journal, prefix):
             result['journal.json'] = {'identity': _image(directory, 'journal.json',
                 len(journal.source_bytes), journal.sha256), 'size': len(journal.source_bytes),
                 'sha256': journal.sha256}
+        if 'journal.next' in names:
+            from ._writer_pending import writer_next_in
+            result['journal.next'] = writer_next_in(directory, journal)
     images = {'before': {}, 'staging': {}, 'rollback': {}}
     for index, entry in enumerate(journal.data['files']):
         for folder, key, size, digest in (
@@ -33,7 +36,7 @@ def read_terminal_work(files, journal, prefix):
             suffix, size, digest = (('bin', 'before_size', 'before_sha256') if entry['existed_before']
                                     else ('removed', 'after_size', 'after_sha256'))
             images['rollback'][str(index) + '.' + suffix] = (entry[size], entry[digest])
-    for folder in sorted(names - {'journal.json'}):
+    for folder in sorted(names - {'journal.json', 'journal.next'}):
         with files.directory((*prefix, folder)) as directory:
             if directory is None or not set(os.listdir(directory)) <= set(images[folder]):
                 raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)

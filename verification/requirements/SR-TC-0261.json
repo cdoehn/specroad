@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0261",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-WRITER-BOUNDARIES-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Owned complete temporary project on the current native Linux filesystem; explicit test host publication/recovery authority; separate stopped writer and recovery interpreters."
+  ],
+  "steps": [
+    "Observe every successful native filesystem boundary in an uninterrupted single-artifact writer, then terminate a fresh writer after each boundary without finalizers and recover solely from persisted bytes.",
+    "Retain the independently bound initial/final journal.next derivative during recovery and prove that foreign content, another cursor, unsafe links, size changes and authority-time mutation cannot be adopted."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Referenztests MÜSSEN einen kontrollierten Prozessabbruch nach jeder dauerhaften Journal- und Dateisystemgrenze injizieren und nach Recovery jeweils exakt die Basis- oder die vollständige Zielmodellwurzel nachweisen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Exact complete basis or target bytes and independently rebuilt model root after every observed journal/staging/publication/receipt/cleanup boundary. Recoverable journals must clear the transaction gate. Pre-journal namespace cuts must retain the exact basis and all evidence while remaining blocked; they are not successful recovery. No power-loss or platform-matrix claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,27 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[building]",
+    "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[cleanup]",
+    "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[publishing]",
+    "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[receipts]",
+    "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[staging]",
+    "tests/test_writer_pending_recovery.py::test_exact_pending_writer_record_is_preserved_in_recovery_archive[committing]",
+    "tests/test_writer_pending_recovery.py::test_exact_pending_writer_record_is_preserved_in_recovery_archive[prepared]",
+    "tests/test_writer_pending_recovery.py::test_pending_writer_record_is_rechecked_after_recovery_authorization",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[foreign-committing]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[foreign-prepared]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[hardlink-committing]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[hardlink-prepared]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[other_cursor-committing]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[other_cursor-prepared]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[oversized-committing]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[oversized-prepared]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[symlink-committing]",
+    "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[symlink-prepared]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "5.v.R: extend the same native matrix to multiple changed files, receipt loss and repeated recovery interruptions. Later 20.e covers the complete transaction/customer matrix; unmeasured filesystems, real power loss and future restore clients are not approved by this local process-interruption proof."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 243
-last_completed_plan_commit: 5.u.C
-next_plan_commit: 5.v.W
-last_completed_numbered_bundle: 94
+implementation_plan_commits_completed: 244
+last_completed_plan_commit: 5.v.W
+next_plan_commit: 5.v.R
+last_completed_numbered_bundle: 95
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4838,12 +4838,40 @@ vor seinem Commit bestätigen. Danach gilt Position 243/885; als Nächstes folgt
 
 #### 5.v.W – Let it Work
 
-- [ ] **5.v.W** · Position **244/885** · Voraussetzung: `5.u.C`.
+- [x] **5.v.W** · Position **244/885** · Voraussetzung: `5.u.C`.
 **Exakte Commit-Message:** `5.v.W feat(changes): Fault-Injection über jede dauerhafte Grenze aufbauen`
 
 **Umsetzung:** Kontrollierten Prozessabbruch an jeder Journal-/Dateigrenze des vorhandenen Writers injizierbar machen.
 
 **Verhaltensabnahme:** Ein Durchlauf mit Recovery endet auf gebundener Basis oder vollständigem Ziel.
+
+**W-Stand / Bundle 095:** Das Result
+`specroad-apply_Result_135934_1008_039dee.zip` bestätigt 5.u.C mit Commit
+`040c9c1bc62587e778aa98ea98ef4a2d2f9a2f58`, 6.011 erfolgreichen parallelen
+Apply-Tests und sauberem Arbeitsbaum. Die neue Testmatrix injiziert echte
+Prozessabbrüche nach sämtlichen im Kontrolllauf beobachteten nativen Grenzen
+von building bis Cleanup. Jede Grenze erhält ein eigenes frisches Projekt;
+Recovery erhält ausschließlich dessen persistierte Bytes, keinen alten Plan
+oder In-Memory-Preflight. Exaktes Basis-/Zielinventar, neu rekonstruierte
+Modellwurzel, unveränderte Nutzerdatei und das abschließende Transaktionsgate
+bilden die Verhaltensoracles.
+
+Der W-Ausschnitt ändert eine Datei und erhält den restlichen vollständigen
+Bestand. Sehr frühe Namespace-Abbrüche ohne vollständiges Journal bleiben
+unter Erhalt der exakten Basis und sämtlicher Nachweise gesperrt; sie werden
+nicht als erfolgreiche Recovery ausgegeben. Die Testhilfe ist ausschließlich
+im Testbaum erreichbar, ohne Produkt- oder Konfigurationsschalter.
+Die Matrix findet die bisher nicht berücksichtigte native Grenze nach dem
+Synchronisieren von `journal.next`: Der eigentliche Journalersatz steht noch aus.
+Recovery bindet den initialen beziehungsweise letzten Ein-Datei-Nachfolger
+unabhängig an das aktive/terminale Journal und erhält seine Bytes im Archiv.
+Fremde Inhalte, andere Cursor, Überlänge, Links und spätere Veränderungen bleiben
+blockierend. 13 ergänzende Verhaltensfälle sichern diese notwendige Korrektur;
+die ursprünglichen Matrix-Oracles bleiben erhalten.
+Mehrdateiwrites, Receiptverlust und wiederholte Recoveryabbrüche folgen in R.
+Kein Stromausfall-, Plattformmatrix- oder allgemeiner Release-Nachweis wird
+behauptet. Erst die vollständigen parallelen Dev-/Apply-Tests und der Commit
+bestätigen Position 244/885. Danach folgt 5.v.R.
 
 #### 5.v.R – Make it Right
 
@@ -13433,11 +13461,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `5.v.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `5.v.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem C-Result bleiben 645 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem W-Result bleiben 641 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 

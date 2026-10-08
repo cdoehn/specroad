@@ -95,8 +95,10 @@ def _work(files, journal, *, raw=None, prefix=None, preflight=None, pending=None
         permitted = {'journal.json', 'before', 'staging'}
         if building: permitted.add('journal.prepared')
         if pending is not None: permitted.add('journal.discard')
+        required = set(permitted)
+        if not building: permitted.add('journal.next')
         if ('journal.json' not in names or not names <= permitted
-                or (not building and names != permitted)):
+                or (not building and not required <= names)):
             raise RecoveryError('recovery_work_inventory_unproven', exit_code=6)
         actual = _read(directory, 'journal.json')
         if actual != (journal.source_bytes if raw is None else raw):
@@ -108,6 +110,9 @@ def _work(files, journal, *, raw=None, prefix=None, preflight=None, pending=None
             expected = journal.data; expected['state'] = 'prepared'
             content = canonical_json_bytes(expected)
             result['journal.prepared'] = _prefix_image(directory, 'journal.prepared', content)
+        if 'journal.next' in names:
+            from ._writer_pending import writer_next_in
+            result['journal.next'] = writer_next_in(directory, journal)
     from .discard_preflight import DiscardPreflight
     if building and type(preflight) is DiscardPreflight:
         _, original, target = preflight._check(files, journal, include_images=True)

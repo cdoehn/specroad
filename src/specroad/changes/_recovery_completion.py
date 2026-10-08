@@ -25,6 +25,7 @@ from ._recovery_receipts import (
 from ._recovery_target import fully_published, prove_complete_target
 from ._staging_files import _image
 from ._recovery_evidence import EvidenceRecord, recovery_action, sync_evidence
+from ._writer_pending import writer_next
 
 
 def _authorize_completion(authority, journal):
@@ -48,6 +49,7 @@ def _authorize_completion(authority, journal):
 
 def _completion_guard(files, journal, held_lock, target, tokens):
     observed = _read_journal(files, journal.data['transaction_id'])
+    pending = writer_next(files, journal)
     if observed[0] != journal.source_bytes:
         raise RecoveryError('recovery_journal_changed', exit_code=6)
     predecessor = journal.predecessor if type(journal) is CommittedJournal else journal
@@ -55,6 +57,8 @@ def _completion_guard(files, journal, held_lock, target, tokens):
         _completion_lock(held_lock, journal)
         if _read_journal(files, journal.data['transaction_id']) != observed:
             raise RecoveryError('recovery_journal_changed', exit_code=6)
+        if writer_next(files, journal) != pending:
+            raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
         if prove_complete_target(files, predecessor) != target:
             raise RecoveryError('recovery_target_changed', exit_code=6)
         for record, token in tokens:
@@ -68,9 +72,12 @@ def _verify_committed_recovery(files, journal, held_lock, authority, *, write_ne
     predecessor = journal.predecessor
     _completion_lock(held_lock, predecessor)
     observed_journal = _read_journal(files, journal.data['transaction_id'])
+    pending = writer_next(files, journal)
     target = prove_complete_target(files, predecessor)
     _authorize_completion(authority, predecessor)
     _completion_lock(held_lock, predecessor)
+    if writer_next(files, journal) != pending:
+        raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
     if prove_complete_target(files, predecessor) != target:
         raise RecoveryError('recovery_target_changed', exit_code=6)
     transaction, request_receipt, expected = prepare_recovery_receipts(predecessor)
@@ -165,10 +172,13 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
         if '.specroad/transactions/' + transaction_id not in active:
             raise RecoveryError('recovery_active_set_unproven', exit_code=6)
         target = prove_complete_target(files, journal)
+        pending = writer_next(files, journal)
         _authorize_completion(authority, journal)
         _completion_lock(held_lock, journal)
         if files.journal_entries() != active or _read_journal(files, transaction_id) != (raw, directory_identity):
             raise RecoveryError('recovery_journal_changed', exit_code=6)
+        if writer_next(files, journal) != pending:
+            raise RecoveryError('recovery_writer_successor_changed', exit_code=6)
         if prove_complete_target(files, journal) != target:
             raise RecoveryError('recovery_target_changed', exit_code=6)
         recovered = fully_published(journal)
