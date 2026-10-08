@@ -57,7 +57,8 @@
     "SR-FIX-DISCARD-RESTART-v1",
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-PRODUCTION-VALIDATION-v1",
-    "SR-FIX-REFERENCE-FINDINGS-v1"
+    "SR-FIX-REFERENCE-FINDINGS-v1",
+    "SR-FIX-AUTOMATIC-RECOVERY-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -287,6 +288,10 @@
     "SR-FIX-REFERENCE-FINDINGS-v1": {
       "provider": "tests/test_validation_reference_sets.py:reference_case",
       "kind": "Owned source documents with independent expected missing-target, relation-matrix, field and review findings; the companion missing-reference cases use the same model helpers. Real model/read-only API comparisons preserve selection, deterministic findings and strict identity barriers; no invalid resolved graph or approval/write authority."
+    },
+    "SR-FIX-AUTOMATIC-RECOVERY-v1": {
+      "provider": "tests/support/automatic_recovery.py:pending",
+      "kind": "Owned native Linux project with auto_recover policy bound before plan/publication preparation; real building/prepared/partial/complete/committed transactions, independent expected source/target bytes, actual native locks and durable receipts. The companion writer supports a real abrupt process exit. Host authorization is test-only; no new operation, public CLI or full crash-matrix claim."
     }
   }
 }

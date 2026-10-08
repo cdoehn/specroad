@@ -110,3 +110,6 @@ __all__ += ['inspect_recovery_protection', 'check_cache_removal']
 
 from .discard_preflight import DiscardPreflight, prepare_discard_recovery
 __all__ += ['DiscardPreflight', 'prepare_discard_recovery']
+
+from .transaction_preflight import TransactionPreflight, transaction_preflight
+__all__ += ['TransactionPreflight', 'transaction_preflight']

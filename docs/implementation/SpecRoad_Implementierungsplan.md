@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 237
-last_completed_plan_commit: 5.s.C
-next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 88
+implementation_plan_commits_completed: 238
+last_completed_plan_commit: 5.t.W
+next_plan_commit: 5.t.R
+last_completed_numbered_bundle: 89
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -52,7 +52,7 @@ Der Grobaudit vom 2. Oktober 2026 bewertet den bis **5.s.C** abgeschlossenen Pro
 
 Die Prüfung war statisch; sie führte keine Tests aus. Das Result enthält keine Execution-Logs einer Apply-Ausführung und keine historischen W/R/C-Zwischenstände. Die Bindung oben dokumentiert den untersuchten Ausgangsstand; jedes Reparaturbundle verwendet ausschließlich die Bindung aus seinem dann neuesten Result.
 
-**Aktueller Arbeitsauftrag:** `AUDIT-CLOSE` entscheidet unten über die abgeschlossenen Nacharbeiten. Nach erfolgreichem Apply dieses Abschlusses ist `5.t.W` der nächste reguläre Produktpunkt; ein vorbereiteter Abschluss ohne eigenes erfolgreiches Result hebt die Sperre nicht auf. Die 885 ursprünglichen Produktpositionen, ihre Kennungen, Reihenfolge und historischen Checkboxen bleiben erhalten; der Zähler bleibt während der Nacharbeiten bei **237/885**. Eine gesetzte alte Checkbox beseitigt keinen hier ausdrücklich offenen Befund.
+**Aktueller Arbeitsauftrag:** Der Audit-Abschluss ist durch Result von Bundle 088 bestätigt. Die reguläre Fortsetzung richtet sich wieder nach `next_plan_commit` im Fortschrittsblock. Die 885 ursprünglichen Produktpositionen, ihre Kennungen, Reihenfolge und historischen Checkboxen bleiben erhalten; der Zähler bleibt während der Nacharbeiten bei **237/885**. Eine gesetzte alte Checkbox beseitigt keinen hier ausdrücklich offenen Befund.
 
 Die Kennungen `AUDIT-*` sind Nacharbeitskennungen außerhalb der 885 Produktpositionen. Bei Umsetzung wird eine genau einem ursprünglichen Plan-Commit zuordenbare Reparatur als `FIX` mit dessen Kennung geführt; übergreifende Korrekturen werden als `OFF-PLAN` geführt. Die tatsächlichen Commitkennungen und Messages werden vor der jeweiligen Auslieferung passend zum dann aktuellen Result festgelegt und mit dem Nacharbeitsschritt verknüpft. Es gibt keine durch diese Liste vorgeschriebene Bundleanzahl. Mehrere geordnete Commits dürfen in einem Bundle liegen.
 
@@ -4594,12 +4594,52 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.t.W – Let it Work
 
-- [ ] **5.t.W** · Position **238/885** · Voraussetzung: `5.s.C`.
+- [x] **5.t.W** · Position **238/885** · Voraussetzung: `5.s.C`.
 **Exakte Commit-Message:** `5.t.W feat(changes): Schreibfreie und automatische Preflight-Recovery aufbauen`
 
 **Umsetzung:** Read-only-Befehle schreibfrei blockieren; autorisierte automatische Recovery mit getrenntem Abschluss/Wiederaufruf ausführen.
 
 **Verhaltensabnahme:** Read-only-Aufruf meldet Recoverybedarf ohne Betriebswrite.
+
+**W-Stand / Bundle 089:** Basis ist das erfolgreiche Audit-Abschlussresult
+`specroad-apply_Result_110259_1008_b00aa9.zip`, Commit
+`73b14b1966a8a9954aaac18f890cf77cb1abd808`. Alle 1469 Snapshotdateien und zehn
+Payloads sind geprüft; 5880 parallele Apply-Tests in 412,16 Sekunden und der
+saubere Commit bestätigen `AUDIT-CLOSE`. Die Auditsperre ist damit aufgehoben.
+
+Die neue öffentliche `transaction_preflight`-Bibliothek führt normale
+Aufrufklassen über eine begrenzte flache Metadatenprüfung. Auch die vorhandenen
+schreibfreien Projektleser nutzen diese Beobachtung. Recoverybedarf blockiert
+Lese-, Plan-, Ausgabe- und Dry-Run-Aufrufe mit Code 5 vor dem Modellload und ohne
+Betriebswrite. Aktive/unklare Einträge werden auf höchstens 16 begrenzt; bereits
+beobachteter Recoverybedarf erfordert keinen vollständigen Journalbody.
+
+Ein normativer Aufruf mit aktivierter Projektpolicy und ausdrücklicher
+Hostautorisierung darf genau eine sicher ausgewählte alte Transaktion unter
+nativem Recoverylock abschließen. Building/Prepared, vollständiges Ziel,
+Teilrollback und bestehender Commit verwenden die bereits geprüften
+Recovery-/Receipt-/Cleanup-APIs. Ein real beendeter lokaler Writer erhält den
+bestehenden auditierten Übernahmeweg; lebende oder nicht sicher bewiesene
+Eigentümer bleiben gesperrt. Die neue Request-ID wird nicht verbraucht.
+Nach Recovery endet der Aufruf mit Code 5 und einem expliziten Wiederaufrufbedarf;
+er startet keine neue Fachoperation und liefert keine übertragbare Freigabe.
+
+35 zusätzliche Verhaltenstests prüfen unabhängige Basis-/Zielbytes, alte Belege,
+neue Writer/Leser, echte abgestürzte Writerprozesse, schreibfreie Meldungen,
+verbotene Autorisierungen, unveränderte Betriebsdateien, begrenzte Beobachtung
+und einen Policywechsel im Autorisierungsaufruf. Die explizite Metadatendiagnose
+behält ihre vollständige Liste; die 16er-Grenze betrifft nur die kurze
+Startbeobachtung. Ein zusätzlicher Bytebeleg trennt das Metadatenbudget von der
+autorisierten vollständigen Eigentümerdiagnose. Die SR-TC-Manifeste
+0256/0558/0559/0560 erhalten reale Partial-Bindungen; kein vollständiger CLI-
+oder Releaseabschluss wird behauptet. Weitere Kontext-/Wiederaufrufgrenzen sind
+5.t.R, allgemeine Preflightprofile/Detailfortsetzung 6.a und die Betriebsprüfung
+6.b zugeordnet. Die vollständige Crashmatrix bleibt 5.v.
+
+Dieser W-Zustand benötigt seinen eigenen vollständigen parallelen Dev-/Apply-
+Test vor seinem Commit. Nach erfolgreichem Result gilt Position 238/885;
+der nächste Zustand ist 5.t.R. Technische Nutzung:
+[Transaction_Preflight.md](../development/Transaction_Preflight.md).
 
 #### 5.t.R – Make it Right
 
@@ -13259,7 +13299,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach dem erfolgreichen Result von `AUDIT-CLOSE` der reguläre Produktpunkt `5.t.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Ohne bestätigten Audit-Abschluss bleibt `5.t.W` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `5.t.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

@@ -7,53 +7,15 @@ from hashlib import sha256
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
 from ..model.paths import PathClass, artifact_path
-from ..model.operational_paths import PASSIVE_ROOTS, passive_journal_directory
 from ..security import ProjectBoundary
-from ..security.resource_access import directory_entries
 from ..validation import ModelDocument
 from .json_syntax import parse_json_object
 from .project import ProjectSource
 from .resource_discovery import current_json_paths
+from .operational_preflight import observe_operational_preflight
 
-def _operational_metadata(boundary):
-    """Only shallow names/types of active locations; no journal/cache contents.
-
-    An empty/absent active namespace permits an observation, not an ownership
-    proof. Unknown operational files can be writer/lock metadata: keep them and
-    block normal reads until the appropriate later resolver can assess them.
-    Completed receipts and caches are not required input to this read path.
-    """
-    entries = directory_entries(boundary, ".specroad", missing_ok=True)
-    observed, unresolved, unknown = [], [], []
-    for name, directory in (() if entries is None else entries):
-        path = ".specroad/" + name
-        observed.append({"path": path, "directory": directory})
-        if directory and path in PASSIVE_ROOTS:
-            continue
-        if directory and name == "locks":
-            for child, is_directory in directory_entries(boundary, path):
-                logical = path + "/" + child
-                observed.append({"path": logical, "directory": is_directory})
-                unknown.append(logical)
-            continue
-        if directory and name in ("transactions", "recovery"):
-            for child, is_directory in directory_entries(boundary, path):
-                logical = path + "/" + child
-                observed.append({"path": logical, "directory": is_directory})
-                if is_directory and passive_journal_directory(name, child):
-                    continue
-                unresolved.append(logical)
-        else:
-            unknown.append(path)
-    state = "recovery_required" if unresolved else "unknown" if unknown else "consistent"
-    return {"consistency_state": state, "recovery_required": bool(unresolved),
-            "unresolved_paths": sorted(unresolved), "unknown_paths": sorted(unknown),
-            "observed_entries": sorted(observed, key=lambda v: v["path"]),
-            "writer_owner": None, "writer_ownership_verified": False,
-            "journal_contents_loaded": False, "cache_contents_loaded": False,
-            "recovery_performed": False, "model_loaded": False,
-            "inspection_scope": "shallow_operational_entries",
-            "operational_directory_present": entries is not None, "atomic_snapshot": False}
+def _operational_metadata(boundary, *, complete_inventory=False):
+    return observe_operational_preflight(boundary, complete_inventory=complete_inventory)
 
 
 def _artifact_names(source):
@@ -130,4 +92,3 @@ def _record_freshness(source, observation, documents, data):
         "sources": data["source_bindings"], "resources": data["resource_bindings"],
         "operational": observation})
     data["freshness_verified"] = True
-

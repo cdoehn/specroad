@@ -36,8 +36,8 @@ def diagnose_read_only(root):
     try:
         data["phase"] = "operational"
         boundary = ProjectBoundary(root)
-        first = _operational_metadata(boundary)
-        if _operational_metadata(boundary) != first:
+        first = _operational_metadata(boundary, complete_inventory=True)
+        if _operational_metadata(boundary, complete_inventory=True) != first:
             raise ModelError("operational_metadata_changed")
         data.update(status="completed", exit_code=0, operational=first)
         return ReadOnlyResult._create(data)

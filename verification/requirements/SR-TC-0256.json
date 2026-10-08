@@ -4,18 +4,31 @@
   "requirement_id": "SR-REQ-0256",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-AUTOMATIC-RECOVERY-v1"
+  ],
+  "preconditions": [
+    "Owned local Linux project, explicit command class and actual persisted native transaction bytes; recovery authority is a trusted test host, not a project-data permission."
+  ],
+  "steps": [
+    "Observe transaction metadata before loading a model; compare all original project/operational files and actual forbidden write attempts.",
+    "For permitted automatic recovery, compare independently planned base/target bytes, durable terminal receipts and subsequent fresh access; assert the new request remains unconsumed."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein normaler Projektbefehl MUSS vor dem Laden des kanonischen Modells den begrenzten Transaktions-Preflight einschließlich der befehlsklassenabhängigen Recovery- oder Diagnoseentscheidung aus Anhang N.2–N.3 durchführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Bounded shallow transaction metadata gate for supplied normal command classes, integrated into current read-only project observation. No artifact or historical receipt scan occurs before a recovery decision. The library is not yet full CLI invocation preflight or external continuation."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +41,46 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_transaction_preflight.py::test_authorization_cannot_change_policy_then_recover_under_the_old_setting",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[building]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[committed]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[complete]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[partial]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[prepared]",
+    "tests/test_transaction_preflight.py::test_broken_model_and_configuration_do_not_prevent_metadata_diagnosis",
+    "tests/test_transaction_preflight.py::test_clean_gate_does_not_read_artifact_or_receipt_history",
+    "tests/test_transaction_preflight.py::test_denied_or_nonboolean_authority_never_acquires_a_recovery_lock[1]",
+    "tests/test_transaction_preflight.py::test_denied_or_nonboolean_authority_never_acquires_a_recovery_lock[False]",
+    "tests/test_transaction_preflight.py::test_denied_or_nonboolean_authority_never_acquires_a_recovery_lock[None]",
+    "tests/test_transaction_preflight.py::test_live_writer_is_not_automatically_taken_over",
+    "tests/test_transaction_preflight.py::test_missing_or_disabled_auto_policy_has_no_operational_effect[False]",
+    "tests/test_transaction_preflight.py::test_missing_or_disabled_auto_policy_has_no_operational_effect[None]",
+    "tests/test_transaction_preflight.py::test_more_than_sixteen_active_entries_block_without_full_scan_or_journal_read",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-generated_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-normative_write-True]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-plan_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-read_only-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-generated_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-normative_write-True]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-plan_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-read_only-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-generated_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-normative_write-True]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-plan_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-read_only-False]",
+    "tests/test_transaction_preflight.py::test_real_dead_writer_uses_audited_takeover_without_new_request[complete]",
+    "tests/test_transaction_preflight.py::test_real_dead_writer_uses_audited_takeover_without_new_request[partial]",
+    "tests/test_transaction_preflight.py::test_real_dead_writer_uses_audited_takeover_without_new_request[prepared]",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[None]",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[normative_write]",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[recovery_write]",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[root_creation]",
+    "tests/test_transaction_preflight.py::test_short_metadata_budget_precedes_authorized_owner_diagnosis"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Further stale-context, interrupted automatic-phase and selection/ownership boundaries belong to 5.t.R; current W tests do not claim the full transaction crash matrix from 5.v.",
+    "General preflight profiles/detail continuation belong to 6.a and environment checks to 6.b; complete registered project command integration and runtime/filesystem evidence remain unproved. No CLI or release approval is inferred.",
+    "Human presentation/documentation is not an automated oracle (TD-001)."
   ]
 }
