@@ -56,7 +56,10 @@ Konfigurationseintrag mit weiterem Hardlink wird nach dem bestehenden Lesevertra
 geprüft, ohne gemeinsame Bytes zu verändern oder daraus Schreibbefugnis abzuleiten.
 Fehlerhafte
 oder unermittelbare optionale Limits bleiben unbekannt; auch ein beobachtetes
-Null-Limit behauptet keinen verfügbaren Speicher. C trennt die gemessenen
-Voraussetzungen strukturell von Verfügbarkeitsschätzungen.
+Null-Limit behauptet keinen verfügbaren Speicher. Die optionale Ressourcenbeobachtung
+ist in `runtime/resource_observations.py` von der Prüfung erforderlicher
+Runtime-, Projekt- und Zielvoraussetzungen getrennt. Derselbe aktuelle Limitaufruf
+liefert dieselben qualifizierten Werte und Unknowns; ihre optionale Einstufung
+und die Bereitschaftsentscheidung bleiben im Diagnosebericht.
 SR-TC-0565/0566/0567 bleiben partiell; eine
 Runtime-/Plattformfreigabe oder ein Work-Engine-Nachweis wird nicht behauptet.

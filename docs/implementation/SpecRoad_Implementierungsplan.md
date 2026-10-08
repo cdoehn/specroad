@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 251
-last_completed_plan_commit: 6.b.R
-next_plan_commit: 6.b.C
-last_completed_numbered_bundle: 102
+implementation_plan_commits_completed: 252
+last_completed_plan_commit: 6.b.C
+next_plan_commit: 6.c.W
+last_completed_numbered_bundle: 103
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5142,7 +5142,7 @@ Commit gilt Position 251/885; danach folgt 6.b.C.
 
 #### 6.b.C – Make it Clean
 
-- [ ] **6.b.C** · Position **252/885** · Voraussetzung: `6.b.R`.
+- [x] **6.b.C** · Position **252/885** · Voraussetzung: `6.b.R`.
 **Exakte Commit-Message:** `6.b.C refactor(work): Environment-Check ohne Nebenwirkungen bereinigen`
 
 **Bereinigung:** Messbare Voraussetzungen von bloßer Verfügbarkeitsschätzung trennen.
@@ -5150,6 +5150,26 @@ Commit gilt Position 251/885; danach folgt 6.b.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 103:** Das vollständig geprüfte Result von Bundle 102
+bestätigt `e765416c37560ff351be6290d4e56ce72b61e67d`, 6.200 erfolgreiche
+parallele Apply-Tests und einen sauberen Snapshot. Die vier Anweisungen zur
+aktuellen Ressourcenbeobachtung werden unverändert in eine eigene Funktion
+verschoben. Runtime-, Projekt- und Zielvoraussetzungen bleiben von den optionalen
+Beobachtungen und ihren begrenzten Verfügbarkeitsaussagen getrennt.
+
+Der extrahierte Block behält denselben AST; die umgebende Diagnose behält nach
+Rückeinsetzen dieses Blocks ebenfalls ihren bisherigen AST. Die Funktion liest
+weiterhin genau einmal dieselbe Limit-API. Werte, Herkunft, Unknowns, Reihenfolge,
+Fehlerklassen, Recovery-Aussagen und zulässige Seiteneffekte bleiben erhalten.
+Alle bisherigen Testdateien und 6.200 Testidentitäten bleiben unverändert,
+einschließlich der 32 W- und 42 R-Fälle. Es werden keine neuen fachlichen
+Erwartungen für diese Strukturänderung eingeführt.
+
+SR-TC-0565/0566/0567 bleiben partiell; Budget-/Work-Integration und die vollständige
+Runtime-/Plattformmatrix sind weiterhin offen. Erst nach erfolgreichen
+vollständigen parallelen Dev-/Apply-Tests und Commit gilt Position 252/885;
+anschließend folgt 6.c.W.
 
 <a id="step-6-c"></a>
 ### 6.c – Ressourcenprofile und Grenzklassen

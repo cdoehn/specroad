@@ -1,7 +1,7 @@
 """Current environment diagnosis; no semantic model, probes or target execution."""
 from . import check_runtime, UnsupportedRuntimeError
 from .identity import version_info, BuildMetadataError
-from .limits import current_limits
+from .resource_observations import resource_observations
 from .resource_profiles import profile_targets
 
 
@@ -99,19 +99,7 @@ def environment_report(invocation):
         check('command.write_paths', 'unknown' if write else 'not_applicable',
               'write_capability_not_probed' if write else 'write_paths_not_required', required=write)
 
-    # A process address-space ceiling is not available RAM or an allocation promise.
-    limits = current_limits()
-    memory = limits['process_address_space_bytes']['soft']
-    known_memory = memory['state'] == 'known'
-    observations = {
-        'cpu_capacity': {'value': None, 'unit': 'cores', 'source': 'not_observed',
-                         'state': 'unknown', 'scope': 'current_process_allocation'},
-        'memory_limit': {'value': memory['value'] if known_memory else None, 'unit': 'bytes',
-                         'source': 'getrlimit.RLIMIT_AS' if known_memory else 'not_observed',
-                         'state': 'observed' if known_memory else 'unknown',
-                         'scope': 'process_address_space_ceiling'},
-        'storage_capacity': {'value': None, 'unit': 'bytes', 'source': 'not_observed',
-                             'state': 'unknown', 'scope': 'current_process_storage_quota'}}
+    observations = resource_observations()
     for name, observation in observations.items():
         check('resources.' + name, 'passed' if observation['state'] == 'observed' else 'unknown',
               'qualified_process_limit' if observation['state'] == 'observed' else 'no_trustworthy_quota',
