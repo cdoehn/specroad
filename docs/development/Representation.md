@@ -1,4 +1,4 @@
-# Repräsentation ohne Fachänderung – Entwicklungsstand 5.u.R
+# Repräsentation ohne Fachänderung – Entwicklungsstand 5.u.C
 
 ## Grenzen
 
@@ -97,6 +97,13 @@ und prüft zusätzlich die identische vollständige Normalform. Weder andere
 Einrückungsbytes noch geänderte Policies werden dadurch still übernommen.
 Unveröffentlichte Ressourcenimages werden bei Discard aus ihren unabhängigen
 Originalbytes und Operationshashes erneut geprüft.
+
+Die reine Umfangs-/Statusprüfung liegt seit C in `model/_representation_scope.py`.
+Schreibfreie Leser, explizite Normalisierungspläne, vollständige Format-Auswahl
+und unabhängige Discardprüfung verwenden dieselbe Fachregel ohne Abhängigkeit
+vom `ProjectSource`-Adapter. Ihr Funktionskörper bleibt unverändert; Bytehashes,
+Fehlerverträge, Schutzgrenzen und der einzige transaktionale Schreibweg bleiben
+die aus W/R geprüften. Bestehende Tests und Anforderungsbindungen bleiben bytegleich.
 
 ## Schutzbereich aus Spezifikation 10.17
 

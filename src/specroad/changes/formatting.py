@@ -6,7 +6,7 @@ of the existing publication path. This is not a registered format CLI command.
 from ..model.errors import ModelError
 from ..model.paths import CURRENT_JSON_CLASSES, classify_path
 from ..model.representation import NormalizationCandidate
-from ..storage.representation import _validate_format_input
+from ..model._representation_scope import _validate_format_input
 from .target_model import TargetModel
 from .target_values import TargetError
 from .target import prepare_change_target

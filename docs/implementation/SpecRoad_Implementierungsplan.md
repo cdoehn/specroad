@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 242
-last_completed_plan_commit: 5.u.R
-next_plan_commit: 5.u.C
-last_completed_numbered_bundle: 93
+implementation_plan_commits_completed: 243
+last_completed_plan_commit: 5.u.C
+next_plan_commit: 5.v.W
+last_completed_numbered_bundle: 94
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4806,10 +4806,25 @@ parallelem Dev-/Apply-Volltest und Commit gilt Position 242/885. Danach folgt 5.
 
 #### 5.u.C – Make it Clean
 
-- [ ] **5.u.C** · Position **243/885** · Voraussetzung: `5.u.R`.
+- [x] **5.u.C** · Position **243/885** · Voraussetzung: `5.u.R`.
 **Exakte Commit-Message:** `5.u.C refactor(changes): Repräsentationsnormalisierung über Transaktionen bereinigen`
 
 **Bereinigung:** Normalisierungsplanung als spezialisierte Operation statt zweitem Schreibweg führen.
+
+**C-Stand / Bundle 094:** Das Result
+`specroad-apply_Result_134137_1008_26ff53.zip` bestätigt R mit Commit
+`9ebe37ca5580fdfd581878612685fdd283a3e0c1`, 6.011 erfolgreichen parallelen
+Apply-Tests und sauberem Arbeitsbaum. C verschiebt die bereits gemeinsam genutzte,
+rein fachliche Umfangs-/Statusprüfung aus dem Speicheradapter nach
+`model/_representation_scope.py`. Ihr Funktionskörper bleibt AST-identisch.
+Leser, Operationsplanung, vollständige Format-Auswahl und unabhängige
+Discardprüfung beziehen die Regel direkt aus der Modellschicht.
+
+Es entstehen weder neue Schreibpfade noch neue Fachregeln, Fehlerverträge oder
+Rückgabefelder. Alle bestehenden Tests und Anforderungsmanifeste bleiben
+bytegleich. Der eigene vollständige parallele Dev-/Apply-Test muss den C-Zustand
+vor seinem Commit bestätigen. Danach gilt Position 243/885; als Nächstes folgt
+5.v.W für kontrollierte Abbrüche an dauerhaften Transaktionsgrenzen.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
@@ -13418,7 +13433,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `5.u.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `5.v.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

@@ -2,7 +2,7 @@
 from ..model.errors import ModelError
 from ..model.paths import PathClass, CURRENT_JSON_CLASSES, classify_path
 from ..model.representation import NormalizationCandidate
-from ..storage.representation import _validate_format_input
+from ..model._representation_scope import _validate_format_input
 from ..validation import ModelDocument
 from .target_values import TargetError
 

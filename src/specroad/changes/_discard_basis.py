@@ -88,7 +88,7 @@ def _normalization_images(source, data, original):
     """Prove byte-only effects independently, including config/resource originals."""
     from ..model.paths import CURRENT_JSON_CLASSES
     from ..model.representation import NormalizationCandidate
-    from ..storage.representation import _validate_format_input
+    from ..model._representation_scope import _validate_format_input
     from ._discard_basis_contract import staging_images
     images = staging_images(data.get('discard_basis', {}))
     expected, seen = {}, set()
