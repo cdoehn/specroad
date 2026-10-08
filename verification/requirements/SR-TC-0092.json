@@ -21,7 +21,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Diagnosen MÜSSEN bei identischen Eingaben in einer stabilen Reihenfolge nach Schwere, Datei, Artefakt-ID, Pfad und Code ausgegeben werden.",
-    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint. Direct and read-only project reference findings retain deterministic machine order under reversed source order, repeated targets and full or partial selections."
+    "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Direct and read-only project reference findings retain deterministic machine order under reversed source order, repeated targets and full or partial selections."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

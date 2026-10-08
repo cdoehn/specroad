@@ -22,7 +22,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Transaktion in `building` oder `prepared` MUSS ohne Veröffentlichung verworfen werden können.",
-    "scope": "Existing retained-preflight building/prepared discard and its protection boundaries remain supported. AUDIT-REC-05.W additionally reconstructs the complete prepared basis from current project files and persisted profile/resource selection, without a Change Plan or regular model load. Both normal writer exit and audited native takeover after actual process death are covered; independent full-root calculation, byte preservation, immutable audit/receipt and next-writer access are observed. AUDIT-REC-05.R covers persisted building prefixes and fresh-process resumption across discard marker, receipt, barrier, archive and completion boundaries; contradictory roots/evidence, changed resources and unsafe owners remain blocked without normative writes."
+    "scope": "Retained-preflight building/prepared discard and persisted-input restart are supported for the bound cases. Complete basis reconstruction uses current project files and persisted profile/resource selection without a Change Plan or regular model load. Independent full-root calculation, byte preservation, immutable audit/receipt and next-writer access cover normal writer exit and audited native takeover after actual process death. Persisted building prefixes and interrupted discard marker, receipt, barrier, archive and completion paths resume in fresh processes; contradictory roots/evidence, changed resources and unsafe owners remain blocked without normative writes."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

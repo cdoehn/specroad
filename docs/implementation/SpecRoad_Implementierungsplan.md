@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 86
+last_completed_numbered_bundle: 87
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-EVIDENCE-01.C
+next_audit_step: AUDIT-CLOSE
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -1314,7 +1314,7 @@ bleiben erhalten. Die bestehenden SR-TC-Teilumfänge ändern sich nicht.
 
 - [x] **AUDIT-EVIDENCE-01.W:** Überholte `scope`-/`open_items`-Angaben in SR-TC-0288 und SR-TC-0412 mit tatsächlichen Kernen und Tests abgleichen; die fehlende Beschreibung von `SR-FIX-TRANSACTION-RECEIPTS-v1` anhand ihres realen Providers ergänzen. **Abnahme:** Referenzen zeigen auf existierende fachliche Nachweise; nicht ausgeführte beziehungsweise noch unvollständige Abnahmen bleiben erkennbar offen.
 - [x] **AUDIT-EVIDENCE-01.R:** Alle von den Nacharbeiten betroffenen Requirementmanifeste, Tests und Fixturebezüge konsistent fortschreiben. **Abnahme:** Formale Sammlung und Bindung passen zur echten Testmenge; jeder Behauptung steht ihr tatsächlich geprüfter Teilumfang gegenüber. Keine pauschale Hochstufung von `partial` und keine erfundenen alten W/R/C-Erfolge.
-- [ ] **AUDIT-EVIDENCE-01.C:** Gemeinsame Beschreibungen und Verweise konsolidieren, ohne Nachweisumfang oder Ausnahmen zu ändern. **Abnahme:** Inhaltliche Befundzuordnung und maschinenlesbare Katalogverträge bleiben wie nach R. Keine Tests auf Wortlaut, Markdown oder Dokumentation.
+- [x] **AUDIT-EVIDENCE-01.C:** Gemeinsame Beschreibungen und Verweise konsolidieren, ohne Nachweisumfang oder Ausnahmen zu ändern. **Abnahme:** Inhaltliche Befundzuordnung und maschinenlesbare Katalogverträge bleiben wie nach R. Keine Tests auf Wortlaut, Markdown oder Dokumentation.
 
 ### AUDIT-EVIDENCE-01.W – aktuelle Kernnachweise und Receipt-Fixture (Bundle 085)
 
@@ -1404,6 +1404,41 @@ Commit-Message: `docs(verification): reconcile audit evidence bindings`.
 Dieser R-Stand benötigt seinen eigenen vollständigen parallelen Dev-/Apply-Lauf;
 erst das erfolgreiche Apply-Result bestätigt den Abschluss. Nächster Schritt:
 `AUDIT-EVIDENCE-01.C`; Produktstand 237/885 und Sperre von 5.t.W bleiben erhalten.
+
+### AUDIT-EVIDENCE-01.C – konsolidierte Teilumfangsbeschreibungen (Bundle 087)
+
+Basis ist Result `specroad-apply_Result_101721_1008_305181.zip`, Commit
+`da2ba9703569467856a69175976859e59621eedd`. Bundle 086 ist durch 5874 erfolgreiche
+parallele Apply-Tests und einen sauberen Abschluss bestätigt. Alle 1467
+Snapshotdateien und 19 R-Payloads stimmen mit Commit und Entwicklung überein.
+
+Die über mehrere Auditphasen gewachsenen Recoverybeschreibungen sind nach
+aktuellem Vorgang, erhaltenen Sicherheitsgrenzen und offenen Abnahmen geordnet.
+Gleiche Teilverträge für vollständige Hilfsdateiveröffentlichung,
+Originalnachweiserhalt und explizite Wiederaufnahme verwenden dieselbe
+Beschreibung. Die Discard-Manifeste beschreiben gemeinsam den erhaltenen
+Preflightpfad und die persistierte Neustartrekonstruktion. Historische
+W-/R-Zuordnung verbleibt in den jeweiligen Planabschnitten; ihre Entfernung aus
+der laufenden Teilumfangsprosa verändert keine Abnahme.
+
+Die Diagnosemanifeste verwenden eine einheitliche Grundbeschreibung für
+gebundene Beobachtung, stabile Reihenfolge und explizite Schwellenbewertung.
+Die jeweiligen Ergänzungen zu Fundorten, Codes, Referenzmengen und
+Zusammenfassungen bleiben erhalten. In insgesamt 16 Requirementmanifesten
+ändert sich ausschließlich `oracle.scope`; alle anderen Felder, insbesondere
+Status, Requirement-/Verifikationsidentitäten, Originalanforderung,
+Test-/Fixturebindungen, Diagnose-/Exitverträge und offene Punkte, bleiben
+identisch zum geprüften R-Stand. Fixturekatalog, Produktquellen und Tests bleiben
+ebenfalls unverändert. Die 3886 Testbindungen aller 730 Katalogeinträge behalten
+ihren tatsächlichen Nachweisumfang; es entstehen keine Wortlaut- oder
+Dokumentationstests.
+
+Commit-Message: `docs(verification): consolidate audit scope descriptions`.
+Dieser C-Stand benötigt seinen eigenen vollständigen parallelen Dev-/Apply-Lauf;
+erst das erfolgreiche Apply-Result bestätigt den Abschluss. Danach folgt
+`AUDIT-CLOSE` mit seiner gesonderten Befund- und Vertragsentscheidung. Der
+Auditstatus bleibt bis dahin offen; Produktstand 237/885 und Sperre von 5.t.W
+bleiben erhalten.
 
 ### AUDIT-CLOSE – Abschlussentscheidung vor 5.t
 

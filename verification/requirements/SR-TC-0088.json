@@ -21,7 +21,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS Schema- und Modellfehler mit Artefakt-ID und JSON Pointer auf das betroffene Feld ausgeben, soweit eine Artefakt-ID ermittelbar ist.",
-    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint. Actual reference diagnostics additionally retain each available artifact, source path and field/relation pointer, including simultaneous errors behind safe identity barriers."
+    "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Actual reference diagnostics additionally retain each available artifact, source path and field/relation pointer, including simultaneous errors behind safe identity barriers."
   },
   "expected_diagnostics": [
     "SRV001",

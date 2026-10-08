@@ -19,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Diagnoseschwere MUSS einen der Werte `error`, `warning` oder `info` besitzen.",
-    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint."
+    "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
