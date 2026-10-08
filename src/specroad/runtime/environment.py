@@ -2,12 +2,18 @@
 from . import check_runtime, UnsupportedRuntimeError
 from .identity import version_info, BuildMetadataError
 from .resource_observations import resource_observations
-from .resource_profiles import profile_targets
+from .budget_policy import RESOURCE_OPTIONS, ResourcePolicyError, resolve_resource_policy
 
 
 def environment_report(invocation):
     """Return a complete diagnosis and its actual error class, never a write lease."""
     options, registry = invocation.options, invocation.registry
+    resource_options = {k: v for k, v in options.items() if k in RESOURCE_OPTIONS}
+    try:
+        resource_policy = resolve_resource_policy(resource_options)
+    except ResourcePolicyError as error:
+        from ..cli.command_errors import CommandUsageError
+        raise CommandUsageError(str(error)) from error
     target = registry.resolve_selector(options['--for-command']) if '--for-command' in options else None
     root = invocation.resolved.project_root
     checks = []
@@ -100,6 +106,7 @@ def environment_report(invocation):
               'write_capability_not_probed' if write else 'write_paths_not_required', required=write)
 
     observations = resource_observations()
+    resource_policy = resolve_resource_policy(resource_options, observations=observations)
     for name, observation in observations.items():
         check('resources.' + name, 'passed' if observation['state'] == 'observed' else 'unknown',
               'qualified_process_limit' if observation['state'] == 'observed' else 'no_trustworthy_quota',
@@ -113,8 +120,7 @@ def environment_report(invocation):
               'python': python, 'distribution': distribution,
               'checks': sorted(checks, key=lambda c: c['check_id']),
               'recovery_required': recovery_required,
-              'resource_policy': profile_targets(options.get('--resource-profile', 'constrained'),
-                  source='cli' if '--resource-profile' in options else 'default'),
+              'resource_policy': resource_policy,
               'observations': observations, 'semantic_validation_performed': False,
               'target_command_id': None if target is None else target.command_id,
               'metadata': metadata}

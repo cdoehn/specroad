@@ -1,7 +1,7 @@
 """Declared Annex O.1 work targets for diagnostics; never host quota promises.
 
-The budget resolver/engine is a later implementation step. This projection does
-not enforce a deadline, reject large work or claim a resumable work engine.
+The budget resolver adds explicit overrides and classifies supplied constraints.
+This default projection never enforces a deadline or claims a resumable engine.
 """
 
 _TARGETS = (

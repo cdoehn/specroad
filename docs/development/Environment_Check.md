@@ -28,12 +28,29 @@ behauptet weder verfügbaren RAM noch erfolgreiche spätere Allokationen oder
 Schreiboperationen. Ein fehlender Build-Datensatz einer Moduldistribution bleibt
 ehrlich `unrecorded`; ein beschädigter Datensatz ist ein Blocker.
 
-`--resource-profile constrained|standard` projiziert die deklarierten weichen
-Arbeitsziele aus Anhang O.1 mit Herkunft; ohne Auswahl gilt `constrained`. Diese
-Diagnose meldet ausdrücklich `budget_engine_available=false`. Die tatsächliche
-Budgetauflösung und Verarbeitung nach `runtime-budget-v2` folgen in 6.c und den
-weiteren Ressourcenpositionen. Der Bericht ist kein Modellbestandteil und
-erteilt keine Schreibberechtigung.
+`--resource-profile constrained|standard` wählt die weichen Arbeitsziele aus
+Anhang O.1 mit Herkunft; ohne Auswahl gilt `constrained`. `--cpu-budget-ms`,
+`--wall-budget-ms`, `--memory-budget-mib`, `--scratch-budget-mib`, `--step-cpu-ms`
+und `--step-wall-ms` überschreiben jeweils genau das benannte Ziel. Nur positive
+Ganzzahlen sind erlaubt. Ein explizites Schrittfenster darf größer als sein
+übergeordnetes Ziel sein. Der Bericht weist jeden effektiven Wert und seine
+Herkunft aus; MiB werden in Bytes umgerechnet, ohne diese Bytes zu reservieren.
+
+Die gemeinsame reine Auflösung steht in `runtime.budget_policy`. Sie klassifiziert
+ausdrücklich übergebene Ressourcengrenzen und gebundene Scope Descriptors getrennt
+von den Arbeitszielen. Hostbeobachtungen erhalten ihre eigenen Werte, Quellen und
+Unknowns; ein größeres Arbeitsziel erhöht keine Hostgrenze. Environment-Check
+aktiviert keine Modell-/Profilauflösung und reicht hier nur die tatsächlich
+beobachteten Hostwerte weiter. Fehlende Fach-/Strukturvorgaben werden nicht erfunden.
+Die SRX-Bibliothek akzeptiert `EvaluationContext(..., resource_options=...)` als
+Betriebsoptionen außerhalb ihrer vier fachlichen Kontextwurzeln. Der ausgewählte
+Grapharbeitswert wird im bestehenden SRX-Zähler verwendet; ausdrückliche bisherige
+SRX-Vorgaben und harte Strukturprüfungen bleiben erhalten.
+
+`command describe environment.check` nennt `runtime-budget-v2`. Die Diagnose
+meldet weiterhin `budget_engine_available=false`: Verbrauchsmessung, adaptive
+Verarbeitung und persistente Fortsetzungen folgen in weiteren Planpositionen.
+Der Bericht ist kein Modellbestandteil und erteilt keine Schreibberechtigung.
 
 Alle Prüfungen bleiben lesend. Es gibt keine Probe-Writes, Benchmarks,
 Netzwerkzugriffe oder ausgeführte Git-Unterprozesse. Normale frühe Syntax-,

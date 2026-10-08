@@ -150,8 +150,12 @@ def builtin_registry() -> CommandRegistry:
         command_id='environment.check', words=('environment', 'check'),
         command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.PROJECT_METADATA,
         effect_scope=EffectScope.NONE, handler=_environment, configuration_schema_required=True,
+        budget_policy_version='runtime-budget-v2',
         options=(OptionSpec('--project', takes_value=True), OptionSpec('--for-command', takes_value=True),
                  OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
+                 OptionSpec('--cpu-budget-ms', takes_value=True), OptionSpec('--wall-budget-ms', takes_value=True),
+                 OptionSpec('--memory-budget-mib', takes_value=True), OptionSpec('--scratch-budget-mib', takes_value=True),
+                 OptionSpec('--step-cpu-ms', takes_value=True), OptionSpec('--step-wall-ms', takes_value=True),
                  OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
                  OptionSpec('--no-color'), OptionSpec('--quiet')),
         protocol=CommandProtocol('environment-v1', {

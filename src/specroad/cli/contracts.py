@@ -137,7 +137,7 @@ class CommandSpec:
     requires_project: bool = False
     requires_git: bool = False
     requires_write_paths: tuple[str, ...] = ()
-    # No resource-budget implementation or supported version is claimed yet.
+    # A resource policy declaration does not imply a resumable work engine.
     budget_policy_version: str | None = None
     positionals: tuple[PositionalSpec, ...] = ()
     protocol: CommandProtocol | None = None
@@ -215,7 +215,9 @@ class CommandSpec:
         if (self.configuration_schema_required and self.preflight_profile not in
                 (PreflightProfile.PROJECT_METADATA, PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE)):
             raise CommandUsageError("Configuration schema checks require a project profile")
-        if self.budget_policy_version is not None and (not isinstance(self.budget_policy_version, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", self.budget_policy_version)):
+        if self.budget_policy_version is not None and (not isinstance(self.budget_policy_version, str) or
+                (self.budget_policy_version != 'runtime-budget-v2' and
+                 not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", self.budget_policy_version))):
             raise CommandUsageError("Invalid budget policy version")
 
     def preflight_for(self, options) -> PreflightProfile:

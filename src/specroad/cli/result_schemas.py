@@ -122,7 +122,10 @@ def _fields(schema_id):
             'resource_policy': _object({'policy_version': {'const': 'runtime-budget-v2'},
                 'profile': {'enum': ['constrained', 'standard']}, 'profile_source': {'enum': ['default', 'cli']},
                 'scope': {'const': 'declared_soft_work_targets'}, 'budget_engine_available': {'const': False},
-                'effective_budgets': {'type': 'object', 'additionalProperties': budget}}),
+                'effective_budgets': {'type': 'object', 'additionalProperties': budget},
+                'classified_limits': _object({
+                    'soft_work_target': obj, 'semantic_scope': obj, 'hard_safety_or_format': obj,
+                    'observed_host_limit': {'type': 'object', 'additionalProperties': observation}})}),
             'observations': _object({name: observation for name in ('cpu_capacity', 'memory_limit', 'storage_capacity')}),
             'semantic_validation_performed': {'const': False}, 'target_command_id': _nullable(nonempty),
             'metadata': _nullable(obj)})

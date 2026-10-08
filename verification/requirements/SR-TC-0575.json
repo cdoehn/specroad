@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0575",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
+  ],
+  "steps": [
+    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Betriebliche Ressourcenoptionen MÜSSEN unabhängig von fachlicher Konfiguration, Aufgabenidentität und Operationshash nach Anhang O.1 aufgelöst werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Operational values are resolved separately from a real bound ChangePlan/request, scope descriptor and semantic configuration hash. SRX resource_options remain outside its four field-visible roots. Returned maps own their data and do not write options back into semantic inputs."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0
+  ],
+  "json_pointers": [
+    "/result/resource_policy",
+    "/result/resource_policy/classified_limits"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[1-False-constrained]",
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[1-False-standard]",
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[2-True-constrained]",
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[2-True-standard]",
+    "tests/test_runtime_resource_policy.py::test_profile_changes_srx_work_policy_without_changing_fach_scope_or_operations",
+    "tests/test_runtime_resource_policy.py::test_resolved_values_own_their_inputs_and_do_not_write_back_budget_options"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
   ]
 }

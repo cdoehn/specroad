@@ -93,7 +93,7 @@ class ResourcePolicy:
                 "work_targets": self.work.data}
 
     @classmethod
-    def from_project(cls, project, *, rule_id):
+    def from_project(cls, project, *, rule_id, resource_options=None):
         if type(project) is not dict:
             raise SrxResourcePolicyError(rule_id=rule_id, pointer="/project")
         raw = project.get("resource_limits", {})
@@ -101,6 +101,13 @@ class ResourcePolicy:
             raise SrxResourcePolicyError(rule_id=rule_id)
         defaults = {"srx_nodes": 10000, "srx_depth": 2048, "srx_operations": 1000000,
                     "srx_iterations": 1000000, "srx_graph_steps": 2000000}
+        if resource_options is not None:
+            from ..runtime.budget_policy import ResourcePolicyError, resolve_resource_policy
+            try:
+                runtime = resolve_resource_policy(resource_options)
+            except ResourcePolicyError as error:
+                raise SrxResourcePolicyError(rule_id=rule_id, pointer='/resource_options') from error
+            defaults['srx_graph_steps'] = runtime['effective_budgets']['graph']['value']
         unknown = sorted(key for key in raw if key.startswith("srx_") and key not in defaults)
         if unknown:
             raise SrxResourcePolicyError(rule_id=rule_id, pointer="/project/resource_limits/" + unknown[0].replace("~", "~0").replace("/", "~1"))

@@ -4,19 +4,34 @@
   "requirement_id": "SR-REQ-0202",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0014",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
+  ],
+  "steps": [
+    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS alle Größen- und Komplexitätsgrenzen nach der abschließenden Klassifikation in Anhang O.1 als weiches Arbeitsziel, expliziten Fachscope oder harte Sicherheits-/Formatgrenze behandeln.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Declared quantities are classified independently as soft work targets, semantic scopes or hard structure/format limits. Runtime options cannot select safety overrides or workers. Current SRX evaluation uses the selected graph target while retaining current hard AST guards."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3
+  ],
+  "json_pointers": [
+    "/result/resource_policy",
+    "/result/resource_policy/classified_limits"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +43,24 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[1-False-constrained]",
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[1-False-standard]",
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[2-True-constrained]",
+    "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[2-True-standard]",
+    "tests/test_runtime_resource_policy.py::test_declared_limits_have_distinct_semantic_safety_and_work_classes",
+    "tests/test_runtime_resource_policy.py::test_profile_preserves_hard_structure_and_soft_excess_does_not_end_valid_evaluation[constrained]",
+    "tests/test_runtime_resource_policy.py::test_profile_preserves_hard_structure_and_soft_excess_does_not_end_valid_evaluation[standard]",
+    "tests/test_runtime_resource_policy.py::test_runtime_options_cannot_relax_safety_or_activate_workers[bad0]",
+    "tests/test_runtime_resource_policy.py::test_runtime_options_cannot_relax_safety_or_activate_workers[bad1]",
+    "tests/test_runtime_resource_policy.py::test_runtime_options_cannot_relax_safety_or_activate_workers[bad2]",
+    "tests/test_runtime_resource_policy.py::test_runtime_options_cannot_relax_safety_or_activate_workers[bad3]",
+    "tests/test_runtime_resource_policy.py::test_runtime_options_cannot_relax_safety_or_activate_workers[bad4]",
+    "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits0]",
+    "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits1]",
+    "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits2]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
   ]
 }

@@ -4,19 +4,33 @@
   "requirement_id": "SR-REQ-0573",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
+  ],
+  "steps": [
+    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS die Ressourcenprofile und weichen Default-Arbeitsziele von `runtime-budget-v2` nach Anhang O.1 bereitstellen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "The real environment.check and embedded resolver provide all eleven constrained/standard targets, default and explicit origins, six positive integer overrides, byte conversion and unclamped explicit step windows. Real CLI/structured/registry routes use the same policy; the SRX consumer uses its selected graph target."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
+  "json_pointers": [
+    "/result/resource_policy",
+    "/result/resource_policy/classified_limits"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +42,51 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_runtime_resource_policy.py::test_all_overrides_reach_the_same_real_command[cli]",
+    "tests/test_runtime_resource_policy.py::test_all_overrides_reach_the_same_real_command[registry]",
+    "tests/test_runtime_resource_policy.py::test_all_overrides_reach_the_same_real_command[structured]",
+    "tests/test_runtime_resource_policy.py::test_all_profile_defaults_are_used_by_the_environment_contract[None]",
+    "tests/test_runtime_resource_policy.py::test_all_profile_defaults_are_used_by_the_environment_contract[constrained]",
+    "tests/test_runtime_resource_policy.py::test_all_profile_defaults_are_used_by_the_environment_contract[standard]",
+    "tests/test_runtime_resource_policy.py::test_command_describes_resolved_policy_without_inventing_a_work_engine",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[ 1]",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[-1]",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[0]",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[1.5_0]",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[1.5_1]",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[None]",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[True]",
+    "tests/test_runtime_resource_policy.py::test_embedded_invalid_targets_cannot_silently_disable_budget_policy[value7]",
+    "tests/test_runtime_resource_policy.py::test_explicit_step_windows_can_exceed_parent_targets_without_clamping",
+    "tests/test_runtime_resource_policy.py::test_explicit_target_overrides_one_value_and_reports_its_origin[--cpu-budget-ms-cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_explicit_target_overrides_one_value_and_reports_its_origin[--memory-budget-mib-memory-1048576]",
+    "tests/test_runtime_resource_policy.py::test_explicit_target_overrides_one_value_and_reports_its_origin[--scratch-budget-mib-scratch-1048576]",
+    "tests/test_runtime_resource_policy.py::test_explicit_target_overrides_one_value_and_reports_its_origin[--step-cpu-ms-step_cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_explicit_target_overrides_one_value_and_reports_its_origin[--step-wall-ms-step_wall-1]",
+    "tests/test_runtime_resource_policy.py::test_explicit_target_overrides_one_value_and_reports_its_origin[--wall-budget-ms-wall-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[-1---cpu-budget-ms-cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[-1---memory-budget-mib-memory-1048576]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[-1---scratch-budget-mib-scratch-1048576]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[-1---step-cpu-ms-step_cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[-1---step-wall-ms-step_wall-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[-1---wall-budget-ms-wall-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[0---cpu-budget-ms-cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[0---memory-budget-mib-memory-1048576]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[0---scratch-budget-mib-scratch-1048576]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[0---step-cpu-ms-step_cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[0---step-wall-ms-step_wall-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[0---wall-budget-ms-wall-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---cpu-budget-ms-cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---memory-budget-mib-memory-1048576]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---scratch-budget-mib-scratch-1048576]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---step-cpu-ms-step_cpu-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---step-wall-ms-step_wall-1]",
+    "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---wall-budget-ms-wall-1]",
+    "tests/test_runtime_resource_policy.py::test_resolved_profile_selects_the_real_meter_threshold[constrained-True]",
+    "tests/test_runtime_resource_policy.py::test_resolved_profile_selects_the_real_meter_threshold[standard-False]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
   ]
 }

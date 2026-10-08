@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 252
-last_completed_plan_commit: 6.b.C
-next_plan_commit: 6.c.W
-last_completed_numbered_bundle: 103
+implementation_plan_commits_completed: 253
+last_completed_plan_commit: 6.c.W
+next_plan_commit: 6.c.R
+last_completed_numbered_bundle: 104
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5179,12 +5179,48 @@ anschließend folgt 6.c.W.
 
 #### 6.c.W – Let it Work
 
-- [ ] **6.c.W** · Position **253/885** · Voraussetzung: `6.b.C`.
+- [x] **6.c.W** · Position **253/885** · Voraussetzung: `6.b.C`.
 **Exakte Commit-Message:** `6.c.W feat(work): Ressourcenprofile und Grenzklassen aufbauen`
 
 **Umsetzung:** runtime-budget-v2 mit constrained/standard, expliziten Fachscopes, harten Sicherheitsgrenzen und weichen Arbeitszielen auflösen.
 
 **Verhaltensabnahme:** Profilwechsel ändert Arbeitsweise, nicht Scope oder Operationshash.
+
+**Umsetzung / Bundle 104:** Das vollständig geprüfte Result von Bundle 103
+bestätigt `50568469ff689492ba561f8165dbd1fd88542fda`, 6.200 erfolgreiche
+parallele Apply-Tests und einen sauberen Snapshot. Die reine Auflösung von
+`runtime-budget-v2` verbindet die elf vorhandenen Profildefaults mit den sechs
+expliziten Budget-/Schrittoptionen. Werte und Herkunft bleiben sichtbar;
+MiB werden in Bytes umgerechnet, Schrittfenster nicht an Elternziele geklemmt.
+Null, negative Werte und `unlimited` sind bei diesen Optionen Nutzungsfehler.
+
+Ausdrücklich übergebene Mengenziele, Fachlimits und gebundene Scope Descriptors,
+harte Strukturvorgaben und qualifizierte Hostbeobachtungen werden getrennt
+klassifiziert. Ein Arbeitsziel ändert weder Scope noch Hostgrenze. Der echte
+Environment-Check nutzt diese Auflösung, ohne dadurch Fachmodelle oder Profile
+zu laden. Die SRX-Auswertung erhält Betriebsoptionen außerhalb ihrer vier
+fachlichen Kontextwurzeln und verwendet das gewählte Grapharbeitsziel im
+bestehenden Zähler; ausdrückliche bisherige SRX-Vorgaben bleiben wirksam.
+
+64 neue Verhaltensfälle prüfen Profildefaults, Überschreibungen, Herkunft,
+Fehlerklassen und reale CLI-/Request-/Registry-Verbraucher. Ein tatsächlicher
+ChangePlan, Authoring-Request, Operationshash, Konfigurationshash und gebundener
+Scope bleiben bei Profilwechsel unverändert. Vorhandene Queryseiten behalten
+ihre Pagination und ihr vollständiges `total`; dies ist kein Nachweis eines
+fertigen Queryengines. Reale SRX-Auswertungen erhalten Tracetiefe, vollständige
+Ergebnisse oberhalb eines weichen Ziels und harte Strukturfehler. Der separate
+Zählerfall nutzt eine ausdrücklich gelieferte Menge, keinen behaupteten
+Laufzeitbenchmark. Host-Unknowns bleiben unbekannt, bekannte Decken unverändert.
+
+Die bestehende Selbstbeschreibungsabnahme erwartet ausschließlich für den
+Environment-Check die jetzt verwendete Policykennung. Alle Aussagen über
+fehlende Work-Fortsetzung, Checkpoints und deren Seiteneffekte bleiben erhalten.
+Die bisherigen Environment-W-/R-Fälle werden unverändert erneut ausgeführt.
+Sieben Requirements erhalten begrenzte Teilabnahmen; adaptive Verarbeitung,
+gemessener Gesamtverbrauch, persistente Work-Fortsetzung und die vollständige
+Runtime-/Plattformmatrix bleiben offen. Historische Mengenbehandlung und die
+weitere Robustheit gehören zu 6.c.R. Erst nach erfolgreichen vollständigen
+parallelen Dev-/Apply-Tests und Commit gilt Position 253/885; danach folgt 6.c.R.
 
 #### 6.c.R – Make it Right
 

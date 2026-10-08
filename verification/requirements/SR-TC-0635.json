@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0635",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
+  ],
+  "steps": [
+    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Nicht bekannte Anbieterquoten DÜRFEN NICHT als bestimmte verfügbare Ressourcen oder als nachgewiesene Unausführbarkeit ausgegeben werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "The real environment command preserves unknown CPU/memory/storage observations despite large selected work targets. A supplied observed address-space ceiling remains separately qualified and unchanged; neither a target nor unknown quota implies available capacity or proven impossibility."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0
+  ],
+  "json_pointers": [
+    "/result/resource_policy",
+    "/result/resource_policy/classified_limits"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_runtime_resource_policy.py::test_known_host_ceiling_is_separate_from_soft_target_and_never_raised",
+    "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[constrained]",
+    "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[standard]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
   ]
 }
