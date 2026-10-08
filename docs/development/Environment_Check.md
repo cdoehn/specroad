@@ -40,12 +40,30 @@ Die gemeinsame reine Auflösung steht in `runtime.budget_policy`. Sie klassifizi
 ausdrücklich übergebene Ressourcengrenzen und gebundene Scope Descriptors getrennt
 von den Arbeitszielen. Hostbeobachtungen erhalten ihre eigenen Werte, Quellen und
 Unknowns; ein größeres Arbeitsziel erhöht keine Hostgrenze. Environment-Check
-aktiviert keine Modell-/Profilauflösung und reicht hier nur die tatsächlich
-beobachteten Hostwerte weiter. Fehlende Fach-/Strukturvorgaben werden nicht erfunden.
+aktiviert keine Modell-/Profilauflösung. Bei explizitem `--project` übernimmt er
+die deklarierten `resource_limits` aus der bereits schema- und aktuell geprüften
+Konfiguration. Kleine Mengenziele werden ausgewiesen, ohne Modellgröße oder
+Anzahl ungelesener Objekte zu schätzen oder daraus einen Blocker abzuleiten.
+Ungültige beziehungsweise unbekannte Projektgrenzen ergeben Modellfehler 3;
+konkurrierend geänderte Metadaten behalten Konfliktcode 6. Aktive Journale und
+unklare Locks bleiben unabhängig davon Blocker. Fehlende Fach-/Strukturvorgaben
+werden nicht erfunden, Hostwerte bleiben gesonderte Beobachtungen.
 Die SRX-Bibliothek akzeptiert `EvaluationContext(..., resource_options=...)` als
 Betriebsoptionen außerhalb ihrer vier fachlichen Kontextwurzeln. Der ausgewählte
 Grapharbeitswert wird im bestehenden SRX-Zähler verwendet; ausdrückliche bisherige
 SRX-Vorgaben und harte Strukturprüfungen bleiben erhalten.
+
+Historische positive Gesamtmengenziele bleiben Betriebsdaten. Ihre Änderung
+verändert die aktuelle semantische Konfigurations-/Modellwurzel nicht;
+Paginationdefaults und harte Grenzen bleiben darin enthalten. Bereits erzeugte
+Manifeste und Pläne werden nicht umgeschrieben. Die spätere Migrationsplanung
+muss den Wechsel historischer Hashpolicies ausweisen. Das ist keine bereits
+implementierte Migration. Tests mit vollständigen gelieferten Zielmodellen und
+echter SRX-Auswertung prüfen Arbeit oberhalb kleiner Mengenziele; sie belegen
+weder einen beliebig großen Auftrag auf jeder Runtime noch einen fertigen
+Query-/Work-Engine. Die Budgetauflösung prüft außerdem, ob ihre Zahlen und
+Qualifizierungen als tatsächliches UTF-8-JSON darstellbar sind. Ungültige
+Betriebseingaben ergeben Code 2; daraus wird kein falscher Hostblocker.
 
 `command describe environment.check` nennt `runtime-budget-v2`. Die Diagnose
 meldet weiterhin `budget_engine_available=false`: Verbrauchsmessung, adaptive

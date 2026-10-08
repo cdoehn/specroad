@@ -15,17 +15,21 @@
   ],
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS die Ressourcenprofile und weichen Default-Arbeitsziele von `runtime-budget-v2` nach Anhang O.1 bereitstellen.",
-    "scope": "The real environment.check and embedded resolver provide all eleven constrained/standard targets, default and explicit origins, six positive integer overrides, byte conversion and unclamped explicit step windows. Real CLI/structured/registry routes use the same policy; the SRX consumer uses its selected graph target."
+    "scope": "The real environment.check and embedded resolver provide all eleven constrained/standard targets, default and explicit origins, six positive integer overrides, byte conversion and unclamped explicit step windows. Real CLI/structured/registry routes use the same policy; the SRX consumer uses its selected graph target. R reports stable selected-project targets with project origins, preserves model error class for invalid declarations and checks real UTF-8 JSON representability after unit conversion. Concurrent embedded calls retain independent policy selection."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
-    2
+    2,
+    3,
+    5,
+    6
   ],
   "json_pointers": [
     "/result/resource_policy",
@@ -84,9 +88,23 @@
     "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---step-wall-ms-step_wall-1]",
     "tests/test_runtime_resource_policy.py::test_nonpositive_or_unlimited_cli_targets_are_usage_errors[unlimited---wall-budget-ms-wall-1]",
     "tests/test_runtime_resource_policy.py::test_resolved_profile_selects_the_real_meter_threshold[constrained-True]",
-    "tests/test_runtime_resource_policy.py::test_resolved_profile_selects_the_real_meter_threshold[standard-False]"
+    "tests/test_runtime_resource_policy.py::test_resolved_profile_selects_the_real_meter_threshold[standard-False]",
+    "tests/test_runtime_resource_policy_right.py::test_changed_metadata_cannot_publish_stale_project_budget_values",
+    "tests/test_runtime_resource_policy_right.py::test_concurrent_profile_selections_do_not_share_mutable_policy_or_context_values",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_project_resource_declarations_keep_model_error_class_and_original_bytes[limits0]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_project_resource_declarations_keep_model_error_class_and_original_bytes[limits1]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_project_resource_declarations_keep_model_error_class_and_original_bytes[limits2]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_project_resource_declarations_keep_model_error_class_and_original_bytes[limits3]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_project_resource_declarations_keep_model_error_class_and_original_bytes[limits4]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[clean-constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[clean-standard]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[pending-constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[pending-standard]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[unknown_lock-constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[unknown_lock-standard]",
+    "tests/test_runtime_resource_policy_right.py::test_unit_conversion_cannot_turn_a_usage_problem_into_unserializable_cli_success"
   ],
   "open_items": [
-    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
+    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

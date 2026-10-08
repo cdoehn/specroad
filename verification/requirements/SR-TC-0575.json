@@ -15,12 +15,13 @@
   ],
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Betriebliche Ressourcenoptionen MÜSSEN unabhängig von fachlicher Konfiguration, Aufgabenidentität und Operationshash nach Anhang O.1 aufgelöst werden.",
-    "scope": "Operational values are resolved separately from a real bound ChangePlan/request, scope descriptor and semantic configuration hash. SRX resource_options remain outside its four field-visible roots. Returned maps own their data and do not write options back into semantic inputs."
+    "scope": "Operational values are resolved separately from a real bound ChangePlan/request, scope descriptor and semantic configuration hash. SRX resource_options remain outside its four field-visible roots. Returned maps own their data and do not write options back into semantic inputs. R checks all nine historical soft quantity names outside the current semantic configuration hash and all eight hard/semantic names inside it. A real model manifest is unchanged by soft-only differences; previously owned manifests/configuration/plan bytes remain intact. No historical hash migration is performed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -47,9 +48,29 @@
     "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[2-True-constrained]",
     "tests/test_runtime_resource_policy.py::test_actual_srx_graph_evaluation_keeps_semantic_depth[2-True-standard]",
     "tests/test_runtime_resource_policy.py::test_profile_changes_srx_work_policy_without_changing_fach_scope_or_operations",
-    "tests/test_runtime_resource_policy.py::test_resolved_values_own_their_inputs_and_do_not_write_back_budget_options"
+    "tests/test_runtime_resource_policy.py::test_resolved_values_own_their_inputs_and_do_not_write_back_budget_options",
+    "tests/test_runtime_resource_policy_right.py::test_complete_supplied_target_is_valid_beyond_all_tiny_total_quantity_targets[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_complete_supplied_target_is_valid_beyond_all_tiny_total_quantity_targets[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_concurrent_profile_selections_do_not_share_mutable_policy_or_context_values",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[archive_uncompressed_bytes-8192]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[artifact_file_bytes-4096]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[json_depth-4]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[query_default_limit-1]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[srx_depth-3]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[srx_nodes-9]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[trace_depth-2]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[xml_depth-4]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[diagnostic_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[import_object_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[merge_conflict_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[model_bytes]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[query_result_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[relation_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[srx_graph_steps]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[srx_iterations]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[srx_operations]"
   ],
   "open_items": [
-    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
+    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

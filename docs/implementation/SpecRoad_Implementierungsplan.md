@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 253
-last_completed_plan_commit: 6.c.W
-next_plan_commit: 6.c.R
-last_completed_numbered_bundle: 104
+implementation_plan_commits_completed: 254
+last_completed_plan_commit: 6.c.R
+next_plan_commit: 6.c.C
+last_completed_numbered_bundle: 105
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5224,12 +5224,44 @@ parallelen Dev-/Apply-Tests und Commit gilt Position 253/885; danach folgt 6.c.R
 
 #### 6.c.R – Make it Right
 
-- [ ] **6.c.R** · Position **254/885** · Voraussetzung: `6.c.W`.
+- [x] **6.c.R** · Position **254/885** · Voraussetzung: `6.c.W`.
 **Exakte Commit-Message:** `6.c.R feat(work): Ressourcenprofile und Grenzklassen vervollständigen`
 
 **Vervollständigung:** Historische Gesamtmengenziele nicht zu harten Laufzeitverboten machen; echte Sicherheitsgrenzen niemals lockern.
 
 **Verhaltensabnahme:** Großer gültiger Auftrag bleibt ausführbar; unzulässige Struktur bleibt gesperrt. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 105:** Das vollständig geprüfte Result von Bundle 104
+bestätigt `dba42cbf23134e0357aa2ad8456ad470722c9562`, 6.264 erfolgreiche
+parallele Apply-Tests und einen sauberen Snapshot. Environment-Check übernimmt
+bei ausdrücklicher Projektauswahl die deklarierten Ressourcenvorgaben erst nach
+Schema-, Betriebsmetadaten- und Byte-Wiederprüfung. Historische Gesamtmengen
+erscheinen als Arbeitsziele, Fachlimits und harte Strukturen bleiben getrennt.
+Es werden keine Modellobjekte gelesen, Mengen geschätzt oder kleine Arbeitsziele
+als Ausführungsverbot interpretiert. Ungültige Projektvorgaben ergeben Code 3;
+beobachtete Änderungen und aktive Konflikte behalten ihre bisherigen Fehlerklassen.
+
+50 zusätzliche Fälle prüfen diese echte Metadatenintegration sowie die neun
+historischen weichen Werte und acht verbleibenden Fach-/Strukturwerte. Ein
+vollständiger gelieferter Zielbestand mit 32 Artefakten wird trotz Mengenzielen
+von jeweils eins vollständig geprüft und liefert alle Artefakte. Seine aktuelle
+Modellwurzel bleibt bei ausschließlich weichen Änderungen identisch; bestehende
+Manifest-/Planbytes werden nicht umgeschrieben. Vorhandene Queryseiten mit fünf
+angeforderten Items bleiben bei Chargenziel eins vollständig. Echte SRX-Aufträge
+mit 1.025 Iterationen und Grapharbeit oberhalb ihrer Ziele liefern das vollständige
+Ergebnis; eine unzulässige AST-Struktur erreicht auch mit großen Arbeitszielen
+keinen Operator. Profilkomposition behält harte Minima und lässt weiche Mengen
+nicht als harte Profilgrenzen zu.
+
+Nicht darstellbare Budgetwerte und fehlerhafte Hostqualifizierungen bleiben
+Nutzungsfehler; parallele eingebettete Aufrufe teilen keine veränderlichen
+Policywerte. Alle 64 W-Fälle und bisherigen Verhaltenstests bleiben unverändert.
+Requirements behalten ihren Teilstatus. Der spätere Migrationsplan muss die
+Umstellung historischer Hashpolicies nennen; eine Migration, universelle
+Großprojekt-Ausführbarkeit, adaptive Work-Verarbeitung, persistente Checkpoints
+oder eine vollständige Plattformabnahme werden nicht vorgezogen. Erst nach
+erfolgreichen vollständigen parallelen Dev-/Apply-Tests und Commit gilt Position
+254/885; danach folgt 6.c.C.
 
 #### 6.c.C – Make it Clean
 

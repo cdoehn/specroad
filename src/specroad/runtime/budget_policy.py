@@ -4,6 +4,7 @@ This selects declared work targets and classifies explicitly supplied constraint
 It neither measures consumption nor grants capacity, write authority or resume.
 """
 from collections.abc import Mapping
+import json
 import re
 
 from .resource_profiles import profile_targets
@@ -98,4 +99,10 @@ def resolve_resource_policy(options=None, *, resource_limits=None,
     if 'srx_graph_steps' in groups['soft_work_target']:
         result['effective_budgets']['graph'].update(groups['soft_work_target']['srx_graph_steps'])
     result['classified_limits'] = groups
+    try:
+        # Unit conversion must still produce a representable machine report.
+        # This checks the active JSON encoder, not a maximum work/host budget.
+        json.dumps(result, ensure_ascii=False, allow_nan=False).encode('utf-8')
+    except (ValueError, OverflowError) as error:
+        raise ResourcePolicyError('Resource policy cannot be represented as JSON') from error
     return result

@@ -48,6 +48,7 @@ def environment_report(invocation):
 
     recovery_required = None
     metadata = None
+    resource_limits = None
     if root is not None:
         from ..security import ProjectBoundary, SafetyViolation
         from ..model.errors import ModelError
@@ -58,13 +59,18 @@ def environment_report(invocation):
         try:
             boundary = ProjectBoundary(root)
             raw = ledger.read_bytes(boundary, 'specroad.json')
-            JsonResource(raw, configuration_schema(), path='specroad.json')
+            configuration = JsonResource(raw, configuration_schema(), path='specroad.json')
             observed = observe_operational_preflight(boundary, metadata=ledger)
             if observe_operational_preflight(boundary, metadata=ledger) != observed:
                 check('project.metadata', 'failed', 'project_metadata_changed', code=6)
             elif ledger.read_bytes(boundary, 'specroad.json') != raw:
                 check('project.metadata', 'failed', 'project_configuration_changed', code=6)
             else:
+                declared = configuration.data.get('resource_limits', {})
+                # Classify only the stable, explicitly selected configuration.
+                # No count is compared to current model size or used as a ban.
+                resolve_resource_policy(resource_options, resource_limits=declared)
+                resource_limits = declared
                 check('project.metadata', 'passed', 'current_configuration_readable')
                 blocked = observed['consistency_state'] != 'consistent'
                 # An unclassified entry or uninspected writer is a blocker,
@@ -76,6 +82,8 @@ def environment_report(invocation):
                       code=5 if blocked else 0)
         except ModelError as error:
             check('project.metadata', 'failed', error.reason, code=3)
+        except ResourcePolicyError:
+            check('project.metadata', 'failed', 'invalid_resource_policy', code=3)
         except SafetyViolation:
             check('project.metadata', 'failed', 'unsafe_project_metadata', code=7)
         except OSError:
@@ -106,7 +114,8 @@ def environment_report(invocation):
               'write_capability_not_probed' if write else 'write_paths_not_required', required=write)
 
     observations = resource_observations()
-    resource_policy = resolve_resource_policy(resource_options, observations=observations)
+    resource_policy = resolve_resource_policy(resource_options, resource_limits=resource_limits,
+                                              observations=observations)
     for name, observation in observations.items():
         check('resources.' + name, 'passed' if observation['state'] == 'observed' else 'unknown',
               'qualified_process_limit' if observation['state'] == 'observed' else 'no_trustworthy_quota',

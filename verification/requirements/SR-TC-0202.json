@@ -15,18 +15,20 @@
   ],
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS alle Größen- und Komplexitätsgrenzen nach der abschließenden Klassifikation in Anhang O.1 als weiches Arbeitsziel, expliziten Fachscope oder harte Sicherheits-/Formatgrenze behandeln.",
-    "scope": "Declared quantities are classified independently as soft work targets, semantic scopes or hard structure/format limits. Runtime options cannot select safety overrides or workers. Current SRX evaluation uses the selected graph target while retaining current hard AST guards."
+    "scope": "Declared quantities are classified independently as soft work targets, semantic scopes or hard structure/format limits. Runtime options cannot select safety overrides or workers. Current SRX evaluation uses the selected graph target while retaining current hard AST guards. R observes declared legacy targets through the real selected-project environment path without reading model objects. Actual complete supplied-target assessment and SRX execution proceed beyond tiny work quantities. Hard AST checks and minimum profile composition remain enforced."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
     2,
-    3
+    3,
+    5
   ],
   "json_pointers": [
     "/result/resource_policy",
@@ -58,9 +60,42 @@
     "tests/test_runtime_resource_policy.py::test_runtime_options_cannot_relax_safety_or_activate_workers[bad4]",
     "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits0]",
     "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits1]",
-    "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits2]"
+    "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits2]",
+    "tests/test_runtime_resource_policy_right.py::test_actual_graph_keeps_all_requested_work_after_legacy_graph_target[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_actual_graph_keeps_all_requested_work_after_legacy_graph_target[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_complete_supplied_target_is_valid_beyond_all_tiny_total_quantity_targets[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_complete_supplied_target_is_valid_beyond_all_tiny_total_quantity_targets[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[archive_uncompressed_bytes-8192]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[artifact_file_bytes-4096]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[json_depth-4]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[query_default_limit-1]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[srx_depth-3]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[srx_nodes-9]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[trace_depth-2]",
+    "tests/test_runtime_resource_policy_right.py::test_hard_and_semantic_constraints_remain_in_current_model_binding[xml_depth-4]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[diagnostic_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[import_object_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[merge_conflict_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[model_bytes]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[query_result_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[relation_count]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[srx_graph_steps]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[srx_iterations]",
+    "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[srx_operations]",
+    "tests/test_runtime_resource_policy_right.py::test_large_actual_srx_evaluation_completes_above_legacy_counters_with_same_output[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_large_actual_srx_evaluation_completes_above_legacy_counters_with_same_output[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_large_work_target_never_bypasses_current_srx_structure_recheck[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_large_work_target_never_bypasses_current_srx_structure_recheck[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_profile_composition_rejects_soft_quantities_in_hard_policy_and_keeps_minimum",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[clean-constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[clean-standard]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[pending-constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[pending-standard]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[unknown_lock-constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[unknown_lock-standard]",
+    "tests/test_runtime_resource_policy_right.py::test_tiny_query_result_target_does_not_repaginate_a_larger_requested_scope"
   ],
   "open_items": [
-    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
+    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

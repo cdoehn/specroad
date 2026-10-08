@@ -15,12 +15,13 @@
   ],
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Ressourcenprofil DARF NICHT den angeforderten fachlichen Scope, die Prüfstrenge oder erforderliche Nachweise stillschweigend verändern.",
-    "scope": "Profile changes preserve a real ChangePlan, authoring request, operations hash and bound scope. Actual SRX reachability preserves semantic depth and AST strictness. Bound supplied query pages retain their complete total and selected pagination; no query engine or Work checkpoint is claimed."
+    "scope": "Profile changes preserve a real ChangePlan, authoring request, operations hash and bound scope. Actual SRX reachability preserves semantic depth and AST strictness. Bound supplied query pages retain their complete total and selected pagination; no query engine or Work checkpoint is claimed. R validates all 32 supplied target artifacts despite unit work targets, retains all five requested query-page items despite a unit batch target, and completes actual 1025-iteration SRX and graph work. Hard structure and profile composition remain strict."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -51,9 +52,19 @@
     "tests/test_runtime_resource_policy.py::test_profile_preserves_hard_structure_and_soft_excess_does_not_end_valid_evaluation[constrained]",
     "tests/test_runtime_resource_policy.py::test_profile_preserves_hard_structure_and_soft_excess_does_not_end_valid_evaluation[standard]",
     "tests/test_runtime_resource_policy.py::test_query_pagination_and_bound_page_survive_resource_profile_switch[0]",
-    "tests/test_runtime_resource_policy.py::test_query_pagination_and_bound_page_survive_resource_profile_switch[1]"
+    "tests/test_runtime_resource_policy.py::test_query_pagination_and_bound_page_survive_resource_profile_switch[1]",
+    "tests/test_runtime_resource_policy_right.py::test_actual_graph_keeps_all_requested_work_after_legacy_graph_target[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_actual_graph_keeps_all_requested_work_after_legacy_graph_target[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_complete_supplied_target_is_valid_beyond_all_tiny_total_quantity_targets[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_complete_supplied_target_is_valid_beyond_all_tiny_total_quantity_targets[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_large_actual_srx_evaluation_completes_above_legacy_counters_with_same_output[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_large_actual_srx_evaluation_completes_above_legacy_counters_with_same_output[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_large_work_target_never_bypasses_current_srx_structure_recheck[constrained]",
+    "tests/test_runtime_resource_policy_right.py::test_large_work_target_never_bypasses_current_srx_structure_recheck[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_profile_composition_rejects_soft_quantities_in_hard_policy_and_keeps_minimum",
+    "tests/test_runtime_resource_policy_right.py::test_tiny_query_result_target_does_not_repaginate_a_larger_requested_scope"
   ],
   "open_items": [
-    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
+    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

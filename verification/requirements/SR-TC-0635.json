@@ -15,16 +15,18 @@
   ],
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection."
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Nicht bekannte Anbieterquoten DÜRFEN NICHT als bestimmte verfügbare Ressourcen oder als nachgewiesene Unausführbarkeit ausgegeben werden.",
-    "scope": "The real environment command preserves unknown CPU/memory/storage observations despite large selected work targets. A supplied observed address-space ceiling remains separately qualified and unchanged; neither a target nor unknown quota implies available capacity or proven impossibility."
+    "scope": "The real environment command preserves unknown CPU/memory/storage observations despite large selected work targets. A supplied observed address-space ceiling remains separately qualified and unchanged; neither a target nor unknown quota implies available capacity or proven impossibility. R rejects contradictory, unqualified, negative/noninteger or non-UTF-8 host claims as usage errors without changing caller observations or converting uncertainty into capacity."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
-    0
+    0,
+    2
   ],
   "json_pointers": [
     "/result/resource_policy",
@@ -44,9 +46,18 @@
   "test_ids": [
     "tests/test_runtime_resource_policy.py::test_known_host_ceiling_is_separate_from_soft_target_and_never_raised",
     "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[constrained]",
-    "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[standard]"
+    "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[standard]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes0]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes1]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes2]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes3]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes4]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes5]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes6]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes7]",
+    "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes8]"
   ],
   "open_items": [
-    "Partial 6.c.W evidence only. Historical quantity handling and complete consumer integration remain in 6.c.R; adaptive processing, measured runtime consumption, persistent Work/checkpoints and the full runtime/platform matrix remain open. No release, capacity guarantee or query-engine benchmark is claimed."
+    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }
