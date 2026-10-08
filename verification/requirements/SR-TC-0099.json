@@ -8,7 +8,8 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-DIAGNOSTICS-v1",
-    "SR-FIX-REFERENCE-FINDINGS-v1"
+    "SR-FIX-REFERENCE-FINDINGS-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1"
   ],
   "preconditions": [
     "Explicit diagnostic data and already loaded, source-bound model reports."
@@ -21,7 +22,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jedes Prüfkommando MUSS eine Zusammenfassung mit Anzahl geprüfter Artefakte und Anzahl Diagnosen je Schwere ausgeben.",
-    "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Direct and read-only project reference assessments retain the complete observed artifact and diagnostic counts for full and partial selections, without a full CLI claim."
+    "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Direct and read-only project reference assessments retain the complete observed artifact and diagnostic counts for full and partial selections, without a full CLI claim. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -80,7 +81,11 @@
     "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[two_wrong_types-unrelated]",
     "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-project]",
     "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-source]",
-    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-unrelated]"
+    "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-unrelated]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[1-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[2-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-True]"
   ],
   "open_items": [
     "Future validator and public command adapters must preserve this existing diagnostic contract; current model and read-only project integrations do not establish all command consumers.",

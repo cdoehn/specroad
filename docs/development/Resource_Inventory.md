@@ -100,5 +100,6 @@ Verhaltenstests benutzen eigene temporäre Projektverzeichnisse, echte Binärdat
 und gezielte Störungen. Sie prüfen vollständige Ressourcenmengen, Bytebindungen,
 Frische, blockweises Lesen, Isolation, sichere Fehler und verschobene Modul-/Zipapp-
 Distributionen. Keine Layout-, Konsolentext-, Farb- oder Dokumentationstests.
-Parallele Suite und serieller Referenzlauf verwenden die bestehende Testinfrastruktur.
+Für die parallele Vollsuite gilt die lokale AGENTS.md; technische Aufrufe beschreibt
+[Testing.md](Testing.md).
 Keine neuen Core-Abhängigkeiten, kein neuer CLI-Befehl, kein Cache- oder Projektwrite.

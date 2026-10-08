@@ -59,9 +59,10 @@ Dateisystemmanipulation. Ein Ergebnis behauptet daher kein atomares Modellsnapsh
 Dies ist die fachliche Bibliotheksgrundlage, noch kein neu verdrahteter CLI-Befehl
 oder vollständiger ChangeBackend. Der
 [Neustartbefund](../reviews/SpecRoad_AUDIT_REC_05_U.md) beschrieb die fehlende
-Rekonstruktion des unabhängigen Discard-Basisnachweises. `AUDIT-REC-05.W` ergänzt
-nun den unten beschriebenen öffentlichen Prepared-Neustartweg; Building und
-unterbrochene Vorbereitung bleiben `AUDIT-REC-05.R`. Zielabschluss und
+Rekonstruktion des unabhängigen Discard-Basisnachweises. `AUDIT-REC-05.W/R/C`
+implementiert den unten beschriebenen öffentlichen Neustartweg für Prepared,
+Building und unterbrochene Vorbereitung samt erneuter unabhängiger Basisprüfung.
+Zielabschluss und
 Rollback sind in den folgenden Abschnitten beschrieben; automatischer
 Transaktionspreflight (5.t) und Vollquellen-Restore (15.j) bleiben getrennte Aufgaben.
 

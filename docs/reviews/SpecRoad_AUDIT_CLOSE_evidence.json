@@ -1,0 +1,2542 @@
+{
+  "evidence_kind": "specroad-audit-close-review-v1",
+  "review_date": "2026-10-08",
+  "scope": "Review of actual audit correction history through Bundle 087. This file is not a test execution or release approval.",
+  "product_progress": {
+    "completed": 237,
+    "total": 885,
+    "last": "5.s.C",
+    "next": "5.t.W"
+  },
+  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "original_audit": {
+    "commit": "f5534e50e74a701b4a5b29cdcfc39e792e21e542",
+    "report": "SpecRoad_Grobaudit_2026-10-02_f5534e50.md",
+    "report_sha256": "b9776b86d52851b02d2b116f88e1f817e90eda90504fb3c3c1e387ed982f4079",
+    "result": "specroad-apply_Result_151409_1002_817f46.zip",
+    "result_sha256": "b7a8aec9356fa50f2bd6f895078485501528bf16e8a19404ca66ae81fc619229",
+    "test_execution_present": false,
+    "historical_product_wrc_evidence": "not established by the static audit"
+  },
+  "closure_base": {
+    "result": "/home/christian/Codex/specroad/exchange/specroad-apply_Result_103524_1008_f2793e.zip",
+    "sha256": "4d65d7e3423a1b6fe1c9b0bb3a6c698c319bf2d31761aa926d82b29cd5bfdd68",
+    "base_commit": "2ace2fc325093a9fb8dab9795c762bf4d2ef7adb",
+    "base_files": 1467,
+    "zip_entries": 1477,
+    "dirty": false,
+    "operation": "apply",
+    "issues": [],
+    "snapshot_checks_passed": true,
+    "core_validation": "passed with installed PatchHarbor defaults",
+    "apply": {
+      "bundle_number": "087",
+      "patch_sha256": "a01513b02c164f6d31fc93ee363f5730def4d9a0e0c90bfde9f024cc11dcdbc5",
+      "run_id": "f2793e55-61b3-40a3-9705-a44cabb114e5",
+      "completed_commit": "2ace2fc325093a9fb8dab9795c762bf4d2ef7adb",
+      "parent_commit": "da2ba9703569467856a69175976859e59621eedd",
+      "payload_files_matched": 17,
+      "entrypoint_exit_code": 0,
+      "tests": [
+        {
+          "mode": "parallel",
+          "workers": 4,
+          "passed": 5874,
+          "seconds": 413.17
+        }
+      ]
+    }
+  },
+  "verification_method": [
+    "Installed PatchHarbor reader with unchanged default limits verifies each non-dry Result.",
+    "Every base entry size, Git blob identity, mode and complete path set is compared with the actual recorded commit tree.",
+    "Run status, recorded full-suite gates and commit messages are read from actual execution logs; failed operations are retained.",
+    "Current full snapshot and prior delivered payloads also match the Development and read-only Apply files.",
+    "Bundle 080 uses qualified local emergency execution records plus the persisted Apply receipt and a separately verified later manual snapshot."
+  ],
+  "findings": [
+    {
+      "finding": "F01",
+      "audit_step": "AUDIT-REC-01",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "5.q",
+        "5.r",
+        "5.s"
+      ],
+      "observed_contract": "Complete current normative membership and bytes bind the independent base/target roots; missing, extra, changed or concurrently observed resources block recovery. This is transitive root binding, not a fresh semantic model load.",
+      "behavior_test_files": [
+        "tests/test_recovery_inventory.py",
+        "tests/test_recovery_inventory_right.py"
+      ],
+      "applied_commits": [
+        "bacb457e237da9c9626493fc482d16d070a3e4cc",
+        "6455ced97549a2b110dd6b5e17f0f54a5be99121",
+        "33461a60ca916d78210939e99268501095d515a6"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F02",
+      "audit_step": "AUDIT-REC-02",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "5.n",
+        "5.r",
+        "5.s"
+      ],
+      "observed_contract": "Rollback, completion and discard persist transaction receipts and action evidence. Explicit cleanup preserves archived work and permits subsequent real readers/writers only after terminal proof.",
+      "behavior_test_files": [
+        "tests/test_terminal_recovery.py",
+        "tests/test_terminal_recovery_right.py",
+        "tests/test_transaction_recovery_lock.py"
+      ],
+      "applied_commits": [
+        "36a1be7d7a970186459c370e4aa708bd3a128470",
+        "a664e668efd458fb2d9d05bf933e373c06932001",
+        "2bb69a071771e28501089109996aaf9433bfd352"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F03",
+      "audit_step": "AUDIT-REC-03",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "5.q.R",
+        "5.n.R"
+      ],
+      "observed_contract": "Operational writes before receipt or completion failures remain observable as mutation_possible; conflicting preexisting evidence remains untouched and does not become this call's write.",
+      "behavior_test_files": [
+        "tests/test_recovery_mutation_accounting.py",
+        "tests/test_recovery_mutation_accounting_right.py"
+      ],
+      "applied_commits": [
+        "610f8b9f4904711d2a0c739a8fc8b53c9c4a571a",
+        "3042582595a8692876d6b7354a6fa194ac0f6a71",
+        "efe11768f6f5f7ffbe2c87af28e36a14713ba8aa"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F04",
+      "audit_step": "AUDIT-REC-04",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "5.q.R",
+        "5.r.R"
+      ],
+      "observed_contract": "Bound auxiliary bytes are staged completely before publication, resumed after real process stops and rechecked against current sources; foreign or changed evidence is retained and blocks.",
+      "behavior_test_files": [
+        "tests/test_recovery_initial_successor.py",
+        "tests/test_recovery_auxiliary_writes.py"
+      ],
+      "applied_commits": [
+        "8d08b23b1769cc7ade2932fcae8ed3c6db7f356c",
+        "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+        "762f8900ec183c5870ffba9b118fe50b6af913d0"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F05",
+      "audit_step": "AUDIT-CONTRACT-01",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "1.i",
+        "1.n",
+        "2.q"
+      ],
+      "observed_contract": "Self-description advertises retrievable model contracts and executable SRX library support separately from actually registered CLI commands and output formats.",
+      "behavior_test_files": [
+        "tests/test_capabilities.py",
+        "tests/test_capability_scope.py"
+      ],
+      "applied_commits": [
+        "891e7ffbb80fd524444f81600881c9f91692db44",
+        "8fd56dcd8a60bfbc8c55b873447cf0b762b2dbec",
+        "7468a78a696b5a9a0b248dcf9e0acd813dfcf968"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F06",
+      "audit_step": "AUDIT-CONTRACT-02",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "2.q",
+        "5.a"
+      ],
+      "observed_contract": "The implemented Change Plan 1.2.0 schema is retrievable through the catalog with exact version identity and detached return values; no future operation or command is advertised.",
+      "behavior_test_files": [
+        "tests/test_schema_catalog_change_plan.py",
+        "tests/test_schema_catalog.py"
+      ],
+      "applied_commits": [
+        "2977923276e2b281e652ee5575c22be8274c891f",
+        "cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33",
+        "ee91f34df4bee63ea983680afa5412e601ba8185"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F07",
+      "audit_step": "AUDIT-VALIDATION-01",
+      "decision": "confirmed_and_corrected_with_explicit_future_scope",
+      "original_positions": [
+        "4.l",
+        "4.o",
+        "4.r"
+      ],
+      "observed_contract": "Rationale and relation minima produce bound nonliteral Core findings, preserve independent literal findings and keep unavailable inputs incomplete. Full currentness integrations remain assigned to later product steps.",
+      "behavior_test_files": [
+        "tests/test_core_lint.py",
+        "tests/test_core_lint_right.py"
+      ],
+      "applied_commits": [
+        "60bcd2e75b2cb44c559568a6aa28f3141026ade9",
+        "b1f6b1ee52e23f768e75e0361dfb9d9762c315bc",
+        "c48f8e581f4ba83cf925671e94ceffd1eb0f0b70"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F08",
+      "audit_step": "AUDIT-VALIDATION-02",
+      "decision": "confirmed_and_corrected_with_explicit_future_scope",
+      "original_positions": [
+        "4.o",
+        "4.p",
+        "4.q",
+        "4.r",
+        "5.f",
+        "5.g"
+      ],
+      "observed_contract": "Actual configuration, language registry, selected profiles, SRX predicates and formal approval observations feed model/project/target validation. Missing authentic reviews, evidence and lifecycle history remain unavailable and cannot grant approval.",
+      "behavior_test_files": [
+        "tests/test_production_validation.py",
+        "tests/test_production_validation_right.py"
+      ],
+      "applied_commits": [
+        "3492260429e2ccddb56e8166fce10d44e3690ede",
+        "5080638795d9fd828b5ceb0b00b107c4980aea22",
+        "9a121a3535b336312019c88b3fdda9f0e00d4611"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "F09",
+      "audit_step": "AUDIT-DOC-01",
+      "decision": "corrected_by_manual_instruction_review",
+      "original_positions": [],
+      "observed_contract": "Active instructions use parallel-only Dev and Apply suites, including the final state; only the user starts workflow_dispatch CI. Historical serial executions remain historical. No documentation or wording tests are introduced.",
+      "behavior_test_files": [],
+      "applied_commits": [],
+      "closure_gate_required": true
+    },
+    {
+      "finding": "F10",
+      "audit_step": "AUDIT-EVIDENCE-01",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "3.h",
+        "3.i",
+        "3.j",
+        "4.e",
+        "4.g",
+        "4.i",
+        "5.n"
+      ],
+      "observed_contract": "Current scope/open items and real fixture providers are reconciled with collected behavior cases. No requirement is promoted to passed and no unavailable historical W/R/C evidence is invented.",
+      "behavior_test_files": [],
+      "applied_commits": [
+        "5ad36d921675f0ecb52ac5bfc10424c7bc3c1943",
+        "da2ba9703569467856a69175976859e59621eedd",
+        "2ace2fc325093a9fb8dab9795c762bf4d2ef7adb"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "RECOVERY-RESTART",
+      "audit_step": "AUDIT-REC-05",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "5.q",
+        "5.s"
+      ],
+      "observed_contract": "Persisted independent basis evidence permits prepared/building discard reconstruction after fresh-process restart and interrupted completion; full inventory and byte checks preserve originals and reject unproved inputs.",
+      "behavior_test_files": [
+        "tests/test_discard_restart.py",
+        "tests/test_discard_restart_right.py"
+      ],
+      "applied_commits": [
+        "ee3f10f0d72159a40816b8e89fd2b64d590850d6",
+        "d79a5beb5be80bef87b70074a5f27e6b1398031a",
+        "2074a970a03281819435430dd4e6fe99a516654e"
+      ],
+      "closure_gate_required": false
+    },
+    {
+      "finding": "REFERENCE-SETS",
+      "audit_step": "AUDIT-VALIDATION-03",
+      "decision": "confirmed_and_corrected",
+      "original_positions": [
+        "4.p.R",
+        "5.f",
+        "5.g"
+      ],
+      "observed_contract": "Independent reference findings retain all known locations behind valid identity barriers. New closure cases compare whole-target and read-only project field findings; strict stored-relation planning rejects invalid source graphs before a ChangePlan exists.",
+      "behavior_test_files": [
+        "tests/test_validation_missing_references.py",
+        "tests/test_validation_reference_sets.py",
+        "tests/test_validation_target_reference_sets.py"
+      ],
+      "applied_commits": [
+        "7b0814660666f8f71584d13ab250c7ca7d2803e5",
+        "81daac1f05b5cbc018ce363074de91a156d68503",
+        "9fbbe807695b971bb874e852aca852f03f50c91a"
+      ],
+      "closure_gate_required": true
+    }
+  ],
+  "deferred_product_scope": [
+    {
+      "positions": [
+        "5.t.W",
+        "5.t.R",
+        "5.t.C"
+      ],
+      "scope": "Automatic transaction preflight",
+      "reason": "The audit restores already promised explicit recovery APIs; automatic integration is the next unimplemented product step."
+    },
+    {
+      "positions": [
+        "5.v.W",
+        "5.v.R",
+        "5.v.C"
+      ],
+      "scope": "Complete crash matrix",
+      "reason": "Observed audit fault boundaries are specific regressions, not the full planned transaction crash matrix."
+    },
+    {
+      "positions": [
+        "7.f",
+        "7.g",
+        "7.h",
+        "7.j",
+        "10.d.C",
+        "12.t.W"
+      ],
+      "scope": "Authentic lifecycle history, review, baseline and evidence integration",
+      "reason": "Formal predicates cannot replace actual history/currentness services; absent services remain incomplete and never authorize approval."
+    },
+    {
+      "positions": [
+        "8.b",
+        "11.f"
+      ],
+      "scope": "Public SRX query/filter and document query/table consumers",
+      "reason": "The implemented SRX library and conformance vectors do not register future public commands."
+    },
+    {
+      "positions": [
+        "9.c",
+        "9.d"
+      ],
+      "scope": "Configuration applicability integration",
+      "reason": "Existing scope/control/hash contracts do not create the planned production applicability workflow."
+    },
+    {
+      "positions": [
+        "15.j",
+        "15.k",
+        "15.l"
+      ],
+      "scope": "Full-source restore",
+      "reason": "Explicit rollback of bound transaction bytes does not implement restore of all model sources."
+    },
+    {
+      "positions": [
+        "M20"
+      ],
+      "scope": "Release and complete runtime/filesystem evidence",
+      "reason": "Current Linux/CPython local results and historical runs do not prove all supported environments or release readiness."
+    }
+  ],
+  "commits": [
+    {
+      "commit": "ef01c7dbffa3eb7290f03569cdf0afd42d0eda42",
+      "parent": "f5534e50e74a701b4a5b29cdcfc39e792e21e542",
+      "message": "docs(plan): Audit-Nacharbeiten vor 5.t konkretisieren",
+      "logged_in_results": [
+        "specroad-apply_Result_170816_1002_30aa8e.zip"
+      ]
+    },
+    {
+      "commit": "bacb457e237da9c9626493fc482d16d070a3e4cc",
+      "parent": "ef01c7dbffa3eb7290f03569cdf0afd42d0eda42",
+      "message": "fix(recovery): prove complete journal-bound inventories",
+      "logged_in_results": [
+        "specroad-apply_Result_185537_1002_d1be06.zip"
+      ]
+    },
+    {
+      "commit": "6455ced97549a2b110dd6b5e17f0f54a5be99121",
+      "parent": "bacb457e237da9c9626493fc482d16d070a3e4cc",
+      "message": "fix(recovery): align inventory diagnosis and retry guards",
+      "logged_in_results": [
+        "specroad-apply_Result_185537_1002_d1be06.zip"
+      ]
+    },
+    {
+      "commit": "33461a60ca916d78210939e99268501095d515a6",
+      "parent": "6455ced97549a2b110dd6b5e17f0f54a5be99121",
+      "message": "refactor(recovery): share inventory observation boundaries",
+      "logged_in_results": [
+        "specroad-apply_Result_202135_1002_5d8e5f.zip"
+      ]
+    },
+    {
+      "commit": "2612cbd0e9a6b5cfecca2db748dbc5ffe76cd506",
+      "parent": "33461a60ca916d78210939e99268501095d515a6",
+      "message": "docs(recovery): document terminal recovery audit and repair scope",
+      "logged_in_results": [
+        "specroad-apply_Result_123926_1003_3e65cb.zip"
+      ]
+    },
+    {
+      "commit": "36a1be7d7a970186459c370e4aa708bd3a128470",
+      "parent": "2612cbd0e9a6b5cfecca2db748dbc5ffe76cd506",
+      "message": "fix(recovery): persist terminal evidence and enable explicit cleanup",
+      "logged_in_results": [
+        "specroad-apply_Result_132329_1003_232f4b.zip"
+      ]
+    },
+    {
+      "commit": "a664e668efd458fb2d9d05bf933e373c06932001",
+      "parent": "36a1be7d7a970186459c370e4aa708bd3a128470",
+      "message": "fix(recovery): harden terminal retries and audited orphan takeover",
+      "logged_in_results": [
+        "specroad-apply_Result_154415_1003_52d584.zip"
+      ]
+    },
+    {
+      "commit": "2bb69a071771e28501089109996aaf9433bfd352",
+      "parent": "a664e668efd458fb2d9d05bf933e373c06932001",
+      "message": "refactor(recovery): share terminal proof and lock checks",
+      "logged_in_results": [
+        "specroad-apply_Result_170642_1003_89cea3.zip"
+      ]
+    },
+    {
+      "commit": "610f8b9f4904711d2a0c739a8fc8b53c9c4a571a",
+      "parent": "2bb69a071771e28501089109996aaf9433bfd352",
+      "message": "fix(recovery): track mutation before creating recovery receipts",
+      "logged_in_results": [
+        "specroad-apply_Result_185358_1003_3449f9.zip"
+      ]
+    },
+    {
+      "commit": "3042582595a8692876d6b7354a6fa194ac0f6a71",
+      "parent": "610f8b9f4904711d2a0c739a8fc8b53c9c4a571a",
+      "message": "fix(recovery): preserve mutation accounting across completion boundaries",
+      "logged_in_results": [
+        "specroad-apply_Result_195933_1003_6d1d16.zip"
+      ]
+    },
+    {
+      "commit": "efe11768f6f5f7ffbe2c87af28e36a14713ba8aa",
+      "parent": "3042582595a8692876d6b7354a6fa194ac0f6a71",
+      "message": "refactor(recovery): centralize mutation state and error translation",
+      "logged_in_results": [
+        "specroad-apply_Result_064106_1004_c04f19.zip"
+      ]
+    },
+    {
+      "commit": "e3656471165ae294226c53fd4fa8587f5ddf4f9f",
+      "parent": "efe11768f6f5f7ffbe2c87af28e36a14713ba8aa",
+      "message": "docs(recovery): confirm interrupted helper restart gaps",
+      "logged_in_results": [
+        "specroad-apply_Result_073156_1004_338aeb.zip"
+      ]
+    },
+    {
+      "commit": "8d08b23b1769cc7ade2932fcae8ed3c6db7f356c",
+      "parent": "e3656471165ae294226c53fd4fa8587f5ddf4f9f",
+      "message": "Fix: publish initial rollback successors only after complete staging",
+      "logged_in_results": [
+        "specroad-apply_Result_083726_1004_6d476d.zip"
+      ]
+    },
+    {
+      "commit": "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+      "parent": "8d08b23b1769cc7ade2932fcae8ed3c6db7f356c",
+      "message": "fix(recovery): resume all bound auxiliary writes after interruptions",
+      "logged_in_results": [
+        "specroad-apply_Result_093702_1004_0de973.zip"
+      ]
+    },
+    {
+      "commit": "762f8900ec183c5870ffba9b118fe50b6af913d0",
+      "parent": "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+      "message": "refactor(recovery): centralize auxiliary file bindings and durability",
+      "logged_in_results": [
+        "specroad-apply_Result_131124_1004_93e82b.zip"
+      ]
+    },
+    {
+      "commit": "2558feb44857f32c7c0f33b2ee8be1326b4d6e47",
+      "parent": "762f8900ec183c5870ffba9b118fe50b6af913d0",
+      "message": "docs(recovery): confirm unpublished discard restart dependency",
+      "logged_in_results": [
+        "specroad-apply_Result_152751_1004_3a508f.zip"
+      ]
+    },
+    {
+      "commit": "ee3f10f0d72159a40816b8e89fd2b64d590850d6",
+      "parent": "2558feb44857f32c7c0f33b2ee8be1326b4d6e47",
+      "message": "fix(recovery): reconstruct prepared discard proof after restart",
+      "logged_in_results": [
+        "specroad-apply_Result_162511_1004_801033.zip"
+      ]
+    },
+    {
+      "commit": "d79a5beb5be80bef87b70074a5f27e6b1398031a",
+      "parent": "ee3f10f0d72159a40816b8e89fd2b64d590850d6",
+      "message": "fix(recovery): resume unpublished discard across interrupted preparation",
+      "logged_in_results": [
+        "specroad-apply_Result_171714_1004_7b5c41.zip"
+      ]
+    },
+    {
+      "commit": "2074a970a03281819435430dd4e6fe99a516654e",
+      "parent": "d79a5beb5be80bef87b70074a5f27e6b1398031a",
+      "message": "refactor(recovery): share read-only discard evidence checks",
+      "logged_in_results": [
+        "specroad-apply_Result_181602_1004_102394.zip"
+      ]
+    },
+    {
+      "commit": "891e7ffbb80fd524444f81600881c9f91692db44",
+      "parent": "2074a970a03281819435430dd4e6fe99a516654e",
+      "message": "fix(core): advertise implemented model schema support",
+      "logged_in_results": [
+        "specroad-apply_Result_185856_1004_b69b90.zip"
+      ]
+    },
+    {
+      "commit": "8fd56dcd8a60bfbc8c55b873447cf0b762b2dbec",
+      "parent": "891e7ffbb80fd524444f81600881c9f91692db44",
+      "message": "fix(core): distinguish SRX library support from CLI capabilities",
+      "logged_in_results": [
+        "specroad-apply_Result_194140_1004_39a4e9.zip"
+      ]
+    },
+    {
+      "commit": "7468a78a696b5a9a0b248dcf9e0acd813dfcf968",
+      "parent": "8fd56dcd8a60bfbc8c55b873447cf0b762b2dbec",
+      "message": "refactor(core): share model and SRX version identities",
+      "logged_in_results": [
+        "specroad-apply_Result_204811_1004_642827.zip"
+      ]
+    },
+    {
+      "commit": "2977923276e2b281e652ee5575c22be8274c891f",
+      "parent": "7468a78a696b5a9a0b248dcf9e0acd813dfcf968",
+      "message": "fix(model): expose the existing change plan schema in the catalog",
+      "logged_in_results": [
+        "specroad-apply_Result_214108_1004_04063c.zip"
+      ]
+    },
+    {
+      "commit": "cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33",
+      "parent": "2977923276e2b281e652ee5575c22be8274c891f",
+      "message": "test(model): harden catalog identity and isolation coverage",
+      "logged_in_results": [
+        "specroad-apply_Result_222356_1004_4cafee.zip"
+      ]
+    },
+    {
+      "commit": "ee91f34df4bee63ea983680afa5412e601ba8185",
+      "parent": "cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33",
+      "message": "refactor(model): share change plan schema identity",
+      "logged_in_results": [
+        "specroad-apply_Result_230658_1004_9dff6c.zip"
+      ]
+    },
+    {
+      "commit": "b669fe16663eb88b48543cb55288cbecf494040d",
+      "parent": "ee91f34df4bee63ea983680afa5412e601ba8185",
+      "message": "docs(validation): record missing nonliteral lint diagnostics",
+      "logged_in_results": [
+        "specroad-apply_Result_235051_1004_72af87.zip"
+      ]
+    },
+    {
+      "commit": "06d514f4f413e3bb595b911be51a2fc06e4be947",
+      "parent": "b669fe16663eb88b48543cb55288cbecf494040d",
+      "message": "docs(validation): record missing production gate adapters",
+      "logged_in_results": [
+        "specroad-apply_Result_004435_1005_821734.zip"
+      ]
+    },
+    {
+      "commit": "804cdedf915805db3d14e9788dca2957d71a0a48",
+      "parent": "06d514f4f413e3bb595b911be51a2fc06e4be947",
+      "message": "docs(validation): record incomplete reference diagnostic sets",
+      "logged_in_results": [
+        "specroad-apply_Result_012756_1005_eb54a4.zip"
+      ]
+    },
+    {
+      "commit": "60bcd2e75b2cb44c559568a6aa28f3141026ade9",
+      "parent": "804cdedf915805db3d14e9788dca2957d71a0a48",
+      "message": "fix(lint): report missing rationale and relation minima",
+      "logged_in_results": [
+        "specroad-apply_Result_022149_1005_95d2e5.zip"
+      ]
+    },
+    {
+      "commit": "b1f6b1ee52e23f768e75e0361dfb9d9762c315bc",
+      "parent": "60bcd2e75b2cb44c559568a6aa28f3141026ade9",
+      "message": "fix(lint): preserve bound findings and incomplete coverage",
+      "logged_in_results": [
+        "specroad-apply_Result_031556_1005_64501e.zip"
+      ]
+    },
+    {
+      "commit": "c48f8e581f4ba83cf925671e94ceffd1eb0f0b70",
+      "parent": "b1f6b1ee52e23f768e75e0361dfb9d9762c315bc",
+      "message": "refactor(lint): share finding assessment and rule projection",
+      "logged_in_results": [
+        "specroad-apply_Result_035946_1005_5a5f8b.zip"
+      ]
+    },
+    {
+      "commit": "3492260429e2ccddb56e8166fce10d44e3690ede",
+      "parent": "c48f8e581f4ba83cf925671e94ceffd1eb0f0b70",
+      "message": "fix(validation): connect productive language profile and approval checks",
+      "logged_in_results": [
+        "specroad-apply_Result_045412_1005_f5b80c.zip"
+      ]
+    },
+    {
+      "commit": "5080638795d9fd828b5ceb0b00b107c4980aea22",
+      "parent": "3492260429e2ccddb56e8166fce10d44e3690ede",
+      "message": "fix(validation): harden resource binding and adapter coverage",
+      "logged_in_results": [],
+      "qualified_local_evidence": "bundle_080_export_failure"
+    },
+    {
+      "commit": "9a121a3535b336312019c88b3fdda9f0e00d4611",
+      "parent": "5080638795d9fd828b5ceb0b00b107c4980aea22",
+      "message": "refactor(validation): consolidate bound resource observations",
+      "logged_in_results": [
+        "specroad-apply_Result_075733_1008_17cdbe.zip"
+      ]
+    },
+    {
+      "commit": "7b0814660666f8f71584d13ab250c7ca7d2803e5",
+      "parent": "9a121a3535b336312019c88b3fdda9f0e00d4611",
+      "message": "fix(validation): collect independently missing reference targets",
+      "logged_in_results": [
+        "specroad-apply_Result_083435_1008_5486e2.zip"
+      ]
+    },
+    {
+      "commit": "81daac1f05b5cbc018ce363074de91a156d68503",
+      "parent": "7b0814660666f8f71584d13ab250c7ca7d2803e5",
+      "message": "fix(validation): complete reference diagnostic sets",
+      "logged_in_results": [
+        "specroad-apply_Result_090436_1008_f0b039.zip"
+      ]
+    },
+    {
+      "commit": "9fbbe807695b971bb874e852aca852f03f50c91a",
+      "parent": "81daac1f05b5cbc018ce363074de91a156d68503",
+      "message": "refactor(validation): share strict reference predicates",
+      "logged_in_results": [
+        "specroad-apply_Result_092722_1008_f55178.zip"
+      ]
+    },
+    {
+      "commit": "5ad36d921675f0ecb52ac5bfc10424c7bc3c1943",
+      "parent": "9fbbe807695b971bb874e852aca852f03f50c91a",
+      "message": "docs(verification): align operator and scope evidence",
+      "logged_in_results": [
+        "specroad-apply_Result_095456_1008_6973ba.zip"
+      ]
+    },
+    {
+      "commit": "da2ba9703569467856a69175976859e59621eedd",
+      "parent": "5ad36d921675f0ecb52ac5bfc10424c7bc3c1943",
+      "message": "docs(verification): reconcile audit evidence bindings",
+      "logged_in_results": [
+        "specroad-apply_Result_101721_1008_305181.zip"
+      ]
+    },
+    {
+      "commit": "2ace2fc325093a9fb8dab9795c762bf4d2ef7adb",
+      "parent": "da2ba9703569467856a69175976859e59621eedd",
+      "message": "docs(verification): consolidate audit scope descriptions",
+      "logged_in_results": [
+        "specroad-apply_Result_103524_1008_f2793e.zip"
+      ]
+    }
+  ],
+  "result_records": [
+    {
+      "result": "specroad-apply_Result_061427_1008_89b33f.zip",
+      "sha256": "369cceed16fe4116d8d5cabd8d50beefc2d04e7f6eddb077003619dd7b90fda8",
+      "base_commit": "5080638795d9fd828b5ceb0b00b107c4980aea22",
+      "base_files": 1464,
+      "operation": "bundle",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": null,
+      "dirty": false,
+      "expected_base_commit": null,
+      "completed_commit": null,
+      "patch_sha256": null,
+      "observed_commits": [],
+      "passed_suites": [],
+      "gates": [],
+      "execution_log_sha256": null,
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_075733_1008_17cdbe.zip",
+      "sha256": "3bb05af97dcdf619f7d088f8561750897fb15534503cbbc57a9ee4f7675ca062",
+      "base_commit": "9a121a3535b336312019c88b3fdda9f0e00d4611",
+      "base_files": 1464,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "5080638795d9fd828b5ceb0b00b107c4980aea22",
+      "completed_commit": "9a121a3535b336312019c88b3fdda9f0e00d4611",
+      "patch_sha256": "f5f9ef44e685248a462889dabc275956653ce1607865083483d2437e66aa49b8",
+      "observed_commits": [
+        "9a121a3535b336312019c88b3fdda9f0e00d4611"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5829,
+          "seconds": 392.62
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "7e5082878dbc822ac071e22ce938641081b50c93d0c8a61f1039a44f181a1302",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_083435_1008_5486e2.zip",
+      "sha256": "4e651545b8d66cdc2af4779c1f012eca204a34e624e442bd92b3bc08beea297d",
+      "base_commit": "7b0814660666f8f71584d13ab250c7ca7d2803e5",
+      "base_files": 1465,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "9a121a3535b336312019c88b3fdda9f0e00d4611",
+      "completed_commit": "7b0814660666f8f71584d13ab250c7ca7d2803e5",
+      "patch_sha256": "74baf621de0c67ae7ff45b0bd2f303b172c09bd39b29635f37cfcdf4aafb1344",
+      "observed_commits": [
+        "7b0814660666f8f71584d13ab250c7ca7d2803e5"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5837,
+          "seconds": 393.94
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "2e38e007ec53004a269e00ea15773d4af3729148243dfcd7cf8f8ea22579ca8f",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_090436_1008_f0b039.zip",
+      "sha256": "3032a9d3e5ba083143bbedbf5330c76471404b928bbf96a995816ff7a6c7c269",
+      "base_commit": "81daac1f05b5cbc018ce363074de91a156d68503",
+      "base_files": 1466,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "7b0814660666f8f71584d13ab250c7ca7d2803e5",
+      "completed_commit": "81daac1f05b5cbc018ce363074de91a156d68503",
+      "patch_sha256": "83b2d74682c0d1f4e09c543f6269b807d720f192e8af4fbe095ab4dfd110b3c4",
+      "observed_commits": [
+        "81daac1f05b5cbc018ce363074de91a156d68503"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5874,
+          "seconds": 408.54
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "8536befc0901ae92ea082e14c1b62376a8d13f5f9ee2b6b2a2f423d1608f86fc",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_092722_1008_f55178.zip",
+      "sha256": "65e9eb6d837f99a1f8ac292d985e535eaa3e7485e30c1d57a01ee2845efe74e7",
+      "base_commit": "9fbbe807695b971bb874e852aca852f03f50c91a",
+      "base_files": 1467,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "81daac1f05b5cbc018ce363074de91a156d68503",
+      "completed_commit": "9fbbe807695b971bb874e852aca852f03f50c91a",
+      "patch_sha256": "d277893d0ad64bb7320f724fde1f5b8883b4bdb43d717506863ff010fed8589b",
+      "observed_commits": [
+        "9fbbe807695b971bb874e852aca852f03f50c91a"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5874,
+          "seconds": 440.78
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "5c08c1a2f991180308261098ce300ac18a2b7a46b17b9cb853b6fa6239abadf4",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_095456_1008_6973ba.zip",
+      "sha256": "21d4811166ea2c8c17efd9cef600d39b013e7e0233a32f11eefead2e96cd54ed",
+      "base_commit": "5ad36d921675f0ecb52ac5bfc10424c7bc3c1943",
+      "base_files": 1467,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "9fbbe807695b971bb874e852aca852f03f50c91a",
+      "completed_commit": "5ad36d921675f0ecb52ac5bfc10424c7bc3c1943",
+      "patch_sha256": "51daf8a3be4335290464867ef02e165be98fe8f6848bb822ff1400e3647c5ecc",
+      "observed_commits": [
+        "5ad36d921675f0ecb52ac5bfc10424c7bc3c1943"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5874,
+          "seconds": 410.13
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "b939d447d0fce959570935b7131ca61db7e127f185ead72d2bc15f08efdd11f0",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_101721_1008_305181.zip",
+      "sha256": "1f908b0d684393dc5e100ff32b7310a72655e806b349f6baf2fe4ce737933461",
+      "base_commit": "da2ba9703569467856a69175976859e59621eedd",
+      "base_files": 1467,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "5ad36d921675f0ecb52ac5bfc10424c7bc3c1943",
+      "completed_commit": "da2ba9703569467856a69175976859e59621eedd",
+      "patch_sha256": "e972fa13af0d0fbdc5e32a2cfcce11430c8c64ab52e009c452352fcec473c79f",
+      "observed_commits": [
+        "da2ba9703569467856a69175976859e59621eedd"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5874,
+          "seconds": 407.88
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "44f056c688f1572dc275f2a8286e198eedbddaad446afd2f902423a3ed49f2a2",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_004435_1005_821734.zip",
+      "sha256": "0b7c4d31c0f9c68bb091292c2cbffdb98b8b56fbe7e4fa0dcc3c858b3d89f5bf",
+      "base_commit": "06d514f4f413e3bb595b911be51a2fc06e4be947",
+      "base_files": 1451,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "b669fe16663eb88b48543cb55288cbecf494040d",
+      "completed_commit": "06d514f4f413e3bb595b911be51a2fc06e4be947",
+      "patch_sha256": "01348b8bef3faace1a60c3d9a3ab18c77a38cb6a70b72a7200ba6a36d9b6976d",
+      "observed_commits": [
+        "06d514f4f413e3bb595b911be51a2fc06e4be947"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5727,
+          "seconds": 333.71
+        },
+        {
+          "tests": 5727,
+          "seconds": 908.19
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "72fdb11f321317814b020b3aad67e37bad5f96e32efd86badf9dffdd4bb51c8b",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_012756_1005_eb54a4.zip",
+      "sha256": "10c160c0c5d76cb586e360888e76f09ab0062a7a875e733b70125a8a4f120752",
+      "base_commit": "804cdedf915805db3d14e9788dca2957d71a0a48",
+      "base_files": 1454,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "06d514f4f413e3bb595b911be51a2fc06e4be947",
+      "completed_commit": "804cdedf915805db3d14e9788dca2957d71a0a48",
+      "patch_sha256": "003f36a0f7988af9f5fcb14cc0593330e977cf6c85fcd617a5245bbd70b52f28",
+      "observed_commits": [
+        "804cdedf915805db3d14e9788dca2957d71a0a48"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5727,
+          "seconds": 341.29
+        },
+        {
+          "tests": 5727,
+          "seconds": 903.07
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "b61a4dd4d2c70fc3cab1788fa9ae5eac3ad4f3578a6591bedcc482820c5656f0",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_022149_1005_95d2e5.zip",
+      "sha256": "4df7169c658a6b4cb1239ec2703875fbbfe16ebfc61c0bbf7be069717270223e",
+      "base_commit": "60bcd2e75b2cb44c559568a6aa28f3141026ade9",
+      "base_files": 1457,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "804cdedf915805db3d14e9788dca2957d71a0a48",
+      "completed_commit": "60bcd2e75b2cb44c559568a6aa28f3141026ade9",
+      "patch_sha256": "c9a9b9bf6f9cdbcd82a710a5311b674263ca6024ccfa9bf04e18fa50ed6ee49e",
+      "observed_commits": [
+        "60bcd2e75b2cb44c559568a6aa28f3141026ade9"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5741,
+          "seconds": 336.41
+        },
+        {
+          "tests": 5741,
+          "seconds": 919.79
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "4f76ea7a7b85a33bc12fbe842bb10b56db0ab128622dd89d8ce388d5cdc09893",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_031556_1005_64501e.zip",
+      "sha256": "10d0fc735c438e03e14f9f30a428fa1d897da11789e63a64d5b3ec637a69f1a9",
+      "base_commit": "b1f6b1ee52e23f768e75e0361dfb9d9762c315bc",
+      "base_files": 1458,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "60bcd2e75b2cb44c559568a6aa28f3141026ade9",
+      "completed_commit": "b1f6b1ee52e23f768e75e0361dfb9d9762c315bc",
+      "patch_sha256": "984f53fd388b8f7e79cc4c0c7cab9166db4cdfebdfd916722f27c20c53ba6c86",
+      "observed_commits": [
+        "b1f6b1ee52e23f768e75e0361dfb9d9762c315bc"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5773,
+          "seconds": 340.97
+        },
+        {
+          "tests": 5773,
+          "seconds": 923.87
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "861a5520adf7bd87c665beb8ada0a4da702a6ba0c6399f32ef0bc24ee4b295e3",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_035946_1005_5a5f8b.zip",
+      "sha256": "e13fb9fe967be95ac3a85a90bd67205d6cf4c819de0a6d99a7debc2da1edf8fd",
+      "base_commit": "c48f8e581f4ba83cf925671e94ceffd1eb0f0b70",
+      "base_files": 1458,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "b1f6b1ee52e23f768e75e0361dfb9d9762c315bc",
+      "completed_commit": "c48f8e581f4ba83cf925671e94ceffd1eb0f0b70",
+      "patch_sha256": "5b170a9aa4eb3a0a71700a448435777eb1d83ecadcef95fa32ba7049ddc4a176",
+      "observed_commits": [
+        "c48f8e581f4ba83cf925671e94ceffd1eb0f0b70"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5773,
+          "seconds": 349.71
+        },
+        {
+          "tests": 5773,
+          "seconds": 908.95
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "d5b4bc96984577e9a5a9138f86e2f4297dc0e8b7083164e10a28d543ae99eedc",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_045412_1005_f5b80c.zip",
+      "sha256": "f35a23465883549efa93f23fe2ca32188346e5bcce8e0b59fe851e8cf76dfb8c",
+      "base_commit": "3492260429e2ccddb56e8166fce10d44e3690ede",
+      "base_files": 1462,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "c48f8e581f4ba83cf925671e94ceffd1eb0f0b70",
+      "completed_commit": "3492260429e2ccddb56e8166fce10d44e3690ede",
+      "patch_sha256": "f39c0ee80fb71f4576f3528006cea7c5670991b2693ea6bda119e1bcd0102138",
+      "observed_commits": [
+        "3492260429e2ccddb56e8166fce10d44e3690ede"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5792,
+          "seconds": 484.78
+        },
+        {
+          "tests": 5792,
+          "seconds": 967.54
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "19783c1776d659797e39737dc11c90e43383e037518dced1e161220540d83d2e",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_064106_1004_c04f19.zip",
+      "sha256": "0add878b118440a43e053a33fb6c2973cbc6fb32a3e444f97ad07656f43ca6b4",
+      "base_commit": "efe11768f6f5f7ffbe2c87af28e36a14713ba8aa",
+      "base_files": 1423,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "3042582595a8692876d6b7354a6fa194ac0f6a71",
+      "completed_commit": "efe11768f6f5f7ffbe2c87af28e36a14713ba8aa",
+      "patch_sha256": "8a159d9dff12f2c585cbb17e601e35576b4ed0c07d40bac2997d327d716ae99b",
+      "observed_commits": [
+        "efe11768f6f5f7ffbe2c87af28e36a14713ba8aa"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5316,
+          "seconds": 204.15
+        },
+        {
+          "tests": 5316,
+          "seconds": 634.02
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "f40fb2b3ccdfa0ec5d733c993aeb1bdb40302d091e7a8780c1e5bf76261aa732",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_073156_1004_338aeb.zip",
+      "sha256": "da5b07d7952cb7dedc56107219989c95ae8a4240ad3c1690dac1c90b8e0c6ad2",
+      "base_commit": "e3656471165ae294226c53fd4fa8587f5ddf4f9f",
+      "base_files": 1426,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "efe11768f6f5f7ffbe2c87af28e36a14713ba8aa",
+      "completed_commit": "e3656471165ae294226c53fd4fa8587f5ddf4f9f",
+      "patch_sha256": "9ddb3d01b6943e9641286b8c81ef02f7d9622270ad3ed56ed708baa12c2e6e52",
+      "observed_commits": [
+        "e3656471165ae294226c53fd4fa8587f5ddf4f9f"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5316,
+          "seconds": 194.49
+        },
+        {
+          "tests": 5316,
+          "seconds": 571.82
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "d598c42b54ecbce52aa97c6529ef6d2ff886689914f957571cd7c2e8cf000ef3",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_083726_1004_6d476d.zip",
+      "sha256": "7c720965b337af4147dae7694358fbae067538998e50eec1d12f06bbbc530056",
+      "base_commit": "8d08b23b1769cc7ade2932fcae8ed3c6db7f356c",
+      "base_files": 1428,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "e3656471165ae294226c53fd4fa8587f5ddf4f9f",
+      "completed_commit": "8d08b23b1769cc7ade2932fcae8ed3c6db7f356c",
+      "patch_sha256": "53f6b077f7c63dd82354aea70d798055d39ae5d1eacceb3ebe95aec2dda3b64d",
+      "observed_commits": [
+        "8d08b23b1769cc7ade2932fcae8ed3c6db7f356c"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5340,
+          "seconds": 191.97
+        },
+        {
+          "tests": 5340,
+          "seconds": 614.42
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "29c0b8a648ba2b4f53a93bdde6f3eab0d75d8d9d724066eb37622403333737e0",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_093702_1004_0de973.zip",
+      "sha256": "ce7f72278a0a770230eb10c3a3f5aab97b1a4746f244e848bfb9c4f748fc38d9",
+      "base_commit": "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+      "base_files": 1430,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "8d08b23b1769cc7ade2932fcae8ed3c6db7f356c",
+      "completed_commit": "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+      "patch_sha256": "cd925198c3d314ec7b9e5a23f1903d32b2bfa2a5b50568fc6ad52c61c9a5af67",
+      "observed_commits": [
+        "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5545,
+          "seconds": 276.83
+        },
+        {
+          "tests": 5545,
+          "seconds": 677.95
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "e3cae45fb4a97ccb470312d5f08388bc40a849ad93c8f2593835e202de77e2c5",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_103524_1008_f2793e.zip",
+      "sha256": "4d65d7e3423a1b6fe1c9b0bb3a6c698c319bf2d31761aa926d82b29cd5bfdd68",
+      "base_commit": "2ace2fc325093a9fb8dab9795c762bf4d2ef7adb",
+      "base_files": 1467,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "da2ba9703569467856a69175976859e59621eedd",
+      "completed_commit": "2ace2fc325093a9fb8dab9795c762bf4d2ef7adb",
+      "patch_sha256": "a01513b02c164f6d31fc93ee363f5730def4d9a0e0c90bfde9f024cc11dcdbc5",
+      "observed_commits": [
+        "2ace2fc325093a9fb8dab9795c762bf4d2ef7adb"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5874,
+          "seconds": 413.17
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "482fb7b85aba1711499b19d65d9f2b29692e8caad1349dc753d7d93c4551695f",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_104253_1004_8ac543.zip",
+      "sha256": "e94fc87569248340a3e03d20cd36b9568c45c7fb36251fe7a171c2c9a627f555",
+      "base_commit": "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+      "base_files": 1430,
+      "operation": "apply",
+      "dry_run": false,
+      "success": false,
+      "entrypoint_exit_code": 1,
+      "dirty": true,
+      "expected_base_commit": "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+      "completed_commit": null,
+      "patch_sha256": "b8ca966dd5d0c04c9a19a6ea1f6dd9ee0f73627699870f41be397dca20ab6b78",
+      "observed_commits": [],
+      "passed_suites": [
+        {
+          "tests": 5545,
+          "seconds": 344.23
+        },
+        {
+          "tests": 5545,
+          "seconds": 672.71
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "e18c16ec7ad0eeb40f0af1a3ef89522d42132b5b92e602917eb2502968ea5f19",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_123926_1003_3e65cb.zip",
+      "sha256": "d65ca6f5c8df94ab582df3399c3d1096f7df2da25a7f766bdfaf5fc82d428a94",
+      "base_commit": "2612cbd0e9a6b5cfecca2db748dbc5ffe76cd506",
+      "base_files": 1409,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "33461a60ca916d78210939e99268501095d515a6",
+      "completed_commit": "2612cbd0e9a6b5cfecca2db748dbc5ffe76cd506",
+      "patch_sha256": "ef1af482325ac2b4479fe28b60cbb556014fe11697484c0198c6c997097e1537",
+      "observed_commits": [
+        "2612cbd0e9a6b5cfecca2db748dbc5ffe76cd506"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5201,
+          "seconds": 153.21
+        },
+        {
+          "tests": 5201,
+          "seconds": 464.01
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "fd5f925db0615b8d91ec1ed4a1ea194d1bde597c1d33b3f6dad7d49c6853a2c3",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_131124_1004_93e82b.zip",
+      "sha256": "9ab58d3a5772bf9f8ef7edd6ff8fd291e3aca172357b851f3797f3cb97729c6a",
+      "base_commit": "762f8900ec183c5870ffba9b118fe50b6af913d0",
+      "base_files": 1431,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "a4e3a61ba70c87a5968fdf6ea2cd99a1534c0006",
+      "completed_commit": "762f8900ec183c5870ffba9b118fe50b6af913d0",
+      "patch_sha256": "6877002ac7305ba1290ebb712c3ae94df3759202979ef4f4a93a987f4b0f0a7d",
+      "observed_commits": [
+        "762f8900ec183c5870ffba9b118fe50b6af913d0"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5545,
+          "seconds": 388.97
+        },
+        {
+          "tests": 5545,
+          "seconds": 677.53
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "c46983ebd299e63108732d80e7df73fc908614aa5f4b640bbb4e7957a6c1ede4",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_132329_1003_232f4b.zip",
+      "sha256": "48d5ecb684fdb9f07d7f26b41130179723c001f6efd529fc3a026f4a793a66a2",
+      "base_commit": "36a1be7d7a970186459c370e4aa708bd3a128470",
+      "base_files": 1412,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "2612cbd0e9a6b5cfecca2db748dbc5ffe76cd506",
+      "completed_commit": "36a1be7d7a970186459c370e4aa708bd3a128470",
+      "patch_sha256": "116e7d65f192004eac9ee0536e685e4d82ed76d2860a3adc9b47bff632fc5d1a",
+      "observed_commits": [
+        "36a1be7d7a970186459c370e4aa708bd3a128470"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5226,
+          "seconds": 246.18
+        },
+        {
+          "tests": 5226,
+          "seconds": 468.97
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "ea049437c00782dfa1fa35bfb3633f35cc4566e7cac03a537f0cb84fa09cf546",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_152751_1004_3a508f.zip",
+      "sha256": "00bc4e9a823f6d209aa6b79d7dbff9d938b2304715381019f65c5af572d14ed0",
+      "base_commit": "2558feb44857f32c7c0f33b2ee8be1326b4d6e47",
+      "base_files": 1434,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "762f8900ec183c5870ffba9b118fe50b6af913d0",
+      "completed_commit": "2558feb44857f32c7c0f33b2ee8be1326b4d6e47",
+      "patch_sha256": "27f888c563f87ae10b5f813f37fe1fee38e78e92a88f07166eebbb69b58fa68e",
+      "observed_commits": [
+        "2558feb44857f32c7c0f33b2ee8be1326b4d6e47"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5545,
+          "seconds": 273.38
+        },
+        {
+          "tests": 5545,
+          "seconds": 729.77
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "a9599402d001c1f0934d8811117c2d5594a0bbc41325cf3cfb6107ef4580c9f3",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_154415_1003_52d584.zip",
+      "sha256": "3eb250f3a094435490ac8b222b49263a124470726bfae55d5ba483e0420155eb",
+      "base_commit": "a664e668efd458fb2d9d05bf933e373c06932001",
+      "base_files": 1417,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "36a1be7d7a970186459c370e4aa708bd3a128470",
+      "completed_commit": "a664e668efd458fb2d9d05bf933e373c06932001",
+      "patch_sha256": "ada6d56e2ad89d7f66878ef740308cd6c16069f48ff5803eff4b4169681bc293",
+      "observed_commits": [
+        "a664e668efd458fb2d9d05bf933e373c06932001"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5280,
+          "seconds": 248.82
+        },
+        {
+          "tests": 5280,
+          "seconds": 526.31
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "326b7e5baf4fc7e70de49c6c828a40c45461fc7cf66e6951c300fe461804aae9",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_162511_1004_801033.zip",
+      "sha256": "0038947a6ab65dea4f4283fecc5c6fa54ac3dcf705ac28413f57651a802d321a",
+      "base_commit": "ee3f10f0d72159a40816b8e89fd2b64d590850d6",
+      "base_files": 1439,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "2558feb44857f32c7c0f33b2ee8be1326b4d6e47",
+      "completed_commit": "ee3f10f0d72159a40816b8e89fd2b64d590850d6",
+      "patch_sha256": "0430d99c5be11748a86380c78e5eefb0c8e792af329575d9233f905aaeacaa8d",
+      "observed_commits": [
+        "ee3f10f0d72159a40816b8e89fd2b64d590850d6"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5579,
+          "seconds": 263.75
+        },
+        {
+          "tests": 5579,
+          "seconds": 700.31
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "df5abc077e3f27974f093125dcc87414d685b037698365421e9125009ac202b7",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_170642_1003_89cea3.zip",
+      "sha256": "d2664807f4ef9030ad44388b183586ffb2eb4c75ab20027cbe2c7f4036b69e0e",
+      "base_commit": "2bb69a071771e28501089109996aaf9433bfd352",
+      "base_files": 1420,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "a664e668efd458fb2d9d05bf933e373c06932001",
+      "completed_commit": "2bb69a071771e28501089109996aaf9433bfd352",
+      "patch_sha256": "e005105e32b06bc9c87c22a17ab5a246107266b867898cac60235359c89bbc63",
+      "observed_commits": [
+        "2bb69a071771e28501089109996aaf9433bfd352"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5280,
+          "seconds": 200.96
+        },
+        {
+          "tests": 5280,
+          "seconds": 494.45
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "c56d58f941e412c861ced6d0ae33aad03a8ea02f69810775c4ee081442318f4f",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_170816_1002_30aa8e.zip",
+      "sha256": "4260292ef78add545464dff70f93e2c2d3871cf03a5a5abd96567fac66ca53e4",
+      "base_commit": "ef01c7dbffa3eb7290f03569cdf0afd42d0eda42",
+      "base_files": 1402,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "f5534e50e74a701b4a5b29cdcfc39e792e21e542",
+      "completed_commit": "ef01c7dbffa3eb7290f03569cdf0afd42d0eda42",
+      "patch_sha256": "e6d6c51199e3493fddef97c2a2e9fd351df3b20eab4e12aa096ced5a78454473",
+      "observed_commits": [
+        "ef01c7dbffa3eb7290f03569cdf0afd42d0eda42"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5153,
+          "seconds": 174.82
+        },
+        {
+          "tests": 5153,
+          "seconds": 489.89
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "9cf1be5e469a4227668d380776274e2d4d98031f3c8cd98d2af6068d35122dd1",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_171714_1004_7b5c41.zip",
+      "sha256": "17407d608f16bce4a4614fd71b8cfc3131b4356a90378555ea2ab97fbaa0e827",
+      "base_commit": "d79a5beb5be80bef87b70074a5f27e6b1398031a",
+      "base_files": 1441,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "ee3f10f0d72159a40816b8e89fd2b64d590850d6",
+      "completed_commit": "d79a5beb5be80bef87b70074a5f27e6b1398031a",
+      "patch_sha256": "e90e962b06c3727f127a68b779aea4ab012933eec3079578711c4d089b3a4116",
+      "observed_commits": [
+        "d79a5beb5be80bef87b70074a5f27e6b1398031a"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5703,
+          "seconds": 437.96
+        },
+        {
+          "tests": 5703,
+          "seconds": 1077.19
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "5c75de0c4a20249f18ae56be63f13f9e59da5663df4a213cbc192d65469fb130",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_181602_1004_102394.zip",
+      "sha256": "a28e41be6eedfeea625be2ec6278b29b54903c17c6a482f4ed580d38b94f10d2",
+      "base_commit": "2074a970a03281819435430dd4e6fe99a516654e",
+      "base_files": 1442,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "d79a5beb5be80bef87b70074a5f27e6b1398031a",
+      "completed_commit": "2074a970a03281819435430dd4e6fe99a516654e",
+      "patch_sha256": "588cda7802e64525f59f05ff1ebe421c99b2fb6847921595970ea2d976cc6399",
+      "observed_commits": [
+        "2074a970a03281819435430dd4e6fe99a516654e"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5703,
+          "seconds": 334.28
+        },
+        {
+          "tests": 5703,
+          "seconds": 898.84
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "77a33d4283e7c9ae22def82e7c3ed8d189939d0d63937831815250575d805551",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_183700_1003_4aae13.zip",
+      "sha256": "40b9a6443ea7b2308164a962e9c7e7ea544f3983a14187680b7a647028fd3b44",
+      "base_commit": "2bb69a071771e28501089109996aaf9433bfd352",
+      "base_files": 1420,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "2bb69a071771e28501089109996aaf9433bfd352",
+      "completed_commit": null,
+      "patch_sha256": "72bbfa7bbb56c3ac7a7f95b6b46f9cc8cee0e88ec57f81f3b8e272561fc16a20",
+      "observed_commits": [],
+      "passed_suites": [],
+      "gates": [],
+      "execution_log_sha256": "c3ddd31a8e1fc9be0803335c00a0f3a718e516446ad991ffd11956ff3a79f43c",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true,
+      "interpretation": "Successful operation without a new commit; no new test or commit evidence inferred."
+    },
+    {
+      "result": "specroad-apply_Result_185358_1003_3449f9.zip",
+      "sha256": "0f5a3b8c5840a4eb6f31547ce07941d3819944854889999d3a7f187bc9c6b51d",
+      "base_commit": "610f8b9f4904711d2a0c739a8fc8b53c9c4a571a",
+      "base_files": 1421,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "2bb69a071771e28501089109996aaf9433bfd352",
+      "completed_commit": "610f8b9f4904711d2a0c739a8fc8b53c9c4a571a",
+      "patch_sha256": "43be79dc707910bc73f6f0553d735582920ce242d8bc2c5f75b01f46c78e949c",
+      "observed_commits": [
+        "610f8b9f4904711d2a0c739a8fc8b53c9c4a571a"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5292,
+          "seconds": 196.87
+        },
+        {
+          "tests": 5292,
+          "seconds": 715.57
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "9ed57b7b0cf884ef473dfec5a2ccf50f73eecefc2378b802874d8689b68264bf",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_185537_1002_d1be06.zip",
+      "sha256": "1b39888518a1834740076c337e017625154f162bf79e5e03b23ad7bcd81fcaf2",
+      "base_commit": "6455ced97549a2b110dd6b5e17f0f54a5be99121",
+      "base_files": 1405,
+      "operation": "apply",
+      "dry_run": false,
+      "success": false,
+      "entrypoint_exit_code": 1,
+      "dirty": true,
+      "expected_base_commit": "ef01c7dbffa3eb7290f03569cdf0afd42d0eda42",
+      "completed_commit": null,
+      "patch_sha256": "a8e5d77b02a2b5451890cb8bf8ba298839876fe5ff5371c7018e9cb0f3d967cc",
+      "observed_commits": [
+        "bacb457e237da9c9626493fc482d16d070a3e4cc",
+        "6455ced97549a2b110dd6b5e17f0f54a5be99121"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5160,
+          "seconds": 153.67
+        },
+        {
+          "tests": 5160,
+          "seconds": 394.81
+        },
+        {
+          "tests": 5201,
+          "seconds": 165.72
+        },
+        {
+          "tests": 5201,
+          "seconds": 414.03
+        },
+        {
+          "tests": 5201,
+          "seconds": 166.23
+        },
+        {
+          "tests": 5201,
+          "seconds": 412.96
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        },
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        },
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "2e26bf8536b162f776d67340ca4ab75a293a7ba57f4a6948878c6765e9575165",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_185856_1004_b69b90.zip",
+      "sha256": "311620dc53bd826ebf76f2d45b94465dc64c98f0cf56110119b75e282de6bc66",
+      "base_commit": "891e7ffbb80fd524444f81600881c9f91692db44",
+      "base_files": 1442,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "2074a970a03281819435430dd4e6fe99a516654e",
+      "completed_commit": "891e7ffbb80fd524444f81600881c9f91692db44",
+      "patch_sha256": "0f304e6ad33cc18d9b4df665612b5ad689cda02aaafcfc380b1fa1466d0c30e2",
+      "observed_commits": [
+        "891e7ffbb80fd524444f81600881c9f91692db44"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5705,
+          "seconds": 331.37
+        },
+        {
+          "tests": 5705,
+          "seconds": 900.59
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "ae5bd17ffc633dccff659d8d47f5746a9b1501d6603e4c76ad247e3d3e56062f",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_194140_1004_39a4e9.zip",
+      "sha256": "94ff9fb53dc5cf5fd7c00891d17ae740e0eb42a247f226a4088c7a0759f83d1c",
+      "base_commit": "8fd56dcd8a60bfbc8c55b873447cf0b762b2dbec",
+      "base_files": 1444,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "891e7ffbb80fd524444f81600881c9f91692db44",
+      "completed_commit": "8fd56dcd8a60bfbc8c55b873447cf0b762b2dbec",
+      "patch_sha256": "562cf66028c714dbc4b6d8909d719b266dfa846fda9722b0031651a25d63d863",
+      "observed_commits": [
+        "8fd56dcd8a60bfbc8c55b873447cf0b762b2dbec"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5714,
+          "seconds": 334.81
+        },
+        {
+          "tests": 5714,
+          "seconds": 913.35
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "686e2db26c4a6437097a0920a265b5bbbf9833abd46feef430827a997e71ff8e",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_195933_1003_6d1d16.zip",
+      "sha256": "9b0212e017bbb7e4c757bd5483e534ea008e6da2c7a9f70f3a2302aa9814728d",
+      "base_commit": "3042582595a8692876d6b7354a6fa194ac0f6a71",
+      "base_files": 1422,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "610f8b9f4904711d2a0c739a8fc8b53c9c4a571a",
+      "completed_commit": "3042582595a8692876d6b7354a6fa194ac0f6a71",
+      "patch_sha256": "983ad5af9e4247bf996dcaee8a6b9a3648c4929a9f882b5e9394e4dd88ec5c03",
+      "observed_commits": [
+        "3042582595a8692876d6b7354a6fa194ac0f6a71"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5316,
+          "seconds": 182.36
+        },
+        {
+          "tests": 5316,
+          "seconds": 494.16
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "32a626c471ec9fbc7063687e96646a5e4f67fe2f9c5e7f3b146ac045e234abab",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_202135_1002_5d8e5f.zip",
+      "sha256": "6b4c8e9149c0119ff3a52d418b637ed1bb090af8bc0aab930acf8a88010c3d31",
+      "base_commit": "33461a60ca916d78210939e99268501095d515a6",
+      "base_files": 1406,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "6455ced97549a2b110dd6b5e17f0f54a5be99121",
+      "completed_commit": "33461a60ca916d78210939e99268501095d515a6",
+      "patch_sha256": "4285b41a7e7e9205cada656efe8f78da7fc0d650d6f86041822bc2e5f23a7413",
+      "observed_commits": [
+        "33461a60ca916d78210939e99268501095d515a6"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5201,
+          "seconds": 210.09
+        },
+        {
+          "tests": 5201,
+          "seconds": 460.47
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "3131c5f05282be8f255c073337a934828a1db62c2996aeacf2cccb21c79c8e2a",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_204811_1004_642827.zip",
+      "sha256": "41498de4afb651a226d510fd2b69d203e7029f3d0cf27fbf7d7311bac4d98076",
+      "base_commit": "7468a78a696b5a9a0b248dcf9e0acd813dfcf968",
+      "base_files": 1444,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "8fd56dcd8a60bfbc8c55b873447cf0b762b2dbec",
+      "completed_commit": "7468a78a696b5a9a0b248dcf9e0acd813dfcf968",
+      "patch_sha256": "e02d5f86f83d4ccba6e31939e5969cb4eb0e5aeca647eb728a000a3725747e31",
+      "observed_commits": [
+        "7468a78a696b5a9a0b248dcf9e0acd813dfcf968"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5714,
+          "seconds": 317.51
+        },
+        {
+          "tests": 5714,
+          "seconds": 908.79
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "45943f1c5611196ad4de7b88022c12b0a12649c53cbe6f4ff52f8068a35c6aff",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_214108_1004_04063c.zip",
+      "sha256": "e09d6e869ac595f9e59a2fbbd7a4e3178562171e0fc280b6f92f5847d93eef07",
+      "base_commit": "2977923276e2b281e652ee5575c22be8274c891f",
+      "base_files": 1444,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "7468a78a696b5a9a0b248dcf9e0acd813dfcf968",
+      "completed_commit": "2977923276e2b281e652ee5575c22be8274c891f",
+      "patch_sha256": "27db2d8379d86628c8bb9d8bb0c6d3732894f6382f985155a5bb9170780999e9",
+      "observed_commits": [
+        "2977923276e2b281e652ee5575c22be8274c891f"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5718,
+          "seconds": 321.13
+        },
+        {
+          "tests": 5718,
+          "seconds": 910.48
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "78a81271b69bafa71ac779e7d1c562fe699da86f3f0caf1e40e9718e7ba5020b",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_222356_1004_4cafee.zip",
+      "sha256": "74ed3bcdc7a93c8cac65a5c1f9d78d68873fd8f56e9fd4a54b3ed4a43fdce904",
+      "base_commit": "cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33",
+      "base_files": 1445,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "2977923276e2b281e652ee5575c22be8274c891f",
+      "completed_commit": "cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33",
+      "patch_sha256": "49dffebcd0fec85289eedcdf795aec9415f4d882b897117dc747ca09007152b0",
+      "observed_commits": [
+        "cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5727,
+          "seconds": 333.96
+        },
+        {
+          "tests": 5727,
+          "seconds": 898.94
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "4d86ffa8c8df3ab4f27e9fc1adec595e8cabb46049978652e11f53e2efce48c9",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_230658_1004_9dff6c.zip",
+      "sha256": "33122b5e7275a4ab8fd102721f5386a295209c0f540ed2b9016dfc58efa33e3e",
+      "base_commit": "ee91f34df4bee63ea983680afa5412e601ba8185",
+      "base_files": 1445,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "cd6216d45a24f3ae01bc0cb33ff4094e9cc6ad33",
+      "completed_commit": "ee91f34df4bee63ea983680afa5412e601ba8185",
+      "patch_sha256": "50e4e7621005ace95c8c316e644a375f99922a7a760b33e0accdcdc18ff59fce",
+      "observed_commits": [
+        "ee91f34df4bee63ea983680afa5412e601ba8185"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5727,
+          "seconds": 325.29
+        },
+        {
+          "tests": 5727,
+          "seconds": 922.54
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "3c2538058edec1da08ba36a5be1a01fb22d7e52aea772173154f86a54d3ac2bd",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    },
+    {
+      "result": "specroad-apply_Result_235051_1004_72af87.zip",
+      "sha256": "8952cd71099185afaed215b7a71455dd8a399f043715f2353e5b3cccc037a85d",
+      "base_commit": "b669fe16663eb88b48543cb55288cbecf494040d",
+      "base_files": 1448,
+      "operation": "apply",
+      "dry_run": false,
+      "success": true,
+      "entrypoint_exit_code": 0,
+      "dirty": false,
+      "expected_base_commit": "ee91f34df4bee63ea983680afa5412e601ba8185",
+      "completed_commit": "b669fe16663eb88b48543cb55288cbecf494040d",
+      "patch_sha256": "2dc9e8f28fa5916db1568c9f886703481a22a36c7a563acdeea7cd2b7ebaeed5",
+      "observed_commits": [
+        "b669fe16663eb88b48543cb55288cbecf494040d"
+      ],
+      "passed_suites": [
+        {
+          "tests": 5727,
+          "seconds": 329.97
+        },
+        {
+          "tests": 5727,
+          "seconds": 914.51
+        }
+      ],
+      "gates": [
+        {
+          "checks": [
+            {
+              "exit_code": 0,
+              "mode": "parallel"
+            },
+            {
+              "exit_code": 0,
+              "mode": "serial"
+            }
+          ],
+          "suite_passed": true
+        }
+      ],
+      "execution_log_sha256": "f95697375bcd9f3979e925fe442083b1cdb51e6d1df60b849d1a07063d815d38",
+      "native_result_validation": "passed",
+      "git_snapshot_match": true
+    }
+  ],
+  "bundle_080_export_failure": {
+    "bundle_number": "080",
+    "run_id": "3e23c672-6bc8-48c1-a10c-d8f962308d5c",
+    "commit": "5080638795d9fd828b5ceb0b00b107c4980aea22",
+    "parent_commit": "3492260429e2ccddb56e8166fce10d44e3690ede",
+    "patch_sha256": "779a6cb9ab790e83f1619b63c1093346479b7794815af0515f5f5cdfc4a4cad4",
+    "source": "locally retained emergency diagnostics plus persisted PatchHarbor Apply receipt; export failure is preserved",
+    "entrypoint_exit_code": 0,
+    "result_export_exit_code": 11,
+    "result_export_status": "failed",
+    "historical_tests": [
+      {
+        "mode": "parallel",
+        "workers": 4,
+        "passed": 5830,
+        "seconds": 325.94
+      },
+      {
+        "mode": "serial",
+        "passed": 5830,
+        "seconds": 1104.65
+      }
+    ],
+    "diagnostic_file_sha256": {
+      "run.json": "666c28f7c236acdada99dc8d843a7405f5cb5e84bf877e29758e6dd653fa2f79",
+      "verification.json": "29f9f69be983bc31fcc7d27148607ca21409a1fe23c2ccbe749043e690dee8c5",
+      "execution.log": "14cdc3975d7cfcfcf99c38f5a37b9071e904fcdab263e5a511f45981338be534"
+    },
+    "subsequent_manual_result": "specroad-apply_Result_061427_1008_89b33f.zip",
+    "subsequent_manual_result_sha256": "369cceed16fe4116d8d5cabd8d50beefc2d04e7f6eddb077003619dd7b90fda8",
+    "manual_result_includes_execution_logs": false
+  },
+  "historical_exceptions": [
+    {
+      "bundle": "048",
+      "result": "specroad-apply_Result_185537_1002_d1be06.zip",
+      "decision": "W and R gates and commits succeeded; C gates passed but the operation failed before its commit. The dirty C state and successful commits were preserved; Bundle 049 supplies the later C completion."
+    },
+    {
+      "bundle": "061",
+      "result": "specroad-apply_Result_104253_1004_8ac543.zip",
+      "decision": "Full gates passed but staged whitespace validation failed. There was no C commit; Bundle 062 corrects the retained state and supplies its own successful gates and commit."
+    },
+    {
+      "bundle": "080",
+      "decision": "Entrypoint and tests succeeded; Result export failed with process exit 11. The later manual Result has no execution log and is snapshot evidence only; the retained emergency log is the qualified execution source."
+    },
+    {
+      "result": "specroad-apply_Result_183700_1003_4aae13.zip",
+      "decision": "Successful push operation without a new commit; it adds no test or commit evidence."
+    }
+  ],
+  "closing_bundle": {
+    "number": "088",
+    "step": "AUDIT-CLOSE",
+    "new_behavior_cases": 6,
+    "apply_completion": "Not yet present in this evidence file. The owning commit requires its own successful complete parallel Apply gate and subsequent Result.",
+    "historical_evidence_boundary": "All result_records describe already observed history only."
+  },
+  "requirement_status": {
+    "open": 433,
+    "partial": 297,
+    "passed": 0,
+    "failed": 0
+  },
+  "release_approved": false,
+  "current_execution_policy": {
+    "development": "full_parallel_only",
+    "apply": "full_parallel_only_including_final_state",
+    "github_ci": "workflow_dispatch_started_by_user_only",
+    "correction_retry_limit": null
+  }
+}

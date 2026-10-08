@@ -7,7 +7,8 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-CHANGE-TARGET-v1"
+    "SR-FIX-CHANGE-TARGET-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1"
   ],
   "preconditions": [
     "Explicit closed project inventory, original configuration/resource bytes, bound effective profile and registered trusted model/command gates."
@@ -18,7 +19,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS den vollständigen geplanten Endstand einschließlich aller abhängigen Regeln vor `prepared` gegen seine befehlsspezifischen Gates validieren; die eng begrenzte Review-Ergebnisausnahme ist ausschließlich in Kapitel 11.13 definiert.",
-    "scope": "Complete isolated target evaluation over a supplied closed project; missing core/command gates and dependent errors fail closed. Real plan/resource/base/result hashes are checked. No physical prepared transaction or write permission is issued. Direct preparation uses the same checked saved-plan path; whole-target command/resource gates also cover empty targets. Explicit historical reservations remain bound."
+    "scope": "Complete isolated target evaluation over a supplied closed project; missing core/command gates and dependent errors fail closed. Real plan/resource/base/result hashes are checked. No physical prepared transaction or write permission is issued. Direct preparation uses the same checked saved-plan path; whole-target command/resource gates also cover empty targets. Explicit historical reservations remain bound. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
   },
   "expected_diagnostics": [
     "SRV146"
@@ -57,7 +58,11 @@
     "tests/test_change_target_right.py::test_partial_gate_result_is_not_a_success",
     "tests/test_change_target_right.py::test_empty_target_still_executes_required_command_gates",
     "tests/test_change_target_right.py::test_rule_resource_integrity_needs_explicit_service_even_without_artifacts",
-    "tests/test_change_target_right.py::test_authoring_and_saved_plan_paths_produce_identical_observations"
+    "tests/test_change_target_right.py::test_authoring_and_saved_plan_paths_produce_identical_observations",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[1-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[2-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-True]"
   ],
   "open_items": [
     "Actual inventory completeness, resource freshness under locks, durable prepared storage and final write authorization remain future transaction/CLI integration.",

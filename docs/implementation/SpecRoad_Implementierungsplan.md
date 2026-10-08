@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 87
+last_completed_numbered_bundle: 88
 implementation_state: in_progress
-audit_followup_status: open
-next_audit_step: AUDIT-CLOSE
+audit_followup_status: closed
+next_audit_step: null
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -52,7 +52,7 @@ Der Grobaudit vom 2. Oktober 2026 bewertet den bis **5.s.C** abgeschlossenen Pro
 
 Die Prüfung war statisch; sie führte keine Tests aus. Das Result enthält keine Execution-Logs einer Apply-Ausführung und keine historischen W/R/C-Zwischenstände. Die Bindung oben dokumentiert den untersuchten Ausgangsstand; jedes Reparaturbundle verwendet ausschließlich die Bindung aus seinem dann neuesten Result.
 
-**Aktueller Arbeitsauftrag:** zuerst die unten geordneten Nacharbeiten. **Nächster regulärer Produktpunkt:** weiterhin `5.t.W`, bis zum Abschluss von `AUDIT-CLOSE` gesperrt. Die 885 ursprünglichen Produktpositionen, ihre Kennungen, Reihenfolge und historischen Checkboxen bleiben erhalten; der Zähler bleibt während der Nacharbeiten bei **237/885**. Eine gesetzte alte Checkbox beseitigt keinen hier ausdrücklich offenen Befund.
+**Aktueller Arbeitsauftrag:** `AUDIT-CLOSE` entscheidet unten über die abgeschlossenen Nacharbeiten. Nach erfolgreichem Apply dieses Abschlusses ist `5.t.W` der nächste reguläre Produktpunkt; ein vorbereiteter Abschluss ohne eigenes erfolgreiches Result hebt die Sperre nicht auf. Die 885 ursprünglichen Produktpositionen, ihre Kennungen, Reihenfolge und historischen Checkboxen bleiben erhalten; der Zähler bleibt während der Nacharbeiten bei **237/885**. Eine gesetzte alte Checkbox beseitigt keinen hier ausdrücklich offenen Befund.
 
 Die Kennungen `AUDIT-*` sind Nacharbeitskennungen außerhalb der 885 Produktpositionen. Bei Umsetzung wird eine genau einem ursprünglichen Plan-Commit zuordenbare Reparatur als `FIX` mit dessen Kennung geführt; übergreifende Korrekturen werden als `OFF-PLAN` geführt. Die tatsächlichen Commitkennungen und Messages werden vor der jeweiligen Auslieferung passend zum dann aktuellen Result festgelegt und mit dem Nacharbeitsschritt verknüpft. Es gibt keine durch diese Liste vorgeschriebene Bundleanzahl. Mehrere geordnete Commits dürfen in einem Bundle liegen.
 
@@ -66,12 +66,12 @@ Die organisatorischen W/R/C-, Test- und PatchHarbor-Regeln werden in der lokalen
 | F02 – Rollback ohne vorgeschriebenen Receipt und nutzbaren Abschluss-/Bereinigungspfad | nachgewiesener Vertragsfehler / hoch | 5.n, 5.r, 5.s; SR-REQ-0259/0462 | AUDIT-REC-02 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F03 – falsches `mutation_possible` nach Receiptfehler | statisch nachgewiesener Fehler / mittel | 5.q.R, 5.n.R; SR-REQ-0258 | AUDIT-REC-03 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F04 – kurze eigene Hilfsdateien blockieren Wiederanlauf | dynamisch bestätigte Wiederanlauflücke / mittel | 5.q.R, 5.r.R; SR-REQ-0258/0459/0511; terminale Belege aus AUDIT-REC-02 | AUDIT-REC-04 | U bestätigt; W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil nachgewiesen; SRX-Reichweite offen / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
+| F05 – veraltete Schema-/Versionsselbstbeschreibung | Schemaanteil und getrennte SRX-Bibliotheksreichweite geklärt / mittel | 1.i, 1.n, 2.q; SR-REQ-0194/0376/0392 | AUDIT-CONTRACT-01 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
 | F06 – Change-Plan-Schema fehlt im Katalog | nachgewiesene Kataloglücke / mittel | 2.q, 5.a; SR-REQ-0377/0378 | AUDIT-CONTRACT-02 | W/R/C umgesetzt; Apply-Nachweis maßgeblich |
-| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | Abdeckungsverdacht / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | U bestätigt; W/R/C umgesetzt, Audit-CLOSE offen |
-| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | Integrationsverdacht / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | U bestätigt; W/R/C umgesetzt, Audit-CLOSE offen |
-| F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | Textkorrektur Teil dieses OFF-PLAN-Commits; Abschlusskontrolle in AUDIT-CLOSE |
-| F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | offen |
+| F07 – nichtliterale Core-Lintanteile nicht durchgehend belegt | begrenzte Lücke bestätigt / mittel | 4.l, 4.o, 4.r; SR-REQ-0096 | AUDIT-VALIDATION-01 | W/R/C durch Results bestätigt; Abschlussentscheidung unten |
+| F08 – produktive M4-Gateverbindung nicht durchgehend belegt | begrenzte Lücke bestätigt / mittel | 4.o–4.r, 5.f/5.g; SR-REQ-0086/0100 | AUDIT-VALIDATION-02 | W/R/C bestätigt; fehlende spätere Currentness-Dienste bleiben unvollständig |
+| F09 – widersprüchliche Testanweisungen | Dokumentationswiderspruch / mittel | allgemeine Arbeitsanweisungen, TD-002 | AUDIT-DOC-01 | aktive Hinweise beim Abschluss abgeglichen; Historie erhalten |
+| F10 – veraltete `open_items` und unvollständige Fixturebeschreibung | Nachweisdaten inkonsistent / niedrig | 3.h–3.j, 4.e/4.g/4.i; SR-REQ-0288/0412 | AUDIT-EVIDENCE-01 | W/R/C durch Results bestätigt; bestehende Partial-Grenzen erhalten |
 
 Ein vorhandener Testverweis oder der Katalogstatus `partial` beweist keine vollständige Erfüllung. Die 293 als `partial` und 437 als `open` erfassten Anforderungen des Auditstands werden durch diese Planung nicht hochgestuft. Für jede spätere Schließung werden tatsächlicher Result-/Commitbezug, betroffene Testkennungen und beobachtete Abnahme dokumentiert; geplante Läufe zählen nicht als Nachweis.
 
@@ -1442,10 +1442,94 @@ bleiben erhalten.
 
 ### AUDIT-CLOSE – Abschlussentscheidung vor 5.t
 
-- [ ] Für F01 bis F10 sowie die zusätzlichen Recovery-/Diagnosefragen eine abschließende Entscheidung mit aktuellem Result-/Commitbezug dokumentieren. Bestätigte Fehler brauchen beobachtbare Verhaltensnachweise; widerlegte Verdachtsstellen brauchen ihren Gegenbeleg. Tatsächlich spätere Arbeit braucht eine genaue offene Planposition und die Begründung, warum sie keine schon fällige Abnahme ersetzt.
-- [ ] Die betroffenen fachlichen Verträge nach den Korrekturen erneut prüfen, insbesondere vollständige Recoverywurzel, dauerhafte Abschlussbeweise und normaler Folgezugriff. Die tatsächlichen erfolgreichen Apply-Prüfungen anhand ihrer Results feststellen; dieses Planungsbundle belegt noch keine Reparatur.
-- [ ] Aktuelle Testanweisungen auf Konsistenz zur zentralen Arbeitsregel prüfen. Historische Ausführungsaussagen und nicht verfügbare Nachweise bleiben historisch beziehungsweise offen; es werden keine vergangenen Testläufe nachträglich behauptet.
-- [ ] Im Fortschrittsblock `audit_followup_status` erst nach erfüllter Abschlussentscheidung auf `closed` und `next_audit_step` auf `null` setzen. Der Produktzähler bleibt 237/885; erst der danach tatsächlich umgesetzte und abgenommene reguläre Schritt 5.t.W erhöht ihn. Solange fällige Korrekturen oder wesentliche Vertragsfragen offen sind, bleibt die Sperre bestehen.
+- [x] Für F01 bis F10 sowie die zusätzlichen Recovery-/Diagnosefragen eine abschließende Entscheidung mit aktuellem Result-/Commitbezug dokumentieren. Bestätigte Fehler brauchen beobachtbare Verhaltensnachweise; widerlegte Verdachtsstellen brauchen ihren Gegenbeleg. Tatsächlich spätere Arbeit braucht eine genaue offene Planposition und die Begründung, warum sie keine schon fällige Abnahme ersetzt.
+- [x] Die betroffenen fachlichen Verträge nach den Korrekturen erneut prüfen, insbesondere vollständige Recoverywurzel, dauerhafte Abschlussbeweise und normaler Folgezugriff. Die tatsächlichen erfolgreichen Apply-Prüfungen anhand ihrer Results feststellen; dieses Planungsbundle belegt noch keine Reparatur.
+- [x] Aktuelle Testanweisungen auf Konsistenz zur zentralen Arbeitsregel prüfen. Historische Ausführungsaussagen und nicht verfügbare Nachweise bleiben historisch beziehungsweise offen; es werden keine vergangenen Testläufe nachträglich behauptet.
+- [x] Im Fortschrittsblock `audit_followup_status` erst nach erfüllter Abschlussentscheidung auf `closed` und `next_audit_step` auf `null` setzen. Der Produktzähler bleibt 237/885; erst der danach tatsächlich umgesetzte und abgenommene reguläre Schritt 5.t.W erhöht ihn. Solange fällige Korrekturen oder wesentliche Vertragsfragen offen sind, bleibt die Sperre bestehen.
+
+### AUDIT-CLOSE – beobachtete Abschlussentscheidung (Bundle 088)
+
+Abschlussbasis ist das vollständig geprüfte Result
+`specroad-apply_Result_103524_1008_f2793e.zip`, SHA-256
+`4d65d7e3423a1b6fe1c9b0bb3a6c698c319bf2d31761aa926d82b29cd5bfdd68`,
+Commit `2ace2fc325093a9fb8dab9795c762bf4d2ef7adb`. Seine 1467 Snapshotdateien und
+17 Payloads aus Bundle 087 stimmen mit Git und Entwicklung überein. Der saubere
+Apply-Abschluss enthält 5874 erfolgreiche Tests mit vier parallelen Workern in
+413,17 Sekunden, Exit 0 und keine Warnungen.
+
+Die [maschinell lesbare Nachweisübersicht](../reviews/SpecRoad_AUDIT_CLOSE_evidence.json)
+bindet 41 tatsächliche Nicht-Dry-Run-Results und die 40 aufeinanderfolgenden
+Audit-Commits seit `f5534e50e74a701b4a5b29cdcfc39e792e21e542`. Der installierte
+PatchHarbor-Reader prüfte alle Results mit seinen unveränderten Standardlimits.
+Für jeden Snapshot stimmen vollständige Pfadmenge, Größe, Git-Blob und Modus mit
+dem aufgezeichneten Commitbaum überein. Logmeldungen, Testgates, Commitnachrichten
+und Elternfolge wurden abgeglichen. Die Übersicht ist ein Review vorhandener
+Nachweise; sie ist selbst weder Testlauf noch Releasefreigabe.
+
+| Befund | Abschließende Entscheidung und beobachtbarer Nachweis |
+|---|---|
+| F01 / REC-01 | Bestätigt und korrigiert. Vollständige normative Pfad-/Bytemengen binden die unabhängig vorbereitete Basis-/Zielwurzel. Zusätzliche, fehlende, geänderte und während der Prüfung beobachtete Ressourcen sperren; `test_recovery_inventory*` erhält unbeteiligte Dateien. Recovery behauptet keine erneute semantische Modellberechnung. |
+| F02 / REC-02 | Bestätigt und korrigiert, einschließlich Zielabschluss und Discard-Receipt. `test_terminal_recovery*` prüft dauerhafte Receipts, Originalautorität, archivierte Work-Bytes und explizite Bereinigung. Unabhängige Prozesse lesen anschließend das Modell und erwerben einen neuen Writerlock; aktive fremde Blocker bleiben erhalten. |
+| F03 / REC-03 | Bestätigt und korrigiert. `test_recovery_mutation_accounting*` prüft spätere Fehler nach Verzeichnis-, Receipt-, Marker- und Auditwrites. Vorbestehende Konflikte werden nicht als eigene Mutation ausgegeben. |
+| F04 / REC-04 | Wiederanlauflücke bestätigt und korrigiert. `test_recovery_initial_successor` und `test_recovery_auxiliary_writes` prüfen vollständige gebundene Hilfsdateiveröffentlichung, echte Prozessabbrüche, Wiederaufnahme und Fremd-/Quelländerungsgrenzen. |
+| F05 / CONTRACT-01 | Selbstbeschreibung korrigiert; SRX-Reichweite geklärt. `test_capabilities` und `test_capability_scope` verbinden angebotene Schemas und SRX-Bibliotheksversionen mit tatsächlicher Ausführung, ohne künftige CLI-Befehle oder Ausgabeformate zu behaupten. |
+| F06 / CONTRACT-02 | Change-Plan-Kataloglücke korrigiert. `test_schema_catalog_change_plan` prüft abrufbare Version 1.2.0, Identität, Operationsgrenzen und isolierte Rückgabewerte. |
+| F07 / VALIDATION-01 | Bereits fällige Rationale-/Relationsminima korrigiert. `test_core_lint*` prüft unabhängige Befunde, vollständige Mengen, Auswahl-/Profilgrenzen und ehrliche Unvollständigkeit; Literalbefunde bleiben erhalten. |
+| F08 / VALIDATION-02 | Bereits verfügbare produktive Sprach-, Profil-/SRX- und Formalprüfungen eingebunden. `test_production_validation*` prüft echte Ressourcen, Projekt-/Zielpfade und gleichzeitige Befunde. Fehlende authentische Review-, Evidence- und Historiedienste bleiben ausdrücklich unavailable und erteilen keine Freigabe. |
+| F09 / DOC-01 | Aktive Anweisungen manuell abgeglichen. TD-002 und Resource_Inventory verweisen auf ausschließlich parallele Dev-/Apply-Volltests; GitHub-CI startet allein der Nutzer. Historische Ausführung und überholte Vorgaben sind als solche erhalten. Keine Wortlaut-/Dokumentationstests. |
+| F10 / EVIDENCE-01 | W/R/C durch Results 085–087 bestätigt. Aktuelle Scope-/Open-Item-Angaben, 3886 bisherige Testbindungen und reale Fixtureprovider stimmen überein; keine Partial-Anforderung wurde als vollständig erfüllt ausgegeben. |
+| Zusätzlicher Discard-Neustart / REC-05 | Bestätigte Abhängigkeit korrigiert. `test_discard_restart*` prüft Prepared/Building, kurze Vorbereitungsbytes, vollständige Ressourcenbasis, eigene frische Prozesse und unterbrochene Abschlussgrenzen; archivierte Originalbytes und nächste Writer bleiben nachgewiesen. |
+| Zusätzliche Diagnoseaggregation / VALIDATION-03 | Unabhängige Referenzfehler werden vollständig an sicheren Identitätsgrenzen gesammelt. `test_validation_missing_references` und `test_validation_reference_sets` prüfen Codes, Fundorte, Summary, Auswahl und Sperren. Sechs zusätzliche Abschlussfälle sichern Ziel-/Dry-Run-Parität und die bestehende strikte Planungsgrenze. |
+
+Die sechs Abschlussfälle in `test_validation_target_reference_sets` vergleichen
+zwei fehlende Interface-Componentfelder, einen verbliebenen Fehler, beide real
+vorhandenen Ziele sowie zwei Fundstellen desselben fehlenden Ziels durch direkte
+Modellprüfung, schreibfreien Projektleser, vollständige Zielbewertung und Dry-Run.
+Ein unverändertes Interface kann die Änderung eines anderen Artefakts sperren.
+Codes, Fundorte, Summary, Exit 3 beziehungsweise der echte Positivfall und fehlende
+Schreib-/Freigabeberechtigung werden beobachtet. Zwei weitere Konstellationen
+zeigen die notwendige Grenze: Ungültige gespeicherte Relationsgraphen werden
+bereits vor Erstellung eines ChangePlans zurückgewiesen. Daraus wird keine
+fiktive Zielbewertung und kein gültiger Teilgraph erzeugt. Die fünf betroffenen
+Partial-Manifeste 0086/0088/0099/0100/0238 erhalten 24 zusätzliche Bindungen; ihre
+Anforderungen und offenen Vollabnahmen bleiben erhalten.
+
+Historische Ausnahmen bleiben ausdrücklich sichtbar:
+
+- Bundle 048 lieferte erfolgreiche W-/R-Commits, scheiterte nach erfolgreichen
+  C-Tests aber vor dem C-Commit. Bundle 049 bestätigt den tatsächlich späteren
+  C-Abschluss; das fehlgeschlagene Result wird nicht umgedeutet.
+- Bundle 061 bestand seine Tests, scheiterte dann am Whitespacegate ohne C-Commit.
+  Bundle 062 korrigierte den erhaltenen Zustand und hat eigene erfolgreiche Gates.
+- Bundle 080 bestand 5830 parallele und die damals vorgeschriebenen 5830 seriellen
+  Tests; Commit `5080638795d9fd828b5ceb0b00b107c4980aea22` entstand. Danach scheiterte
+  die Result-Veröffentlichung. Aufbewahrte Notfalllogs und der persistierte
+  PatchHarbor-Applybeleg belegen die Ausführung; das spätere manuelle Result
+  `specroad-apply_Result_061427_1008_89b33f.zip` bestätigt den Quellstand, enthält
+  selbst jedoch keine Execution-Logs. Diese qualifizierte Beleglage bleibt benannt.
+- Der historische Push-only-Lauf erzeugte keinen neuen Commit und keinen neuen
+  Testnachweis. Frühere serielle Läufe werden nicht in parallele umgeschrieben.
+  Der ursprüngliche statische Grobaudit belegt weiterhin keine damaligen
+  Produkt-W/R/C-Zwischenstände und führte selbst keine Tests aus.
+
+Die verbleibenden Arbeiten ersetzen keine bereits fällige Abnahme: Automatischer
+Transaktionspreflight bleibt der nächste Produktpunkt 5.t; die vollständige
+Crashmatrix bleibt 5.v. Authentische Lifecycle-/Review-, Baseline- und
+Evidenceintegration bleibt 7.f/7.g/7.h/7.j, 10.d.C und 12.t.W zugeordnet;
+ihre fehlenden Dienste erzeugen heute Unvollständigkeit. Öffentliche SRX-Query-
+und Dokumentkonsumenten bleiben 8.b und 11.f, produktive Konfigurationsanwendbarkeit
+9.c/9.d, Vollquellen-Restore 15.j–15.l und vollständige Runtime-/Dateisystem- und
+Releaseabnahme M20. Die genaue Begründung pro Grenze steht in der Nachweisübersicht.
+730 Requirements bleiben bei 433 open und 297 partial; Releasefreigabe bleibt false.
+
+**Entscheidung:** Die bestätigten, bereits fälligen Auditkorrekturen sind durch
+ihre tatsächlichen Apply-Results beziehungsweise die benannte qualifizierte
+Belegquelle umgesetzt. Es verbleibt kein ungeklärter Audit-Vertragswiderspruch.
+Dieser Abschlusszustand erhält seinen eigenen vollständigen parallelen Dev-/Apply-
+Test vor dem Commit; erst sein erfolgreiches Apply-Result bestätigt `closed` und
+hebt die Sperre von 5.t.W auf. Produktzähler und historische Produktcheckboxen
+bleiben bei 237/885, der Fortschrittsblock setzt `next_audit_step` auf `null`.
+Commit-Message: `test(audit): close verified findings and target reference coverage`.
 
 ### Rückverweise auf abgeschlossene Produktpositionen
 
@@ -1473,12 +1557,15 @@ Fachliche Dokumentmodelle, vollständige ausgewählte Daten und sichere Verarbei
 
 Die CLI wird dennoch von Anfang an **farbig, übersichtlich und ansprechend** umgesetzt: austauschbare Präsentationsschicht, deutlich erkennbare Phasen, fortlaufender Fortschritt, klare Warnungen und kompakter Abschluss. Es gibt keinen nachträglichen Riesenschritt, der sämtliche Bedienbarkeit erst am Ende erzeugt. Terminalbreite, TTY-/Plain-Modus, NO_COLOR und quiet werden bei der Implementierung berücksichtigt, aber ihre Darstellung nicht automatisiert festgeschrieben.
 
-## TD-002 – parallele Volltests, serieller Bundle-Abschluss und manuelle GitHub-CI
+## TD-002 – ausschließlich parallele Volltests und nutzerseitig manuelle GitHub-CI
 
 Die Nutzerentscheidung vom 2. Oktober 2026 ersetzt die frühere Testauswahl und
-CI-Auslösung. Die aktualisierte Ergänzung vom 3. Oktober 2026 verlangt lokale
-Paralleltests, parallele Apply-Volltests und einen zusätzlichen seriellen Lauf
-beim letzten Bundle-Zustand. Ihre operative Pflege erfolgt zentral in der lokalen AGENTS.md
+CI-Auslösung. Die jüngste ausdrückliche Nutzerentscheidung verlangt ausschließlich
+parallele Volltests in Entwicklung und Apply, auch beim letzten Zustand eines
+Bundles. Der zusätzliche serielle Abschlusslauf aus der Ergänzung vom 3. Oktober
+2026 ist aufgehoben. GitHub-CI ist ausschließlich manuell; der Nutzer startet
+sie bei Bedarf selbst, Codex löst sie nicht aus. Ihre operative Pflege erfolgt
+zentral in der lokalen AGENTS.md
 des Codex-Arbeitsbereichs; ausführbare Aufrufe und Infrastruktur beschreibt
 [Testing.md](../development/Testing.md), den manuellen Workflow
 [Bundle_CI.md](../development/Bundle_CI.md). Dieser Plan enthält die fachlichen
@@ -13172,7 +13259,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** die im Fortschrittsblock genannte offene Audit-Nacharbeit (`next_audit_step`). Zuerst das neueste Result nach dieser Planaktualisierung auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Die reguläre Fortsetzung `5.t.W` bleibt bis `AUDIT-CLOSE` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach dem erfolgreichen Result von `AUDIT-CLOSE` der reguläre Produktpunkt `5.t.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Ohne bestätigten Audit-Abschluss bleibt `5.t.W` gesperrt. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 

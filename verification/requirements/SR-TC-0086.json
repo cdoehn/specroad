@@ -23,7 +23,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Validierung MUSS mindestens JSON-Parsing, JSON Schema, Typen, IDs, Referenzen, Relation Rules, Zyklen, Lifecycle, Profile, Baseline-Integrität und Evidence-Aktualität abdecken.",
-    "scope": "Loaded-model structure, dependency-expanded semantic dispatch and actual bound language policy, profile SRX and formal Requirement approval observations. Project and target adapters reuse the kernels; absent review/evidence/history services remain unavailable. No permission or whole-product release claim. Actual adapter coverage includes profile applicability, concurrent findings, conservative full-model dependencies, SRX structure limits, bound resource reconstruction, and project/target/dry-run threshold parity. Safe independent reference findings are collected without constructing an invalid resolved graph. Structural failures block downstream semantics; loading all required valid targets restores successful graph validation."
+    "scope": "Loaded-model structure, dependency-expanded semantic dispatch and actual bound language policy, profile SRX and formal Requirement approval observations. Project and target adapters reuse the kernels; absent review/evidence/history services remain unavailable. No permission or whole-product release claim. Actual adapter coverage includes profile applicability, concurrent findings, conservative full-model dependencies, SRX structure limits, bound resource reconstruction, and project/target/dry-run threshold parity. Safe independent reference findings are collected without constructing an invalid resolved graph. Structural failures block downstream semantics; loading all required valid targets restores successful graph validation. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
   },
   "expected_diagnostics": [
     "validation_required_gate_unavailable",
@@ -168,7 +168,13 @@
     "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-unrelated]",
     "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[json]",
     "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[schema]",
-    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[typed_field]"
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[typed_field]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[1-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[2-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-True]",
+    "tests/test_validation_target_reference_sets.py::test_invalid_stored_relations_keep_strict_plan_boundary[False]",
+    "tests/test_validation_target_reference_sets.py::test_invalid_stored_relations_keep_strict_plan_boundary[True]"
   ],
   "open_items": [
     "The bound model and read-only project inventory adapters are implemented library scopes; public validate command integration and remaining command consumers still need their assigned integration evidence.",

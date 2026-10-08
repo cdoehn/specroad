@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
-    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write. Complete safe reference sets and invalid-inventory barriers are observed through the real read-only project adapter with direct-model parity and unchanged project bytes."
+    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write. Complete safe reference sets and invalid-inventory barriers are observed through the real read-only project adapter with direct-model parity and unchanged project bytes. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
   },
   "expected_diagnostics": [
     "SRV020",
@@ -166,7 +166,13 @@
     "tests/test_validation_reference_sets.py::test_reference_set_is_complete_in_project_and_selected_validation[unresolved_review-unrelated]",
     "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[json]",
     "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[schema]",
-    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[typed_field]"
+    "tests/test_validation_reference_sets.py::test_selected_public_validation_does_not_infer_targets_from_invalid_inventory[typed_field]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[1-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[2-False]",
+    "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-True]",
+    "tests/test_validation_target_reference_sets.py::test_invalid_stored_relations_keep_strict_plan_boundary[False]",
+    "tests/test_validation_target_reference_sets.py::test_invalid_stored_relations_keep_strict_plan_boundary[True]"
   ],
   "open_items": [
     "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",
