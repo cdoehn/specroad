@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 83
+last_completed_numbered_bundle: 84
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-03.C
+next_audit_step: AUDIT-EVIDENCE-01.W
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -937,7 +937,7 @@ nicht durch eine vollständige Produktabnahme ersetzt.
   stabile Codes und Orte, passende Summary und Code 3. Unlesbare, schemawidrige
   oder mehrdeutige Eingaben behalten ihre erforderlichen Abbruchgrenzen;
   Lesen bleibt schreibfrei und erzeugt keine Freigabe.
-- [ ] **AUDIT-VALIDATION-03.C:** Referenzbeobachtung, Fehlerprojektion und strikte
+- [x] **AUDIT-VALIDATION-03.C:** Referenzbeobachtung, Fehlerprojektion und strikte
   Graphkonstruktion ohne doppelte Fachregeln strukturieren. **Abnahme:** W-/R-
   Diagnosemengen, Reihenfolge, Fehlerverträge und erlaubte Wirkungen bleiben
   gleich; eine gescheiterte Referenzprüfung erzeugt weiterhin keinen gültigen
@@ -1276,6 +1276,35 @@ Commit-Message: `fix(validation): complete reference diagnostic sets`.
 Erst das erfolgreiche Apply-Result bestätigt diesen R-Abschluss. Nächster
 Schritt: `AUDIT-VALIDATION-03.C`; Produktstand 237/885 und Sperre von 5.t.W
 bleiben erhalten. Die SR-TC-Manifeste behalten ihren bisherigen Teilumfang.
+
+### AUDIT-VALIDATION-03.C – gemeinsame Referenzregeln (Bundle 084)
+
+Basis ist Result `specroad-apply_Result_090436_1008_f0b039.zip`, Commit
+`81daac1f05b5cbc018ce363074de91a156d68503`. Der vollständig geprüfte Apply-Lauf
+bestätigt Bundle 083 mit 5874 erfolgreichen parallelen Tests und sauberem
+Abschluss. Alle 1466 Snapshotdateien und vier Payloads stimmen mit dem
+Eltern-/Abschlusscommit und der Entwicklung überein.
+
+Strikte Graphkonstruktion und sammelnde Modellvalidierung verwenden gemeinsame
+Prädikate für Quellidentitäten, Relationsidentitäten, externe Identitäten,
+vorhandene Ziele, zulässige Endpunkte und Fehlerorte. Die Auswertung der
+Identitätsbefunde erfolgt schrittweise: Der strikte Konstruktor bricht weiterhin
+beim bisherigen ersten Fehler ab; die Beobachtung sammelt ihre sicheren Befunde
+innerhalb der bestehenden Phasengrenzen. Reihenfolge, Codes, Artefaktzuordnung,
+Datei und Pointer bleiben erhalten. Es entsteht weiterhin kein ungültiger
+aufgelöster Gesamtgraph.
+
+Bekannte Feldziele und gespeicherte Review-Relationen nutzen jeweils eine
+Fehlerprüfung sowohl für die Diagnosebeobachtung als auch für den strikten
+Abhängigkeitsaufbau. W-/R-Verhalten, Auswahlgrenzen und erlaubte schreibfreie
+Wirkungen bleiben unverändert. Die vorhandenen Verhaltenstests einschließlich
+aller 45 neuen W-/R-Fälle werden unverändert übernommen; es gibt keine neue
+fachliche Regel oder zusätzliche Freigabebehauptung.
+
+Commit-Message: `refactor(validation): share strict reference predicates`.
+Erst das erfolgreiche Apply-Result bestätigt diesen C-Abschluss. Nächster
+Schritt: `AUDIT-EVIDENCE-01.W`; Produktstand 237/885 und Sperre von 5.t.W
+bleiben erhalten. Die bestehenden SR-TC-Teilumfänge ändern sich nicht.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 

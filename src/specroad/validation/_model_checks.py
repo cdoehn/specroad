@@ -6,7 +6,10 @@ known validated contracts; arbitrary strings never cause dependency discovery.
 from __future__ import annotations
 
 from ..model.errors import ModelError
-from ..graph.references import _check_endpoints
+from ..graph._reference_checks import (
+    _check_endpoints, _source_identity_errors, _relation_identity_errors,
+    _target_identity, _locate_relation_error,
+)
 
 def _issue(error, artifact_id=None, path=None):
     return {**error.diagnostic(), "artifact_id": artifact_id,
@@ -36,6 +39,20 @@ def _applies(hook, data, profile):
     return hook.startswith("extension:")
 
 
+def _review_relation_error(data, relations, path):
+    if data["relation_id"] not in relations:
+        return ModelError("validation_review_relation_missing", path=path, pointer="/relation_id")
+    return None
+
+
+def _field_target_error(target, target_kind, index, path, pointer):
+    if target not in index:
+        return ModelError("validation_field_target_missing", path=path, pointer=pointer)
+    if target_kind is not None and index[target].identity.artifact_type != target_kind:
+        return ModelError("validation_field_target_type", path=path, pointer=pointer)
+    return None
+
+
 def _field_targets(record, relations=None):
     """Declared fields only; review endpoint dependencies need resolved relations."""
     data = record.data
@@ -55,9 +72,10 @@ def _field_targets(record, relations=None):
     if kind == "configuration" and data.get("parent") is not None:
         candidates.append((data["parent"], "/parent", "configuration"))
     if kind == "relation_review" and relations is not None:
-        relation = relations.get(data["relation_id"])
-        if relation is None:
-            raise ModelError("validation_review_relation_missing", path=record.path, pointer="/relation_id")
+        error = _review_relation_error(data, relations, record.path)
+        if error is not None:
+            raise error
+        relation = relations[data["relation_id"]]
         candidates.extend((v, "/relation_id", None) for v in (relation.source.id, relation.target.id))
     for i, provenance in enumerate(data.get("provenance", ())):
         if provenance.get("source_id") is not None:
@@ -77,57 +95,37 @@ def _reference_issues(records):
     index, issues = {}, []
     prefix = records[0].identity.id_prefix if records else None
     for record in records:
-        if record.identity.id_prefix != prefix:
-            issues.append(_issue(ModelError("mixed_project_prefix", path=record.path), record.identity.id))
-        if record.identity.id in index:
-            issues.append(_issue(ModelError("duplicate_artifact_id", path=record.path, pointer="/id"),
-                                 record.identity.id))
+        issues.extend(_issue(error, record.identity.id)
+                      for error in _source_identity_errors(record, index, prefix))
         index[record.identity.id] = record
     if issues:
         return issues
     relation_ids, external_keys = set(), set()
     for record in records:
         for position, relation in enumerate(record.relations):
-            pointer = "/relations/" + str(position)
-            if relation.identity.id in relation_ids:
-                issues.append(_issue(ModelError("duplicate_relation_id", path=record.path,
-                    pointer=pointer + "/relation_id"), record.identity.id))
-            relation_ids.add(relation.identity.id)
-            for external_position, external in enumerate(relation.data["external_identities"]):
-                key = tuple(external[name] for name in ("source_system", "source_document", "external_id"))
-                if key in external_keys:
-                    issues.append(_issue(ModelError("duplicate_external_relation_identity", path=record.path,
-                        pointer=pointer + "/external_identities/" + str(external_position)), record.identity.id))
-                external_keys.add(key)
+            issues.extend(_issue(_locate_relation_error(error, record, position), record.identity.id)
+                          for error in _relation_identity_errors(relation, relation_ids, external_keys))
     if issues:
         return issues
     for record in records:
         for position, relation in enumerate(record.relations):
-            target = index.get(relation.target)
             try:
-                if target is None:
-                    raise ModelError("missing_relation_target", pointer="/target")
-                _check_endpoints(relation, record.identity, target.identity)
+                _check_endpoints(relation, record.identity, _target_identity(relation, index))
             except ModelError as error:
-                error.path = record.path
-                error.pointer = "/relations/" + str(position) + error.pointer
-                issues.append(_issue(error, record.identity.id))
+                issues.append(_issue(_locate_relation_error(error, record, position), record.identity.id))
     for record in records:
         data = record.data
         # Missing review relations are independent facts. A present relation's
         # endpoints are checked above; an invalid one never creates a secondary
         # missing-review or fabricated endpoint finding.
-        if data["artifact_type"] == "relation_review" and data["relation_id"] not in relation_ids:
-            issues.append(_issue(ModelError("validation_review_relation_missing", path=record.path,
-                pointer="/relation_id"), record.identity.id))
+        if data["artifact_type"] == "relation_review":
+            error = _review_relation_error(data, relation_ids, record.path)
+            if error is not None:
+                issues.append(_issue(error, record.identity.id))
         for target, pointer, target_kind in _field_targets(record):
-            reason = None
-            if target not in index:
-                reason = "validation_field_target_missing"
-            elif target_kind is not None and index[target].identity.artifact_type != target_kind:
-                reason = "validation_field_target_type"
-            if reason is not None:
-                issues.append(_issue(ModelError(reason, path=record.path, pointer=pointer), record.identity.id))
+            error = _field_target_error(target, target_kind, index, record.path, pointer)
+            if error is not None:
+                issues.append(_issue(error, record.identity.id))
     return issues
 
 
@@ -139,9 +137,8 @@ def _foreign_edges(records, references):
     for record in records:
         source = record.identity.id
         for target, pointer, target_kind in _field_targets(record, relations):
-            if target not in index:
-                raise ModelError("validation_field_target_missing", path=record.path, pointer=pointer)
-            if target_kind is not None and index[target].identity.artifact_type != target_kind:
-                raise ModelError("validation_field_target_type", path=record.path, pointer=pointer)
+            error = _field_target_error(target, target_kind, index, record.path, pointer)
+            if error is not None:
+                raise error
             edges.append((source, target))
     return edges

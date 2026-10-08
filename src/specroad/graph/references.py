@@ -9,20 +9,11 @@ from dataclasses import dataclass
 from ..model.errors import ModelError
 from ..model.identity_values import ArtifactIdentity
 from .relations import Relation, SourceRelations
-from .relation_matrix import relation_pair_allowed
-
-
-def _check_endpoints(relation, source, target):
-    if type(relation) is not Relation or type(source) is not ArtifactIdentity or type(target) is not ArtifactIdentity:
-        raise ModelError("relation_endpoint_values_required")
-    if relation.source != source or relation.target != target.id:
-        raise ModelError("relation_endpoint_identity_mismatch")
-    if source.id_prefix != target.id_prefix:
-        raise ModelError("mixed_project_prefix")
-    if source.id == target.id:
-        raise ModelError("self_relation_forbidden", pointer="/target")
-    if not relation_pair_allowed(relation.type, source.artifact_type, target.artifact_type):
-        raise ModelError("relation_type_pair_forbidden", pointer="/target")
+from .relation_matrix import relation_pair_allowed  # Preserve the earlier import path.
+from ._reference_checks import (
+    _check_endpoints, _source_identity_errors, _relation_identity_errors,
+    _target_identity, _locate_relation_error,
+)
 
 
 @dataclass(frozen=True)
@@ -60,10 +51,8 @@ class RelationReferences:
                 raise ModelError("source_relations_required")
             if prefix is None:
                 prefix = source.identity.id_prefix
-            elif source.identity.id_prefix != prefix:
-                raise ModelError("mixed_project_prefix", path=source.path)
-            if source.identity.id in index:
-                raise ModelError("duplicate_artifact_id", path=source.path, pointer="/id")
+            for error in _source_identity_errors(source, index, prefix):
+                raise error
             index[source.identity.id] = source
         relations = []
         seen = set()
@@ -71,23 +60,12 @@ class RelationReferences:
         for source in sorted(records, key=lambda record: record.identity.id):
             for position, relation in enumerate(source.relations):
                 try:
-                    if relation.identity.id in seen:
-                        raise ModelError("duplicate_relation_id", pointer="/relation_id")
-                    seen.add(relation.identity.id)
-                    for external_index, external in enumerate(relation.data["external_identities"]):
-                        key = tuple(external[name] for name in ("source_system", "source_document", "external_id"))
-                        if key in external_keys:
-                            raise ModelError("duplicate_external_relation_identity",
-                                             pointer="/external_identities/" + str(external_index))
-                        external_keys.add(key)
-                    target = index.get(relation.target)
-                    if target is None:
-                        raise ModelError("missing_relation_target", pointer="/target")
-                    relations.append(ResolvedRelation(relation, source.identity, target.identity))
+                    for error in _relation_identity_errors(relation, seen, external_keys):
+                        raise error
+                    target = _target_identity(relation, index)
+                    relations.append(ResolvedRelation(relation, source.identity, target))
                 except ModelError as error:
-                    error.path = source.path
-                    error.pointer = "/relations/" + str(position) + error.pointer
-                    raise
+                    raise _locate_relation_error(error, source, position)
         object.__setattr__(self, "sources", tuple(index[name].identity for name in sorted(index)))
         object.__setattr__(self, "relations", tuple(sorted(relations, key=lambda item: item.relation.key)))
         object.__setattr__(self, "validation_scope", "relation_references_only")
