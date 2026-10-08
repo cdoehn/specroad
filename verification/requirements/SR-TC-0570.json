@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0570",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Current owned project inputs and native read/enumeration recording through actual invocation and transaction-preflight boundaries."
+  ],
+  "steps": [
+    "Read configuration capture and recheck at exact byte thresholds; record actual offsets and returned bytes.",
+    "Compare startup scope before and after 5,000 historical entries; cap actual active-entry classification at sixteen.",
+    "Preserve live owner and authority decisions for oversized valid recovery policy; retain changed bytes without starting a normal operation."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der automatische Preflight MUSS die Metadaten- und Journalgrenzen aus Anhang N.2 ohne Scannen der abgeschlossenen Receipt-Historie einhalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Shared accounting limits each metadata phase to 1 MiB across actual configuration bytes and shallow names; separate rechecks are counted. Reads progress at the current offset in blocks of at most 64 KiB. At most sixteen active entries are classified per independent observation; no completed receipt/request/cache/audit namespace is opened or enumerated. Detail phases report SRV167; size alone does not produce code 5 or an unproven code 8. Genuine corruption, mutation, live owner and authorization failures preserve their contracts."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV167"
+  ],
+  "expected_exit_codes": [
+    0,
+    3,
+    5,
+    7
+  ],
+  "json_pointers": [
+    "/summary/preflight/metadata_bytes_read",
+    "/summary/preflight/metadata_phases",
+    "/summary/preflight/preflight_detail_required"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,47 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[16]",
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[17]",
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[400]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[early_eof]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[grow]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[replace]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[truncate]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[pending]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[schema]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[syntax]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[-1]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[0]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[1]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[dryrun]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[metadata]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[read]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[False-True-5]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[True-False-7]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[True-True-5]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-read]",
+    "tests/test_preflight_metadata.py::test_short_native_reads_advance_without_repeating_or_losing_bytes"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Same-invocation bounded metadata phases are implemented. Durable Work manifests, checkpoints and cross-invocation resumption under Annex P remain assigned to 6.i-6.l. Broader command-profile integration and the runtime/platform matrix remain open."
   ]
 }

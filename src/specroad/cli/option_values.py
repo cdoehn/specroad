@@ -16,9 +16,10 @@ CORE_PROFILE = "core@0.2.0"
 
 
 class OptionResolutionError(CommandUsageError):
-    def __init__(self, message: str, exit_code: int = 2):
+    def __init__(self, message: str, exit_code: int = 2, *, details=None):
         super().__init__(message)
         self.exit_code = exit_code
+        self.details = details
 
 
 @dataclass(frozen=True)
@@ -33,10 +34,14 @@ class ResolvedOptions:
     project_source: str | None
     values: Mapping[str, object]
     history: Mapping[str, tuple[OptionOrigin, ...]]
+    preflight: Mapping | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "values", MappingProxyType(dict(self.values)))
         object.__setattr__(self, "history", MappingProxyType({key: tuple(value) for key, value in self.history.items()}))
+        if self.preflight is not None:
+            from .results import freeze
+            object.__setattr__(self, "preflight", freeze(self.preflight))
 
     @property
     def origins(self) -> Mapping[str, str]:

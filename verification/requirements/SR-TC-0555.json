@@ -15,20 +15,31 @@
   ],
   "steps": [
     "Execute the named behavior tests in the current complete suite.",
-    "Observe returned data, file effects, module loads and exit status; never human-readable output."
+    "Observe returned data, file effects, module loads and exit status; never human-readable output.",
+    "Observe actual bounded descriptor reads and phase progress across exact metadata thresholds, short reads and changing files; preserve genuine error classes.",
+    "Compare native startup accesses before and after 5,000 completed history files; classify at most sixteen active entries without opening journal bodies."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Preflight DARF NICHT allein zur Startprüfung die vollständige Modellvalidierung, einen Indexneuaufbau oder einen rekursiven Repository-/Archivscan auslösen.",
-    "scope": "Native access recording and side-effect traps cover bootstrap, current metadata diagnosis and project_read/startup gates through the actual invocation pipeline. Invalid unrelated model/archive/history contents remain uninterpreted; unresolved active state blocks without model or journal-body loading. Broader metadata budgets and later command families remain open."
+    "scope": "Native access recording and side-effect traps cover bootstrap, current metadata diagnosis and project_read/startup gates through the actual invocation pipeline. Invalid unrelated model/archive/history contents remain uninterpreted; unresolved active state blocks without model or journal-body loading. Broader metadata budgets and later command families remain open. Shared metadata accounting covers configuration capture, shallow names and verification; same-invocation detail phases disclose SRV167 without a size-only error or invented persistent continuation. Large history does not change native startup accesses."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV167"
+  ],
   "expected_exit_codes": [
     0,
     2,
-    5
+    3,
+    5,
+    6,
+    7
   ],
-  "json_pointers": [],
+  "json_pointers": [
+    "/summary/preflight/metadata_bytes_read",
+    "/summary/preflight/metadata_phases",
+    "/summary/preflight/preflight_detail_required"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -43,6 +54,44 @@
   "test_ids": [
     "test_bootstrap.BootstrapRobustnessTests.test_instrumented_bootstrap_performs_no_project_reads_scans_or_processes",
     "test_bootstrap.BootstrapRobustnessTests.test_metadata_only_call_does_not_read_model_or_git",
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[16]",
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[17]",
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[400]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[early_eof]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[grow]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[replace]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[truncate]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[pending]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[schema]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[syntax]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[-1]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[0]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[1]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[dryrun]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[metadata]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[read]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[False-True-5]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[True-False-7]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[True-True-5]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-read]",
+    "tests/test_preflight_metadata.py::test_short_native_reads_advance_without_repeating_or_losing_bytes",
     "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments0]",
     "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments1]",
     "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments2]",
@@ -67,6 +116,6 @@
     "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[read]"
   ],
   "open_items": [
-    "6.a.R completes shared metadata/journal accounting and large-history handling. Complete downstream command families, resumable detail phases and the required runtime matrix remain open."
+    "6.a.C consolidates profile definitions without behavior changes. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
   ]
 }

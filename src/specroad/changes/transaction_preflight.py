@@ -12,6 +12,7 @@ from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
 from ..storage.json_syntax import parse_json_object
 from ..storage.operational_preflight import observe_operational_preflight
+from ..storage.preflight_metadata import MetadataPhases
 from .authoring import normalize_request_id
 from .execution_values import ChangeExecutionError
 from .recovery_values import RecoveryError
@@ -70,26 +71,32 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
             'model_loaded': False, 'write_authorized': False, 'atomic_snapshot': False,
             'recovery_required': True, 'recovery_attempted': False, 'recovery_completed': False,
             'requires_new_invocation': False, 'mutation_possible': False, 'recovery': None}
+    metadata = MetadataPhases()
+
+    def result():
+        data.update(metadata.summary())
+        data['diagnostic_codes'] = ['SRV167'] if data['preflight_detail_required'] else []
+        return TransactionPreflight._create(data)
+
     try:
         boundary = ProjectBoundary(root)
-        observed = observe_operational_preflight(boundary)
+        observed = observe_operational_preflight(boundary, metadata=metadata)
         data['operational'] = observed
-        if observe_operational_preflight(boundary) != observed:
+        if observe_operational_preflight(boundary, metadata=metadata) != observed:
             raise RecoveryError('preflight_operational_metadata_changed', exit_code=6)
-        data['metadata_bytes_read'] = 2 * observed['metadata_bytes_read']
         if observed['consistency_state'] == 'consistent':
             data.update(exit_code=0, reason='transaction_gate_clear',
                         recovery_required=False, transaction_preflight_passed=True)
-            return TransactionPreflight._create(data)
+            return result()
         if command_class is not CommandClass.NORMATIVE_WRITE or dry_run:
-            return TransactionPreflight._create(data)
-        decision = prepare_automatic_recovery(boundary, observed, data,
+            return result()
+        decision = prepare_automatic_recovery(boundary, observed, data, metadata,
             expected_project_id=expected_project_id, request_id=request_id, authority=authority, actor=actor)
         if decision is not None:
             recover_selected_transaction(decision, data)
-        return TransactionPreflight._create(data)
+        return result()
     except (ChangeExecutionError, ModelError, SafetyViolation, OSError) as error:
         data.update(exit_code=getattr(error, 'exit_code', 5),
                     reason=getattr(error, 'reason', 'transaction_preflight_unavailable'),
                     mutation_possible=data['mutation_possible'] or getattr(error, 'mutation_possible', False))
-        return TransactionPreflight._create(data)
+        return result()

@@ -1,14 +1,11 @@
 """Bounded automatic-recovery decision; no lock or recovery write is acquired."""
 from dataclasses import dataclass, replace
 from hashlib import sha256
-import os
 
 from ..model.configuration import ProjectConfiguration
 from ..security import ProjectBoundary
-from ..security.resource_access import opened_resource
 from ..model.canonical import canonical_json_bytes
 from ..storage.json_reader import JsonResource, configuration_schema
-from ..storage.operational_preflight import MAX_METADATA_BYTES
 from .authoring import normalize_authoring_actor
 from .recovery_values import RecoveryAuthority, RecoveryError
 from ._recovery_evidence import EvidenceRecord
@@ -60,22 +57,6 @@ class RecoveryDecision:
         return True
 
 
-def _metadata(boundary, path, available):
-    with opened_resource(boundary, path) as (fd, info):
-        if info.st_size > available:
-            raise RecoveryError('automatic_recovery_policy_requires_explicit_inspection', exit_code=5)
-        chunks, remaining = [], info.st_size
-        while remaining:
-            raw = os.read(fd, min(65536, remaining))
-            if not raw:
-                raise RecoveryError('preflight_configuration_changed', exit_code=6)
-            chunks.append(raw)
-            remaining -= len(raw)
-        if os.read(fd, 1):
-            raise RecoveryError('preflight_configuration_changed', exit_code=6)
-    return b''.join(chunks)
-
-
 def _authorize(authority, request):
     before = canonical_json_bytes(request)
     try:
@@ -86,7 +67,7 @@ def _authorize(authority, request):
         raise RecoveryError('automatic_recovery_not_authorized', exit_code=7)
 
 
-def prepare_automatic_recovery(boundary, observed, data, *, expected_project_id,
+def prepare_automatic_recovery(boundary, observed, data, metadata, *, expected_project_id,
                                request_id, authority, actor):
     """Record a blocked decision or select one explicitly authorized recovery.
 
@@ -98,21 +79,16 @@ def prepare_automatic_recovery(boundary, observed, data, *, expected_project_id,
             or any(p != '.specroad/locks/project.json' for p in observed['unknown_paths'])):
         data['reason'] = 'explicit_recovery_selection_required'
         return None
-    raw_config = _metadata(boundary, 'specroad.json', MAX_METADATA_BYTES - data['metadata_bytes_read'])
+    raw_config = metadata.read_bytes(boundary, 'specroad.json')
     config = ProjectConfiguration(JsonResource(raw_config, configuration_schema(), path='specroad.json').data)
-    data['metadata_bytes_read'] += len(raw_config)
     data['configuration_sha256'] = sha256(raw_config).hexdigest()
     if expected_project_id is not None and config.project_id != expected_project_id:
         raise RecoveryError('preflight_project_identity_mismatch', exit_code=6)
     if config.data.get('transaction_policy', {}).get('auto_recover') is not True:
         data['reason'] = 'automatic_recovery_disabled'
         return None
-    def metadata(path):
-        raw = _metadata(boundary, path, MAX_METADATA_BYTES - data['metadata_bytes_read'])
-        data['metadata_bytes_read'] += len(raw)
-        return raw
-
-    transaction_id, barrier = select_recovery(observed, config.project_id, boundary, metadata)
+    transaction_id, barrier = select_recovery(observed, config.project_id, boundary,
+                                            lambda path: metadata.read_bytes(boundary, path))
     if type(authority) is not RecoveryAuthority or request_id is None:
         raise RecoveryError('automatic_recovery_authority_and_request_required', exit_code=7)
     actor = normalize_authoring_actor(actor).as_fields()

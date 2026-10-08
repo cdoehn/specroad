@@ -2,7 +2,7 @@
 
 This gate neither loads a model nor authorizes writes. The normal handler must
 still validate its own inputs and recheck every actual read/publication. Other
-profile families and resumable metadata-budget handling have separate contracts.
+profile families and persistent work checkpoints have separate contracts.
 """
 from ..cli.results import FailureKind, OperationFailure
 from ..model.errors import ModelError
@@ -11,7 +11,7 @@ from ..storage.json_reader import JsonResource, configuration_schema
 from ..storage.operational_preflight import observe_operational_preflight
 
 
-def require_project_read_preflight(boundary, configuration_bytes):
+def require_project_read_preflight(boundary, configuration_bytes, metadata):
     """Check current schema and shallow transaction state before a read handler.
 
     The same captured bytes supply option resolution after this check. A changed
@@ -26,15 +26,15 @@ def require_project_read_preflight(boundary, configuration_bytes):
 
     def fail(kind, reason):
         raise OperationFailure(kind, 'The current project preflight did not pass.',
-                               details={'preflight': {**data, 'reason': reason}})
+                               details={'preflight': {**data, **metadata.summary(), 'reason': reason}})
 
     try:
         JsonResource(configuration_bytes, configuration_schema(), path='specroad.json')
-        first = observe_operational_preflight(boundary)
+        first = observe_operational_preflight(boundary, metadata=metadata)
         data['operational'] = first
-        if observe_operational_preflight(boundary) != first:
+        if observe_operational_preflight(boundary, metadata=metadata) != first:
             fail(FailureKind.CONFLICT, 'preflight_operational_metadata_changed')
-        if boundary.read_bytes('specroad.json') != configuration_bytes:
+        if metadata.read_bytes(boundary, 'specroad.json') != configuration_bytes:
             fail(FailureKind.CONFLICT, 'preflight_configuration_changed')
         boundary._check_root()
         if first['consistency_state'] != 'consistent':
@@ -46,3 +46,4 @@ def require_project_read_preflight(boundary, configuration_bytes):
         fail(FailureKind.SECURITY, 'unsafe_preflight_resource')
     except OSError:
         fail(FailureKind.ENVIRONMENT, 'preflight_resource_unavailable')
+    return {**data, **metadata.summary(), 'reason': 'preflight_clear', 'preflight_passed': True}

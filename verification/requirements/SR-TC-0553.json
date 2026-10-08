@@ -17,14 +17,18 @@
     "Invoke project_read through CLI spelling, alias and structured request; observe the current configuration, active transaction gate and whether the real handler runs.",
     "Record native opens and directory enumeration while denying project writes, processes and network; retain all unrelated and pending bytes.",
     "Change configuration or operational state during observation and between invocations; reject stale preparation before handler execution.",
-    "Run bootstrap without project access and retain bounded metadata diagnosis for a blocked project."
+    "Run bootstrap without project access and retain bounded metadata diagnosis for a blocked project.",
+    "Observe actual bounded descriptor reads and phase progress across exact metadata thresholds, short reads and changing files; preserve genuine error classes.",
+    "Compare native startup accesses before and after 5,000 completed history files; classify at most sixteen active entries without opening journal bodies."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der automatische Preflight MUSS ausschließlich den für den angeforderten Befehl definierten Prüfumfang aus Anhang N.2 ausführen.",
-    "scope": "Current configuration schema and shallow operational state gate project_read and project_write dry-runs before the handler. Bootstrap performs no project access; metadata-only diagnosis remains available. Current root/configuration and operational rechecks reject stale preparation. No model validation, journal body/history scan, process, network or project mutation is used for startup."
+    "scope": "Current configuration schema and shallow operational state gate project_read and project_write dry-runs before the handler. Bootstrap performs no project access; metadata-only diagnosis remains available. Current root/configuration and operational rechecks reject stale preparation. No model validation, journal body/history scan, process, network or project mutation is used for startup. Shared metadata accounting covers configuration capture, shallow names and verification; same-invocation detail phases disclose SRV167 without a size-only error or invented persistent continuation. Large history does not change native startup accesses."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV167"
+  ],
   "expected_exit_codes": [
     0,
     3,
@@ -33,8 +37,11 @@
     7
   ],
   "json_pointers": [
-    "/summary/preflight/profile",
-    "/summary/preflight/normal_operation_started"
+    "/summary/preflight/metadata_bytes_read",
+    "/summary/preflight/metadata_phases",
+    "/summary/preflight/normal_operation_started",
+    "/summary/preflight/preflight_detail_required",
+    "/summary/preflight/profile"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -48,6 +55,44 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[16]",
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[17]",
+    "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[400]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[early_eof]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[grow]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[replace]",
+    "tests/test_preflight_metadata.py::test_configuration_read_changes_fail_before_handler_and_retain_actual_bytes[truncate]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[pending]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[schema]",
+    "tests/test_preflight_metadata.py::test_detail_phase_keeps_actual_failure_class_and_diagnostic[syntax]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[-1]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[0]",
+    "tests/test_preflight_metadata.py::test_directory_names_and_configuration_share_the_same_phase_limit[1]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[dryrun]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[metadata]",
+    "tests/test_preflight_metadata.py::test_large_completed_history_does_not_change_startup_accesses_or_work[read]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[False-True-5]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[True-False-7]",
+    "tests/test_preflight_metadata.py::test_large_recovery_policy_reaches_real_authority_and_owner_decision[True-True-5]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048576-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[1048577-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[3145745-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524288-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[524289-read]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-dryrun]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-metadata]",
+    "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-read]",
+    "tests/test_preflight_metadata.py::test_short_native_reads_advance_without_repeating_or_losing_bytes",
     "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments0]",
     "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments1]",
     "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments2]",
@@ -82,6 +127,6 @@
     "tests/test_preflight_profiles.py::test_relocated_project_uses_only_its_current_root"
   ],
   "open_items": [
-    "6.a.R/C complete metadata accounting and boundary handling, then consolidate profile definitions. Resumable detail phases, full runtime budgets, actual write/recovery/root-creation prerequisites and further project CLI families remain assigned to their later implementation steps. No runtime/platform-matrix approval."
+    "6.a.C consolidates profile definitions without behavior changes. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
   ]
 }

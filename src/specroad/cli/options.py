@@ -8,7 +8,7 @@ from .option_values import (
     ResolvedOptions, _compose_values, _validate_layers, policy_exit_code,
 )
 
-def select_project(command, options, cwd):
+def select_project(command, options, cwd, *, preflight=None):
     """Do not import project I/O for a contract which does not select a root."""
     if command.preflight_profile is PreflightProfile.BOOTSTRAP:
         if "--project" in options:
@@ -17,7 +17,7 @@ def select_project(command, options, cwd):
     if not command.requires_project and "--project" not in options:
         return None, None, {}
     from .project_selection import select_project as select
-    return select(command, options, cwd)
+    return select(command, options, cwd, preflight=preflight)
 
 
 _GLOBAL_OPTIONS = {
@@ -61,6 +61,7 @@ def resolve_options(invocation: Invocation, *, cwd: Path | None = None,
                     configuration_layer: OptionLayer | None = None) -> ResolvedOptions:
     check_global_contract(invocation.command)
     _validate_layers(profile_layers, configuration_layer)
-    root, source, project = select_project(invocation.command, invocation.options, cwd)
+    preflight = {}
+    root, source, project = select_project(invocation.command, invocation.options, cwd, preflight=preflight)
     values, history = _compose_values(project, invocation.options, profile_layers, configuration_layer)
-    return ResolvedOptions(root, source, values, history)
+    return ResolvedOptions(root, source, values, history, preflight or None)

@@ -5,12 +5,12 @@ import stat
 from ..model.operational_paths import PASSIVE_ROOTS, passive_journal_directory
 from ..security import paths as guards
 from ..security.resource_access import opened_resource
+from .preflight_metadata import MAX_METADATA_BYTES
 
 MAX_ACTIVE_ENTRIES = 16
-MAX_METADATA_BYTES = 1024 * 1024
 
 
-def observe_operational_preflight(boundary, *, complete_inventory=False):
+def observe_operational_preflight(boundary, *, complete_inventory=False, metadata=None):
     """A found active entry already proves the N.3 recovery blocker.
 
     At most sixteen active/unclear entries are classified. Their existence is
@@ -25,20 +25,30 @@ def observe_operational_preflight(boundary, *, complete_inventory=False):
     def entries(path):
         nonlocal complete, metadata_bytes
         entered = False
+        read_id = metadata.begin_read() if metadata is not None else None
+        offset = 0
         try:
             with opened_resource(boundary, path, directory=True) as (fd, initial):
                 entered = True
                 seen = set()
                 with os.scandir(fd) as iterator:
-                    for entry in iterator:
+                    while True:
                         if not complete_inventory and len(unresolved) + len(unknown) >= MAX_ACTIVE_ENTRIES:
                             complete = False
+                            return
+                        try:
+                            entry = next(iterator)
+                        except StopIteration:
                             return
                         guards._parts(entry.name)
                         if entry.name.casefold() in seen:
                             raise guards.SafetyViolation('Portable directory names collide')
                         seen.add(entry.name.casefold())
-                        metadata_bytes += len(entry.name.encode('utf-8'))
+                        size = len(entry.name.encode('utf-8'))
+                        if metadata is not None:
+                            metadata.consume(path, read_id, offset, size)
+                        offset += size
+                        metadata_bytes += size
                         info = os.stat(entry.name, dir_fd=fd, follow_symlinks=False)
                         directory = stat.S_ISDIR(info.st_mode)
                         guards._regular(info, directory=directory)

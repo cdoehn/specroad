@@ -37,11 +37,42 @@ eingebauten Encoder direkt auf. Fachwerte und Byteordnung bleiben erhalten;
 der Authoring-Nachweis ohne externe Zugriffe läuft zusätzlich in einem
 frischen isolierten Prozess.
 
-W bindet die bestehende Root-/Optionsauswahl und den schreibfreien
-Transaktionscheck zusammen. Die gemeinsame Metadatenbilanz, große
-Konfigurationen und die vollständige Begrenzung historischer Namensräume
-gehören zu 6.a.R. Fortsetzbare Detailphasen, Ressourcenbudgets, reale
+R bilanziert die tatsächlichen Konfigurationsbytes einschließlich der
+Wiederprüfung und die UTF-8-Namen der flachen Betriebsbeobachtung gemeinsam.
+Jede Phase enthält höchstens 1 MiB. Konfigurationsdateien werden durch die
+bestehende sichere Deskriptorgrenze in Blöcken von höchstens 64 KiB gelesen;
+kurze positive Reads setzen am erreichten Offset fort. Eine volle Phase führt
+zum nächsten Bereich, nicht erneut zum Anfang derselben Lesepassage.
+Notwendige unabhängige Wiederprüfungen besitzen eine eigene Leseidentität.
+Dateigröße, Identität, Zeitstempel und Root werden danach erneut geprüft.
+
+Der maschinenlesbare Preflight weist Gesamtbytes, Phasen und deren erste und
+nächste Cursor aus. Bei zusätzlichen Phasen enthält er
+`preflight_detail_required=true`; der Command-Envelope ergänzt SRV167/info.
+Auch Metadaten-Diagnosen lesen ihre Konfiguration begrenzt. Die automatische
+Recovery-Auswahl benutzt dieselbe Bilanz für Konfiguration und den benötigten
+Pending-Deskriptor. Eine große gültige Policy wird nicht allein wegen ihrer
+Größe mit Code 5 zurückgewiesen: Autorisierung, tatsächlicher Eigentümer und
+Recoverybedarf bestimmen weiterhin das Ergebnis. Vollständige Recovery-Proofs
+und deren verpflichtende Wiederprüfungen gehören zur anschließenden explizit
+autorisierten Recovery-Phase.
+
+Die aktive Enumeration stoppt vor dem nächsten Iteratorzugriff, sobald 16
+aktive oder unklare Einträge eingeordnet sind. Dann ist die Inventarliste
+konservativ unvollständig; bereits erkannter Recoverybedarf blockiert reguläre
+Zugriffe. Die zweite Beobachtung prüft denselben begrenzten Bereich erneut.
+Abgeschlossene Receipt-, Request-, Cache- und Auditverzeichnisse werden nicht
+geöffnet oder aufgezählt. Der Verhaltensnachweis vergleicht die nativen Zugriffe
+vor und nach Ergänzung von 5.000 historischen Dateien; der Prüfumfang bleibt
+identisch. Weitere Nachweise decken exakte Bytegrenzen, kurze Reads, Änderungen
+während des Lesens und die Erhaltung wirklicher Fehlerklassen ab.
+
+Diese Detailfortsetzung bleibt innerhalb desselben Aufrufs. Sie erzeugt keinen
+dauerhaften Work-Cursor und keinen Code 8. Das vollständige Konfigurations-JSON
+wird weiterhin im Speicher interpretiert; die Phasengröße ist keine Zusage über
+den gesamten Speicherbedarf. Persistente Work-Manifeste/Checkpoints nach Anhang P
+und ihre Wiederaufnahme gehören zu 6.i–6.l. Ressourcenbudgets, reale
 Write-/Recovery-/Root-Creation-Voraussetzungen und die weiteren öffentlichen
 Projektbefehle bleiben ihren Implementierungspositionen zugeordnet.
-`SR-REQ-0553` und `SR-REQ-0555` bleiben daher partiell; dieser Stand ist keine
+`SR-REQ-0553`, `SR-REQ-0555` und `SR-REQ-0570` bleiben daher partiell; dieser Stand ist keine
 Freigabe aller Profile oder der Runtime-/Plattformmatrix.

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 247
-last_completed_plan_commit: 6.a.W
-next_plan_commit: 6.a.R
-last_completed_numbered_bundle: 98
+implementation_plan_commits_completed: 248
+last_completed_plan_commit: 6.a.R
+next_plan_commit: 6.a.C
+last_completed_numbered_bundle: 99
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4996,12 +4996,40 @@ parallelen Dev-/Apply-Tests und Commit gilt Position 247/885; danach folgt 6.a.R
 
 #### 6.a.R – Make it Right
 
-- [ ] **6.a.R** · Position **248/885** · Voraussetzung: `6.a.W`.
+- [x] **6.a.R** · Position **248/885** · Voraussetzung: `6.a.W`.
 **Exakte Commit-Message:** `6.a.R feat(work): Begrenzte Preflightprofile vervollständigen`
 
 **Vervollständigung:** Metadaten-/Journalgrenzen einhalten und abgeschlossene Receipthistorie nicht zur Startprüfung durchsuchen.
 
 **Verhaltensabnahme:** Zugriffsaufzeichnung belegt den begrenzten Prüfumfang auch bei großer Receipthistorie. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 099:** Gemeinsame Bilanz für Konfigurationserfassung,
+flache Betriebsnamen und unabhängige Wiederprüfung. Jede Metadatenphase bleibt
+bei höchstens 1 MiB; Deskriptorreads sind höchstens 64 KiB groß. Weitere Phasen
+setzen am aktuellen Offset fort und werden mit `preflight_detail_required` und
+SRV167/info ausgewiesen. Die Root-/Konfigurations-/Betriebsprüfungen bleiben
+aktuell; kurze Reads, gewachsene, verkürzte oder ersetzte Dateien führen weder
+zu Mischdaten noch zu einer Freigabe des Handlers.
+
+Die Enumeration endet vor einem weiteren Iteratorzugriff nach 16 aktiven oder
+unklaren Einträgen. Reale Konflikte blockieren weiterhin nach N.3. Die Auswahl
+automatischer Recovery nutzt dieselben begrenzten Lesephasen; eine große Policy
+ersetzt nicht die echte Autorisierungs-/Eigentümerentscheidung durch einen
+reinen Größenfehler. Historische Receipts, Requests, Caches und Audits werden
+nicht geöffnet oder enumeriert. Native Zugriffsaufzeichnung vor und nach
+5.000 zusätzlichen historischen Dateien belegt unveränderte Startarbeit.
+
+38 neue Verhaltenstests ergänzen alle unveränderten W- und bisherigen
+Recovery-Nachweise: exakte Grenzwerte einschließlich Wiederprüfung und Namen,
+monotone tatsächliche Leseoffsets, kurze Reads, aktuelle Byteänderungen,
+16/17/400 aktive Einträge sowie echte Fehler- und Autorisierungsergebnisse.
+SR-TC-0570 erhält die tatsächlich implementierte Teilabnahme; SR-TC-0553/0555
+bleiben partiell. Die Detailphasen werden innerhalb dieses Aufrufs beendet;
+persistente Work-Manifeste, externe Work-Roots und wiederaufnehmbare Checkpoints
+nach Anhang P bleiben 6.i–6.l zugeordnet. Kein Code 8 ohne dauerhaften Nachweis,
+keine allgemeine Speicher- oder Runtime-/Plattformfreigabe. Erst nach den
+erfolgreichen vollständigen parallelen Dev-/Apply-Tests und Commit gilt
+Position 248/885; danach folgt 6.a.C.
 
 #### 6.a.C – Make it Clean
 
@@ -13535,11 +13563,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `6.a.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `6.a.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem W-Result bleiben 638 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem R-Result bleiben 637 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 

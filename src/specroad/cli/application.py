@@ -10,6 +10,7 @@ from .invocation_context import InvocationContextBuilder
 from .registry import CommandRegistry, CommandUsageError
 from .requests import CommandRequest
 from .results import CommandResult, FailureKind, OperationFailure, failed_result
+from ..diagnostics import Diagnostic
 
 
 @dataclass(frozen=True)
@@ -51,6 +52,7 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
     command = "unknown"
     options = _error_options(arguments)
     project = None
+    preflight = None
     try:
         selected = builtin_registry() if registry is None else registry
         invocation = (selected.bind_request(arguments) if isinstance(arguments, CommandRequest)
@@ -61,6 +63,7 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
         invocation = builder.prepare(
             invocation, cwd=cwd, profile_layers=profile_layers,
             configuration_layer=configuration_layer)
+        preflight = invocation.resolved.preflight
         if invocation.resolved.project_root is not None:
             # Identity and hashes remain unknown until a future model loader binds them.
             project = {"project_root": str(invocation.resolved.project_root),
@@ -69,7 +72,7 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
     except OperationFailure as error:
         outcome = failed_result(command, error.kind, str(error), complete=error.complete, details=error.details)
     except OptionResolutionError as error:
-        outcome = failed_result(command, FailureKind(error.exit_code), str(error))
+        outcome = failed_result(command, FailureKind(error.exit_code), str(error), details=error.details)
     except CommandUsageError as error:
         outcome = failed_result(command, FailureKind.USAGE, str(error))
     except OSError:
@@ -78,6 +81,13 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
         outcome = failed_result(command, FailureKind.INTERNAL, "An internal command contract failed.")
     if outcome.project is None and project is not None:
         outcome = replace(outcome, project=project)
+    if preflight is not None:
+        outcome = replace(outcome, details={**outcome.details, 'preflight': preflight})
+    observation = outcome.details.get('preflight')
+    if isinstance(observation, Mapping) and observation.get('preflight_detail_required'):
+        outcome = replace(outcome, diagnostics=(*outcome.diagnostics,
+            Diagnostic('SRV167', 'info', 'preflight_detail_required',
+                       'Additional bounded metadata phases were required.')))
     return CommandResponse(outcome, options)
 
 
