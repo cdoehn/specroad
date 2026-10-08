@@ -24,7 +24,7 @@ from .values import (
     GateDependencies, GateResult, ValidationReport, _sequence, _ids, _diagnostics,
     _document_bindings,
 )
-from ._model_checks import _issue, _applies, _foreign_edges
+from ._model_checks import _issue, _applies, _foreign_edges, _missing_reference_issues
 from .resources import ValidationResources
 from .production import production_gates, formal_findings, profile_applies
 
@@ -131,6 +131,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         stage("model_dependencies", status="blocked")
         return report()
     records = tuple(sorted(records, key=lambda r: r.identity.id))
+    missing_references = _missing_reference_issues(records)
+    if missing_references:
+        stage("identities_references", missing_references)
+        stage("graph_and_semantics", status="blocked")
+        return report()
     try:
         references = RelationReferences(records)
         foreign = _foreign_edges(records, references)

@@ -22,10 +22,10 @@ implementation_plan_commits_total: 885
 implementation_plan_commits_completed: 237
 last_completed_plan_commit: 5.s.C
 next_plan_commit: 5.t.W
-last_completed_numbered_bundle: 81
+last_completed_numbered_bundle: 82
 implementation_state: in_progress
 audit_followup_status: open
-next_audit_step: AUDIT-VALIDATION-03.W
+next_audit_step: AUDIT-VALIDATION-03.R
 plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
@@ -922,7 +922,7 @@ Voraussetzung, kein bewiesenes fehlendes Ziel. Die SR-TC-Manifeste 0087–0092
 und 0098–0099 bleiben unverändert partial; ihr bestehender Diagnosekern wird
 nicht durch eine vollständige Produktabnahme ersetzt.
 
-- [ ] **AUDIT-VALIDATION-03.W:** Alle unabhängig fehlenden Relations- und
+- [x] **AUDIT-VALIDATION-03.W:** Alle unabhängig fehlenden Relations- und
   bekannten Feldziele einer strukturell gültigen, eindeutig indexierbaren
   Eingabemenge vor dem Abbruch der Referenzstufe sammeln. **Abnahme:** Zwei
   Quellen, zwei Kanten derselben Quelle und beide Componentfelder eines
@@ -1208,6 +1208,38 @@ Commit-Message: `refactor(validation): consolidate bound resource observations`.
 Erst das erfolgreiche Apply-Result bestätigt diesen C-Abschluss. Nächster
 Schritt: `AUDIT-VALIDATION-03.W`; Produktzähler 237/885 und Sperre von 5.t.W
 bleiben erhalten.
+
+### AUDIT-VALIDATION-03.W – alle unabhängig fehlenden Referenzziele (Bundle 082)
+
+Basis ist Result `specroad-apply_Result_075733_1008_17cdbe.zip`, Commit
+`9a121a3535b336312019c88b3fdda9f0e00d4611`. Der vollständig geprüfte Apply-Lauf
+bestätigt Bundle 081 mit 5829 erfolgreichen parallelen Tests und sauberem
+Abschluss. Alle 1464 Snapshotdateien und die elf übergebenen Payloads stimmen
+mit der Entwicklung und dem tatsächlichen Apply-Commit überein.
+
+Nach erfolgreichem Parsing und Schemaaufbau sammelt die Referenzstufe unabhängig
+fehlende Relationsziele und explizit bekannte Feldziele vor ihrem Abbruch.
+Voraussetzung sind eindeutig indexierbare Artefakt-, Relations- und externe
+Relationsidentitäten sowie ein gemeinsamer Projektpräfix. Die Ermittlung meldet
+jede Fundstelle mit dem bestehenden Grund, SRV020, Quellartefakt, Datei und Pointer;
+sie konstruiert keinen aufgelösten Teilgraphen. Abgeleitete Review-Endpunkte
+bleiben an die erfolgreiche Auflösung ihrer gespeicherten Relation gebunden.
+
+Die Verhaltensabnahme umfasst zwei Quellen, zwei Kanten derselben Quelle und
+beide Componentfelder eines Interfaces. Direkte und öffentliche schreibfreie
+Projektbewertung sowie umgekehrte Dokumentreihenfolge erhalten dieselbe Menge.
+Graph-/Fachstufen bleiben gesperrt, der Exitcode ist 3, die Prüfung unvollständig
+und ohne Freigabe. Das Laden aller tatsächlichen Ziele stellt die erfolgreiche
+Prüfung wieder her. Unlesbare oder schemawidrige Bestände beweisen keine fehlenden
+Ziele; mehrdeutige Artefaktidentitäten behalten ihre strikte Abbruchgrenze.
+
+Gemischte fehlende/typwidrige Ziele und die weiteren R-Randfälle bleiben der
+folgenden Phase zugeordnet. Die bestehenden SR-TC-Manifeste werden nicht zur
+vollständigen Produktabnahme hochgestuft; 5.t.W bleibt gesperrt.
+
+Commit-Message: `fix(validation): collect independently missing reference targets`.
+Erst das erfolgreiche Apply-Result bestätigt diesen W-Abschluss. Nächster
+Schritt: `AUDIT-VALIDATION-03.R`; Produktstand weiterhin 237/885.
 
 ### AUDIT-DOC-01 und AUDIT-EVIDENCE-01 – Anweisungen und Nachweisdaten
 
