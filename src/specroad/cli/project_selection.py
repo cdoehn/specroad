@@ -64,10 +64,9 @@ def _read_configuration(path: Path, *, project_read=False, preflight=None) -> di
 
 def select_project(command, options, cwd, *, preflight=None):
     explicit = options.get("--project")
-    project_read = (command.preflight_profile is PreflightProfile.PROJECT_READ
-                    or (command.preflight_profile is PreflightProfile.PROJECT_WRITE
-                        and options.get("--dry-run") is True))
-    if command.preflight_profile is PreflightProfile.BOOTSTRAP:
+    profile = command.preflight_for(options)
+    project_read = profile is PreflightProfile.PROJECT_READ
+    if profile is PreflightProfile.BOOTSTRAP:
         if explicit is not None:
             raise OptionResolutionError("Bootstrap does not select a project")
         return None, None, {}

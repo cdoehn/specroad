@@ -76,3 +76,12 @@ Write-/Recovery-/Root-Creation-Voraussetzungen und die weiteren öffentlichen
 Projektbefehle bleiben ihren Implementierungspositionen zugeordnet.
 `SR-REQ-0553`, `SR-REQ-0555` und `SR-REQ-0570` bleiben daher partiell; dieser Stand ist keine
 Freigabe aller Profile oder der Runtime-/Plattformmatrix.
+
+C bündelt die Auswahl des wirksamen Profils in `CommandSpec.preflight_for`.
+CLI-Schreibweise, Aliase und strukturierte Requests verwenden den identischen
+registrierten Command-Vertrag. Rootauswahl und Optionsadapter fragen dessen
+Profilentscheidung ab; die bisherige Umleitung eines normativen Dry-Runs auf
+`project_read` bleibt gleich. Die Selbstauskunft beschreibt weiterhin das
+deklarierte Profil. Metadatenphasen, Fehlerklassen und Seiteneffektgrenzen ändern
+sich nicht. Alle bestehenden W-/R-Tests und ihre fachlichen Orakel bleiben
+unverändert.

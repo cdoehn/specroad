@@ -127,6 +127,6 @@
     "tests/test_preflight_profiles.py::test_relocated_project_uses_only_its_current_root"
   ],
   "open_items": [
-    "6.a.C consolidates profile definitions without behavior changes. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
+    "Profile selection is consolidated in the registered CommandSpec by 6.a.C; all existing W/R behavior tests remain unchanged. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
   ]
 }

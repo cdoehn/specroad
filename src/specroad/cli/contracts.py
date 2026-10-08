@@ -213,6 +213,17 @@ class CommandSpec:
         if self.budget_policy_version is not None and (not isinstance(self.budget_policy_version, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", self.budget_policy_version)):
             raise CommandUsageError("Invalid budget policy version")
 
+    def preflight_for(self, options) -> PreflightProfile:
+        """Effective profile of the current bound request, shared by all routes.
+
+        The declared profile remains the self-description contract. A normative
+        dry-run uses its existing read gate without acquiring write authority.
+        """
+        if (self.preflight_profile is PreflightProfile.PROJECT_WRITE
+                and options.get('--dry-run') is True):
+            return PreflightProfile.PROJECT_READ
+        return self.preflight_profile
+
 
 @dataclass(frozen=True)
 class Invocation:
@@ -225,4 +236,3 @@ class Invocation:
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))
         object.__setattr__(self, "arguments", MappingProxyType(dict(self.arguments)))
-

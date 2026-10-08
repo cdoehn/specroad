@@ -116,6 +116,6 @@
     "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[read]"
   ],
   "open_items": [
-    "6.a.C consolidates profile definitions without behavior changes. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
+    "The current profile selection and bounded startup are covered by unchanged W/R tests after 6.a.C consolidation. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
   ]
 }

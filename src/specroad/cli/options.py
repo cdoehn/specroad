@@ -10,7 +10,7 @@ from .option_values import (
 
 def select_project(command, options, cwd, *, preflight=None):
     """Do not import project I/O for a contract which does not select a root."""
-    if command.preflight_profile is PreflightProfile.BOOTSTRAP:
+    if command.preflight_for(options) is PreflightProfile.BOOTSTRAP:
         if "--project" in options:
             raise OptionResolutionError("Bootstrap does not select a project")
         return None, None, {}

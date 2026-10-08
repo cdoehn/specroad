@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 248
-last_completed_plan_commit: 6.a.R
-next_plan_commit: 6.a.C
-last_completed_numbered_bundle: 99
+implementation_plan_commits_completed: 249
+last_completed_plan_commit: 6.a.C
+next_plan_commit: 6.b.W
+last_completed_numbered_bundle: 100
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5033,10 +5033,26 @@ Position 248/885; danach folgt 6.a.C.
 
 #### 6.a.C – Make it Clean
 
-- [ ] **6.a.C** · Position **249/885** · Voraussetzung: `6.a.R`.
+- [x] **6.a.C** · Position **249/885** · Voraussetzung: `6.a.R`.
 **Exakte Commit-Message:** `6.a.C refactor(work): Begrenzte Preflightprofile bereinigen`
 
 **Bereinigung:** Preflightprofile aus derselben Command Registry wie CLI-Verträge ableiten.
+
+**Umsetzung / Bundle 100:** Die bisher im Rootadapter enthaltene wirksame
+Profilwahl gehört nun zum registrierten `CommandSpec`. Options- und Rootadapter
+verwenden `preflight_for` desselben Vertrags; das deklarierte Profil bleibt die
+unveränderte Selbstauskunft. Ein normativer Dry-Run benutzt weiterhin den
+Read-Preflight. Keine neue Profilfreigabe, Budgetfunktion oder Write-Authority.
+
+Alle bestehenden Testdateien, Testidentitäten und fachlichen Orakel bleiben
+bytegleich zur R-Basis. Der vollständige Paralleltest prüft erneut die 6.126
+Fälle einschließlich 32 W- und 38 R-Preflightfällen, Bootstrap ohne Projekt-I/O,
+aktueller Root-/Betriebsprüfung und vorhandener Recovery. Metadatenbilanz,
+SRV167, Fehlerverträge, historische Ausschlüsse und erlaubte Seiteneffekte
+bleiben erhalten. SR-TC-0553/0555/0570 behalten ihre Teilabnahme; persistente
+Work-Fortsetzung und die weiteren Befehlsfamilien sind weiter offen. Erst nach
+den erfolgreichen vollständigen parallelen Dev-/Apply-Tests und Commit gilt
+Position 249/885; anschließend folgt 6.b.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
@@ -13563,11 +13579,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `6.a.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `6.b.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem R-Result bleiben 637 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem C-Result bleiben 636 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 
