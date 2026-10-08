@@ -116,7 +116,8 @@ def test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidenc
 
 
 @pytest.mark.parametrize('scenario', ['discard', 'rollback', 'complete'])
-def test_every_recovery_boundary_survives_another_interrupted_recovery(tmp_path, scenario):
+@pytest.mark.parametrize('group', range(4))
+def test_every_recovery_boundary_survives_another_interrupted_recovery(tmp_path, scenario, group):
     _, writer_trace = control(tmp_path / 'writer-control')
     start = select(writer_trace, scenario)
     control_root = tmp_path / 'recovery-control'
@@ -126,7 +127,9 @@ def test_every_recovery_boundary_survives_another_interrupted_recovery(tmp_path,
     events = completed['events']
     assert events and any(e['operation'] == 'link' for e in events)
     observed = []
-    for event in events:
+    # All four collected groups cover the complete native trace, without a
+    # boundary limit or dependence on another test's execution order.
+    for event in events[group::4]:
         root = tmp_path / ('cut-' + str(event['ordinal']))
         bound = cut_writer(root, start)
         stopped, = child(root, 'recover', 'recovery', event['ordinal'], exit_code=CRASH_EXIT)
@@ -146,7 +149,8 @@ def test_every_recovery_boundary_survives_another_interrupted_recovery(tmp_path,
             assert len(created) == 1
             removed = list((root / '.specroad/recovery').rglob('*.removed'))
             assert len(removed) == 1 and removed[0].read_bytes().hex() == bound['after'][created.pop()]
-        observed.append({**event, 'outcome': recovered['outcome'], 'process_stops': 3})
+        observed.append({**event, 'outcome': recovered['outcome'], 'process_stops': 3,
+                         'scenario': scenario, 'group': group})
     (tmp_path / 'recovery-boundaries.json').write_text(json.dumps(observed, indent=2) + '\n')
 
 

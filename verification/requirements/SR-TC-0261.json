@@ -50,9 +50,18 @@
     "tests/test_writer_boundaries_right.py::test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence[foreign-transaction]",
     "tests/test_writer_boundaries_right.py::test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence[missing-request]",
     "tests/test_writer_boundaries_right.py::test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence[missing-transaction]",
-    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[complete]",
-    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[discard]",
-    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[rollback]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[0-complete]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[0-discard]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[0-rollback]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[1-complete]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[1-discard]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[1-rollback]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[2-complete]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[2-discard]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[2-rollback]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[3-complete]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[3-discard]",
+    "tests/test_writer_boundaries_right.py::test_every_recovery_boundary_survives_another_interrupted_recovery[3-rollback]",
     "tests/test_writer_boundaries_right.py::test_missing_receipts_before_committed_marker_are_reconstructed_exactly[both]",
     "tests/test_writer_boundaries_right.py::test_missing_receipts_before_committed_marker_are_reconstructed_exactly[request]",
     "tests/test_writer_boundaries_right.py::test_missing_receipts_before_committed_marker_are_reconstructed_exactly[transaction]",
@@ -79,6 +88,6 @@
     "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[symlink-prepared]"
   ],
   "open_items": [
-    "5.v.C: isolate test injection/observation from scenario orchestration while retaining every behavior oracle. Later 20.e covers the complete transaction/customer matrix; unmeasured filesystems, real power loss and future restore clients are not approved by this local process-interruption proof."
+    "Later 20.e covers the complete transaction/customer matrix; unmeasured filesystems, real power loss and future restore clients are not approved by this local process-interruption proof."
   ]
 }

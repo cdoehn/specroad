@@ -68,3 +68,19 @@ Linux-Dateisystem. Sie simulieren keinen Stromverlust und belegen keine
 Dateisystem- oder Plattformmatrix.
 Die übergreifende Kunden-/Restore-Matrix bleibt den weiteren Planpunkten
 zugeordnet; `SR-REQ-0261` erhält einen partiellen Verhaltensnachweis.
+
+## C-Struktur
+
+Die unveränderte native Instrumentierung liegt ausschließlich in
+`tests/support/native_boundaries.py`. Die Writer-/Recovery-Szenarien binden
+sie ausdrücklich im jeweiligen Testprozess ein. Produktimporte,
+Konfiguration und Testreihenfolge installieren keine Hooks.
+
+Jedes der drei Recovery-Szenarien ermittelt weiterhin seine vollständige
+native Kontrollspur. Vier getrennt gesammelte Testgruppen verteilen deren
+Grenzen nach Ereignisposition; gemeinsam führen sie jede Grenze genau einmal
+mit denselben Prozessabbrüchen und Fachprüfungen aus. Keine feste Obergrenze
+beschneidet die Spur. Die Beobachtungsdateien benennen zusätzlich Szenario
+und Gruppe, sodass die vollständige Abdeckung unabhängig verglichen werden
+kann. Einzel- und Mehrdateiwriter sowie die Receipt-/Bindungsfälle bleiben
+unverändert.

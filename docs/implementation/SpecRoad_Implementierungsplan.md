@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 245
-last_completed_plan_commit: 5.v.R
-next_plan_commit: 5.v.C
-last_completed_numbered_bundle: 96
+implementation_plan_commits_completed: 246
+last_completed_plan_commit: 5.v.C
+next_plan_commit: 6.a.W
+last_completed_numbered_bundle: 97
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4905,7 +4905,7 @@ Erst nach vollständigen parallelen Dev-/Apply-Tests und Commit gilt Position
 
 #### 5.v.C – Make it Clean
 
-- [ ] **5.v.C** · Position **246/885** · Voraussetzung: `5.v.R`.
+- [x] **5.v.C** · Position **246/885** · Voraussetzung: `5.v.R`.
 **Exakte Commit-Message:** `5.v.C refactor(changes): Fault-Injection über jede dauerhafte Grenze bereinigen`
 
 **Bereinigung:** Fault-Hooks ausschließlich testbar einspeisen, Produktionslogik nicht an Testreihenfolge koppeln.
@@ -4913,6 +4913,25 @@ Erst nach vollständigen parallelen Dev-/Apply-Tests und Commit gilt Position
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Stand / Bundle 097:** Das Result
+`specroad-apply_Result_151925_1008_37e5d5.zip` bestätigt R mit Commit
+`b6acce33945abd9c53c959d4a409bafef37abb41`, 6.047 erfolgreichen parallelen
+Apply-Tests und sauberem Arbeitsbaum. C trennt die unveränderte native
+Instrumentierung in ein eigenes Testhilfsmodul. Alle Writer-/Recoveryabläufe
+und Produktdateien behalten ihr Verhalten.
+
+Die bisher drei langen Recovery-Testknoten werden in je vier disjunkte
+Gruppen aufgeteilt. Jede Gruppe ermittelt dieselbe vollständige native Spur;
+zusammen unterbrechen sie weiterhin jede beobachtete Grenze genau einmal.
+Prozessabbrüche, exakte Basis-/Zielbytes, Modellwurzeln, Gatefreigabe und
+Archivnachweise bleiben unverändert. Beobachtungsberichte kennzeichnen
+Szenario und Gruppe für den vollständigen Abgleich. Die Instrumentierung
+bleibt ausschließlich im Testbaum, ohne Produktoption oder Bindung an die
+Testreihenfolge. Der lokale Prozessnachweis ersetzt weiterhin keine
+Stromausfall-, Plattform- oder spätere Kunden-/Restore-Matrix. Erst nach
+vollständigen parallelen Dev-/Apply-Tests und Commit gilt Position 246/885;
+danach folgt 6.a.W.
 
 **Meilenstein 5 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 
@@ -13482,11 +13501,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des R-Zustands der reguläre Produktpunkt `5.v.C`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `6.a.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem R-Result bleiben 640 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem C-Result bleiben 639 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 
