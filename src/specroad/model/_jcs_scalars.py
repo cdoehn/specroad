@@ -1,6 +1,7 @@
 """RFC-8785 scalar encoding; independent of human formatting and storage."""
 
 from decimal import Decimal
+from codecs import utf_16_be_encode
 import json
 import math
 
@@ -61,8 +62,9 @@ def _key(value, pointer):
     if type(value) is not str:
         raise ModelError("string_key_required", pointer=pointer)
     try:
-        return value.encode("utf-16-be")
+        # Calling the built-in encoder directly avoids a first-use registry
+        # lookup/import while an otherwise pure operation is already running.
+        return utf_16_be_encode(value)[0]
     except UnicodeError as error:
         raise ModelError("invalid_unicode", pointer=pointer) from error
-
 

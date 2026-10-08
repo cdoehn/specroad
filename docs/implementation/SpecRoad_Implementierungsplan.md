@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 246
-last_completed_plan_commit: 5.v.C
-next_plan_commit: 6.a.W
-last_completed_numbered_bundle: 97
+implementation_plan_commits_completed: 247
+last_completed_plan_commit: 6.a.W
+next_plan_commit: 6.a.R
+last_completed_numbered_bundle: 98
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -4953,12 +4953,46 @@ danach folgt 6.a.W.
 
 #### 6.a.W – Let it Work
 
-- [ ] **6.a.W** · Position **247/885** · Voraussetzung: `5.v.C`.
+- [x] **6.a.W** · Position **247/885** · Voraussetzung: `5.v.C`.
 **Exakte Commit-Message:** `6.a.W feat(work): Begrenzte Preflightprofile aufbauen`
 
 **Umsetzung:** Pro Command ausschließlich benötigte Root-, Metadaten-, Lock- und aktive Journalprüfungen ausführen.
 
 **Verhaltensabnahme:** Bootstrap und project_read benötigen keinen rekursiven Vollscan.
+
+**W-Stand / Bundle 098:** Das Result
+`specroad-apply_Result_160447_1008_4802e6.zip` bestätigt 5.v.C mit Commit
+`419b34b6083571fa0429baf0433ed5c62a2b5dfa`, 6.056 erfolgreichen parallelen
+Apply-Tests und sauberem Arbeitsbaum. Der nächste W-Ausschnitt bindet den
+schreibfreien `project_read`-Preflight an die vorhandene aktuelle Root- und
+Optionsauswahl. Modelllesende, planende und generierende Aufrufe sowie der
+Dry-Run eines `project_write` prüfen Konfigurationsschema und aktive
+Transaktionsmetadaten, bevor ihr registrierter Handler beginnt.
+
+Dieselben erfassten Konfigurationsbytes liefern die Optionswerte. Eine
+geänderte Konfiguration, Rootbindung oder Betriebsbeobachtung sperrt den
+Aufruf; eine offene Transaktion wird ohne Journalbody, Recoverywrite oder
+Handleraufruf erkannt. Bootstrap bleibt ohne Projektzugriff nutzbar,
+Metadatendiagnose ohne Modellladen. Echte Zugriffsaufzeichnungen prüfen den
+fehlenden Modell-/Archivscan und erhaltene Dateien über CLI, Alias und
+strukturierten Request. Frühere Invocation-Objekte werden nicht als aktuelle
+Freigabe übernommen.
+
+Der erste vollständige Paralleltest deckte außerdem einen reihenfolgeabhängigen
+Kaltstart der kanonischen Schlüsselsortierung auf: Ein noch nicht geladener
+UTF-16-Codec verletzte den Importverbotsnachweis beim Authoring. Der direkte
+Aufruf desselben eingebauten Encoders erhält Byteordnung und Fachwerte.
+Derselbe Verhaltensnachweis läuft zusätzlich in einem frischen Prozess, sodass
+kein vorangegangener Test die nötige Laufzeitinitialisierung verdecken kann.
+Der fehlgeschlagene Kandidat und sein Volltest bleiben als Entwicklungsnachweis
+erhalten; die Korrektur erhält einen neuen vollständigen Paralleltest.
+
+Dieser W-Nachweis ergänzt die bestehenden Bootstrap-Verträge. Die gemeinsame
+Metadatenbilanz und große Bestände folgen in 6.a.R; vollständige Detailfortsetzung,
+Budgets und weitere öffentliche Projekt-/Write-/Recoverybefehle bleiben bei
+ihren vorgesehenen Positionen offen. SR-TC-0553 und SR-TC-0555 sind partiell;
+eine Runtime-/Plattformfreigabe wird nicht behauptet. Erst nach vollständigen
+parallelen Dev-/Apply-Tests und Commit gilt Position 247/885; danach folgt 6.a.R.
 
 #### 6.a.R – Make it Right
 
@@ -13501,11 +13535,11 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des C-Zustands der reguläre Produktpunkt `6.a.W`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `6.a.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
 
 Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
 
-**Nach erfolgreichem C-Result bleiben 639 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Nach erfolgreichem W-Result bleiben 638 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 

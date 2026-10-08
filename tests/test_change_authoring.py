@@ -151,8 +151,24 @@ def test_analyzer_like_identifiers_do_not_supply_write_context():
     with pytest.raises(TypeError):request(analysis_id='same')
 
 
-def test_policy_and_bindings_need_no_external_state():
+def test_policy_and_bindings_need_no_external_state(tmp_path):
     from support.io_guards import block_imports_and_open
     with block_imports_and_open():
         r=request(operations=[])
     assert r.data['route']=='direct' and not r.data['actor_authenticated']
+    # Each parallel worker may reach this operation before any prior key sort.
+    # Repeat in a fresh process so another test cannot initialize its codecs.
+    from pathlib import Path
+    from support import run_core
+    body = 'sys.path.insert(0, ' + repr(str(Path(__file__).parent)) + ')\n' + '''
+from specroad.changes import prepare_authoring_request
+from support.io_guards import block_imports_and_open
+with block_imports_and_open():
+    request = prepare_authoring_request(command_id='artifact update',
+        actor={'actor_type': 'human', 'actor_id': 'caller'},
+        operations=[], request_id='Run-1')
+assert request.data['route'] == 'direct'
+assert not request.data['actor_authenticated']
+'''
+    process = run_core(body, tmp_path)
+    assert process.returncode == 0, process.stderr

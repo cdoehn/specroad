@@ -1,7 +1,7 @@
 """Current-call prerequisites only; no cached root, session or model service.
 
-This prepares the existing option/metadata layer. Transaction preflights and
-resource budgets are separate later plan steps, not success placeholders here.
+This prepares the current option/metadata layer and its read-profile transaction
+gate. Resource budgets and write authority remain separate contracts.
 """
 
 from dataclasses import dataclass, replace

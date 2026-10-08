@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0553",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current owned temporary project/configuration and trusted registry handlers; every invocation rebuilds its own context."
+  ],
+  "steps": [
+    "Invoke project_read through CLI spelling, alias and structured request; observe the current configuration, active transaction gate and whether the real handler runs.",
+    "Record native opens and directory enumeration while denying project writes, processes and network; retain all unrelated and pending bytes.",
+    "Change configuration or operational state during observation and between invocations; reject stale preparation before handler execution.",
+    "Run bootstrap without project access and retain bounded metadata diagnosis for a blocked project."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der automatische Preflight MUSS ausschließlich den für den angeforderten Befehl definierten Prüfumfang aus Anhang N.2 ausführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Current configuration schema and shallow operational state gate project_read and project_write dry-runs before the handler. Bootstrap performs no project access; metadata-only diagnosis remains available. Current root/configuration and operational rechecks reject stale preparation. No model validation, journal body/history scan, process, network or project mutation is used for startup."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    5,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/summary/preflight/profile",
+    "/summary/preflight/normal_operation_started"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,41 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments0]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments1]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments2]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments3]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments4]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments5]",
+    "tests/test_preflight_profiles.py::test_changed_configuration_cannot_mix_old_options_with_current_preflight",
+    "tests/test_preflight_profiles.py::test_linked_operational_namespace_is_rejected_without_following_it",
+    "tests/test_preflight_profiles.py::test_metadata_diagnosis_stays_available_without_loading_pending_data",
+    "tests/test_preflight_profiles.py::test_operational_change_during_startup_blocks_the_handler",
+    "tests/test_preflight_profiles.py::test_prepared_invocation_does_not_reuse_a_previous_clear_gate",
+    "tests/test_preflight_profiles.py::test_project_profile_cannot_declare_projectless_execution[project_read]",
+    "tests/test_preflight_profiles.py::test_project_profile_cannot_declare_projectless_execution[project_write]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-dryrun]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-generated]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-plan]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-read]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-dryrun]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-generated]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-plan]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-read]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-dryrun]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-generated]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-plan]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-read]",
+    "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[generated]",
+    "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[plan]",
+    "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[read]",
+    "tests/test_preflight_profiles.py::test_project_read_rejects_invalid_configuration_before_handler[invalid_json]",
+    "tests/test_preflight_profiles.py::test_project_read_rejects_invalid_configuration_before_handler[unknown_field]",
+    "tests/test_preflight_profiles.py::test_project_read_rejects_invalid_configuration_before_handler[version]",
+    "tests/test_preflight_profiles.py::test_relocated_project_uses_only_its_current_root"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "6.a.R/C complete metadata accounting and boundary handling, then consolidate profile definitions. Resumable detail phases, full runtime budgets, actual write/recovery/root-creation prerequisites and further project CLI families remain assigned to their later implementation steps. No runtime/platform-matrix approval."
   ]
 }

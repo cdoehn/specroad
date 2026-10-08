@@ -207,6 +207,9 @@ class CommandSpec:
             raise CommandUsageError("Side-effect boundary contradicts command class")
         if self.preflight_profile is PreflightProfile.BOOTSTRAP and (self.requires_project or self.requires_git or self.requires_write_paths or self.effect_scope is not EffectScope.NONE):
             raise CommandUsageError("Bootstrap must not require project, Git or writes")
+        if (self.preflight_profile in (PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE)
+                and not self.requires_project):
+            raise CommandUsageError("Project read/write preflights require a current project")
         if self.budget_policy_version is not None and (not isinstance(self.budget_policy_version, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", self.budget_policy_version)):
             raise CommandUsageError("Invalid budget policy version")
 
@@ -222,5 +225,4 @@ class Invocation:
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))
         object.__setattr__(self, "arguments", MappingProxyType(dict(self.arguments)))
-
 

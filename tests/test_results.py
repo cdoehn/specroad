@@ -254,7 +254,8 @@ class ResultRobustnessTests(unittest.TestCase):
     def test_selected_project_failure_preserves_known_root_without_invented_hashes(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            (root / "specroad.json").write_text("{}")
+            from support.model import configuration_file
+            configuration_file(root)
             cmd = command(lambda _: (_ for _ in ()).throw(OperationFailure(FailureKind.CONFLICT, "stale")),
                 preflight_profile=PreflightProfile.PROJECT_READ, requires_project=True)
             result = dispatch_result(["fixture", "check"], registry=CommandRegistry((cmd,)), cwd=root)

@@ -20,12 +20,13 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Preflight DARF NICHT allein zur Startprüfung die vollständige Modellvalidierung, einen Indexneuaufbau oder einen rekursiven Repository-/Archivscan auslösen.",
-    "scope": "Bounded current bootstrap/metadata reads with instrumented effects; full journal preflight remains later."
+    "scope": "Native access recording and side-effect traps cover bootstrap, current metadata diagnosis and project_read/startup gates through the actual invocation pipeline. Invalid unrelated model/archive/history contents remain uninterpreted; unresolved active state blocks without model or journal-body loading. Broader metadata budgets and later command families remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
-    2
+    2,
+    5
   ],
   "json_pointers": [],
   "required_environment": {
@@ -41,9 +42,31 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_bootstrap.BootstrapRobustnessTests.test_instrumented_bootstrap_performs_no_project_reads_scans_or_processes",
-    "test_bootstrap.BootstrapRobustnessTests.test_metadata_only_call_does_not_read_model_or_git"
+    "test_bootstrap.BootstrapRobustnessTests.test_metadata_only_call_does_not_read_model_or_git",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments0]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments1]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments2]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments3]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments4]",
+    "tests/test_preflight_profiles.py::test_bootstrap_ignores_broken_project_and_pending_transaction[arguments5]",
+    "tests/test_preflight_profiles.py::test_metadata_diagnosis_stays_available_without_loading_pending_data",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-dryrun]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-generated]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-plan]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[journal-read]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-dryrun]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-generated]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-plan]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[lock-read]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-dryrun]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-generated]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-plan]",
+    "tests/test_preflight_profiles.py::test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data[recovery-read]",
+    "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[generated]",
+    "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[plan]",
+    "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[read]"
   ],
   "open_items": [
-    "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."
+    "6.a.R completes shared metadata/journal accounting and large-history handling. Complete downstream command families, resumable detail phases and the required runtime matrix remain open."
   ]
 }
