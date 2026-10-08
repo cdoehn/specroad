@@ -17,14 +17,18 @@
     "Invoke environment.check through CLI, structured request and registry entry; inspect actual machine report and exit status.",
     "Record native startup accesses and reject write/process/network attempts beside broken unselected projects, invalid model contents and pending transactions.",
     "Request registered target prerequisites without calling its handler; retain unknown missing arguments/project/Git/write capabilities.",
-    "Read qualified process-limit observations, unavailable API results and declared constrained/standard targets; preserve genuine failure classes."
+    "Read qualified process-limit observations, unavailable API results and declared constrained/standard targets; preserve genuine failure classes.",
+    "Diagnose actual chmod-restricted roots under native write/process/network traps, including fresh isolated startup and unknown lock metadata.",
+    "Inject native getrlimit and metadata open failures; observe unchanged owned bytes, retained error classes and no invented quota or recovery certainty. Preserve regular shared configuration format checks without acquiring write authority.",
+    "Change owned configuration and operational metadata during real reads, reject the stale diagnosis, and validate actual environment documents against the public schema."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Nicht nachweisbare Ressourcenquoten oder Runtimevoraussetzungen MÜSSEN in der Umgebungsdiagnose ausdrücklich als unbekannt statt als garantiert verfügbar ausgewiesen werden.",
-    "scope": "A real registered environment.check emits environment-v1 using only current runtime/distribution and optional explicit project metadata. No-project calls never discover a root; malformed model/history is uninspected. Active state blocks without recovery. Target aliases resolve to their registered contract without handler execution; missing required prerequisites remain unknown with code 0 and compatible=null. Optional unavailable quotas remain unknown; an observed RLIMIT_AS is qualified only as a process address-space ceiling. Native access recording and effect traps prove the current tested scope is free from probe writes, subprocesses, network and semantic model validation."
+    "scope": "A real registered environment.check emits environment-v1 using only current runtime/distribution and optional explicit project metadata. No-project calls never discover a root; malformed model/history is uninspected. Active state blocks without recovery. Target aliases resolve to their registered contract without handler execution; missing required prerequisites remain unknown with code 0 and compatible=null. Optional unavailable quotas remain unknown; an observed RLIMIT_AS is qualified only as a process address-space ceiling. Native access recording and effect traps prove the current tested scope is free from probe writes, subprocesses, network and semantic model validation. R preserves W cases and distinguishes proven pending journals from unclassified operational entries: the latter block with code 5 but keep recovery_required=null. Readonly roots, optional invalid/unavailable native limits, unknown CPU/storage quotas, permission failures, unsafe symlinks, regular configuration aliases and concurrent metadata changes retain their actual failure classes without repair. The public environment schema requires runtime/build identity fields and null values for unknown observations; no project secrets or extra environment fields are accepted."
   },
   "expected_diagnostics": [
+    "CORE_CONFLICT",
     "CORE_ENVIRONMENT",
     "CORE_MODEL",
     "CORE_SECURITY"
@@ -34,6 +38,7 @@
     2,
     3,
     5,
+    6,
     7
   ],
   "json_pointers": [
@@ -87,9 +92,51 @@
     "tests/test_environment_check.py::test_target_prerequisites_are_not_probed_or_assumed_available[git]",
     "tests/test_environment_check.py::test_target_prerequisites_are_not_probed_or_assumed_available[root_creation]",
     "tests/test_environment_check.py::test_target_prerequisites_are_not_probed_or_assumed_available[write]",
-    "tests/test_environment_check.py::test_unavailable_optional_resource_api_keeps_quotas_unknown_and_diagnosis_complete"
+    "tests/test_environment_check.py::test_unavailable_optional_resource_api_keeps_quotas_unknown_and_diagnosis_complete",
+    "tests/test_environment_check_right.py::test_actual_metadata_open_failure_retains_environment_class_without_repair[.specroad]",
+    "tests/test_environment_check_right.py::test_actual_metadata_open_failure_retains_environment_class_without_repair[specroad.json]",
+    "tests/test_environment_check_right.py::test_fresh_readonly_project_diagnosis_has_no_writes_processes_or_secret_disclosure",
+    "tests/test_environment_check_right.py::test_metadata_change_during_diagnosis_keeps_conflict_and_current_bytes[configuration]",
+    "tests/test_environment_check_right.py::test_metadata_change_during_diagnosis_keeps_conflict_and_current_bytes[operational]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[bad_infinity]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[boolean]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[float]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[infinite]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[malformed]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[missing_attribute]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[negative]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[oserror]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[overflow]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[reversed]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[text]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[valueerror]",
+    "tests/test_environment_check_right.py::test_optional_limit_uncertainty_never_becomes_host_capacity_or_a_blocker[zero]",
+    "tests/test_environment_check_right.py::test_public_schema_rejects_missing_identity_and_false_resource_observations[build_hash]",
+    "tests/test_environment_check_right.py::test_public_schema_rejects_missing_identity_and_false_resource_observations[distribution_empty]",
+    "tests/test_environment_check_right.py::test_public_schema_rejects_missing_identity_and_false_resource_observations[extra_runtime_secret]",
+    "tests/test_environment_check_right.py::test_public_schema_rejects_missing_identity_and_false_resource_observations[observed_null]",
+    "tests/test_environment_check_right.py::test_public_schema_rejects_missing_identity_and_false_resource_observations[python_empty]",
+    "tests/test_environment_check_right.py::test_public_schema_rejects_missing_identity_and_false_resource_observations[support_missing]",
+    "tests/test_environment_check_right.py::test_public_schema_rejects_missing_identity_and_false_resource_observations[unknown_number]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[None-clean]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[None-pending]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[None-unknown_lock]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[fixture.writer-clean]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[fixture.writer-pending]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[fixture.writer-unknown_lock]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[version-clean]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[version-pending]",
+    "tests/test_environment_check_right.py::test_readonly_root_reports_only_proven_prerequisites_without_effects[version-unknown_lock]",
+    "tests/test_environment_check_right.py::test_regular_configuration_alias_is_read_only_and_keeps_format_checks[False]",
+    "tests/test_environment_check_right.py::test_regular_configuration_alias_is_read_only_and_keeps_format_checks[True]",
+    "tests/test_environment_check_right.py::test_repeated_diagnoses_recheck_current_operational_state_without_reusing_a_clear_report",
+    "tests/test_environment_check_right.py::test_unclassified_operational_entries_do_not_invent_recovery_certainty[mixed]",
+    "tests/test_environment_check_right.py::test_unclassified_operational_entries_do_not_invent_recovery_certainty[unknown_directory]",
+    "tests/test_environment_check_right.py::test_unclassified_operational_entries_do_not_invent_recovery_certainty[unknown_file]",
+    "tests/test_environment_check_right.py::test_unsafe_metadata_never_reads_foreign_content_or_changes_it[config_symlink]",
+    "tests/test_environment_check_right.py::test_unsafe_metadata_never_reads_foreign_content_or_changes_it[operational_symlink]"
   ],
   "open_items": [
-    "6.b.R/C complete further read-only permission, resource-observation and failure boundaries, then separate measured prerequisites from availability estimates. Full runtime-budget-v2 resolution/integration remains assigned to 6.c; persistent Work and the complete runtime/platform matrix remain open. Early prerequisite failures retain the standard Core error envelope. No release or guaranteed host-capacity claim."
+    "6.b.C separates measured prerequisites from availability estimates without new behavior. Full runtime-budget-v2 resolution/integration remains assigned to 6.c; persistent Work and the complete runtime/platform matrix remain open. Early prerequisite failures retain the standard Core error envelope. No release or guaranteed host-capacity claim."
   ]
 }

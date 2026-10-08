@@ -98,8 +98,17 @@ def _fields(schema_id):
         return _object({"format_version": {"const": "1.0.0"}, "schemas": _array(entry),
                 "categories": _object({name: count for name in CATEGORIES})})
     if schema_id == 'environment-v1':
-        observation = _object({'value': _nullable(count), 'unit': nonempty, 'source': nonempty,
-            'state': {'enum': ['observed', 'unknown']}, 'scope': nonempty})
+        observation = {'anyOf': [_object({'value': value, 'unit': nonempty, 'source': nonempty,
+            'state': {'const': state}, 'scope': nonempty})
+            for state, value in (('observed', count), ('unknown', {'type': 'null'}))]}
+        environment_python = _object({'implementation': nonempty, 'python_version': nonempty,
+            'supported': boolean, 'system': text, 'machine': text, 'support': support},
+            ('implementation', 'python_version', 'supported'))
+        environment_distribution = _object({
+            'distribution_kind': {'enum': ['module', 'zipapp', 'unknown']},
+            'build_id': _nullable(nonempty), 'build_sha256': _nullable(sha),
+            'build_identity_status': {'enum': ['recorded', 'unrecorded', 'unavailable']},
+            'release_approved': boolean})
         check = _object({'check_id': nonempty, 'required': boolean,
             'state': {'enum': ['passed', 'failed', 'unknown', 'not_applicable']}, 'reason': nonempty,
             'exit_code': {'type': 'integer', 'minimum': 0, 'maximum': 7}})
@@ -108,7 +117,7 @@ def _fields(schema_id):
         return _object({'environment_format_version': {'const': '1.0.0'},
             'compatible': _nullable(boolean),
             'operation_readiness': {'enum': ['not_requested', 'ready', 'blocked', 'unknown']},
-            'python': obj, 'distribution': obj, 'checks': _array(check),
+            'python': environment_python, 'distribution': environment_distribution, 'checks': _array(check),
             'recovery_required': _nullable(boolean),
             'resource_policy': _object({'policy_version': {'const': 'runtime-budget-v2'},
                 'profile': {'enum': ['constrained', 'standard']}, 'profile_source': {'enum': ['default', 'cli']},

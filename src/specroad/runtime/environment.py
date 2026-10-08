@@ -60,10 +60,14 @@ def environment_report(invocation):
                 check('project.metadata', 'failed', 'project_configuration_changed', code=6)
             else:
                 check('project.metadata', 'passed', 'current_configuration_readable')
-                recovery_required = observed['consistency_state'] != 'consistent'
-                check('project.operational', 'failed' if recovery_required else 'passed',
-                      'recovery_required' if recovery_required else 'no_active_conflict_observed',
-                      code=5 if recovery_required else 0)
+                blocked = observed['consistency_state'] != 'consistent'
+                # An unclassified entry or uninspected writer is a blocker,
+                # but does not establish that a recoverable journal exists.
+                recovery_required = True if observed['recovery_required'] else None if blocked else False
+                reason = ('recovery_required' if recovery_required else
+                          'operational_state_unknown' if blocked else 'no_active_conflict_observed')
+                check('project.operational', 'failed' if blocked else 'passed', reason,
+                      code=5 if blocked else 0)
         except ModelError as error:
             check('project.metadata', 'failed', error.reason, code=3)
         except SafetyViolation:

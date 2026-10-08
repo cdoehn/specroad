@@ -6,6 +6,11 @@ Konfiguration und die begrenzten Betriebsmetadaten geprüft; Artefakte, Gitdaten
 Anhänge, historische Receipts und Journalbodies bleiben ungelesen. Ein kaputtes
 Fachmodell verhindert diese Diagnose nicht. Ein erkannter aktiver Konflikt
 ergibt Code 5 und einen vollständigen Bericht, ohne Recovery oder Fachoperation.
+Ein unklassifizierter Betriebseintrag oder ein nicht inspizierter Writer-Lock
+blockiert ebenfalls, lässt `recovery_required` aber ausdrücklich `null`. Erst
+ein erkannter aktiver Journaleintrag begründet `true`; eine konsistente aktuelle
+Metadatenbeobachtung ergibt `false`. Der Bericht liest keinen Lock- oder Journalbody,
+um eine nicht belegte Gewissheit zu erzeugen.
 
 `--for-command COMMAND-ID` akzeptiert die kanonische Kennung oder eine registrierte
 Schreibweise. Der Zielhandler wird nicht ausgeführt. Fehlende Zielargumente,
@@ -37,9 +42,21 @@ die angeforderte Konfigurationsschema-Prüfung klassifiziert Formatfehler als
 Code 3. Fehler innerhalb der Diagnose erhalten den vollständigen Bericht und
 ihre tatsächliche Fehlerklasse. `semantic_validation_performed` bleibt false.
 
+Das abrufbare Schema verlangt die Runtime-/Build-Identitätsfelder. Eine unbekannte
+Ressourcenbeobachtung darf keinen numerischen Wert enthalten; ein beobachteter
+Wert darf nicht `null` sein. Erfolgreiche Metadatenlesbarkeit ist keine
+Schreibzusage, auch wenn der Root oder seine Dateien schreibgeschützt sind.
+
 Der W-Nachweis umfasst echte CLI-/Request-Aufrufe, einen frischen isolierten
 Prozess, native Zugriffsaufzeichnung, unveränderte Projektbytes und verbotene
-Schreib-/Prozess-/Netzwerkversuche. R ergänzt weitere Rechte-, Quoten- und
-Fehlergrenzen; C trennt die gemessenen Voraussetzungen strukturell von
-Verfügbarkeitsschätzungen. SR-TC-0565/0566/0567 bleiben partiell; eine
+Schreib-/Prozess-/Netzwerkversuche. R ergänzt tatsächliche chmod-Beschränkungen,
+einen isolierten Start mit explizitem Root, unklare Betriebsmetadaten, native
+Zugriffsfehler, Symlinkgrenzen und konkurrierende Metadatenänderungen. Ein regulärer
+Konfigurationseintrag mit weiterem Hardlink wird nach dem bestehenden Lesevertrag
+geprüft, ohne gemeinsame Bytes zu verändern oder daraus Schreibbefugnis abzuleiten.
+Fehlerhafte
+oder unermittelbare optionale Limits bleiben unbekannt; auch ein beobachtetes
+Null-Limit behauptet keinen verfügbaren Speicher. C trennt die gemessenen
+Voraussetzungen strukturell von Verfügbarkeitsschätzungen.
+SR-TC-0565/0566/0567 bleiben partiell; eine
 Runtime-/Plattformfreigabe oder ein Work-Engine-Nachweis wird nicht behauptet.

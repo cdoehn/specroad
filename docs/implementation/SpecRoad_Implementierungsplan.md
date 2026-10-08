@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 250
-last_completed_plan_commit: 6.b.W
-next_plan_commit: 6.b.R
-last_completed_numbered_bundle: 101
+implementation_plan_commits_completed: 251
+last_completed_plan_commit: 6.b.R
+next_plan_commit: 6.b.C
+last_completed_numbered_bundle: 102
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5105,12 +5105,40 @@ parallelen Dev-/Apply-Tests und Commit gilt Position 250/885; danach folgt 6.b.R
 
 #### 6.b.R – Make it Right
 
-- [ ] **6.b.R** · Position **251/885** · Voraussetzung: `6.b.W`.
+- [x] **6.b.R** · Position **251/885** · Voraussetzung: `6.b.W`.
 **Exakte Commit-Message:** `6.b.R feat(work): Environment-Check ohne Nebenwirkungen vervollständigen`
 
 **Vervollständigung:** Keine Probe-Writes, Benchmarks, Netzwerkzugriffe oder Vollvalidierung ausführen.
 
 **Verhaltensabnahme:** Ein schreibgeschützter Root und unbekannte Quoten bleiben ohne Dateien oder garantierte Ressourcenbehauptung. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 102:** Das geprüfte Result von Bundle 101 bestätigt
+`2c84dbd2a92f3dd01d8bb5699fca169529a239d8`, 6.158 erfolgreiche parallele
+Apply-Tests und einen sauberen Snapshot. Die 32 W-Fälle bleiben unverändert.
+Die Diagnose unterscheidet jetzt nachgewiesene aktive Journale von lediglich
+unklassifizierten Betriebsdaten oder nicht inspizierten Lock-Eigentümern. Beide
+blockieren konservativ mit Code 5; nur nachgewiesene Journale ergeben
+`recovery_required=true`. Bei unklarem Betriebszustand bleibt dieser Wert `null`,
+bei konsistenter Beobachtung `false`. Journal- und Lockbodies bleiben ungelesen.
+
+42 zusätzliche Verhaltensfälle prüfen echte schreibgeschützte Roots und Dateien
+unter nativen Seiteneffekt-Sperren, einschließlich eines frischen isolierten
+Starts mit explizitem Projekt. Ungültige oder unermittelbare optionale Limits
+werden nicht zu Hostquoten oder Kompatibilitätsfehlern. Ein CPU-Zeitlimit ist
+keine CPU-Zuteilung; selbst ein endliches Null-Limit ist nur eine qualifizierte
+Beobachtung. Unbekannte Schreibfähigkeit bleibt auch nach erfolgreichem Lesen
+ungeklärt. Reguläre Konfigurationseinträge mit zusätzlichem Hardlink behalten
+ihre normalen Formatprüfungen, ohne gemeinsame Bytes zu verändern oder
+Schreibbefugnis zu erteilen. Native Lesefehler, unsichere Symlinks sowie Konfigurations- und
+Betriebsänderungen während der Diagnose behalten die Codes 5, 7 beziehungsweise 6,
+ohne Reparatur oder Verlust der aktuellen Dateien.
+
+Das öffentliche Schema verlangt die tatsächlich erforderlichen Runtime- und
+Build-Identitätsfelder und trennt beobachtete Werte von unbekannten Nullwerten.
+Die Requirements SR-TC-0565/0566/0567 erhalten diese zusätzliche Teilabnahme;
+Budget-/Work-Integration und die vollständige Runtime-/Plattformmatrix bleiben
+offen. Erst nach erfolgreichen vollständigen parallelen Dev-/Apply-Tests und
+Commit gilt Position 251/885; danach folgt 6.b.C.
 
 #### 6.b.C – Make it Clean
 
