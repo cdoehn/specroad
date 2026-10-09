@@ -9,14 +9,12 @@ from dataclasses import dataclass
 import errno
 
 from ..model.canonical import canonical_json_bytes
-from ..model.errors import ModelError
 from ..runtime.controlled import _invocation
 from ..runtime.control_points import PhaseBoundary
-from ..security import SafetyViolation
-from ._data_contract import WorkManifestError, _parse
-from .checkpoints import CheckpointStore, CheckpointStorageError
-from .manifest import read_work_successor
-from .resume import resume_read_only_work, _require, _compatible_read
+from ._data_contract import _parse
+from .checkpoints import CheckpointStore
+from ._progress_proof import confirmed_window_data, _retained_checkpoint
+from .resume import resume_read_only_work, _require
 
 
 @dataclass(frozen=True, init=False)
@@ -56,37 +54,7 @@ def _advance_read_only_work(store, call, *, cwd, attempt):
     attempt['stage'] = 'control_end'
     end = call.control(PhaseBoundary('work_unit', 'end'))
     attempt['stage'] = 'progress_confirmation'
-    current = step.manifest
-    value = current.as_dict()
-    completed = current.entries('completed')
-    _require(len(completed) == 1 and not current.entries('remaining'),
-             'unconfirmed_handler_progress')
-    if step.executed:
-        previous = store._initial
-        _compatible_read(read_work_successor, current.raw, current.objects,
-            previous=previous, registry=current._registry,
-            expected_tool_build=value['tool_build'])
-        _require(not previous.entries('completed'), 'repeated_handler_progress')
-    else:
-        previous = current
-    exceeded = start['soft_budget_exceeded'] or end['soft_budget_exceeded']
-    window = {
-        'format_version': 'read-only-work-window-v1',
-        'minimum_unit': 'complete_read_only_handler',
-        'previous_checkpoint_generation': previous.as_dict()['checkpoint_generation'],
-        'previous_checkpoint_sha256': previous.as_dict()['checkpoint_sha256'],
-        'new_completed_unit_ids': [completed[0]['unit_id']] if step.executed else [],
-        'reused_completed_unit_ids': [] if step.executed else [completed[0]['unit_id']],
-        'progress_made': step.executed, 'checkpoint_changed': step.executed,
-        'smallest_unit_attempted': step.executed,
-        'soft_budget_exceeded': exceeded,
-        'window_reason': ('reuse_completed_unit' if not step.executed else
-                          'minimum_unit_completed_above_soft_target' if exceeded else
-                          'complete_single_handler'),
-        'observations': {'before': start, 'after': end},
-        'consumption_scope': 'caller_owned_in_process_invocation',
-        'consumption_persisted': False, 'global_finalization_required': True,
-    }
+    window = confirmed_window_data(store, step, start, end)
     result = object.__new__(ReadOnlyWorkWindow)
     object.__setattr__(result, 'step', step)
     object.__setattr__(result, '_window_bytes', canonical_json_bytes(window))
@@ -106,26 +74,6 @@ _IO_BLOCKERS = {
 }
 if hasattr(errno, 'EDQUOT'):
     _IO_BLOCKERS[errno.EDQUOT] = ('storage_unavailable', 'provide_quota_for_external_work_storage')
-
-
-def _retained_checkpoint(store):
-    """Read current actual storage once; never assume an error rolled it back."""
-    try:
-        current = store.read()
-        if current is None:
-            return {'status': 'unpublished', 'checkpoint': None, 'error': None}
-        value = current.as_dict()
-        return {'status': 'verified_storage_chain', 'checkpoint': {
-            'work_id': value['work_id'], 'checkpoint_generation': value['checkpoint_generation'],
-            'checkpoint_sha256': value['checkpoint_sha256'],
-            'completed_unit_ids': [row['unit_id'] for row in current.entries('completed')],
-            'work_state': value['state']}, 'error': None}
-    except (OSError, MemoryError, CheckpointStorageError, WorkManifestError,
-            SafetyViolation, ModelError) as error:
-        return {'status': 'unavailable', 'checkpoint': None,
-                'error': {'type': type(error).__name__,
-                          'reason': getattr(error, 'reason', None),
-                          'native_errno': error.errno if isinstance(error, OSError) else None}}
 
 
 def advance_read_only_work_outcome(store, call, *, cwd=None):

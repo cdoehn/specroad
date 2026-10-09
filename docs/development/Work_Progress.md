@@ -68,6 +68,13 @@ Ergebnisbytes werden dabei wiederverwendet. Selbst vollständig neu gehashte
 doppelte Einheiten oder leere Folgegenerationen scheitern am bestehenden
 Manifest-/Nachfolgervertrag, bevor der Handler ausgeführt wird.
 
+Intern bündelt `_progress_proof.py` den Nachfolger-/Wiederverwendungsnachweis,
+die unveränderte Fensterprojektion und die lesende Prüfung des erhaltenen
+Speicherstands. `progress.py` steuert weiterhin Messgrenzen, den einmaligen
+Resume-Aufruf und die Zuordnung beobachteter Fehler. Öffentliche API und
+Ergebnistyp, Prüfungsreihenfolge, Fehlerverträge und Ergebnisfelder bleiben
+unverändert; die Trennung fügt keine neue Ausführungsbefugnis hinzu.
+
 Dieser erste Fortschrittspfad ist eine Python-API für den geschlossenen
 Ein-Handler-Plan. Die Fachausgabe dieses Handlers ist vollständig gespeichert;
 der globale Work-Zustand bleibt bis zur gesonderten Schlussprüfung `running`.

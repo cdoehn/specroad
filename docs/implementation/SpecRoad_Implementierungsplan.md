@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 287
-last_completed_plan_commit: 6.n.R
-next_plan_commit: 6.n.C
-last_completed_numbered_bundle: 138
+implementation_plan_commits_completed: 288
+last_completed_plan_commit: 6.n.C
+next_plan_commit: 6.o.W
+last_completed_numbered_bundle: 139
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6478,10 +6478,25 @@ Apply-Test und Commit bestätigen 287/885; danach folgt 6.n.C.
 
 #### 6.n.C – Make it Clean
 
-- [ ] **6.n.C** · Position **288/885** · Voraussetzung: `6.n.R`.
+- [x] **6.n.C** · Position **288/885** · Voraussetzung: `6.n.R`.
 **Exakte Commit-Message:** `6.n.C refactor(work): Monotoner Fortschritt und kleinste Einheit bereinigen`
 
 **Bereinigung:** Fortschrittsbeweis und Schedulerentscheidungen als eigene Komponenten gestalten.
+
+**Implementierungsstand 6.n.C:** `_progress_proof.py` übernimmt den bestehenden
+Nachfolger-/Wiederverwendungsnachweis samt Fensterprojektion und die lesende
+Prüfung des tatsächlich erhaltenen Checkpoints. Die Entscheidungsfolge in
+`progress.py` behält aktive Messgrenzen, genau einen Resume-Versuch und die
+bisherige Zuordnung beobachteter Ressourcenfehler. Der öffentliche Ergebnistyp
+bleibt in seinem bisherigen Modul; Projektion, Fehlergrenzen, Prüfungsreihenfolge
+und zulässige Seiteneffekte bleiben unverändert.
+
+Die extrahierten Prüfungsanweisungen und der Retained-Checkpoint-Prüfer bleiben
+strukturgleich. Alle vorhandenen W-/R-Verhaltenstests bleiben bytegleich;
+Erwartungswerte werden nicht passend zur neuen Struktur umgeschrieben. Der
+geschlossene Ein-Handler-Scope und alle offenen Integrationen bleiben erhalten,
+die Requirement-Nachweise partiell. Erst vollständiger paralleler Apply-Test
+und Commit bestätigen 288/885; danach folgt 6.o.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
