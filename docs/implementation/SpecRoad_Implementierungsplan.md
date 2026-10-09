@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 276
-last_completed_plan_commit: 6.j.C
-next_plan_commit: 6.k.W
-last_completed_numbered_bundle: 127
+implementation_plan_commits_completed: 277
+last_completed_plan_commit: 6.k.W
+next_plan_commit: 6.k.R
+last_completed_numbered_bundle: 128
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6085,12 +6085,35 @@ Erst der erfolgreiche parallele Apply-Volltest und Commit bestätigen Position
 
 #### 6.k.W – Let it Work
 
-- [ ] **6.k.W** · Position **277/885** · Voraussetzung: `6.j.C`.
+- [x] **6.k.W** · Position **277/885** · Voraussetzung: `6.j.C`.
 **Exakte Commit-Message:** `6.k.W feat(work): Fortsetzbarer Eingangs-Snapshot aufbauen`
 
 **Umsetzung:** Deterministische Enumeration, blockweises Hashen und schrittweise Versiegelung des Eingangsmanifests implementieren.
 
 **Verhaltensabnahme:** Bereits gesicherte Bytes können vor Abschluss weiterverwendet werden.
+
+**Implementierungsstand 6.k.W:** `InputSnapshotTask` enumeriert die explizit
+deklarierte Eingangsmenge deterministisch, erfasst gehashte Blöcke über den
+vorhandenen sicheren Ressourcenadapter und versiegelt erst einzelne Dateien,
+dann das vollständige deklarierte Eingangsmanifest. Begrenzte `advance`-Aufrufe
+halten konkrete Bytepositionen und lesen bereits erfasste Präfixe nicht erneut.
+Vollständig erfasste Dateien und einzelne gesicherte Blöcke sind vor Abschluss
+der übrigen Menge nutzbar; Quellverlust erfindet keine fehlenden Bytes.
+
+33 neue Verhaltensfälle prüfen echte Eingangsdateien, kleine Arbeitsfenster,
+kurze und leere Dateien, frühe Wiederverwendung, Pfad-/Parametergrenzen,
+fehlende oder während des Lesens veränderte Quellen sowie die Übergabe der
+gesicherten Bytes an den vorhandenen Work-Codec. Blockgrößen, Quellverschiebung
+und Deklarationsreihenfolge ändern das fachliche Eingangsmanifest nicht.
+
+Die erste Implementierung arbeitet innerhalb derselben Invocation und hält
+die Gesamtmenge im Speicher. Sie bestätigt nur die erfasste deklarierte
+Bytemenge: keine vollständige normative Modellerkennung, keine atomare
+Projektmomentaufnahme, keine dauerhafte Generation und kein Code 8.
+`model_root_sha256` bleibt ausdrücklich `null`. Übergreifende Quell-/Writerprüfung
+folgt in 6.k.R; Persistenz und tatsächliches Resume folgen in 6.l/6.m.
+Alle zugeordneten Requirementnachweise bleiben partiell. Erst der erfolgreiche
+parallele Apply-Volltest und Commit bestätigen Position 277/885.
 
 #### 6.k.R – Make it Right
 

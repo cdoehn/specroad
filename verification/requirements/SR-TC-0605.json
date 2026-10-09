@@ -11,7 +11,8 @@
   ],
   "preconditions": [
     "Explicit diagnostic iterator and a fresh external private spool directory; all protected project/input/output roots are supplied as trusted boundaries. Current native POSIX descriptor operations only.",
-    "R: retain the same live DiagnosticSort or PathSort object between bounded advance calls. Injected failures are labelled; no persistent Work checkpoint is claimed."
+    "R: retain the same live DiagnosticSort or PathSort object between bounded advance calls. Injected failures are labelled; no persistent Work checkpoint is claimed.",
+    "Explicit caller-declared source paths under owned native ProjectBoundary fixtures. Live in-memory input capture only; no durable checkpoint or atomic normative model snapshot."
   ],
   "steps": [
     "Compare the complete stable diagnostic sequence across tiny batches and pages, including duplicates, mandatory errors, large individual records, large integer coordinates and an empty source.",
@@ -20,12 +21,13 @@
     "Reject linked, overlapping, replaced, changed or non-private storage without returning the affected page or claiming completion.",
     "Resume at concrete open merge positions with windows as small as one real unit; verify monotone positions, exact complete reference results, retained pending input and unchanged protected files.",
     "Mutate detached cursor snapshots, close paused tasks, change input/output/root between steps, and inject initialization/write resource failures; no failed unit becomes completed or causes automatic retry.",
-    "Deliver all 128 prepared shortest paths from a layered reference graph through the same bounded transport; preserve producer order, identities, directions and duplicates."
+    "Deliver all 128 prepared shortest paths from a layered reference graph through the same bounded transport; preserve producer order, identities, directions and duplicates.",
+    "Capture real files in small work windows and bounded reads; compare every captured byte and hash, early complete-file reuse, stable manifests across block sizes and locations, concrete missing-input errors and unchanged source inventories."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede potenziell große Verarbeitungsphase MUSS einen dokumentierten granularen Fortschritts- und Fortsetzungsvertrag nach Anhang P.5 besitzen.",
-    "scope": "6.f.W: hashed JSONL batch runs and pairwise stable merging preserve every Diagnostic and its existing ordering, independently of the soft encoded batch target. The complete final run is delivered through a monotone record/byte cursor with full hash and descriptor guards; prefixes are not complete results. Oversized individual diagnostics make real progress. Owned private files lie outside declared protected roots, survive failures and are never automatically deleted. The cursor explicitly declares durable_checkpoint=false; construction, merge and cross-process resume remain a partial P.5 scope. 6.f.R adds live input/run/merge/publication steps with detached state projections, actual read/output record and byte cursors and monotonically confirmed units. Paused tasks retain the iterator and two merge heads; one failed unit invalidates the task without a success increment or retry. Prepared path output uses the same bounded driver and preserves the complete producer order. The synchronous diagnostic adapter drains that exact driver, preserving the original W contracts. 6.f.C moves the unchanged immutable run reference, positive-count validation and guarded delivery cursor into shared storage segment/cursor primitives. Native file authority, work driver, codecs, result fields and all W/R behavior contracts remain unchanged; no additional requirement completion is inferred."
+    "scope": "6.f.W: hashed JSONL batch runs and pairwise stable merging preserve every Diagnostic and its existing ordering, independently of the soft encoded batch target. The complete final run is delivered through a monotone record/byte cursor with full hash and descriptor guards; prefixes are not complete results. Oversized individual diagnostics make real progress. Owned private files lie outside declared protected roots, survive failures and are never automatically deleted. The cursor explicitly declares durable_checkpoint=false; construction, merge and cross-process resume remain a partial P.5 scope. 6.f.R adds live input/run/merge/publication steps with detached state projections, actual read/output record and byte cursors and monotonically confirmed units. Paused tasks retain the iterator and two merge heads; one failed unit invalidates the task without a success increment or retry. Prepared path output uses the same bounded driver and preserves the complete producer order. The synchronous diagnostic adapter drains that exact driver, preserving the original W contracts. 6.f.C moves the unchanged immutable run reference, positive-count validation and guarded delivery cursor into shared storage segment/cursor primitives. Native file authority, work driver, codecs, result fields and all W/R behavior contracts remain unchanged; no additional requirement completion is inferred. 6.k.W incrementally captures the explicit declared input set into immutable hash-addressed bytes. Progress is detached data; only guarded complete files can be materialized and the declared-set manifest is sealed last. Source errors preserve prior bytes, identify the logical resource, do not count the failed unit and do not trigger retry. Tests measure actual read offsets and limits, reuse captured files before the entire set, and roundtrip the completed input bytes through the existing inert Work codec. model_root_sha256 remains null, atomic_project_snapshot and durable_checkpoint remain false. Whole-project closure, writer/overarching consistency, cross-process persistence/resume and bounded total storage are not yet claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -42,6 +44,39 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[grow]",
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[replace]",
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[rewrite]",
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[truncate]",
+    "tests/test_input_snapshot.py::test_constructor_and_deterministic_enumeration_do_not_read_source_content",
+    "tests/test_input_snapshot.py::test_detached_progress_and_store_cannot_change_captured_data",
+    "tests/test_input_snapshot.py::test_duplicate_input_cannot_be_counted_twice",
+    "tests/test_input_snapshot.py::test_empty_declared_set_has_a_complete_empty_manifest",
+    "tests/test_input_snapshot.py::test_every_declared_input_is_captured_with_monotone_bounded_progress[1-1]",
+    "tests/test_input_snapshot.py::test_every_declared_input_is_captured_with_monotone_bounded_progress[10000-65536]",
+    "tests/test_input_snapshot.py::test_every_declared_input_is_captured_with_monotone_bounded_progress[3-7]",
+    "tests/test_input_snapshot.py::test_first_complete_input_is_usable_before_the_whole_set_is_finished",
+    "tests/test_input_snapshot.py::test_input_order_root_location_and_block_size_do_not_change_manifest_binding",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[-1]",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[0]",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[1.5]",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[True]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[-1]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[0]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[1.5]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[True]",
+    "tests/test_input_snapshot.py::test_live_capture_is_not_a_serializable_checkpoint",
+    "tests/test_input_snapshot.py::test_missing_captured_object_is_not_reconstructed_from_its_hash",
+    "tests/test_input_snapshot.py::test_missing_input_is_named_and_previously_captured_bytes_are_retained",
+    "tests/test_input_snapshot.py::test_multiple_roots_have_distinct_logical_identities",
+    "tests/test_input_snapshot.py::test_partial_blocks_survive_close_without_becoming_a_complete_input",
+    "tests/test_input_snapshot.py::test_pausing_does_not_reread_already_captured_blocks",
+    "tests/test_input_snapshot.py::test_sealed_capture_survives_source_relocation_and_later_content_changes",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[../outside]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[/absolute]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[a/./b]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[a//b]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[a\\\\b]",
     "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[1-1-1]",
     "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[65536-10000-1000]",
     "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[8192-17-7]",

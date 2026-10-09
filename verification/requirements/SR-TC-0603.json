@@ -10,18 +10,20 @@
     "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
-    "Owned temporary source files and explicit fixture build/source declarations. Completion JSON is labelled planner data; one entropy test substitutes deterministic bytes. No production command is executed or durable work state published."
+    "Owned temporary source files and explicit fixture build/source declarations. Completion JSON is labelled planner data; one entropy test substitutes deterministic bytes. No production command is executed or durable work state published.",
+    "Explicit caller-declared source paths under owned native ProjectBoundary fixtures. Live in-memory input capture only; no durable checkpoint or atomic normative model snapshot."
   ],
   "steps": [
     "Roundtrip original owned input bytes and all declared units through bounded-fanout manifest trees.",
     "Relocate identical source bytes and verify unchanged semantic input/task bindings; change same-size content and observe different bindings.",
     "Reject missing or damaged objects, unsafe input paths and a different expected tool build.",
-    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes."
+    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes.",
+    "Capture real files in small work windows and bounded reads; compare every captured byte and hash, early complete-file reuse, stable manifests across block sizes and locations, concrete missing-input errors and unchanged source inventories."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder aufgeteilte Auftrag MUSS ein gehashtes vollständiges Aufgaben- und Eingangsmanifest nach Anhang P besitzen.",
-    "scope": "Initial work-v1 candidate hashes all supplied input bytes and the full caller-declared task plan in versioned segment trees. References bind ID, size, SHA-256 and count; missing or changed referenced data is rejected. Relative logical source locations survive relocation. Declared tool/source bindings are data, not independent provenance or an atomically captured snapshot. Full command-specific planners and portable persisted snapshots remain open. R checks the entire supplied object store as exact native hash-addressed bytes, including retained unreferenced objects. Repeated segment references are rejected before amplification. A caller-trusted preceding candidate anchors unchanged input/task hashes across immediate successors; self-consistent new input, source or task bindings cannot replace that work. C relocates identical closed data and request-binding definitions and shares the same pure phase expressions between reader and writer. Existing W/R behavior, test identities, typed refusals, partial status and open boundaries are unchanged."
+    "scope": "Initial work-v1 candidate hashes all supplied input bytes and the full caller-declared task plan in versioned segment trees. References bind ID, size, SHA-256 and count; missing or changed referenced data is rejected. Relative logical source locations survive relocation. Declared tool/source bindings are data, not independent provenance or an atomically captured snapshot. Full command-specific planners and portable persisted snapshots remain open. R checks the entire supplied object store as exact native hash-addressed bytes, including retained unreferenced objects. Repeated segment references are rejected before amplification. A caller-trusted preceding candidate anchors unchanged input/task hashes across immediate successors; self-consistent new input, source or task bindings cannot replace that work. C relocates identical closed data and request-binding definitions and shares the same pure phase expressions between reader and writer. Existing W/R behavior, test identities, typed refusals, partial status and open boundaries are unchanged. 6.k.W incrementally captures the explicit declared input set into immutable hash-addressed bytes. Progress is detached data; only guarded complete files can be materialized and the declared-set manifest is sealed last. Source errors preserve prior bytes, identify the logical resource, do not count the failed unit and do not trigger retry. Tests measure actual read offsets and limits, reuse captured files before the entire set, and roundtrip the completed input bytes through the existing inert Work codec. model_root_sha256 remains null, atomic_project_snapshot and durable_checkpoint remain false. Whole-project closure, writer/overarching consistency, cross-process persistence/resume and bounded total storage are not yet claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,6 +40,39 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[grow]",
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[replace]",
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[rewrite]",
+    "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[truncate]",
+    "tests/test_input_snapshot.py::test_constructor_and_deterministic_enumeration_do_not_read_source_content",
+    "tests/test_input_snapshot.py::test_detached_progress_and_store_cannot_change_captured_data",
+    "tests/test_input_snapshot.py::test_duplicate_input_cannot_be_counted_twice",
+    "tests/test_input_snapshot.py::test_empty_declared_set_has_a_complete_empty_manifest",
+    "tests/test_input_snapshot.py::test_every_declared_input_is_captured_with_monotone_bounded_progress[1-1]",
+    "tests/test_input_snapshot.py::test_every_declared_input_is_captured_with_monotone_bounded_progress[10000-65536]",
+    "tests/test_input_snapshot.py::test_every_declared_input_is_captured_with_monotone_bounded_progress[3-7]",
+    "tests/test_input_snapshot.py::test_first_complete_input_is_usable_before_the_whole_set_is_finished",
+    "tests/test_input_snapshot.py::test_input_order_root_location_and_block_size_do_not_change_manifest_binding",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[-1]",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[0]",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[1.5]",
+    "tests/test_input_snapshot.py::test_invalid_block_size_is_rejected_before_input_access[True]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[-1]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[0]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[1.5]",
+    "tests/test_input_snapshot.py::test_invalid_work_window_preserves_the_previous_state[True]",
+    "tests/test_input_snapshot.py::test_live_capture_is_not_a_serializable_checkpoint",
+    "tests/test_input_snapshot.py::test_missing_captured_object_is_not_reconstructed_from_its_hash",
+    "tests/test_input_snapshot.py::test_missing_input_is_named_and_previously_captured_bytes_are_retained",
+    "tests/test_input_snapshot.py::test_multiple_roots_have_distinct_logical_identities",
+    "tests/test_input_snapshot.py::test_partial_blocks_survive_close_without_becoming_a_complete_input",
+    "tests/test_input_snapshot.py::test_pausing_does_not_reread_already_captured_blocks",
+    "tests/test_input_snapshot.py::test_sealed_capture_survives_source_relocation_and_later_content_changes",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[../outside]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[/absolute]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[a/./b]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[a//b]",
+    "tests/test_input_snapshot.py::test_unsafe_declared_input_paths_are_rejected[a\\\\b]",
     "tests/test_work_manifest.py::test_a_new_build_requires_an_explicit_matching_reader_binding",
     "tests/test_work_manifest.py::test_changed_input_content_changes_bound_units_even_at_the_same_size",
     "tests/test_work_manifest.py::test_input_locations_cannot_introduce_absolute_or_escaping_paths[../escape]",
