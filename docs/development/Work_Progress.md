@@ -36,6 +36,38 @@ sie wird hier noch nicht in den Work-Checkpoint übernommen. Fehler erhalten
 ihre bisherigen Codes und tatsächlichen Speicherzustände. Ein fehlgeschlagener
 Mindestversuch liefert kein erfolgreiches Fenster und löst keinen Retry aus.
 
+Die ergänzende API `advance_read_only_work_outcome(store, call, cwd=...)`
+führt genau denselben Versuch aus und liefert ein maschinenlesbares
+`read-only-work-outcome-v1`. Ein bestätigtes Handlerresultat ergibt
+`state=unit_result_available`, den tatsächlichen Handlercode und das vollständige
+Fenster. Ein beobachteter Speicher-, Dateideskriptor-, Zugriffs- oder I/O-Fehler
+innerhalb der Wiederaufnahme ergibt `state=blocked`, Code 5 und einen getrennten
+Blocker mit Ursache, nativer Fehlernummer und erforderlicher Abhilfe.
+
+Der Blocker nennt weder eine erfundene Mindestressourcenmenge noch einen
+unbelegten Handler-Versuch: Die Wiederaufnahme umfasst auch Prüfung und
+Veröffentlichung. `minimum_resources_known=false` und
+`smallest_unit_attempted=null` halten diese Grenze ausdrücklich fest. Fehler
+der Messung oder Ergebnisprojektion, unbekannte Fehlernummern, Unterbrechungen,
+Sicherheits-, Kompatibilitäts- und Fachfehler behalten ihren Ausnahmevertrag.
+Eine Budgetüberschreitung allein erzeugt keinen Blocker.
+
+Nach einem solchen Ressourcenfehler wird der tatsächliche gespeicherte Stand
+einmal lesend geprüft. `retained.status=verified_storage_chain` enthält den
+jetzt geprüften Checkpoint und seine Einheiten. Das kann bereits eine neue
+Generation sein, wenn der Fehler erst nach dem atomaren Zeigerwechsel auftrat.
+Ein fehlgeschlagener Readback ergibt `unavailable` mit eigenem Fehler und
+`checkpoint=null`; ein nicht veröffentlichter Stand ergibt `unpublished`.
+Diese Prüfung der Speicherkette erteilt keine Ausführungsbefugnis.
+
+Es gibt keinen automatischen Retry, Rollback, keine Löschung kritischer Daten
+und keinen neuen leeren Checkpoint allein für den Blocker. `blocker_persisted=false` weist aus, dass
+der Blocker zum aktuellen Aufruf gehört. Nach Abhilfe muss ein neuer expliziter
+Aufruf den Work-Zustand wieder vollständig prüfen; bereits bestätigte
+Ergebnisbytes werden dabei wiederverwendet. Selbst vollständig neu gehashte
+doppelte Einheiten oder leere Folgegenerationen scheitern am bestehenden
+Manifest-/Nachfolgervertrag, bevor der Handler ausgeführt wird.
+
 Dieser erste Fortschrittspfad ist eine Python-API für den geschlossenen
 Ein-Handler-Plan. Die Fachausgabe dieses Handlers ist vollständig gespeichert;
 der globale Work-Zustand bleibt bis zur gesonderten Schlussprüfung `running`.

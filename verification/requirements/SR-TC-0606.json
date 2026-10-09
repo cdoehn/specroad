@@ -15,12 +15,14 @@
   "steps": [
     "Begin an active measurement window, including a soft target already exceeded before execution; attempt a complete supported Core handler and inspect its durably confirmed result.",
     "Reuse the saved result across new resource profiles and fresh compatible processes without recomputing the handler or generating an empty checkpoint.",
-    "Reject unowned windows, missing work bytes, incomplete handlers and failed publication without inventing successful progress or hiding actual errors."
+    "Reject unowned windows, missing work bytes, incomplete handlers and failed publication without inventing successful progress or hiding actual errors.",
+    "Use labelled native resource failures at actual resume/publication boundaries; inspect the retained checkpoint after early and late errors, then explicitly resume after remedy without recomputing confirmed units.",
+    "Reject self-hashed duplicate units and empty checkpoint generations before handler execution; keep observation, safety, compatibility and usage failures distinct from resource blockers."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Arbeitsschritt MUSS bevorzugt innerhalb seines gewählten Schrittfensters bis zum nächsten sicheren Checkpoint ausgeführt werden.",
-    "scope": "6.n.W connects the existing closed read-only bootstrap handler plan to an active owned InvocationConsumption. One complete safe handler is the supported minimum unit; a measured soft target already exceeded before execution still permits its attempt and durable publication. Successful new work is checked as an immediate manifest successor with a new completed unit. Existing checked completion bytes are reused without re-executing the handler or creating an empty generation, including after resource profile changes and relocation into a new built module/zipapp process. Unknown observations stay unknown. Incomplete handlers, missing checkpoint bytes and publication failures retain their actual error/state and do not return a successful work window. Measurements bracket fresh checks, execution and checkpoint publication, with no preemptive timing guarantee. The window explicitly reports consumption_persisted=false: consumption is only the caller-owned in-process ledger, not cumulative checkpoint evidence. The current handler result is complete while work remains running pending global finalization. General multi-unit scheduling, persistent consumption/blockers, Code 8 and CLI integration remain open; this is partial behavior coverage, not complete requirement or release approval."
+    "scope": "6.n.W connects the existing closed read-only bootstrap handler plan to an active owned InvocationConsumption. One complete safe handler is the supported minimum unit; a measured soft target already exceeded before execution still permits its attempt and durable publication. Successful new work is checked as an immediate manifest successor with a new completed unit. Existing checked completion bytes are reused without re-executing the handler or creating an empty generation, including after resource profile changes and relocation into a new built module/zipapp process. Unknown observations stay unknown. Incomplete handlers, missing checkpoint bytes and publication failures retain their actual error/state and do not return a successful work window. Measurements bracket fresh checks, execution and checkpoint publication, with no preemptive timing guarantee. The window explicitly reports consumption_persisted=false: consumption is only the caller-owned in-process ledger, not cumulative checkpoint evidence. The current handler result is complete while work remains running pending global finalization. General multi-unit scheduling, persistent consumption/blockers, Code 8 and CLI integration remain open; this is partial behavior coverage, not complete requirement or release approval. 6.n.R adds a single-attempt outcome API that distinguishes confirmed handler results from observed resource failures during resume. The blocker states its native cause, required remedy and the actual freshly inspected storage chain, without claiming execution authority, a known minimum resource amount or an exactly observed handler-attempt boundary. A late publication error may retain the new generation; unavailable inspection reports no invented checkpoint. No retry, rollback, critical-data deletion or empty blocker generation occurs. Measurement/projection failures, unknown errors, interruptions and safety/compatibility/usage failures keep their original exception contracts. Rehashed duplicate units and empty generations are rejected before execution. Blockers are current-call data, not persisted WorkManifest state; all previously listed integration limits remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -75,7 +77,33 @@
     "tests/test_work_progress.py::test_unowned_measurement_cannot_start_or_change_work[invalid1]",
     "tests/test_work_progress.py::test_untrusted_work_is_rejected_before_measurement_or_mutation[None]",
     "tests/test_work_progress.py::test_untrusted_work_is_rejected_before_measurement_or_mutation[invalid1]",
-    "tests/test_work_progress.py::test_window_projections_are_detached_and_cannot_change_confirmed_work"
+    "tests/test_work_progress.py::test_window_projections_are_detached_and_cannot_change_confirmed_work",
+    "tests/test_work_progress_right.py::test_complete_unit_or_reused_result_is_separate_from_global_work_completion",
+    "tests/test_work_progress_right.py::test_error_after_pointer_replacement_reports_new_actual_generation_without_rollback",
+    "tests/test_work_progress_right.py::test_failed_readback_is_not_reported_as_a_verified_old_checkpoint",
+    "tests/test_work_progress_right.py::test_incompatible_runtime_stays_a_conflict_instead_of_a_resource_blocker",
+    "tests/test_work_progress_right.py::test_incomplete_command_keeps_usage_failure_instead_of_a_resource_blocker",
+    "tests/test_work_progress_right.py::test_measurement_failure_does_not_masquerade_as_a_resume_resource_blocker[end]",
+    "tests/test_work_progress_right.py::test_measurement_failure_does_not_masquerade_as_a_resume_resource_blocker[start]",
+    "tests/test_work_progress_right.py::test_missing_actual_work_root_reports_unavailable_storage_without_allocating",
+    "tests/test_work_progress_right.py::test_observed_memory_refusal_does_not_reexecute_until_a_new_explicit_call",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[122]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[12]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[13]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[1]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[23]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[24]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[28]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[2]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[30]",
+    "tests/test_work_progress_right.py::test_observed_publication_resource_failure_preserves_the_actual_prior_checkpoint[5]",
+    "tests/test_work_progress_right.py::test_projection_failure_keeps_confirmed_bytes_and_propagates_instead_of_faking_blocker",
+    "tests/test_work_progress_right.py::test_self_hashed_duplicate_or_empty_progress_cannot_become_a_new_window[duplicate_unit]",
+    "tests/test_work_progress_right.py::test_self_hashed_duplicate_or_empty_progress_cannot_become_a_new_window[empty_generation]",
+    "tests/test_work_progress_right.py::test_unclassified_or_interrupted_execution_keeps_its_original_exception[failure0]",
+    "tests/test_work_progress_right.py::test_unclassified_or_interrupted_execution_keeps_its_original_exception[failure1]",
+    "tests/test_work_progress_right.py::test_unclassified_or_interrupted_execution_keeps_its_original_exception[failure2]",
+    "tests/test_work_progress_right.py::test_unsafe_work_data_stays_a_safety_failure_and_is_never_removed"
   ],
   "open_items": [
     "General multi-unit scheduling and finite completion beyond the closed single-handler plan, persistent consumption/blocker state, global Work finalization and CLI/Code-8 integration remain open. No total memory or preemptive timing bound is asserted."

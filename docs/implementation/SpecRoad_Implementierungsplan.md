@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 286
-last_completed_plan_commit: 6.n.W
-next_plan_commit: 6.n.R
-last_completed_numbered_bundle: 137
+implementation_plan_commits_completed: 287
+last_completed_plan_commit: 6.n.R
+next_plan_commit: 6.n.C
+last_completed_numbered_bundle: 138
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6439,12 +6439,42 @@ bestätigen 286/885; danach folgt 6.n.R.
 
 #### 6.n.R – Make it Right
 
-- [ ] **6.n.R** · Position **287/885** · Voraussetzung: `6.n.W`.
+- [x] **6.n.R** · Position **287/885** · Voraussetzung: `6.n.W`.
 **Exakte Commit-Message:** `6.n.R feat(work): Monotoner Fortschritt und kleinste Einheit vervollständigen`
 
 **Vervollständigung:** Doppelte Einheiten und endlose leere Checkpoints verhindern; echte Blocker separat behalten.
 
 **Verhaltensabnahme:** Sehr kleine Fenster terminieren nach endlicher Schrittfolge mit vollständigem Resultat oder belegtem Blocker. Die W-Nachweise bleiben zusätzlich grün.
+
+**Implementierungsstand 6.n.R:** `advance_read_only_work_outcome` führt denselben
+kleinsten Read-only-Versuch einmal aus und trennt das bestätigte Handlerresultat
+von einem tatsächlich beobachteten Ressourcenfehler während der Wiederaufnahme.
+Der Blocker enthält Ursache, native Fehlernummer, erforderliche Abhilfe und den
+einmal frisch gelesenen tatsächlichen Checkpoint. Ein Fehler nach atomarem
+Zeigerwechsel darf bereits die neue Generation hinterlassen; ein fehlgeschlagener
+Readback meldet unbekannten Stand, keinen erfundenen alten Checkpoint. Die
+Speicherprüfung erteilt keine Ausführungsbefugnis. Der Blocker bleibt ausdrücklich
+Aufrufergebnis und wird nicht durch eine leere Folgegeneration persistiert.
+
+Mess-/Projektionsfehler, unbekannte Fehlernummern, Unterbrechungen, Sicherheits-,
+Kompatibilitäts- und Fachfehler bleiben unverändert. Unbekannter Ressourcenbedarf
+und der innerhalb von Prüfung/Ausführung/Veröffentlichung nicht genauer belegte
+Versuchsstand bleiben unbekannt. Kein automatischer Retry, Rollback oder Löschen
+kritischer Daten folgt aus einem Blocker. Ein neuer expliziter Aufruf prüft nach
+Abhilfe alles erneut und verwendet bestätigte Ergebnisbytes wieder.
+
+26 neue Verhaltensfälle ergänzen die unveränderten W-Nachweise: echte
+Veröffentlichung mit markierten Ressourcenfehlern, tatsächlicher Zeigerwechsel
+vor spätem I/O-Fehler, fehlender Work-Root, fehlgeschlagener Readback,
+Fehlerklassentrennung und manipulierte, selbst konsistent gehashte doppelte
+Einheiten/leere Generationen. Diese ungültigen Fortschrittsstände werden vor
+Handlerausführung abgewiesen. Bisherige Tests bleiben bytegleich.
+
+Der Scope bleibt der geschlossene Ein-Handler-Plan als Python-API. Allgemeine
+mehrteilige Ausführung, persistierte Blocker/Verbrauchssummen, globale
+Finalisierung und CLI-/Code-8-Anbindung bleiben offen; SR-TC-0606, SR-TC-0612,
+SR-TC-0613 und SR-TC-0631 bleiben partiell. Erst der vollständige parallele
+Apply-Test und Commit bestätigen 287/885; danach folgt 6.n.C.
 
 #### 6.n.C – Make it Clean
 
