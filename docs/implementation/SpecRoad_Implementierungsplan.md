@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 261
-last_completed_plan_commit: 6.e.C
-next_plan_commit: 6.f.W
-last_completed_numbered_bundle: 112
+implementation_plan_commits_completed: 262
+last_completed_plan_commit: 6.f.W
+next_plan_commit: 6.f.R
+last_completed_numbered_bundle: 113
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5551,12 +5551,40 @@ Danach folgt 6.f.W für dateibasierte Sortierung und Diagnose-Spooling.
 
 #### 6.f.W – Let it Work
 
-- [ ] **6.f.W** · Position **262/885** · Voraussetzung: `6.e.C`.
+- [x] **6.f.W** · Position **262/885** · Voraussetzung: `6.e.C`.
 **Exakte Commit-Message:** `6.f.W feat(work): Dateibasierte Sortierung und Diagnose-Spooling aufbauen`
 
 **Umsetzung:** Große geordnete Ergebnisse in gehashte Teilläufe mit Cursorzustand auslagern.
 
 **Verhaltensabnahme:** Vollständige Ergebnismengen bleiben trotz kleiner In-Memory-Batches erhalten.
+
+**Umsetzung / Bundle 113:** Das vollständig geprüfte Result von Bundle 112
+bestätigt Commit `107c9e87b079d75241d2c3310eccac36c678f1a3`, 6.441 erfolgreiche
+parallele Apply-Tests sowie einen sauberen, vollständig übereinstimmenden Snapshot.
+Der explizite Bibliothekspfad `create_diagnostic_spool` sortiert einen einmaligen
+Diagnoseiterator in kleinen Chargen und gehashten JSONL-Läufen außerhalb sämtlicher
+vom aufrufenden Adapter geschützten Roots. Stabile Paarmerges erhalten alle
+Diagnosen, Duplikate und die bisherige Diagnosereihenfolge. Ein großer Einzelbefund
+wird auch oberhalb des weichen Chargenziels verarbeitet. Ein konkreter Lesecursor
+liefert die vollständige Reihenfolge seitenweise mit Record- und Byteposition;
+erst bestätigtes vollständiges EOF setzt seinen Abschlussstatus.
+
+Verhaltenstests vergleichen sämtliche Befunde mit der bestehenden Referenzsortierung,
+einschließlich kleiner Chargen, Duplikaten, Pflichtfehlern, großen Ortskoordinaten,
+leerem Auftrag und großen Einzelrecords. Ein realer über 4 MiB großer Lauf wird
+aus einem Generator mit 32-KiB-Chargen erzeugt; der begrenzte Python-Allokations-
+Messbereich ist kein RSS-/Hostquotenbeweis. Native kurze Schreibvorgänge bleiben
+vollständig; ein gezielt injizierter ENOSPC nach tatsächlich geschriebenen Bytes
+behält die unvollständige eigene Datei. Veränderung, Verknüpfung und Umbenennung
+werden ohne unberechtigte Ergebnislieferung abgewehrt. Projektbytes bleiben
+unverändert. Alle 262 bisherigen Testdateien und 6.441 Fälle bleiben unverändert.
+
+SR-REQ-0605 erhält ausschließlich einen begrenzten Teilnachweis des dokumentierten
+Sortier-/Lieferpfads. Der Graph-/Pfadvertrag SR-REQ-0585 bleibt offen. Es gibt noch
+keinen persistierten Work-Checkpoint, keine prozessübergreifende Wiederaufnahme,
+keine pausierbaren Mergecursor und keine automatische Befehlsintegration. Die
+Dateien bleiben beim Schließen erhalten. Erst erfolgreiche vollständige parallele
+Dev-/Apply-Tests und Commit bestätigen Position 262/885. Danach folgt 6.f.R.
 
 #### 6.f.R – Make it Right
 
