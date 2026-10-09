@@ -1,9 +1,9 @@
 """Closed, inert work-v1 candidates with complete declared manifest partitions.
 
-These values are not durable checkpoints or execution approvals. The first
-codec binds read-only structured requests without operational options. A trusted
-planner supplies the full unit plan; this module proves its structural retention,
-not that the planner covers every semantic obligation of a command.
+These values are not durable checkpoints or execution approvals. The codec
+binds read-only structured requests or original normative ChangePlan bytes and
+authoring identity. A trusted planner supplies the full unit plan; this module
+proves its structural retention, not complete command coverage or authorization.
 """
 
 from dataclasses import dataclass
@@ -181,9 +181,39 @@ def create_work_manifest(registry, request, *, tool_build, source_bindings, inpu
     Work identity uses fresh operating-system entropy once, before any partition.
     """
     command = _command(registry, request)
+    return _create_manifest(registry, command, tool_build=tool_build,
+        source_bindings=source_bindings, inputs=inputs, units=units)
+
+
+def create_normative_work_manifest(registry, request, *, plan, tool_build,
+                                   source_bindings, inputs, units):
+    """Bind an original ChangePlan for later fresh checks, never authorizing writes.
+
+    The trusted host supplies its actual registered change.apply contract. This
+    does not install a placeholder command in the built-in CLI registry.
+    """
+    from ._normative_binding import plan_values
+    command = _command(registry, request, normative=True)
+    metadata, objects = plan_values(plan)
+    return _create_manifest(registry, command, tool_build=tool_build,
+        source_bindings=source_bindings, inputs=inputs, units=units,
+        authoring=metadata, extra_objects=objects)
+
+
+def _task_binding(command, source_bindings, input_hash, authoring):
+    value = {**command, 'source_bindings': source_bindings, 'input_manifest_sha256': input_hash}
+    if command['command_class'] == 'normative_write':
+        value.update(authoring)
+    return sha256(canonical_json_bytes(value)).hexdigest()
+
+
+def _create_manifest(registry, command, *, tool_build, source_bindings, inputs, units,
+                     authoring=None, extra_objects=None):
     _tool(tool_build); _sources(source_bindings)
     _require(type(inputs) is list and type(units) is list and bool(units))
-    objects, input_rows = {}, []
+    if authoring is None:
+        authoring = {'actor': None, 'request_id': None, 'operations_sha256': None, 'plan_binding': None}
+    objects, input_rows = dict(extra_objects or {}), []
     for item in inputs:
         _object(item, ('root_id', 'path', 'raw'))
         _text(item['root_id']); _path(item['path'])
@@ -191,8 +221,7 @@ def create_work_manifest(registry, request, *, tool_build, source_bindings, inpu
                            **_put(item['raw'], objects)})
     input_rows.sort(key=lambda item: (item['root_id'], item['path']))
     input_ref = _tree('inputs', input_rows, objects)
-    binding = sha256(canonical_json_bytes({**command, 'source_bindings': source_bindings,
-                                          'input_manifest_sha256': input_ref['sha256']})).hexdigest()
+    binding = _task_binding(command, source_bindings, input_ref['sha256'], authoring)
     tasks = []
     for unit in units:
         _object(unit, ('key', 'phase', 'range'))
@@ -204,11 +233,11 @@ def create_work_manifest(registry, request, *, tool_build, source_bindings, inpu
     value = {
         'work_format_version': '1.0.0', 'work_id': 'WORK-' + encode128(secrets.token_bytes(16)),
         'checkpoint_generation': 0, **command,
-        'actor': None, 'request_id': None, 'operations_sha256': None,
+        **authoring,
         'tool_build': _copy(tool_build), 'algorithm_versions': dict(_VERSIONS),
         'schema_versions': {'work': '1.0.0'}, 'source_bindings': _copy(source_bindings),
         'manifests': {'inputs': input_ref, 'tasks': _tree('tasks', tasks, objects)},
-        'plan_binding': None, 'cursors': {}, 'result_parts': [], 'diagnostic_parts': [],
+        'cursors': {}, 'result_parts': [], 'diagnostic_parts': [],
         'consumption': {'invocation': None, 'cumulative': None, 'measurement_status': 'unrecorded'},
         'state': 'running', 'blocked_reason': None,
     }
@@ -279,10 +308,16 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
         request = CommandRequest(value['command_id'], **value['normalized_arguments'])
     except CommandUsageError as error:
         raise WorkManifestError('Invalid structured work request') from error
-    command = _command(registry, request)
+    command = _command(registry, request, normative=value['command_class'] == 'normative_write')
     _require(all(value[name] == item for name, item in command.items()))
-    _require(all(value[name] is None for name in ('actor', 'request_id', 'operations_sha256', 'plan_binding', 'blocked_reason')))
+    _require(value['blocked_reason'] is None)
     _sources(value['source_bindings'])
+    authoring = {name: value[name] for name in ('actor', 'request_id', 'operations_sha256', 'plan_binding')}
+    if command['command_class'] == 'normative_write':
+        from ._normative_binding import read_plan
+        read_plan(value, objects)
+    else:
+        _require(all(item is None for item in authoring.values()))
     _object(value['manifests'], _KINDS)
     rows = {kind: _entries(kind, value['manifests'][kind], objects) for kind in _KINDS}
     for kind, field in (('inputs', 'input'), ('tasks', 'task'),
@@ -296,8 +331,7 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
         _require(key not in seen); seen.add(key)
         _bytes({k: item[k] for k in ('size', 'sha256')}, objects)
     _require(rows['inputs'] == sorted(rows['inputs'], key=lambda item: (item['root_id'], item['path'])))
-    binding = sha256(canonical_json_bytes({**command, 'source_bindings': value['source_bindings'],
-                                          'input_manifest_sha256': value['input_manifest_sha256']})).hexdigest()
+    binding = _task_binding(command, value['source_bindings'], value['input_manifest_sha256'], authoring)
     tasks, keys = {}, set()
     for task in rows['tasks']:
         _object(task, ('key', 'phase', 'range', 'unit_id'))

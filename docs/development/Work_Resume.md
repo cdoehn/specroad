@@ -1,4 +1,4 @@
-# Geprüfte Read-only-Fortsetzung
+# Geprüfte Fortsetzung und normative Vorprüfung
 
 `specroad.work.resume.prepare_read_only_work(request)` erzeugt einen gebundenen
 Plan für genau einen vollständigen eingebauten Bootstrap-Handler. Der erste
@@ -35,7 +35,11 @@ Ein nicht vollständig ausgeführter Handler erzeugt keine bestätigte Einheit;
 sein tatsächlicher Fehlercode bleibt am `WorkResumeError` erhalten.
 
 Ein erneuter Aufruf prüft bereits gespeicherte Completion-Bytes, deren Bindung
-und Ergebnisschema und liefert sie ohne erneute Handlerausführung. Auch dabei
+und Ergebnisschema und liefert sie ohne erneute Handlerausführung. Gespeicherte
+Exit-Codes und Diagnosen müssen zusätzlich zum aktuellen Handlervertrag passen.
+Unpassende Schema-/Algorithmusverträge und manipulierte vollständige Ergebnisse
+werden vor einer schreibenden Work-Lease als Konflikt mit Code 6 abgewiesen.
+Die laufende Buildidentität wird auch vor der Bestätigung erneut geprüft. Dabei
 werden Runtime, geschützte Roots, Work-Root und aktueller Berechtigungskontext
 neu geprüft. Ein vorhandener verwaister Work-Owner wird nicht übernommen.
 
@@ -49,12 +53,46 @@ ausgeführten Handlers sind bereits vollständig gespeichert.
 Dies ist zunächst eine Python-Einbettung des Resume-Ausführungswegs. Die CLI-
 Registry und ihre Angaben zur automatischen Fortsetzung bleiben beim bisherigen
 Umfang. Code 8, automatische Budgetunterbrechung und allgemeine CLI-Anbindung
-werden hier nicht freigegeben. Normative Actors, Request-IDs, Zielbasisprüfungen,
-mehrteilige Fachpläne und die vollständige Work-Abschlussintegration bleiben
-offen; die betreffenden Requirementstatus werden nicht als erfüllt markiert.
+werden hier nicht freigegeben. Normative Ausführung, mehrteilige Fachpläne und
+die vollständige Work-Abschlussintegration bleiben offen; die betreffenden
+Requirementstatus werden nicht als erfüllt markiert.
 
 Die Verhaltensnachweise verwenden neben expliziten In-process-Buildfixtures
 wirklich gebaute Modul-/Zipapp-Distributionen in unabhängigen isolierten
 Prozessen. Runtime-, Work- und geschützte Rootpfade werden zwischen Aufrufen
 verschoben. Ein solcher Rename erhält die geprüfte Dateisystemidentität;
 Kopieren/Restore auf andere Inodes folgt dem späteren Restore-Vertrag.
+
+## Ursprünglichen normativen Plan erneut prüfen
+
+`specroad.work.manifest.create_normative_work_manifest(...)` bindet die
+ursprünglichen `ChangePlan.source_bytes` samt Plan-ID, semantischem Planhash,
+Actor, kanonischer Request-ID und fachlichem Operationshash. Diese Bindungen
+gehen in die Einheitenidentität ein und bleiben in jedem Nachfolger erhalten.
+Der vertrauenswürdige Host liefert seinen aktuellen registrierten `change.apply`-
+Vertrag; die eingebaute CLI erhält dadurch keinen Platzhalter-Handler.
+Unterstützt wird hier der geschlossene Projektumfang mit den drei expliziten
+Authoringoptionen `--actor-type`, `--actor-id` und `--request-id`.
+
+`specroad.work.resume_checks.prepare_normative_resume(store, registry=...,
+model=..., policy=..., actor=..., request_id=...)` liest den vollständigen
+Checkpoint unter dem nativen Work-Mutex und prüft ihn gegen den aktuellen
+Build und Registryvertrag. Actor, Request-ID und Projektidentität müssen den
+gespeicherten Werten entsprechen. Eine aktuelle Projektlokalisierung muss
+ausdrücklich zu den geschützten Roots des Work-Verzeichnisses gehören.
+
+Die vorhandene `prepare_publication_check` prüft danach den originalen Plan
+gegen das aktuelle Modell und tatsächliche Projektbytes, Namen, Konfiguration
+und Schreibrechte. Eine veränderte Zielbasis ist Code 6; ursprüngliche Planbytes,
+Request und Work-Daten bleiben erhalten. Es gibt kein Rebase und keine
+Probe-Schreibzugriffe. Ein Verschieben des Projekts mit einer neuen geprüften
+Rootbindung ist zulässig, solange Identität und Basis weiterhin passen.
+
+`NormativeResumeCheck` liefert den originalen Plan, das bestätigte Datenmanifest
+und die aktuelle Vorprüfung. Die Projektion weist `write_authorized=false`,
+`final_locked_check_required=true`, `normative_writes=0` und
+`checkpoint_changed=false` aus. Dieser Aufruf führt keinen normativen Handler
+aus und verändert weder Projekt noch Work-Verzeichnis. Die abschließende
+Autorisierung, erneute Rechte-/Basisprüfung unter dem echten Projekt-Writer-Lock
+und dauerhafte Veröffentlichung bleiben beim bestehenden Apply-Pfad. Ein
+gespeicherter Actor ist keine Authentifizierung oder menschliche Freigabe.

@@ -16,8 +16,9 @@ from ..cli.invocation_context import InvocationContextBuilder
 from ..cli.requests import CommandRequest
 from ..cli.result_schemas import ENVELOPE_ID, validate_result_document
 from ..model.canonical import canonical_json_bytes
+from ..model.errors import ModelError
 from ..runtime.identity import version_info
-from ._data_contract import _parse, _object
+from ._data_contract import WorkManifestError, _parse, _object
 from .checkpoints import CheckpointStore
 from .manifest import (WorkManifest, create_work_manifest, read_work_manifest,
                        partition_work_manifest)
@@ -43,6 +44,14 @@ class WorkResumeError(ValueError):
 def _require(condition, reason):
     if not condition:
         raise WorkResumeError(reason)
+
+
+def _compatible_read(reader, *args, **kwargs):
+    """Translate only saved-work contract failures, preserving I/O failures."""
+    try:
+        return reader(*args, **kwargs)
+    except (WorkManifestError, ModelError) as error:
+        raise WorkResumeError('incompatible_work_contract', exit_code=6) from error
 
 
 def _runtime_build():
@@ -86,8 +95,8 @@ def prepare_read_only_work(request):
 def _checked_plan(manifest, registry, build):
     _require(type(manifest) is WorkManifest, 'checked_work_required')
     _require(manifest.as_dict()['tool_build'] == build, 'incompatible_runtime_build')
-    current = read_work_manifest(manifest.raw, manifest.objects, registry=registry,
-                                 expected_tool_build=build)
+    current = _compatible_read(read_work_manifest, manifest.raw, manifest.objects,
+                               registry=registry, expected_tool_build=build)
     value = current.as_dict()
     request = CommandRequest(value['command_id'], **value['normalized_arguments'])
     invocation = _invocation(registry, request)
@@ -106,6 +115,10 @@ def _checked_outcome(document, invocation, exit_code):
              and document['result_ref'] is None
              and document['status'] in ('success', 'failed'), 'incomplete_resume_outcome')
     _require(type(exit_code) is int and exit_code in range(8), 'invalid_resume_exit_code')
+    _require(exit_code in invocation.command.protocol.handler_exit_codes,
+             'undeclared_resume_exit_code')
+    _require(all(item['code'] in invocation.command.protocol.diagnostic_codes
+                 for item in document['diagnostics']), 'undeclared_resume_diagnostic')
     if document['status'] == 'success':
         _require(exit_code == 0, 'invalid_resume_exit_code')
         validate_result_document(invocation.command.protocol.result_schema, document['result'])
@@ -159,10 +172,13 @@ def resume_read_only_work(store, *, cwd=None):
     registry, build = builtin_registry(), _runtime_build()
     # Reject missing/incompatible work before a writer lease could allocate data.
     initial, _, _, _ = _checked_plan(store._initial, registry, build)
-    _require(initial.as_dict()['checkpoint_generation'] == 0, 'initial_work_required')
-    current = store.read()
+    _require(initial.as_dict()['checkpoint_generation'] == 0
+             and not initial.entries('completed'), 'initial_work_required')
+    current = _compatible_read(store.read)
     _require(current is not None, 'published_work_required')
-    _checked_plan(current, registry, build)
+    checked, request, invocation, unit_id = _checked_plan(current, registry, build)
+    if checked.entries('completed'):
+        _compatible_read(_saved_outcome, checked, request, invocation, unit_id)
     saved = {}
 
     def advance(previous):
@@ -171,6 +187,7 @@ def resume_read_only_work(store, *, cwd=None):
         InvocationContextBuilder().prepare(invocation, cwd=cwd)
         if current.entries('completed'):
             outcome, exit_code = _saved_outcome(current, request, invocation, unit_id)
+            _require(_runtime_build() == build, 'runtime_build_changed')
             saved.update(outcome=outcome, exit_code=exit_code, executed=False)
             return previous
         response = execute_request(request, registry=registry, cwd=cwd)
@@ -178,6 +195,7 @@ def resume_read_only_work(store, *, cwd=None):
         if not response.result.complete:
             raise WorkResumeError('command_did_not_complete', exit_code=exit_code)
         _checked_outcome(outcome, invocation, exit_code)
+        _require(_runtime_build() == build, 'runtime_build_changed')
         raw = canonical_json_bytes({'format_version': 'read-only-handler-evidence-v1',
             'unit_id': unit_id, 'request': request.as_dict(), 'tool_build': build,
             'exit_code': exit_code, 'outcome': outcome})
@@ -185,6 +203,6 @@ def resume_read_only_work(store, *, cwd=None):
         saved.update(outcome=outcome, exit_code=exit_code, executed=True)
         return following
 
-    confirmed = store._update(advance)
+    confirmed = _compatible_read(store._update, advance)
     return ReadOnlyResumeStep(confirmed, canonical_json_bytes(saved['outcome']),
                              saved['exit_code'], saved['executed'])

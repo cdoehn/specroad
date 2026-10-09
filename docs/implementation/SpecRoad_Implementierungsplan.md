@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 283
-last_completed_plan_commit: 6.m.W
-next_plan_commit: 6.m.R
-last_completed_numbered_bundle: 134
+implementation_plan_commits_completed: 284
+last_completed_plan_commit: 6.m.R
+next_plan_commit: 6.m.C
+last_completed_numbered_bundle: 135
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6328,12 +6328,43 @@ Commit bestätigen 283/885; danach folgt 6.m.R.
 
 #### 6.m.R – Make it Right
 
-- [ ] **6.m.R** · Position **284/885** · Voraussetzung: `6.m.W`.
+- [x] **6.m.R** · Position **284/885** · Voraussetzung: `6.m.W`.
 **Exakte Commit-Message:** `6.m.R feat(work): Resume und Kompatibilitätsprüfung vervollständigen`
 
 **Vervollständigung:** Unpassender Build-/Algorithmusvertrag, Actorwechsel oder stale Zielbasis erzeugen Konflikt statt Rebase.
 
 **Verhaltensabnahme:** Veränderte Writebasis führt zu Code 6 ohne Verlust des gespeicherten Auftrags. Die W-Nachweise bleiben zusätzlich grün.
+
+**Implementierungsstand 6.m.R:** Gespeicherte Read-only-Ergebnisse werden vor
+einer schreibenden Work-Lease gegen den aktuellen vollständigen Ergebnisvertrag,
+zulässige Handler-Exit-Codes und Diagnosen geprüft. Unpassende Schema-/Algorithmus-
+und Ergebnisverträge führen zu Code 6. Ein während der Kontextprüfung veränderter
+Runtime-Build darf weder vorhandene Ergebnisse bestätigen noch neuen Fortschritt
+veröffentlichen.
+
+Der normative Datenvertrag bindet nun die originalen ChangePlan-Bytes, Plan-ID,
+Plan- und Operationshash, Actor und Request-ID in Manifest und Einheitenidentität.
+Die rein lesende `prepare_normative_resume` verlangt die aktuelle Registry,
+Runtime, geschützte Projektlokalisierung und dieselbe Actor-/Request-/Projektbindung.
+Die bestehende Publication-Vorprüfung kontrolliert anschließend das aktuelle
+Modell, tatsächliche Zielbytes, Konfiguration, Namen und Berechtigungen. Eine
+veränderte Basis ist Code 6 ohne Rebase; ursprünglicher Auftrag und Checkpoints
+bleiben erhalten. Ein neuer kompatibler Rootpfad ist mit frischer Bindung möglich.
+
+44 neue Verhaltensfälle decken die erhaltenen Originalbytes und IDs, unzulässige
+Actor-/Request-/Projektwechsel, fehlende oder manipulierte Plandaten, veränderte
+reale Zielbytes, nicht mehr schreibbare Eltern, frische Registryverträge,
+unzulässige gespeicherte Ergebnisse und Runtimewechsel ab. Alle bisherigen
+W-Nachweise und betroffenen Work-/Authoring-/Publication-Verträge bleiben Gates.
+
+Der normative Rückgabewert erklärt ausdrücklich `write_authorized=false` und
+verlangt weiterhin die abschließende Autorisierung und Prüfung unter dem echten
+Projekt-Writer-Lock. Er führt keinen normativen Handler aus und schreibt keine
+Work-Daten. Allgemeine CLI-/Code-8-Anbindung, normative Ausführung, mehrteilige
+Ausführung und Work-Abschluss bleiben offen. SR-TC-0611, SR-TC-0616 und SR-TC-0617
+erhalten partielle Nachweise; keine Anforderung wird als vollständig erfüllt
+markiert. Erst der vollständige parallele Apply-Test und Commit bestätigen
+284/885; danach folgt 6.m.C.
 
 #### 6.m.C – Make it Clean
 

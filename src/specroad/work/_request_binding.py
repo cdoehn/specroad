@@ -1,4 +1,4 @@
-"""Read-only request and declared source/build binding; no handler invocation."""
+"""Registered request and declared source/build binding; no handler invocation."""
 
 from ..cli.contracts import CommandClass, CommandUsageError
 from ..cli.registry import CommandRegistry
@@ -6,20 +6,22 @@ from ..cli.requests import CommandRequest
 from ._data_contract import WorkManifestError, _require, _text, _copy, _object, _hash
 
 
-def _command(registry, request):
+def _command(registry, request, *, normative=False):
     _require(type(registry) is CommandRegistry and type(request) is CommandRequest)
     # The first data codec does not guess which flag denotes a runtime locator,
     # budget or presentation choice. Such normalization belongs to a planner.
-    _require(not request.options)
+    _require(type(normative) is bool and (normative or not request.options))
     _text(request.command_id)
-    _copy({'arguments': dict(request.arguments)})
+    _copy({'arguments': dict(request.arguments), 'options': dict(request.options)})
     try:
         invocation = registry.bind_request(request)
     except CommandUsageError as error:
         raise WorkManifestError('Invalid registered work request') from error
-    _require(invocation.command.command_class is CommandClass.READ_ONLY)
-    return {'command_id': request.command_id, 'command_class': 'read_only',
-            'normalized_arguments': {'arguments': dict(invocation.arguments), 'options': {}}}
+    expected = CommandClass.NORMATIVE_WRITE if normative else CommandClass.READ_ONLY
+    _require(invocation.command.command_class is expected)
+    return {'command_id': request.command_id, 'command_class': expected.value,
+            'normalized_arguments': {'arguments': dict(invocation.arguments),
+                                    'options': dict(invocation.options) if normative else {}}}
 
 
 def _tool(value):
