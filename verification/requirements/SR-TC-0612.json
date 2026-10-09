@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0612",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Private external work storage, independently trusted initial work binding, explicit recorded-build and deterministic clock fixtures; separate generated module/zipapp distributions for fresh-process reuse."
+  ],
+  "steps": [
+    "Begin an active measurement window, including a soft target already exceeded before execution; attempt a complete supported Core handler and inspect its durably confirmed result.",
+    "Reuse the saved result across new resource profiles and fresh compatible processes without recomputing the handler or generating an empty checkpoint.",
+    "Reject unowned windows, missing work bytes, incomplete handlers and failed publication without inventing successful progress or hiding actual errors."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Fortsetzung MUSS bestätigte fachliche Zwischenergebnisse wiederverwenden, statt den bereits abgeschlossenen vollständigen Präfix bei jedem Prompt erneut zu berechnen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "6.n.W connects the existing closed read-only bootstrap handler plan to an active owned InvocationConsumption. One complete safe handler is the supported minimum unit; a measured soft target already exceeded before execution still permits its attempt and durable publication. Successful new work is checked as an immediate manifest successor with a new completed unit. Existing checked completion bytes are reused without re-executing the handler or creating an empty generation, including after resource profile changes and relocation into a new built module/zipapp process. Unknown observations stay unknown. Incomplete handlers, missing checkpoint bytes and publication failures retain their actual error/state and do not return a successful work window. Measurements bracket fresh checks, execution and checkpoint publication, with no preemptive timing guarantee. The window explicitly reports consumption_persisted=false: consumption is only the caller-owned in-process ledger, not cumulative checkpoint evidence. The current handler result is complete while work remains running pending global finalization. General multi-unit scheduling, persistent consumption/blockers, Code 8 and CLI integration remain open; this is partial behavior coverage, not complete requirement or release approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_progress.py::test_new_built_process_reuses_small_window_result_after_relocation[module]",
+    "tests/test_work_progress.py::test_new_built_process_reuses_small_window_result_after_relocation[zipapp]",
+    "tests/test_work_progress.py::test_new_resource_profile_reuses_confirmed_result_without_an_empty_generation",
+    "tests/test_work_progress.py::test_window_projections_are_detached_and_cannot_change_confirmed_work"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "General multi-unit scheduling and finite completion beyond the closed single-handler plan, persistent consumption/blocker state, global Work finalization and CLI/Code-8 integration remain open. No total memory or preemptive timing bound is asserted."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 285
-last_completed_plan_commit: 6.m.C
-next_plan_commit: 6.n.W
-last_completed_numbered_bundle: 136
+implementation_plan_commits_completed: 286
+last_completed_plan_commit: 6.n.W
+next_plan_commit: 6.n.R
+last_completed_numbered_bundle: 137
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6401,12 +6401,41 @@ vollständige parallele Apply-Test und Commit bestätigen 285/885; danach folgt
 
 #### 6.n.W – Let it Work
 
-- [ ] **6.n.W** · Position **286/885** · Voraussetzung: `6.m.C`.
+- [x] **6.n.W** · Position **286/885** · Voraussetzung: `6.m.C`.
 **Exakte Commit-Message:** `6.n.W feat(work): Monotoner Fortschritt und kleinste Einheit aufbauen`
 
 **Umsetzung:** Abgeschlossene Einheiten wiederverwenden und bei kleinem Fenster mindestens sicheren kleinsten Fortschritt versuchen.
 
 **Verhaltensabnahme:** Jede erfolgreiche Folgegeneration erledigt neue Arbeit statt den bestätigten Präfix neu zu rechnen.
+
+**Implementierungsstand 6.n.W:** `advance_read_only_work` verbindet den bereits
+ausführbaren geschlossenen Read-only-Handlerplan mit einer aktiven
+`InvocationConsumption`. Gemessen wird vor und nach Kompatibilitätsprüfung,
+tatsächlichem Handler und dauerhafter Veröffentlichung. Ein bereits
+überschrittenes weiches CPU-/Wall-/Schrittziel verhindert den kleinsten sicheren
+vollständigen Handler nicht. Ein bestätigter neuer Stand muss ein gültiger
+unmittelbarer Nachfolger mit einer neuen Einheitenbestätigung sein.
+
+Vorhandene Ergebnisse werden über den unveränderten Resume-Pfad geprüft und
+wiederverwendet. Ressourcenprofilwechsel erzeugen weder einen neuen Auftrag
+noch eine leere Generation oder erneute Handlerarbeit. Das Fenster weist neue
+und wiederverwendete Einheiten, vorherigen Checkpoint, tatsächliche
+Messbeobachtungen und ausstehende globale Finalisierung getrennt aus.
+
+39 neue Verhaltensfälle prüfen die sechs bestehenden Handler mit sehr kleinen
+weichen Fenstern, nachträglich beobachtete Überschreitung, unbekannte Messwerte,
+Wiederverwendung unter anderen Profilen, fehlende Work-Bytes, fehlgeschlagene
+Handler und Speicherfehler. Wirklich gebaute Modul-/Zipapp-Distributionen
+verwenden das gespeicherte Ergebnis in neuen Prozessen nach Root-/Runtimewechsel
+erneut. Bisherige W-/R-Tests bleiben unverändert.
+
+Dieser W-Stand unterstützt die bestehende sichere Ein-Handler-Einheit als
+Python-API; allgemeines Scheduling mehrteiliger Fachpläne bleibt offen.
+Messsummen bleiben ausdrücklich prozesslokal, der Work-Verbrauch unverzeichnet.
+Globale Finalisierung, CLI-/Code-8-Anbindung und persistierte Blocker werden
+nicht vorweggenommen. SR-TC-0606, SR-TC-0612, SR-TC-0613 und SR-TC-0631 erhalten
+partielle Nachweise. Erst der vollständige parallele Apply-Test und Commit
+bestätigen 286/885; danach folgt 6.n.R.
 
 #### 6.n.R – Make it Right
 

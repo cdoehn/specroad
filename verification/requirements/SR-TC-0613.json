@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0613",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Private external work storage, independently trusted initial work binding, explicit recorded-build and deterministic clock fixtures; separate generated module/zipapp distributions for fresh-process reuse."
+  ],
+  "steps": [
+    "Begin an active measurement window, including a soft target already exceeded before execution; attempt a complete supported Core handler and inspect its durably confirmed result.",
+    "Reuse the saved result across new resource profiles and fresh compatible processes without recomputing the handler or generating an empty checkpoint.",
+    "Reject unowned windows, missing work bytes, incomplete handlers and failed publication without inventing successful progress or hiding actual errors."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein zu kleines weiches Schrittfenster MUSS nach Anhang P.5 einen sicheren kleinsten Fortschrittsversuch statt einer endlosen Folge leerer Checkpoints auslösen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "6.n.W connects the existing closed read-only bootstrap handler plan to an active owned InvocationConsumption. One complete safe handler is the supported minimum unit; a measured soft target already exceeded before execution still permits its attempt and durable publication. Successful new work is checked as an immediate manifest successor with a new completed unit. Existing checked completion bytes are reused without re-executing the handler or creating an empty generation, including after resource profile changes and relocation into a new built module/zipapp process. Unknown observations stay unknown. Incomplete handlers, missing checkpoint bytes and publication failures retain their actual error/state and do not return a successful work window. Measurements bracket fresh checks, execution and checkpoint publication, with no preemptive timing guarantee. The window explicitly reports consumption_persisted=false: consumption is only the caller-owned in-process ledger, not cumulative checkpoint evidence. The current handler result is complete while work remains running pending global finalization. General multi-unit scheduling, persistent consumption/blockers, Code 8 and CLI integration remain open; this is partial behavior coverage, not complete requirement or release approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,37 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-capabilities]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-command.describe]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-help]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-schema.list]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-schema.show]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-version]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-cpu-ms-capabilities]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-cpu-ms-command.describe]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-cpu-ms-help]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-cpu-ms-schema.list]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-cpu-ms-schema.show]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-cpu-ms-version]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-wall-ms-capabilities]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-wall-ms-command.describe]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-wall-ms-help]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-wall-ms-schema.list]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-wall-ms-schema.show]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--step-wall-ms-version]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--wall-budget-ms-capabilities]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--wall-budget-ms-command.describe]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--wall-budget-ms-help]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--wall-budget-ms-schema.list]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--wall-budget-ms-schema.show]",
+    "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--wall-budget-ms-version]",
+    "tests/test_work_progress.py::test_exceeded_target_after_execution_keeps_the_complete_durable_unit",
+    "tests/test_work_progress.py::test_incomplete_handler_cannot_become_progress_due_to_a_tiny_window",
+    "tests/test_work_progress.py::test_publication_failure_preserves_prior_generation_without_a_success_window",
+    "tests/test_work_progress.py::test_unknown_measurements_do_not_invent_exhaustion_or_block_execution"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "General multi-unit scheduling and finite completion beyond the closed single-handler plan, persistent consumption/blocker state, global Work finalization and CLI/Code-8 integration remain open. No total memory or preemptive timing bound is asserted."
   ]
 }
