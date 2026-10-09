@@ -56,7 +56,7 @@ def fingerprint_steps(read, expected_size, *, block_size=65536, controlled=True)
     return result
 
 
-def allocate_transfer_buffer(block_size=65536):
+def allocate_transfer_buffer(block_size=65536, *, attempts=None):
     """Reserve one conservative payload buffer before consuming any input.
 
     Only a failed buffer allocation is retried. An exception after a read may
@@ -66,6 +66,8 @@ def allocate_transfer_buffer(block_size=65536):
     validate_block_size(block_size)
     capacity = min(block_size, 65536)
     while True:
+        if attempts is not None:
+            attempts.append(capacity)
         try:
             return bytearray(capacity)
         except MemoryError:

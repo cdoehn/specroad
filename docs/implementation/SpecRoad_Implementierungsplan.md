@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 259
-last_completed_plan_commit: 6.e.W
-next_plan_commit: 6.e.R
-last_completed_numbered_bundle: 110
+implementation_plan_commits_completed: 260
+last_completed_plan_commit: 6.e.R
+next_plan_commit: 6.e.C
+last_completed_numbered_bundle: 111
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5465,12 +5465,47 @@ Position 259/885. Danach folgt 6.e.R.
 
 #### 6.e.R – Make it Right
 
-- [ ] **6.e.R** · Position **260/885** · Voraussetzung: `6.e.W`.
+- [x] **6.e.R** · Position **260/885** · Voraussetzung: `6.e.W`.
 **Exakte Commit-Message:** `6.e.R feat(work): Streaming und kleine Transferblöcke vervollständigen`
 
 **Vervollständigung:** Reale Speicher-/Rechtefehler und nicht teilbare Mindestoperationen kontrolliert behandeln.
 
 **Verhaltensabnahme:** Kleinere Puffer liefern denselben Bytehash und erhalten vorhandene kritische Daten bei Fehlern. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 111:** Das vollständig geprüfte Result von Bundle 110
+bestätigt Commit `d88a5a5b14e1beae9b2d2ff02a4461b7f8497af2`, 6.411 erfolgreiche
+parallele Apply-Tests sowie einen sauberen, vollständig übereinstimmenden Snapshot.
+`fingerprint_file_outcome` ergänzt den bisherigen nativen Hashadapter um einen
+maschinenlesbaren betrieblichen Ausgang. Ein vollständiger Bytehash erhält Code 0;
+beobachtete bekannte Speicher-, Zugriffs-, Deskriptor- und I/O-Blocker erhalten
+Code 5 mit fehlgeschlagener Phase, tatsächlich versuchten Puffergrößen und
+konkreter erforderlicher Abhilfe. Native Fehlertexte und Dateinamen werden nicht
+in den Bericht übernommen.
+
+Nur eine wirklich gescheiterte Einbyte-Reservierung weist dieses bekannte Minimum
+aus. Für einen nicht weiter geteilten Initialisierungs-, Read- oder Guard-Schritt
+wird kein erfundener RAM-Mindestwert angegeben. Nach einem möglicherweise bereits
+vorgerückten Read erfolgt weder ein automatischer Retry noch die Herausgabe eines
+Teilhashes. Ein erneuter Versuch verlangt die Abhilfe und vollständige erneute
+Eingabeprüfung; ein dauerhafter Checkpoint wird nicht behauptet. Sicherheits-,
+Nutzungs-, Programmierfehler und Unterbrechungen behalten ihre Fehlerverträge.
+Die bisherige native Ausnahme-API und alle W-Nachweise bleiben unverändert.
+
+30 neue Verhaltensfälle vergleichen vollständige Hashes mit verschieden kleinen
+Puffern, erfolglose Einbyteversuche, Fehler nach tatsächlichem Lesen, getrennte
+Fehlerklassen, unveränderte kritische Fixturedateien und kleine fertige Arbeit
+oberhalb weicher Speicherziele. Isolierte eigene Prozesse belegen echte
+Dateideskriptor- und Rechteverweigerungen. Ein ausdrücklich injizierter nicht
+teilbarer Initialisierer löst zusätzlich eine reale abgewiesene Allokation unter
+der allein im Test gesetzten Prozessgrenze aus; das ist kein Speicherbenchmark
+des tatsächlichen SHA-256-Kernels. Die Produktimplementierung setzt keine Quoten
+herauf oder herab. Alle 6.411 bisherigen Fälle bleiben unverändert.
+
+0583 und 0584 bleiben begrenzte Teilnachweise dieses Hashpfads. Bekannte Hostgrenzen,
+Stagingkapazität/-reserven, die übrigen Archiv-/Import-/Snapshotverbraucher,
+persistente Work-Fortsetzung und vollständige Plattformabnahme bleiben offen.
+Erst erfolgreiche vollständige parallele Dev-/Apply-Tests und Commit bestätigen
+Position 260/885. Danach folgt die gemeinsame strukturelle Bereinigung 6.e.C.
 
 #### 6.e.C – Make it Clean
 
