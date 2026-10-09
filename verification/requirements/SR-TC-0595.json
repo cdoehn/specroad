@@ -4,19 +4,36 @@
   "requirement_id": "SR-REQ-0595",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0036",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current trusted runtime and real CLI/request/registry consumers; explicit process-local ledgers and clearly named counter fixtures for exact arithmetic."
+  ],
+  "steps": [
+    "Run real environment commands with and without --metrics, including explicit selected-project error outcomes.",
+    "Reuse one owned ledger across completed windows and compare independent CPU/wall sums, RSS peaks and registered byte peaks.",
+    "Check machine values, measurement sources, unchanged semantic payloads and project inventories."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Explizite Verbrauchsmesswerte MÜSSEN ausschließlich über die betriebliche Ausgabe nach Anhang O.5 bereitgestellt werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Only an explicitly requested environment --metrics option adds summary.runtime. The complete environment payload, original error class, diagnostics, project bytes and pure SRX results stay unchanged. Explicit embedding reuses a separately owned operational ledger."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    5
+  ],
+  "json_pointers": [
+    "/summary/runtime",
+    "/summary/runtime/invocation",
+    "/summary/runtime/cumulative"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +45,19 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_runtime_consumption.py::test_explicit_window_can_wrap_real_srx_without_changing_semantic_inputs_or_output",
+    "tests/test_runtime_consumption.py::test_metrics_keep_the_same_complete_environment_payload",
+    "tests/test_runtime_consumption.py::test_metrics_preserve_real_project_outcomes_and_source_bytes[clean-0]",
+    "tests/test_runtime_consumption.py::test_metrics_preserve_real_project_outcomes_and_source_bytes[invalid-3]",
+    "tests/test_runtime_consumption.py::test_metrics_preserve_real_project_outcomes_and_source_bytes[pending-5]",
+    "tests/test_runtime_consumption.py::test_real_environment_metrics_are_explicit_qualified_and_do_not_write[cli]",
+    "tests/test_runtime_consumption.py::test_real_environment_metrics_are_explicit_qualified_and_do_not_write[registry]",
+    "tests/test_runtime_consumption.py::test_real_environment_metrics_are_explicit_qualified_and_do_not_write[structured]",
+    "tests/test_runtime_consumption.py::test_reports_and_input_options_do_not_mutate_the_ledger_or_previous_result",
+    "tests/test_runtime_consumption.py::test_without_metrics_no_sampler_runs_and_no_measurement_is_exposed"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial 6.d.W scope: parsed-command preparation through result assembly and explicit embedded windows only. Interpreter bootstrap/earlier parsing, final delivery, child processes, all-phase subtotals, periodic checkpoints, durable Work identity/resume, other RSS platform adapters and complete runtime/platform performance acceptance remain open. Native RSS is a current-process lifetime peak, not exclusive per-work memory or host capacity. Exact arithmetic fixtures are not benchmarks."
   ]
 }

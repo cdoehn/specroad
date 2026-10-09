@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0594",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0036",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Current trusted runtime and real CLI/request/registry consumers; explicit process-local ledgers and clearly named counter fixtures for exact arithmetic."
+  ],
+  "steps": [
+    "Run real environment commands with and without --metrics, including explicit selected-project error outcomes.",
+    "Reuse one owned ledger across completed windows and compare independent CPU/wall sums, RSS peaks and registered byte peaks.",
+    "Check machine values, measurement sources, unchanged semantic payloads and project inventories."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Runtime-Diagnose MUSS gemessenen Gesamtverbrauch, verbuchten Eigenverbrauch und unbekannte Hostgrenzen entsprechend Anhang O.3 unterscheiden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Operational reports distinguish native process measurements, Linux lifetime peak RSS with kernel-unit checks, and explicitly registered own memory/scratch bytes. Missing measurements remain unknown/null and are not treated as capacity or as zero accumulated use."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
+  "json_pointers": [
+    "/summary/runtime",
+    "/summary/runtime/invocation",
+    "/summary/runtime/cumulative"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,26 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_runtime_consumption.py::test_failed_optional_sampler_preserves_command_result_and_reports_unknown",
+    "tests/test_runtime_consumption.py::test_invalid_byte_registrations_do_not_change_accounted_state[-1]",
+    "tests/test_runtime_consumption.py::test_invalid_byte_registrations_do_not_change_accounted_state[1.5]",
+    "tests/test_runtime_consumption.py::test_invalid_byte_registrations_do_not_change_accounted_state[1]",
+    "tests/test_runtime_consumption.py::test_invalid_byte_registrations_do_not_change_accounted_state[None]",
+    "tests/test_runtime_consumption.py::test_invalid_byte_registrations_do_not_change_accounted_state[True]",
+    "tests/test_runtime_consumption.py::test_linux_rss_bytes_are_bounded_by_native_kernel_peak_observations",
+    "tests/test_runtime_consumption.py::test_native_sample_uses_read_only_in_process_sources_without_external_monitor",
+    "tests/test_runtime_consumption.py::test_real_environment_metrics_are_explicit_qualified_and_do_not_write[cli]",
+    "tests/test_runtime_consumption.py::test_real_environment_metrics_are_explicit_qualified_and_do_not_write[registry]",
+    "tests/test_runtime_consumption.py::test_real_environment_metrics_are_explicit_qualified_and_do_not_write[structured]",
+    "tests/test_runtime_consumption.py::test_registered_byte_peaks_survive_calls_and_are_not_measured_rss[memory]",
+    "tests/test_runtime_consumption.py::test_registered_byte_peaks_survive_calls_and_are_not_measured_rss[scratch]",
+    "tests/test_runtime_consumption.py::test_releasing_unregistered_bytes_cannot_create_negative_consumption",
+    "tests/test_runtime_consumption.py::test_unknown_sample_does_not_become_zero_in_cumulative_measurement[cpu_ns]",
+    "tests/test_runtime_consumption.py::test_unknown_sample_does_not_become_zero_in_cumulative_measurement[rss_peak_bytes]",
+    "tests/test_runtime_consumption.py::test_unknown_sample_does_not_become_zero_in_cumulative_measurement[wall_ns]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial 6.d.W scope: parsed-command preparation through result assembly and explicit embedded windows only. Interpreter bootstrap/earlier parsing, final delivery, child processes, all-phase subtotals, periodic checkpoints, durable Work identity/resume, other RSS platform adapters and complete runtime/platform performance acceptance remain open. Native RSS is a current-process lifetime peak, not exclusive per-work memory or host capacity. Exact arithmetic fixtures are not benchmarks."
   ]
 }

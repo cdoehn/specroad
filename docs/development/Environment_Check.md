@@ -1,5 +1,9 @@
 # Environment-Check
 
+`--metrics` ergänzt ausschließlich `summary.runtime` um ausdrücklich angeforderte
+Verbrauchswerte. Messarten, Geltungsbereich und die wiederverwendbare eingebettete
+Bilanz beschreibt [Verbrauchsbilanz](Runtime_Consumption.md).
+
 `environment check` erzeugt eine betriebliche Momentaufnahme. Ohne `--project`
 wird kein Projekt gesucht. Mit `--project PATH` werden die aktuelle
 Konfiguration und die begrenzten Betriebsmetadaten geprüft; Artefakte, Gitdaten,

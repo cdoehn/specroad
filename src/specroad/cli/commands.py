@@ -156,6 +156,7 @@ def builtin_registry() -> CommandRegistry:
                  OptionSpec('--cpu-budget-ms', takes_value=True), OptionSpec('--wall-budget-ms', takes_value=True),
                  OptionSpec('--memory-budget-mib', takes_value=True), OptionSpec('--scratch-budget-mib', takes_value=True),
                  OptionSpec('--step-cpu-ms', takes_value=True), OptionSpec('--step-wall-ms', takes_value=True),
+                 OptionSpec('--metrics'),
                  OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
                  OptionSpec('--no-color'), OptionSpec('--quiet')),
         protocol=CommandProtocol('environment-v1', {

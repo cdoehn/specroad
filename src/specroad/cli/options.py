@@ -28,6 +28,7 @@ _GLOBAL_OPTIONS = {
     "--strict": OptionSpec("--strict"),
     "--no-color": OptionSpec("--no-color"),
     "--quiet": OptionSpec("--quiet"),
+    "--metrics": OptionSpec("--metrics"),
     "--format": OptionSpec("--format", takes_value=True, choices=("pretty", "json", "sarif")),
 }
 

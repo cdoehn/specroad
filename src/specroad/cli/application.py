@@ -9,7 +9,7 @@ from .options import OptionResolutionError
 from .invocation_context import InvocationContextBuilder
 from .registry import CommandRegistry, CommandUsageError
 from .requests import CommandRequest
-from .results import CommandResult, FailureKind, OperationFailure, failed_result
+from .results import CommandResult, FailureKind, OperationFailure, failed_result, thaw
 from ..diagnostics import Diagnostic
 
 
@@ -46,19 +46,30 @@ def _error_options(arguments):
 
 def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry: CommandRegistry | None = None,
             cwd=None, profile_layers=(), configuration_layer=None,
-            context_builder: InvocationContextBuilder | None = None) -> CommandResponse:
+            context_builder: InvocationContextBuilder | None = None, consumption=None) -> CommandResponse:
     if isinstance(arguments, (list, tuple)):
         arguments = tuple(arguments)
     command = "unknown"
     options = _error_options(arguments)
     project = None
     preflight = None
+    consumption_call = None
     try:
         selected = builtin_registry() if registry is None else registry
         invocation = (selected.bind_request(arguments) if isinstance(arguments, CommandRequest)
                       else selected.parse(arguments))
         command = invocation.command.command_id
         options = invocation.options
+        if options.get('--metrics') is True:
+            from ..runtime.budget_policy import RESOURCE_OPTIONS, ResourcePolicyError
+            from ..runtime.consumption import WorkConsumption, ConsumptionError
+            try:
+                work = WorkConsumption() if consumption is None else consumption
+                if type(work) is not WorkConsumption:
+                    raise ConsumptionError('An owned work consumption ledger is required')
+                consumption_call = work.begin({k: v for k, v in options.items() if k in RESOURCE_OPTIONS})
+            except (ResourcePolicyError, ConsumptionError) as error:
+                raise CommandUsageError(str(error)) from error
         builder = InvocationContextBuilder() if context_builder is None else context_builder
         invocation = builder.prepare(
             invocation, cwd=cwd, profile_layers=profile_layers,
@@ -89,6 +100,17 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
         outcome = replace(outcome, diagnostics=(*outcome.diagnostics,
             Diagnostic('SRV167', 'info', 'preflight_detail_required',
                        'Additional bounded metadata phases were required.')))
+    if consumption_call is not None:
+        report = consumption_call.finish()
+        if command == 'environment.check' and isinstance(outcome.result, Mapping):
+            policy = outcome.result.get('resource_policy')
+            if isinstance(policy, Mapping) and isinstance(policy.get('effective_budgets'), Mapping):
+                # The completed diagnosis also knows stable selected-project targets.
+                report['effective_budgets'] = thaw(policy['effective_budgets'])
+        report['observation_scope'] = 'parsed_command_through_result_assembly'
+        report['includes_interpreter_start'] = False
+        report['includes_result_delivery'] = False
+        outcome = replace(outcome, details={**outcome.details, 'runtime': report})
     return CommandResponse(outcome, options)
 
 

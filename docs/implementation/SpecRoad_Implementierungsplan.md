@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 255
-last_completed_plan_commit: 6.c.C
-next_plan_commit: 6.d.W
-last_completed_numbered_bundle: 106
+implementation_plan_commits_completed: 256
+last_completed_plan_commit: 6.d.W
+next_plan_commit: 6.d.R
+last_completed_numbered_bundle: 107
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5304,12 +5304,39 @@ gilt Position 255/885; anschließend folgt 6.d.W.
 
 #### 6.d.W – Let it Work
 
-- [ ] **6.d.W** · Position **256/885** · Voraussetzung: `6.c.C`.
+- [x] **6.d.W** · Position **256/885** · Voraussetzung: `6.c.C`.
 **Exakte Commit-Message:** `6.d.W feat(work): Verbrauchsbilanz und Kontrollpunkte aufbauen`
 
 **Umsetzung:** CPU, Wallzeit, gemessenen RSS und verbuchte Bytes unterscheiden und je Auftrag kumulieren.
 
 **Verhaltensabnahme:** Mehrere Aufrufe addieren Verbrauch, ohne das neue Schrittfenster zu verbieten.
+
+**Umsetzung / Bundle 107:** Das vollständig geprüfte Result von Bundle 106
+bestätigt `fb3896b9fa8c1ada18cd7e3e4908f5eb8f27cffd`, 6.314 erfolgreiche
+parallele Apply-Tests und einen sauberen Snapshot. `WorkConsumption` führt eine
+ausdrücklich gehaltene prozesslokale Bilanz über abgeschlossene Aufrufe. CPU
+und Wallzeit werden getrennt addiert; gemessener Linux-Prozess-RSS und bewusst
+registrierte Memory-/Scratchbytes behalten getrennte Quellen und Maxima.
+Offene Bytebuchungen überleben einen Aufruf, bis sie ausdrücklich freigegeben
+werden. Überlappende Fenster und doppelter Abschluss werden zurückgewiesen.
+
+Der echte Environment-Check bietet `--metrics` an und legt die Messungen unter
+`summary.runtime` ab. CLI, strukturierter Request und Registry verwenden denselben
+Pfad; ein eingebetteter Aufrufer kann dieselbe Bilanz erneut übergeben. Profilwechsel
+und kumulierte Überschreitungen verhindern kein neues Arbeitsfenster. Fachpayload,
+Projektbytes und ursprüngliche Fehlerklassen bleiben erhalten. Messausfälle werden
+als unbekannt geführt. Eine native Messung wird nicht in die reine SRX-Auswertung
+eingebaut; ein ausdrückliches äußeres Fenster kann ihre Arbeit erfassen.
+
+Die neuen Fälle prüfen reale Befehle, native Quellen und Linux-RSS-Einheiten,
+zusätzlich genaue Summen mit ausdrücklich gekennzeichneten Zählerfixtures.
+Alle bisherigen Verhaltenstests bleiben unverändert. Vier Requirements erhalten
+Teilnachweise; 0578 bleibt offen. Gemessen wird zunächst nach dem Befehlsparsen
+bis zur Ergebniszusammenstellung. Interpreterstart, Lieferung, Kindprozesse,
+Phasensummen, persistente Work-Zustände und Plattformfreigabe bleiben offen;
+der Bericht kennzeichnet seine tatsächliche Reichweite. Weitere Robustheit und
+Kontrollintervalle folgen in R. Erst nach erfolgreichen vollständigen parallelen
+Dev-/Apply-Tests und Commit gilt Position 256/885; danach folgt 6.d.R.
 
 #### 6.d.R – Make it Right
 
