@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 258
-last_completed_plan_commit: 6.d.C
-next_plan_commit: 6.e.W
-last_completed_numbered_bundle: 109
+implementation_plan_commits_completed: 259
+last_completed_plan_commit: 6.e.W
+next_plan_commit: 6.e.R
+last_completed_numbered_bundle: 110
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5425,12 +5425,43 @@ Position 258/885. Danach folgt 6.e.W für Streaming und kleine Transferblöcke.
 
 #### 6.e.W – Let it Work
 
-- [ ] **6.e.W** · Position **259/885** · Voraussetzung: `6.d.C`.
+- [x] **6.e.W** · Position **259/885** · Voraussetzung: `6.d.C`.
 **Exakte Commit-Message:** `6.e.W feat(work): Streaming und kleine Transferblöcke aufbauen`
 
 **Umsetzung:** Payloadhashing und große Datenverarbeitung in begrenzten Blöcken mit sparsamer Alternative ausführen.
 
 **Verhaltensabnahme:** Ein großer Anhang wird ohne vollständige RAM-Kopie gehasht.
+
+**Umsetzung / Bundle 110:** Das vollständig geprüfte Result von Bundle 109
+bestätigt Commit `5261a036350488f291ce98c5ee5bce36c84e404c`, 6.386 erfolgreiche
+parallele Apply-Tests sowie einen sauberen, vollständig übereinstimmenden Snapshot.
+Der vorhandene kontrollierte Dateihasher reserviert jetzt einen wiederverwendbaren
+Payloadpuffer von höchstens 64 KiB. Native `readinto`-Zugriffe füllen begrenzte
+Views dieses Puffers; der SHA-256 verarbeitet nur die tatsächlich gelesenen Bytes.
+Eine größere Dateilänge löst keine entsprechend große RAM-Allokation aus.
+
+Scheitert die Pufferreservierung, wird vor dem ersten Payloadread eine kleinere
+Kapazität bis zum einzelnen Byte versucht. Die Folge ist endlich; ein Fehler nach
+bereits vorgerücktem Read wird nicht stillschweigend wiederholt. Dateigröße, Hash,
+Kontrollen nach jeweils 64 KiB und der bestehende Root-/Pfad-/Deskriptorschutz
+bleiben erhalten. Der Deskriptor bleibt im Besitz seines Guards. Die wirklich
+reservierten Payloadbytes werden im aktiven Fenster getrennt von gemessenem RSS
+verbucht und anschließend freigegeben.
+
+25 neue Verhaltensfälle prüfen unter anderem echte 32-MiB-Anhänge mit 64-KiB-
+und 4-KiB-Puffern, vollständige unabhängig gebildete Hashes, begrenzte gemessene
+Python-Allokation, wiederverwendete Speicherbereiche, kurze Reads bis zum
+Einbytepuffer, genaue Kontrollgrenzen und unveränderte Quellen bei Fehlern.
+Reservierungs-/Readfehler sind ausdrücklich markierte Injektionen, keine
+behaupteten nativen OOM- oder Quotenmessungen. Alle 6.386 bisherigen Fälle bleiben
+unverändert. 0583 und 0584 erhalten begrenzte Teilnachweise.
+
+Der W-Ausschnitt gilt für den expliziten kontrollierten Dateihasher. Die konkrete
+Blockerprojektion realer Ressourcen-/Rechtefehler und nicht teilbare Mindestschritte
+folgen in R. Weitere Archiv-/Import-/Snapshotverbraucher, bekannte Hostgrenzen,
+Stagingkapazität/-reserven und vollständige Plattformabnahme bleiben offen.
+Erst erfolgreiche vollständige parallele Dev-/Apply-Tests und Commit bestätigen
+Position 259/885. Danach folgt 6.e.R.
 
 #### 6.e.R – Make it Right
 

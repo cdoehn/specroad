@@ -54,3 +54,58 @@ def fingerprint_steps(read, expected_size, *, block_size=65536, controlled=True)
     if controls is not None:
         yield PhaseBoundary('payload_hash', 'end')
     return result
+
+
+def allocate_transfer_buffer(block_size=65536):
+    """Reserve one conservative payload buffer before consuming any input.
+
+    Only a failed buffer allocation is retried. An exception after a read may
+    have advanced the source and must never cause an implicit read retry.
+    Actual allocation success is not a promise of future host availability.
+    """
+    validate_block_size(block_size)
+    capacity = min(block_size, 65536)
+    while True:
+        try:
+            return bytearray(capacity)
+        except MemoryError:
+            if capacity == 1:
+                raise
+            capacity = max(1, capacity // 2)
+
+
+def fingerprint_into_steps(readinto, expected_size, buffer):
+    """Hash a trusted synchronous reader using the same caller-owned buffer.
+
+    The reader fills only its provided view and returns the actual byte count.
+    It must not retain or mutate that view after returning. This is a transfer
+    primitive; the caller still owns path/descriptor and host-error handling.
+    """
+    if type(buffer) is not bytearray or not 1 <= len(buffer) <= 65536:
+        raise ValueError('A bounded writable byte buffer is required')
+    controls = ControlIntervals()
+    yield PhaseBoundary('payload_hash', 'start')
+    digest = sha256()
+    count = 0
+    with memoryview(buffer) as view:
+        while True:
+            requested = min(len(view), controls.remaining('payload_bytes'))
+            with view[:requested] as transfer:
+                received = readinto(transfer)
+                if type(received) is not int or not 0 <= received <= requested:
+                    raise SafetyViolation('Reader did not honor the bounded byte request')
+                if received == 0:
+                    break
+                count += received
+                if count > expected_size:
+                    raise SafetyViolation('Resource grew during inspection')
+                with transfer[:received] as filled:
+                    digest.update(filled)
+            point = controls.advance('payload_bytes', received)
+            if point is not None:
+                yield point
+    if count != expected_size:
+        raise SafetyViolation('Resource byte count changed during inspection')
+    result = ByteFingerprint(count, digest.hexdigest())
+    yield PhaseBoundary('payload_hash', 'end')
+    return result

@@ -1,5 +1,5 @@
 """Trusted synchronous drivers; native metrics never enter pure result values."""
-import os
+from io import FileIO
 
 from .consumption import InvocationConsumption, ConsumptionError
 from .control_points import PhaseBoundary
@@ -31,15 +31,24 @@ def evaluate_srx(program, context, call):
 
 
 def fingerprint_file(boundary, path, call, *, block_size=65536):
-    """Read a guarded payload in at most 64 KiB units, preserving all guards."""
+    """Hash a guarded payload with one reusable, at most 64 KiB buffer."""
     from ..model.paths import project_path
     from ..security.resource_access import opened_resource
-    from ..storage.byte_binding import fingerprint_steps, validate_block_size
+    from ..storage.byte_binding import (allocate_transfer_buffer,
+                                       fingerprint_into_steps, validate_block_size)
     _invocation(call)
     validate_block_size(block_size)
     with opened_resource(boundary, project_path(path)) as (descriptor, initial):
-        return _drive(fingerprint_steps(lambda size: os.read(descriptor, size),
-            initial.st_size, block_size=block_size), call)
+        buffer = allocate_transfer_buffer(block_size)
+        capacity = len(buffer)
+        call.account_bytes('memory', capacity)
+        try:
+            # The guard retains ownership and rechecks this very descriptor.
+            with FileIO(descriptor, 'rb', closefd=False) as source:
+                return _drive(fingerprint_into_steps(source.readinto, initial.st_size, buffer), call)
+        finally:
+            del buffer
+            call.account_bytes('memory', capacity, release=True)
 
 
 def load_srx_graph(sources, call, *, rule_id):

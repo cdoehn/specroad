@@ -4,18 +4,29 @@
   "requirement_id": "SR-REQ-0583",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "W: explicitly invoked guarded payload hashing in an active consumption window; owned temporary inputs. Allocation/read failures are labelled injections, not native host-quota or OOM measurements."
+  ],
+  "steps": [
+    "Hash a real 32 MiB attachment with 64 KiB and 4 KiB reusable buffers; bind the complete byte count and independent incremental SHA-256.",
+    "Exercise smaller pre-read buffer allocation alternatives, short reads, exact control positions, guarded descriptor lifetime and unchanged critical fixture bytes on failure."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Anhangs-, Archivpayload- und Dateihashverarbeitung MUSS den begrenzten Transferblockvertrag aus Anhang O.3 verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "The existing guarded synchronous file-hash driver now uses one reusable bytearray and readinto views, at most 65536 bytes. Exact byte count, SHA-256, source identity and every 65536-byte control boundary survive smaller buffers and short reads. Native descriptor ownership stays with the existing guard. A real owned 32 MiB file is read with one observed reusable buffer; tracemalloc bounds the selected Python allocation window below 2 MiB. Full-payload copy, claimed host quota, staging availability or whole-product completion is not inferred."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +39,34 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_streaming_work.py::test_allocation_fallback_uses_smaller_buffer_before_consuming_input[1024]",
+    "tests/test_streaming_work.py::test_allocation_fallback_uses_smaller_buffer_before_consuming_input[1]",
+    "tests/test_streaming_work.py::test_allocation_fallback_uses_smaller_buffer_before_consuming_input[32768]",
+    "tests/test_streaming_work.py::test_error_after_source_advances_is_not_retried_and_registration_is_released",
+    "tests/test_streaming_work.py::test_invalid_buffer_is_rejected_before_any_source_access[empty]",
+    "tests/test_streaming_work.py::test_invalid_buffer_is_rejected_before_any_source_access[oversized]",
+    "tests/test_streaming_work.py::test_invalid_buffer_is_rejected_before_any_source_access[readonly]",
+    "tests/test_streaming_work.py::test_invalid_readinto_count_cannot_complete_or_hash_unread_bytes[-1]",
+    "tests/test_streaming_work.py::test_invalid_readinto_count_cannot_complete_or_hash_unread_bytes[1]",
+    "tests/test_streaming_work.py::test_invalid_readinto_count_cannot_complete_or_hash_unread_bytes[65537]",
+    "tests/test_streaming_work.py::test_invalid_readinto_count_cannot_complete_or_hash_unread_bytes[None]",
+    "tests/test_streaming_work.py::test_invalid_readinto_count_cannot_complete_or_hash_unread_bytes[True]",
+    "tests/test_streaming_work.py::test_large_guarded_attachment_uses_one_buffer_without_a_payload_copy[4096]",
+    "tests/test_streaming_work.py::test_large_guarded_attachment_uses_one_buffer_without_a_payload_copy[65536]",
+    "tests/test_streaming_work.py::test_native_smaller_buffer_is_accounted_and_released_before_next_invocation",
+    "tests/test_streaming_work.py::test_native_source_replacement_is_rejected_by_existing_descriptor_guard",
+    "tests/test_streaming_work.py::test_readinto_size_mismatch_keeps_safety_failure_without_successful_end[growing]",
+    "tests/test_streaming_work.py::test_readinto_size_mismatch_keeps_safety_failure_without_successful_end[short]",
+    "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[below]",
+    "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[empty]",
+    "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[exact]",
+    "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[one_byte]",
+    "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[over]",
+    "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[small]",
+    "tests/test_streaming_work.py::test_unavailable_minimum_buffer_stops_without_reading_or_removing_inputs"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial bounded payload-hash driver only. Controlled host/resource-blocker projection, native memory/permission failures and indivisible minimum steps follow in 6.e.R. Archive/import/snapshot consumers, known-limit integration, staging capacity/reserves, persistent work and complete runtime/platform acceptance remain open. The measured Python allocation window is not total RSS or a host capacity guarantee."
   ]
 }
