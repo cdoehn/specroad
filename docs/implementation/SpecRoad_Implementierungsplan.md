@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 291
-last_completed_plan_commit: 6.o.C
-next_plan_commit: 6.p.W
-last_completed_numbered_bundle: 142
+implementation_plan_commits_completed: 292
+last_completed_plan_commit: 6.p.W
+next_plan_commit: 6.p.R
+last_completed_numbered_bundle: 143
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6622,12 +6622,43 @@ und Commit bestätigen 291/885; danach folgt 6.p.W.
 
 #### 6.p.W – Let it Work
 
-- [ ] **6.p.W** · Position **292/885** · Voraussetzung: `6.o.C`.
+- [x] **6.p.W** · Position **292/885** · Voraussetzung: `6.o.C`.
 **Exakte Commit-Message:** `6.p.W feat(work): Atomarer Write über mehrere Vorbereitungsphasen aufbauen`
 
 **Umsetzung:** Große Change Plans vor Veröffentlichung fortsetzen und den finalen Fachwrite ungeteilt ausführen.
 
 **Verhaltensabnahme:** Mehrere Vorbereitungsaufrufe führen zu genau einer atomaren Fachtransaktion.
+
+**Implementierungsstand 6.p.W:** Ein geschlossener Host-Adapter bindet einen
+originalen Change Plan und bestätigt fachliche Zielprüfung sowie aktuellen
+Veröffentlichungs-Preflight in zwei eigenen dauerhaften Work-Generationen.
+Beide binden dasselbe Assessment; Projektdateien und Projektbetriebsdaten bleiben
+in den Vorbereitungsaufrufen unverändert. Alle ursprünglichen IDs, Actor,
+Request-ID, Operationsfolge und Planbytes bleiben erhalten.
+
+Die Veröffentlichung prüft zunächst das native Request-Receipt. Ein bereits
+bestätigter Commit wird ohne zweiten Fachwrite wiedergegeben. Andernfalls sind
+beide Vorbereitungen, ein freier Transaktionszustand, aktuelle vollständige
+Basis-/Zielprüfung und erneute Autorisierung erforderlich. Der bestehende
+native Writer führt Building, Staging, sämtliche Planoperationen, Nachprüfung,
+Receipts und sichere Bereinigung unter einem durchgehend gehaltenen
+Projektwriter-Lock aus. Dabei wird kein Work-Checkpoint erzeugt. Native Fehler
+erhalten den tatsächlichen Zustand; offene Transaktionen verweisen auf Recovery.
+
+27 neue Verhaltenstests prüfen getrennte dauerhafte Vorbereitungen, mehrere
+gemeinsam veröffentlichte Operationen, globale Pflichtgates, aktuelle Bindungen,
+unvollständige oder manipulierte Vorbereitung, fehlende Berechtigung und
+frühe/späte Work- sowie native I/O-Fehler. Verlorener Output nach tatsächlichem
+Commit führt zur Receipt-Wiederholung. Die Fehlerfälle ersetzen keinen echten
+Prozessabbruchnachweis; dieser gehört zur folgenden Robustheitserweiterung.
+
+Der native Transaktionsnachweis bleibt vom noch offenen finalen normativen
+Work-Abschluss getrennt. Der Vorbereitungscheckpoint bleibt erhalten. Allgemeiner
+inkrementeller großer Planaufbau, feinere speicherbegrenzte Vorbereitung und
+CLI-/Code-8-Anbindung bleiben offen; jede Phase verarbeitet ihr geliefertes
+Modell noch vollständig im Speicher. Die beiden Requirement-Nachweise bleiben
+partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
+292/885; danach folgt 6.p.R.
 
 #### 6.p.R – Make it Right
 

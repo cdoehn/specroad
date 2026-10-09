@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0620",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0041",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary real project and private external Work root; independently bound original ChangePlan and recorded-build fixture; explicit test-host registry, policy and human authority."
+  ],
+  "steps": [
+    "Persist target assessment and live publication preflight in separate calls; inspect exact project bytes and retained Work identities.",
+    "Publish all original operations with the native writer and inspect the durable transaction/request receipts; replay their identical result without another writer.",
+    "Refuse incomplete/invalid preparation, missing global target gates, changed bindings and denied authority; preserve actual Work and journal state on injected native I/O errors."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein atomarer Change Plan DARF NICHT allein wegen kleiner Schrittfenster in unabhängige fachliche Teilcommits zerlegt werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "6.p.W adds a closed trusted-host adapter that persists complete target assessment and current publication preflight in two distinct Work generations without project writes. Their assessment bindings agree. A new publication requires the whole original plan, fresh target/basis checks, explicit current host authority and the existing native writer lock. Building, staging, every planned target replacement, full target checks, durable receipts and existing cleanup run in one uninterrupted native transaction. Original actor, request, operations, plan bytes and IDs are preserved. Receipt-first retry returns the verified historical native result without a second normative write, including output loss after commit. Missing or malformed preparation, missing global gates, changed current inputs/identity/build and authority denial do not gain publication permission. Actual early/late Work and native I/O faults preserve the observed generation or native journal; open transactions block ordinary Work continuation and require the existing recovery path. Tests use real temporary filesystem operations and explicitly labelled in-process build and host-authority fixtures; no actual process termination or power-loss claim is made in this W step. Final normative Work completion and CLI/Code-8 delivery are not claimed. Each preparation still handles a full supplied in-memory model; incremental large-plan construction and finer bounded units remain open. This is partial behavior coverage, not full requirement or release approval. A changed reconstructed current model is consistently a stale-target conflict with code 6 in either preparation phase and before new publication; original work and project bytes are preserved."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,36 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_publication.py::test_absent_work_is_never_created_to_claim_preparation[prepare]",
+    "tests/test_work_publication.py::test_absent_work_is_never_created_to_claim_preparation[publish]",
+    "tests/test_work_publication.py::test_actual_changed_target_is_rechecked_before_writer_creation",
+    "tests/test_work_publication.py::test_all_original_operations_publish_in_one_native_transaction_and_replay[False]",
+    "tests/test_work_publication.py::test_all_original_operations_publish_in_one_native_transaction_and_replay[True]",
+    "tests/test_work_publication.py::test_changed_fresh_model_is_a_conflict_in_every_phase[0]",
+    "tests/test_work_publication.py::test_changed_fresh_model_is_a_conflict_in_every_phase[1]",
+    "tests/test_work_publication.py::test_changed_fresh_model_is_a_conflict_in_every_phase[2]",
+    "tests/test_work_publication.py::test_generic_planner_data_is_not_the_closed_native_preparation_plan[prepare]",
+    "tests/test_work_publication.py::test_generic_planner_data_is_not_the_closed_native_preparation_plan[publish]",
+    "tests/test_work_publication.py::test_incomplete_preparation_cannot_open_a_project_writer[0]",
+    "tests/test_work_publication.py::test_incomplete_preparation_cannot_open_a_project_writer[1]",
+    "tests/test_work_publication.py::test_interrupted_native_publication_requires_recovery_not_work_resume",
+    "tests/test_work_publication.py::test_live_authority_denial_preserves_preparation_and_all_normative_bytes",
+    "tests/test_work_publication.py::test_lost_output_after_native_commit_replays_receipt_without_second_write",
+    "tests/test_work_publication.py::test_missing_global_gate_cannot_be_confirmed_by_the_first_preparation",
+    "tests/test_work_publication.py::test_original_identity_and_build_cannot_be_relabelled_at_publication[actor]",
+    "tests/test_work_publication.py::test_original_identity_and_build_cannot_be_relabelled_at_publication[request]",
+    "tests/test_work_publication.py::test_original_identity_and_build_cannot_be_relabelled_at_publication[runtime]",
+    "tests/test_work_publication.py::test_preparation_publication_failure_keeps_actual_work_without_project_writes[False]",
+    "tests/test_work_publication.py::test_preparation_publication_failure_keeps_actual_work_without_project_writes[True]",
+    "tests/test_work_publication.py::test_preparations_are_separate_durable_generations_without_project_changes[False]",
+    "tests/test_work_publication.py::test_preparations_are_separate_durable_generations_without_project_changes[True]",
+    "tests/test_work_publication.py::test_rehashed_invalid_preparation_evidence_never_opens_the_writer[extra_field]",
+    "tests/test_work_publication.py::test_rehashed_invalid_preparation_evidence_never_opens_the_writer[out_of_order]",
+    "tests/test_work_publication.py::test_rehashed_invalid_preparation_evidence_never_opens_the_writer[wrong_phase]",
+    "tests/test_work_publication.py::test_rehashed_invalid_preparation_evidence_never_opens_the_writer[wrong_plan]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Actual process-termination coverage follows in 6.p.R. Incremental large-plan construction, finer memory-bounded preparation, builtin CLI/Code-8 integration and final normative Work completion remain open. No release or complete requirement approval is claimed."
   ]
 }
