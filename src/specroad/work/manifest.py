@@ -10,22 +10,19 @@ from dataclasses import dataclass
 from collections.abc import Mapping
 from hashlib import sha256
 from types import MappingProxyType
-import re
 import secrets
 
-from ..cli.contracts import CommandClass, CommandUsageError
-from ..cli.registry import CommandRegistry
+from ..cli.contracts import CommandUsageError
 from ..cli.requests import CommandRequest
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..model.identity_tokens import encode128, decode128
-from ..storage.json_syntax import parse_json_object
-
-
-class WorkManifestError(ValueError):
-    """Unusable work data, never a request to execute another command."""
-
-    exit_code = 4
+from ._data_contract import (
+    WorkManifestError, _require, _object, _text, _hash, _count, _path, _copy, _parse,
+)
+from ._request_binding import _command, _tool, _sources
+from ._phase import phase_name as _phase_name, frontier as _phase_frontier
+from ._phase import next_action as _next_action, progress as _progress
 
 
 _KINDS = ('inputs', 'tasks', 'completed', 'remaining')
@@ -46,78 +43,6 @@ _FIELDS = {
     'cursors', 'result_parts', 'diagnostic_parts', 'progress', 'consumption',
     'state', 'blocked_reason', 'next_action', 'checkpoint_sha256',
 }
-
-
-def _require(condition):
-    if not condition:
-        raise WorkManifestError('Invalid or incomplete work manifest')
-
-
-def _object(value, fields):
-    _require(type(value) is dict and all(type(key) is str for key in value)
-             and set(value) == set(fields))
-
-
-def _text(value):
-    _require(type(value) is str and bool(value) and '\0' not in value)
-    try:
-        value.encode('utf-8')
-    except UnicodeError as error:
-        raise WorkManifestError('Invalid work text') from error
-
-
-def _hash(value):
-    _require(type(value) is str and re.fullmatch('[0-9a-f]{64}', value) is not None)
-
-
-def _count(value):
-    _require(type(value) is int and 0 <= value <= 2**53 - 1)
-
-
-def _path(value):
-    _text(value)
-    _require(not any(c in value for c in ('\\', ':'))
-             and all(part not in ('', '.', '..') for part in value.split('/')))
-
-
-def _plain_json(value):
-    # Equality-based type membership can invoke a foreign metaclass. Admit
-    # exact JSON types by identity before passing data to the shared encoder.
-    stack, seen = [iter((value,))], set()
-    while stack:
-        try:
-            item = next(stack[-1])
-        except StopIteration:
-            stack.pop()
-            continue
-        kind = type(item)
-        if item is None or kind is str or kind is bool or kind is int or kind is float:
-            continue
-        _require(kind is dict or kind is list)
-        if id(item) in seen:
-            continue  # The canonical encoder separately rejects real cycles.
-        seen.add(id(item))
-        if kind is dict:
-            _require(all(type(key) is str for key in item))
-            stack.append(iter(item.values()))
-        else:
-            stack.append(iter(item))
-
-
-def _copy(value):
-    _plain_json(value)
-    try:
-        return parse_json_object(canonical_json_bytes(value))
-    except ModelError as error:
-        raise WorkManifestError('Invalid JSON work value') from error
-
-
-def _parse(raw):
-    _require(type(raw) is bytes)
-    try:
-        return parse_json_object(raw)
-    except ModelError as error:
-        raise WorkManifestError('Invalid JSON work bytes') from error
 
 
 def _put(raw, objects):
@@ -188,41 +113,6 @@ def _entries(kind, reference, objects):
             result.extend(items)
     _require(len(result) == reference['count'])
     return result
-
-
-def _command(registry, request):
-    _require(type(registry) is CommandRegistry and type(request) is CommandRequest)
-    # The first data codec does not guess which flag denotes a runtime locator,
-    # budget or presentation choice. Such normalization belongs to a planner.
-    _require(not request.options)
-    _text(request.command_id)
-    _copy({'arguments': dict(request.arguments)})
-    try:
-        invocation = registry.bind_request(request)
-    except CommandUsageError as error:
-        raise WorkManifestError('Invalid registered work request') from error
-    _require(invocation.command.command_class is CommandClass.READ_ONLY)
-    return {'command_id': request.command_id, 'command_class': 'read_only',
-            'normalized_arguments': {'arguments': dict(invocation.arguments), 'options': {}}}
-
-
-def _tool(value):
-    _object(value, ('version', 'build_sha256', 'hash_algorithm'))
-    _text(value['version']); _hash(value['build_sha256'])
-    _text(value['hash_algorithm'])
-    _require(value['hash_algorithm'] == 'specroad-dev-payload-v1')
-
-
-def _sources(value):
-    _object(value, ('project_id', 'scope', 'model_root_sha256'))
-    if value['project_id'] is not None:
-        _text(value['project_id'])
-    _require(type(value['scope']) is list)
-    for scope in value['scope']:
-        _text(scope)
-    _require(len(value['scope']) == len(set(value['scope'])))
-    if value['model_root_sha256'] is not None:
-        _hash(value['model_root_sha256'])
 
 
 def _seal(value):
@@ -334,11 +224,10 @@ def _partition(value, tasks, completed, objects, registry, tool_build):
     for kind, field in (('inputs', 'input'), ('tasks', 'task'),
                         ('completed', 'completed'), ('remaining', 'remaining')):
         value[field + '_manifest_sha256'] = value['manifests'][kind]['sha256']
-    value['phase'] = remaining[0]['phase'] if remaining else 'finalize'
-    value['frontier'] = [remaining[0]['unit_id']] if remaining else []
-    value['progress'] = {'completed_units': len(completed), 'total_units': len(tasks)}
-    value['next_action'] = ({'operation': 'process_declared_unit', 'unit_id': remaining[0]['unit_id']}
-                            if remaining else {'operation': 'finalize_declared_work'})
+    value['phase'] = _phase_name(remaining)
+    value['frontier'] = _phase_frontier(remaining)
+    value['progress'] = _progress(len(completed), len(tasks))
+    value['next_action'] = _next_action(remaining)
     return read_work_manifest(_seal(value), objects, registry=registry, expected_tool_build=tool_build)
 
 
@@ -429,15 +318,14 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     _require(canonical_json_bytes(rows['remaining']) == canonical_json_bytes(remaining))
     _require([item['unit_id'] for item in rows['completed']]
              == [identity for identity in tasks if identity in completed])
-    _require(value['progress'] == {'completed_units': len(completed), 'total_units': len(tasks)})
+    _require(value['progress'] == _progress(len(completed), len(tasks)))
     _require(type(value['progress']['completed_units']) is int and type(value['progress']['total_units']) is int)
     _require(value['state'] == 'running' and value['cursors'] == {}
              and value['result_parts'] == [] and value['diagnostic_parts'] == [])
     _require(value['consumption'] == {'invocation': None, 'cumulative': None, 'measurement_status': 'unrecorded'})
-    _require(value['phase'] == (remaining[0]['phase'] if remaining else 'finalize'))
-    _require(value['frontier'] == ([remaining[0]['unit_id']] if remaining else []))
-    action = ({'operation': 'process_declared_unit', 'unit_id': remaining[0]['unit_id']}
-              if remaining else {'operation': 'finalize_declared_work'})
+    _require(value['phase'] == (_phase_name(remaining)))
+    _require(value['frontier'] == (_phase_frontier(remaining)))
+    action = _next_action(remaining)
     _require(value['next_action'] == action)
     _hash(value['checkpoint_sha256'])
     sealed = _parse(_seal(value))

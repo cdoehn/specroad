@@ -1,5 +1,12 @@
 # Work-Manifest: Datenvertrag
 
+Der öffentliche Einstieg bleibt `specroad.work.manifest`. Die reinen
+JSON-/Typprüfungen liegen intern in `_data_contract`, die Registry- und
+Quellbindung in `_request_binding`. `_phase` berechnet dieselben Phasen-,
+Frontier-, Fortschritts- und Aktionswerte für Erzeuger und Leser. Segmentprüfung,
+Objektspeicher und Nachfolgebindung bleiben im Codec. Diese Strukturtrennung
+ändert weder Datenformat noch zulässige Zustände oder Seiteneffekte.
+
 `specroad.work.manifest` stellt den ersten geschlossenen `work-v1`-Codec bereit.
 Er erstellt und prüft reine Datenkandidaten. Ein vertrauenswürdiger Aufrufer
 liefert die registrierte Read-only-Anfrage, die explizite Tool-Bindung, sämtliche

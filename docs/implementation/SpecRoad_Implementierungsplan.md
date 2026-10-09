@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 272
-last_completed_plan_commit: 6.i.R
-next_plan_commit: 6.i.C
-last_completed_numbered_bundle: 123
+implementation_plan_commits_completed: 273
+last_completed_plan_commit: 6.i.C
+next_plan_commit: 6.j.W
+last_completed_numbered_bundle: 124
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5962,7 +5962,7 @@ Dev-/Apply-Volltests und Commit bestätigen Position 272/885. Danach folgt 6.i.C
 
 #### 6.i.C – Make it Clean
 
-- [ ] **6.i.C** · Position **273/885** · Voraussetzung: `6.i.R`.
+- [x] **6.i.C** · Position **273/885** · Voraussetzung: `6.i.R`.
 **Exakte Commit-Message:** `6.i.C refactor(work): Work-Identität und geschlossenes Manifest bereinigen`
 
 **Bereinigung:** Workcodec, Command Registry und Phasenzustand über schmale Verträge verbinden.
@@ -5970,6 +5970,26 @@ Dev-/Apply-Volltests und Commit bestätigen Position 272/885. Danach folgt 6.i.C
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 124:** Das vollständig geprüfte Result von Bundle 123
+bestätigt Commit `07f9506be231bb93a3d1c814f22253243511f253`, 6.774 erfolgreiche
+parallele Apply-Tests, sieben identische Payloads und den sauberen Basissnapshot.
+Die bisherigen geschlossenen Typ-/JSON-Prüfungen und die typisierte Ablehnung
+liegen jetzt in `work._data_contract`; `work._request_binding` kapselt die
+unveränderte Verbindung zur vertrauenswürdigen Registry sowie Tool-/Quellwerte.
+`work._phase` stellt die bereits vorhandenen Phasen-, Frontier-, Fortschritts-
+und Aktionsausdrücke gemeinsam für Leser und Erzeuger bereit.
+
+Die Strukturprüfung bestätigt exakt gleiche ASTs aller 13 ausgelagerten
+Definitionen. Nach rein syntaktischem Einsetzen der vier Phasenausdrücke sind
+auch die übrigen 14 Codecdefinitionen identisch; die Rootkonstanten bleiben
+gleich. Der vorhandene Parser-Einschleusungspunkt für Segmentprüfungen bleibt
+erhalten. Alle 270 bisherigen Testdateien und 6.774 Fälle bleiben bytegleich.
+Die drei Requirement-Teilnachweise behalten Testbindungen, Status und offene
+Grenzen. Es entstehen keine neue Fachwirkung und keine Darstellungstests.
+
+Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
+273/885. Danach folgt 6.j.W für den externen Work-Root und dessen Locks.
 
 <a id="step-6-j"></a>
 ### 6.j – Externer Work-Root und Locks
