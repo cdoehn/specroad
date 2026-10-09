@@ -7,6 +7,7 @@ from threading import Lock
 import time
 
 from .budget_policy import resolve_resource_policy
+from .control_points import ControlPoint, PhaseBoundary, INTERVALS
 
 
 class ConsumptionError(ValueError):
@@ -41,7 +42,10 @@ class CounterSample:
             value = getattr(self, name)
             if type(value) is not str or not value:
                 raise ConsumptionError('A measurement source is required')
-            value.encode('utf-8')
+            try:
+                value.encode('utf-8')
+            except UnicodeError as error:
+                raise ConsumptionError('A UTF-8 measurement source is required') from error
 
 
 def _reading(reader):
@@ -72,7 +76,12 @@ def _metric(value, unit, source, scope, *, kind='measured'):
 
 
 def _sum(previous, current):
-    return None if previous is None or current is None else previous + current
+    if previous is None or current is None:
+        return None
+    try:
+        return _count(previous + current)
+    except ConsumptionError:
+        return None
 
 
 def _peak(previous, current):
@@ -94,6 +103,7 @@ class WorkConsumption:
         self._lock = Lock()
         self._active = None
         self._calls = 0
+        self._control_checks = 0
         self._totals = {'cpu_ns': 0, 'wall_ns': 0, 'rss_peak_bytes': 0}
         self._sources = {name: None for name in self._totals}
         self._current = {'memory': 0, 'scratch': 0}
@@ -124,6 +134,11 @@ class InvocationConsumption:
     def __init__(self, work, policy, start, peaks):
         self._work, self._policy, self._start = work, policy, start
         self._peaks = peaks
+        self._previous = start
+        self._unknown = set()
+        self._events = {}
+        self._controls = {'checks': 0, 'intervals': {}, 'phases': {},
+                          'progress_scope': 'current_kernel_only', 'durable_checkpoint': False}
 
     def account_bytes(self, kind, count, *, release=False):
         count = _count(count)
@@ -138,20 +153,68 @@ class InvocationConsumption:
             work._current[kind] = value
             self._peaks[kind] = max(self._peaks[kind], value)
 
+    def _observe(self, end):
+        values, sources = {}, {}
+        for metric, source in (('cpu_ns', 'cpu_source'), ('wall_ns', 'wall_source'),
+                               ('rss_peak_bytes', 'rss_source')):
+            before, previous, after = (getattr(sample, metric) for sample in (self._start, self._previous, end))
+            same_source = getattr(self._start, source) == getattr(self._previous, source) == getattr(end, source)
+            sources[metric] = getattr(end, source) if same_source else 'changed_measurement_source'
+            if (not same_source or before is None or previous is None or after is None
+                    or after < previous):
+                self._unknown.add(metric)
+            values[metric] = None if metric in self._unknown else (
+                after if metric == 'rss_peak_bytes' else after - before)
+        self._previous = end
+        return values, sources
+
+    def _observe_budgets(self, values):
+        for target, observed, factor in (
+            ('cpu', values['cpu_ns'], 1000000), ('wall', values['wall_ns'], 1000000),
+            ('step_cpu', values['cpu_ns'], 1000000), ('step_wall', values['wall_ns'], 1000000),
+            ('memory', self._peaks['memory'], 1), ('scratch', self._peaks['scratch'], 1)):
+            budget = self._policy['effective_budgets'][target]
+            if observed is not None and observed > budget['value'] * factor and target not in self._events:
+                self._events[target] = {'metric': target, 'target': budget['value'], 'target_unit': budget['unit'],
+                                       'observed': observed, 'observed_unit': 'ns' if factor > 1 else 'bytes'}
+
+    def control(self, point):
+        """Observe one typed, synchronous kernel boundary outside pure evaluation.
+
+        Only aggregate counts are retained. Signals do not suspend, serialize,
+        authorize or publish work, and a missing sample is never invented.
+        """
+        if type(point) not in (ControlPoint, PhaseBoundary):
+            raise ConsumptionError('A typed internal control point is required')
+        work = self._work
+        with work._lock:
+            if work._active is not self:
+                raise ConsumptionError('The invocation is no longer active')
+            values, sources = self._observe(work._sample())
+            self._observe_budgets(values)
+            self._controls['checks'] += 1
+            if type(point) is ControlPoint:
+                entry = self._controls['intervals'].setdefault(point.metric,
+                    {'interval': INTERVALS[point.metric], 'checks': 0, 'last_completed': 0})
+                entry['checks'] += 1
+                entry['last_completed'] = point.completed
+            else:
+                entry = self._controls['phases'].setdefault(point.phase, {'start': 0, 'end': 0})
+                entry[point.edge] += 1
+            return {'measured': {name: _metric(value, 'bytes' if name == 'rss_peak_bytes' else 'ns',
+                    sources[name], {'cpu_ns': 'current_process_all_threads_interval',
+                        'wall_ns': 'monotonic_interval', 'rss_peak_bytes': 'current_process_lifetime_peak'}[name])
+                    for name, value in values.items()},
+                    'soft_budget_exceeded': bool(self._events), 'control_checks': self._controls['checks']}
+
     def finish(self):
         work = self._work
         with work._lock:
             if work._active is not self:
                 raise ConsumptionError('The invocation is no longer active')
-            end = work._sample()
-            values, sources = {}, {}
-            for metric, source in (('cpu_ns', 'cpu_source'), ('wall_ns', 'wall_source'),
-                                   ('rss_peak_bytes', 'rss_source')):
-                before, after = getattr(self._start, metric), getattr(end, metric)
-                same_source = getattr(self._start, source) == getattr(end, source)
-                sources[metric] = getattr(end, source) if same_source else 'changed_measurement_source'
-                values[metric] = (after if metric == 'rss_peak_bytes' else after - before) if (
-                    same_source and before is not None and after is not None and after >= before) else None
+            values, sources = self._observe(work._sample())
+            self._observe_budgets(values)
+            for metric in values:
                 combine = _peak if metric == 'rss_peak_bytes' else _sum
                 work._totals[metric] = combine(work._totals[metric], values[metric])
                 previous_source = work._sources[metric]
@@ -160,6 +223,7 @@ class InvocationConsumption:
             for kind in self._peaks:
                 work._peaks[kind] = max(work._peaks[kind], self._peaks[kind])
             work._calls += 1
+            work._control_checks += self._controls['checks']
             work._active = None
             scopes = {'cpu_ns': 'current_process_all_threads_interval',
                       'wall_ns': 'monotonic_interval', 'rss_peak_bytes': 'current_process_lifetime_peak'}
@@ -173,21 +237,14 @@ class InvocationConsumption:
                 return {kind + '_peak_bytes': _metric(value, 'bytes', 'explicit_byte_registrations',
                     'registered_own_bytes_only', kind='accounted') for kind, value in peaks.items()}
 
-            events = []
-            for target, observed, factor in (
-                ('cpu', values['cpu_ns'], 1000000), ('wall', values['wall_ns'], 1000000),
-                ('step_cpu', values['cpu_ns'], 1000000), ('step_wall', values['wall_ns'], 1000000),
-                ('memory', self._peaks['memory'], 1), ('scratch', self._peaks['scratch'], 1)):
-                budget = self._policy['effective_budgets'][target]
-                if observed is not None and observed > budget['value'] * factor:
-                    events.append({'metric': target, 'target': budget['value'], 'target_unit': budget['unit'],
-                                   'observed': observed, 'observed_unit': 'ns' if factor > 1 else 'bytes'})
+            events = [deepcopy(self._events[name]) for name in ('cpu', 'wall', 'step_cpu', 'step_wall', 'memory', 'scratch') if name in self._events]
             return {'format_version': 'runtime-consumption-v1', 'policy_version': self._policy['policy_version'],
                     'profile': self._policy['profile'], 'effective_budgets': deepcopy(self._policy['effective_budgets']),
                     'invocations_recorded': work._calls,
-                    'invocation': {'measured': measured(values), 'accounted': accounted(self._peaks)},
+                    'invocation': {'measured': measured(values), 'accounted': accounted(self._peaks),
+                                   'controls': deepcopy(self._controls)},
                     'cumulative': {'measured': measured(work._totals, cumulative=True),
-                                   'accounted': accounted(work._peaks)},
+                                   'accounted': accounted(work._peaks), 'control_checks': work._control_checks},
                     'soft_budget_exceeded': bool(events), 'events': events,
                     'observation_scope': 'explicit_in_process_invocations',
                     'includes_child_processes': False, 'host_capacity_known': False,

@@ -61,7 +61,56 @@ Der Aufrufer schließt ein begonnenes Fenster auch im Fehlerfall in seinem
 
 Der Zustand bleibt prozesslokal und erteilt keine Fortsetzungs- oder
 Schreibberechtigung. Native Messungen laufen außerhalb der reinen SRX-Auswertung.
-Persistente Work-Identität, Wiederaufnahme, Phasensummen, Kontrollintervalle und
-vollständige Runtime-/Plattformabnahme folgen in den dafür vorgesehenen Schritten.
-Die Requirements 0576, 0577, 0594 und 0595 erhalten begrenzte Teilnachweise;
-0578 bleibt bis zur Kontrollpunktintegration offen.
+Persistente Work-Identität, Wiederaufnahme, Phasensummen und vollständige
+Runtime-/Plattformabnahme folgen in den dafür vorgesehenen Schritten. Die
+Requirements 0576–0578, 0594 und 0595 enthalten begrenzte Teilnachweise.
+
+
+## Kontrollierte eingebettete Arbeit
+
+`specroad.runtime.controlled` bietet ausdrücklich angeforderte Adapter für
+`evaluate_srx(program, context, call)`, `load_srx_graph(sources, call, rule_id=...)`,
+`fingerprint_file(boundary, path, call, block_size=...)` und
+`publish_prepared(preflight, journal, call, held_lock=..., authority=..., gates=...)`.
+Sie verwenden ein begonnenes `InvocationConsumption`-Fenster. Der Aufrufer
+schließt es auch bei einem Fachfehler mit `finish()` in seinem `finally`-Pfad ab.
+
+SRX liefert reine Fortschrittssignale nach jeweils 512 Expression-Dispatches;
+seine geladenen Graphzugriffe nach jeweils 128 Knotenentnahmen/Kantenverarbeitungen.
+Der Payloadhasher fordert höchstens 64 KiB und höchstens die bis zum nächsten
+Kontrollpunkt fehlenden Bytes an. Kurze Reads werden fortgezählt; jede 64-KiB-Grenze
+wird vor dem nächsten Read beobachtet. Die bisherige deterministische SRX-
+Verbrauchsrechnung behält ihre bisherigen Zähler, Ereignisse und Fachresultate.
+Auch eine gefilterte Kante zählt als tatsächlich bearbeitete Kante.
+
+Die reinen SRX-Generatoren rufen weder Uhr noch Messprovider auf. Nur der äußere,
+synchrone Treiber nimmt bei einem Signal eine Messung vor. Phasengrenzen liegen
+vor/nach SRX-Validierung und Ergebnisbildung, Graphladen, Auswahl/Sortierung der
+Graphansichten, Payloadhashing und nativer vorbereiteter Veröffentlichung.
+Ein Fehler erzeugt keinen erfolgreichen Endmarker der unvollendeten Phase.
+Native Operationen werden erst nach ihrer Rückgabe wieder kontrolliert.
+
+Die Veröffentlichung delegiert an den bestehenden nativen Writer und benötigt
+weiterhin dessen Preflight, gehaltenen Lock und ausdrückliche Autorität. Ein
+weiches Budget pausiert oder verweigert sie nicht. Ihr Ergebnis bleibt
+`PublishedFiles` im Zustand `committing`: dauerhafte Receipts und Finalisierung
+sind weiter nötig. Der Messadapter behauptet weder Rollback noch neue Schreibrechte.
+
+`invocation.controls` enthält aggregierte Kontrollzahlen, keine wachsende Liste
+aller Messungen. Intervallpositionen gelten für den jeweiligen Kernel; sie sind
+keine globale Vollständigkeits- oder Wiederaufnahmekennung. Die kumulierte Zahl
+abgeschlossener Kontrollen steht unter `cumulative.control_checks`.
+`durable_checkpoint=false` bleibt ausdrücklich erhalten.
+
+Fehlt eine Zwischenmessung, läuft ein Zähler rückwärts oder ändert sich seine
+Quelle, bleibt diese Messgröße für das gesamte Fenster unbekannt. Andere gültige
+Messgrößen bleiben nutzbar. Ein zuvor tatsächlich beobachtetes weiches
+Überschreitungsereignis wird nicht durch einen späteren Messausfall gelöscht.
+Kann die kumulierte Zahl nicht mehr im aktiven JSON-Zahlenvertrag dargestellt
+werden, wird sie unbekannt; das bereits vollständig berechnete Fachresultat bleibt
+verfügbar. Es wird weder ein Ersatzwert noch ein Hostlimit erfunden.
+
+Diese Adapter decken die genannten vorhandenen Kerne ab. Der Environment-Check
+misst weiterhin seinen beschriebenen W-Abschnitt. Eine allgemeine Einbindung in
+sämtliche Command-/Snapshot-/Streaming-Verbraucher, persistente Work-Zustände,
+Phasensummen, Kindprozesse und weitere Plattformadapter sind damit nicht abgenommen.

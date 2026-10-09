@@ -5,10 +5,17 @@ from .errors import SrxError
 from ._quantifier_iteration import QuantifierIteration
 from ._operations import apply_values, boolean_value, leaf_value
 from .graph_validation import GRAPH_OPERATORS
-from .graph_operations import direct_graph_operation, ReachabilityIteration
+from .graph_operations import direct_graph_operation_steps, ReachabilityIteration
+from ..runtime.control_points import complete_steps
 
 
 def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/expression", item_scope=None, numeric_policy=None, meter=None):
+    return complete_steps(expression_steps(expression, roots, rule_id=rule_id, graph=graph,
+        pointer=pointer, item_scope=item_scope, numeric_policy=numeric_policy, meter=meter))
+
+
+def expression_steps(expression, roots, *, rule_id, graph=None, pointer="/expression",
+                     item_scope=None, numeric_policy=None, meter=None, controls=None):
     # Every continuation carries roots and item; nested BFS never recurses here.
     work = [("visit", expression, pointer, item_scope, roots)]
     values = []
@@ -48,11 +55,11 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
                 work.append(("visit", cursor.predicate, at+"/where", cursor.item_scope(), current_roots))
             continue
         if action == "reachable_item":
-            node.accept(values.pop())
+            yield from node.accept_steps(values.pop(), controls)
             if node.done:
                 values.append(node.result)
             else:
-                candidate = node.next_roots()
+                candidate = yield from node.next_roots_steps(controls)
                 work.append(("reachable_item", node, at, scope, current_roots))
                 work.append(("visit", node.node["where"], at+"/where", scope, candidate))
             continue
@@ -62,11 +69,12 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
         if op in GRAPH_OPERATORS:
             if op == "reachable":
                 cursor = ReachabilityIteration(node, current_roots, graph=graph, rule_id=rule_id, at=at, meter=meter)
-                candidate = cursor.next_roots()
+                candidate = yield from cursor.next_roots_steps(controls)
                 work.append(("reachable_item", cursor, at, scope, current_roots))
                 work.append(("visit", node["where"], at+"/where", scope, candidate))
             else:
-                values.append(direct_graph_operation(node, current_roots, graph=graph, rule_id=rule_id, at=at, meter=meter))
+                values.append((yield from direct_graph_operation_steps(node, current_roots, graph=graph,
+                    rule_id=rule_id, at=at, meter=meter, controls=controls)))
         elif op in ("literal", "field"):
             values.append(leaf_value(node, current_roots, rule_id=rule_id, at=at, item_scope=scope))
         elif op in UNARY_OPERATORS:
@@ -89,4 +97,8 @@ def evaluate_expression(expression, roots, *, rule_id, graph=None, pointer="/exp
         else:
             raise SrxError("unsupported_operator", rule_id=rule_id, pointer=at+"/op",
                            expected="supported operator", actual="string")
+        if controls is not None:
+            point = controls.advance('srx_steps')
+            if point is not None:
+                yield point
     return values[0]

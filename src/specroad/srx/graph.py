@@ -9,6 +9,7 @@ from ..model.errors import ModelError
 from ._json_values import JsonSnapshot, json_type
 from .comparisons import compare
 from .errors import SrxError
+from ..runtime.control_points import PhaseBoundary, complete_steps
 
 
 @dataclass(frozen=True, init=False)
@@ -79,24 +80,53 @@ class LoadedGraph:
         return identifier
 
     def neighbours(self, identifier, direction, types, *, meter=None, pointer="/expression"):
-        # Stored type selectors also match their computed incoming views.
+        return complete_steps(self.neighbours_steps(identifier, direction, types, meter=meter, pointer=pointer))
+
+    def neighbours_steps(self, identifier, direction, types, *, meter=None, pointer="/expression", controls=None):
+        # The legacy deterministic work charge remains unchanged. Operational
+        # controls follow the actual per-edge processing below, not this batch.
+        if controls is not None:
+            yield PhaseBoundary('graph_views', 'start')
         views = self._index.for_artifact(identifier, direction=direction)
+        if controls is not None:
+            yield PhaseBoundary('graph_views', 'end')
         if meter is not None:
             meter.add("graph_steps", len(views), pointer=pointer)
-        return tuple(view for view in views if types == "*" or
-                     view.type in types or view.stored.relation.type in types)
+        selected = []
+        for view in views:
+            if types == "*" or view.type in types or view.stored.relation.type in types:
+                selected.append(view)
+            if controls is not None:
+                point = controls.advance('graph_steps')
+                if point is not None:
+                    yield point
+        return tuple(selected)
 
     def candidate_roots(self, roots, identifier, *, rule_id, meter=None, pointer="/expression"):
+        return complete_steps(self.candidate_roots_steps(roots, identifier, rule_id=rule_id,
+                                                        meter=meter, pointer=pointer))
+
+    def candidate_roots_steps(self, roots, identifier, *, rule_id, meter=None,
+                              pointer="/expression", controls=None):
         result = dict(roots)
         result["artifact"] = self.artifact(identifier, rule_id=rule_id)
+        if controls is not None:
+            yield PhaseBoundary('graph_views', 'start')
         views = self._index.for_artifact(identifier, direction="both")
+        if controls is not None:
+            yield PhaseBoundary('graph_views', 'end')
         if meter is not None:
             meter.add("graph_steps", len(views), pointer=pointer)
-        result["relations"] = [
-            {"relation_id": view.relation_id, "type": view.type,
-             "source": view.source.id, "target": view.target.id,
-             "target_type": view.target.artifact_type, "inverse": view.inverse}
-            for view in views]
+        result["relations"] = []
+        for view in views:
+            result["relations"].append(
+                {"relation_id": view.relation_id, "type": view.type,
+                 "source": view.source.id, "target": view.target.id,
+                 "target_type": view.target.artifact_type, "inverse": view.inverse})
+            if controls is not None:
+                point = controls.advance('graph_steps')
+                if point is not None:
+                    yield point
         return result
 
 

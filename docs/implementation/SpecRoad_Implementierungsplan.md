@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 256
-last_completed_plan_commit: 6.d.W
-next_plan_commit: 6.d.R
-last_completed_numbered_bundle: 107
+implementation_plan_commits_completed: 257
+last_completed_plan_commit: 6.d.R
+next_plan_commit: 6.d.C
+last_completed_numbered_bundle: 108
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5340,12 +5340,50 @@ Dev-/Apply-Tests und Commit gilt Position 256/885; danach folgt 6.d.R.
 
 #### 6.d.R – Make it Right
 
-- [ ] **6.d.R** · Position **257/885** · Voraussetzung: `6.d.W`.
+- [x] **6.d.R** · Position **257/885** · Voraussetzung: `6.d.W`.
 **Exakte Commit-Message:** `6.d.R feat(work): Verbrauchsbilanz und Kontrollpunkte vervollständigen`
 
 **Vervollständigung:** Unbekannte Messwerte als unknown/null führen; Kontrollintervalle gemäß O.2 instrumentieren.
 
 **Verhaltensabnahme:** Graph-, SRX- und Payloadgrenzen lösen Kontrollen aus, aber keine erfundenen Verbrauchswerte. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 108:** Basis ist das vollständig geprüfte Result von
+Bundle 107: Commit `6c692700e5cec8f360424347be843afef55bfe02`, 6.340 erfolgreiche
+parallele Apply-Tests, sauberer Zustand und 1.514 übereinstimmende Snapshotdateien.
+
+Reine kooperative SRX-/Graph-Generatoren geben nach 512 Expression-Dispatches
+beziehungsweise 128 tatsächlich verarbeiteten Knoten/Kanten Kontrollsignale aus.
+Die bisherige Fachauswertung kann denselben Kern ohne Messungen vollständig
+abarbeiten. Ihre bestehenden deterministischen Verbrauchszähler und Fehlerdaten
+bleiben gleich. Der gemeinsame Bytehasher gibt bei angeforderter Kontrolle nach
+je 64 KiB tatsächlich gelesenen Bytes ab; kurze Reads überspringen keine Grenze.
+Ein äußerer Runtime-Treiber liest die nativen Messwerte, ohne sie in SRX-Ergebnisse,
+Graphwerte oder Payloadhashes einzubauen.
+
+Phasenkontrollen umfassen tatsächliches Graphladen, Auswahl/Sortierung geladener
+Ansichten, SRX-Vorbereitung/-Ergebnisbildung, Payloadhashing und den bestehenden
+nativen Veröffentlichungsweg. Dessen gehaltene Locks, Autorisierung, exakte
+Zielbytes, Fehler und verbleibende Receipt-/Finalisierungspflicht bleiben erhalten.
+Weiche Überschreitungen lösen keine freiwillige Pause im Commit aus. Fehlende,
+rückwärts laufende oder quellenwechselnde Zwischenmessungen bleiben je Messgröße
+unbekannt; andere gültige Messungen bleiben verwendbar. Bereits beobachtete
+weiche Ereignisse bleiben erhalten. Nicht mehr darstellbare kumulierte Zahlen
+werden unbekannt, statt die fachliche Ergebnislieferung zu zerstören.
+
+46 neue Verhaltensfälle prüfen echte Intervallgrenzen, vollständige SRX-Parität,
+spätere Auswertungsfehler, Graphkanten einschließlich Filter und Kandidatenwurzeln,
+native schreibfreie Payloads, kurze/abweichende Reads, Sicherheitsgrenzen,
+Messausfälle und echte vorbereitete native Publikation im eigenen Testprojekt.
+Alle 6.340 bisherigen Fälle bleiben unverändert. 0578 erhält einen Teilnachweis;
+die übrigen vier Teilnachweise werden präzisiert. Der Zustand hält nur begrenzte
+Kontrollaggregate, keine wachsende Messliste und keinen dauerhaften Checkpoint.
+
+Die Abnahme gilt für diese expliziten vorhandenen Kerne. Sämtliche übrigen
+Command-/Snapshot-/Streaming-Verbraucher, vollständige Phasensummen, Bootstrap
+und Lieferung, Kindprozesse, persistente Work-Identität und vollständige
+Runtime-/Plattformabnahme bleiben ihren weiteren Implementierungsschritten
+zugeordnet. Erst erfolgreiche vollständige parallele Dev-/Apply-Tests und Commit
+bestätigen Position 257/885. Danach folgt die strukturelle Bereinigung 6.d.C.
 
 #### 6.d.C – Make it Clean
 

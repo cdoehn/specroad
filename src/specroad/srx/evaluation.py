@@ -60,3 +60,36 @@ def evaluate_with_usage(program, context):
     """Return owned result and work observations; soft targets never truncate it."""
     value, usage = _run(program, context)
     return EvaluationObservation(value, usage, rule_id=program.rule_id)
+
+
+def evaluation_steps(program, context):
+    """Yield pure control signals, returning the complete original observation.
+
+    The generator does not read clocks or call an observer. Its driver owns any
+    operational measurements. It is an in-process cursor, not durable resume.
+    """
+    from ..runtime.control_points import ControlIntervals, PhaseBoundary
+    from ._machine import expression_steps
+    if type(program) is not SrxProgram:
+        raise SrxError("program_required", rule_id=None, expected="SrxProgram", actual="non_program")
+    if type(context) is not EvaluationContext:
+        raise SrxError("context_required", rule_id=program.rule_id,
+                       expected="EvaluationContext", actual="non_context", subject="context")
+    yield PhaseBoundary('srx_validation', 'start')
+    document = program.document
+    structure = _validate_document(document, program.rule_id,
+                                   structure_limits=context.resource_policy.structure)
+    yield PhaseBoundary('srx_validation', 'end')
+    meter = WorkMeter(context.resource_policy, structure)
+    yield PhaseBoundary('srx_evaluation', 'start')
+    try:
+        value = yield from expression_steps(document["expression"], context.data, rule_id=program.rule_id,
+            graph=context.graph, numeric_policy=context.numeric_policy, meter=meter, controls=ControlIntervals())
+    except SrxError as error:
+        error.resource_usage = meter.observation(False)
+        raise
+    yield PhaseBoundary('srx_evaluation', 'end')
+    yield PhaseBoundary('srx_result', 'start')
+    result = EvaluationObservation(value, meter.observation(True), rule_id=program.rule_id)
+    yield PhaseBoundary('srx_result', 'end')
+    return result

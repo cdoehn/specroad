@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0578",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "R: trusted synchronous operational drivers; complete explicit SRX inputs and owned temporary payload/transaction roots; fixture-labelled samples only for exact arithmetic/failure injection."
+  ],
+  "steps": [
+    "Drive real SRX/graph and bounded native payload work through pure interval signals; compare complete results and byte hashes with the unobserved execution.",
+    "Check intermediate unknown/regression/source changes, actual native publication phase boundaries and unchanged authority/receipt contracts for the selected cases."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Budgetüberwachung MUSS die begrenzten internen Kontrollintervalle aus Anhang O.2 ohne externe Überwachungsprozesse einhalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual SRX dispatches yield at every 512 units, loaded-graph node/edge processing at every 128 units, and a guarded hashing reader at every 65536 actual bytes including short reads. Real runtime drivers sample these pure signals. Phase edges bracket validation, results, graph load/view sorting, hashing and the existing native prepared publication. Signals neither grant authority nor finalize receipts."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    7
+  ],
+  "json_pointers": [
+    "/summary/runtime/invocation/controls",
+    "/summary/runtime/cumulative/control_checks"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,42 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_runtime_consumption_right.py::test_actual_srx_dispatch_boundaries_preserve_complete_value_and_usage[1022]",
+    "tests/test_runtime_consumption_right.py::test_actual_srx_dispatch_boundaries_preserve_complete_value_and_usage[1023]",
+    "tests/test_runtime_consumption_right.py::test_actual_srx_dispatch_boundaries_preserve_complete_value_and_usage[509]",
+    "tests/test_runtime_consumption_right.py::test_actual_srx_dispatch_boundaries_preserve_complete_value_and_usage[510]",
+    "tests/test_runtime_consumption_right.py::test_actual_srx_dispatch_boundaries_preserve_complete_value_and_usage[511]",
+    "tests/test_runtime_consumption_right.py::test_closed_invocation_cannot_execute_another_real_srx_or_payload_operation",
+    "tests/test_runtime_consumption_right.py::test_control_intervals_reject_a_jump_over_an_unobserved_boundary",
+    "tests/test_runtime_consumption_right.py::test_control_reports_are_detached_and_retain_constant_size_aggregate_fields",
+    "tests/test_runtime_consumption_right.py::test_graph_controls_cover_candidate_roots_and_filtered_edges_without_result_changes[filtered_has]",
+    "tests/test_runtime_consumption_right.py::test_graph_controls_cover_candidate_roots_and_filtered_edges_without_result_changes[reach]",
+    "tests/test_runtime_consumption_right.py::test_graph_edge_controls_happen_inside_real_adjacency_processing[127]",
+    "tests/test_runtime_consumption_right.py::test_graph_edge_controls_happen_inside_real_adjacency_processing[128]",
+    "tests/test_runtime_consumption_right.py::test_graph_edge_controls_happen_inside_real_adjacency_processing[129]",
+    "tests/test_runtime_consumption_right.py::test_graph_edge_controls_happen_inside_real_adjacency_processing[256]",
+    "tests/test_runtime_consumption_right.py::test_guarded_measured_reader_does_not_follow_symlink_or_remove_source",
+    "tests/test_runtime_consumption_right.py::test_measured_native_publication_retains_exact_targets_and_incomplete_receipt_state",
+    "tests/test_runtime_consumption_right.py::test_measured_publication_keeps_native_authority_refusal_and_all_existing_bytes",
+    "tests/test_runtime_consumption_right.py::test_payload_controls_are_actual_byte_boundaries_including_short_reads[0]",
+    "tests/test_runtime_consumption_right.py::test_payload_controls_are_actual_byte_boundaries_including_short_reads[131072]",
+    "tests/test_runtime_consumption_right.py::test_payload_controls_are_actual_byte_boundaries_including_short_reads[65535]",
+    "tests/test_runtime_consumption_right.py::test_payload_controls_are_actual_byte_boundaries_including_short_reads[65536]",
+    "tests/test_runtime_consumption_right.py::test_payload_controls_are_actual_byte_boundaries_including_short_reads[65537]",
+    "tests/test_runtime_consumption_right.py::test_payload_failures_preserve_error_and_never_emit_successful_phase_end[growing]",
+    "tests/test_runtime_consumption_right.py::test_payload_failures_preserve_error_and_never_emit_successful_phase_end[oversized_block]",
+    "tests/test_runtime_consumption_right.py::test_payload_failures_preserve_error_and_never_emit_successful_phase_end[short]",
+    "tests/test_runtime_consumption_right.py::test_pure_control_generator_reads_no_native_clock_or_sampler",
+    "tests/test_runtime_consumption_right.py::test_real_graph_loading_has_observed_phase_edges_and_identical_loaded_records",
+    "tests/test_runtime_consumption_right.py::test_real_guarded_payload_driver_keeps_bytes_and_hash_and_samples_each_signal",
+    "tests/test_runtime_consumption_right.py::test_real_runtime_driver_samples_controls_without_changing_srx_inputs_or_policy",
+    "tests/test_runtime_consumption_right.py::test_srx_control_is_yielded_before_later_real_failure_and_cannot_claim_completion",
+    "tests/test_runtime_consumption_right.py::test_untyped_control_cannot_invoke_native_sampling_or_change_counts[None]",
+    "tests/test_runtime_consumption_right.py::test_untyped_control_cannot_invoke_native_sampling_or_change_counts[control]",
+    "tests/test_runtime_consumption_right.py::test_untyped_control_cannot_invoke_native_sampling_or_change_counts[point1]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Measured scope remains explicit in-process windows and the controlled SRX/loaded-graph, payload-hash and native prepared-publication drivers. Pure control signals are not durable checkpoints. Whole-command bootstrap/final delivery, all-phase subtotals, all remaining consumers, child processes, persistent Work identity/resume, other RSS platform adapters and full runtime/platform performance acceptance remain open. Graph input completeness and native publication authority remain independent existing contracts; PublishedFiles still requires receipt finalization."
   ]
 }

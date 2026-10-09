@@ -11,17 +11,20 @@
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
   "preconditions": [
-    "Current trusted runtime and real CLI/request/registry consumers; explicit process-local ledgers and clearly named counter fixtures for exact arithmetic."
+    "Current trusted runtime and real CLI/request/registry consumers; explicit process-local ledgers and clearly named counter fixtures for exact arithmetic.",
+    "R: trusted synchronous operational drivers; complete explicit SRX inputs and owned temporary payload/transaction roots; fixture-labelled samples only for exact arithmetic/failure injection."
   ],
   "steps": [
     "Run real environment commands with and without --metrics, including explicit selected-project error outcomes.",
     "Reuse one owned ledger across completed windows and compare independent CPU/wall sums, RSS peaks and registered byte peaks.",
-    "Check machine values, measurement sources, unchanged semantic payloads and project inventories."
+    "Check machine values, measurement sources, unchanged semantic payloads and project inventories.",
+    "Drive real SRX/graph and bounded native payload work through pure interval signals; compare complete results and byte hashes with the unobserved execution.",
+    "Check intermediate unknown/regression/source changes, actual native publication phase boundaries and unchanged authority/receipt contracts for the selected cases."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS verbrauchte CPU-Zeit und verstrichene Zeit als getrennte betriebliche Größen nach Anhang O.2 behandeln.",
-    "scope": "Real CLI, structured and registry consumers expose separate process CPU and monotonic wall intervals. Explicit arithmetic fixtures check their distinct cumulative totals and omit gaps between invocation windows. Native sources are read without an external monitor."
+    "scope": "Real CLI, structured and registry consumers expose separate process CPU and monotonic wall intervals. Explicit arithmetic fixtures check their distinct cumulative totals and omit gaps between invocation windows. Native sources are read without an external monitor. R keeps unavailable, regressing or source-changing intermediate counters unknown through completion and preserves unrelated measurements. Pure SRX generators themselves never read clocks."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -52,9 +55,21 @@
     "tests/test_runtime_consumption.py::test_reused_work_adds_real_command_windows_without_cumulative_budget_refusal",
     "tests/test_runtime_consumption.py::test_unknown_sample_does_not_become_zero_in_cumulative_measurement[cpu_ns]",
     "tests/test_runtime_consumption.py::test_unknown_sample_does_not_become_zero_in_cumulative_measurement[rss_peak_bytes]",
-    "tests/test_runtime_consumption.py::test_unknown_sample_does_not_become_zero_in_cumulative_measurement[wall_ns]"
+    "tests/test_runtime_consumption.py::test_unknown_sample_does_not_become_zero_in_cumulative_measurement[wall_ns]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[regression-cpu_ns]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[regression-rss_peak_bytes]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[regression-wall_ns]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[source_change-cpu_ns]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[source_change-rss_peak_bytes]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[source_change-wall_ns]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[unknown-cpu_ns]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[unknown-rss_peak_bytes]",
+    "tests/test_runtime_consumption_right.py::test_incomplete_intermediate_samples_stay_unknown_after_later_valid_finish[unknown-wall_ns]",
+    "tests/test_runtime_consumption_right.py::test_pure_control_generator_reads_no_native_clock_or_sampler",
+    "tests/test_runtime_consumption_right.py::test_real_runtime_driver_samples_controls_without_changing_srx_inputs_or_policy",
+    "tests/test_runtime_consumption_right.py::test_unrepresentable_accumulated_cpu_remains_unknown_instead_of_breaking_json_report"
   ],
   "open_items": [
-    "Partial 6.d.W scope: parsed-command preparation through result assembly and explicit embedded windows only. Interpreter bootstrap/earlier parsing, final delivery, child processes, all-phase subtotals, periodic checkpoints, durable Work identity/resume, other RSS platform adapters and complete runtime/platform performance acceptance remain open. Native RSS is a current-process lifetime peak, not exclusive per-work memory or host capacity. Exact arithmetic fixtures are not benchmarks."
+    "Measured scope remains explicit in-process windows and the controlled SRX/loaded-graph, payload-hash and native prepared-publication drivers. Pure control signals are not durable checkpoints. Whole-command bootstrap/final delivery, all-phase subtotals, all remaining consumers, child processes, persistent Work identity/resume, other RSS platform adapters and full runtime/platform performance acceptance remain open. Graph input completeness and native publication authority remain independent existing contracts; PublishedFiles still requires receipt finalization."
   ]
 }

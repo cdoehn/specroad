@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from ..security.errors import SafetyViolation
+from ..runtime.control_points import ControlIntervals, PhaseBoundary, complete_steps
 
 
 @dataclass(frozen=True)
@@ -22,17 +23,34 @@ def validate_block_size(block_size):
 
 
 def fingerprint_reader(read, expected_size, *, block_size=65536):
+    return complete_steps(fingerprint_steps(read, expected_size, block_size=block_size, controlled=False))
+
+
+def fingerprint_steps(read, expected_size, *, block_size=65536, controlled=True):
     validate_block_size(block_size)
+    controls = ControlIntervals() if controlled else None
+    if controls is not None:
+        yield PhaseBoundary('payload_hash', 'start')
     digest = sha256()
     count = 0
     while True:
-        block = read(block_size)
+        requested = block_size if controls is None else min(block_size, controls.remaining('payload_bytes'))
+        block = read(requested)
+        if controls is not None and (type(block) is not bytes or len(block) > requested):
+            raise SafetyViolation('Reader did not honor the bounded byte request')
         if not block:
             break
         digest.update(block)
         count += len(block)
         if count > expected_size:
             raise SafetyViolation("Resource grew during inspection")
+        if controls is not None:
+            point = controls.advance('payload_bytes', len(block))
+            if point is not None:
+                yield point
     if count != expected_size:
         raise SafetyViolation("Resource byte count changed during inspection")
-    return ByteFingerprint(count, digest.hexdigest())
+    result = ByteFingerprint(count, digest.hexdigest())
+    if controls is not None:
+        yield PhaseBoundary('payload_hash', 'end')
+    return result

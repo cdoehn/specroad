@@ -39,3 +39,11 @@ class GraphReadContext:
 
     def candidate_roots(self, identifier):
         return self.graph.candidate_roots(self.roots, identifier, rule_id=self.rule_id, meter=self.meter, pointer=self.at)
+
+    def neighbours_steps(self, identifier, controls):
+        return self.graph.neighbours_steps(identifier, self.direction, self.types,
+            meter=self.meter, pointer=self.at, controls=controls)
+
+    def candidate_roots_steps(self, identifier, controls):
+        return self.graph.candidate_roots_steps(self.roots, identifier, rule_id=self.rule_id,
+            meter=self.meter, pointer=self.at, controls=controls)
