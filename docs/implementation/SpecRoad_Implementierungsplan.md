@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 292
-last_completed_plan_commit: 6.p.W
-next_plan_commit: 6.p.R
-last_completed_numbered_bundle: 143
+implementation_plan_commits_completed: 293
+last_completed_plan_commit: 6.p.R
+next_plan_commit: 6.p.C
+last_completed_numbered_bundle: 144
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6662,12 +6662,38 @@ partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.p.R – Make it Right
 
-- [ ] **6.p.R** · Position **293/885** · Voraussetzung: `6.p.W`.
+- [x] **6.p.R** · Position **293/885** · Voraussetzung: `6.p.W`.
 **Exakte Commit-Message:** `6.p.R feat(work): Atomarer Write über mehrere Vorbereitungsphasen vervollständigen`
 
 **Vervollständigung:** Kein freiwilliger Promptwechsel während committing; echter Abbruch geht ausschließlich durch Recovery.
 
 **Verhaltensabnahme:** Nach Pause bleibt Basis regulär lesbar; Crash während Veröffentlichung folgt M5 statt normalen Work-Resume. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 144):** Zwölf zusätzliche
+Verhaltenstests ergänzen die unveränderten W-Nachweise. Zwei frische
+Prozesswechsel bestätigen lesbare Basis und freigegebene Locks nach einer
+beziehungsweise beiden Vorbereitungen. Sechs echte Prozessabbrüche erfolgen
+nach nativen Building-/Staging-Aufrufen, dem ersten tatsächlichen Dateiwechsel,
+allen Veröffentlichungen, dem bestätigten Commit und der Bereinigung. Die
+Interpreter enden ohne Exception-Aufräumen. Normale Work-Fortsetzung beseitigt
+keinen nativen Recoveryblocker. Ein weiterer Prozess stellt über M5 exakt die
+vollständige Basis oder das vollständige Ziel her; der letzte Work-Checkpoint
+bleibt bytegleich. Wiederholung nach Fachcommit liefert das ursprüngliche
+Receipt und erzeugt keinen zweiten Write. Diese Nachweise behaupten keine
+Stromausfallsicherheit oder allgemeine Dateisystemgarantie.
+
+Der Adapter verbindet vor seiner Ergebnisausgabe die unabhängig gelesenen
+Request- und Transaktionsnachweise anhand von Request, Projekt, Transaktion,
+Zielwurzel und exaktem Receipt-Verweis. Vier Fälle mit tatsächlich erzeugten,
+einzeln gültigen, jedoch unterschiedlichen nativen Nachweisen werden als
+Konflikt abgewiesen, sowohl beim Replay als auch nach frischem Commit. Ein
+bereits erfolgter Commit und die tatsächlichen Dateien bleiben erhalten.
+
+Die geschlossene Host-Anbindung bleibt ohne CLI-/Code-8-Registrierung und ohne
+finalen normativen Work-Abschluss. Inkrementeller großer Planaufbau und feinere
+speicherbegrenzte Vorbereitung bleiben offen; beide Requirement-Nachweise
+bleiben partiell. Erst vollständiger paralleler Apply-Test und Commit
+bestätigen 293/885; anschließend folgt 6.p.C.
 
 #### 6.p.C – Make it Clean
 

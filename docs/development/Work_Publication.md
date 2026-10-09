@@ -42,13 +42,32 @@ Native Fehler erhalten ihr tatsächliches Journal, vorhandene Receipts und
 bereits geänderte Bytes. Ein unterbrochener Transaktionsstand blockiert normale
 Work-Fortsetzung und muss über den bestehenden Recoveryvertrag behandelt
 werden. Es gibt weder automatischen Retry noch Rücksetzen auf vermutete
-Vorherzustände. Die Fehlertests dieses ersten Schritts verwenden echte native
-Dateioperationen mit gezielt ausgelösten I/O-Fehlern; sie behaupten keinen
-Prozessabbruch- oder Stromausfallnachweis.
+Vorherzustände. Zusätzlich zu den I/O-Fehlertests beenden separate Testprozesse
+den Interpreter nach Building, Staging, dem ersten tatsächlichen Dateiwechsel,
+allen Dateiwechseln, dem bestätigten Commit und der Bereinigung. Ohne
+Python-Aufräumen bleiben die tatsächlichen nativen Betriebsdaten erhalten.
+Ein anderer Prozess führt ausschließlich den vorhandenen Recoverypfad aus;
+er stellt die vollständige Basis oder das vollständige Ziel her. Der letzte
+Vorbereitungscheckpoint bleibt dabei bytegleich. Diese Nachweise gelten für
+Prozessverlust im geprüften Dateisystem, nicht für Stromausfallgarantien.
+
+Nach Recovery auf die Basis kann derselbe vollständig gebundene Auftrag mit
+einer neuen technischen Transaktions-ID erneut veröffentlicht werden. Nach
+gesichertem Fachcommit liefert der Adapter nur das ursprüngliche Receipt.
+Ein solcher historischer Replay räumt einen noch vorhandenen nativen
+Lock-/Transaktionsstand nicht auf; normale Projektarbeit benötigt weiterhin
+den expliziten Recoveryabschluss.
 
 `NormativeWorkPublication` liefert einen unveränderlichen, maschinenlesbaren
 Transaktionsnachweis. Sein `result_object` stammt aus dem bestätigten nativen
-Request-Receipt. Technischer Work-Abschluss und endgültige Ergebnislieferung
+Request-Receipt. Vor der Ausgabe werden Request-ID, Projekt-ID,
+Transaktions-ID, Zielwurzel und der exakte Request-Receipt-Verweis mit dem
+Transaktionsnachweis verbunden. Widersprüchliche, einzeln gültige Beobachtungen
+werden als `normative_receipt_binding_changed` mit Code 6 abgewiesen. Ein bereits
+erfolgter Commit bleibt erhalten; ein erneuter expliziter Aufruf prüft dessen
+Receipt, statt fachlich erneut zu schreiben.
+
+Technischer Work-Abschluss und endgültige Ergebnislieferung
 werden damit nicht fingiert: der Vorbereitungscheckpoint bleibt erhalten,
 `work_completion_recorded` ist `false`. Der historische Replay bestätigt
 keinen inzwischen geänderten aktuellen Projektstand.
