@@ -37,7 +37,11 @@ geschlossene JSON-Felder, Versionen, registrierte Commandklasse, explizit
 erwartete Tool-Bindung, alle referenzierten Bytes und Hashes sowie die
 vollständige Partition. Fehlende Originalbytes werden nicht aus Hashes
 rekonstruiert. Werte aus `as_dict()` und `entries(kind)` sind abgelöste Kopien;
-Objektbytes sind unveränderlich. Ungültige Manifestdaten werden verworfen.
+Objektbytes sind unveränderlich. Der Objektspeicher akzeptiert ein natives
+`dict` oder den bereits geprüften unveränderlichen Speicher dieses Codecs.
+Auch unreferenzierte Einträge müssen native Bytes unter ihrem tatsächlichen
+SHA-256 sein. Beliebige Mappings und Mapping-Proxys werden nicht ausgewertet.
+Ungültige Manifestdaten werden mit `WorkManifestError` verworfen.
 
 Die Prüfsummen belegen Datenkonsistenz, keine Herkunft oder Berechtigung.
 Insbesondere ist eine Erledigterklärung ein Planerdatum und kein unabhängiger
@@ -48,13 +52,38 @@ in sich konsistente Fremddeklaration benötigt vor späterer Ausführung weiterh
 eine extern erwartete Auftragsbindung. Diese Daten erteilen keine
 `VerifiedContinuation`-Freigabe und aktivieren keine CLI-Fortsetzung.
 
+`read_work_successor(raw, objects, *, previous, registry, expected_tool_build)`
+prüft einen unmittelbaren Nachfolgekandidaten gegen den vom Aufrufer bereits
+vertrauenswürdig gebundenen Vorgänger. `previous` darf nicht erst aus demselben
+fremden Paket übernommen werden. Work-ID, Command, Argumente, Schreibklasse,
+Quellen, Tool, Gesamtplan und ursprüngliche Eingänge müssen gleich bleiben.
+Die Generation steigt genau um eins; mindestens eine weitere Erledigterklärung
+kommt hinzu. Vorherige Erledigtnachweise und sämtliche bisher vorhandenen
+Objektbytes müssen unverändert erhalten sein. Ein bloß erneut gehashtes,
+in sich gültiges Ersatzpaket erfüllt diese Bindung nicht.
+
+Der Leser weist außerdem wiederholte Segmentreferenzen vor erneuter Expansion
+ab. Restaufgaben werden als kanonische JSON-Werte verglichen, damit etwa
+`true` keinen numerischen Bereichswert `1` ersetzen kann. Erledigtnachweise
+folgen der ursprünglichen Aufgabenreihenfolge. Fremde Pythonwerte werden vor
+eigenen Hash-, Vergleichs-, Mapping- oder Serialisierungshooks abgewiesen.
+Die Typzulassung vergleicht Identitäten; fremde Metaklassen gelangen auch bei
+verschachtelten JSON-Werten nicht in Typvergleiche des gemeinsamen Encoders.
+Die Registry bleibt vertrauenswürdiger Anwendungscode, keine Python-Sandbox.
+
 Die 43 neuen Verhaltensfälle prüfen echte temporäre Eingangsbytes, Roundtrips,
 stabile Identität und vollständige Aufteilungen, Segmentbäume bis 4.097 Einheiten,
 fehlende oder veränderte Daten, lokale Pfadgrenzen sowie ausbleibende
 Handleraufrufe und Dateiänderungen. Entropie- und Erledigtfixtures sind als
 solche gekennzeichnet. Bisherige Commandbeschreibungen bleiben unverändert.
 
-Strengere Fremddaten-/Commandbindung folgt in 6.i.R. Work-Root und Locks (6.j),
+67 zusätzliche R-Fälle prüfen diese Bindungs- und Fremddatengrenzen, darunter
+gültig neu gehashte Ersatzaufträge, verlorene oder umgeschriebene Nachweise,
+Generationssprünge und einen vielfach geteilten Segmentbaum. Alle 43 W-Fälle
+bleiben unverändert. JSON-Strings mit codeähnlichem Inhalt bleiben reine Werte;
+kein Parser lädt daraus Module oder führt diese Strings aus.
+
+Work-Root und Locks (6.j),
 konsistente Snapshotaufnahme (6.k), dauerhafte atomare Veröffentlichung (6.l),
 tatsächliche Wiederaufnahme (6.m) und Ausführungs-/Abschlussnachweise (6.n/6.o)
 bleiben eigene Schritte. Es wird kein veröffentlichter Checkpoint, Exitcode 8,

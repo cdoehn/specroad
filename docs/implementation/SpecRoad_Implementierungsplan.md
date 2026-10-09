@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 271
-last_completed_plan_commit: 6.i.W
-next_plan_commit: 6.i.R
-last_completed_numbered_bundle: 122
+implementation_plan_commits_completed: 272
+last_completed_plan_commit: 6.i.R
+next_plan_commit: 6.i.C
+last_completed_numbered_bundle: 123
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5921,12 +5921,44 @@ Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.i.R – Make it Right
 
-- [ ] **6.i.R** · Position **272/885** · Voraussetzung: `6.i.W`.
+- [x] **6.i.R** · Position **272/885** · Voraussetzung: `6.i.W`.
 **Exakte Commit-Message:** `6.i.R feat(work): Work-Identität und geschlossenes Manifest vervollständigen`
 
 **Vervollständigung:** Pickle, Skripte, fremde Pythonobjekte und unbekannte auszuführende Command-IDs ablehnen.
 
 **Verhaltensabnahme:** Manipuliertes Manifest kann keine andere Fachfunktion oder Schreibklasse starten. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 123:** Das vollständig geprüfte Result von Bundle 122
+bestätigt Commit `069b92891141bc260f17f6d1bfaf83460331f611`, 6.707 erfolgreiche
+parallele Apply-Tests, acht identische Payloads und den sauberen Basissnapshot.
+`read_work_successor` bindet den unmittelbaren Nachfolgekandidaten an den vom
+Aufrufer vertrauenswürdig bekannten Vorgänger. Command, Argumente, Work-ID,
+Quellen, Tool und Gesamtplan bleiben fest; Generation und Erledigterklärungen
+müssen fortschreiten. Frühere Nachweise und alle bisherigen Objektbytes bleiben
+unverändert. Selbst konsistent neu gehashte Ersatzaufträge werden abgewiesen.
+
+Der Objektspeicher akzeptiert nur native geprüfte Bytes und keine fremden
+Mapping-Proxys. Geschlossene Felder werden vor fremden Pythonhooks geprüft;
+ungültige strukturierte Commands führen zu typisierter Ablehnung. Wiederholte
+Segmentreferenzen werden vor mehrfacher Expansion verworfen. Kanonischer
+JSON-Vergleich verhindert boolesche Ersatzwerte in numerischen Restbereichen;
+Erledigtnachweise folgen der gebundenen Aufgabenreihenfolge.
+
+67 neue Verhaltenstests prüfen diese Grenzen mit Handler-/Objekthooks als
+Fallen, tatsächlich neu gehashten Ersatzpaketen und einem stark geteilten
+Segmentbaum. Zwei Fälle sichern die identitätsbasierte Typzulassung gegen
+fremde Metaklassen ab, auch vor dem gemeinsamen JSON-Encoder. Alle 269
+bisherigen Testdateien und 6.707 Fälle bleiben bytegleich.
+Die drei bisherigen Requirement-Teilnachweise werden erweitert; SR-TC-0632
+und die vorhandene CLI-Selbstbeschreibung bleiben unverändert.
+
+Der Vorgänger ist eine Vertrauensvoraussetzung des Aufrufers; der Standalone-
+Leser authentifiziert keine beliebigen Fremddaten. Erledigterklärungen bleiben
+Planerdaten, keine unabhängigen Fachausführungsnachweise. Es entstehen weder
+Handlerausführung noch Work-Dateien oder eine Freigabe zur CLI-Fortsetzung.
+Snapshot, Veröffentlichung, tatsächliches Resume und globale Finalisierung
+bleiben in den vorgesehenen Folgeschritten offen. Erst erfolgreiche parallele
+Dev-/Apply-Volltests und Commit bestätigen Position 272/885. Danach folgt 6.i.C.
 
 #### 6.i.C – Make it Clean
 

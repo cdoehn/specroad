@@ -7,12 +7,13 @@ not that the planner covers every semantic obligation of a command.
 """
 
 from dataclasses import dataclass
+from collections.abc import Mapping
 from hashlib import sha256
 from types import MappingProxyType
 import re
 import secrets
 
-from ..cli.contracts import CommandClass
+from ..cli.contracts import CommandClass, CommandUsageError
 from ..cli.registry import CommandRegistry
 from ..cli.requests import CommandRequest
 from ..model.canonical import canonical_json_bytes
@@ -30,6 +31,12 @@ class WorkManifestError(ValueError):
 _KINDS = ('inputs', 'tasks', 'completed', 'remaining')
 _FANOUT = 64
 _VERSIONS = {'work_manifest': 'work-manifest-segments-v1'}
+_BINDING_FIELDS = (
+    'work_format_version', 'work_id', 'command_id', 'command_class',
+    'normalized_arguments', 'actor', 'request_id', 'operations_sha256',
+    'tool_build', 'algorithm_versions', 'schema_versions', 'source_bindings',
+    'input_manifest_sha256', 'task_manifest_sha256', 'plan_binding',
+)
 _FIELDS = {
     'work_format_version', 'work_id', 'checkpoint_generation', 'command_id',
     'command_class', 'normalized_arguments', 'actor', 'request_id', 'operations_sha256',
@@ -47,7 +54,8 @@ def _require(condition):
 
 
 def _object(value, fields):
-    _require(type(value) is dict and set(value) == set(fields))
+    _require(type(value) is dict and all(type(key) is str for key in value)
+             and set(value) == set(fields))
 
 
 def _text(value):
@@ -72,7 +80,32 @@ def _path(value):
              and all(part not in ('', '.', '..') for part in value.split('/')))
 
 
+def _plain_json(value):
+    # Equality-based type membership can invoke a foreign metaclass. Admit
+    # exact JSON types by identity before passing data to the shared encoder.
+    stack, seen = [iter((value,))], set()
+    while stack:
+        try:
+            item = next(stack[-1])
+        except StopIteration:
+            stack.pop()
+            continue
+        kind = type(item)
+        if item is None or kind is str or kind is bool or kind is int or kind is float:
+            continue
+        _require(kind is dict or kind is list)
+        if id(item) in seen:
+            continue  # The canonical encoder separately rejects real cycles.
+        seen.add(id(item))
+        if kind is dict:
+            _require(all(type(key) is str for key in item))
+            stack.append(iter(item.values()))
+        else:
+            stack.append(iter(item))
+
+
 def _copy(value):
+    _plain_json(value)
     try:
         return parse_json_object(canonical_json_bytes(value))
     except ModelError as error:
@@ -126,10 +159,13 @@ def _tree(kind, records, objects):
 def _entries(kind, reference, objects):
     pending = [reference]
     result = []
+    seen = set()
     while pending:
         current = pending.pop()
         _object(current, ('id', 'sha256', 'size', 'count'))
         _hash(current['sha256'])
+        _require(current['sha256'] not in seen)
+        seen.add(current['sha256'])
         _count(current['count'])
         _require(current['id'] == 'SEG-' + current['sha256'])
         value = _parse(_bytes({k: current[k] for k in ('sha256', 'size')}, objects))
@@ -144,6 +180,7 @@ def _entries(kind, reference, objects):
             for child in items:
                 _object(child, ('id', 'sha256', 'size', 'count'))
                 _count(child['count'])
+                _require(child['count'] > 0)
             _require(sum(child['count'] for child in items) == current['count'])
             pending.extend(reversed(items))
         else:
@@ -155,11 +192,16 @@ def _entries(kind, reference, objects):
 
 def _command(registry, request):
     _require(type(registry) is CommandRegistry and type(request) is CommandRequest)
-    invocation = registry.bind_request(request)
-    _require(invocation.command.command_class is CommandClass.READ_ONLY)
     # The first data codec does not guess which flag denotes a runtime locator,
     # budget or presentation choice. Such normalization belongs to a planner.
     _require(not request.options)
+    _text(request.command_id)
+    _copy({'arguments': dict(request.arguments)})
+    try:
+        invocation = registry.bind_request(request)
+    except CommandUsageError as error:
+        raise WorkManifestError('Invalid registered work request') from error
+    _require(invocation.command.command_class is CommandClass.READ_ONLY)
     return {'command_id': request.command_id, 'command_class': 'read_only',
             'normalized_arguments': {'arguments': dict(invocation.arguments), 'options': {}}}
 
@@ -167,6 +209,7 @@ def _command(registry, request):
 def _tool(value):
     _object(value, ('version', 'build_sha256', 'hash_algorithm'))
     _text(value['version']); _hash(value['build_sha256'])
+    _text(value['hash_algorithm'])
     _require(value['hash_algorithm'] == 'specroad-dev-payload-v1')
 
 
@@ -190,6 +233,38 @@ def _seal(value):
 
 
 @dataclass(frozen=True, init=False)
+class _WorkObjects(Mapping):
+    """Immutable native-byte store; arbitrary mapping proxies are not trusted."""
+
+    _data: object
+
+    def __init__(self, *args, **kwargs):
+        raise WorkManifestError('Use the checked work manifest factories')
+
+    def __getitem__(self, key):
+        return self._data[key]
+
+    def __iter__(self):
+        return iter(self._data)
+
+    def __len__(self):
+        return len(self._data)
+
+
+def _objects(value):
+    _require(type(value) is dict or type(value) is _WorkObjects)
+    if type(value) is _WorkObjects:
+        return value
+    # Reject foreign keys before any keyed lookup can invoke their hooks.
+    for key, raw in value.items():
+        _hash(key)
+        _require(type(raw) is bytes and sha256(raw).hexdigest() == key)
+    instance = object.__new__(_WorkObjects)
+    object.__setattr__(instance, '_data', MappingProxyType(dict(value)))
+    return instance
+
+
+@dataclass(frozen=True, init=False)
 class WorkManifest:
     """A checked data candidate; not a trusted CLI continuation approval."""
 
@@ -204,7 +279,7 @@ class WorkManifest:
         return _parse(self.raw)
 
     def entries(self, kind):
-        _require(kind in _KINDS)
+        _require(type(kind) is str and kind in _KINDS)
         return _entries(kind, self.as_dict()['manifests'][kind], self.objects)
 
 
@@ -275,6 +350,7 @@ def partition_work_manifest(manifest, completions):
     Earlier object bytes remain available; no files are written or removed.
     """
     _require(type(manifest) is WorkManifest and type(completions) is dict and bool(completions))
+    _require(all(type(key) is str for key in completions))
     value = manifest.as_dict()
     tasks, completed = manifest.entries('tasks'), manifest.entries('completed')
     valid = {item['unit_id'] for item in tasks}
@@ -291,7 +367,11 @@ def partition_work_manifest(manifest, completions):
 
 
 def read_work_manifest(raw, objects, *, registry, expected_tool_build):
-    """Validate the closed data graph and current trusted command/build binding."""
+    """Validate inert data; use read_work_successor for an expected prior work.
+
+    This standalone reader does not authenticate the supplied work identity.
+    Objects must be a native dict or the immutable store from this codec.
+    """
     value = _parse(raw)
     _object(value, _FIELDS)
     _require(value['work_format_version'] == '1.0.0')
@@ -301,13 +381,15 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     except ModelError as error:
         raise WorkManifestError('Invalid work identity') from error
     _count(value['checkpoint_generation'])
-    _require(type(objects) in (dict, MappingProxyType))
-    objects = dict(objects)
+    objects = _objects(objects)
     _tool(expected_tool_build); _tool(value['tool_build'])
     _require(value['tool_build'] == expected_tool_build)
     _require(value['algorithm_versions'] == _VERSIONS and value['schema_versions'] == {'work': '1.0.0'})
     _object(value['normalized_arguments'], ('options', 'arguments'))
-    request = CommandRequest(value['command_id'], **value['normalized_arguments'])
+    try:
+        request = CommandRequest(value['command_id'], **value['normalized_arguments'])
+    except CommandUsageError as error:
+        raise WorkManifestError('Invalid structured work request') from error
     command = _command(registry, request)
     _require(all(value[name] == item for name, item in command.items()))
     _require(all(value[name] is None for name in ('actor', 'request_id', 'operations_sha256', 'plan_binding', 'blocked_reason')))
@@ -344,7 +426,9 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
         completed.add(item['unit_id'])
         _parse(_bytes(item['evidence'], objects))
     remaining = [task for identity, task in tasks.items() if identity not in completed]
-    _require(rows['remaining'] == remaining)
+    _require(canonical_json_bytes(rows['remaining']) == canonical_json_bytes(remaining))
+    _require([item['unit_id'] for item in rows['completed']]
+             == [identity for identity in tasks if identity in completed])
     _require(value['progress'] == {'completed_units': len(completed), 'total_units': len(tasks)})
     _require(type(value['progress']['completed_units']) is int and type(value['progress']['total_units']) is int)
     _require(value['state'] == 'running' and value['cursors'] == {}
@@ -360,6 +444,28 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     _require(sealed['checkpoint_sha256'] == value['checkpoint_sha256'])
     instance = object.__new__(WorkManifest)
     object.__setattr__(instance, 'raw', canonical_json_bytes(value))
-    object.__setattr__(instance, 'objects', MappingProxyType(objects))
+    object.__setattr__(instance, 'objects', objects)
     object.__setattr__(instance, '_registry', registry)
     return instance
+
+
+def read_work_successor(raw, objects, *, previous, registry, expected_tool_build):
+    """Check an immediate data successor against a caller-trusted prior value.
+
+    The caller must obtain previous from its trusted work binding, not from the
+    same untrusted package. No handler, filesystem or continuation approval is
+    involved. Actual execution evidence and durable publication remain separate.
+    """
+    _require(type(previous) is WorkManifest)
+    current = read_work_manifest(raw, objects, registry=registry,
+                                 expected_tool_build=expected_tool_build)
+    before, after = previous.as_dict(), current.as_dict()
+    _require(all(canonical_json_bytes(before[name]) == canonical_json_bytes(after[name])
+                 for name in _BINDING_FIELDS))
+    _require(after['checkpoint_generation'] == before['checkpoint_generation'] + 1)
+    old_done = {item['unit_id']: item for item in previous.entries('completed')}
+    new_done = {item['unit_id']: item for item in current.entries('completed')}
+    _require(len(new_done) > len(old_done) and old_done.keys() <= new_done.keys())
+    _require(all(new_done[key] == item for key, item in old_done.items()))
+    _require(all(current.objects.get(key) == raw for key, raw in previous.objects.items()))
+    return current

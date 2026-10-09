@@ -15,12 +15,13 @@
   "steps": [
     "Replace registered handlers with traps and inspect candidate binding without invoking them or changing public continuation declarations.",
     "Refuse a registered normative writer, unknown or shell-like command IDs and operational options.",
-    "Reject pickle/script bytes, duplicate JSON keys, non-finite JSON, foreign Python range values and rehashed incompatible or unauthorized metadata."
+    "Reject pickle/script bytes, duplicate JSON keys, non-finite JSON, foreign Python range values and rehashed incompatible or unauthorized metadata.",
+    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Work-Daten DÜRFEN NICHT ausführbaren Code, Pickle-Objekte oder zur Fortsetzung zu ladende fremde Pythonobjekte enthalten.",
-    "scope": "The first closed data codec accepts strict JSON metadata and hashed raw bytes, binds only current registered read-only requests without options, and never calls a handler, deserializer or external process. Labelled handler/foreign-object traps and write guards verify these boundaries. Broader hostile-shape hardening, externally expected task identity and all eventual resume/publication integration remain open; internally consistent hashes alone confer no execution authority."
+    "scope": "The first closed data codec accepts strict JSON metadata and hashed raw bytes, binds only current registered read-only requests without options, and never calls a handler, deserializer or external process. Labelled handler/foreign-object traps and write guards verify these boundaries. Broader hostile-shape hardening, externally expected task identity and all eventual resume/publication integration remain open; internally consistent hashes alone confer no execution authority. R rejects foreign mappings, mapping proxies, dict/byte subclasses, custom keys and nested foreign values before their hooks run. Invalid structured commands have a typed refusal; script-like JSON text is inert. A successor is checked against externally supplied trusted prior work, so newly hashed command/class/argument replacements gain no authority. The standalone data reader remains non-authenticating and invokes no handler. Exact JSON-type admission uses identity comparisons before the shared encoder, including nested values, so foreign metaclass equality is never invoked."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -56,9 +57,60 @@
     "tests/test_work_manifest.py::test_rehashed_false_metadata_is_rejected_before_execution[change6]",
     "tests/test_work_manifest.py::test_unknown_or_shell_command_text_is_not_an_executable_binding[not.registered]",
     "tests/test_work_manifest.py::test_unknown_or_shell_command_text_is_not_an_executable_binding[version; echo unsafe]",
-    "tests/test_work_manifest.py::test_unknown_or_shell_command_text_is_not_an_executable_binding[work.resume]"
+    "tests/test_work_manifest.py::test_unknown_or_shell_command_text_is_not_an_executable_binding[work.resume]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[byte_subclass]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[dict_subclass]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[foreign_key]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[foreign_value]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[proxy]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[wrong_hash]",
+    "tests/test_work_manifest_right.py::test_bound_successive_partitions_preserve_all_previous_data_without_handler_execution",
+    "tests/test_work_manifest_right.py::test_cyclic_in_memory_json_is_rejected_without_serializing_foreign_state",
+    "tests/test_work_manifest_right.py::test_foreign_metaclass_is_not_compared_or_evaluated_during_type_admission[nested_range]",
+    "tests/test_work_manifest_right.py::test_foreign_metaclass_is_not_compared_or_evaluated_during_type_admission[store]",
+    "tests/test_work_manifest_right.py::test_foreign_values_cannot_execute_hooks_at_public_codec_boundaries[algorithm]",
+    "tests/test_work_manifest_right.py::test_foreign_values_cannot_execute_hooks_at_public_codec_boundaries[completion_key]",
+    "tests/test_work_manifest_right.py::test_foreign_values_cannot_execute_hooks_at_public_codec_boundaries[field_key]",
+    "tests/test_work_manifest_right.py::test_foreign_values_cannot_execute_hooks_at_public_codec_boundaries[kind]",
+    "tests/test_work_manifest_right.py::test_foreign_values_cannot_execute_hooks_at_public_codec_boundaries[range]",
+    "tests/test_work_manifest_right.py::test_invalid_json_values_are_typed_failures_without_side_effects[[]]",
+    "tests/test_work_manifest_right.py::test_invalid_json_values_are_typed_failures_without_side_effects[null]",
+    "tests/test_work_manifest_right.py::test_invalid_json_values_are_typed_failures_without_side_effects[{\"x\":\"\\ud800\"}]",
+    "tests/test_work_manifest_right.py::test_invalid_json_values_are_typed_failures_without_side_effects[{\"x\":\"\\xff\"}]",
+    "tests/test_work_manifest_right.py::test_invalid_json_values_are_typed_failures_without_side_effects[{\"x\":1e9999}]",
+    "tests/test_work_manifest_right.py::test_invalid_json_values_are_typed_failures_without_side_effects[{\"x\":Infinity}]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[actor-new-actor]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[algorithm_versions-value15]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[checkpoint_generation--1]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[checkpoint_generation-False]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[command_id-os.system]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[command_id-unknown.command]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[command_id-value3]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[cursors-value19]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[diagnostic_parts-value18]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[next_action-value20]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[normalized_arguments-value0]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[normalized_arguments-value1]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[normalized_arguments-value2]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[operations_sha256-ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[plan_binding-value14]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[progress-value10]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[request_id-new-request]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[result_parts-value17]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[schema_versions-value16]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[work_id-WORK-0000000000000000000000000]",
+    "tests/test_work_manifest_right.py::test_rehashed_malformed_or_unauthorized_control_data_has_a_typed_refusal[work_id-WORK-ZZZZZZZZZZZZZZZZZZZZZZZZZZ]",
+    "tests/test_work_manifest_right.py::test_script_like_json_text_remains_data_without_a_loader_or_handler",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[arguments]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[build]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[command]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[identity]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[input]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[plan]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[project]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[scope]"
   ],
   "open_items": [
-    "Partial data contract only: trusted planner coverage and actual completion evidence, hostile input hardening, external expected work binding, consistent snapshot capture, safe work storage/locks, atomic durable publication, real resume and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
+    "Partial data contract only: the caller must supply a trusted prior work value; accepting that value from the same untrusted package is not authentication. Complete command-specific plan coverage and actual completion evidence, consistent snapshots, guarded work storage/locks, atomic publication, true resume, bounded whole-store memory and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
   ]
 }

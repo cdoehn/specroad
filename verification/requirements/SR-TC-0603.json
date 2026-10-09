@@ -15,12 +15,13 @@
   "steps": [
     "Roundtrip original owned input bytes and all declared units through bounded-fanout manifest trees.",
     "Relocate identical source bytes and verify unchanged semantic input/task bindings; change same-size content and observe different bindings.",
-    "Reject missing or damaged objects, unsafe input paths and a different expected tool build."
+    "Reject missing or damaged objects, unsafe input paths and a different expected tool build.",
+    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder aufgeteilte Auftrag MUSS ein gehashtes vollständiges Aufgaben- und Eingangsmanifest nach Anhang P besitzen.",
-    "scope": "Initial work-v1 candidate hashes all supplied input bytes and the full caller-declared task plan in versioned segment trees. References bind ID, size, SHA-256 and count; missing or changed referenced data is rejected. Relative logical source locations survive relocation. Declared tool/source bindings are data, not independent provenance or an atomically captured snapshot. Full command-specific planners and portable persisted snapshots remain open."
+    "scope": "Initial work-v1 candidate hashes all supplied input bytes and the full caller-declared task plan in versioned segment trees. References bind ID, size, SHA-256 and count; missing or changed referenced data is rejected. Relative logical source locations survive relocation. Declared tool/source bindings are data, not independent provenance or an atomically captured snapshot. Full command-specific planners and portable persisted snapshots remain open. R checks the entire supplied object store as exact native hash-addressed bytes, including retained unreferenced objects. Repeated segment references are rejected before amplification. A caller-trusted preceding candidate anchors unchanged input/task hashes across immediate successors; self-consistent new input, source or task bindings cannot replace that work."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -56,9 +57,32 @@
     "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[1]",
     "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[4097]",
     "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[64]",
-    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[65]"
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[65]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[byte_subclass]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[dict_subclass]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[foreign_key]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[foreign_value]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[proxy]",
+    "tests/test_work_manifest_right.py::test_all_object_store_entries_are_native_hashed_bytes_without_foreign_hooks[wrong_hash]",
+    "tests/test_work_manifest_right.py::test_bound_successive_partitions_preserve_all_previous_data_without_handler_execution",
+    "tests/test_work_manifest_right.py::test_rehashed_bad_segment_metadata_is_rejected[count]",
+    "tests/test_work_manifest_right.py::test_rehashed_bad_segment_metadata_is_rejected[format_version]",
+    "tests/test_work_manifest_right.py::test_rehashed_bad_segment_metadata_is_rejected[id]",
+    "tests/test_work_manifest_right.py::test_rehashed_bad_segment_metadata_is_rejected[kind]",
+    "tests/test_work_manifest_right.py::test_rehashed_bad_segment_metadata_is_rejected[size]",
+    "tests/test_work_manifest_right.py::test_rehashed_bad_segment_metadata_is_rejected[unknown]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[arguments]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[build]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[command]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[identity]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[input]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[plan]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[project]",
+    "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[scope]",
+    "tests/test_work_manifest_right.py::test_shared_segment_amplification_is_rejected_before_repeated_leaf_decoding",
+    "tests/test_work_manifest_right.py::test_successor_preserves_even_previously_referenced_bytes_not_in_the_new_root"
   ],
   "open_items": [
-    "Partial data contract only: trusted planner coverage and actual completion evidence, hostile input hardening, external expected work binding, consistent snapshot capture, safe work storage/locks, atomic durable publication, real resume and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
+    "Partial data contract only: the caller must supply a trusted prior work value; accepting that value from the same untrusted package is not authentication. Complete command-specific plan coverage and actual completion evidence, consistent snapshots, guarded work storage/locks, atomic publication, true resume, bounded whole-store memory and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
   ]
 }
