@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 262
-last_completed_plan_commit: 6.f.W
-next_plan_commit: 6.f.R
-last_completed_numbered_bundle: 113
+implementation_plan_commits_completed: 263
+last_completed_plan_commit: 6.f.R
+next_plan_commit: 6.f.C
+last_completed_numbered_bundle: 114
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5588,12 +5588,41 @@ Dev-/Apply-Tests und Commit bestätigen Position 262/885. Danach folgt 6.f.R.
 
 #### 6.f.R – Make it Right
 
-- [ ] **6.f.R** · Position **263/885** · Voraussetzung: `6.f.W`.
+- [x] **6.f.R** · Position **263/885** · Voraussetzung: `6.f.W`.
 **Exakte Commit-Message:** `6.f.R feat(work): Dateibasierte Sortierung und Diagnose-Spooling vervollständigen`
 
 **Vervollständigung:** Keine Pflichtdiagnose und keinen kürzesten Pfad wegen Ausgabeschwelle verlieren.
 
 **Verhaltensabnahme:** Große Mengen stimmen mit Referenzlauf vollständig überein; offene Mergecursor bleiben fortsetzbar. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 114:** Das vollständig geprüfte Result von Bundle 113
+bestätigt Commit `537b1a6c19f10666d4abf0423e27ccb8f3e74ef1`, 6.478 erfolgreiche
+parallele Apply-Tests und einen sauberen, vollständig übereinstimmenden Snapshot.
+`DiagnosticSort` macht Eingabe, Chargenschreiben, Paarmerge und abschließende
+Veröffentlichung desselben Sortierpfads in kleinen Einheiten fortsetzbar.
+Die abgelöste Cursorprojektion enthält konkrete Eingabe-/Outputreferenzen,
+Record- und Bytepositionen. Ein weiches Fenster von einer Einheit erhält den
+Quelliterator und offene Mergeköpfe, statt vollständige Präfixe erneut zu lesen.
+Erst vollständiger Abschluss gibt einen fertigen Spool frei. Native Fehler
+invalidieren den Task ohne automatischen Retry oder Löschung eigener Dateien.
+
+`PathRecord`/`PathSort` nutzen denselben externen Transport für bereits berechnete
+Pfadaufträge und erhalten Identitäten, Inversrichtungen, Duplikate sowie die
+vollständige vorgegebene Reihenfolge. Ein geschichteter Fixturegraph liefert
+128 gleich kurze vorbereitete Pfade; selbst kleinste Arbeits-/Ausgabefenster
+geben sie vollständig aus. Die Berechnung des vollständigen gültigen Why-Auftrags
+ist weiterhin Schritt 8.f; sie wird hier nicht als implementiert behauptet.
+SR-REQ-0585 erhält daher nur den Pfadtransport-Teilnachweis, SR-REQ-0605 behält
+einen erweiterten Teilnachweis. Eine dauerhafte Work-Wiederaufnahme folgt
+entsprechend 6.i–6.l; der lebende Cursor bezeichnet ausdrücklich keinen
+persistierten Checkpoint.
+
+Neue Verhaltenstests prüfen monotone Fortsetzung, vollständige Referenzgleichheit,
+konkrete Mergepositionen, behaltene nächste Eingaben, abgelöste Stateprojektionen,
+Abbruch bei veränderten Dateien sowie echte geschriebene Bytes vor injizierten
+Ressourcenfehlern. Alle 263 bisherigen Testdateien und 6.478 Fälle bleiben
+unverändert. Erst erfolgreiche vollständige parallele Dev-/Apply-Tests und
+Commit bestätigen Position 263/885. Danach folgt die strukturelle Bereinigung 6.f.C.
 
 #### 6.f.C – Make it Clean
 

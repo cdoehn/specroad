@@ -10,18 +10,22 @@
     "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
-    "Explicit diagnostic iterator and a fresh external private spool directory; all protected project/input/output roots are supplied as trusted boundaries. Current native POSIX descriptor operations only."
+    "Explicit diagnostic iterator and a fresh external private spool directory; all protected project/input/output roots are supplied as trusted boundaries. Current native POSIX descriptor operations only.",
+    "R: retain the same live DiagnosticSort or PathSort object between bounded advance calls. Injected failures are labelled; no persistent Work checkpoint is claimed."
   ],
   "steps": [
     "Compare the complete stable diagnostic sequence across tiny batches and pages, including duplicates, mandatory errors, large individual records, large integer coordinates and an empty source.",
     "Generate a real run larger than 4 MiB with a one-pass iterator and 32-KiB encoded batches; measure only the selected Python allocation window.",
     "Verify complete hashed run bindings, monotone record/byte delivery positions, unchanged protected files, short writes and retained partial own files on a labelled I/O failure.",
-    "Reject linked, overlapping, replaced, changed or non-private storage without returning the affected page or claiming completion."
+    "Reject linked, overlapping, replaced, changed or non-private storage without returning the affected page or claiming completion.",
+    "Resume at concrete open merge positions with windows as small as one real unit; verify monotone positions, exact complete reference results, retained pending input and unchanged protected files.",
+    "Mutate detached cursor snapshots, close paused tasks, change input/output/root between steps, and inject initialization/write resource failures; no failed unit becomes completed or causes automatic retry.",
+    "Deliver all 128 prepared shortest paths from a layered reference graph through the same bounded transport; preserve producer order, identities, directions and duplicates."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede potenziell große Verarbeitungsphase MUSS einen dokumentierten granularen Fortschritts- und Fortsetzungsvertrag nach Anhang P.5 besitzen.",
-    "scope": "6.f.W: hashed JSONL batch runs and pairwise stable merging preserve every Diagnostic and its existing ordering, independently of the soft encoded batch target. The complete final run is delivered through a monotone record/byte cursor with full hash and descriptor guards; prefixes are not complete results. Oversized individual diagnostics make real progress. Owned private files lie outside declared protected roots, survive failures and are never automatically deleted. The cursor explicitly declares durable_checkpoint=false; construction, merge and cross-process resume remain a partial P.5 scope."
+    "scope": "6.f.W: hashed JSONL batch runs and pairwise stable merging preserve every Diagnostic and its existing ordering, independently of the soft encoded batch target. The complete final run is delivered through a monotone record/byte cursor with full hash and descriptor guards; prefixes are not complete results. Oversized individual diagnostics make real progress. Owned private files lie outside declared protected roots, survive failures and are never automatically deleted. The cursor explicitly declares durable_checkpoint=false; construction, merge and cross-process resume remain a partial P.5 scope. 6.f.R adds live input/run/merge/publication steps with detached state projections, actual read/output record and byte cursors and monotonically confirmed units. Paused tasks retain the iterator and two merge heads; one failed unit invalidates the task without a success increment or retry. Prepared path output uses the same bounded driver and preserves the complete producer order. The synchronous diagnostic adapter drains that exact driver, preserving the original W contracts."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,6 +42,38 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[1-1-1]",
+    "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[65536-10000-1000]",
+    "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[8192-17-7]",
+    "tests/test_spooling_right.py::test_change_during_paused_merge_cannot_publish_complete_spool[input]",
+    "tests/test_spooling_right.py::test_change_during_paused_merge_cannot_publish_complete_spool[output]",
+    "tests/test_spooling_right.py::test_change_during_paused_merge_cannot_publish_complete_spool[root]",
+    "tests/test_spooling_right.py::test_closing_a_paused_merge_keeps_files_and_releases_its_owned_directory_handles",
+    "tests/test_spooling_right.py::test_diagnostic_and_path_backends_reject_each_others_value_types",
+    "tests/test_spooling_right.py::test_disconnected_relation_views_cannot_become_a_path_record",
+    "tests/test_spooling_right.py::test_empty_task_finishes_with_positive_smallest_units_and_no_false_prefix",
+    "tests/test_spooling_right.py::test_failed_resume_does_not_retry_or_count_failed_unit_as_completed[memory]",
+    "tests/test_spooling_right.py::test_failed_resume_does_not_retry_or_count_failed_unit_as_completed[storage]",
+    "tests/test_spooling_right.py::test_failed_resume_does_not_retry_or_count_failed_unit_as_completed[zero_write]",
+    "tests/test_spooling_right.py::test_failed_run_hash_initialization_does_not_open_or_leak_a_writable_file",
+    "tests/test_spooling_right.py::test_failed_task_initialization_releases_real_handles_and_keeps_owned_root",
+    "tests/test_spooling_right.py::test_invalid_work_window_neither_consumes_source_nor_changes_state[-1]",
+    "tests/test_spooling_right.py::test_invalid_work_window_neither_consumes_source_nor_changes_state[0]",
+    "tests/test_spooling_right.py::test_invalid_work_window_neither_consumes_source_nor_changes_state[1.5]",
+    "tests/test_spooling_right.py::test_invalid_work_window_neither_consumes_source_nor_changes_state[True]",
+    "tests/test_spooling_right.py::test_mutating_a_cursor_snapshot_does_not_change_owned_work_or_file_targets",
+    "tests/test_spooling_right.py::test_open_merge_cursors_make_monotone_progress_and_preserve_every_diagnostic[1000]",
+    "tests/test_spooling_right.py::test_open_merge_cursors_make_monotone_progress_and_preserve_every_diagnostic[1]",
+    "tests/test_spooling_right.py::test_open_merge_cursors_make_monotone_progress_and_preserve_every_diagnostic[7]",
+    "tests/test_spooling_right.py::test_path_projection_is_detached_from_owned_identity_values",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[bad_length]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[bool_not_int]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[extra_field]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[foreign_object]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[missing_field]",
+    "tests/test_spooling_right.py::test_path_spool_preserves_inverse_edges_zero_length_and_duplicate_paths",
+    "tests/test_spooling_right.py::test_pausing_preserves_the_same_final_run_and_manifest_as_synchronous_use",
+    "tests/test_spooling_right.py::test_pending_input_is_retained_while_a_previous_batch_is_flushed",
     "tests/test_spooling_work.py::test_change_between_pages_never_returns_a_partial_page_or_advances_cursor",
     "tests/test_spooling_work.py::test_changed_final_run_is_rejected_before_any_diagnostic_delivery[append]",
     "tests/test_spooling_work.py::test_changed_final_run_is_rejected_before_any_diagnostic_delivery[hardlink]",
@@ -77,6 +113,6 @@
     "tests/test_spooling_work.py::test_traversal_path_is_rejected_before_any_write"
   ],
   "open_items": [
-    "Only explicit external diagnostic sorting and a live in-process delivery cursor are implemented. Persistent Work generations, portable resume/source snapshot bindings, pausable merge cursors, automatic root selection, locks and all-command integration remain open. Intermediate runs are retained, so disk use can grow with merge levels. The graph/frontier/all-shortest-path requirement SR-REQ-0585 remains open; no graph behavior is inferred from this diagnostic test suite. No total RSS, host quota or cross-platform completion is claimed."
+    "Work identity, persistent generations, source-snapshot binding, portable/process-independent resume, automatic roots, locks and all-command integration remain open for subsequent plan steps. The live cursor does not import arbitrary state; durable_checkpoint remains false. Prepared path transport does not implement Why search/frontier preservation. Intermediate runs remain retained. Batch goals and work windows do not promise total RSS, host quota, cross-platform completion or preemptive wall-clock control."
   ]
 }

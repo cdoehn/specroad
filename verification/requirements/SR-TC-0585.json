@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0585",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Prepared complete path sequence over explicitly supplied typed identities/views; the production spool performs no graph search. Owned protected project and external native POSIX storage."
+  ],
+  "steps": [
+    "Construct a layered reference fixture with exactly 128 equal-length shortest paths and pass every prepared path through tiny work, batch and delivery windows.",
+    "Compare the complete producer-defined path order and all artifact/relation identities, directions and duplicates; include zero-length and inverse paths.",
+    "Reject malformed path projections and disconnected typed relation walks; preserve protected project bytes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Graphtraversierung und vollständige Pfadausgabe MÜSSEN bei Erreichen weicher Arbeitsschritt- oder Ausgabeschwellen ihren vollständigen Restauftrag nach Anhang P fortsetzbar erhalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "6.f.R output-transport subset only: PathRecord and the bounded PathSort/PathSpool preserve all already computed ordered paths and exact identities. A seven-layer binary fixture supplies all 128 equal shortest paths of eight edges; one-unit/one-record windows do not drop any path or call a prefix complete. Production shortest-path discovery, semantic endpoint selection and traversal/frontier persistence are not implemented by this transport proof."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,21 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[1-1-1]",
+    "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[65536-10000-1000]",
+    "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[8192-17-7]",
+    "tests/test_spooling_right.py::test_diagnostic_and_path_backends_reject_each_others_value_types",
+    "tests/test_spooling_right.py::test_disconnected_relation_views_cannot_become_a_path_record",
+    "tests/test_spooling_right.py::test_path_projection_is_detached_from_owned_identity_values",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[bad_length]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[bool_not_int]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[extra_field]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[foreign_object]",
+    "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[missing_field]",
+    "tests/test_spooling_right.py::test_path_spool_preserves_inverse_edges_zero_length_and_duplicate_paths"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Graph computation/complete frontier, valid Why goals/needs/sources and configured maximum depth belong to 8.e/8.f. Persistent Work identity, input snapshot binding and checkpoint generations remain assigned to 6.i-6.l. Live iterator/merge/delivery continuation is not process-independent resume or a whole-project completeness proof."
   ]
 }
