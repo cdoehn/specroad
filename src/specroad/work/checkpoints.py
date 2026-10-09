@@ -11,9 +11,8 @@ import secrets
 from ..changes._publication_io import replace_bound_image
 from ..changes._staging_files import _write_new
 from ..model.canonical import canonical_json_bytes
-from ..security import paths as guards
 from ._data_contract import _object, _parse, _hash, _count
-from ._root_lock import _private
+from ._checkpoint_files import _directory, read_file, verify_bindings
 from .manifest import WorkManifest, read_work_manifest, read_work_successor, _tree, _entries
 from .root import WorkDirectory
 
@@ -43,50 +42,10 @@ def _reference_check(reference):
     _hash(reference['sha256']); _count(reference['size'])
 
 
-def _directory(held, folder):
-    return held._children[('checkpoints', 'objects', 'results').index(folder)]
-
-
 def _read_file(held, folder, name, *, sync=False, expected_size=None,
                maximum=None, bindings=None):
-    held.check()
-    parent = _directory(held, folder)
-    logical = folder + '/' + name
-    try:
-        before = os.stat(name, dir_fd=parent, follow_symlinks=False)
-        _private(before)
-        _check(expected_size is None or before.st_size == expected_size,
-               'checkpoint_bytes_changed', path=logical)
-        _check(maximum is None or before.st_size <= maximum,
-               'checkpoint_metadata_too_large', path=logical)
-        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
-        try:
-            _check(guards._signature(os.fstat(fd)) == guards._signature(before), path=logical)
-            data = bytearray()
-            while len(data) <= before.st_size:
-                raw = os.read(fd, min(65536, before.st_size + 1 - len(data)))
-                if not raw:
-                    break
-                data.extend(raw)
-            if sync:
-                os.fsync(fd)
-                os.fsync(parent)
-            now = os.stat(name, dir_fd=parent, follow_symlinks=False)
-            _private(now)
-            _check(len(data) == before.st_size
-                   and guards._signature(now) == guards._signature(before)
-                   and guards._signature(os.fstat(fd)) == guards._signature(before), path=logical)
-            held.check()
-            if bindings is not None:
-                key, signature = (folder, name), guards._signature(before)
-                _check(key not in bindings or bindings[key] == signature,
-                       'checkpoint_bytes_changed', path=logical)
-                bindings[key] = signature
-            return bytes(data)
-        finally:
-            os.close(fd)
-    except FileNotFoundError as error:
-        raise CheckpointStorageError('checkpoint_bytes_missing', path=logical) from error
+    return read_file(held, folder, name, check=_check, error_type=CheckpointStorageError,
+                     sync=sync, expected_size=expected_size, maximum=maximum, bindings=bindings)
 
 
 def _read_reference(held, folder, reference, *, bindings=None):
@@ -99,26 +58,7 @@ def _read_reference(held, folder, reference, *, bindings=None):
 
 
 def _verify_bindings(held, bindings):
-    """Close the checked read set without silently trusting earlier path reads."""
-    for (folder, name), signature in bindings.items():
-        held.check()
-        parent, logical = _directory(held, folder), folder + '/' + name
-        try:
-            before = os.stat(name, dir_fd=parent, follow_symlinks=False)
-            _private(before)
-            _check(guards._signature(before) == signature, 'checkpoint_bytes_changed', path=logical)
-            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
-            try:
-                _check(guards._signature(os.fstat(fd)) == signature,
-                       'checkpoint_bytes_changed', path=logical)
-                now = os.stat(name, dir_fd=parent, follow_symlinks=False)
-                _private(now)
-                _check(guards._signature(now) == signature, 'checkpoint_bytes_changed', path=logical)
-            finally:
-                os.close(fd)
-        except FileNotFoundError as error:
-            raise CheckpointStorageError('checkpoint_bytes_missing', path=logical) from error
-    held.check()
+    return verify_bindings(held, bindings, check=_check, error_type=CheckpointStorageError)
 
 
 def _ensure_file(held, folder, name, raw):

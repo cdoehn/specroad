@@ -29,6 +29,14 @@ gespeicherten Bytes geprüft wurden, wird `work.json` atomar ersetzt und die
 Ersetzung einschließlich beider Verzeichnisse synchronisiert. Die vorherige
 Pointerbindung wird unmittelbar vor der Ersetzung nochmals geprüft.
 
+Der interne Adapter `_checkpoint_files` bündelt descriptorgebundene Datei-
+und Abschlussprüfungen. Der Aufrufer übergibt den vorhandenen Work-Fehlervertrag;
+`CheckpointStorageError` bleibt in `work.checkpoints` definiert. Generationen,
+Vorgängerkette und Pointerwechsel werden weiterhin ausschließlich vom
+`CheckpointStore` gesteuert. Der Adapter schreibt keine Journale und trifft
+keine Recoveryentscheidung. Work und Projekttransaktionen teilen ausschließlich
+die bestehenden Dateiprimitiven, keine Journal- oder Freigabepolicy.
+
 `read()` erfasst ausschließlich den aktuell veröffentlichten Pointer und prüft
 die vollständige gehashte Vorgängerfolge bis zum vertrauenswürdigen Anfangswert.
 Es lädt nur die jeweiligen Inventare und ihre Bytes; übrig gebliebene, nicht

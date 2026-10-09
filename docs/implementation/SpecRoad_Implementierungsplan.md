@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 281
-last_completed_plan_commit: 6.l.R
-next_plan_commit: 6.l.C
-last_completed_numbered_bundle: 132
+implementation_plan_commits_completed: 282
+last_completed_plan_commit: 6.l.C
+next_plan_commit: 6.m.W
+last_completed_numbered_bundle: 133
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6256,10 +6256,26 @@ paralleler Apply-Volltest und Commit bestätigen 281/885.
 
 #### 6.l.C – Make it Clean
 
-- [ ] **6.l.C** · Position **282/885** · Voraussetzung: `6.l.R`.
+- [x] **6.l.C** · Position **282/885** · Voraussetzung: `6.l.R`.
 **Exakte Commit-Message:** `6.l.C refactor(work): Dauerhafte Checkpointgenerationen bereinigen`
 
 **Bereinigung:** Gemeinsame atomare Dateiprimitiven nutzen, Work- und Projektjournale dennoch getrennt halten.
+
+**Implementierungsstand 6.l.C:** Der interne Adapter `_checkpoint_files`
+trennt die descriptorgebundenen Datei-/Lesemengenprüfungen von der Steuerung
+der Work-Generationen. Der bestehende öffentliche Fehlervertrag wird explizit
+übergeben; seine Klasse und alle Generationen-/Pointerentscheidungen bleiben
+unverändert. Exklusives Schreiben und atomare Ersetzung verwenden weiterhin
+dieselben gemeinsamen Dateiprimitiven. Weder Projektjournale noch deren
+Recovery-/Berechtigungspolicy werden in den Work-Adapter übernommen.
+
+Die verschobenen Funktionskörper wurden strukturell gegen den bestätigten
+R-Zustand verglichen; nur ihre Fehlerabhängigkeiten sind explizite Parameter.
+Alle bisherigen Testdateien und fachlichen Erwartungswerte bleiben bytegleich.
+Die bestehenden W-/R-Fälle sowie relevante Work-, Manifest-, Snapshot-,
+Staging- und Veröffentlichungsregressionen werden gezielt parallel ausgeführt.
+Die Requirements bleiben partiell; der vollständige parallele Apply-Lauf und
+der anschließende Commit bestätigen erst 282/885. Danach folgt 6.m.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
