@@ -15,12 +15,13 @@
   "steps": [
     "Publish complete initial and immediate successor generations; verify every original byte, private mode, retained predecessor, segmented inventory and fsync ordering before atomic pointer replacement.",
     "Read the actual current generation in another process; abruptly terminate publishers during object storage and immediately before/after pointer replacement, retaining the orphan record and verifying data-only read access.",
-    "Reject stale or foreign successors and identify missing/changed required bytes; retain the prior readable generation on an injected partial-write failure."
+    "Reject stale or foreign successors and identify missing/changed required bytes; retain the prior readable generation on an injected partial-write failure.",
+    "Rehash altered stored records/inventories independently, mutate previously read or newly secured parts, inject fsync failures before and after publication, and require retained predecessors plus the actual complete pointer without writes from readers."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein bestätigter Checkpoint und seine notwendigen Snapshotdaten DÜRFEN NICHT durch eine Cachebereinigung entfernt werden.",
-    "scope": "6.l.W persists the existing inert WorkManifest and its exact object set through segmented hash-addressed inventories and a checked predecessor chain anchored in the caller-trusted initial manifest. Existing native exclusive creation and atomic image replacement primitives fsync all required files/directories before switching work.json. Data-only inspection uses the native work mutex without creating/removing owner records, so a crashed publisher leaves either the prior complete generation or the fully secured new one readable; orphan records still block writes. Previous checkpoints, all objects and partial own files remain retained. Real process restart/exit tests prove current stored-byte selection, not command execution or runtime resume. No Code 8, execution authority, all-command coverage, cache-cleanup integration, automatic recovery, bounded whole-store memory or non-native filesystem durability is asserted."
+    "scope": "6.l.W persists the existing inert WorkManifest and its exact object set through segmented hash-addressed inventories and a checked predecessor chain anchored in the caller-trusted initial manifest. Existing native exclusive creation and atomic image replacement primitives fsync all required files/directories before switching work.json. Data-only inspection uses the native work mutex without creating/removing owner records, so a crashed publisher leaves either the prior complete generation or the fully secured new one readable; orphan records still block writes. Previous checkpoints, all objects and partial own files remain retained. Real process restart/exit tests prove current stored-byte selection, not command execution or runtime resume. No Code 8, execution authority, all-command coverage, cache-cleanup integration, automatic recovery, bounded whole-store memory or non-native filesystem durability is asserted. 6.l.R binds the complete checked read set to stable file identities/signatures and verifies it before returning; known object-size mismatches are rejected before payload reads. Fixed-structure checkpoint records and canonical 64-fanout inventory segments are limited to 64 KiB, independently of input-payload sizes. The entire prospective generation and predecessor chain is freshly checked immediately before pointer replacement and again afterward. Missing/changed new parts before replacement preserve the prior pointer; later errors retain the actual state and every predecessor. Independently rehashed hostile metadata, foreign initial bindings, unsafe file types, late read/publication mutations and explicit fsync fault windows are exercised. Unreferenced private data remains inert and retained. No automatic rollback, cleanup, lock takeover, command execution or atomic snapshot against noncooperating external writes is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -53,9 +54,58 @@
     "tests/test_work_checkpoints.py::test_storage_declaration_and_absent_inspection_do_not_create_files",
     "tests/test_work_checkpoints.py::test_unavailable_required_payload_is_named_instead_of_reconstructed[different]",
     "tests/test_work_checkpoints.py::test_unavailable_required_payload_is_named_instead_of_reconstructed[missing]",
-    "tests/test_work_checkpoints.py::test_wrong_initial_binding_is_rejected_without_storage_effects"
+    "tests/test_work_checkpoints.py::test_wrong_initial_binding_is_rejected_without_storage_effects",
+    "tests/test_work_checkpoints_right.py::test_a_fully_rehashed_foreign_initial_model_does_not_replace_the_trust_anchor",
+    "tests/test_work_checkpoints_right.py::test_a_previously_read_object_must_stay_bound_until_the_reader_returns[missing]",
+    "tests/test_work_checkpoints_right.py::test_a_previously_read_object_must_stay_bound_until_the_reader_returns[same_bytes_new_inode]",
+    "tests/test_work_checkpoints_right.py::test_a_previously_read_object_must_stay_bound_until_the_reader_returns[same_size]",
+    "tests/test_work_checkpoints_right.py::test_damage_after_initial_readback_but_before_pointer_replace_preserves_old_current[changed]",
+    "tests/test_work_checkpoints_right.py::test_damage_after_initial_readback_but_before_pointer_replace_preserves_old_current[missing]",
+    "tests/test_work_checkpoints_right.py::test_fsync_failure_keeps_the_actual_complete_pointer_and_retains_predecessors[new_object]",
+    "tests/test_work_checkpoints_right.py::test_fsync_failure_keeps_the_actual_complete_pointer_and_retains_predecessors[pointer_file]",
+    "tests/test_work_checkpoints_right.py::test_fsync_failure_keeps_the_actual_complete_pointer_and_retains_predecessors[source_directory]",
+    "tests/test_work_checkpoints_right.py::test_fsync_failure_keeps_the_actual_complete_pointer_and_retains_predecessors[target_directory]",
+    "tests/test_work_checkpoints_right.py::test_missing_or_changed_required_metadata_cannot_be_a_checkpoint[missing-index]",
+    "tests/test_work_checkpoints_right.py::test_missing_or_changed_required_metadata_cannot_be_a_checkpoint[missing-manifest]",
+    "tests/test_work_checkpoints_right.py::test_missing_or_changed_required_metadata_cannot_be_a_checkpoint[missing-record]",
+    "tests/test_work_checkpoints_right.py::test_missing_or_changed_required_metadata_cannot_be_a_checkpoint[wrong_hash-index]",
+    "tests/test_work_checkpoints_right.py::test_missing_or_changed_required_metadata_cannot_be_a_checkpoint[wrong_hash-manifest]",
+    "tests/test_work_checkpoints_right.py::test_missing_or_changed_required_metadata_cannot_be_a_checkpoint[wrong_hash-record]",
+    "tests/test_work_checkpoints_right.py::test_noncanonical_inventory_cannot_be_smuggled_under_a_fresh_hash",
+    "tests/test_work_checkpoints_right.py::test_pointer_replacement_by_another_writer_is_not_silently_overwritten",
+    "tests/test_work_checkpoints_right.py::test_rehashed_inventory_still_requires_a_complete_unique_ordered_object_set[bool_size]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_inventory_still_requires_a_complete_unique_ordered_object_set[branch_duplicate]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_inventory_still_requires_a_complete_unique_ordered_object_set[duplicate]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_inventory_still_requires_a_complete_unique_ordered_object_set[kind]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_inventory_still_requires_a_complete_unique_ordered_object_set[missing_entry]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_inventory_still_requires_a_complete_unique_ordered_object_set[reverse]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_pointer_metadata_never_overrides_its_bound_generation[update0]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_pointer_metadata_never_overrides_its_bound_generation[update1]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_pointer_metadata_never_overrides_its_bound_generation[update2]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_pointer_metadata_never_overrides_its_bound_generation[update3]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_pointer_metadata_never_overrides_its_bound_generation[update4]",
+    "tests/test_work_checkpoints_right.py::test_rehashed_pointer_metadata_never_overrides_its_bound_generation[update5]",
+    "tests/test_work_checkpoints_right.py::test_self_consistent_record_hashes_do_not_validate_false_generation_metadata[update0]",
+    "tests/test_work_checkpoints_right.py::test_self_consistent_record_hashes_do_not_validate_false_generation_metadata[update1]",
+    "tests/test_work_checkpoints_right.py::test_self_consistent_record_hashes_do_not_validate_false_generation_metadata[update2]",
+    "tests/test_work_checkpoints_right.py::test_self_consistent_record_hashes_do_not_validate_false_generation_metadata[update3]",
+    "tests/test_work_checkpoints_right.py::test_self_consistent_record_hashes_do_not_validate_false_generation_metadata[update4]",
+    "tests/test_work_checkpoints_right.py::test_self_consistent_record_hashes_do_not_validate_false_generation_metadata[update5]",
+    "tests/test_work_checkpoints_right.py::test_self_consistent_record_hashes_do_not_validate_false_generation_metadata[update6]",
+    "tests/test_work_checkpoints_right.py::test_structurally_bounded_metadata_is_rejected_before_its_bytes_are_read[index]",
+    "tests/test_work_checkpoints_right.py::test_structurally_bounded_metadata_is_rejected_before_its_bytes_are_read[record]",
+    "tests/test_work_checkpoints_right.py::test_unreferenced_private_script_bytes_remain_inert_and_are_not_cleaned",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[fifo-input]",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[fifo-pointer]",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[hardlink-input]",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[hardlink-pointer]",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[public-input]",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[public-pointer]",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[symlink-input]",
+    "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[symlink-pointer]",
+    "tests/test_work_checkpoints_right.py::test_wrong_object_size_is_detected_before_reading_the_object"
   ],
   "open_items": [
-    "Further hostile-segment, interrupted-transition and integrity boundaries belong to 6.l.R. Command resume/compatibility, actual completion evidence, portable restore, explicit orphan recovery, incremental publication/readback, bounded total memory and full runtime/cache integration remain open. This first native data persistence scope is partial; no release or complete requirement pass is claimed."
+    "Command resume/compatibility, actual completion evidence, portable restore, explicit orphan recovery, incremental publication/readback, bounded total memory and full runtime/cache integration remain open. Native persistent declared-work data is covered; no release or complete requirement pass is claimed."
   ]
 }

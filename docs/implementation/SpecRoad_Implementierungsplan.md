@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 280
-last_completed_plan_commit: 6.l.W
-next_plan_commit: 6.l.R
-last_completed_numbered_bundle: 131
+implementation_plan_commits_completed: 281
+last_completed_plan_commit: 6.l.R
+next_plan_commit: 6.l.C
+last_completed_numbered_bundle: 132
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6224,12 +6224,35 @@ partiell. Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen
 
 #### 6.l.R – Make it Right
 
-- [ ] **6.l.R** · Position **281/885** · Voraussetzung: `6.l.W`.
+- [x] **6.l.R** · Position **281/885** · Voraussetzung: `6.l.W`.
 **Exakte Commit-Message:** `6.l.R feat(work): Dauerhafte Checkpointgenerationen vervollständigen`
 
 **Vervollständigung:** Fehlende Segmente, falsche Hashes und Abbruch beim Generationenwechsel lassen keinen Teilcheckpoint gültig werden.
 
 **Verhaltensabnahme:** Vorherige bestätigte Generation bleibt bei Fehler nutzbar und wird nicht als Cache entfernt. Die W-Nachweise bleiben zusätzlich grün.
+
+**Implementierungsstand 6.l.R:** Jeder vollständige Checkpoint-Leselauf hält
+zusätzlich zu den tatsächlichen Inhaltsprüfungen eine gemeinsame Dateibindung
+für alle referenzierten Teile. Ein Wechsel derselben Datei während des Laufs
+oder bis zur abschließenden descriptorrelativen Prüfung verhindert die Rückgabe.
+Bekannte Größenabweichungen werden vor dem Lesen erkannt. Inventarsegmente
+und Kontrollrecords besitzen eine aus ihrer festen Struktur abgeleitete
+64-KiB-Metadatagrenze; Eingangsdateien werden dadurch nicht begrenzt.
+
+Die neue vollständige Generation samt Vorgängerkette wird unmittelbar vor und
+nach der Pointerersetzung nochmals geprüft. Eine zwischen erstem Readback und
+Ersetzung beschädigte neue Datei lässt den alten Pointer unverändert. Fehler
+nach einer erfolgten Ersetzung erhalten den realen Zustand statt eines behaupteten
+Rollbacks. Vorgängerdateien und nicht referenzierte private Teile bleiben erhalten.
+
+49 neue Verhaltensfälle prüfen fehlende/beschädigte Kontroll- und Inventarteile,
+neu gehashte falsche Metadaten, doppelte oder unvollständige Inventare, eine
+vollständig neu gebundene fremde Anfangsgeneration, unsichere Dateitypen,
+Änderungen im Lesefenster und vor der Pointerersetzung sowie reale Datei-/
+Verzeichnis-fsync-Fehlerfenster. Die 17 W-Fälle und alle bisherigen Testdateien
+bleiben unverändert. Es gibt keine neue Command-Ausführung, Lockübernahme oder
+Cachebereinigung. Die Requirements bleiben partiell; erst erfolgreicher
+paralleler Apply-Volltest und Commit bestätigen 281/885.
 
 #### 6.l.C – Make it Clean
 

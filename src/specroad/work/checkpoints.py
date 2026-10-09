@@ -47,13 +47,18 @@ def _directory(held, folder):
     return held._children[('checkpoints', 'objects', 'results').index(folder)]
 
 
-def _read_file(held, folder, name, *, sync=False):
+def _read_file(held, folder, name, *, sync=False, expected_size=None,
+               maximum=None, bindings=None):
     held.check()
     parent = _directory(held, folder)
     logical = folder + '/' + name
     try:
         before = os.stat(name, dir_fd=parent, follow_symlinks=False)
         _private(before)
+        _check(expected_size is None or before.st_size == expected_size,
+               'checkpoint_bytes_changed', path=logical)
+        _check(maximum is None or before.st_size <= maximum,
+               'checkpoint_metadata_too_large', path=logical)
         fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
         try:
             _check(guards._signature(os.fstat(fd)) == guards._signature(before), path=logical)
@@ -72,6 +77,11 @@ def _read_file(held, folder, name, *, sync=False):
                    and guards._signature(now) == guards._signature(before)
                    and guards._signature(os.fstat(fd)) == guards._signature(before), path=logical)
             held.check()
+            if bindings is not None:
+                key, signature = (folder, name), guards._signature(before)
+                _check(key not in bindings or bindings[key] == signature,
+                       'checkpoint_bytes_changed', path=logical)
+                bindings[key] = signature
             return bytes(data)
         finally:
             os.close(fd)
@@ -79,12 +89,36 @@ def _read_file(held, folder, name, *, sync=False):
         raise CheckpointStorageError('checkpoint_bytes_missing', path=logical) from error
 
 
-def _read_reference(held, folder, reference):
+def _read_reference(held, folder, reference, *, bindings=None):
     _reference_check(reference)
     name = reference['sha256'] + ('.json' if folder == 'checkpoints' else '')
-    raw = _read_file(held, folder, name)
+    raw = _read_file(held, folder, name, expected_size=reference['size'],
+                     maximum=65536 if folder == 'checkpoints' else None, bindings=bindings)
     _check(_reference(raw) == reference, 'checkpoint_bytes_changed', path=folder + '/' + name)
     return raw
+
+
+def _verify_bindings(held, bindings):
+    """Close the checked read set without silently trusting earlier path reads."""
+    for (folder, name), signature in bindings.items():
+        held.check()
+        parent, logical = _directory(held, folder), folder + '/' + name
+        try:
+            before = os.stat(name, dir_fd=parent, follow_symlinks=False)
+            _private(before)
+            _check(guards._signature(before) == signature, 'checkpoint_bytes_changed', path=logical)
+            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+            try:
+                _check(guards._signature(os.fstat(fd)) == signature,
+                       'checkpoint_bytes_changed', path=logical)
+                now = os.stat(name, dir_fd=parent, follow_symlinks=False)
+                _private(now)
+                _check(guards._signature(now) == signature, 'checkpoint_bytes_changed', path=logical)
+            finally:
+                os.close(fd)
+        except FileNotFoundError as error:
+            raise CheckpointStorageError('checkpoint_bytes_missing', path=logical) from error
+    held.check()
 
 
 def _ensure_file(held, folder, name, raw):
@@ -103,15 +137,20 @@ def _ensure_file(held, folder, name, raw):
 class _StoredObjects:
     """Lazy trusted adapter for the existing bounded-fanout manifest reader."""
 
-    def __init__(self, held):
+    def __init__(self, held, bindings):
         self.held = held
+        self.bindings = bindings
         self.cache = {}
 
     def get(self, digest, default=None):
         _hash(digest)
         if digest not in self.cache:
-            raw = _read_file(self.held, 'objects', digest)
+            # A 64-entry inventory segment has only fixed hash references/counts.
+            # This metadata limit is unrelated to the size of stored input bytes.
+            raw = _read_file(self.held, 'objects', digest, maximum=65536, bindings=self.bindings)
             _check(sha256(raw).hexdigest() == digest, 'checkpoint_bytes_changed',
+                   path='objects/' + digest)
+            _check(canonical_json_bytes(_parse(raw)) == raw, 'noncanonical_checkpoint_segment',
                    path='objects/' + digest)
             self.cache[digest] = raw
         return self.cache[digest]
@@ -156,12 +195,12 @@ class CheckpointStore:
     def _read_chain(self, held, pointer):
         current = self._pointer_value(pointer)
         reference, generation = current['checkpoint'], current['checkpoint_generation']
-        seen, chain = set(), []
+        seen, chain, bindings = set(), [], {}
         while True:
             _reference_check(reference)
             _check(reference['sha256'] not in seen, 'checkpoint_cycle')
             seen.add(reference['sha256'])
-            raw = _read_reference(held, 'checkpoints', reference)
+            raw = _read_reference(held, 'checkpoints', reference, bindings=bindings)
             record = _parse(raw)
             _object(record, ('format_version', 'work_id', 'checkpoint_generation',
                              'checkpoint_sha256', 'manifest', 'objects', 'parent'))
@@ -170,15 +209,15 @@ class CheckpointStore:
                    and record['work_id'] == current['work_id']
                    and record['checkpoint_generation'] == generation
                    and canonical_json_bytes(record) == raw)
-            stored = _StoredObjects(held)
+            stored = _StoredObjects(held, bindings)
             rows = _entries('checkpoint-objects', record['objects'], stored)
             objects = {}
             for row in rows:
                 _reference_check(row)
                 _check(row['sha256'] not in objects, 'duplicate_checkpoint_object')
-                objects[row['sha256']] = _read_reference(held, 'objects', row)
+                objects[row['sha256']] = _read_reference(held, 'objects', row, bindings=bindings)
             _check([row['sha256'] for row in rows] == sorted(objects))
-            manifest_raw = _read_reference(held, 'objects', record['manifest'])
+            manifest_raw = _read_reference(held, 'objects', record['manifest'], bindings=bindings)
             manifest = read_work_manifest(manifest_raw, objects, registry=self._registry,
                                           expected_tool_build=self._build)
             value = manifest.as_dict()
@@ -201,7 +240,7 @@ class CheckpointStore:
         value = previous.as_dict()
         _check(value['checkpoint_generation'] == current['checkpoint_generation']
                and value['checkpoint_sha256'] == current['checkpoint_sha256'])
-        held.check()
+        _verify_bindings(held, bindings)
         return previous
 
     def read(self):
@@ -262,10 +301,14 @@ class CheckpointStore:
             def before_replace():
                 held.check()
                 _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
+                _check(self._read_chain(held, pointer).raw == manifest.raw)
+                _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
             replace_bound_image(directory, temporary, held._root, 'work.json',
                 size=len(pointer), digest=sha256(pointer).hexdigest(), identity=identity,
                 source_changed=lambda: CheckpointStorageError('checkpoint_pointer_changed'),
                 before_replace=before_replace)
+            _check(self._pointer(held) == (pointer, identity), 'checkpoint_pointer_changed')
+            _check(self._read_chain(held, pointer).raw == manifest.raw)
             _check(self._pointer(held) == (pointer, identity), 'checkpoint_pointer_changed')
             held.check()
             return manifest

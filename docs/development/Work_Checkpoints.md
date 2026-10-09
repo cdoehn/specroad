@@ -40,6 +40,28 @@ ergeben `CheckpointStorageError` mit logischem Speicherpfad; Hashes ersetzen
 keine Bytes. Vorhandene Work-/Schema-/Pfadsicherheitsfehler bleiben ebenfalls
 blockierend.
 
+Jeder vollständige Leselauf bindet sämtliche geprüften Dateien zusätzlich an
+ihre beobachtete Identität, Größe, `mtime` und `ctime`. Dieselbe Referenz darf
+während eines Laufs nicht unbemerkt wechseln. Eine abschließende descriptorrelative
+Prüfung erhält diese Bindungen bis zur Rückgabe; die Merkmale ergänzen die
+tatsächlich gelesenen und gehashten Bytes, sie ersetzen keinen Inhaltshash.
+Bekannte falsche Dateigrößen werden bereits vor dem Lesen zurückgewiesen.
+
+Inventarsegmente und Checkpoint-Kontrolldokumente sind auf 64 KiB begrenzt.
+Diese Metadatagrenze liegt oberhalb der vollständig befüllten 64-fach verzweigten
+Struktur aus festen Hashreferenzen und Zählern; sie begrenzt keine Eingangsdatei.
+Inventarsegmente müssen kanonische JSON-Bytes enthalten. Unbekannte Felder,
+Generationensprünge, fremde Anfangsbindungen sowie doppelte oder unvollständige
+Inventare werden auch bei neu berechneten äußeren Hashes abgewiesen.
+
+Unmittelbar vor der Pointerersetzung wird die neue Generation einschließlich
+ihrer Vorgänger nochmals vollständig aus dem Work-Speicher geprüft. Nach der
+Ersetzung erfolgt dieselbe Prüfung vor der Rückgabe. Auch eine erst nach dem
+ersten Readback fehlende oder veränderte neue Datei kann so keinen erfolgreichen
+Publish vortäuschen. Nicht kooperierende Änderungen durch andere Prozesse des
+gleichen Benutzers bleiben grundsätzlich beobachtungsabhängig; es gibt keine
+Behauptung einer atomaren Momentaufnahme des gesamten Dateisystems.
+
 Dieser Leseweg benutzt `inspect_checkpoint()` und schreibt keine Dateien. Nach
 einem abrupten Publisherabbruch kann er unter dem freigewordenen Kernel-Mutex
 die tatsächlich veröffentlichte vollständige Generation prüfen, während die
