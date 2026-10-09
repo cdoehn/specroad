@@ -15,8 +15,8 @@ from ..changes.request_ids import normalize_request_id
 from ..changes.target_model import TargetModel
 from ..changes.target_values import TargetPolicy
 from ._normative_binding import read_plan
+from ._resume_restore import check_initial_normative, restore_normative_checkpoint
 from .checkpoints import CheckpointStore
-from .manifest import read_work_manifest
 from .resume import WorkResumeError, _runtime_build, _require, _compatible_read
 
 
@@ -45,6 +45,25 @@ class NormativeResumeCheck:
         raise TypeError('A resume check does not authorize publication')
 
 
+def _check_current_target(current, *, model, policy, current_actor, current_request,
+                          gates, strict, package_files):
+    """Recheck current identities, target basis and rights against the saved plan."""
+    value = current.as_dict()
+    _require(current_actor == value['actor'], 'resume_actor_changed')
+    _require(current_request == value['request_id'], 'resume_request_changed')
+    _require(model.binding.project_id == value['source_bindings']['project_id'],
+             'resume_project_changed')
+    plan = read_plan(value, current.objects)
+    try:
+        preflight = prepare_publication_check(plan, model, policy=policy, gates=gates,
+                                              strict=strict, package_files=package_files)
+    except PublicationCheckError as error:
+        if error.reason == 'target_base_root_mismatch':
+            raise WorkResumeError('stale_resume_target', exit_code=6) from error
+        raise
+    return plan, preflight
+
+
 def prepare_normative_resume(store, *, registry, model, policy, actor, request_id,
                              gates=(), strict=False, package_files=()):
     """Recheck original authoring identity and actual current target bytes.
@@ -57,12 +76,7 @@ def prepare_normative_resume(store, *, registry, model, policy, actor, request_i
     _require(type(model) is TargetModel and type(policy) is TargetPolicy,
              'current_resume_model_and_policy_required')
     build = _runtime_build()
-    _require(store._initial.as_dict()['tool_build'] == build, 'incompatible_runtime_build')
-    initial = _compatible_read(read_work_manifest, store._initial.raw, store._initial.objects,
-                               registry=registry, expected_tool_build=build)
-    _require(initial.as_dict()['command_class'] == 'normative_write'
-             and initial.as_dict()['checkpoint_generation'] == 0
-             and not initial.entries('completed'), 'initial_normative_work_required')
+    check_initial_normative(store, registry, build)
     if not any(boundary.root == Path(model.binding.source_root)
                for boundary in store._location._protected):
         raise WorkResumeError('unprotected_resume_target', exit_code=7)
@@ -70,24 +84,10 @@ def prepare_normative_resume(store, *, registry, model, policy, actor, request_i
     identity = normalize_request_id(request_id)
     current_request = None if identity is None else identity.value
     with store._location.inspect_checkpoint() as held:
-        pointer = store._pointer(held)
-        _require(pointer is not None, 'published_work_required')
-        current = _compatible_read(store._read_chain, held, pointer[0])
-        current = _compatible_read(read_work_manifest, current.raw, current.objects,
-                                   registry=registry, expected_tool_build=build)
-        value = current.as_dict()
-        _require(current_actor == value['actor'], 'resume_actor_changed')
-        _require(current_request == value['request_id'], 'resume_request_changed')
-        _require(model.binding.project_id == value['source_bindings']['project_id'],
-                 'resume_project_changed')
-        plan = read_plan(value, current.objects)
-        try:
-            preflight = prepare_publication_check(plan, model, policy=policy, gates=gates,
-                                                  strict=strict, package_files=package_files)
-        except PublicationCheckError as error:
-            if error.reason == 'target_base_root_mismatch':
-                raise WorkResumeError('stale_resume_target', exit_code=6) from error
-            raise
+        pointer, current = restore_normative_checkpoint(store, held, registry, build)
+        plan, preflight = _check_current_target(current, model=model, policy=policy,
+            current_actor=current_actor, current_request=current_request,
+            gates=gates, strict=strict, package_files=package_files)
         _require(_runtime_build() == build, 'runtime_build_changed')
         _require(store._pointer(held) == pointer, 'checkpoint_pointer_changed')
         _require(_compatible_read(store._read_chain, held, pointer[0]).raw == current.raw,

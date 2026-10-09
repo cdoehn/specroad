@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 284
-last_completed_plan_commit: 6.m.R
-next_plan_commit: 6.m.C
-last_completed_numbered_bundle: 135
+implementation_plan_commits_completed: 285
+last_completed_plan_commit: 6.m.C
+next_plan_commit: 6.n.W
+last_completed_numbered_bundle: 136
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6368,10 +6368,26 @@ markiert. Erst der vollständige parallele Apply-Test und Commit bestätigen
 
 #### 6.m.C – Make it Clean
 
-- [ ] **6.m.C** · Position **285/885** · Voraussetzung: `6.m.R`.
+- [x] **6.m.C** · Position **285/885** · Voraussetzung: `6.m.R`.
 **Exakte Commit-Message:** `6.m.C refactor(work): Resume und Kompatibilitätsprüfung bereinigen`
 
 **Bereinigung:** Zustandsrestauration und erneute lokale Rechte-/Basisprüfung getrennt ausführen.
+
+**Implementierungsstand 6.m.C:** Die interne `_resume_restore` trennt die
+unabhängige Anfangsbindung und vollständige Checkpointrestauration von der
+aktuellen Prüfung in `resume_checks`. Deren eigene Routine prüft weiterhin
+Actor, Request, Projektidentität, ursprünglichen Plan sowie aktuelle Zielbasis
+und Rechte. Die bisherigen Prüfanweisungen bleiben strukturell identisch und
+in derselben Reihenfolge; der aufrufende Pfad hält denselben Work-Mutex über
+Restaurierung, aktuelle Vorprüfung und abschließende Kontrolllesung.
+
+Öffentliche Ergebniswerte, Fehlerklassen, Build-/Planbindungen, gespeicherte
+Bytes und der Read-only-Ausführungsweg bleiben unverändert. Alle vorhandenen
+W-/R-Tests bleiben bytegleich; es werden keine Tests passend zur neuen Struktur
+umgeschrieben. CLI-/Code-8-Anbindung, normative Ausführung, mehrteilige Ausführung
+und globaler Work-Abschluss bleiben offen, die Nachweise partiell. Erst der
+vollständige parallele Apply-Test und Commit bestätigen 285/885; danach folgt
+6.n.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

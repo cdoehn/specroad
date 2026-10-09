@@ -96,3 +96,10 @@ aus und verändert weder Projekt noch Work-Verzeichnis. Die abschließende
 Autorisierung, erneute Rechte-/Basisprüfung unter dem echten Projekt-Writer-Lock
 und dauerhafte Veröffentlichung bleiben beim bestehenden Apply-Pfad. Ein
 gespeicherter Actor ist keine Authentifizierung oder menschliche Freigabe.
+
+Die interne Datenrestauration liegt getrennt in `_resume_restore`: Sie prüft
+die unabhängige Anfangsbindung und liest den vollständigen aktuellen Checkpoint
+gegen Registry und Build. Erst danach folgt die eigene aktuelle Actor-/Request-/
+Projekt-, Zielbasis- und Rechteprüfung. Der aufrufende Resume-Pfad hält dabei
+unverändert denselben Work-Mutex bis zur abschließenden Kontrolllesung. Diese
+Trennung erweitert weder den unterstützten Befehlsumfang noch Schreibrechte.
