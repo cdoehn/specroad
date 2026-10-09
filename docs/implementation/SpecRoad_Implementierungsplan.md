@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 274
-last_completed_plan_commit: 6.j.W
-next_plan_commit: 6.j.R
-last_completed_numbered_bundle: 125
+implementation_plan_commits_completed: 275
+last_completed_plan_commit: 6.j.R
+next_plan_commit: 6.j.C
+last_completed_numbered_bundle: 126
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6028,12 +6028,32 @@ Position 274/885. Danach folgt 6.j.R für weitere Pfad-, Eigentümer- und Fehler
 
 #### 6.j.R – Make it Right
 
-- [ ] **6.j.R** · Position **275/885** · Voraussetzung: `6.j.W`.
+- [x] **6.j.R** · Position **275/885** · Voraussetzung: `6.j.W`.
 **Exakte Commit-Message:** `6.j.R feat(work): Externer Work-Root und Locks vervollständigen`
 
 **Vervollständigung:** Pfadüberschneidung, Symlink, fremder Auftrag und unprüfbarer Lockowner verhindern Nutzung.
 
 **Verhaltensabnahme:** Read-only- und Dry-Run-Aufträge erzeugen niemals Projekt- oder .specroad-Writes; Pause hält keinen Writer-Lock. Die W-Nachweise bleiben zusätzlich grün.
+
+**Implementierungsstand 6.j.R:** Eine bereits bereitgestellte WorkDirectory
+bindet ihren ursprünglichen Root-Inode und initialisiert einen verschwundenen
+oder ausgetauschten Root nicht still neu. Vorhandene Container werden vor dem
+Lockrecord-Erwerb iterativ über sichere Deskriptoren geprüft; Symlinks,
+Hardlinks, Spezialdateien, zu offene Rechte und veränderte Pfade verhindern
+die Nutzung. Payloadinhalt wird dabei nicht ausgeführt.
+
+41 zusätzliche Fälle prüfen erhaltene Fremd-/Fehlerbytes, ausgetauschte Roots
+und Vorfahren, private verschachtelte Daten, native FIFOs/Sockets, geänderte
+Kontrollrecords, gesperrte Eingangs-/Ausgabegrenzen und Projekt-TMPDIRs sowie
+einen echten Fork ohne Freigabe des Eltern-Locks. Wiederholte abgewiesene
+Dateiprüfungen verlieren keine nativen Deskriptoren und hinterlassen keinen
+gehaltenen Mutex. Alle 32 W-Fälle bleiben unverändert.
+
+Die Speichergrundlage erteilt weiterhin keine CLI-Ausführungs-, Projektwrite-
+oder Fortsetzungsfreigabe. Vollständige Produktionspausen, Work-Befehle,
+Checkpointpublikation und Wiederaufnahme bleiben den folgenden Schritten
+zugeordnet; beide Requirementnachweise bleiben partiell. Erst der erfolgreiche
+parallele Apply-Volltest und Commit bestätigen Position 275/885.
 
 #### 6.j.C – Make it Clean
 

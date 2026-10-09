@@ -60,6 +60,7 @@ class WorkDirectory:
         self._requested = None if directory is None else _path(directory)
         self._temporary = None if temporary_directory is None else _path(temporary_directory)
         self._path = None
+        self._allocated_identity = None
 
     @property
     def path(self):
@@ -91,6 +92,7 @@ class WorkDirectory:
         self._outside(path)
         with _HeldWorkRoot(self, path, exclusive=exclusive) as held:
             self._path = path
+            self._allocated_identity = guards._identity(os.fstat(held._root))
             yield held
 
 
@@ -135,7 +137,11 @@ class _HeldWorkRoot:
             if guards._identity(current) != identity or guards._identity(os.fstat(fd)) != identity:
                 raise SafetyViolation('Work directory changed during use')
         if hasattr(self, '_root'):
-            _private(os.fstat(self._root), directory=True)
+            info = os.fstat(self._root)
+            _private(info, directory=True)
+            expected = self._location._allocated_identity
+            if expected is not None and guards._identity(info) != expected:
+                raise SafetyViolation('Previously allocated work root changed')
         for fd in getattr(self, '_children', ()):
             _private(os.fstat(fd), directory=True)
 
@@ -184,6 +190,77 @@ class _HeldWorkRoot:
             raise SafetyViolation('Work record changed after publication')
         return identity
 
+    def _validate_tree(self, directory):
+        """Inspect retained entry types/ownership without reading payload bytes.
+
+        Iterative descriptor traversal keeps only the active directory chain.
+        Payload readers/writers still need their own current path/hash checks.
+        """
+        stack = []
+        seen = {guards._identity(os.fstat(directory))}
+        def enter(fd, parent=None, name=None):
+            iterator = None
+            try:
+                signature = guards._signature(os.fstat(fd))
+                iterator = os.scandir(fd)
+                stack.append((fd, iterator, signature, parent, name))
+            except BaseException:
+                if iterator is not None:
+                    iterator.close()
+                if parent is not None:
+                    os.close(fd)
+                raise
+        try:
+            enter(directory)
+            while stack:
+                self._check_path()
+                parent, iterator, signature, ancestor, basename = stack[-1]
+                entry = next(iterator, None)
+                if entry is None:
+                    if guards._signature(os.fstat(parent)) != signature:
+                        raise SafetyViolation('Work payload directory changed during inspection')
+                    if ancestor is not None:
+                        current = os.stat(basename, dir_fd=ancestor, follow_symlinks=False)
+                        if guards._signature(current) != signature:
+                            raise SafetyViolation('Work payload path changed during inspection')
+                    stack.pop()
+                    iterator.close()
+                    if ancestor is not None:
+                        os.close(parent)
+                    continue
+                guards._parts(entry.name)
+                before = os.stat(entry.name, dir_fd=parent, follow_symlinks=False)
+                is_directory = stat.S_ISDIR(before.st_mode)
+                _private(before, directory=is_directory)
+                flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+                if is_directory:
+                    flags |= os.O_DIRECTORY
+                fd = os.open(entry.name, flags, dir_fd=parent)
+                try:
+                    if guards._signature(os.fstat(fd)) != guards._signature(before):
+                        raise SafetyViolation('Work payload entry changed while opening')
+                    if is_directory:
+                        identity = guards._identity(before)
+                        if identity in seen or any(identity == b._root_identity for b in self._location._protected):
+                            raise SafetyViolation('Aliased work payload directory')
+                        seen.add(identity)
+                        nested = fd
+                        fd = None  # enter owns the descriptor, including on failure.
+                        enter(nested, parent, entry.name)
+                    else:
+                        current = os.stat(entry.name, dir_fd=parent, follow_symlinks=False)
+                        if guards._signature(current) != guards._signature(before):
+                            raise SafetyViolation('Work payload entry changed during inspection')
+                finally:
+                    if fd is not None:
+                        os.close(fd)
+        finally:
+            while stack:
+                fd, iterator, _, ancestor, _ = stack.pop()
+                iterator.close()
+                if ancestor is not None:
+                    os.close(fd)
+
     def __enter__(self):
         import fcntl
         self._fcntl = fcntl
@@ -193,12 +270,13 @@ class _HeldWorkRoot:
             for name in parts[:-1]:
                 parent = self._directory(parent, name)
             self._check_path()
-            try:
-                os.mkdir(parts[-1], 0o700, dir_fd=parent)
-                os.fsync(parent)
-            except FileExistsError:
-                if self._exclusive:
-                    raise
+            if self._location._allocated_identity is None:
+                try:
+                    os.mkdir(parts[-1], 0o700, dir_fd=parent)
+                    os.fsync(parent)
+                except FileExistsError:
+                    if self._exclusive:
+                        raise
             self._root = self._directory(parent, parts[-1])
             self._check_path()
             fcntl.flock(self._root, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -226,6 +304,8 @@ class _HeldWorkRoot:
             for name in _DIRECTORIES:
                 self._children.append(self._directory(self._root, name))
             self._check_path()
+            for fd in self._children:
+                self._validate_tree(fd)
             owner = LinuxOwnerProbe().current()
             if owner.host_id is None or owner.process_start_id is None:
                 raise SafetyViolation('Work lock owner cannot be verified')

@@ -30,6 +30,21 @@ löst nur den eigenen Lock und erhält sämtliche Arbeitsdaten. Eine veränderte
 fremde oder verwaiste Lockdatei verhindert Nutzung; PID/Hostname oder ein freier
 Kernel-Lock allein erlauben keine Übernahme. Native I/O-Fehler bleiben erhalten.
 
+Nach der ersten Bereitstellung merkt sich die Location die Verzeichnisidentität.
+Ein verlorener oder ausgetauschter Root wird bei erneuter Nutzung derselben
+Location nicht neu erzeugt. Beim Erwerb werden auch vorhandene Containerinhalte
+iterativ und descriptorrelativ auf sichere Namen, reguläre private Einträge,
+fehlende Hardlinks und stabile Verzeichnisgrenzen geprüft. Es werden dabei keine
+Payloadbytes als Programm gelesen oder ausgeführt. Spätere Payloadleser und
+-schreiber benötigen weiterhin eigene aktuelle Pfad- und Inhaltsprüfungen.
+
+Geänderte Kontrolldateien verhindern auch die automatische Entfernung des
+Lockrecords beim Verlassen. Der Kernel-Lock und eigene Deskriptoren werden
+dennoch freigegeben; die tatsächlichen fremden oder beschädigten Bytes bleiben
+zur Diagnose erhalten. Ein geforkter Kindprozess darf den Eltern-Lock weder
+nutzen noch freigeben. Es findet keine automatische Wiederholung oder Reparatur
+eines fehlgeschlagenen Erwerbs statt.
+
 Dies ist eine Speicher- und Lockgrundlage, noch keine Checkpointpublikation.
 `work.json`, atomare Generationen, Eingangs-Snapshot, tatsächliches Resume,
 automatische Pause und Code 8 folgen in den zugehörigen Planschritten. Das
