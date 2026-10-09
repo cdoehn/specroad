@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0607",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned native Linux work and protected roots, independently supplied initial WorkManifest and inert declared completion fixtures. Child processes use isolated interpreters; crash and disk-full injections are explicit."
+  ],
+  "steps": [
+    "Publish complete initial and immediate successor generations; verify every original byte, private mode, retained predecessor, segmented inventory and fsync ordering before atomic pointer replacement.",
+    "Read the actual current generation in another process; abruptly terminate publishers during object storage and immediately before/after pointer replacement, retaining the orphan record and verifying data-only read access.",
+    "Reject stale or foreign successors and identify missing/changed required bytes; retain the prior readable generation on an injected partial-write failure."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein neuer Checkpoint MUSS erst nach vollständiger dauerhafter Sicherung aller referenzierten Bestandteile atomar als aktuelle Generation veröffentlicht werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "6.l.W persists the existing inert WorkManifest and its exact object set through segmented hash-addressed inventories and a checked predecessor chain anchored in the caller-trusted initial manifest. Existing native exclusive creation and atomic image replacement primitives fsync all required files/directories before switching work.json. Data-only inspection uses the native work mutex without creating/removing owner records, so a crashed publisher leaves either the prior complete generation or the fully secured new one readable; orphan records still block writes. Previous checkpoints, all objects and partial own files remain retained. Real process restart/exit tests prove current stored-byte selection, not command execution or runtime resume. No Code 8, execution authority, all-command coverage, cache-cleanup integration, automatic recovery, bounded whole-store memory or non-native filesystem durability is asserted."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,26 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_checkpoints.py::test_active_publisher_mutex_blocks_an_independent_reader",
+    "tests/test_work_checkpoints.py::test_all_payload_files_are_synced_before_the_current_pointer_can_change",
+    "tests/test_work_checkpoints.py::test_an_independent_runtime_reads_exactly_the_last_published_generation",
+    "tests/test_work_checkpoints.py::test_bound_but_unpublished_root_has_no_current_generation",
+    "tests/test_work_checkpoints.py::test_complete_generations_preserve_every_declared_byte_and_previous_file",
+    "tests/test_work_checkpoints.py::test_failed_new_object_write_keeps_the_previous_checkpoint_readable",
+    "tests/test_work_checkpoints.py::test_only_an_immediate_successor_of_the_current_binding_can_publish[different]",
+    "tests/test_work_checkpoints.py::test_only_an_immediate_successor_of_the_current_binding_can_publish[same]",
+    "tests/test_work_checkpoints.py::test_only_an_immediate_successor_of_the_current_binding_can_publish[skip]",
+    "tests/test_work_checkpoints.py::test_real_abrupt_exit_never_publishes_a_partial_generation_or_steals_the_owner[after_pointer-23-1]",
+    "tests/test_work_checkpoints.py::test_real_abrupt_exit_never_publishes_a_partial_generation_or_steals_the_owner[before_pointer-22-0]",
+    "tests/test_work_checkpoints.py::test_real_abrupt_exit_never_publishes_a_partial_generation_or_steals_the_owner[partial_objects-21-0]",
+    "tests/test_work_checkpoints.py::test_segmented_object_inventory_and_binary_inputs_survive_reopening",
+    "tests/test_work_checkpoints.py::test_storage_declaration_and_absent_inspection_do_not_create_files",
+    "tests/test_work_checkpoints.py::test_unavailable_required_payload_is_named_instead_of_reconstructed[different]",
+    "tests/test_work_checkpoints.py::test_unavailable_required_payload_is_named_instead_of_reconstructed[missing]",
+    "tests/test_work_checkpoints.py::test_wrong_initial_binding_is_rejected_without_storage_effects"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Further hostile-segment, interrupted-transition and integrity boundaries belong to 6.l.R. Command resume/compatibility, actual completion evidence, portable restore, explicit orphan recovery, incremental publication/readback, bounded total memory and full runtime/cache integration remain open. This first native data persistence scope is partial; no release or complete requirement pass is claimed."
   ]
 }

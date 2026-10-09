@@ -78,3 +78,21 @@ class WorkDirectory:
             self._path = path
             self._allocated_identity = guards._identity(os.fstat(held._root))
             yield held
+
+    @contextmanager
+    def inspect_checkpoint(self):
+        """Read existing data under the native mutex, preserving every owner file.
+
+        This is no recovery, continuation approval or permission to publish.
+        An active native owner still blocks. No absent storage is created.
+        """
+        if not sys.platform.startswith('linux') or not guards._HAS_SAFE_OPEN:
+            raise SafetyViolation('Native work locking is unavailable')
+        path = self._path or self._requested
+        if path is None:
+            raise SafetyViolation('No existing work location was supplied')
+        self._outside(path)
+        with _HeldWorkRoot(self, path, exclusive=False, inspection=True) as held:
+            self._path = path
+            self._allocated_identity = guards._identity(os.fstat(held._root))
+            yield held

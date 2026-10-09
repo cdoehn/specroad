@@ -17,6 +17,7 @@ from ..security import paths as guards
 _DIRECTORIES = ('checkpoints', 'objects', 'results')
 _BINDING = 'root.json'
 _LOCK = 'work-lock.json'
+_CURRENT = 'work.json'
 
 
 def _private(info, *, directory=False):
@@ -27,11 +28,12 @@ def _private(info, *, directory=False):
 
 
 class _HeldWorkRoot:
-    def __init__(self, location, path, *, exclusive):
+    def __init__(self, location, path, *, exclusive, inspection=False):
         self.path = path
         self.work_id = location._work_id
         self._location = location
         self._exclusive = exclusive
+        self._inspection = inspection
         self._fds = []
         self._entries = []
         self._pid = os.getpid()
@@ -200,7 +202,7 @@ class _HeldWorkRoot:
             for name in parts[:-1]:
                 parent = self._directory(parent, name)
             self._check_path()
-            if self._location._allocated_identity is None:
+            if self._location._allocated_identity is None and not self._inspection:
                 try:
                     os.mkdir(parts[-1], 0o700, dir_fd=parent)
                     os.fsync(parent)
@@ -219,12 +221,16 @@ class _HeldWorkRoot:
             names = set(os.listdir(self._root))
             if names:
                 # Never infer authorization from PID, hostname or an unlocked fd.
-                if names != {_BINDING, *_DIRECTORIES}:
+                required = {_BINDING, *_DIRECTORIES}
+                optional = {_CURRENT, _LOCK} if self._inspection else {_CURRENT}
+                if not required <= names or not names <= required | optional:
                     raise SafetyViolation('Foreign, incomplete or locked work root')
                 raw, self._binding_inode = self._read(_BINDING)
                 if raw != self._binding:
                     raise SafetyViolation('Work root belongs to a different bound order')
             else:
+                if self._inspection:
+                    raise SafetyViolation('No bound work root to inspect')
                 self._binding_inode = self._create(_BINDING, self._binding)
                 for name in _DIRECTORIES:
                     self._check_path()
@@ -236,6 +242,13 @@ class _HeldWorkRoot:
             self._check_path()
             for fd in self._children:
                 self._validate_tree(fd)
+            if _CURRENT in names:
+                self._read(_CURRENT)
+            if self._inspection:
+                # A data-only inspection never steals/removes a retained owner.
+                self._owner = self._read(_LOCK) if _LOCK in names else None
+                self.check()
+                return self
             owner = LinuxOwnerProbe().current()
             if owner.host_id is None or owner.process_start_id is None:
                 raise SafetyViolation('Work lock owner cannot be verified')
@@ -251,11 +264,17 @@ class _HeldWorkRoot:
 
     def check(self):
         self._check_path()
-        if not self._locked or self._owner is None:
+        if not self._locked or (self._owner is None and not self._inspection):
             raise SafetyViolation('No active work lock')
         if self._read(_BINDING) != (self._binding, self._binding_inode):
             raise SafetyViolation('Work identity changed')
-        if self._read(_LOCK) != self._owner:
+        try:
+            owner = self._read(_LOCK)
+        except FileNotFoundError:
+            if not self._inspection or self._owner is not None:
+                raise
+            owner = None
+        if owner != self._owner:
             raise SafetyViolation('Work lock owner changed')
         return True
 
@@ -263,8 +282,9 @@ class _HeldWorkRoot:
         try:
             if os.getpid() == self._pid:
                 self.check()
-                os.unlink(_LOCK, dir_fd=self._root)
-                os.fsync(self._root)
+                if not self._inspection:
+                    os.unlink(_LOCK, dir_fd=self._root)
+                    os.fsync(self._root)
         finally:
             self._close()
 

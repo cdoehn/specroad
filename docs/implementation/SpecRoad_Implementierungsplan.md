@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 279
-last_completed_plan_commit: 6.k.C
-next_plan_commit: 6.l.W
-last_completed_numbered_bundle: 130
+implementation_plan_commits_completed: 280
+last_completed_plan_commit: 6.l.W
+next_plan_commit: 6.l.R
+last_completed_numbered_bundle: 131
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6186,12 +6186,41 @@ Checkpointgenerationen.
 
 #### 6.l.W – Let it Work
 
-- [ ] **6.l.W** · Position **280/885** · Voraussetzung: `6.k.C`.
+- [x] **6.l.W** · Position **280/885** · Voraussetzung: `6.k.C`.
 **Exakte Commit-Message:** `6.l.W feat(work): Dauerhafte Checkpointgenerationen aufbauen`
 
 **Umsetzung:** Alle referenzierten Teile sichern und erst danach atomar die neue aktuelle Generation veröffentlichen.
 
 **Verhaltensabnahme:** Nach Neustart wird genau der letzte vollständige Checkpoint verwendet.
+
+**Implementierungsstand 6.l.W:** `CheckpointStore` sichert die vollständigen
+Bytes des bestehenden inerten Work-Kandidaten, ein segmentiertes Objektinventar
+und die gehashte Vorgängerkette im externen privaten Work-Root. Die vorhandenen
+Dateiprimitiven erzeugen neue Teile exklusiv, prüfen sie und synchronisieren
+Dateien sowie Elternverzeichnisse. Erst danach schaltet eine gebundene atomare
+Ersetzung `work.json` auf die neue vollständige Generation um.
+
+Ein rein lesender Zugriff über `WorkDirectory.inspect_checkpoint()` prüft die
+aktuelle Generation bis zum unabhängig vertrauenswürdigen Anfangsmanifest.
+Er kann nach Prozessabbruch erhaltene Daten unter dem freigewordenen Kernel-Mutex
+lesen, ohne einen verwaisten Ownerrecord zu löschen oder zu übernehmen. Weitere
+Writes bleiben bei diesem Record gesperrt. Bisherige Checkpoints, Objekte und
+unvollständige eigene Dateien werden erhalten, keine Cachebereinigung gestartet.
+
+17 neue Verhaltensfälle prüfen aufeinanderfolgende Generationen, ein verzweigtes
+Inventar mit 150 binären Eingängen, aktuelle File-/Verzeichnis-fsync vor der
+Pointerersetzung, unabhängiges Lesen in einer neuen Runtime und echte abrupte
+Prozessenden vor/nach dem Pointerwechsel. Fehlerfälle benennen fehlende oder
+veränderte Nutzbytes; eine injizierte volle Work-Partition erhält den alten
+lesbaren Checkpoint und den tatsächlichen Dateizustand.
+
+Dies ist dauerhafte Speicherung des deklarierten Datenvertrags, kein ausgeführter
+Command-Resume oder Code 8. Veröffentlichung und Lesen sind zunächst synchron
+und halten Objektbestände/Vorgänger im Speicher. Native Linux-Dauerhaftigkeit
+wird über tatsächliche fsync-Aufrufe belegt; fremde Dateisysteme und vollständige
+Command-/Cache-/Recoveryintegration bleiben offen. Die Requirements bleiben
+partiell. Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen
+280/885; anschließend erweitert 6.l.R die Fehler- und Manipulationsgrenzen.
 
 #### 6.l.R – Make it Right
 

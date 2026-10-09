@@ -5,7 +5,7 @@ Modul wählt die verzögert benötigte externe Location und hält deren Bindung.
 `work._root_lock` verwaltet ausschließlich den privaten Work-Lock, seine
 Deskriptoren, Kontrolldateien und sicheren Containerzugriffe. Der gemeinsame
 Linux-Prozessbeobachter liefert nur Eigentümerdaten; Projektwriter-Locks
-werden durch das Work-Modul weiterhin weder angelegt noch übernommen.
+werden durch diesen Work-Verzeichnisadapter weder angelegt noch übernommen.
 Die Strukturtrennung erhält Datenformate, Fehler und Seiteneffekte.
 
 `specroad.work.root.WorkDirectory` reserviert einen externen Speicherort für
@@ -35,8 +35,9 @@ Container. `work-lock.json` enthält den aktuellen Prozess samt Start-/Boot-/
 PID-Namespace-Bindung und zufälligem Eigentümertoken. `held.check()` prüft die
 weiterhin gleichen Pfade und Kontrolldateien. Eine reguläre Context-Beendigung
 löst nur den eigenen Lock und erhält sämtliche Arbeitsdaten. Eine veränderte,
-fremde oder verwaiste Lockdatei verhindert Nutzung; PID/Hostname oder ein freier
-Kernel-Lock allein erlauben keine Übernahme. Native I/O-Fehler bleiben erhalten.
+fremde oder verwaiste Lockdatei verhindert eine weitere Veröffentlichung;
+PID/Hostname oder ein freier Kernel-Lock allein erlauben keine Übernahme.
+Native I/O-Fehler bleiben erhalten.
 
 Nach der ersten Bereitstellung merkt sich die Location die Verzeichnisidentität.
 Ein verlorener oder ausgetauschter Root wird bei erneuter Nutzung derselben
@@ -53,12 +54,19 @@ zur Diagnose erhalten. Ein geforkter Kindprozess darf den Eltern-Lock weder
 nutzen noch freigeben. Es findet keine automatische Wiederholung oder Reparatur
 eines fehlgeschlagenen Erwerbs statt.
 
-Dies ist eine Speicher- und Lockgrundlage, noch keine Checkpointpublikation.
-`work.json`, atomare Generationen, Eingangs-Snapshot, tatsächliches Resume,
-automatische Pause und Code 8 folgen in den zugehörigen Planschritten. Das
-Wiederöffnen akzeptiert vorerst genau dasselbe initiale Manifest am unverändert
-gebundenen Root; ein neuer Generationenkandidat oder ein verschobener Root
-benötigt später eine gesonderte geprüfte Fortsetzungs-/Restore-Bindung.
+`inspect_checkpoint()` öffnet ausschließlich einen bestehenden gebundenen Root
+unter demselben Kernel-Mutex. Es erzeugt keine Verzeichnisse oder Ownerdateien
+und erhält einen vorhandenen, sicheren Lockrecord bytegenau. Ein aktiver
+Kernel-Eigentümer blockiert weiterhin. Dieser rein lesende Zugang erlaubt nach
+Prozessabbruch die Prüfung der zuletzt veröffentlichten Daten; er übernimmt
+keinen verwaisten Lock und erteilt keine Schreib- oder Fortsetzungsfreigabe.
+
+Die eigentliche Generationenpublikation ergänzt `work.checkpoints.CheckpointStore`
+gemäß [Work_Checkpoints.md](Work_Checkpoints.md). Ein optionales privates `work.json`
+ist deshalb neben der bestehenden Rootstruktur zulässig. Der Verzeichnisadapter
+allein veröffentlicht weiterhin keine Generation. Das Wiederöffnen bindet
+dasselbe vertrauenswürdige initiale Manifest am unveränderten Root; tatsächliches
+Command-Resume und eine Restore-Bindung nach Verschieben bleiben spätere Schritte.
 Dateien im Work-Verzeichnis werden weder als Code geladen noch automatisch
 bereinigt. Ein fehlgeschlagener Aufbau bleibt zur Diagnose erhalten.
 
