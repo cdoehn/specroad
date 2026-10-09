@@ -1,5 +1,13 @@
 # Externes Work-Verzeichnis
 
+Der öffentliche Einstieg bleibt `specroad.work.root.WorkDirectory`. Dieses
+Modul wählt die verzögert benötigte externe Location und hält deren Bindung.
+`work._root_lock` verwaltet ausschließlich den privaten Work-Lock, seine
+Deskriptoren, Kontrolldateien und sicheren Containerzugriffe. Der gemeinsame
+Linux-Prozessbeobachter liefert nur Eigentümerdaten; Projektwriter-Locks
+werden durch das Work-Modul weiterhin weder angelegt noch übernommen.
+Die Strukturtrennung erhält Datenformate, Fehler und Seiteneffekte.
+
 `specroad.work.root.WorkDirectory` reserviert einen externen Speicherort für
 ein vom Aufrufer bereits vertrauenswürdig gebundenes `WorkManifest`.
 Der Aufrufer nennt explizit alle geschützten Projekt-, Eingangs- und

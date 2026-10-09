@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 275
-last_completed_plan_commit: 6.j.R
-next_plan_commit: 6.j.C
-last_completed_numbered_bundle: 126
+implementation_plan_commits_completed: 276
+last_completed_plan_commit: 6.j.C
+next_plan_commit: 6.k.W
+last_completed_numbered_bundle: 127
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6057,10 +6057,21 @@ parallele Apply-Volltest und Commit bestätigen Position 275/885.
 
 #### 6.j.C – Make it Clean
 
-- [ ] **6.j.C** · Position **276/885** · Voraussetzung: `6.j.R`.
+- [x] **6.j.C** · Position **276/885** · Voraussetzung: `6.j.R`.
 **Exakte Commit-Message:** `6.j.C refactor(work): Externer Work-Root und Locks bereinigen`
 
 **Bereinigung:** Work-Lock und Projektlock strikt getrennt verwalten.
+
+**Implementierungsstand 6.j.C:** Der öffentliche Einstieg `work.root` verwaltet
+die verzögerte Location-Auswahl. Die unveränderte private Lease-Klasse und ihre
+Datei-/Rechteprüfung liegen in `work._root_lock`; sie verwalten ausschließlich
+Work-Root-Deskriptoren und Work-Lockrecords. Der Linux-Prozessbeobachter bleibt
+ein gemeinsamer Metadatenleser ohne Projektlock-Erwerb. Alle vier bisherigen
+Klassen-/Funktionsdefinitionen und die Formatkonstanten sind im AST identisch.
+Alle 73 Work-Root-W/R-Fälle, sämtliche bisherigen Testdateien und ihre
+Katalogbindungen bleiben unverändert. Die Requirementnachweise bleiben partiell.
+Erst der erfolgreiche parallele Apply-Volltest und Commit bestätigen Position
+276/885; danach folgt 6.k.W für den fortsetzbaren Eingangs-Snapshot.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
