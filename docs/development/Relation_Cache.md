@@ -53,7 +53,39 @@ Die W-Verhaltenstests vergleichen alle Richtungen mit dem unabhängigen Scan,
 erzwingen echte Treffer ohne normale Indexneukonstruktion, prüfen rehashte
 Manipulationen und binden reale verschobene Modul-/ZIP-Distributionen. Die
 Unitfälle für Buildabweichungen kennzeichnen ihre aufgezeichnete Buildidentität
-ausdrücklich als Fixture. Die breitere native Fehler-/Ressourcenabnahme folgt
-in 6.g.R; CLI-weite Cacheintegration, andere Cachearten und die vollständige
+ausdrücklich als Fixture. CLI-weite Cacheintegration, andere Cachearten und die vollständige
 Runtime-/Plattformabnahme bleiben offen. Es wird kein Geschwindigkeitsgewinn
 oder Benchmarkstatus behauptet.
+
+6.g.R ergänzt eine günstige Strukturvorprüfung während des blockweisen Lesens.
+Sie verwirft Einträge mit mehr als acht Verschachtelungsebenen oder mehr als
+`256 + 32 * Quellen + 8 * Relationen` Strukturzeichen außerhalb von Strings.
+Diese konservative Schranke folgt dem festen Cacheformat und der bereits
+vollständig gelesenen aktuellen Eingabemenge. Sie begrenzt ausschließlich
+entbehrliche Cachearbeit. Stringgrenzen und Escapes bleiben über kurze native
+Lesezugriffe hinweg erhalten; der strikte JSON-Decoder prüft weiterhin die
+vollständige Syntax einschließlich doppelter Schlüssel und ungültiger Zahlen.
+Originaleingaben und vollständige Antworten werden dabei nicht eingeschränkt.
+
+Der Bytepuffer wächst mit den tatsächlich gelesenen Daten. Ein Dateiumfang löst
+keine gleich große Voraballokation aus; ein kurzer Read erzeugt keinen dauerhaft
+separat gespeicherten Teilpuffer. Der R-Nachweis liest einen echten 160-KiB-Eintrag
+in Ein-Byte-Reads und misst ausschließlich diesen Python-Allokationsabschnitt
+mit `tracemalloc` unter 1 MiB. Das ist keine Aussage über Gesamt-RSS, Hostquota,
+Quellladen oder JSON-Objekte. Diese Grenzen aus W bleiben bestehen.
+
+Die R-Fälle prüfen echte kurze Reads, exakte Bytebudgets, ungültige UTF-8-/JSON-
+Werte, zu tiefe/breite Strukturen vor Decoding, ersetzte oder entfernte Cachedateien
+und Änderungen bei gleicher Größe/mtime. Cachefehler schließen eigene Deskriptoren,
+verwerfen den Eintrag ohne Retry oder Reparatur und berechnen aus Originaldaten
+neu. Ein währenddessen verändertes Original bleibt ein Fehler. Programmierfehler
+und Unterbrechungen werden nicht als Cachemiss verschluckt.
+
+Isolierte Prozesse belegen echte `EACCES`- und `EMFILE`-Fälle. Eine gesonderte,
+ausdrücklich injizierte Allokationsfunktion versucht unter einer echten
+Adressraumgrenze eine unzulässige große Allokation; deren `MemoryError` führt
+nach Wiederherstellung der Prozessgrenze zur vollständigen Neuberechnung.
+Dies behauptet keinen Mindest-RAM-Bedarf des tatsächlichen Cacheinitialisierers.
+Weitere gezielt injizierte Fehler bleiben als solche gekennzeichnet. Die
+Read-only-Nachweise fangen Schreibversuche ab und vergleichen vorhandene Bytes,
+Dateimodi und Einträge.

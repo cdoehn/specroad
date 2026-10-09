@@ -11,17 +11,19 @@
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
   "preconditions": [
-    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API."
+    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API.",
+    "R: owned guarded files; actual short reads. EACCES and EMFILE use isolated native processes. Memory failures are labelled injections; the separate address-space case performs a real refused allocation inside an explicitly injected allocator, not the actual cache initializer minimum."
   ],
   "steps": [
     "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
     "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
-    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction."
+    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction.",
+    "R: reject excessive cache depth/structure before strict decoding; check native short-read accounting and the selected 160 KiB adapter allocation window, faults, observed file races, descriptor cleanup, no write attempts and unchanged critical input inventory."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Cachelesen, Memoisierung und zulässige Cachepflege MÜSSEN innerhalb der für den Aufruf geltenden Ressourcen- und Befehlsklassenverträge bleiben.",
-    "scope": "Read-only relation queries do not create, repair, delete or write cache, normative, recovery or Work data. Off, scan, zero byte allowance and unrecorded builds perform no cache open. The explicit nonnegative allowance caps optional native bytes only; full source/result coverage is preserved. No total RSS or full adaptive work integration is claimed."
+    "scope": "Read-only relation queries do not create, repair, delete or write cache, normative, recovery or Work data. Off, scan, zero byte allowance and unrecorded builds perform no cache open. The explicit nonnegative allowance caps optional native bytes only; full source/result coverage is preserved. No total RSS or full adaptive work integration is claimed. R adds bounded streaming structure preflight and bytearray accumulation without retained per-read fragments. Native access/descriptor refusal, labelled allocation failures and observed cache changes fall back completely; original-source changes and programming/interruption failures retain their own errors. The selected one-byte-read Python allocation window stays below 1 MiB for 160 KiB input; this is not RSS or a host capacity promise."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,6 +40,28 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_relation_cache_right.py::test_budget_smaller_than_cache_extent_does_not_consume_or_decode_it",
+    "tests/test_relation_cache_right.py::test_excessive_optional_structure_is_skipped_before_json_decode[deep_array]",
+    "tests/test_relation_cache_right.py::test_excessive_optional_structure_is_skipped_before_json_decode[deep_object]",
+    "tests/test_relation_cache_right.py::test_excessive_optional_structure_is_skipped_before_json_decode[wide_array]",
+    "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[17]",
+    "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[1]",
+    "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[65536]",
+    "tests/test_relation_cache_right.py::test_one_byte_short_reads_do_not_retain_one_object_per_fragment",
+    "tests/test_relation_cache_right.py::test_optional_memory_failure_releases_descriptors_and_rebuilds_once[allocation]",
+    "tests/test_relation_cache_right.py::test_optional_memory_failure_releases_descriptors_and_rebuilds_once[decode]",
+    "tests/test_relation_cache_right.py::test_optional_memory_failure_releases_descriptors_and_rebuilds_once[read]",
+    "tests/test_relation_cache_right.py::test_optional_memory_failure_releases_descriptors_and_rebuilds_once[verify_order]",
+    "tests/test_relation_cache_right.py::test_optional_native_api_errors_do_not_retry_or_write[failure0]",
+    "tests/test_relation_cache_right.py::test_optional_native_api_errors_do_not_retry_or_write[failure1]",
+    "tests/test_relation_cache_right.py::test_optional_native_api_errors_do_not_retry_or_write[failure2]",
+    "tests/test_relation_cache_right.py::test_optional_native_api_errors_do_not_retry_or_write[failure3]",
+    "tests/test_relation_cache_right.py::test_programming_errors_and_interrupts_propagate_without_cache_retry[interrupt]",
+    "tests/test_relation_cache_right.py::test_programming_errors_and_interrupts_propagate_without_cache_retry[runtime]",
+    "tests/test_relation_cache_right.py::test_programming_errors_and_interrupts_propagate_without_cache_retry[type]",
+    "tests/test_relation_cache_right.py::test_real_descriptor_refusal_is_cache_miss_after_limit_restoration",
+    "tests/test_relation_cache_right.py::test_real_permission_denial_does_not_block_original_project",
+    "tests/test_relation_cache_right.py::test_real_refused_allocation_in_labelled_cache_allocator_falls_back",
     "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[both]",
     "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[incoming]",
     "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[outgoing]",
@@ -59,6 +83,6 @@
     "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[oversized]"
   ],
   "open_items": [
-    "Partial current-project relation-reader integration only. Native permission/resource/race hardening follows 6.g.R. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Full parsed cache objects can exceed the read-byte allowance in memory; that allowance is not an RSS cap."
+    "Partial current-project relation-reader integration only. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Parsed cache objects can exceed the read-byte allowance in memory; the allowance is not an RSS cap. Real native error observations and labelled injections are distinguished."
   ]
 }

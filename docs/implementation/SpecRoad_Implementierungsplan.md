@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 265
-last_completed_plan_commit: 6.g.W
-next_plan_commit: 6.g.R
-last_completed_numbered_bundle: 116
+implementation_plan_commits_completed: 266
+last_completed_plan_commit: 6.g.R
+next_plan_commit: 6.g.C
+last_completed_numbered_bundle: 117
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5698,12 +5698,40 @@ Dev-/Apply-Volltests und Commit bestätigen Position 265/885. Danach folgt 6.g.R
 
 #### 6.g.R – Make it Right
 
-- [ ] **6.g.R** · Position **266/885** · Voraussetzung: `6.g.W`.
+- [x] **6.g.R** · Position **266/885** · Voraussetzung: `6.g.W`.
 **Exakte Commit-Message:** `6.g.R feat(work): Optionale Caches ohne Fachwirkung vervollständigen`
 
 **Vervollständigung:** Defekte, unlesbare, falsche oder zu teure Einträge ignorieren; mtime und Größe allein nicht vertrauen.
 
 **Verhaltensabnahme:** Cachelöschung oder Manipulation verändert kein Fachresultat und löst keinen read_only-Write aus. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 117:** Das vollständig geprüfte Result von Bundle 116
+bestätigt Commit `a5d3b3f705b2a3f28b10dd2f9e84135e1aff6a10`, 6.551 erfolgreiche
+parallele Apply-Tests und einen sauberen, vollständig übereinstimmenden Snapshot.
+Vor dem Cache-Decoding begrenzt eine blockweise Strukturvorprüfung die Tiefe
+und den zur aktuellen vollständigen Eingabemenge passenden Strukturumfang.
+Sie hält String-/Escapestand über kurze native Reads hinweg und ersetzt nicht
+den strikten JSON-Decoder. Der Bytepuffer wächst aus tatsächlichen Reads;
+Ein-Byte-Reads erzeugen keine Liste dauerhaft gehaltener Teilobjekte.
+
+38 neue R-Verhaltenstests ergänzen die unveränderten 41 W-Fälle. Sie prüfen
+volle Referenzgleichheit bei nativen Kurzreads, Byte-/Strukturgrenzen ohne
+vorheriges Decoding, ungültige JSON-Werte, Cacheaustausch und Änderungen bei
+gleicher Größe/mtime. Cachefehler schließen Deskriptoren und führen ohne Retry,
+Reparatur oder Löschung zur vollständigen Neuberechnung. Änderungen an
+Originalquellen sowie Programmierfehler und Unterbrechungen bleiben Fehler.
+Isolierte Prozesse liefern echte EACCES-/EMFILE-Nachweise. Eine ausdrücklich
+injizierte Allokationsfunktion belegt native Verweigerung unter einer tatsächlichen
+Adressraumgrenze; sie behauptet keinen Mindest-RAM-Bedarf des Cacheinitialisierers.
+Die gemessene Python-Allokationsspitze beim Lesen eines 160-KiB-Eintrags in
+Ein-Byte-Reads gilt nur für diesen Adapterabschnitt, nicht für Gesamt-RSS.
+
+Alle 265 bisherigen Testdateien und 6.551 Fälle bleiben unverändert.
+SR-REQ-0588 bis SR-REQ-0591 behalten erweiterte Teilnachweise ausschließlich
+für diesen Relationsreader. CLI-weite Integration, andere Cachearten,
+Work-Fenster und vollständige Runtime-/Plattformabnahme bleiben offen.
+Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen
+Position 266/885. Danach folgt die strukturelle Bereinigung 6.g.C.
 
 #### 6.g.C – Make it Clean
 

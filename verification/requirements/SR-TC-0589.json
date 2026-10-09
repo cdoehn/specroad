@@ -11,17 +11,19 @@
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
   "preconditions": [
-    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API."
+    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API.",
+    "R: owned guarded files; actual short reads. EACCES and EMFILE use isolated native processes. Memory failures are labelled injections; the separate address-space case performs a real refused allocation inside an explicitly injected allocator, not the actual cache initializer minimum."
   ],
   "steps": [
     "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
     "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
-    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction."
+    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction.",
+    "R: reject excessive cache depth/structure before strict decoding; check native short-read accounting and the selected 160 KiB adapter allocation window, faults, observed file races, descriptor cleanup, no write attempts and unchanged critical input inventory."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein verwendeter persistenter Cacheeintrag MUSS den vollständigen Inhaltshash- und Abhängigkeitsnachweis aus Anhang O.3 erfüllen.",
-    "scope": "Each usable adjacency entry binds recorded tool build/algorithm/version, runtime, schema, relation policy, complete current configuration bytes and all current artifact paths/content hashes. Its payload hash is checked, then every ID, endpoint, direction, coverage and order is independently checked against fresh resolved edges. Self-consistent rehashing cannot omit, duplicate, reorder or invent a relation. Real generated module and ZIP distributions share a valid cache after relocation."
+    "scope": "Each usable adjacency entry binds recorded tool build/algorithm/version, runtime, schema, relation policy, complete current configuration bytes and all current artifact paths/content hashes. Its payload hash is checked, then every ID, endpoint, direction, coverage and order is independently checked against fresh resolved edges. Self-consistent rehashing cannot omit, duplicate, reorder or invent a relation. Real generated module and ZIP distributions share a valid cache after relocation. R adds bounded streaming structure preflight and bytearray accumulation without retained per-read fragments. Native access/descriptor refusal, labelled allocation failures and observed cache changes fall back completely; original-source changes and programming/interruption failures retain their own errors. The selected one-byte-read Python allocation window stays below 1 MiB for 160 KiB input; this is not RSS or a host capacity promise."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,6 +40,17 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_relation_cache_right.py::test_cache_change_during_native_read_discards_the_observation[grow]",
+    "tests/test_relation_cache_right.py::test_cache_change_during_native_read_discards_the_observation[remove]",
+    "tests/test_relation_cache_right.py::test_cache_change_during_native_read_discards_the_observation[replace]",
+    "tests/test_relation_cache_right.py::test_cache_change_during_native_read_discards_the_observation[same_size_mtime]",
+    "tests/test_relation_cache_right.py::test_cache_change_during_native_read_discards_the_observation[truncate]",
+    "tests/test_relation_cache_right.py::test_empty_project_has_a_valid_complete_cache",
+    "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[17]",
+    "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[1]",
+    "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[65536]",
+    "tests/test_relation_cache_right.py::test_original_source_change_during_cache_read_stays_an_error",
+    "tests/test_relation_cache_right.py::test_quoted_brackets_escaped_quotes_and_slashes_across_blocks_reach_strict_decoder",
     "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[both]",
     "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[incoming]",
     "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[outgoing]",
@@ -62,6 +75,6 @@
     "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[wrong_source]"
   ],
   "open_items": [
-    "Partial current-project relation-reader integration only. Native permission/resource/race hardening follows 6.g.R. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Full parsed cache objects can exceed the read-byte allowance in memory; that allowance is not an RSS cap."
+    "Partial current-project relation-reader integration only. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Parsed cache objects can exceed the read-byte allowance in memory; the allowance is not an RSS cap. Real native error observations and labelled injections are distinguished."
   ]
 }

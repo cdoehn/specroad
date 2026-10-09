@@ -74,20 +74,63 @@ def encode_cache(index):
                                  "order": order, "order_sha256": canonical_json_sha256(order)})
 
 
-def _read_cache(boundary, maximum):
+class _CacheShape:
+    """Cheap streaming rejection before optional JSON objects are allocated.
+
+    This is not a JSON validator. It bounds nesting and structural marks for
+    this fixed cache format; the strict decoder still validates all syntax.
+    Quotes/escapes span native short reads, including one-byte chunks.
+    """
+    def __init__(self, maximum_marks):
+        self.remaining = maximum_marks
+        self.depth = 0
+        self.quoted = False
+        self.escaped = False
+
+    def feed(self, raw):
+        for byte in raw:
+            if self.quoted:
+                if self.escaped:
+                    self.escaped = False
+                elif byte == 92:
+                    self.escaped = True
+                elif byte == 34:
+                    self.quoted = False
+            elif byte == 34:
+                self.quoted = True
+            elif byte in (123, 125, 91, 93, 44, 58):
+                self.remaining -= 1
+                if byte in (123, 91):
+                    self.depth += 1
+                elif byte in (125, 93):
+                    self.depth -= 1
+                if self.remaining < 0 or not 0 <= self.depth <= 8:
+                    raise ModelError("relation_cache_structure_too_expensive")
+
+    def finish(self):
+        if self.quoted or self.depth != 0:
+            raise ModelError("invalid_relation_cache_structure")
+
+
+def _read_cache(boundary, maximum, maximum_marks):
     with opened_resource(boundary, CACHE_PATH) as (descriptor, metadata):
         if metadata.st_size > maximum:
             return None
-        chunks = []
+        shape = _CacheShape(maximum_marks)
+        # Grow with actual bytes, not one retained object per short read or an
+        # up-front allocation sized from an untrusted file's declared extent.
+        data = bytearray()
         remaining = metadata.st_size
         while remaining:
             part = os.read(descriptor, min(65536, remaining))
             if not part:
                 return None
-            chunks.append(part)
+            shape.feed(part)
+            data.extend(part)
             remaining -= len(part)
+        shape.finish()
         # Descriptor size/signature and entry identity are rechecked on exit.
-        raw = b"".join(chunks)
+        raw = bytes(data)
     return raw
 
 
@@ -99,7 +142,11 @@ def read_cache(source, snapshot, references, maximum):
         binding = _binding(snapshot)
         if binding is None:
             return None
-        raw = _read_cache(source.boundary, maximum)
+        # Generous linear allowance for this envelope, every input dependency,
+        # both source tables and exactly two occurrences of each relation ID.
+        # Exceeding it skips optional work; the full normative graph is retained.
+        maximum_marks = 256 + 32 * len(references.sources) + 8 * len(references.relations)
+        raw = _read_cache(source.boundary, maximum, maximum_marks)
         if raw is None:
             return None
         entry = parse_json_object(raw, path=CACHE_PATH)
