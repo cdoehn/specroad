@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 270
-last_completed_plan_commit: 6.h.C
-next_plan_commit: 6.i.W
-last_completed_numbered_bundle: 121
+implementation_plan_commits_completed: 271
+last_completed_plan_commit: 6.i.W
+next_plan_commit: 6.i.R
+last_completed_numbered_bundle: 122
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5884,12 +5884,40 @@ Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.i.W – Let it Work
 
-- [ ] **6.i.W** · Position **271/885** · Voraussetzung: `6.h.C`.
+- [x] **6.i.W** · Position **271/885** · Voraussetzung: `6.h.C`.
 **Exakte Commit-Message:** `6.i.W feat(work): Work-Identität und geschlossenes Manifest aufbauen`
 
 **Umsetzung:** work-v1 mit stabiler Work-ID, Commandbindung, vollständigem Aufgaben-/Eingangsmanifest und Datensegmenten definieren.
 
 **Verhaltensabnahme:** Ein gebundener Arbeitsauftrag benennt erledigte und vollständige offene Arbeit.
+
+**Umsetzung / Bundle 122:** Das vollständig geprüfte Result von Bundle 121
+bestätigt Commit `e2833e43171615bd8e4f90512d959498d3a183cb`, 6.664 erfolgreiche
+parallele Apply-Tests, acht identische Payloads und den sauberen Basissnapshot.
+`work.manifest` bindet eine registrierte Read-only-Anfrage ohne Optionen an eine
+zufällige 128-Bit-Work-ID, originale Eingangsbytes und den vom vertrauenswürdigen
+Planer vollständig deklarierten endlichen Aufgabenplan. Vier gehashte,
+versionierte Segmentbäume tragen Eingänge, Gesamtplan, Erledigterklärungen und
+vollständigen Rest. Jede neue Aufteilung erhält Identität, Gesamtplan und alle
+vorherigen Objektbytes; doppelte oder verlorene Einheiten werden abgewiesen.
+
+43 neue Verhaltenstests prüfen Roundtrips mit realen Eingangsdateien, stabile
+Bindungen, vollständige Partitionen, Segmentbäume bis 4.097 Einheiten, geänderte
+oder fehlende Bytes und grundlegende Daten-/Pfad-/Commandgrenzen. Alle 268
+bisherigen Testdateien und 6.664 Fälle bleiben unverändert. SR-REQ-0602,
+SR-REQ-0603 und SR-REQ-0615 erhalten begrenzte Teilnachweise. Die bestehende
+nicht fortsetzbare CLI-Selbstbeschreibung und SR-TC-0632 bleiben unverändert.
+
+Der Codec verarbeitet ausschließlich Datenkandidaten. Erledigterklärungen sind
+deklarierte Planerdaten, keine unabhängigen Ausführungsnachweise; Prüfsummen
+authentifizieren keinen fremden Auftrag. Ein vollständig aufgeteilter Kandidat
+bleibt bis zur späteren Finalisierung `running`. Der Codec erzeugt weder
+Work-Root noch dauerhaften Checkpoint und ruft keine Handler auf. Vollständige
+fachliche Planer, Snapshotkonsistenz, Veröffentlichung, Resume und globale
+Abschlussnachweise bleiben den folgenden Planschritten vorbehalten.
+
+Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
+271/885. Danach folgt 6.i.R mit weiterer Fremddaten- und Bindungshärtung.
 
 #### 6.i.R – Make it Right
 

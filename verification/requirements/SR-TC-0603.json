@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0603",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary source files and explicit fixture build/source declarations. Completion JSON is labelled planner data; one entropy test substitutes deterministic bytes. No production command is executed or durable work state published."
+  ],
+  "steps": [
+    "Roundtrip original owned input bytes and all declared units through bounded-fanout manifest trees.",
+    "Relocate identical source bytes and verify unchanged semantic input/task bindings; change same-size content and observe different bindings.",
+    "Reject missing or damaged objects, unsafe input paths and a different expected tool build."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder aufgeteilte Auftrag MUSS ein gehashtes vollständiges Aufgaben- und Eingangsmanifest nach Anhang P besitzen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Initial work-v1 candidate hashes all supplied input bytes and the full caller-declared task plan in versioned segment trees. References bind ID, size, SHA-256 and count; missing or changed referenced data is rejected. Relative logical source locations survive relocation. Declared tool/source bindings are data, not independent provenance or an atomically captured snapshot. Full command-specific planners and portable persisted snapshots remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,29 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_manifest.py::test_a_new_build_requires_an_explicit_matching_reader_binding",
+    "tests/test_work_manifest.py::test_changed_input_content_changes_bound_units_even_at_the_same_size",
+    "tests/test_work_manifest.py::test_input_locations_cannot_introduce_absolute_or_escaping_paths[../escape]",
+    "tests/test_work_manifest.py::test_input_locations_cannot_introduce_absolute_or_escaping_paths[/absolute]",
+    "tests/test_work_manifest.py::test_input_locations_cannot_introduce_absolute_or_escaping_paths[C:drive]",
+    "tests/test_work_manifest.py::test_input_locations_cannot_introduce_absolute_or_escaping_paths[a/../b]",
+    "tests/test_work_manifest.py::test_input_locations_cannot_introduce_absolute_or_escaping_paths[a//b]",
+    "tests/test_work_manifest.py::test_input_locations_cannot_introduce_absolute_or_escaping_paths[a\\\\b]",
+    "tests/test_work_manifest.py::test_input_order_and_relocated_source_do_not_change_declared_task_binding",
+    "tests/test_work_manifest.py::test_missing_or_changed_referenced_segment_prevents_read[completed]",
+    "tests/test_work_manifest.py::test_missing_or_changed_referenced_segment_prevents_read[inputs]",
+    "tests/test_work_manifest.py::test_missing_or_changed_referenced_segment_prevents_read[remaining]",
+    "tests/test_work_manifest.py::test_missing_or_changed_referenced_segment_prevents_read[tasks]",
+    "tests/test_work_manifest.py::test_missing_original_bytes_are_not_reconstructed_from_hashes",
+    "tests/test_work_manifest.py::test_partitions_preserve_identity_bindings_every_unit_and_previous_bytes",
+    "tests/test_work_manifest.py::test_real_input_bytes_and_complete_declared_plan_survive_roundtrip_without_effects",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[1]",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[4097]",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[64]",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[65]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial data contract only: trusted planner coverage and actual completion evidence, hostile input hardening, external expected work binding, consistent snapshot capture, safe work storage/locks, atomic durable publication, real resume and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
   ]
 }

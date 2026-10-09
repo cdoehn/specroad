@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0602",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary source files and explicit fixture build/source declarations. Completion JSON is labelled planner data; one entropy test substitutes deterministic bytes. No production command is executed or durable work state published."
+  ],
+  "steps": [
+    "Create a candidate from real owned input bytes and a complete declared finite unit plan.",
+    "Partition units in a different order and verify stable identity, exact remaining work and all prior bytes after each roundtrip.",
+    "Reject duplicate declarations or completion records; exercise segmented plans through 4097 units and detached values."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der vollständige gebundene Auftrag MUSS bei jeder Aufteilung unverändert als offene beziehungsweise nachgewiesen erledigte Arbeit erhalten bleiben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Initial data-only codec preserves the complete finite plan declared by a trusted caller across candidate partitions: stable Work-ID, task/input binding, exact disjoint completed/remaining membership and retained immutable original bytes. Completion evidence is declared JSON fixture data, not proof that a production handler actually executed. No persisted checkpoint, actual resume or final execution success is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,18 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_manifest.py::test_detached_values_and_frozen_objects_cannot_mutate_an_earlier_candidate",
+    "tests/test_work_manifest.py::test_duplicate_input_or_unit_declarations_do_not_silently_reduce_the_plan",
+    "tests/test_work_manifest.py::test_duplicate_unknown_or_empty_completion_cannot_drop_or_double_count_units",
+    "tests/test_work_manifest.py::test_partitions_preserve_identity_bindings_every_unit_and_previous_bytes",
+    "tests/test_work_manifest.py::test_real_input_bytes_and_complete_declared_plan_survive_roundtrip_without_effects",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[1]",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[4097]",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[64]",
+    "tests/test_work_manifest.py::test_segment_tree_retains_every_declared_unit_with_bounded_control_and_nodes[65]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial data contract only: trusted planner coverage and actual completion evidence, hostile input hardening, external expected work binding, consistent snapshot capture, safe work storage/locks, atomic durable publication, real resume and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
   ]
 }
