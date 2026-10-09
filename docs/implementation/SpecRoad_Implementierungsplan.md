@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 290
-last_completed_plan_commit: 6.o.R
-next_plan_commit: 6.o.C
-last_completed_numbered_bundle: 141
+implementation_plan_commits_completed: 291
+last_completed_plan_commit: 6.o.C
+next_plan_commit: 6.p.W
+last_completed_numbered_bundle: 142
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6589,10 +6589,26 @@ partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.o.C – Make it Clean
 
-- [ ] **6.o.C** · Position **291/885** · Voraussetzung: `6.o.R`.
+- [x] **6.o.C** · Position **291/885** · Voraussetzung: `6.o.R`.
 **Exakte Commit-Message:** `6.o.C refactor(work): Globale Schlussprüfung und Abschlussstatus bereinigen`
 
 **Bereinigung:** Technischen Arbeitszustand von fachlichem Gateausgang trennen.
+
+**Implementierungsstand 6.o.C:** Die bestehenden Prüfungen vollständiger
+Commandresultate liegen getrennt in `_completion_outcome`: Commandbindung,
+Kontrollinvarianten, Status, Exit-Code, Resultatschema und Diagnosekatalog.
+`_completion` behält die technischen Abschlussübergänge mit Generation,
+Elternbindung, vollständigen Ergebnis-/Diagnoseteilen und terminalem Zustand.
+Die bisherige Kontrollprüfung bleibt für Resume über denselben Einstieg
+verfügbar. Die extrahierten Funktionen und beide technischen Übergangsfunktionen
+bleiben strukturgleich; öffentliche Finalisierung, Resume und Manifest-Codec
+bleiben bytegleich.
+
+Alle vorhandenen W-/R-Verhaltenstests und ihre Erwartungen bleiben unverändert.
+Der bekannte ausführbare Bootstrap-Plan, die inerten allgemeinen Planerdaten
+und sämtliche offenen Integrationen behalten ihren bisherigen Umfang. Die vier
+Requirement-Nachweise bleiben partiell. Erst vollständiger paralleler Apply-Test
+und Commit bestätigen 291/885; danach folgt 6.p.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

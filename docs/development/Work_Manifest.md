@@ -78,6 +78,12 @@ unbestätigte Ergebnisreferenzen und Code 8 sind kein Abschluss. Ein vollständi
 fachliches Fehlerergebnis bleibt `failed` mit seinem ursprünglichen Code,
 während der technische Arbeitszustand `completed` lautet.
 
+Intern prüft `_completion_outcome` den fachlichen Ergebnisausgang einschließlich
+Commandvertrag, Kontrollfeldern, Exit-Code und Diagnosekatalog. `_completion`
+verantwortet die technischen Abschlussdaten mit Generation, Elternbindung,
+Ergebnis-/Diagnoseteilen und terminalem Zustand. Die bisherigen Prüfungen und
+ihre Reihenfolge bleiben erhalten; Resume nutzt dieselbe Kontrollprüfung.
+
 Der Abschluss erhöht die Generation um eins, bindet ausdrücklich die
 Vorgängergeneration und deren Checkpointhash und erhält alle bisherigen
 Einheiten und Bytes. `result_parts` bindet die vollständige Ergebnishülle,
