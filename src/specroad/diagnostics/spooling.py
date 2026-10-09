@@ -311,6 +311,23 @@ class DiagnosticSort:
         self._spool._check()
         return self._spool
 
+    @property
+    def batch_bytes(self):
+        return self._batch_bytes
+
+    def reduce_batch_bytes(self, maximum):
+        """Reduce future batching without dropping buffered or pending input.
+
+        An in-flight flush/merge keeps its cursor. A previously buffered batch
+        is flushed by the existing driver; this does not claim to free it now.
+        """
+        _positive(maximum)
+        if self._closed:
+            raise ValueError("Sort is closed")
+        if not self._complete:
+            self._batch_bytes = min(self._batch_bytes, maximum)
+        return self._batch_bytes
+
     def advance(self, units=1):
         _positive(units)
         if self._closed:

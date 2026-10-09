@@ -4,7 +4,8 @@ import json
 from types import MappingProxyType
 
 INTERVALS = MappingProxyType({'graph_steps': 128, 'srx_steps': 512, 'payload_bytes': 65536})
-PHASES = frozenset(('srx_validation', 'srx_evaluation', 'srx_result', 'graph_views', 'graph_load', 'payload_hash', 'publication'))
+PHASES = frozenset(('srx_validation', 'srx_evaluation', 'srx_result', 'graph_views', 'graph_load',
+                    'payload_hash', 'publication', 'spool_unit'))
 
 
 @dataclass(frozen=True)

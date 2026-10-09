@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0604",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned guarded external spool roots and protected project fixtures; active in-process consumption windows. CPU/wall counters are explicitly labelled fixture samples. Memory/storage failures are labelled injections into a real ongoing native merge."
+  ],
+  "steps": [
+    "Drive finite diagnostic/prepared-path inputs through tiny measured windows and compare complete results/record bytes with the existing reference.",
+    "Check monotone actual units, one source traversal, retained buffered/pending records and live merge cursors, unknown measurements and detached operational reports.",
+    "Inject a failed minimum write after real progress and verify unchanged protected critical data, retained external run bytes, no retry and no successful failed-unit accounting."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die adaptive Ausführung MUSS vor einer ressourcenbedingten Zurückstellung die sicheren sparsamen Alternativen nach Anhang O.3 prüfen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Before yielding at measured soft pressure, the driver attempts an actual existing streaming/merge unit and reduces future encoded batching to 64 KiB, or one record for an accounted-memory event. Existing buffered/pending records remain owned until flushed. This is a concrete live-spool alternative, not a complete adaptive engine or claimed native capacity proof."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,39 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--cpu-budget-ms]",
+    "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--step-cpu-ms]",
+    "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--step-wall-ms]",
+    "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--wall-budget-ms]",
+    "tests/test_adaptive_spooling_work.py::test_batch_reduction_is_monotone_and_refuses_a_closed_task",
+    "tests/test_adaptive_spooling_work.py::test_completed_task_has_no_false_additional_progress_or_batch_change",
+    "tests/test_adaptive_spooling_work.py::test_detached_window_report_cannot_replace_the_live_task_state",
+    "tests/test_adaptive_spooling_work.py::test_empty_input_finishes_after_real_positive_units",
+    "tests/test_adaptive_spooling_work.py::test_existing_open_merge_advances_its_cursor_instead_of_restarting",
+    "tests/test_adaptive_spooling_work.py::test_finished_consumption_window_cannot_consume_more_source",
+    "tests/test_adaptive_spooling_work.py::test_invalid_batch_reduction_keeps_existing_state[-1]",
+    "tests/test_adaptive_spooling_work.py::test_invalid_batch_reduction_keeps_existing_state[0]",
+    "tests/test_adaptive_spooling_work.py::test_invalid_batch_reduction_keeps_existing_state[1.5]",
+    "tests/test_adaptive_spooling_work.py::test_invalid_batch_reduction_keeps_existing_state[True]",
+    "tests/test_adaptive_spooling_work.py::test_invalid_window_does_not_change_inputs_or_live_state[-1]",
+    "tests/test_adaptive_spooling_work.py::test_invalid_window_does_not_change_inputs_or_live_state[0]",
+    "tests/test_adaptive_spooling_work.py::test_invalid_window_does_not_change_inputs_or_live_state[1.5]",
+    "tests/test_adaptive_spooling_work.py::test_invalid_window_does_not_change_inputs_or_live_state[True]",
+    "tests/test_adaptive_spooling_work.py::test_memory_event_reduces_future_batches_without_losing_buffered_or_pending_input",
+    "tests/test_adaptive_spooling_work.py::test_only_owned_known_tasks_can_be_advanced[None]",
+    "tests/test_adaptive_spooling_work.py::test_only_owned_known_tasks_can_be_advanced[invalid1]",
+    "tests/test_adaptive_spooling_work.py::test_only_owned_known_tasks_can_be_advanced[untrusted]",
+    "tests/test_adaptive_spooling_work.py::test_prepared_paths_keep_order_and_duplicates_under_tiny_measured_windows",
+    "tests/test_adaptive_spooling_work.py::test_real_written_progress_and_recovery_files_survive_failed_minimum_unit[failure0]",
+    "tests/test_adaptive_spooling_work.py::test_real_written_progress_and_recovery_files_survive_failed_minimum_unit[failure1]",
+    "tests/test_adaptive_spooling_work.py::test_soft_target_observed_after_work_stops_at_that_completed_unit",
+    "tests/test_adaptive_spooling_work.py::test_tiny_windows_and_large_window_produce_identical_complete_record_bytes",
+    "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[1000]",
+    "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[1]",
+    "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[7]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial live diagnostic/prepared-path spool integration only. Detailed observed-blocker projection follows 6.h.R; native exceptions already propagate without retry. Other algorithms, persistent Work identity/checkpoints/restart from 6.i onward, CLI continuation results, full host-limit/resource accounting and platform acceptance remain open. Encoded batch targets are not RSS or real capacity promises."
   ]
 }

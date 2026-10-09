@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 267
-last_completed_plan_commit: 6.g.C
-next_plan_commit: 6.h.W
-last_completed_numbered_bundle: 118
+implementation_plan_commits_completed: 268
+last_completed_plan_commit: 6.h.W
+next_plan_commit: 6.h.R
+last_completed_numbered_bundle: 119
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5769,12 +5769,40 @@ erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.h.W – Let it Work
 
-- [ ] **6.h.W** · Position **268/885** · Voraussetzung: `6.g.C`.
+- [x] **6.h.W** · Position **268/885** · Voraussetzung: `6.g.C`.
 **Exakte Commit-Message:** `6.h.W feat(work): Sparsame Weiterarbeit und echter Blocker aufbauen`
 
 **Umsetzung:** Vor Zurückstellung kleinere Chargen, Streaming und sichere kleinste Arbeitseinheit versuchen.
 
 **Verhaltensabnahme:** Weiches Budget führt zu Fortschritt oder sicherem Fortsetzungspunkt.
+
+**Umsetzung / Bundle 119:** Das vollständig geprüfte Result von Bundle 118
+bestätigt Commit `305b26353900dd6141123f862aca82580ae56ac0`, 6.589 erfolgreiche
+parallele Apply-Tests und einen sauberen, vollständig übereinstimmenden Snapshot.
+`advance_spool_sort` verbindet den bestehenden lebenden Diagnose-/Pfad-Sortierer
+mit der vorhandenen Verbrauchsmessung. Vor/nach jeder realen Einheit wird
+beobachtet. Ein bereits überschrittenes weiches Ziel erlaubt mindestens einen
+kleinsten Fortschrittsversuch; danach bleibt der Task für den nächsten Aufruf
+erhalten. Unbekannte Messungen werden nicht als bewiesene Unausführbarkeit gewertet.
+
+Bei weichem Druck wird zukünftige kodierte Chargenbildung auf 64 KiB, bei einem
+Speicherereignis auf einen Record verkleinert. Bereits gepufferte/vorausgelesene
+Daten und offene Mergecursor bleiben erhalten. Der bisherige Streaming-/Paarmerge
+verarbeitet sämtliche Eingaben; vollständige Recordbytes stimmen mit einem
+großen Referenzlauf überein. Die abgelöste Betriebsprojektion benennt echten
+Fortschritt und nächste Operation des lebenden Tasks. Sie behauptet keinen
+persistierten Checkpoint oder CLI-Exitcode 8; Work-Identität folgt ab 6.i.
+
+30 neue Verhaltenstests prüfen winzige CPU-/Wall-/Teilschrittziele mit markierten
+Zählerfixtures, unbekannte Messwerte, fortgesetzte Mergearbeit, vollständige
+Diagnosen/vorbereitete Pfade, unveränderte kritische Dateien und erhaltene reale
+Spoolbytes bei injizierten Mindestschrittfehlern. Alle 266 bisherigen Testdateien
+und 6.589 Fälle bleiben unverändert. SR-REQ-0592, SR-REQ-0593 und SR-REQ-0604
+erhalten begrenzte Teilnachweise für diesen Treiber. SR-REQ-0614 bleibt bis zur
+maschinellen Blockerprojektion in R offen; native Fehler werden bereits erhalten
+und nicht als Erfolg oder leere Fortsetzung umgedeutet. Erst erfolgreiche
+parallele Dev-/Apply-Volltests und Commit bestätigen Position 268/885.
+Danach folgt 6.h.R.
 
 #### 6.h.R – Make it Right
 
