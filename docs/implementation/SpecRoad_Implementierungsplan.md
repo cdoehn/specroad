@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 278
-last_completed_plan_commit: 6.k.R
-next_plan_commit: 6.k.C
-last_completed_numbered_bundle: 129
+implementation_plan_commits_completed: 279
+last_completed_plan_commit: 6.k.C
+next_plan_commit: 6.l.W
+last_completed_numbered_bundle: 130
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6154,7 +6154,7 @@ Erst der erfolgreiche parallele Apply-Volltest und Commit bestätigen 278/885.
 
 #### 6.k.C – Make it Clean
 
-- [ ] **6.k.C** · Position **279/885** · Voraussetzung: `6.k.R`.
+- [x] **6.k.C** · Position **279/885** · Voraussetzung: `6.k.R`.
 **Exakte Commit-Message:** `6.k.C refactor(work): Fortsetzbarer Eingangs-Snapshot bereinigen`
 
 **Bereinigung:** Snapshotzustand unabhängig von absoluten Pfaden und CLI-Laufzeit halten.
@@ -6162,6 +6162,21 @@ Erst der erfolgreiche parallele Apply-Volltest und Commit bestätigen 278/885.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Implementierungsstand 6.k.C:** `work._snapshot_projection` enthält die reinen
+Projektionen für das kanonische Eingangsmanifest und den abgelösten Fortschritt.
+Ihre Argumente sind ausschließlich logische Einträge und Skalare; absolute
+Quellpfade, Dateideskriptoren, Prozessbindung, Sperren und laufende Hashobjekte
+bleiben im Laufzeitadapter `work.snapshot`. Öffentlicher Task und Fehlerklasse
+bleiben dort; die Erfassungs-, Validierungs- und Freigabereihenfolge bleibt gleich.
+
+Der strukturelle Vergleich gegen das maßgebliche Result bestätigt identische
+ASTs der unveränderten Definitionen sowie der beiden extrahierten Projektionen
+nach Rückeinsetzen ihrer Argumente. Alle W-/R-Testdateien und Testidentitäten
+bleiben unverändert. Keine neuen Fachmerkmale, Tests, Formatversionen oder
+Requirementabschlüsse werden eingeführt. Erst erfolgreicher paralleler
+Apply-Volltest und Commit bestätigen 279/885; danach folgt 6.l.W für dauerhafte
+Checkpointgenerationen.
 
 <a id="step-6-l"></a>
 ### 6.l – Dauerhafte Checkpointgenerationen

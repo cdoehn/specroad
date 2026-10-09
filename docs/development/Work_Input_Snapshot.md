@@ -34,6 +34,14 @@ diesem Bestand geliefert, auch wenn sich der Quellordner später ändert.
 `work_inputs()` materialisiert ausdrücklich die vollständige Menge für den
 bestehenden In-Memory-`work-v1`-Codec; es erteilt keine Ausführungsfreigabe.
 
+Die reinen Projektionen liegen in `work._snapshot_projection`: Das kanonische
+Eingangsmanifest und die abgelösten Fortschrittsdaten erhalten ausschließlich
+logische Dateneinträge und Skalare. Absolute Quellpfade, Prozessidentität,
+Dateideskriptoren, native Sperren und laufende Hashobjekte bleiben im
+Erfassungsadapter `work.snapshot`. Der öffentliche Task und seine Fehlerklasse
+bleiben dort erreichbar; Datenfelder, Hashbytes und Fortschrittsgrenzen werden
+durch diese Strukturtrennung nicht verändert.
+
 Dies ist die erste aufteilbare Byte-Erfassung innerhalb derselben Invocation.
 Der gesamte Objektspeicher und die deklarierte Menge liegen noch im Speicher;
 die Blockgrenze ist keine Gesamt-RSS-Garantie. `close()` gibt offene Lesedeskriptoren
@@ -76,7 +84,7 @@ gehört zur Abschluss-Einheit; das Arbeitsfenster ist keine harte Zeitgrenze.
 keine vollständige normative Modellclosure. Kooperierende Writer sind während
 der Erfassung ausgeschlossen; nicht kooperierende externe Dateibearbeitung
 kann die Beobachtungen weiterhin überholen. Die Erfassung behauptet deshalb
-keine atomare Dateisystemmomentaufnahme. Strukturtrennung folgt in 6.k.C,
-dauerhafte Generationen in 6.l und tatsächliche Wiederaufnahme in 6.m. Eine kleine
+keine atomare Dateisystemmomentaufnahme. Dauerhafte Generationen folgen in 6.l
+und tatsächliche Wiederaufnahme in 6.m. Eine kleine
 Arbeitsmenge erzeugt hier keinerlei Work-Dateien; auch bei größeren Eingängen
 wird weder Code 8 noch eine veröffentlichte Checkpointgeneration behauptet.

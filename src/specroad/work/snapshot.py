@@ -6,17 +6,16 @@ a durable checkpoint nor an atomic observation of a whole normative project.
 
 from contextlib import ExitStack, contextmanager
 from hashlib import sha256
-import json
 import os
 from types import MappingProxyType
 
 from ..changes._lock_files import LockFiles
 from ..changes.lock_values import ProjectLockError
-from ..model.canonical import canonical_json_bytes
 from ..security import ProjectBoundary, SafetyViolation
 from ..security.paths import _parts, _signature
 from ..security.resource_access import opened_resource
 from ..storage.operational_preflight import observe_operational_preflight
+from ._snapshot_projection import captured_input_manifest, capture_progress
 
 
 class SnapshotCaptureError(ValueError):
@@ -155,10 +154,7 @@ class InputSnapshotTask:
                             root_id=entry['root_id'], path=entry['path'])
             self._current = None
             self._phase = 'sealing'
-            value = {'format_version': 'captured-inputs-v1', 'inputs': [
-                {key: entry[key] for key in ('root_id', 'path', 'size', 'sha256')}
-                for entry in self._entries]}
-            manifest = canonical_json_bytes(value)
+            manifest = captured_input_manifest(self._entries)
             manifest_hash = sha256(manifest).hexdigest()
         self._manifest = manifest
         self._manifest_hash = manifest_hash
@@ -261,19 +257,11 @@ class InputSnapshotTask:
 
     @property
     def state(self):
-        # Only data and logical names; never descriptors, absolute paths or hash objects.
-        value = {'format_version': 'input-capture-progress-v1', 'phase': self._phase,
-            'expected_inputs': len(self._plan), 'enumerated_inputs': len(self._entries),
-            'completed_inputs': sum(entry['complete'] for entry in self._entries),
-            'confirmed_units': self._units, 'captured_bytes': self._bytes,
-            'validated_inputs': self._validated, 'revalidated_inputs': self._revalidated,
-            'validation_bytes': self._validation_bytes,
-            'inputs': self._entries, 'error': self._error, 'closed': self._closed,
-            'complete': self._manifest is not None,
-            'input_manifest_sha256': self._manifest_hash, 'model_root_sha256': None,
-            'atomic_project_snapshot': False, 'durable_checkpoint': False,
-            'continuation_scope': 'current_invocation'}
-        return json.loads(canonical_json_bytes(value))
+        return capture_progress(phase=self._phase, expected_inputs=len(self._plan),
+            entries=self._entries, confirmed_units=self._units, captured_bytes=self._bytes,
+            validated_inputs=self._validated, revalidated_inputs=self._revalidated,
+            validation_bytes=self._validation_bytes, error=self._error, closed=self._closed,
+            complete=self._manifest is not None, input_manifest_sha256=self._manifest_hash)
 
     @property
     def objects(self):
