@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 260
-last_completed_plan_commit: 6.e.R
-next_plan_commit: 6.e.C
-last_completed_numbered_bundle: 111
+implementation_plan_commits_completed: 261
+last_completed_plan_commit: 6.e.C
+next_plan_commit: 6.f.W
+last_completed_numbered_bundle: 112
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5509,7 +5509,7 @@ Position 260/885. Danach folgt die gemeinsame strukturelle Bereinigung 6.e.C.
 
 #### 6.e.C – Make it Clean
 
-- [ ] **6.e.C** · Position **261/885** · Voraussetzung: `6.e.R`.
+- [x] **6.e.C** · Position **261/885** · Voraussetzung: `6.e.R`.
 **Exakte Commit-Message:** `6.e.C refactor(work): Streaming und kleine Transferblöcke bereinigen`
 
 **Bereinigung:** Streamingprimitiven für Archive, Snapshotaufbau und Import gemeinsam nutzen.
@@ -5517,6 +5517,31 @@ Position 260/885. Danach folgt die gemeinsame strukturelle Bereinigung 6.e.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 112:** Das vollständig geprüfte Result von Bundle 111
+bestätigt Commit `b84bb66022d77e3b69e9a93c5608895b11e7b3c8`, 6.441 erfolgreiche
+parallele Apply-Tests sowie einen sauberen, vollständig übereinstimmenden Snapshot.
+Die bisher doppelte Größenfortschreibung und exakte Hashabschlussprüfung der
+`read`-/`readinto`-Wege liegt jetzt gemeinsam in `_streaming_hash`. Die öffentlichen
+Bytebindungsadapter verwenden denselben Vertrag für vollständige Bytezählung,
+Wachstumserkennung und Digestabschluss. Damit teilen der vorhandene Anhangs-,
+Staging-, Veröffentlichungs- und Recoverypfad sowie der kontrollierte Hasher
+diese Prüfungen. Weitere Archiv-/Snapshot-/Importverbraucher erhalten weiterhin
+die bereits gemeinsame Bytebindungsschnittstelle; ihre noch offenen End-to-End-
+Einbindungen werden durch diese Bereinigung nicht als implementiert ausgegeben.
+
+Beide Transportschleifen behalten ihre bisherige Reihenfolge von Lesen,
+Größenprüfung, Hashaktualisierung und Kontrollsignalen. Statisches Inlining der
+beiden ausgegliederten Prüfungen ergibt die jeweils identischen bisherigen
+Funktionsbäume. Fingerprinttyp, Blockgrößenprüfung, bisheriger Readerwrapper und
+Reservierungsalternativen bleiben strukturell unverändert; auch native Guards,
+Verbrauchsfenster und Blockerprojektion ändern sich nicht.
+
+Alle 262 bisherigen Testdateien und 6.441 Fälle bleiben unverändert, einschließlich
+der 55 W-/R-Fälle dieses Schritts. Die beiden Requirement-Teilnachweise behalten
+Status, Testbindungen und offene Grenzen. Erst erfolgreiche vollständige
+parallele Dev-/Apply-Tests und Commit bestätigen Position 261/885.
+Danach folgt 6.f.W für dateibasierte Sortierung und Diagnose-Spooling.
 
 <a id="step-6-f"></a>
 ### 6.f – Dateibasierte Sortierung und Diagnose-Spooling

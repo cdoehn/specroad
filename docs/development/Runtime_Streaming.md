@@ -80,3 +80,11 @@ zulässt. Ein nicht abfangbarer Prozessabbruch ist kein berichteter Pythonfehler
 Der Adapter ersetzt noch nicht alle Archiv-, Import- und Snapshotpfade.
 Bekannte Hostgrenzen, Stagingkapazität, Kontrollreserven und persistente
 Fortsetzung benötigen ihre weiteren Bindungen; 0583 und 0584 bleiben Teilnachweise.
+
+Die beiden vorhandenen Bytebindungsadapter teilen Größenfortschreibung und
+Digestabschluss über `storage._streaming_hash`. Die Transportreihenfolge und
+Kontrollpunkte bleiben im jeweiligen Adapter; `ByteFingerprint` und die
+öffentlichen Funktionen in `storage.byte_binding` behalten ihre Verträge.
+So gelten die gemeinsamen Größenprüfungen auch für deren bestehende Anhangs-,
+Staging-, Veröffentlichungs- und Recoveryverbraucher. Weitere Archiv-, Snapshot-
+und Importpfade verwenden bei ihrer Einbindung dieselbe Bytebindungsschnittstelle.

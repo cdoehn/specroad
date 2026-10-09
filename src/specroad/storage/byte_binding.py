@@ -9,6 +9,7 @@ from hashlib import sha256
 
 from ..security.errors import SafetyViolation
 from ..runtime.control_points import ControlIntervals, PhaseBoundary, complete_steps
+from ._streaming_hash import checked_byte_count, finished_digest
 
 
 @dataclass(frozen=True)
@@ -41,16 +42,12 @@ def fingerprint_steps(read, expected_size, *, block_size=65536, controlled=True)
         if not block:
             break
         digest.update(block)
-        count += len(block)
-        if count > expected_size:
-            raise SafetyViolation("Resource grew during inspection")
+        count = checked_byte_count(count, len(block), expected_size)
         if controls is not None:
             point = controls.advance('payload_bytes', len(block))
             if point is not None:
                 yield point
-    if count != expected_size:
-        raise SafetyViolation("Resource byte count changed during inspection")
-    result = ByteFingerprint(count, digest.hexdigest())
+    result = ByteFingerprint(count, finished_digest(count, expected_size, digest))
     if controls is not None:
         yield PhaseBoundary('payload_hash', 'end')
     return result
@@ -98,16 +95,12 @@ def fingerprint_into_steps(readinto, expected_size, buffer):
                     raise SafetyViolation('Reader did not honor the bounded byte request')
                 if received == 0:
                     break
-                count += received
-                if count > expected_size:
-                    raise SafetyViolation('Resource grew during inspection')
+                count = checked_byte_count(count, received, expected_size)
                 with transfer[:received] as filled:
                     digest.update(filled)
             point = controls.advance('payload_bytes', received)
             if point is not None:
                 yield point
-    if count != expected_size:
-        raise SafetyViolation('Resource byte count changed during inspection')
-    result = ByteFingerprint(count, digest.hexdigest())
+    result = ByteFingerprint(count, finished_digest(count, expected_size, digest))
     yield PhaseBoundary('payload_hash', 'end')
     return result
