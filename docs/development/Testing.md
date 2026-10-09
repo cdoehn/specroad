@@ -1,18 +1,28 @@
-# Aktive Teststrategie ab 7. Oktober 2026
+# Testaufrufe ab 9. Oktober 2026
 
-Die aktualisierte Nutzeranweisung legt folgende Testmodi fest:
-In `specroad-codex` läuft die vollständige Suite ausschließlich parallel.
-Der geprüfte Zwischenstand wird über PatchHarbor an `specroad-apply` übergeben;
-dort läuft vor jedem Commit die vollständige parallele Suite. Das gilt auch für
-den letzten Zustand des Bundles; es folgt kein zusätzlicher serieller Lauf.
-W, R und C bleiben getrennte Zustände mit jeweils eigener Prüfung und eigenem
-Apply-Commit. Keine gezielte Testauswahl als Apply-Regel.
+Die verbindliche Arbeitsregel steht in der lokalen `AGENTS.md`. Die technische
+Aufteilung ist: gezielte parallele Verhaltenstests in `specroad-codex`,
+vollständige parallele Suite in `specroad-apply` vor jedem einzelnen Commit.
+Das gilt für jeden W/R/C-Zustand und auch für den letzten Zustand eines Bundles.
+Der doppelte Dev-Volltest entfällt; es gibt keinen seriellen Abschlusslauf.
 
-Entwicklung in `specroad-codex`:
+Entwicklung in `specroad-codex`: neue und betroffene Testdateien auswählen,
+die tatsächliche Anzahl ihrer gesammelten Tests ermitteln und ein frisches
+Ausgabeverzeichnis angeben. Beispiel mit vorher gesetzten Auftragswerten:
 
 ```sh
-.venv/bin/python -I -B tools/run_tests.py --workers 4
+.venv/bin/python -I -B tools/run_selected_tests.py --workers 4 \
+  --test-file "$specroad_test_file" --expected-tests "$specroad_test_count" \
+  --outdir "$specroad_test_report_dir"
 ```
+
+`--test-file` ist für weitere betroffene Dateien wiederholbar. Der bestehende
+Runner prüft zuerst durch vollständige Collection die Katalogbindung, führt
+danach ausschließlich die ausgewählten Dateien parallel aus und bindet die
+Beobachtungen an den Quellstand. `selection.json` weist
+`test_scope: selected_files_only` und `full_suite_passed: null` aus. Ein grüner
+Auswahllauf ist ausdrücklich kein bestandener Volltest. Paketprüfungen bleiben
+zusätzlich erforderlich.
 
 Apply-Entrypoint in `specroad-apply`, für jeden Zwischenstand:
 
@@ -53,9 +63,6 @@ Ein vollständiges transitive Lockfile wird damit noch nicht behauptet.
 ```sh
 uv venv --python python3 --no-python-downloads .venv
 uv pip install --python .venv/bin/python --link-mode copy --group dev
-.venv/bin/python -I -B tools/run_tests.py
-.venv/bin/python -I -B tools/run_tests.py --workers 4
-.venv/bin/python -m pytest -n 4
 .venv/bin/python -m pytest -n 4 tests/test_core.py
 ```
 
@@ -117,7 +124,8 @@ prozessübergreifenden Singletons.
 ## Verifikationsgrenzen
 
 Der Patch prüft Zwischenstände einzeln. Die Entwicklungsumgebung liefert nur
-parallele Ergebnisse; das spätere Apply-Protokoll belegt die dortigen Paralleltests.
+gezielte parallele Ergebnisse; das spätere Apply-Protokoll belegt die dortige
+vollständige parallele Suite vor jedem Commit.
 Maßgeblich sind diese Protokolle
 und die zugehörigen aktuellen Berichte; diese Anleitung ist kein Ausführungsnachweis.
 Ein lokaler CPython-Lauf ist kein Nachweis für Pixel/PRoot

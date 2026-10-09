@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 273
-last_completed_plan_commit: 6.i.C
-next_plan_commit: 6.j.W
-last_completed_numbered_bundle: 124
+implementation_plan_commits_completed: 274
+last_completed_plan_commit: 6.j.W
+next_plan_commit: 6.j.R
+last_completed_numbered_bundle: 125
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5999,12 +5999,32 @@ Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.j.W – Let it Work
 
-- [ ] **6.j.W** · Position **274/885** · Voraussetzung: `6.i.C`.
+- [x] **6.j.W** · Position **274/885** · Voraussetzung: `6.i.C`.
 **Exakte Commit-Message:** `6.j.W feat(work): Externer Work-Root und Locks aufbauen`
 
 **Umsetzung:** Sicheren externen Work-Root explizit oder erst beim ersten nötigen Checkpoint automatisch erzeugen.
 
 **Verhaltensabnahme:** Kleine vollständig abgeschlossene Befehle erzeugen keinen Work-Root.
+
+**Implementierungsstand 6.j.W:** `WorkDirectory` reserviert einen privaten
+externen Root erst beim expliziten Bedarf des Aufrufers. Ein fehlender oder
+privater leerer Pfad sowie derselbe vollständig initialisierte Auftrag sind
+zulässig; die automatische Variante erzeugt exklusiv einen zufälligen Root im
+angegebenen temporären Verzeichnis. Der Linux-Lock bindet den Root-Inode und
+eine konkrete Prozessidentität; reguläres Verlassen erhält Arbeitsdateien und
+löst den eigenen Work-Lock. Projektwriter-Locks werden nicht gehalten.
+
+32 neue Verhaltensfälle prüfen verzögerten Aufbau, kleine echte CLI-Aufrufe,
+private Rechte, Prozesskonkurrenz, reguläre Freigabe, echten Prozessabbruch mit
+erhaltenem verwaistem Lock, Fremdaufträge, Pfadgrenzen und erhaltene native
+Schreibfehler. Der Scope ist eine Speichergrundlage für einen vertrauenswürdigen
+Aufrufer: keine CLI-Work-Ausführung, kein Snapshot, keine atomare Generation,
+kein Code 8 und keine Wiederaufnahme. Die Requirementnachweise bleiben partiell.
+Die konkrete Bedienung und Grenzen stehen in `docs/development/Work_Root.md`.
+
+Gezielte parallele Entwicklungstests prüfen neue und betroffene Verhaltensweisen.
+Erst die vollständige parallele Apply-Suite und der tatsächliche Commit bestätigen
+Position 274/885. Danach folgt 6.j.R für weitere Pfad-, Eigentümer- und Fehlergrenzen.
 
 #### 6.j.R – Make it Right
 

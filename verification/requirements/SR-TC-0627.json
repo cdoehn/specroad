@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0627",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned private temporary project/input/work directories; explicitly trusted fixture work manifest. Native Linux kernel mutex and real isolated child processes; one labelled write-failure adapter and one unknown-owner adapter."
+  ],
+  "steps": [
+    "Declare storage without requesting a checkpoint and run small CLI metadata commands; require no work-file creation.",
+    "Acquire an explicit or automatic external root, inspect private permissions and work binding, and prove native exclusion in another process while the project mutex remains available.",
+    "Release normally or through a caller exception; retain payloads and reject changed, foreign, unsafe or orphaned roots. A real child exit leaves a lock record that is never stolen."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Work-Befehlsgruppe MUSS die vollständigen Verträge aus Kapitel 11.12 erfüllen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "A lazy WorkDirectory writes only to explicitly guarded external storage, uses private Linux descriptor-bound directories and a separate root-inode mutex, checks concrete process ownership and releases only its own unchanged record. Small actual metadata commands create no work files. Existing project and operational bytes remain unchanged, and the project mutex remains available while the work mutex is held. Native child termination preserves an orphan record; there is no automatic takeover or cleanup. These are storage lifetime observations, not a complete production pause/resume contract."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,41 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_root.py::test_declaring_storage_without_checkpoint_need_creates_nothing[False]",
+    "tests/test_work_root.py::test_declaring_storage_without_checkpoint_need_creates_nothing[True]",
+    "tests/test_work_root.py::test_exception_releases_owner_but_retains_work_payloads",
+    "tests/test_work_root.py::test_explicit_same_manifest_can_reopen_a_released_root",
+    "tests/test_work_root.py::test_first_needed_root_is_private_bound_external_and_reusable[automatic]",
+    "tests/test_work_root.py::test_first_needed_root_is_private_bound_external_and_reusable[explicit_empty]",
+    "tests/test_work_root.py::test_first_needed_root_is_private_bound_external_and_reusable[explicit_new]",
+    "tests/test_work_root.py::test_foreign_work_identity_cannot_reuse_existing_storage",
+    "tests/test_work_root.py::test_live_native_lock_blocks_another_process_and_releases_at_step_end",
+    "tests/test_work_root.py::test_live_work_handle_cannot_be_copied_or_serialized[copy]",
+    "tests/test_work_root.py::test_live_work_handle_cannot_be_copied_or_serialized[deepcopy]",
+    "tests/test_work_root.py::test_live_work_handle_cannot_be_copied_or_serialized[dumps]",
+    "tests/test_work_root.py::test_native_write_failure_preserves_partial_root_and_propagates",
+    "tests/test_work_root.py::test_preexisting_unsafe_or_foreign_target_is_preserved[file]",
+    "tests/test_work_root.py::test_preexisting_unsafe_or_foreign_target_is_preserved[foreign]",
+    "tests/test_work_root.py::test_preexisting_unsafe_or_foreign_target_is_preserved[public_empty]",
+    "tests/test_work_root.py::test_preexisting_unsafe_or_foreign_target_is_preserved[symlink]",
+    "tests/test_work_root.py::test_protected_root_and_descendants_are_rejected_before_writes[/.specroad/work]",
+    "tests/test_work_root.py::test_protected_root_and_descendants_are_rejected_before_writes[/work]",
+    "tests/test_work_root.py::test_protected_root_and_descendants_are_rejected_before_writes[]",
+    "tests/test_work_root.py::test_real_child_exit_leaves_orphan_record_that_is_never_stolen",
+    "tests/test_work_root.py::test_small_completed_cli_command_leaves_no_work_files[arguments0]",
+    "tests/test_work_root.py::test_small_completed_cli_command_leaves_no_work_files[arguments1]",
+    "tests/test_work_root.py::test_symlinked_ancestor_does_not_create_a_root_in_project",
+    "tests/test_work_root.py::test_unknown_owner_identity_cannot_gain_a_live_work_lease",
+    "tests/test_work_root.py::test_unsafe_path_syntax_is_rejected_without_normalizing_it[//tmp/work]",
+    "tests/test_work_root.py::test_unsafe_path_syntax_is_rejected_without_normalizing_it[/tmp/../work]",
+    "tests/test_work_root.py::test_unsafe_path_syntax_is_rejected_without_normalizing_it[/tmp/./work]",
+    "tests/test_work_root.py::test_unsafe_path_syntax_is_rejected_without_normalizing_it[/tmp//work]",
+    "tests/test_work_root.py::test_unsafe_path_syntax_is_rejected_without_normalizing_it[/tmp/a\\\\b]",
+    "tests/test_work_root.py::test_unsafe_path_syntax_is_rejected_without_normalizing_it[relative]",
+    "tests/test_work_root.py::test_work_ancestor_of_input_is_rejected_before_writes"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial external storage/lock foundation only. Full production prompt-pause integration, complete work CLI contracts, snapshot/atomic checkpoint publication, resume/restore across generations and locations, safe in-memory fallback and final delivery remain future plan steps. No Code 8, complete requirement satisfaction or release approval is claimed."
   ]
 }
