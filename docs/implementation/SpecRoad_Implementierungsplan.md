@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 282
-last_completed_plan_commit: 6.l.C
-next_plan_commit: 6.m.W
-last_completed_numbered_bundle: 133
+implementation_plan_commits_completed: 283
+last_completed_plan_commit: 6.m.W
+next_plan_commit: 6.m.R
+last_completed_numbered_bundle: 134
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6289,12 +6289,42 @@ der anschließende Commit bestätigen erst 282/885. Danach folgt 6.m.W.
 
 #### 6.m.W – Let it Work
 
-- [ ] **6.m.W** · Position **283/885** · Voraussetzung: `6.l.C`.
+- [x] **6.m.W** · Position **283/885** · Voraussetzung: `6.l.C`.
 **Exakte Commit-Message:** `6.m.W feat(work): Resume und Kompatibilitätsprüfung aufbauen`
 
 **Umsetzung:** work resume aus geprüften Manifests mit unveränderten IDs, Actor, Request und Planmetadaten starten.
 
 **Verhaltensabnahme:** Neuer Prozess und neuer kompatibler Pfad führen dieselbe Arbeit fort.
+
+**Implementierungsstand 6.m.W:** Der erste Resume-Ausführungsweg bindet einen
+vollständigen eingebauten Read-only-Bootstrap-Handler an einen geschlossenen
+Einheitenplan. `prepare_read_only_work` und `resume_read_only_work` verlangen die
+aufgezeichnete Identität der aktuellen Distribution und die unabhängige
+Anfangsbindung des bestehenden `CheckpointStore`. Die frische eingebaute
+Registry, Runtime und Invocation-Kontextprüfung entscheiden über die Ausführung;
+beliebige Datenmanifeste und frühere Registry-Handler erhalten keine Autorität.
+
+Der Work-Lock bleibt über erneutes Lesen, Handleraufruf und Veröffentlichung
+gehalten. Vollständige tatsächliche Ergebnishüllen samt ursprünglichem Request,
+Einheiten-ID, Build und Exit-Code werden dauerhaft gespeichert. Wiederaufnahme
+prüft und liefert vorhandene Ergebnisse ohne einen zweiten Handleraufruf.
+Work-ID, Argumente und vorhandene Metadaten bleiben erhalten; Actor, fachliche
+Request-ID und normative Planbindung sind im unterstützten Read-only-Vertrag
+weiterhin ausdrücklich `null`.
+
+25 neue Verhaltensfälle prüfen die sechs unterstützten Handler, aktuelle Build-/
+Runtimebindung, nicht ausführbare fremde Pläne, fehlende Bytes, echte Locks und
+Speicherfehler. Tatsächlich gebaute Modul-/Zipapp-Distributionen führen denselben
+gespeicherten Auftrag in neuen isolierten Prozessen an verschobenen Runtime-,
+Work- und geschützten Rootpfaden aus und verwenden danach dessen Ergebnis erneut.
+
+Dieser W-Stand ist eine Python-Einbettung; die CLI-Registry wird noch nicht um
+einen allgemeinen `work resume`-Command erweitert. Allgemeine CLI-/Code-8- und
+Closureintegration sowie normative Writes, Actor-/Request- und Zielbasisprüfungen
+bleiben offen. Der Workzustand bleibt bis zur späteren Schlussprüfung `running`.
+SR-TC-0608 und SR-TC-0610 erhalten partielle Nachweise; SR-TC-0611, SR-TC-0616
+und SR-TC-0617 bleiben offen. Erst der vollständige parallele Apply-Test und
+Commit bestätigen 283/885; danach folgt 6.m.R.
 
 #### 6.m.R – Make it Right
 

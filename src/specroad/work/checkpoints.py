@@ -204,51 +204,77 @@ class CheckpointStore:
                                       expected_tool_build=self._build)
         _check(manifest.as_dict()['work_id'] == self._location._work_id)
         with self._location.for_checkpoint() as held:
-            before = self._pointer(held)
-            if before is None:
-                _check(manifest.raw == self._initial.raw
-                       and dict(manifest.objects) == dict(self._initial.objects))
-                parent = None
-            else:
-                previous = self._read_chain(held, before[0])
-                manifest = read_work_successor(manifest.raw, manifest.objects, previous=previous,
-                    registry=self._registry, expected_tool_build=self._build)
-                parent = self._pointer_value(before[0])['checkpoint']
-            index = {}
-            reference = _tree('checkpoint-objects', [
-                {'sha256': digest, 'size': len(raw)}
-                for digest, raw in sorted(manifest.objects.items())], index)
-            payloads = dict(manifest.objects)
-            for digest, raw in [*index.items(), (sha256(manifest.raw).hexdigest(), manifest.raw)]:
-                _check(digest not in payloads or payloads[digest] == raw)
-                payloads[digest] = raw
-            for digest, raw in sorted(payloads.items()):
-                _ensure_file(held, 'objects', digest, raw)
-            value = manifest.as_dict()
-            record = canonical_json_bytes({'format_version': 'stored-work-checkpoint-v1',
-                'work_id': value['work_id'], 'checkpoint_generation': value['checkpoint_generation'],
-                'checkpoint_sha256': value['checkpoint_sha256'], 'manifest': _reference(manifest.raw),
-                'objects': reference, 'parent': parent})
-            checkpoint = _reference(record)
-            _ensure_file(held, 'checkpoints', checkpoint['sha256'] + '.json', record)
-            pointer = canonical_json_bytes({'format_version': 'work-current-v1',
-                'work_id': value['work_id'], 'checkpoint_generation': value['checkpoint_generation'],
-                'checkpoint_sha256': value['checkpoint_sha256'], 'checkpoint': checkpoint})
-            _check(self._read_chain(held, pointer).raw == manifest.raw)
-            temporary = '.current-' + secrets.token_hex(16) + '.json'
-            directory = _directory(held, 'checkpoints')
-            identity = _write_new(directory, temporary, pointer)
-            def before_replace():
-                held.check()
-                _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
-                _check(self._read_chain(held, pointer).raw == manifest.raw)
-                _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
-            replace_bound_image(directory, temporary, held._root, 'work.json',
-                size=len(pointer), digest=sha256(pointer).hexdigest(), identity=identity,
-                source_changed=lambda: CheckpointStorageError('checkpoint_pointer_changed'),
-                before_replace=before_replace)
-            _check(self._pointer(held) == (pointer, identity), 'checkpoint_pointer_changed')
-            _check(self._read_chain(held, pointer).raw == manifest.raw)
-            _check(self._pointer(held) == (pointer, identity), 'checkpoint_pointer_changed')
+            return self._publish_held(held, manifest, self._pointer(held))
+
+
+    def _publish_held(self, held, manifest, before):
+        if before is None:
+            _check(manifest.raw == self._initial.raw
+                   and dict(manifest.objects) == dict(self._initial.objects))
+            parent = None
+        else:
+            previous = self._read_chain(held, before[0])
+            manifest = read_work_successor(manifest.raw, manifest.objects, previous=previous,
+                registry=self._registry, expected_tool_build=self._build)
+            parent = self._pointer_value(before[0])['checkpoint']
+        index = {}
+        reference = _tree('checkpoint-objects', [
+            {'sha256': digest, 'size': len(raw)}
+            for digest, raw in sorted(manifest.objects.items())], index)
+        payloads = dict(manifest.objects)
+        for digest, raw in [*index.items(), (sha256(manifest.raw).hexdigest(), manifest.raw)]:
+            _check(digest not in payloads or payloads[digest] == raw)
+            payloads[digest] = raw
+        for digest, raw in sorted(payloads.items()):
+            _ensure_file(held, 'objects', digest, raw)
+        value = manifest.as_dict()
+        record = canonical_json_bytes({'format_version': 'stored-work-checkpoint-v1',
+            'work_id': value['work_id'], 'checkpoint_generation': value['checkpoint_generation'],
+            'checkpoint_sha256': value['checkpoint_sha256'], 'manifest': _reference(manifest.raw),
+            'objects': reference, 'parent': parent})
+        checkpoint = _reference(record)
+        _ensure_file(held, 'checkpoints', checkpoint['sha256'] + '.json', record)
+        pointer = canonical_json_bytes({'format_version': 'work-current-v1',
+            'work_id': value['work_id'], 'checkpoint_generation': value['checkpoint_generation'],
+            'checkpoint_sha256': value['checkpoint_sha256'], 'checkpoint': checkpoint})
+        _check(self._read_chain(held, pointer).raw == manifest.raw)
+        temporary = '.current-' + secrets.token_hex(16) + '.json'
+        directory = _directory(held, 'checkpoints')
+        identity = _write_new(directory, temporary, pointer)
+        def before_replace():
             held.check()
-            return manifest
+            _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
+            _check(self._read_chain(held, pointer).raw == manifest.raw)
+            _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
+        replace_bound_image(directory, temporary, held._root, 'work.json',
+            size=len(pointer), digest=sha256(pointer).hexdigest(), identity=identity,
+            source_changed=lambda: CheckpointStorageError('checkpoint_pointer_changed'),
+            before_replace=before_replace)
+        _check(self._pointer(held) == (pointer, identity), 'checkpoint_pointer_changed')
+        _check(self._read_chain(held, pointer).raw == manifest.raw)
+        _check(self._pointer(held) == (pointer, identity), 'checkpoint_pointer_changed')
+        held.check()
+        return manifest
+
+    def _update(self, transform):
+        """Trusted Core transformation under one live work lease.
+
+        The callable comes from installed Core code, never stored work data.
+        Returning the identical checked value performs no new publication.
+        """
+        _check(callable(transform), 'trusted_checkpoint_transform_required')
+        with self._location.for_checkpoint() as held:
+            before = self._pointer(held)
+            _check(before is not None, 'published_checkpoint_required')
+            previous = self._read_chain(held, before[0])
+            candidate = transform(previous)
+            held.check()
+            _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
+            if candidate is previous:
+                _check(self._read_chain(held, before[0]).raw == previous.raw)
+                _check(self._pointer(held) == before, 'checkpoint_pointer_changed')
+                return previous
+            _check(type(candidate) is WorkManifest, 'checked_checkpoint_required')
+            candidate = read_work_successor(candidate.raw, candidate.objects, previous=previous,
+                registry=self._registry, expected_tool_build=self._build)
+            return self._publish_held(held, candidate, before)
