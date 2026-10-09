@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 264
-last_completed_plan_commit: 6.f.C
-next_plan_commit: 6.g.W
-last_completed_numbered_bundle: 115
+implementation_plan_commits_completed: 265
+last_completed_plan_commit: 6.g.W
+next_plan_commit: 6.g.R
+last_completed_numbered_bundle: 116
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5661,12 +5661,40 @@ Position 264/885. Danach folgt 6.g.W für optionale, fachlich wirkungslose Cache
 
 #### 6.g.W – Let it Work
 
-- [ ] **6.g.W** · Position **265/885** · Voraussetzung: `6.f.C`.
+- [x] **6.g.W** · Position **265/885** · Voraussetzung: `6.f.C`.
 **Exakte Commit-Message:** `6.g.W feat(work): Optionale Caches ohne Fachwirkung aufbauen`
 
 **Umsetzung:** cache off/read und vollständige Inhalts-/Versions-/Abhängigkeitsbindung vorhandener Einträge implementieren.
 
 **Verhaltensabnahme:** Mit und ohne gültigen Cache entstehen dieselben fachlichen Daten.
+
+**Umsetzung / Bundle 116:** Das vollständig geprüfte Result von Bundle 115
+bestätigt Commit `fba5295d98080f39ec83f038f77619e97a4e7f97`, 6.510 erfolgreiche
+parallele Apply-Tests und einen sauberen, vollständig übereinstimmenden Snapshot.
+Der bestehende vollständige Relationsreader bietet jetzt explizites `cache=off`
+und `cache=read` für vorhandene persistente Adjazenzhinweise. Gültige Einträge
+binden die vollständigen aktuellen Artefakt-/Konfigurationsbytes, aufgezeichneten
+Tool-Build, Laufzeit, Schema und Policy. Unversiegelte Checkouts bleiben ohne
+persistente Cacheverwendung. Ein reiner Encoder schreibt keine Projektdateien.
+
+Auch ein passend rehashter manipulierter Eintrag darf kein Fachresultat ändern:
+beide Adjazenzrichtungen werden linear auf vollständige Abdeckung, Quellen,
+Relationen und Reihenfolge gegen frisch aufgelöste Originaldaten geprüft.
+Ein echter Treffer spart die Adjazenzsortierungen, ersetzt aber keinen
+verbindlichen Reader. Fehlende, ungültige, unsichere oder zu große Einträge
+führen ohne Reparatur zur vollständigen Neuberechnung. Originalquellfehler
+bleiben blockierend. Der unabhängige Scan und `off` öffnen keine Cachedatei.
+
+Die neuen Verhaltenstests vergleichen alle Richtungen und isolierte Artefakte,
+prüfen manipulierte Bindungen und selbstkonsistent rehashte falsche Tabellen,
+Cacheverlust und vollständige aktuelle Mitgliedschaft sowie Änderungen bei
+gleicher Größe/mtime. Reale verschobene Modul- und ZIP-Distributionen nutzen
+nachweislich denselben gültigen Cache. Alle 264 bisherigen Testdateien und
+6.510 Fälle bleiben unverändert. SR-REQ-0588 bis SR-REQ-0591 erhalten ausschließlich
+Teilnachweise für diesen Relationsreader. Breitere native Ressourcen-/Fehlerfälle
+folgen in 6.g.R; CLI-weite Integration, andere Cachearten, Work-Fenster und
+vollständige Runtime-/Plattformabnahme bleiben offen. Erst erfolgreiche parallele
+Dev-/Apply-Volltests und Commit bestätigen Position 265/885. Danach folgt 6.g.R.
 
 #### 6.g.R – Make it Right
 

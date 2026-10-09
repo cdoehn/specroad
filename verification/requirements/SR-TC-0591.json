@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0591",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API."
+  ],
+  "steps": [
+    "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
+    "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
+    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Cachelesen, Memoisierung und zulässige Cachepflege MÜSSEN innerhalb der für den Aufruf geltenden Ressourcen- und Befehlsklassenverträge bleiben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Read-only relation queries do not create, repair, delete or write cache, normative, recovery or Work data. Off, scan, zero byte allowance and unrecorded builds perform no cache open. The explicit nonnegative allowance caps optional native bytes only; full source/result coverage is preserved. No total RSS or full adaptive work integration is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,28 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[both]",
+    "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[incoming]",
+    "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[outgoing]",
+    "tests/test_relation_cache_work.py::test_cache_options_reject_invalid_contracts[options0]",
+    "tests/test_relation_cache_work.py::test_cache_options_reject_invalid_contracts[options1]",
+    "tests/test_relation_cache_work.py::test_cache_options_reject_invalid_contracts[options2]",
+    "tests/test_relation_cache_work.py::test_cache_options_reject_invalid_contracts[options3]",
+    "tests/test_relation_cache_work.py::test_cache_options_reject_invalid_contracts[options4]",
+    "tests/test_relation_cache_work.py::test_disabled_or_unbound_cache_does_not_open_any_cache[off]",
+    "tests/test_relation_cache_work.py::test_disabled_or_unbound_cache_does_not_open_any_cache[scan]",
+    "tests/test_relation_cache_work.py::test_disabled_or_unbound_cache_does_not_open_any_cache[unrecorded]",
+    "tests/test_relation_cache_work.py::test_disabled_or_unbound_cache_does_not_open_any_cache[zero]",
+    "tests/test_relation_cache_work.py::test_missing_and_deleted_cache_never_create_cache_or_recovery_state",
+    "tests/test_relation_cache_work.py::test_real_recorded_module_and_zipapp_use_same_cache_after_distribution_move",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[format]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[hash]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[json]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[link]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[oversized]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial current-project relation-reader integration only. Native permission/resource/race hardening follows 6.g.R. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Full parsed cache objects can exceed the read-byte allowance in memory; that allowance is not an RSS cap."
   ]
 }

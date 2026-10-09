@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0589",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API."
+  ],
+  "steps": [
+    "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
+    "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
+    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein verwendeter persistenter Cacheeintrag MUSS den vollständigen Inhaltshash- und Abhängigkeitsnachweis aus Anhang O.3 erfüllen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Each usable adjacency entry binds recorded tool build/algorithm/version, runtime, schema, relation policy, complete current configuration bytes and all current artifact paths/content hashes. Its payload hash is checked, then every ID, endpoint, direction, coverage and order is independently checked against fresh resolved edges. Self-consistent rehashing cannot omit, duplicate, reorder or invent a relation. Real generated module and ZIP distributions share a valid cache after relocation."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,31 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[both]",
+    "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[incoming]",
+    "tests/test_relation_cache_work.py::test_actual_cache_hit_matches_independent_scan_for_every_source[outgoing]",
+    "tests/test_relation_cache_work.py::test_cache_does_not_hide_same_size_and_mtime_source_changes",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[configuration]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[content]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[membership]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[policy]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[runtime]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[schema]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[tool]",
+    "tests/test_relation_cache_work.py::test_new_unselected_source_and_removed_source_invalidate_cache",
+    "tests/test_relation_cache_work.py::test_real_recorded_module_and_zipapp_use_same_cache_after_distribution_move",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[duplicate]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[extra_source]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[missing]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[missing_isolated]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[reverse]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[unhashable]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[unknown]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[wrong_shape]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[wrong_source]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial current-project relation-reader integration only. Native permission/resource/race hardening follows 6.g.R. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Full parsed cache objects can exceed the read-byte allowance in memory; that allowance is not an RSS cap."
   ]
 }

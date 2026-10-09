@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0590",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "preconditions": [
+    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API."
+  ],
+  "steps": [
+    "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
+    "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
+    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ungültige, inkompatible, unlesbare oder übergroße Cacheeinträge MÜSSEN nach Anhang O.3 als entbehrliche Beschleuniger ignoriert werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "The W reader ignores missing, stale, malformed, incompatible, content-hash-invalid, symlinked and byte-budget-exceeding cache entries without repair. Source errors are outside the optional-cache fallback. Wider native error/resource and concurrent-mutation cases remain R work."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,36 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_cache_work.py::test_cache_does_not_hide_same_size_and_mtime_source_changes",
+    "tests/test_relation_cache_work.py::test_cache_never_masks_original_source_failure[invalid]",
+    "tests/test_relation_cache_work.py::test_cache_never_masks_original_source_failure[missing_endpoint]",
+    "tests/test_relation_cache_work.py::test_cache_never_masks_original_source_failure[noncanonical]",
+    "tests/test_relation_cache_work.py::test_cache_never_masks_original_source_failure[unreadable]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[configuration]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[content]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[membership]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[policy]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[runtime]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[schema]",
+    "tests/test_relation_cache_work.py::test_each_cache_binding_is_required_before_order_is_used[tool]",
+    "tests/test_relation_cache_work.py::test_missing_and_deleted_cache_never_create_cache_or_recovery_state",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[duplicate]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[extra_source]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[missing]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[missing_isolated]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[reverse]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[unhashable]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[unknown]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[wrong_shape]",
+    "tests/test_relation_cache_work.py::test_rehashed_order_cannot_change_edges_direction_coverage_or_order[wrong_source]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[format]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[hash]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[json]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[link]",
+    "tests/test_relation_cache_work.py::test_unusable_optional_entry_is_ignored_without_repair[oversized]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Partial current-project relation-reader integration only. Native permission/resource/race hardening follows 6.g.R. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Full parsed cache objects can exceed the read-byte allowance in memory; that allowance is not an RSS cap."
   ]
 }

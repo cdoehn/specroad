@@ -43,6 +43,51 @@ class RelationIndex:
         object.__setattr__(self, "_incoming", MappingProxyType({
             name: tuple(sorted(values, key=_view_key)) for name, values in incoming.items()}))
 
+    @classmethod
+    def from_order(cls, references, order):
+        """Validate an untrusted ordering against every fresh resolved edge.
+
+        The hint supplies IDs only. Values always come from ``references``;
+        even a self-consistently rehashed cache cannot remove or invent edges.
+        Validation is linear in the supplied complete adjacency, without sorting.
+        """
+        require_canonical_relations(references)
+        if type(order) is not dict or set(order) != {"outgoing", "incoming"}:
+            raise ModelError("invalid_relation_order")
+        sources = {source.id for source in references.sources}
+        edges = {edge.relation.identity.id: edge for edge in references.relations}
+        tables = {}
+        for direction, inverse in (("outgoing", False), ("incoming", True)):
+            table = order[direction]
+            if type(table) is not dict or set(table) != sources:
+                raise ModelError("invalid_relation_order")
+            seen = set()
+            checked = {}
+            for source, names in table.items():
+                if type(names) is not list:
+                    raise ModelError("invalid_relation_order")
+                values = []
+                previous = None
+                for name in names:
+                    if type(name) is not str or name not in edges or name in seen:
+                        raise ModelError("invalid_relation_order")
+                    view = RelationView(edges[name], inverse=inverse)
+                    key = _view_key(view)
+                    if view.source.id != source or (previous is not None and key < previous):
+                        raise ModelError("invalid_relation_order")
+                    values.append(view)
+                    seen.add(name)
+                    previous = key
+                checked[source] = tuple(values)
+            if seen != set(edges):
+                raise ModelError("invalid_relation_order")
+            tables[direction] = MappingProxyType(checked)
+        result = object.__new__(cls)
+        object.__setattr__(result, "references", references)
+        object.__setattr__(result, "_outgoing", tables["outgoing"])
+        object.__setattr__(result, "_incoming", tables["incoming"])
+        return result
+
     @property
     def validation_scope(self):
         return "supplied_relation_set_only"
