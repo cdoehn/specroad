@@ -23,7 +23,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Bei Erreichen eines weichen Arbeitsziels MUSS SpecRoad phasenabhängig sparsam weiterarbeiten oder einen sicheren Fortsetzungspunkt nach Anhang O.4 veröffentlichen.",
-    "scope": "Explicit in-process diagnostic/prepared-path spool driver only. Measured soft targets stop after actual bounded progress, never before a first minimum attempt; unknown measurements allow bounded work. Complete outputs and sorted record bytes match the reference. Active reports retain the same live task without claiming persistent checkpoints or Code 8. R additionally drives complete conservative one-record future batches through positive finite windows. Active outcomes have no exit code; only complete spools return code 0. Observed native failures are distinct from soft-target pauses."
+    "scope": "Explicit in-process diagnostic/prepared-path spool driver only. Measured soft targets stop after actual bounded progress, never before a first minimum attempt; unknown measurements allow bounded work. Complete outputs and sorted record bytes match the reference. Active reports retain the same live task without claiming persistent checkpoints or Code 8. R additionally drives complete conservative one-record future batches through positive finite windows. Active outcomes have no exit code; only complete spools return code 0. Observed native failures are distinct from soft-target pauses. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],

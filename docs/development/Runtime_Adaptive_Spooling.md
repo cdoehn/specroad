@@ -101,3 +101,12 @@ Weitere klassifizierte I/O-/Speicherfehler sind markierte Injektionen in einen
 bereits laufenden Merge. Before Images, Journal, Checkpoint-/Snapshotfixtures
 und vorhandene Spoolbytes bleiben erhalten. Harte OOM-Kills und Dateiverlust
 lassen sich durch diese Python-Fehlerprojektion nicht auffangen.
+
+Die interne Struktur trennt in 6.h.C die reine Chargenwahl, die unveränderte
+Zuordnung nativer Fehler und den Aufbau der Blockerwerte in
+`runtime._spool_work_policy` ab. Dieses Modul greift weder auf einen Task noch
+auf Hostmessungen oder Dateien zu. `adaptive_spooling` behält Validierung,
+Messreihenfolge, Fortschrittsversuche und den genauen Ausnahmebereich. Sortier-
+und Spoolalgorithmen bleiben in ihren vorhandenen Modulen. Die öffentlichen
+Einstiege, Betriebswerte, Fehlergrenzen und zulässigen Seiteneffekte bleiben
+gleich.

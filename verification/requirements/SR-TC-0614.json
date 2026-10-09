@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein tatsächlicher Fortschrittsblocker MUSS Ursache, versuchte sparsame Alternativen, erhaltenen Fortschritt und eine konkrete notwendige Abhilfe ausweisen.",
-    "scope": "The live-spool outcome adapter reports only observed MemoryError/known native I/O failures inside a minimum advance. It reports the native cause and required action, actual conservative strategy/batch target, previous buffered input, last observed cursor/completed units, preserved files and explicit lack of volatile or durable resume. Observer, safety and unexpected exceptions are not misclassified. No incomplete success or automatic replay is returned."
+    "scope": "The live-spool outcome adapter reports only observed MemoryError/known native I/O failures inside a minimum advance. It reports the native cause and required action, actual conservative strategy/batch target, previous buffered input, last observed cursor/completed units, preserved files and explicit lack of volatile or durable resume. Observer, safety and unexpected exceptions are not misclassified. No incomplete success or automatic replay is returned. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],

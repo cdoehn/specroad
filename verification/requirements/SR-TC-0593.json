@@ -23,7 +23,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Ressourcenbegrenzung DARF NICHT die Erhaltung bereits benötigter Wiederherstellungsdaten zugunsten neuer fachlicher Arbeit umgehen.",
-    "scope": "The bounded live spool driver and its existing guarded task preserve protected project journal/before-image/checkpoint fixtures and already written external runs when a labelled memory/storage failure interrupts one minimum unit. No automatic retry or cleanup occurs; failed units are not counted complete. Full recovery/capacity integration remains open. R additionally preserves actual partial-write bytes and protected before-image/journal/checkpoint/snapshot fixtures across classified minimum-advance failures. Reports do not claim failed generators or buffered input remain resumable; no cleanup or retry is attempted."
+    "scope": "The bounded live spool driver and its existing guarded task preserve protected project journal/before-image/checkpoint fixtures and already written external runs when a labelled memory/storage failure interrupts one minimum unit. No automatic retry or cleanup occurs; failed units are not counted complete. Full recovery/capacity integration remains open. R additionally preserves actual partial-write bytes and protected before-image/journal/checkpoint/snapshot fixtures across classified minimum-advance failures. Reports do not claim failed generators or buffered input remain resumable; no cleanup or retry is attempted. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],

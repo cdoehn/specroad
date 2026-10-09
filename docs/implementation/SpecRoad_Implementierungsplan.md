@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 269
-last_completed_plan_commit: 6.h.R
-next_plan_commit: 6.h.C
-last_completed_numbered_bundle: 120
+implementation_plan_commits_completed: 270
+last_completed_plan_commit: 6.h.C
+next_plan_commit: 6.i.W
+last_completed_numbered_bundle: 121
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5848,7 +5848,7 @@ Position 269/885. Danach folgt 6.h.C ohne neue Fachwirkung.
 
 #### 6.h.C – Make it Clean
 
-- [ ] **6.h.C** · Position **270/885** · Voraussetzung: `6.h.R`.
+- [x] **6.h.C** · Position **270/885** · Voraussetzung: `6.h.R`.
 **Exakte Commit-Message:** `6.h.C refactor(work): Sparsame Weiterarbeit und echter Blocker bereinigen`
 
 **Bereinigung:** Adaptionsentscheidung von Fachalgorithmus und Hostmessung entkoppeln.
@@ -5856,6 +5856,25 @@ Position 269/885. Danach folgt 6.h.C ohne neue Fachwirkung.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 121:** Das vollständig geprüfte Result von Bundle 120
+bestätigt Commit `b5e7e142b1870345216b68bdb831dbc638a455e4`, 6.664 erfolgreiche
+parallele Apply-Tests, acht identische Payloads und den sauberen Basissnapshot.
+Die reine Chargenentscheidung, native Fehlerzuordnung und Blockerprojektion
+liegen jetzt in `runtime._spool_work_policy`. Die Funktionen erhalten lediglich
+beobachtete Signale und bereits abgelöste Werte. Task-/Dateizugriffe, Messung,
+Validierungsreihenfolge und Ausnahmegrenzen bleiben im vorhandenen Adapter;
+Sortier-/Mergealgorithmen werden nicht verändert.
+
+Die Strukturprüfung vergleicht den nativen W-Einstieg unverändert sowie beide
+Treiberfunktionen nach rein syntaktischem Einsetzen der ausgelagerten Ausdrücke
+und Projektion. Fehlerzuordnung und resultierende Werte sind identisch. Alle
+268 bisherigen Testdateien und 6.664 Fälle bleiben bytegleich; keine neue
+Testlogik, Fachwirkung oder Darstellungstests werden ergänzt. Die vier
+Requirement-Teilnachweise behalten Testbindungen, Status und offene Grenzen.
+
+Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
+270/885. Danach folgt 6.i.W für Work-Identität und geschlossenes Manifest.
 
 <a id="step-6-i"></a>
 ### 6.i – Work-Identität und geschlossenes Manifest
