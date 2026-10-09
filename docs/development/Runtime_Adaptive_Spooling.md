@@ -39,12 +39,49 @@ mit `checkpoint=null` und `durable_checkpoint=false`. Sie ist kein CLI-Resultat
 und vergibt keinen Exitcode 8. Persistente Work-Identität und Wiederaufnahme
 folgen ab 6.i.
 
-Fehler behalten in W den vorhandenen nativen Ausnahmevertrag. Der Task bewahrt
+`advance_spool_sort` behält den vorhandenen nativen Ausnahmevertrag. Der Task bewahrt
 bereits geschriebene Spooldateien, schließt eigene Handles und zählt eine
 fehlgeschlagene Einheit nicht als abgeschlossen. Es gibt keinen automatischen
 Retry, keine Löschung von Projekt-/Recoverydaten und keinen Writer-Lock auf
-einem geschützten Projekt. R ergänzt die ausführliche maschinenlesbare
-Blockerprojektion. Die vorhandenen Schutz- und Eingabeprüfungen bleiben wirksam.
+einem geschützten Projekt. Die vorhandenen Schutz- und Eingabeprüfungen bleiben
+wirksam.
+
+`advance_spool_sort_outcome(task, call, max_units=256)` ergänzt einen ausdrücklich
+konservativen Einstieg. Er wählt vor dem Fortschrittsversuch eine zukünftige
+Charge von einem Record, verwendet die vorhandenen externen Sortierläufe und
+versucht jeweils eine Einheit am bestehenden Cursor. Eine schon vorhandene
+größere Charge wird dadurch nicht rückwirkend freigegeben oder neu eingelesen.
+Diese Wahl kann mehr externe Läufe erzeugen; sie ändert die vollständigen
+fachlichen Ergebnisse nicht.
+
+Die Projektion `spool-work-outcome-v1` enthält bei Erfolg das normale `window`.
+`active` hat `exit_code=null`, `completed` hat `exit_code=0`. Ausschließlich
+beobachtete `MemoryError` und bekannte native I/O-Fehler innerhalb des tatsächlichen
+`spool_advance` ergeben `blocked`, `exit_code=5`, `window=null`. Das ist ein
+betrieblicher Adaptervertrag, kein bereits integriertes CLI-Resultat.
+Ein weiches Ziel oder unbekannte Kapazität allein erzeugt keinen Blocker.
+Ungültige Eingaben, Schutzverletzungen, Messkontrollfehler, unbekannte Fehler und
+Unterbrechungen behalten ihren Ausnahmevertrag.
+
+`blocker` nennt Fehlerklasse, natives `errno`, fehlgeschlagene Phase, die tatsächlich
+gewählte kleinere Charge und den kleinsten Fortschrittsversuch. Eine konkrete
+`required_action` unterscheidet zum Beispiel fehlende Deskriptoren, Speicher,
+Datenträgerplatz, Schreibrechte, Dateigrößenlimit und unzuverlässige I/O.
+Es gibt keine erfundene Zahl für benötigte Mindestressourcen. `retained_progress`
+enthält den zuletzt beobachteten Cursor und abgeschlossene Einheiten; vorhandene
+externe Spooldateien werden nicht gelöscht. Eine kurze native Schreiboperation
+kann außerdem einen unbestätigten Teilrecord hinterlassen. Die Cursorprojektion
+beweist dessen Hash, vollständige Veröffentlichung oder Wiederaufnehmbarkeit
+nicht. Sie wird nach dem Fehler nicht als neuer Checkpoint revalidiert.
+
+Ein fehlgeschlagener Task schließt seine Handles und seinen Generator. Gepufferte
+oder vorausgelesene Werte im flüchtigen Generator sind danach nicht fortsetzbar;
+`live_task_resumable` und `buffered_input_resumable` sind ausdrücklich `false`.
+Die nächste Aktion verlangt deshalb Abhilfe, erneute Eingangsprüfung und einen
+neuen Task in einem neuen externen Spool. Der Adapter führt diesen Neustart nie
+automatisch aus. Die erhaltenen Dateien bleiben zur Prüfung verfügbar. Eine
+Wiederaufnahme ihrer Daten ohne Präfixwiederholung benötigt erst den persistenten
+Work-/Snapshotvertrag ab 6.i; ein Code 8 wird hier weiterhin nicht vergeben.
 
 Die Tests verwenden echte externe Spooldateien und ausdrücklich markierte
 Zählerfixtures für CPU-/Wall-Ziele. Sie vergleichen vollständige Ergebnisse und
@@ -54,3 +91,13 @@ Es wird keine allgemeine präemptive Millisekundengarantie behauptet: native
 I/O-Aufrufe, Recordverarbeitung und notwendige Hashprüfungen bleiben innerhalb
 ihrer bestehenden Einheit unteilbar. Andere Fachalgorithmen, persistente
 Checkpoints und die vollständige Runtime-/Plattformabnahme bleiben offen.
+
+Die R-Nachweise ergänzen reale native Ablehnungen unter isoliertem Linux
+`RLIMIT_NOFILE` beziehungsweise `RLIMIT_FSIZE`, einen echten kurzen Schreibpräfix
+vor einer markiert injizierten Platzverweigerung und eine echte fehlgeschlagene
+Allokation unter `RLIMIT_AS` in einem ausdrücklich markierten Ersatzinitialisierer.
+Letztere ist kein Benchmark des tatsächlichen Speicherbedarfs des Spool-Hashers.
+Weitere klassifizierte I/O-/Speicherfehler sind markierte Injektionen in einen
+bereits laufenden Merge. Before Images, Journal, Checkpoint-/Snapshotfixtures
+und vorhandene Spoolbytes bleiben erhalten. Harte OOM-Kills und Dateiverlust
+lassen sich durch diese Python-Fehlerprojektion nicht auffangen.

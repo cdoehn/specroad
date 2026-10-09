@@ -10,17 +10,20 @@
     "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
-    "Owned guarded external spool roots and protected project fixtures; active in-process consumption windows. CPU/wall counters are explicitly labelled fixture samples. Memory/storage failures are labelled injections into a real ongoing native merge."
+    "Owned guarded external spool roots and protected project/recovery fixtures; active in-process consumption windows. Clock counters and write refusals are explicitly labelled injections. Native descriptor/file-size limits run only in isolated Linux children; the native address-space refusal uses a labelled replacement initializer, not a claim about the real kernel minimum."
   ],
   "steps": [
     "Drive finite diagnostic/prepared-path inputs through tiny measured windows and compare complete results/record bytes with the existing reference.",
     "Check monotone actual units, one source traversal, retained buffered/pending records and live merge cursors, unknown measurements and detached operational reports.",
-    "Inject a failed minimum write after real progress and verify unchanged protected critical data, retained external run bytes, no retry and no successful failed-unit accounting."
+    "Inject a failed minimum write after real progress and verify unchanged protected critical data, retained external run bytes, no retry and no successful failed-unit accounting.",
+    "Drive the conservative outcome adapter to full diagnostic/prepared-path completion with tiny soft targets and unknown capacity, without empty successful windows.",
+    "Observe actual minimum-advance failures and assert machine-readable cause, attempted smaller batching, preserved observed cursor and files, nonresumable volatile input, explicit remedy and no automatic replay.",
+    "Verify native descriptor/file-size refusal and a labelled native failed allocation in isolated children, plus a real short write before injected ENOSPC. Preserve critical recovery fixtures and propagate safety/observer/unexpected failures."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Ressourcenbegrenzung DARF NICHT die Erhaltung bereits benötigter Wiederherstellungsdaten zugunsten neuer fachlicher Arbeit umgehen.",
-    "scope": "The bounded live spool driver and its existing guarded task preserve protected project journal/before-image/checkpoint fixtures and already written external runs when a labelled memory/storage failure interrupts one minimum unit. No automatic retry or cleanup occurs; failed units are not counted complete. Full recovery/capacity integration remains open."
+    "scope": "The bounded live spool driver and its existing guarded task preserve protected project journal/before-image/checkpoint fixtures and already written external runs when a labelled memory/storage failure interrupts one minimum unit. No automatic retry or cleanup occurs; failed units are not counted complete. Full recovery/capacity integration remains open. R additionally preserves actual partial-write bytes and protected before-image/journal/checkpoint/snapshot fixtures across classified minimum-advance failures. Reports do not claim failed generators or buffered input remain resumable; no cleanup or retry is attempted."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,6 +40,51 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_adaptive_spooling_right.py::test_actual_allocation_refusal_in_labelled_initializer_reports_unknown_minimum",
+    "tests/test_adaptive_spooling_right.py::test_already_completed_task_returns_complete_without_new_work",
+    "tests/test_adaptive_spooling_right.py::test_changed_spool_permissions_remain_a_safety_violation",
+    "tests/test_adaptive_spooling_right.py::test_conservative_prepared_path_work_preserves_all_ordered_paths",
+    "tests/test_adaptive_spooling_right.py::test_failed_prefetched_input_is_not_advertised_as_resumable_memory",
+    "tests/test_adaptive_spooling_right.py::test_finished_measurement_window_cannot_reduce_or_advance_a_task",
+    "tests/test_adaptive_spooling_right.py::test_invalid_window_cannot_even_reduce_the_future_batch_target[-1]",
+    "tests/test_adaptive_spooling_right.py::test_invalid_window_cannot_even_reduce_the_future_batch_target[0]",
+    "tests/test_adaptive_spooling_right.py::test_invalid_window_cannot_even_reduce_the_future_batch_target[1.5]",
+    "tests/test_adaptive_spooling_right.py::test_invalid_window_cannot_even_reduce_the_future_batch_target[True]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[1-access_denied-restore_guarded_spool_and_source_permissions]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[12-memory_unavailable-make_memory_for_the_failed_step_available]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[122-storage_unavailable-make_space_available_without_deleting_recovery_data]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[13-access_denied-restore_guarded_spool_and_source_permissions]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[2-bound_path_missing-restore_bound_inputs_and_spool_paths_then_revalidate]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[23-descriptor_unavailable-make_a_file_descriptor_available]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[24-descriptor_unavailable-make_a_file_descriptor_available]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[27-file_size_limit-provide_a_file_size_limit_that_allows_the_required_spool]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[28-storage_unavailable-make_space_available_without_deleting_recovery_data]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[30-read_only_storage-provide_writable_external_spool_storage]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[38-safe_io_unavailable-provide_supported_guarded_file_io]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[5-io_failure-restore_reliable_source_and_spool_io]",
+    "tests/test_adaptive_spooling_right.py::test_observed_failed_merge_reports_cause_attempts_retained_progress_and_remedy[None-memory_unavailable-make_memory_for_the_failed_step_available]",
+    "tests/test_adaptive_spooling_right.py::test_observer_failure_is_not_misreported_as_a_failed_spool_step[failure0-end]",
+    "tests/test_adaptive_spooling_right.py::test_observer_failure_is_not_misreported_as_a_failed_spool_step[failure0-start]",
+    "tests/test_adaptive_spooling_right.py::test_observer_failure_is_not_misreported_as_a_failed_spool_step[failure1-end]",
+    "tests/test_adaptive_spooling_right.py::test_observer_failure_is_not_misreported_as_a_failed_spool_step[failure1-start]",
+    "tests/test_adaptive_spooling_right.py::test_real_native_limit_refuses_minimum_file_operation_without_deleting_critical_data[RLIMIT_FSIZE-27-file_size_limit]",
+    "tests/test_adaptive_spooling_right.py::test_real_native_limit_refuses_minimum_file_operation_without_deleting_critical_data[RLIMIT_NOFILE-24-descriptor_unavailable]",
+    "tests/test_adaptive_spooling_right.py::test_real_short_write_prefix_survives_later_refusal_without_claiming_completed_unit",
+    "tests/test_adaptive_spooling_right.py::test_source_failure_after_real_progress_has_no_partial_success_result",
+    "tests/test_adaptive_spooling_right.py::test_tiny_target_finishes_all_records_without_empty_windows_or_false_blockers[--cpu-budget-ms]",
+    "tests/test_adaptive_spooling_right.py::test_tiny_target_finishes_all_records_without_empty_windows_or_false_blockers[--step-cpu-ms]",
+    "tests/test_adaptive_spooling_right.py::test_tiny_target_finishes_all_records_without_empty_windows_or_false_blockers[--step-wall-ms]",
+    "tests/test_adaptive_spooling_right.py::test_tiny_target_finishes_all_records_without_empty_windows_or_false_blockers[--wall-budget-ms]",
+    "tests/test_adaptive_spooling_right.py::test_unexpected_failures_propagate_without_becoming_resource_claims[input]",
+    "tests/test_adaptive_spooling_right.py::test_unexpected_failures_propagate_without_becoming_resource_claims[interrupt]",
+    "tests/test_adaptive_spooling_right.py::test_unexpected_failures_propagate_without_becoming_resource_claims[programming]",
+    "tests/test_adaptive_spooling_right.py::test_unexpected_failures_propagate_without_becoming_resource_claims[unknown_errno]",
+    "tests/test_adaptive_spooling_right.py::test_unknown_capacity_does_not_prevent_complete_bounded_work[1000]",
+    "tests/test_adaptive_spooling_right.py::test_unknown_capacity_does_not_prevent_complete_bounded_work[1]",
+    "tests/test_adaptive_spooling_right.py::test_unknown_capacity_does_not_prevent_complete_bounded_work[7]",
+    "tests/test_adaptive_spooling_right.py::test_unowned_tasks_are_not_used_as_a_source_of_blocker_claims[None]",
+    "tests/test_adaptive_spooling_right.py::test_unowned_tasks_are_not_used_as_a_source_of_blocker_claims[foreign]",
+    "tests/test_adaptive_spooling_right.py::test_unowned_tasks_are_not_used_as_a_source_of_blocker_claims[invalid1]",
     "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--cpu-budget-ms]",
     "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--step-cpu-ms]",
     "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--step-wall-ms]",
@@ -49,6 +97,6 @@
     "tests/test_adaptive_spooling_work.py::test_real_written_progress_and_recovery_files_survive_failed_minimum_unit[failure1]"
   ],
   "open_items": [
-    "Partial live diagnostic/prepared-path spool integration only. Detailed observed-blocker projection follows 6.h.R; native exceptions already propagate without retry. Other algorithms, persistent Work identity/checkpoints/restart from 6.i onward, CLI continuation results, full host-limit/resource accounting and platform acceptance remain open. Encoded batch targets are not RSS or real capacity promises."
+    "Partial live diagnostic/prepared-path spool integration only. Persistent Work identity/checkpoints, portable restart and reuse of retained files follow from 6.i onward. Full command/CLI integration, other algorithms, complete resource accounting, indivisible large-record kernels, hard OOM/kill recovery and cross-platform acceptance remain open. No host-capacity or minimum-memory amount is inferred from declared budgets, injected errors or fixture allocation sizes."
   ]
 }

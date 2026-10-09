@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 268
-last_completed_plan_commit: 6.h.W
-next_plan_commit: 6.h.R
-last_completed_numbered_bundle: 119
+implementation_plan_commits_completed: 269
+last_completed_plan_commit: 6.h.R
+next_plan_commit: 6.h.C
+last_completed_numbered_bundle: 120
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5806,12 +5806,45 @@ Danach folgt 6.h.R.
 
 #### 6.h.R – Make it Right
 
-- [ ] **6.h.R** · Position **269/885** · Voraussetzung: `6.h.W`.
+- [x] **6.h.R** · Position **269/885** · Voraussetzung: `6.h.W`.
 **Exakte Commit-Message:** `6.h.R feat(work): Sparsame Weiterarbeit und echter Blocker vervollständigen`
 
 **Vervollständigung:** Tatsächliche Unausführbarkeit mit versuchten Alternativen belegen; Recoverydaten nicht für neuen Speicher löschen.
 
 **Verhaltensabnahme:** Winziges Budget führt nicht zu Endlosschleife leerer Schritte oder falschem Fehler allein wegen des Ziels. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzung / Bundle 120:** Das vollständig geprüfte Result von Bundle 119
+bestätigt Commit `c411282aab37b065f18762f83365634f4aa71356`, 6.619 erfolgreiche
+parallele Apply-Tests, neun identische Payloads und den sauberen Basissnapshot.
+Der neue konservative Einstieg `advance_spool_sort_outcome` wählt zukünftige
+Ein-Record-Chargen und versucht tatsächliche Einheiten im vorhandenen externen
+Sortier-/Paarmerge. Ein weiches Ziel allein ist kein Blocker. Die native W-API
+behält ihren Ausnahmevertrag.
+
+Nur tatsächlich beobachtete Speicher-/bekannte I/O-Fehler innerhalb eines
+Sortierfortschritts erzeugen die betriebliche Blockerprojektion. Sie benennt
+Ursache, `errno`, gewählte Charge, kleinsten Versuch, zuletzt beobachteten Cursor,
+abgeschlossene Einheiten und konkrete Abhilfe. Vorhandene Spooldateien sowie
+kritische Projekt-/Recoverydaten werden nicht gelöscht. Ein unbestätigter
+Teilrecord oder flüchtig gepufferte Eingabe wird ausdrücklich nicht als
+bestätigter Checkpoint oder wiederaufnehmbarer Task ausgegeben. Der erforderliche
+Neustart nach Abhilfe und erneuter Eingangsprüfung erfolgt nie automatisch.
+Persistente Wiederaufnahme bleibt dem Workvertrag ab 6.i zugeordnet.
+
+45 neue Verhaltensfälle prüfen vollständige endliche Fortschritte auch bei
+winzigen Zielen, echte native Deskriptor-/Dateigrößenverweigerung in isolierten
+Linux-Prozessen, einen echten kurzen Schreibpräfix vor markiertem ENOSPC und
+eine echte Allokationsverweigerung in einem markierten Ersatzinitialisierer.
+Weitere native Fehler sind ausdrücklich injiziert. Schutz-, Eingabe-, Mess- und
+unerwartete Fehler werden nicht in Ressourcenbehauptungen umgedeutet. Alle 267
+bisherigen Testdateien und 6.619 Fälle bleiben unverändert. SR-REQ-0614 erhält
+einen begrenzten Teilnachweis; 0592/0593/0604 werden entsprechend erweitert.
+
+Die Adaptercodes 0/5 sind keine vollständige CLI-Integration; aktive Fenster
+haben keinen Exitcode und kein Code 8 wird behauptet. Harte OOM-Kills,
+prozessübergreifende Wiederaufnahme und vollständige Plattformabnahme bleiben
+offen. Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen
+Position 269/885. Danach folgt 6.h.C ohne neue Fachwirkung.
 
 #### 6.h.C – Make it Clean
 
