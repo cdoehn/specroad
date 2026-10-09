@@ -16,12 +16,13 @@
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
     "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
-    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
+    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Ressourcenprofil DARF NICHT den angeforderten fachlichen Scope, die Prüfstrenge oder erforderliche Nachweise stillschweigend verändern.",
-    "scope": "Profile changes preserve a real ChangePlan, authoring request, operations hash and bound scope. Actual SRX reachability preserves semantic depth and AST strictness. Bound supplied query pages retain their complete total and selected pagination; no query engine or Work checkpoint is claimed. R validates all 32 supplied target artifacts despite unit work targets, retains all five requested query-page items despite a unit batch target, and completes actual 1025-iteration SRX and graph work. Hard structure and profile composition remain strict."
+    "scope": "Profile changes preserve a real ChangePlan, authoring request, operations hash and bound scope. Actual SRX reachability preserves semantic depth and AST strictness. Bound supplied query pages retain their complete total and selected pagination; no query engine or Work checkpoint is claimed. R validates all 32 supplied target artifacts despite unit work targets, retains all five requested query-page items despite a unit batch target, and completes actual 1025-iteration SRX and graph work. Hard structure and profile composition remain strict. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -65,6 +66,6 @@
     "tests/test_runtime_resource_policy_right.py::test_tiny_query_result_target_does_not_repaginate_a_larger_requested_scope"
   ],
   "open_items": [
-    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
+    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

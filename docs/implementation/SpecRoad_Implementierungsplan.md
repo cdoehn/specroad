@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 254
-last_completed_plan_commit: 6.c.R
-next_plan_commit: 6.c.C
-last_completed_numbered_bundle: 105
+implementation_plan_commits_completed: 255
+last_completed_plan_commit: 6.c.C
+next_plan_commit: 6.d.W
+last_completed_numbered_bundle: 106
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5265,7 +5265,7 @@ erfolgreichen vollständigen parallelen Dev-/Apply-Tests und Commit gilt Positio
 
 #### 6.c.C – Make it Clean
 
-- [ ] **6.c.C** · Position **255/885** · Voraussetzung: `6.c.R`.
+- [x] **6.c.C** · Position **255/885** · Voraussetzung: `6.c.R`.
 **Exakte Commit-Message:** `6.c.C refactor(work): Ressourcenprofile und Grenzklassen bereinigen`
 
 **Bereinigung:** Semantische Konfiguration und Betriebsoptionen in getrennten Typen halten.
@@ -5273,6 +5273,28 @@ erfolgreichen vollständigen parallelen Dev-/Apply-Tests und Commit gilt Positio
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 106:** Das vollständig geprüfte Result von Bundle 105
+bestätigt `b7b450f41853b2e6c2d07966427fb02321080aab`, 6.314 erfolgreiche
+parallele Apply-Tests und einen sauberen Snapshot. Die Ressourcenauflösung hält
+validierte Profilwahl und geordnete betriebliche Überschreibungen in
+`RuntimeResourceOptions`. Fachliche Scope- und Sicherheitsprojektionen bleiben
+im getrennten Typ `SemanticResourceConstraints`. Historische weiche Ziele und
+qualifizierte Hostbeobachtungen gelangen weiterhin in ihre eigenen Berichtsklassen.
+
+Die öffentliche Auflösung akzeptiert dieselben Mapping-Eingaben und gibt dieselbe
+JSON-Struktur zurück. Profildefaults, Einheiten, Herkunft, Vorrang ausdrücklich
+deklarierter Graphziele und die abschließende JSON-Prüfung bleiben erhalten.
+Die bestehenden Klassifikations- und Validierungsanweisungen werden unverändert
+übernommen; Budgetoptionen werden weiterhin vor Projektgrenzen geprüft. Es werden
+keine Optionen in fachliche Konfiguration, Scope oder Request-Identität geschrieben.
+
+Sämtliche vorhandenen Testdateien und 6.314 Testidentitäten bleiben unverändert,
+einschließlich aller 64 W- und 50 R-Fälle. Die Requirements behalten ihre bisherigen
+Teilabnahmen und offenen Nachweise. Die Bereinigung führt weder Verbrauchsmessung
+noch adaptive Work-Fortsetzung, Checkpoints oder eine Plattformfreigabe ein.
+Erst nach erfolgreichen vollständigen parallelen Dev-/Apply-Tests und Commit
+gilt Position 255/885; anschließend folgt 6.d.W.
 
 <a id="step-6-d"></a>
 ### 6.d – Verbrauchsbilanz und Kontrollpunkte

@@ -7,7 +7,7 @@ from collections.abc import Mapping
 import json
 import re
 
-from .resource_profiles import profile_targets
+from ._budget_values import RuntimeResourceOptions, SemanticResourceConstraints
 
 
 _OVERRIDES = {
@@ -72,7 +72,24 @@ def _classes(resource_limits, scope_descriptor, observations):
                     (type(item['value']) is not int or item['value'] < 0))):
             raise ResourcePolicyError('Qualified host observation required')
         groups['observed_host_limit'][name] = dict(item)
-    return groups
+    return (groups['soft_work_target'],
+            SemanticResourceConstraints(groups['semantic_scope'], groups['hard_safety_or_format']),
+            groups['observed_host_limit'])
+
+
+def _runtime_options(options):
+    options = {} if options is None else options
+    if not isinstance(options, Mapping) or set(options) - RESOURCE_OPTIONS:
+        raise ResourcePolicyError('Only declared runtime resource options are accepted')
+    profile = options.get('--resource-profile', 'constrained')
+    if type(profile) is not str or profile not in ('constrained', 'standard'):
+        raise ResourcePolicyError('Unknown runtime resource profile')
+    source = 'cli' if '--resource-profile' in options else 'default'
+    overrides = []
+    for flag, (metric, factor) in _OVERRIDES.items():
+        if flag in options:
+            overrides.append((metric, _positive(options[flag]) * factor, 'cli:' + flag))
+    return RuntimeResourceOptions(profile, source, tuple(overrides))
 
 
 def resolve_resource_policy(options=None, *, resource_limits=None,
@@ -83,22 +100,13 @@ def resolve_resource_policy(options=None, *, resource_limits=None,
     Only the six declared soft targets are overridable. A step window is never
     clamped to its parent target. Supplied host observations remain independent.
     """
-    options = {} if options is None else options
-    if not isinstance(options, Mapping) or set(options) - RESOURCE_OPTIONS:
-        raise ResourcePolicyError('Only declared runtime resource options are accepted')
-    profile = options.get('--resource-profile', 'constrained')
-    if type(profile) is not str or profile not in ('constrained', 'standard'):
-        raise ResourcePolicyError('Unknown runtime resource profile')
-    result = profile_targets(profile, source='cli' if '--resource-profile' in options else 'default')
-    for flag, (metric, factor) in _OVERRIDES.items():
-        if flag in options:
-            result['effective_budgets'][metric].update(
-                value=_positive(options[flag]) * factor, origin='cli:' + flag)
-    groups = _classes(resource_limits, scope_descriptor, observations)
+    result = _runtime_options(options).report()
+    soft_targets, semantic, observed_hosts = _classes(resource_limits, scope_descriptor, observations)
     # The existing explicit SRX graph target takes precedence over a profile default.
-    if 'srx_graph_steps' in groups['soft_work_target']:
-        result['effective_budgets']['graph'].update(groups['soft_work_target']['srx_graph_steps'])
-    result['classified_limits'] = groups
+    if 'srx_graph_steps' in soft_targets:
+        result['effective_budgets']['graph'].update(soft_targets['srx_graph_steps'])
+    result['classified_limits'] = {'soft_work_target': soft_targets, **semantic.classes(),
+                                   'observed_host_limit': observed_hosts}
     try:
         # Unit conversion must still produce a representable machine report.
         # This checks the active JSON encoder, not a maximum work/host budget.

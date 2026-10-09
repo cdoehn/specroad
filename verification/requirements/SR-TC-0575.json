@@ -16,12 +16,13 @@
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
     "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
-    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
+    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Betriebliche Ressourcenoptionen MÜSSEN unabhängig von fachlicher Konfiguration, Aufgabenidentität und Operationshash nach Anhang O.1 aufgelöst werden.",
-    "scope": "Operational values are resolved separately from a real bound ChangePlan/request, scope descriptor and semantic configuration hash. SRX resource_options remain outside its four field-visible roots. Returned maps own their data and do not write options back into semantic inputs. R checks all nine historical soft quantity names outside the current semantic configuration hash and all eight hard/semantic names inside it. A real model manifest is unchanged by soft-only differences; previously owned manifests/configuration/plan bytes remain intact. No historical hash migration is performed."
+    "scope": "Operational values are resolved separately from a real bound ChangePlan/request, scope descriptor and semantic configuration hash. SRX resource_options remain outside its four field-visible roots. Returned maps own their data and do not write options back into semantic inputs. R checks all nine historical soft quantity names outside the current semantic configuration hash and all eight hard/semantic names inside it. A real model manifest is unchanged by soft-only differences; previously owned manifests/configuration/plan bytes remain intact. No historical hash migration is performed. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -71,6 +72,6 @@
     "tests/test_runtime_resource_policy_right.py::test_historical_soft_quantities_change_runtime_policy_but_not_current_semantic_configuration[srx_operations]"
   ],
   "open_items": [
-    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
+    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

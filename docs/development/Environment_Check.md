@@ -36,7 +36,11 @@ Ganzzahlen sind erlaubt. Ein explizites Schrittfenster darf größer als sein
 übergeordnetes Ziel sein. Der Bericht weist jeden effektiven Wert und seine
 Herkunft aus; MiB werden in Bytes umgerechnet, ohne diese Bytes zu reservieren.
 
-Die gemeinsame reine Auflösung steht in `runtime.budget_policy`. Sie klassifiziert
+Die gemeinsame reine Auflösung steht in `runtime.budget_policy`. Intern halten
+`RuntimeResourceOptions` die Profilwahl und die geordneten betriebsbezogenen
+Überschreibungen; `SemanticResourceConstraints` hält getrennt davon die
+Scope- und Sicherheitsprojektionen. Die öffentlichen Mapping-Eingaben und
+JSON-Berichte bleiben erhalten. Die Auflösung klassifiziert
 ausdrücklich übergebene Ressourcengrenzen und gebundene Scope Descriptors getrennt
 von den Arbeitszielen. Hostbeobachtungen erhalten ihre eigenen Werte, Quellen und
 Unknowns; ein größeres Arbeitsziel erhöht keine Hostgrenze. Environment-Check

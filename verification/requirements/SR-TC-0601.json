@@ -16,12 +16,13 @@
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
     "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
-    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged."
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
+    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Überschreitung eines weichen Arbeitsbudgets DARF NICHT allein einen fachlich ausführbaren Gesamtauftrag mit Fehler beenden.",
-    "scope": "An actual complete SRX evaluation succeeds beyond its explicit soft operation target in both profiles, retaining the complete Boolean result and counters. Its hard structural overflow still raises the original structured error. The explicit count fixture also observes profile-specific soft meter thresholds without claiming a timed benchmark or persisted continuation. R executes complete supplied-target assessment, 1025 actual SRX iterations and multi-step graph work beyond explicit positive unit targets, retaining complete outputs. The independent hard AST check still blocks before operator execution even with large soft targets."
+    "scope": "An actual complete SRX evaluation succeeds beyond its explicit soft operation target in both profiles, retaining the complete Boolean result and counters. Its hard structural overflow still raises the original structured error. The explicit count fixture also observes profile-specific soft meter thresholds without claiming a timed benchmark or persisted continuation. R executes complete supplied-target assessment, 1025 actual SRX iterations and multi-step graph work beyond explicit positive unit targets, retaining complete outputs. The independent hard AST check still blocks before operator execution even with large soft targets. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -58,6 +59,6 @@
     "tests/test_runtime_resource_policy_right.py::test_large_work_target_never_bypasses_current_srx_structure_recheck[standard]"
   ],
   "open_items": [
-    "Partial 6.c.W/R evidence only. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
+    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }
