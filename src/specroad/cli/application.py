@@ -9,7 +9,7 @@ from .options import OptionResolutionError
 from .invocation_context import InvocationContextBuilder
 from .registry import CommandRegistry, CommandUsageError
 from .requests import CommandRequest
-from .results import CommandResult, FailureKind, OperationFailure, failed_result, thaw
+from .results import CommandResult, FailureKind, OperationFailure, failed_result
 from ..diagnostics import Diagnostic
 
 
@@ -101,16 +101,8 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
             Diagnostic('SRV167', 'info', 'preflight_detail_required',
                        'Additional bounded metadata phases were required.')))
     if consumption_call is not None:
-        report = consumption_call.finish()
-        if command == 'environment.check' and isinstance(outcome.result, Mapping):
-            policy = outcome.result.get('resource_policy')
-            if isinstance(policy, Mapping) and isinstance(policy.get('effective_budgets'), Mapping):
-                # The completed diagnosis also knows stable selected-project targets.
-                report['effective_budgets'] = thaw(policy['effective_budgets'])
-        report['observation_scope'] = 'parsed_command_through_result_assembly'
-        report['includes_interpreter_start'] = False
-        report['includes_result_delivery'] = False
-        outcome = replace(outcome, details={**outcome.details, 'runtime': report})
+        from ._runtime_metrics import attach_runtime_summary
+        outcome = attach_runtime_summary(outcome, command, consumption_call)
     return CommandResponse(outcome, options)
 
 

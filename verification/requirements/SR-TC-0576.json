@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Verbrauchsbilanz eines Arbeitsauftrags MUSS sämtliche Teilschritte und Verarbeitungsphasen kumuliert ausweisen, ohne diese Summe als automatische Abbruchgrenze zu verwenden.",
-    "scope": "An explicit in-process ledger sums completed invocation CPU and wall intervals, retains registered outstanding bytes, aggregates peaks rather than summing them, and permits another actual environment command after soft-target excess or profile change. Duplicate or overlapping completion cannot double count. In 6.d.R, actual controlled kernels add aggregate control counts across calls without blocking later work; observed soft events survive later missing samples and unrepresentable accumulated counters remain unknown."
+    "scope": "An explicit in-process ledger sums completed invocation CPU and wall intervals, retains registered outstanding bytes, aggregates peaks rather than summing them, and permits another actual environment command after soft-target excess or profile change. Duplicate or overlapping completion cannot double count. In 6.d.R, actual controlled kernels add aggregate control counts across calls without blocking later work; observed soft events survive later missing samples and unrepresentable accumulated counters remain unknown. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

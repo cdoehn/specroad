@@ -8,6 +8,7 @@ import time
 
 from .budget_policy import resolve_resource_policy
 from .control_points import ControlPoint, PhaseBoundary, INTERVALS
+from ._consumption_projection import measured_metrics, accounted_metrics
 
 
 class ConsumptionError(ValueError):
@@ -68,11 +69,6 @@ def native_sample():
             value = _reading(lambda: api.getrusage(api.RUSAGE_SELF).ru_maxrss)
             rss = None if value is None else value * 1024
     return CounterSample(cpu, wall, rss)
-
-
-def _metric(value, unit, source, scope, *, kind='measured'):
-    return {'value': value, 'unit': unit, 'source': source, 'scope': scope,
-            'measurement_kind': 'unknown' if value is None else kind}
 
 
 def _sum(previous, current):
@@ -201,10 +197,7 @@ class InvocationConsumption:
             else:
                 entry = self._controls['phases'].setdefault(point.phase, {'start': 0, 'end': 0})
                 entry[point.edge] += 1
-            return {'measured': {name: _metric(value, 'bytes' if name == 'rss_peak_bytes' else 'ns',
-                    sources[name], {'cpu_ns': 'current_process_all_threads_interval',
-                        'wall_ns': 'monotonic_interval', 'rss_peak_bytes': 'current_process_lifetime_peak'}[name])
-                    for name, value in values.items()},
+            return {'measured': measured_metrics(values, sources),
                     'soft_budget_exceeded': bool(self._events), 'control_checks': self._controls['checks']}
 
     def finish(self):
@@ -225,26 +218,14 @@ class InvocationConsumption:
             work._calls += 1
             work._control_checks += self._controls['checks']
             work._active = None
-            scopes = {'cpu_ns': 'current_process_all_threads_interval',
-                      'wall_ns': 'monotonic_interval', 'rss_peak_bytes': 'current_process_lifetime_peak'}
-
-            def measured(current, *, cumulative=False):
-                return {name: _metric(value, 'bytes' if name == 'rss_peak_bytes' else 'ns',
-                    work._sources[name] if cumulative else sources[name], scopes[name])
-                    for name, value in current.items()}
-
-            def accounted(peaks):
-                return {kind + '_peak_bytes': _metric(value, 'bytes', 'explicit_byte_registrations',
-                    'registered_own_bytes_only', kind='accounted') for kind, value in peaks.items()}
-
             events = [deepcopy(self._events[name]) for name in ('cpu', 'wall', 'step_cpu', 'step_wall', 'memory', 'scratch') if name in self._events]
             return {'format_version': 'runtime-consumption-v1', 'policy_version': self._policy['policy_version'],
                     'profile': self._policy['profile'], 'effective_budgets': deepcopy(self._policy['effective_budgets']),
                     'invocations_recorded': work._calls,
-                    'invocation': {'measured': measured(values), 'accounted': accounted(self._peaks),
+                    'invocation': {'measured': measured_metrics(values, sources), 'accounted': accounted_metrics(self._peaks),
                                    'controls': deepcopy(self._controls)},
-                    'cumulative': {'measured': measured(work._totals, cumulative=True),
-                                   'accounted': accounted(work._peaks), 'control_checks': work._control_checks},
+                    'cumulative': {'measured': measured_metrics(work._totals, work._sources),
+                                   'accounted': accounted_metrics(work._peaks), 'control_checks': work._control_checks},
                     'soft_budget_exceeded': bool(events), 'events': events,
                     'observation_scope': 'explicit_in_process_invocations',
                     'includes_child_processes': False, 'host_capacity_known': False,

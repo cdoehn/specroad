@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Budgetüberwachung MUSS die begrenzten internen Kontrollintervalle aus Anhang O.2 ohne externe Überwachungsprozesse einhalten.",
-    "scope": "Actual SRX dispatches yield at every 512 units, loaded-graph node/edge processing at every 128 units, and a guarded hashing reader at every 65536 actual bytes including short reads. Real runtime drivers sample these pure signals. Phase edges bracket validation, results, graph load/view sorting, hashing and the existing native prepared publication. Signals neither grant authority nor finalize receipts."
+    "scope": "Actual SRX dispatches yield at every 512 units, loaded-graph node/edge processing at every 128 units, and a guarded hashing reader at every 65536 actual bytes including short reads. Real runtime drivers sample these pure signals. Phase edges bracket validation, results, graph load/view sorting, hashing and the existing native prepared publication. Signals neither grant authority nor finalize receipts. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

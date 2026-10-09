@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Runtime-Diagnose MUSS gemessenen Gesamtverbrauch, verbuchten Eigenverbrauch und unbekannte Hostgrenzen entsprechend Anhang O.3 unterscheiden.",
-    "scope": "Operational reports distinguish native process measurements, Linux lifetime peak RSS with kernel-unit checks, and explicitly registered own memory/scratch bytes. Missing measurements remain unknown/null and are not treated as capacity or as zero accumulated use. R checks each intermediate window for missing, regressing and source-changing metrics independently, preserves known earlier soft events, and returns JSON-safe unknown cumulative CPU on representation overflow."
+    "scope": "Operational reports distinguish native process measurements, Linux lifetime peak RSS with kernel-unit checks, and explicitly registered own memory/scratch bytes. Missing measurements remain unknown/null and are not treated as capacity or as zero accumulated use. R checks each intermediate window for missing, regressing and source-changing metrics independently, preserves known earlier soft events, and returns JSON-safe unknown cumulative CPU on representation overflow. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

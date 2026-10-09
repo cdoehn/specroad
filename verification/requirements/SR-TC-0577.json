@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS verbrauchte CPU-Zeit und verstrichene Zeit als getrennte betriebliche Größen nach Anhang O.2 behandeln.",
-    "scope": "Real CLI, structured and registry consumers expose separate process CPU and monotonic wall intervals. Explicit arithmetic fixtures check their distinct cumulative totals and omit gaps between invocation windows. Native sources are read without an external monitor. R keeps unavailable, regressing or source-changing intermediate counters unknown through completion and preserves unrelated measurements. Pure SRX generators themselves never read clocks."
+    "scope": "Real CLI, structured and registry consumers expose separate process CPU and monotonic wall intervals. Explicit arithmetic fixtures check their distinct cumulative totals and omit gaps between invocation windows. Native sources are read without an external monitor. R keeps unavailable, regressing or source-changing intermediate counters unknown through completion and preserves unrelated measurements. Pure SRX generators themselves never read clocks. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

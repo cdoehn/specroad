@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 257
-last_completed_plan_commit: 6.d.R
-next_plan_commit: 6.d.C
-last_completed_numbered_bundle: 108
+implementation_plan_commits_completed: 258
+last_completed_plan_commit: 6.d.C
+next_plan_commit: 6.e.W
+last_completed_numbered_bundle: 109
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5387,7 +5387,7 @@ bestätigen Position 257/885. Danach folgt die strukturelle Bereinigung 6.d.C.
 
 #### 6.d.C – Make it Clean
 
-- [ ] **6.d.C** · Position **258/885** · Voraussetzung: `6.d.R`.
+- [x] **6.d.C** · Position **258/885** · Voraussetzung: `6.d.R`.
 **Exakte Commit-Message:** `6.d.C refactor(work): Verbrauchsbilanz und Kontrollpunkte bereinigen`
 
 **Bereinigung:** Metrikadapter vom fachlichen Resultat und dessen Hash ausschließen.
@@ -5395,6 +5395,27 @@ bestätigen Position 257/885. Danach folgt die strukturelle Bereinigung 6.d.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 109:** Das vollständig geprüfte Result von Bundle 108
+bestätigt Commit `ff5bc0accf83130b3653ce08740bb2f53788773a`, 6.386 erfolgreiche
+parallele Apply-Tests sowie einen sauberen, vollständig übereinstimmenden Snapshot.
+Die bislang doppelte Projektion gemessener Werte und die Projektion verbuchter
+Bytes liegen nun in `_consumption_projection`. Quellen, Einheiten, Geltungsbereiche,
+Messarten und Nullbehandlung werden gemeinsam ohne Zugriff auf Fachresultate
+gebildet. Der bisherige CLI-Block liegt unverändert in `_runtime_metrics`; er
+verbindet das fertig bestimmte Environment-Ergebnis nur mit `summary.runtime`.
+Die dort ausgewiesenen Projektbudgets bleiben die tatsächlich aufgelösten Werte.
+
+Die native Abtastung, Fenster-/Summenrechnung, Kontrollsignale und Budgetereignisse
+behalten ihre bisherigen Funktionen. Die SRX-/Graph-Kerne, Payloadhashes und
+Publikationsautoritäten ändern sich nicht. Struktureller Abgleich bestätigt den
+identischen CLI-Block, Metrikkonstruktor, Byteprojektor und die äquivalente gemeinsame
+Messprojektion. Alle 260 bisherigen Testdateien und 6.386 Testfälle bleiben
+unverändert; die bestehenden fünf Requirement-Teilnachweise behalten Status,
+Testbindungen und offene Grenzen. Es wird keine neue fachliche Abnahme behauptet.
+
+Erst erfolgreiche vollständige parallele Dev-/Apply-Tests und Commit bestätigen
+Position 258/885. Danach folgt 6.e.W für Streaming und kleine Transferblöcke.
 
 <a id="step-6-e"></a>
 ### 6.e – Streaming und kleine Transferblöcke

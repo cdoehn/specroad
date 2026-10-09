@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Explizite Verbrauchsmesswerte MÜSSEN ausschließlich über die betriebliche Ausgabe nach Anhang O.5 bereitgestellt werden.",
-    "scope": "Only an explicitly requested environment --metrics option adds summary.runtime. The complete environment payload, original error class, diagnostics, project bytes and pure SRX results stay unchanged. Explicit embedding reuses a separately owned operational ledger. R compares complete original SRX results/usage, real payload hashes and authorized native target bytes. Control observations remain outside semantic results; native authority refusal and incomplete receipt state are retained."
+    "scope": "Only an explicitly requested environment --metrics option adds summary.runtime. The complete environment payload, original error class, diagnostics, project bytes and pure SRX results stay unchanged. Explicit embedding reuses a separately owned operational ledger. R compares complete original SRX results/usage, real payload hashes and authorized native target bytes. Control observations remain outside semantic results; native authority refusal and incomplete receipt state are retained. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

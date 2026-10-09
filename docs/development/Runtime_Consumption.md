@@ -114,3 +114,11 @@ Diese Adapter decken die genannten vorhandenen Kerne ab. Der Environment-Check
 misst weiterhin seinen beschriebenen W-Abschnitt. Eine allgemeine Einbindung in
 sämtliche Command-/Snapshot-/Streaming-Verbraucher, persistente Work-Zustände,
 Phasensummen, Kindprozesse und weitere Plattformadapter sind damit nicht abgenommen.
+
+
+Die Implementierung trennt die Messung und Bilanzierung (`consumption`) von der
+reinen maschinenlesbaren Metrikprojektion (`_consumption_projection`). Die
+CLI-Anbindung (`cli._runtime_metrics`) ergänzt ausschließlich die bereits
+vorgesehene betriebliche Zusammenfassung und verwendet bei Environment-Ergebnissen
+die tatsächlich aufgelösten Projektbudgets. Fachpayloads, deren Hashbildung,
+Kontrollintervalle und die qualifizierten Messquellen behalten ihren Vertrag.
