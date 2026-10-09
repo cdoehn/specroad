@@ -67,6 +67,9 @@ def finalize_read_only_work(store, *, cwd=None):
         return complete_work_manifest(current, outcome, exit_code=exit_code) if finalized else previous
 
     confirmed = _compatible_read(store._update, finish)
+    # Publication can succeed before a later compatibility failure is noticed.
+    # Preserve that actual generation, but never return a stale runtime claim.
+    _require(_runtime_build() == build, 'runtime_build_changed')
     result = object.__new__(ReadOnlyWorkCompletion)
     object.__setattr__(result, 'manifest', confirmed)
     object.__setattr__(result, 'outcome_bytes', canonical_json_bytes(saved['outcome']))

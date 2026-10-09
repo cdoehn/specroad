@@ -93,6 +93,15 @@ Read-only-Anbindung in `work.finalization` prüft dafür zusätzlich den bekannt
 Core-Plan und dessen gespeichertes Handlerergebnis. Normative Writes und
 semantische Erfolgsreceipts werden durch den Datenabschluss nicht freigegeben.
 
+Beim Restore gelten zusätzlich die Kontrollinvarianten des typisierten
+`CommandResult`: Eine vollständige Inline-Hülle darf keine reservierten
+Teilumfangs-, externen Liefer- oder Fortsetzungsfelder in `summary` einschleusen.
+Ein `failure_kind` gehört ausschließlich zu einem Fehlerstatus. Andere
+zulässige Commanddetails bleiben erhalten. Diese Prüfung ergänzt das reine
+Feldschema; selbst neue gültige Hashes machen eine widersprüchliche Hülle nicht
+zu einem Vollabschluss oder einer Code-8-Freigabe. Gehashte Diagnoseteile müssen
+weiterhin genau sämtliche Diagnosen des vollständigen Ergebnisses enthalten.
+
 Der Leser weist außerdem wiederholte Segmentreferenzen vor erneuter Expansion
 ab. Restaufgaben werden als kanonische JSON-Werte verglichen, damit etwa
 `true` keinen numerischen Bereichswert `1` ersetzen kann. Erledigtnachweise

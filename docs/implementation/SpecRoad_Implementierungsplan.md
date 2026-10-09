@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 289
-last_completed_plan_commit: 6.o.W
-next_plan_commit: 6.o.R
-last_completed_numbered_bundle: 140
+implementation_plan_commits_completed: 290
+last_completed_plan_commit: 6.o.R
+next_plan_commit: 6.o.C
+last_completed_numbered_bundle: 141
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6553,12 +6553,39 @@ Nachweise. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.o.R – Make it Right
 
-- [ ] **6.o.R** · Position **290/885** · Voraussetzung: `6.o.W`.
+- [x] **6.o.R** · Position **290/885** · Voraussetzung: `6.o.W`.
 **Exakte Commit-Message:** `6.o.R feat(work): Globale Schlussprüfung und Abschlussstatus vervollständigen`
 
 **Vervollständigung:** Lokale Teilfreigaben und noch offene Arbeit verhindern Erfolgsreceipt.
 
 **Verhaltensabnahme:** Spät entdeckter globaler Fehler bleibt im vollständigen Ergebnis erhalten; Code 8 erst nach gültigem Checkpoint. Die W-Nachweise bleiben zusätzlich grün.
+
+**Implementierungsstand 6.o.R:** Gespeicherte Abschluss-/Handlerhüllen müssen
+neben dem Feldschema die Kontrollinvarianten des typisierten Commandresultats
+einhalten. Reservierte Teilumfangs-, externe Liefer- und Fortsetzungsfelder in
+einer vollständigen Inline-Hülle werden abgewiesen; ein Fehlerkind kann keinen
+Erfolgsstatus begleiten. Sonstige zulässige Commanddetails bleiben unverändert.
+Die gemeinsame Prüfung greift bei Datenkandidaten, Resume und Abschluss, bevor
+unpassende gespeicherte Ergebnisse einen Schreibversuch auslösen können.
+
+Die Runtime-Bindung wird zusätzlich nach tatsächlicher Veröffentlichung erneut
+geprüft. Ein dort bemerkter Wechsel verhindert eine falsche Rückgabe, erhält
+aber die bereits veröffentlichte Generation. Kompatible Wiederholung liefert
+deren bestätigte Ergebnisbytes ohne erneute Handlerausführung.
+
+42 neue Verhaltensfälle prüfen neu gehashte widersprüchliche Kontrollfelder,
+abweichende finale Handlerausgänge, manipulierte Elternbindung, verlorene,
+umgeordnete oder veränderte Diagnoseteile, spätere Runtimewechsel und die
+Abweisung normativer Vorbereitungen als Read-only-Erfolgsreceipt. Vollständige
+fachliche Fehler bleiben in den markierten Planerfixtures einschließlich aller
+Diagnosen erhalten. Die 25 W-Fälle und sämtliche bisherigen Tests bleiben
+bytegleich. Fremde Fortsetzungsdaten werden nicht zu einer Code-8-Freigabe.
+
+Allgemeine Graph-/Closure-Ausführung mehrteiliger Fachpläne, normative Receipts,
+CLI/Code-8-Anbindung und große externe Ausgaben bleiben offen; der ausführbare
+Pfad bleibt der bekannte Bootstrap-Plan, die vier Requirement-Nachweise
+partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
+290/885; danach folgt 6.o.C.
 
 #### 6.o.C – Make it Clean
 

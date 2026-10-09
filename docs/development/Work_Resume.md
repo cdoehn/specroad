@@ -93,6 +93,20 @@ Der ausführbare Adapter bleibt bei den sechs vorhandenen Bootstrap-Commands.
 Allgemeine Graph-/Closure-Reduktion, normative Receipts, mehrteilige Fachpläne,
 CLI/Code 8 und große externe Ergebnislieferung bleiben weitere Integrationen.
 
+Wiederaufnahme und Abschluss weisen auch schemaförmige, neu gehashte
+Ergebnisse mit widersprüchlichen Kontrollfeldern vor einer schreibenden Lease
+ab. Eine lokale Teilumfangsangabe, ein fremder Fortsetzungsauftrag oder eine
+behauptete externe Lieferung kann keinen vollständigen Handlerausgang ersetzen.
+Ein separat gültiger Abschlusskandidat, dessen Ergebnis vom bestätigten
+Handlerausgang abweicht, bleibt ebenfalls ein Konflikt. Normative Vorbereitung
+kann über diesen Read-only-Pfad kein Erfolgsreceipt erhalten.
+
+Die aktuelle Runtime-Bindung wird zusätzlich nach der Checkpointveröffentlichung
+geprüft. Ein erst dort bemerkter Buildwechsel lässt den tatsächlich bereits
+veröffentlichten Endstand erhalten, liefert aber keinen erfolgreichen Abschluss
+unter der geänderten Runtime zurück. Nach Wiederherstellung der kompatiblen
+Runtime wird das gespeicherte Resultat erneut geprüft und wiederverwendet.
+
 ## Ursprünglichen normativen Plan erneut prüfen
 
 `specroad.work.manifest.create_normative_work_manifest(...)` bindet die

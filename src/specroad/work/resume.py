@@ -109,11 +109,13 @@ def _checked_plan(manifest, registry, build):
 
 
 def _checked_outcome(document, invocation, exit_code):
+    from ._completion import check_completed_controls
     validate_result_document(ENVELOPE_ID, document)
     _require(document['command'] == invocation.command.command_id
              and document['summary']['complete'] is True
              and document['result_ref'] is None
              and document['status'] in ('success', 'failed'), 'incomplete_resume_outcome')
+    _compatible_read(check_completed_controls, document)
     _require(type(exit_code) is int and exit_code in range(8), 'invalid_resume_exit_code')
     _require(exit_code in invocation.command.protocol.handler_exit_codes,
              'undeclared_resume_exit_code')
