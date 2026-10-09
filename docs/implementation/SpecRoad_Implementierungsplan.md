@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 266
-last_completed_plan_commit: 6.g.R
-next_plan_commit: 6.g.C
-last_completed_numbered_bundle: 117
+implementation_plan_commits_completed: 267
+last_completed_plan_commit: 6.g.C
+next_plan_commit: 6.h.W
+last_completed_numbered_bundle: 118
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5735,7 +5735,7 @@ Position 266/885. Danach folgt die strukturelle Bereinigung 6.g.C.
 
 #### 6.g.C – Make it Clean
 
-- [ ] **6.g.C** · Position **267/885** · Voraussetzung: `6.g.R`.
+- [x] **6.g.C** · Position **267/885** · Voraussetzung: `6.g.R`.
 **Exakte Commit-Message:** `6.g.C refactor(work): Optionale Caches ohne Fachwirkung bereinigen`
 
 **Bereinigung:** Cache als austauschbaren Beschleuniger hinter dem verbindlichen Reader halten.
@@ -5743,6 +5743,23 @@ Position 266/885. Danach folgt die strukturelle Bereinigung 6.g.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 118:** Das vollständig geprüfte Result von Bundle 117
+bestätigt Commit `a3cff135638ff5703eac7d9ff55930491cdb53a8`, 6.589 erfolgreiche
+parallele Apply-Tests und einen sauberen, vollständig übereinstimmenden Snapshot.
+Das interne Modul `storage._relation_cache_values` enthält nun die unveränderte
+Build-/Versions-/Abhängigkeitsprojektion, den reinen Encoder und die inkrementelle
+Strukturvorprüfung. Der native Adapter behält Pfad-/Deskriptorguards, tatsächliche
+Reads und Pufferallokation, striktes JSON-Decoding sowie die Cachemiss-Grenze.
+Seine bisherigen internen Namen bleiben als Aliase erhalten.
+
+Statische Funktionsbaumvergleiche belegen unveränderte ausgelagerte Bausteine
+und unveränderte verbleibende Adapterfunktionen. Projektreader und vollständige
+Adjazenzprüfung bleiben bytegleich. Alle 266 bisherigen Testdateien und 6.589
+Fälle, darunter die 79 Cache-W-/R-Fälle, bleiben unverändert. Die vier
+Requirement-Teilnachweise behalten Testbindungen und offene Grenzen. Erst
+erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
+267/885. Danach folgt 6.h.W für sparsame Weiterarbeit und echte Blocker.
 
 <a id="step-6-h"></a>
 ### 6.h – Sparsame Weiterarbeit und echter Blocker

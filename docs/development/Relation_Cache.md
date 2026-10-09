@@ -89,3 +89,11 @@ Dies behauptet keinen Mindest-RAM-Bedarf des tatsächlichen Cacheinitialisierers
 Weitere gezielt injizierte Fehler bleiben als solche gekennzeichnet. Die
 Read-only-Nachweise fangen Schreibversuche ab und vergleichen vorhandene Bytes,
 Dateimodi und Einträge.
+
+6.g.C trennt Cacheformat, Bindungsprojektion, Encoder und inkrementelle
+Strukturvorprüfung in `storage._relation_cache_values` vom nativen Adapter
+`storage._relation_cache`. Die bisherigen internen Importnamen bleiben dort
+als Aliase verfügbar. Guarded Open, Leseaufrufe, Pufferallokation, striktes
+Decoding und die optionale Fehlergrenze behalten ihren bisherigen Aufrufpfad.
+Der verbindliche Projektreader und die vollständige Adjazenzprüfung ändern
+sich nicht. Alle 79 W-/R-Verhaltenstests bleiben unverändert.
