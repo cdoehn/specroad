@@ -4,15 +4,19 @@ Captured bytes are immutable hash-addressed data. The live builder is neither
 a durable checkpoint nor an atomic observation of a whole normative project.
 """
 
+from contextlib import ExitStack, contextmanager
 from hashlib import sha256
 import json
 import os
 from types import MappingProxyType
 
+from ..changes._lock_files import LockFiles
+from ..changes.lock_values import ProjectLockError
 from ..model.canonical import canonical_json_bytes
 from ..security import ProjectBoundary, SafetyViolation
-from ..security.paths import _parts
+from ..security.paths import _parts, _signature
 from ..security.resource_access import opened_resource
+from ..storage.operational_preflight import observe_operational_preflight
 
 
 class SnapshotCaptureError(ValueError):
@@ -61,6 +65,46 @@ def _plan(roots, entries):
     return tuple(sorted(result))
 
 
+def _check_sources(handles):
+    for root_id, boundary, files in handles:
+        try:
+            files.require_held()
+            boundary._check_root()
+            status = observe_operational_preflight(boundary)
+        except (ProjectLockError, SafetyViolation, OSError) as error:
+            raise SnapshotCaptureError('source_guard_changed', root_id=root_id) from error
+        if status['consistency_state'] != 'consistent' or not status['inspection_complete']:
+            paths = sorted(status['unresolved_paths'] + status['unknown_paths'])
+            reason = 'source_recovery_required' if status['recovery_required'] else 'source_operational_state_unknown'
+            raise SnapshotCaptureError(reason, root_id=root_id, path=paths[0] if paths else None)
+
+
+@contextmanager
+def _locked_sources(roots):
+    # Reuse the writer's real root-inode mutex without creating an owner record.
+    # A live task retains it across advance calls and releases it at seal/close.
+    with ExitStack() as stack:
+        held, handles = {}, []
+        for root_id, boundary in sorted(roots.items()):
+            try:
+                boundary._check_root()
+                identity = boundary._root_identity
+                if identity not in held:
+                    files = stack.enter_context(LockFiles(boundary.root))
+                    if files.boundary._root_identity != identity:
+                        raise SafetyViolation('Input root changed before capture')
+                    files.acquire()
+                    held[identity] = files
+                handles.append((root_id, boundary, held[identity]))
+            except (ProjectLockError, SafetyViolation, OSError) as error:
+                reason = ('source_writer_busy' if isinstance(error, ProjectLockError)
+                          and error.reason == 'project_lock_busy' else 'source_guard_unavailable')
+                raise SnapshotCaptureError(reason, root_id=root_id) from error
+        _check_sources(handles)
+        yield handles
+        _check_sources(handles)
+
+
 class InputSnapshotTask:
     """Retain live progress across advance calls and keep all captured bytes.
 
@@ -84,6 +128,11 @@ class InputSnapshotTask:
         self._failed = False
         self._closed = False
         self._error = None
+        self._pid = os.getpid()
+        self._signatures = {}
+        self._validated = 0
+        self._revalidated = 0
+        self._validation_bytes = 0
         self._steps = self._capture()
 
     def _capture(self):
@@ -91,6 +140,32 @@ class InputSnapshotTask:
             self._entries.append({'root_id': root_id, 'path': path, 'size': None,
                 'captured_bytes': 0, 'sha256': None, 'complete': False, 'chunks': []})
             yield None  # One deterministic declaration; no content claim.
+        with _locked_sources(self._roots) as handles:
+            yield from self._capture_files()
+            self._phase = 'validating'
+            _check_sources(handles)
+            yield from self._validate_files()
+            # A change after an earlier validation unit still prevents sealing.
+            # Noncooperating OS writes cannot be made atomic by this observation.
+            for entry in self._entries:
+                self._current = entry
+                with opened_resource(self._roots[entry['root_id']], entry['path']) as (_, initial):
+                    if _signature(initial) != self._signatures[(entry['root_id'], entry['path'])]:
+                        raise SnapshotCaptureError('source_changed_during_closure',
+                            root_id=entry['root_id'], path=entry['path'])
+            self._current = None
+            self._phase = 'sealing'
+            value = {'format_version': 'captured-inputs-v1', 'inputs': [
+                {key: entry[key] for key in ('root_id', 'path', 'size', 'sha256')}
+                for entry in self._entries]}
+            manifest = canonical_json_bytes(value)
+            manifest_hash = sha256(manifest).hexdigest()
+        self._manifest = manifest
+        self._manifest_hash = manifest_hash
+        self._phase = 'sealed'
+        yield None
+
+    def _capture_files(self):
         self._phase = 'capturing'
         for entry in self._entries:
             self._current = entry
@@ -98,6 +173,7 @@ class InputSnapshotTask:
             root_id, path = entry['root_id'], entry['path']
             with opened_resource(self._roots[root_id], path) as (fd, initial):
                 entry['size'] = initial.st_size
+                self._signatures[(root_id, path)] = _signature(initial)
                 yield None  # Opened, guarded input; no bytes have been invented.
                 while entry['captured_bytes'] < initial.st_size:
                     raw = os.read(fd, min(self._block_bytes, initial.st_size - entry['captured_bytes']))
@@ -121,19 +197,38 @@ class InputSnapshotTask:
             entry['sha256'] = digest.hexdigest()
             entry['complete'] = True
             yield None  # This one captured input is usable before the full set.
-        self._current = None
-        self._phase = 'sealing'
-        value = {'format_version': 'captured-inputs-v1', 'inputs': [
-            {key: entry[key] for key in ('root_id', 'path', 'size', 'sha256')}
-            for entry in self._entries]}
-        self._manifest = canonical_json_bytes(value)
-        self._manifest_hash = sha256(self._manifest).hexdigest()
-        self._phase = 'sealed'
-        yield None
+
+    def _validate_files(self):
+        for entry in self._entries:
+            self._current = entry
+            root_id, path = entry['root_id'], entry['path']
+            refreshed = False
+            with opened_resource(self._roots[root_id], path) as (fd, initial):
+                if _signature(initial) != self._signatures[(root_id, path)]:
+                    # Size/mtime are never accepted as a replacement content hash.
+                    # Reread only an affected source, once, in bounded blocks.
+                    digest, offset = sha256(), 0
+                    while offset < initial.st_size:
+                        raw = os.read(fd, min(self._block_bytes, initial.st_size - offset))
+                        if not raw:
+                            raise SnapshotCaptureError('source_truncated', root_id=root_id, path=path)
+                        digest.update(raw)
+                        offset += len(raw)
+                        self._validation_bytes += len(raw)
+                        yield None
+                    if os.read(fd, 1) or offset != entry['size'] or digest.hexdigest() != entry['sha256']:
+                        raise SnapshotCaptureError('source_content_changed', root_id=root_id, path=path)
+                    refreshed = True
+            self._signatures[(root_id, path)] = _signature(initial)
+            self._validated += 1
+            self._revalidated += refreshed
+            yield None
 
     def advance(self, max_units):
         """Run at most this many confirmed units; a failed unit is not counted."""
         _positive(max_units)
+        if self._pid != os.getpid():
+            raise SnapshotCaptureError('capture_not_owned')
         if self._closed or self._failed:
             raise SnapshotCaptureError('capture_not_active')
         if self._manifest is not None:
@@ -171,6 +266,8 @@ class InputSnapshotTask:
             'expected_inputs': len(self._plan), 'enumerated_inputs': len(self._entries),
             'completed_inputs': sum(entry['complete'] for entry in self._entries),
             'confirmed_units': self._units, 'captured_bytes': self._bytes,
+            'validated_inputs': self._validated, 'revalidated_inputs': self._revalidated,
+            'validation_bytes': self._validation_bytes,
             'inputs': self._entries, 'error': self._error, 'closed': self._closed,
             'complete': self._manifest is not None,
             'input_manifest_sha256': self._manifest_hash, 'model_root_sha256': None,
@@ -224,3 +321,9 @@ class InputSnapshotTask:
 
     def __reduce__(self):
         raise TypeError('Live input capture tasks cannot be serialized')
+
+    def __copy__(self):
+        raise TypeError('Live input capture tasks cannot be copied')
+
+    def __deepcopy__(self, memo):
+        raise TypeError('Live input capture tasks cannot be copied')

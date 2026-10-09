@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 277
-last_completed_plan_commit: 6.k.W
-next_plan_commit: 6.k.R
-last_completed_numbered_bundle: 128
+implementation_plan_commits_completed: 278
+last_completed_plan_commit: 6.k.R
+next_plan_commit: 6.k.C
+last_completed_numbered_bundle: 129
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6117,12 +6117,40 @@ parallele Apply-Volltest und Commit bestätigen Position 277/885.
 
 #### 6.k.R – Make it Right
 
-- [ ] **6.k.R** · Position **278/885** · Voraussetzung: `6.k.W`.
+- [x] **6.k.R** · Position **278/885** · Voraussetzung: `6.k.W`.
 **Exakte Commit-Message:** `6.k.R feat(work): Fortsetzbarer Eingangs-Snapshot vervollständigen`
 
 **Vervollständigung:** Veränderte/fehlende Quellen und Writeraktivität verhindern falsche Snapshotbestätigung.
 
 **Verhaltensabnahme:** Teilaufbau wird nicht als vollständige Modellwurzel ausgegeben; fehlende Bytes werden konkret benannt. Die W-Nachweise bleiben zusätzlich grün.
+
+**Implementierungsstand 6.k.R:** Der Eingangsaufbau hält die vorhandenen nativen
+Root-Inode-Mutexe aller Quellen ohne neue Sperrdateien. Aktive Writer, Recovery-
+und Operational-Sperren sowie verwaiste Ownerdateien, offene Transaktionen und
+unklare Betriebsdaten verhindern eine Bestätigung. Sperren werden bei Erfolg,
+Fehler oder explizitem Schließen freigegeben; Fork-Kinder erhalten keine
+Fortschritts- oder Entsperrberechtigung für den Elternprozess.
+
+Eine eigene abschließende Phase prüft alle deklarierten Dateien erneut. Bei
+beobachteter Änderung werden die betroffenen Quellen einmal blockweise neu
+gehasht. Nur inhaltlich identische Bytes bestätigen die bestehende Bindung;
+abweichender Inhalt oder Quellverlust beendet den Task mit konkreter logischer
+Ressource und erhält vorher erfasste Bytes. Unveränderte Präfixe werden bei
+kleinen Arbeitsfenstern nicht wiederholt gelesen. Eine weitere abschließende
+Merkmalprüfung erkennt auch Änderungen nach einem früheren Validierungsschritt.
+
+36 neue Verhaltensfälle prüfen echte Prozesssperren, partielle Freigabe bei
+mehreren Roots, gleiche physische Roots unter verschiedenen logischen Namen,
+verwaiste und offene Betriebsdaten, erneute Hashprüfung trotz gleicher Größe
+und zurückgesetzter mtime, sichere Quelltypen, Ressourcenfreigabe, Fork und
+gezielt injizierte I/O-/Lock-Ausfälle. Sämtliche W-Testdateien bleiben unverändert.
+
+Die Absicherung gilt für die deklarierte Eingangsmenge und kooperierende native
+Linux-Writer. Externe nicht kooperierende Bearbeitung bleibt beobachtungsabhängig;
+keine atomare Dateisystemmomentaufnahme oder vollständige normative Modellclosure
+wird behauptet. Modellwurzel bleibt null, Requirements bleiben partiell. Dauerhafte
+Generationen und tatsächliche Wiederaufnahme gehören weiterhin zu 6.l/6.m.
+Erst der erfolgreiche parallele Apply-Volltest und Commit bestätigen 278/885.
 
 #### 6.k.C – Make it Clean
 

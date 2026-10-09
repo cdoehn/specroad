@@ -10,7 +10,8 @@ behauptet keine automatische vollständige normative Projekterkennung.
 
 `advance(max_units)` verarbeitet höchstens die genannte positive Anzahl
 erfolgreicher Einheiten: eine Deklaration, ein geöffneter Eingang, ein gelesener
-Block, eine versiegelte Datei oder das abschließende Eingangsmanifest.
+Block, eine versiegelte Datei, ein erneut gehashter Validierungsblock, ein
+abschließend geprüfter Eingang oder das abschließende Eingangsmanifest.
 Leseaufrufe sind auf höchstens 64 KiB begrenzt. Ein laufender Dateideskriptor
 behält zwischen Aufrufen seine Position; bereits gelesene Präfixe werden nicht
 wegen eines kleinen Arbeitsfensters erneut eingelesen. Der vorhandene
@@ -40,10 +41,42 @@ frei und erhält die erfassten Bytes im Taskobjekt. Fehler zählen die betroffen
 Einheit nicht als erfolgreich, erhalten vorherige Daten und stoppen diesen Task.
 Es gibt keinen automatischen Retry oder stillen Projektwrite.
 
+Vor dem ersten Eingangsbyte erfasst der Task die vorhandenen nativen
+Root-Inode-Mutexe aller deklarierten Quellen über `LockFiles`. Er erzeugt
+keine Projekt-Sperrdatei und benötigt keinen Schreibzugriff auf die Quellen.
+Mehrere logische Root-IDs derselben physischen Quelle teilen sich einen Mutex.
+Die bestehenden Writer-, Recovery- und Operational-Sperren schließen diese
+Erfassung gegenseitig aus. Die Sperren bleiben über `advance`-Aufrufe hinweg
+gehalten und werden bei Versiegelung, Fehler oder `close()` freigegeben.
+Native Linux-Sperren sind dafür erforderlich; ohne sichere Sperre gibt es
+keinen ungeschützten Ersatzpfad. Ein Task ist nicht kopierbar; ein geerbter
+Task darf im Fork-Kind weder fortschreiten noch den Elternprozess entsperren.
+
+Unter diesen Sperren prüft der vorhandene flache Betriebsdaten-Preflight vor
+dem Lesen und vor der Versiegelung auf offene Transaktionen und unklare
+Betriebsdaten. Auch verwaiste Ownerdateien blockieren; der Task repariert oder
+entfernt sie nicht. `SnapshotCaptureError` benennt Root-ID und, soweit bekannt,
+den konkreten logischen Quell- oder Betriebsdatenpfad.
+
+Die abschließende Validierungsphase öffnet jeden deklarierten Eingang erneut
+über den sicheren Ressourcenadapter. Bei unveränderter Identität, Größe,
+`mtime` und `ctime` bleiben die bereits erfassten Inhaltshashes maßgeblich;
+ein unveränderter Präfix wird nicht nochmals gelesen. Veränderte Merkmale
+lösen genau eine erneute blockweise Hashprüfung des betroffenen Eingangs aus.
+Nur erneut nachgewiesene, hashidentische Bytes dürfen die vorhandene Bindung
+bestätigen. Abweichender Inhalt, Quellverlust oder ein weiterer beobachteter
+Wechsel verhindert die Versiegelung. Vorher erfasste Bytes bleiben verfügbar,
+werden aber nicht still gegen neue Quellen ausgetauscht. `validated_inputs`,
+`revalidated_inputs` und `validation_bytes` weisen diesen Fortschritt aus.
+Die notwendige letzte Prüfung sämtlicher Dateimerkmalbindungen und Roots
+gehört zur Abschluss-Einheit; das Arbeitsfenster ist keine harte Zeitgrenze.
+
 `model_root_sha256` bleibt `null`, `atomic_project_snapshot` und
 `durable_checkpoint` bleiben `false`. Die Erfassung einzelner Dateien bestätigt
-noch keine gleichzeitige normative Projektmomentaufnahme: übergreifende Quell-
-und Writerprüfung folgen in 6.k.R, Strukturtrennung in 6.k.C, dauerhafte
-Generationen in 6.l und tatsächliche Wiederaufnahme in 6.m. Eine kleine
+keine vollständige normative Modellclosure. Kooperierende Writer sind während
+der Erfassung ausgeschlossen; nicht kooperierende externe Dateibearbeitung
+kann die Beobachtungen weiterhin überholen. Die Erfassung behauptet deshalb
+keine atomare Dateisystemmomentaufnahme. Strukturtrennung folgt in 6.k.C,
+dauerhafte Generationen in 6.l und tatsächliche Wiederaufnahme in 6.m. Eine kleine
 Arbeitsmenge erzeugt hier keinerlei Work-Dateien; auch bei größeren Eingängen
 wird weder Code 8 noch eine veröffentlichte Checkpointgeneration behauptet.
