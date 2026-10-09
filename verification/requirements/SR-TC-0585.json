@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Graphtraversierung und vollständige Pfadausgabe MÜSSEN bei Erreichen weicher Arbeitsschritt- oder Ausgabeschwellen ihren vollständigen Restauftrag nach Anhang P fortsetzbar erhalten.",
-    "scope": "6.f.R output-transport subset only: PathRecord and the bounded PathSort/PathSpool preserve all already computed ordered paths and exact identities. A seven-layer binary fixture supplies all 128 equal shortest paths of eight edges; one-unit/one-record windows do not drop any path or call a prefix complete. Production shortest-path discovery, semantic endpoint selection and traversal/frontier persistence are not implemented by this transport proof."
+    "scope": "6.f.R output-transport subset only: PathRecord and the bounded PathSort/PathSpool preserve all already computed ordered paths and exact identities. A seven-layer binary fixture supplies all 128 equal shortest paths of eight edges; one-unit/one-record windows do not drop any path or call a prefix complete. Production shortest-path discovery, semantic endpoint selection and traversal/frontier persistence are not implemented by this transport proof. 6.f.C moves the unchanged immutable run reference, positive-count validation and guarded delivery cursor into shared storage segment/cursor primitives. Native file authority, work driver, codecs, result fields and all W/R behavior contracts remain unchanged; no additional requirement completion is inferred."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],

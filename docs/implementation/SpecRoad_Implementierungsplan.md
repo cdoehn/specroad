@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 263
-last_completed_plan_commit: 6.f.R
-next_plan_commit: 6.f.C
-last_completed_numbered_bundle: 114
+implementation_plan_commits_completed: 264
+last_completed_plan_commit: 6.f.C
+next_plan_commit: 6.g.W
+last_completed_numbered_bundle: 115
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -5626,7 +5626,7 @@ Commit bestätigen Position 263/885. Danach folgt die strukturelle Bereinigung 6
 
 #### 6.f.C – Make it Clean
 
-- [ ] **6.f.C** · Position **264/885** · Voraussetzung: `6.f.R`.
+- [x] **6.f.C** · Position **264/885** · Voraussetzung: `6.f.R`.
 **Exakte Commit-Message:** `6.f.C refactor(work): Dateibasierte Sortierung und Diagnose-Spooling bereinigen`
 
 **Bereinigung:** Allgemeine Segment-/Cursorabstraktion statt befehlsspezifischer Tempformate verwenden.
@@ -5634,6 +5634,24 @@ Commit bestätigen Position 263/885. Danach folgt die strukturelle Bereinigung 6
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzung / Bundle 115:** Das vollständig geprüfte Result von Bundle 114
+bestätigt Commit `c99f2e7efb06cb5ead3884bb3ef678cf15a5aa81`, 6.510 erfolgreiche
+parallele Apply-Tests und einen sauberen, vollständig übereinstimmenden Snapshot.
+Die gemeinsame Laufreferenz, Mengenprüfung und der konkrete Lesecursor liegen
+jetzt als allgemeine Segment-/Cursorbausteine in `storage._spool_segments`.
+Diagnose- und vorbereiteter Pfadtransport verwenden dieselben unveränderten
+Datenfelder, Codecaufrufe, Hash-/Dateiguards und Abschlussprüfungen. Die früheren
+Imports im Diagnosemodul bleiben als Aliase erhalten.
+
+Statische Funktionsbaumvergleiche bestätigen die unveränderten ausgegliederten
+Implementierungen nach Klassenumbenennung. Native Verzeichnis-/Dateioperationen,
+Writer, Hashinitialisierung, Merge und fortsetzbarer Sortiertreiber bleiben
+strukturell unverändert. Alle 264 bisherigen Testdateien und 6.510 Fälle bleiben
+unverändert, darunter die 69 W-/R-Fälle des Diagnose-/Pfad-Spoolings. Die beiden
+Requirement-Teilnachweise behalten Status, Testbindungen und offene Grenzen.
+Erst erfolgreiche vollständige parallele Dev-/Apply-Tests und Commit bestätigen
+Position 264/885. Danach folgt 6.g.W für optionale, fachlich wirkungslose Caches.
 
 <a id="step-6-g"></a>
 ### 6.g – Optionale Caches ohne Fachwirkung

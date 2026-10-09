@@ -143,3 +143,19 @@ Stateprojektion lässt sich nicht importieren oder als Work-Checkpoint ausgeben;
 `durable_checkpoint` bleibt `false`. Dauerhafte Work-Identität und Generationen
 folgen in 6.i–6.l. Bereits vollständige Läufe bleiben bei einer Pause erhalten;
 unversiegelte Ausgabedateien sind kein eigenständig anerkennbarer Checkpoint.
+
+## Gemeinsame Segment- und Cursorbausteine ab 6.f.C
+
+Die unveränderliche Laufreferenz `RunSegment`, die positive Mengenprüfung und
+der vorwärts lesende `RunCursor` liegen gemeinsam in
+`storage._spool_segments`. Diagnose- und Pfadtransport verwenden damit denselben
+Segment- und Liefervertrag. Der jeweilige Besitzer stellt weiterhin den
+geprüften Dateizugriff sowie seinen bereits vorhandenen Recordcodec bereit;
+die allgemeinen Bausteine verleihen keine eigene Pfad- oder Schreibberechtigung.
+
+Die bisherigen Imports `_Run`, `_positive` und `DiagnosticCursor` im Diagnose-
+Spoolmodul bleiben als Aliase verfügbar. Felder, JSON-Formate, Sortierordnung,
+Cursorbewegung, vollständige EOF-Prüfung und Fehlerbereinigung ändern sich nicht.
+Native Dateiguards, Writer, Hashinitialisierung und der fortsetzbare Sortiertreiber
+bleiben unverändert. Der Schritt ergänzt keine Wiederaufnahme über Prozessgrenzen,
+keinen neuen Fachbefehl und keinen zusätzlichen Requirement-Abschluss.
