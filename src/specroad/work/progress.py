@@ -108,6 +108,7 @@ def advance_read_only_work_outcome(store, call, *, cwd=None):
         return {'format_version': 'read-only-work-outcome-v1', 'state': 'blocked',
                 'exit_code': 5, 'window': None, 'blocker': blocker,
                 'global_finalization_required': True}
+    projection = window.as_dict()
     return {'format_version': 'read-only-work-outcome-v1', 'state': 'unit_result_available',
-            'exit_code': window.step.command_exit_code, 'window': window.as_dict(),
-            'blocker': None, 'global_finalization_required': True}
+            'exit_code': window.step.command_exit_code, 'window': projection,
+            'blocker': None, 'global_finalization_required': projection['global_finalization_required']}

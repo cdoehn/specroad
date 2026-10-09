@@ -140,12 +140,19 @@ def _saved_outcome(current, request, invocation, unit_id):
              and record['unit_id'] == unit_id and record['request'] == request.as_dict()
              and record['tool_build'] == current.as_dict()['tool_build']
              and canonical_json_bytes(record) == raw, 'invalid_resume_completion')
-    return _checked_outcome(record['outcome'], invocation, record['exit_code']), record['exit_code']
+    outcome = _checked_outcome(record['outcome'], invocation, record['exit_code'])
+    if current.as_dict()['state'] == 'completed':
+        from ._completion import read_completion
+        final = read_completion(current.as_dict(), current.objects, current._registry)
+        _require(canonical_json_bytes(final['outcome']) == canonical_json_bytes(outcome)
+                 and final['exit_code'] == record['exit_code'],
+                 'final_result_differs_from_confirmed_handler')
+    return outcome, record['exit_code']
 
 
 @dataclass(frozen=True)
 class ReadOnlyResumeStep:
-    """Saved handler output; the WorkManifest still requires later finalization."""
+    """Saved handler output with the actual current WorkManifest state."""
 
     manifest: WorkManifest
     outcome_bytes: bytes

@@ -42,7 +42,7 @@ def confirmed_window_data(store, step, start, end):
                           'complete_single_handler'),
         'observations': {'before': start, 'after': end},
         'consumption_scope': 'caller_owned_in_process_invocation',
-        'consumption_persisted': False, 'global_finalization_required': True,
+        'consumption_persisted': False, 'global_finalization_required': value['state'] != 'completed',
     }
     return window
 

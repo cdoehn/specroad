@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 288
-last_completed_plan_commit: 6.n.C
-next_plan_commit: 6.o.W
-last_completed_numbered_bundle: 139
+implementation_plan_commits_completed: 289
+last_completed_plan_commit: 6.o.W
+next_plan_commit: 6.o.R
+last_completed_numbered_bundle: 140
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6510,12 +6510,46 @@ und Commit bestätigen 288/885; danach folgt 6.o.W.
 
 #### 6.o.W – Let it Work
 
-- [ ] **6.o.W** · Position **289/885** · Voraussetzung: `6.n.C`.
+- [x] **6.o.W** · Position **289/885** · Voraussetzung: `6.n.C`.
 **Exakte Commit-Message:** `6.o.W feat(work): Globale Schlussprüfung und Abschlussstatus aufbauen`
 
 **Umsetzung:** Globale Closure-/Konsistenzarbeit und Pflichtdiagnosen vor fachlichem Abschluss vollständig zusammenführen.
 
 **Verhaltensabnahme:** completed kann fachlich bestanden oder fehlgeschlagen sein, aber nie unvollständig.
+
+**Implementierungsstand 6.o.W:** Der Datenvertrag erhält einen gesonderten
+gebundenen Abschlussübergang: alle deklarierten Einheiten müssen bestätigt sein;
+vollständiges Ergebnis und sämtliche enthaltenen Diagnosen bleiben gespeichert.
+Die Schlussreduktion bindet Vorgängergeneration und Checkpointhash, erhöht die
+Generation genau einmal und erhält sämtliche bisherigen Einheiten und Bytes.
+`completed` ist terminal. Vollständige fachliche Fehler behalten ihren
+ursprünglichen Status und Code; offene, partielle oder als Code 8 ausgegebene
+Ergebnisse können keinen Abschluss erzeugen.
+
+`finalize_read_only_work` führt diese Veröffentlichung für den vorhandenen
+geschlossenen Bootstrap-Handlerplan tatsächlich aus. Anfangsbindung, aktueller
+Build/Registryvertrag, vollständige Speicherkette, Kontext und gespeichertes
+Handlerergebnis werden vor und unter dem Work-Lock geprüft. Offene Arbeit wird
+vor jedem Schreibversuch abgewiesen. Wiederholung liefert nach erneuter Prüfung
+dasselbe finale Ergebnis ohne Handlerausführung oder zusätzliche Generation.
+Resume und Fortschrittsfenster erkennen den tatsächlichen Endzustand ebenfalls.
+
+25 neue Verhaltensfälle prüfen alle sechs realen Handler, unveränderte
+Ergebnisbytes, vollständige Diagnoseretention, offene globale Planerphasen,
+fachlich fehlgeschlagene Abschlussdaten, falsche Ergebnishüllen, frühe/späte
+Veröffentlichungsfehler und fehlende Ergebnisbytes. Gebaute Modul-/Zipapp-
+Distributionen liefern den Endstand in neuen Prozessen nach Pfadwechsel erneut.
+Allgemeine Fehlerresultate und Einheitenpläne sind ausdrücklich Datenfixtures,
+keine behauptete Ausführung zusätzlicher CLI-Commands. Vorhandene Tests bleiben
+bytegleich.
+
+Der allgemeine Codec beweist Datenkonsistenz des deklarierten Plans, keine
+Ausführungswahrheit. Der ausführbare Abschluss bleibt auf den bekannten
+Ein-Handler-Plan begrenzt. Allgemeine Graph-/Closure-Reduktion mehrteiliger
+Fachpläne, normative Erfolgsreceipts, CLI/Code 8 und große externe Ausgaben
+bleiben offen; SR-TC-0586, SR-TC-0618, SR-TC-0622 und SR-TC-0636 erhalten partielle
+Nachweise. Erst vollständiger paralleler Apply-Test und Commit bestätigen
+289/885; danach folgt 6.o.R.
 
 #### 6.o.R – Make it Right
 

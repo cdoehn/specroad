@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0618",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Private external Work storage and independent initial binding; labelled recorded-build/planner fixtures, plus actual built module/zipapp distributions for fresh-process checks."
+  ],
+  "steps": [
+    "Execute each supported real handler and finalize its fully stored result under the Work lease; replay the same terminal bytes without handler execution or extra generations.",
+    "Keep declared global work open until confirmed; retain complete failed outcome data and every provided diagnostic in labelled planner fixtures.",
+    "Refuse incomplete/mismatched envelopes and Code 8; preserve actual generations across early/late publication errors and refuse lost final result bytes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein noch nicht fachlich abgeschlossener Auftrag DARF NICHT ein semantisches Erfolgsreceipt erzeugen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "6.o.W adds an inert completed-data transition that requires every declared unit to be confirmed and binds the complete command envelope, all supplied diagnostics, original work binding and immediate source checkpoint. Completed functional failures retain their actual status and code; incomplete/partial envelopes and Code 8 are not completion. A completed generation is terminal and preserves all previous bytes and unit evidence. The live finalize_read_only_work adapter separately checks the independently bound closed bootstrap plan, fresh runtime/registry/context, full storage chain and saved handler output, then durably publishes before returning. Replay revalidates and delivers the same result without executing the handler or generating another checkpoint. Resume/progress also check the final result against saved handler evidence. Early/late publication failures retain actual storage; missing final bytes prevent replay. Real generated module and zipapp processes demonstrate final-result reuse after relocation. General failed outcomes and multi-phase unit declarations are explicitly labelled inert planner fixtures, not a claim of additional live command execution. General graph/closure reduction, multi-unit execution, normative semantic receipts, CLI/Code-8 delivery and large external results remain open; this is partial coverage, not complete requirement approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,34 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[capabilities]",
+    "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[command.describe]",
+    "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[help]",
+    "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[schema.list]",
+    "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[schema.show]",
+    "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[version]",
+    "tests/test_work_finalization.py::test_completed_data_retains_full_failed_outcome_and_every_provided_diagnostic",
+    "tests/test_work_finalization.py::test_completed_manifest_is_terminal_and_cannot_create_an_empty_successor",
+    "tests/test_work_finalization.py::test_generic_planner_completions_do_not_authorize_the_closed_live_adapter",
+    "tests/test_work_finalization.py::test_incomplete_or_mismatched_machine_result_cannot_be_completed[continuation_code]",
+    "tests/test_work_finalization.py::test_incomplete_or_mismatched_machine_result_cannot_be_completed[incomplete]",
+    "tests/test_work_finalization.py::test_incomplete_or_mismatched_machine_result_cannot_be_completed[unknown_diagnostic]",
+    "tests/test_work_finalization.py::test_incomplete_or_mismatched_machine_result_cannot_be_completed[wrong_code]",
+    "tests/test_work_finalization.py::test_incomplete_or_mismatched_machine_result_cannot_be_completed[wrong_command]",
+    "tests/test_work_finalization.py::test_incomplete_or_mismatched_machine_result_cannot_be_completed[wrong_failure_kind]",
+    "tests/test_work_finalization.py::test_local_completion_cannot_replace_the_explicit_remaining_global_phase",
+    "tests/test_work_finalization.py::test_lost_final_result_bytes_prevent_replaying_a_completed_claim",
+    "tests/test_work_finalization.py::test_missing_work_is_not_created_to_claim_a_completion",
+    "tests/test_work_finalization.py::test_pending_unit_cannot_publish_a_final_result_or_execute_work",
+    "tests/test_work_finalization.py::test_progress_reuse_reports_already_completed_work_without_another_finalization",
+    "tests/test_work_finalization.py::test_publication_failure_keeps_actual_old_or_new_generation_without_false_return[False]",
+    "tests/test_work_finalization.py::test_publication_failure_keeps_actual_old_or_new_generation_without_false_return[True]",
+    "tests/test_work_finalization.py::test_real_built_process_delivers_the_same_final_result_after_relocation[module]",
+    "tests/test_work_finalization.py::test_real_built_process_delivers_the_same_final_result_after_relocation[zipapp]",
+    "tests/test_work_finalization.py::test_returned_completion_is_frozen_and_does_not_expose_mutable_saved_bytes"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "The live adapter covers only the closed six-command bootstrap plan. Arbitrary planner data remains inert, not execution proof. General multi-unit graph/closure execution, normative success receipts, CLI/Code-8 continuation and large external output delivery remain open. No release or full requirement approval is claimed."
   ]
 }

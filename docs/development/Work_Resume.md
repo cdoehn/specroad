@@ -45,16 +45,18 @@ neu geprüft. Ein vorhandener verwaister Work-Owner wird nicht übernommen.
 
 `ReadOnlyResumeStep` enthält das bestätigte Manifest, unveränderliche
 `outcome_bytes`, `command_exit_code` und `executed`. `as_dict()` liefert eine
-abgetrennte maschinenlesbare Projektion. Der Work-Zustand bleibt `running` mit
-`next_action.operation=finalize_declared_work`; der vollständige Abschluss des
-Work-Protokolls gehört zum folgenden Closure-Schritt. Die Ergebnisbytes des
-ausgeführten Handlers sind bereits vollständig gespeichert.
+abgetrennte maschinenlesbare Projektion. Nach der ersten Handlerausführung bleibt
+der Work-Zustand `running` mit `next_action.operation=finalize_declared_work`.
+Die Ergebnisbytes sind vollständig gespeichert; der gesonderte Abschluss
+erfolgt wie unten beschrieben. Ein Resume nach diesem Abschluss liefert den
+tatsächlichen Zustand `completed` und prüft zusätzlich, dass finales Ergebnis
+und bestätigtes Handlerergebnis bytegleich zusammenpassen.
 
 Dies ist zunächst eine Python-Einbettung des Resume-Ausführungswegs. Die CLI-
 Registry und ihre Angaben zur automatischen Fortsetzung bleiben beim bisherigen
 Umfang. Code 8, automatische Budgetunterbrechung und allgemeine CLI-Anbindung
 werden hier nicht freigegeben. Normative Ausführung, mehrteilige Fachpläne und
-die vollständige Work-Abschlussintegration bleiben offen; die betreffenden
+deren allgemeine Work-Abschlussintegration bleiben offen; die betreffenden
 Requirementstatus werden nicht als erfüllt markiert.
 
 Die Verhaltensnachweise verwenden neben expliziten In-process-Buildfixtures
@@ -62,6 +64,34 @@ wirklich gebaute Modul-/Zipapp-Distributionen in unabhängigen isolierten
 Prozessen. Runtime-, Work- und geschützte Rootpfade werden zwischen Aufrufen
 verschoben. Ein solcher Rename erhält die geprüfte Dateisystemidentität;
 Kopieren/Restore auf andere Inodes folgt dem späteren Restore-Vertrag.
+
+## Vollständiges gespeichertes Ergebnis abschließen
+
+`specroad.work.finalization.finalize_read_only_work(store, cwd=...)` schließt
+den vorhandenen sicheren Ein-Handler-Plan in einer eigenen Checkpointgeneration
+ab. Unabhängige Anfangsbindung, aktuelle Runtime und Registry, vollständige
+Speicherkette und gesamter gespeicherter Handlerausgang werden erneut geprüft.
+Offene Arbeit scheitert bereits vor einer schreibenden Work-Lease. Allgemeine
+Planerdaten mit beliebigen lokalen oder globalen Einheiten werden von diesem
+geschlossenen Ausführungsadapter nicht übernommen.
+
+Unter derselben Work-Lease folgen frische Kontext-/Ergebnisprüfung und die
+bestehende atomare Veröffentlichung. Der neue Stand bindet den vorherigen
+Checkpoint, die vollständige Ergebnishülle und alle ihre Diagnosen. Erst nach
+bestätigter Veröffentlichung liefert `ReadOnlyWorkCompletion` unveränderliche
+Ergebnisbytes und den Zustand `completed`. Es wird kein Handler erneut
+ausgeführt und kein normatives Erfolgsreceipt angelegt. Fehler bewahren den
+tatsächlichen Speicherzustand; ein später I/O-Fehler kann bereits einen
+vollständigen neuen Stand hinterlassen.
+
+Ein erneuter Abschluss prüft und liefert denselben gespeicherten Endstand,
+ohne eine weitere Generation zu erzeugen. Auch ein neuer kompatibler Modul-/
+Zipapp-Prozess kann dieses Ergebnis nach Pfadwechsel wieder liefern. Der
+allgemeine Datenvertrag trennt technischen Abschluss und fachlichen Fehlercode;
+seine Fehlerresultat-Tests verwenden ausdrücklich markierte Planerfixtures.
+Der ausführbare Adapter bleibt bei den sechs vorhandenen Bootstrap-Commands.
+Allgemeine Graph-/Closure-Reduktion, normative Receipts, mehrteilige Fachpläne,
+CLI/Code 8 und große externe Ergebnislieferung bleiben weitere Integrationen.
 
 ## Ursprünglichen normativen Plan erneut prüfen
 

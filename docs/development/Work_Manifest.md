@@ -65,9 +65,33 @@ vertrauenswürdig gebundenen Vorgänger. `previous` darf nicht erst aus demselbe
 fremden Paket übernommen werden. Work-ID, Command, Argumente, Schreibklasse,
 Quellen, Tool, Gesamtplan und ursprüngliche Eingänge müssen gleich bleiben.
 Die Generation steigt genau um eins; mindestens eine weitere Erledigterklärung
-kommt hinzu. Vorherige Erledigtnachweise und sämtliche bisher vorhandenen
+kommt beim Fortschreiben laufender Arbeit hinzu. Vorherige Erledigtnachweise und sämtliche bisher vorhandenen
 Objektbytes müssen unverändert erhalten sein. Ein bloß erneut gehashtes,
 in sich gültiges Ersatzpaket erfüllt diese Bindung nicht.
+
+`complete_work_manifest(manifest, outcome, exit_code=...)` ergänzt einen
+gesonderten inerten Abschlusskandidaten für Read-only-Arbeit. Jede deklarierte
+Einheit muss bereits bestätigt sein, einschließlich expliziter globaler
+Restphasen. Die vollständige Ergebnishülle muss zum Commandvertrag, Exit-Code
+und Diagnosekatalog passen; unvollständige oder partielle Ergebnisse, externe
+unbestätigte Ergebnisreferenzen und Code 8 sind kein Abschluss. Ein vollständiges
+fachliches Fehlerergebnis bleibt `failed` mit seinem ursprünglichen Code,
+während der technische Arbeitszustand `completed` lautet.
+
+Der Abschluss erhöht die Generation um eins, bindet ausdrücklich die
+Vorgängergeneration und deren Checkpointhash und erhält alle bisherigen
+Einheiten und Bytes. `result_parts` bindet die vollständige Ergebnishülle,
+`diagnostic_parts` sämtliche enthaltenen Diagnosen in ihrer gespeicherten
+Reihenfolge. Diese gebundene Schlussreduktion ist der einzige erlaubte
+Nachfolger ohne zusätzliche Erledigterklärung; leere laufende Generationen
+bleiben verboten. `completed` hat keine weitere Folgegeneration.
+
+Der allgemeine Codec prüft Daten und den vom vertrauenswürdigen Planer
+deklarierten Umfang. Er beweist weiterhin weder tatsächliche Ausführung noch
+die Vollständigkeit eines beliebigen Fachplans. Die ausführbare geschlossene
+Read-only-Anbindung in `work.finalization` prüft dafür zusätzlich den bekannten
+Core-Plan und dessen gespeichertes Handlerergebnis. Normative Writes und
+semantische Erfolgsreceipts werden durch den Datenabschluss nicht freigegeben.
 
 Der Leser weist außerdem wiederholte Segmentreferenzen vor erneuter Expansion
 ab. Restaufgaben werden als kanonische JSON-Werte verglichen, damit etwa

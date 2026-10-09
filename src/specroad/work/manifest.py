@@ -270,6 +270,7 @@ def partition_work_manifest(manifest, completions):
     _require(type(manifest) is WorkManifest and type(completions) is dict and bool(completions))
     _require(all(type(key) is str for key in completions))
     value = manifest.as_dict()
+    _require(value['state'] == 'running')
     tasks, completed = manifest.entries('tasks'), manifest.entries('completed')
     valid = {item['unit_id'] for item in tasks}
     done = {item['unit_id'] for item in completed}
@@ -282,6 +283,12 @@ def partition_work_manifest(manifest, completions):
     completed.sort(key=lambda item: order[item['unit_id']])
     value['checkpoint_generation'] += 1
     return _partition(value, tasks, completed, objects, manifest._registry, value['tool_build'])
+
+
+def complete_work_manifest(manifest, outcome, *, exit_code):
+    """Create inert completed data after every declared unit, not an approval."""
+    from ._completion import completion_candidate
+    return completion_candidate(manifest, outcome, exit_code)
 
 
 def read_work_manifest(raw, objects, *, registry, expected_tool_build):
@@ -354,13 +361,18 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
              == [identity for identity in tasks if identity in completed])
     _require(value['progress'] == _progress(len(completed), len(tasks)))
     _require(type(value['progress']['completed_units']) is int and type(value['progress']['total_units']) is int)
-    _require(value['state'] == 'running' and value['cursors'] == {}
-             and value['result_parts'] == [] and value['diagnostic_parts'] == [])
+    _require(value['cursors'] == {})
     _require(value['consumption'] == {'invocation': None, 'cumulative': None, 'measurement_status': 'unrecorded'})
-    _require(value['phase'] == (_phase_name(remaining)))
-    _require(value['frontier'] == (_phase_frontier(remaining)))
-    action = _next_action(remaining)
-    _require(value['next_action'] == action)
+    if value['state'] == 'completed':
+        from ._completion import read_completion
+        _require(not remaining)
+        read_completion(value, objects, registry)
+    else:
+        _require(value['state'] == 'running'
+                 and value['result_parts'] == [] and value['diagnostic_parts'] == [])
+        _require(value['phase'] == (_phase_name(remaining)))
+        _require(value['frontier'] == (_phase_frontier(remaining)))
+        _require(value['next_action'] == _next_action(remaining))
     _hash(value['checkpoint_sha256'])
     sealed = _parse(_seal(value))
     _require(sealed['checkpoint_sha256'] == value['checkpoint_sha256'])
@@ -387,7 +399,15 @@ def read_work_successor(raw, objects, *, previous, registry, expected_tool_build
     _require(after['checkpoint_generation'] == before['checkpoint_generation'] + 1)
     old_done = {item['unit_id']: item for item in previous.entries('completed')}
     new_done = {item['unit_id']: item for item in current.entries('completed')}
-    _require(len(new_done) > len(old_done) and old_done.keys() <= new_done.keys())
+    _require(before['state'] == 'running')
+    if after['state'] == 'completed':
+        from ._completion import read_completion
+        record = read_completion(after, current.objects, registry)
+        _require(not previous.entries('remaining') and new_done == old_done
+                 and record['source_checkpoint_generation'] == before['checkpoint_generation']
+                 and record['source_checkpoint_sha256'] == before['checkpoint_sha256'])
+    else:
+        _require(len(new_done) > len(old_done) and old_done.keys() <= new_done.keys())
     _require(all(new_done[key] == item for key, item in old_done.items()))
     _require(all(current.objects.get(key) == raw for key, raw in previous.objects.items()))
     return current

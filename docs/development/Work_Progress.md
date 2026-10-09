@@ -77,7 +77,10 @@ unverändert; die Trennung fügt keine neue Ausführungsbefugnis hinzu.
 
 Dieser erste Fortschrittspfad ist eine Python-API für den geschlossenen
 Ein-Handler-Plan. Die Fachausgabe dieses Handlers ist vollständig gespeichert;
-der globale Work-Zustand bleibt bis zur gesonderten Schlussprüfung `running`.
+der globale Work-Zustand bleibt bis zur gesonderten Schlussprüfung über
+`finalize_read_only_work` `running`. Danach erkennt auch die Wiederverwendung
+im Fortschrittsfenster den tatsächlichen Zustand `completed` und meldet
+`global_finalization_required=false`.
 Allgemeines Scheduling mehrteiliger Fachpläne, persistente Verbrauchssummen,
 Code 8 und CLI-Integration sowie persistierte Blocker gehören zu den offenen
 Integrationen. Die Requirements erhalten partielle Nachweise.
