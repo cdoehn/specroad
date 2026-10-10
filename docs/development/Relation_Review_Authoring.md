@@ -22,6 +22,12 @@ sein; reservierte und archivierte IDs bleiben ausgeschlossen. Diese frühe
 Prüfung ersetzt keine Live-Prüfung: Zielvalidierung und tatsächliche Dateibytes
 werden an den bestehenden Publikationsgrenzen weiterhin erneut geprüft.
 
+Die reinen Funktionen für Kontextbindung, Zeitordnung und Record-Erzeugung
+liegen in `specroad.changes.review_record`. Ihre bisherigen Importpfade
+über `specroad.changes.reviews` bleiben erhalten. Dieses Modul übernimmt
+weiterhin Planprüfung und gebundene Validierungs-Gates; Writer und
+Publikationsabschluss bleiben im nativen Authoring-Dienst.
+
 Der spezielle Target-Planner rekonstruiert den Datensatz auch bei gespeicherten
 Plänen vollständig. Er erlaubt genau eine isolierte Reviewoperation. Er legt
 Revision 1 und `recorded`/`approved` fest, ohne Endpunkte zu verändern oder

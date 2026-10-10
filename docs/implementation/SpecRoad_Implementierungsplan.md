@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 329
-last_completed_plan_commit: 7.g.R
-next_plan_commit: 7.g.C
-last_completed_numbered_bundle: 180
+implementation_plan_commits_completed: 330
+last_completed_plan_commit: 7.g.C
+next_plan_commit: 7.h.W
+last_completed_numbered_bundle: 181
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8110,10 +8110,31 @@ SR-REQ-0434 bleiben `partial`.
 
 #### 7.g.C – Make it Clean
 
-- [ ] **7.g.C** · Position **330/885** · Voraussetzung: `7.g.R`.
+- [x] **7.g.C** · Position **330/885** · Voraussetzung: `7.g.R`.
 **Exakte Commit-Message:** `7.g.C refactor(authoring): Reviewdatensatz und Kontextbindung bereinigen`
 
 **Bereinigung:** Reviewkonstruktion und generisches Authoring getrennt halten.
+
+**Vorbereiteter Implementierungsstand (Bundle 181):** Result 180 bestätigt
+7.g.R mit 8.499 bestandenen parallelen Apply-Tests, dem passenden Commit und
+sauberem Arbeitsbaum. Die reine Kontextbindung, Zeitordnung und Konstruktion
+des bestätigenden Reviewdatensatzes liegen nun in `changes/review_record.py`.
+`changes/reviews.py` hält isolierte Operationsprüfung, Candidate-Folding und
+gebundene Validierungs-Gates zusammen und exportiert die bisherigen drei
+Funktionsnamen weiterhin. Die vollständigen Funktions- und Klassenbäume
+bleiben gegenüber dem maßgeblichen Result unverändert; der native Writer,
+Replay und die vorgezogene R-Inventarprüfung bleiben bytegleich.
+
+Alle 253 bisherigen Testdateien und 730 Anforderungsnachweise bleiben
+bytegleich. Die 69 Review-W/R-Fälle sowie 741 betroffene Regressionen bilden
+die gezielte parallele Dev-Auswahl mit 810 Fällen. Die vollständige parallele
+Apply-Suite umfasst weiterhin 8.499 Fälle; erst deren Erfolg und der passende
+Commit bestätigen 330/885. Danach folgt 7.h.W.
+
+**Abgrenzung:** Es entsteht kein neues Fachverhalten. Allgemeine Status- und
+Historienauswahl, negative Entscheidungen mit Freigaberücknahmen, CLI,
+produktive Inventur/Akteurprüfung und Plattformnachweise bleiben offen.
+SR-REQ-0275 und SR-REQ-0434 bleiben ausdrücklich `partial`.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
