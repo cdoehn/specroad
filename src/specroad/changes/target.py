@@ -10,6 +10,7 @@ from ..storage.json_syntax import parse_json_object
 from ..validation import ModelDocument, validate_model, assess_validation
 from .values import ChangePlan
 from .lifecycle import prepare_plan_lifecycle, prepare_change_lifecycle
+from .reviews import review_mode, prepare_review_candidates
 from .core import prepare_change_plan
 from .target_values import TargetError, TargetPolicy, TargetAssessment, TARGET_VERSION
 from .target_model import TargetModel, _sequence, _project_scope
@@ -35,7 +36,16 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     if value['base']['model_root_sha256'] != base.sha256:
         raise TargetError('target_base_root_mismatch', pointer='/base/model_root_sha256')
     normalize = normalization_mode(value['operations'])
-    if normalize:
+    if review_mode(value['operations']):
+        folded = prepare_review_candidates(model.artifacts, value['operations'],
+            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
+            planned_at=value['planned_at'], preconditions=value['preconditions'],
+            source_files=model.source_files, **model.reservations)
+        actual = {c.id: c.candidate_sha256 for c in folded.candidates}
+        expected = {r['artifact']['id']: r['sha256'] for r in value['result_artifacts']}
+        if actual != expected:
+            raise TargetError('declared_review_result_mismatch', pointer='/result_artifacts')
+    elif normalize:
         # Keep all ordinary source/precondition/history checks, but do not fold
         # representation changes as artifact edits or stamp revision/metadata.
         folded = prepare_change_lifecycle(model.artifacts, [],
@@ -111,7 +121,8 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     operations = [ChangeOperation(v).data for v in _sequence(operations, 'target_operations_required')]
     preconditions = _snapshot(list(_sequence(preconditions, 'target_preconditions_required')), '/preconditions').data
     normalize = normalization_mode(operations)
-    folded = prepare_change_lifecycle(model.artifacts, [] if normalize else operations,
+    prepare = prepare_review_candidates if review_mode(operations) else prepare_change_lifecycle
+    folded = prepare(model.artifacts, [] if normalize else operations,
         metadata_policy_version=metadata_policy_version, actor=actor, planned_at=planned_at,
         preconditions=preconditions, source_files=model.source_files, **model.reservations)
     plan = prepare_change_plan({'format_version':'1.2.0',

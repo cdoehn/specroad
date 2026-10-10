@@ -7,18 +7,21 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
+    "Owned temporary native project with two goals and a draft requirement, complete resource bindings, explicit human actor/source guards and actual writer/receipt services."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Record a confirmed relation review under the real writer lock; inspect complete endpoint/context bindings, immutable revision-1 output and native receipts; replay the same request and reject changed intent, nonhuman actors, stale guards and tampered saved plans."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Relationsreview-Artefakt MUSS atomar mit `review_state=recorded` und `maturity=approved` erzeugt werden.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "Native first confirmed human review: new random128 identity, exact relation/source/target IDs, revisions, full and context hashes, reviewer/time/reason/comment, recorded/approved creation through complete target checks and native journal/publication/receipt/cleanup, unchanged original files, historical request replay and immutable generic routes. The bound gates cover only the new review; general history/currentness, negative outcomes/withdrawals and CLI remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,11 +38,48 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "test_record_schemas.RecordRightTests.test_all_special_endstates_refuse_every_generic_route",
     "test_record_schemas.RecordWorkTests.test_relation_reviews_require_a_human_declaration",
     "test_record_schemas.RecordWorkTests.test_special_status_and_maturity_are_coupled",
-    "test_record_schemas.RecordRightTests.test_all_special_endstates_refuse_every_generic_route"
+    "tests/test_relation_review_authoring.py::test_confirmed_retry_reuses_proof_before_lock_allocation_or_context_replanning",
+    "tests/test_relation_review_authoring.py::test_denied_authority_leaves_every_original_file_unchanged",
+    "tests/test_relation_review_authoring.py::test_first_review_gates_do_not_approve_unimplemented_history_selection",
+    "tests/test_relation_review_authoring.py::test_negative_outcome_remains_closed_without_the_withdrawal_service",
+    "tests/test_relation_review_authoring.py::test_new_review_time_is_after_existing_matching_review_without_restamping_history",
+    "tests/test_relation_review_authoring.py::test_nonhuman_review_is_denied_before_any_write[ai]",
+    "tests/test_relation_review_authoring.py::test_nonhuman_review_is_denied_before_any_write[ci]",
+    "tests/test_relation_review_authoring.py::test_nonhuman_review_is_denied_before_any_write[tool]",
+    "tests/test_relation_review_authoring.py::test_record_binds_exact_review_and_publishes_one_new_immutable_artifact[Inspected against the complete source and target.-both]",
+    "tests/test_relation_review_authoring.py::test_record_binds_exact_review_and_publishes_one_new_immutable_artifact[Inspected against the complete source and target.-hash]",
+    "tests/test_relation_review_authoring.py::test_record_binds_exact_review_and_publishes_one_new_immutable_artifact[Inspected against the complete source and target.-revision]",
+    "tests/test_relation_review_authoring.py::test_record_binds_exact_review_and_publishes_one_new_immutable_artifact[None-both]",
+    "tests/test_relation_review_authoring.py::test_record_binds_exact_review_and_publishes_one_new_immutable_artifact[None-hash]",
+    "tests/test_relation_review_authoring.py::test_record_binds_exact_review_and_publishes_one_new_immutable_artifact[None-revision]",
+    "tests/test_relation_review_authoring.py::test_review_keeps_all_generic_mutation_routes_closed[create]",
+    "tests/test_relation_review_authoring.py::test_review_keeps_all_generic_mutation_routes_closed[transition]",
+    "tests/test_relation_review_authoring.py::test_review_keeps_all_generic_mutation_routes_closed[update]",
+    "tests/test_relation_review_authoring.py::test_same_request_rejects_changed_intent_before_a_second_writer[changed0]",
+    "tests/test_relation_review_authoring.py::test_same_request_rejects_changed_intent_before_a_second_writer[changed1]",
+    "tests/test_relation_review_authoring.py::test_same_request_rejects_changed_intent_before_a_second_writer[changed2]",
+    "tests/test_relation_review_authoring.py::test_saved_plan_recomputes_exact_review_and_requires_actual_semantic_gates",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[relation_content_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[reviewer-new_value7]",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[source_artifact_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[source_context_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[source_revision-8]",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[target_artifact_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[target_context_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_relation_review_authoring.py::test_self_hashed_plan_cannot_substitute_review_observations[target_revision-77]",
+    "tests/test_relation_review_authoring.py::test_source_guard_is_explicit_before_io[guards0]",
+    "tests/test_relation_review_authoring.py::test_source_guard_is_explicit_before_io[guards1]",
+    "tests/test_relation_review_authoring.py::test_source_guard_is_explicit_before_io[guards2]",
+    "tests/test_relation_review_authoring.py::test_source_guard_is_explicit_before_io[guards3]",
+    "tests/test_relation_review_authoring.py::test_stale_source_guard_never_publishes_a_review[intent0]",
+    "tests/test_relation_review_authoring.py::test_stale_source_guard_never_publishes_a_review[intent1]"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Complete 7.g.R robustness and saved/direct review binding cases; retain genuine W/R/C states.",
+    "General review-history/status selection belongs to 7.h; negative decisions and exact approval withdrawals belong to 7.i. Other relevant semantic subjects fail closed until their services exist.",
+    "Integrate registered CLI/dry-run/output, production model/history acquisition and supported-platform evidence; no complete requirement or release claim."
   ]
 }

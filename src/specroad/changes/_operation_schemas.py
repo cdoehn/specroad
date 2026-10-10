@@ -67,7 +67,9 @@ def relation_review_record_schema():
     ref = text()
     blob = {"type": "object"}
     withdrawal = expected({'target': ref, 'reason': text()}, ['target', 'reason'])
-    return obj({**base, 'record': blob, 'source': ref, 'target': ref, 'approval_withdrawals': arr(withdrawal)})
+    return obj({**base, 'record': blob, 'source': ref, 'target': ref,
+        'approval_withdrawals': arr(withdrawal), 'expected_revision': revision(),
+        'expected_sha256': digest()}, ['op', 'record', 'source', 'target', 'approval_withdrawals'])
 
 def proposal_control_schema():
     base = {"op": {"const": 'proposal_control'}}

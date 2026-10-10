@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 327
-last_completed_plan_commit: 7.f.C
-next_plan_commit: 7.g.W
-last_completed_numbered_bundle: 178
+implementation_plan_commits_completed: 328
+last_completed_plan_commit: 7.g.W
+next_plan_commit: 7.g.R
+last_completed_numbered_bundle: 179
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8030,12 +8030,50 @@ und Commit bestätigen 327/885. Danach folgt 7.g.W.
 
 #### 7.g.W – Let it Work
 
-- [ ] **7.g.W** · Position **328/885** · Voraussetzung: `7.f.C`.
+- [x] **7.g.W** · Position **328/885** · Voraussetzung: `7.f.C`.
 **Exakte Commit-Message:** `7.g.W feat(authoring): Reviewdatensatz und Kontextbindung aufbauen`
 
 **Umsetzung:** Menschlichen Relationsreview mit Relation, beiden Endpunkten und Kontext-/Vollhashes als immutable Datensatz planen.
 
 **Verhaltensabnahme:** Review entsteht atomar als recorded/approved mit neuen Identitäten.
+
+**Vorbereiteter Implementierungsstand (Bundle 179):** Result 178 bestätigt
+7.f.C mit 8.430 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Dieser W-Ausschnitt ergänzt einen nativen menschlichen `confirmed`-Review:
+neue random128-ID unter Writer-Lock, unveränderbarer Datensatz in Revision 1
+und `recorded`/`approved`, Relationsinhaltshash sowie beide Endpunkt-IDs,
+Revisionen, vollständige Artefakt- und Kontext-Hashes, Reviewer, gebundene Zeit,
+Begründung und optionaler Kommentar. Der spezielle Planner rekonstruiert auch
+gespeicherte Pläne und prüft explizite Quellguards. Endpunktwerte und ihre
+Dateibytes bleiben erhalten; generische Record-Mutationen bleiben gesperrt.
+Native Journale, Publish-, Receipt- und Cleanup-Dienste liefern den tatsächlichen
+Schreibabschluss. Derselbe bestätigte Request liefert den ursprünglichen
+Nachweis, geänderte Intent-/Guardbindungen einen Konflikt.
+
+35 neue Verhaltenstests und 741 betroffene Regressionen bilden die gezielte
+parallele Dev-Auswahl (776 Fälle). Die vollständige parallele Apply-Suite
+umfasst 8.465 Fälle; erst ihr Erfolg und der passende Commit bestätigen
+328/885. Danach folgt 7.g.R. Der anfängliche Katalog-Importfehler durch als
+Extension-Command-Gates eingetragene Core-Gatenamen wurde korrigiert; dabei
+liefen keine Testkörper. Die Core-Pipeline fordert ihre semantischen Gates
+weiterhin selbstständig anhand der Artefakte an.
+
+Der erste gezielte Durchlauf endete mit 683 bestandenen und 6 fehlgeschlagenen
+Fällen: Alle sechs positiven Reviewvarianten belegten einen korrekt publizierten
+Nachweis, dessen neue ID aber in `created_ids` des nativen Receipts fehlte.
+Die Receipt-Projektion berücksichtigt jetzt `relation_review_record`; alle
+Testorakel bleiben unverändert. Der fehlgeschlagene Stand und seine Protokolle
+sind erhalten. Die erneute Auswahl umfasst zusätzlich die bisherigen
+Transaction-Receipt-W/R-Regressionen.
+
+**Abgrenzung:** Die eingebauten Review-Gates bestätigen allein den neu
+gebundenen positiven Nachweis. Andere Lifecycle-/Currentness-Subjekte und
+Reviewhistorie bleiben ohne ihre vollständigen Dienste gesperrt. Allgemeine
+Statusauswahl folgt in 7.h, negative Reviews samt Freigaberücknahmen in 7.i.
+CLI, produktive Inventur/Akteurprüfung und Plattformnachweise sind weiterhin
+unvollständig. Ältere passive Feldfixtures bleiben lesbar, neue Writes müssen
+den vollständigen rekonstruierten Datensatz liefern. SR-REQ-0275 und
+SR-REQ-0434 bleiben ausdrücklich `partial`.
 
 #### 7.g.R – Make it Right
 

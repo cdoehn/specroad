@@ -67,6 +67,7 @@ def _created_ids(operations):
     for operation in operations:
         if operation['op'] == 'create': values.append(operation['artifact']['id'])
         elif operation['op'] == 'relation_add': values.append(operation['relation']['relation_id'])
+        elif operation['op'] == 'relation_review_record': values.append(operation['record']['id'])
     return sorted(set(values))
 
 
