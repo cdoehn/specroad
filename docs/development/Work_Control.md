@@ -104,6 +104,12 @@ maschinelle Fehler `prompt_required_content_exceeds_limit` mit Code 2;
 Integritätsdaten und Aktionen werden niemals abgeschnitten. Die vollständige
 Arbeit bleibt im Store. Ungültige Grenzwerte werden vor Work-Zugriff abgewiesen.
 
+Seit 6.r.C liegt der unveränderte Textaufbau in `_prompt_rendering.py`. Die
+maschinelle Ableitung und alle Work-/Projekt-/Belegprüfungen verbleiben im
+Koordinator `prompt.py`; er ruft den Renderer an derselben Stelle auf und prüft
+danach weiterhin die aktuelle Bindung. Der Renderer erhält ausschließlich den
+bereits abgeleiteten Datenvertrag und die geprüfte Zeichengrenze.
+
 Terminale Arbeit erhält keine neue Fortsetzungsanweisung. Ein gespeicherter
 Checkpoint und ein historischer Fachcommit bestätigen weiterhin weder ein
 unbekanntes Prozessende noch vollständige Ergebnislieferung. Der Vertrag nennt

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 299
-last_completed_plan_commit: 6.r.R
-next_plan_commit: 6.r.C
-last_completed_numbered_bundle: 150
+implementation_plan_commits_completed: 300
+last_completed_plan_commit: 6.r.C
+next_plan_commit: 6.s.W
+last_completed_numbered_bundle: 151
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6943,10 +6943,27 @@ bleibt partiell. Erst vollständiger paralleler Apply-Test und Commit bestätige
 
 #### 6.r.C – Make it Clean
 
-- [ ] **6.r.C** · Position **300/885** · Voraussetzung: `6.r.R`.
+- [x] **6.r.C** · Position **300/885** · Voraussetzung: `6.r.R`.
 **Exakte Commit-Message:** `6.r.C refactor(work): Work-Status, Prompt und Cancel bereinigen`
 
 **Bereinigung:** Maschinellen Fortsetzungsvertrag vom rein menschlichen Promptrenderer trennen.
+
+**Vorbereiteter Implementierungsstand (Bundle 151):** Der rein menschliche
+Renderer liegt in einem eigenen Modul. Seine Funktion behält denselben AST;
+alle übrigen Funktionen des bisherigen Koordinators bleiben ebenfalls
+AST-gleich. Die maschinelle Ableitung, tatsächliche Operationen, Hash-/Runtime-
+und native Receiptprüfungen verbleiben an ihren bisherigen Stellen. Der
+Renderer erhält nur bereits geprüfte Daten; die abschließenden Frischeprüfungen
+laufen weiterhin nach der Textbildung. Seine bestehenden Fehler-Injektionspunkte
+bleiben erreichbar.
+
+Sämtliche 231 bisherigen Testdateien und alle W-/R-Erwartungen bleiben bytegleich.
+Die gezielte parallele Entwicklungsabnahme führt alle 34 W- und 30 R-Fälle dieses
+Schritts aus. Fachliche Werte, Fehlertypen, erlaubte Seiteneffekte, Zeichengrenzen
+und Geheimnisabgrenzung ändern sich nicht; Darstellungstests werden nicht ergänzt.
+Die partiellen Anforderungsstände und dokumentierten Integrationsgrenzen bleiben
+erhalten. Erst erfolgreicher vollständiger paralleler Apply-Test und Commit
+bestätigen 300/885; anschließend folgt 6.s.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

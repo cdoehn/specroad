@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`work prompt` MUSS einen aus dem geprüften Arbeitsmanifest abgeleiteten konkreten Fortsetzungstext nach Anhang P.8 ausgeben.",
-    "scope": "Fresh bound Work data selects an actual existing closed host entrypoint and its original required inputs. Stored progress and the full remaining manifest are retained, and required data is never truncated to fit a character limit. Runtime, terminal state, checkpoint and native proof are checked before return. Native receipts take precedence over preparation; unresolved transactions refuse ordinary continuation."
+    "scope": "Fresh bound Work data selects an actual existing closed host entrypoint and its original required inputs. Stored progress and the full remaining manifest are retained, and required data is never truncated to fit a character limit. Runtime, terminal state, checkpoint and native proof are checked before return. Native receipts take precedence over preparation; unresolved transactions refuse ordinary continuation. 6.r.C isolates the identical human renderer while retaining every machine-contract function, call order, final freshness check and original test expectation. The renderer and the six remaining coordinator functions retain identical ASTs."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
