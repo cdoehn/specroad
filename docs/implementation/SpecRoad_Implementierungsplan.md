@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 304
-last_completed_plan_commit: 6.t.W
-next_plan_commit: 6.t.R
-last_completed_numbered_bundle: 155
+implementation_plan_commits_completed: 305
+last_completed_plan_commit: 6.t.R
+next_plan_commit: 6.t.C
+last_completed_numbered_bundle: 156
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7132,12 +7132,45 @@ Test und Commit bestätigen 304/885; danach folgt 6.t.R.
 
 #### 6.t.R – Make it Right
 
-- [ ] **6.t.R** · Position **305/885** · Voraussetzung: `6.t.W`.
+- [x] **6.t.R** · Position **305/885** · Voraussetzung: `6.t.W`.
 **Exakte Commit-Message:** `6.t.R feat(work): Prozesslebensdauer und Cleanupgrenzen vervollständigen`
 
 **Vervollständigung:** Ausnahme-/Abbruchpfade und gesicherte Checkpoints bei Cleanup schützen.
 
 **Verhaltensabnahme:** Kontrollierter Prozessabbruch hinterlässt weder Hintergrunddienst noch gelöschten gültigen Workstand. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 156):** Der direkte Prozessadapter
+versucht alle eigenen Cleanupoperationen auch nach einem vorherigen Fehler.
+Wiederholte behandelte KeyboardInterrupt-/SystemExit-Unterbrechungen werden an den
+nativen Operationsgrenzen zurückgestellt; InterruptedError wiederholt nur die
+betroffene Operation. Nach erfolgreicher Bereinigung bleibt die ursprüngliche
+Aufrufausnahme erhalten, ansonsten wird eine erst im Cleanup aufgetretene
+Unterbrechung anschließend weitergereicht.
+
+Nicht behebbare Cleanupfehler werden mit tatsächlichem PID-/Returncodezustand,
+Einsammelstatus, noch offenen Pipes und Fehleroperationen maschinenlesbar gemeldet.
+Ein fehlgeschlagener Kill wird weder als Erfolg ausgegeben noch durch unbegrenzt
+blockierendes Wait verdeckt. Auch bei fehlgeschlagenem Close werden die übrigen
+Pipes versucht. Ursprüngliche Ausnahmen bleiben als Ursache erhalten; Work- und
+Recoverydaten werden durch die Bereinigung nicht verändert.
+
+35 neue Verhaltenstests prüfen wiederholte Unterbrechungen in sechs nativen
+Cleanupoperationen, späte Unterbrechungen nach tatsächlichem Prozessende, frühe
+und späte Fehler einzelner oder sämtlicher Pipes, tatsächlich fehlgeschlagenes
+Kill beziehungsweise nachgelagerten Waitfehler, reale behandelte SIGTERM-Signale
+in isolierten Elternprozessen, unnötiges Signalisieren bereits beendeter Kinder
+und vorzeitig geschlossene Kind-Eingabe. Alle Prozessnachweise verwenden echte
+Kinder/Pipes; absichtlich verhindertes Produktcleanup übernimmt abschließend der
+Testharness. Gültige Checkpoint- und Projektbytes bleiben erhalten. Die gezielte
+parallele Dev-Abnahme umfasst 193 neue und betroffene Prozess-/Work-/Checkpoint-
+Fälle; alle bisherigen Testdateien bleiben bytegleich.
+
+Der Umfang bleibt auf ausdrücklich vertrauenswürdige direkte POSIX-Kinder und
+vollständige I/O im Speicher begrenzt. Konkrete Git-/Analyzeradapter, fortsetzbare
+Streams, Verbrauchsintegration und nicht-POSIX-Systeme bleiben offen; weder
+daemonisierende Nachkommen noch harter unbehandelter Hostverlust sind abgedeckt.
+SR-REQ-0579/0580 bleiben partiell. Erst vollständiger paralleler Apply-Test und
+Commit bestätigen 305/885; danach folgt die Bereinigung 6.t.C.
 
 #### 6.t.C – Make it Clean
 

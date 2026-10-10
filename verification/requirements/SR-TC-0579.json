@@ -16,12 +16,15 @@
     "Run explicitly requested children synchronously with exact binary input/output and actual nonzero or signal status; observe completed child ownership through native waitpid.",
     "Exercise literal arguments, explicit environment, closed implicit stdin and closed unrelated descriptors. Reject malformed contracts before launch and preserve actual native launch failure without retry.",
     "Interrupt actual owned children through handled exception boundaries and a real isolated-parent SIGINT; check termination/reaping and preserved published Work bytes.",
-    "Run current read-only Work execution/finalization/export/restore and native preparation/publication with process and thread startup forbidden; confirm the actual completed results without background helpers."
+    "Run current read-only Work execution/finalization/export/restore and native preparation/publication with process and thread startup forbidden; confirm the actual completed results without background helpers.",
+    "Inject repeated keyboard/exit/EINTR interruptions around native operations on actual owned processes; verify collection, closed pipes and preserved original exceptions and Work bytes.",
+    "Exercise early/late pipe close failures and actual kill/wait failure boundaries; verify honest structured cleanup state, all remaining cleanup attempts and preserved checkpoint bytes. The harness collects deliberately retained owned children.",
+    "Handle real SIGTERM in isolated parent processes and preserve actual nonzero child status when input closes early."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Core DARF NICHT für Fachoperationen Worker-Pools, Watcher, Hintergrundindexer oder einen dauerhaft laufenden Hilfsdienst starten.",
-    "scope": "Current read-only and native Work paths execute without background threads, pools, watchers or helper-process startup. The explicit child adapter starts exactly one direct process per call, waits synchronously and retains no active process between calls. Initial explicitly trusted direct POSIX-child host API with whole-byte I/O. No invocation authority is derived from Work/project data. Future Git/analyzer adapters, large streaming protocols, child consumption accounting, repeated interruption/cleanup failures and non-POSIX operation remain open. No guarantee is claimed for daemonizing descendants or fatal unhandled host termination; no release approval or complete general command integration is claimed."
+    "scope": "Current read-only and native Work paths execute without background threads, pools, watchers or helper-process startup. The explicit child adapter starts exactly one direct process per call, waits synchronously and retains no active process between calls. Repeated KeyboardInterrupt/SystemExit and EINTR around actual native cleanup operations do not skip collection or other pipes. Original call exceptions are retained after successful cleanup; a cleanup interruption without an original call failure is propagated afterwards. Nonrecoverable cleanup failures expose actual returncode/reaping/open-pipe state and all failed operation types without declaring success. A denied kill does not enter a blocking wait. Actual handled parent SIGTERM and early closed child input are covered; checkpoint and protected project bytes remain unchanged. Explicitly trusted direct POSIX-child host API with whole-byte I/O. No invocation authority is derived from Work/project data. Future Git/analyzer adapters, large streaming protocols, child consumption accounting and non-POSIX operation remain open. No guarantee is claimed for daemonizing descendants, fatal unhandled host termination or arbitrary interruption outside handled operation boundaries; no release approval or complete general command integration is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -40,9 +43,44 @@
   "test_ids": [
     "tests/test_owned_children.py::test_current_work_flows_start_no_pool_watcher_or_helper_process[native]",
     "tests/test_owned_children.py::test_current_work_flows_start_no_pool_watcher_or_helper_process[read_only]",
-    "tests/test_owned_children.py::test_each_explicit_call_owns_one_child_without_background_threads"
+    "tests/test_owned_children.py::test_each_explicit_call_owns_one_child_without_background_threads",
+    "tests/test_owned_children_right.py::test_child_closing_input_early_keeps_its_actual_status_and_output",
+    "tests/test_owned_children_right.py::test_error_after_actual_child_exit_does_not_send_an_unnecessary_signal",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[False-all]",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[False-stderr]",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[False-stdin]",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[False-stdout]",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[True-all]",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[True-stderr]",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[True-stdin]",
+    "tests/test_owned_children_right.py::test_every_pipe_is_attempted_and_actual_cleanup_failure_is_reported[True-stdout]",
+    "tests/test_owned_children_right.py::test_failed_kill_reports_a_live_child_without_waiting_or_claiming_completion",
+    "tests/test_owned_children_right.py::test_failure_after_native_wait_retains_the_observed_reaped_state",
+    "tests/test_owned_children_right.py::test_late_interrupt_is_delivered_after_successful_child_collection[eintr]",
+    "tests/test_owned_children_right.py::test_late_interrupt_is_delivered_after_successful_child_collection[exit]",
+    "tests/test_owned_children_right.py::test_late_interrupt_is_delivered_after_successful_child_collection[keyboard]",
+    "tests/test_owned_children_right.py::test_real_handled_sigterm_reaps_the_child_and_preserves_the_checkpoint[False]",
+    "tests/test_owned_children_right.py::test_real_handled_sigterm_reaps_the_child_and_preserves_the_checkpoint[True]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[eintr-kill]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[eintr-poll]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[eintr-stderr]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[eintr-stdin]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[eintr-stdout]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[eintr-wait]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[exit-kill]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[exit-poll]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[exit-stderr]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[exit-stdin]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[exit-stdout]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[exit-wait]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[keyboard-kill]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[keyboard-poll]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[keyboard-stderr]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[keyboard-stdin]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[keyboard-stdout]",
+    "tests/test_owned_children_right.py::test_repeated_cleanup_interruptions_preserve_original_error_and_work[keyboard-wait]"
   ],
   "open_items": [
-    "Initial explicitly trusted direct POSIX-child host API with whole-byte I/O. No invocation authority is derived from Work/project data. Future Git/analyzer adapters, large streaming protocols, child consumption accounting, repeated interruption/cleanup failures and non-POSIX operation remain open. No guarantee is claimed for daemonizing descendants or fatal unhandled host termination; no release approval or complete general command integration is claimed."
+    "Explicitly trusted direct POSIX-child host API with whole-byte I/O. No invocation authority is derived from Work/project data. Future Git/analyzer adapters, large streaming protocols, child consumption accounting and non-POSIX operation remain open. No guarantee is claimed for daemonizing descendants, fatal unhandled host termination or arbitrary interruption outside handled operation boundaries; no release approval or complete general command integration is claimed."
   ]
 }
