@@ -67,6 +67,13 @@ werden als `normative_receipt_binding_changed` mit Code 6 abgewiesen. Ein bereit
 erfolgter Commit bleibt erhalten; ein erneuter expliziter Aufruf prüft dessen
 Receipt, statt fachlich erneut zu schreiben.
 
+Die interne Einheit `_publication_outcome` enthält den unveränderlichen
+Ergebniswert und diese Zusammenführung der bereits gelesenen Nachweise. Sie
+öffnet keine Dateien oder Locks und startet keine Transaktion. Der bestehende
+öffentliche Import `specroad.work.publication.NormativeWorkPublication` bleibt
+erhalten; Vorbereitung und die unveränderte zusammenhängende native
+Transaktionsfolge bleiben in `publication`.
+
 Technischer Work-Abschluss und endgültige Ergebnislieferung
 werden damit nicht fingiert: der Vorbereitungscheckpoint bleibt erhalten,
 `work_completion_recorded` ist `false`. Der historische Replay bestätigt

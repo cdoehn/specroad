@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 293
-last_completed_plan_commit: 6.p.R
-next_plan_commit: 6.p.C
-last_completed_numbered_bundle: 144
+implementation_plan_commits_completed: 294
+last_completed_plan_commit: 6.p.C
+next_plan_commit: 6.q.W
+last_completed_numbered_bundle: 145
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6697,10 +6697,29 @@ bestätigen 293/885; anschließend folgt 6.p.C.
 
 #### 6.p.C – Make it Clean
 
-- [ ] **6.p.C** · Position **294/885** · Voraussetzung: `6.p.R`.
+- [x] **6.p.C** · Position **294/885** · Voraussetzung: `6.p.R`.
 **Exakte Commit-Message:** `6.p.C refactor(work): Atomarer Write über mehrere Vorbereitungsphasen bereinigen`
 
 **Bereinigung:** Worksteuerung vor und nach Transaktion anschließen, nicht in atomare Teilcommits zerlegen.
+
+**Vorbereiteter Implementierungsstand (Bundle 145):** Der eingefrorene
+`NormativeWorkPublication`-Ergebniswert und die unveränderte Verknüpfung seiner
+nativen Request-/Transaktionsnachweise liegen in `_publication_outcome`.
+Diese Einheit führt keine Datei- oder Lockoperationen aus. `publication`
+behält Vorbereitung, Work-Prüfungen und die zusammenhängende native
+Transaktionsfolge; die öffentliche Ergebnisklasse wird dort weiter exportiert.
+
+Die ausgelagerten Definitionen und sämtliche verbleibenden Funktionskörper
+sind strukturell unverändert. Ergebnisfelder, Receipt-Bindungen,
+Fehlerklassen, Lockgrenzen, Idempotenz und Recoveryverhalten bleiben erhalten.
+Die vollständigen W-/R-Testdateien und deren Erwartungen bleiben bytegleich;
+es werden keine neuen Fach- oder Darstellungstests erfunden. Die offenen
+Grenzen des geschlossenen Host-Adapters bleiben bestehen, insbesondere der
+inkrementelle große Planaufbau, feinere speicherbegrenzte Vorbereitung,
+CLI-/Code-8-Anbindung und finale normative Work-Abschluss.
+
+Erst vollständiger paralleler Apply-Test und Commit bestätigen 294/885;
+anschließend folgt 6.q.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
