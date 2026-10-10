@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0579",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned native POSIX test processes and temporary paths, an explicitly trusted Python executable/child program and explicit loader environment. Actual pipes, signals and waitpid ownership are exercised. Work compatibility metadata is an explicitly labelled recorded-build fixture."
+  ],
+  "steps": [
+    "Run explicitly requested children synchronously with exact binary input/output and actual nonzero or signal status; observe completed child ownership through native waitpid.",
+    "Exercise literal arguments, explicit environment, closed implicit stdin and closed unrelated descriptors. Reject malformed contracts before launch and preserve actual native launch failure without retry.",
+    "Interrupt actual owned children through handled exception boundaries and a real isolated-parent SIGINT; check termination/reaping and preserved published Work bytes.",
+    "Run current read-only Work execution/finalization/export/restore and native preparation/publication with process and thread startup forbidden; confirm the actual completed results without background helpers."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der Core DARF NICHT für Fachoperationen Worker-Pools, Watcher, Hintergrundindexer oder einen dauerhaft laufenden Hilfsdienst starten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Current read-only and native Work paths execute without background threads, pools, watchers or helper-process startup. The explicit child adapter starts exactly one direct process per call, waits synchronously and retains no active process between calls. Initial explicitly trusted direct POSIX-child host API with whole-byte I/O. No invocation authority is derived from Work/project data. Future Git/analyzer adapters, large streaming protocols, child consumption accounting, repeated interruption/cleanup failures and non-POSIX operation remain open. No guarantee is claimed for daemonizing descendants or fatal unhandled host termination; no release approval or complete general command integration is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,12 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_owned_children.py::test_current_work_flows_start_no_pool_watcher_or_helper_process[native]",
+    "tests/test_owned_children.py::test_current_work_flows_start_no_pool_watcher_or_helper_process[read_only]",
+    "tests/test_owned_children.py::test_each_explicit_call_owns_one_child_without_background_threads"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Initial explicitly trusted direct POSIX-child host API with whole-byte I/O. No invocation authority is derived from Work/project data. Future Git/analyzer adapters, large streaming protocols, child consumption accounting, repeated interruption/cleanup failures and non-POSIX operation remain open. No guarantee is claimed for daemonizing descendants or fatal unhandled host termination; no release approval or complete general command integration is claimed."
   ]
 }

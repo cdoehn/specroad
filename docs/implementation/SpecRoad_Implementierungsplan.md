@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 303
-last_completed_plan_commit: 6.s.C
-next_plan_commit: 6.t.W
-last_completed_numbered_bundle: 154
+implementation_plan_commits_completed: 304
+last_completed_plan_commit: 6.t.W
+next_plan_commit: 6.t.R
+last_completed_numbered_bundle: 155
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7092,12 +7092,43 @@ Test und Commit bestätigen 303/885; anschließend folgt 6.t.W.
 
 #### 6.t.W – Let it Work
 
-- [ ] **6.t.W** · Position **304/885** · Voraussetzung: `6.s.C`.
+- [x] **6.t.W** · Position **304/885** · Voraussetzung: `6.s.C`.
 **Exakte Commit-Message:** `6.t.W feat(work): Prozesslebensdauer und Cleanupgrenzen aufbauen`
 
 **Umsetzung:** Keine Core-Workerpools; zulässige Kindprozesse kontrolliert abschließen und einsammeln.
 
 **Verhaltensabnahme:** Ein beendeter Aufruf hinterlässt keine laufenden eigenen Kindprozesse.
+
+**Vorbereiteter Implementierungsstand (Bundle 155):** Eine ausdrückliche synchrone
+Host-API besitzt einen vertrauenswürdigen direkten POSIX-Kindprozess vom Start
+bis zum Einsammeln. Executable, Argumenttupel, Arbeitsverzeichnis, vollständige
+Umgebung und optionale Eingabebytes werden vor dem Start geprüft. Shellauswertung,
+PATH-Suche, implizite Umgebung/stdin, Worker-Pools, automatische Wiederholung und
+feste Job-Laufzeitlimits werden nicht eingeführt. Der tatsächliche Returncode und
+vollständige binäre Ausgaben bleiben erhalten.
+
+Eine behandelte Ausnahme beendet ein noch laufendes direktes Kind und wartet es
+ab; eigene Pipes werden geschlossen. Cleanup verändert keine Work-/Recoverydaten.
+Der Adapter ist keine Ausführungserlaubnis aus Workdaten und noch keine neue CLI-
+oder Git-/Analyzerintegration. Die bestehenden Read-only- und nativen Work-Flows
+bleiben ohne zusätzliche Prozesse oder Hintergrundthreads.
+
+27 neue Verhaltenstests prüfen tatsächliche binäre Mehrkanal-I/O, nichtnull- und
+Signalstatus, explizite Umgebung/Argumente, geschlossenes stdin, Deskriptorgrenzen,
+Vertragsfehler vor dem Start, echten Startfehler ohne Retry, drei behandelte
+Ausnahmetypen mit tatsächlichem Kill/Wait, realen KeyboardInterrupt gegen einen
+ignorierenden Kindprozess, synchronen Einzelbesitz und bisherige Work-Flows unter
+Prozess-/Thread-Startverbot. Native `waitpid`-Prüfungen belegen das Einsammeln;
+bereits publizierte Workbytes bleiben erhalten. 158 neue und betroffene Prozess-/
+Work-/Checkpointfälle bilden die gezielte parallele Dev-Abnahme; bisherige
+Testdateien bleiben bytegleich.
+
+Der W-Umfang betrifft vertrauenswürdige direkte POSIX-Kinder und vollständige I/O
+im Speicher. Fremde daemonisierende Nachkommen, unbehandelter harter Hostverlust,
+große fortsetzbare Streamprotokolle, konkrete spätere Git-/Analyzerintegration und
+wiederholte Abbruch-/Cleanupfehler sind damit nicht allgemein abgedeckt.
+SR-REQ-0579/0580 werden nur partiell belegt. Erst vollständiger paralleler Apply-
+Test und Commit bestätigen 304/885; danach folgt 6.t.R.
 
 #### 6.t.R – Make it Right
 
