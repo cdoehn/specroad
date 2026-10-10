@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0623",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary protected project/input root and private external Work directory; actual closed bootstrap handlers, complete durable Work generation and explicitly labelled recorded-build compatibility fixture."
+  ],
+  "steps": [
+    "Execute and finalize each supported real read-only handler, then publish its entire unchanged result payload and bound file manifest.",
+    "Check complete machine payload, original schema, exact byte size/hash, full diagnostics and source checkpoint binding; reuse through a fresh controller without writes or handler execution.",
+    "Refuse unfinished/missing work, changed runtime, missing/changed outputs and unsafe result storage; retain actual files and checkpoint after native short writes or early/late output failures."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine zu große Inlineausgabe MUSS vollständig über den Ergebnisdatei-/Manifestvertrag nach Kapitel 11.5 geliefert werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "6.q.W adds explicit file materialization for already completed Work from the existing six read-only bootstrap handlers. Actual saved handler results and the full original schema, status, exit code, project binding and diagnostics are preserved. The whole canonical result is atomically published in the protected external Work results directory; a subsequently published canonical manifest binds every produced payload by relative path, role, media type, size, SHA-256 and schema, plus the originating Work/checkpoint/command and complete source-envelope hash. The returned manifest reference binds its own complete bytes without recursion. Every delivery access rechecks the original closed Work plan, full checkpoint chain, current build and all output bytes. Matching files are reused without writes, handler execution, checkpoint changes or project changes. Missing or altered files never yield a confirmed delivery; unsafe storage and changed runtime are refused. Actual short writes and injected early/late native output failures retain the real checkpoint and output/temporary files, and explicit retry only completes verified missing outputs. All tests compare machine contracts and complete byte content, not human wording or layout. This is a partial closed-host adapter, not CLI integration or a claim of streaming/multipart/normative result delivery."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,31 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_result_files.py::test_bounded_short_writes_keep_the_entire_original_payload",
+    "tests/test_work_result_files.py::test_every_access_rechecks_all_result_and_manifest_bytes[different_bytes-manifest]",
+    "tests/test_work_result_files.py::test_every_access_rechecks_all_result_and_manifest_bytes[different_bytes-payload]",
+    "tests/test_work_result_files.py::test_every_access_rechecks_all_result_and_manifest_bytes[missing-manifest]",
+    "tests/test_work_result_files.py::test_every_access_rechecks_all_result_and_manifest_bytes[missing-payload]",
+    "tests/test_work_result_files.py::test_fresh_controller_reuses_only_fully_verified_persisted_output",
+    "tests/test_work_result_files.py::test_full_original_payload_is_published_with_its_bound_manifest[capabilities]",
+    "tests/test_work_result_files.py::test_full_original_payload_is_published_with_its_bound_manifest[command.describe]",
+    "tests/test_work_result_files.py::test_full_original_payload_is_published_with_its_bound_manifest[help]",
+    "tests/test_work_result_files.py::test_full_original_payload_is_published_with_its_bound_manifest[schema.list]",
+    "tests/test_work_result_files.py::test_full_original_payload_is_published_with_its_bound_manifest[schema.show]",
+    "tests/test_work_result_files.py::test_full_original_payload_is_published_with_its_bound_manifest[version]",
+    "tests/test_work_result_files.py::test_missing_work_is_not_allocated_by_result_delivery",
+    "tests/test_work_result_files.py::test_output_failure_preserves_actual_files_and_checkpoint_for_explicit_retry[False]",
+    "tests/test_work_result_files.py::test_output_failure_preserves_actual_files_and_checkpoint_for_explicit_retry[True]",
+    "tests/test_work_result_files.py::test_runtime_change_cannot_relabel_an_existing_delivery",
+    "tests/test_work_result_files.py::test_unfinished_work_cannot_be_advertised_as_a_delivered_result[0]",
+    "tests/test_work_result_files.py::test_unfinished_work_cannot_be_advertised_as_a_delivered_result[1]",
+    "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[fifo]",
+    "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[hardlink]",
+    "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[public]",
+    "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[symlink]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Automatic CLI delivery selection, normative receipt-backed result delivery, multipart output and external large-diagnostic delivery remain open. Source, canonical output and readback still use the complete in-memory result; bounded I/O does not establish streaming generation. No complete requirement or release approval is claimed."
   ]
 }

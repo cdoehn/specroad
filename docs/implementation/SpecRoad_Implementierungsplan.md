@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 294
-last_completed_plan_commit: 6.p.C
-next_plan_commit: 6.q.W
-last_completed_numbered_bundle: 145
+implementation_plan_commits_completed: 295
+last_completed_plan_commit: 6.q.W
+next_plan_commit: 6.q.R
+last_completed_numbered_bundle: 146
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6733,12 +6733,42 @@ anschließend folgt 6.q.W.
 
 #### 6.q.W – Let it Work
 
-- [ ] **6.q.W** · Position **295/885** · Voraussetzung: `6.p.C`.
+- [x] **6.q.W** · Position **295/885** · Voraussetzung: `6.p.C`.
 **Exakte Commit-Message:** `6.q.W feat(work): Große Ergebnisdateien und Abschlusslieferung aufbauen`
 
 **Umsetzung:** Vollständige Ergebnisse über sichere Datei-/Manifestbindung statt abgeschnittener Inlinewerte liefern.
 
 **Verhaltensabnahme:** Ergebnismanifest bindet alle tatsächlich erzeugten Datenbytes.
+
+**Vorbereiteter Implementierungsstand (Bundle 146):** Eine explizite Host-API
+materialisiert das vollständige gespeicherte Ergebnis der bestehenden sechs
+Read-only-Work-Handler in `results/` ihres geschützten externen Work-Roots.
+Result-Payload und anschließend sein vollständiges Manifest werden privat,
+bytegebunden und atomar veröffentlicht. Das ursprüngliche Fachschema bleibt
+erhalten; der Envelope verweist per `result_ref` auf den vollständigen Payload
+und behält Status, Exit Code, Projektbindung und sämtliche Diagnosen.
+
+Das Manifest bindet vollständige Dateiliste, Größen und Hashes sowie Work-ID,
+Command, Checkpoint und Original-Envelope. Die Rückgabe bindet das Manifest
+selbst ohne rekursive Hashreferenz. Jede spätere Ergebnisausgabe prüft
+Checkpointkette und alle Ausgabebytes frisch. Ein erneuter Aufruf verwendet
+vollständig passende Dateien ohne weitere Writes; kein Handler wird wiederholt.
+Offene Arbeit, fehlender Speicher, veränderte Bytes, unsichere Pfade oder eine
+andere Runtime ergeben keinen bestätigten Liefernachweis. Frühe und späte
+I/O-Fehler erhalten den tatsächlichen Dateistand und unveränderten Checkpoint.
+
+22 neue Verhaltenstests prüfen die sechs tatsächlich ausgeführten Handler,
+vollständige Payload-/Manifestbindungen, Wiederverwendung mit neuem Controller,
+Buildwechsel, offene/fehlende Arbeit, Verlust oder Veränderung beider Dateien,
+Pfad- und Dateigrenzen, echte kurze Writes und frühe/späte Ausgabefehler.
+Sie prüfen maschinenlesbare Daten und Byteintegrität, keine Textdarstellung.
+
+Der Umfang bleibt auf den bestehenden geschlossenen Read-only-Adapter begrenzt.
+Normative Lieferung, automatische CLI-Auswahl, mehrteilige Resultate und große
+ausgelagerte Diagnosen bleiben offen. Quelle, kanonischer Payload und Readback
+liegen noch vollständig im Speicher. Der Nachweis für SR-REQ-0623 bleibt
+partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
+295/885; anschließend folgt 6.q.R.
 
 #### 6.q.R – Make it Right
 
