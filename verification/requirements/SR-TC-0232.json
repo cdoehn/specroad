@@ -8,27 +8,35 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-JSON-PATCH-v1",
-    "SR-FIX-DOMAIN-DRAFT-v1"
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
-    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash."
+    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash.",
+    "For actual writes: an explicit complete TargetModel, trusted PublicationAuthority, actor, UTC time, plan/transaction IDs and native writable project tree."
   ],
   "steps": [
     "Apply real RFC-6902 operations in order on an isolated value snapshot.",
     "Compile ordered set/unset inputs without implicit parent creation or type conversion.",
-    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged."
+    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged.",
+    "Read an explicit saved RFC-6902 array from a stable file or binary stdin, or normalize ordered set/unset pairs into an owned update operation.",
+    "Use complete native planning, lifecycle/metadata and the real writer lock, live checks, journal, publication and completion receipts.",
+    "Retry the original normalized operation before a new plan/lock; reject a conflicting reuse and retain unrelated file bytes and modes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad artifact update <ID>` MUSS RFC-6902-Patches sowie die Komfortoptionen `--set <JSON-POINTER>=<JSON-VALUE>` und `--unset <JSON-POINTER>` unterstützen und eine erwartete Revision oder einen erwarteten Hash verlangen.",
-    "scope": "Pure RFC-6902 value execution and guarded artifact candidates. No live storage reads, full Change Plan folding, metadata advancement, lifecycle approval, CLI command or publication."
+    "scope": "Pure RFC-6902 and guarded value previews plus actual embedding-service updates on a complete local Goal/Requirement model: explicit revision/hash, all six patch operations, ordered set/unset, one revision, live host authorization, no-op and native historical replay. No registered CLI, general production model loading, dry-run/stdout or platform completion claim."
   },
   "expected_diagnostics": [
     "SRV070",
     "SRV146"
   ],
   "expected_exit_codes": [
-    3
+    2,
+    3,
+    6,
+    7
   ],
   "json_pointers": [
     "/patch",
@@ -48,19 +56,63 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_artifact_update.py::test_actor_policy_blocks_before_planning_and_lock[ai-update-1-7]",
+    "tests/test_artifact_update.py::test_actor_policy_blocks_before_planning_and_lock[ci-None-2]",
+    "tests/test_artifact_update.py::test_confirmed_retry_precedes_new_plan_and_lock[False]",
+    "tests/test_artifact_update.py::test_confirmed_retry_precedes_new_plan_and_lock[True]",
+    "tests/test_artifact_update.py::test_host_denial_preserves_normative_bytes_and_has_no_journal",
+    "tests/test_artifact_update.py::test_identity_and_maturity_are_not_generic_field_options[/id-SR-REQ-11111111111111111111111111]",
+    "tests/test_artifact_update.py::test_identity_and_maturity_are_not_generic_field_options[/maturity-approved]",
+    "tests/test_artifact_update.py::test_input_route_must_be_explicit_and_unambiguous[kwargs0]",
+    "tests/test_artifact_update.py::test_input_route_must_be_explicit_and_unambiguous[kwargs1]",
+    "tests/test_artifact_update.py::test_invalid_other_artifact_blocks_complete_model_update",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-file-language-en-US]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-file-normative_force-should]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-file-statement-The workspace supports local updates.]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-options-language-en-US]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-options-normative_force-should]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-options-statement-The workspace supports local updates.]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-stdin-language-en-US]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-stdin-normative_force-should]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-stdin-statement-The workspace supports local updates.]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-file-language-en-US]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-file-normative_force-should]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-file-statement-The workspace supports local updates.]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-options-language-en-US]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-options-normative_force-should]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-options-statement-The workspace supports local updates.]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-stdin-language-en-US]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-stdin-normative_force-should]",
+    "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[revision-stdin-statement-The workspace supports local updates.]",
+    "tests/test_artifact_update.py::test_missing_or_invalid_guard_is_rejected_before_input_read[guards0]",
+    "tests/test_artifact_update.py::test_missing_or_invalid_guard_is_rejected_before_input_read[guards1]",
+    "tests/test_artifact_update.py::test_missing_or_invalid_guard_is_rejected_before_input_read[guards2]",
+    "tests/test_artifact_update.py::test_missing_or_invalid_guard_is_rejected_before_input_read[guards3]",
+    "tests/test_artifact_update.py::test_missing_or_invalid_guard_is_rejected_before_input_read[guards4]",
+    "tests/test_artifact_update.py::test_missing_or_invalid_guard_is_rejected_before_input_read[guards5]",
+    "tests/test_artifact_update.py::test_noop_keeps_every_file_and_revision_without_receipt",
+    "tests/test_artifact_update.py::test_ordered_set_unset_combines_fields_into_one_revision",
+    "tests/test_artifact_update.py::test_saved_patch_is_strict_json_array_data[[{\"op\":\"replace\",\"op\":\"remove\",\"path\":\"/statement\",\"value\":\"x\"}]]",
+    "tests/test_artifact_update.py::test_saved_patch_is_strict_json_array_data[[{\"op\":\"replace\",\"path\":\"/statement\",\"value\":NaN}]]",
+    "tests/test_artifact_update.py::test_saved_patch_is_strict_json_array_data[{}]",
+    "tests/test_artifact_update.py::test_saved_rfc_patch_executes_all_six_operations_as_one_update",
+    "tests/test_artifact_update.py::test_should_update_without_deviation_metadata_is_rejected_without_write",
+    "tests/test_artifact_update.py::test_stale_guard_cannot_publish[guards0-expected_revision_mismatch]",
+    "tests/test_artifact_update.py::test_stale_guard_cannot_publish[guards1-expected_hash_mismatch]",
     "tests/test_json_patch.py::test_comfort_options_preserve_order_and_use_assignment_not_array_insertion",
+    "tests/test_json_patch.py::test_noop_patch_does_not_claim_new_revision_or_write_authority",
     "tests/test_json_patch.py::test_preview_update_requires_matching_explicit_preconditions",
     "tests/test_json_patch.py::test_revision_and_hash_when_both_supplied_must_both_match",
     "tests/test_json_patch.py::test_update_without_precondition_is_never_allowed",
-    "tests/test_json_patch.py::test_noop_patch_does_not_claim_new_revision_or_write_authority",
-    "tests/test_json_patch_right.py::test_comfort_update_binds_actual_base_and_retains_source_bytes",
     "tests/test_json_patch_right.py::test_base_preconditions_fail_before_comfort_execution",
+    "tests/test_json_patch_right.py::test_comfort_update_binds_actual_base_and_retains_source_bytes",
     "tests/test_json_patch_right.py::test_controlled_parent_writes_cannot_be_hidden_by_later_restore"
   ],
   "open_items": [
-    "Wire artifact-update CLI and planner to the same preview/normalization path in the scheduled authoring step.",
-    "Apply full Change Plan folding, metadata advancement, profile/lifecycle validation and transaction-bound live preconditions in later steps.",
-    "Proposal planning must include both revision and hash; this authoring input API accepts either and checks both when supplied.",
-    "Full supported Python matrix is evaluated by CI; local selected tests are not complete suite evidence."
+    "Register the public artifact-update CLI, including production model/history loading, dry-run and stdout contracts.",
+    "Complete the deeper stale-precondition, approved-lifecycle, no-op and context-binding integration acceptance in 7.d.R; missing actual semantic gates remain blocking.",
+    "Callers retain the original normalized operation for retry; recompiling field options against an already changed artifact is not an equivalent historical-intent guarantee.",
+    "Proposal planning still requires both revision and hash; this authoring path accepts either and checks both when present.",
+    "Only the user starts manual CI for the supported Python matrix; selected development evidence is not a full-suite or platform pass."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 318
-last_completed_plan_commit: 7.c.C
-next_plan_commit: 7.d.W
-last_completed_numbered_bundle: 169
+implementation_plan_commits_completed: 319
+last_completed_plan_commit: 7.d.W
+next_plan_commit: 7.d.R
+last_completed_numbered_bundle: 170
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7681,12 +7681,36 @@ Danach folgt 7.d.W für den kleinsten nutzbaren Ausschnitt der Artefaktaktualisi
 
 #### 7.d.W – Let it Work
 
-- [ ] **7.d.W** · Position **319/885** · Voraussetzung: `7.c.C`.
+- [x] **7.d.W** · Position **319/885** · Voraussetzung: `7.c.C`.
 **Exakte Commit-Message:** `7.d.W feat(authoring): Artefakte aktualisieren aufbauen`
 
 **Umsetzung:** Updatekomfort und gespeicherte Patches mit erwarteter Revision oder Hash anbieten.
 
 **Verhaltensabnahme:** Sprach-/Force-/Textänderung erzeugt genau eine neue Fachrevision.
+
+**Vorbereiteter Implementierungsstand (Bundle 170):** Result 169 bestätigt
+`600e5599cce6ecd0256b9bc5d7a2d4ad7233136b`, 8.160 bestandene parallele
+Apply-Tests und einen sauberen Arbeitsbaum. `authoring.update` verbindet
+geordnete Set-/Unset-Optionen sowie gespeicherte RFC-6902-Arrays aus Datei oder
+ausdrücklichem binärem stdin mit dem vorhandenen vollständigen Zielplaner und
+nativen Schreibpfad. Revision oder kanonischer Hash werden ausdrücklich
+verlangt; beide angegebenen Vorbedingungen müssen passen.
+
+Reale Writes prüfen Sprache, Normativität und Text sowie mehrere Feldänderungen
+mit genau einer neuen Fachrevision, erhaltener Identität und Erstellungsmetadaten.
+Writer-Lock, Hostberechtigung, aktuelle Dateibindungen, Journal, atomare
+Veröffentlichung und Abschlussbelege kommen aus dem vorhandenen Kern.
+Bestätigte Wiederholungen werden vor neuer Planung und Lock anhand des
+ursprünglich normalisierten Vorgangs ausgewertet. Ein No-op wird unter Lock
+erneut geprüft und erzeugt keine neuen Artefaktbytes oder Abschlussbelege.
+
+Die Schnittstelle verlangt ein vollständig geladenes `TargetModel` und eine
+echte Hostberechtigung; fehlende Fachgates bleiben blockierend. Registrierte
+CLI, Dry-run/stdout, allgemeine Produktions-/Historienbeladung und umfassende
+Approved-/Kontextbindungs- sowie Plattformabnahme bleiben offen.
+SR-REQ-0232 und SR-REQ-0657 bleiben partiell. Die vorhandenen Verhaltenstests
+werden nicht umgeschrieben. Erst erfolgreicher Apply-Volltest und Commit
+bestätigen 319/885; danach folgt die vertiefte Abnahme in 7.d.R.
 
 #### 7.d.R – Make it Right
 
