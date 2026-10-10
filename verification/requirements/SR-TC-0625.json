@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0625",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned private temporary project and Work roots; independently bound initial stores, explicit recorded-build fixture and closed trusted-host registry. Real native transactions, receipts and isolated process cuts; no presentation oracle."
+  ],
+  "steps": [
+    "Create and independently publish real supported Work; inspect continuation under write/process/network traps and compare complete retained byte inventories.",
+    "Execute the selected known host operation separately with its real explicit inputs, then inspect the next persisted state.",
+    "Exercise hostile data, incompatible state and changing proof as applicable; require actual refusal without authorization, execution or fabricated completion."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT selbst einen neuen Chat, einen LLM-Aufruf oder eine autonome Nachricht zur Fortsetzung starten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Continuation construction is observational: real handlers, native preparations/commits and process-loss fixtures prove which subsequent operation is requested without invoking it. Write, process and network traps and complete byte inventories establish the absence of new execution, messages, project or Work mutation during prompt construction."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,24 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_prompt.py::test_foreign_project_instructions_and_secrets_do_not_enter_continuation",
+    "tests/test_work_prompt.py::test_native_next_step_requires_original_inputs_and_fresh_authority[0]",
+    "tests/test_work_prompt.py::test_native_next_step_requires_original_inputs_and_fresh_authority[1]",
+    "tests/test_work_prompt.py::test_native_next_step_requires_original_inputs_and_fresh_authority[2]",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[cleanup]",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[committed]",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[first_target]",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[prepared]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[capabilities]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[command.describe]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[help]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[schema.list]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[schema.show]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[version]",
+    "tests/test_work_prompt.py::test_work_location_is_typed_data_and_cannot_select_or_run_an_operation"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Closed host-adapter continuation only. Full Work CLI and the exact executable CLI action required by P.8, general workflows, portable work-package discovery and the complete production agent contract remain open. No Code 8, global semantic success, process completion authentication or release approval is claimed. Every actual operation independently repeats its current checks; prompt data grants no write authority."
   ]
 }

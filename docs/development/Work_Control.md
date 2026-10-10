@@ -60,8 +60,60 @@ atomare Pointerwechsel bereits erfolgt, bleibt die abgebrochene Generation
 sichtbar; ein Fehler ist keine automatische Rücknahme. Keine Funktion entfernt
 Recoverydaten, führt Recovery aus oder beginnt eine native Transaktion.
 
+## Passive Fortsetzungsanleitung
+
+`specroad.work.prompt.read_only_work_prompt(store, max_prompt_chars=6000)` und
+`normative_work_prompt(store, registry=..., model=..., policy=..., actor=...,
+request_id=..., max_prompt_chars=6000)` liefern einen strukturierten Vertrag
+`work-continuation-v1` und einen daraus erzeugten Text in `work-prompt-v1`.
+Die Ableitung prüft den unabhängig gebundenen Store, die vollständige aktuelle
+Checkpointkette, den Runtime-Build und einen der vorhandenen geschlossenen
+Adapter. Alle Prüfungen bleiben lesend; es wird keine Facharbeit begonnen.
+
+Für Read-only-Arbeit ist der konkrete nächste Hostaufruf entweder
+`resume_read_only_work` oder, nach bestätigtem Handlerergebnis,
+`finalize_read_only_work`. Der Text wird niemals als Programm ausgewertet.
+Normative Arbeit verlangt erneut Originalactor, Request-ID und Projektbindung.
+Ein vollständig quergeprüftes natives Receipt führt zur vorhandenen reinen
+Ergebnislieferung `publish_normative_receipt_files`. Ohne bestätigten Commit
+wird eine verbleibende Vorbereitungsphase oder `publish_normative_work` genannt.
+Ungelöste native Transaktionen verhindern gewöhnliche Fortsetzung; die
+Promptableitung startet keine Recovery. Fehlende Request-Identität wird abgewiesen.
+
+Diese Operationen sind bedingte Hostaufrufe mit ihren konkreten erforderlichen
+Inputs. Sie sind keine Ausführungserlaubnis. Insbesondere Veröffentlichung
+verlangt die aktuelle echte `PublicationAuthority`, einen betrieblichen
+Transaktionsbezeichner und sämtliche erneuten nativen Gates. Die ursprüngliche
+fachliche Request-ID wird nicht ersetzt. Historische Receipts bestätigen keinen
+später veränderten Zielstand. Work- und native Belege werden vor Rückgabe erneut
+geprüft; eine zwischenzeitliche Änderung verhindert die Ausgabe.
+
+Der maschinelle Vertrag enthält Work-ID, Generation/Hash, tatsächliche lokale
+Work-Lokalisierung, bestätigte Einheiten, die vollständige Restmanifestreferenz,
+den exakt gebundenen Distribution-Build und die feste Hostoperation. Originale
+Actor-/Request-/Plan-/Quellbindungen werden nur über einen gemeinsamen Hash
+referenziert. Vollständige Argumente, Quelltexte, Planformulierungen, freie
+Projektanweisungen und Umgebungsvariablen werden nicht kopiert. Pfade bleiben
+typisierte Daten und werden im Text JSON-quotiert; sie wählen keinen Code aus.
+Es gibt keinen Netzwerk-, Chat-, LLM-, Nachrichten- oder Kindprozessaufruf.
+
+Die Grenze misst Unicode-Zeichen, keine vorgetäuschten Anbietertokens. Erlaubt
+sind ganze Zahlen ab 1000, Default 6000. Passen die notwendigen unveränderten
+Bindungen, Lokalisierung und Aktion nicht vollständig hinein, lautet der
+maschinelle Fehler `prompt_required_content_exceeds_limit` mit Code 2;
+Integritätsdaten und Aktionen werden niemals abgeschnitten. Die vollständige
+Arbeit bleibt im Store. Ungültige Grenzwerte werden vor Work-Zugriff abgewiesen.
+
+Terminale Arbeit erhält keine neue Fortsetzungsanweisung. Ein gespeicherter
+Checkpoint und ein historischer Fachcommit bestätigen weiterhin weder ein
+unbekanntes Prozessende noch vollständige Ergebnislieferung. Der Vertrag nennt
+vollständige Originalarbeit, Gates, Receipts, Lieferung und bestätigtes Prozessende
+als erforderliche Erfolgsnachweise. Eine manipulierte Rückgabe ersetzt keine
+frische Prüfung im tatsächlich aufgerufenen Hostadapter.
+
 Dies sind explizite Host-APIs für bestehende geschlossene Work-Adapter. Die volle
-Work-CLI, ein konkreter CLI-Fortsetzungsprompt, weitere Workflowarten und die
-allgemeine portable Wiederherstellung bleiben offen. Es gibt keinen Code-8-,
-Release- oder vollständigen Anforderungsnachweis. Promptableitung und die
-Abgrenzung fremder Projektanweisungen folgen im R-Schritt.
+Work-CLI, ein tatsächlich ausführbarer CLI-Fortsetzungsprompt, weitere
+Workflowarten, portable Paketlokalisierung und allgemeine Wiederherstellung
+bleiben offen. `work_cli_available` und `portable_package_verified` sind deshalb
+ausdrücklich false. Es gibt keinen Code-8-, Release- oder vollständigen
+Anforderungsnachweis.

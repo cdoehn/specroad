@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 298
-last_completed_plan_commit: 6.r.W
-next_plan_commit: 6.r.R
-last_completed_numbered_bundle: 149
+implementation_plan_commits_completed: 299
+last_completed_plan_commit: 6.r.R
+next_plan_commit: 6.r.C
+last_completed_numbered_bundle: 150
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6900,12 +6900,46 @@ paralleler Apply-Test und Commit bestätigen 298/885; anschließend folgt 6.r.R.
 
 #### 6.r.R – Make it Right
 
-- [ ] **6.r.R** · Position **299/885** · Voraussetzung: `6.r.W`.
+- [x] **6.r.R** · Position **299/885** · Voraussetzung: `6.r.W`.
 **Exakte Commit-Message:** `6.r.R feat(work): Work-Status, Prompt und Cancel vervollständigen`
 
 **Vervollständigung:** Fremde Projektanweisungen im Prompt bleiben Daten; keine Chats, LLMs oder Nachrichten selbst starten.
 
 **Verhaltensabnahme:** Tests prüfen erlaubte nächste Operation und Seiteneffekte, nicht Promptformulierungen. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 150):** Die bestehenden geschlossenen
+Hostadapter erhalten einen aus der frisch geprüften vollständigen Work-Kette
+abgeleiteten maschinellen Fortsetzungsvertrag und einen begrenzten Text. Er bindet
+Work-ID, Checkpoint, Distribution, tatsächlichen Fortschritt, vollständige
+Restreferenz und eine fest im Core gewählte tatsächliche Hostoperation mit ihren
+erforderlichen Inputs. Ein bestätigtes Handlerergebnis führt zur Finalisierung;
+normative Vorbereitung bleibt getrennt von aktueller Veröffentlichungsfreigabe.
+Native Commitbelege werden zuerst vollständig geprüft und führen ausschließlich
+zur vorhandenen Receiptlieferung. Ungelöste Transaktionen, terminale Arbeit,
+geänderte Runtime oder veränderte Belege verhindern eine falsche Fortsetzung.
+
+Projekttexte, freie Planformulierungen, rohe Actor-/Requestdaten und Umgebungs-
+geheimnisse werden nicht übernommen; Originalbindungen bleiben per Hash erhalten.
+Pfade bleiben typisierte, im Text quotierte Lokalisierungsdaten. Der Aufruf startet
+keinen Handler, Writer, Recovery, Prozess, Chat, LLM oder Nachrichtenversand.
+Längen werden als Unicode-Zeichen geprüft; notwendige Bindungen und Operationen
+werden auch bei zu kleinem Ausgabeplatz nicht abgeschnitten. Ein Prompt erteilt
+keine Berechtigung und bestätigt kein unbekanntes Prozessende oder Gesamtergebnis.
+
+30 neue Verhaltenstests prüfen die sechs tatsächlichen Read-only-Aufträge,
+normative Vorbereitung/Veröffentlichung/Receiptlieferung, fremde Projektdaten,
+Geheimnisse, manipulierte Lokalisierungen/Pläne, terminale und fehlende Arbeit,
+Längengrenzen, Runtime-/Checkpointwechsel, reale native Prozessabbrüche und
+verlorene Commitbelege. Die gezielte parallele Dev-Abnahme umfasst diese Fälle,
+sämtliche 34 unveränderten W-Fälle und betroffene vorhandene Adaptertests:
+164 Fälle. Menschliche Formulierungen und Layout werden nicht getestet.
+
+Dies bleibt eine Hostintegration mit konkreten vorhandenen Funktionen. Die volle
+Work-CLI und damit die genaue ausführbare CLI-Aktion nach P.8, generische
+Workflowarten und portable Paketlokalisierung bleiben offen. Die Prompt-
+Anforderungen SR-REQ-0624 bis SR-REQ-0626 werden nur partiell belegt; SR-REQ-0627
+bleibt partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
+299/885; anschließend folgt 6.r.C.
 
 #### 6.r.C – Make it Clean
 

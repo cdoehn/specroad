@@ -21,12 +21,13 @@
     "Read actual stored Work status and complete remaining manifest without running a handler or touching project/Work bytes; report the inert next operation without inventing an executable CLI action or native commit observation.",
     "Explicitly cancel unfinished closed work with a bound reason and one durable terminal control generation; retain all prior objects and original partitions, and reject later resume/finalization or a different cancellation reason.",
     "For normative preparation, exclude native writers with the existing project root mutex while publishing only external Work control data; refuse active/orphan transactions and already committed requests, with no project record, Recovery or semantic mutation.",
-    "Exercise real child loss, concurrent writer exclusion, cancellation between inspection and resume, altered control records, runtime changes and early/late atomic-pointer errors; keep actual state and avoid fabricated semantic success."
+    "Exercise real child loss, concurrent writer exclusion, cancellation between inspection and resume, altered control records, runtime changes and early/late atomic-pointer errors; keep actual state and avoid fabricated semantic success.",
+    "6.r.R derives passive closed-host continuation from freshly checked Work and native proof, with explicit current inputs/approvals and no foreign instruction execution, secrets, write effects or invented CLI support."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Work-Befehlsgruppe MUSS die vollständigen Verträge aus Kapitel 11.12 erfüllen.",
-    "scope": "A lazy WorkDirectory writes only to explicitly guarded external storage, uses private Linux descriptor-bound directories and a separate root-inode mutex, checks concrete process ownership and releases only its own unchanged record. Small actual metadata commands create no work files. Existing project and operational bytes remain unchanged, and the project mutex remains available while the work mutex is held. Native child termination preserves an orphan record; there is no automatic takeover or cleanup. These are storage lifetime observations, not a complete production pause/resume contract. R pins an allocated root identity against silent recreation and checks retained container entry types and private ownership through an iterative descriptor walk. Altered live records are preserved on exit while the native mutex is released. A real fork cannot release its parent lease; repeated rejected walks preserve both bytes and the native descriptor count. Payload inspection is not snapshot authentication or production resume approval. C separates lazy location selection from the identical private work lease/file implementation. Both classes, both helper functions and all format constants retain identical ASTs; existing W/R test bindings, refusal behavior, side effects and open integration boundaries remain unchanged. 6.r.W adds fresh stored-chain status and explicit cancellation for the existing closed read-only/native preparation host adapters. A terminal work-cancellation-v1 control record binds the unchanged complete partitions and immediate source checkpoint, retains all old bytes and contains no semantic result or success code. Idempotent cancellation does not create another generation or rewrite the reason. Resume and finalization reject cancelled work before handler execution, including a concurrent cancellation. Native preparation cancellation requires original actor/request/project and proven absence of publication under the existing root-inode mutex; it writes only the external Work checkpoint, creates no project owner record and invokes no handler, Apply or Recovery. Actual committed/active/orphan transactions are refused. Read status exposes only checked stored data and explicitly does not assert native transaction checks, runnable CLI actions or an unknown process outcome. New tests use real native locks, checkpoints and process cuts, compare machine state and bytes and preserve existing test expectations."
+    "scope": "A lazy WorkDirectory writes only to explicitly guarded external storage, uses private Linux descriptor-bound directories and a separate root-inode mutex, checks concrete process ownership and releases only its own unchanged record. Small actual metadata commands create no work files. Existing project and operational bytes remain unchanged, and the project mutex remains available while the work mutex is held. Native child termination preserves an orphan record; there is no automatic takeover or cleanup. These are storage lifetime observations, not a complete production pause/resume contract. R pins an allocated root identity against silent recreation and checks retained container entry types and private ownership through an iterative descriptor walk. Altered live records are preserved on exit while the native mutex is released. A real fork cannot release its parent lease; repeated rejected walks preserve both bytes and the native descriptor count. Payload inspection is not snapshot authentication or production resume approval. C separates lazy location selection from the identical private work lease/file implementation. Both classes, both helper functions and all format constants retain identical ASTs; existing W/R test bindings, refusal behavior, side effects and open integration boundaries remain unchanged. 6.r.W adds fresh stored-chain status and explicit cancellation for the existing closed read-only/native preparation host adapters. A terminal work-cancellation-v1 control record binds the unchanged complete partitions and immediate source checkpoint, retains all old bytes and contains no semantic result or success code. Idempotent cancellation does not create another generation or rewrite the reason. Resume and finalization reject cancelled work before handler execution, including a concurrent cancellation. Native preparation cancellation requires original actor/request/project and proven absence of publication under the existing root-inode mutex; it writes only the external Work checkpoint, creates no project owner record and invokes no handler, Apply or Recovery. Actual committed/active/orphan transactions are refused. Read status exposes only checked stored data and explicitly does not assert native transaction checks, runnable CLI actions or an unknown process outcome. New tests use real native locks, checkpoints and process cuts, compare machine state and bytes and preserve existing test expectations. 6.r.R adds passive structured continuation and bounded prompt production for these same closed adapters. The chosen actual host operation follows confirmed handler/preparation/receipt state, repeats original binding checks and never receives authority from stored data. Project text and environment secrets remain outside the projection; changed Work/native proof prevents returning stale instructions. No presentation wording is an oracle."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -77,6 +78,36 @@
     "tests/test_work_control.py::test_status_observes_exact_stored_state_without_handler_or_project_access[0]",
     "tests/test_work_control.py::test_status_observes_exact_stored_state_without_handler_or_project_access[1]",
     "tests/test_work_control.py::test_status_observes_exact_stored_state_without_handler_or_project_access[2]",
+    "tests/test_work_prompt.py::test_cancelled_native_work_and_rebound_actor_remain_refused",
+    "tests/test_work_prompt.py::test_changed_runtime_refuses_old_continuation_without_effects",
+    "tests/test_work_prompt.py::test_character_budget_never_truncates_required_contract_data",
+    "tests/test_work_prompt.py::test_checkpoint_changed_during_projection_refuses_stale_continuation",
+    "tests/test_work_prompt.py::test_foreign_project_instructions_and_secrets_do_not_enter_continuation",
+    "tests/test_work_prompt.py::test_foreign_task_plan_is_not_treated_as_code_or_a_known_handler",
+    "tests/test_work_prompt.py::test_invalid_limits_are_rejected_before_reading_or_writing_work[0]",
+    "tests/test_work_prompt.py::test_invalid_limits_are_rejected_before_reading_or_writing_work[1000.0]",
+    "tests/test_work_prompt.py::test_invalid_limits_are_rejected_before_reading_or_writing_work[1000]",
+    "tests/test_work_prompt.py::test_invalid_limits_are_rejected_before_reading_or_writing_work[999]",
+    "tests/test_work_prompt.py::test_invalid_limits_are_rejected_before_reading_or_writing_work[None]",
+    "tests/test_work_prompt.py::test_invalid_limits_are_rejected_before_reading_or_writing_work[True]",
+    "tests/test_work_prompt.py::test_missing_work_is_not_created_by_prompt",
+    "tests/test_work_prompt.py::test_native_next_step_requires_original_inputs_and_fresh_authority[0]",
+    "tests/test_work_prompt.py::test_native_next_step_requires_original_inputs_and_fresh_authority[1]",
+    "tests/test_work_prompt.py::test_native_next_step_requires_original_inputs_and_fresh_authority[2]",
+    "tests/test_work_prompt.py::test_native_proof_lost_during_projection_refuses_receipt_delivery_instruction",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[cleanup]",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[committed]",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[first_target]",
+    "tests/test_work_prompt.py::test_real_process_loss_never_becomes_a_new_write_authorization[prepared]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[capabilities]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[command.describe]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[help]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[schema.list]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[schema.show]",
+    "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[version]",
+    "tests/test_work_prompt.py::test_terminal_work_does_not_get_an_executable_continuation[False]",
+    "tests/test_work_prompt.py::test_terminal_work_does_not_get_an_executable_continuation[True]",
+    "tests/test_work_prompt.py::test_work_location_is_typed_data_and_cannot_select_or_run_an_operation",
     "tests/test_work_root.py::test_declaring_storage_without_checkpoint_need_creates_nothing[False]",
     "tests/test_work_root.py::test_declaring_storage_without_checkpoint_need_creates_nothing[True]",
     "tests/test_work_root.py::test_exception_releases_owner_but_retains_work_payloads",
@@ -152,6 +183,6 @@
     "tests/test_work_root_right.py::test_unsafe_retained_entries_block_reacquisition_without_changing_any_bytes[symlink-results]"
   ],
   "open_items": [
-    "Closed host-adapter scope only. Full Work CLI and concrete executable CLI prompt, foreign-data prompt protection, general workflow support, portable export/restore and production pause/agent integration remain open. Native cancellation needs a bound request identity and refuses unresolved transaction state; it does not remove Recovery data. Stored-chain status is neither execution authentication nor confirmation of unseen process completion or external result delivery. No Code 8, full requirement satisfaction or release approval is claimed."
+    "Closed host-adapter continuation only. Full Work CLI and the exact executable CLI action required by P.8, general workflows, portable work-package discovery and the complete production agent contract remain open. No Code 8, global semantic success, process completion authentication or release approval is claimed. Every actual operation independently repeats its current checks; prompt data grants no write authority. Native cancellation continues to refuse unresolved transaction state and never removes Recovery data."
   ]
 }
