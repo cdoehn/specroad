@@ -47,6 +47,17 @@ def _hash(value):
              'invalid_archive_hash')
 
 
+def _paths(names):
+    """A regular file cannot also be an ancestor of another archive entry."""
+    for name in names:
+        _path(name)
+    names = set(names)
+    for name in names:
+        parts = name.split('/')
+        if any('/'.join(parts[:end]) in names for end in range(1, len(parts))):
+            raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
+
+
 def _inventory(payloads):
     _require(type(payloads) is dict and all(type(v) is bytes for v in payloads.values()))
     for name in payloads:
@@ -80,6 +91,7 @@ def encode_archive(manifest_name, metadata, payloads):
     _require(type(metadata) is dict and 'entries' not in metadata)
     entries = _inventory(payloads)
     _require(manifest_name not in payloads, 'recursive_archive_manifest')
+    _paths([manifest_name, *payloads])
     try:
         manifest = canonical_json_bytes({**metadata, 'entries': entries})
     except ModelError as error:
@@ -98,8 +110,8 @@ def decode_archive(raw, *, manifest_name, expected_sha256):
             names = [info.filename for info in infos]
             _require(len(names) == len(set(names)) and names.count(manifest_name) == 1,
                      'archive_entry_set_invalid')
+            _paths(names)
             for info in infos:
-                _path(info.filename)
                 if info.external_attr != 0o100644 << 16:
                     raise ArchiveError('unsafe_archive_entry', exit_code=7)
                 _require(info.compress_type == ZIP_STORED

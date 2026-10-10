@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 301
-last_completed_plan_commit: 6.s.W
-next_plan_commit: 6.s.R
-last_completed_numbered_bundle: 152
+implementation_plan_commits_completed: 302
+last_completed_plan_commit: 6.s.R
+next_plan_commit: 6.s.C
+last_completed_numbered_bundle: 153
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7018,12 +7018,43 @@ vollständiger paralleler Apply-Test und Commit bestätigen 301/885; danach folg
 
 #### 6.s.R – Make it Right
 
-- [ ] **6.s.R** · Position **302/885** · Voraussetzung: `6.s.W`.
+- [x] **6.s.R** · Position **302/885** · Voraussetzung: `6.s.W`.
 **Exakte Commit-Message:** `6.s.R feat(work): Sicherer Work-Export und Restore vervollständigen`
 
 **Vervollständigung:** Traversal, Sonderdateien, fehlende Payloads und unzulässige Zielüberschneidung vor Restore abweisen.
 
 **Verhaltensabnahme:** Restore erhält fachliche Bindungen und erkennt Verlust ungesicherter Bytes statt sie aus Hashes zu erfinden. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 153):** Der Archivcodec verweigert
+Datei-/Vorfahrkollisionen einschließlich des Manifestpfads. Restore prüft vor
+Zielanlage zusätzlich die bytegleich reproduzierbare native Objektinventur und
+den nach vollständiger Paketprüfung weiterhin aktuellen Runtime-Build. Eine nur
+strukturell gültige alternative Inventur kann damit nicht erst nach Zielwrites
+am gebundenen Endpointer scheitern.
+
+Die Zielinventur wird vor der ersten und nach jeder publizierten Generation
+erneut geprüft. Fremde Kontroll-/Nutzdateinamen und unsichere Nutzdateitypen,
+Linkzahlen oder Berechtigungen verhindern den Abschluss. Die vollständige
+Nutzdateimenge wird abschließend bestätigt. Fehler erhalten tatsächliche Bytes
+und bereits publizierte Pointer; ein veränderter Pointerbestand wird nicht als
+erneut verifizierter, nutzbarer Checkpoint ausgegeben. Ein ausgetauschter Root
+wird nicht zum Schreibziel umgedeutet und sein alter Owner nicht blind gelöscht.
+
+56 neue Verhaltenstests prüfen tatsächlich veränderte ZIP-Header und Payloads,
+Pfadkollisionen, neu gehashte unbekannte Work-Verträge und alternative Inventuren,
+Verlust konkreter Eingangs-/Manifest-/Inventar-/Historien-/Ergebnisbytes,
+Runtime-/Quelldatenwechsel nach Prüfung, echte native Sperren, unsichere Vorfahren,
+fremde Einträge nach erster/letzter Generation und einen ausgetauschten Zielinode.
+426 neue und betroffene Archiv-/Paket-/Root-/Checkpoint-/Manifest-/Adapterfälle
+bilden die gezielte parallele Dev-Abnahme. Sämtliche W-Testdateien bleiben
+bytegleich und sind mit enthalten.
+
+Der Umfang bleibt bei vollständigen gewöhnlichen Read-only-ZIP32-Arbeitspaketen
+und vertrauenswürdigen Host-Aufrufen. Work-CLI, allgemeine Workflowausführung,
+normative portable Ziel-/Transaktions-/Receiptbindung, fortsetzbare große Exporte
+und Multipartarchive bleiben offen. SR-REQ-0563/0628 bleiben partiell. Erst der
+vollständige parallele Apply-Test und sein Commit bestätigen 302/885; anschließend
+folgt 6.s.C.
 
 #### 6.s.C – Make it Clean
 

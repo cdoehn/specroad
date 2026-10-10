@@ -23,6 +23,8 @@ kanonisches Manifest und exakte Payloadbijektion. Die erneute kanonische
 Bytebildung erkennt auch abweichende Reihenfolge, Präfixe und angehängte Bytes.
 Pfad- und Dateitypfehler werden vor jeglicher Extraktion abgewiesen. Der Codec
 selbst extrahiert nichts und greift nicht auf ein Dateisystem zu.
+Auch die Rolle jedes Pfads muss eindeutig sein: Eine reguläre Datei darf nicht
+zugleich Vorfahr eines anderen Eintrags sein. Das gilt ebenso für den Manifestpfad.
 
 `restore_work_package(raw, expected_sha256=..., registry=...,
 protected_roots=..., directory=...)` verlangt einen extern erhaltenen erwarteten
@@ -37,6 +39,10 @@ Initialzustand, sämtliche Nachfolger und der aktuelle Pointer müssen zusammenp
 Zusätzliche unreferenzierte Payloads sind unzulässig. Fehlende Bytes werden nicht
 aus ihren Hashes ersetzt. Die Paketdaten werden nicht in neue fachliche IDs oder
 eine andere Auftrags-/Quellbindung umgeschrieben.
+Die gespeicherte Objektinventur muss durch den vorhandenen nativen Publisher
+bytegleich reproduzierbar sein. Eine strukturell lesbare, aber anders aufgeteilte
+Inventur wird bereits vor Zielanlage abgewiesen. Nach vollständiger Paketprüfung
+wird auch der aktuelle Runtime-Build vor dem ersten Zielschreibzugriff erneut geprüft.
 
 Das Ziel muss fehlen oder privat und leer sein. Der bestehende Work-Mutex schützt
 die Leerprüfung, bevor ein Owner- oder Kontrollsatz geschrieben wird. Selbst ein
@@ -46,12 +52,24 @@ geschützten Roots. Die neue lokale Rootbindung verwendet den tatsächlichen neu
 Inode. Alle ursprünglichen Generationen werden über den vorhandenen dauerhaften
 Checkpoint-Publisher in private Dateien geschrieben; der letzte Pointer bleibt
 bytegleich zum exportierten Zustand.
+Vor der ersten und nach jeder Generation wird die aktuelle Zielinventur unter
+dem Work-Mutex erneut geprüft. Es sind nur die gebundenen Kontroll-/Verzeichnisnamen
+und private reguläre Nutzdateien aus dem geprüften Paket erlaubt; beim Abschluss
+muss die vollständige Nutzdateimenge vorhanden sein. Fremde Dateien, Symlinks,
+Hardlinks, Verzeichnisse an Nutzdateipfaden und öffentliche Nutzdateien verhindern
+den Abschluss. Nicht kooperierende Änderungen nach Rückgabe kann ein beratender
+Dateisystem-Mutex nicht verhindern; spätere Aufrufe prüfen ihre Bindungen erneut.
 
 Bei I/O-Fehlern bleiben tatsächlich geschriebene Dateien und bereits veröffentlichte
 Generationen erhalten. Ein später Fehler nach Pointerwechsel wird nicht als
 Rollback oder vollständiger Restore umgedeutet. Ein erneuter Restore überschreibt
 kein solches inzwischen nichtleeres Ziel. Der gespeicherte vollständige Präfix
 kann separat mit seiner ursprünglichen Bindung geprüft werden.
+Das gilt auch für fremde Einträge, die während Restore hinzukommen: Sie werden
+nicht entfernt. Bei einer ausgetauschten Root-Inode wird nicht in den Ersatzroot
+weitergeschrieben und ein nicht mehr sicher zuordenbarer Ownerdatensatz nicht
+eigenmächtig bereinigt. Veränderte Nutzdaten können auch einen bereits publizierten
+Pointer unbrauchbar machen; sein Vorhandensein ersetzt keine erneute Byteprüfung.
 
 Die geschlossenen Bootstrap-Adapter können nach Wiederherstellung tatsächlich
 weiterarbeiten oder ihre ursprünglichen Ergebnisse liefern. Generische deklarierte
@@ -60,7 +78,7 @@ zusätzliche Befugnis, unbekannte Aufgaben auszuführen. Abgebrochene Arbeit ble
 abgebrochen, unvollständige Handlerarbeit bleibt unvollständig. Eine Distribution
 wird separat benötigt und nicht aus dem Arbeitspaket importiert.
 
-Dieser W-Stand verarbeitet Read-only-Arbeit und vollständige gewöhnliche ZIP32-
+Dieser W/R-Stand verarbeitet Read-only-Arbeit und vollständige gewöhnliche ZIP32-
 Archive im Speicher. Normative Work-Aufträge werden ausdrücklich abgewiesen,
 solange keine gesonderte aktuelle Transaktions-/Receiptbindung für ihren Export
 vorliegt. Ein Paket ersetzt keine aktive Projekt-Recovery. Work-CLI, allgemeine

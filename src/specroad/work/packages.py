@@ -7,6 +7,7 @@ exists. These host APIs process complete ZIP32 bytes, not CLI/multipart streams.
 """
 
 from hashlib import sha256
+import os
 
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
@@ -15,10 +16,11 @@ from ._data_contract import WorkManifestError, _object, _parse, _hash, _count
 from .checkpoints import (CheckpointStore, _StoredObjects, _read_reference,
                           _reference, _reference_check, _verify_bindings)
 from .control import _initial, _read
-from .manifest import _entries, read_work_manifest, read_work_successor
+from .manifest import _entries, _tree, read_work_manifest, read_work_successor
 from .result_files import _ensure_work
 from .resume import _runtime_build
 from .root import WorkDirectory
+from ._root_lock import _BINDING, _CURRENT, _DIRECTORIES, _LOCK, _private
 
 
 _MANIFEST = 'work-package.json'
@@ -111,6 +113,9 @@ def _decode(metadata, payloads, registry, build):
                  and record['checkpoint_generation'] == generation,
                  'work_package_checkpoint_invalid')
         rows = _entries('checkpoint-objects', record['objects'], Objects())
+        _require(canonical_json_bytes(record['objects'])
+                 == canonical_json_bytes(_tree('checkpoint-objects', rows, {})),
+                 'noncanonical_work_package_inventory')
         objects = {}
         for item in rows:
             content = referenced('objects', item)
@@ -179,6 +184,24 @@ def export_work_package(store):
         return raw
 
 
+def _restore_target(held, payloads, *, complete=False):
+    """Refuse foreign arrivals without deleting them or the published prefix."""
+    held.check()
+    required = {_BINDING, _LOCK, *_DIRECTORIES}
+    names = set(os.listdir(held._root))
+    _require(required <= names <= required | {_CURRENT}, 'work_package_target_changed')
+    for folder, directory in zip(_DIRECTORIES, held._children):
+        expected = {name[len(folder) + 1:] for name in payloads if name.startswith(folder + '/')}
+        current = set(os.listdir(directory))
+        _require(current <= expected and (not complete or current == expected),
+                 'work_package_target_changed')
+        for name in current:
+            _private(os.stat(name, dir_fd=directory, follow_symlinks=False))
+        _require(set(os.listdir(directory)) == current, 'work_package_target_changed')
+    _require(set(os.listdir(held._root)) == names, 'work_package_target_changed')
+    held.check()
+
+
 def restore_work_package(raw, *, expected_sha256, registry, protected_roots, directory):
     """Verify every package byte, then restore into one missing/empty safe root.
 
@@ -190,13 +213,17 @@ def restore_work_package(raw, *, expected_sha256, registry, protected_roots, dir
     _require(directory is not None, 'work_package_target_required')
     build = _runtime_build()
     chain, payloads = _checked_package(raw, expected_sha256, registry, build)
+    _require(_runtime_build() == build, 'work_package_runtime_changed')
     location = WorkDirectory(chain[0], protected_roots=protected_roots, directory=directory)
     store = CheckpointStore(location, chain[0])
     with location.for_checkpoint(require_empty=True) as held:
         _require(_runtime_build() == build, 'work_package_runtime_changed')
+        _restore_target(held, payloads)
         for manifest in chain:
             _require(_runtime_build() == build, 'work_package_runtime_changed')
             store._publish_held(held, manifest, store._pointer(held))
+            _restore_target(held, payloads)
         _require(store._pointer(held)[0] == payloads['work.json'], 'work_package_restore_mismatch')
         _ensure_work(store, held, store._pointer(held), chain[-1], build)
+        _restore_target(held, payloads, complete=True)
     return store
