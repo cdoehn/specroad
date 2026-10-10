@@ -26,6 +26,13 @@ selbst extrahiert nichts und greift nicht auf ein Dateisystem zu.
 Auch die Rolle jedes Pfads muss eindeutig sein: Eine reguläre Datei darf nicht
 zugleich Vorfahr eines anderen Eintrags sein. Das gilt ebenso für den Manifestpfad.
 
+Der fachlich unabhängige Codec liegt unter `specroad.storage.archive` und stellt
+`ArchiveError`, `encode_archive` und `decode_archive` als gemeinsame Grundlage
+für spätere Paketnutzer bereit. Er kennt keine Work-Identität, Command Registry,
+Checkpointkette oder normative Zielzuordnung. Diese Prüfungen bleiben in
+`specroad.work.packages`. Die bisherigen Importe aus `specroad.work._archive`
+verweisen auf dieselben Implementierungen; es gibt keine zweite Codec-Kopie.
+
 `restore_work_package(raw, expected_sha256=..., registry=...,
 protected_roots=..., directory=...)` verlangt einen extern erhaltenen erwarteten
 Gesamthash, die aktuelle vertrauenswürdige Command Registry, explizite geschützte
@@ -78,7 +85,7 @@ zusätzliche Befugnis, unbekannte Aufgaben auszuführen. Abgebrochene Arbeit ble
 abgebrochen, unvollständige Handlerarbeit bleibt unvollständig. Eine Distribution
 wird separat benötigt und nicht aus dem Arbeitspaket importiert.
 
-Dieser W/R-Stand verarbeitet Read-only-Arbeit und vollständige gewöhnliche ZIP32-
+Dieser Stand verarbeitet Read-only-Arbeit und vollständige gewöhnliche ZIP32-
 Archive im Speicher. Normative Work-Aufträge werden ausdrücklich abgewiesen,
 solange keine gesonderte aktuelle Transaktions-/Receiptbindung für ihren Export
 vorliegt. Ein Paket ersetzt keine aktive Projekt-Recovery. Work-CLI, allgemeine

@@ -11,7 +11,7 @@ import os
 
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ._archive import ArchiveError, encode_archive, decode_archive, _require
+from ..storage.archive import ArchiveError, encode_archive, decode_archive, _require
 from ._data_contract import WorkManifestError, _object, _parse, _hash, _count
 from .checkpoints import (CheckpointStore, _StoredObjects, _read_reference,
                           _reference, _reference_check, _verify_bindings)

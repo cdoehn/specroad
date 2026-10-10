@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 302
-last_completed_plan_commit: 6.s.R
-next_plan_commit: 6.s.C
-last_completed_numbered_bundle: 153
+implementation_plan_commits_completed: 303
+last_completed_plan_commit: 6.s.C
+next_plan_commit: 6.t.W
+last_completed_numbered_bundle: 154
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7058,10 +7058,27 @@ folgt 6.s.C.
 
 #### 6.s.C – Make it Clean
 
-- [ ] **6.s.C** · Position **303/885** · Voraussetzung: `6.s.R`.
+- [x] **6.s.C** · Position **303/885** · Voraussetzung: `6.s.R`.
 **Exakte Commit-Message:** `6.s.C refactor(work): Sicherer Work-Export und Restore bereinigen`
 
 **Bereinigung:** Archivcodec als gemeinsame Basis für M14/M15 anbieten, Workmanifest fachlich separat halten.
+
+**Vorbereiteter Implementierungsstand (Bundle 154):** Der generische Codec liegt
+bytegleich zum geprüften R-Stand unter `specroad.storage.archive`. Die bisherige
+Work-Moduladresse bleibt als Importweiterleitung auf dieselbe Fehlerklasse und
+dieselben Funktionen erhalten. Die Work-Paketlogik importiert den gemeinsamen
+Codec direkt; Paketart, Runtime-, Manifest-, Checkpoint-, Quell- und Zielprüfung
+bleiben fachlich getrennt und unverändert. Spätere M14-/M15-Nutzer erhalten eine
+gemeinsame Grundlage, ohne dadurch bereits implementiert zu sein.
+
+Der statische Vergleich bindet die unveränderten Codecbytes und den einzigen
+Importwechsel der Work-Paketlogik an den vollständigen R-Result-Snapshot. Alle
+125 W-/R-Verhaltenstests des Archiv-/Paketausschnitts bilden die gezielte parallele
+Dev-Abnahme; vorhandene Testdateien und fachliche Erwartungen bleiben bytegleich.
+Die offenen Grenzen für Read-only-Host-Aufrufe, ZIP32 im Speicher, Work-CLI,
+normative portable Bindungen und große beziehungsweise mehrteilige Exporte bleiben
+erhalten. SR-REQ-0563/0628 bleiben partiell. Erst vollständiger paralleler Apply-
+Test und Commit bestätigen 303/885; anschließend folgt 6.t.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
