@@ -53,3 +53,29 @@ Spezialdienste verhindern weiterhin eine Veröffentlichung, auch bei Proposed-
 Quellen. Sie werden nicht durch Erfolgsstubs ersetzt. Vollständige Produktions-
 und Historienbeladung, CLI/Dry-run/stdout, weitere Zustands- und Plattformnachweise
 bleiben offen; SR-REQ-0233 und SR-REQ-0234 bleiben partiell.
+
+## Inventarbindung und Fehlerfälle
+
+Vor dem ersten externen Read übernimmt der Dienst das übergebene
+Relationsinventar in einen eigenen nativen Wert und prüft dessen Felder erneut.
+Eine spätere Änderung des aufrufereigenen Containers kann dadurch keine anfangs
+archivierte oder reservierte Identität freigeben. Der vorhandene Allocator
+berücksichtigt weiterhin aktuelle, archivierte und reservierte IDs.
+
+Die R-Abnahme prüft falsche Typkombinationen, fehlende Endpunkte, Self-Links,
+falsche symmetrische Richtung, ungeeignete Zusatzfelder sowie falsche Quell- und
+Relations-IDs. Ein Quellartefakthash ersetzt den verlangten Relationshash nicht.
+Leere Gründe und veraltete Hashes werden abgewiesen. Bestätigte Request-IDs
+können weder ein anderes Ziel oder einen anderen Grund noch einen Wechsel
+zwischen Hinzufügen und Entfernen bezeichnen. Ein identischer Operationshash
+liefert dagegen auch bei geändertem Aufruferakteur das historische Ergebnis.
+Der ursprüngliche Akteur und seine Auditdaten bleiben unverändert; der Replay
+führt keinen neuen normativen Write aus.
+
+Fremde Ausgangsbytes und bereits aktive Writer werden erhalten. Reale
+Dateiaustauschfehler vor und nach der Veröffentlichung bewahren die tatsächlich
+vorhandenen alten oder neuen Bytes und das native Recovery-Journal. Ein
+anschließender blinder Schreibversuch bleibt blockiert. Aus einer solchen
+Unterbrechung wird weder ein sicherer Nicht-Write noch ein bestätigter Commit
+abgeleitet. Diese lokalen Nachweise ersetzen keine vollständige Historien- oder
+Plattformfreigabe.

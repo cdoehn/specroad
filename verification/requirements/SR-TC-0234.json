@@ -16,12 +16,14 @@
   "steps": [
     "Run the actual native relation authoring adapter through full target validation, writer lock, live check, journal, publication and completion.",
     "Inspect source artifact bytes/revision, unchanged unrelated files and modes, original native operation, actor and receipt.",
-    "Retry a confirmed request before planning/locking/allocation; check actor and host refusal, missing lifecycle service and invalid unrelated model."
+    "Retry a confirmed request before planning/locking/allocation; check actor and host refusal, missing lifecycle service and invalid unrelated model.",
+    "Exercise actual wrong type/endpoint/identity/hash refusals, conflicting confirmed requests, foreign source bytes, an active writer and failure before/after real replacement; preserve original or published bytes and native recovery journal, and block blind retries.",
+    "For the same Request-ID and normalized operations, a retry by another eligible actor returns the historical result without writes; original source and receipt actor are retained as required by SR-REQ-0384."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad relation remove <SOURCE-ID> --relation-id <RELATION-ID> --reason <TEXT>` MUSS genau die bezeichnete Beziehung entfernen, die Quellrevision erhöhen und Grund sowie Akteur im Auditbericht erfassen.",
-    "scope": "Actual local draft Requirement relation removal by exact ID and explicit canonical relation hash: only the addressed edge disappears, one source revision, original reason/actor retained in the native transaction receipt and safe historical retry. Missing real semantic services fail closed. No registered CLI, general production/history loading, dry-run/stdout or platform completion claim."
+    "scope": "Actual local draft Requirement relation removal by exact ID and explicit canonical relation hash: only the addressed edge disappears, one source revision, original reason/actor retained in the native transaction receipt and safe historical retry. Missing real semantic services fail closed. No registered CLI, general production/history loading, dry-run/stdout or platform completion claim. R extends evidence to exact endpoint/type/hash conflicts, unchanged rejected trees, original request binding, CI audit, active writer/live-base conflicts and actual interrupted publication with retained recovery state. Retry actor is not an additional idempotency key: identical operation hashes retain the original historical actor and result without new writes."
   },
   "expected_diagnostics": [
     "SRV146"
@@ -29,6 +31,8 @@
   "expected_exit_codes": [
     2,
     3,
+    5,
+    6,
     7
   ],
   "json_pointers": [
@@ -63,11 +67,28 @@
     "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[human-0]",
     "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[human-1]",
     "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[tool-0]",
-    "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[tool-1]"
+    "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[tool-1]",
+    "tests/test_relation_authoring_right.py::test_changed_physical_source_is_preserved[remove]",
+    "tests/test_relation_authoring_right.py::test_ci_with_explicit_request_keeps_actor_in_source_and_audit[remove]",
+    "tests/test_relation_authoring_right.py::test_confirmed_remove_request_cannot_describe_another_removal[hash]",
+    "tests/test_relation_authoring_right.py::test_confirmed_remove_request_cannot_describe_another_removal[reason]",
+    "tests/test_relation_authoring_right.py::test_confirmed_remove_request_cannot_describe_another_removal[relation_id]",
+    "tests/test_relation_authoring_right.py::test_existing_writer_remains_untouched[remove]",
+    "tests/test_relation_authoring_right.py::test_failed_real_replace_retains_actual_relation_bytes_and_recovery_evidence[False-remove]",
+    "tests/test_relation_authoring_right.py::test_failed_real_replace_retains_actual_relation_bytes_and_recovery_evidence[True-remove]",
+    "tests/test_relation_authoring_right.py::test_remove_needs_exact_source_relation_hash_and_reason[empty_reason-None]",
+    "tests/test_relation_authoring_right.py::test_remove_needs_exact_source_relation_hash_and_reason[missing_source-missing_operation_source]",
+    "tests/test_relation_authoring_right.py::test_remove_needs_exact_source_relation_hash_and_reason[other_source-missing_operation_relation]",
+    "tests/test_relation_authoring_right.py::test_remove_needs_exact_source_relation_hash_and_reason[source_hash-expected_relation_hash_mismatch]",
+    "tests/test_relation_authoring_right.py::test_remove_needs_exact_source_relation_hash_and_reason[stale_hash-expected_relation_hash_mismatch]",
+    "tests/test_relation_authoring_right.py::test_remove_needs_exact_source_relation_hash_and_reason[wrong_relation-missing_operation_relation]",
+    "tests/test_relation_authoring_right.py::test_request_id_cannot_change_between_add_and_remove[add]",
+    "tests/test_relation_authoring_right.py::test_request_id_cannot_change_between_add_and_remove[remove]",
+    "tests/test_relation_authoring_right.py::test_same_operation_retry_with_another_actor_retains_historical_actor[remove]"
   ],
   "open_items": [
     "Register public relation CLI, dry-run/stdout and complete production model/history loading in the assigned integration steps.",
-    "Complete further wrong-type, missing-target, wrong-relation, stale/live-state and recovery cases in7.e.R; no general lifecycle/history or platform approval is claimed.",
+    "Complete missing lifecycle/specialist services in their assigned integration steps; no general historical completeness, approval legitimacy or platform completion is claimed.",
     "Only the user starts manual CI; selected development evidence is not a full-suite or supported-platform pass."
   ]
 }

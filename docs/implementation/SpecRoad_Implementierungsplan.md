@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 322
-last_completed_plan_commit: 7.e.W
-next_plan_commit: 7.e.R
-last_completed_numbered_bundle: 173
+implementation_plan_commits_completed: 323
+last_completed_plan_commit: 7.e.R
+next_plan_commit: 7.e.C
+last_completed_numbered_bundle: 174
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7833,12 +7833,42 @@ Danach folgt 7.e.R mit den weiteren Rand- und Fehlerfällen.
 
 #### 7.e.R – Make it Right
 
-- [ ] **7.e.R** · Position **323/885** · Voraussetzung: `7.e.W`.
+- [x] **7.e.R** · Position **323/885** · Voraussetzung: `7.e.W`.
 **Exakte Commit-Message:** `7.e.R feat(authoring): Beziehungen hinzufügen und entfernen vervollständigen`
 
 **Vervollständigung:** Typfehler, fehlendes Ziel und falsche Relation-ID ohne Teilwrite behandeln.
 
 **Verhaltensabnahme:** Audit, Quelle und Relationsanzahl weisen den exakten fachlichen Effekt nach. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 174):** Result 173 bestätigt
+`ee38af3ba1a524842ed2c6372c3bd869657f9d30`, 8.277 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der Relationsdienst übernimmt und
+prüft das ausdrückliche Identitätsinventar jetzt vor externen Reads in einem
+eigenen nativen Wert. Änderungen am aufrufereigenen Container während eines
+Reads oder Entropie-Callbacks dürfen keine ursprünglich archivierte oder
+reservierte Relation-ID nachträglich freigeben.
+
+Die R-Nachweise prüfen die vorhandenen Typ-, Ziel-, Symmetrie-, ID- und Hashgrenzen
+an echten Projektdateien. Quellhash und Relationshash bleiben unterschiedliche
+Verträge; genau die bezeichnete Relation wird entfernt. Alle erklärten
+Identitätsausschlüsse gelten auch bei Kollisionen. Veränderte Wiederholungen
+einschließlich Ziel, Grund und Operationsart bleiben vor neuer Planung oder
+Veröffentlichung blockiert. Bei identischem Operationshash liefert ein anderer
+Aufruferakteur dagegen dasselbe historische Ergebnis gemäß SR-REQ-0384; der
+ursprüngliche Akteur bleibt in Quelle und Beleg erhalten. CI-Akteure mit
+ausdrücklicher Request-ID bleiben in Quellmetadaten und Transaktionsbeleg gebunden.
+
+Weitere Fälle erhalten fremde physische Ausgangsbytes und aktive Writer.
+Injizierte Fehler vor und nach dem tatsächlichen Dateiaustausch bewahren alte
+oder neue Relationsbytes, die native Commit-Ungewissheit und das Recovery-
+Journal. Ein blinder Retry veröffentlicht nicht weiter. Die vorhandenen W-Fälle
+und betroffenen Kernverträge werden unverändert erneut ausgeführt.
+
+Die lokale Abnahme ersetzt keine allgemeine Produktions-/Historienbeladung,
+registrierte CLI/Dry-run/stdout, fehlende Lifecycle-/Spezialdienste oder
+Plattformnachweise. Vorhandene Fälle ohne echten Lifecycle-Dienst bleiben
+blockiert; SR-REQ-0233 und SR-REQ-0234 bleiben partiell. Erst erfolgreicher
+Apply-Volltest und Commit bestätigen 323/885. Danach folgt 7.e.C.
 
 #### 7.e.C – Make it Clean
 

@@ -129,6 +129,11 @@ def _execute(model, command, intent, *, inventory=None, actor, planned_at, chang
     actor, request_id = request.data['actor'], request.data['request_id']
     try:
         UtcTimestamp(planned_at)
+        if adding:
+            # Own the declared exclusions before external reads or callbacks.
+            # Mutating the caller's container must not free a historical ID.
+            inventory = RelationInventory(inventory.current_ids,
+                inventory.archived_ids, inventory.reserved_ids)
     except ModelError as error:
         raise AuthoringError(error.reason, pointer=error.pointer, exit_code=3) from error
     source = ProjectSource(model.binding.source_root, expected_project_id=model.binding.project_id)
