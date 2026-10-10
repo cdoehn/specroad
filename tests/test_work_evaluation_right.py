@@ -2,48 +2,20 @@
 
 import errno
 import json
-import os
 from pathlib import Path
-import subprocess
-import sys
 
 import pytest
 
 from specroad import _build
-from specroad.model.canonical import canonical_json_bytes
 from specroad.work import evaluation
-from specroad.work.checkpoints import CheckpointStore
 from specroad.work.evaluation import (WorkEvaluationBlocked, WorkEvaluationDataError,
                                      finalize_evaluation_work)
-from specroad.work.manifest import partition_work_manifest, complete_work_manifest
+from specroad.work.manifest import complete_work_manifest
 from specroad.work.resume import WorkResumeError
-from specroad.work.root import WorkDirectory
-from support.artifacts import artifact_bytes
-from support.profiles import profile_data
 from support.read_only import inventory, no_write_attempts
-from test_work_evaluation import setup, data, registry, advance, direct, PORTABLE
+from support.command_parity import build_core, process_environment, run_python
+from support.work_evaluation import setup, data, registry, advance, direct, PORTABLE, failed_inputs, run, copy_record
 from test_work_resume import recorded
-
-
-def failed_inputs():
-    inputs, jobs, values = data()
-    inputs[-1]['raw'] = artifact_bytes(profile_data(profile_id='core', forbidden_fields=[
-        {'artifact_types': ['goal'], 'maturities': [], 'fields': ['/statement']}]))
-    return inputs, jobs, values
-
-
-def run(store, operation):
-    return advance(store) if operation == 'advance' else finalize_evaluation_work(store, registry=registry())
-
-
-def copy_record(tmp_path, setup_values, mutate):
-    _, _, _, _, boundaries, initial, _, actual = setup_values
-    step, _ = advance(actual); item = step.manifest.entries('completed')[0]
-    row = json.loads(step.manifest.objects[item['evidence']['sha256']]); mutate(row)
-    candidate = partition_work_manifest(initial, {item['unit_id']: canonical_json_bytes(row)})
-    location = WorkDirectory(initial, protected_roots=tuple(boundaries.values()), directory=tmp_path / 'untrusted-work')
-    store = CheckpointStore(location, initial); store.publish(initial); store.publish(candidate)
-    return store, candidate
 
 
 @pytest.mark.parametrize('operation', ['advance', 'finalize'])
@@ -195,18 +167,17 @@ def test_fresh_host_descriptor_limits_preserve_checkpoint_and_allow_later_progre
     packet = tmp_path / 'independent-binding.json'
     packet.write_text(json.dumps({'inputs': [{**i, 'raw': i['raw'].hex()} for i in inputs], 'jobs': jobs}))
     output = tmp_path / 'distribution'; root = Path(__file__).resolve().parents[1]
-    built = subprocess.run([sys.executable, '-I', '-B', str(root / 'tools/build_core.py'), '--output', str(output)], capture_output=True)
+    built = build_core(root, output)
     assert built.returncode == 0, built.stderr
-    work = tmp_path / 'work'; environment = {'PATH': ''}
-    if 'LD_LIBRARY_PATH' in os.environ: environment['LD_LIBRARY_PATH'] = os.environ['LD_LIBRARY_PATH']
+    work = tmp_path / 'work'; environment = process_environment()
     def invoke(action, limit=32):
         body = PORTABLE.replace('store=CheckpointStore(location,initial)',
             'store=CheckpointStore(location,initial)\nimport resource\nresource.setrlimit(resource.RLIMIT_NOFILE,('+str(limit)+',resource.getrlimit(resource.RLIMIT_NOFILE)[1]))')
         wrapper = ('import sys,json,errno;sys.path.insert(0,' + repr(str(output / 'module')) + ')\n'
             'try:\n exec(' + repr(body) + ')\n'
             'except OSError as error:\n print(json.dumps({"native_errno":error.errno}));raise SystemExit(19)\n')
-        child = subprocess.run([sys.executable, '-I', '-S', '-B', '-c', wrapper, str(packet), str(work), str(project), action, 'constrained'],
-            cwd=tmp_path, env=environment, stdin=subprocess.DEVNULL, capture_output=True)
+        child = run_python(wrapper, [str(packet), str(work), str(project), action, 'constrained'],
+            cwd=tmp_path, environment=environment)
         assert child.returncode in (0, 19), child.stderr
         return child.returncode, json.loads(child.stdout)
     assert invoke('plan')[0] == 0

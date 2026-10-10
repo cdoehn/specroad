@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 308
-last_completed_plan_commit: 6.u.R
-next_plan_commit: 6.u.C
-last_completed_numbered_bundle: 159
+implementation_plan_commits_completed: 309
+last_completed_plan_commit: 6.u.C
+next_plan_commit: 7.a.W
+last_completed_numbered_bundle: 160
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7294,10 +7294,34 @@ paralleler Apply-Test und Commit bestätigen 308/885; danach folgt 6.u.C.
 
 #### 6.u.C – Make it Clean
 
-- [ ] **6.u.C** · Position **309/885** · Voraussetzung: `6.u.R`.
+- [x] **6.u.C** · Position **309/885** · Voraussetzung: `6.u.R`.
 **Exakte Commit-Message:** `6.u.C refactor(work): Endergebnisparität und Runtime-Wechsel bereinigen`
 
 **Bereinigung:** Wiederverwendbare Paritätsharness für jeden späteren Fachbefehl bereitstellen.
+
+**Vorbereiteter Implementierungsstand (Bundle 160):** Gemeinsame Modell-/Profil-,
+Work- und direkte native Vergleichsfixtures liegen in
+`tests/support/work_evaluation.py`. Die unveränderten Aufrufe für den echten
+Distributionsbau und isolierte neue Python-Prozesse sind in
+`tests/support/command_parity.py` für spätere Fachbefehle wiederverwendbar.
+Die jeweiligen Tests behalten ihre fachlichen Orakel, Prozessprogramme,
+Parametrisierungen und Seiteneffektprüfungen.
+
+Die gezielte parallele Dev-Abnahme umfasst alle 79 bisherigen W-/R-Fälle von
+6.u sowie die 64 betroffenen Fortschritts-/Resume-Fälle, insgesamt 143 Fälle.
+Alle 7597 bisherigen Testidentitäten bleiben erhalten. Ein struktureller
+Vergleich gegen das maßgebliche Result erhält sämtliche 81 Assertions der
+18 betroffenen Testfunktionen sowie alle acht ausgelagerten Fixturefunktionen;
+nach Rückeinsetzen der Prozesshilfen sind die Testfunktionsbäume identisch.
+Die 237 übrigen bisherigen Testdateien, alle 441 Produktdateien und sämtliche
+730 Requirementdateien bleiben bytegleich. Dies ist eine Strukturprüfung,
+kein zusätzlicher Verhaltenstest und kein vollständiger Dev-Testlauf.
+
+Die in W/R genannten Host-API-, Speicher-, CLI-/Code-8-, Workpaket- und
+Plattformgrenzen bleiben offen; Requirements werden nicht hochgestuft. Dieser
+C-Schritt erteilt keine allgemeine Produkt- oder Releasefreigabe. Erst der
+vollständige parallele Apply-Test und der zugehörige Commit bestätigen 309/885;
+danach folgt 7.a.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

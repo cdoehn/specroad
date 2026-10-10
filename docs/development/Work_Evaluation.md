@@ -98,3 +98,21 @@ Aktuelle native Hostfehler, beispielsweise `EMFILE` bei unzureichendem
 Dateideskriptorlimit, bleiben solche Fehler. Sie werden nicht als Softbudgetereignis,
 fachliches Prädikat oder bestätigter Fortschritt umgedeutet. Ein späterer
 Aufruf mit ausreichender aktueller Ausstattung kann denselben Auftrag fortsetzen.
+
+## Wiederverwendung der Paritätsnachweise
+
+`tests/support/work_evaluation.py` bündelt die gemeinsamen Modell-/Profilfixtures,
+den direkten nativen Ergebnisvergleich, die Workvorbereitung und das bestehende
+Prozessprogramm für diesen Adapter. Die in-process Buildfixture bleibt als
+solche erkennbar; die portablen Fälle bauen und verwenden tatsächliche
+Distributionen. Fachliche Assertions und Parametrisierungen bleiben in den
+zugehörigen W-/R-Testdateien.
+
+`tests/support/command_parity.py` stellt den unveränderten Distributionsbau und
+den isolierten Python-Prozessaufruf bereit. Weitere Fachbefehle können eigene
+vertrauenswürdige Testprogramme und Argumente übergeben; Ergebnisvergleich,
+erwartete Exit-Codes und Seiteneffektprüfungen bleiben beim jeweiligen Test.
+Der Kindprozess hat geschlossenes stdin, leeren PATH und nur den gegebenenfalls
+benötigten LD_LIBRARY_PATH. Er verwendet `-I -S -B`, einen ausdrücklich
+gewählten Arbeitsordner und erfasst stdout/stderr als Bytes. Diese Hilfen
+führen keinen Code aus Projekt- oder Workdaten aus und sind kein Produktrunner.
