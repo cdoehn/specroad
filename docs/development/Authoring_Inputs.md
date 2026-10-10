@@ -52,9 +52,11 @@ neu registrierter `artifact create`-Befehl und kein vollständiger Change Plan.
 Er verwendet keine Entropie, Zeitstempel, Projektwrites oder externe Programme.
 Feldschema-Erfolg bestätigt weder Graph-/Profil-/Lifecyclegates noch lokale
 Zusatzprüfungen einer vollständigen gespeicherten Instanz. ID-Vergabe,
-vollständige Modellvalidierung und atomarer Writer folgen in 7.c; die weiteren
-Authoring-Dienste verwenden anschließend dieselbe Eingabegrenze. Die tatsächliche
-CLI-Integration samt versioniertem stdout-Ergebnis bleibt bis dahin offen.
+vollständige Modellvalidierung und atomarer Writer werden in 7.c angebunden.
+Der native Einbettungsdienst aus 7.c.W ist in `Artifact_Creation.md` beschrieben;
+er verlangt explizit gebundene Modelle, ID-Inventare und Schreibberechtigung.
+Die weiteren Authoring-Dienste verwenden anschließend dieselbe Eingabegrenze.
+Die tatsächliche CLI-Integration samt versioniertem stdout-Ergebnis bleibt offen.
 
 Rohbytes und normalisierte Werte sind derzeit speicherresident; der Reader
 verwendet begrenzte Readblöcke, aber keine behauptete Gesamt-Speicherobergrenze.

@@ -1,0 +1,55 @@
+# Nativer Artefakt-Erzeugungsdienst
+
+`specroad.authoring.creation.create_artifact` verbindet die vorbereiteten
+Eingaben aus `authoring.inputs` mit dem bestehenden Change-Plan- und
+Transaktionskern. Es ist ein ausführbarer Einbettungsdienst mit tatsächlichen
+Dateiwrites; ein registrierter CLI-Befehl ist damit noch nicht vorhanden.
+
+Der Aufrufer übergibt einen `TargetModel`, einen `ArtifactCreateInput`, ein
+vollständiges `IdentityInventory` sowie eine ausdrücklich registrierte
+`PublicationAuthority`. Weitere Pflichtargumente sind `actor`, `planned_at`
+als UTC-Text, `change_plan_id` und `transaction_id`. `request_id` ist für Human
+und Tool optional, für CI Pflicht. AI-Direktwrites bleiben abgewiesen.
+`gates`, `strict` und `package_files` entsprechen den vorhandenen nativen
+Publikationsschnittstellen. Externe Programme werden nicht gestartet.
+
+Das Modell muss die tatsächlichen Projektdateien vollständig enthalten. Das
+ID-Inventar muss aktuelle, archivierte und reservierte IDs aufführen; seine
+aktuellen IDs und sein Präfix werden gegen das Modell geprüft. Der Dienst
+entdeckt keine historischen IDs und bestätigt nicht die Vollständigkeit eines
+vom Host gelieferten historischen Inventars. Modellwerte, Actor-Deklarationen
+und Eingabeobjekte ersetzen keine Schreibberechtigung.
+
+Der Ablauf ist:
+
+1. Typisierte Eingaben, Actor-Regeln und Metadaten prüfen; einen vorhandenen
+   Request anhand seiner nativen Abschlussbelege vor neuer Planung auswerten.
+2. Den exklusiven nativen Writer-Lock nehmen und die Request-Prüfung wiederholen.
+3. Unter diesem Lock die zufällige Artefakt-ID gegen das übergebene Inventar
+   vergeben, Draft und Revisions-/Auditfelder über die nativen Konstruktoren
+   vorbereiten und das vollständige geladene Zielmodell validieren.
+4. Dieselben Dateien und Ressourcen vor dem Write erneut prüfen, Journal
+   erstellen, Bytes stagen und über den vorhandenen atomaren Dateiaustausch
+   veröffentlichen. Erst die verifizierten Abschlussbelege bestätigen Erfolg.
+5. Die dafür vorgesehenen temporären Transaktionsdaten bereinigen. Ein Fehler
+   bewahrt den tatsächlichen Zustand und vorhandene Recovery-Belege.
+
+Das Ergebnisobjekt `format_version: 1.0.0` enthält Artefakt-ID, Typ, relativen
+Pfad, Revision, Reifegrad und die native `completion`. Bei einer Wiederholung
+werden ursprüngliche ID und ursprünglicher Commitbeleg geliefert; sie bestätigen
+einen historischen Abschluss, nicht den heutigen Zielzustand. Eine bereits
+bestätigte Anfrage wird weder neu geplant noch erneut veröffentlicht.
+`completion.cleanup_completed` und `completion.commit_completed` bleiben
+unabhängige Aussagen. Dieser Dienst führt ausschließlich tatsächliche Erzeugung
+aus; die öffentliche Dry-run-/CLI-Anbindung bleibt offen.
+
+Der W-Nachweis umfasst echte Veröffentlichungen für 15 Drafttypen über Mapping,
+Datei und stdin. Für neun weitere reguläre Typen fehlen derzeit vollständige
+native Fachgates, unter anderem Dokumentmodell, Evidence-Currentness und externe
+Ressourcen. Solche Ziele werden abgelehnt, nicht mit erfolgreichen Ersatzprüfern
+freigegeben. Das betrifft auch ein Projekt mit einem Primärdokument, solange
+der Host keinen tatsächlichen Dokumentmodell-Prüfer bereitstellt.
+
+SR-REQ-0216, SR-REQ-0217 und SR-REQ-0240 bleiben daher partiell. Vollständige
+Projekt-/Historienbeladung, öffentliche CLI samt Dry-run und stdout-Vertrag,
+weitere Fachgates und Plattform-/Releaseabnahme sind hier nicht abgeschlossen.

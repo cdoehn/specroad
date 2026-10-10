@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 315
-last_completed_plan_commit: 7.b.C
-next_plan_commit: 7.c.W
-last_completed_numbered_bundle: 166
+implementation_plan_commits_completed: 316
+last_completed_plan_commit: 7.c.W
+next_plan_commit: 7.c.R
+last_completed_numbered_bundle: 167
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7572,12 +7572,40 @@ bleiben bestehen. Erst erfolgreicher Apply-Volltest und Commit bestätigen
 
 #### 7.c.W – Let it Work
 
-- [ ] **7.c.W** · Position **316/885** · Voraussetzung: `7.b.C`.
+- [x] **7.c.W** · Position **316/885** · Voraussetzung: `7.b.C`.
 **Exakte Commit-Message:** `7.c.W feat(authoring): Artefakte erstellen aufbauen`
 
 **Umsetzung:** Zulässige Drafttypen über ID-Vergabe, vollständige Validierung und Writer erzeugen.
 
 **Verhaltensabnahme:** Ein gültiges Artefakt erscheint atomar unter dem berechneten ID-Pfad.
+
+**Vorbereiteter Implementierungsstand (Bundle 167):** Result 166 bestätigt
+`0fc2e22bc13968135e35748ceca97ebef456f4e2`, 8.031 bestandene parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der native Erzeugungsdienst verbindet
+`ArtifactCreateInput` mit dem zufälligen ID-Allocator, den vorhandenen Draft- und
+Auditkonstruktoren, vollständiger Zielmodellvalidierung und dem tatsächlichen
+Writer. Die Artefakt-ID wird unter dem exklusiven Writer-Lock vergeben. Journal,
+Staging, atomare Veröffentlichung, Abschlussbelege und Bereinigung bleiben beim
+vorhandenen Transaktionskern. Gleiche bestätigte Requests werden vor neuer
+Entropie, Planung und Lockvergabe auf ihren ursprünglichen Abschluss zurückgeführt.
+
+61 neue Verhaltenstests prüfen reale Erzeugungen für 15 Drafttypen über Mapping,
+Datei und stdin, die tatsächlich gehaltene Writer-Sperre bei der ID-Vergabe,
+Dateipfad, vollständige JSON-Veröffentlichung und Revisions-/Auditwerte. Weitere
+Fälle prüfen Actor-/Hostverweigerung, den unveränderten fremden Bestand, einen
+ungültigen unberührten Modellteil sowie gleiche und widersprüchliche Requests.
+Neun Typen mit fehlenden vollständigen Fachgates bleiben gesperrt; es werden
+keine erfolgreichen Ersatzprüfer eingesetzt. Bestehende Tests bleiben unverändert.
+
+SR-REQ-0216 und SR-REQ-0217 erhalten partielle Nachweise; SR-REQ-0240 bleibt
+partiell. Der W-Schritt liefert den nativen Einbettungsdienst gegen explizite
+Modelle, historische ID-Inventare und Hostberechtigung. Historische Vollständigkeit
+wird nicht aus passenden Inventarwerten abgeleitet. Allgemeine Projektbeladung,
+registrierter CLI-Befehl einschließlich Dry-run/stdout und noch fehlende native
+Fachgates bleiben offen. Insbesondere verlangt ein Primärdokument einen realen
+Dokumentmodell-Prüfer. Erst erfolgreicher Apply-Volltest und Commit bestätigen
+316/885; anschließend vertieft 7.c.R Kollisionen, Fehlergrenzen und Wiederholungen.
+Bedienung und Reichweite: `docs/development/Artifact_Creation.md`.
 
 #### 7.c.R – Make it Right
 

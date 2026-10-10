@@ -17,12 +17,13 @@
     "Verify all 24 regular draft field types, exact textual semantics, language canonicalization, detached values and preservation of input files; reject generated fields, specialized records, malformed JSON, conflicts and unsafe input paths.",
     "Feed equivalent normalized requirement fields into the existing constructor with an explicitly supplied fixed identity, actor and time; compare the resulting native authoring preview binding without writes or entropy allocation.",
     "Exercise actual built module/zipapp adapters with real binary process stdin and passive code-like field text. Do not infer a registered artifact writer or its stdout contract.",
-    "Reject missing/null required fields for all regular types and native conditional requirements. Check exact composite option values, control-field rejection, conflicting sources, broken/closed binary streams, actual file replacement/growth/shrinkage and FIFOs without visible identities or project writes. Verify actual built distribution invalid stdin diagnostics."
+    "Reject missing/null required fields for all regular types and native conditional requirements. Check exact composite option values, control-field rejection, conflicting sources, broken/closed binary streams, actual file replacement/growth/shrinkage and FIFOs without visible identities or project writes. Verify actual built distribution invalid stdin diagnostics.",
+    "Connect equivalent mapping/file/stdin inputs to the actual native embedding writer, check stored draft fields and its versioned result without claiming an implemented CLI stdout surface."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Schreibende Authoring-Befehle MÜSSEN strukturierte Eingaben sowohl über `--input <FILE>` als auch über `--input -` von stdin akzeptieren und bei `--format json` ausschließlich ein versioniertes Ergebnisobjekt auf stdout ausgeben.",
-    "scope": "Executable artifact-create field input layer: the same semantic input yields identical canonical versioned intent independently of JSON spelling, file path or explicit transport. Native field schemas, option binding and safe file reads are used. No identity allocation, clock, publication or write authority. This partial W/R scope does not register artifact create, certify complete model/graph/profile/local instance validation, or complete the authoring command stdout contract; the actual writer follows in 7.c. R additionally enforces single composite JSON option values and I/O classification for unavailable or closed binary streams, with unchanged W parity and explicit hostile-source/read-failure behavior."
+    "scope": "Shared artifact-create field inputs normalize options, files and explicit binary stdin into canonical intent for24regular types without input-layer writes or allocation. The native7.c.W embedding service now connects those inputs to locked identity allocation, complete supplied-target validation and real transaction publication for applicable types, with required unavailable semantic gates failing closed. Registered CLI/stdout, complete production project/history loading, other authoring commands, platform and release scope remain partial."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -44,6 +45,51 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-assumption]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-capability]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-component]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-decision]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-goal]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-interface]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-issue]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-milestone]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-need]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-release]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-requirement]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-risk]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-scenario]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-task]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-term]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-assumption]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-capability]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-component]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-decision]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-goal]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-interface]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-issue]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-milestone]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-need]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-release]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-requirement]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-risk]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-scenario]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-task]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[mapping-term]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-assumption]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-capability]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-component]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-decision]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-goal]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-interface]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-issue]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-milestone]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-need]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-release]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-requirement]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-risk]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-scenario]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-task]",
+    "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[stdin-term]",
     "tests/test_authoring_inputs.py::test_all_regular_draft_types_preserve_expected_fields[file-assumption]",
     "tests/test_authoring_inputs.py::test_all_regular_draft_types_preserve_expected_fields[file-capability]",
     "tests/test_authoring_inputs.py::test_all_regular_draft_types_preserve_expected_fields[file-code_ref]",
@@ -356,7 +402,7 @@
     "tests/test_authoring_inputs_right.py::test_union_option_wrong_types_are_schema_errors[null]"
   ],
   "open_items": [
-    "Integrate this shared input boundary with artifact create in 7.c and subsequent authoring handlers. The actual registered writing commands and their versioned stdout result are not implemented by this input layer.",
+    "Complete registered artifact-create CLI/dry-run/stdout and production project/history loading; extend the shared boundary to subsequent authoring commands. The native embedding writer is now covered but is not a registered CLI.",
     "Whole raw and normalized inputs remain memory-resident. Full model, profile, graph, local instance, platform and release coverage is not established by field-schema preparation."
   ]
 }
