@@ -27,6 +27,12 @@ Vorgang erhalten bleiben. Erneutes Übersetzen von Feldoptionen gegen ein späte
 verändertes Artefakt kann beispielsweise aus `add` ein `replace` machen und ist
 kein Nachweis desselben historischen Auftrags.
 
+Die reine Eingabeaufbereitung liegt in `changes.update_inputs`; der
+Authoring-Adapter stellt dieselbe Funktion weiterhin unter
+`authoring.update.normalize_artifact_update_input` bereit. Beide verwenden
+dieselbe Unterscheidung zwischen ausgelassenen und ausdrücklich übergebenen
+Werten. Dateilesen, Planung und Veröffentlichung bleiben im vorhandenen Adapter.
+
 `update_artifact(model, operation, ...)` verlangt einen vollständigen
 `TargetModel`, eine `PublicationAuthority` und ausdrückliche Werte für `actor`,
 `planned_at`, `change_plan_id` sowie `transaction_id`. Der Host verantwortet

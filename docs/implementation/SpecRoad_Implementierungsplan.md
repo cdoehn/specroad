@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 320
-last_completed_plan_commit: 7.d.R
-next_plan_commit: 7.d.C
-last_completed_numbered_bundle: 171
+implementation_plan_commits_completed: 321
+last_completed_plan_commit: 7.d.C
+next_plan_commit: 7.e.W
+last_completed_numbered_bundle: 172
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7757,10 +7757,32 @@ Apply-Volltest und Commit bestätigen 320/885. Danach folgt 7.d.C.
 
 #### 7.d.C – Make it Clean
 
-- [ ] **7.d.C** · Position **321/885** · Voraussetzung: `7.d.R`.
+- [x] **7.d.C** · Position **321/885** · Voraussetzung: `7.d.R`.
 **Exakte Commit-Message:** `7.d.C refactor(authoring): Artefakte aktualisieren bereinigen`
 
 **Bereinigung:** Authoring nur als Adapter auf denselben Planer führen.
+
+**Vorbereiteter Implementierungsstand (Bundle 172):** Result 171 bestätigt
+`0724faf7e7604b5c0a01012f1d8027d83d284537`, 8.247 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Die reine Aufbereitung einer
+Update-Operation wechselt unverändert nach `changes.update_inputs`. Der
+Authoring-Adapter exportiert dieselbe Funktion und verwendet denselben Marker
+für ausgelassene Werte. Signatur, Prüfungsreihenfolge, Guards, Fehlerklassen und
+besessene Operationswerte bleiben erhalten.
+
+Datei-/stdin-Leser, Ergebnisaufbereitung, Replay und tatsächlicher Schreibdienst
+bleiben als vollständige Funktionsbäume identisch. Der bereits gebundene native
+Lifecycle-Prüfer, vollständige Zielplanung und Transaktionsablauf bleiben
+unverändert. Sämtliche bestehenden Testdateien und 730 Requirement-Nachweise
+werden bytegleich erhalten; die vorhandenen W-/R-Fälle und betroffenen
+Kernverträge bilden die gezielte Regressionsabnahme.
+
+Es entsteht kein neues Fachverhalten. Allgemeine Produktions-/Historienbeladung,
+registrierte CLI/Dry-run/stdout, vollständige Review-/Kontextbindungsabnahme,
+fehlende Fachgates und Plattformnachweise bleiben offen. Die begrenzte
+Lifecycle-Abdeckung bescheinigt weiterhin keine historische Freigabe;
+SR-REQ-0232 und SR-REQ-0657 bleiben partiell. Erst erfolgreicher Apply-Volltest
+und Commit bestätigen 321/885. Danach folgt 7.e.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
