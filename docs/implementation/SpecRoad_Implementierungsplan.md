@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 324
-last_completed_plan_commit: 7.e.C
-next_plan_commit: 7.f.W
-last_completed_numbered_bundle: 175
+implementation_plan_commits_completed: 325
+last_completed_plan_commit: 7.f.W
+next_plan_commit: 7.f.R
+last_completed_numbered_bundle: 176
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7910,12 +7910,48 @@ Apply-Volltest und Commit bestätigen 324/885. Danach folgt 7.f.W.
 
 #### 7.f.W – Let it Work
 
-- [ ] **7.f.W** · Position **325/885** · Voraussetzung: `7.e.C`.
+- [x] **7.f.W** · Position **325/885** · Voraussetzung: `7.e.C`.
 **Exakte Commit-Message:** `7.f.W feat(authoring): Lifecycle und Stilllegung aufbauen`
 
 **Umsetzung:** transition und retire über die vollständigen Standard-/Spezialregeln anbieten.
 
 **Verhaltensabnahme:** Reiner Übergang erhält Fachprojektion und schreibt Grund/Actor im Audit.
+
+**Vorbereiteter Implementierungsstand (Bundle 176):** Result 175 bestätigt
+`2c3d2f0b9d4be5d1e8cc2940a079397e4f6c11f6`, 8.323 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der neue Authoring-Dienst bindet
+ursprüngliche Identität und Ausgangsstatus beziehungsweise ausdrücklich
+angegebene Revisions-/Hashvorbedingungen in native `transition`-/`retire`-
+Operationen. Er verbindet sie mit vollständiger Zielprüfung, Writer-Lock,
+Live-Prüfung, nativer Veröffentlichung und Abschlussbelegen.
+
+Eine reine Lifecycle-Änderung erhält sämtliche Fachwerte, erhöht die Revision
+genau einmal und bindet Grund, Ausgang/Ziel sowie Akteur und Zeitpunkt im Audit.
+Die zusätzliche gebundene Lifecycle-Prüfung berechnet den kompletten Zielzustand
+bei jedem Aufruf neu. Sie bestätigt ausschließlich das betroffene
+Standardartefakt; weitere Nicht-Draft-Artefakte benötigen ihre echten Dienste.
+Explizite Host-Prüfungen bleiben wirksam. Spezialartefakte können den allgemeinen
+Pfad nicht nutzen; die native Approval-Grenze bleibt geschlossen.
+
+Bestätigte Requests liefern vor neuer Planung oder Sperre den historischen
+Abschluss. Identische Operationen behalten auch bei anderem zulässigem
+Aufruferakteur den ursprünglichen Audit. Ein neuer geschützter Retire-Auftrag
+für einen tatsächlich stillgelegten Zustand wird unter Sperre und Autorität
+frisch geprüft; sein No-op erhält alle Dateien ohne weiteren Beleg.
+
+Die W-Abnahme umfasst echte lokale Übergänge und Stilllegungen, explizite
+Vorbedingungen, Fachprojektion, Revision, Dateien/Modi und Audit. Akteurs- und
+Host-Verweigerungen, fehlende weitere Lifecycle-Dienste, ungültige übrige
+Artefakte, Spezialartefakte und unerlaubte Approval-Anfragen bleiben gesperrt.
+Alle bisherigen Tests bleiben unverändert. Der positive Eintritt nach
+`in_review` verwendet ein gültiges Need; Requirements ohne die vorhandenen
+formalen Voraussetzungen bleiben gesperrt. Weitere Randfall- und
+Unterbrechungsnachweise folgen in R.
+
+Registrierte CLI/Dry-run/stdout, allgemeine Produktions-/Historienbeladung,
+vollständige Approval-Anbindung und Plattformnachweise bleiben offen;
+SR-REQ-0218 und SR-REQ-0235 bleiben partiell. Erst erfolgreicher Apply-Volltest
+und Commit bestätigen 325/885. Danach folgt 7.f.R.
 
 #### 7.f.R – Make it Right
 

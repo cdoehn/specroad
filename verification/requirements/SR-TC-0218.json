@@ -4,19 +4,44 @@
   "requirement_id": "SR-REQ-0218",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Explicit complete local TargetModel and real PublicationAuthority; supplied actor, UTC time, plan/transaction IDs and owned native project tree.",
+    "Original native transition binds target/from/to/reason; retire has explicit revision/hash guards. Retain the same normalized operation across retries."
+  ],
+  "steps": [
+    "Execute native transition/retire through complete target validation, real writer lock, live checks, publication and completion.",
+    "Compare complete old/new artifacts and their fach projections, exactly one revision, unrelated files/modes, native operation and bound actor/time in the actual transaction receipt.",
+    "Check guarded fresh retirement no-op, historical retry with preserved original actor, explicit authority denial and actor policy.",
+    "Keep missing services for other non-draft subjects, invalid unrelated model and generic specialist transitions closed."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad lifecycle transition <ID> --to retired --reason <TEXT>` MUSS die atomare Stilllegung mit genau einer Revisionsänderung, dem Endzustand `retired`, unveränderter Fachprojektion und dem gebundenen Grund-/Akteursnachweis nach Kapitel 9.6.3 ausführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual local single-operation lifecycle publication: native standard/specialist restrictions, exact source state or explicit retire guards, unchanged fach projection, one revision and original reason/actor audit. A fresh guarded retired no-op preserves all files without new receipts; confirmed retries return historical results even with a different eligible retry actor. Other non-draft subjects need actual semantic services; explicit host denial remains effective. Dedicated approval, registered CLI/dry-run/stdout, complete production/history loading, further boundary/interruption evidence and supported-platform completion remain open."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV030",
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    2,
+    3,
+    7
+  ],
+  "json_pointers": [
+    "/target",
+    "/from",
+    "/to",
+    "/metadata/reason",
+    "/reason",
+    "/expected_revision",
+    "/expected_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +53,50 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_lifecycle_authoring.py::test_actor_policy_blocks_before_writer[ai-lifecycle-1-7-retire]",
+    "tests/test_lifecycle_authoring.py::test_actor_policy_blocks_before_writer[ai-lifecycle-1-7-transition]",
+    "tests/test_lifecycle_authoring.py::test_actor_policy_blocks_before_writer[ci-None-2-retire]",
+    "tests/test_lifecycle_authoring.py::test_actor_policy_blocks_before_writer[ci-None-2-transition]",
+    "tests/test_lifecycle_authoring.py::test_confirmed_retry_precedes_planning_and_lock_and_preserves_original_actor[retire]",
+    "tests/test_lifecycle_authoring.py::test_confirmed_retry_precedes_planning_and_lock_and_preserves_original_actor[transition]",
+    "tests/test_lifecycle_authoring.py::test_explicit_host_lifecycle_denial_is_not_replaced[retire]",
+    "tests/test_lifecycle_authoring.py::test_explicit_host_lifecycle_denial_is_not_replaced[transition]",
+    "tests/test_lifecycle_authoring.py::test_fresh_guarded_retire_of_actual_retired_target_is_noop_without_new_receipt",
+    "tests/test_lifecycle_authoring.py::test_host_denial_leaves_original_tree[retire]",
+    "tests/test_lifecycle_authoring.py::test_host_denial_leaves_original_tree[transition]",
+    "tests/test_lifecycle_authoring.py::test_human_request_id_is_optional[retire]",
+    "tests/test_lifecycle_authoring.py::test_human_request_id_is_optional[transition]",
+    "tests/test_lifecycle_authoring.py::test_invalid_unrelated_artifact_blocks_full_supplied_target[retire]",
+    "tests/test_lifecycle_authoring.py::test_invalid_unrelated_artifact_blocks_full_supplied_target[transition]",
+    "tests/test_lifecycle_authoring.py::test_other_non_draft_subject_still_requires_actual_lifecycle_service[retire]",
+    "tests/test_lifecycle_authoring.py::test_other_non_draft_subject_still_requires_actual_lifecycle_service[transition]",
+    "tests/test_lifecycle_authoring.py::test_retire_guard_is_explicit_and_never_inferred[guards0]",
+    "tests/test_lifecycle_authoring.py::test_retire_guard_is_explicit_and_never_inferred[guards1]",
+    "tests/test_lifecycle_authoring.py::test_retire_guard_is_explicit_and_never_inferred[guards2]",
+    "tests/test_lifecycle_authoring.py::test_retire_guard_is_explicit_and_never_inferred[guards3]",
+    "tests/test_lifecycle_authoring.py::test_retire_guard_is_explicit_and_never_inferred[guards4]",
+    "tests/test_lifecycle_authoring.py::test_retire_guard_is_explicit_and_never_inferred[guards5]",
+    "tests/test_lifecycle_authoring.py::test_retire_uses_explicit_guards_and_preserves_content_and_reason_audit[both-human]",
+    "tests/test_lifecycle_authoring.py::test_retire_uses_explicit_guards_and_preserves_content_and_reason_audit[both-tool]",
+    "tests/test_lifecycle_authoring.py::test_retire_uses_explicit_guards_and_preserves_content_and_reason_audit[hash-human]",
+    "tests/test_lifecycle_authoring.py::test_retire_uses_explicit_guards_and_preserves_content_and_reason_audit[hash-tool]",
+    "tests/test_lifecycle_authoring.py::test_retire_uses_explicit_guards_and_preserves_content_and_reason_audit[revision-human]",
+    "tests/test_lifecycle_authoring.py::test_retire_uses_explicit_guards_and_preserves_content_and_reason_audit[revision-tool]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[baseline-retire]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[baseline-transition]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[evidence-retire]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[evidence-transition]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[proposal-retire]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[proposal-transition]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[relation_review-retire]",
+    "tests/test_lifecycle_authoring.py::test_special_artifacts_cannot_use_general_lifecycle[relation_review-transition]",
+    "tests/test_lifecycle_authoring.py::test_transition_preserves_content_and_binds_one_revision_and_original_audit[requirement-draft-retired-human]",
+    "tests/test_lifecycle_authoring.py::test_transition_preserves_content_and_binds_one_revision_and_original_audit[requirement-draft-retired-tool]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Register lifecycle CLI, dry-run/stdout and general production model/history loading in assigned integration steps.",
+    "Complete dedicated approval integration and remaining lifecycle boundary/interruption evidence; current local fixtures do not attest historical approval or production completeness.",
+    "No all-platform or complete requirement pass is claimed by this selected local evidence."
   ]
 }
