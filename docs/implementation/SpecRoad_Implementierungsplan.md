@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 321
-last_completed_plan_commit: 7.d.C
-next_plan_commit: 7.e.W
-last_completed_numbered_bundle: 172
+implementation_plan_commits_completed: 322
+last_completed_plan_commit: 7.e.W
+next_plan_commit: 7.e.R
+last_completed_numbered_bundle: 173
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7796,12 +7796,40 @@ und Commit bestätigen 321/885. Danach folgt 7.e.W.
 
 #### 7.e.W – Let it Work
 
-- [ ] **7.e.W** · Position **322/885** · Voraussetzung: `7.d.C`.
+- [x] **7.e.W** · Position **322/885** · Voraussetzung: `7.d.C`.
 **Exakte Commit-Message:** `7.e.W feat(authoring): Beziehungen hinzufügen und entfernen aufbauen`
 
 **Umsetzung:** relation add/remove mit eigener Relation-ID, Grund und Quellrevision implementieren.
 
 **Verhaltensabnahme:** Gültige Beziehung entsteht beziehungsweise genau die adressierte Beziehung entfällt.
+
+**Vorbereiteter Implementierungsstand (Bundle 173):** Result 172 bestätigt
+`47c7212651bca16a4f11f9d9fa524e6f77512fbd`, 8.247 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der neue Einbettungsdienst verbindet
+`relation_add` und `relation_remove` mit dem bestehenden vollständigen Planer
+und tatsächlichen Veröffentlichungspfad. Ein ausdrückliches Relationsinventar
+bindet aktuelle und reservierte Identitäten; die neue zufällige Relation-ID
+entsteht unter dem nativen Writer-Lock. Beim Entfernen bleiben Relations-ID,
+expliziter Relationshash und Grund im Auftrag festgehalten.
+
+Vollständige Zielprüfung, Live-Bindung, Actor-/Hostberechtigung, Journal und
+Abschlussbelege bleiben Sache der vorhandenen nativen Dienste. Erfolgreiche
+Änderungen erhöhen die Quellrevision einmal; andere Relationen bleiben erhalten.
+Die ursprüngliche Operation und der Akteur sind im Transaktionsnachweis gebunden.
+Bestätigte Wiederholungen verwenden das ursprüngliche Ergebnis vor neuer
+Planung, Sperre oder ID-Vergabe und behaupten keinen aktuellen Zielzustand.
+
+Die W-Nachweise prüfen reale Dateien, Need-/Capability-/Requirement-Quellen,
+Human-/Tool-Akteure, genaue Entfernung beider möglicher Beziehungen, erhaltene
+Quellmodi, Auditdaten und Replay. Actor- und Hostverweigerung, fehlende echte
+Lifecycle-Prüfer, ungültige weitere Artefakte und fehlerhafte Eingaben bleiben
+ohne Veröffentlichung abgewiesen. Vorhandene Verhaltenstests bleiben bytegleich.
+
+Allgemeine Produktions-/Historienbeladung, registrierte CLI/Dry-run/stdout,
+weitere Lifecycle-/Spezialdienste und Plattformnachweise bleiben offen. Die
+Abnahme trägt keine historische Freigabe ein; SR-REQ-0233 und SR-REQ-0234 bleiben
+partiell. Erst erfolgreicher Apply-Volltest und Commit bestätigen 322/885.
+Danach folgt 7.e.R mit den weiteren Rand- und Fehlerfällen.
 
 #### 7.e.R – Make it Right
 

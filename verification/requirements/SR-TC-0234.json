@@ -4,19 +4,39 @@
   "requirement_id": "SR-REQ-0234",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Explicit complete local TargetModel and trusted PublicationAuthority; human/tool actor, UTC time, plan/transaction IDs and owned native project tree.",
+    "Addition receives a complete current/archived/reserved RelationInventory; removal retains original relation ID, canonical relation hash and reason."
+  ],
+  "steps": [
+    "Run the actual native relation authoring adapter through full target validation, writer lock, live check, journal, publication and completion.",
+    "Inspect source artifact bytes/revision, unchanged unrelated files and modes, original native operation, actor and receipt.",
+    "Retry a confirmed request before planning/locking/allocation; check actor and host refusal, missing lifecycle service and invalid unrelated model."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad relation remove <SOURCE-ID> --relation-id <RELATION-ID> --reason <TEXT>` MUSS genau die bezeichnete Beziehung entfernen, die Quellrevision erhöhen und Grund sowie Akteur im Auditbericht erfassen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual local draft Requirement relation removal by exact ID and explicit canonical relation hash: only the addressed edge disappears, one source revision, original reason/actor retained in the native transaction receipt and safe historical retry. Missing real semantic services fail closed. No registered CLI, general production/history loading, dry-run/stdout or platform completion claim."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    2,
+    3,
+    7
+  ],
+  "json_pointers": [
+    "/source",
+    "/relation_id",
+    "/expected_sha256",
+    "/reason"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +48,26 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_authoring.py::test_actor_policy_blocks_before_lock_or_allocation[ai-r-1-7-remove]",
+    "tests/test_relation_authoring.py::test_actor_policy_blocks_before_lock_or_allocation[ci-None-2-remove]",
+    "tests/test_relation_authoring.py::test_confirmed_retry_uses_original_operation_without_planning_lock_or_allocation[remove]",
+    "tests/test_relation_authoring.py::test_host_refusal_retains_all_original_files[remove]",
+    "tests/test_relation_authoring.py::test_human_request_id_is_optional_and_creates_no_request_receipt[remove]",
+    "tests/test_relation_authoring.py::test_invalid_unrelated_artifact_blocks_complete_target[remove]",
+    "tests/test_relation_authoring.py::test_missing_real_lifecycle_service_remains_closed[remove]",
+    "tests/test_relation_authoring.py::test_remove_requires_explicit_relation_hash_before_io[AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "tests/test_relation_authoring.py::test_remove_requires_explicit_relation_hash_before_io[None]",
+    "tests/test_relation_authoring.py::test_remove_requires_explicit_relation_hash_before_io[]",
+    "tests/test_relation_authoring.py::test_remove_requires_explicit_relation_hash_before_io[short]",
+    "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[human-0]",
+    "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[human-1]",
+    "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[tool-0]",
+    "tests/test_relation_authoring.py::test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge[tool-1]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Register public relation CLI, dry-run/stdout and complete production model/history loading in the assigned integration steps.",
+    "Complete further wrong-type, missing-target, wrong-relation, stale/live-state and recovery cases in7.e.R; no general lifecycle/history or platform approval is claimed.",
+    "Only the user starts manual CI; selected development evidence is not a full-suite or supported-platform pass."
   ]
 }

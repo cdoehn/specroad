@@ -4,19 +4,41 @@
   "requirement_id": "SR-REQ-0233",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Explicit complete local TargetModel and trusted PublicationAuthority; human/tool actor, UTC time, plan/transaction IDs and owned native project tree.",
+    "Addition receives a complete current/archived/reserved RelationInventory; removal retains original relation ID, canonical relation hash and reason."
+  ],
+  "steps": [
+    "Run the actual native relation authoring adapter through full target validation, writer lock, live check, journal, publication and completion.",
+    "Inspect source artifact bytes/revision, unchanged unrelated files and modes, original native operation, actor and receipt.",
+    "Retry a confirmed request before planning/locking/allocation; check actor and host refusal, missing lifecycle service and invalid unrelated model."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad relation add <SOURCE-ID> --type <TYPE> --target <TARGET-ID>` MUSS eine typgültige Beziehung mit eigener `relation_id` über den gemeinsamen Change Plan anlegen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual local draft Need/Capability/Requirement relation addition through the common planner: fresh native ID allocated under writer lock, one source revision, original relation/audit receipts and safe historical retry. Missing real semantic services fail closed. No registered CLI, general production/history loading, dry-run/stdout or platform completion claim."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    2,
+    3,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/source",
+    "/relation",
+    "/relation/relation_id",
+    "/relation/type",
+    "/relation/target"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +50,26 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_authoring.py::test_actor_policy_blocks_before_lock_or_allocation[ai-r-1-7-add]",
+    "tests/test_relation_authoring.py::test_actor_policy_blocks_before_lock_or_allocation[ci-None-2-add]",
+    "tests/test_relation_authoring.py::test_add_allocates_under_real_lock_and_publishes_one_source_revision[human-capability]",
+    "tests/test_relation_authoring.py::test_add_allocates_under_real_lock_and_publishes_one_source_revision[human-need]",
+    "tests/test_relation_authoring.py::test_add_allocates_under_real_lock_and_publishes_one_source_revision[human-requirement]",
+    "tests/test_relation_authoring.py::test_add_allocates_under_real_lock_and_publishes_one_source_revision[tool-capability]",
+    "tests/test_relation_authoring.py::test_add_allocates_under_real_lock_and_publishes_one_source_revision[tool-need]",
+    "tests/test_relation_authoring.py::test_add_allocates_under_real_lock_and_publishes_one_source_revision[tool-requirement]",
+    "tests/test_relation_authoring.py::test_add_inventory_must_include_live_relations_before_allocation",
+    "tests/test_relation_authoring.py::test_confirmed_retry_uses_original_operation_without_planning_lock_or_allocation[add]",
+    "tests/test_relation_authoring.py::test_host_refusal_retains_all_original_files[add]",
+    "tests/test_relation_authoring.py::test_human_request_id_is_optional_and_creates_no_request_receipt[add]",
+    "tests/test_relation_authoring.py::test_invalid_unrelated_artifact_blocks_complete_target[add]",
+    "tests/test_relation_authoring.py::test_missing_real_lifecycle_service_remains_closed[add]",
+    "tests/test_relation_authoring.py::test_unknown_relation_type_is_not_inferred"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Register public relation CLI, dry-run/stdout and complete production model/history loading in the assigned integration steps.",
+    "Complete further wrong-type, missing-target, wrong-relation, stale/live-state and recovery cases in7.e.R; no general lifecycle/history or platform approval is claimed.",
+    "Only the user starts manual CI; selected development evidence is not a full-suite or supported-platform pass."
   ]
 }
