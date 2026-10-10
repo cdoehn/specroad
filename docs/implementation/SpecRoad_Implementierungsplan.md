@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 319
-last_completed_plan_commit: 7.d.W
-next_plan_commit: 7.d.R
-last_completed_numbered_bundle: 170
+implementation_plan_commits_completed: 320
+last_completed_plan_commit: 7.d.R
+next_plan_commit: 7.d.C
+last_completed_numbered_bundle: 171
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7714,12 +7714,46 @@ bestätigen 319/885; danach folgt die vertiefte Abnahme in 7.d.R.
 
 #### 7.d.R – Make it Right
 
-- [ ] **7.d.R** · Position **320/885** · Voraussetzung: `7.d.W`.
+- [x] **7.d.R** · Position **320/885** · Voraussetzung: `7.d.W`.
 **Exakte Commit-Message:** `7.d.R feat(authoring): Artefakte aktualisieren vervollständigen`
 
 **Vervollständigung:** Veraltete Vorbedingungen, direkte Identitätsänderung und freies Setzen von maturity verhindern.
 
 **Verhaltensabnahme:** Approved-Inhaltsänderung wird proposed; No-op verändert keine Bytes. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 171):** Result 170 bestätigt
+`8a4805961df0cc78d067cf1f1aba5ab3c27d9ebc`, 8.203 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der Update-Leser behält jetzt die
+vor dem ersten Eingaberead festgehaltene Ziel-ID und Vorbedingungen. Eine
+Änderung des aufrufereigenen Artefaktobjekts während des Lesens kann den Auftrag
+nicht nachträglich umadressieren. Der native Operationsprüfer bleibt zuständig.
+
+Die neue R-Abnahme machte zusätzlich die fehlende Verbindung zur reservierten
+Lifecycle-Modellprüfung sichtbar: Nicht-Draft-Ziele wurden trotz vorhandener
+Lifecycle-Berechnung korrekt blockiert. Ein eng an den Update-Auftrag gebundener
+nativer Prüfer berechnet nun das Ergebnis mit demselben vorhandenen Kern erneut
+und vergleicht das vollständige Zielmodell. Er deckt ausschließlich das
+aktualisierte Proposed-Artefakt ab; andere Nicht-Draft-Prüflinge und Zustände
+bleiben ohne echten eigenen Fachdienst blockiert. Explizite Host-Prüfer werden
+nicht ersetzt. Die fehlerhaften Erstnachweise bleiben erhalten; nach dieser
+Produktkorrektur wird die gesamte gezielte Auswahl erneut ausgeführt.
+
+Neue Verhaltensfälle prüfen echte Approved-Inhaltsänderungen mit genau einer
+Revision und `proposed`, einschließlich entfernter Approved-Pflichtfelder.
+Draft-/Proposed-No-ops erhalten nichtkanonische Originalbytes und Dateimodi
+ohne Journal oder Receipt. Beide gleichzeitig angegebenen Vorbedingungen,
+geschützte Felder, manipulierte Container, Hostverweigerung und veränderte
+physische Ausgangsdateien werden geprüft. Reale Fehler vor und nach dem
+atomaren Zielaustausch bewahren tatsächliche Bytes und Recovery-Journal;
+weitere Writes bleiben durch den vorhandenen nativen Schutz blockiert.
+
+Die bisherigen W-Fälle und betroffene Kernverträge werden erneut ausgeführt,
+ohne frühere Assertions umzuschreiben. Die strukturell gespeicherten
+Approved-Fixtures behaupten keine legitime historische Freigabe. Allgemeine
+Produktions-/Historienbeladung, registrierte CLI/Dry-run/stdout, vollständige
+Review-/Kontextbindungsabnahme, fehlende Fachgates und Plattformnachweise bleiben
+offen; SR-REQ-0232 und SR-REQ-0657 bleiben partiell. Erst erfolgreicher
+Apply-Volltest und Commit bestätigen 320/885. Danach folgt 7.d.C.
 
 #### 7.d.C – Make it Clean
 

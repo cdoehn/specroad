@@ -15,6 +15,7 @@ from ..changes._journal_codec import _transaction
 from ..changes._publication_observation import _root
 from ..changes.field_patches import compile_field_patch
 from ..changes.json_patch import JsonPatch
+from ..changes.update_lifecycle_gate import prepare_update_lifecycle_gate
 from ..model.audit_values import UtcTimestamp
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
@@ -22,6 +23,7 @@ from ..model.identity_values import artifact_identity
 from ..security import SafetyViolation
 from ..storage.json_syntax import parse_json_object
 from ..storage.project import ProjectSource
+from ..validation import ModelGate
 from .inputs import _read_input
 
 _UNSPECIFIED = object()
@@ -61,10 +63,13 @@ def read_artifact_update_input(artifact, *, input, cwd=None, stdin=None,
         expected_revision=_UNSPECIFIED, expected_sha256=_UNSPECIFIED):
     """Read one explicit RFC-6902 array from a stable file or binary stdin '-'."""
     guards = dict(expected_revision=expected_revision, expected_sha256=expected_sha256)
-    normalize_artifact_update_input(artifact, patch=[], **guards)
+    guarded = normalize_artifact_update_input(artifact, patch=[], **guards)
     try:
         patch = JsonPatch.from_bytes(_read_input(input, cwd, stdin))
-        return normalize_artifact_update_input(artifact, patch=patch.data, **guards)
+        # Retain the original target and guards across external input reads.
+        # A caller/stream callback changing its artifact must not retarget this
+        # request after the first owned snapshot has already been taken.
+        return ChangeOperation({**guarded.data, 'patch': patch.data})
     except ChangePlanError:
         raise
     except SafetyViolation as error:
@@ -126,6 +131,9 @@ def update_artifact(model, operation, *, actor, planned_at, change_plan_id,
     if replay is not None:
         return replay
     model = model.snapshot()
+    if not any(type(gate) is ModelGate and gate.gate_id == 'lifecycle' for gate in gates):
+        gates = (*gates, prepare_update_lifecycle_gate(model, operation,
+            metadata_policy_version='change-metadata-v1', actor=actor, planned_at=planned_at))
     with project_lock(source.boundary.root, kind='writer', command='change apply',
             project_id=model.configuration.project_id, request_id=request_id,
             transaction_id=transaction_id) as held:

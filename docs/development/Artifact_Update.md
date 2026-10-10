@@ -59,8 +59,41 @@ Ein tatsächlicher oder historisch bestätigter Abschluss enthält die native
 bestätigt ursprüngliche Transaktion und Zielwurzel, nicht den heutigen Zustand.
 Der Dienst erfindet daraus keine aktuelle Artefaktrevision.
 
-Die W-Nachweise verwenden einen realen lokalen Dateibaum mit vollständigem
+Die Nachweise verwenden einen realen lokalen Dateibaum mit vollständigem
 geladenem Goal-/Requirement-Modell. Sie bestätigen keine allgemeine
-Produktionsbeladung, vollständige Approved-/Kontextbindungsabnahme oder
-Plattformfreigabe. SR-REQ-0232 und SR-REQ-0657 bleiben partiell. Die vertiefte
-Abnahme von Lifecycle, Vorbedingungen und No-op folgt in 7.d.R.
+Produktionsbeladung, vollständige Kontextbindungsabnahme oder Plattformfreigabe.
+SR-REQ-0232 und SR-REQ-0657 bleiben partiell.
+
+## Bindung der Eingabe und Fehlerverhalten
+
+Beim Lesen eines gespeicherten Patches werden Ziel-ID und ausdrückliche
+Vorbedingungen vor dem ersten Eingaberead in einem eigenen `ChangeOperation`
+festgehalten. Ändert der Aufrufer währenddessen sein Artefaktobjekt, etwa in
+einem Stream-Callback, bindet das den begonnenen Auftrag nicht an ein anderes
+Ziel. Der Patch wird über denselben nativen Operationsprüfer ergänzt.
+
+Ohne ausdrücklich übergebenen Lifecycle-Prüfdienst verbindet der Adapter den
+vorhandenen Lifecycle-Kern über `changes.update_lifecycle_gate` mit der
+vollständigen Modellprüfung. Dieser Prüfer besitzt ursprüngliches Modell,
+Operation und Auditparameter. Bei jedem Aufruf berechnet er deren Ergebnis
+erneut und vergleicht es mit dem vollständigen vorgelegten Zielmodell.
+Einziger abgedeckter Nicht-Draft-Prüfling ist dabei das aktualisierte Artefakt
+im Zustand `proposed`. Andere Nicht-Draft-Artefakte und andere Zielzustände
+benötigen weiterhin einen ausdrücklich bereitgestellten echten Fachdienst.
+Eine Host-Prüfung wird weder ersetzt noch ihre Ablehnung übergangen. Der
+gebundene Prüfer bescheinigt keine bestehende Freigabe oder Historienvollständigkeit.
+
+Die R-Abnahme umfasst echte Änderungen strukturell gespeicherter
+Approved-Requirements: Sprache, Normativität, Text und das Entfernen einer nur
+für Approved erforderlichen Rationale ergeben `proposed` mit einer neuen
+Revision. Das begründet keine historische Freigabe dieser Testartefakte.
+No-ops in Draft und Proposed erhalten auch nichtkanonische Originalbytes und
+Dateimodi. Sie benötigen weiterhin Hostberechtigung und passende Live-Dateien.
+
+Veraltete Vorbedingungen, geschützte Identitäts-/Zustandsfelder und nachträglich
+manipulierte Operationscontainer bleiben abgewiesen. Ein vorhandener Writer
+oder ein abweichender physischer Ausgangsstand verhindert den Write.
+Injizierte Fehler vor und nach dem realen Dateiaustausch erhalten jeweils die
+tatsächlich vorhandenen alten oder neuen Bytes sowie das native Journal.
+Ein blinder Wiederholungsversuch wird vor weiterer Veröffentlichung blockiert.
+Der Dienst meldet daraus keinen sicheren Nicht-Write oder abgeschlossenen Commit.
