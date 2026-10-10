@@ -54,11 +54,13 @@ def finalize_read_only_work(store, *, cwd=None):
     current = _compatible_read(store.read)
     _require(current is not None, 'published_work_required')
     checked, request, invocation, unit_id = _checked_plan(current, registry, build)
+    _require(checked.as_dict()['state'] in ('running', 'completed'), 'work_cannot_complete')
     _compatible_read(_checked_completion, checked, request, invocation, unit_id)
     saved = {}
 
     def finish(previous):
         current, request, invocation, unit_id = _checked_plan(previous, registry, _runtime_build())
+        _require(current.as_dict()['state'] in ('running', 'completed'), 'work_cannot_complete')
         InvocationContextBuilder().prepare(invocation, cwd=cwd)
         outcome, exit_code = _checked_completion(current, request, invocation, unit_id)
         _require(_runtime_build() == build, 'runtime_build_changed')

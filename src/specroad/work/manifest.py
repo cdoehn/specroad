@@ -367,6 +367,9 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
         from ._completion import read_completion
         _require(not remaining)
         read_completion(value, objects, registry)
+    elif value['state'] == 'cancelled':
+        from ._cancellation import read_cancellation
+        read_cancellation(value, objects)
     else:
         _require(value['state'] == 'running'
                  and value['result_parts'] == [] and value['diagnostic_parts'] == [])
@@ -404,6 +407,12 @@ def read_work_successor(raw, objects, *, previous, registry, expected_tool_build
         from ._completion import read_completion
         record = read_completion(after, current.objects, registry)
         _require(not previous.entries('remaining') and new_done == old_done
+                 and record['source_checkpoint_generation'] == before['checkpoint_generation']
+                 and record['source_checkpoint_sha256'] == before['checkpoint_sha256'])
+    elif after['state'] == 'cancelled':
+        from ._cancellation import read_cancellation
+        record = read_cancellation(after, current.objects)
+        _require(new_done == old_done and after['manifests'] == before['manifests']
                  and record['source_checkpoint_generation'] == before['checkpoint_generation']
                  and record['source_checkpoint_sha256'] == before['checkpoint_sha256'])
     else:

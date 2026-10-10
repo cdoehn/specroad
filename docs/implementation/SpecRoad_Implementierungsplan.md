@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 297
-last_completed_plan_commit: 6.q.C
-next_plan_commit: 6.r.W
-last_completed_numbered_bundle: 148
+implementation_plan_commits_completed: 298
+last_completed_plan_commit: 6.r.W
+next_plan_commit: 6.r.R
+last_completed_numbered_bundle: 149
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6854,12 +6854,49 @@ bestätigen 297/885; anschließend folgt 6.r.W.
 
 #### 6.r.W – Let it Work
 
-- [ ] **6.r.W** · Position **298/885** · Voraussetzung: `6.q.C`.
+- [x] **6.r.W** · Position **298/885** · Voraussetzung: `6.q.C`.
 **Exakte Commit-Message:** `6.r.W feat(work): Work-Status, Prompt und Cancel aufbauen`
 
 **Umsetzung:** Status und next_action aus geprüfter Arbeit ableiten; Cancel nur für zulässig unveröffentlichte Arbeit ausführen.
 
 **Verhaltensabnahme:** Abgebrochene Vorbereitung erhält den Projektstand und besitzt keinen fingierten Erfolg.
+
+**Vorbereiteter Implementierungsstand (Bundle 149):** Ein expliziter Host-Status
+liest die vollständige Work-Kette mit aktueller Buildbindung und liefert Zustand,
+Checkpoint, gespeicherten Fortschritt, vollständige Restreferenz und geprüfte
+inerte nächste Operation. Er führt weder Facharbeit noch Projekt-/Work-Writes
+aus; die native Transaktion und ein unbekanntes Prozessende werden dadurch nicht
+als bestätigt ausgegeben. Die Datenoperation ist kein vorgetäuschtes CLI-Kommando.
+
+Die bestehenden geschlossenen Read-only-Aufträge und normativen Vorbereitungen
+können mit einem expliziten Grund atomar abgebrochen werden. Ein eigener
+Kontrollbeleg bindet Originalauftrag, Quellgeneration/-hash und den unveränderten
+vollständigen Aufgabenstand. Er enthält kein fachliches Erfolgsresultat. Alle
+früheren Objekte und Checkpoints bleiben erhalten; Wiederholung mit demselben
+Grund erzeugt keine neue Generation. Wiederaufnahme und Finalisierung werden
+auch nach einer konkurrierenden Stornierung vor Handlerausführung gesperrt.
+
+Bei normativer Vorbereitung werden Actor, Request-ID, Projekt und Originalplan
+frisch gebunden. Bereits bestätigte Commits, aktive/verwaiste Transaktionen oder
+fehlende/widersprüchliche Belege verhindern den Abbruch. Der bestehende native
+Projektroot-Mutex bleibt während der Abbruchveröffentlichung gehalten und
+verhindert kooperierende neue Writer; dafür werden keine Projektdateien oder
+Ownerdatensätze erzeugt. Recovery und ursprüngliche Operationen werden niemals
+ausgelöst. Ein früher oder später I/O-Fehler erhält den tatsächlichen Zustand.
+
+34 neue Verhaltenstests prüfen lesenden Status, alle sechs echten Bootstrap-
+Aufträge, erhaltene Handler-Evidenz, terminale Sperren, normative Vorbereitung
+vor/nach beiden Phasen, bereits erfolgten Fachcommit, echte Prozessabbrüche,
+konkurrierende native Writer, frühe/späte Checkpointfehler, konkurrierenden
+Abbruch vor Resume, Kontrollbelegmanipulation, Gründe, Runtime und fehlende Roots.
+605 ausgewählte Work-/Result-Verhaltenstests bilden die gezielte parallele
+Entwicklungsabnahme; bisherige Tests bleiben unverändert.
+
+Die APIs bleiben auf die vorhandenen geschlossenen Adapter begrenzt. Vollständige
+Work-CLI, ausführbarer CLI-Fortsetzungsprompt, generische Workflows und portable
+Wiederherstellung bleiben offen. SR-REQ-0627 bleibt partiell; die Prompt- und
+Agentenanforderungen werden nicht vorzeitig geschlossen. Erst vollständiger
+paralleler Apply-Test und Commit bestätigen 298/885; anschließend folgt 6.r.R.
 
 #### 6.r.R – Make it Right
 

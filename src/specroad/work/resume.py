@@ -186,6 +186,7 @@ def resume_read_only_work(store, *, cwd=None):
     current = _compatible_read(store.read)
     _require(current is not None, 'published_work_required')
     checked, request, invocation, unit_id = _checked_plan(current, registry, build)
+    _require(checked.as_dict()['state'] in ('running', 'completed'), 'work_cannot_resume')
     if checked.entries('completed'):
         _compatible_read(_saved_outcome, checked, request, invocation, unit_id)
     saved = {}
@@ -193,6 +194,7 @@ def resume_read_only_work(store, *, cwd=None):
     def advance(previous):
         # This second read is under the lease retained through publication.
         current, request, invocation, unit_id = _checked_plan(previous, registry, _runtime_build())
+        _require(current.as_dict()['state'] in ('running', 'completed'), 'work_cannot_resume')
         InvocationContextBuilder().prepare(invocation, cwd=cwd)
         if current.entries('completed'):
             outcome, exit_code = _saved_outcome(current, request, invocation, unit_id)
