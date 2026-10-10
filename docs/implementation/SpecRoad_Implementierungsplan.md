@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 296
-last_completed_plan_commit: 6.q.R
-next_plan_commit: 6.q.C
-last_completed_numbered_bundle: 147
+implementation_plan_commits_completed: 297
+last_completed_plan_commit: 6.q.C
+next_plan_commit: 6.r.W
+last_completed_numbered_bundle: 148
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6817,7 +6817,7 @@ vollständiger paralleler Apply-Test und Commit bestätigen 296/885; danach folg
 
 #### 6.q.C – Make it Clean
 
-- [ ] **6.q.C** · Position **297/885** · Voraussetzung: `6.q.R`.
+- [x] **6.q.C** · Position **297/885** · Voraussetzung: `6.q.R`.
 **Exakte Commit-Message:** `6.q.C refactor(work): Große Ergebnisdateien und Abschlusslieferung bereinigen`
 
 **Bereinigung:** Ergebnislieferung und fachlichen Commitabschluss als getrennte überprüfbare Zustände führen.
@@ -6825,6 +6825,26 @@ vollständiger paralleler Apply-Test und Commit bestätigen 296/885; danach folg
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter Implementierungsstand (Bundle 148):** Die reine Bildung der
+beiden Ergebnis-/Dateimanifeste liegt in einem eigenen privaten Projektionsmodul.
+Dieses verarbeitet ausschließlich bereits geprüfte Werte und besitzt weder
+Work-/Projekt-I/O noch Lock-, Commit- oder Lieferbestätigungszustände. Die
+bestehenden Adapter behalten die vollständige Quellprüfung, native
+Receipt-Verknüpfung, Checkpointbindung, atomare Dateiveröffentlichung und frische
+Byteprüfung jedes Lieferzugriffs.
+
+Die ausgelagerten Anweisungen ergeben nach Rückeinsetzen in beide Koordinatoren
+denselben AST wie zuvor; alle übrigen Funktionen und Klassen bleiben ebenfalls
+strukturgleich. Result-Schema, Status-/Exit-Verträge, Diagnosen, Größen, Hashes,
+Dateireihenfolge und erlaubte Seiteneffekte bleiben erhalten. Sämtliche bisherigen
+Testdateien und die W-/R-Erwartungen bleiben bytegleich. Die gezielte parallele
+Abnahme umfasst alle 45 W-/R-Fälle der Ergebnislieferung sowie die betroffenen
+Result-/Schema-Verträge; ein zusätzlicher Dev-Volltest wird nicht behauptet.
+
+Die dokumentierten Grenzen von W/R bleiben unverändert; SR-REQ-0623 bleibt
+partiell. Erst erfolgreicher vollständiger paralleler Apply-Test und Commit
+bestätigen 297/885; anschließend folgt 6.r.W.
 
 <a id="step-6-r"></a>
 ### 6.r – Work-Status, Prompt und Cancel

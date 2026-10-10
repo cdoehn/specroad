@@ -13,18 +13,12 @@ import secrets
 from ..changes._publication_io import replace_bound_image
 from ..changes._staging_files import _write_new
 from ..cli.commands import builtin_registry
-from ..cli.result_schemas import ENVELOPE_ID, validate_result_document
-from ..cli.results import ResultReference
 from ..model.canonical import canonical_json_bytes
 from ._checkpoint_files import _directory
+from ._result_projection import read_only_result_projection
 from .checkpoints import CheckpointStore, CheckpointStorageError, _read_file, _verify_bindings
 from .resume import (_checked_plan, _compatible_read, _require, _runtime_build,
                      _saved_outcome, WorkResumeError)
-
-
-def _reference(path, raw, schema):
-    return ResultReference(str(path), 'application/json', len(raw),
-                           sha256(raw).hexdigest(), schema)
 
 
 def _projection(store, held):
@@ -42,30 +36,10 @@ def _projection(store, held):
     _require(outcome['result'] is not None, 'complete_result_payload_required')
     raw = canonical_json_bytes(outcome['result'])
     schema = invocation.command.protocol.result_schema
-    name = 'result-' + sha256(raw).hexdigest() + '.json'
-    reference = _reference(held.path / 'results' / name, raw, schema)
-    entry = {**reference.as_dict(), 'path': 'results/' + name, 'role': 'result'}
-    manifest = canonical_json_bytes({'format_version': 'work-result-files-v1',
-        'work_id': value['work_id'], 'command_id': value['command_id'],
-        'checkpoint_generation': value['checkpoint_generation'],
-        'checkpoint_sha256': value['checkpoint_sha256'],
-        'outcome_sha256': sha256(canonical_json_bytes(outcome)).hexdigest(),
-        'exit_code': exit_code, 'files': [entry]})
-    manifest_name = 'manifest-' + sha256(manifest).hexdigest() + '.json'
-    manifest_ref = _reference(held.path / 'results' / manifest_name, manifest, 'work-result-files-v1')
-    # The complete diagnostics stay in this envelope. This first adapter does
-    # not truncate them or claim a separate large-diagnostic delivery protocol.
-    external = {**outcome, 'result': None, 'result_ref': reference.as_dict(),
-                'summary': {**outcome['summary'], 'delivery': 'external'}}
-    validate_result_document(ENVELOPE_ID, external)
-    result = {'format_version': 'work-result-delivery-v1', 'work_id': value['work_id'],
-        'checkpoint_generation': value['checkpoint_generation'],
-        'checkpoint_sha256': value['checkpoint_sha256'],
-        'command_exit_code': exit_code, 'command_outcome': external,
-        'delivery_manifest': manifest_ref.as_dict(), 'work_checkpoint_changed': False,
-        'project_writes_performed': False, 'handler_executed': False}
+    files, result = read_only_result_projection(
+        held.path, value, raw, outcome, exit_code, schema)
     _ensure_work(store, held, pointer, current, build)
-    return pointer, current, build, ((name, raw), (manifest_name, manifest)), result
+    return pointer, current, build, files, result
 
 
 def _ensure_work(store, held, pointer, current, build):

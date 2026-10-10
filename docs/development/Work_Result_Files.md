@@ -88,6 +88,14 @@ Die normative Dateilieferung erzeugt keine neue Work-Generation und behauptet
 keinen normativen Work-Abschluss. Die Quellbelege und diese gesonderte Lieferung
 bleiben getrennte Zustände; der laufende Vorbereitungscheckpoint bleibt erhalten.
 
+Die interne Projektion in `work/_result_projection.py` bildet ausschließlich
+Payload-Verweise, Manifeste und Ergebnisobjekte aus bereits geprüften Werten.
+Sie liest keine Projekt-/Work-Dateien, nimmt keinen Lock und veröffentlicht
+keine Ausgabe. Die öffentlichen Adapter behalten die Prüfung der nativen
+Commit-Belege bzw. gespeicherten Handlerergebnisse, sämtliche Work-Bindungen,
+die Dateiveröffentlichung und die frische Lieferprüfung. Die JSON-Verträge und
+kanonischen Bytes bleiben gegenüber W/R unverändert.
+
 Beide Adapter sind explizite Host-APIs. Automatische CLI-Auswahl des Lieferwegs,
 vollständiger normativer CLI-/Work-Abschluss, mehrteilige Resultate und ein
 eigenes Protokoll für ausgelagerte große Diagnosen bleiben offen. Quelle,
