@@ -13,12 +13,13 @@
     "Owned temporary native project with two goals and a draft requirement, complete resource bindings, explicit human actor/source guards and actual writer/receipt services."
   ],
   "steps": [
-    "Record a confirmed relation review under the real writer lock; inspect complete endpoint/context bindings, immutable revision-1 output and native receipts; replay the same request and reject changed intent, nonhuman actors, stale guards and tampered saved plans."
+    "Record a confirmed relation review under the real writer lock; inspect complete endpoint/context bindings, immutable revision-1 output and native receipts; replay the same request and reject changed intent, nonhuman actors, stale guards and tampered saved plans.",
+    "Reject invalid supplied graphs, stale source guards and incomplete known historical exclusions before lock/allocation; verify saved-plan isolation and exact immutable audit bindings, live endpoint byte conflicts and native interrupted publication evidence."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `relation_review`-Artefakt MUSS die geprüfte `relation_id`, den kanonischen Relationsinhaltshash, Quell- und Ziel-ID, deren Revision und vollständigen Artefakthash, deren `relation_context_hash-v1`, Reviewer, Entscheidung, Zeitstempel und optionalen Kommentar enthalten.",
-    "scope": "Native first confirmed human review: new random128 identity, exact relation/source/target IDs, revisions, full and context hashes, reviewer/time/reason/comment, recorded/approved creation through complete target checks and native journal/publication/receipt/cleanup, unchanged original files, historical request replay and immutable generic routes. The bound gates cover only the new review; general history/currentness, negative outcomes/withdrawals and CLI remain open."
+    "scope": "Native first confirmed human review: new random128 identity, exact relation/source/target IDs, revisions, full and context hashes, reviewer/time/reason/comment, recorded/approved creation through complete target checks and native journal/publication/receipt/cleanup, unchanged original files, historical request replay and immutable generic routes. The bound gates cover only the new review; general history/currentness, negative outcomes/withdrawals and CLI remain open. R: early graph/guard checks, known historical allocation exclusions, self-hashed record and mixed-plan rejection, live tag-only endpoint mutations, host-gate ownership, timestamp context discrimination and real before/after-rename recovery evidence. General history selection and negative reviews remain closed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -69,10 +70,43 @@
     "tests/test_relation_review_authoring.py::test_source_guard_is_explicit_before_io[guards2]",
     "tests/test_relation_review_authoring.py::test_source_guard_is_explicit_before_io[guards3]",
     "tests/test_relation_review_authoring.py::test_stale_source_guard_never_publishes_a_review[intent0]",
-    "tests/test_relation_review_authoring.py::test_stale_source_guard_never_publishes_a_review[intent1]"
+    "tests/test_relation_review_authoring.py::test_stale_source_guard_never_publishes_a_review[intent1]",
+    "tests/test_relation_review_authoring_right.py::test_actual_endpoint_byte_change_is_not_hidden_by_unchanged_context_fields[source]",
+    "tests/test_relation_review_authoring_right.py::test_actual_endpoint_byte_change_is_not_hidden_by_unchanged_context_fields[target]",
+    "tests/test_relation_review_authoring_right.py::test_allocation_skips_known_archived_and_reserved_review_ids_under_the_lock",
+    "tests/test_relation_review_authoring_right.py::test_declared_historical_identity_must_be_in_the_allocation_inventory",
+    "tests/test_relation_review_authoring_right.py::test_failed_native_record_replace_retains_actual_bytes_and_blocks_blind_retry[False]",
+    "tests/test_relation_review_authoring_right.py::test_failed_native_record_replace_retains_actual_bytes_and_blocks_blind_retry[True]",
+    "tests/test_relation_review_authoring_right.py::test_invalid_project_graph_is_rejected_before_lock_or_entropy[duplicate_id-duplicate_relation_id]",
+    "tests/test_relation_review_authoring_right.py::test_invalid_project_graph_is_rejected_before_lock_or_entropy[missing_target-missing_relation_target]",
+    "tests/test_relation_review_authoring_right.py::test_invalid_project_graph_is_rejected_before_lock_or_entropy[noncanonical-noncanonical_symmetric_relation]",
+    "tests/test_relation_review_authoring_right.py::test_invalid_project_graph_is_rejected_before_lock_or_entropy[self-self_relation_forbidden]",
+    "tests/test_relation_review_authoring_right.py::test_invalid_project_graph_is_rejected_before_lock_or_entropy[unrelated_fields-missing_field]",
+    "tests/test_relation_review_authoring_right.py::test_invalid_project_graph_is_rejected_before_lock_or_entropy[wrong_pair-relation_type_pair_forbidden]",
+    "tests/test_relation_review_authoring_right.py::test_mutable_host_gate_list_cannot_remove_a_bound_denial",
+    "tests/test_relation_review_authoring_right.py::test_nonhuman_actor_cannot_reach_even_structural_preflight[ai]",
+    "tests/test_relation_review_authoring_right.py::test_nonhuman_actor_cannot_reach_even_structural_preflight[ci]",
+    "tests/test_relation_review_authoring_right.py::test_nonhuman_actor_cannot_reach_even_structural_preflight[tool]",
+    "tests/test_relation_review_authoring_right.py::test_saved_record_cannot_rebind_identity_audit_or_title[created_by-new_value4]",
+    "tests/test_relation_review_authoring_right.py::test_saved_record_cannot_rebind_identity_audit_or_title[reviewed_at-2027-01-01T00:00:00Z]",
+    "tests/test_relation_review_authoring_right.py::test_saved_record_cannot_rebind_identity_audit_or_title[revision-2]",
+    "tests/test_relation_review_authoring_right.py::test_saved_record_cannot_rebind_identity_audit_or_title[source_id-SR-GOAL-00000000000000000000000002]",
+    "tests/test_relation_review_authoring_right.py::test_saved_record_cannot_rebind_identity_audit_or_title[target_id-SR-GOAL-00000000000000000000000002]",
+    "tests/test_relation_review_authoring_right.py::test_saved_record_cannot_rebind_identity_audit_or_title[title-Substituted review record]",
+    "tests/test_relation_review_authoring_right.py::test_saved_record_cannot_rebind_identity_audit_or_title[updated_by-new_value5]",
+    "tests/test_relation_review_authoring_right.py::test_saved_review_plan_cannot_mix_endpoint_or_relation_changes[relation_remove]",
+    "tests/test_relation_review_authoring_right.py::test_saved_review_plan_cannot_mix_endpoint_or_relation_changes[transition]",
+    "tests/test_relation_review_authoring_right.py::test_saved_review_plan_cannot_mix_endpoint_or_relation_changes[update]",
+    "tests/test_relation_review_authoring_right.py::test_stale_guard_precedes_lock_and_unavailable_entropy[guard0-expected_revision_mismatch]",
+    "tests/test_relation_review_authoring_right.py::test_stale_guard_precedes_lock_and_unavailable_entropy[guard1-expected_hash_mismatch]",
+    "tests/test_relation_review_authoring_right.py::test_unknown_selected_source_or_relation_is_rejected_before_lock[relation]",
+    "tests/test_relation_review_authoring_right.py::test_unknown_selected_source_or_relation_is_rejected_before_lock[source]",
+    "tests/test_relation_review_authoring_right.py::test_unmatched_historical_context_does_not_shift_new_review_time[relation_content_sha256]",
+    "tests/test_relation_review_authoring_right.py::test_unmatched_historical_context_does_not_shift_new_review_time[relation_id]",
+    "tests/test_relation_review_authoring_right.py::test_unmatched_historical_context_does_not_shift_new_review_time[source_context_sha256]",
+    "tests/test_relation_review_authoring_right.py::test_unmatched_historical_context_does_not_shift_new_review_time[target_context_sha256]"
   ],
   "open_items": [
-    "Complete 7.g.R robustness and saved/direct review binding cases; retain genuine W/R/C states.",
     "General review-history/status selection belongs to 7.h; negative decisions and exact approval withdrawals belong to 7.i. Other relevant semantic subjects fail closed until their services exist.",
     "Integrate registered CLI/dry-run/output, production model/history acquisition and supported-platform evidence; no complete requirement or release claim."
   ]

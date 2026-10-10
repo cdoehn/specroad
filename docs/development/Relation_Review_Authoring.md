@@ -15,6 +15,13 @@ Reviewer, Entscheidung, `reviewed_at`, Begründung und optionalen Kommentar.
 Reguläre Erzeugungsmetadaten und `reviewed_at` verwenden die gebundene Zeit;
 diese wird nach vorhandenen Reviews derselben Kontextbindung angeordnet.
 
+Vor Lock und ID-Allokation prüft der Dienst bereits das vollständige gelieferte
+Artefakt-/Relationsinventar, die strukturelle Beziehung und die expliziten
+Quellguards. Bekannte historische IDs müssen im Allokationsinventar enthalten
+sein; reservierte und archivierte IDs bleiben ausgeschlossen. Diese frühe
+Prüfung ersetzt keine Live-Prüfung: Zielvalidierung und tatsächliche Dateibytes
+werden an den bestehenden Publikationsgrenzen weiterhin erneut geprüft.
+
 Der spezielle Target-Planner rekonstruiert den Datensatz auch bei gespeicherten
 Plänen vollständig. Er erlaubt genau eine isolierte Reviewoperation. Er legt
 Revision 1 und `recorded`/`approved` fest, ohne Endpunkte zu verändern oder

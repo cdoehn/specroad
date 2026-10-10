@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 328
-last_completed_plan_commit: 7.g.W
-next_plan_commit: 7.g.R
-last_completed_numbered_bundle: 179
+implementation_plan_commits_completed: 329
+last_completed_plan_commit: 7.g.R
+next_plan_commit: 7.g.C
+last_completed_numbered_bundle: 180
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8077,12 +8077,36 @@ SR-REQ-0434 bleiben ausdrücklich `partial`.
 
 #### 7.g.R – Make it Right
 
-- [ ] **7.g.R** · Position **329/885** · Voraussetzung: `7.g.W`.
+- [x] **7.g.R** · Position **329/885** · Voraussetzung: `7.g.W`.
 **Exakte Commit-Message:** `7.g.R feat(authoring): Reviewdatensatz und Kontextbindung vervollständigen`
 
 **Vervollständigung:** AI-Reviewer und strukturell ungültige Beziehung vor Write abweisen.
 
 **Verhaltensabnahme:** Der Nachweis bindet exakt die geprüften Werte und lässt sich nicht generisch aktualisieren. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 180):** Result 179 bestätigt
+7.g.W mit 8.465 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Struktur und Quellguards des vollständigen gelieferten Inventars werden nun
+vor Writer-Lock und Entropieallokation geprüft. Das Allokationsinventar muss
+bereits bekannte historische IDs berücksichtigen. Vollständige Zielvalidierung
+und native Live-Prüfungen an den Publikationsgrenzen bleiben erhalten.
+
+34 neue R-Verhaltenstests ergänzen alle 35 W-Fälle und 741 betroffene
+Regressionen: 810 gezielte Dev-Fälle parallel. Sie binden frühe Struktur- und
+Guardfehler, Actor-Grenzen, historische/reservierte IDs, manipulierte
+Record-/Auditfelder, unzulässige gemischte Pläne, reale Endpunktänderungen,
+gebundene Host-Gates und tatsächliche Fehler vor/nach dem Record-Rename.
+Dateizustand und Recovery-Journal bleiben bei Publikationsfehlern erhalten;
+blindes Wiederholen ist gesperrt. Alle bisherigen Testorakel bleiben unverändert.
+Die vollständige parallele Apply-Suite umfasst 8.499 Fälle; erst deren Erfolg
+und der passende Commit bestätigen 329/885. Danach folgt 7.g.C.
+
+**Abgrenzung:** Der erste positive Review bleibt der unterstützte Schreibfall.
+Allgemeine Reviewhistorie/Statusauswahl (7.h), negative Entscheidungen mit
+Freigaberücknahmen (7.i), CLI, produktive Inventur/Akteurprüfung und
+Plattformnachweise bleiben offen. Eine frühe Modellprüfung ist keine Aussage
+über unveränderte Live-Dateien und ersetzt kein Write-Gate. SR-REQ-0275 und
+SR-REQ-0434 bleiben `partial`.
 
 #### 7.g.C – Make it Clean
 

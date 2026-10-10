@@ -13,6 +13,7 @@ from ..changes import (AuthoringError, ChangeOperation, TargetModel, TargetPolic
     finalize_committing_journal, cleanup_completed_transaction,
     read_transaction_completion, resolve_normative_request)
 from ..changes._common import _text, _reference
+from ..changes._fold_inputs import _inventory, _relation_inventory, _check_expected
 from ..changes._journal_codec import _transaction
 from ..changes._lock_files import LockFiles
 from ..changes._publication_observation import _root
@@ -70,6 +71,21 @@ def _result(operation, completion, *, replayed=False):
         'maturity': record['maturity'], 'revision': record['revision'],
         'path': artifact_path('relation_review', record['id'], record['id'].split('-')[0]),
         'write_state': 'committed', 'replayed': replayed, 'completion': completion.data}
+
+
+def _preflight_context(model, intent):
+    """Reject an inconsistent supplied graph/guard before locking or allocation.
+
+    The immutable observation is still checked against the bound model by the
+    target planner and against actual files at every publication boundary.
+    This early check is neither a live snapshot nor a write capability.
+    """
+    state, _, _ = _inventory(model.artifacts, [*model.reserved_artifact_ids,
+        *model.reservations['previously_approved_ids']])
+    _relation_inventory(state, model.reserved_relation_ids)
+    context = review_context(list(state.values()), intent['source'], intent['relation_id'])
+    _check_expected(state[intent['source']], intent)
+    return context
 
 
 def _replay(source, intent, actor, request_id):
@@ -141,8 +157,12 @@ def record_relation_review(model, source_id, relation_id, *, decision, reason,
     model = model.snapshot()
     if (inventory.id_prefix != model.configuration.id_prefix
             or inventory.current_ids != {a['id'] for a in model.artifacts}
-            or not set(model.reserved_artifact_ids) <= inventory.reserved_ids | inventory.archived_ids):
+            or not set(model.reserved_artifact_ids) <= inventory.reserved_ids | inventory.archived_ids
+            or not set(model.reservations['previously_approved_ids']) <=
+                inventory.current_ids | inventory.archived_ids | inventory.reserved_ids):
         raise AuthoringError('review_identity_inventory_mismatch', exit_code=6)
+    context = _preflight_context(model, intent)
+    planned_at = review_time(model.artifacts, context, planned_at)
     with project_lock(source.boundary.root, kind='writer', command='change apply',
             project_id=model.configuration.project_id, request_id=request_id,
             transaction_id=transaction_id) as held:
@@ -152,8 +172,6 @@ def record_relation_review(model, source_id, relation_id, *, decision, reason,
         current = _root(model)
         held.require_publication(current, command='change apply', request_id=request_id,
                                  transaction_id=transaction_id)
-        context = review_context(model.artifacts, source_id, relation_id)
-        planned_at = review_time(model.artifacts, context, planned_at)
         try:
             identity = allocate_artifact_identity('relation_review', inventory).identity
         except ModelError as error:
