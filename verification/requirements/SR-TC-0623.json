@@ -10,17 +10,21 @@
     "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
-    "Owned temporary protected project/input root and private external Work directory; actual closed bootstrap handlers, complete durable Work generation and explicitly labelled recorded-build compatibility fixture."
+    "Owned temporary protected project/input root and private external Work directory; actual closed bootstrap handlers, complete durable Work generation and explicitly labelled recorded-build compatibility fixture.",
+    "Explicit trusted test-host normative registry and authority; real native project locks, journal, receipts and owned subprocess cuts after semantic commit or cleanup. Independently retained original Work binding; no CLI registration or measured distribution claim."
   ],
   "steps": [
     "Execute and finalize each supported real read-only handler, then publish its entire unchanged result payload and bound file manifest.",
     "Check complete machine payload, original schema, exact byte size/hash, full diagnostics and source checkpoint binding; reuse through a fresh controller without writes or handler execution.",
-    "Refuse unfinished/missing work, changed runtime, missing/changed outputs and unsafe result storage; retain actual files and checkpoint after native short writes or early/late output failures."
+    "Refuse unfinished/missing work, changed runtime, missing/changed outputs and unsafe result storage; retain actual files and checkpoint after native short writes or early/late output failures.",
+    "After a real native commit, export the complete original request resolution and bound manifest; retain request, actor, operation hash, created IDs and historical receipt references without another publication.",
+    "Interrupt an actual child process after commit or cleanup, deliver the original result from a fresh controller, then explicitly recover native cleanup and reuse identical delivery bytes.",
+    "Inject early/late output errors, remove native proof, combine different valid observations or change output bytes/runtime; refuse false delivery, retain actual state and permit only explicit output completion."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine zu große Inlineausgabe MUSS vollständig über den Ergebnisdatei-/Manifestvertrag nach Kapitel 11.5 geliefert werden.",
-    "scope": "6.q.W adds explicit file materialization for already completed Work from the existing six read-only bootstrap handlers. Actual saved handler results and the full original schema, status, exit code, project binding and diagnostics are preserved. The whole canonical result is atomically published in the protected external Work results directory; a subsequently published canonical manifest binds every produced payload by relative path, role, media type, size, SHA-256 and schema, plus the originating Work/checkpoint/command and complete source-envelope hash. The returned manifest reference binds its own complete bytes without recursion. Every delivery access rechecks the original closed Work plan, full checkpoint chain, current build and all output bytes. Matching files are reused without writes, handler execution, checkpoint changes or project changes. Missing or altered files never yield a confirmed delivery; unsafe storage and changed runtime are refused. Actual short writes and injected early/late native output failures retain the real checkpoint and output/temporary files, and explicit retry only completes verified missing outputs. All tests compare machine contracts and complete byte content, not human wording or layout. This is a partial closed-host adapter, not CLI integration or a claim of streaming/multipart/normative result delivery."
+    "scope": "6.q.W adds explicit file materialization for already completed Work from the existing six read-only bootstrap handlers. Actual saved handler results and the full original schema, status, exit code, project binding and diagnostics are preserved. The whole canonical result is atomically published in the protected external Work results directory; a subsequently published canonical manifest binds every produced payload by relative path, role, media type, size, SHA-256 and schema, plus the originating Work/checkpoint/command and complete source-envelope hash. The returned manifest reference binds its own complete bytes without recursion. Every delivery access rechecks the original closed Work plan, full checkpoint chain, current build and all output bytes. Matching files are reused without writes, handler execution, checkpoint changes or project changes. Missing or altered files never yield a confirmed delivery; unsafe storage and changed runtime are refused. Actual short writes and injected early/late native output failures retain the real checkpoint and output/temporary files, and explicit retry only completes verified missing outputs. All tests compare machine contracts and complete byte content, not human wording or layout. This is a partial closed-host adapter, not CLI integration or a claim of streaming/multipart/normative result delivery. 6.q.R adds a separate receipt-only native result-file adapter. Independently verified request and transaction completion observations must bind the same project/request/transaction/target/receipt. The entire original normative-request-resolution-v1 payload is externalized, without inventing a native CLI envelope or marking normative Work completed. Source proof is checked again during atomic output publication and every delivery access; old output never substitutes for missing native commit proof. Actual post-commit process loss, explicit cleanup Recovery and early/late output failures preserve the one original semantic commit. Explicit retry only finishes missing result files, never invokes another Apply, handler, project writer or automatic Recovery. Prior W tests are unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,6 +41,29 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_work_receipt_files.py::test_complete_original_receipt_is_delivered_without_another_apply[False]",
+    "tests/test_work_receipt_files.py::test_complete_original_receipt_is_delivered_without_another_apply[True]",
+    "tests/test_work_receipt_files.py::test_different_valid_completion_observations_cannot_confirm_delivery[False]",
+    "tests/test_work_receipt_files.py::test_different_valid_completion_observations_cannot_confirm_delivery[True]",
+    "tests/test_work_receipt_files.py::test_each_delivery_access_rechecks_every_output_byte[changed-delivery_manifest]",
+    "tests/test_work_receipt_files.py::test_each_delivery_access_rechecks_every_output_byte[changed-result_ref]",
+    "tests/test_work_receipt_files.py::test_each_delivery_access_rechecks_every_output_byte[missing-delivery_manifest]",
+    "tests/test_work_receipt_files.py::test_each_delivery_access_rechecks_every_output_byte[missing-result_ref]",
+    "tests/test_work_receipt_files.py::test_lost_process_output_is_delivered_from_original_commit_before_and_after_cleanup[cleanup]",
+    "tests/test_work_receipt_files.py::test_lost_process_output_is_delivered_from_original_commit_before_and_after_cleanup[committed]",
+    "tests/test_work_receipt_files.py::test_missing_native_proof_cannot_be_replaced_by_output_files[False-committed]",
+    "tests/test_work_receipt_files.py::test_missing_native_proof_cannot_be_replaced_by_output_files[False-request]",
+    "tests/test_work_receipt_files.py::test_missing_native_proof_cannot_be_replaced_by_output_files[False-transaction]",
+    "tests/test_work_receipt_files.py::test_missing_native_proof_cannot_be_replaced_by_output_files[True-committed]",
+    "tests/test_work_receipt_files.py::test_missing_native_proof_cannot_be_replaced_by_output_files[True-request]",
+    "tests/test_work_receipt_files.py::test_missing_native_proof_cannot_be_replaced_by_output_files[True-transaction]",
+    "tests/test_work_receipt_files.py::test_output_failure_retains_commit_and_actual_files_and_retry_only_finishes_delivery[False-manifest]",
+    "tests/test_work_receipt_files.py::test_output_failure_retains_commit_and_actual_files_and_retry_only_finishes_delivery[False-payload]",
+    "tests/test_work_receipt_files.py::test_output_failure_retains_commit_and_actual_files_and_retry_only_finishes_delivery[True-manifest]",
+    "tests/test_work_receipt_files.py::test_output_failure_retains_commit_and_actual_files_and_retry_only_finishes_delivery[True-payload]",
+    "tests/test_work_receipt_files.py::test_receipt_disappearing_during_output_write_prevents_publication",
+    "tests/test_work_receipt_files.py::test_runtime_change_refuses_existing_delivery_without_writes",
+    "tests/test_work_receipt_files.py::test_uncommitted_preparations_do_not_trigger_apply_or_allocate_output",
     "tests/test_work_result_files.py::test_bounded_short_writes_keep_the_entire_original_payload",
     "tests/test_work_result_files.py::test_every_access_rechecks_all_result_and_manifest_bytes[different_bytes-manifest]",
     "tests/test_work_result_files.py::test_every_access_rechecks_all_result_and_manifest_bytes[different_bytes-payload]",
@@ -61,6 +88,6 @@
     "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[symlink]"
   ],
   "open_items": [
-    "Automatic CLI delivery selection, normative receipt-backed result delivery, multipart output and external large-diagnostic delivery remain open. Source, canonical output and readback still use the complete in-memory result; bounded I/O does not establish streaming generation. No complete requirement or release approval is claimed."
+    "Automatic CLI delivery selection, final normative CLI/Work completion, multipart output and external large-diagnostic delivery remain open. Both source outcomes, canonical outputs and readbacks still use complete in-memory values; bounded I/O does not establish streaming generation. Historical receipt delivery does not assert current target validity, authentication, new write permission or overall requirement/release approval."
   ]
 }

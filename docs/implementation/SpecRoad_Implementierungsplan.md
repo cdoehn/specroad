@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 295
-last_completed_plan_commit: 6.q.W
-next_plan_commit: 6.q.R
-last_completed_numbered_bundle: 146
+implementation_plan_commits_completed: 296
+last_completed_plan_commit: 6.q.R
+next_plan_commit: 6.q.C
+last_completed_numbered_bundle: 147
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6772,12 +6772,48 @@ partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.q.R – Make it Right
 
-- [ ] **6.q.R** · Position **296/885** · Voraussetzung: `6.q.W`.
+- [x] **6.q.R** · Position **296/885** · Voraussetzung: `6.q.W`.
 **Exakte Commit-Message:** `6.q.R feat(work): Große Ergebnisdateien und Abschlusslieferung vervollständigen`
 
 **Vervollständigung:** Ausgabeausfall nach Fachcommit darf keinen zweiten Apply auslösen; unvollständige Datei nicht als geliefert markieren.
 
 **Verhaltensabnahme:** Datenumfang und Hashes stimmen vollständig; Tests vergleichen keine menschengelesenen Ergebnislayouts. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 147):** Eine gesonderte Host-API
+liefert die vollständige ursprüngliche native Request-Resolution nach einem
+bereits bestätigten Fachcommit als atomare Ergebnisdatei und gebundenes Manifest.
+Der vorhandene Request-Reader und der unabhängig gelesene Transaktionsabschluss
+müssen denselben Request, dasselbe Projekt, dieselbe Transaktion, denselben
+Zielhash und denselben Receipt-Verweis bestätigen. Work-Anfangsbindung,
+Originalplan, Actor, Request-ID, Projektroot, Checkpointkette und Runtime bleiben
+verbindlich. Alte Ausgabedateien ersetzen keinen fehlenden nativen Beleg.
+
+Die Dateilieferung besitzt keine Schreibautorität, startet keine native
+Transaktion und führt keinen Handler erneut aus. Ein Ausgabeausfall erhält den
+bereits bestätigten Fachcommit und den tatsächlichen Work-/Dateistand. Ein
+expliziter Wiederholungsaufruf prüft alle vorhandenen Dateien und ergänzt nur
+fehlende Ausgaben. Jeder Lieferzugriff und jeder atomare Dateiwechselschritt
+prüfen die nativen Quellbelege erneut. Unvollständige Dateien erzeugen keinen
+bestätigten Lieferverweis. Eine spätere native Cleanup-Recovery verändert den
+vollständigen historischen Request-Payload nicht.
+
+23 neue Verhaltenstests prüfen tatsächliche native Einzel-/Mehrfachoperationen,
+vollständige Payload-/Manifestbindungen, echte Prozessabbrüche unmittelbar nach
+Commit oder Cleanup, Wiederverwendung vor und nach expliziter Recovery,
+frühe/späte Ausgabefehler in Payload und Manifest, fehlende oder widersprüchliche
+Commit-Belege, unbestätigte Vorbereitungen, Byteverlust/-änderung, Runtimewechsel
+und einen während der Ausgabeschreibphase verschwindenden Commit-Beleg.
+Die W-Nachweise und betroffenen nativen Receipt-/Idempotenznachweise bleiben
+Teil der gezielten parallelen Verhaltensabnahme; bisherige Tests bleiben
+unverändert.
+
+Der normative Work-Checkpoint bleibt laufend und unverändert; die Lieferung
+behauptet keinen vollständigen normativen CLI-/Work-Abschluss. Automatische
+CLI-Auswahl, mehrteilige Ergebnisse, ausgelagerte große Diagnosen und
+inkrementelle Generierung bleiben offen. Quelle, Payload und Readback liegen
+weiter vollständig im Speicher. SR-REQ-0623 bleibt partiell. Erst erfolgreicher
+vollständiger paralleler Apply-Test und Commit bestätigen 296/885; danach folgt
+6.q.C.
 
 #### 6.q.C – Make it Clean
 
