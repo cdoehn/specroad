@@ -10,17 +10,19 @@
     "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
-    "Owned temporary model/profile files and Work roots; real native model, graph, SRX, checkpoint and transaction paths. In-process tests use an explicitly labelled recorded-build fixture; process tests build and run the actual module/zipapp. Trusted host registry, initial binding and normative publication authority are explicit test harness inputs."
+    "Owned temporary model/profile files and Work roots; real native model, graph, SRX, checkpoint and transaction paths. In-process tests use an explicitly labelled recorded-build fixture; process tests build and run the actual module/zipapp. Trusted host registry, initial binding and normative publication authority are explicit test harness inputs.",
+    "The host-boundary case uses actual newly built module execution and native RLIMIT_NOFILE changes in independent owned child processes; low-limit failure is a real EMFILE, not an invented softbudget refusal."
   ],
   "steps": [
     "Run actual model validation with a selected subject whose incoming graph dependencies require additional model subjects; retain the native source report and exact checked IDs.",
     "Compare completed durable results and complete policy failures with direct native evaluation, including every diagnostic and retained native detail.",
-    "Reject missing required checks or unfinished batches without a false completion; preserve the prior checkpoint and complete native failure findings."
+    "Reject missing required checks or unfinished batches without a false completion; preserve the prior checkpoint and complete native failure findings.",
+    "Check rehashed incomplete/contradictory retained data and actual changed input/runtime/host prerequisites; retain the actual checkpoint and all required observations, then resume only after a compatible prerequisite is restored."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Inkrementelle Prüfungen MÜSSEN ihren tatsächlich geprüften Umfang einschließlich notwendiger Abhängigkeiten korrekt ausweisen.",
-    "scope": "The selected closure contains exactly three dependent goals from four supplied sources; all source bytes are structurally examined. Every completed result retains the native source report, scope and diagnostics. Malformed model inputs and unfinished work cannot claim completion. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
+    "scope": "The selected closure contains exactly three dependent goals from four supplied sources; all source bytes are structurally examined. Every completed result retains the native source report, scope and diagnostics. Malformed model inputs and unfinished work cannot claim completion. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -54,7 +56,41 @@
     "tests/test_work_evaluation.py::test_incomplete_batch_cannot_finalize_or_write_a_false_completion[4]",
     "tests/test_work_evaluation.py::test_real_failed_checks_preserve_checkpoint_and_complete_findings[malformed_model]",
     "tests/test_work_evaluation.py::test_real_failed_checks_preserve_checkpoint_and_complete_findings[missing_profile]",
-    "tests/test_work_evaluation.py::test_real_failed_checks_preserve_checkpoint_and_complete_findings[srx_type]"
+    "tests/test_work_evaluation.py::test_real_failed_checks_preserve_checkpoint_and_complete_findings[srx_type]",
+    "tests/test_work_evaluation_right.py::test_global_completion_cannot_discard_an_actual_unit_or_diagnostic[drop_diagnostic-advance]",
+    "tests/test_work_evaluation_right.py::test_global_completion_cannot_discard_an_actual_unit_or_diagnostic[drop_diagnostic-finalize]",
+    "tests/test_work_evaluation_right.py::test_global_completion_cannot_discard_an_actual_unit_or_diagnostic[drop_result-advance]",
+    "tests/test_work_evaluation_right.py::test_global_completion_cannot_discard_an_actual_unit_or_diagnostic[drop_result-finalize]",
+    "tests/test_work_evaluation_right.py::test_incomplete_required_input_set_retains_all_findings_and_no_confirmed_unit[malformed_outside_selection]",
+    "tests/test_work_evaluation_right.py::test_incomplete_required_input_set_retains_all_findings_and_no_confirmed_unit[missing_dependency]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[approval-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[approval-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[changed_selection-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[changed_selection-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[diagnostic_format-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[diagnostic_format-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[diagnostic_summary-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[diagnostic_summary-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[duplicate_source-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[duplicate_source-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[extra_projection-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[extra_projection-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[incomplete_phase-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[incomplete_phase-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[lost_diagnostic-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[lost_diagnostic-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[lost_native_finding-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[lost_native_finding-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[missing_dependency-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[missing_dependency-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[missing_stage-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[missing_stage-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[model_result-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[model_result-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[source_binding-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[source_binding-finalize]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[unknown_stage-advance]",
+    "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[unknown_stage-finalize]"
   ],
   "open_items": [
     "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."

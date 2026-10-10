@@ -13,12 +13,13 @@ from ..cli.registry import CommandRegistry
 from ..cli.requests import CommandRequest
 from ..cli.results import CommandResult, FailureKind
 from ..diagnostics import Diagnostic
+from ..result_contract import ResultContractError
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..runtime.controlled import _invocation, evaluate_srx, load_srx_graph
 from ..runtime.control_points import PhaseBoundary
 from ._data_contract import WorkManifestError, _copy, _object, _parse, _text
-from .checkpoints import CheckpointStore
+from .checkpoints import CheckpointStore, CheckpointStorageError
 from .manifest import (WorkManifest, create_work_manifest, read_work_manifest,
                        partition_work_manifest, complete_work_manifest)
 from .resume import WorkResumeError, _compatible_read, _require, _runtime_build
@@ -27,6 +28,29 @@ from .resume import WorkResumeError, _compatible_read, _require, _runtime_build
 _REQUEST = CommandRequest('analysis.evaluate')
 _SOURCES = {'project_id': None, 'scope': ['explicit_saved_model'], 'model_root_sha256': None}
 _SCHEMA = 'work-evaluation-v1'
+
+
+class WorkEvaluationDataError(WorkResumeError):
+    """A concrete missing/changed stored resource, never a source fallback."""
+
+    def __init__(self, reason, *, resource):
+        super().__init__(reason)
+        self._resource = canonical_json_bytes(resource)
+
+    def as_dict(self):
+        return {**super().as_dict(), 'resource': _parse(self._resource)}
+
+
+def _stored(reader, initial, *args):
+    try:
+        return _compatible_read(reader, *args)
+    except (CheckpointStorageError, FileNotFoundError) as error:
+        path = error.path if isinstance(error, CheckpointStorageError) else error.filename
+        name = path.rsplit('/', 1)[-1] if type(path) is str else None
+        row = next((row for row in initial.entries('inputs') if row['sha256'] == name), None)
+        resource = ({k: row[k] for k in ('root_id', 'path', 'sha256')} if row else
+                    {'root_id': 'work', 'path': path if type(path) is str and not path.startswith('/') else None})
+        raise WorkEvaluationDataError('evaluation_work_data_unavailable', resource=resource) from error
 
 
 class WorkEvaluationBlocked(WorkResumeError):
@@ -114,6 +138,13 @@ def _checked_plan(current, registry, build):
 
 
 def _records(current):
+    try:
+        return _read_records(current)
+    except (WorkManifestError, ModelError, ResultContractError) as error:
+        raise WorkResumeError('invalid_evaluation_completion') from error
+
+
+def _read_records(current):
     """Read retained evidence without rerunning completed model/SRX work."""
     tasks = {t['unit_id']: t for t in current.entries('tasks')}
     value = current.as_dict(); records = []
@@ -147,6 +178,8 @@ def _records(current):
                 and observation.get('status') == ('success' if row['exit_code'] == 0 else 'failed')
                 and canonical_json_bytes(observation.get('diagnostics')) == canonical_json_bytes(row['diagnostics']),
                 'invalid_evaluation_completion')
+            from ._evaluation_evidence import check_validation_observation
+            check_validation_observation(current, task, observation)
         records.append(row)
     return records
 
@@ -218,7 +251,7 @@ def _checked_store(store, registry, build):
     initial = _checked_plan(store._initial, registry, build)
     _require(initial.as_dict()['checkpoint_generation'] == 0 and not initial.entries('completed'),
              'initial_work_required')
-    current = _compatible_read(store.read)
+    current = _stored(store.read, initial)
     _require(current is not None, 'published_work_required')
     current = _checked_plan(current, registry, build); _records(current)
     _checked_final(current, registry)
@@ -261,7 +294,11 @@ def advance_evaluation_work(store, call, *, registry, max_units=1):
             if observation['soft_budget_exceeded']:
                 break
         _require(_runtime_build() == build, 'runtime_build_changed')
-        return partition_work_manifest(current, additions) if additions else previous
+        if not additions:
+            return previous
+        candidate = partition_work_manifest(current, additions)
+        _records(candidate)
+        return candidate
 
     try:
         confirmed = store._update(advance)

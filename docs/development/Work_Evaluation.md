@@ -64,3 +64,37 @@ Allgemeine CLI-/Code-8-Anbindung, Workpaketexport/-restore dieses neuen Adapters
 andere Buildversionen, große speicherbegrenzte Auswertungen, sämtliche späteren
 Fachbefehle sowie die vollständige Plattform-/Sandbox-/Release-Matrix bleiben
 offen. Die zugehörigen Requirements sind nur teilweise umgesetzt.
+
+## Gespeicherte Befunde und geänderte Voraussetzungen
+
+Vor einer schreibenden Work-Lease prüft der Adapter gespeicherte native
+Validierungsbefunde auf den vollständigen derzeit unterstützten Phasenvertrag.
+Quellmanifest, Quellzahl, angeforderte Auswahl, tatsächlicher Prüfumfang,
+Pflichtphasen, Status und Verweigerung von Freigabe-/Writebehauptungen müssen
+zusammenpassen. Die vorhandene native Diagnoseprojektion wird auf den erhaltenen
+Originalbericht angewendet und vollständig mit der gespeicherten Projektion
+verglichen. Fehlende oder veränderte Diagnoseeinheiten, Summen und zusätzliche
+Ergebnisfelder werden so als Code-6-Konflikte vor Fortsetzung oder Abschluss
+abgewiesen. Auch neue Kandidaten durchlaufen diese Prüfung vor Veröffentlichung.
+
+Dies prüft die Konsistenz gespeicherter Beobachtungen; Modellvalidierung,
+Profilkomposition, Graph-/SRX-Auswertung und Fachgates werden für bestätigte
+Einheiten nicht wiederholt. Der Leser authentifiziert keine fremden,
+vollständig erfundenen Beobachtungen und ersetzt die unabhängige Anfangsbindung
+und den geschützten Work-Store nicht.
+
+Fehlende oder veränderte Snapshotobjekte ergeben `WorkEvaluationDataError`
+(Code 6). Soweit das Objekt zu einem bekannten Eingang gehört, benennt
+`as_dict().resource` dessen `root_id`, relativen `path` und `sha256`.
+Andere Speicherbefunde behalten ihre logische Workressource. Noch vorhandene
+Originaldateien werden nicht stillschweigend als Ersatz eingesetzt.
+Die Ausnahme begründet keine Löschung, Reparatur oder Neuinterpretation des
+tatsächlichen Checkpoints.
+
+Ein Buildwechsel während der Auswertung oder nach tatsächlicher Veröffentlichung
+liefert keinen Erfolg unter einer falschen Runtimebindung. Nach Wiederherstellung
+der kompatiblen Runtime wird nur der tatsächlich gespeicherte Präfix wiederverwendet.
+Aktuelle native Hostfehler, beispielsweise `EMFILE` bei unzureichendem
+Dateideskriptorlimit, bleiben solche Fehler. Sie werden nicht als Softbudgetereignis,
+fachliches Prädikat oder bestätigter Fortschritt umgedeutet. Ein späterer
+Aufruf mit ausreichender aktueller Ausstattung kann denselben Auftrag fortsetzen.

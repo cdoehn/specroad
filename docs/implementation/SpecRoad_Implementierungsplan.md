@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 307
-last_completed_plan_commit: 6.u.W
-next_plan_commit: 6.u.R
-last_completed_numbered_bundle: 158
+implementation_plan_commits_completed: 308
+last_completed_plan_commit: 6.u.R
+next_plan_commit: 6.u.C
+last_completed_numbered_bundle: 159
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7256,12 +7256,41 @@ folgt 6.u.R. Technischer Aufrufvertrag: `docs/development/Work_Evaluation.md`.
 
 #### 6.u.R – Make it Right
 
-- [ ] **6.u.R** · Position **308/885** · Voraussetzung: `6.u.W`.
+- [x] **6.u.R** · Position **308/885** · Voraussetzung: `6.u.W`.
 **Exakte Commit-Message:** `6.u.R feat(work): Endergebnisparität und Runtime-Wechsel vervollständigen`
 
 **Vervollständigung:** Unvollständige Eingänge, neue Hostgrenzen und veraltete Workdaten als konkrete Konflikte behandeln.
 
 **Verhaltensabnahme:** Erforderliche Abhängigkeiten und Diagnosen bleiben über alle Schritte vollständig erhalten. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 159):** Gespeicherte native
+Validierungsbeobachtungen müssen alle Pflichtphasen, die gebundenen Quellen,
+Auswahl und Prüfumfang sowie vollständige Diagnoseprojektionen konsistent
+erhalten. Eine fehlende Phase, verlorene Abhängigkeit im Phasenbericht,
+widersprüchliche Quelle, geänderte Diagnose, manipulierte Summe oder erfundene
+Freigabe wird vor Fortsetzung/Abschluss als Code-6-Konflikt abgewiesen. Neue
+Kandidaten werden vor Veröffentlichung ebenso geprüft. Fehlende beziehungsweise
+veränderte Snapshotbytes benennen ihre logische Ressource; vorhandene
+Originaldateien dienen nicht als stiller Ersatz.
+
+52 neue Verhaltenstests prüfen selbstkonsistent gehashte, aber unvollständige
+Validierungs-/SRX-Beobachtungen, fehlende und veränderte Modell-/Profilobjekte,
+wirklich fehlende Abhängigkeiten und unlesbare Quellen außerhalb der Auswahl,
+späte Buildwechsel vor/nach Veröffentlichung sowie verlorene globale Ergebnis-
+und Diagnoseeinheiten. Eine echte gebaute Distribution setzt in neuen Prozessen
+unter geänderten nativen Dateideskriptorlimits fort; ein tatsächliches EMFILE
+erhält den Checkpoint und erlaubt nach Behebung die weitere Arbeit. Bestätigte
+native Auswertungen werden bei Prüfung und erneutem Abschluss nicht wiederholt.
+
+Die gezielte parallele Dev-Abnahme umfasst 605 Fälle einschließlich sämtlicher
+W-Nachweise und betroffener Work-, Validierungs-, SRX- und Schemaverträge. Alle
+bisherigen Testdateien und Testidentitäten bleiben unverändert. Die vier
+Requirements bleiben partiell: Host-API, vollständige Auswertungseinheiten im
+Speicher und explizit gespeicherter Quellenumfang; keine allgemeine CLI-/Code-8-
+oder Releasefreigabe. Konsistenzprüfungen authentifizieren keine fremden Workdaten.
+Feinere dauerhafte Cursor, Workpaketexport/-restore dieses Adapters und die
+vollständige Plattform-/Sandboxmatrix bleiben offen. Erst vollständiger
+paralleler Apply-Test und Commit bestätigen 308/885; danach folgt 6.u.C.
 
 #### 6.u.C – Make it Clean
 
