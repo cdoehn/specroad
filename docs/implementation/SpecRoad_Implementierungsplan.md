@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 312
-last_completed_plan_commit: 7.a.C
-next_plan_commit: 7.b.W
-last_completed_numbered_bundle: 163
+implementation_plan_commits_completed: 313
+last_completed_plan_commit: 7.b.W
+next_plan_commit: 7.b.R
+last_completed_numbered_bundle: 164
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7469,12 +7469,39 @@ anschließend beginnt 7.b.W mit strukturierten Authoring-Eingaben.
 
 #### 7.b.W – Let it Work
 
-- [ ] **7.b.W** · Position **313/885** · Voraussetzung: `7.a.C`.
+- [x] **7.b.W** · Position **313/885** · Voraussetzung: `7.a.C`.
 **Exakte Commit-Message:** `7.b.W feat(authoring): Strukturierte Authoring-Eingaben aufbauen`
 
 **Umsetzung:** Typspezifische Optionen und input-Datei/stdin in gemeinsame Fachinputs überführen.
 
 **Verhaltensabnahme:** Gleiche Eingabedaten erzeugen denselben normalisierten Änderungsauftrag.
+
+**Vorbereiteter Implementierungsstand (Bundle 164):** Result 163 bestätigt
+`18f14649ddf6355096d5c87666150541fefb17cc`, 7.721 bestandene parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Die gemeinsame Eingabeschicht
+normalisiert Fachoptionen, explizite JSON-Dateien und `--input -` in denselben
+unveränderbar besessenen, kanonisch versionierten Erzeugungsauftrag. Quellpfad
+und JSON-Darstellung ändern seine Fachidentität nicht. Der bestehende
+Optionsbinder und die nativen Feldschemas der 24 regulären Drafttypen werden
+verwendet; spezialisierte Recordtypen bleiben ihren Diensten vorbehalten.
+
+Die Vorbereitung liest stdin ausschließlich nach dem Marker, bewahrt Eingaben
+und erzeugt weder IDs noch Zeitstempel oder Projektdateien. Native Pfad-/I/O-
+Fehlerklassen bleiben erhalten. Gleichwertige normalisierte Requirement-Felder
+werden zusätzlich durch den vorhandenen Konstruktor und die native
+Authoring-Preview-Bindung geführt. Die 117 neuen Verhaltenstests prüfen alle
+regulären Typen, Kanalparität, Ownership, Konflikte, ungültige Eingaben und
+reale stdin-Prozesse beider gebauten Distributionen. Bestehende Tests bleiben
+unverändert; Dokumentationsdarstellung wird nicht getestet.
+
+SR-REQ-0240 erhält einen partiellen Nachweis. Der W-Schritt liefert den
+wiederverwendbaren Inputadapter; registrierter Artefaktwriter, ID-Vergabe und
+vollständige Modell-/Graph-/Profilgates folgen gemäß Plan in 7.c und den
+weiteren Authoring-Diensten. Der tatsächliche CLI-stdout-Vertrag ist damit noch
+nicht erfüllt. Eingaben bleiben insgesamt speicherresident. Zusätzliche
+negative Eingabe-/Störfälle gehören zu 7.b.R. Erst erfolgreicher Apply-Volltest
+und Commit bestätigen 313/885; anschließend folgt 7.b.R.
+Bedienung: `docs/development/Authoring_Inputs.md`.
 
 #### 7.b.R – Make it Right
 
