@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 326
-last_completed_plan_commit: 7.f.R
-next_plan_commit: 7.f.C
-last_completed_numbered_bundle: 177
+implementation_plan_commits_completed: 327
+last_completed_plan_commit: 7.f.C
+next_plan_commit: 7.g.W
+last_completed_numbered_bundle: 178
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7993,10 +7993,30 @@ und Commit bestätigen 326/885. Danach folgt 7.f.C.
 
 #### 7.f.C – Make it Clean
 
-- [ ] **7.f.C** · Position **327/885** · Voraussetzung: `7.f.R`.
+- [x] **7.f.C** · Position **327/885** · Voraussetzung: `7.f.R`.
 **Exakte Commit-Message:** `7.f.C refactor(authoring): Lifecycle und Stilllegung bereinigen`
 
 **Bereinigung:** Statusparser, Gateprüfung und Writeroperation sauber trennen.
+
+**Vorbereiteter Implementierungsstand (Bundle 178):** Result 177 bestätigt
+`406418e02c0caca2be298d96a58b68cc3c31dafa`, 8.430 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Die beiden Normalisierungen für
+`transition` und `retire` liegen jetzt in `changes.lifecycle_inputs`; die an
+Operation und vollständigen Zielzustand gebundene Prüfung liegt in
+`changes.lifecycle_gate`. Der Authoring-Dienst behält Replay, Sperre und den
+nativen Veröffentlichungsablauf sowie die bisherigen Importzugänge.
+
+Die verschobenen Funktionskörper und sämtliche Funktionen für Ergebnis,
+Replay und Schreiben bleiben strukturell identisch. Das gilt insbesondere
+für die Übernahme der anfänglichen Host-Prüfungen, die ursprünglichen
+Request-Operationen, neue geschützte No-ops und erhaltene Recovery-Zustände.
+Die vorhandenen W-/R- und betroffenen Regressionstests sowie alle
+Anforderungsdateien bleiben unverändert.
+
+Registrierte CLI/Dry-run/stdout, allgemeine Produktions-/Historienbeladung,
+vollständige Approval-Anbindung und Plattformnachweise bleiben offen;
+SR-REQ-0218 und SR-REQ-0235 bleiben partiell. Erst erfolgreicher Apply-Volltest
+und Commit bestätigen 327/885. Danach folgt 7.g.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

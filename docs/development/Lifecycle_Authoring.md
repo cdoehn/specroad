@@ -6,6 +6,13 @@ liefert ein vollständiges `TargetModel`, eine `PublicationAuthority`, Akteur,
 Zeitpunkt und Plan-/Transaktions-IDs. Die registrierte CLI, Dry-run/stdout und
 allgemeine Produktions-/Historienbeladung bleiben noch offen.
 
+Die internen Zuständigkeiten sind getrennt: `specroad.changes.lifecycle_inputs`
+normalisiert die Eingaben, `specroad.changes.lifecycle_gate` bindet die native
+Lifecycle-Prüfung an den vollständigen Zielzustand, und
+`specroad.authoring.lifecycle` führt Replay, Sperre und Veröffentlichung aus.
+Die bisherigen Normalisierungsfunktionen bleiben unter ihrem Authoring-Import
+erreichbar. Verträge, Fehler und zulässige Seiteneffekte bleiben gleich.
+
 `normalize_transition_input(artifact, to=..., reason=...)` bindet die ursprüngliche
 Identität und den Ausgangsstatus an eine native `transition`-Operation. Der Grund
 ist optional für Übergänge, deren Regel ihn nicht verlangt. Für `rejected` und

@@ -4,95 +4,25 @@ The host supplies the complete model, authority and audit/transaction inputs.
 This embedding service neither registers a CLI nor authenticates stored history.
 Keep the original normalized operation for retries, including its from/guards.
 """
-from ..changes import (AuthoringError, ChangeOperation, ChangePlanError, TargetModel,
+from ..changes import (AuthoringError, ChangeOperation, TargetModel,
     TargetPolicy, PublicationAuthority, prepare_authoring_request,
     prepare_change_target, prepare_publication_check, recheck_publication,
     project_lock, begin_building_journal, stage_building_journal,
     publish_prepared_journal, read_committing_journal, finalize_committing_journal,
     cleanup_completed_transaction, read_transaction_completion, resolve_normative_request)
-from ..changes._common import _text
 from ..changes._journal_codec import _transaction
-from ..changes._metadata_policy import bind_policy
 from ..changes._publication_observation import _root
-from ..changes.lifecycle import prepare_change_lifecycle
+from ..changes.lifecycle_inputs import (
+    _UNSPECIFIED, normalize_transition_input, normalize_retire_input)
+from ..changes.lifecycle_gate import _prepare_lifecycle_gate
 from ..model.audit_values import UtcTimestamp
-from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
-from ..model.identity_values import artifact_identity
-from ..storage.json_syntax import parse_json_object
 from ..storage.project import ProjectSource
 from ..validation import ModelGate
 
-_UNSPECIFIED = object()
 _POLICY = TargetPolicy('lifecycle.transition', '1', ())
 _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
-
-
-def normalize_transition_input(artifact, *, to, reason=_UNSPECIFIED):
-    """Own the original target/from and an explicit requested maturity."""
-    try:
-        base = parse_json_object(canonical_json_bytes(artifact))
-        metadata = {}
-        if reason is not _UNSPECIFIED:
-            _text(reason, '/metadata/reason')
-            metadata['reason'] = reason
-        return ChangeOperation({'op': 'transition', 'target': artifact_identity(base).id,
-            'from': base.get('maturity'), 'to': to, 'metadata': metadata})
-    except ChangePlanError:
-        raise
-    except ModelError as error:
-        raise AuthoringError(error.reason, pointer=error.pointer, exit_code=3) from error
-
-
-def normalize_retire_input(artifact, *, reason, expected_revision=_UNSPECIFIED,
-                           expected_sha256=_UNSPECIFIED):
-    """Require explicit revision/hash guards; None is not an omitted guard."""
-    try:
-        base = parse_json_object(canonical_json_bytes(artifact))
-        value = {'op': 'retire', 'target': artifact_identity(base).id, 'reason': reason}
-        if expected_revision is not _UNSPECIFIED:
-            value['expected_revision'] = expected_revision
-        if expected_sha256 is not _UNSPECIFIED:
-            value['expected_sha256'] = expected_sha256
-        return ChangeOperation(value)
-    except ChangePlanError:
-        raise
-    except ModelError as error:
-        raise AuthoringError(error.reason, pointer=error.pointer, exit_code=3) from error
-
-
-def _prepare_lifecycle_gate(model, operation, *, actor, planned_at):
-    """Recompute this operation's entire target on every semantic check.
-
-    Only the requested standard subject is certified. Other non-draft subjects,
-    specialist records and approval history still need their actual services.
-    The native lifecycle fold retains all transition and approval refusals.
-    """
-    owned = model.snapshot()
-    operation = ChangeOperation(operation.data)
-    metadata = bind_policy('change-metadata-v1', actor, planned_at)
-    identity = operation.data['target']
-    maturity = 'retired' if operation.op == 'retire' else operation.data['to']
-    resources = canonical_json_sha256({'model_sources_sha256': owned._sources_sha256,
-        'operation': operation.data, 'metadata': metadata})
-
-    def dependencies(context):
-        return context.dependency_result({key: list(context.all_ids) for key in context.subjects})
-
-    def check(context):
-        if context.subjects != (identity,) or context.artifact(identity)['maturity'] != maturity:
-            return context.result([{'reason': 'lifecycle_subject_not_supported', 'severity': 'error'}])
-        folded = prepare_change_lifecycle(owned.artifacts, [operation.data],
-            **metadata, source_files=owned.source_files, **owned.reservations)
-        expected = {a['id']: a for a in folded.artifacts}
-        actual = {key: context.artifact(key) for key in context.all_ids}
-        if canonical_json_sha256(expected) != canonical_json_sha256(actual):
-            return context.result([{'reason': 'lifecycle_target_mismatch',
-                                    'severity': 'error', 'artifact_id': identity}])
-        return context.result()
-
-    return ModelGate('lifecycle', 'bound-authoring-lifecycle-v1', dependencies, check, resources)
 
 
 def _result(operation, completion, *, replayed=False):
