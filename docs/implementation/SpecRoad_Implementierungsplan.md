@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 305
-last_completed_plan_commit: 6.t.R
-next_plan_commit: 6.t.C
-last_completed_numbered_bundle: 156
+implementation_plan_commits_completed: 306
+last_completed_plan_commit: 6.t.C
+next_plan_commit: 6.u.W
+last_completed_numbered_bundle: 157
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7174,10 +7174,32 @@ Commit bestätigen 305/885; danach folgt die Bereinigung 6.t.C.
 
 #### 6.t.C – Make it Clean
 
-- [ ] **6.t.C** · Position **306/885** · Voraussetzung: `6.t.R`.
+- [x] **6.t.C** · Position **306/885** · Voraussetzung: `6.t.R`.
 **Exakte Commit-Message:** `6.t.C refactor(work): Prozesslebensdauer und Cleanupgrenzen bereinigen`
 
 **Bereinigung:** Prozessadapter und Cleanupstrategie für spätere Git-/Analyzerverwendung bündeln.
+
+**Vorbereiteter Implementierungsstand (Bundle 157):** Die bestehende Cleanupfolge
+ist in einem internen Laufzeitmodul gebündelt. Der öffentliche Prozessadapter
+delegiert ausschließlich diese Folge und übergibt seine unveränderte Fehlerklasse.
+Vertragsprüfung, Prozessstart, binäre Kommunikation, Statusrückgabe, öffentliche
+Fehlerdefinitionen und ursprüngliche Ausnahmen bleiben beim bisherigen Adapter.
+Das interne Modul startet selbst keinen Prozess und führt keine zusätzliche
+Ausführungserlaubnis, Wiederholung, Laufzeitgrenze oder Dateibereinigung ein.
+
+Ein Strukturvergleich bindet die ausgegliederte Funktion an den vorherigen
+Result-Snapshot: Außer Funktionsname und Übergabe der bestehenden Fehlerklasse
+bleibt ihr Syntaxbaum gleich; die übrigen bestehenden Definitionen bleiben
+unverändert. Die 193 betroffenen W-/R-Prozess-, Work- und Checkpointtests werden
+gezielt parallel ausgeführt. Alle 237 bisherigen Testdateien, 7.518 Testidentitäten
+und Requirementzuordnungen bleiben erhalten; es werden keine Testoracles an die
+Bereinigung angepasst und keine neuen Darstellungs-/Dokumentationstests ergänzt.
+
+Die W-/R-Scopegrenzen gelten fort: vertrauenswürdige direkte POSIX-Kinder und
+vollständige I/O im Speicher, keine allgemeine Git-/Analyzerintegration oder
+Garantie bei daemonisierenden Nachkommen und unbehandeltem Hostverlust.
+SR-REQ-0579/0580 bleiben partiell. Erst vollständiger paralleler Apply-Test und
+Commit bestätigen 306/885; danach folgt 6.u.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

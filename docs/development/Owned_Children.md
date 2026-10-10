@@ -8,6 +8,15 @@ ausdrücklich als String beziehungsweise Dictionary übergeben. Der Adapter lös
 keinen Befehl aus Work- oder Projektinhalt auf. Welche Distribution und Operation
 zulässig sind, muss der aufrufende vertrauenswürdige Fachadapter separat prüfen.
 
+Der öffentliche Adapter und seine Fehlerklassen bleiben in `runtime.children`.
+Die interne Lebensdauerstrategie liegt in `runtime._child_cleanup`; der Adapter
+übergibt ihr sein direktes Kind, die ursprüngliche Ausnahme und seine bestehende
+Cleanupfehlerklasse. Die Strategie startet selbst keine Prozesse und definiert
+keine neue Ausführungsberechtigung. Spätere vertrauenswürdige Git-/Analyzeradapter
+können so denselben Einstieg nutzen, ohne eine zweite Cleanupimplementierung
+einzuführen. Die bestehende Operationsfolge und sämtliche Fehlerdaten bleiben
+bei dieser Aufteilung erhalten.
+
 Der Aufruf verwendet keine Shell, keine PATH-Suche und keine implizit geerbte
 Umgebung. Nicht ausdrücklich übergebene Eingabebytes bedeuten geschlossenes stdin.
 Ausdrückliche Eingabe und beide Ausgabekanäle werden binär über Pipes übertragen;
