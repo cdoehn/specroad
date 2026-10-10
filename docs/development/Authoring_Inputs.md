@@ -47,7 +47,7 @@ Nur fehlende `relations` und `extensions` erhalten leere Container; deklarierte
 Sprachtags werden durch den nativen Parser kanonisiert. Prosa und normative
 Force werden weder übersetzt noch aus Text oder Priorität abgeleitet.
 
-Der W/R-Stand ist eine gemeinsame Eingabeschicht für den folgenden Writer, kein
+Der W/R/C-Stand ist eine gemeinsame Eingabeschicht für den folgenden Writer, kein
 neu registrierter `artifact create`-Befehl und kein vollständiger Change Plan.
 Er verwendet keine Entropie, Zeitstempel, Projektwrites oder externe Programme.
 Feldschema-Erfolg bestätigt weder Graph-/Profil-/Lifecyclegates noch lokale
@@ -61,3 +61,8 @@ verwendet begrenzte Readblöcke, aber keine behauptete Gesamt-Speicherobergrenze
 Pflichtfeld-/Typfehler, widersprüchliche Quellen und Störfälle der Eingabekanäle
 haben in 7.b.R zusätzliche Verhaltensnachweise erhalten. SR-REQ-0240 bleibt
 wegen der noch ausstehenden Writer- und CLI-Integration partiell.
+
+Intern bündelt `_input_fields.py` die nativen Draftfeldschemas,
+Optionsdefinitionen und Konvertierung der Feldoptionswerte. Der öffentliche
+Adapter in `inputs.py` führt diese Vorbereitung vor dem Lesen und Zusammenführen
+aus; seine Schnittstellen und die beschriebenen Fehlerverträge bleiben erhalten.

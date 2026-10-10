@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 314
-last_completed_plan_commit: 7.b.R
-next_plan_commit: 7.b.C
-last_completed_numbered_bundle: 165
+implementation_plan_commits_completed: 315
+last_completed_plan_commit: 7.b.C
+next_plan_commit: 7.c.W
+last_completed_numbered_bundle: 166
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7537,7 +7537,7 @@ speicherresident. Erst erfolgreicher Apply-Volltest und Commit bestätigen
 
 #### 7.b.C – Make it Clean
 
-- [ ] **7.b.C** · Position **315/885** · Voraussetzung: `7.b.R`.
+- [x] **7.b.C** · Position **315/885** · Voraussetzung: `7.b.R`.
 **Exakte Commit-Message:** `7.b.C refactor(authoring): Strukturierte Authoring-Eingaben bereinigen`
 
 **Bereinigung:** Eingabekonvertierung aus den Handlerschritten herausziehen.
@@ -7545,6 +7545,24 @@ speicherresident. Erst erfolgreicher Apply-Volltest und Commit bestätigen
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter Implementierungsstand (Bundle 166):** Result 165 bestätigt
+`427971a021be464ea5e893011d05001bcb478a4f`, 8.031 bestandene parallele
+Apply-Tests und einen sauberen Arbeitsbaum. `_input_fields.py` bündelt die
+nativen Draftfeldschemas, Optionsdefinitionen und die Konvertierung der
+Feldoptionswerte. Der öffentliche Eingabeadapter verwendet diese Vorbereitung
+vor dem unveränderten Lesen, Zusammenführen und Normalisieren der Fachwerte.
+
+Die drei ausgelagerten Hilfsfunktionen und der Konvertierungsblock bleiben
+AST-identisch. Eingabetyp, Normalisierung, Lesegrenzen, argv-Bindung, Merge-
+und Fehlerbehandlung bleiben erhalten. Sämtliche vorhandenen Testdateien,
+8.031 Testidentitäten und 730 Anforderungskatalogeinträge sind unverändert;
+die bestehenden W/R- und betroffenen Regressionstests bilden die Abnahme.
+Es werden keine Fachfunktionen oder Darstellungs-/Dokumentationstests ergänzt.
+
+Der partielle SR-REQ-0240-Nachweis und seine offenen Writer-/CLI-/Modellgates
+bleiben bestehen. Erst erfolgreicher Apply-Volltest und Commit bestätigen
+315/885; anschließend beginnt 7.c.W mit der Artefakterzeugung.
 
 <a id="step-7-c"></a>
 ### 7.c – Artefakte erstellen
