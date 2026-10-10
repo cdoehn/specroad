@@ -53,3 +53,24 @@ der Host keinen tatsächlichen Dokumentmodell-Prüfer bereitstellt.
 SR-REQ-0216, SR-REQ-0217 und SR-REQ-0240 bleiben daher partiell. Vollständige
 Projekt-/Historienbeladung, öffentliche CLI samt Dry-run und stdout-Vertrag,
 weitere Fachgates und Plattform-/Releaseabnahme sind hier nicht abgeschlossen.
+
+## Fehler- und Wiederholungsgrenzen
+
+Kollisionen mit aktuellen, archivierten oder reservierten IDs werden durch den
+vorhandenen Zufallsallocator innerhalb derselben exklusiven Schreibsperre
+übersprungen. Sie verändern weder bestehende Revisionen noch das übergebene
+Inventar. Ein Ausfall der Zufallsquelle oder ein ungültiges Entropieergebnis
+wird als Betriebsfehler mit Code 5 gemeldet. Es gibt dabei keinen automatischen
+Wiederholungsversuch nach dem Fehler und noch kein Journal oder Fachfile.
+
+Der Dienst prüft auch bereits typisierte Eingaben erneut: Fehlende oder ungültige
+Draftfelder und Spezialrecords, die einen eigenen Fachservice benötigen, werden
+vor Lock und ID-Vergabe mit Code 3 abgelehnt. Ein abweichendes aktuelles
+ID-Inventar oder eine nicht abgedeckte Modellreservierung ergibt Code 6.
+
+Fehler an der nativen Veröffentlichung behalten ihren tatsächlichen Schreibstatus.
+Auch eine fehlgeschlagene Systemoperation kann die Zieldatei bereits verändert
+haben. Der Dienst meldet dann weder einen sicheren Nicht-Write noch einen
+abgeschlossenen Commit. Journal und vorhandene Dateien bleiben für Recovery
+erhalten. Ein normaler erneuter Create-Aufruf wird durch dieses Journal vor
+weiterer ID-Vergabe blockiert; er startet keine automatische Reparatur.

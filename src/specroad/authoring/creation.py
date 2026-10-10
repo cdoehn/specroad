@@ -144,7 +144,12 @@ def create_artifact(model, prepared, *, inventory, actor, planned_at, change_pla
         current = _root(model)
         held.require_publication(current, command='change apply', request_id=request_id,
                                  transaction_id=transaction_id)
-        identity = allocate_artifact_identity(owned.data['artifact_type'], inventory).identity
+        try:
+            identity = allocate_artifact_identity(owned.data['artifact_type'], inventory).identity
+        except ModelError as error:
+            # Inputs and inventory are already checked. Failure of the native
+            # entropy provider is operational, before any journal/publication.
+            raise AuthoringError(error.reason, pointer=error.pointer, exit_code=5) from error
         try:
             artifact = _draft(owned, identity, actor, planned_at, model.configuration)
         except ModelError as error:

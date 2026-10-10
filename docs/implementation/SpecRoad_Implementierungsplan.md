@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 316
-last_completed_plan_commit: 7.c.W
-next_plan_commit: 7.c.R
-last_completed_numbered_bundle: 167
+implementation_plan_commits_completed: 317
+last_completed_plan_commit: 7.c.R
+next_plan_commit: 7.c.C
+last_completed_numbered_bundle: 168
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7609,12 +7609,36 @@ Bedienung und Reichweite: `docs/development/Artifact_Creation.md`.
 
 #### 7.c.R – Make it Right
 
-- [ ] **7.c.R** · Position **317/885** · Voraussetzung: `7.c.W`.
+- [x] **7.c.R** · Position **317/885** · Voraussetzung: `7.c.W`.
 **Exakte Commit-Message:** `7.c.R feat(authoring): Artefakte erstellen vervollständigen`
 
 **Vervollständigung:** Kollision, fehlende Draftfelder und Spezialtypen ohne Fachservice abweisen.
 
 **Verhaltensabnahme:** ID-/Datei-/Revisionseffekte und Retryverhalten werden geprüft, keine Konsolenausgabe. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Vorbereiteter Implementierungsstand (Bundle 168):** Result 167 bestätigt
+`6bc4d0a4c6687f68c53493b6d2075f79358aeed2`, 8.092 bestandene parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der Erzeugungsdienst übersetzt einen
+Ausfall der nativen Zufallsquelle und ungültige Entropiebytes vor Journalerzeugung
+in einen Betriebsfehler mit Code 5. Die vorhandene Kollisionssuche wird nicht
+begrenzt oder durch eine eigene Vergabestrategie ersetzt.
+
+Neue Verhaltenstests prüfen eine Folge aktueller, archivierter und reservierter
+IDs, die tatsächliche Prozesssperre während jeder Vergabe, fehlende und ungültige
+Draftfelder aller 24 regulären Typen, vier gesperrte Spezialrecords sowie
+unvollständige Inventare und Reservierungen. Ein zweiter Writer und ein geänderter
+physischer Bestand bleiben blockiert. Fehler vor und nach dem tatsächlichen
+Dateiaustausch bewahren Journal, vorhandene Revisionen und den erreichten Zustand;
+ein blinder Wiederholungsversuch darf keine neue ID vergeben. Sämtliche bisherigen
+W-Tests bleiben unverändert und gehören weiter zur gezielten Verhaltensabnahme.
+
+Die Grenzen des W-Dienstes gelten weiter: explizite Hostmodelle und historische
+Inventare, fehlende öffentliche CLI-/Dry-run-/stdout-Anbindung sowie noch fehlende
+native Fachgates. Die Anforderungen 0216 und 0217 bleiben partiell; diese
+Nachweise bestätigen keine vollständige Historienbeladung oder Plattformabnahme.
+Erst erfolgreicher Apply-Volltest und Commit bestätigen 317/885. Danach folgt
+7.c.C mit einer verhaltenserhaltenden Bereinigung desselben Dienstes.
 
 #### 7.c.C – Make it Clean
 
