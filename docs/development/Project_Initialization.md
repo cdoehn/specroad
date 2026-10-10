@@ -73,3 +73,11 @@ Die neuen leeren Betriebsverzeichnisse `.specroad/tmp` und `.specroad/merge`
 werden von den vorhandenen Preflights als leer erkannt. Inhalt darin bleibt
 ungeklärt und blockiert den normalen Ablauf; die Initialisierung führt keine
 allgemeine Bereinigungsregel für diese Verzeichnisse ein.
+
+Die Implementierung hält Root-Erzeugung und Änderungen an bestehenden Projekten
+getrennt. `initialization` steuert die Bootstrap-Operation; `_bootstrap_io`
+besitzt die nativen Publikations-/Rollbackschritte. `_bootstrap_recovery`
+liest den tatsächlichen Zustand, während `_bootstrap_record` ausschließlich
+Journalform und ursprüngliche Fachwerte prüft. `_initialization_command`
+bildet die Ergebnisse und Fehler auf den CLI-Vertrag ab. Der registrierte
+Einstiegspunkt und die vorhandenen Bootstrap-Formate bleiben erhalten.

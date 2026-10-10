@@ -8,9 +8,7 @@ import sys
 
 from ..changes._lock_files import LockFiles
 from ..changes.lock_values import ProjectLockError
-from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..cli.result_schemas import validate_result_document
-from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..security import paths as guards
 from ._bootstrap_io import (BootstrapError, BootstrapTree, STAGING, directory,
@@ -130,19 +128,6 @@ def initialize_project(path='.', *, cwd=None):
 
 
 def initialize_command(invocation):
-    try:
-        payload = initialize_project(invocation.arguments.get('path', '.'),
-                                     cwd=invocation.resolved.working_directory)
-    except BootstrapError as error:
-        raise OperationFailure(FailureKind(error.exit_code), 'Project initialization did not complete.',
-            details={'bootstrap': {'reason': error.reason, 'path': error.path,
-                                    'mutation_possible': error.mutation_possible}}) from error
-    except ProjectLockError as error:
-        raise OperationFailure(FailureKind(error.exit_code), 'Bootstrap lock unavailable.',
-                               details={'bootstrap': {'reason': error.reason}}) from error
-    except SafetyViolation as error:
-        raise OperationFailure(FailureKind.SECURITY, 'Unsafe bootstrap destination.') from error
-    except ModelError as error:
-        raise OperationFailure(FailureKind.MODEL, 'Invalid initialization resource.',
-                               details={'bootstrap': error.diagnostic()}) from error
-    return CommandResult('init', result=payload)
+    """Keep the registered entry point while isolating CLI result projection."""
+    from ._initialization_command import initialize_command as execute
+    return execute(invocation)

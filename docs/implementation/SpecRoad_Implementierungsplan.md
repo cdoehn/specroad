@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 311
-last_completed_plan_commit: 7.a.R
-next_plan_commit: 7.a.C
-last_completed_numbered_bundle: 162
+implementation_plan_commits_completed: 312
+last_completed_plan_commit: 7.a.C
+next_plan_commit: 7.b.W
+last_completed_numbered_bundle: 163
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7431,7 +7431,7 @@ Erst Apply-Volltest und Commit bestätigen 311/885; anschließend folgt 7.a.C.
 
 #### 7.a.C – Make it Clean
 
-- [ ] **7.a.C** · Position **312/885** · Voraussetzung: `7.a.R`.
+- [x] **7.a.C** · Position **312/885** · Voraussetzung: `7.a.R`.
 **Exakte Commit-Message:** `7.a.C refactor(authoring): Atomare Projektinitialisierung bereinigen`
 
 **Bereinigung:** Root-Erzeugung vom Change Plan eines bereits vorhandenen Projekts trennen.
@@ -7439,6 +7439,27 @@ Erst Apply-Volltest und Commit bestätigen 311/885; anschließend folgt 7.a.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter Implementierungsstand (Bundle 163):** Result 162 bestätigt
+`6571239da3cd8357f421a8a756c011cdd7454a64`, 7.721 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der C-Schritt extrahiert die
+Bootstrap-Journal-/Fachwertprüfung aus der Wiederaufnahmesteuerung und die
+CLI-Ergebnis-/Fehlerabbildung aus der Root-Erzeugung. Der registrierte
+Einstiegspunkt delegiert weiterhin an dieselbe Bootstrap-Operation;
+Change-Plan-Abläufe für bestehende Projekte werden nicht verändert.
+
+Die verschobenen Validatoren und die übrigen Recovery-/Root-Funktionskörper
+bleiben strukturell identisch. Der CLI-Adapter erhält dieselbe Fehlerabbildung
+und löst die Root-Operation beim Aufruf auf. Alle 241 bisherigen Testdateien,
+7.721 Testidentitäten und 730 Requirement-Dateien bleiben unverändert. Der
+gezielte parallele Dev-Lauf wiederholt W/R sowie betroffene Befehls-, Lock-,
+Preflight- und Ressourcenverträge. Fachwerte, Journalformate, Dateiwirkungen
+und Fehlerklassen erhalten keine neue Ausnahme.
+
+Die im R-Schritt benannten Grenzen bleiben offen, insbesondere unvollständige
+Vorbereitungsreste, Plattform-/Dateisystemabdeckung und vollständige spätere
+Modellgates. Erst erfolgreicher Apply-Volltest und Commit bestätigen 312/885;
+anschließend beginnt 7.b.W mit strukturierten Authoring-Eingaben.
 
 <a id="step-7-b"></a>
 ### 7.b – Strukturierte Authoring-Eingaben
