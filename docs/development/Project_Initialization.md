@@ -33,9 +33,31 @@ Geänderte oder zusätzliche Inhalte werden erhalten und als Recoverybedarf
 gemeldet. Ein bereits vollständig veröffentlichter gültiger Grundstand wird
 bei einem späteren Bereinigungsfehler erhalten.
 
-Der W-Stand übernimmt kein vorgefundenes Bootstrap-Journal. Nach einem harten
-Prozessabbruch bleibt es als Konflikt erhalten; die sichere Wiederaufnahme und
-weitere Fault-Injection gehören zum anschließenden R-Schritt. Die Mutexe sind
+Ein erneuter `init` prüft ein vorgefundenes vorbereitetes Bootstrap-Journal
+vollständig: geschlossenes kanonisches Format, Root-/Stagebezug, exakte
+Verzeichnisse, Dateiinodes, Modi und Bytes, Veröffentlichungsreihenfolge sowie
+die unveränderten nativen Konfigurations-, Dokument- und Distributionsverträge.
+Er vervollständigt ausschließlich den nachgewiesenen veröffentlichten Präfix.
+Projekt-ID, Dokument-ID und Zeitstempel stammen aus den vorbereiteten Bytes;
+die Wiederaufnahme erzeugt sie nicht erneut. Ein erneuter I/O-Fehler erhält den
+tatsächlichen Zwischenstand für die nächste Prüfung.
+
+Nach vollständiger Veröffentlichung wandert das gesamte Journalverzeichnis
+per No-Replace-Rename nach `.specroad/recovery/init-bootstrap`. Dieser passive
+Abschlussbeleg bewahrt die ursprüngliche Stage-Identität und die Bindungen;
+er erweitert nicht die Liste normativer Projektdateien im Init-Ergebnis.
+Auch ein Abbruch beim Abschluss ist damit prüfbar. Solange die anfängliche
+Projektstruktur unverändert ist, liefert ein erneuter Aufruf dasselbe Ergebnis.
+Nach fachlichen Projektänderungen berechtigt der alte Beleg nicht zur
+Neuinitialisierung. Er bleibt erhalten und ist kein aktives Transaktionsjournal.
+
+Zusätzliche, geänderte, doppelte oder fehlende Einträge blockieren vor einem
+Recovery-Write. Fremde Daten werden weder gelöscht noch aus einem ungeprüften
+Journal als eigene deklariert. Ein Abbruch während der Vorbereitung vor einem
+vollständigen dauerhaften Journal bleibt ein erhaltener Konflikt; ohne den
+geschlossenen Nachweis erfolgt keine automatische Löschung oder Fortsetzung.
+Die Journalprüfung authentifiziert keine absichtlich vollständig neu erstellte
+fremde Belegkette. Die Mutexe sind
 advisory; sie ersetzen keine Sandbox gegen unabhängige nichtkooperierende
 Hostschreiber. Andere Plattformen und Dateisysteme ohne den nativen
 No-Replace-Vertrag werden vor Writes abgewiesen.

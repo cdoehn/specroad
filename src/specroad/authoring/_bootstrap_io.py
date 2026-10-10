@@ -2,7 +2,7 @@
 
 The root-inode mutex is advisory, as for existing project transactions. This
 module never interprets stored journal data as authority to execute or delete.
-An unfamiliar/interrupted journal is retained for explicit recovery support.
+Recovery validates the closed journal and all actual owned bytes before use.
 """
 from contextlib import contextmanager
 from hashlib import sha256
@@ -16,6 +16,7 @@ from ..security import SafetyViolation
 from ..security import paths as guards
 
 STAGING = '.specroad-bootstrap'
+COMPLETED = ('.specroad', 'recovery', 'init-bootstrap')
 
 
 class BootstrapError(Exception):
@@ -38,10 +39,15 @@ def rename_function():
     return function
 
 
-def rename_new(function, source_fd, source, target_fd, target):
+def _rename_native(function, source_fd, source, target_fd, target):
     if function(source_fd, os.fsencode(source), target_fd, os.fsencode(target), 1) != 0:
         code = ctypes.get_errno()
         raise OSError(code, os.strerror(code), target)
+
+
+def rename_new(function, source_fd, source, target_fd, target):
+    """Publish or roll back one project payload unit, never control metadata."""
+    _rename_native(function, source_fd, source, target_fd, target)
     os.fsync(target_fd)
     os.fsync(source_fd)
 
@@ -94,10 +100,17 @@ def check_entry(parent, name, expected):
     return info
 
 
-def verify_tree(parent, inventory, prefix=''):
+def verify_tree(parent, inventory, prefix='', *, receipt_identity=None):
     """Exact names, identities and bytes; no unlisted entry is read or removed."""
     children = {p[len(prefix):].split('/')[0] for p in inventory if p.startswith(prefix)}
-    if set(os.listdir(parent)) != children:
+    actual = set(os.listdir(parent))
+    if receipt_identity is not None and prefix == '.specroad/recovery/':
+        receipt = info_at(parent, COMPLETED[-1])
+        if receipt is None or identity(receipt) != receipt_identity:
+            raise BootstrapError('bootstrap_receipt_changed')
+        guards._regular(receipt, directory=True)
+        actual.remove(COMPLETED[-1])
+    if actual != children:
         raise BootstrapError('bootstrap_inventory_changed', path=prefix)
     for name in sorted(children):
         path = prefix + name
@@ -105,7 +118,7 @@ def verify_tree(parent, inventory, prefix=''):
         before = check_entry(parent, name, expected)
         if expected['kind'] == 'directory':
             with directory(parent, (name,)) as child:
-                verify_tree(child, inventory, path + '/')
+                verify_tree(child, inventory, path + '/', receipt_identity=receipt_identity)
         else:
             fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0), dir_fd=parent)
             try:
@@ -127,12 +140,12 @@ def verify_tree(parent, inventory, prefix=''):
             raise BootstrapError('bootstrap_entry_changed', path=path)
 
 
-def verify_unit(parent, name, inventory, path):
+def verify_unit(parent, name, inventory, path, *, receipt_identity=None):
     expected = inventory[path]
     check_entry(parent, name, expected)
     if expected['kind'] == 'directory':
         with directory(parent, (name,)) as child:
-            verify_tree(child, inventory, path + '/')
+            verify_tree(child, inventory, path + '/', receipt_identity=receipt_identity)
     else:
         # Same bounded byte check as for a tree, without requiring an otherwise
         # empty repository parent. This one file is always the final config.
@@ -165,12 +178,14 @@ class BootstrapTree:
         self.fd = None
         self.units = []
         self.committed = False
+        self.stage_parts = (STAGING,)
 
     def check(self):
         self.held.require_held()
         if self.fd is None or identity(os.fstat(self.fd)) != self.stage_identity:
             raise BootstrapError('bootstrap_stage_changed')
-        current = os.stat(STAGING, dir_fd=self.held.root_fd, follow_symlinks=False)
+        with directory(self.held.root_fd, self.stage_parts[:-1]) as parent:
+            current = os.stat(self.stage_parts[-1], dir_fd=parent, follow_symlinks=False)
         guards._regular(current, directory=True)
         if identity(current) != self.stage_identity:
             raise BootstrapError('bootstrap_stage_changed')
@@ -238,26 +253,67 @@ class BootstrapTree:
                 if (a is None) == (b is None):
                     raise BootstrapError('bootstrap_unit_ambiguous', path=path)
                 selected = staged if a is not None else target
-                verify_unit(selected, parts[-1], self.inventory, path)
+                verify_unit(selected, parts[-1], self.inventory, path,
+                            receipt_identity=self.stage_identity if self.stage_parts == COMPLETED else None)
                 locations[path] = a is None
+        return locations
+
+    def checked_locations(self):
+        self.check()
+        locations = self.unit_locations()
+        # An actual publication/rollback always has a complete ordered prefix.
+        values = list(locations.values())
+        if values != sorted(values, reverse=True):
+            raise BootstrapError('bootstrap_publication_order_conflict')
+        for path in self.reused:
+            expected = {p.split('/')[1] for p, moved in locations.items()
+                        if moved and p.startswith(path + '/')}
+            with directory(self.held.root_fd, (path,)) as target:
+                if set(os.listdir(target)) != expected:
+                    raise BootstrapError('bootstrap_reused_directory_changed', path=path)
+        remaining = {p: value for p, value in self.inventory.items() if not any(
+            moved and (p == unit or p.startswith(unit + '/')) for unit, moved in locations.items())}
+        verify_tree(self.fd, remaining)
+        self.check()
         return locations
 
     def publish(self):
         for path in self.units:
-            self.check()
-            self.unit_locations()
+            if self.checked_locations()[path]:
+                continue
             parts = path.split('/')
             with directory(self.fd, parts[:-1]) as staged, directory(self.held.root_fd, parts[:-1]) as target:
                 rename_new(self.function, staged, parts[-1], target, parts[-1])
         self.check()
-        if not all(self.unit_locations().values()):
+        if not all(self.checked_locations().values()):
             raise BootstrapError('bootstrap_publication_incomplete')
         os.fsync(self.held.root_fd)
         self.committed = True
 
+    def retain_completed(self):
+        """Atomically retain the durable control record after full publication.
+
+        The original record and empty reused-directory wrappers remain evidence;
+        no unlink window can make a completed bootstrap an ownerless empty stage.
+        """
+        if not all(self.checked_locations().values()):
+            raise BootstrapError('bootstrap_publication_incomplete')
+        if self.stage_parts == COMPLETED:
+            return
+        with directory(self.held.root_fd, COMPLETED[:-1]) as parent:
+            self.check()
+            _rename_native(self.function, self.held.root_fd, STAGING, parent, COMPLETED[-1])
+            self.stage_parts = COMPLETED
+            os.fsync(parent)
+            os.fsync(self.held.root_fd)
+        self.checked_locations()
+
     def cleanup(self):
         self.check()
-        moved = self.unit_locations() if self.units else {}
+        moved = self.checked_locations() if self.units else {}
+        if self.committed:
+            self.retain_completed()
+            return
         if not self.committed:
             for path, published in reversed(tuple(moved.items())):
                 if published:

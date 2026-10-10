@@ -16,14 +16,19 @@ from ..security import paths as guards
 from ._bootstrap_io import (BootstrapError, BootstrapTree, STAGING, directory,
                             identity, info_at, metadata, rename_function)
 from ._initial_content import ROOT_DIRECTORIES, initial_content
+from ._bootstrap_recovery import recover_bootstrap
 
 
-def _preflight(held):
+def _portable_names(held):
     held.require_held()
     names = os.listdir(held.root_fd)
     claimed = {'specroad.json', STAGING, *ROOT_DIRECTORIES}
     if any(name.casefold() in {p.casefold() for p in claimed} and name not in claimed for name in names):
         raise BootstrapError('bootstrap_portable_path_collision')
+
+
+def _preflight(held):
+    _portable_names(held)
     if info_at(held.root_fd, STAGING) is not None:
         raise BootstrapError('bootstrap_recovery_required', path=STAGING)
     reused = {}
@@ -47,7 +52,8 @@ def initialize_project(path='.', *, cwd=None):
 
     A missing final directory or a collision-free existing repository is allowed.
     Existing empty claimed root directories retain their identities. An unknown
-    prior bootstrap is a conflict; this W slice does not guess its ownership.
+    prior bootstrap is a conflict unless its complete journal, identities and
+    actual bytes prove the exact prepared state or a published prefix of it.
     """
     if not isinstance(path, (str, Path)) or not str(path) or '\0' in str(path):
         raise BootstrapError('bootstrap_path_invalid', exit_code=2)
@@ -62,7 +68,6 @@ def initialize_project(path='.', *, cwd=None):
     parent = requested.parent.resolve(strict=True)
     target = parent / requested.name
     function = rename_function()
-    content, directories, configuration, document_id = initial_content(target.name)
     created = False; created_identity = None; tree = None; rollback_complete = False
     with ExitStack() as stack:
         parent_held = stack.enter_context(LockFiles(parent)); parent_held.acquire()
@@ -70,19 +75,28 @@ def initialize_project(path='.', *, cwd=None):
         if current is not None: guards._regular(current, directory=True)
         try:
             if current is None:
+                content, directories, configuration, document_id = initial_content(target.name)
                 os.mkdir(target.name, mode=0o755, dir_fd=parent_held.root_fd)
                 created = True
                 created_identity = identity(os.stat(target.name, dir_fd=parent_held.root_fd, follow_symlinks=False))
                 os.fsync(parent_held.root_fd)
             held = stack.enter_context(LockFiles(target)); held.acquire()
-            if created and identity(os.fstat(held.root_fd)) != created_identity:
+            expected_identity = created_identity if created else identity(current)
+            if identity(os.fstat(held.root_fd)) != expected_identity:
                 raise BootstrapError('bootstrap_root_changed')
-            reused = _preflight(held)
-            tree = BootstrapTree(held, function, reused)
-            tree.create()
-            tree.prepare(content, directories, created)
-            tree.publish()
-            tree.cleanup()
+            _portable_names(held)
+            recovered = None if created else recover_bootstrap(held, function, target.name)
+            if recovered is not None:
+                content, directories, configuration, document_id = recovered
+            else:
+                reused = _preflight(held)
+                if not created:
+                    content, directories, configuration, document_id = initial_content(target.name)
+                tree = BootstrapTree(held, function, reused)
+                tree.create()
+                tree.prepare(content, directories, created)
+                tree.publish()
+                tree.cleanup()
         except BaseException as original:
             if tree is not None and tree.fd is not None:
                 try:

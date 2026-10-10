@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 310
-last_completed_plan_commit: 7.a.W
-next_plan_commit: 7.a.R
-last_completed_numbered_bundle: 161
+implementation_plan_commits_completed: 311
+last_completed_plan_commit: 7.a.R
+next_plan_commit: 7.a.C
+last_completed_numbered_bundle: 162
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7392,12 +7392,42 @@ folgt 7.a.R. Bedienung: `docs/development/Project_Initialization.md`.
 
 #### 7.a.R – Make it Right
 
-- [ ] **7.a.R** · Position **311/885** · Voraussetzung: `7.a.W`.
+- [x] **7.a.R** · Position **311/885** · Voraussetzung: `7.a.W`.
 **Exakte Commit-Message:** `7.a.R feat(authoring): Atomare Projektinitialisierung vervollständigen`
 
 **Vervollständigung:** Bestehende fremde Dateien erhalten; Konflikte und Abbruch führen zu Ausgang oder vollständig neuer Struktur.
 
 **Verhaltensabnahme:** Fault-Injection weist nach, dass nur vom Bootstrap neu erzeugte Pfade rückgängig gemacht werden. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 162):** Result 161 bestätigt den
+vorherigen W-Commit `7eae7da723d8983e33f498cac1fbecf7e4312804` mit 7.640
+bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum. Die Wiederaufnahme
+liest ein geschlossenes, begrenztes Bootstrapjournal und prüft vor weiteren
+Writes die vollständige native Inventur, Root-/Stage-/Verzeichnisidentitäten,
+Modi, Bytes und den tatsächlich veröffentlichten Präfix. Native Konfigurations-
+und Dokumentverträge sowie die exakten Distributionsressourcen werden erneut
+gebunden. Ursprüngliche Identitäten und Zeitstempel bleiben erhalten.
+
+Die abgeschlossene Veröffentlichung verschiebt das ursprüngliche Journal
+atomar in einen passiven Bootstrap-Abschlussbeleg unter `.specroad/recovery/`.
+Auch Abbrüche vor und nach diesem Rename können geprüft werden. Ein weiterer
+Replayfehler erhält den tatsächlichen Zwischenstand. Fremde oder veränderte
+Einträge verhindern automatische Writes oder Rollbacks; bestehende Daten
+werden nicht aus einer Journalbehauptung heraus gelöscht.
+
+81 neue Verhaltenstests führen echte harte Prozessabbrüche an Publikations-
+und Abschlussgrenzen aus, prüfen wiederverwendete Root-Inodes, unveränderte
+IDs/Bytes, erneute I/O-Fehler, manipulierte und mehrdeutige Journale sowie
+Fremddatenerhalt. Alle bisherigen W-Testdateien und Testidentitäten bleiben
+unverändert. Der gezielte parallele Dev-Lauf umfasst W/R und betroffene CLI-,
+Lock-, Preflight- und Ressourcenverträge; der Volltest erfolgt in Apply.
+
+Die vier Requirements bleiben partiell: Vorbereitungsreste ohne vollständiges
+dauerhaftes Journal bleiben sichere, unveränderte Konflikte. Eine konsistente
+Journalinventur authentifiziert keine absichtlich neu aufgebaute fremde
+Belegkette. Andere Plattformen/Dateisysteme, nichtkooperierende Hostschreiber
+und vollständige spätere Modellgates sind weiterhin nicht freigegeben.
+Erst Apply-Volltest und Commit bestätigen 311/885; anschließend folgt 7.a.C.
 
 #### 7.a.C – Make it Clean
 
