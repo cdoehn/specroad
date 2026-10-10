@@ -58,12 +58,14 @@ class WorkDirectory:
                 raise SafetyViolation('Work and protected paths overlap')
 
     @contextmanager
-    def for_checkpoint(self):
+    def for_checkpoint(self, *, require_empty=False):
         """Reserve a guarded root; exiting releases only our exact live owner.
 
         Retains all work files, even on failure. No work.json/Code 8 or durable
         continuation is claimed by this storage-only preparation step.
         """
+        if type(require_empty) is not bool:
+            raise ValueError('The empty-target requirement must be a boolean')
         if not sys.platform.startswith('linux') or not guards._HAS_SAFE_OPEN:
             raise SafetyViolation('Native work locking is unavailable')
         path = self._path or self._requested
@@ -74,7 +76,7 @@ class WorkDirectory:
             path = parent / ('specroad-work-' + secrets.token_hex(16))
             exclusive = True
         self._outside(path)
-        with _HeldWorkRoot(self, path, exclusive=exclusive) as held:
+        with _HeldWorkRoot(self, path, exclusive=exclusive, require_empty=require_empty) as held:
             self._path = path
             self._allocated_identity = guards._identity(os.fstat(held._root))
             yield held

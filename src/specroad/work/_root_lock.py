@@ -28,12 +28,13 @@ def _private(info, *, directory=False):
 
 
 class _HeldWorkRoot:
-    def __init__(self, location, path, *, exclusive, inspection=False):
+    def __init__(self, location, path, *, exclusive, inspection=False, require_empty=False):
         self.path = path
         self.work_id = location._work_id
         self._location = location
         self._exclusive = exclusive
         self._inspection = inspection
+        self._require_empty = require_empty
         self._fds = []
         self._entries = []
         self._pid = os.getpid()
@@ -203,12 +204,21 @@ class _HeldWorkRoot:
                 parent = self._directory(parent, name)
             self._check_path()
             if self._location._allocated_identity is None and not self._inspection:
-                try:
-                    os.mkdir(parts[-1], 0o700, dir_fd=parent)
-                    os.fsync(parent)
-                except FileExistsError:
-                    if self._exclusive:
-                        raise
+                create = True
+                if self._require_empty:
+                    try:
+                        os.stat(parts[-1], dir_fd=parent, follow_symlinks=False)
+                    except FileNotFoundError:
+                        pass
+                    else:
+                        create = False
+                if create:
+                    try:
+                        os.mkdir(parts[-1], 0o700, dir_fd=parent)
+                        os.fsync(parent)
+                    except FileExistsError:
+                        if self._exclusive:
+                            raise
             self._root = self._directory(parent, parts[-1])
             self._check_path()
             fcntl.flock(self._root, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -219,6 +229,8 @@ class _HeldWorkRoot:
                 'work_id': self.work_id, 'initial_checkpoint_sha256': self._location._initial_hash,
                 'device': str(info.st_dev), 'inode': str(info.st_ino)})
             names = set(os.listdir(self._root))
+            if self._require_empty and names:
+                raise SafetyViolation('Restore requires an empty work root')
             if names:
                 # Never infer authorization from PID, hostname or an unlocked fd.
                 required = {_BINDING, *_DIRECTORIES}

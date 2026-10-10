@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 300
-last_completed_plan_commit: 6.r.C
-next_plan_commit: 6.s.W
-last_completed_numbered_bundle: 151
+implementation_plan_commits_completed: 301
+last_completed_plan_commit: 6.s.W
+next_plan_commit: 6.s.R
+last_completed_numbered_bundle: 152
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -6977,12 +6977,44 @@ bestätigen 300/885; anschließend folgt 6.s.W.
 
 #### 6.s.W – Let it Work
 
-- [ ] **6.s.W** · Position **301/885** · Voraussetzung: `6.r.C`.
+- [x] **6.s.W** · Position **301/885** · Voraussetzung: `6.r.C`.
 **Exakte Commit-Message:** `6.s.W feat(work): Sicherer Work-Export und Restore aufbauen`
 
 **Umsetzung:** Selbstenthaltenes gehashtes Arbeitspaket samt generischem sicheren Archivcodec implementieren.
 
 **Verhaltensabnahme:** Exportierte Snapshot-/Checkpointbytes reichen für Restore im neuen kompatiblen Root.
+
+**Vorbereiteter Implementierungsstand (Bundle 152):** Ein generischer kanonischer
+ZIP_STORED-Codec prüft externe Gesamtidentität, Pfade/Dateitypen, kanonische
+Containerbytes und eine exakte nichtrekursive Payloadinventur. Die Work-Host-API
+exportiert daraus ein Paket mit `package_kind=work`, vollständiger erreichbarer
+Checkpointkette und sämtlichen Objektbytes aller Generationen. Der Export bleibt
+lesend und erzeugt keine implizite Ausgabedatei. Root-/Prozessbindungen und
+unreferenzierte temporäre Dateien sind keine portable fachliche Nutzlast.
+
+Restore prüft vor Zielschreibzugriffen alle Paket-, Build-, Schema-, Initial- und
+Nachfolgerbindungen. Das explizite externe Ziel muss fehlen oder privat und leer
+sein; die Leerprüfung erfolgt unter dem bestehenden Work-Mutex. Symlinks und
+geschützte Zielüberschneidungen bleiben gesperrt. Der vorhandene Checkpoint-
+Publisher stellt jede unveränderte Generation mit neuer lokaler Rootbindung her.
+I/O-Fehler erhalten tatsächlich publizierte Präfixe und tatsächliche Dateibytes;
+es gibt keine automatische Rücknahme oder Überschreibung eines nichtleeren Ziels.
+
+69 neue Verhaltenstests prüfen kanonische Archivbytes, exakte Inventuren,
+gefährliche Einträge, externe Hashbindung, alle sechs echten Bootstrap-Handler
+vor/nach Ausführung und Finalisierung, einen unabhängigen neuen Prozess,
+gesiegelte Eingangsbytes nach Quellenverlust, segmentierte Historie, unzulässige
+Pakete/Ziele, abgebrochene/unvollständige Arbeit und frühe/späte Restorefehler.
+370 neue und betroffene Root-/Checkpoint-/Manifest-/Adapterfälle bilden die
+gezielte parallele Dev-Abnahme; bisherige Testdateien bleiben bytegleich.
+
+Der sichere W-Ausschnitt umfasst Read-only-Work und vollständige gewöhnliche
+ZIP32-Pakete im Speicher. Normative Arbeit wird ohne gesonderte aktuelle
+Transaktions-/Receipt-Exportbindung abgewiesen. Die Work-CLI, allgemeine Workflows,
+normative portable Zielzuordnung sowie große fortsetzbare und mehrteilige Exporte
+bleiben offen. SR-REQ-0563 und SR-REQ-0628 werden nur partiell belegt. Erst
+vollständiger paralleler Apply-Test und Commit bestätigen 301/885; danach folgt
+6.s.R.
 
 #### 6.s.R – Make it Right
 

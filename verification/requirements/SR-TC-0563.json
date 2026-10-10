@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0563",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned private Work/project/input/restore roots and externally retained package bytes/hash. Explicit recorded-build fixture and trusted host registry; actual closed handlers, sealed source capture, native checkpoint publication and isolated fresh process."
+  ],
+  "steps": [
+    "Export the independently bound complete published read-only chain without writes, retain its exact archive bytes and external hash, and remove owned original Work/source data.",
+    "Verify canonical ZIP bytes, exact nonrecursive inventory and every original Work generation before allocating a missing or private empty external destination.",
+    "Restore through the real durable checkpoint publisher and compare original manifests, objects, semantic bindings and progress. Execute supported handlers separately or reject generic inert plans as execution authority.",
+    "Reject malformed paths, special entries, missing/changed/additional bytes, wrong external identity/build and unsafe targets before destination writes. Preserve actual prefix generations after injected native I/O failures."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Wiederaufnahme nach vollständigem Sandboxverlust MUSS auf extern erhaltene, verifizierbare Projektvollbundles beziehungsweise Arbeitspakete nach Anhang P begrenzt sein.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "An externally retained, full-SHA-bound work package is sufficient to reconstruct the complete original read-only checkpoint chain and all referenced object bytes in a new private root, including a new process with the explicitly compatible runtime. Sealed captured inputs survive loss of original source bytes. Actual closed handlers resume or reuse their recorded output without changing original Work identity or inventing success; a generic task manifest remains inert data. Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,37 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_packages.py::test_a_new_process_restores_only_the_retained_package_and_bound_runtime",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[capabilities-0]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[capabilities-1]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[capabilities-2]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[command.describe-0]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[command.describe-1]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[command.describe-2]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[help-0]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[help-1]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[help-2]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[schema.list-0]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[schema.list-1]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[schema.list-2]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[schema.show-0]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[schema.show-1]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[schema.show-2]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[version-0]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[version-1]",
+    "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[version-2]",
+    "tests/test_work_packages.py::test_external_hash_and_explicit_target_are_required_before_allocation",
+    "tests/test_work_packages.py::test_invalid_complete_package_is_rejected_before_destination_writes[additional]",
+    "tests/test_work_packages.py::test_invalid_complete_package_is_rejected_before_destination_writes[build]",
+    "tests/test_work_packages.py::test_invalid_complete_package_is_rejected_before_destination_writes[initial]",
+    "tests/test_work_packages.py::test_invalid_complete_package_is_rejected_before_destination_writes[kind]",
+    "tests/test_work_packages.py::test_invalid_complete_package_is_rejected_before_destination_writes[missing]",
+    "tests/test_work_packages.py::test_invalid_complete_package_is_rejected_before_destination_writes[object_bytes]",
+    "tests/test_work_packages.py::test_invalid_complete_package_is_rejected_before_destination_writes[pointer]",
+    "tests/test_work_packages.py::test_sealed_input_bytes_and_segmented_history_survive_source_loss"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed."
   ]
 }
