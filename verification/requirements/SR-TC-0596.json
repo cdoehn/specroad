@@ -4,18 +4,29 @@
   "requirement_id": "SR-REQ-0596",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary model/profile files and Work roots; real native model, graph, SRX, checkpoint and transaction paths. In-process tests use an explicitly labelled recorded-build fixture; process tests build and run the actual module/zipapp. Trusted host registry, initial binding and normative publication authority are explicit test harness inputs."
+  ],
+  "steps": [
+    "Compare actual direct native validation/graph/SRX outcomes with durable windows of one, two and many units under constrained and standard resource profiles.",
+    "Delete the original captured source files and use absent, empty or corrupt project caches; confirm saved inputs and previously completed units are reused.",
+    "Cross already exceeded soft CPU/wall targets while confirming one real durable unit and unchanged final scientific values."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Vollständig abgeschlossene Läufe mit verschiedenen Ressourcenprofilen und Cachezuständen MÜSSEN dieselben fachlichen Ergebnisse nach Anhang O.5 erzeugen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Direct and fully completed stepped outcomes agree for the implemented validation and SRX jobs, including missing versus false and complete policy failures. Changed operational windows, resource profiles and irrelevant project cache state do not alter the result projection. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    1
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +39,22 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[100]",
+    "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[1]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[constrained-100]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[constrained-1]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[constrained-2]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[standard-100]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[standard-1]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[standard-2]",
+    "tests/test_work_evaluation.py::test_exceeded_soft_window_persists_one_real_unit[--step-cpu-ms]",
+    "tests/test_work_evaluation.py::test_exceeded_soft_window_persists_one_real_unit[--step-wall-ms]",
+    "tests/test_work_evaluation.py::test_saved_inputs_survive_source_loss_and_cache_state_without_rerunning_prefix[absent]",
+    "tests/test_work_evaluation.py::test_saved_inputs_survive_source_loss_and_cache_state_without_rerunning_prefix[corrupt]",
+    "tests/test_work_evaluation.py::test_saved_inputs_survive_source_loss_and_cache_state_without_rerunning_prefix[empty]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
   ]
 }

@@ -4,18 +4,30 @@
   "requirement_id": "SR-REQ-0587",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary model/profile files and Work roots; real native model, graph, SRX, checkpoint and transaction paths. In-process tests use an explicitly labelled recorded-build fixture; process tests build and run the actual module/zipapp. Trusted host registry, initial binding and normative publication authority are explicit test harness inputs."
+  ],
+  "steps": [
+    "Run actual model validation with a selected subject whose incoming graph dependencies require additional model subjects; retain the native source report and exact checked IDs.",
+    "Compare completed durable results and complete policy failures with direct native evaluation, including every diagnostic and retained native detail.",
+    "Reject missing required checks or unfinished batches without a false completion; preserve the prior checkpoint and complete native failure findings."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Inkrementelle Prüfungen MÜSSEN ihren tatsächlich geprüften Umfang einschließlich notwendiger Abhängigkeiten korrekt ausweisen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "The selected closure contains exactly three dependent goals from four supplied sources; all source bytes are structurally examined. Every completed result retains the native source report, scope and diagnostics. Malformed model inputs and unfinished work cannot claim completion. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    1,
+    3
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +40,23 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[100]",
+    "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[1]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[constrained-100]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[constrained-1]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[constrained-2]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[standard-100]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[standard-1]",
+    "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[standard-2]",
+    "tests/test_work_evaluation.py::test_incomplete_batch_cannot_finalize_or_write_a_false_completion[0]",
+    "tests/test_work_evaluation.py::test_incomplete_batch_cannot_finalize_or_write_a_false_completion[1]",
+    "tests/test_work_evaluation.py::test_incomplete_batch_cannot_finalize_or_write_a_false_completion[4]",
+    "tests/test_work_evaluation.py::test_real_failed_checks_preserve_checkpoint_and_complete_findings[malformed_model]",
+    "tests/test_work_evaluation.py::test_real_failed_checks_preserve_checkpoint_and_complete_findings[missing_profile]",
+    "tests/test_work_evaluation.py::test_real_failed_checks_preserve_checkpoint_and_complete_findings[srx_type]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 306
-last_completed_plan_commit: 6.t.C
-next_plan_commit: 6.u.W
-last_completed_numbered_bundle: 157
+implementation_plan_commits_completed: 307
+last_completed_plan_commit: 6.u.W
+next_plan_commit: 6.u.R
+last_completed_numbered_bundle: 158
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7213,12 +7213,46 @@ Commit bestätigen 306/885; danach folgt 6.u.W.
 
 #### 6.u.W – Let it Work
 
-- [ ] **6.u.W** · Position **307/885** · Voraussetzung: `6.t.C`.
+- [x] **6.u.W** · Position **307/885** · Voraussetzung: `6.t.C`.
 **Exakte Commit-Message:** `6.u.W feat(work): Endergebnisparität und Runtime-Wechsel aufbauen`
 
 **Umsetzung:** Bestehende Graph-/SRX-/Validierungs-/Writepfade an die Workengine anschließen und Einzellaufparität nachweisen.
 
 **Verhaltensabnahme:** Unterschiedliche Budgets, Caches, Roots und Prozesse liefern dieselbe Fachprojektion.
+
+**Vorbereiteter Implementierungsstand (Bundle 158):** Ein geschlossener Hostadapter
+bindet endliche, explizit gespeicherte Modell-/Profilbytes an echte native
+Validierungs-, Graph- und SRX-Auswertungen. Einheiten sind vollständige
+Auswertungen. Erfolgreich bestätigte Einheiten werden dauerhaft wiederverwendet;
+ein gesonderter Abschluss reduziert sämtliche Ergebnisse und Diagnosen. Der
+tatsächlich geprüfte Umfang einschließlich notwendiger Modellabhängigkeiten
+bleibt im vollständigen Originalbericht sichtbar. Fachliche Fehler bleiben
+vollständige fehlgeschlagene Ergebnisse; fehlende Pflichtprüfungen und native
+SRX-Fehler werden nicht in bestätigte Einheiten umgedeutet.
+
+27 neue Verhaltenstests vergleichen echte Einzelauswertungen mit abgeschlossenen
+Mehrschrittläufen unter verschiedenen Profilen und Fenstergrößen, einschließlich
+bereits überschrittener weicher Ziele. Gespeicherte Eingänge bleiben nach Verlust
+der Originaldateien und bei fehlendem, leerem oder korruptem Cache verwendbar.
+Gebaute Modul-/Zipapp-Distributionen laufen in neuen isolierten Prozessen nach
+Verschieben von Runtime-, Work- und Projektroots weiter. Ein zusätzlicher
+Paritätsfall vergleicht direkte native Veröffentlichung mit dauerhafter
+Workvorbereitung, vollständiger nativer Transaktion und Receiptwiederholung.
+
+Die gezielte parallele Dev-Abnahme umfasst 553 neue und betroffene Work-,
+Validierungs-, SRX- und Schemaverträge. Der öffentliche Schemakatalog erhält
+`work-evaluation-v1`; genau dessen bestehender Inventartest wird um die neue
+Schemaidentität ergänzt. Alle übrigen bisherigen Testdateien und Testidentitäten
+bleiben erhalten. Die vier zugeordneten Requirements werden nur partiell belegt.
+
+Der Umfang bleibt eine Host-API für explizite gespeicherte Quellen mit aktueller
+Rootprüfung und unabhängiger Anfangsbindung. Ganze Auswertungen liegen im Speicher;
+feinere dauerhafte Cursor, allgemeine CLI-/Code-8-Anbindung, Paketexport/-restore
+dieses Adapters und vollständige Plattform-/Sandbox-/Releaseabnahme bleiben offen.
+Rename-Nachweise gelten für erhaltene Inodes und dieselben gebauten Bytes.
+Das gespeicherte Ergebnis behauptet keine aktuelle Projektverifikation.
+Erst vollständiger paralleler Apply-Test und Commit bestätigen 307/885; danach
+folgt 6.u.R. Technischer Aufrufvertrag: `docs/development/Work_Evaluation.md`.
 
 #### 6.u.R – Make it Right
 

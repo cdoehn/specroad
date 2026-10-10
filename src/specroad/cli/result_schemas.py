@@ -63,6 +63,12 @@ def _fields(schema_id):
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),
             "exit_codes": {"type": "object", "additionalProperties": text}, "examples": strings, "scope": text})
+    if schema_id == 'work-evaluation-v1':
+        return _object({'format_version': {'const': 'work-evaluation-v1'},
+            'input_manifest_sha256': sha, 'task_manifest_sha256': sha,
+            'source_scope': {'const': 'explicit_saved_model'}, 'project_files_verified': {'const': False},
+            'results': _array(_object({'key': nonempty, 'kind': {'enum': ['validate', 'srx']},
+                'observation': obj, 'exit_code': {'enum': [0, 1]}}))})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,
