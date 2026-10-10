@@ -17,13 +17,12 @@ from ..changes.receipt_read import _read_confirmed_request, _CompletionProof
 from ..model.audit import new_artifact_audit, actor as parse_actor
 from ..model.audit_values import UtcTimestamp
 from ..model.canonical import canonical_json_bytes
+from ..model.draft_factory import prepare_draft_fields
 from ..model.domain_schemas import DOMAIN_TYPES
 from ..model.errors import ModelError
 from ..model.identities import IdentityInventory, allocate_artifact_identity
 from ..model.identity_values import artifact_identity
 from ..model.paths import artifact_path
-from ..model.requirement import prepare_requirement
-from ..model.versions import SCHEMA_VERSION
 from ..storage.domain_artifact import DomainArtifact
 from ..storage.project import ProjectSource
 from ..storage.record_artifact import RecordArtifact
@@ -37,13 +36,8 @@ _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
 def _draft(prepared, identity, actor, planned_at, configuration):
     kind = prepared.data['artifact_type']
     actor, planned_at = parse_actor(actor), UtcTimestamp(planned_at)
-    if kind == 'requirement':
-        value = prepare_requirement(prepared.fields, identity=identity, actor=actor,
-            planned_at=planned_at, configuration=configuration).data
-    else:
-        value = {**prepared.fields, 'schema_version': SCHEMA_VERSION, 'artifact_type': kind,
-            'id': identity.id, 'id_scheme': identity.id_scheme, 'maturity': 'draft',
-            **new_artifact_audit(actor=actor, planned_at=planned_at).as_fields()}
+    value = prepare_draft_fields(kind, prepared.fields, identity=identity, actor=actor,
+        planned_at=planned_at, configuration=configuration)
     path = artifact_path(kind, identity.id, configuration.id_prefix)
     reader = DomainArtifact if kind in DOMAIN_TYPES else RecordArtifact
     reader(canonical_json_bytes(value), expected_type=kind, path=path)

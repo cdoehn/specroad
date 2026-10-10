@@ -74,3 +74,17 @@ haben. Der Dienst meldet dann weder einen sicheren Nicht-Write noch einen
 abgeschlossenen Commit. Journal und vorhandene Dateien bleiben für Recovery
 erhalten. Ein normaler erneuter Create-Aufruf wird durch dieses Journal vor
 weiterer ID-Vergabe blockiert; er startet keine automatische Reparatur.
+
+## Gemeinsame Draft-Konstruktion
+
+Die reine Zusammenstellung der Draftfelder liegt in
+`model.draft_factory.prepare_draft_fields`. Für Requirements delegiert sie an
+den bestehenden M2-Konstruktor `prepare_requirement`; die Auditfelder kommen
+weiterhin aus `new_artifact_audit`. Typ, normalisierte Felder, Identität, Actor,
+Zeit und Projektkonfiguration werden ausdrücklich übergeben. Es entstehen dabei
+weder neue IDs noch Zeitwerte, Dateien oder Schreibberechtigungen.
+
+Der Erzeugungsdienst behält seine Eingabeprüfung, Actor-/Zeitkonvertierung,
+Pfadberechnung und nativen Artefaktprüfer. Transaktion, Wiederholungsprüfung und
+Fehlergrenzen bleiben unverändert. Die Feldkonstruktion allein bestätigt weder
+einen gültigen Gesamtzustand noch die Erlaubnis zur Veröffentlichung.

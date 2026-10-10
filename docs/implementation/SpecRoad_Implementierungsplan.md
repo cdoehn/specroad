@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 317
-last_completed_plan_commit: 7.c.R
-next_plan_commit: 7.c.C
-last_completed_numbered_bundle: 168
+implementation_plan_commits_completed: 318
+last_completed_plan_commit: 7.c.C
+next_plan_commit: 7.d.W
+last_completed_numbered_bundle: 169
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7642,7 +7642,7 @@ Erst erfolgreicher Apply-Volltest und Commit bestätigen 317/885. Danach folgt
 
 #### 7.c.C – Make it Clean
 
-- [ ] **7.c.C** · Position **318/885** · Voraussetzung: `7.c.R`.
+- [x] **7.c.C** · Position **318/885** · Voraussetzung: `7.c.R`.
 **Exakte Commit-Message:** `7.c.C refactor(authoring): Artefakte erstellen bereinigen`
 
 **Bereinigung:** Gemeinsamen Konstruktor aus M2 statt CLI-eigener Standardwerte verwenden.
@@ -7650,6 +7650,28 @@ Erst erfolgreicher Apply-Volltest und Commit bestätigen 317/885. Danach folgt
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter Implementierungsstand (Bundle 169):** Result 168 bestätigt
+`5093be5c3d4de8ec8d0ff14ce806d5be1a134321`, 8.160 bestandene parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Die bisher im Erzeugungsadapter
+enthaltene Draft-Feldkonstruktion ist in `model.draft_factory` zusammengeführt.
+Requirements verwenden unverändert den vorhandenen M2-Konstruktor;
+Revisions-/Auditfelder bleiben beim gemeinsamen Auditkonstruktor. Alle Inputs
+werden ausdrücklich übergeben, ohne zusätzliche Defaults, Zeitwerte oder IDs.
+
+Ein Strukturvergleich bestätigt dieselben Konstruktorzweige nach Übergabe der
+normalisierten Felder als eigenem Parameter. Actor-/Zeitkonvertierung und
+abschließende Pfad-/Artefaktprüfung verbleiben im Erzeugungsdienst. Die Körper
+von Write-Ablauf, Ergebnisaufbau und Wiederholungslogik sind unverändert. Alle
+245 bisherigen Testdateien und alle 730 Requirement-Katalogdateien bleiben
+bytegleich. Die vorhandenen W-/R-Fälle sowie betroffene Modellkonstruktor-,
+Audit-, Schema- und Eingabeverträge werden gezielt erneut geprüft.
+
+Der native Dienst behält seine bisherigen offenen Integrationsgrenzen; weder
+CLI-/Dry-run-/stdout-Anbindung, vollständige Produktions-/Historienbeladung noch
+fehlende native Fachgates oder Plattformabnahme werden durch diese Bereinigung
+abgeschlossen. Erst erfolgreicher Apply-Volltest und Commit bestätigen 318/885.
+Danach folgt 7.d.W für den kleinsten nutzbaren Ausschnitt der Artefaktaktualisierung.
 
 <a id="step-7-d"></a>
 ### 7.d – Artefakte aktualisieren
