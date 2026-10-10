@@ -7,6 +7,12 @@ ausdrücklich geladenes vollständiges `TargetModel` und eine
 `PublicationAuthority`; CLI, Dry-run/stdout und allgemeine Modell-/Historien-
 beladung sind noch nicht angebunden.
 
+Die reine Aufbereitung neuer Relationsfelder und ihrer nativen Add-Operation
+liegt in `changes.relation_inputs`. Der Authoring-Adapter verbindet diese Werte
+weiterhin mit Inventar, Sperre und Veröffentlichung. Entfernen bleibt eine
+typisierte `relation_remove`-Operation; rohe Arraypatches ersetzen keinen der
+beiden Vorgänge.
+
 `add_relation(model, source_id, relation_type, target_id, inventory=..., ...)`
 verlangt ein `RelationInventory` mit aktuellen, archivierten und reservierten
 Relations-IDs. Die aktuellen IDs müssen mit dem gesamten Modell übereinstimmen;

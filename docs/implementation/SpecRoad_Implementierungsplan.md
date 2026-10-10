@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 323
-last_completed_plan_commit: 7.e.R
-next_plan_commit: 7.e.C
-last_completed_numbered_bundle: 174
+implementation_plan_commits_completed: 324
+last_completed_plan_commit: 7.e.C
+next_plan_commit: 7.f.W
+last_completed_numbered_bundle: 175
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7872,10 +7872,31 @@ Apply-Volltest und Commit bestätigen 323/885. Danach folgt 7.e.C.
 
 #### 7.e.C – Make it Clean
 
-- [ ] **7.e.C** · Position **324/885** · Voraussetzung: `7.e.R`.
+- [x] **7.e.C** · Position **324/885** · Voraussetzung: `7.e.R`.
 **Exakte Commit-Message:** `7.e.C refactor(authoring): Beziehungen hinzufügen und entfernen bereinigen`
 
 **Bereinigung:** Relationsoperationen nicht durch rohe Arraypatches in der CLI ersetzen.
+
+**Vorbereiteter Implementierungsstand (Bundle 175):** Result 174 bestätigt
+`7b06dfee88a10ba106d61812f9f394a282b33e1e`, 8.323 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Die reine Aufbereitung der
+Add-Eingabe und der nativen `relation_add`-Operation wechselt unverändert nach
+`changes.relation_inputs`. Der öffentliche Authoring-Aufruf behält Signatur,
+Prüfreihenfolge, Fehlerklassen und native Veröffentlichung bei.
+
+Remove-Adapter, Ergebnisaufbereitung, Replay und gemeinsamer Schreibdienst
+bleiben als vollständige Funktionsbäume identisch. Auch die Übernahme des
+Relationsinventars vor externen Reads und die historische Akteurserhaltung bei
+identischem Operationshash bleiben erhalten. Die Entfernung verwendet weiterhin
+die native `relation_remove`-Operation mit explizitem Relationshash und Grund.
+Es entsteht weder ein freier Arraypatch-Pfad noch neues Fachverhalten.
+
+Sämtliche 249 bestehenden Testdateien und 730 Requirement-Nachweise bleiben
+bytegleich. Alle vorhandenen W-/R-Fälle und die betroffenen Kernverträge werden
+erneut gezielt geprüft. CLI/Dry-run/stdout, allgemeine Produktions-/Historien-
+beladung, fehlende Lifecycle-/Spezialdienste und Plattformnachweise bleiben
+offen; SR-REQ-0233 und SR-REQ-0234 bleiben partiell. Erst erfolgreicher
+Apply-Volltest und Commit bestätigen 324/885. Danach folgt 7.f.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

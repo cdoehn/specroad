@@ -4,24 +4,21 @@ The host supplies model/history inventories, actor, time, IDs and authority.
 This embedding service does not discover a model or register a CLI. Relation
 operations remain typed operations of the common planner, never array patches.
 """
-from ..changes import (AuthoringError, ChangeOperation, ChangePlanError, TargetModel,
+from ..changes import (AuthoringError, ChangeOperation, TargetModel,
     TargetPolicy, PublicationAuthority, prepare_authoring_request,
     prepare_change_target, prepare_publication_check, project_lock,
     begin_building_journal, stage_building_journal, publish_prepared_journal,
     read_committing_journal, finalize_committing_journal, cleanup_completed_transaction,
     read_transaction_completion, resolve_normative_request)
-from ..changes._common import _reference
 from ..changes._journal_codec import _transaction
 from ..changes._lock_files import LockFiles
 from ..changes._publication_observation import _root
 from ..changes.receipt_read import _read_confirmed_request, _CompletionProof
-from ..graph.relation_types import require_relation_type
+from ..changes.relation_inputs import normalize_relation_add_input, _addition
 from ..model.audit_values import UtcTimestamp
-from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..model.relation_identity import (RelationInventory, allocate_relation_identity,
     relation_identity)
-from ..storage.json_syntax import parse_json_object
 from ..storage.project import ProjectSource
 
 _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
@@ -36,21 +33,8 @@ def add_relation(model, source_id, relation_type, target_id, *, inventory,
     Retrying with the same Request-ID reconstructs the original operation from
     its verified committed proof before any new allocation or publication.
     """
-    try:
-        _reference(source_id, '/source')
-        _reference(target_id, '/target')
-        require_relation_type(relation_type)
-        fields = {'type': relation_type, 'target': target_id,
-                  'external_identities': [], 'extensions': {}}
-        if rationale is not None:
-            fields['rationale'] = rationale
-        if position is not None:
-            fields['position'] = position
-        intent = parse_json_object(canonical_json_bytes({'source': source_id, 'fields': fields}))
-    except ChangePlanError:
-        raise
-    except ModelError as error:
-        raise AuthoringError(error.reason, pointer=error.pointer, exit_code=3) from error
+    intent = normalize_relation_add_input(source_id, relation_type, target_id,
+        rationale=rationale, position=position)
     return _execute(model, 'relation add', intent, inventory=inventory, **options)
 
 
@@ -63,12 +47,6 @@ def remove_relation(model, source_id, relation_id, *, expected_sha256, reason, *
     operation = ChangeOperation({'op': 'relation_remove', 'source': source_id,
         'relation_id': relation_id, 'expected_sha256': expected_sha256, 'reason': reason})
     return _execute(model, 'relation remove', operation, **options)
-
-
-def _addition(intent, identity, actor, planned_at):
-    return ChangeOperation({'op': 'relation_add', 'source': intent['source'],
-        'relation': {**intent['fields'], **identity.as_fields(),
-                     'created_at': planned_at, 'created_by': actor}})
 
 
 def _result(operation, completion, *, replayed=False):
