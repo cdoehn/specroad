@@ -20,8 +20,10 @@ Der Typ stammt aus dem Aufruf. Die entsprechende Tokenliste ist
 `['goal', '--title', 'Ziel', '--statement', 'Offline arbeiten.', '--owner',
 '"engineering"']`. Feldnamen verwenden in Optionen Bindestriche statt
 Unterstrichen. Reine Text-/String-Enumfelder nehmen Text entgegen; Zahlen,
-Objekte, Arrays und unionswertige Felder wie `owner` verwenden einen JSON-Wert.
+Objekte, Arrays und unionswertige Felder wie `owner` verwenden genau einen JSON-Wert.
 Die JSON-Anführungszeichen im Owner-Beispiel sind deshalb Bestandteil des Wertes.
+Zusätzliche Objektmitglieder lassen sich nicht über diesen Optionswert
+einschleusen; ungültige Werte werden vor dem Lesen von Datei oder stdin abgewiesen.
 
 Datei und Optionen dürfen sich ergänzen. Derselbe kanonische Feldwert ist
 redundant zulässig; widersprüchliche Angaben führen zu Code 2. Fehlende Felder
@@ -30,6 +32,12 @@ Code 7, tatsächliche I/O-Fehler Code 5. Ohne den exakten Marker `-` wird stdin
 nicht gelesen; eine Datei mit diesem Namen bleibt über `./-` auswählbar.
 Ein übergebener binärer Stream wird nicht geschlossen. Datei-Reads verwenden
 den vorhandenen deskriptorgebundenen Leser und prüfen den beobachteten Zustand.
+Eine fehlende binäre stdin-Schnittstelle oder ein geschlossener Stream führt zu
+Code 5. Bereits begonnene Reads werden bei Fehlern nicht wiederholt. Ein Reader,
+der Text statt Bytes oder mehr Bytes als angefordert liefert, verletzt die
+Lesegrenze und führt zu Code 7. Austausch, Wachstum und Schrumpfen der Datei
+werden abgewiesen; der fremde Endzustand bleibt erhalten. Benannte Pipes werden
+vor einem möglicherweise blockierenden Öffnen abgelehnt.
 
 Die Feldschemas stammen aus den vorhandenen Domain-/Recordverträgen der
 24 regulären Drafttypen. Evidence, Baseline, Proposal und Relationsreview
@@ -39,7 +47,7 @@ Nur fehlende `relations` und `extensions` erhalten leere Container; deklarierte
 Sprachtags werden durch den nativen Parser kanonisiert. Prosa und normative
 Force werden weder übersetzt noch aus Text oder Priorität abgeleitet.
 
-Der W-Stand ist eine gemeinsame Eingabeschicht für den folgenden Writer, kein
+Der W/R-Stand ist eine gemeinsame Eingabeschicht für den folgenden Writer, kein
 neu registrierter `artifact create`-Befehl und kein vollständiger Change Plan.
 Er verwendet keine Entropie, Zeitstempel, Projektwrites oder externe Programme.
 Feldschema-Erfolg bestätigt weder Graph-/Profil-/Lifecyclegates noch lokale
@@ -50,5 +58,6 @@ CLI-Integration samt versioniertem stdout-Ergebnis bleibt bis dahin offen.
 
 Rohbytes und normalisierte Werte sind derzeit speicherresident; der Reader
 verwendet begrenzte Readblöcke, aber keine behauptete Gesamt-Speicherobergrenze.
-Zusätzliche widersprüchliche Quellen, Typ-/Pflichtfeldfehler und Störfälle der
-Eingabekanäle werden im anschließenden 7.b.R vertieft. SR-REQ-0240 bleibt partiell.
+Pflichtfeld-/Typfehler, widersprüchliche Quellen und Störfälle der Eingabekanäle
+haben in 7.b.R zusätzliche Verhaltensnachweise erhalten. SR-REQ-0240 bleibt
+wegen der noch ausstehenden Writer- und CLI-Integration partiell.

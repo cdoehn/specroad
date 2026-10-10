@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 313
-last_completed_plan_commit: 7.b.W
-next_plan_commit: 7.b.R
-last_completed_numbered_bundle: 164
+implementation_plan_commits_completed: 314
+last_completed_plan_commit: 7.b.R
+next_plan_commit: 7.b.C
+last_completed_numbered_bundle: 165
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7505,12 +7505,35 @@ Bedienung: `docs/development/Authoring_Inputs.md`.
 
 #### 7.b.R – Make it Right
 
-- [ ] **7.b.R** · Position **314/885** · Voraussetzung: `7.b.W`.
+- [x] **7.b.R** · Position **314/885** · Voraussetzung: `7.b.W`.
 **Exakte Commit-Message:** `7.b.R feat(authoring): Strukturierte Authoring-Eingaben vervollständigen`
 
 **Vervollständigung:** Widersprüchliche Quellen, fehlende Pflichtfelder und falsche Datentypen vor Planung ablehnen.
 
 **Verhaltensabnahme:** Ungültige Eingaben ändern keine Dateien und verbrauchen keine sichtbare fachliche Identität. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 165):** Result 164 bestätigt
+`0cbf5fbc5e89f5730127a4221935377dbd9c1151`, 7.838 bestandene parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Zusammengesetzte Optionswerte
+enthalten genau einen JSON-Wert; zusätzliche eingeschleuste Objektmitglieder
+werden vor jedem Eingaberead abgelehnt. Geschlossene oder nicht verfügbare
+binäre Streams erhalten Code 5; Sicherheitsverletzungen behalten Code 7.
+Teilweise gelesene Eingaben werden nach einem Fehler nicht erneut gelesen.
+
+193 neue Verhaltenstests ergänzen alle 24 regulären Drafttypen um fehlende
+und ungültige Pflichtwerte über Mapping, Datei und stdin. Hinzu kommen native
+bedingte Feldpflichten, Datentypfehler, widersprüchliche Quellen, fremde
+Steuerfelder, ungültiges JSON und gestörte Reader. Reale Dateimutationen prüfen
+Austausch, Wachstum und Schrumpfen unter Erhalt des fremden Endzustands;
+benannte Pipes werden vor dem Öffnen abgewiesen. Isolierte Prozesse beider
+gebauten Distributionen bestätigen die maschinenlesbare Ablehnung ungültiger
+stdin-Daten ohne Projektänderung. Sämtliche W-Tests bleiben unverändert.
+
+SR-REQ-0240 bleibt partiell: registrierter Writer, ID-Vergabe, vollständige
+Instanz-/Graph-/Profilvalidierung und tatsächlicher Authoring-stdout-Vertrag
+folgen in 7.c und den weiteren Diensten. Die Eingabe bleibt insgesamt
+speicherresident. Erst erfolgreicher Apply-Volltest und Commit bestätigen
+314/885; anschließend folgt die Strukturbereinigung 7.b.C.
 
 #### 7.b.C – Make it Clean
 

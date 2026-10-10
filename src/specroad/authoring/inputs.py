@@ -111,7 +111,14 @@ def _read_stream(read, expected_size=None):
     while True:
         requested = 65536 if expected_size is None else min(65536, expected_size + 1 - len(raw))
         if requested <= 0: raise SafetyViolation('Authoring input grew while reading')
-        block = read(requested)
+        try:
+            block = read(requested)
+        except SafetyViolation:
+            raise
+        except (OSError, ValueError) as error:
+            # A closed binary stream raises ValueError, not OSError. Do not
+            # retry a read that may already have consumed part of the input.
+            raise AuthoringError('authoring_input_io', exit_code=5) from error
         if type(block) is not bytes or len(block) > requested:
             raise SafetyViolation('Authoring input reader violated its byte contract')
         if not block: break
@@ -125,8 +132,11 @@ def _read_input(path, cwd, stdin):
     if type(path) is not str or not path or '\0' in path:
         raise AuthoringError('authoring_input_path_required', pointer='/input')
     if path == '-':
-        stream = sys.stdin.buffer if stdin is None else stdin
-        return _read_stream(stream.read)
+        stream = getattr(sys.stdin, 'buffer', None) if stdin is None else stdin
+        read = getattr(stream, 'read', None)
+        if not callable(read):
+            raise AuthoringError('binary_stdin_unavailable', exit_code=5)
+        return _read_stream(read)
     target = Path(path)
     if not target.is_absolute(): target = (Path.cwd() if cwd is None else Path(cwd)) / target
     boundary = ProjectBoundary(target.parent)
@@ -152,7 +162,10 @@ def read_artifact_create_input(kind, *, options=None, input=None, cwd=None, stdi
                 option_fields[field] = value
             else:
                 try:
-                    option_fields[field] = parse_json_object(('{"value":' + value + '}').encode())['value']
+                    decoded = parse_json_object(('{"value":' + value + '}').encode())
+                    if set(decoded) != {'value'}:
+                        raise ModelError('single_json_value_required')
+                    option_fields[field] = decoded['value']
                 except ModelError as error:
                     pointer = '/' + field + error.pointer.removeprefix('/value')
                     raise AuthoringError(error.reason, pointer=pointer, exit_code=3) from error
