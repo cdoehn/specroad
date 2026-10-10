@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 325
-last_completed_plan_commit: 7.f.W
-next_plan_commit: 7.f.R
-last_completed_numbered_bundle: 176
+implementation_plan_commits_completed: 326
+last_completed_plan_commit: 7.f.R
+next_plan_commit: 7.f.C
+last_completed_numbered_bundle: 177
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7955,12 +7955,41 @@ und Commit bestätigen 325/885. Danach folgt 7.f.R.
 
 #### 7.f.R – Make it Right
 
-- [ ] **7.f.R** · Position **326/885** · Voraussetzung: `7.f.W`.
+- [x] **7.f.R** · Position **326/885** · Voraussetzung: `7.f.W`.
 **Exakte Commit-Message:** `7.f.R feat(authoring): Lifecycle und Stilllegung vervollständigen`
 
 **Vervollständigung:** Rejected ohne Grund, unerlaubte Rückkehr aus retired und superseded ohne Nachfolger ablehnen.
 
 **Verhaltensabnahme:** §9.6.3-Fälle bestätigen genau eine Revision und keinen versteckten Reset. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 177):** Result 176 bestätigt
+`5335bec65283f57f811ca6ee13c842f54a7607a6`, 8.375 erfolgreiche parallele
+Apply-Tests und einen sauberen Arbeitsbaum. Der Lifecycle-Authoring-Dienst
+übernimmt die ursprüngliche Auswahl expliziter Host-Prüfungen vor externen
+Lesezugriffen. Eine nachträglich geleerte Aufruferliste entfernt keine anfängliche
+Lifecycle-Sperre. Gebundene Nachweise zertifizieren keine anderen Akteure,
+Zeitpunkte, Ziele oder veränderten übrigen Artefakte.
+
+Die zusätzliche R-Abnahme prüft fehlende Gründe, den Endzustand `retired`,
+unveränderte Ausgangs- und Revisions-/Hashvorbedingungen sowie echte eingehende,
+zyklenfreie Nachfolger. Reine Übergänge eines strukturell gültigen
+`approved`-Ausgangs nach `proposed`, `retired` oder `superseded` behalten ihre
+Fachprojektion, den ausdrücklich gewählten Endzustand und genau eine Revision.
+Diese Fixtures belegen keine frühere fachliche Freigabe.
+
+Bestätigte Requests können Operation, Ziel, Ausgang, Grund und Vorbedingungen
+nicht nachträglich ändern. Frische No-ops prüfen weiterhin die aktuelle
+Autorität. Fremde Dateiänderungen und bestehende Sperren bleiben erhalten.
+Echte Ersetzungsfehler vor beziehungsweise nach der Dateibewegung erhalten
+die tatsächlichen Bytes, den unklaren Schreibstatus und das native
+`committing`-Journal; ein blinder Retry bleibt gesperrt. CI-Aufträge mit
+Request-ID erhalten ihren ursprünglichen Akteursnachweis.
+
+Die bisherigen W- und betroffenen Regressionstests bleiben unverändert.
+Registrierte CLI/Dry-run/stdout, allgemeine Produktions-/Historienbeladung,
+vollständige Approval-Anbindung und Plattformnachweise bleiben offen;
+SR-REQ-0218 und SR-REQ-0235 bleiben partiell. Erst erfolgreicher Apply-Volltest
+und Commit bestätigen 326/885. Danach folgt 7.f.C.
 
 #### 7.f.C – Make it Clean
 

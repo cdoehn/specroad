@@ -39,6 +39,10 @@ und vergleicht alle Artefakte. Sie deckt ausschließlich das Standardartefakt de
 aktuellen Auftrags ab. Weitere Nicht-Draft-Artefakte und Spezialdienste benötigen
 ihre echten semantischen Prüfungen. Ein ausdrücklich übergebener Lifecycle-Dienst
 wird nicht durch diesen Adapter ersetzt.
+Die Auswahl der übergebenen Prüfungen wird vor externen Lesezugriffen übernommen.
+Eine später geleerte Aufruferliste entfernt damit keine anfängliche Host-Sperre.
+Gebundene Nachweise gelten nur für den ursprünglichen vollständigen Zielzustand,
+einschließlich Akteur, Zeitpunkt und unveränderter übriger Artefakte.
 
 Writer-Lock, vollständige Zielprüfung, Live-Prüfung, Journal, Veröffentlichung
 und Abschlussbelege verwenden die bestehenden nativen Dienste. Ein reiner
@@ -60,7 +64,26 @@ Das Ergebnis enthält `format_version: 1.0.0`, `command_id: lifecycle.transition
 Veröffentlichungsfehler behalten ihren tatsächlichen Schreibstatus und die
 nativen Recovery-Daten; der Dienst startet weder Retry noch Rollback.
 
+Reine Übergänge eines vorhandenen `approved`-Artefakts nach `proposed`, `retired`
+oder `superseded` behalten das ausdrücklich gewählte Ziel und ändern die Revision
+genau einmal. Bei `superseded` muss ein anderes Artefakt desselben Typs im
+vollständigen Zielmodell eine eingehende `supersedes`-Beziehung besitzen;
+eine ausgehende Beziehung oder ein Zyklus genügt nicht. Fehlende Gründe für
+Ablehnung/Stilllegung, Rückkehr aus `retired` und veraltete Ausgangsstände oder
+Retire-Vorbedingungen bleiben gesperrt. Auch ein frischer Retire-No-op prüft
+beide ausdrücklich angegebenen Vorbedingungen und die aktuelle Host-Autorität.
+
+Ein bestätigter Request darf weder seine ursprüngliche Operation noch deren
+Ziel, Ausgang, Grund oder Vorbedingungen ändern. Ein anderer zulässiger
+Retry-Akteur bleibt dagegen Teil des bereits beschriebenen historischen Replays.
+Fremde Dateiänderungen und bestehende Writer-Sperren werden erhalten. Bei einem
+I/O-Fehler vor oder nach tatsächlicher Dateiersetzung bleiben die wirklichen
+Artefaktbytes und das native `committing`-Journal liegen; der unklare Schreibstatus
+wird nicht in einen Erfolg oder einen automatischen Wiederholungsversuch umgedeutet.
+
 SR-REQ-0218 und SR-REQ-0235 bleiben partiell. Die lokale Abnahme ist kein Nachweis
 vollständiger Produktionshistorie, früherer Freigaben, registrierter CLI oder
-aller unterstützten Plattformen. Weitere Randfall- und Unterbrechungsnachweise
-folgen in 7.f.R.
+aller unterstützten Plattformen. Die R-Fixtures mit einem strukturell gültigen
+`approved`-Ausgangszustand belegen keine frühere fachliche Freigabe. Die gezielten
+W-/R-Nachweise decken die beschriebenen lokalen Grenzen und unterbrochenen
+Veröffentlichungen ab; die vollständige Approval-Anbindung bleibt offen.

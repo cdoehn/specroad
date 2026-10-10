@@ -133,6 +133,8 @@ def _execute(model, operation, *, expected_kind, actor, planned_at, change_plan_
         raise AuthoringError('lifecycle_operation_required', pointer='/op')
     if type(gates) not in (list, tuple) or type(strict) is not bool:
         raise AuthoringError('explicit_lifecycle_options_required')
+    # Keep the host's original gate selection across external source callbacks.
+    gates = tuple(gates)
     if type(change_plan_id) is not str or not change_plan_id.strip() or '\0' in change_plan_id:
         raise AuthoringError('change_plan_identity_required')
     _transaction(transaction_id)
