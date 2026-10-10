@@ -47,7 +47,8 @@ class SchemaCatalogRobustnessTests(unittest.TestCase):
             self.assertEqual(actual['examples'], [command.protocol.example.as_dict()])
             for example in actual['examples']:
                 self.catalog.validate(schema['$id'], example)
-                self.assertEqual(execute_request(example).result.exit_code, 0)
+                with tempfile.TemporaryDirectory() as tmp:
+                    self.assertEqual(execute_request(example, cwd=Path(tmp)).result.exit_code, 0)
 
     def test_requirement_enum_and_examples_have_no_obligation_default(self):
         field = self.catalog.get(domain_schema('requirement')['$id']).schema['properties']['normative_force']

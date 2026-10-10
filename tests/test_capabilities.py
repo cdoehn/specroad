@@ -24,7 +24,7 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertEqual(set(semantic['capability_ids']), {'cli.' + item for item in ids} |
                          {'python.structured-request', 'python.srx.evaluate'})
         self.assertEqual(set(semantic['command_groups']), {item.split('.')[0] for item in ids})
-        self.assertEqual(semantic['command_classes'], ['read_only'])
+        self.assertEqual(semantic['command_classes'], ['read_only', 'root_creation'])
         for item in semantic['commands']:
             result = dispatch_result(['command', 'describe', item['command_id']], registry=registry)
             self.assertEqual(result.exit_code, 0)

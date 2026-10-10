@@ -65,4 +65,7 @@ def resolve_options(invocation: Invocation, *, cwd: Path | None = None,
     preflight = {}
     root, source, project = select_project(invocation.command, invocation.options, cwd, preflight=preflight)
     values, history = _compose_values(project, invocation.options, profile_layers, configuration_layer)
-    return ResolvedOptions(root, source, values, history, preflight or None)
+    origin = None
+    if invocation.command.preflight_for(invocation.options) is PreflightProfile.ROOT_CREATION:
+        origin = Path.cwd() if cwd is None else Path(cwd)
+    return ResolvedOptions(root, source, values, history, preflight or None, origin)

@@ -106,7 +106,7 @@ class CommandProtocol:
 
     def __post_init__(self):
         from .requests import CommandRequest
-        if self.lock_kind != "none" or not isinstance(self.work, WorkContract):
+        if self.lock_kind not in ('none', 'bootstrap') or not isinstance(self.work, WorkContract):
             raise CommandUsageError("Unsupported lock or work protocol")
         if not isinstance(self.result_schema, str) or not re.fullmatch(r"[a-z][a-z0-9._-]*", self.result_schema):
             raise CommandUsageError("Invalid result schema identity")
@@ -182,6 +182,9 @@ class CommandSpec:
         if self.protocol is not None and (not isinstance(self.protocol, CommandProtocol)
                 or self.protocol.example.command_id != self.command_id):
             raise CommandUsageError("Protocol example must address its own command")
+        if (self.protocol is not None and self.protocol.lock_kind == 'bootstrap'
+                and self.command_class is not CommandClass.ROOT_CREATION):
+            raise CommandUsageError('Bootstrap locking requires a root-creation command')
         flags = [option.flag for option in self.options]
         if len(flags) != len(set(flags)):
             raise CommandUsageError("Duplicate option flag")

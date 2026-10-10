@@ -88,8 +88,24 @@ def _environment(invocation) -> CommandResult:
     return CommandResult(invocation.command.command_id, result=payload, diagnostics=diagnostics)
 
 
+def _initialize(invocation):
+    from ..authoring.initialization import initialize_command
+    return initialize_command(invocation)
+
+
 def builtin_registry() -> CommandRegistry:
     return CommandRegistry((CommandSpec(
+        command_id='init', words=('init',), command_class=CommandClass.ROOT_CREATION,
+        preflight_profile=PreflightProfile.ROOT_CREATION, effect_scope=EffectScope.NEW_ROOT,
+        handler=_initialize, positionals=(PositionalSpec('path', required=False),),
+        requires_write_paths=('path',),
+        options=(OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                 OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('project-init-v1', {'command_id': 'init',
+            'arguments': {'path': 'specroad-project'}, 'options': {'--format': 'json'}},
+            handler_exit_codes=(0, 3, 6, 7), diagnostic_codes=('CORE_MODEL', 'CORE_CONFLICT', 'CORE_SECURITY'),
+            lock_kind='bootstrap', work=WorkContract('root_creation', ('distribution_resources', 'target_directory'))),
+    ), CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
         command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.BOOTSTRAP,

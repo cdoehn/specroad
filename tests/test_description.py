@@ -36,7 +36,8 @@ class DescriptionWorkTests(unittest.TestCase):
             document = describe_command(registry, command.command_id)
             for request in document['examples']:
                 with self.subTest(command=command.command_id):
-                    result = execute_request(request, registry=registry).result
+                    with tempfile.TemporaryDirectory() as tmp:
+                        result = execute_request(request, registry=registry, cwd=Path(tmp)).result
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
                     self.assertIsNone(result.project)
@@ -50,7 +51,7 @@ class DescriptionWorkTests(unittest.TestCase):
         self.assertEqual(cli.result['stdout']['json_envelope_version'], '2.0.0')
 
     def test_unknown_commands_are_not_success_placeholders(self):
-        for target in ('init', 'retire', 'schema.unavailable', 'work.resume', 'not-registered'):
+        for target in ('init.unavailable', 'retire', 'schema.unavailable', 'work.resume', 'not-registered'):
             self.assertEqual(dispatch_result(['command', 'describe', target]).exit_code, 2)
 
     def test_missing_extra_and_unknown_input_is_rejected(self):
@@ -202,7 +203,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(work['external_side_effects'], [])
             self.assertEqual(work['checkpoint_algorithms'], [])
             self.assertEqual(document['write_effects']['external_work'], [])
-            self.assertEqual(document['lock_kind'], 'none')
+            self.assertEqual(document['lock_kind'], 'bootstrap' if command.command_id == 'init' else 'none')
             self.assertNotIn(8, document['exit_codes'])
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id == 'environment.check' else None)

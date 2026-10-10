@@ -127,7 +127,7 @@ class EntryPointRobustnessTests(unittest.TestCase):
         sys.stdin = ForbiddenInput()
         try:
             for arguments in ([], ["--help", "extra"], ["--help", "--bad"],
-                              ["--he"], ["change", "apply"], ["validate"], ["init"],
+                              ["--he"], ["change", "apply"], ["validate"], ["init", "--unavailable"],
                               ["--format"], ["--format", "json"], ["\x1b[31m"],
                               "--help", [None], 42):
                 with self.subTest(arguments=arguments):

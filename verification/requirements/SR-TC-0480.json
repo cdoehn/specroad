@@ -4,18 +4,31 @@
   "requirement_id": "SR-REQ-0480",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary directories; native Linux descriptor-relative reads, inode flock and renameat2 no-replace publication. Built module/zipapp cases use actual independently built distribution bytes in fresh isolated processes."
+  ],
+  "steps": [
+    "Execute the real init CLI, structured-request and registry routes on missing, empty and collision-free existing targets; independently inspect the required directories, exactly one native valid draft primary document, configuration and pinned distribution resources.",
+    "Verify existing bytes/inodes/modes survive collisions and ordinary preparation/publication failures, including an error after the real native rename; inspect the durable journal before each publication and configuration-last order.",
+    "Verify the real root mutex, metadata preflights and supported isolated module/zipapp execution; do not infer full semantic validation or hard-abort recovery from these observations."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Root-Erzeugungsbefehl MUSS die für ihn in Kapitel 11.7 festgelegte Zielvorbedingung prüfen und die geplante Root-Struktur vollständig oder gar nicht veröffentlichen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Real root-creation command publishes the specified minimum directory structure with exactly one primary draft document, fresh identities and hash-bound distribution resources. Existing foreign files and reused empty root directories retain bytes and identities. Conflicts occur before writes. Ordinary errors before full publication restore the original target or preserve unverified data with recovery_required; a completed valid project is retained after later cleanup failure. This W scope does not claim hard-abort recovery, full semantic model validation, other platforms or release approval."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +41,54 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_initialization.py::test_built_distribution_initializes_without_project_imports_or_path[module]",
+    "tests/test_project_initialization.py::test_built_distribution_initializes_without_project_imports_or_path[zipapp]",
+    "tests/test_project_initialization.py::test_configuration_is_last_and_every_move_has_a_durable_journal",
+    "tests/test_project_initialization.py::test_current_native_root_mutex_blocks_concurrent_creation",
+    "tests/test_project_initialization.py::test_description_reports_root_creation_without_creating_it",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[file-.specroad]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[file-generated]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[file-profiles]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[file-spec]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[file-specroad.json]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[symlink-.specroad]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[symlink-generated]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[symlink-profiles]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[symlink-spec]",
+    "tests/test_project_initialization.py::test_existing_claimed_path_is_rejected_before_writes[symlink-specroad.json]",
+    "tests/test_project_initialization.py::test_independent_initializations_allocate_new_random_identities",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[empty-cli]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[empty-registry]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[empty-request]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[empty_roots-cli]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[empty_roots-registry]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[empty_roots-request]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[missing-cli]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[missing-registry]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[missing-request]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[repository-cli]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[repository-registry]",
+    "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[repository-request]",
+    "tests/test_project_initialization.py::test_new_operational_directories_are_only_clear_while_empty[merge]",
+    "tests/test_project_initialization.py::test_new_operational_directories_are_only_clear_while_empty[tmp]",
+    "tests/test_project_initialization.py::test_nonempty_or_reserved_namespace_remains_untouched[.specroad-bootstrap]",
+    "tests/test_project_initialization.py::test_nonempty_or_reserved_namespace_remains_untouched[.specroad]",
+    "tests/test_project_initialization.py::test_nonempty_or_reserved_namespace_remains_untouched[SPEC]",
+    "tests/test_project_initialization.py::test_nonempty_or_reserved_namespace_remains_untouched[profiles]",
+    "tests/test_project_initialization.py::test_nonempty_or_reserved_namespace_remains_untouched[spec]",
+    "tests/test_project_initialization.py::test_omitted_path_uses_current_invocation_directory[cli]",
+    "tests/test_project_initialization.py::test_omitted_path_uses_current_invocation_directory[request]",
+    "tests/test_project_initialization.py::test_ordinary_publication_failure_rolls_back_only_owned_paths[False-False]",
+    "tests/test_project_initialization.py::test_ordinary_publication_failure_rolls_back_only_owned_paths[False-True]",
+    "tests/test_project_initialization.py::test_ordinary_publication_failure_rolls_back_only_owned_paths[True-False]",
+    "tests/test_project_initialization.py::test_ordinary_publication_failure_rolls_back_only_owned_paths[True-True]",
+    "tests/test_project_initialization.py::test_preparation_failure_leaves_no_partial_project[False]",
+    "tests/test_project_initialization.py::test_preparation_failure_leaves_no_partial_project[True]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Safe recovery of a prior bootstrap after hard process interruption and additional adversarial/failure scenarios are assigned to 7.a.R.",
+    "The native implementation is currently Linux/local-filesystem only; other platform, filesystem and complete release coverage remain open. Advisory mutexes do not sandbox noncooperating host writers.",
+    "Parent directories must already exist. Whole bootstrap inputs and inventory are memory-resident. Full later document/project semantic gates are not implemented by initialization."
   ]
 }

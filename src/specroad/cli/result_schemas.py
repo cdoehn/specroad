@@ -69,6 +69,13 @@ def _fields(schema_id):
             'source_scope': {'const': 'explicit_saved_model'}, 'project_files_verified': {'const': False},
             'results': _array(_object({'key': nonempty, 'kind': {'enum': ['validate', 'srx']},
                 'observation': obj, 'exit_code': {'enum': [0, 1]}}))})
+    if schema_id == 'project-init-v1':
+        return _object({'format_version': {'const': 'project-init-v1'},
+            'project_root': nonempty, 'project_id': nonempty, 'primary_document_id': nonempty,
+            'files': _array(_object({'path': nonempty, 'size': count, 'sha256': sha})),
+            'directories': strings, 'bootstrap_state': {'const': 'complete'},
+            'validation_scope': {'const': 'configuration_record_fields_and_distribution_bindings'},
+            'full_semantic_validation': {'const': False}})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,
@@ -76,7 +83,7 @@ def _fields(schema_id):
             "supported_output_format_versions": {"type": "object", "additionalProperties": strings}})
     if schema_id == "command-description-v1":
         return _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
-            "lock_kind": {"const": "none"}, "work": work,
+            "lock_kind": {"enum": ['none', 'bootstrap']}, "work": work,
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
                 "datatype": text, "required": boolean, "choices": strings})),
             "options": _array(_object({"flag": text, "datatype": text, "repeatable": boolean,

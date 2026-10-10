@@ -2,7 +2,7 @@
 import os
 import stat
 
-from ..model.operational_paths import PASSIVE_ROOTS, passive_journal_directory
+from ..model.operational_paths import PASSIVE_ROOTS, EMPTY_OPERATIONAL_DIRECTORIES, passive_journal_directory
 from ..security import paths as guards
 from ..security.resource_access import opened_resource
 from .preflight_metadata import MAX_METADATA_BYTES
@@ -63,6 +63,12 @@ def observe_operational_preflight(boundary, *, complete_inventory=False, metadat
         path = '.specroad/' + name
         observed.append({'path': path, 'directory': directory})
         if directory and path in PASSIVE_ROOTS:
+            continue
+        if directory and name in EMPTY_OPERATIONAL_DIRECTORIES:
+            for child, is_directory in entries(path):
+                logical = path + '/' + child
+                observed.append({'path': logical, 'directory': is_directory})
+                unknown.append(logical)
             continue
         if directory and name in ('locks', 'transactions', 'recovery'):
             for child, is_directory in entries(path):

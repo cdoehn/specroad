@@ -35,6 +35,7 @@ class ResolvedOptions:
     values: Mapping[str, object]
     history: Mapping[str, tuple[OptionOrigin, ...]]
     preflight: Mapping | None = None
+    working_directory: Path | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "values", MappingProxyType(dict(self.values)))

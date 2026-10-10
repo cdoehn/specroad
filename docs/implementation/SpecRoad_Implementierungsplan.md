@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 309
-last_completed_plan_commit: 6.u.C
-next_plan_commit: 7.a.W
-last_completed_numbered_bundle: 160
+implementation_plan_commits_completed: 310
+last_completed_plan_commit: 7.a.W
+next_plan_commit: 7.a.R
+last_completed_numbered_bundle: 161
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -7347,12 +7347,48 @@ danach folgt 7.a.W.
 
 #### 7.a.W – Let it Work
 
-- [ ] **7.a.W** · Position **310/885** · Voraussetzung: `6.u.C`.
+- [x] **7.a.W** · Position **310/885** · Voraussetzung: `6.u.C`.
 **Exakte Commit-Message:** `7.a.W feat(authoring): Atomare Projektinitialisierung aufbauen`
 
 **Umsetzung:** init mit Bootstrapjournal, Mindeststruktur und genau einem Primärdokument implementieren.
 
 **Verhaltensabnahme:** Neues oder kollisionsfreies bestehendes Repository erhält ein gültiges Projekt.
+
+**Vorbereiteter Implementierungsstand (Bundle 161):** Der echte CLI-/Request-
+Befehl `init [PATH]` veröffentlicht die Mindeststruktur mit neuer Projekt-ID,
+genau einem Primärdokument und realer Random128-Identität. Native Feldprüfungen
+und die bestehenden Distributionleser prüfen Konfiguration, Dokument,
+Core-/Softwareprofile, Sprachregister und neun deklarative Sprachpakete.
+Fremde Repositorydateien bleiben erhalten; vorhandene leere beanspruchte
+Rootverzeichnisse behalten ihre Inodes. Belegte Zielpfade und Links blockieren
+vor der Vorbereitung.
+
+Der native Linux-Pfad hält Eltern-/Root-Inode-Mutexe und bereitet die Inhalte
+unter einem eigenen Bootstrapverzeichnis vor. Sein dauerhaftes Journal bindet
+Inodes, Modi und Bytes; No-Replace-Veröffentlichung installiert nur fehlende
+Einheiten und zuletzt die Konfiguration. Normale Vorbereitungs-/Publikationsfehler
+rollen nur unveränderte eigene Einheiten zurück. Der tatsächliche Zustand bleibt
+bei unklarer Eigentümerschaft oder späterem Bereinigungsfehler erhalten.
+Die Mindeststruktur ergänzt leere tmp-/merge-Betriebsverzeichnisse; deren
+unbekannte Inhalte bleiben in den bisherigen Preflights blockierend.
+
+43 neue Verhaltenstests prüfen die CLI-/Request-/Registrywege, bestehende und
+fehlende Ziele, echte Ressourcenbindungen, Kollisionen, Fremddatenerhalt,
+Rücknahme vor/nach nativen Umbenennungen, Journal vor Veröffentlichung,
+Konfiguration zuletzt, echten Mutexkonflikt und gebaute Modul-/Zipapp-Prozesse.
+Die vorhandenen öffentlichen Inventartests werden um den implementierten Befehl
+und sein Ergebnisschema erweitert; bisherige Testidentitäten bleiben erhalten.
+Schreibende Vertragsexemplare laufen in eigenen temporären Verzeichnissen.
+
+Die vier zugeordneten Requirements erhalten partielle Nachweise. Harte
+Prozessabbrüche mit vorgefundenem Bootstrap-Journal bleiben im W-Stand ein
+erhaltener Konflikt; sichere Wiederaufnahme und zusätzliche Fehlerfälle folgen
+in 7.a.R. Ein fehlendes Elternverzeichnis wird nicht rekursiv erzeugt. Andere
+Plattformen, fremde nichtkooperierende Schreiber und vollständige spätere
+Dokument-/Projektgates sind nicht durch diesen Stand freigegeben. Das Ergebnis
+weist seine tatsächliche Feld-/Ressourcenprüfreichweite ausdrücklich aus.
+Erst vollständiger paralleler Apply-Test und Commit bestätigen 310/885; danach
+folgt 7.a.R. Bedienung: `docs/development/Project_Initialization.md`.
 
 #### 7.a.R – Make it Right
 

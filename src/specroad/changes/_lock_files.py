@@ -11,7 +11,7 @@ import os
 import stat
 import sys
 from ..security import ProjectBoundary, SafetyViolation
-from ..model.operational_paths import OPERATIONAL_DIRECTORIES, passive_journal_directory
+from ..model.operational_paths import OPERATIONAL_DIRECTORIES, EMPTY_OPERATIONAL_DIRECTORIES, passive_journal_directory
 from ..security import paths as guards
 from .lock_values import ProjectLockError, LockRecord, MAX_LOCK_BYTES, LOCK_PATH
 
@@ -226,6 +226,10 @@ class LockFiles:
                     guards._regular(info, directory=stat.S_ISDIR(info.st_mode))
                     if name not in OPERATIONAL_DIRECTORIES or not stat.S_ISDIR(info.st_mode):
                         found.append('.specroad/' + name)
+                    elif name in EMPTY_OPERATIONAL_DIRECTORIES:
+                        with self.directory(('.specroad', name)) as child:
+                            if os.listdir(child):
+                                found.append('.specroad/' + name)
         for folder in ('transactions', 'recovery'):
             with self.directory(('.specroad', folder)) as directory:
                 if directory is None:
