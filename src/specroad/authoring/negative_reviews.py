@@ -1,8 +1,8 @@
-"""Dedicated human rejection and coupled withdrawal through native publication.
+"""Human review outcomes and coupled withdrawals through native publication.
 
 The host supplies complete project inputs, authentic history and authority.
-The initial service supports computed Requirement withdrawals and preserves
-all unrelated write gates. The confirmed-only API retains its earlier scope.
+Computed Requirement withdrawals and subsequent confirmations preserve all
+unrelated write gates. The first-confirmation API retains its earlier scope.
 """
 from ..changes import (AuthoringError, ChangeOperation, TargetModel, TargetPolicy,
     PublicationAuthority, prepare_authoring_request, prepare_change_target,
@@ -17,9 +17,9 @@ from ..changes._lock_files import LockFiles
 from ..changes._publication_observation import _root
 from ..changes._schema_fields import expected
 from ..changes.receipt_read import _read_confirmed_request, _CompletionProof
-from ..changes.reviews import review_context, review_time
+from ..changes.reviews import review_context, review_time, prepare_review_record
 from ..changes.negative_reviews import (prepare_negative_review_record,
-    required_review_withdrawals, prepare_negative_review_gates)
+    required_review_withdrawals, prepare_review_outcome_gates)
 from ..diagnostics import Diagnostic, code_metadata
 from ..model._schema import validate_builtin
 from ..model.audit_values import UtcTimestamp
@@ -30,7 +30,7 @@ from ..model.relation_values import RelationIdentity
 from ..storage.project import ProjectSource
 
 _UNSPECIFIED = object()
-_POLICY = TargetPolicy('relation.review', 'negative-review-v1', ('extension:review-withdrawal',))
+_POLICY = TargetPolicy('relation.review', 'review-outcome-v1', ('extension:review-withdrawal',))
 _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
 
@@ -39,8 +39,8 @@ def _intent(source_id, relation_id, decision, reason, comment, guards):
     _reference(source_id, '/source')
     RelationIdentity(relation_id, 'random128-v1')
     validate_builtin(guards, expected({}, []))
-    if decision != 'rejected':
-        raise AuthoringError('negative_review_decision_required', exit_code=3)
+    if type(decision) is not str or decision not in ('confirmed', 'rejected'):
+        raise AuthoringError('review_decision_invalid', exit_code=3)
     _text(reason, '/reason')
     value = {'source': source_id, 'relation_id': relation_id, 'decision': decision,
              'reason': reason, **guards}
@@ -64,6 +64,7 @@ def _operation(intent, record, withdrawals):
 
 def _result(operation, completion, *, plan_sha256, target_root, replayed=False):
     record = operation.data['record']
+    negative = record['decision'] == 'rejected'
     diagnostic = Diagnostic('SRV027', 'error', 'review_outcome', code_metadata('SRV027')['meaning'],
         rule_id='core:relation-review-status', artifact_id=record['source_id'],
         rationale='current_review_rejected',
@@ -80,9 +81,10 @@ def _result(operation, completion, *, plan_sha256, target_root, replayed=False):
         'path': artifact_path('relation_review', record['id'], record['id'].split('-')[0]),
         'write_state': 'committed', 'replayed': replayed, 'completion': completion.data,
         'plan_sha256': plan_sha256, 'target_model_root_sha256': target_root,
-        'approval_withdrawals': withdrawals, 'relation_status': 'invalid',
-        'assessment_status': 'failed', 'assessment_scope': 'recorded_review_outcome_only',
-        'diagnostics': [diagnostic.as_dict()], 'approval_granted': False}
+        'approval_withdrawals': withdrawals, 'relation_status': 'invalid' if negative else 'current',
+        'assessment_status': 'failed' if negative else 'passed',
+        'assessment_scope': 'recorded_review_outcome_only',
+        'diagnostics': [diagnostic.as_dict()] if negative else [], 'approval_granted': False}
 
 
 def _preflight_context(model, intent):
@@ -115,7 +117,7 @@ def _replay(source, intent, actor, request_id):
         operations = value['authoring_binding']['operations']
         if (len(operations) != 1 or operations[0]['op'] != 'relation_review_record'
                 or 'target_id' not in operations[0]['record']
-                or operations[0]['record']['decision'] != 'rejected'):
+                or operations[0]['record']['decision'] not in ('confirmed', 'rejected')):
             raise AuthoringError('request_operations_conflict', pointer='/request_id', exit_code=6)
         operation = _operation(intent, operations[0]['record'], operations[0]['approval_withdrawals'])
         request = prepare_authoring_request(command_id='relation review', actor=actor,
@@ -131,11 +133,11 @@ def _replay(source, intent, actor, request_id):
             target_root=value['target_model_root_sha256'])
 
 
-def record_negative_relation_review(model, source_id, relation_id, *, reason, decision='rejected',
+def record_coupled_relation_review(model, source_id, relation_id, *, reason, decision,
         inventory, actor, planned_at, change_plan_id, transaction_id, authority,
         expected_revision=_UNSPECIFIED, expected_sha256=_UNSPECIFIED, comment=None,
         request_id=None, gates=(), strict=False, package_files=()):
-    """Publish a rejection and every required supported withdrawal atomically.
+    """Publish a review and every required supported withdrawal atomically.
 
     Explicit source guards, composed profile and exact saved-plan recomputation
     are mandatory. Publication is never retried; native recovery evidence stays.
@@ -176,7 +178,8 @@ def record_negative_relation_review(model, source_id, relation_id, *, reason, de
                 inventory.current_ids | inventory.archived_ids | inventory.reserved_ids):
         raise AuthoringError('review_identity_inventory_mismatch', exit_code=6)
     context = _preflight_context(model, intent)
-    withdrawals = required_review_withdrawals(model.artifacts, source_id, relation_id, profile=model.profile)
+    withdrawals = (required_review_withdrawals(model.artifacts, source_id, relation_id, profile=model.profile)
+                   if decision == 'rejected' else [])
     planned_at = review_time(model.artifacts, context, planned_at)
     with project_lock(source.boundary.root, kind='writer', command='change apply',
             project_id=model.configuration.project_id, request_id=request_id,
@@ -191,10 +194,11 @@ def record_negative_relation_review(model, source_id, relation_id, *, reason, de
             identity = allocate_artifact_identity('relation_review', inventory).identity
         except ModelError as error:
             raise AuthoringError(error.reason, pointer=error.pointer, exit_code=5) from error
-        record = prepare_negative_review_record(context, identity, actor=actor, planned_at=planned_at,
-            reason=reason, comment=comment)
+        prepare = prepare_negative_review_record if decision == 'rejected' else prepare_review_record
+        record = prepare(context, identity, actor=actor, planned_at=planned_at,
+            reason=reason, comment=comment, **({'decision': decision} if decision == 'confirmed' else {}))
         operation = _operation(intent, record, withdrawals)
-        gates += prepare_negative_review_gates(model, operation, actor=actor, planned_at=planned_at)
+        gates += prepare_review_outcome_gates(model, operation, actor=actor, planned_at=planned_at)
         checked = prepare_change_target(model, [operation.data], change_plan_id=change_plan_id,
             request_id=request_id, actor=actor, planned_at=planned_at, scope_descriptor=_SCOPE,
             metadata_policy_version='change-metadata-v1', policy=_POLICY, gates=gates, strict=strict)
@@ -215,3 +219,10 @@ def record_negative_relation_review(model, source_id, relation_id, *, reason, de
             held_lock=held, authority=authority)
         return _result(operation, completion, plan_sha256=checked.plan.sha256,
             target_root=checked.data['binding']['target_model_root'])
+
+
+def record_negative_relation_review(model, source_id, relation_id, *, decision='rejected', **options):
+    """The original API remains explicitly restricted to a negative decision."""
+    if type(decision) is not str or decision != 'rejected':
+        raise AuthoringError('negative_review_decision_required', exit_code=3)
+    return record_coupled_relation_review(model, source_id, relation_id, decision=decision, **options)

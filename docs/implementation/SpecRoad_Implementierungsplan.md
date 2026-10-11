@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 334
-last_completed_plan_commit: 7.i.W
-next_plan_commit: 7.i.R
-last_completed_numbered_bundle: 185
+implementation_plan_commits_completed: 335
+last_completed_plan_commit: 7.i.R
+next_plan_commit: 7.i.C
+last_completed_numbered_bundle: 186
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8308,12 +8308,46 @@ Es gibt keine generische Fehlerausnahme und keine neue Artefaktfreigabe.
 
 #### 7.i.R – Make it Right
 
-- [ ] **7.i.R** · Position **335/885** · Voraussetzung: `7.i.W`.
+- [x] **7.i.R** · Position **335/885** · Voraussetzung: `7.i.W`.
 **Exakte Commit-Message:** `7.i.R feat(authoring): Negativer Review mit Freigaberücknahme vervollständigen`
 
 **Vervollständigung:** Fachlich korrekt gespeichertes Negativurteil von ungültigem Write unterscheiden; Code 0 mit failed assessment versus später validate Code 1.
 
 **Verhaltensabnahme:** R-35 bis R-39 prüfen atomare Kopplung, fehlende unbegründete Rücknahme und stabile Kontextbindung. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 186):** Result 185 bestätigt
+7.i.W mit 8.600 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Der gekoppelte Review-Dienst nimmt auch eine spätere bestätigende Entscheidung
+auf. Sie erzeugt einen neuen unveränderbaren Review mit monotonem Zeitstempel,
+lässt das herabgestufte Requirement aber bytegleich auf `proposed` mit derselben
+Revision. Ein weiterer negativer Review bewirkt ebenfalls keine zweite Rücknahme.
+Der ursprüngliche negative Einstieg bleibt auf `rejected` begrenzt; der frühere
+Erstbestätigungsdienst und alle nativen Transaktionsmodule bleiben unverändert.
+
+Unveränderte Standardzustände erhalten keine neue Revision. Eine optionale
+Ablehnung darf eine gültige Freigabe erhalten; alle im Endstand weiterhin
+freigegebenen Requirements werden erneut auf vollständige und aktuelle
+Pflichtrelationen geprüft. Eine komponierte Regel mit beiden Richtungen bindet
+auch die inverse Sicht: Beide betroffenen Requirements werden gemeinsam und
+jeweils genau einmal herabgestuft. Fremde Fehler, strukturelle Defekte,
+nichtmenschliche Reviewer und zusätzliche Planoperationen bleiben blockierend.
+
+27 neue Verhaltenstests ergänzen 1.229 betroffene bisherige Fälle. Die gezielte
+parallele Dev-Auswahl umfasst 1.256 Fälle; alle 256 bestehenden Testdateien
+bleiben bytegleich. Ein erfolgreicher negativer nativer Write mit Code-0-Receipt
+wird von der anschließenden schreibfreien Reviewbewertung mit Code 1 getrennt.
+Echte Kindprozessabbrüche nach erster/letzter normativer Ersetzung und nach
+Receipt-Commit prüfen vollständigen Rollback oder vollständigen Abschluss,
+erhaltene Dateimodi und idempotente Wiederholung. Die drei J-Hashes bleiben
+auch nach der gekoppelten Rücknahme stabil.
+
+Der vollständige parallele Apply-Lauf umfasst 8.627 Fälle. Erst dessen Erfolg
+und der passende Commit bestätigen Position 335/885; danach folgt 7.i.C.
+Die drei Anforderungen bleiben `partial`. CLI-/Envelope-Integration, echte
+Hostauthentifizierung und vollständige Historienbeschaffung, weitere
+Standardartefakt-Rücknahmen und Spezialdienste sowie die abschließende explizite
+Freigabefolge aus R-36 bleiben offen. Die nativen Teilnachweise aus R-35 bis R-39
+werden nicht als vollständige CLI-/Produkt- oder Plattformabnahme ausgewiesen.
 
 #### 7.i.C – Make it Clean
 

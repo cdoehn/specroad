@@ -14,12 +14,15 @@
   ],
   "steps": [
     "Plan and publish one negative review with its exact Requirement withdrawal; inspect canonical source/review bytes, revision, context hashes, audit operation and durable receipt.",
-    "Reject stale guards, nonhuman actors, altered withdrawal payloads, missing required gate, unrelated error and denied authority; verify stable request replay without additional writes."
+    "Reject stale guards, nonhuman actors, altered withdrawal payloads, missing required gate, unrelated error and denied authority; verify stable request replay without additional writes.",
+    "Record a later confirmed or rejected review without another source revision or automatic approval; preserve optional and nonapproved sources and check remaining mandatory obligations, including a composed both-direction rule.",
+    "Compare a successful native receipt with a separate failed read-only review assessment; reject structural defects, nonhuman confirmation and mixed saved operations.",
+    "Stop an actual child writer after the first or last coupled target replacement or after receipt commit; recover the exact full basis or target and replay the same native receipt without additional writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Requirement DARF den Reifegrad `approved` nur bei durchgehend `current` bewerteten profilabhängigen Pflichtrelationen behalten; die atomare Rücknahme bei negativem Relationsreview folgt Kapitel 11.13.",
-    "scope": "Required affected approved Requirements are recomputed from bound composed profile minima and Core requirements, changed to proposed with one revision in the same transaction, and independently checked for saved plans and publication. Context hashes remain stable. Unsupported other approval/lifecycle subjects fail closed."
+    "scope": "Native coupled human review API with computed Requirement withdrawals, later reconfirmation without reapproval, unchanged supported standard states, exact composed relation obligations, separate review assessment and actual process-loss recovery. The existing first-confirmation API and native publication/receipt/recovery protocols retain their scope. This is not complete CLI, authentic host history or final approval integration."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -56,11 +59,38 @@
     "tests/test_negative_relation_review.py::test_stale_negative_source_is_refused_before_lock_or_entropy[guard1]",
     "tests/test_negative_relation_review.py::test_writer_recomputes_withdrawal_set_instead_of_trusting_operation_payload[missing]",
     "tests/test_negative_relation_review.py::test_writer_recomputes_withdrawal_set_instead_of_trusting_operation_payload[wrong_guard]",
-    "tests/test_negative_relation_review.py::test_writer_recomputes_withdrawal_set_instead_of_trusting_operation_payload[wrong_reason]"
+    "tests/test_negative_relation_review.py::test_writer_recomputes_withdrawal_set_instead_of_trusting_operation_payload[wrong_reason]",
+    "tests/test_negative_relation_review_right.py::test_changed_decision_cannot_reuse_the_original_negative_receipt",
+    "tests/test_negative_relation_review_right.py::test_composed_both_direction_rule_withdraws_both_requirements_once",
+    "tests/test_negative_relation_review_right.py::test_confirmation_can_be_recorded_while_another_optional_review_remains_negative",
+    "tests/test_negative_relation_review_right.py::test_coupled_confirmation_still_requires_human_authority_before_io[ai]",
+    "tests/test_negative_relation_review_right.py::test_coupled_confirmation_still_requires_human_authority_before_io[ci]",
+    "tests/test_negative_relation_review_right.py::test_coupled_confirmation_still_requires_human_authority_before_io[tool]",
+    "tests/test_negative_relation_review_right.py::test_negative_outcome_never_waives_incomplete_in_review_formal_fields",
+    "tests/test_negative_relation_review_right.py::test_negative_review_never_changes_nonapproved_source_maturity_or_revision[draft]",
+    "tests/test_negative_relation_review_right.py::test_negative_review_never_changes_nonapproved_source_maturity_or_revision[in_review]",
+    "tests/test_negative_relation_review_right.py::test_negative_review_never_changes_nonapproved_source_maturity_or_revision[proposed]",
+    "tests/test_negative_relation_review_right.py::test_negative_review_never_changes_nonapproved_source_maturity_or_revision[rejected]",
+    "tests/test_negative_relation_review_right.py::test_negative_review_never_changes_nonapproved_source_maturity_or_revision[retired]",
+    "tests/test_negative_relation_review_right.py::test_negative_review_never_changes_nonapproved_source_maturity_or_revision[superseded]",
+    "tests/test_negative_relation_review_right.py::test_new_judgment_after_withdrawal_never_revises_or_reapproves_requirement[confirmed]",
+    "tests/test_negative_relation_review_right.py::test_new_judgment_after_withdrawal_never_revises_or_reapproves_requirement[rejected]",
+    "tests/test_negative_relation_review_right.py::test_optional_negative_relation_preserves_valid_approved_requirement_bytes[False]",
+    "tests/test_negative_relation_review_right.py::test_optional_negative_relation_preserves_valid_approved_requirement_bytes[True]",
+    "tests/test_negative_relation_review_right.py::test_optional_review_cannot_preserve_a_broken_mandatory_approval",
+    "tests/test_negative_relation_review_right.py::test_real_process_loss_recovers_entire_review_withdrawal_and_same_receipt[first_target]",
+    "tests/test_negative_relation_review_right.py::test_real_process_loss_recovers_entire_review_withdrawal_and_same_receipt[last_target]",
+    "tests/test_negative_relation_review_right.py::test_real_process_loss_recovers_entire_review_withdrawal_and_same_receipt[receipt]",
+    "tests/test_negative_relation_review_right.py::test_saved_review_never_accepts_extra_content_or_lifecycle_operations[content]",
+    "tests/test_negative_relation_review_right.py::test_saved_review_never_accepts_extra_content_or_lifecycle_operations[lifecycle]",
+    "tests/test_negative_relation_review_right.py::test_structural_invalidity_is_not_a_review_outcome_exception[missing_target]",
+    "tests/test_negative_relation_review_right.py::test_structural_invalidity_is_not_a_review_outcome_exception[self_reference]",
+    "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[False]",
+    "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[True]"
   ],
   "open_items": [
-    "Complete 7.i.R behavior coverage and 7.i.C cleanup, including the specific R-35 through R-39 recovery and reconfirmation contracts.",
-    "Integrate registered CLI/envelopes, complete authentic project/history loading and all applicable approval services; unsupported non-Requirement withdrawals and other lifecycle/approval subjects currently fail closed.",
-    "Verify the applicable supported-platform and product-level acceptance contracts."
+    "Complete 7.i.C structural cleanup; retain all W/R behavior oracles.",
+    "Integrate registered CLI/envelopes, complete authentic project/history loading and all applicable approval services, including the explicit in_review/approved transitions concluding R-36. Unsupported non-Requirement withdrawals and specialist lifecycle/approval subjects fail closed.",
+    "Verify complete R-35 through R-39 CLI/product acceptance and applicable supported-platform contracts; the current native integration cases are partial evidence."
   ]
 }
