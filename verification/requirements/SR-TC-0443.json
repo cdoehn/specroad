@@ -13,12 +13,13 @@
     "Owned TargetModel bytes, explicit immutable plan and command policy. A trusted test-only storage adapter is supplied only to the apply path."
   ],
   "steps": [
-    "Compare dry-run/direct/saved results, fail-on-change, fresh transaction inputs, exact receipt/readback binding and actual file effects in owned test storage."
+    "Compare dry-run/direct/saved results, fail-on-change, fresh transaction inputs, exact receipt/readback binding and actual file effects in owned test storage.",
+    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein direkter Authoring-Befehl MUSS intern denselben speicherbaren Change Plan erzeugen wie sein entsprechender Dry-Run.",
-    "scope": "Shared full target/plan/diff/impact/diagnostic projection; dry-run never enters any publication backend or writes a receipt. Exact supplied readback is verified after trusted publication, without claiming independent durability proof. Exact raw plan bytes are retained; source state is read again after locked revalidation. Detached callback handoffs, full post-publication file sets and controlled unknown outcomes are checked."
+    "scope": "Shared full target/plan/diff/impact/diagnostic projection; dry-run never enters any publication backend or writes a receipt. Exact supplied readback is verified after trusted publication, without claiming independent durability proof. Exact raw plan bytes are retained; source state is read again after locked revalidation. Detached callback handoffs, full post-publication file sets and controlled unknown outcomes are checked. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed."
   },
   "expected_diagnostics": [
     "SRV146"
@@ -58,11 +59,38 @@
     "tests/test_change_execution_right.py::test_readback_missing_unchanged_artifact_is_rejected",
     "tests/test_change_execution_right.py::test_partial_actual_write_is_preserved_without_automatic_rollback",
     "tests/test_change_execution_right.py::test_mutated_factory_handoff_is_rejected",
-    "tests/test_change_execution_right.py::test_exit_failure_after_successful_publish_is_not_hidden"
+    "tests/test_change_execution_right.py::test_exit_failure_after_successful_publish_is_not_hidden",
+    "tests/test_authoring_plan_execution.py::test_changed_live_input_after_preview_cannot_be_published",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[add]",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[confirmed]",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[create]",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[rejected]",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[remove]",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[retire]",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[transition]",
+    "tests/test_authoring_plan_execution.py::test_existing_direct_adapter_builds_the_identical_saveable_plan[update]",
+    "tests/test_authoring_plan_execution.py::test_noop_preview_and_fresh_native_authorization_create_no_receipt[False]",
+    "tests/test_authoring_plan_execution.py::test_noop_preview_and_fresh_native_authorization_create_no_receipt[True]",
+    "tests/test_authoring_plan_execution.py::test_preview_does_not_grant_actor_write_authority[ai-None-2]",
+    "tests/test_authoring_plan_execution.py::test_preview_does_not_grant_actor_write_authority[ai-ai-request-7]",
+    "tests/test_authoring_plan_execution.py::test_preview_does_not_grant_actor_write_authority[ci-None-2]",
+    "tests/test_authoring_plan_execution.py::test_real_authority_denial_preserves_files_and_receipts",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[add]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[confirmed]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[create]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[rejected]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[remove]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[retire]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[transition]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[update]",
+    "tests/test_authoring_plan_execution.py::test_wrong_or_unsupported_command_cannot_relabel_an_operation[artifact.create]",
+    "tests/test_authoring_plan_execution.py::test_wrong_or_unsupported_command_cannot_relabel_an_operation[init]",
+    "tests/test_authoring_plan_execution.py::test_wrong_or_unsupported_command_cannot_relabel_an_operation[relation.review]",
+    "tests/test_authoring_plan_execution.py::test_wrong_or_unsupported_command_cannot_relabel_an_operation[relation.status]"
   ],
   "open_items": [
-    "Native CLI wiring and the safe filesystem transaction backend with real authorization, locks, journals, request receipts and fsync are later plan steps. The injected backend is trusted host code, not sandboxed or authenticated by its registration.",
-    "Current scope is the complete supplied unconfigured project and the six supported ordinary operation families, not independently discovered on-disk completeness.",
-    "The in-test storage adapter checks real effects but is not a production crash-safe implementation. Full native dry-run/apply equivalence remains pending its integration."
+    "Integrate registered CLI/stdout envelopes and raw-intent dry-run allocation, authentic complete model/history acquisition and actual host identity/authorization. Explicit prepared operation IDs in this API are not reserved by a preview.",
+    "Complete R error/continuation audit integration across every original direct command and the create/update/review/retire end-to-end chain; retain historical audit on retry. Complete C cleanup and remaining product acceptance.",
+    "Verify supported-platform/Python behavior with actual applicable evidence; this local native run is not a full platform or product approval."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 339
-last_completed_plan_commit: 7.j.C
-next_plan_commit: 7.k.W
-last_completed_numbered_bundle: 190
+implementation_plan_commits_completed: 340
+last_completed_plan_commit: 7.k.W
+next_plan_commit: 7.k.R
+last_completed_numbered_bundle: 191
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8509,12 +8509,42 @@ nachzuweisen. Nur der C-Bereinigungspunkt wird aus den offenen Nachweisen entfer
 
 #### 7.k.W – Let it Work
 
-- [ ] **7.k.W** · Position **340/885** · Voraussetzung: `7.j.C`.
+- [x] **7.k.W** · Position **340/885** · Voraussetzung: `7.j.C`.
 **Exakte Commit-Message:** `7.k.W feat(authoring): Authoring-Dry-Run und Wiederholung aufbauen`
 
 **Umsetzung:** Alle vorhandenen Authoringbefehle mit einheitlicher Plan-/Audit-/Dry-Runbindung integrieren.
 
 **Verhaltensabnahme:** Vorschauziel entspricht dem späteren autorisierten Ergebnis.
+
+**Vorbereiteter Implementierungsstand (Bundle 191):** Result 190 bestätigt
+7.j.C mit 8.710 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Die sechs vorhandenen nativen Authoringfamilien teilen jetzt eine gemeinsame
+Planvorbereitung. Eine schreibfreie API erzeugt aus genau einer vorbereiteten
+Operation den vollständigen speicherbaren Plan mit Diff, Impact, Diagnosen,
+Zielwurzel und gebundenem Audit. Der neue native Planausführer verwendet genau
+diesen Plan einschließlich seiner IDs und Metadaten, revalidiert und autorisiert
+unter Writer-Lock und verwendet das bestehende Journal-/Receiptprotokoll.
+
+27 neue Verhaltenstests vergleichen acht Varianten sowohl mit der nativen
+Ausführung des gespeicherten Plans als auch mit den bisherigen Direktadaptern.
+Die tatsächlich veröffentlichten Dateien, Planbytes und Modellwurzel stimmen
+mit der Vorschau überein. Bestätigte Wiederholungen liefern den ursprünglichen
+Audit und dasselbe Receipt ohne erneute ID-/Revisionswirkung. Weitere Fälle
+prüfen No-op, Actorpolicy, Befehl/Operationsbindung, Hostverweigerung und eine
+zwischenzeitlich veränderte tatsächliche Eingabedatei.
+
+Lokal werden 1.522 neue und betroffene Tests aus 31 Dateien gezielt parallel
+geprüft; vor dem Commit ist die vollständige parallele Apply-Suite mit 8.737
+Fällen erforderlich. Alle 259 bisherigen Testdateien und 8.710 Identitäten
+bleiben erhalten. Erst erfolgreicher Apply-Lauf und Commit bestätigen 340/885;
+danach folgt 7.k.R. SR-REQ-0241 und SR-REQ-0443 bleiben `partial`.
+
+Die Vorschau erwartet bereits vorbereitete Operationsdaten und reserviert keine
+IDs. Registrierte CLI-/stdout-Anbindung, Rohinput-Dry-Run mit späterer ID-Übernahme,
+vollständige Fehler-/Fortsetzungs-Audits aller ursprünglichen Direktbefehle,
+authentische Projekt-/Historienbeschaffung, die R-E2E-Kette, C-Bereinigung und
+Plattform-/Produktabnahmen bleiben offen. Bedienung und Grenzen stehen in
+`docs/development/Authoring_Plan_Execution.md`.
 
 #### 7.k.R – Make it Right
 

@@ -6,10 +6,11 @@ operations remain typed operations of the common planner, never array patches.
 """
 from ..changes import (AuthoringError, ChangeOperation, TargetModel,
     TargetPolicy, PublicationAuthority, prepare_authoring_request,
-    prepare_change_target, prepare_publication_check, project_lock,
+    prepare_publication_check, project_lock,
     begin_building_journal, stage_building_journal, publish_prepared_journal,
     read_committing_journal, finalize_committing_journal, cleanup_completed_transaction,
     read_transaction_completion, resolve_normative_request)
+from .plans import prepare_authoring_target as prepare_change_target
 from ..changes._journal_codec import _transaction
 from ..changes._lock_files import LockFiles
 from ..changes._publication_observation import _root

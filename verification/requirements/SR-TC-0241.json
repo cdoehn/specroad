@@ -15,12 +15,13 @@
   "steps": [
     "Publish verified target files using the existing transaction phases.",
     "Create bound receipts, synchronize them and only then persist committed.",
-    "Assert normative inputs are not written again and failed completion retains evidence."
+    "Assert normative inputs are not written again and failed completion retains evidence.",
+    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder tatsächlich ausgeführte oder abgewiesene `normative_write` MUSS den Auditbericht seiner Befehlsklasse nach Kapitel 11.7 ausgeben; ein noch offener Arbeitsschritt weist statt eines Erfolgsreceipts den Fortsetzungsstand aus.",
-    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim."
+    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -104,11 +105,21 @@
     "tests/test_transaction_receipts_right.py::test_authority_changing_receipt_prevents_cleanup",
     "tests/test_transaction_receipts_right.py::test_original_request_must_match_when_rechecking_current_completion",
     "tests/test_transaction_receipts_right.py::test_new_reader_inputs_are_explicit_and_not_converted",
-    "tests/test_transaction_receipts_right.py::test_unknown_result_fields_and_unsafe_output_paths_fail_closed"
+    "tests/test_transaction_receipts_right.py::test_unknown_result_fields_and_unsafe_output_paths_fail_closed",
+    "tests/test_authoring_plan_execution.py::test_noop_preview_and_fresh_native_authorization_create_no_receipt[False]",
+    "tests/test_authoring_plan_execution.py::test_noop_preview_and_fresh_native_authorization_create_no_receipt[True]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[add]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[confirmed]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[create]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[rejected]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[remove]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[retire]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[transition]",
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[update]"
   ],
   "open_items": [
-    "Public normative command audit adapters must still cover every executed or refused command and continuation outcome; these collected receipt tests establish the complete-target finalization library scope only.",
-    "Immutable recovery evidence and confirmed native Request-ID replay already have separate partial evidence in SR-TC-0259/0462 and SR-TC-0383/0384/0385. Full command dispatch, authentic authorization and end-to-end ChangeBackend integration remain open.",
-    "Full supported Python matrix is evidenced only by its actual GitHub runs."
+    "Integrate registered CLI/stdout envelopes and raw-intent dry-run allocation, authentic complete model/history acquisition and actual host identity/authorization. Explicit prepared operation IDs in this API are not reserved by a preview.",
+    "Complete R error/continuation audit integration across every original direct command and the create/update/review/retire end-to-end chain; retain historical audit on retry. Complete C cleanup and remaining product acceptance.",
+    "Verify supported-platform/Python behavior with actual applicable evidence; this local native run is not a full platform or product approval."
   ]
 }
