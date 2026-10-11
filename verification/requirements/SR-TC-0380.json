@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad project inspect --format json` MUSS sämtliche Pflichtangaben zu Projekt, Modell, Schema, Profilen, Artefakten, Migrationsbedarf, Diagnosen, Hauptdokumenten, Projektroot, Transaktion und Writer-Lock in den getrennten `semantic`-/`runtime`-Bereichen nach Kapitel 11.5.1 ausgeben.",
-    "scope": "Actual project-inspect-v1 payload, model root, schema, profile order, counts, primary documents, explicit unknowns and blocked runtime; no invented diagnostic success or unsupported migration result. R adds coherent repeated operational/lock observations, visible late blockers, final source rereads, orphan writers, complete journal inventory and exact semantic error/warning/info counts across relocation with passive runtime differences. Explicit host title predicates are test fixtures, not substitute production specialist services."
+    "scope": "Actual project-inspect-v1 payload, model root, schema, profile order, counts, primary documents, explicit unknowns and blocked runtime; no invented diagnostic success or unsupported migration result. R adds coherent repeated operational/lock observations, visible late blockers, final source rereads, orphan writers, complete journal inventory and exact semantic error/warning/info counts across relocation with passive runtime differences. Explicit host title predicates are test fixtures, not substitute production specialist services. C extracts the existing semantic projection unchanged from inspection orchestration. Existing W/R behavior tests and their expected results remain unchanged; this adds no behavior or release approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [

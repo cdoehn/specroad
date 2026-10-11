@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 344
-last_completed_plan_commit: 7.l.R
-next_plan_commit: 7.l.C
-last_completed_numbered_bundle: 196
+implementation_plan_commits_completed: 345
+last_completed_plan_commit: 7.l.C
+next_plan_commit: 8.a.W
+last_completed_numbered_bundle: 197
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8717,10 +8717,31 @@ erteilen keine atomare Garantie gegen nicht kooperierende externe Schreiber.
 
 #### 7.l.C – Make it Clean
 
-- [ ] **7.l.C** · Position **345/885** · Voraussetzung: `7.l.R`.
+- [x] **7.l.C** · Position **345/885** · Voraussetzung: `7.l.R`.
 **Exakte Commit-Message:** `7.l.C refactor(authoring): Projektinspektion mit getrenntem Laufzeitkontext bereinigen`
 
 **Bereinigung:** Inspektion aus bestehenden Reader-/Preflightdaten aufbauen, nicht heimlich initialisieren oder reparieren.
+
+**Vorbereiteter Implementierungsstand (Bundle 197):** Result 196 bestätigt R
+mit 8.791 bestandenen parallelen Apply-Tests und sauberem Commit. Die bisherige
+Berechnung der semantischen Projektbeschreibung liegt unverändert in einer
+reinen Funktion in `authoring/_inspection_projection.py`. Sie verwendet das
+bereits geladene Modell, den vorhandenen Validierungsbericht und dessen
+Diagnosebewertung. Die Inspektionssteuerung ruft diese Projektion an derselben
+Stelle auf. Quellinventur, Reader, Runtimebeobachtung, Wiederholungsprüfungen,
+Fehlerbehandlung und zulässige Seiteneffekte bleiben unverändert.
+
+Ein struktureller Vergleich bindet den verschobenen Berechnungsblock exakt an
+die Result-Basis; außerhalb des Funktionsaufrufs und der zugehörigen Imports
+ändert sich die Steuerung nicht. Alle 263 bisherigen Testdateien und sämtliche
+8.791 Testkennungen bleiben erhalten und bytegleich. Entwicklung prüft dieselben
+1.090 W-/R- und betroffenen Integrationsfälle gezielt parallel; Apply führt vor
+diesem C-Commit erneut die vollständige Suite parallel aus. Erst erfolgreicher
+Apply-Lauf und Commit bestätigen 345/885; danach folgt 8.a.W.
+
+Die offenen Spezialdienst-, Migrations-, CLI-Preflight- und Plattform-/
+Produktnachweise bleiben offen; SR-REQ-0380 und SR-REQ-0381 bleiben `partial`.
+Die Bereinigung erteilt keine zusätzliche Meilenstein- oder Releasefreigabe.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

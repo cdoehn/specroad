@@ -61,3 +61,9 @@ keine Modellfreigabe. Explizite Test-Host-Prädikate belegen Zählung und
 Projektdeterminismus; sie ersetzen keine fehlenden Produkt-Spezialdienste.
 Passive Cache-/Receipt-Dateien verändern die Fachprojektion nicht. Aktive
 Journale und verwaiste Writer blockieren weiterhin ohne automatische Recovery.
+
+Die Fachprojektion ist als reine Funktion in `_inspection_projection.py`
+zusammengefasst. Sie verwendet ausschließlich das bereits geladene Modell und
+die vorhandenen Prüfergebnisse. Inspektionssteuerung, sichere Quellleser und
+Runtimebeobachtung behalten ihre bisherigen Zuständigkeiten und Reihenfolge.
+Die Extraktion verändert weder Resultatwerte noch Fehler- oder Schreibverträge.

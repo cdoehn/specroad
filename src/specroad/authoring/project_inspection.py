@@ -5,7 +5,6 @@ detect changes but do not promise atomicity against noncooperating writers.
 Missing specialist validation services remain incomplete, never green stubs.
 """
 from ..changes.locking import inspect_project_lock
-from ..changes.target_model import _default_scope
 from ..changes._target_materialization import validation_resources
 from ..cli.result_schemas import validate_result_document
 from ..cli.results import CommandResult, FailureKind
@@ -16,6 +15,7 @@ from ..storage.operational_preflight import observe_operational_preflight
 from ..validation import ModelGate, validate_model
 from ..validation.diagnostics import assess_validation
 from ._inspection_snapshot import InspectionChanged, InspectionSnapshot
+from ._inspection_projection import semantic_description
 
 SEMANTIC_FIELDS = ('project_id', 'model_root_sha256', 'schema_version', 'active_profiles',
                    'artifact_counts', 'migration_needed', 'diagnostic_summary', 'primary_documents')
@@ -102,22 +102,7 @@ def inspect_project(root, *, profiles=None, gates=()):
         report = validate_model(model.documents, profile=model.profile,
                                 resources=validation_resources(model), gates=gates)
         assessment = assess_validation(report, documents=model.documents)
-        artifacts = model.artifacts
-        counts = {}
-        for artifact in artifacts:
-            kind = artifact['artifact_type']
-            counts[kind] = counts.get(kind, 0) + 1
-        semantic = {'project_id': model.configuration.project_id,
-            'model_root_sha256': model.manifest(artifacts, _default_scope()).sha256,
-            'schema_version': model.configuration.data['schema_version'],
-            'active_profiles': [{k: p[k] for k in ('profile_id', 'version')}
-                                for p in model.profile.data['profiles']],
-            'artifact_counts': dict(sorted(counts.items())), 'migration_needed': False,
-            'diagnostic_summary': assessment.summary['diagnostics_by_severity']
-                                  if report.data['checks_complete'] else None,
-            'primary_documents': sorted(({'id': a['id'], 'title': a['title']} for a in artifacts
-                if a['artifact_type'] == 'document' and a.get('document_role') == 'primary_specification'),
-                key=lambda a: a['id'])}
+        semantic = semantic_description(model, report, assessment)
         snapshot.verify_current()
         payload['runtime'] = final = _runtime(boundary, model.configuration.project_id)
         if final['consistency_state'] != 'consistent':
