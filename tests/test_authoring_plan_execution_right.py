@@ -6,17 +6,14 @@ from unittest.mock import patch
 import pytest
 
 from specroad.authoring import execution
-from specroad.authoring.execution import execute_authoring_plan
 from specroad.authoring.creation import _draft
 from specroad.authoring.inputs import normalize_artifact_create_input
 from specroad.authoring.update import normalize_artifact_update_input
 from specroad.authoring.lifecycle import normalize_retire_input
-from specroad.changes import (ChangeOperation, PublicationAuthority, prepare_change_plan)
+from specroad.changes import ChangeOperation, PublicationAuthority, prepare_change_plan
 from specroad.changes.relation_inputs import normalize_relation_add_input, _addition
 from specroad.changes.reviews import review_context, prepare_review_record
-from specroad.graph.relations import SourceRelations
-from specroad.graph.review_status import RelationReviewStatuses
-from specroad.model.canonical import canonical_json_bytes, canonical_json_sha256
+from specroad.model.canonical import canonical_json_bytes
 from specroad.model.identities import ArtifactIdentity
 from specroad.model.identity_tokens import encode128
 from specroad.model.paths import artifact_path
@@ -25,33 +22,9 @@ from specroad.validation import ModelGate
 from support.read_only import inventory as file_inventory, no_write_attempts
 from test_artifact_creation import project
 from test_authoring_inputs import fields
-from test_authoring_plan_execution import ACTOR, preview, saved, scenario
 from test_negative_relation_review_right import current
-
-ALLOW = PublicationAuthority('owned-execution-host', '1', lambda request: True)
-
-
-def execute(plan, model, command, **options):
-    arguments = dict(command_id=command, transaction_id='txn-execution', authority=ALLOW)
-    arguments.update(options)
-    return execute_authoring_plan(plan, model, **arguments)
-
-
-def assert_failed(result, plan, code, *, state='not_committed'):
-    assert result['status'] == 'failed' and result['exit_code'] == code
-    assert result['write_state'] == state and result['no_change'] is None
-    assert result['completion'] is None and not result['current_target_verified']
-    assert result['target_model_root_sha256'] is None and not result['approval_granted']
-    assert not result['retry_safe'] and not result['automatic_retry'] and not result['automatic_rollback']
-    audit = result['audit']
-    assert audit['audit_scope'] == 'failed_plan_attempt' and audit['outcome'] == 'failed'
-    assert audit['write_state'] == state and audit['diagnostic'] == result['diagnostics'][0]
-    assert 'created_ids' not in audit and 'target_model_root_sha256' not in audit
-    assert audit['plan_integrity_checked'] and audit['plan_sha256'] == plan.sha256
-    assert audit['operations'] == plan.data['operations']
-    assert audit['actor'] == plan.data['actor'] and audit['request_id'] == plan.data['request_id']
-    assert audit['expected_model_root_sha256'] == plan.data['expected_result']['model_root_sha256']
-    assert json.loads(canonical_json_bytes(result)) == result
+from support.authoring_execution import (ACTOR, ALLOW, scenario, preview, saved,
+    execute, assert_failed, retained_review_gates)
 
 
 @pytest.mark.parametrize('actor_type,request_id,code', [('ai', None, 2), ('ai', 'ai-request', 7), ('ci', None, 2)])
@@ -221,31 +194,6 @@ def test_unclassified_io_failure_does_not_leak_message_or_claim_rollback(tmp_pat
     assert_failed(result, plan, 5, state='unknown')
     assert result['diagnostics'] == [{'reason': 'authoring_execution_io_failure'}]
     assert result['recovery_required'] and file_inventory(root) == before
-
-
-def retained_review_gates(model, source, record, time):
-    """Trusted fixture evidence for exactly this retirement and retained record.
-
-    This is not an authentic history loader or a generic approval service.
-    Both gates bind the complete independently expected target, including the
-    unchanged recorded review; review currentness is recomputed by the core.
-    """
-    expected = {a['id']: a for a in model.artifacts}
-    expected[source['id']] = {**source, 'maturity': 'retired', 'revision': source['revision'] + 1,
-        'updated_at': time, 'updated_by': ACTOR}
-    digest = canonical_json_sha256(expected)
-    def check(context):
-        actual = {key: context.artifact(key) for key in context.all_ids}
-        if (canonical_json_sha256(actual) != digest
-                or not set(context.subjects) <= {source['id'], record['id']}):
-            return context.result([{'reason': 'fixture_retirement_target_mismatch', 'severity': 'error'}])
-        statuses = RelationReviewStatuses(tuple(SourceRelations(canonical_json_bytes(a)) for a in actual.values()))
-        if [s.status for s in statuses.statuses] != ['current']:
-            return context.result([{'reason': 'fixture_retained_review_not_current', 'severity': 'error'}])
-        return context.result()
-    return tuple(ModelGate(name, 'fixture-exact-retained-review-v1',
-        lambda c: c.dependency_result({key: list(c.all_ids) for key in c.subjects}), check, digest)
-        for name in ('lifecycle', 'review_currentness'))
 
 
 def test_real_create_update_link_review_retire_chain_replays_without_new_ids(tmp_path):

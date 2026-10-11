@@ -74,11 +74,18 @@ unabhängig erwarteten vollständigen Zielzustand; die Core-Reviewprüfung besti
 seine Currentness erneut. Das ist kein Nachweis einer authentischen allgemeinen
 Historien- oder Approvalbeschaffung.
 
+Die gemeinsamen Testszenarien liegen in `tests/support/authoring_execution.py`.
+Die Fachadapter liefern dieselbe vorbereitete Operation und den zugehörigen
+nativen Direktaufruf; W- und R-Fälle verwenden gemeinsame Vorschau-, Ausführungs-
+und Ergebnishelfer. Testkörper, Parametrisierungen, erwartete Werte und
+Fixturegates bleiben bei dieser C-Bereinigung unverändert. Die bisherigen
+Testkennungen bleiben erhalten; der Produktcode wird dabei nicht geändert.
+
 Noch offen sind registrierte CLI-/stdout-Anbindung, eine Vorschau unmittelbar
 aus Rohinputs einschließlich späterer ID-Übernahme, vollständige Fehler- und
 Fortsetzungs-Auditberichte aller ursprünglichen Direktbefehle sowie authentische
-Projekt-/Historienbeschaffung. Die C-Bereinigung und vollständige
-Plattform-/Produktabnahme bleiben gesondert nachzuweisen. Die API verwendet
+Projekt-/Historienbeschaffung. Die vollständige Plattform-/Produktabnahme
+bleibt gesondert nachzuweisen. Die API verwendet
 vorbereitete Operationsdaten; sie behauptet keine bereits implementierten
 `--dry-run`-Optionen der öffentlichen CLI. `init` bleibt Root-Erzeugung;
 Relationsstatus bleibt eine schreibfreie Abfrage ohne Change Plan.

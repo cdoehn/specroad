@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 341
-last_completed_plan_commit: 7.k.R
-next_plan_commit: 7.k.C
-last_completed_numbered_bundle: 192
+implementation_plan_commits_completed: 342
+last_completed_plan_commit: 7.k.C
+next_plan_commit: 7.l.W
+last_completed_numbered_bundle: 193
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8587,10 +8587,32 @@ bleiben offen. Der neue Fehlerbericht gilt für den gespeicherten Planpfad.
 
 #### 7.k.C – Make it Clean
 
-- [ ] **7.k.C** · Position **342/885** · Voraussetzung: `7.k.R`.
+- [x] **7.k.C** · Position **342/885** · Voraussetzung: `7.k.R`.
 **Exakte Commit-Message:** `7.k.C refactor(authoring): Authoring-Dry-Run und Wiederholung bereinigen`
 
 **Bereinigung:** Gemeinsame Testszenarien über Fachadapter statt Kopien je Befehl verwenden.
+
+**Vorbereiteter Implementierungsstand (Bundle 193):** Result 192 bestätigt
+7.k.R mit 8.757 bestandenen parallelen Apply-Tests und sauberem Commit. Die
+sieben bisherigen W-/R-Szenario- und Ergebnishelfer sowie fünf gemeinsame
+Konstanten liegen jetzt in `tests/support/authoring_execution.py`. Beide
+Testmodule verwenden diese Fachadapter; R importiert seine Szenarien nicht
+mehr aus dem W-Testmodul. Die bisherigen Helfernamen bleiben dort importierbar.
+
+Die Testkörper einschließlich Parametrisierungen und die verschobenen Helfer
+und Konstanten stimmen strukturell exakt mit der Result-Basis überein. Es
+werden keine Erwartungen geändert, Fälle entfernt oder Produktfunktionen
+ergänzt. Sämtliche übrigen Testdateien und der Produktcode bleiben bytegleich;
+alle 8.757 Testkennungen bleiben erhalten. Die Entwicklung prüft die betroffenen
+W-/R- und nativen Regressionsfälle gezielt parallel. Vor diesem Commit führt
+Apply die vollständige Suite parallel aus. Erst erfolgreicher Apply-Lauf und
+Commit bestätigen 342/885; danach folgt 7.l.W.
+
+SR-REQ-0241 und SR-REQ-0443 bleiben `partial`. CLI-/stdout-Anbindung,
+Rohinput-Dry-Run mit späterer ID-Übernahme, vollständige Fehler-/Fortsetzungs-
+Audits aller ursprünglichen Direktbefehle, authentische Projekt-/Historien-
+beschaffung und Plattform-/Produktabnahme bleiben offen. Die Fixturegrenzen
+des Review-/Retirement-Nachweises aus R bleiben unverändert.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
