@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 342
-last_completed_plan_commit: 7.k.C
-next_plan_commit: 7.l.W
-last_completed_numbered_bundle: 193
+implementation_plan_commits_completed: 343
+last_completed_plan_commit: 7.l.W
+next_plan_commit: 7.l.R
+last_completed_numbered_bundle: 195
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8626,10 +8626,58 @@ des Review-/Retirement-Nachweises aus R bleiben unverändert.
 
 #### 7.l.W – Let it Work
 
-- [ ] **7.l.W** · Position **343/885** · Voraussetzung: `7.k.C`.
+- [x] **7.l.W** · Position **343/885** · Voraussetzung: `7.k.C`.
 **Exakte Commit-Message:** `7.l.W feat(authoring): Projektinspektion mit getrenntem Laufzeitkontext aufbauen`
 
 **Umsetzung:** project inspect mit vollständigem semantic-/runtime-Vertrag aus vorhandenen Modelldiensten implementieren.
+
+**Vorbereiteter Implementierungsstand (Bundle 194):** Result 193 bestätigt
+7.k.C mit 8.757 bestandenen parallelen Apply-Tests und sauberem Commit. Der
+registrierte CLI-Befehl `project inspect`, sein strukturierter Request und die
+Python-API liefern jetzt den versionierten, im Schemakatalog abrufbaren
+semantic-/runtime-Payload aus tatsächlichen Dateien. Inventur, Registry,
+Profilreihenfolge, aktivierte Sprachpakete, referenzierte Anhänge und Modellwurzel
+werden aus den bestehenden Reader-/Modelldiensten zusammengesetzt. Abschließende
+Inventur-, Byte- und Runtimeprüfungen verwerfen erkannte Änderungen.
+
+Native Writer- und Journalbeobachtungen verhindern gewöhnliches Modelllesen bei
+blockiertem Zustand. Die Inspektion repariert, initialisiert und sperrt nicht.
+Unbekannte Werte bleiben ausdrücklich unbekannt. Neue Verhaltenstests prüfen
+reale CLI-/Python-/Requestgleichheit, Initialisierungsressourcen, Hauptdokumente,
+Profilreihenfolge, Relokationsdeterminismus, Seiteneffekte, Blockaden und veränderte
+Eingaben. Die allgemeinen Katalog- und Beschreibungsprüfungen erhalten für
+projektpflichtige Befehle ein echtes Minimalprojekt und prüfen dessen Bindung;
+die Schema-Inventur enthält die neue Resultatidentität. Sämtliche bisherigen
+Assertions und Test-IDs bleiben erhalten, die Projektoptionsregel wird auf den
+tatsächlich projektpflichtigen Befehl erweitert. Vier bisherige Testmodule
+erhalten ausschließlich diese Erweiterungen; alle übrigen bleiben bytegleich.
+
+SR-REQ-0380 und SR-REQ-0381 bleiben `partial`: Fehlende Spezialdienste (unter
+anderem Dokumentmodellprüfung) liefern keinen erfundenen Diagnoserfolg; ihre
+Diagnosezählung bleibt `null` und der Status unvollständig/fehlgeschlagen.
+Migration älterer Schemata, weitergehende R-Randfälle und die vollständige
+Plattform-/Produktabnahme bleiben offen. Reine CLI-Auswahl-/Konfigurationsfehler
+können bereits vor dem Handler scheitern. Entwicklung prüft neue und betroffene
+Verhaltenstests gezielt parallel; Apply führt vor diesem Commit die vollständige
+Suite parallel aus. Erst erfolgreicher Apply-Lauf und Commit bestätigen 343/885;
+danach folgt 7.l.R.
+
+**Korrekturstand (Bundle 195):** Das maßgebliche Result 194 meldet zwei
+fehlgeschlagene und 8.773 bestandene parallele Apply-Tests. Es wurde kein Commit
+erstellt. Die tatsächlichen 15 ausgebrachten Dateien und der unveränderte Index
+sind anhand des vollständigen Results und des Apply-Arbeitsstands geprüft.
+Zwei ältere Registry-/Request-Tests erwarteten noch die Befehlsmenge ohne
+`project.inspect`. Beide exakten Mengenvergleiche werden um diesen tatsächlich
+implementierten Befehl ergänzt; kein Befehl oder Negativtest wird entfernt.
+
+Produktcode, vorhandene Inspektionsfälle und alle Testkennungen bleiben
+unverändert. Die gezielte parallele Entwicklungsauswahl umfasst zusätzlich
+beide betroffenen Testmodule. Das Korrekturbundle überträgt ausschließlich
+diese beiden Testdateien und diesen Plan. Nach erneutem vollständigem
+parallelem Apply-Test wird der gesamte erhaltene W-Stand mit den Korrekturen
+als ein 7.l.W-Commit abgeschlossen. Planposition 343 wird nicht doppelt gezählt;
+7.l.R folgt erst nach bestätigtem Erfolg. Die oben benannten fachlichen Grenzen
+bleiben offen.
 
 **Verhaltensabnahme:** Projekt, Schema, Profile, Artefakte, Hauptdokumente und Migrationsbedarf sind fachlich strukturiert abrufbar.
 

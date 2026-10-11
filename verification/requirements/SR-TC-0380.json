@@ -4,19 +4,37 @@
   "requirement_id": "SR-REQ-0380",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Current Core on native Linux with owned temporary project files, actual bound profile/registry resources and isolated CLI processes."
+  ],
+  "steps": [
+    "Invoke the real CLI, structured request and read-only Python inspection on the actual files.",
+    "Compare canonical semantic data, native runtime observations, actual side effects and explicit incomplete outcomes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad project inspect --format json` MUSS sämtliche Pflichtangaben zu Projekt, Modell, Schema, Profilen, Artefakten, Migrationsbedarf, Diagnosen, Hauptdokumenten, Projektroot, Transaktion und Writer-Lock in den getrennten `semantic`-/`runtime`-Bereichen nach Kapitel 11.5.1 ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual project-inspect-v1 payload, model root, schema, profile order, counts, primary documents, explicit unknowns and blocked runtime; no invented diagnostic success or unsupported migration result."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    5,
+    6
+  ],
+  "json_pointers": [
+    "/result/format_version",
+    "/result/runtime",
+    "/result/semantic",
+    "/summary/complete"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +46,29 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_inspection.py::test_actual_active_writer_blocks_before_model_loading[cli]",
+    "tests/test_project_inspection.py::test_actual_active_writer_blocks_before_model_loading[python]",
+    "tests/test_project_inspection.py::test_actual_initialized_project_binds_distributed_profiles_and_language_packages",
+    "tests/test_project_inspection.py::test_effective_profile_order_and_explicit_cli_selection_are_observed",
+    "tests/test_project_inspection.py::test_failed_lock_observation_is_unknown_never_an_absent_lock",
+    "tests/test_project_inspection.py::test_final_read_detects_input_changes_and_discards_stale_semantics[bytes]",
+    "tests/test_project_inspection.py::test_final_read_detects_input_changes_and_discards_stale_semantics[inventory]",
+    "tests/test_project_inspection.py::test_identical_relocated_models_have_equal_canonical_semantics",
+    "tests/test_project_inspection.py::test_inspection_has_no_write_process_stdin_entropy_or_lock_acquisition",
+    "tests/test_project_inspection.py::test_primary_documents_and_counts_remain_known_when_a_required_service_is_missing",
+    "tests/test_project_inspection.py::test_real_cli_python_and_structured_request_describe_the_actual_project",
+    "tests/test_project_inspection.py::test_returned_values_are_detached_and_unknown_result_versions_fail",
+    "tests/test_project_inspection.py::test_unreadable_or_unbound_model_has_no_invented_success_facts[artifact]",
+    "tests/test_project_inspection.py::test_unreadable_or_unbound_model_has_no_invented_success_facts[profile]",
+    "tests/test_project_inspection.py::test_unreadable_or_unbound_model_has_no_invented_success_facts[registry]",
+    "tests/test_project_inspection.py::test_unreadable_or_unbound_model_has_no_invented_success_facts[schema]",
+    "tests/test_project_inspection.py::test_unresolved_operational_entries_block_without_repair_or_model_read[.specroad/transactions/unresolved.json-recovery_required]",
+    "tests/test_project_inspection.py::test_unresolved_operational_entries_block_without_repair_or_model_read[.specroad/unclassified.json-unknown]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Required specialist model services (including document model) are not all available; diagnostic_summary stays null and the outcome fails when a required service cannot finish.",
+    "Older/unknown schema migration, pre-handler CLI failure payloads and further 7.l.R edge cases remain open.",
+    "Collect the complete supported CPython/platform matrix and product acceptance before release."
   ]
 }

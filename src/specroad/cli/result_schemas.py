@@ -76,6 +76,18 @@ def _fields(schema_id):
             'directories': strings, 'bootstrap_state': {'const': 'complete'},
             'validation_scope': {'const': 'configuration_record_fields_and_distribution_bindings'},
             'full_semantic_validation': {'const': False}})
+    if schema_id == 'project-inspect-v1':
+        return _object({'format_version': {'const': '1.0.0'},
+            'semantic': _object({'project_id': _nullable(nonempty), 'model_root_sha256': _nullable(sha),
+                'schema_version': _nullable(nonempty),
+                'active_profiles': _nullable(_array(_object({'profile_id': nonempty, 'version': nonempty}))),
+                'artifact_counts': _nullable({'type': 'object', 'additionalProperties': count}),
+                'migration_needed': _nullable(boolean),
+                'diagnostic_summary': _nullable(_object({s: count for s in ('error', 'warning', 'info')})),
+                'primary_documents': _nullable(_array(_object({'id': nonempty, 'title': nonempty})))}),
+            'runtime': _object({'project_root': _nullable(nonempty), 'open_transaction': _nullable(obj),
+                'writer_lock': _nullable(obj), 'consistency_state': {'enum':
+                    ['consistent', 'recovery_required', 'writer_active', 'unknown']}})})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,

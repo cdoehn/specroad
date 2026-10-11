@@ -93,6 +93,11 @@ def _initialize(invocation):
     return initialize_command(invocation)
 
 
+def _inspect(invocation):
+    from ..authoring.project_inspection import inspect_command
+    return inspect_command(invocation)
+
+
 def builtin_registry() -> CommandRegistry:
     return CommandRegistry((CommandSpec(
         command_id='init', words=('init',), command_class=CommandClass.ROOT_CREATION,
@@ -105,6 +110,19 @@ def builtin_registry() -> CommandRegistry:
             'arguments': {'path': 'specroad-project'}, 'options': {'--format': 'json'}},
             handler_exit_codes=(0, 3, 6, 7), diagnostic_codes=('CORE_MODEL', 'CORE_CONFLICT', 'CORE_SECURITY'),
             lock_kind='bootstrap', work=WorkContract('root_creation', ('distribution_resources', 'target_directory'))),
+    ), CommandSpec(
+        command_id='project.inspect', words=('project', 'inspect'),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.PROJECT_METADATA,
+        effect_scope=EffectScope.NONE, handler=_inspect, requires_project=True,
+        options=(OptionSpec('--project', takes_value=True),
+                 OptionSpec('--profile', takes_value=True, repeatable=True),
+                 OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                 OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('project-inspect-v1', {'command_id': 'project.inspect',
+            'options': {'--format': 'json'}}, handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'VALIDATION_UNAVAILABLE'),
+            work=WorkContract('project_inspection', ('project_configuration', 'current_model', 'runtime_metadata'))),
     ), CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
         command_class=CommandClass.READ_ONLY,

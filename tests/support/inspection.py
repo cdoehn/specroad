@@ -1,0 +1,32 @@
+"""A real minimal project for commands whose declared input includes a root."""
+from specroad.changes.target_model import TargetModel
+from specroad.model.canonical import canonical_json_bytes
+from specroad.model.model_manifest import ProjectReadBinding
+from specroad.model.paths import artifact_path
+from specroad.profiles import ProfileResource, compose_profiles
+from specroad.storage.language_registry import bundled_language_registry, registry_binding
+from specroad.validation import ModelDocument
+from .domain import domain_value
+from .model import configuration_value, put
+from .profiles import profile_data
+
+
+def inspection_project(root, *, artifacts=None, extra_profiles=()):
+    root.mkdir(exist_ok=True)
+    registry = bundled_language_registry()
+    profile = ProfileResource(canonical_json_bytes(profile_data(profile_id='core')))
+    resources = [profile, *extra_profiles]
+    keys = [p.key for p in extra_profiles]
+    configuration = configuration_value(language_registry=registry_binding(registry), profiles=keys)
+    effective = compose_profiles(resources, core_key=profile.key, cli_profiles=keys, language_registry=registry)
+    values = [domain_value('goal')] if artifacts is None else artifacts
+    info = root.stat()
+    model = TargetModel(canonical_json_bytes(configuration),
+        ProjectReadBinding(configuration['project_id'], str(root), (info.st_dev, info.st_ino)),
+        [ModelDocument(artifact_path(v['artifact_type'], v['id'], 'SR'), canonical_json_bytes(v)) for v in values],
+        profile=effective, resource_files=[ModelDocument('profiles/' + p.profile_id + '.json', p.source_bytes)
+            for p in resources] + [ModelDocument(registry_binding(registry)['path'], registry.source_bytes)])
+    for path, raw in model.source_files.items():
+        put(root, path, raw)
+    (root / '.specroad/locks').mkdir(parents=True)
+    return model

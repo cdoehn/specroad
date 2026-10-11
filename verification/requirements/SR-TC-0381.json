@@ -7,30 +7,36 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
-    "Current Core distribution and isolated owned temporary directory."
+    "Current Core on native Linux with owned temporary project files, actual bound profile/registry resources and isolated CLI processes."
   ],
   "steps": [
-    "Bind and execute the actual registered command or request.",
-    "Observe typed result data, exit codes and actual side effects."
+    "Invoke the real CLI, structured request and read-only Python inspection on the actual files.",
+    "Compare canonical semantic data, native runtime observations, actual side effects and explicit incomplete outcomes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die fachlichen Selbstbeschreibungen MÜSSEN bei identischen fachlichen Eingaben und identischer Toolversion in der exakt definierten Projektion nach Kapitel 11.5.1 identische JSON-Bytes liefern; Projektroot, Lock, Transaktion und sonstiger Laufzeitkontext sind keine Bestandteile dieser Gleichheitsgarantie.",
-    "scope": "Deterministic semantic projection across current-directory, registry-order, presentation and runtime-limit changes; build changes remain semantic. Future schema/project self-descriptions and full platform matrix remain open."
+    "scope": "Deterministic semantic projection across current-directory, registry-order, presentation and runtime-limit changes; build changes remain semantic. Future schema/project self-descriptions and full platform matrix remain open. Real project inspection now proves exact RFC8785 semantic equality after relocation and detached output ownership; runtime remains separately observed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
     2,
+    3,
     4,
-    5
+    5,
+    6
   ],
   "json_pointers": [
-    "/result"
+    "/result",
+    "/result/format_version",
+    "/result/runtime",
+    "/result/semantic",
+    "/summary/complete"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -50,9 +56,14 @@
     "test_capabilities.CapabilitiesWorkTests.test_unknown_host_limits_are_not_reported_as_zero_or_capacity",
     "test_capabilities.CapabilitiesRobustnessTests.test_runtime_changes_do_not_change_semantic_projection",
     "test_capabilities.CapabilitiesRobustnessTests.test_registry_order_and_working_directory_do_not_change_semantic_bytes",
-    "test_capabilities.CapabilitiesRobustnessTests.test_distribution_identity_changes_the_semantic_input_binding"
+    "test_capabilities.CapabilitiesRobustnessTests.test_distribution_identity_changes_the_semantic_input_binding",
+    "tests/test_project_inspection.py::test_identical_relocated_models_have_equal_canonical_semantics",
+    "tests/test_project_inspection.py::test_real_cli_python_and_structured_request_describe_the_actual_project",
+    "tests/test_project_inspection.py::test_returned_values_are_detached_and_unknown_result_versions_fail"
   ],
   "open_items": [
-    "Extend coverage as future handlers become available; collect the full supported CPython/platform matrix before release."
+    "Required specialist model services (including document model) are not all available; diagnostic_summary stays null and the outcome fails when a required service cannot finish.",
+    "Older/unknown schema migration, pre-handler CLI failure payloads and further 7.l.R edge cases remain open.",
+    "Collect the complete supported CPython/platform matrix and product acceptance before release."
   ]
 }

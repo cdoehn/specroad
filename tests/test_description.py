@@ -37,10 +37,17 @@ class DescriptionWorkTests(unittest.TestCase):
             for request in document['examples']:
                 with self.subTest(command=command.command_id):
                     with tempfile.TemporaryDirectory() as tmp:
+                        if command.requires_project:
+                            from support.inspection import inspection_project
+                            inspection_project(Path(tmp))
                         result = execute_request(request, registry=registry, cwd=Path(tmp)).result
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
-                    self.assertIsNone(result.project)
+                    if command.requires_project:
+                        self.assertEqual(result.project['project_root'], str(Path(tmp)))
+                        self.assertEqual(result.project['project_id'], 'sample')
+                    else:
+                        self.assertIsNone(result.project)
 
     def test_cli_and_structured_description_are_same_contract(self):
         cli = dispatch_result(['command', 'describe', 'version', '--format', 'json'])
@@ -232,7 +239,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
             document = describe_command(registry, command.command_id)
             accepted = {option['flag'] for option in document['options']}
             rejected = ('--work-dir', '--resume', '--request-id', '--dry-run', '--actor-id')
-            if command.command_id == 'environment.check':
+            if command.command_id == 'environment.check' or command.requires_project:
                 self.assertIn('--project', accepted)
             else:
                 rejected += ('--project',)
