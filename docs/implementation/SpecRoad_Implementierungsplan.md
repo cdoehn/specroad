@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 337
-last_completed_plan_commit: 7.j.W
-next_plan_commit: 7.j.R
-last_completed_numbered_bundle: 188
+implementation_plan_commits_completed: 338
+last_completed_plan_commit: 7.j.R
+next_plan_commit: 7.j.C
+last_completed_numbered_bundle: 189
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8429,12 +8429,44 @@ keine vollständige Erfüllung dieser Produktanforderungen.
 
 #### 7.j.R – Make it Right
 
-- [ ] **7.j.R** · Position **338/885** · Voraussetzung: `7.j.W`.
+- [x] **7.j.R** · Position **338/885** · Voraussetzung: `7.j.W`.
 **Exakte Commit-Message:** `7.j.R feat(authoring): Reviewpolicy und Relationsstatus-CLI vervollständigen`
 
 **Vervollständigung:** invalid bleibt Fehler unabhängig von Profil; keine automatische Wiederfreigabe nach Bestätigung.
 
 **Verhaltensabnahme:** Wiederholtes confirmed macht Relation current, Requirement aber nicht selbständig approved. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 189):** Result 188 bestätigt
+7.j.W mit 8.678 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Auch `relation_review_diagnostics` wertet jetzt die tatsächlich gebundene aktive
+Profilpolicy aus. Ihr bisheriger kompakter Ergebnisumfang bleibt erhalten;
+für dieselbe unbeschränkte Modellabfrage stimmen Diagnosen und Exit-Bewertung
+mit dem erweiterten Statusbericht überein.
+
+Die R-Nachweise prüfen fehlende Ziele, Self-Links, unzulässige Typkombinationen,
+falsche symmetrische Speicherung und aktuelle Ablehnung unter permissiven
+Profilen und mit/ohne Strict. `SRV027` bleibt `error`; ein globales Downgrade
+wird bereits bei der Profilkomposition abgewiesen. Weitere Fälle binden aktive
+Auswahl, unveränderte Standardprojektion, ungültige Policycontainer, exakte
+Zeitties, unbekannte passive Auditdaten, Filtergrenzen und vollständige
+Eingabeprüfung sowie Manipulation einer abgelösten Profilrepräsentation.
+
+Eine native Ablehnung mit gekoppelter Rücknahme, spätere neue Bestätigung und
+Receipt-Wiederholung belegen `current` ohne automatische Wiederfreigabe:
+Das Requirement bleibt bytegleich `proposed`/Revision 5, die vorherige Reviewdatei
+unverändert. Beide Diagnoseabfragen bleiben schreibfrei. Die neue Bestätigung
+publiziert ausschließlich ihren neuen Reviewnachweis; der Retry verwendet
+dasselbe Receipt ohne erneute Identitätsvergabe oder normative Änderung.
+
+32 neue Verhaltenstests ergänzen alle 1.448 ausgewählten W-/Regressionstests.
+Damit werden lokal 1.480 Tests aus 41 Dateien gezielt parallel geprüft;
+vor dem Commit ist die vollständige parallele Apply-Suite mit 8.710 Fällen
+erforderlich. Alle 258 bisherigen Testdateien und 8.678 Testidentitäten bleiben
+erhalten. Erst der erfolgreiche Apply-Lauf und Commit bestätigen 338/885;
+danach folgt 7.j.C. Beide Anforderungen bleiben `partial`. CLI-/Envelope-
+Integration, authentische vollständige aktuelle Projekt-/Historienbeschaffung,
+übrige produktweite Policyintegration, C- und Plattform-/Produktabnahmen sowie
+die gesonderte explizite Lifecycle-Freigabefolge bleiben offen.
 
 #### 7.j.C – Make it Clean
 

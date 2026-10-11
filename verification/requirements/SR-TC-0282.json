@@ -13,12 +13,13 @@
     "Owned complete supplied TargetModel with exact Core-first profile resources and field-valid passive review history; no host or history authenticity is inferred."
   ],
   "steps": [
-    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts."
+    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
+    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Aktive Profile MÜSSEN je Relationstyp und Artefaktreifegrad festlegen können, ob `unreviewed` oder `suspect` als `info`, `warning` oder `error` gilt.",
-    "scope": "Closed optional relation_review_policy selects unreviewed/suspect severity by stored relation type and source maturity. Actual profile resources and deterministic later-profile composition bind the decision into EffectiveProfile; later global overrides and same-profile scoped precedence are explicit. Invalid stays error and current creates no finding. Scope is the supplied byte-bound model API, not all product command integrations."
+    "scope": "Closed optional relation_review_policy selects unreviewed/suspect severity by stored relation type and source maturity. Actual profile resources and deterministic later-profile composition bind the decision into EffectiveProfile; later global overrides and same-profile scoped precedence are explicit. Invalid stays error and current creates no finding. Scope is the supplied byte-bound model API, not all product command integrations. R: the existing relation_review_diagnostics API also uses the byte-bound active profile without changing its response scope. Invalid remains error under permissive scopes and strict thresholds; global downgrades and malformed containers fail closed. Inactive resources do not affect active composition; native confirmation/retry grants no approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -71,10 +72,37 @@
     "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector0]",
     "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector1]",
     "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector2]",
-    "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector3]"
+    "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector3]",
+    "tests/test_relation_status_policy_right.py::test_active_selection_excludes_inactive_policy_resources",
+    "tests/test_relation_status_policy_right.py::test_default_composition_retains_original_absent_policy_projection",
+    "tests/test_relation_status_policy_right.py::test_detached_effective_profile_cannot_change_owned_model_evaluation[relation_review_diagnostics]",
+    "tests/test_relation_status_policy_right.py::test_detached_effective_profile_cannot_change_owned_model_evaluation[relation_status_report]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[error-1-1-suspect]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[error-1-1-unreviewed]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[info-0-0-suspect]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[info-0-0-unreviewed]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[warning-0-1-suspect]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[warning-0-1-unreviewed]",
+    "tests/test_relation_status_policy_right.py::test_global_invalid_downgrade_blocks_composition_before_query[info]",
+    "tests/test_relation_status_policy_right.py::test_global_invalid_downgrade_blocks_composition_before_query[warning]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-canonical-noncanonical_symmetric_relation]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-missing-missing_relation_target]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-negative-current_review_rejected]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-pair-relation_type_pair_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-self-self_relation_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-canonical-noncanonical_symmetric_relation]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-missing-missing_relation_target]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-negative-current_review_rejected]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-pair-relation_type_pair_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-self-self_relation_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_malformed_review_policy_container_cannot_become_an_empty_policy[None]",
+    "tests/test_relation_status_policy_right.py::test_malformed_review_policy_container_cannot_become_an_empty_policy[unreviewed]",
+    "tests/test_relation_status_policy_right.py::test_malformed_review_policy_container_cannot_become_an_empty_policy[value1]",
+    "tests/test_relation_status_policy_right.py::test_malformed_review_policy_container_cannot_become_an_empty_policy[value3]",
+    "tests/test_relation_status_policy_right.py::test_native_confirmation_and_retry_keep_requirement_proposed_and_bytes_unchanged"
   ],
   "open_items": [
-    "Complete 7.j.R robustness and 7.j.C cleanup with retained W behavior evidence.",
+    "Complete 7.j.C cleanup with retained W/R behavior evidence.",
     "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
     "Verify applicable supported-platform and full product acceptance contracts."
   ]

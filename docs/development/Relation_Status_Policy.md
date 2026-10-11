@@ -63,7 +63,24 @@ Relationsreparatur. Diese Daten führen keine Reparatur, keinen Write und keine
 Wiederfreigabe aus. `strict` und `fail_on` ändern ausschließlich die
 Fehlerentscheidung, nicht die aus dem Profil bestimmte Severity.
 
+Auch die bestehende API `relation_review_diagnostics` verwendet die aktive,
+bytegebundene Profilbewertung. Ihr bisheriger Ergebnisumfang und ihre kompakten
+Statuszeilen bleiben erhalten. Für dieselbe unbeschränkte Modellabfrage liefern
+beide APIs dieselben typisierten Diagnosen und dieselbe Fehlerentscheidung.
+Ein Artefaktfilter begrenzt ausschließlich die ausgegebenen Relationen und deren
+Diagnosen; eine fehlerhafte unbeteiligte Eingabe bleibt bereits bei der Prüfung
+des vollständigen übergebenen Inventars blockierend.
+
+Die R-Nachweise umfassen fehlende Ziele, Self-Links, ungültige Typkombinationen,
+falsche symmetrische Speicherung und aktuelle Ablehnungen auch unter permissiven
+Profilen. Eine native Ablehnung mit nachfolgender Bestätigung und Receipt-Retry
+belegt den schreibfreien Bericht über die wieder `current` gewordene Relation:
+Das Requirement bleibt bytegleich auf `proposed`, Revision 5; keine API erteilt
+eine automatische Freigabe. Die ausdrückliche spätere Lifecycle-Freigabefolge
+ist weiterhin ein eigener, hier nicht abgeschlossener Produktnachweis.
+
 Die vollständige CLI-/Envelope-Integration und authentische aktuelle
 Projekt-/Historienbeschaffung bleiben gesondert nachzuweisen. Die W-Abnahme
-belegt den hier beschriebenen gebundenen API-Ausschnitt; eine Produktfreigabe
+belegt den hier beschriebenen gebundenen API-Ausschnitt; die R-Nachweise ergänzen
+Fehlergrenzen und native Wiederholung. Eine Produktfreigabe
 oder vollständige Erfüllung von SR-REQ-0281/SR-REQ-0282 wird nicht behauptet.

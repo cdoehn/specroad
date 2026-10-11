@@ -13,12 +13,13 @@
     "Owned complete supplied TargetModel with exact Core-first profile resources and field-valid passive review history; no host or history authenticity is inferred."
   ],
   "steps": [
-    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts."
+    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
+    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad relation status [<ID>]` MUSS alle Relationsreviewzustände einschließlich auslösender Revisionen, letzter Reviewentscheidung und erforderlicher Reparatur stabil sortiert ausgeben.",
-    "scope": "Owned read-only relation-status-v1 API reports stable incident-edge selection, current and reviewed endpoint revisions/hashes, controlling versus latest historical decision, hash-change causes, distinct required repairs, exact diagnostic positions and bound profile severity. No registered CLI, on-disk complete history acquisition or approval is claimed."
+    "scope": "Owned read-only relation-status-v1 API reports stable incident-edge selection, current and reviewed endpoint revisions/hashes, controlling versus latest historical decision, hash-change causes, distinct required repairs, exact diagnostic positions and bound profile severity. No registered CLI, on-disk complete history acquisition or approval is claimed. R: compact and enriched APIs agree under active profile severity; protected structural and negative outcomes, exact history ties, passive metadata gaps, incident filtering and complete-input validation remain observable. Native rejection then confirmation and receipt retry leave the Requirement proposed/5 and byte-identical while the relation becomes current."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -59,10 +60,34 @@
     "tests/test_relation_status_policy.py::test_target_maturity_does_not_replace_source_policy_selector",
     "tests/test_relation_status_policy.py::test_unknown_filter_cannot_pass_as_an_empty_success[SR-GOAL-0000000000000000000000000M-review_artifact_missing]",
     "tests/test_relation_status_policy.py::test_unknown_filter_cannot_pass_as_an_empty_success[True-review_artifact_identity_required]",
-    "tests/test_relation_status_policy.py::test_unreviewed_reports_current_revisions_without_invented_history"
+    "tests/test_relation_status_policy.py::test_unreviewed_reports_current_revisions_without_invented_history",
+    "tests/test_relation_status_policy_right.py::test_detached_effective_profile_cannot_change_owned_model_evaluation[relation_review_diagnostics]",
+    "tests/test_relation_status_policy_right.py::test_detached_effective_profile_cannot_change_owned_model_evaluation[relation_status_report]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[error-1-1-suspect]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[error-1-1-unreviewed]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[info-0-0-suspect]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[info-0-0-unreviewed]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[warning-0-1-suspect]",
+    "tests/test_relation_status_policy_right.py::test_existing_diagnostic_query_honors_same_bound_policy_as_rich_report[warning-0-1-unreviewed]",
+    "tests/test_relation_status_policy_right.py::test_filter_does_not_hide_invalid_unrelated_history_input",
+    "tests/test_relation_status_policy_right.py::test_filtered_report_excludes_other_edges_and_their_policy_failures",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-canonical-noncanonical_symmetric_relation]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-missing-missing_relation_target]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-negative-current_review_rejected]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-pair-relation_type_pair_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[False-self-self_relation_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-canonical-noncanonical_symmetric_relation]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-missing-missing_relation_target]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-negative-current_review_rejected]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-pair-relation_type_pair_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_invalid_cannot_be_downgraded_by_permissive_active_profile[True-self-self_relation_forbidden]",
+    "tests/test_relation_status_policy_right.py::test_latest_history_projection_uses_exact_time_tie_and_highest_review_id[False]",
+    "tests/test_relation_status_policy_right.py::test_latest_history_projection_uses_exact_time_tie_and_highest_review_id[True]",
+    "tests/test_relation_status_policy_right.py::test_native_confirmation_and_retry_keep_requirement_proposed_and_bytes_unchanged",
+    "tests/test_relation_status_policy_right.py::test_passive_legacy_audit_gaps_remain_unknown_instead_of_invented"
   ],
   "open_items": [
-    "Complete 7.j.R robustness and 7.j.C cleanup with retained W behavior evidence.",
+    "Complete 7.j.C cleanup with retained W/R behavior evidence.",
     "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
     "Verify applicable supported-platform and full product acceptance contracts."
   ]
