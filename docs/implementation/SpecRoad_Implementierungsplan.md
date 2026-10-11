@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 331
-last_completed_plan_commit: 7.h.W
-next_plan_commit: 7.h.R
-last_completed_numbered_bundle: 182
+implementation_plan_commits_completed: 332
+last_completed_plan_commit: 7.h.R
+next_plan_commit: 7.h.C
+last_completed_numbered_bundle: 183
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8186,12 +8186,39 @@ Die vier zugeordneten Anforderungen sind `partial`, nicht vollständig erfüllt.
 
 #### 7.h.R – Make it Right
 
-- [ ] **7.h.R** · Position **332/885** · Voraussetzung: `7.h.W`.
+- [x] **7.h.R** · Position **332/885** · Voraussetzung: `7.h.W`.
 **Exakte Commit-Message:** `7.h.R feat(authoring): Reviewstatus berechnen vervollständigen`
 
 **Vervollständigung:** Ungültige Struktur und jüngstes passendes rejected erhalten invalid-Vorrang.
 
 **Verhaltensabnahme:** Lifecycle-/Auditänderung allein macht ein Review nicht suspect. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 183):** Result 182 bestätigt
+7.h.W mit 8.532 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Die berechneten Statusbeobachtungen liefern nun gebundene Core-Diagnosen:
+SRV025/SRV026 bleiben Warnungen, SRV027 bleibt ein geschützter Fehler.
+Aktuelle Ablehnungen tragen `review_outcome` und `current_review_rejected`;
+strukturelle Ungültigkeit bleibt davon getrennt. Pfad und Pointer beziehen
+sich auf die tatsächliche ursprüngliche Relationsposition. Die zusätzliche
+reine Diagnoseabfrage verwendet die bestehende Fail-Policy, ohne ursprüngliche
+Schweren, Statuswerte oder Projektdateien zu verändern.
+
+47 neue R-Verhaltenstests ergänzen die bisherigen 370 gezielten Fälle sowie
+86 betroffene Diagnose-Regressionen: 503 parallele Dev-Fälle. Sie prüfen
+strukturellen Vorrang, jüngste passende Ablehnung trotz neuerer unpassender
+Bestätigung, präzise Zeitgrenzen, Audit-/Lifecycle-/Tag-Ausschlüsse,
+fachliche Änderungen, echte Relationspointer und mehrdeutige Eingaben.
+Alle 254 bisherigen Testdateien bleiben bytegleich. Die vollständige parallele
+Apply-Suite umfasst 8.579 Fälle; erst ihr Erfolg und der passende Commit
+bestätigen 332/885. Danach folgt 7.h.C.
+
+**Abgrenzung:** Status und Diagnosen gelten für den gelieferten Snapshot.
+Produktive vollständige/authentische Inventur, registrierte CLI und allgemeine
+Validierungs-/Approval-Gateverbindung bleiben offen. Kein Status oder
+Diagnoseobjekt legitimiert einen Write oder eine generische Fehlerausnahme.
+Der native Reviewwriter und seine bisherigen Grenzen bleiben unverändert;
+negative Writes mit Freigaberücknahmen bleiben 7.i. Die vier Anforderungen
+bleiben ausdrücklich `partial`.
 
 #### 7.h.C – Make it Clean
 

@@ -13,12 +13,13 @@
     "Owned complete field-valid endpoints and passive human review history; the native integration case uses an owned temporary project and actual publication receipt."
   ],
   "steps": [
-    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts."
+    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts.",
+    "Inspect typed SRV025/SRV026/SRV027 findings, exact stored pointers and failure policy; verify structural and newest-current rejection precedence, lifecycle/audit exclusions, semantic changes and retained read-only boundaries."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Änderung am reviewrelevanten Inhalt des Quell- oder Zielartefakts MUSS jedes zuvor `current` Relationsreview auf Basis abweichender `relation_context_hash-v1` als `suspect` erscheinen lassen.",
-    "scope": "Review-relevant source or target statement changes make the prior review suspect. Complete artifact hashes and revisions are audit observations and are not selection keys; actual native confirmed review is readable as current."
+    "scope": "Review-relevant source or target statement changes make the prior review suspect. Complete artifact hashes and revisions are audit observations and are not selection keys; actual native confirmed review is readable as current. R: typed diagnostics retain protected error severity and distinguish review_outcome from structural invalid; supplied-snapshot query preserves exact source pointers and original severity under strict/fail-on policies. Additional precedence, lifecycle/audit and input-ambiguity regressions retain all W expectations."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -41,10 +42,30 @@
     "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[target_revision]",
     "tests/test_relation_review_status.py::test_changed_endpoint_statement_makes_previous_review_suspect[source]",
     "tests/test_relation_review_status.py::test_changed_endpoint_statement_makes_previous_review_suspect[target]",
-    "tests/test_relation_review_status.py::test_query_reads_an_actual_native_review_without_any_write"
+    "tests/test_relation_review_status.py::test_query_reads_an_actual_native_review_without_any_write",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[created_at-2025-01-01T00:00:00Z-source]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[created_at-2025-01-01T00:00:00Z-target]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[created_by-value4-source]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[created_by-value4-target]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[maturity-proposed-source]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[maturity-proposed-target]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[revision-99-source]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[revision-99-target]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[tags-value6-source]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[tags-value6-target]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[updated_at-2027-01-01T00:00:00Z-source]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[updated_at-2027-01-01T00:00:00Z-target]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[updated_by-value5-source]",
+    "tests/test_relation_review_status_right.py::test_excluded_lifecycle_audit_and_tags_do_not_make_review_suspect[updated_by-value5-target]",
+    "tests/test_relation_review_status_right.py::test_new_unrelated_relation_does_not_invalidate_existing_current_review",
+    "tests/test_relation_review_status_right.py::test_review_relevant_fields_make_history_suspect[source-extensions-value3]",
+    "tests/test_relation_review_status_right.py::test_review_relevant_fields_make_history_suspect[source-title-A different source]",
+    "tests/test_relation_review_status_right.py::test_review_relevant_fields_make_history_suspect[target-extensions-value4]",
+    "tests/test_relation_review_status_right.py::test_review_relevant_fields_make_history_suspect[target-owner-operations]",
+    "tests/test_relation_review_status_right.py::test_review_relevant_fields_make_history_suspect[target-title-A different target]"
   ],
   "open_items": [
-    "Complete 7.h.R boundary and precedence regressions and 7.h.C structural cleanup.",
+    "Complete 7.h.C structural cleanup without changing behavior or machine contracts.",
     "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
     "Verify the applicable supported-platform and product-level acceptance contracts."
   ]

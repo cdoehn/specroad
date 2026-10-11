@@ -13,12 +13,13 @@
     "Owned complete field-valid endpoints and passive human review history; the native integration case uses an owned temporary project and actual publication receipt."
   ],
   "steps": [
-    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts."
+    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts.",
+    "Inspect typed SRV025/SRV026/SRV027 findings, exact stored pointers and failure policy; verify structural and newest-current rejection precedence, lifecycle/audit exclusions, semantic changes and retained read-only boundaries."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Relation MUSS `invalid` sein, wenn ihr Ziel fehlt, ihre Quell-Ziel-Typkombination unzulässig ist, ihre kanonische Speicherung verletzt ist oder das jüngste aktuelle Review die Entscheidung `rejected` trägt.",
-    "scope": "Missing target or forbidden endpoint type pair gives structural invalid; the latest matching rejected decision yields invalid/current_review_rejected. Equal instants use highest review ID; exact UTC fraction comparison avoids truncation. General validator and diagnostic integration remain open."
+    "scope": "Missing target or forbidden endpoint type pair gives structural invalid; the latest matching rejected decision yields invalid/current_review_rejected. Equal instants use highest review ID; exact UTC fraction comparison avoids truncation. General validator and diagnostic integration remain open. R: typed diagnostics retain protected error severity and distinguish review_outcome from structural invalid; supplied-snapshot query preserves exact source pointers and original severity under strict/fail-on policies. Additional precedence, lifecycle/audit and input-ambiguity regressions retain all W expectations."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -47,10 +48,24 @@
     "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00.09Z-2026-01-01T00:00:00.1Z-False]",
     "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00.1Z-2026-01-01T00:00:00.10Z-True]",
     "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00Z-2026-01-01T00:00:00.000000001Z-False]",
-    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01t00:00:00Z-2026-01-01T00:00:00.000Z-True]"
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01t00:00:00Z-2026-01-01T00:00:00.000Z-True]",
+    "tests/test_relation_review_status_right.py::test_exact_timestamp_precedence_preserves_supported_precision_and_rollover[2024-06-30T23:59:59.999999999Z-2024-06-30T23:59:60Z]",
+    "tests/test_relation_review_status_right.py::test_exact_timestamp_precedence_preserves_supported_precision_and_rollover[2024-06-30T23:59:60Z-2024-07-01T00:00:00Z]",
+    "tests/test_relation_review_status_right.py::test_exact_timestamp_precedence_preserves_supported_precision_and_rollover[2026-01-01T00:00:00.00000000000000000001Z-2026-01-01T00:00:00.00000000000000000002Z]",
+    "tests/test_relation_review_status_right.py::test_later_current_confirmation_removes_only_the_previous_outcome_finding",
+    "tests/test_relation_review_status_right.py::test_newer_nonmatching_confirmation_cannot_hide_current_rejection[relation_content_sha256]",
+    "tests/test_relation_review_status_right.py::test_newer_nonmatching_confirmation_cannot_hide_current_rejection[source_context_sha256]",
+    "tests/test_relation_review_status_right.py::test_newer_nonmatching_confirmation_cannot_hide_current_rejection[target_context_sha256]",
+    "tests/test_relation_review_status_right.py::test_rejected_outcome_remains_error_for_every_query_failure_policy[policy0]",
+    "tests/test_relation_review_status_right.py::test_rejected_outcome_remains_error_for_every_query_failure_policy[policy1]",
+    "tests/test_relation_review_status_right.py::test_rejected_outcome_remains_error_for_every_query_failure_policy[policy2]",
+    "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[canonical-noncanonical_symmetric_relation]",
+    "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[missing-missing_relation_target]",
+    "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[pair-relation_type_pair_forbidden]",
+    "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[self-self_relation_forbidden]"
   ],
   "open_items": [
-    "Complete 7.h.R boundary and precedence regressions and 7.h.C structural cleanup.",
+    "Complete 7.h.C structural cleanup without changing behavior or machine contracts.",
     "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
     "Verify the applicable supported-platform and product-level acceptance contracts."
   ]

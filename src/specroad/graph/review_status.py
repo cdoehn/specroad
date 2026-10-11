@@ -5,6 +5,7 @@ supplied records nor certify a complete project, grant approval, or allow writes
 """
 from dataclasses import dataclass
 
+from ..diagnostics import Diagnostic, code_metadata, diagnostic_key
 from ..model.audit_values import UtcTimestamp
 from ..model.domain_schemas import validate_domain_fields
 from ..model.errors import ModelError
@@ -73,11 +74,28 @@ def _status(source, relation, index, history):
         tuple(sorted(record['id'] for record in matching)))
 
 
+def _diagnostic(value, path, position):
+    if value.status == 'current':
+        return None
+    code = {'unreviewed': 'SRV025', 'suspect': 'SRV026', 'invalid': 'SRV027'}[value.status]
+    metadata = code_metadata(code)
+    category = ('review_outcome' if value.reason == 'current_review_rejected'
+        else 'relation_structure' if value.status == 'invalid' else 'relation_review')
+    related = (value.relation_id, value.target_id)
+    if value.selected_review_id is not None:
+        related += (value.selected_review_id,)
+    return Diagnostic(code, metadata['default_severity'], category, metadata['meaning'],
+        rule_id='core:relation-review-status', artifact_id=value.source_id,
+        path=path, location={'pointer': '/relations/' + str(position)},
+        rationale=value.reason or 'relation_' + value.status, related_ids=related)
+
+
 @dataclass(frozen=True, init=False)
 class RelationReviewStatuses:
     """One deterministic observation per stored relation in the supplied input."""
     statuses: tuple
     _source_ids: tuple
+    _diagnostics: tuple
 
     def __init__(self, sources):
         if isinstance(sources, (str, bytes, dict)):
@@ -113,6 +131,15 @@ class RelationReviewStatuses:
             for relation in sorted(source.relations, key=lambda edge: edge.identity.id))
         object.__setattr__(self, 'statuses', observations)
         object.__setattr__(self, '_source_ids', tuple(sorted(index)))
+        by_relation = {(value.source_id, value.relation_id): value for value in observations}
+        findings = []
+        for source in ordered:
+            for position, relation in enumerate(source.relations):
+                finding = _diagnostic(by_relation[(source.identity.id, relation.identity.id)],
+                    source.path, position)
+                if finding is not None:
+                    findings.append(finding)
+        object.__setattr__(self, '_diagnostics', tuple(sorted(findings, key=diagnostic_key)))
 
     def for_relation(self, source_id, relation_id):
         if type(source_id) is not str or type(relation_id) is not str:
@@ -132,6 +159,10 @@ class RelationReviewStatuses:
     @property
     def approval_granted(self):
         return False
+
+    @property
+    def diagnostics(self):
+        return self._diagnostics
 
     @property
     def data(self):

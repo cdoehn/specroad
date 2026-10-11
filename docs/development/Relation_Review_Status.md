@@ -12,6 +12,21 @@ relation_id)` übernimmt dafür einen eigenen Snapshot des gelieferten
 `TargetModel`. Die Abfrage lädt keine weiteren Dateien, erzeugt keine IDs,
 schreibt keinen Status in die Relation und erteilt keine Freigabe.
 
+`RelationReviewStatuses.diagnostics` liefert typisierte Core-Diagnosen:
+`SRV025`/`warning` für `unreviewed`, `SRV026`/`warning` für `suspect` und
+`SRV027`/`error` für `invalid`. Nur `current_review_rejected` erhält die
+Kategorie `review_outcome`; strukturelle Fehler bleiben `relation_structure`.
+Pfad und JSON-Pointer beziehen sich auf die tatsächliche Speicherposition der
+Relation, auch wenn Statusbeobachtungen anders sortiert werden.
+
+`relation_review_diagnostics(model, fail_on="error", strict=False)` beurteilt
+diese Diagnosen mit der vorhandenen Fail-Policy. Strenge Warnschwellen ändern
+die ursprüngliche Schwere nicht; aktuelle Ablehnungen bleiben Fehler. Das
+Ergebnis enthält Statusbeobachtungen, Diagnosen und deren expliziten
+`validation_scope`. `checks_complete` bezeichnet ausschließlich die gelieferten
+Relationsbeobachtungen. Es entsteht keine allgemeine Projektfreigabe oder
+Write-Ausnahme; unvollständige Eingaben werden nicht als Gesamtinventur bestätigt.
+
 Die Auswahl folgt Anhang J: Strukturelle Ungültigkeit hat Vorrang. Bei gültiger
 Struktur müssen Relationsinhaltshash und beide Kontexthashes passen. Unter den
 passenden Reviews entscheidet der neueste Zeitpunkt, bei Gleichheit die
