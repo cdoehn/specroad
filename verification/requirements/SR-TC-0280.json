@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0280",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned complete field-valid endpoints and passive human review history; the native integration case uses an owned temporary project and actual publication receipt."
+  ],
+  "steps": [
+    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine Relation MUSS `invalid` sein, wenn ihr Ziel fehlt, ihre Quell-Ziel-Typkombination unzulässig ist, ihre kanonische Speicherung verletzt ist oder das jüngste aktuelle Review die Entscheidung `rejected` trägt.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Missing target or forbidden endpoint type pair gives structural invalid; the latest matching rejected decision yields invalid/current_review_rejected. Equal instants use highest review ID; exact UTC fraction comparison avoids truncation. General validator and diagnostic integration remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,24 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_review_status.py::test_duplicate_history_identity_is_rejected_before_selection",
+    "tests/test_relation_review_status.py::test_duplicate_relation_identity_in_two_sources_is_rejected",
+    "tests/test_relation_review_status.py::test_equal_timestamp_uses_highest_review_id_not_input_order[False]",
+    "tests/test_relation_review_status.py::test_equal_timestamp_uses_highest_review_id_not_input_order[True]",
+    "tests/test_relation_review_status.py::test_forbidden_endpoint_type_pair_is_invalid",
+    "tests/test_relation_review_status.py::test_missing_target_is_structurally_invalid_despite_confirming_history",
+    "tests/test_relation_review_status.py::test_newest_matching_decision_wins_without_changing_history[confirmed-current-None]",
+    "tests/test_relation_review_status.py::test_newest_matching_decision_wins_without_changing_history[rejected-invalid-current_review_rejected]",
+    "tests/test_relation_review_status.py::test_schema_invalid_review_cannot_be_used_as_confirming_evidence",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00.09Z-2026-01-01T00:00:00.1Z-False]",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00.1Z-2026-01-01T00:00:00.10Z-True]",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00Z-2026-01-01T00:00:00.000000001Z-False]",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01t00:00:00Z-2026-01-01T00:00:00.000Z-True]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 7.h.R boundary and precedence regressions and 7.h.C structural cleanup.",
+    "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
+    "Verify the applicable supported-platform and product-level acceptance contracts."
   ]
 }

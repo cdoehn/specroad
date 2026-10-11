@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0279",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned complete field-valid endpoints and passive human review history; the native integration case uses an owned temporary project and actual publication receipt."
+  ],
+  "steps": [
+    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine Änderung am reviewrelevanten Inhalt des Quell- oder Zielartefakts MUSS jedes zuvor `current` Relationsreview auf Basis abweichender `relation_context_hash-v1` als `suspect` erscheinen lassen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Review-relevant source or target statement changes make the prior review suspect. Complete artifact hashes and revisions are audit observations and are not selection keys; actual native confirmed review is readable as current."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,18 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[source_artifact_sha256]",
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[source_revision]",
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[target_artifact_sha256]",
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[target_revision]",
+    "tests/test_relation_review_status.py::test_changed_endpoint_statement_makes_previous_review_suspect[source]",
+    "tests/test_relation_review_status.py::test_changed_endpoint_statement_makes_previous_review_suspect[target]",
+    "tests/test_relation_review_status.py::test_query_reads_an_actual_native_review_without_any_write"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 7.h.R boundary and precedence regressions and 7.h.C structural cleanup.",
+    "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
+    "Verify the applicable supported-platform and product-level acceptance contracts."
   ]
 }

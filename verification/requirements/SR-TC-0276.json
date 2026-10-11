@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0276",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned complete field-valid endpoints and passive human review history; the native integration case uses an owned temporary project and actual publication receipt."
+  ],
+  "steps": [
+    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS für jede gespeicherte Relation den berechneten Reviewstatus `unreviewed`, `current`, `suspect` oder `invalid` aus Relationsinhaltshash und den beiden `relation_context_hash-v1` bestimmen, ohne diesen Status als zweite normative Kopie in der Relation zu speichern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Pure deterministic Appendix J status for every stored relation in a supplied validated field inventory, plus a read-only query over TargetModel. Covers unreviewed/current/suspect/invalid, owned outputs, ordered history selection, no stored status and no approval. This is not complete-project validation or history authenticity proof."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,44 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[source_artifact_sha256]",
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[source_revision]",
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[target_artifact_sha256]",
+    "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[target_revision]",
+    "tests/test_relation_review_status.py::test_changed_endpoint_statement_makes_previous_review_suspect[source]",
+    "tests/test_relation_review_status.py::test_changed_endpoint_statement_makes_previous_review_suspect[target]",
+    "tests/test_relation_review_status.py::test_changed_relation_rationale_keeps_history_and_becomes_suspect",
+    "tests/test_relation_review_status.py::test_duplicate_history_identity_is_rejected_before_selection",
+    "tests/test_relation_review_status.py::test_duplicate_relation_identity_in_two_sources_is_rejected",
+    "tests/test_relation_review_status.py::test_empty_inventory_has_no_invented_status_or_approval",
+    "tests/test_relation_review_status.py::test_equal_timestamp_uses_highest_review_id_not_input_order[False]",
+    "tests/test_relation_review_status.py::test_equal_timestamp_uses_highest_review_id_not_input_order[True]",
+    "tests/test_relation_review_status.py::test_forbidden_endpoint_type_pair_is_invalid",
+    "tests/test_relation_review_status.py::test_matching_confirmed_review_is_current_without_stored_status",
+    "tests/test_relation_review_status.py::test_missing_target_is_structurally_invalid_despite_confirming_history",
+    "tests/test_relation_review_status.py::test_newer_nonmatching_review_does_not_override_matching_review[confirmed]",
+    "tests/test_relation_review_status.py::test_newer_nonmatching_review_does_not_override_matching_review[rejected]",
+    "tests/test_relation_review_status.py::test_newest_matching_decision_wins_without_changing_history[confirmed-current-None]",
+    "tests/test_relation_review_status.py::test_newest_matching_decision_wins_without_changing_history[rejected-invalid-current_review_rejected]",
+    "tests/test_relation_review_status.py::test_passive_legacy_record_uses_creation_time_when_reviewed_at_is_absent",
+    "tests/test_relation_review_status.py::test_query_reads_an_actual_native_review_without_any_write",
+    "tests/test_relation_review_status.py::test_query_requires_native_model_before_inspection",
+    "tests/test_relation_review_status.py::test_result_is_deterministic_detached_and_read_only",
+    "tests/test_relation_review_status.py::test_retargeted_relation_does_not_reuse_previous_endpoint_review",
+    "tests/test_relation_review_status.py::test_schema_invalid_review_cannot_be_used_as_confirming_evidence",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00.09Z-2026-01-01T00:00:00.1Z-False]",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00.1Z-2026-01-01T00:00:00.10Z-True]",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01T00:00:00Z-2026-01-01T00:00:00.000000001Z-False]",
+    "tests/test_relation_review_status.py::test_timestamp_order_is_exact_and_equivalent_spellings_use_id[2026-01-01t00:00:00Z-2026-01-01T00:00:00.000Z-True]",
+    "tests/test_relation_review_status.py::test_unknown_selected_relation_never_creates_a_status[SR-REQ-00000000000000000000000001-REL-00000000000000000000000002-review_relation_missing]",
+    "tests/test_relation_review_status.py::test_unknown_selected_relation_never_creates_a_status[SR-REQ-00000000000000000000000002-REL-00000000000000000000000001-review_source_missing]",
+    "tests/test_relation_review_status.py::test_unrelated_relation_history_does_not_turn_unreviewed_into_suspect",
+    "tests/test_relation_review_status.py::test_unreviewed_relation_has_no_selected_or_historical_review"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 7.h.R boundary and precedence regressions and 7.h.C structural cleanup.",
+    "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
+    "Verify the applicable supported-platform and product-level acceptance contracts."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 330
-last_completed_plan_commit: 7.g.C
-next_plan_commit: 7.h.W
-last_completed_numbered_bundle: 181
+implementation_plan_commits_completed: 331
+last_completed_plan_commit: 7.h.W
+next_plan_commit: 7.h.R
+last_completed_numbered_bundle: 182
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8148,12 +8148,41 @@ SR-REQ-0275 und SR-REQ-0434 bleiben ausdrücklich `partial`.
 
 #### 7.h.W – Let it Work
 
-- [ ] **7.h.W** · Position **331/885** · Voraussetzung: `7.g.C`.
+- [x] **7.h.W** · Position **331/885** · Voraussetzung: `7.g.C`.
 **Exakte Commit-Message:** `7.h.W feat(authoring): Reviewstatus berechnen aufbauen`
 
 **Umsetzung:** unreviewed/current/suspect/invalid aus Relation und passender Reviewhistorie berechnen.
 
 **Verhaltensabnahme:** Passendes bestätigtes Review ist current; fachliche Endpunktänderung wird suspect.
+
+**Vorbereiteter Implementierungsstand (Bundle 182):** Result 181 bestätigt
+7.g.C mit 8.499 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Der neue reine Dienst berechnet pro gespeicherter Relation `unreviewed`,
+`current`, `suspect` oder `invalid` aus der explizit gelieferten Historie.
+Relationsinhalt und beide Kontexthashes begrenzen die aktuelle Auswahl;
+das neueste passende Review entscheidet, bei gleichem Zeitpunkt die höchste
+Review-ID. UTC-Bruchteile bleiben ohne Rundung erhalten. Ältere passive
+Datensätze ohne `reviewed_at` verwenden ihren Erzeugungszeitstempel.
+
+Fehlende Endpunkte und ungültige Typkombinationen liefern strukturelles
+`invalid`; ein ausgewähltes `rejected` liefert `current_review_rejected`.
+Vollständige Artefakthashes und Revisionen sind Auditdaten und keine weiteren
+Aktualitätsschlüssel. Die reine TargetModel-Abfrage liest auch einen tatsächlich
+nativ publizierten positiven Review. Sie schreibt keinen Status zurück und
+erteilt keine Artefaktfreigabe. Fehlerhafte Feldverträge und mehrdeutige
+Artefakt-/Relationsidentitäten werden vor Auswahl abgewiesen.
+
+33 neue Verhaltenstests und 337 betroffene Regressionen bilden die gezielte
+parallele Dev-Auswahl mit 370 Fällen. Alle 253 bisherigen Testdateien bleiben
+bytegleich. Die vollständige parallele Apply-Suite umfasst 8.532 Fälle;
+erst deren Erfolg und der passende Commit bestätigen 331/885. Danach folgt 7.h.R.
+
+**Abgrenzung:** Die Beobachtung bezieht sich allein auf das gelieferte Modell
+und seine Historie. Produktive vollständige/authentische Inventur, registrierte
+CLI sowie allgemeine Validierungs-/Diagnose- und Approval-Gateverbindung
+bleiben offen. Der native Reviewwriter und seine bisherigen Grenzen bleiben
+erhalten; negative Writes mit Freigaberücknahmen gehören weiterhin zu 7.i.
+Die vier zugeordneten Anforderungen sind `partial`, nicht vollständig erfüllt.
 
 #### 7.h.R – Make it Right
 
