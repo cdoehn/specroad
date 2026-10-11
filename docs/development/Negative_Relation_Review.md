@@ -27,6 +27,14 @@ Gates, strukturelle Fehler, unzulässige Akteure, stale Basis und verweigerte
 Publikationsautorität bleiben blockierend. Ein gleich benannter fremder
 Gate-Befund erzeugt keine Ausnahme.
 
+Die gebundenen Gates liegen gemeinsam in
+`specroad.changes._review_outcome_gates`. Das Modul berechnet denselben
+gekoppelten Endstand erneut, erhält die Grenzen der unterstützten Subjekte und
+prüft verbleibende Freigabeinvarianten. Nur die dort selbst ermittelten negativen
+Reviewbefunde werden als fachliche Ergebnisdaten behandelt. Kandidatenbildung
+und vollständige negative Reviewbewertung bleiben in `changes.negative_reviews`;
+die bisherigen Gate-Einstiege werden dort weiterhin bereitgestellt.
+
 Das Target-Assessment negativer Pläne hält die gelieferten Reviewstatus-Befunde
 unter `review_assessment` fest. Negative Urteile bleiben `SRV027`/`error`;
 das erfolgreiche Write-Gate behauptet kein bestandenes fachliches Review.

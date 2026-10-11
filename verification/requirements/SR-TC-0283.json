@@ -89,7 +89,6 @@
     "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[True]"
   ],
   "open_items": [
-    "Complete 7.i.C structural cleanup; retain all W/R behavior oracles.",
     "Integrate registered CLI/envelopes, complete authentic project/history loading and all applicable approval services, including the explicit in_review/approved transitions concluding R-36. Unsupported non-Requirement withdrawals and specialist lifecycle/approval subjects fail closed.",
     "Verify complete R-35 through R-39 CLI/product acceptance and applicable supported-platform contracts; the current native integration cases are partial evidence."
   ]

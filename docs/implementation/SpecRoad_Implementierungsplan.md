@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 335
-last_completed_plan_commit: 7.i.R
-next_plan_commit: 7.i.C
-last_completed_numbered_bundle: 186
+implementation_plan_commits_completed: 336
+last_completed_plan_commit: 7.i.C
+next_plan_commit: 7.j.W
+last_completed_numbered_bundle: 187
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8351,7 +8351,7 @@ werden nicht als vollständige CLI-/Produkt- oder Plattformabnahme ausgewiesen.
 
 #### 7.i.C – Make it Clean
 
-- [ ] **7.i.C** · Position **336/885** · Voraussetzung: `7.i.R`.
+- [x] **7.i.C** · Position **336/885** · Voraussetzung: `7.i.R`.
 **Exakte Commit-Message:** `7.i.C refactor(authoring): Negativer Review mit Freigaberücknahme bereinigen`
 
 **Bereinigung:** Eng definierte Review-Gateausnahme zentral und nicht als generelles Validierungsbypass implementieren.
@@ -8359,6 +8359,29 @@ werden nicht als vollständige CLI-/Produkt- oder Plattformabnahme ausgewiesen.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter Implementierungsstand (Bundle 187):** Result 186 bestätigt
+7.i.R mit 8.627 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Die gebundene Review-Gateausnahme liegt mit ihrer Quellenprojektion und dem
+negativen Kompatibilitätseinstieg gemeinsam in `_review_outcome_gates.py`.
+Kandidatenbildung und vollständige negative Reviewbewertung bleiben getrennt
+in `negative_reviews.py`. Alle bisherigen Einstiegsnamen bleiben verfügbar.
+
+Die drei verschobenen Funktionsdefinitionen und sämtliche fünf verbliebenen
+Definitionen haben unveränderte ASTs. Ziel-Neuberechnung, Ressourcenbindung,
+unterstützte Subjekte, verbleibende Pflichtrelationsinvarianten und die exakt
+begrenzte Diagnoseausnahme bleiben identisch. Die Autorendienste und die nativen
+Transaktions-/Receipt-/Recovery-Module bleiben bytegleich.
+
+Die 257 bisherigen Testdateien und alle 8.627 Testidentitäten bleiben erhalten.
+Für diese Bereinigung werden keine neuen Fachtests erfunden; die 1.256 vorhandenen
+W-/R- und betroffenen Regressionstests werden gezielt parallel ausgeführt.
+Der vollständige parallele Apply-Lauf umfasst weiterhin 8.627 Fälle. Erst sein
+Erfolg mit dem passenden Commit bestätigt 336/885; danach folgt 7.j.W.
+Die drei Anforderungen bleiben `partial`; ausschließlich der erledigte
+C-Bereinigungsvermerk entfällt. CLI-/Envelope-Integration, Authentifizierung und
+vollständige Historie, weitere Spezialdienste und die explizite Freigabefolge
+aus R-36 sowie vollständige Produkt-/Plattformabnahmen bleiben offen.
 
 <a id="step-7-j"></a>
 ### 7.j – Reviewpolicy und Relationsstatus-CLI
