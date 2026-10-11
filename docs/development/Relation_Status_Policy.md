@@ -79,6 +79,14 @@ Das Requirement bleibt bytegleich auf `proposed`, Revision 5; keine API erteilt
 eine automatische Freigabe. Die ausdrückliche spätere Lifecycle-Freigabefolge
 ist weiterhin ein eigener, hier nicht abgeschlossener Produktnachweis.
 
+Die reine Zeilenprojektion liegt in `specroad.graph._relation_status_projection`.
+Sie übernimmt bereits geprüfte Status-, Endpunkt-, Historien- und Profildaten
+und kann von späteren Coverage-/Readiness-Abfragen wiederverwendet werden.
+Modellbindung, vollständige Eingabeprüfung, Filter und Diagnosebewertung bleiben
+in der Authoring-API. Die bisherigen Hilfsnamen werden dort weiter exportiert;
+Fachwerte, Fehlerverträge und Schreibfreiheit bleiben unverändert. Die bisherigen
+W-/R-Verhaltenstests sichern auch diesen C-Zwischenstand ab.
+
 Die vollständige CLI-/Envelope-Integration und authentische aktuelle
 Projekt-/Historienbeschaffung bleiben gesondert nachzuweisen. Die W-Abnahme
 belegt den hier beschriebenen gebundenen API-Ausschnitt; die R-Nachweise ergänzen

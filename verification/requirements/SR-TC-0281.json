@@ -14,7 +14,8 @@
   ],
   "steps": [
     "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
-    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay."
+    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay.",
+    "Re-execute unchanged W/R behavioral oracles after extracting pure status row projection; retain public query behavior, error contracts, policy binding and absence of writes."
   ],
   "oracle": {
     "kind": "behavior",
@@ -87,7 +88,6 @@
     "tests/test_relation_status_policy_right.py::test_passive_legacy_audit_gaps_remain_unknown_instead_of_invented"
   ],
   "open_items": [
-    "Complete 7.j.C cleanup with retained W/R behavior evidence.",
     "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
     "Verify applicable supported-platform and full product acceptance contracts."
   ]

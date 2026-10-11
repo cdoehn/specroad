@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 338
-last_completed_plan_commit: 7.j.R
-next_plan_commit: 7.j.C
-last_completed_numbered_bundle: 189
+implementation_plan_commits_completed: 339
+last_completed_plan_commit: 7.j.C
+next_plan_commit: 7.k.W
+last_completed_numbered_bundle: 190
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8470,7 +8470,7 @@ die gesonderte explizite Lifecycle-Freigabefolge bleiben offen.
 
 #### 7.j.C – Make it Clean
 
-- [ ] **7.j.C** · Position **339/885** · Voraussetzung: `7.j.R`.
+- [x] **7.j.C** · Position **339/885** · Voraussetzung: `7.j.R`.
 **Exakte Commit-Message:** `7.j.C refactor(authoring): Reviewpolicy und Relationsstatus-CLI bereinigen`
 
 **Bereinigung:** Statusprojektion für spätere Coverage/Readiness wiederverwendbar machen.
@@ -8478,6 +8478,28 @@ die gesonderte explizite Lifecycle-Freigabefolge bleiben offen.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter Implementierungsstand (Bundle 190):** Result 189 bestätigt
+7.j.R mit 8.710 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Die unveränderten Hilfsfunktionen `_endpoint`, `_review` und `_row` liegen jetzt
+in `graph._relation_status_projection`; die bisherigen Authoring-Namen bleiben
+als Exporte erhalten. Die Projektion verwendet bereits geprüfte Eingaben und
+kann späteren Coverage-/Readiness-Abfragen dienen. Modellbindung, vollständige
+Eingabeprüfung, Filter und Diagnosebewertung bleiben in `relation_status_report`.
+Die ASTs aller vier Funktionen sind gegenüber dem bestätigten R-Zustand gleich.
+Profilkomposition, kompakte Diagnosen, native Writes, Receipts und Recovery
+bleiben unverändert; es entsteht kein neues Fachverhalten.
+
+Alle 259 bisherigen Testdateien und 8.710 Testidentitäten bleiben erhalten.
+Die unveränderten 1.480 W-/R- und Regressionstests aus 41 Dateien werden lokal
+gezielt parallel erneut ausgeführt. Vor dem Commit ist die vollständige
+parallele Apply-Suite mit 8.710 Fällen erforderlich. Erst der erfolgreiche
+Apply-Lauf und Commit bestätigen 339/885; danach folgt 7.k.W.
+SR-REQ-0281 und SR-REQ-0282 bleiben `partial`: CLI-/Envelope-Integration,
+authentische vollständige aktuelle Projekt-/Historienbeschaffung, übrige
+produktweite Policyintegration und Plattform-/Produktabnahmen bleiben offen.
+Die ausdrückliche spätere Lifecycle-Freigabefolge ist weiterhin gesondert
+nachzuweisen. Nur der C-Bereinigungspunkt wird aus den offenen Nachweisen entfernt.
 
 <a id="step-7-k"></a>
 ### 7.k – Authoring-Dry-Run und Wiederholung
