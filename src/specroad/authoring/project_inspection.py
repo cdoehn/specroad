@@ -28,6 +28,10 @@ def _unknown():
 def _runtime(boundary, project_id=None):
     operational = observe_operational_preflight(boundary, complete_inventory=True)
     lock = inspect_project_lock(boundary.root, expected_project_id=project_id).data
+    again = observe_operational_preflight(boundary, complete_inventory=True)
+    repeated_lock = inspect_project_lock(boundary.root, expected_project_id=project_id).data
+    if operational != again or lock != repeated_lock:
+        raise InspectionChanged('inspection_runtime_observation_changed')
     record = lock['record']
     state = operational['consistency_state']
     if record is not None:
@@ -59,6 +63,14 @@ def _result(payload, *, code=0, diagnostics=(), **details):
     return CommandResult('project.inspect', result=payload, project=project, diagnostics=diagnostics, details=details)
 
 
+def _blocked_result(payload):
+    state = payload['runtime']['consistency_state']
+    code = 6 if state == 'writer_active' else 5
+    return _result(payload, code=code, diagnostics=(Diagnostic(
+        'CORE_CONFLICT' if code == 6 else 'CORE_ENVIRONMENT', 'error', 'runtime',
+        'Project inspection is blocked by operational state.', rationale=state),))
+
+
 def inspect_project(root, *, profiles=None, gates=()):
     """Describe actual files. Trusted host gates are explicit, never project code.
 
@@ -82,10 +94,7 @@ def inspect_project(root, *, profiles=None, gates=()):
         payload['runtime'] = initial = _runtime(boundary)
         state = initial['consistency_state']
         if state != 'consistent':
-            code = 6 if state == 'writer_active' else 5
-            return _result(payload, code=code, diagnostics=(Diagnostic(
-                'CORE_CONFLICT' if code == 6 else 'CORE_ENVIRONMENT', 'error', 'runtime',
-                'Project inspection is blocked by operational state.', rationale=state),))
+            return _blocked_result(payload)
         snapshot = InspectionSnapshot(boundary.root, profiles)
         if snapshot.source.boundary._root_identity != boundary._root_identity:
             raise InspectionChanged('inspection_root_changed')
@@ -111,8 +120,13 @@ def inspect_project(root, *, profiles=None, gates=()):
                 key=lambda a: a['id'])}
         snapshot.verify_current()
         payload['runtime'] = final = _runtime(boundary, model.configuration.project_id)
+        if final['consistency_state'] != 'consistent':
+            return _blocked_result(payload)
         if final != initial:
             raise InspectionChanged('inspection_runtime_changed')
+        # Runtime observation itself can interleave with a normative write.
+        # Recheck the inputs once more without claiming a writer-lock snapshot.
+        snapshot.verify_current()
         payload['semantic'] = semantic
         code = assessment.exit_code if assessment.exit_code >= 2 else 0
         return _result(payload, code=code, diagnostics=assessment.diagnostics,
@@ -123,7 +137,7 @@ def inspect_project(root, *, profiles=None, gates=()):
         payload['runtime'].update(open_transaction=_unknown(), writer_lock=_unknown(),
                                   consistency_state='unknown')
         if isinstance(error, ModelError):
-            code = getattr(error, 'exit_code', 3)
+            code = 6 if error.reason == 'configuration_changed' else getattr(error, 'exit_code', 3)
             diagnostic = from_model_error(error)
         else:
             code = 7 if isinstance(error, SafetyViolation) else 5

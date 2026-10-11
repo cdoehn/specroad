@@ -78,6 +78,12 @@ class InspectionSnapshot:
             language_packages=selected_packages)
 
     def verify_current(self):
+        try:
+            self._verify_current()
+        except FileNotFoundError as error:
+            raise InspectionChanged('inspection_source_disappeared') from error
+
+    def _verify_current(self):
         source = self.source
         source.check_current()
         if current_json_paths(source) != self.paths:

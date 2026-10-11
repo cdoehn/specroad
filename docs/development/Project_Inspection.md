@@ -45,3 +45,19 @@ scheitern. Weitergehende Migrations- und Spezialdienstintegration bleibt offen.
 Für Vergleiche gelten ausschließlich RFC-8785-Bytes von
 `{format_version, semantic}`. Absolute Roots, Writer-/Transaktionsmetadaten,
 Runtimefehler und äußerer Envelope gehören nicht zu dieser Gleichheitsgarantie.
+
+Die Runtimebeobachtung prüft operative Einträge und Lockmetadaten jeweils
+erneut. Widersprüchliche Beobachtungen ergeben Konfliktstatus 6 und ausdrücklich
+unbekannte Laufzeitwerte. Ein stabil erkannter neuer Writer oder eine neue
+offene Transaktion am Ende der Inspektion bleibt dagegen mit ihren tatsächlichen
+Metadaten sichtbar; die zuvor gelesenen semantischen Angaben werden verworfen.
+Nach einer konsistenten abschließenden Runtimebeobachtung werden auch die
+normativen Eingabebytes erneut geprüft. Eine dabei geänderte oder verschwundene
+Konfiguration ist ein Konflikt, keine erfolgreiche Beschreibung alter Daten.
+
+Fachliche Diagnosezahlen werden aus den tatsächlich abgeschlossenen Prüfungen
+gebildet. Auch eine vollständig beschriebene fachliche Fehlermeldung erteilt
+keine Modellfreigabe. Explizite Test-Host-Prädikate belegen Zählung und
+Projektdeterminismus; sie ersetzen keine fehlenden Produkt-Spezialdienste.
+Passive Cache-/Receipt-Dateien verändern die Fachprojektion nicht. Aktive
+Journale und verwaiste Writer blockieren weiterhin ohne automatische Recovery.

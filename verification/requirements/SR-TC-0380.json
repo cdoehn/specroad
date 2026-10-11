@@ -20,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad project inspect --format json` MUSS sämtliche Pflichtangaben zu Projekt, Modell, Schema, Profilen, Artefakten, Migrationsbedarf, Diagnosen, Hauptdokumenten, Projektroot, Transaktion und Writer-Lock in den getrennten `semantic`-/`runtime`-Bereichen nach Kapitel 11.5.1 ausgeben.",
-    "scope": "Actual project-inspect-v1 payload, model root, schema, profile order, counts, primary documents, explicit unknowns and blocked runtime; no invented diagnostic success or unsupported migration result."
+    "scope": "Actual project-inspect-v1 payload, model root, schema, profile order, counts, primary documents, explicit unknowns and blocked runtime; no invented diagnostic success or unsupported migration result. R adds coherent repeated operational/lock observations, visible late blockers, final source rereads, orphan writers, complete journal inventory and exact semantic error/warning/info counts across relocation with passive runtime differences. Explicit host title predicates are test fixtures, not substitute production specialist services."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -64,11 +64,27 @@
     "tests/test_project_inspection.py::test_unreadable_or_unbound_model_has_no_invented_success_facts[registry]",
     "tests/test_project_inspection.py::test_unreadable_or_unbound_model_has_no_invented_success_facts[schema]",
     "tests/test_project_inspection.py::test_unresolved_operational_entries_block_without_repair_or_model_read[.specroad/transactions/unresolved.json-recovery_required]",
-    "tests/test_project_inspection.py::test_unresolved_operational_entries_block_without_repair_or_model_read[.specroad/unclassified.json-unknown]"
+    "tests/test_project_inspection.py::test_unresolved_operational_entries_block_without_repair_or_model_read[.specroad/unclassified.json-unknown]",
+    "tests/test_project_inspection_right.py::test_complete_operational_inventory_does_not_hide_later_unresolved_entries",
+    "tests/test_project_inspection_right.py::test_disappearing_configuration_after_the_final_runtime_read_is_a_conflict",
+    "tests/test_project_inspection_right.py::test_host_cannot_remove_a_required_explicit_gate_during_source_loading",
+    "tests/test_project_inspection_right.py::test_incoherent_runtime_observations_cannot_be_combined_into_a_healthy_snapshot",
+    "tests/test_project_inspection_right.py::test_native_orphan_writer_is_observed_without_lock_recovery",
+    "tests/test_project_inspection_right.py::test_new_stable_operational_blocker_is_reported_after_model_read[.specroad/transactions/new/journal.json-recovery_required]",
+    "tests/test_project_inspection_right.py::test_new_stable_operational_blocker_is_reported_after_model_read[.specroad/unclassified.json-unknown]",
+    "tests/test_project_inspection_right.py::test_new_writer_during_inspection_remains_visible_and_invalidates_semantics",
+    "tests/test_project_inspection_right.py::test_normative_change_during_final_runtime_read_cannot_escape_the_last_input_check[artifact]",
+    "tests/test_project_inspection_right.py::test_normative_change_during_final_runtime_read_cannot_escape_the_last_input_check[configuration]",
+    "tests/test_project_inspection_right.py::test_normative_change_during_final_runtime_read_cannot_escape_the_last_input_check[profile]",
+    "tests/test_project_inspection_right.py::test_normative_change_during_final_runtime_read_cannot_escape_the_last_input_check[registry]",
+    "tests/test_project_inspection_right.py::test_previously_successful_description_does_not_hide_a_later_open_transaction",
+    "tests/test_project_inspection_right.py::test_semantic_findings_are_counted_without_runtime_or_approval[error]",
+    "tests/test_project_inspection_right.py::test_semantic_findings_are_counted_without_runtime_or_approval[info]",
+    "tests/test_project_inspection_right.py::test_semantic_findings_are_counted_without_runtime_or_approval[warning]"
   ],
   "open_items": [
-    "Required specialist model services (including document model) are not all available; diagnostic_summary stays null and the outcome fails when a required service cannot finish.",
-    "Older/unknown schema migration, pre-handler CLI failure payloads and further 7.l.R edge cases remain open.",
-    "Collect the complete supported CPython/platform matrix and product acceptance before release."
+    "Required specialist model services (including document model) are not all available; diagnostic_summary remains null and incomplete operations fail.",
+    "Older/unknown schema migration and pre-handler CLI failure payloads remain open.",
+    "Collect the complete supported CPython/platform matrix and product acceptance before release; no atomic snapshot claim is made against noncooperating external writers."
   ]
 }

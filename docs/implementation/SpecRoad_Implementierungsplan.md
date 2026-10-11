@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 343
-last_completed_plan_commit: 7.l.W
-next_plan_commit: 7.l.R
-last_completed_numbered_bundle: 195
+implementation_plan_commits_completed: 344
+last_completed_plan_commit: 7.l.R
+next_plan_commit: 7.l.C
+last_completed_numbered_bundle: 196
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8683,10 +8683,35 @@ bleiben offen.
 
 #### 7.l.R – Make it Right
 
-- [ ] **7.l.R** · Position **344/885** · Voraussetzung: `7.l.W`.
+- [x] **7.l.R** · Position **344/885** · Voraussetzung: `7.l.W`.
 **Exakte Commit-Message:** `7.l.R feat(authoring): Projektinspektion mit getrenntem Laufzeitkontext vervollständigen`
 
 **Vervollständigung:** Root, Writerlock und Transaktion nicht in Fachdeterminismus einrechnen; offene Transaktion nicht als gesundes Projekt verstecken.
+
+**Vorbereiteter Implementierungsstand (Bundle 196):** Result 195 bestätigt den
+korrigierten W-Stand mit 8.775 bestandenen parallelen Apply-Tests und einem
+sauberen 17-Dateien-Commit. R prüft operative Einträge und Lockmetadaten innerhalb
+jeder Runtimebeobachtung erneut. Widersprüche liefern einen Konflikt mit
+unbekannten Werten. Stabil neu auftretende Writer oder Transaktionen bleiben
+mit ihren aktuellen Metadaten sichtbar, während unverlässliche semantische
+Angaben verworfen werden. Nach der letzten Runtimebeobachtung werden die
+normativen Quellen erneut geprüft; auch eine geänderte oder verschwundene
+Konfiguration liefert keinen Erfolg mit alten Daten.
+
+Neue Verhaltenstests prüfen diese tatsächlichen Zustandswechsel, verwaiste
+native Writer, vollständige operative Inventuren jenseits des begrenzten
+Preflights, unveränderte Fachprojektion nach Relokation und passiven
+Runtimeänderungen sowie Fehler-/Warnungs-/Infozählung aus real ausgeführten
+Host-Prädikaten. Diese expliziten Fixtureprädikate erteilen keine Freigabe und
+ersetzen keine fehlenden Produkt-Spezialdienste. Alle bisherigen Tests und
+Testkennungen bleiben unverändert. Entwicklung prüft neue und betroffene Fälle
+gezielt parallel; Apply prüft die vollständige Suite parallel vor diesem Commit.
+Erst erfolgreicher Apply-Lauf und Commit bestätigen 344/885; danach folgt 7.l.C.
+
+SR-REQ-0380 und SR-REQ-0381 bleiben `partial`. Fehlende fachliche Spezialdienste,
+Migration älterer Schemata, vorgezogene CLI-Auswahl-/Konfigurationsfehler und
+vollständige Plattform-/Produktabnahme bleiben offen. Die mehrfachen Beobachtungen
+erteilen keine atomare Garantie gegen nicht kooperierende externe Schreiber.
 
 **Verhaltensabnahme:** Identische Modelle in anderem Pfad besitzen gleiche Fachprojektion, aber zutreffende verschiedene Runtimeinformationen. Die W-Nachweise bleiben zusätzlich grün.
 
