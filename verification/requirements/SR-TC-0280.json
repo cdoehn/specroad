@@ -65,7 +65,6 @@
     "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[self-self_relation_forbidden]"
   ],
   "open_items": [
-    "Complete 7.h.C structural cleanup without changing behavior or machine contracts.",
     "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
     "Verify the applicable supported-platform and product-level acceptance contracts."
   ]

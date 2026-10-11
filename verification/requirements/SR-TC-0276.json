@@ -118,7 +118,6 @@
     "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[records1]"
   ],
   "open_items": [
-    "Complete 7.h.C structural cleanup without changing behavior or machine contracts.",
     "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
     "Verify the applicable supported-platform and product-level acceptance contracts."
   ]

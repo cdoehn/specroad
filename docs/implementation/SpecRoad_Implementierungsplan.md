@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 332
-last_completed_plan_commit: 7.h.R
-next_plan_commit: 7.h.C
-last_completed_numbered_bundle: 183
+implementation_plan_commits_completed: 333
+last_completed_plan_commit: 7.h.C
+next_plan_commit: 7.i.W
+last_completed_numbered_bundle: 184
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8222,10 +8222,33 @@ bleiben ausdrücklich `partial`.
 
 #### 7.h.C – Make it Clean
 
-- [ ] **7.h.C** · Position **333/885** · Voraussetzung: `7.h.R`.
+- [x] **7.h.C** · Position **333/885** · Voraussetzung: `7.h.R`.
 **Exakte Commit-Message:** `7.h.C refactor(authoring): Reviewstatus berechnen bereinigen`
 
 **Bereinigung:** Reine Statusauswahl von historischen Reviewdaten und Diagnoserendering entkoppeln.
+
+**Vorbereiteter Implementierungsstand (Bundle 184):** Result 183 bestätigt
+7.h.R mit 8.579 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Die reine Statusauswahl einschließlich exakter Zeitordnung liegt nun in einem
+eigenen internen Modul; ein zweites Modul bildet fertige Beobachtungen auf
+typisierte Diagnosen ab. Die bestehende Fassade übernimmt weiterhin Inventur,
+Historienaufbereitung und Aggregation. Die fünf bisherigen Klassen- und
+Funktionsdefinitionen bleiben beim Verschieben syntaktisch unverändert;
+öffentliche Imports, JSON-Verträge, Fehler und zulässige Seiteneffekte bleiben
+erhalten. Die lesende Authoring-Abfrage und der native Writer bleiben bytegleich.
+
+Alle 255 vorhandenen Testdateien und ihre Erwartungen bleiben unverändert.
+Die 503 betroffenen W-/R- und Regressionstests bilden die gezielte parallele
+Dev-Auswahl. Die vollständige parallele Apply-Suite umfasst weiterhin 8.579
+Fälle; erst ihr Erfolg und der passende Commit bestätigen 333/885. Danach
+folgt 7.i.W. Es entstehen keine neuen Verhaltenstests für die reine Bereinigung.
+
+**Abgrenzung:** Die vier zugeordneten Anforderungen bleiben `partial`.
+Vollständige/authentische Projektinventur, registrierte CLI und allgemeine
+Validierungs-/Approval-Gateverbindung bleiben offene Integrationsschritte.
+Status und Diagnosen bleiben auf den gelieferten Snapshot begrenzt; sie
+erteilen keine Freigabe oder Write-Ausnahme. Negative Writes mit gekoppelter
+Freigaberücknahme gehören unverändert zu 7.i.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

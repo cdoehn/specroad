@@ -7,6 +7,11 @@ Artefakt-/Relationsidentitäten und der gemeinsame Projektpräfix werden geprüf
 `for_relation(source_id, relation_id)` wählt eine konkrete Beobachtung;
 `as_fields()` und `data` liefern abgetrennte JSON-kompatible Werte.
 
+Intern bleiben Inventur und Historienaufbereitung in `review_status`.
+`_review_status_selection` berechnet die reinen Statuswerte;
+`_review_status_diagnostics` bildet sie auf typisierte Befunde ab.
+Die öffentlichen Imports und JSON-Verträge bleiben unverändert.
+
 `specroad.authoring.review_status.relation_review_status(model, source_id,
 relation_id)` übernimmt dafür einen eigenen Snapshot des gelieferten
 `TargetModel`. Die Abfrage lädt keine weiteren Dateien, erzeugt keine IDs,

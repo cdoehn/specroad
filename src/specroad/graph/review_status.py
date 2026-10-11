@@ -1,93 +1,19 @@
-"""Appendix J status observations over an explicitly supplied review history.
+"""Appendix J observations with owned inventory and history preparation.
 
 No status is stored in a relation. These observations neither authenticate the
 supplied records nor certify a complete project, grant approval, or allow writes.
 """
 from dataclasses import dataclass
 
-from ..diagnostics import Diagnostic, code_metadata, diagnostic_key
-from ..model.audit_values import UtcTimestamp
+from ..diagnostics import diagnostic_key
 from ..model.domain_schemas import validate_domain_fields
 from ..model.errors import ModelError
 from ..model.record_contracts import RECORD_TYPES
 from ..model.record_schemas import validate_record_fields
 from ._reference_checks import _source_identity_errors, _relation_identity_errors
+from ._review_status_selection import RelationReviewStatus, _time_key, _status
+from ._review_status_diagnostics import _diagnostic
 from .relations import SourceRelations
-from .review_context_values import RelationReviewContext
-
-
-@dataclass(frozen=True)
-class RelationReviewStatus:
-    source_id: str
-    relation_id: str
-    target_id: str
-    status: str
-    reason: str | None
-    selected_review_id: str | None
-    matching_review_ids: tuple
-    historical_review_ids: tuple
-
-    def as_fields(self):
-        return {'source_id': self.source_id, 'relation_id': self.relation_id,
-            'target_id': self.target_id, 'status': self.status, 'reason': self.reason,
-            'selected_review_id': self.selected_review_id,
-            'matching_review_ids': list(self.matching_review_ids),
-            'historical_review_ids': list(self.historical_review_ids)}
-
-
-def _time_key(record):
-    # Older passive records retain only creation time. Trailing zeroes denote
-    # the same instant; arbitrary fractional precision must not be rounded.
-    stamp = record.get('reviewed_at', record['created_at'])
-    UtcTimestamp(stamp)
-    fraction = stamp[20:-1].rstrip('0') if stamp[19:20] == '.' else ''
-    return stamp[:19].upper(), fraction, record['id']
-
-
-def _status(source, relation, index, history):
-    historical = tuple(sorted(record['id'] for record in history))
-
-    def result(status, reason=None, selected=None, matching=()):
-        return RelationReviewStatus(source.identity.id, relation.identity.id,
-            relation.target, status, reason, selected, matching, historical)
-
-    target = index.get(relation.target)
-    if target is None:
-        return result('invalid', 'missing_relation_target')
-    try:
-        context = RelationReviewContext(relation, source, target)
-    except ModelError as error:
-        if error.reason not in ('self_relation_forbidden', 'relation_type_pair_forbidden',
-                                'noncanonical_symmetric_relation'):
-            raise
-        return result('invalid', error.reason)
-    matching = [record for record in history
-        if record['relation_content_sha256'] == context.relation_sha256
-        and record['source_context_sha256'] == context.source.context_sha256
-        and record['target_context_sha256'] == context.target.context_sha256]
-    if not matching:
-        return result('suspect' if history else 'unreviewed')
-    selected = max(matching, key=_time_key)
-    rejected = selected['decision'] == 'rejected'
-    return result('invalid' if rejected else 'current',
-        'current_review_rejected' if rejected else None, selected['id'],
-        tuple(sorted(record['id'] for record in matching)))
-
-
-def _diagnostic(value, path, position):
-    if value.status == 'current':
-        return None
-    code = {'unreviewed': 'SRV025', 'suspect': 'SRV026', 'invalid': 'SRV027'}[value.status]
-    metadata = code_metadata(code)
-    category = ('review_outcome' if value.reason == 'current_review_rejected'
-        else 'relation_structure' if value.status == 'invalid' else 'relation_review')
-    related = (value.relation_id, value.target_id)
-    if value.selected_review_id is not None:
-        related += (value.selected_review_id,)
-    return Diagnostic(code, metadata['default_severity'], category, metadata['meaning'],
-        rule_id='core:relation-review-status', artifact_id=value.source_id,
-        path=path, location={'pointer': '/relations/' + str(position)},
-        rationale=value.reason or 'relation_' + value.status, related_ids=related)
 
 
 @dataclass(frozen=True, init=False)

@@ -65,7 +65,6 @@
     "tests/test_relation_review_status_right.py::test_review_relevant_fields_make_history_suspect[target-title-A different target]"
   ],
   "open_items": [
-    "Complete 7.h.C structural cleanup without changing behavior or machine contracts.",
     "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
     "Verify the applicable supported-platform and product-level acceptance contracts."
   ]

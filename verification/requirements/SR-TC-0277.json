@@ -49,7 +49,6 @@
     "tests/test_relation_review_status_right.py::test_read_only_query_policy_changes_failure_threshold_not_warning_severity[policy2-1]"
   ],
   "open_items": [
-    "Complete 7.h.C structural cleanup without changing behavior or machine contracts.",
     "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
     "Verify the applicable supported-platform and product-level acceptance contracts."
   ]
