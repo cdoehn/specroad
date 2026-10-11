@@ -1,9 +1,9 @@
-"""Dedicated confirmed-review planning; generic record mutation stays closed.
+"""Dedicated review dispatch; generic record mutation stays closed.
 
 Explicit source guards, human actor, exact endpoint observations and regular
 creation metadata are rechecked for saved plans as well as direct authoring.
-Negative assessment/withdrawals and general history selection remain separate
-services. No function here grants publication authority or mutates a file.
+Negative assessment/withdrawals use their separate bound service. No function
+here grants publication authority or mutates a file.
 """
 from dataclasses import dataclass
 
@@ -45,11 +45,18 @@ class _ReviewCandidates:
 
 def prepare_review_candidates(artifacts, operations, *, metadata_policy_version, actor,
         planned_at, preconditions=(), source_files=None, reserved_artifact_ids=(),
-        reserved_relation_ids=(), previously_approved_ids=()):
-    """One immutable creation; never expose a generic special-record reducer."""
+        reserved_relation_ids=(), previously_approved_ids=(), profile=None):
+    """Dispatch one review operation to its bound positive or negative fold."""
     ops = [ChangeOperation(v).data for v in _owned_sequence(operations, '/operations')]
     if not review_mode(ops):
         raise TargetError('review_operation_required')
+    if ops[0]['record']['decision'] == 'rejected':
+        from .negative_reviews import prepare_negative_review_candidates
+        return prepare_negative_review_candidates(artifacts, ops,
+            metadata_policy_version=metadata_policy_version, actor=actor,
+            planned_at=planned_at, profile=profile, preconditions=preconditions,
+            source_files=source_files, reserved_artifact_ids=reserved_artifact_ids,
+            reserved_relation_ids=reserved_relation_ids, previously_approved_ids=previously_approved_ids)
     metadata = bind_policy(metadata_policy_version, actor, planned_at)
     history = _owned_sequence(previously_approved_ids, '/previously_approved_ids')
     reserved = _owned_sequence(reserved_artifact_ids, '/reserved_artifact_ids')

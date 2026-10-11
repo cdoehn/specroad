@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 333
-last_completed_plan_commit: 7.h.C
-next_plan_commit: 7.i.W
-last_completed_numbered_bundle: 184
+implementation_plan_commits_completed: 334
+last_completed_plan_commit: 7.i.W
+next_plan_commit: 7.i.R
+last_completed_numbered_bundle: 185
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8262,12 +8262,49 @@ Freigaberücknahme gehören unverändert zu 7.i.
 
 #### 7.i.W – Let it Work
 
-- [ ] **7.i.W** · Position **334/885** · Voraussetzung: `7.h.C`.
+- [x] **7.i.W** · Position **334/885** · Voraussetzung: `7.h.C`.
 **Exakte Commit-Message:** `7.i.W feat(authoring): Negativer Review mit Freigaberücknahme aufbauen`
 
 **Umsetzung:** relation_review_record einschließlich aller erforderlichen Approval-Rücknahmen als einen Plan ausführen.
 
 **Verhaltensabnahme:** Rejected einer Pflichtrelation erzeugt Review und setzt betroffenes approved Requirement einmal auf proposed.
+
+**Vorbereiteter Implementierungsstand (Bundle 185):** Result 184 bestätigt
+7.h.C mit 8.579 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Ein eigener menschlicher Review-Dienst berechnet Requirement-Rücknahmen aus
+den tatsächlich gebundenen komponierten Profilregeln und Core-Pflichtrelationen.
+Der eine `relation_review_record`-Plan bindet den unveränderbaren negativen
+Nachweis und die exakte Rücknahmemenge. Direkte Planung, gespeicherter Plan und
+Publikationsprüfungen rechnen diese Menge und ihre Zielbytes erneut.
+Fehlende, zusätzliche und veränderte Rücknahmen werden abgewiesen.
+
+Der native Writer veröffentlicht Review und betroffene Requirement-Zustände
+über eine gemeinsame Transaktion mit Receipt. Die Rücknahme setzt `approved`
+auf `proposed`, erhöht die Revision genau einmal und erhält die fachlichen
+Endpunkt-/Relationsinhalte. Der neue Review bindet den zuvor beobachteten
+Stand; seine Kontexthashes bleiben nach den Lifecycle-Änderungen gleich.
+Der Original-Request kann dasselbe Receipt und dieselbe Review-ID wiederverwenden.
+
+Negative Fachurteile bleiben SRV027/error. Das Target-Assessment hält die
+berechnete Reviewbewertung gesondert fest; andere Write-Gates und beliebige
+gleich benannte fremde Fehler bleiben blockierend. Die native API projiziert
+den aufgenommenen negativen Fachbefund mit explizit begrenztem Ergebnisscope.
+Der bisherige positive Review-Dienst und die nativen Transaktionsmodule bleiben
+bytegleich.
+
+21 neue Verhaltenstests und 1.009 betroffene bisherige Fälle bilden die
+gezielte parallele Dev-Auswahl mit 1.030 Tests. Die 255 vorhandenen Testdateien
+bleiben unverändert. Die vollständige parallele Apply-Suite umfasst 8.600
+Fälle; erst ihr Erfolg und der passende Commit bestätigen 334/885. Danach
+folgt 7.i.R. Die drei Anforderungen wechseln ausschließlich von `open` auf
+`partial`, nicht auf vollständig erfüllt.
+
+**Abgrenzung:** Der Host liefert vollständige aktuelle Eingaben, authentische
+Historie und Publikationsautorität. Andere notwendige Standardartefakt-Rücknahmen
+und nicht unterstützte zusätzliche Lifecycle-/Approval-Subjekte bleiben gesperrt.
+Vollständige Wiederbestätigung, CLI-/Envelope- und allgemeine Approval-Integration
+sowie die spezifischen Crash-/Recovery-Abnahmen aus R-35 bis R-39 bleiben offen.
+Es gibt keine generische Fehlerausnahme und keine neue Artefaktfreigabe.
 
 #### 7.i.R – Make it Right
 

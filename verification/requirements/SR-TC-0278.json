@@ -4,15 +4,22 @@
   "requirement_id": "SR-REQ-0278",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned temporary native project with explicitly supplied synthetic review history, composed profiles and trusted host-service fixtures; no real human authentication or genuine approval is claimed."
+  ],
+  "steps": [
+    "Plan and publish one negative review with its exact Requirement withdrawal; inspect canonical source/review bytes, revision, context hashes, audit operation and durable receipt.",
+    "Reject stale guards, nonhuman actors, altered withdrawal payloads, missing required gate, unrelated error and denied authority; verify stable request replay without additional writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad relation review <SOURCE-ID> --relation-id <RELATION-ID> --decision confirmed\\|rejected` MUSS den vollständig gebundenen menschlichen Review-Vorgang einschließlich atomarer Freigabefolgen, Diagnosen und Exit-Ergebnis nach Kapitel 11.13 ausführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Dedicated native human-negative-review embedding API, exact source guards, one bound relation_review_record with computed Requirement withdrawals, durable publication and receipt replay. The old confirmed-only API retains its scope. This is not registered CLI or full actor/history authentication."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +35,32 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_negative_relation_review.py::test_another_gate_cannot_turn_an_error_into_an_exempt_review_outcome",
+    "tests/test_negative_relation_review.py::test_denied_authority_preserves_both_original_source_and_review_history",
+    "tests/test_negative_relation_review.py::test_draft_rejection_creates_no_source_revision_or_unjustified_withdrawal",
+    "tests/test_negative_relation_review.py::test_missing_required_negative_review_gate_never_admits_the_target",
+    "tests/test_negative_relation_review.py::test_negative_retry_returns_same_receipt_without_second_review_or_revision",
+    "tests/test_negative_relation_review.py::test_negative_review_and_single_revision_withdrawal_share_native_receipt[False-both]",
+    "tests/test_negative_relation_review.py::test_negative_review_and_single_revision_withdrawal_share_native_receipt[False-hash]",
+    "tests/test_negative_relation_review.py::test_negative_review_and_single_revision_withdrawal_share_native_receipt[False-revision]",
+    "tests/test_negative_relation_review.py::test_negative_review_and_single_revision_withdrawal_share_native_receipt[True-both]",
+    "tests/test_negative_relation_review.py::test_negative_review_and_single_revision_withdrawal_share_native_receipt[True-hash]",
+    "tests/test_negative_relation_review.py::test_negative_review_and_single_revision_withdrawal_share_native_receipt[True-revision]",
+    "tests/test_negative_relation_review.py::test_nonhuman_negative_review_is_refused_before_writes[ai]",
+    "tests/test_negative_relation_review.py::test_nonhuman_negative_review_is_refused_before_writes[ci]",
+    "tests/test_negative_relation_review.py::test_nonhuman_negative_review_is_refused_before_writes[tool]",
+    "tests/test_negative_relation_review.py::test_reusing_negative_request_with_changed_reason_is_a_conflict",
+    "tests/test_negative_relation_review.py::test_saved_negative_plan_recomputes_coupled_target_and_preserves_error_assessment",
+    "tests/test_negative_relation_review.py::test_stale_negative_source_is_refused_before_lock_or_entropy[guard0]",
+    "tests/test_negative_relation_review.py::test_stale_negative_source_is_refused_before_lock_or_entropy[guard1]",
+    "tests/test_negative_relation_review.py::test_writer_recomputes_withdrawal_set_instead_of_trusting_operation_payload[missing]",
+    "tests/test_negative_relation_review.py::test_writer_recomputes_withdrawal_set_instead_of_trusting_operation_payload[wrong_guard]",
+    "tests/test_negative_relation_review.py::test_writer_recomputes_withdrawal_set_instead_of_trusting_operation_payload[wrong_reason]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 7.i.R behavior coverage and 7.i.C cleanup, including the specific R-35 through R-39 recovery and reconfirmation contracts.",
+    "Integrate registered CLI/envelopes, complete authentic project/history loading and all applicable approval services; unsupported non-Requirement withdrawals and other lifecycle/approval subjects currently fail closed.",
+    "Verify the applicable supported-platform and product-level acceptance contracts."
   ]
 }

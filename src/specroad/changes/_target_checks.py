@@ -23,6 +23,10 @@ def _gates(gates, policy, plan, model):
         canonical_json_sha256({'plan':plan.sha256, 'resources':model.resources_sha256,
             'command':policy.data(), 'gate_resources':g.resources_sha256})) for g in gates)
     required = set(policy.required_gate_ids)
+    operations = plan.data['operations']
+    if (len(operations) == 1 and operations[0]['op'] == 'relation_review_record'
+            and operations[0]['record']['decision'] == 'rejected'):
+        required.add('extension:review-withdrawal')
     # Raw rule/mapping resources are hash-bound but their full specialized
     # semantics must be confirmed by an explicit trusted whole-target service.
     if any(r.data['kind'] in ('rule','mapping') for r in model.resources):
