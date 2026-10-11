@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 336
-last_completed_plan_commit: 7.i.C
-next_plan_commit: 7.j.W
-last_completed_numbered_bundle: 187
+implementation_plan_commits_completed: 337
+last_completed_plan_commit: 7.j.W
+next_plan_commit: 7.j.R
+last_completed_numbered_bundle: 188
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8391,12 +8391,41 @@ aus R-36 sowie vollständige Produkt-/Plattformabnahmen bleiben offen.
 
 #### 7.j.W – Let it Work
 
-- [ ] **7.j.W** · Position **337/885** · Voraussetzung: `7.i.C`.
+- [x] **7.j.W** · Position **337/885** · Voraussetzung: `7.i.C`.
 **Exakte Commit-Message:** `7.j.W feat(authoring): Reviewpolicy und Relationsstatus-CLI aufbauen`
 
 **Umsetzung:** Profilseverity und Relationsstatusdaten inklusive erforderlicher Reparatur bereitstellen.
 
 **Verhaltensabnahme:** Unterschiedliche Reifegrade ergeben die vorgeschriebene Policybewertung.
+
+**Vorbereiteter Implementierungsstand (Bundle 188):** Result 187 bestätigt
+7.i.C mit 8.627 bestandenen parallelen Apply-Tests und sauberem Arbeitsbaum.
+Das optionale geschlossene Profilfeld `relation_review_policy` legt die Severity
+von `unreviewed` und `suspect` je Relationstyp und Quellreifegrad fest. Die
+Core-first-Komposition bindet aufgelöste Zellen in den effektiven Profilhash;
+spätere Profile gewinnen. Innerhalb eines Profils hat die spezifische Zelle
+Vorrang vor dem globalen Codeoverride. Überschneidungen in einem Profil sind
+Fehler. Bestehende Profile ohne diese Regeln behalten ihre Mergeprojektion.
+`invalid` bleibt Fehler; `current` erzeugt keine Statusdiagnose.
+
+Die schreibfreie API `relation_status_report` baut das übergebene TargetModel
+aus Originalbytes erneut auf und projiziert stabil geordnete ein- und ausgehende
+Relationen eines optionalen Artefakts. Sie liefert aktuelle und geprüfte
+Revisionen/Hashes, maßgebliches und letztes historisches Review, abweichende
+Kontexthashes sowie erforderliche Reparatur. Diagnosepositionen bleiben an der
+gespeicherten Reihenfolge gebunden. Revisions-/Auditänderungen erzeugen keinen
+falschen Suspect-Status; Query und Bestätigung erteilen keine Freigabe.
+
+51 neue Verhaltenstests ergänzen 1.397 ausgewählte bestehende Fälle. Lokal
+werden damit 1.448 Tests aus 40 Dateien gezielt parallel geprüft; vor dem Commit
+ist die vollständige parallele Apply-Suite mit 8.678 Fällen erforderlich.
+Die 257 bisherigen Testdateien und ihre 8.627 Testidentitäten bleiben erhalten.
+Erst der erfolgreiche Apply-Lauf und der passende Commit bestätigen 337/885;
+danach folgt 7.j.R. SR-REQ-0281 und SR-REQ-0282 bleiben `partial`.
+Registrierte CLI-/Envelope-Anbindung, authentische vollständige aktuelle
+Projekt-/Historienbeschaffung, weitere produktweite Policyintegration sowie
+R-/C- und Plattform-/Produktabnahmen bleiben offen. Der W-Nachweis behauptet
+keine vollständige Erfüllung dieser Produktanforderungen.
 
 #### 7.j.R – Make it Right
 

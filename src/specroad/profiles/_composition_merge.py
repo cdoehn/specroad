@@ -27,6 +27,7 @@ MERGE_STRATEGIES = (
     ("relation_rules", "ordered_rule_identity"),
     ("lint_rules", "ordered_rule_identity"),
     ("severity_overrides", "later_wins_with_floor"),
+    ("relation_review_policy", "scoped_review_severity"),
 )
 SEVERITY_RANK = {"info": 0, "warning": 1, "error": 2}
 
@@ -51,6 +52,7 @@ class _MergeProjection:
         self.rules = {"relation_rules": [], "lint_rules": []}
         self.seen_rules, self.rule_bindings, self.overrides = {}, [], {}
         self.hard_limits, self.normative_policy = {}, {}
+        self.review_severities = {}
         self.minima = dict(CORE_MINIMUM_SEVERITIES)
         core_data = chain[0].data
         for family in self.rules:
@@ -65,6 +67,7 @@ class _MergeProjection:
             "scoped_union": self._union, "scoped_intersection": self._intersection,
             "ordered_rule_identity": self._rules,
             "later_wins_with_floor": self._overrides,
+            "scoped_review_severity": self._review_policy,
         }
         for group, strategy in MERGE_STRATEGIES:
             handlers[strategy](group, data.get(group, {}), profile.key)
@@ -113,6 +116,18 @@ class _MergeProjection:
             if identity in self.minima and SEVERITY_RANK[severity] < SEVERITY_RANK[self.minima[identity]]:
                 _error("profile_core_severity_lowered", "/severity_overrides/" + identity, (profile,), identity)
             self.overrides[identity] = severity
+            status = {"SRV025": "unreviewed", "SRV026": "suspect"}.get(identity)
+            for cell in self.review_severities:
+                if cell[2] == status:
+                    self.review_severities[cell] = severity
+
+    def _review_policy(self, group, entries, profile):
+        # Later profiles win. In the same profile scoped cells are more specific
+        # than its global code override, which has already been applied.
+        for entry in entries:
+            for kind in entry["relation_types"]:
+                for maturity in entry["maturities"] or MATURITIES:
+                    self.review_severities[(kind, maturity, entry["status"])] = entry["severity"]
 
     def finish(self):
         for cell, fields in self.unions["required_fields"].items():
@@ -126,7 +141,7 @@ class _MergeProjection:
                 floor = self.minima.get(rule["rule_id"])
                 if floor is not None and SEVERITY_RANK[rule["severity"]] < SEVERITY_RANK[floor]:
                     _error("profile_core_severity_lowered", "/" + family, (p.key for p in self.chain), rule["rule_id"])
-        return {
+        result = {
             **{group: _field_rows(fields) for group, fields in self.unions.items()},
             "allowed_values": [{"artifact_types": [kind], "maturities": [maturity],
                                 "field": field, "values": [json.loads(v) for v in sorted(values)]}
@@ -135,6 +150,11 @@ class _MergeProjection:
             "severity_overrides": self.overrides, "minimum_severities": self.minima,
             "hard_limits": self.hard_limits, "normative_policy": self.normative_policy,
         }
+        if self.review_severities:
+            result["relation_review_policy"] = [
+                {"relation_type": kind, "maturity": maturity, "status": status, "severity": severity}
+                for (kind, maturity, status), severity in sorted(self.review_severities.items())]
+        return result
 
 
 def _merge(chain):

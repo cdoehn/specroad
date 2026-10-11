@@ -78,5 +78,21 @@ class EffectiveProfile:
         floor = merged["minimum_severities"].get(rule_id, "info")
         return max((chosen, floor), key=levels.get)
 
+    def relation_review_severity(self, relation_type, maturity, status):
+        from ..graph.relation_types import CORE_RELATION_TYPES
+        from ..model.artifact_schemas import MATURITIES
+        if (type(relation_type) is not str or relation_type not in CORE_RELATION_TYPES
+                or type(maturity) is not str or maturity not in MATURITIES
+                or type(status) is not str or status not in ("current", "invalid", "unreviewed", "suspect")):
+            _error("profile_review_selector_required")
+        if status == "invalid":
+            return "error"
+        if status == "current":
+            return None
+        for entry in self.data["merge"].get("relation_review_policy", ()):
+            if (entry["relation_type"], entry["maturity"], entry["status"]) == (relation_type, maturity, status):
+                return entry["severity"]
+        return self.severity_for({"unreviewed": "SRV025", "suspect": "SRV026"}[status], "warning")
+
 
 

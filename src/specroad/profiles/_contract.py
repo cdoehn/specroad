@@ -7,6 +7,7 @@ from ..model.artifact_types import artifact_types
 from ..model.artifact_schemas import MATURITIES
 from ..model.canonical import canonical_json_bytes
 from ..graph.relation_obligations import MinimumRelationRule
+from ..graph.relation_types import CORE_RELATION_TYPES
 from ..srx.program import SrxProgram
 from ..srx.errors import SrxError
 from ..srx.pointers import parse_pointer
@@ -14,7 +15,7 @@ from ..srx.pointers import parse_pointer
 PROFILE_FORMAT = "profile-v1"
 PROFILE_FIELDS = frozenset({"schema_version", "profile_format_version", "profile_id", "version",
     "required_fields", "forbidden_fields", "allowed_values", "relation_rules", "lint_rules", "severity_overrides"})
-OPTIONAL_FIELDS = frozenset({"description", "hard_limits", "normative_policy"})
+OPTIONAL_FIELDS = frozenset({"description", "hard_limits", "normative_policy", "relation_review_policy"})
 KINDS = frozenset(t.artifact_type for t in artifact_types())
 SEVERITIES = frozenset({"error", "warning", "info"})
 SEMVER = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?")
@@ -106,6 +107,7 @@ def _validate_profile(value):
     if type(value["profile_format_version"]) is not str or value["profile_format_version"] != PROFILE_FORMAT:
         _fail("profile_unsupported_format", "/profile_format_version")
     _validate_composition_policies(value)
+    _validate_review_policy(value)
     _identity(value["profile_id"], "/profile_id")
     _version(value["version"], "/version")
     if "description" in value and type(value["description"]) is not str:
@@ -159,6 +161,24 @@ def _validate_profile(value):
     for key, severity in overrides.items():
         _identity(key, "/severity_overrides")
         _severity(severity, "/severity_overrides/" + key)
+
+
+def _validate_review_policy(value):
+    seen = set()
+    for i, entry in enumerate(_sequence(value.get("relation_review_policy", []), "/relation_review_policy")):
+        at = "/relation_review_policy/" + str(i)
+        _shape(entry, {"relation_types", "maturities", "status", "severity"}, at)
+        _tokens(entry["relation_types"], CORE_RELATION_TYPES, at + "/relation_types", nonempty=True)
+        _tokens(entry["maturities"], MATURITIES, at + "/maturities")
+        if type(entry["status"]) is not str or entry["status"] not in ("unreviewed", "suspect"):
+            _fail("profile_invalid_review_status", at + "/status")
+        _severity(entry["severity"], at + "/severity")
+        for kind in entry["relation_types"]:
+            for maturity in entry["maturities"] or MATURITIES:
+                cell = (kind, maturity, entry["status"])
+                if cell in seen:
+                    _fail("profile_duplicate_review_policy", at)
+                seen.add(cell)
 
 
 # Only known hard structure/format budgets belong in this merge. Soft work

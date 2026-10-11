@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0282",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Owned complete supplied TargetModel with exact Core-first profile resources and field-valid passive review history; no host or history authenticity is inferred."
+  ],
+  "steps": [
+    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Aktive Profile MÜSSEN je Relationstyp und Artefaktreifegrad festlegen können, ob `unreviewed` oder `suspect` als `info`, `warning` oder `error` gilt.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Closed optional relation_review_policy selects unreviewed/suspect severity by stored relation type and source maturity. Actual profile resources and deterministic later-profile composition bind the decision into EffectiveProfile; later global overrides and same-profile scoped precedence are explicit. Invalid stays error and current creates no finding. Scope is the supplied byte-bound model API, not all product command integrations."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,48 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_relation_status_policy.py::test_current_has_no_finding_and_invalid_stays_error[error]",
+    "tests/test_relation_status_policy.py::test_current_has_no_finding_and_invalid_stays_error[info]",
+    "tests/test_relation_status_policy.py::test_current_has_no_finding_and_invalid_stays_error[warning]",
+    "tests/test_relation_status_policy.py::test_failure_threshold_changes_exit_without_rewriting_policy_severity[settings0-0]",
+    "tests/test_relation_status_policy.py::test_failure_threshold_changes_exit_without_rewriting_policy_severity[settings1-1]",
+    "tests/test_relation_status_policy.py::test_failure_threshold_changes_exit_without_rewriting_policy_severity[settings2-1]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes0]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes10]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes11]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes1]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes2]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes3]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes4]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes5]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes6]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes7]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes8]",
+    "tests/test_relation_status_policy.py::test_invalid_policy_documents_are_rejected_before_composition[changes9]",
+    "tests/test_relation_status_policy.py::test_later_global_override_supersedes_earlier_scoped_policy[suspect-SRV026]",
+    "tests/test_relation_status_policy.py::test_later_global_override_supersedes_earlier_scoped_policy[unreviewed-SRV025]",
+    "tests/test_relation_status_policy.py::test_later_scoped_policy_wins_and_same_profile_specificity_beats_global",
+    "tests/test_relation_status_policy.py::test_negative_review_and_missing_target_have_distinct_repairs",
+    "tests/test_relation_status_policy.py::test_overlapping_policy_cells_in_one_profile_are_rejected[second0]",
+    "tests/test_relation_status_policy.py::test_overlapping_policy_cells_in_one_profile_are_rejected[second1]",
+    "tests/test_relation_status_policy.py::test_relation_type_and_source_maturity_are_independent_selectors",
+    "tests/test_relation_status_policy.py::test_scoped_policy_changes_effective_hash_and_returns_detached_values",
+    "tests/test_relation_status_policy.py::test_source_maturity_selects_bound_policy_and_actual_diagnostic[draft-info-0-suspect]",
+    "tests/test_relation_status_policy.py::test_source_maturity_selects_bound_policy_and_actual_diagnostic[draft-info-0-unreviewed]",
+    "tests/test_relation_status_policy.py::test_source_maturity_selects_bound_policy_and_actual_diagnostic[in_review-error-1-suspect]",
+    "tests/test_relation_status_policy.py::test_source_maturity_selects_bound_policy_and_actual_diagnostic[in_review-error-1-unreviewed]",
+    "tests/test_relation_status_policy.py::test_source_maturity_selects_bound_policy_and_actual_diagnostic[proposed-warning-0-suspect]",
+    "tests/test_relation_status_policy.py::test_source_maturity_selects_bound_policy_and_actual_diagnostic[proposed-warning-0-unreviewed]",
+    "tests/test_relation_status_policy.py::test_target_maturity_does_not_replace_source_policy_selector",
+    "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector0]",
+    "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector1]",
+    "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector2]",
+    "tests/test_relation_status_policy.py::test_untyped_or_unknown_lookup_selectors_are_not_silent_defaults[selector3]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 7.j.R robustness and 7.j.C cleanup with retained W behavior evidence.",
+    "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
+    "Verify applicable supported-platform and full product acceptance contracts."
   ]
 }
