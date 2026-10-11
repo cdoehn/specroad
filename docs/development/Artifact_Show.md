@@ -35,5 +35,19 @@ gewähren keinen atomaren Snapshot gegen nicht kooperierende Schreiber.
 
 Show verändert weder Projekt noch `.specroad/`, erzeugt keinen Cache, fordert
 keinen Writer-Lock an und benötigt weder Git noch stdin. Das Ergebnis wird
-vollständig im Speicher berechnet. Plattformmatrix, Lastnachweise sowie weitere
-Robustheits- und Fehlerfälle folgen der R-Phase und der späteren Produktabnahme.
+vollständig im Speicher berechnet. Plattformmatrix, Lastnachweise und vollständige
+Work-Engine-Integration bleiben Aufgaben der späteren Produktabnahme.
+
+
+Die R-Nachweise prüfen vollständige aktuelle Antworten auch mit partiellen,
+veralteten oder fremden Indexhinweisen. Entfernte Quellen und umgehängte
+Relationen werden aus den aktuellen Dateien bestimmt. Gespeicherte Legacy-IDs
+und Relationen von retired-Artefakten bleiben lesbar; Query-Paginationdefaults
+beschneiden Show nicht.
+
+Verschwindet bei der abschließenden Prüfung eine zuvor gebundene Quelle oder
+Konfiguration, scheitert die Abfrage mit Änderungskonflikt 6. Tatsächliche
+Berechtigungs-/I/O-Fehler bleiben Code 5, unsichere Pfade Code 7 und Modellfehler
+Code 3. Alle diese Fehler liefern keinen scheinbar vollständigen Fachpayload.
+Die Nachweise verändern Quellen gezielt zwischen den Beobachtungen und prüfen
+den erhaltenen Dateizustand; Show führt weiterhin keine Reparatur durch.

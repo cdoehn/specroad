@@ -19,6 +19,13 @@ def _preflight(source):
 
 
 def _verify_current(source, binding):
+    try:
+        _verify_bound_sources(source, binding)
+    except FileNotFoundError as error:
+        raise ModelError('show_source_disappeared') from error
+
+
+def _verify_bound_sources(source, binding):
     # The public reader binds all artifact bytes, including unrelated and
     # relation-free sources. Recheck that observation after the final preflight.
     def paths():
@@ -78,7 +85,7 @@ def show_artifact(root, artifact_id, *, index=None, strategy='indexed'):
         if isinstance(error, ModelError):
             changed = {'configuration_changed', 'relation_source_changed',
                        'relation_index_membership_changed', 'relation_index_source_changed',
-                       'show_source_changed'}
+                       'show_source_changed', 'show_source_disappeared'}
             code = 6 if error.reason in changed else getattr(error, 'exit_code', 3)
             diagnostic = from_model_error(error)
         else:

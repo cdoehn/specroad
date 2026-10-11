@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 346
-last_completed_plan_commit: 8.a.W
-next_plan_commit: 8.a.R
-last_completed_numbered_bundle: 198
+implementation_plan_commits_completed: 347
+last_completed_plan_commit: 8.a.R
+next_plan_commit: 8.a.C
+last_completed_numbered_bundle: 199
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8809,12 +8809,36 @@ Leseabfrage, nicht als fachliche Modellfreigabe.
 
 #### 8.a.R – Make it Right
 
-- [ ] **8.a.R** · Position **347/885** · Voraussetzung: `8.a.W`.
+- [x] **8.a.R** · Position **347/885** · Voraussetzung: `8.a.W`.
 **Exakte Commit-Message:** `8.a.R feat(query): Show und inverse Relationssicht vervollständigen`
 
 **Vervollständigung:** Fehlende IDs und unvollständiger Index erhalten keine scheinbar vollständige Antwort.
 
 **Verhaltensabnahme:** Fachresultat und Projektinventur belegen Vollständigkeit ohne Writes. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 199):** Result 198 bestätigt W
+mit 8.808 bestandenen parallelen Apply-Tests und sauberem Commit. Eine während
+der Abschlussprüfung verschwundene, bereits gebundene Quelle oder Konfiguration
+wird ausdrücklich als Änderungskonflikt 6 klassifiziert. Tatsächliche I/O- und
+Berechtigungsfehler bleiben Code 5; unsichere Quellen Code 7. Fachpayloads werden
+bei diesen Fehlern weiterhin vollständig verworfen.
+
+25 neue Verhaltenstests prüfen partielle, veraltete und fremde Indexhinweise,
+entfernte oder umgehängte Relationen, fehlende/defekte aktuelle Quellen,
+Legacy-IDs, reine Anzeigelabels, gleiche Größe/Zeitstempel bei geänderten Bytes,
+130 retired-Quellen trotz Query-Limit 1, Änderungen während der abschließenden
+Prüfung sowie echte spät auftretende Writer und Journale. Weitere Nachweise
+prüfen injizierte PermissionError-Ausfälle, Symlinks, verschachtelte Projekte,
+fehlende Endpunkte und unkanonische symmetrische Speicherung. Exakte fachliche
+Mengen und erhaltene Projektinventuren bilden die Orakel; keine Darstellungstests.
+
+Alle 264 bisherigen Testdateien und 8.808 Testkennungen bleiben unverändert.
+Entwicklung prüft 1.404 neue und betroffene Fälle in 47 Dateien gezielt
+parallel; Apply führt vor diesem R-Commit alle 8.833 Tests parallel aus.
+Erst erfolgreicher Apply-Lauf und Commit bestätigen 347/885; danach folgt 8.a.C.
+SR-REQ-0108 bleibt wegen offener Plattform-/Produktabnahme und Last-/Work-Engine-
+Nachweise `partial`. Die Abfrage erteilt weder fachliche Freigabe noch einen
+atomaren Snapshot gegen nicht kooperierende externe Schreiber.
 
 #### 8.a.C – Make it Clean
 

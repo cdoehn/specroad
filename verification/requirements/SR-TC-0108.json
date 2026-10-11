@@ -15,19 +15,22 @@
   ],
   "steps": [
     "Invoke artifact show and its show alias through CLI, structured request and Python on actual project files.",
-    "Compare complete artifact data, incoming/outgoing projections, stored relation identities, current project coverage and absence of writes."
+    "Compare complete artifact data, incoming/outgoing projections, stored relation identities, current project coverage and absence of writes.",
+    "Recheck current project bytes with incomplete, stale and foreign index hints; interleave real source/operational changes and inject read-permission failure without repair or stale success."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad show <ID>` MUSS das vollständige Artefakt sowie berechnete eingehende und ausgehende Beziehungen anzeigen.",
-    "scope": "Real project-bound Show returns full stored artifact data, every incoming/outgoing relation and original edge identity, including computed superseded_by. CLI alias, canonical command, structured request, Python and relocated distributions use the same reader. Existing read preflight and full artifact-source observation are enforced; no project writes, cache creation or approval are claimed."
+    "scope": "Real project-bound Show returns full stored artifact data, every incoming/outgoing relation and original edge identity, including computed superseded_by. CLI alias, canonical command, structured request, Python and relocated distributions use the same reader. Existing read preflight and full artifact-source observation are enforced; no project writes, cache creation or approval are claimed. R adds complete results despite partial/stale/foreign hints, legacy IDs, retired sources and query pagination defaults. Current-byte changes, late writers/journals, disappeared bound sources, unsafe paths, missing endpoints and invalid canonical storage prevent a complete success payload. A vanished already-bound source is conflict 6; actual read permission failures remain I/O 5."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
     2,
     3,
-    5
+    5,
+    6,
+    7
   ],
   "json_pointers": [
     "/result/artifact",
@@ -64,10 +67,35 @@
     "tests/test_artifact_show.py::test_symmetric_relationship_is_visible_from_either_endpoint_without_storage_copy",
     "tests/test_artifact_show.py::test_target_with_only_incoming_edges_includes_complete_source_relation",
     "tests/test_artifact_show.py::test_unknown_identity_fails_without_an_empty_success_answer",
-    "tests/test_artifact_show.py::test_unresolved_journal_blocks_without_loading_or_repair"
+    "tests/test_artifact_show.py::test_unresolved_journal_blocks_without_loading_or_repair",
+    "tests/test_artifact_show_right.py::test_change_during_final_preflight_invalidates_all_project_results[artifact]",
+    "tests/test_artifact_show_right.py::test_change_during_final_preflight_invalidates_all_project_results[configuration]",
+    "tests/test_artifact_show_right.py::test_change_during_final_preflight_invalidates_all_project_results[missing_configuration]",
+    "tests/test_artifact_show_right.py::test_change_during_final_preflight_invalidates_all_project_results[new_source]",
+    "tests/test_artifact_show_right.py::test_change_during_final_preflight_invalidates_all_project_results[removed_source]",
+    "tests/test_artifact_show_right.py::test_claimed_complete_untyped_index_is_rejected_without_side_effects",
+    "tests/test_artifact_show_right.py::test_display_labels_do_not_replace_stable_identity_lookup",
+    "tests/test_artifact_show_right.py::test_foreign_project_index_never_becomes_local_coverage",
+    "tests/test_artifact_show_right.py::test_invalid_unselected_current_source_never_uses_cached_success",
+    "tests/test_artifact_show_right.py::test_late_real_operational_blocker_prevents_payload_delivery[journal]",
+    "tests/test_artifact_show_right.py::test_late_real_operational_blocker_prevents_payload_delivery[writer]",
+    "tests/test_artifact_show_right.py::test_legacy_artifact_ids_keep_full_inverse_relations",
+    "tests/test_artifact_show_right.py::test_many_retired_incoming_sources_are_complete_despite_query_page_defaults",
+    "tests/test_artifact_show_right.py::test_missing_selected_artifact_does_not_fall_back_to_previous_index",
+    "tests/test_artifact_show_right.py::test_missing_unselected_endpoint_prevents_complete_answer_even_with_partial_hint",
+    "tests/test_artifact_show_right.py::test_nested_project_is_not_combined_into_complete_show",
+    "tests/test_artifact_show_right.py::test_noncanonical_symmetric_relation_is_not_silently_repaired",
+    "tests/test_artifact_show_right.py::test_partial_index_cannot_hide_real_incoming_source[edge]",
+    "tests/test_artifact_show_right.py::test_partial_index_cannot_hide_real_incoming_source[source]",
+    "tests/test_artifact_show_right.py::test_read_permission_failure_stays_io_failure_without_private_host_details",
+    "tests/test_artifact_show_right.py::test_retargeted_edge_is_not_returned_at_its_previous_endpoint",
+    "tests/test_artifact_show_right.py::test_same_size_and_timestamp_changes_are_read_from_current_bytes",
+    "tests/test_artifact_show_right.py::test_source_disappearing_during_final_bound_read_is_a_conflict",
+    "tests/test_artifact_show_right.py::test_stale_project_index_includes_new_source_and_excludes_removed_source",
+    "tests/test_artifact_show_right.py::test_symlink_source_is_rejected_without_following_or_repair"
   ],
   "open_items": [
-    "Extend R coverage for incomplete/stale index hints, changing source inventory, operational races, security boundaries and failing reads.",
-    "Complete supported CPython/platform and product acceptance and later performance/work-engine integration; no atomic snapshot or full semantic validation is claimed."
+    "Complete supported CPython/platform and product acceptance; only the current native environment is measured.",
+    "Load evidence and full work-engine integration remain open; no atomic snapshot against noncooperating writers or full semantic validation is claimed."
   ]
 }
