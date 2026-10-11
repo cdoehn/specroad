@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0108",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "preconditions": [
+    "Current Core on native Linux with owned temporary projects, actual artifact files and closed-stdin isolated CLI processes."
+  ],
+  "steps": [
+    "Invoke artifact show and its show alias through CLI, structured request and Python on actual project files.",
+    "Compare complete artifact data, incoming/outgoing projections, stored relation identities, current project coverage and absence of writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad show <ID>` MUSS das vollständige Artefakt sowie berechnete eingehende und ausgehende Beziehungen anzeigen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Real project-bound Show returns full stored artifact data, every incoming/outgoing relation and original edge identity, including computed superseded_by. CLI alias, canonical command, structured request, Python and relocated distributions use the same reader. Existing read preflight and full artifact-source observation are enforced; no project writes, cache creation or approval are claimed."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5
+  ],
+  "json_pointers": [
+    "/result/artifact",
+    "/result/incoming",
+    "/result/outgoing",
+    "/result/coverage",
+    "/summary/complete"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,27 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_artifact_show.py::test_actual_initialized_primary_document_is_read_without_specialist_approval",
+    "tests/test_artifact_show.py::test_actual_writer_blocks_public_api_and_cli_before_relation_loading",
+    "tests/test_artifact_show.py::test_broken_unselected_source_prevents_claim_of_complete_incoming_relations",
+    "tests/test_artifact_show.py::test_canonical_alias_python_structured_and_isolated_cli_return_same_data",
+    "tests/test_artifact_show.py::test_incoming_and_outgoing_are_independent_complete_directions",
+    "tests/test_artifact_show.py::test_isolated_artifact_has_known_empty_directions_and_full_content",
+    "tests/test_artifact_show.py::test_moved_module_and_zipapp_execute_the_real_show_alias",
+    "tests/test_artifact_show.py::test_passive_generated_archive_and_cache_entries_do_not_become_graph_sources",
+    "tests/test_artifact_show.py::test_query_never_attempts_writes_processes_stdin_entropy_or_lock_acquisition",
+    "tests/test_artifact_show.py::test_relation_order_matches_scan_and_is_independent_of_source_creation_order",
+    "tests/test_artifact_show.py::test_returned_artifact_and_relations_cannot_mutate_sources_or_future_results",
+    "tests/test_artifact_show.py::test_schema_and_command_contract_are_retrievable_and_bound_to_actual_output",
+    "tests/test_artifact_show.py::test_superseded_by_keeps_the_one_stored_supersedes_identity",
+    "tests/test_artifact_show.py::test_symmetric_relationship_is_visible_from_either_endpoint_without_storage_copy",
+    "tests/test_artifact_show.py::test_target_with_only_incoming_edges_includes_complete_source_relation",
+    "tests/test_artifact_show.py::test_unknown_identity_fails_without_an_empty_success_answer",
+    "tests/test_artifact_show.py::test_unresolved_journal_blocks_without_loading_or_repair"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Extend R coverage for incomplete/stale index hints, changing source inventory, operational races, security boundaries and failing reads.",
+    "Complete supported CPython/platform and product acceptance and later performance/work-engine integration; no atomic snapshot or full semantic validation is claimed."
   ]
 }

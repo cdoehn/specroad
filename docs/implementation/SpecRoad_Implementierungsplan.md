@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 345
-last_completed_plan_commit: 7.l.C
-next_plan_commit: 8.a.W
-last_completed_numbered_bundle: 197
+implementation_plan_commits_completed: 346
+last_completed_plan_commit: 8.a.W
+next_plan_commit: 8.a.R
+last_completed_numbered_bundle: 198
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8767,12 +8767,45 @@ Die Bereinigung erteilt keine zusätzliche Meilenstein- oder Releasefreigabe.
 
 #### 8.a.W – Let it Work
 
-- [ ] **8.a.W** · Position **346/885** · Voraussetzung: `7.l.C`.
+- [x] **8.a.W** · Position **346/885** · Voraussetzung: `7.l.C`.
 **Exakte Commit-Message:** `8.a.W feat(query): Show und inverse Relationssicht aufbauen`
 
 **Umsetzung:** Vollständiges Artefakt und berechnete eingehende/ausgehende Beziehungen als Fachresultat anbieten.
 
 **Verhaltensabnahme:** Show findet auch nur eingehend referenzierende Artefakte.
+
+**Vorbereiteter Implementierungsstand (Bundle 198):** Result 197 bestätigt
+7.l.C mit 8.791 bestandenen parallelen Apply-Tests und sauberem Commit. Der neue
+Befehl `artifact show <ID>` und sein Kurzalias `show <ID>` liefern über
+`artifact-show-v1` das vollständige gespeicherte Artefakt sowie getrennte
+berechnete eingehende und ausgehende Relationssichten. Die Python-Schnittstelle
+`query.show_artifact` und strukturierte Requests verwenden denselben Reader.
+Relations-ID, normative Quelle und vollständige gespeicherte Relation bleiben
+in jeder Sicht erhalten; `superseded_by` bleibt berechnet.
+
+Der bestehende Projekt-Relationsreader inventarisiert alle aktuellen
+Artefaktquellen. Frühere oder partielle Indexhinweise ersetzen diese Inventur
+nicht. Konfiguration und Betriebszustand durchlaufen den regulären Lese-Preflight;
+anschließend werden vollständige Inventur und gebundene Quellbytes erneut
+geprüft. Das Result nennt seinen aktuellen Projekt- und Prüfbereich ausdrücklich.
+Es behauptet weder vollständige semantische Validierung noch atomaren Snapshot,
+Schreibrecht oder fachliche Freigabe. Projekt und `.specroad/` bleiben unverändert.
+
+17 neue Verhaltenstests prüfen vollständige Inhalte, nur eingehend referenzierende
+Quellen, beide Richtungen, inverse und symmetrische Sichten, exakte Reihenfolge,
+CLI-/Python-/Request-Parität, portables Modul/Zipapp, initialisierte Dokumente,
+Schreibfreiheit, unbekannte IDs, defekte Fremdquellen und reale Writer-/Journal-
+Blocker. Drei bestehende Tests erhalten ausschließlich die neue Command-/Schema-
+Identität in ihren exakten Inventaren; alle übrigen 260 bisherigen Testdateien und
+sämtliche 8.791 bisherigen Testkennungen bleiben erhalten. Entwicklung prüft
+1.379 neue und betroffene Fälle in 46 Dateien gezielt parallel. Apply führt
+vor diesem W-Commit alle 8.808 Tests parallel aus. Erst erfolgreicher Apply-Lauf
+und Commit bestätigen 346/885; danach folgt 8.a.R.
+
+SR-REQ-0108 bleibt `partial`: weitere Randfall-, Index-, Änderungs-, Sicherheits-
+und Fehlernachweise folgen in R. Plattform-/Produktabnahme sowie Last- und Work-
+Engine-Integration bleiben offen. Der API-Erfolg gilt für die beschriebene
+Leseabfrage, nicht als fachliche Modellfreigabe.
 
 #### 8.a.R – Make it Right
 

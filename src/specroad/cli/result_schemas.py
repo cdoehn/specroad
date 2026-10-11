@@ -88,6 +88,18 @@ def _fields(schema_id):
             'runtime': _object({'project_root': _nullable(nonempty), 'open_transaction': _nullable(obj),
                 'writer_lock': _nullable(obj), 'consistency_state': {'enum':
                     ['consistent', 'recovery_required', 'writer_active', 'unknown']}})})
+    if schema_id == 'artifact-show-v1':
+        def relation_view(inverse):
+            return _object({'relation_id': nonempty, 'type': nonempty, 'source': nonempty,
+                'target': nonempty, 'inverse': {'const': inverse}, 'stored_source': nonempty,
+                'stored_relation': _object({'relation_id': nonempty, 'type': nonempty,
+                                           'target': nonempty}, extra=True)})
+        return _object({'format_version': {'const': '1.0.0'}, 'artifact': obj,
+            'incoming': _array(relation_view(True)), 'outgoing': _array(relation_view(False)),
+            'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+                'source_count': count, 'relation_count': count, 'observation_sha256': sha,
+                'validation_scope': {'const': 'relation_references_and_canonical_storage_only'},
+                'atomic_snapshot': {'const': False}})})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,

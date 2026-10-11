@@ -98,6 +98,11 @@ def _inspect(invocation):
     return inspect_command(invocation)
 
 
+def _show(invocation):
+    from ..query.show import show_command
+    return show_command(invocation)
+
+
 def builtin_registry() -> CommandRegistry:
     return CommandRegistry((CommandSpec(
         command_id='init', words=('init',), command_class=CommandClass.ROOT_CREATION,
@@ -123,6 +128,21 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
                               'VALIDATION_UNAVAILABLE'),
             work=WorkContract('project_inspection', ('project_configuration', 'current_model', 'runtime_metadata'))),
+    ), CommandSpec(
+        command_id='artifact.show', words=('artifact', 'show'), aliases=(('show',),),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.PROJECT_READ,
+        effect_scope=EffectScope.NONE, handler=_show, requires_project=True,
+        positionals=(PositionalSpec('id'),),
+        options=(OptionSpec('--project', takes_value=True),
+                 OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                 OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('artifact-show-v1', {'command_id': 'artifact.show',
+            'arguments': {'id': 'SR-GOAL-' + '0' * 26}, 'options': {'--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002'),
+            work=WorkContract('artifact_show', ('project_configuration', 'current_project_artifacts',
+                                              'complete_relation_references'))),
     ), CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
         command_class=CommandClass.READ_ONLY,
