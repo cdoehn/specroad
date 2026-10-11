@@ -31,6 +31,23 @@ Cleanup. Ein No-op wird unter Lock frisch autorisiert und erzeugt kein Receipt.
 Fehler bleiben Fehler des bestehenden Protokolls; erreichte Zustände und
 Recoverybelege werden erhalten.
 
+`execute_authoring_plan` verwendet denselben nativen Pfad und liefert für
+erwartete Modell-, Sicherheits- und I/O-Fehler einen maschinenlesbaren
+Fehlerbericht. Die bisherige werfende API bleibt erhalten. Der Fehleraudit
+bezeichnet den versuchten Plan (`audit_scope=failed_plan_attempt`); prospektive
+IDs und Zielwurzel heißen ausdrücklich `planned_created_ids` und
+`expected_model_root_sha256`. Es gibt dabei keinen erfundenen Abschlussbeleg,
+keine behauptete aktuelle Zielprüfung und keine automatische Wiederholung oder
+Rücknahme. Ein vorhandener nativer Schreib-/Recoveryzustand wird übernommen;
+ohne eindeutigen Nachweis bleibt der Schreibzustand `unknown`. Eine erfolgreiche
+Planintegritätsprüfung bestätigt nur Schema und Hash, keine Autorisierung.
+Unklassifizierte OS-Fehler geben keine rohen Fehlermeldungen mit Nutzdaten aus.
+
+Die vom Host gelieferte Gateauswahl wird vor externen Source-/Receiptzugriffen
+übernommen. Das spätere Verändern der ursprünglichen Liste kann eine anfangs
+erforderliche Verweigerung nicht entfernen. Gültige gespeicherte Plandaten
+ersetzen weder die Hostgates noch die frische Schreibautorisierung.
+
 Eine bestätigte Request-Wiederholung wird vor neuer Zielprüfung und Lock
 aufgelöst. Der Auditbericht verwendet die ursprünglichen Plan-, Actor-, Zeit-,
 Operations- und Wurzelwerte aus dem vollständig geprüften Abschlussbeleg.
@@ -45,10 +62,22 @@ die zu dessen Vorschau passenden Bytes und dieselbe Modellwurzel. Weitere Fälle
 prüfen No-op, abgewiesene Actor-Writes, unzulässige Befehlsumdeklaration,
 Hostverweigerung und zwischenzeitlich geänderte reale Eingaben.
 
+Der R-Nachweis ergänzt Fehleraudits, Request-Konflikte, beschädigte
+Abschlussbelege, fremde Änderungen und reale Ersetzungsfehler vor bzw. nach
+einer bereits erfolgten Veröffentlichung. Eine echte native Kette erzeugt ein
+Requirement, ändert dessen Statement, verknüpft es mit einem Goal, zeichnet das
+Review auf und retirert das Requirement. Frisch eingelesene Zwischenstände und
+Retries behalten die ursprünglichen IDs, Revisionen und historischen Audits.
+Das Requirement erhält dabei keine Freigabe. Beim Retirement bestätigen
+explizite vertrauenswürdige Fixturegates genau das unveränderte Review und den
+unabhängig erwarteten vollständigen Zielzustand; die Core-Reviewprüfung bestimmt
+seine Currentness erneut. Das ist kein Nachweis einer authentischen allgemeinen
+Historien- oder Approvalbeschaffung.
+
 Noch offen sind registrierte CLI-/stdout-Anbindung, eine Vorschau unmittelbar
 aus Rohinputs einschließlich späterer ID-Übernahme, vollständige Fehler- und
 Fortsetzungs-Auditberichte aller ursprünglichen Direktbefehle sowie authentische
-Projekt-/Historienbeschaffung. Die R-E2E-Kette, C-Bereinigung und vollständige
+Projekt-/Historienbeschaffung. Die C-Bereinigung und vollständige
 Plattform-/Produktabnahme bleiben gesondert nachzuweisen. Die API verwendet
 vorbereitete Operationsdaten; sie behauptet keine bereits implementierten
 `--dry-run`-Optionen der öffentlichen CLI. `init` bleibt Root-Erzeugung;

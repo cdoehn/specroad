@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 340
-last_completed_plan_commit: 7.k.W
-next_plan_commit: 7.k.R
-last_completed_numbered_bundle: 191
+implementation_plan_commits_completed: 341
+last_completed_plan_commit: 7.k.R
+next_plan_commit: 7.k.C
+last_completed_numbered_bundle: 192
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8548,12 +8548,42 @@ Plattform-/Produktabnahmen bleiben offen. Bedienung und Grenzen stehen in
 
 #### 7.k.R – Make it Right
 
-- [ ] **7.k.R** · Position **341/885** · Voraussetzung: `7.k.W`.
+- [x] **7.k.R** · Position **341/885** · Voraussetzung: `7.k.W`.
 **Exakte Commit-Message:** `7.k.R feat(authoring): Authoring-Dry-Run und Wiederholung vervollständigen`
 
 **Vervollständigung:** Fehler, abgewiesene KI-Writes und stale Requests ohne unerwartete Dateiänderungen beenden.
 
 **Verhaltensabnahme:** Reale E2E-Kette erzeugt, ändert, reviewt und retirert ohne doppelte IDs bei Retry. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter Implementierungsstand (Bundle 192):** Result 191 bestätigt
+7.k.W mit 8.737 bestandenen parallelen Apply-Tests und sauberem Commit.
+Der ergänzende Ausführungsadapter berichtet erwartete native Verweigerungen
+und Fehler als fehlgeschlagenen Planversuch. Prospektive IDs und Zielwurzel
+werden von tatsächlich bestätigter Veröffentlichung unterschieden; unbekannte
+Schreibzustände, Recoverybelege und bereits erreichte Dateizustände bleiben
+erhalten. Die ursprüngliche werfende API bleibt verfügbar. Die Gateauswahl wird
+vor externen Lesezugriffen festgehalten, sodass eine mutierte Aufruferliste
+eine erforderliche Verweigerung nicht entfernen kann.
+
+Neue Verhaltenstests prüfen Actor-/Hostverweigerung, falsche Befehlsklassen,
+stale Eingaben, kollidierende Request-IDs, ursprüngliche Retry-Audits,
+manipulierte Plan-/Receiptbytes und reale fehlgeschlagene Ersetzungen. Die
+native E2E-Kette erzeugt, ändert, verknüpft, reviewt und retirert mit frisch
+eingelesenen Zwischenständen. Jeder Retry erhält ursprüngliche IDs und
+Revisionen; auch der früheste historische Erfolg bleibt nach Abschluss als
+historischer Nachweis erkennbar. Das Retirement verwendet explizite
+Fixturegates für das exakt unveränderte Review und den unabhängig erwarteten
+Gesamtzustand; eine allgemeine authentische Historienbeschaffung ist damit
+nicht nachgewiesen.
+
+Alle bisherigen Testdateien und Testkennungen bleiben erhalten. Entwicklung
+prüft neue und betroffene Fälle gezielt parallel; Apply führt vor diesem Commit
+die vollständige Suite parallel aus. Erst erfolgreicher Apply-Lauf und Commit
+bestätigen 341/885; danach folgt 7.k.C. SR-REQ-0241 und SR-REQ-0443 bleiben
+`partial`: CLI-/stdout-Anbindung, Rohinput-Dry-Run mit späterer ID-Übernahme,
+Fehler-/Fortsetzungs-Audits aller ursprünglichen Direktbefehle, authentische
+Projekt-/Historienbeschaffung, C-Bereinigung und Plattform-/Produktabnahme
+bleiben offen. Der neue Fehlerbericht gilt für den gespeicherten Planpfad.
 
 #### 7.k.C – Make it Clean
 

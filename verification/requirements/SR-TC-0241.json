@@ -16,12 +16,13 @@
     "Publish verified target files using the existing transaction phases.",
     "Create bound receipts, synchronize them and only then persist committed.",
     "Assert normative inputs are not written again and failed completion retains evidence.",
-    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay."
+    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay.",
+    "Inspect real native refusal and interrupted-publication evidence; execute and retry each create/update/link/review/retire step against fresh on-disk models, preserving original audit and IDs."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder tatsächlich ausgeführte oder abgewiesene `normative_write` MUSS den Auditbericht seiner Befehlsklasse nach Kapitel 11.7 ausgeben; ein noch offener Arbeitsschritt weist statt eines Erfolgsreceipts den Fortsetzungsstand aus.",
-    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed."
+    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed. 7.k.R: native saved-plan failure reports preserve actual write/recovery state, distinguish planned identities and roots from publication, and reject conflicting or damaged retry proofs. A real create/update/link/review/retire chain uses freshly loaded models and verified historical replays without new IDs or revisions. The final retirement uses explicit fixture host gates bound to the unchanged review and independently expected complete target; it does not prove authentic history acquisition or generic approval authority."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -115,11 +116,31 @@
     "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[remove]",
     "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[retire]",
     "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[transition]",
-    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[update]"
+    "tests/test_authoring_plan_execution.py::test_saved_preview_matches_native_files_receipt_and_replay[update]",
+    "tests/test_authoring_plan_execution_right.py::test_authority_refusal_or_failure_never_invents_completion[False]",
+    "tests/test_authoring_plan_execution_right.py::test_authority_refusal_or_failure_never_invents_completion[True]",
+    "tests/test_authoring_plan_execution_right.py::test_conflicting_request_preserves_original_completion_and_all_bytes",
+    "tests/test_authoring_plan_execution_right.py::test_failed_replace_preserves_real_bytes_and_unacknowledged_recovery[False]",
+    "tests/test_authoring_plan_execution_right.py::test_failed_replace_preserves_real_bytes_and_unacknowledged_recovery[True]",
+    "tests/test_authoring_plan_execution_right.py::test_failure_report_cannot_reclassify_saved_operation[artifact.create]",
+    "tests/test_authoring_plan_execution_right.py::test_failure_report_cannot_reclassify_saved_operation[init]",
+    "tests/test_authoring_plan_execution_right.py::test_failure_report_cannot_reclassify_saved_operation[relation.review]",
+    "tests/test_authoring_plan_execution_right.py::test_failure_report_cannot_reclassify_saved_operation[relation.status]",
+    "tests/test_authoring_plan_execution_right.py::test_modified_completion_proof_is_not_a_successful_replay",
+    "tests/test_authoring_plan_execution_right.py::test_mutating_detached_preview_cannot_retarget_saved_bytes",
+    "tests/test_authoring_plan_execution_right.py::test_real_create_update_link_review_retire_chain_replays_without_new_ids",
+    "tests/test_authoring_plan_execution_right.py::test_refused_actor_has_owned_failure_audit_without_io[ai-None-2]",
+    "tests/test_authoring_plan_execution_right.py::test_refused_actor_has_owned_failure_audit_without_io[ai-ai-request-7]",
+    "tests/test_authoring_plan_execution_right.py::test_refused_actor_has_owned_failure_audit_without_io[ci-None-2]",
+    "tests/test_authoring_plan_execution_right.py::test_reparsed_plan_integrity_failure_has_no_trusted_plan_audit",
+    "tests/test_authoring_plan_execution_right.py::test_required_host_gate_survives_mutation_during_source_read",
+    "tests/test_authoring_plan_execution_right.py::test_retry_reports_original_actor_time_and_plan_not_new_envelope",
+    "tests/test_authoring_plan_execution_right.py::test_stale_live_bytes_report_failure_without_erasing_external_change",
+    "tests/test_authoring_plan_execution_right.py::test_unclassified_io_failure_does_not_leak_message_or_claim_rollback"
   ],
   "open_items": [
     "Integrate registered CLI/stdout envelopes and raw-intent dry-run allocation, authentic complete model/history acquisition and actual host identity/authorization. Explicit prepared operation IDs in this API are not reserved by a preview.",
-    "Complete R error/continuation audit integration across every original direct command and the create/update/review/retire end-to-end chain; retain historical audit on retry. Complete C cleanup and remaining product acceptance.",
+    "Integrate complete error/continuation audit output across every original direct command; the new report adapter covers the saved-plan route. Complete C scenario cleanup and remaining product acceptance. The native chain uses explicit fixture gates for retained review evidence, not an authentic general history service.",
     "Verify supported-platform/Python behavior with actual applicable evidence; this local native run is not a full platform or product approval."
   ]
 }
