@@ -17,12 +17,13 @@
   "steps": [
     "Search declared text fields with NFC-plus-casefold working copies and compare exact matching IDs.",
     "Combine repeated fulltext alternatives with other groups and SRX; retain original source bytes, hashes and projected text.",
-    "Reject invalid known text field types; ensure no host locale, file, network or process use."
+    "Reject invalid known text field types; ensure no host locale, file, network or process use.",
+    "Check original bytes/hash ownership, current source replacement, exact non-fulltext fields, malformed known text and isolated real locale switches."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabhängig anwenden.",
-    "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval."
+    "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -69,10 +70,35 @@
     "tests/test_query_full_text.py::test_search_does_not_consult_host_locale_or_execute_host_operations",
     "tests/test_query_full_text.py::test_selected_known_text_field_with_wrong_type_is_error_not_python_repr",
     "tests/test_query_full_text.py::test_source_bytes_hashes_and_projection_stay_in_their_original_unicode_form",
-    "tests/test_query_full_text.py::test_title_description_term_and_scenario_steps_are_searchable"
+    "tests/test_query_full_text.py::test_title_description_term_and_scenario_steps_are_searchable",
+    "tests/test_query_full_text_right.py::test_actual_locale_switches_in_isolated_process_preserve_hits_and_source_bytes",
+    "tests/test_query_full_text_right.py::test_equivalent_json_encodings_do_not_collapse_raw_source_identity",
+    "tests/test_query_full_text_right.py::test_equivalent_term_spellings_bind_the_same_query_without_rewriting_input",
+    "tests/test_query_full_text_right.py::test_equivalent_unicode_sources_match_but_keep_distinct_original_bindings",
+    "tests/test_query_full_text_right.py::test_foreign_source_lookalike_is_rejected_without_reading_its_properties",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[None]",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload1]",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload2]",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload3]",
+    "tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[bad1]",
+    "tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[bad2]",
+    "tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[not-an-array]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Caf\\xe9]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Cafe\\u0301]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[STRASSE]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Stra\\xdfe]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[\\u0130zmir]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[i\\u0307zmir]",
+    "tests/test_query_full_text_right.py::test_reusing_identity_after_source_change_cannot_reuse_an_old_search_copy",
+    "tests/test_query_full_text_right.py::test_search_normalization_never_changes_exact_owner_tags_or_projection",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[Caf\\xe9]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[None]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign2]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign3]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[{}]"
   ],
   "open_items": [
-    "Complete 8.c.R/C and supported platform/product acceptance; the current run measures native CPython only.",
+    "Complete 8.c.C and supported platform/product acceptance; the current run measures native CPython and locally available locales only.",
     "Public query CLI/live project adapter, public page delivery, load and full Work integration remain open.",
     "Full specialist artifact/document validation, rendering/include traversal and attachment indexing are outside the current explicit-input text selection."
   ]

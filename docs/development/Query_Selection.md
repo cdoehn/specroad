@@ -89,3 +89,30 @@ the explicit-input selection stage, with no public CLI/page, live model validati
 persistent search index, Work continuation or approval claim. Specialist field
 validation and document rendering remain separate providers. The requirement
 stays partial pending the R/C and broader product/platform acceptance.
+
+
+## Unicode source ownership (8.c.R)
+
+Each fulltext comparison now starts from its exact `SourceRelations` input.
+`SearchText` in the fulltext module owns immutable original bytes, their raw
+SHA-256 and artifact identity separately from its normalized search copies.
+Decoded mappings and foreign objects cannot claim this source contract. Query
+selection looks up the actual supplied record by the graph-validated identity;
+every invocation builds fresh copies, so replacing a source under the same ID
+cannot reuse an earlier match. This is an in-memory observation, not a persistent
+index, cache hint, canonical writer or project-completeness certificate.
+
+NFC and NFD originals may match the same query while retaining different source
+hashes and different projected text. Whitespace and escaped JSON encodings also
+remain part of the exact original byte identity. Normalization applies only to
+fulltext matching; owner/tag equality and projected values remain exact. Known
+malformed prose or scenario text produces the existing structured error and
+cannot be converted to Python display text.
+
+R behavior tests switch real locales only in an isolated test subprocess, never
+in parallel pytest workers or the product. `C` is mandatory; additional available
+UTF-8/German/Turkish/English locale spellings are checked when installed. Exact
+hits, input/query bindings, projected NFC/NFD text and source bytes are compared
+across every successful switch. This measures the current environment and does
+not replace supported-platform acceptance. Public CLI/live-project integration,
+public page delivery and broader product/Work validation remain open.

@@ -114,6 +114,7 @@ def select_query(records, query, *, project, configuration=None):
         raise ModelError('query_evaluation_provider_required')
     records = _sequence(records)
     graph = LoadedGraph(records, rule_id='query')
+    search_sources = {record.identity.id: record for record in records} if 'full_text' in data['filters'] else {}
     roots = EvaluationContext({'artifact': {}, 'project': project,
         'configuration': configuration, 'relations': []}, rule_id='query').data
     input_hash = canonical_json_sha256({'project': roots['project'],
@@ -145,7 +146,7 @@ def select_query(records, query, *, project, configuration=None):
         matches = True
         for name, values in data['filters'].items():
             if name == 'full_text':
-                matched = full_text_matches(artifact, values)
+                matched = full_text_matches(search_sources[identifier], values)
             elif name == 'tag':
                 matched = any(value in artifact.get('tags', []) for value in values)
             elif name == 'has_relation':

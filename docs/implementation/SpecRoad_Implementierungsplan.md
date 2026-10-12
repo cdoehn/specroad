@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 352
-last_completed_plan_commit: 8.c.W
-next_plan_commit: 8.c.R
-last_completed_numbered_bundle: 204
+implementation_plan_commits_completed: 353
+last_completed_plan_commit: 8.c.R
+next_plan_commit: 8.c.C
+last_completed_numbered_bundle: 205
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8992,12 +8992,33 @@ paralleler Apply-Volltest und Commit bestätigen 352/885; danach folgt 8.c.R.
 
 #### 8.c.R – Make it Right
 
-- [ ] **8.c.R** · Position **353/885** · Voraussetzung: `8.c.W`.
+- [x] **8.c.R** · Position **353/885** · Voraussetzung: `8.c.W`.
 **Exakte Commit-Message:** `8.c.R feat(query): Unicode-Volltextsuche vervollständigen`
 
 **Vervollständigung:** Originaltext und Hash unverändert lassen; Normalisierung nur für Suche verwenden.
 
 **Verhaltensabnahme:** Suchtreffer bleiben über Localewechsel gleich, gespeicherte NFC/NFD-Originale verschieden. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungsstand 8.c.R (Bundle 205):** Suchbeobachtungen übernehmen nur echte
+SourceRelations und binden deren unveränderte Originalbytes, rohe SHA-256 und
+Artefaktidentität getrennt von unveränderbaren NFC-/Casefold-Arbeitskopien. Die
+Query-Auswahl nutzt je Aufruf die aktuellen, vom Graphen geprüften Quellen;
+ein gleicher Bezeichner mit neuem Inhalt übernimmt keinen alten Suchtreffer.
+Dekodierte Mappings und fremde Objekte dürfen keine Quellbindung vortäuschen.
+
+25 zusätzliche Verhaltenstests prüfen Originalbytes und Hashes, verschiedene
+NFC/NFD- und JSON-Speicherformen, Quellenwechsel, exakte Owner-/Tag- und
+Projektionswerte sowie fehlerhafte bekannte Textfelder. Reale Localewechsel
+laufen ausschließlich in einem isolierten Testkindprozess; C ist verpflichtend,
+weitere installierte Locales werden mit identischen Treffer- und Byteorakeln
+verglichen. Es gibt keine behauptete vollständige Plattformabnahme. Alle 268
+bisherigen Testdateien und 8.926 Testkennungen bleiben unverändert.
+
+Dev führt 1.229 neue und betroffene Verhaltenstests gezielt parallel aus. Die
+Requirements bleiben partial; CLI/Live-Projektadapter, öffentliche Pagination,
+vollständige Produkt-/Plattformabnahme und Work-Integration bleiben offen.
+Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 353/885;
+danach folgt 8.c.C.
 
 #### 8.c.C – Make it Clean
 
