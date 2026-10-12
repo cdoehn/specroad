@@ -15,6 +15,17 @@ configuration and stored workflow statuses have distinct classes. Evidence
 result, binding and other record changes are distinguished; changed evidence
 bytes do not establish currency or subject verification.
 
+Unstructured domain text, including criteria, procedures, definitions and
+reasons, stays `text_changed` when no stronger declared classification applies.
+Text inside namespaced extensions is opaque even when its keys resemble Core
+fields such as `timing`, `thresholds` or `verification_result`. Added/removed
+text containers retain their full values and presence flags. The classifier
+walks JSON values iteratively; it does not parse Markdown, detect languages,
+normalize Unicode or interpret numbers and words inside prose. Unknown numeric
+or Boolean deltas remain structural `field_changed` observations. Declared
+machine values such as enum choices, identities and code paths retain their
+existing structural classifications.
+
 Optional `before_configuration` and `after_configuration` must both be typed
 `ProjectConfiguration` values matching the project and ID prefix. Comparison
 uses the existing semantic configuration projection. Raw declarations remain
@@ -37,8 +48,8 @@ selection require their later providers. A field-valid approved record grants
 no approval. `full_semantic_validation`, `approval_granted` and `write_authorized`
 remain false.
 
-The W kernel materializes both supplied inventories and the full diff. The
-planned R/C stages strengthen conservative classification and separate field
-semantics from generic comparison. Git/local source adapters, public Diff CLI,
+The kernel materializes both supplied inventories and the full diff. The
+planned C stage separates field semantics from generic comparison. Git/local
+source adapters, public Diff CLI,
 Work continuation, effective profiles, applicability-derived scope, evaluated
 evidence currency and supported-platform/performance acceptance remain open.

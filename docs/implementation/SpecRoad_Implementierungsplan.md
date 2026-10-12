@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 367
-last_completed_plan_commit: 8.h.W
-next_plan_commit: 8.h.R
-last_completed_numbered_bundle: 219
+implementation_plan_commits_completed: 368
+last_completed_plan_commit: 8.h.R
+next_plan_commit: 8.h.C
+last_completed_numbered_bundle: 220
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9528,12 +9528,38 @@ Apply-Volltest und Commit bestätigen 367/885; danach folgt 8.h.R.
 
 #### 8.h.R – Make it Right
 
-- [ ] **8.h.R** · Position **368/885** · Voraussetzung: `8.h.W`.
+- [x] **8.h.R** · Position **368/885** · Voraussetzung: `8.h.W`.
 **Exakte Commit-Message:** `8.h.R feat(query): Semantische Diffklassen vervollständigen`
 
 **Vervollständigung:** Unbekannte Semantik bleibt text_changed; keine Sprachverständnisheuristik einsetzen.
 
 **Verhaltensabnahme:** Wertebasierte Fixtures prüfen Klassifikation und Identität statt Ausgabetexte. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung (Bundle 220, PLAN `8.h.R`):** Weitere unstrukturierte Fachtexte
+wie Kriterien, Verfahren, Definitionen und Begründungen bleiben text_changed,
+wenn keine stärkere deklarierte Feldsemantik vorliegt. Texttragende namespaced
+Extensions werden unabhängig von ihren Schlüsseln oder Wörtern als undurchsichtige
+Textänderungen berichtet. Auch timing, thresholds oder verification_result in
+solchen Erweiterungen erzeugen keine Core-Bewertung. Rein numerische/boolsche
+Änderungen bleiben strukturelle field_changed-Beobachtungen; deklarierte Enum-,
+Identitäts- und Pfadwerte erhalten ihre bestehenden Klassen.
+
+Die Erkennung prüft ausschließlich JSON-Werttypen und deklarierte Feldpositionen.
+Ein iterativer Wertdurchlauf erhält vollständige hinzugefügte/entfernte Container,
+Null-/Anwesenheitsunterschiede und maskierte JSON Pointer. Sie interpretiert weder
+Sprachen, Wörter, Zahlen in Prosa noch Markdown und normalisiert keinen Unicode.
+Neue unabhängige Verhaltenstests prüfen Fachtexte über Domain- und Recordtypen,
+Extensions mit irreführenden Schlüsseln, strukturelle Maschinenwerte, tiefe und
+breite Daten, Textcontainer, unveränderte Identitäten, Ergebniseigentum und
+schreibfreie Ausführung. Sämtliche 278 alten Testdateien und 9.263 Testkennungen
+bleiben unverändert; alle W-Nachweise gehören zur gezielten Regression.
+
+Requirements 0115/0116/0403 bleiben partial. Die gemeinsame Berichtstruktur,
+Hashbindungen und explizit nicht bewerteten Bereiche bleiben erhalten. C,
+Quellenadapter, Diff-CLI, dauerhafte Work-Ausführung, effektive Profile,
+Applicability-bedingter Modellumfang, Evidence-Aktualität und Plattform-/
+Performanceabnahme bleiben offen. Erst erfolgreicher paralleler Apply-Volltest
+und Commit bestätigen 368/885; danach folgt 8.h.C.
 
 #### 8.h.C – Make it Clean
 

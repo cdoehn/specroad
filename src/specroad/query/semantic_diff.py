@@ -16,6 +16,44 @@ from ..model.record_schemas import validate_record_fields
 from ..model.semantic_configuration import semantic_configuration
 
 
+_TEXT_FIELDS = {
+    'goal': ('success_criterion',),
+    'capability': ('outcome',),
+    'requirement': ('preconditions',),
+    'scenario': ('actors', 'preconditions', 'main_flow', 'postconditions'),
+    'decision': ('alternatives', 'consequences'),
+    'risk': ('acceptance_rationale',),
+    'assumption': ('validation_method', 'reevaluation_condition'),
+    'component': ('responsibility',),
+    'interface': ('contract', 'contract_not_applicable'),
+    'release': ('name', 'objective'),
+    'milestone': ('objective', 'done_criteria'),
+    'task': ('done_criteria',),
+    'term': ('term', 'definition', 'synonyms', 'forbidden_synonyms'),
+    'source': ('excerpt',),
+    'verification': ('preconditions', 'procedure', 'oracle'),
+    'test': ('oracle',),
+    'issue': ('resolution_criteria', 'permanent_status_reason'),
+    'document': ('purpose', 'audience'),
+    'relation_review': ('reason', 'comment'),
+    'configuration': ('name',),
+}
+
+
+def _contains_text(value):
+    """Recognize JSON strings, never interpret their words or numeric claims."""
+    pending = [value]
+    while pending:
+        current = pending.pop()
+        if type(current) is str:
+            return True
+        if type(current) is dict:
+            pending.extend(current.values())
+        elif type(current) is list:
+            pending.extend(current)
+    return False
+
+
 def _field_category(kind, field):
     parts = field['pointer'].split('/')[1:]
     name = parts[0].replace('~1', '/').replace('~0', '~') if parts else ''
@@ -33,6 +71,12 @@ def _field_category(kind, field):
             return 'evidence_result_changed'
         if name in ('attachments', 'produced_at', 'producer', 'tool', 'environment', 'origin', 'unbound_reason'):
             return 'evidence_changed'
+    opaque_text = name == 'extensions' or name in _TEXT_FIELDS.get(kind, ())
+    if kind == 'content_block' and parts[:2] in (['payload', 'markdown'], ['payload', 'title']):
+        opaque_text = True
+    if (field['category'] == 'field_changed' and opaque_text
+            and (_contains_text(field['before']) or _contains_text(field['after']))):
+        return 'text_changed'
     return field['category']
 
 

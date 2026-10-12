@@ -17,12 +17,13 @@
   ],
   "steps": [
     "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O.",
-    "Compare semantic categories and exact values/identities with independent fixtures; check explicit unknown scope/currency, input hashes, read-only boundaries and isolated-process parity."
+    "Compare semantic categories and exact values/identities with independent fixtures; check explicit unknown scope/currency, input hashes, read-only boundaries and isolated-process parity.",
+    "Compare declared and opaque text changes with independent exact-value, identity and pointer oracles; preserve machine-value classes, complete containers and all W behavior."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der semantische Diff MUSS mindestens Hinzufügen, Retirement, Feldänderung, Grenzwertänderung, Timing-Verschärfung oder -Lockerung, Scope- oder Applicability-Änderung, Ausnahmeänderung, Relationsänderung, Dokumentstruktur- oder Positionsänderung, Statusänderung, Verifikationsänderung, Evidence-Aktualitätsänderung und Code-Referenzänderung unterscheiden, sofern strukturierte Felder diese Klassifikation erlauben.",
-    "scope": "8.h.W adds compare_semantic over explicit ComparisonInputs. Every supplied stored artifact field contract is validated before classification. Existing artifact identities, hashes, presence flags, values and pointers remain visible. Threshold/text, scope/exception/relation/document/verification/code-reference differences retain their structural classes; applicability, product configuration, stored statuses and evidence result/binding/content changes are distinguished. Paired typed ProjectConfigurations compare through the existing semantic projection and also bind their raw declarations. Explicit requirement timing bounds alone enable exact tightened/relaxed/equivalent/incomparable duration observations; policies bind even unchanged input. Missing configuration is not_supplied. Supplied inventory membership deltas do not imply applicability-derived scope, which remains not_evaluated alongside evidence currency. Independent tests cover classes, exact values/identities, configuration and policy binding, invalid inputs, ownership, no writes and fresh-process parity. Existing 277 test files and 9227 IDs remain unchanged. R/C, source adapters, Diff CLI, durable Work, effective profiles, applicability-derived scope, evidence-currentness services and platform/performance acceptance remain open; no release approval is claimed."
+    "scope": "8.h.W adds compare_semantic over explicit ComparisonInputs. Every supplied stored artifact field contract is validated before classification. Existing artifact identities, hashes, presence flags, values and pointers remain visible. Threshold/text, scope/exception/relation/document/verification/code-reference differences retain their structural classes; applicability, product configuration, stored statuses and evidence result/binding/content changes are distinguished. Paired typed ProjectConfigurations compare through the existing semantic projection and also bind their raw declarations. Explicit requirement timing bounds alone enable exact tightened/relaxed/equivalent/incomparable duration observations; policies bind even unchanged input. Missing configuration is not_supplied. Supplied inventory membership deltas do not imply applicability-derived scope, which remains not_evaluated alongside evidence currency. Independent tests cover classes, exact values/identities, configuration and policy binding, invalid inputs, ownership, no writes and fresh-process parity. Existing 277 test files and 9227 IDs remain unchanged. C, source adapters, Diff CLI, durable Work, effective profiles, applicability-derived scope, evidence-currentness services and platform/performance acceptance remain open; no release approval is claimed. R classifies additional unstructured domain text and text-bearing namespaced extension values as text_changed without interpreting words, languages, Markdown or numerical claims. Opaque extension keys never inherit Core timing/threshold/status/evidence semantics. Pure numeric/Boolean unknown deltas remain structural field_changed; declared enum, identity and path values keep their existing classes. Iterative value scanning retains complete containers, presence/null distinctions, escaped pointers and exact Unicode bytes. Independent tests cover twenty domain/record text positions, misleading extension names, typed machine values, deep/wide data, ownership, ordering and read-only boundaries. All 278 old test files and 9263 IDs remain unchanged; all W cases remain part of selected regression. C, source/CLI/Work integration, effective profiles, evaluated scope/currency and platform/performance acceptance remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -95,9 +96,56 @@
     "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[unknown_timing_subject]",
     "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[unparseable_timing]",
     "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[wrong_prefix]",
-    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[wrong_project]"
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[wrong_project]",
+    "tests/test_query_semantic_diff_right.py::test_block_markdown_keeps_literal_text_without_parsing_instructions",
+    "tests/test_query_semantic_diff_right.py::test_declared_machine_values_do_not_become_unstructured_text[code_ref-path-src/first.py-src/second.py]",
+    "tests/test_query_semantic_diff_right.py::test_declared_machine_values_do_not_become_unstructured_text[requirement-language-en-US-de-DE]",
+    "tests/test_query_semantic_diff_right.py::test_declared_machine_values_do_not_become_unstructured_text[requirement-normative_force-must-may]",
+    "tests/test_query_semantic_diff_right.py::test_declared_machine_values_do_not_become_unstructured_text[requirement-priority-mandatory-high]",
+    "tests/test_query_semantic_diff_right.py::test_declared_machine_values_do_not_become_unstructured_text[requirement-requirement_kind-functional-quality]",
+    "tests/test_query_semantic_diff_right.py::test_declared_machine_values_do_not_become_unstructured_text[source-locator-owned:first-owned:second]",
+    "tests/test_query_semantic_diff_right.py::test_extension_field_names_and_words_do_not_inherit_core_semantics[applicability]",
+    "tests/test_query_semantic_diff_right.py::test_extension_field_names_and_words_do_not_inherit_core_semantics[maturity]",
+    "tests/test_query_semantic_diff_right.py::test_extension_field_names_and_words_do_not_inherit_core_semantics[priority]",
+    "tests/test_query_semantic_diff_right.py::test_extension_field_names_and_words_do_not_inherit_core_semantics[thresholds]",
+    "tests/test_query_semantic_diff_right.py::test_extension_field_names_and_words_do_not_inherit_core_semantics[timing]",
+    "tests/test_query_semantic_diff_right.py::test_extension_field_names_and_words_do_not_inherit_core_semantics[verification_result]",
+    "tests/test_query_semantic_diff_right.py::test_opaque_nested_object_addition_scans_values_without_recursion_or_interpretation",
+    "tests/test_query_semantic_diff_right.py::test_opaque_text_preserves_presence_null_and_complete_container_values[add]",
+    "tests/test_query_semantic_diff_right.py::test_opaque_text_preserves_presence_null_and_complete_container_values[array]",
+    "tests/test_query_semantic_diff_right.py::test_opaque_text_preserves_presence_null_and_complete_container_values[from_null]",
+    "tests/test_query_semantic_diff_right.py::test_opaque_text_preserves_presence_null_and_complete_container_values[object]",
+    "tests/test_query_semantic_diff_right.py::test_opaque_text_preserves_presence_null_and_complete_container_values[remove]",
+    "tests/test_query_semantic_diff_right.py::test_opaque_text_preserves_presence_null_and_complete_container_values[to_null]",
+    "tests/test_query_semantic_diff_right.py::test_unknown_numeric_extension_changes_are_only_structural_fields",
+    "tests/test_query_semantic_diff_right.py::test_unknown_text_classification_is_order_independent_owned_and_read_only",
+    "tests/test_query_semantic_diff_right.py::test_unknown_text_is_preserved_without_language_or_unicode_normalization[\\u0645\\u0633\\u0645\\u0648\\u062d-\\u0645\\u062d\\u0638\\u0648\\u0631]",
+    "tests/test_query_semantic_diff_right.py::test_unknown_text_is_preserved_without_language_or_unicode_normalization[\\xe9-e\\u0301]",
+    "tests/test_query_semantic_diff_right.py::test_unknown_text_is_preserved_without_language_or_unicode_normalization[au plus dix-au moins cinq]",
+    "tests/test_query_semantic_diff_right.py::test_unknown_text_is_preserved_without_language_or_unicode_normalization[within 10 ms-within 5 ms]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-assumption-validation_method-Review 10 cases-Review 20 cases]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-capability-outcome-Respond within 10 ms-Respond within 5 ms]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-component-responsibility-Control within 10 ms-Control within 5 ms]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-decision-alternatives-old4-new4]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-goal-success_criterion-At most ten actions-At most five actions]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-interface-contract-old8-new8]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-milestone-objective-Ten deliveries-Five deliveries]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-release-objective-Verify all subjects-All subjects verified]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-requirement-preconditions-old2-new2]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-risk-acceptance_rationale-Low risk-Approved high risk]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-scenario-main_flow-old3-new3]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-task-done_criteria-old11-new11]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[domain-term-definition-Maximum is 10-Maximum is 5]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-configuration-name-Safe verified edition-Critical unverified edition]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-document-purpose-State a 10 ms bound-State a 5 ms bound]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-issue-resolution_criteria-old16-new16]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-relation_review-reason-Ten checks passed-All checks passed]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-source-excerpt-MUST verify within 10 ms-MUST verify within 5 ms]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-test-oracle-Pass at most ten-Pass at most five]",
+    "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-verification-procedure-old14-new14]",
+    "tests/test_query_semantic_diff_right.py::test_wide_extension_text_changes_have_complete_identity_and_pointer_sets"
   ],
   "open_items": [
-    "Complete conservative R/C classification, planned source/CLI/Work integration, effective profile semantics, applicability-derived model scope, evaluated evidence currency and platform/performance acceptance; Merge integration remains a later consumer."
+    "Complete C separation of classifiers, planned source/CLI/Work integration, effective profile semantics, applicability-derived model scope, evaluated evidence currency and platform/performance acceptance; Merge integration remains a later consumer."
   ]
 }
