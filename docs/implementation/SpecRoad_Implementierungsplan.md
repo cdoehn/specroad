@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 368
-last_completed_plan_commit: 8.h.R
-next_plan_commit: 8.h.C
-last_completed_numbered_bundle: 220
+implementation_plan_commits_completed: 369
+last_completed_plan_commit: 8.h.C
+next_plan_commit: 8.i.W
+last_completed_numbered_bundle: 221
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9563,7 +9563,7 @@ und Commit bestätigen 368/885; danach folgt 8.h.C.
 
 #### 8.h.C – Make it Clean
 
-- [ ] **8.h.C** · Position **369/885** · Voraussetzung: `8.h.R`.
+- [x] **8.h.C** · Position **369/885** · Voraussetzung: `8.h.R`.
 **Exakte Commit-Message:** `8.h.C refactor(query): Semantische Diffklassen bereinigen`
 
 **Bereinigung:** Klassifikatoren pro Feldsemantik von allgemeinem Objektvergleich trennen.
@@ -9571,6 +9571,28 @@ und Commit bestätigen 368/885; danach folgt 8.h.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Umsetzung (Bundle 221, PLAN `8.h.C`):** Der private Baustein
+_semantic_classes übernimmt die bestehenden deklarierten Feldklassen samt
+iterativer Texterkennung, den paarweisen Konfigurationsvergleich und die
+expliziten Dauergrenzenregeln. Der öffentliche compare_semantic-Treiber behält
+Eingangsvalidierung, allgemeinen Artefaktvergleich, Identitäts-/Hashbindungen und
+Berichtsaufbau. Alle fünf ausgelagerten Definitionen sowie der öffentliche
+Funktionskörper bleiben in Quelltext und AST identisch zur geprüften R-Basis;
+lediglich die Modulzuständigkeit und die dafür nötigen Importe ändern sich.
+
+Sämtliche 279 vorhandenen Testdateien und 9.310 Testkennungen bleiben unverändert.
+Die gezielte parallele Regression umfasst alle W-/R-Diff-Fälle sowie die
+betroffenen Modell-, Graph-, Query-, SRX- und maschinenlesbaren CLI-Verträge.
+Die statische Extraktionsprüfung ergänzt diese Verhaltensabnahme; sie ersetzt
+keinen Testlauf. Es entstehen keine neuen Fachklassen, Fehlerverträge,
+Interpretationen oder Seiteneffekte.
+
+Requirements 0115/0116/0403 bleiben partial. Quelladapter, Diff-CLI, dauerhafte
+Work-Ausführung, effektive Profile, Applicability-bedingter Modellumfang,
+Evidence-Aktualität sowie Plattform-/Performanceabnahme bleiben offen.
+Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 369/885;
+danach folgt 8.i.W.
 
 <a id="step-8-i"></a>
 ### 8.i – Sichere Git-Objektquelle

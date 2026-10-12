@@ -48,8 +48,13 @@ selection require their later providers. A field-valid approved record grants
 no approval. `full_semantic_validation`, `approval_granted` and `write_authorized`
 remain false.
 
-The kernel materializes both supplied inventories and the full diff. The
-planned C stage separates field semantics from generic comparison. Git/local
+The private `_semantic_classes` module owns declared field classes, opaque-text
+recognition, paired configuration comparison and explicit duration policies.
+The public `compare_semantic` driver retains input validation, general artifact
+comparison, identity/hash bindings and result assembly. This separation retains
+the W/R algorithms and behavior; it introduces no additional interpretation.
+
+The kernel materializes both supplied inventories and the full diff. Git/local
 source adapters, public Diff CLI,
 Work continuation, effective profiles, applicability-derived scope, evaluated
 evidence currency and supported-platform/performance acceptance remain open.
