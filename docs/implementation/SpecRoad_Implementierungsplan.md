@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 361
-last_completed_plan_commit: 8.f.W
-next_plan_commit: 8.f.R
-last_completed_numbered_bundle: 213
+implementation_plan_commits_completed: 362
+last_completed_plan_commit: 8.f.R
+next_plan_commit: 8.f.C
+last_completed_numbered_bundle: 214
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9292,12 +9292,39 @@ Apply-Volltest und Commit bestätigen 361/885; danach folgt 8.f.R.
 
 #### 8.f.R – Make it Right
 
-- [ ] **8.f.R** · Position **362/885** · Voraussetzung: `8.f.W`.
+- [x] **8.f.R** · Position **362/885** · Voraussetzung: `8.f.W`.
 **Exakte Commit-Message:** `8.f.R feat(query): Alle kürzesten Why-Pfade vervollständigen`
 
 **Vervollständigung:** Große Pfadanzahl checkpointen statt eine Stichprobe als vollständig ausgeben.
 
 **Verhaltensabnahme:** Referenzgraph mit verzweigter Pfadzahl weist vollständige und minimale Pfade nach. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung (Bundle 214, PLAN `8.f.R`):** WhyTraversal verarbeitet echte
+Knoten-, Relations- und Pfadrahmenschritte. Kleine oder wechselnde Arbeitsziele
+erhalten Suchfrontier, Kantenposition und alle gleich kurzen Vorgänger sowie den
+bereits erzeugten Pfadpräfix. Kanonische Datencheckpoints binden Algorithmus,
+Start/Tiefe und sämtliche Identitäten und gespeicherten Relationsdaten des
+übergebenen Index, einschließlich unerreichter Relationen. Die Wiederaufnahme
+prüft zuerst eine unabhängig aufbewahrte SHA-256, dann den geschlossenen Vertrag
+und die vollständige Graphbindung; sie spielt den abgearbeiteten Präfix nicht ab.
+
+Neue Verhaltenstests vergleichen 8.192 Pfade mit einem unabhängigen kartesischen
+Referenzgraphen. Sie erfassen jeden fortsetzbaren Zustand, echte dateibasierte
+Prozessneustarts, unvollständige/veränderte Checkpoints, fremde Graphdaten,
+fehlerhafte Arbeitsziele, Abbruch, Allokationsfehler und eine 1.100 Kanten lange
+iterative Route. Die bisherigen Why-W-Orakel und sämtliche alten Testdateien
+bleiben unverändert. Der öffentliche Befehl verwendet denselben Produzenten mit
+den bestehenden vollständigen Projektlese- und Aktualitätsprüfungen.
+
+Requirements 0064/0112/0117 bleiben partial. Der reine Codec schreibt keine Dateien
+und behauptet weder fsync noch Work-v1-Aufnahme oder öffentliche work-resume-
+Unterstützung. Ein mit untrusted Daten gelieferter Hash ist keine unabhängige
+Vertrauensbasis. Caller-eigene Persistierung und separat aufbewahrte Prüfsummen
+ermöglichen den nachgewiesenen Prozessneustart. Index, Vorgänger und Pfadpräfix
+bleiben im Speicher; Sortierung/Validierung/Codec sind unteilbare Schritte.
+Dauerhafte Work-Integration, adaptive Runtime, externe Großausgabe, Profildefaults
+und Plattform-/Performanceabnahme bleiben offen. Erst erfolgreicher paralleler
+Apply-Volltest und Commit bestätigen 362/885; danach folgt 8.f.C.
 
 #### 8.f.C – Make it Clean
 

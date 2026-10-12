@@ -18,12 +18,13 @@
   "steps": [
     "Invoke the same Why through Python, CLI, structured requests and a portable zipapp.",
     "Compare exact independent shortest-path sets, origin-specific distances, stored identities and configured depths.",
-    "Reject invalid configuration and complete-inventory graph errors; trap writes and observe currentness/writer/journal failures."
+    "Reject invalid configuration and complete-inventory graph errors; trap writes and observe currentness/writer/journal failures.",
+    "Resume exact search/path checkpoints, including independently trusted file-backed process restarts; preserve all shortest paths and reject changed graph/cursor data without project mutation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS für jedes Artefakt erklären können, über welche Beziehungspfade es auf Goals oder Needs zurückgeführt wird.",
-    "scope": "8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. W materializes index, predecessors and all paths; R/C continuation, durable Work, adaptive runtime, external delivery, effective profile defaults and supported-platform/performance acceptance remain open. Coverage is not complete semantic validation or atomic-snapshot approval."
+    "scope": "8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. The W baseline materialized index, predecessors and all paths. Coverage is not complete semantic validation or atomic-snapshot approval. R adds WhyTraversal with actual node/edge/path-frame work and canonical data checkpoints retaining both frontiers and the complete path prefix. Restore checks an independently retained trusted SHA-256 before parsing, then a closed contract and all supplied graph identities and stored relation data, including unreachable relations. Native file-backed fresh-process tests prove exact resumption without replaying completed search or materialized paths; an independent Cartesian-product oracle covers 8192 complete shortest paths. Malformed, changed-input, failed and cancelled states cannot publish a result. The public command drives the same producer synchronously with its existing project guards. The pure codec does not perform persistence/fsync, admit Work-v1 continuation or claim bounded total memory. Input validation, sorting, codec and final projection are indivisible; durable Work integration, adaptive runtime, external delivery, profile defaults and platform/performance acceptance remain open. C separation remains pending."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -82,10 +83,60 @@
     "tests/test_query_why.py::test_soft_count_targets_do_not_cap_the_complete_path_set",
     "tests/test_query_why.py::test_symmetric_inverse_preserves_stored_relation_identity_and_orientation",
     "tests/test_query_why.py::test_unknown_start_is_an_error_even_with_zero_depth[0]",
-    "tests/test_query_why.py::test_unknown_start_is_an_error_even_with_zero_depth[3]"
+    "tests/test_query_why.py::test_unknown_start_is_an_error_even_with_zero_depth[3]",
+    "tests/test_query_why_right.py::test_8192_paths_match_independent_product_without_sampling_or_longer_walks[targets0]",
+    "tests/test_query_why_right.py::test_8192_paths_match_independent_product_without_sampling_or_longer_walks[targets1]",
+    "tests/test_query_why_right.py::test_8192_paths_match_independent_product_without_sampling_or_longer_walks[targets2]",
+    "tests/test_query_why_right.py::test_cancelled_or_failed_work_cannot_publish_but_prior_checkpoint_remains_owned[close]",
+    "tests/test_query_why_right.py::test_cancelled_or_failed_work_cannot_publish_but_prior_checkpoint_remains_owned[failure]",
+    "tests/test_query_why_right.py::test_checkpoint_roundtrip_preserves_each_real_frontier_without_prefix_replay[complete]",
+    "tests/test_query_why_right.py::test_checkpoint_roundtrip_preserves_each_real_frontier_without_prefix_replay[edge]",
+    "tests/test_query_why_right.py::test_checkpoint_roundtrip_preserves_each_real_frontier_without_prefix_replay[initial]",
+    "tests/test_query_why_right.py::test_checkpoint_roundtrip_preserves_each_real_frontier_without_prefix_replay[next_target]",
+    "tests/test_query_why_right.py::test_checkpoint_roundtrip_preserves_each_real_frontier_without_prefix_replay[paths]",
+    "tests/test_query_why_right.py::test_checkpoint_roundtrip_preserves_each_real_frontier_without_prefix_replay[prefix]",
+    "tests/test_query_why_right.py::test_checkpoint_roundtrip_preserves_each_real_frontier_without_prefix_replay[search]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[algorithm]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[boolean_distance]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[duplicate_field]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[duplicate_pending]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[extra_field]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[invalid_inverse]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[negative_offset]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[noncanonical]",
+    "tests/test_query_why_right.py::test_closed_checkpoint_contract_rejects_malformed_even_with_an_owner_supplied_digest[phase]",
+    "tests/test_query_why_right.py::test_complete_input_binding_rejects_changed_graph_including_unreached_data[added_identity]",
+    "tests/test_query_why_right.py::test_complete_input_binding_rejects_changed_graph_including_unreached_data[reachable_edge]",
+    "tests/test_query_why_right.py::test_complete_input_binding_rejects_changed_graph_including_unreached_data[unreached_relation_metadata]",
+    "tests/test_query_why_right.py::test_every_single_operation_can_be_exported_and_restored_with_owned_progress",
+    "tests/test_query_why_right.py::test_integrity_is_checked_before_parsing_or_graph_visits[mutable_bytes]",
+    "tests/test_query_why_right.py::test_integrity_is_checked_before_parsing_or_graph_visits[tampered]",
+    "tests/test_query_why_right.py::test_integrity_is_checked_before_parsing_or_graph_visits[truncated]",
+    "tests/test_query_why_right.py::test_integrity_is_checked_before_parsing_or_graph_visits[uppercase_digest]",
+    "tests/test_query_why_right.py::test_integrity_is_checked_before_parsing_or_graph_visits[wrong_digest]",
+    "tests/test_query_why_right.py::test_invalid_semantic_depth_is_not_coerced[-1]",
+    "tests/test_query_why_right.py::test_invalid_semantic_depth_is_not_coerced[1.5]",
+    "tests/test_query_why_right.py::test_invalid_semantic_depth_is_not_coerced[1]",
+    "tests/test_query_why_right.py::test_invalid_semantic_depth_is_not_coerced[True]",
+    "tests/test_query_why_right.py::test_invalid_work_targets_preserve_all_state[-1]",
+    "tests/test_query_why_right.py::test_invalid_work_targets_preserve_all_state[0]",
+    "tests/test_query_why_right.py::test_invalid_work_targets_preserve_all_state[1.5]",
+    "tests/test_query_why_right.py::test_invalid_work_targets_preserve_all_state[1]",
+    "tests/test_query_why_right.py::test_invalid_work_targets_preserve_all_state[None]",
+    "tests/test_query_why_right.py::test_invalid_work_targets_preserve_all_state[True]",
+    "tests/test_query_why_right.py::test_long_path_materialization_and_restore_do_not_require_recursive_walks",
+    "tests/test_query_why_right.py::test_materialization_cursor_and_completed_prefix_are_validated[drop_prefix]",
+    "tests/test_query_why_right.py::test_materialization_cursor_and_completed_prefix_are_validated[wrong_frame]",
+    "tests/test_query_why_right.py::test_materialization_cursor_and_completed_prefix_are_validated[wrong_path]",
+    "tests/test_query_why_right.py::test_materialization_cursor_and_completed_prefix_are_validated[wrong_position]",
+    "tests/test_query_why_right.py::test_persisted_checkpoint_resumes_in_a_fresh_process_with_independent_digest[edge]",
+    "tests/test_query_why_right.py::test_persisted_checkpoint_resumes_in_a_fresh_process_with_independent_digest[next_target]",
+    "tests/test_query_why_right.py::test_persisted_checkpoint_resumes_in_a_fresh_process_with_independent_digest[prefix]",
+    "tests/test_query_why_right.py::test_public_why_uses_real_small_steps_and_checkpoint_codec_without_project_writes",
+    "tests/test_query_why_right.py::test_unknown_start_and_invalid_index_are_not_empty_successes"
   ],
   "open_items": [
-    "Complete 8.f.R/C with actual continued search and path production for large path sets.",
+    "Complete 8.f.C by separating the now checkpointable search and path materialization.",
     "Durable Work, adaptive runtime, external large-result delivery, effective profile/default resolution and supported-platform/performance acceptance remain open."
   ]
 }

@@ -38,10 +38,39 @@ sources and changes to any observed source or configuration block success.
 The command creates no project cache, writer lock or other project file.
 `atomic_snapshot=false` and `full_semantic_validation=false` remain explicit.
 
-This W implementation is synchronous: the loaded index, predecessor graph and
-entire final path set are materialized in memory. `command describe why` reports
-`continuation_supported=false`. R/C must add and clean up actual continuation of
-search and path production. Durable Work, adaptive runtime admission, external
-large-result delivery, effective profile/default resolution and supported-platform
-and performance acceptance remain open. Small operational count targets do not
-silently reduce the configured semantic depth or the promised path set.
+The public command drives `WhyTraversal(index, artifact_id, depth=...)`
+synchronously. The producer accepts an immutable `RelationIndex` and exposes
+`advance(units)`, `state`, `result`, `checkpoint()`, `restore(...)` and `close()`.
+A positive exact integer work target advances individual node, edge or path-frame
+operations. Search retains its pending nodes, current adjacency offset and every
+minimum-distance predecessor; path enumeration retains its stack and already
+produced prefix. An incomplete, closed or failed producer cannot publish a result.
+Changing operational targets never changes depth, path completeness or ordering.
+
+`checkpoint()` returns canonical JSON bytes containing both frontiers and the
+complete produced prefix. The owner persists these bytes and independently
+retains their SHA-256. `WhyTraversal.restore(index, raw, expected_sha256=digest)`
+checks that trusted digest before parsing or visiting the graph, validates a
+closed data contract and rebinds every artifact identity and stored relation
+value, including unreachable relations. Artifact contents outside the supplied
+graph projection are not available to this producer; the public command retains
+its separate complete-project currentness check. Array order does not change the
+graph binding. The algorithm version and semantic start/depth belong to the
+checkpoint. Restoration reconstructs the actual position without replaying
+completed search or already produced paths. No imports, callbacks or executable
+payloads are loaded from checkpoint data.
+
+A checksum supplied by an untrusted checkpoint is not an independent trust anchor.
+The codec itself performs no file writes, atomic publication or fsync and makes
+no claim that exported bytes are already durably stored. Caller-owned files and
+a separately retained digest can cross a process restart, as verified by native
+subprocess tests. This is not admission to the generic Work-v1 store or a public
+`work resume` integration; `command describe why` continues to report
+`continuation_supported=false` and producer state reports `durable_checkpoint=false`.
+
+Input/hierarchy validation, target/path sorting, checkpoint encoding and final
+projection are indivisible. The index, predecessor graph and full result prefix
+remain materialized in memory. C will separate search from path materialization.
+Durable Work integration, adaptive runtime admission, external large-result
+delivery, effective profile/default resolution and supported-platform/performance
+acceptance remain open. No sample or implicit count cap replaces the full set.

@@ -1,57 +1,24 @@
 """All shortest directed paths to origins in a fresh complete project observation."""
-from collections import deque
-
 from ..cli.result_schemas import validate_result_document
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
-from ..graph.hierarchies import validate_hierarchies
-from ..graph.path_output import PathRecord
-from ..graph.symmetry import SYMMETRIC_RELATION_TYPES
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..storage.project import ProjectSource
 from ..storage.relation_index import build_project_relation_index
 from .show import _preflight, _verify_current
+from .why_work import WhyTraversal
 
 
 def _why_paths(index, artifact_id, depth):
-    index.for_artifact(artifact_id)  # Unknown starts remain errors at depth zero.
-    identities = {identity.id: identity for identity in index.references.sources}
-    distances, predecessors, pending = {artifact_id: 0}, {artifact_id: []}, deque([artifact_id])
-    while pending:
-        current = pending.popleft()
-        if distances[current] == depth:
-            continue
-        for view in index.for_artifact(current):
-            if view.inverse and view.type not in SYMMETRIC_RELATION_TYPES:
-                continue
-            target, distance = view.target.id, distances[current] + 1
-            if target not in distances:
-                distances[target] = distance
-                predecessors[target] = []
-                pending.append(target)
-            if distances[target] == distance:
-                predecessors[target].append(view)
-    targets = sorted((identities[name] for name in distances
-                      if identities[name].artifact_type in ('goal', 'need', 'source')),
-                     key=lambda identity: (identity.artifact_type, identity.id))
-    rows, paths = [], []
-    for target in targets:
-        records = []
-        stack = [(target.id, ())]
-        while stack:
-            current, reverse_views = stack.pop()
-            if current == artifact_id:
-                records.append(PathRecord.from_views(identities[artifact_id], tuple(reversed(reverse_views))))
-            else:
-                for view in predecessors[current]:
-                    stack.append((view.source.id, reverse_views + (view,)))
-        records.sort(key=lambda record: (tuple(value.id for value in record.artifacts),
-                                        tuple(value.id for value in record.relations), record.inverse))
-        rows.append({'id': target.id, 'artifact_type': target.artifact_type,
-                     'distance': distances[target.id], 'path_count': len(records)})
-        paths.extend(record.as_dict() for record in records)
-    return rows, paths
+    work = WhyTraversal(index, artifact_id, depth=depth)
+    try:
+        while not work.advance(128):
+            pass
+        result = work.result
+        return result['targets'], result['paths']
+    finally:
+        work.close()
 
 
 def why_artifact(root, artifact_id):
@@ -59,7 +26,7 @@ def why_artifact(root, artifact_id):
 
     Stored directions and symmetric inverse views define connectivity. The
     configured trace_depth is semantic scope; absence is not a guessed default.
-    All paths are materialized in this synchronous W implementation.
+    The checkpointable producer is driven synchronously by this command.
     """
     project = None
     details = dict(atomic_snapshot=False, full_semantic_validation=False,
@@ -74,7 +41,6 @@ def why_artifact(root, artifact_id):
                              pointer='/resource_limits/trace_depth')
         depth = limits['trace_depth']
         observed = build_project_relation_index(source)
-        validate_hierarchies(observed.adjacency.references)
         targets, paths = _why_paths(observed.adjacency, artifact_id, depth)
         payload = {'format_version': '1.0.0', 'start': artifact_id, 'depth': depth,
                    'traversal': 'stored_direction_with_symmetric_inverses',
