@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 351
-last_completed_plan_commit: 8.b.C
-next_plan_commit: 8.c.W
-last_completed_numbered_bundle: 203
+implementation_plan_commits_completed: 352
+last_completed_plan_commit: 8.c.W
+next_plan_commit: 8.c.R
+last_completed_numbered_bundle: 204
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8965,12 +8965,30 @@ parallele Apply-Volltest und Commit bestätigen 351/885; danach folgt 8.c.W.
 
 #### 8.c.W – Let it Work
 
-- [ ] **8.c.W** · Position **352/885** · Voraussetzung: `8.b.C`.
+- [x] **8.c.W** · Position **352/885** · Voraussetzung: `8.b.C`.
 **Exakte Commit-Message:** `8.c.W feat(query): Unicode-Volltextsuche aufbauen`
 
 **Umsetzung:** Sucharbeitskopien mit NFC und Casefold localeunabhängig vergleichen.
 
 **Verhaltensabnahme:** Äquivalente Suchbegriffe finden dieselben passenden Fachtexte.
+
+**Umsetzungsstand 8.c.W (Bundle 204):** Der Query-Auswahlkern führt full_text
+als echte ODER-Wertfiltergruppe aus und verknüpft sie mit anderen Gruppen und
+SRX per UND. Titel, Beschreibung, Begriff, bekannte typspezifische Haupttexte
+und eigene Prose-/Admonition-Payloads werden als reine NFC-/Casefold-Arbeitskopien
+literal verglichen. Originalbytes, Quellhashes und Projektionswerte bleiben
+unverändert. Es gibt keine Localeabfrage, Regexinterpretation, Includeausführung,
+Attachmentlesung oder beliebige Metadaten-Stringifizierung.
+
+Der bisherige Negativfall für einen fehlenden Fulltext-Provider wird genau für
+diesen nun implementierten Provider auf die exakte leere Auswahl umgestellt;
+Release-/Verification-Sperren und alle bestehenden Testkennungen bleiben erhalten.
+Die übrigen bisherigen Testdateien bleiben bytegleich. Neue Verhaltenstests
+belegen Unicodeäquivalenz und konkrete ID-/Textresultate. Requirement 0474 bleibt
+partial: R/C, vollständige Produkt-/Plattformabnahme, Last und Work-Anbindung
+sind offen; öffentliche Query-CLI, Live-Projektadapter und Pagination sind weiterhin
+separate Integrationsarbeit. Dev prüft gezielt parallel. Erst erfolgreicher
+paralleler Apply-Volltest und Commit bestätigen 352/885; danach folgt 8.c.R.
 
 #### 8.c.R – Make it Right
 

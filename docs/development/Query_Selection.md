@@ -16,7 +16,7 @@ operands. SRX results must be Boolean. Missing, numeric and other results are
 errors, never implicit truth values. Empty filter groups contribute true.
 
 Supported selection groups are `type`, `maturity`, `implementation_status`,
-`verification_plan_status`, `owner`, `tag`, `has_relation` and `missing_relation`.
+`verification_plan_status`, `owner`, `tag`, `has_relation`, `missing_relation` and `full_text`.
 Relation filters inspect both computed directions. Missing-relation alternatives
 are OR, just like other repeated value filters. Projection returns exact stored
 values; absent pointers yield `{"state":"missing"}`. Stored
@@ -30,8 +30,7 @@ not truncate this selection. The observation is not the six-field public Query
 result and does not assert project completeness, current evidence or approval.
 
 This first W state exposes a pure Python kernel. The public CLI/structured request
-and live project adapter remain open. Fulltext execution belongs to 8.c and
-sorting/pagination to 8.d. Release closure, current verification aggregation and
+and live project adapter remain open. The fulltext provider from 8.c.W is available; sorting/pagination belongs to 8.d. Release closure, current verification aggregation and
 evaluation binding require their actual providers; requesting these filters or
 an evaluation currently raises a structured model error even for empty input.
 Accepting their passive grammar does not claim their execution. Unknown filter
@@ -69,3 +68,24 @@ the public `NormalizedQuery` and `QuerySelection` classes, their module identity
 and the evaluation/selection orchestration. The initializers and projection call
 these pure helpers at the same points in the original sequence. All W/R behavior,
 errors, result ownership, bindings and provider boundaries remain unchanged.
+
+## Unicode fulltext selection (8.c.W)
+
+`full_text` searches literal substrings in NFC-plus-casefold working copies of
+`title`, `description`, `term`, the known type-specific main statement, and
+prose/admonition `payload.markdown`. Scenario main-flow entries are separate text
+values. The domain mappings include statement, decision, responsibility,
+objective and definition; document purpose and proposal rationale are text
+inputs where present. Each matching block keeps its own artifact identity.
+No include rendering, attachment loading or arbitrary metadata stringification
+occurs. Owner, IDs, tags and extension objects are not fulltext fields.
+
+Repeated terms are OR alternatives, combined with the other value groups and SRX
+predicates by AND. Matching uses Unicode NFC followed by casefold, without host
+locale collation, accent removal, NFKC conversion or regex interpretation.
+Projection and source/hash bindings retain the original source data. Known text
+fields of the wrong type produce a structured model error. The search is still
+the explicit-input selection stage, with no public CLI/page, live model validation,
+persistent search index, Work continuation or approval claim. Specialist field
+validation and document rendering remain separate providers. The requirement
+stays partial pending the R/C and broader product/platform acceptance.

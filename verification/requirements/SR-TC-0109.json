@@ -22,7 +22,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad query` MUSS die in Kapitel 11.6 definierte Filter- und Projektionsgrammatik unterstützen.",
-    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed. C extracts normalization and stored-field projection into private pure helpers at the original call sites. Public classes and module identities, existing W/R cases, errors, bindings and provider boundaries remain unchanged."
+    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed. C extracts normalization and stored-field projection into private pure helpers at the original call sites. Public classes and module identities, existing W/R cases, errors, bindings and provider boundaries remain unchanged. 8.c.W now executes the full_text group with literal NFC/casefold search; repeated terms are OR and compose with the existing groups/SRX by AND. Its former missing-provider empty-input case now requires the exact empty selection; other provider failures remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -44,6 +44,34 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[CAF\\xc9]",
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[Caf\\xc9]",
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[cafe\\u0301]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[STRASSE]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[Stra\\xdfe]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[strasse]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[assumption-statement-Annahme Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[component-responsibility-Aufgabe Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[decision-decision-Entscheidung Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[goal-statement-Ziel Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[milestone-objective-Meilenstein Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[need-statement-Bedarf Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[release-objective-Release Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[requirement-statement-Pflicht Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[term-definition-Definition Caf\\xe9]",
+    "tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[admonition]",
+    "tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[prose]",
+    "tests/test_query_full_text.py::test_dotted_i_uses_unicode_mapping_without_locale_specific_replacement",
+    "tests/test_query_full_text.py::test_greek_sigma_forms_share_casefold_search",
+    "tests/test_query_full_text.py::test_identity_owner_tags_and_extension_payload_are_not_arbitrary_search_text",
+    "tests/test_query_full_text.py::test_nfc_does_not_remove_accents_or_apply_compatibility_normalization",
+    "tests/test_query_full_text.py::test_prose_includes_and_non_prose_payload_are_not_opened_or_stringified",
+    "tests/test_query_full_text.py::test_punctuation_and_regex_looking_terms_are_literal_substrings",
+    "tests/test_query_full_text.py::test_repeated_search_terms_are_or_and_other_groups_and_srx_remain_and",
+    "tests/test_query_full_text.py::test_search_does_not_consult_host_locale_or_execute_host_operations",
+    "tests/test_query_full_text.py::test_selected_known_text_field_with_wrong_type_is_error_not_python_repr",
+    "tests/test_query_full_text.py::test_source_bytes_hashes_and_projection_stay_in_their_original_unicode_form",
+    "tests/test_query_full_text.py::test_title_description_term_and_scenario_steps_are_searchable",
     "tests/test_query_selection.py::test_absent_semantic_provider_never_fakes_empty_success[full_text]",
     "tests/test_query_selection.py::test_absent_semantic_provider_never_fakes_empty_success[release]",
     "tests/test_query_selection.py::test_absent_semantic_provider_never_fakes_empty_success[verification_result]",
@@ -112,7 +140,7 @@
   ],
   "open_items": [
     "Public query CLI/structured request and current project adapter remain open; this evidence covers the explicit-input Python selection kernel only.",
-    "Fulltext execution belongs to 8.c; custom sorting and exact public page delivery to 8.d. The current selection is explicitly unpaged.",
+    "Custom sorting and exact public page delivery belong to 8.d; the current selection remains explicitly unpaged.",
     "Closed release scope, current verification aggregation and evaluation binding require actual providers; absent providers reject requested execution.",
     "Supported platform/product acceptance, load and full Work-engine integration remain open."
   ]

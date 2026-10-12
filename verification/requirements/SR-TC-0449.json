@@ -62,7 +62,7 @@
   ],
   "open_items": [
     "Public query CLI/structured request and current project adapter remain open; this evidence covers the explicit-input Python selection kernel only.",
-    "Fulltext execution belongs to 8.c; custom sorting and exact public page delivery to 8.d. The current selection is explicitly unpaged.",
+    "Custom sorting and exact public page delivery belong to 8.d; the current selection remains explicitly unpaged.",
     "Closed release scope, current verification aggregation and evaluation binding require actual providers; absent providers reject requested execution.",
     "Supported platform/product acceptance, load and full Work-engine integration remain open."
   ]

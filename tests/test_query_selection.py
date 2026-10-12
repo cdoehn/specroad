@@ -146,6 +146,13 @@ def test_selection_is_complete_before_bound_sort_offset_and_limit():
 
 @pytest.mark.parametrize('name', ['verification_result', 'release', 'full_text'])
 def test_absent_semantic_provider_never_fakes_empty_success(name):
+    if name == 'full_text':
+        # 8.c.W supplies this provider; a genuinely empty inventory now has an
+        # exact empty result. Release and verification still require providers.
+        result = select([], filters={name: ['value']})
+        assert result.items == [] and result.artifact_ids == () and result.total == 0
+        assert result.source_count == 0 and result.pagination_applied is False
+        return
     with pytest.raises(ModelError) as caught:
         select([], filters={name: ['value']})
     assert caught.value.reason == 'query_filter_provider_required'

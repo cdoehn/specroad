@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0474",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-SRX-CONTEXT-v1"
+  ],
+  "preconditions": [
+    "Owned current-schema artifact bytes and actual Query selection on native CPython; no CLI or document-rendering claim."
+  ],
+  "steps": [
+    "Search declared text fields with NFC-plus-casefold working copies and compare exact matching IDs.",
+    "Combine repeated fulltext alternatives with other groups and SRX; retain original source bytes, hashes and projected text.",
+    "Reject invalid known text field types; ensure no host locale, file, network or process use."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabhängig anwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/filters/full_text",
+    "/items"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,39 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[CAF\\xc9]",
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[Caf\\xc9]",
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[cafe\\u0301]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[STRASSE]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[Stra\\xdfe]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[strasse]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[assumption-statement-Annahme Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[component-responsibility-Aufgabe Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[decision-decision-Entscheidung Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[goal-statement-Ziel Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[milestone-objective-Meilenstein Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[need-statement-Bedarf Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[release-objective-Release Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[requirement-statement-Pflicht Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[term-definition-Definition Caf\\xe9]",
+    "tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[admonition]",
+    "tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[prose]",
+    "tests/test_query_full_text.py::test_dotted_i_uses_unicode_mapping_without_locale_specific_replacement",
+    "tests/test_query_full_text.py::test_greek_sigma_forms_share_casefold_search",
+    "tests/test_query_full_text.py::test_identity_owner_tags_and_extension_payload_are_not_arbitrary_search_text",
+    "tests/test_query_full_text.py::test_nfc_does_not_remove_accents_or_apply_compatibility_normalization",
+    "tests/test_query_full_text.py::test_prose_includes_and_non_prose_payload_are_not_opened_or_stringified",
+    "tests/test_query_full_text.py::test_punctuation_and_regex_looking_terms_are_literal_substrings",
+    "tests/test_query_full_text.py::test_repeated_search_terms_are_or_and_other_groups_and_srx_remain_and",
+    "tests/test_query_full_text.py::test_search_does_not_consult_host_locale_or_execute_host_operations",
+    "tests/test_query_full_text.py::test_selected_known_text_field_with_wrong_type_is_error_not_python_repr",
+    "tests/test_query_full_text.py::test_source_bytes_hashes_and_projection_stay_in_their_original_unicode_form",
+    "tests/test_query_full_text.py::test_title_description_term_and_scenario_steps_are_searchable"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 8.c.R/C and supported platform/product acceptance; the current run measures native CPython only.",
+    "Public query CLI/live project adapter, public page delivery, load and full Work integration remain open.",
+    "Full specialist artifact/document validation, rendering/include traversal and attachment indexing are outside the current explicit-input text selection."
   ]
 }

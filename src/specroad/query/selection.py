@@ -16,6 +16,7 @@ from ..srx import EvaluationContext, LoadedGraph, SrxProgram, evaluate, require_
 from ..srx.pointers import parse_pointer
 from ._query_normalization import _sequence, normalize_query
 from ._selection_projection import project_item
+from .full_text import full_text_matches
 
 
 @dataclass(frozen=True, init=False)
@@ -106,7 +107,7 @@ def select_query(records, query, *, project, configuration=None):
     if type(query) is not NormalizedQuery:
         raise ModelError('normalized_query_required')
     data = query.data
-    for name in ('verification_result', 'release', 'full_text'):
+    for name in ('verification_result', 'release'):
         if name in data['filters']:
             raise ModelError('query_filter_provider_required', pointer='/filters/' + name)
     if data['evaluation'] is not None:
@@ -143,7 +144,9 @@ def select_query(records, query, *, project, configuration=None):
         kinds = {view['type'] for view in current['relations']}
         matches = True
         for name, values in data['filters'].items():
-            if name == 'tag':
+            if name == 'full_text':
+                matched = full_text_matches(artifact, values)
+            elif name == 'tag':
                 matched = any(value in artifact.get('tags', []) for value in values)
             elif name == 'has_relation':
                 matched = any(value in kinds for value in values)
