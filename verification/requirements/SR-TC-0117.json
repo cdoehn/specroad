@@ -4,19 +4,40 @@
   "requirement_id": "SR-REQ-0117",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1"
+  ],
+  "preconditions": [
+    "Fresh owned current-project artifacts, canonical resolved relation identities and native CPython; no approval or atomic snapshot claim."
+  ],
+  "steps": [
+    "Invoke the same trace scope through Python, CLI, structured request and portable distribution.",
+    "Compare independently expected node distances, edge directions, depth boundaries, original relation values and complete inventory bindings.",
+    "Trap project writes, stdin, entropy, subprocesses and lock acquisition; exercise currentness, writer/journal and invalid-input failures."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Rendering, Query, Trace, Why, Impact und Diff DÜRFEN NICHT das normative Projektmodell verändern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "This evidence establishes only the implemented trace command and its current-project read boundary; other operations in SR-REQ-0117 remain open. 8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. W is synchronous and materializes its result; R continuation, wider cycle/multiple-path/soft-target acceptance, durable Work, external delivery and supported-platform/performance acceptance remain open."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6
+  ],
+  "json_pointers": [
+    "/nodes",
+    "/edges",
+    "/coverage"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +49,44 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_trace.py::test_changed_unreached_source_is_rejected_by_final_freshness_check",
+    "tests/test_query_trace.py::test_direct_cli_and_structured_invocation_agree_on_complete_machine_result",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[both-0-nodes2-edges2]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[both-1-nodes5-edges5]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[both-2-nodes8-edges8]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[in-0-nodes0-edges0]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[in-1-nodes3-edges3]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[in-2-nodes6-edges6]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[out-0-nodes1-edges1]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[out-1-nodes4-edges4]",
+    "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[out-2-nodes7-edges7]",
+    "tests/test_query_trace.py::test_explicit_depth_above_historical_default_is_not_silently_capped",
+    "tests/test_query_trace.py::test_invalid_direct_scope_fails_before_project_access[None-1]",
+    "tests/test_query_trace.py::test_invalid_direct_scope_fails_before_project_access[out--1]",
+    "tests/test_query_trace.py::test_invalid_direct_scope_fails_before_project_access[out-1.5]",
+    "tests/test_query_trace.py::test_invalid_direct_scope_fails_before_project_access[out-1]",
+    "tests/test_query_trace.py::test_invalid_direct_scope_fails_before_project_access[out-True]",
+    "tests/test_query_trace.py::test_invalid_direct_scope_fails_before_project_access[sideways-1]",
+    "tests/test_query_trace.py::test_invalid_unreached_source_prevents_a_false_complete_trace",
+    "tests/test_query_trace.py::test_inverse_supersedes_keeps_original_identity_and_data",
+    "tests/test_query_trace.py::test_isolated_start_remains_a_known_node_and_unknown_start_is_an_error",
+    "tests/test_query_trace.py::test_missing_required_scope_and_unknown_direction_are_usage_errors",
+    "tests/test_query_trace.py::test_non_decimal_cli_depth_is_usage_error_without_traversal[ 1]",
+    "tests/test_query_trace.py::test_non_decimal_cli_depth_is_usage_error_without_traversal[+1]",
+    "tests/test_query_trace.py::test_non_decimal_cli_depth_is_usage_error_without_traversal[-1]",
+    "tests/test_query_trace.py::test_non_decimal_cli_depth_is_usage_error_without_traversal[1.0]",
+    "tests/test_query_trace.py::test_non_decimal_cli_depth_is_usage_error_without_traversal[\\u0661]",
+    "tests/test_query_trace.py::test_non_decimal_cli_depth_is_usage_error_without_traversal[true]",
+    "tests/test_query_trace.py::test_public_trace_does_not_attempt_writes_processes_entropy_stdin_or_lock_acquisition",
+    "tests/test_query_trace.py::test_registered_machine_protocol_exposes_actual_trace_without_resume_claim",
+    "tests/test_query_trace.py::test_result_mutation_cannot_change_sources_or_later_trace",
+    "tests/test_query_trace.py::test_writer_and_unresolved_journal_block_before_model_loading",
+    "tests/test_query_trace.py::test_zipapp_and_module_return_the_same_trace"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 8.e.R/C, including cooperative continuation and expanded cycle/multiple-path/soft-target acceptance.",
+    "Durable Work, large external result delivery and supported-platform/performance acceptance remain open.",
+    "Complete the remaining rendering/query/why/impact/diff product boundaries; trace evidence does not close the whole multi-command requirement."
   ]
 }

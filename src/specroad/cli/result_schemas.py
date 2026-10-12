@@ -100,6 +100,18 @@ def _fields(schema_id):
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
                 'validation_scope': {'const': 'relation_references_and_canonical_storage_only'},
                 'atomic_snapshot': {'const': False}})})
+    if schema_id == 'artifact-trace-v1':
+        edge = _object({'relation_id': nonempty, 'type': nonempty, 'source': nonempty,
+            'target': nonempty, 'inverse': boolean, 'stored_source': nonempty,
+            'stored_relation': _object({'relation_id': nonempty, 'type': nonempty,
+                                       'target': nonempty}, extra=True)})
+        return _object({'format_version': {'const': '1.0.0'}, 'start': nonempty,
+            'direction': {'enum': ['in', 'out', 'both']}, 'depth': count,
+            'nodes': _array(_object({'id': nonempty, 'artifact_type': nonempty, 'distance': count})),
+            'edges': _array(edge), 'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+                'source_count': count, 'relation_count': count, 'observation_sha256': sha,
+                'validation_scope': {'const': 'relation_references_and_canonical_storage_only'},
+                'atomic_snapshot': {'const': False}})})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,

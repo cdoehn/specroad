@@ -103,6 +103,11 @@ def _show(invocation):
     return show_command(invocation)
 
 
+def _trace(invocation):
+    from ..query.trace import trace_command
+    return trace_command(invocation)
+
+
 def builtin_registry() -> CommandRegistry:
     return CommandRegistry((CommandSpec(
         command_id='init', words=('init',), command_class=CommandClass.ROOT_CREATION,
@@ -143,6 +148,23 @@ def builtin_registry() -> CommandRegistry:
                               'SRV001', 'SRV002'),
             work=WorkContract('artifact_show', ('project_configuration', 'current_project_artifacts',
                                               'complete_relation_references'))),
+    ), CommandSpec(
+        command_id='trace', words=('trace',), command_class=CommandClass.READ_ONLY,
+        preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.NONE,
+        handler=_trace, requires_project=True, positionals=(PositionalSpec('id'),),
+        options=(OptionSpec('--direction', takes_value=True, required=True, choices=('in', 'out', 'both')),
+                 OptionSpec('--depth', takes_value=True, required=True),
+                 OptionSpec('--project', takes_value=True),
+                 OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                 OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('artifact-trace-v1', {'command_id': 'trace',
+            'arguments': {'id': 'SR-GOAL-' + '0' * 26},
+            'options': {'--direction': 'both', '--depth': '3', '--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT',
+                              'CORE_SECURITY', 'SRV001', 'SRV002'),
+            work=WorkContract('artifact_trace', ('project_configuration', 'current_project_artifacts',
+                                               'complete_relation_references', 'explicit_trace_scope'))),
     ), CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
         command_class=CommandClass.READ_ONLY,

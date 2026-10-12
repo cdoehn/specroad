@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 357
-last_completed_plan_commit: 8.d.C
-next_plan_commit: 8.e.W
-last_completed_numbered_bundle: 209
+implementation_plan_commits_completed: 358
+last_completed_plan_commit: 8.e.W
+next_plan_commit: 8.e.R
+last_completed_numbered_bundle: 210
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9147,12 +9147,36 @@ paralleler Apply-Volltest und Commit bestätigen 357/885; danach folgt 8.e.W.
 
 #### 8.e.W – Let it Work
 
-- [ ] **8.e.W** · Position **358/885** · Voraussetzung: `8.d.C`.
+- [x] **8.e.W** · Position **358/885** · Voraussetzung: `8.d.C`.
 **Exakte Commit-Message:** `8.e.W feat(query): Trace in beide Richtungen aufbauen`
 
 **Umsetzung:** Gerichtete Traversierung für in/out/both mit expliziter Tiefe anbieten.
 
 **Verhaltensabnahme:** Fachlich gewählte Tiefe und Relationsrichtung ergeben die erwarteten Knoten/Kanten.
+
+**Umsetzungsstand 8.e.W (Bundle 210):** trace ist als schreibfreier CLI-,
+strukturierter und Python-Aufruf implementiert. Explizite Richtung in/out/both
+und Tiefe bestimmen besuchte Knoten mit Mindestabstand und tatsächlich durchlaufene
+Relationsansichten. Die vorhandene IdentityFrontier priorisiert Abstand/ID und
+verarbeitet jede Identität einmal. Randknoten werden aufgenommen und nicht weiter
+expandiert. Originalrelationen, inverse Kennzeichnung und superseded_by bleiben
+erhalten; die historisch eingestellte Standardtiefe begrenzt keinen expliziten Wert.
+
+Projekt-Read-Preflight, vollständiger aktueller Relationsindex und abschließende
+Quellprüfung gelten auch für unerreichte Artefakte. Writer, offene Journale,
+kaputte Quellen oder geänderte Bytes erlauben keinen Scheinerfolg. artifact-trace-v1
+und der ausführbare Befehl sind maschinenlesbar registriert. Drei bestehende
+Inventartests erhalten ausschließlich die neuen realen Einträge; ein exakter
+Quellvergleich bindet diese Anpassung an das Result. Alle übrigen 268 Testdateien
+und alle 9.014 bisherigen Testkennungen bleiben erhalten. 33 neue Fälle und
+betroffene Regressionen bilden 1.618 gezielte parallele Dev-Prüfungen.
+
+Requirements 0111/0117 bleiben partial: W ist synchron und hält sein Ergebnis im
+Speicher. R/C-Fortsetzung, breitere Zyklus-/Mehrfachpfad-/Arbeitszielabnahme,
+dauerhafte Work-Ausführung, externe Großausgabe und Plattform-/Performanceabnahme
+bleiben offen. Keine vollständige semantische Validierung, atomare Momentaufnahme
+oder Freigabe wird behauptet. Erst erfolgreicher paralleler Apply-Volltest und
+Commit bestätigen 358/885; danach folgt 8.e.R.
 
 #### 8.e.R – Make it Right
 
