@@ -4,19 +4,41 @@
   "requirement_id": "SR-REQ-0112",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1"
+  ],
+  "preconditions": [
+    "Owned current-project artifacts with explicit trace_depth, canonical complete relation references and protected hierarchies; no approval or atomic-snapshot claim."
+  ],
+  "steps": [
+    "Invoke the same Why through Python, CLI, structured requests and a portable zipapp.",
+    "Compare exact independent shortest-path sets, origin-specific distances, stored identities and configured depths.",
+    "Reject invalid configuration and complete-inventory graph errors; trap writes and observe currentness/writer/journal failures."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad why <ID>` MUSS alle kürzesten gültigen Pfade des Artefakts zu Goals, Needs und Sources bis zur konfigurierten Maximaltiefe ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. W materializes index, predecessors and all paths; R/C continuation, durable Work, adaptive runtime, external delivery, effective profile defaults and supported-platform/performance acceptance remain open. Coverage is not complete semantic validation or atomic-snapshot approval."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6
+  ],
+  "json_pointers": [
+    "/targets",
+    "/paths",
+    "/path_count",
+    "/coverage"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +50,42 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_why.py::test_active_writer_and_unresolved_journal_block_before_graph_loading",
+    "tests/test_query_why.py::test_changes_during_path_materialization_block_final_success[configuration]",
+    "tests/test_query_why.py::test_changes_during_path_materialization_block_final_success[unreached_source]",
+    "tests/test_query_why.py::test_direct_cli_request_and_process_return_the_same_machine_paths",
+    "tests/test_query_why.py::test_directed_incoming_edges_do_not_invent_an_origin_route",
+    "tests/test_query_why.py::test_equal_length_distinct_relation_identities_are_distinct_paths",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[0]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[1]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[20]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[2]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[3]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[-1]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[1.5]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[3]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[True]",
+    "tests/test_query_why.py::test_invalid_unreachable_sources_block_a_complete_answer[hierarchy_cycle]",
+    "tests/test_query_why.py::test_invalid_unreachable_sources_block_a_complete_answer[malformed]",
+    "tests/test_query_why.py::test_invalid_unreachable_sources_block_a_complete_answer[missing_target]",
+    "tests/test_query_why.py::test_missing_configured_depth_is_an_explicit_model_error_before_graph_loading",
+    "tests/test_query_why.py::test_nonhierarchy_cycles_terminate_without_longer_or_repeated_paths",
+    "tests/test_query_why.py::test_origin_start_includes_its_one_zero_edge_shortest_path[goal]",
+    "tests/test_query_why.py::test_origin_start_includes_its_one_zero_edge_shortest_path[need]",
+    "tests/test_query_why.py::test_origin_start_includes_its_one_zero_edge_shortest_path[source]",
+    "tests/test_query_why.py::test_portable_zipapp_returns_all_the_same_paths",
+    "tests/test_query_why.py::test_public_command_schema_declares_actual_read_only_synchronous_behavior",
+    "tests/test_query_why.py::test_public_why_attempts_no_project_writes_processes_entropy_stdin_or_writer_lock",
+    "tests/test_query_why.py::test_relation_array_and_file_creation_order_do_not_change_path_order",
+    "tests/test_query_why.py::test_result_mutations_do_not_change_sources_or_subsequent_paths",
+    "tests/test_query_why.py::test_soft_count_targets_do_not_cap_the_complete_path_set",
+    "tests/test_query_why.py::test_symmetric_inverse_preserves_stored_relation_identity_and_orientation",
+    "tests/test_query_why.py::test_unknown_start_is_an_error_even_with_zero_depth[0]",
+    "tests/test_query_why.py::test_unknown_start_is_an_error_even_with_zero_depth[3]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 8.f.R/C with actual continued search and path production for large path sets.",
+    "Durable Work, adaptive runtime, external large-result delivery, effective profile/default resolution and supported-platform/performance acceptance remain open."
   ]
 }

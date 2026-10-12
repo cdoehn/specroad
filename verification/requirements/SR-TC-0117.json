@@ -19,12 +19,13 @@
     "Invoke the same trace scope through Python, CLI, structured request and portable distribution.",
     "Compare independently expected node distances, edge directions, depth boundaries, original relation values and complete inventory bindings.",
     "Trap project writes, stdin, entropy, subprocesses and lock acquisition; exercise currentness, writer/journal and invalid-input failures.",
-    "Resume actual node/edge work under changing targets; compare independent graph sets and retain honest pending, failure and cancellation states without project writes."
+    "Resume actual node/edge work under changing targets; compare independent graph sets and retain honest pending, failure and cancellation states without project writes.",
+    "Verify exact Why paths through the same public read boundary, with no project mutation or stale-success fallback."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Rendering, Query, Trace, Why, Impact und Diff DÜRFEN NICHT das normative Projektmodell verändern.",
-    "scope": "This evidence establishes only the implemented trace command and its current-project read boundary; other operations in SR-REQ-0117 remain open. 8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. R adds genuine process-local TraceTraversal over a supplied resolved RelationIndex: one node removal or directed edge check per work unit, retaining the frontier and unfinished adjacency across calls. Independent cycle/diamond/multiple-relation oracles, a 513-edge node and a 1301-node chain prove unchanged scope under small or varying targets. Incomplete/failed/closed work cannot publish a result; invalid targets consume no work, and result/state copies own their data. Public trace uses this engine with the existing current-project guards. Inventory/graph/output remain materialized; durable Work, adaptive runtime admission, external delivery and supported-platform/performance acceptance remain open. C moves the unchanged frontier implementation into a private graph module while preserving the public TraceTraversal class name, defining module and docstring through inheritance. The project adapter, all W/R behavior oracles and other product sources remain unchanged."
+    "scope": "This evidence covers the implemented trace and why commands and their current-project read boundaries; remaining operations in SR-REQ-0117 remain open. 8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. R adds genuine process-local TraceTraversal over a supplied resolved RelationIndex: one node removal or directed edge check per work unit, retaining the frontier and unfinished adjacency across calls. Independent cycle/diamond/multiple-relation oracles, a 513-edge node and a 1301-node chain prove unchanged scope under small or varying targets. Incomplete/failed/closed work cannot publish a result; invalid targets consume no work, and result/state copies own their data. Public trace uses this engine with the existing current-project guards. Inventory/graph/output remain materialized; durable Work, adaptive runtime admission, external delivery and supported-platform/performance acceptance remain open. C moves the unchanged frontier implementation into a private graph module while preserving the public TraceTraversal class name, defining module and docstring through inheritance. The project adapter, all W/R behavior oracles and other product sources remain unchanged. 8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. W materializes index, predecessors and all paths; R/C continuation, durable Work, adaptive runtime, external delivery, effective profile defaults and supported-platform/performance acceptance remain open. Coverage is not complete semantic validation or atomic-snapshot approval."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -35,9 +36,12 @@
     6
   ],
   "json_pointers": [
-    "/nodes",
+    "/coverage",
     "/edges",
-    "/coverage"
+    "/nodes",
+    "/path_count",
+    "/paths",
+    "/targets"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -124,10 +128,43 @@
     "tests/test_query_trace_right.py::test_unknown_start_is_not_a_completed_empty_traversal[0]",
     "tests/test_query_trace_right.py::test_unknown_start_is_not_a_completed_empty_traversal[1]",
     "tests/test_query_trace_right.py::test_unresolved_inputs_are_not_accepted_as_a_relation_index[None]",
-    "tests/test_query_trace_right.py::test_unresolved_inputs_are_not_accepted_as_a_relation_index[index1]"
+    "tests/test_query_trace_right.py::test_unresolved_inputs_are_not_accepted_as_a_relation_index[index1]",
+    "tests/test_query_why.py::test_active_writer_and_unresolved_journal_block_before_graph_loading",
+    "tests/test_query_why.py::test_changes_during_path_materialization_block_final_success[configuration]",
+    "tests/test_query_why.py::test_changes_during_path_materialization_block_final_success[unreached_source]",
+    "tests/test_query_why.py::test_direct_cli_request_and_process_return_the_same_machine_paths",
+    "tests/test_query_why.py::test_directed_incoming_edges_do_not_invent_an_origin_route",
+    "tests/test_query_why.py::test_equal_length_distinct_relation_identities_are_distinct_paths",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[0]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[1]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[20]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[2]",
+    "tests/test_query_why.py::test_every_shortest_path_per_origin_is_returned_with_exact_depth[3]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[-1]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[1.5]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[3]",
+    "tests/test_query_why.py::test_invalid_configured_depth_never_becomes_an_empty_success[True]",
+    "tests/test_query_why.py::test_invalid_unreachable_sources_block_a_complete_answer[hierarchy_cycle]",
+    "tests/test_query_why.py::test_invalid_unreachable_sources_block_a_complete_answer[malformed]",
+    "tests/test_query_why.py::test_invalid_unreachable_sources_block_a_complete_answer[missing_target]",
+    "tests/test_query_why.py::test_missing_configured_depth_is_an_explicit_model_error_before_graph_loading",
+    "tests/test_query_why.py::test_nonhierarchy_cycles_terminate_without_longer_or_repeated_paths",
+    "tests/test_query_why.py::test_origin_start_includes_its_one_zero_edge_shortest_path[goal]",
+    "tests/test_query_why.py::test_origin_start_includes_its_one_zero_edge_shortest_path[need]",
+    "tests/test_query_why.py::test_origin_start_includes_its_one_zero_edge_shortest_path[source]",
+    "tests/test_query_why.py::test_portable_zipapp_returns_all_the_same_paths",
+    "tests/test_query_why.py::test_public_command_schema_declares_actual_read_only_synchronous_behavior",
+    "tests/test_query_why.py::test_public_why_attempts_no_project_writes_processes_entropy_stdin_or_writer_lock",
+    "tests/test_query_why.py::test_relation_array_and_file_creation_order_do_not_change_path_order",
+    "tests/test_query_why.py::test_result_mutations_do_not_change_sources_or_subsequent_paths",
+    "tests/test_query_why.py::test_soft_count_targets_do_not_cap_the_complete_path_set",
+    "tests/test_query_why.py::test_symmetric_inverse_preserves_stored_relation_identity_and_orientation",
+    "tests/test_query_why.py::test_unknown_start_is_an_error_even_with_zero_depth[0]",
+    "tests/test_query_why.py::test_unknown_start_is_an_error_even_with_zero_depth[3]"
   ],
   "open_items": [
     "Durable Work, large external result delivery and supported-platform/performance acceptance remain open.",
-    "Complete the remaining rendering/query/why/impact/diff product boundaries; trace evidence does not close the whole multi-command requirement."
+    "Complete the remaining rendering/query/impact/diff product boundaries; trace/why evidence does not close the whole multi-command requirement.",
+    "Complete 8.f.R/C and the documented Why process-local, memory and configuration-resolution boundaries."
   ]
 }

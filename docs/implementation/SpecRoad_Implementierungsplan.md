@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 360
-last_completed_plan_commit: 8.e.C
-next_plan_commit: 8.f.W
-last_completed_numbered_bundle: 212
+implementation_plan_commits_completed: 361
+last_completed_plan_commit: 8.f.W
+next_plan_commit: 8.f.R
+last_completed_numbered_bundle: 213
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9250,12 +9250,45 @@ paralleler Apply-Volltest und Commit bestätigen 360/885; danach folgt 8.f.W.
 
 #### 8.f.W – Let it Work
 
-- [ ] **8.f.W** · Position **361/885** · Voraussetzung: `8.e.C`.
+- [x] **8.f.W** · Position **361/885** · Voraussetzung: `8.e.C`.
 **Exakte Commit-Message:** `8.f.W feat(query): Alle kürzesten Why-Pfade aufbauen`
 
 **Umsetzung:** Sämtliche kürzesten gültigen Pfade zu Goals, Needs und Sources berechnen.
 
 **Verhaltensabnahme:** Mehrere gleich kurze Herkunftswege erscheinen im vollständigen fachlichen Ergebnis.
+
+**Umsetzungsstand 8.f.W (Bundle 213):** why ist als schreibfreier Python-,
+CLI-, strukturierter und portabler Aufruf implementiert. Die explizit deklarierte
+resource_limits.trace_depth bindet den fachlichen Scope; ein fehlender Wert wird
+als Modellfehler ausgewiesen und nicht aus der Beispielkonfiguration geraten.
+Die gespeicherte Relationsrichtung und symmetrische Gegensichten definieren den
+Graphen. Die vollständige aktuelle Inventur wird auf Referenzen, kanonische
+Speicherung und geschützte Hierarchien geprüft.
+
+Ein Breitensuch-Vorgängergraph erhält alle gleich kurzen Wege zu jedem erreichbaren
+Goal, Need und Source. Das Erreichen eines Herkunftsziels beendet die Suche nach
+weiteren Zielen nicht. Iterative Pfadmaterialisierung gibt sämtliche kürzesten
+Pfade als bestehende PathRecord-Verträge mit Artefakt-/Relationsidentitäten und
+Richtungsflags aus. Zielweise Mindestabstände und Pfadzahlen sind exakt; kleine
+operative Mengenziele kürzen weder Scope noch Pfadmenge. Der öffentliche Befehl
+behält Projekt-Read-Preflights und abschließende Quellaktualitätsprüfung.
+
+32 neue Verhaltenstests besitzen unabhängig bestimmte Herkunftswege, Richtungs-,
+Tiefen- und Mehrfachrelationsorakel. Konfigurationsfehler, ungültige unerreichte
+Quellen, Hierarchiezyklen, Writer/Journale und Änderungen während der Verarbeitung
+verhindern einen Scheinerfolg. Drei exakte Inventartests ergänzen ausschließlich
+den implementierten Befehl und artifact-why-v1; 270 weitere Testdateien und alle
+9.088 bisherigen Testkennungen bleiben unverändert. Die gemeinsame Fixture für
+ausführbare Befehlsbeispiele deklariert zusätzlich trace_depth=10; sämtliche
+bisherigen Assertions bleiben erhalten. 1.831 gezielte parallele Dev-Prüfungen
+umfassen neue und betroffene Regressionen einschließlich aller Fixture-Nutzer.
+
+Requirements 0064/0112 werden partial; 0117 bleibt partial. W hält Index,
+Vorgängergraph und vollständige Ausgabe im Speicher. R/C-Fortsetzung, dauerhafte
+Work-Ausführung, adaptive Runtime, externe Großausgabe, effektive Profildefaults
+und Plattform-/Performanceabnahme bleiben offen. Keine vollständige semantische
+Freigabe oder atomare Momentaufnahme wird behauptet. Erst erfolgreicher paralleler
+Apply-Volltest und Commit bestätigen 361/885; danach folgt 8.f.R.
 
 #### 8.f.R – Make it Right
 

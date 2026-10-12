@@ -17,7 +17,8 @@ def inspection_project(root, *, artifacts=None, extra_profiles=()):
     profile = ProfileResource(canonical_json_bytes(profile_data(profile_id='core')))
     resources = [profile, *extra_profiles]
     keys = [p.key for p in extra_profiles]
-    configuration = configuration_value(language_registry=registry_binding(registry), profiles=keys)
+    configuration = configuration_value(language_registry=registry_binding(registry), profiles=keys,
+                                        resource_limits={'trace_depth': 10})
     effective = compose_profiles(resources, core_key=profile.key, cli_profiles=keys, language_registry=registry)
     values = [domain_value('goal')] if artifacts is None else artifacts
     info = root.stat()

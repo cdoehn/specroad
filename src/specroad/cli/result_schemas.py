@@ -112,6 +112,20 @@ def _fields(schema_id):
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
                 'validation_scope': {'const': 'relation_references_and_canonical_storage_only'},
                 'atomic_snapshot': {'const': False}})})
+    if schema_id == 'artifact-why-v1':
+        identity = _object({'id': nonempty, 'id_scheme': nonempty, 'artifact_type': nonempty, 'id_prefix': nonempty})
+        path = _object({'artifacts': _array(identity),
+                        'relations': _array(_object({'relation_id': nonempty, 'id_scheme': nonempty})),
+                        'inverse': _array(boolean)})
+        return _object({'format_version': {'const': '1.0.0'}, 'start': nonempty, 'depth': count,
+            'traversal': {'const': 'stored_direction_with_symmetric_inverses'},
+            'targets': _array(_object({'id': nonempty, 'artifact_type': {'enum': ['goal', 'need', 'source']},
+                                      'distance': count, 'path_count': count})),
+            'paths': _array(path), 'path_count': count,
+            'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+                'source_count': count, 'relation_count': count, 'observation_sha256': sha,
+                'validation_scope': {'const': 'relation_references_canonical_storage_and_hierarchies_only'},
+                'atomic_snapshot': {'const': False}})})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,
