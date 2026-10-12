@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 355
-last_completed_plan_commit: 8.d.W
-next_plan_commit: 8.d.R
-last_completed_numbered_bundle: 207
+implementation_plan_commits_completed: 356
+last_completed_plan_commit: 8.d.R
+next_plan_commit: 8.d.C
+last_completed_numbered_bundle: 208
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9082,12 +9082,33 @@ danach folgt 8.d.R.
 
 #### 8.d.R – Make it Right
 
-- [ ] **8.d.R** · Position **356/885** · Voraussetzung: `8.d.W`.
+- [x] **8.d.R** · Position **356/885** · Voraussetzung: `8.d.W`.
 **Exakte Commit-Message:** `8.d.R feat(query): Sortierung und exakte Pagination vervollständigen`
 
 **Vervollständigung:** Leere Menge, Offset jenseits Ende und große fortsetzbare Auswahl behandeln.
 
 **Verhaltensabnahme:** Einzel- und Mehrschrittlauf ergeben dieselbe Gesamtzahl und Seite. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungsstand 8.d.R (Bundle 208):** QueryWork sortiert die vollständig
+bestimmte Auswahl über tatsächliche M6-Chargen und Merge-Läufe. advance führt
+reale Arbeitsschritte und anschließend vorwärts gerichtete Seitenausgabe aus;
+vor vollständiger Sortierung entsteht kein abgeschlossenes QueryPage. Leere
+Mengen, Offsets am/hinter dem Ende und Limit null behalten exakte Gesamtzahl und
+truncated-Formel. Eine tatsächlich 10.001 Elemente große Ergebnismenge bleibt
+vollständig. Unterschiedliche Schrittgrößen, Sortierrichtungen und Chargenziele
+liefern dieselben fachlichen Seiten und bewahren Originalprojektion/Quellbindung.
+
+Der Spool erhält ausschließlich eine explizite neue private Wurzel außerhalb der
+geschützten Eingaben. Abbruch, Schreibfehler und Manipulation veröffentlichen kein
+Scheinergebnis; vorhandene eigene Dateien bleiben erhalten. 32 neue Verhaltenstests
+und unveränderte Query-/Graph-/SRX-/Scope-/M6-Regressionsfälle bilden 1.436 gezielte
+parallele Dev-Prüfungen. Alle 270 bisherigen Testdateien und 8.982 Kennungen bleiben
+unverändert. Requirement 0475 bleibt partial: vorgelagerte Auswahl und angeforderte
+Seite sind weiterhin im Speicher; die Fortsetzung gilt nur im lebenden Prozess.
+Öffentliche CLI/Live-Projektanbindung, aktuelle semantische Provider, dauerhafte
+Work-Integration, adaptive Runtime-Anbindung und Plattform-/Produktabnahme bleiben
+offen. Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 356/885;
+danach folgt die strukturelle Bereinigung 8.d.C.
 
 #### 8.d.C – Make it Clean
 

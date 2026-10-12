@@ -17,12 +17,13 @@
   "steps": [
     "Execute value/fulltext/SRX filters over every supplied source and count all matches.",
     "Sort original scalar fields independently of projection; apply offset/limit only after complete sorting.",
-    "Compare all six result fields and independent ID/value oracles; reject non-scalar and unavailable computed sort values before pagination."
+    "Compare all six result fields and independent ID/value oracles; reject non-scalar and unavailable computed sort values before pagination.",
+    "Advance the real external query sort and delivery with different budgets; compare exact results and explicit failure/cancellation/storage boundaries."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Query-Ergebnis MUSS `items`, `total`, `offset`, `limit`, `returned` und `truncated` enthalten.",
-    "scope": "8.d.W adds query_records and an owned QueryPage with exactly items/total/offset/limit/returned/truncated. All supplied-inventory filters execute before exact counting, full scalar sorting and pagination. Missing/null/Boolean/numeric/string precedence, NFC UTF-8 string order, mixed directions and final ascending ID tie-breaking have independent result oracles. Projection never removes sort operands. Object/array sort values fail before pagination, and computed verification sorting requires the actual provider even for empty input. Source bytes, query/input bindings and all existing selection behavior remain unchanged. The synchronous kernel is in-memory; R/C continuation and M6 spooling, public CLI/live-project delivery and current semantic providers remain open."
+    "scope": "8.d.W adds query_records and an owned QueryPage with exactly items/total/offset/limit/returned/truncated. All supplied-inventory filters execute before exact counting, full scalar sorting and pagination. Missing/null/Boolean/numeric/string precedence, NFC UTF-8 string order, mixed directions and final ascending ID tie-breaking have independent result oracles. Projection never removes sort operands. Object/array sort values fail before pagination, and computed verification sorting requires the actual provider even for empty input. Source bytes, query/input bindings and all existing selection behavior remain unchanged. The synchronous kernel is in-memory; R/C continuation and M6 spooling, public CLI/live-project delivery and current semantic providers remain open. 8.d.R adds QueryWork with actual M6 bounded-run sorting and forward-only page construction. Single and multiple advance calls retain exact empty/beyond-end/zero-limit pages, all scalar directions and final ascending ID ties. An actual 10001-item selection is delivered without a count cap. Projection pointer order, original Unicode and input/query bindings survive external merges. Incomplete work never exposes a complete page; cancellation, native write failures and run tampering preserve owned files and block success. Only an explicit private spool outside protected roots is writable. Upstream selection and the requested page remain materialized; this is process-local continuation, not durable Work or a whole-query memory bound. All prior tests remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -76,10 +77,42 @@
     "tests/test_query_paging.py::test_sort_reads_original_fields_even_when_projection_omits_them",
     "tests/test_query_paging.py::test_string_order_uses_nfc_utf8_without_casefold_or_original_rewrite",
     "tests/test_query_paging.py::test_unselected_non_scalar_metadata_is_not_a_sort_operand",
-    "tests/test_query_paging.py::test_zero_limit_returns_no_items_with_exact_nonzero_total"
+    "tests/test_query_paging.py::test_zero_limit_returns_no_items_with_exact_nonzero_total",
+    "tests/test_query_paging_right.py::test_actual_collection_above_historical_soft_count_is_complete_in_both_runs",
+    "tests/test_query_paging_right.py::test_cancellation_preserves_files_and_protected_project_without_a_result[input]",
+    "tests/test_query_paging_right.py::test_cancellation_preserves_files_and_protected_project_without_a_result[merge]",
+    "tests/test_query_paging_right.py::test_empty_and_beyond_end_pages_keep_exact_counts_in_single_and_many_steps[0-0-0]",
+    "tests/test_query_paging_right.py::test_empty_and_beyond_end_pages_keep_exact_counts_in_single_and_many_steps[0-7-5]",
+    "tests/test_query_paging_right.py::test_empty_and_beyond_end_pages_keep_exact_counts_in_single_and_many_steps[3-0-0]",
+    "tests/test_query_paging_right.py::test_empty_and_beyond_end_pages_keep_exact_counts_in_single_and_many_steps[3-3-5]",
+    "tests/test_query_paging_right.py::test_empty_and_beyond_end_pages_keep_exact_counts_in_single_and_many_steps[3-8-2]",
+    "tests/test_query_paging_right.py::test_empty_and_beyond_end_pages_keep_exact_counts_in_single_and_many_steps[3-9007199254740992-1]",
+    "tests/test_query_paging_right.py::test_external_merge_keeps_scalar_types_and_key_directions[1-asc]",
+    "tests/test_query_paging_right.py::test_external_merge_keeps_scalar_types_and_key_directions[1-desc]",
+    "tests/test_query_paging_right.py::test_external_merge_keeps_scalar_types_and_key_directions[4096-asc]",
+    "tests/test_query_paging_right.py::test_external_merge_keeps_scalar_types_and_key_directions[4096-desc]",
+    "tests/test_query_paging_right.py::test_filters_original_projection_and_bindings_precede_external_paging",
+    "tests/test_query_paging_right.py::test_invalid_step_budget_does_not_advance_or_cancel_owned_work[-1]",
+    "tests/test_query_paging_right.py::test_invalid_step_budget_does_not_advance_or_cancel_owned_work[0]",
+    "tests/test_query_paging_right.py::test_invalid_step_budget_does_not_advance_or_cancel_owned_work[1.5]",
+    "tests/test_query_paging_right.py::test_invalid_step_budget_does_not_advance_or_cancel_owned_work[True]",
+    "tests/test_query_paging_right.py::test_limit_one_waits_for_all_matches_and_real_sort_work_before_delivery",
+    "tests/test_query_paging_right.py::test_native_spool_write_failure_keeps_partial_state_and_no_complete_result",
+    "tests/test_query_paging_right.py::test_non_scalar_after_first_match_fails_without_any_complete_page[0-bad0]",
+    "tests/test_query_paging_right.py::test_non_scalar_after_first_match_fails_without_any_complete_page[0-bad1]",
+    "tests/test_query_paging_right.py::test_non_scalar_after_first_match_fails_without_any_complete_page[1-bad0]",
+    "tests/test_query_paging_right.py::test_non_scalar_after_first_match_fails_without_any_complete_page[1-bad1]",
+    "tests/test_query_paging_right.py::test_run_tampering_between_sort_and_delivery_cannot_publish_a_page",
+    "tests/test_query_paging_right.py::test_spool_authority_never_comes_from_project_paths_existing_paths_or_links[existing]",
+    "tests/test_query_paging_right.py::test_spool_authority_never_comes_from_project_paths_existing_paths_or_links[protected]",
+    "tests/test_query_paging_right.py::test_spool_authority_never_comes_from_project_paths_existing_paths_or_links[symlink]",
+    "tests/test_query_paging_right.py::test_unavailable_computed_sort_is_rejected_before_spool_creation[False]",
+    "tests/test_query_paging_right.py::test_unavailable_computed_sort_is_rejected_before_spool_creation[True]",
+    "tests/test_query_paging_right.py::test_unicode_mixed_keys_and_ascending_id_ties_survive_every_merge",
+    "tests/test_query_paging_right.py::test_unrepresentable_offset_keeps_the_existing_json_number_error"
   ],
   "open_items": [
-    "Complete 8.d.R/C, including large resumable selection and M6 external spooling; W currently retains the supplied inventory and complete selected rows in memory.",
+    "Complete 8.d.C structural cleanup. R provides actual M6 external sorting/live page continuation; upstream selection and the requested page still materialize in memory.",
     "Public query CLI/live-project adapter and current release/verification/evaluation providers remain open.",
     "Supported platform/product acceptance, load and full durable Work integration remain open."
   ]

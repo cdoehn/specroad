@@ -158,3 +158,39 @@ R/C will address large resumable selection and M6 spooling. Public CLI/live-proj
 integration, current verification aggregation, supported-platform acceptance and
 full durable Work execution remain open; six-field kernel output is not a claim
 that all public query semantics or whole-project validation are complete.
+
+## Live external sorting and paging (8.d.R)
+
+`QueryWork(spool_root, records, query, project=..., protected_roots=...,
+configuration=None, batch_bytes=65536)` captures the supplied selection, then
+uses the existing M6 sorter for real input, bounded sorted runs and pairwise
+merges. The explicit new spool directory must be outside every protected
+project/input/output boundary. Existing paths and symlink ancestry confer no
+storage authority. There is no implicit project write or temporary-directory
+choice. Native I/O errors propagate; closing or failing preserves owned files.
+
+`advance(units)` advances actual sort and forward-only delivery operations.
+`state` is a detached process-local description with `durable_checkpoint=false`;
+it cannot be imported or used to reopen an arbitrary path. `result` becomes an
+owned `QueryPage` only after every matching sort value and the complete external
+sort have been processed. A partial prefix is never a complete query result.
+Empty inputs, offsets at/beyond the end and zero limits retain the exact six
+fields and the specified `truncated` formula. A large requested limit is not
+capped at the historical soft count target. M6's batch byte goal limits encoded
+sort batches, with its existing allowance for one oversized record.
+
+Per-key directions, Missing/null/Boolean/number/string order and the final
+ascending ID tie-breaker also govern external merges. Projected items are encoded
+as owned JSON text inside spool rows so M6's outer JSON key sorting cannot reorder
+requested projection pointers. Original Unicode values and source/query hashes
+remain unchanged. The synchronous `query_records` API retains its existing pure,
+in-memory behavior and errors.
+
+The behavior checks compare single/multiple advance calls, independent page and
+count oracles, an actual 10,001-item result, protected inputs, cancellation, native
+write failure and run tampering. All previous tests remain unchanged. Upstream
+selection still materializes the supplied inventory and matches; the requested
+page is also retained in memory. This is bounded external sorting and live page
+construction, not a whole-query RSS bound, process restart, adaptive-runtime
+admission or durable `work-v1` implementation. Public CLI/live-project delivery,
+current semantic providers and broader platform/product acceptance remain open.
