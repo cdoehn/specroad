@@ -51,6 +51,27 @@ def _impact_rows(records, artifact_id):
     return rows, review_groups, findings
 
 
+def _artifact_observations(records, artifact_id, groups):
+    """Project only declared facts; missing fields never become assessments."""
+    values = {record.identity.id: record.data for record in records}
+    names = {artifact_id} | {name for group in groups for name in group['artifact_ids']}
+    observations = []
+    for name in sorted(names):
+        value = values.get(name)
+        fields = {}
+        for field in ('priority', 'verification_plan_status'):
+            if value is None:
+                fields[field] = {'state': 'unavailable'}
+            elif field not in value:
+                fields[field] = {'state': 'missing'}
+            else:
+                fields[field] = {'state': 'present', 'value': value[field]}
+        observations.append({'artifact_id': name, 'present': value is not None,
+            'artifact_type': None if value is None else value['artifact_type'],
+            'fields': fields, 'verification_assessment': {'state': 'not_performed'}})
+    return observations
+
+
 def impact_artifact(root, artifact_id):
     """Report both physical directions, retaining invalid direct bindings.
 
@@ -68,8 +89,9 @@ def impact_artifact(root, artifact_id):
         _preflight(source)
         snapshot = _capture_sources(source)
         groups, review_groups, findings = _impact_rows(snapshot.records, artifact_id)
-        payload = {'format_version': '1.0.0', 'artifact_id': artifact_id, 'depth': 1,
+        payload = {'format_version': '1.1.0', 'artifact_id': artifact_id, 'depth': 1,
                    'transitive': False, 'groups': groups, 'review_groups': review_groups,
+                   'artifact_observations': _artifact_observations(snapshot.records, artifact_id, groups),
                    'coverage': {'scope': 'current_project_artifacts', 'source_count': len(snapshot.records),
                        'relation_count': sum(len(record.relations) for record in snapshot.records),
                        'review_record_count': sum(record.identity.artifact_type == 'relation_review'

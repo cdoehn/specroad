@@ -19,6 +19,8 @@ def identity_metadata(schema_id):
     Knowing a family never registers a schema. Exact availability is exclusively
     determined by the trusted distribution provider index.
     """
+    if schema_id == 'artifact-impact-v1':
+        return ('1.1.0', 'result', 'result_fields_only')
     if schema_id in RESULT_IDS:
         return ("2.0.0" if schema_id == ENVELOPE_ID else "1.0.0",
                 "exchange" if schema_id == "sarif-specroad-v1" else "result",

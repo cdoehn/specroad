@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 364
-last_completed_plan_commit: 8.g.W
-next_plan_commit: 8.g.R
-last_completed_numbered_bundle: 216
+implementation_plan_commits_completed: 365
+last_completed_plan_commit: 8.g.R
+next_plan_commit: 8.g.C
+last_completed_numbered_bundle: 217
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9402,12 +9402,44 @@ paralleler Apply-Volltest und Commit bestätigen 364/885; danach folgt 8.g.R.
 
 #### 8.g.R – Make it Right
 
-- [ ] **8.g.R** · Position **365/885** · Voraussetzung: `8.g.W`.
+- [x] **8.g.R** · Position **365/885** · Voraussetzung: `8.g.W`.
 **Exakte Commit-Message:** `8.g.R feat(query): Direkte und reviewbezogene Impactanalyse vervollständigen`
 
 **Vervollständigung:** Fehlende fachliche Informationen nicht in eine erfundene Priorität oder Verifikation umdeuten.
 
 **Verhaltensabnahme:** Betroffenheitsmengen stimmen unabhängig von Reihenfolge und Cachezustand. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung (Bundle 217, PLAN `8.g.R`):** Der Impact-Bericht ergänzt für den
+Start und alle direkten Endpunkte explizite Fachbeobachtungen. Tatsächlich
+gespeicherte Priorität und Verifikationsplanstatus erscheinen unverändert als
+present mit Wert; fehlende Felder vorhandener Artefakte als missing und fehlende
+Artefakte als unavailable. Für fehlende Ziele wird auch kein Artefakttyp aus der
+ID geraten. Ungültige gespeicherte Werte bleiben Modellfehler. Freitext,
+Extensions, benachbarte Artefakte und aktuelle Relationsreviews ersetzen keine
+fehlenden Angaben und begründen keine fachliche Verifikation.
+
+Die zusätzliche Ausgabe erklärt verification_assessment als not_performed. Sie
+berechnet kein verification_result und verwechselt weder Planstatus noch einen
+strukturell lesbaren Waiver mit der Nachweisauswahl und Ergebnisaggregation nach
+Kapitel 10.5. Die bestehende Ergebnisfamilie artifact-impact-v1 und ihre
+Katalogmetadaten verwenden für die zusätzlichen Felder Minor-Version 1.1.0.
+
+Neue Verhaltenstests prüfen genaue direkte Beobachtungsmengen, alle zulässigen
+Prioritäts-/Workflowwerte, explizite Abwesenheit, ungültige Angaben, unabhängige
+Reviewauswahl und stabile Mengen bei geänderter Schreib-/Relationsreihenfolge.
+Beschädigte, veraltete, irreführende und verlinkte Cachedateien verändern die
+normativen Ergebnisse nicht. Änderungen während der Fachprojektion verhindern
+eine veraltete vollständige Antwort. Read-only-Grenzen, Eigentum der Rückgaben,
+CLI-Parität und der tatsächliche Schemakontrakt bleiben prüfbar. Sämtliche alten
+Testdateien und die 9.197 vorhandenen Testkennungen bleiben unverändert.
+
+Requirements 0113/0117/0284 bleiben partial. Andere Berichtsfunktionen, gemeinsame
+Planner-Berechnung (C), dauerhafte Work-Ausführung, externe Großausgabe, effektive
+Profilpolicy, alternative Basen und Plattform-/Performanceabnahme bleiben offen.
+Inventar und Ausgabe werden weiterhin im Speicher gehalten; authentifizierte
+Reviewhistorie, vollständige semantische Freigabe und atomarer Snapshot werden
+nicht behauptet. Erst erfolgreicher paralleler Apply-Volltest und Commit
+bestätigen 365/885; danach folgt 8.g.C.
 
 #### 8.g.C – Make it Clean
 

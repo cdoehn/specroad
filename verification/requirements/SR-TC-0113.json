@@ -19,12 +19,13 @@
   ],
   "steps": [
     "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O.",
-    "Query all direct incoming/outgoing neighbours and Appendix J review observations; compare independent groups/reasons/identities and guard currentness and all read-only boundaries."
+    "Query all direct incoming/outgoing neighbours and Appendix J review observations; compare independent groups/reasons/identities and guard currentness and all read-only boundaries.",
+    "Compare literal domain facts and explicit absence, preserve affected/review sets across order and cache changes, and reject stale or invalid source data without writes or inferred verification."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad impact <ID>` MUSS mindestens alle direkt eingehend und ausgehend verbundenen Artefakte gruppiert nach Relationstyp ausgeben.",
-    "scope": "The earlier supplied-input direct-impact primitives remain covered. Current-project CLI integration is added below; alternate bases, effective profiles and platform approval remain separate. 8.g.W implements actual read-only impact through Python, CLI, structured requests and the portable zipapp. A complete current artifact inventory includes all relation-review history. Every directly stored incoming/outgoing relation is grouped by original type, retaining relation identity, both endpoints, physical direction and neighbour existence. Appendix J observations provide separate unreviewed/current/suspect/invalid groups with affected IDs, exact reasons and selected/matching/historical review IDs. Structural invalid bindings and current rejections remain visible; direct invalid yields exit 1 with a complete result and SRV027/error. Unreviewed/suspect use Core warning defaults; effective profile policy is explicitly not claimed. Malformed inventory/review fields abort rather than publish partial results. Unrelated structural invalidity is outside the direct assessment, but all bytes/membership/configuration remain bound and are rechecked before completion. No normative write, cache, lock, inferred priority, invented verification, authenticated-review claim, full semantic approval or atomic snapshot is added. Inventory and output are materialized; R/C robustness/planner integration, Work continuation, external delivery, effective profiles, alternate bases and platform/performance acceptance remain open."
+    "scope": "The earlier supplied-input direct-impact primitives remain covered. Current-project CLI integration is added below; alternate bases, effective profiles and platform approval remain separate. 8.g.W implements actual read-only impact through Python, CLI, structured requests and the portable zipapp. A complete current artifact inventory includes all relation-review history. Every directly stored incoming/outgoing relation is grouped by original type, retaining relation identity, both endpoints, physical direction and neighbour existence. Appendix J observations provide separate unreviewed/current/suspect/invalid groups with affected IDs, exact reasons and selected/matching/historical review IDs. Structural invalid bindings and current rejections remain visible; direct invalid yields exit 1 with a complete result and SRV027/error. Unreviewed/suspect use Core warning defaults; effective profile policy is explicitly not claimed. Malformed inventory/review fields abort rather than publish partial results. Unrelated structural invalidity is outside the direct assessment, but all bytes/membership/configuration remain bound and are rechecked before completion. No normative write, cache, lock, inferred priority, invented verification, authenticated-review claim, full semantic approval or atomic snapshot is added. The W baseline materializes inventory and output. R adds artifact_observations for exactly the start and all direct endpoints. Stored priority and verification_plan_status remain literal values; absent fields and absent artifacts are explicitly missing and unavailable, respectively. Missing targets have no inferred artifact type. Every row declares verification_assessment=not_performed; workflow, text, extensions, waivers and current relation reviews never become a computed verification result. The existing result family and catalog metadata use minor version 1.1.0. Independent oracles cover every allowed priority/workflow value, invalid fields, ordering, passive malformed/stale/symlink caches, corrupt normative sources, concurrent projection changes, ownership, CLI parity and schema closure. All old test files and 9197 old IDs remain unchanged. C planner sharing, remaining report consumers, durable Work, external delivery, effective profiles, alternate bases and platform/performance acceptance remain open; materialized input/output and existing read-only/currentness boundaries remain explicit."
   },
   "expected_diagnostics": [
     "SRV025",
@@ -40,7 +41,9 @@
     6
   ],
   "json_pointers": [
+    "/artifact_observations",
     "/coverage",
+    "/format_version",
     "/groups",
     "/review_groups"
   ],
@@ -89,7 +92,37 @@
     "tests/test_query_impact.py::test_symmetric_edge_keeps_one_normative_identity_and_physical_direction",
     "tests/test_query_impact.py::test_unreadable_inventory_or_malformed_review_cannot_be_partial_success[invalid_review]",
     "tests/test_query_impact.py::test_unreadable_inventory_or_malformed_review_cannot_be_partial_success[malformed_unrelated]",
-    "tests/test_query_impact.py::test_unrelated_invalid_relation_is_outside_the_direct_assessment"
+    "tests/test_query_impact.py::test_unrelated_invalid_relation_is_outside_the_direct_assessment",
+    "tests/test_query_impact_right.py::test_cache_claim_cannot_replace_unreadable_normative_artifacts",
+    "tests/test_query_impact_right.py::test_cache_state_cannot_change_direct_scope_review_status_or_missing_facts[claimed_complete]",
+    "tests/test_query_impact_right.py::test_cache_state_cannot_change_direct_scope_review_status_or_missing_facts[malformed]",
+    "tests/test_query_impact_right.py::test_cache_state_cannot_change_direct_scope_review_status_or_missing_facts[stale_status]",
+    "tests/test_query_impact_right.py::test_cache_state_cannot_change_direct_scope_review_status_or_missing_facts[symlink]",
+    "tests/test_query_impact_right.py::test_changes_during_fact_projection_block_the_whole_answer[priority]",
+    "tests/test_query_impact_right.py::test_changes_during_fact_projection_block_the_whole_answer[review]",
+    "tests/test_query_impact_right.py::test_current_relation_review_never_certifies_the_subject_verification",
+    "tests/test_query_impact_right.py::test_declared_verification_workflow_never_becomes_a_verification_result[not_applicable]",
+    "tests/test_query_impact_right.py::test_declared_verification_workflow_never_becomes_a_verification_result[not_planned]",
+    "tests/test_query_impact_right.py::test_declared_verification_workflow_never_becomes_a_verification_result[planned]",
+    "tests/test_query_impact_right.py::test_declared_verification_workflow_never_becomes_a_verification_result[running]",
+    "tests/test_query_impact_right.py::test_declared_verification_workflow_never_becomes_a_verification_result[waived]",
+    "tests/test_query_impact_right.py::test_fact_projection_is_owned_and_minor_version_matches_schema_metadata",
+    "tests/test_query_impact_right.py::test_invalid_declared_values_are_model_errors_instead_of_missing_defaults[priority-None]",
+    "tests/test_query_impact_right.py::test_invalid_declared_values_are_model_errors_instead_of_missing_defaults[priority-urgent]",
+    "tests/test_query_impact_right.py::test_invalid_declared_values_are_model_errors_instead_of_missing_defaults[verification_plan_status-None]",
+    "tests/test_query_impact_right.py::test_invalid_declared_values_are_model_errors_instead_of_missing_defaults[verification_plan_status-passed]",
+    "tests/test_query_impact_right.py::test_missing_target_is_unavailable_without_inferred_artifact_type_or_priority",
+    "tests/test_query_impact_right.py::test_observations_cover_exactly_the_start_and_all_direct_endpoints",
+    "tests/test_query_impact_right.py::test_only_the_actual_declared_priority_is_reported_without_ranking_neighbours[high]",
+    "tests/test_query_impact_right.py::test_only_the_actual_declared_priority_is_reported_without_ranking_neighbours[low]",
+    "tests/test_query_impact_right.py::test_only_the_actual_declared_priority_is_reported_without_ranking_neighbours[mandatory]",
+    "tests/test_query_impact_right.py::test_only_the_actual_declared_priority_is_reported_without_ranking_neighbours[medium]",
+    "tests/test_query_impact_right.py::test_order_changes_preserve_all_affected_sets_facts_and_review_selection[both]",
+    "tests/test_query_impact_right.py::test_order_changes_preserve_all_affected_sets_facts_and_review_selection[reverse_relations]",
+    "tests/test_query_impact_right.py::test_order_changes_preserve_all_affected_sets_facts_and_review_selection[reverse_sources]",
+    "tests/test_query_impact_right.py::test_text_and_extensions_cannot_fill_missing_domain_fields[extension]",
+    "tests/test_query_impact_right.py::test_text_and_extensions_cannot_fill_missing_domain_fields[statement]",
+    "tests/test_query_impact_right.py::test_text_and_extensions_cannot_fill_missing_domain_fields[title]"
   ],
   "open_items": [
     "Complete R/C robustness and shared planner integration; effective profiles, alternate bases and platform/performance acceptance remain open.",

@@ -127,13 +127,21 @@ def _fields(schema_id):
                 'validation_scope': {'const': 'relation_references_canonical_storage_and_hierarchies_only'},
                 'atomic_snapshot': {'const': False}})})
     if schema_id == 'artifact-impact-v1':
+        observed_field = {'anyOf': [
+            _object({'state': {'const': 'present'}, 'value': nonempty}),
+            _object({'state': {'enum': ['missing', 'unavailable']}})]}
+        observation = _object({'artifact_id': nonempty, 'present': boolean,
+            'artifact_type': _nullable(nonempty),
+            'fields': _object({name: observed_field for name in ('priority', 'verification_plan_status')}),
+            'verification_assessment': _object({'state': {'const': 'not_performed'}})})
         connection = _object({'relation_id': nonempty, 'source_id': nonempty, 'target_id': nonempty,
             'related_id': nonempty, 'direction': {'enum': ['incoming', 'outgoing']},
             'related_present': boolean, 'review_status': {'enum': ['unreviewed', 'current', 'suspect', 'invalid']},
             'review_reason': _nullable(nonempty), 'selected_review_id': _nullable(nonempty),
             'matching_review_ids': strings, 'historical_review_ids': strings})
-        return _object({'format_version': {'const': '1.0.0'}, 'artifact_id': nonempty,
+        return _object({'format_version': {'const': '1.1.0'}, 'artifact_id': nonempty,
             'depth': {'const': 1}, 'transitive': {'const': False},
+            'artifact_observations': _array(observation),
             'groups': _array(_object({'relation_type': nonempty, 'artifact_ids': strings,
                                       'connections': _array(connection)})),
             'review_groups': _object({state: _object({'relation_ids': strings, 'affected_ids': strings})
