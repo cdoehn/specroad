@@ -51,3 +51,9 @@ Berechtigungs-/I/O-Fehler bleiben Code 5, unsichere Pfade Code 7 und Modellfehle
 Code 3. Alle diese Fehler liefern keinen scheinbar vollständigen Fachpayload.
 Die Nachweise verändern Quellen gezielt zwischen den Beobachtungen und prüfen
 den erhaltenen Dateizustand; Show führt weiterhin keine Reparatur durch.
+
+Die reine Datenprojektion liegt in `_show_projection.py`. Sie übernimmt die
+bereits geprüfte Beobachtung und erzeugt die bestehenden Artefakt-, Relations-
+und Coveragefelder ohne Datei-, Preflight- oder Renderingzugriff. Die Abfrage
+behält Ablauf, Quellenprüfungen, Fehlerklassen und Envelope-Erzeugung bei;
+Pretty- und JSON-Ausgabe verwenden weiterhin dasselbe fachliche Resultat.

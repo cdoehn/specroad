@@ -12,6 +12,7 @@ from ..storage.preflight_metadata import MetadataPhases
 from ..storage.project import ProjectSource
 from ..storage.relation_index import read_project_relation_views
 from ..storage.resource_discovery import current_json_paths
+from ._show_projection import show_payload
 
 
 def _preflight(source):
@@ -62,17 +63,7 @@ def show_artifact(root, artifact_id, *, index=None, strategy='indexed'):
                    'project_id': source.configuration.project_id}
         _preflight(source)
         observed = read_project_relation_views(source, artifact_id, index=index, strategy=strategy)
-        incoming, outgoing = [], []
-        for view in observed.views:
-            row = {'relation_id': view.relation_id, 'type': view.type,
-                   'source': view.source.id, 'target': view.target.id, 'inverse': view.inverse,
-                   'stored_source': view.stored.source.id, 'stored_relation': view.stored.relation.data}
-            (incoming if view.inverse else outgoing).append(row)
-        payload = {'format_version': '1.0.0', 'artifact': observed.artifact.data,
-            'incoming': incoming, 'outgoing': outgoing,
-            'coverage': {'scope': observed.coverage_scope, 'source_count': observed.source_count,
-                'relation_count': observed.relation_count, 'observation_sha256': observed.binding.sha256,
-                'validation_scope': observed.validation_scope, 'atomic_snapshot': observed.atomic_snapshot}}
+        payload = show_payload(observed)
         _preflight(source)
         _verify_current(source, observed.binding)
         validate_result_document('artifact-show-v1', payload)

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 347
-last_completed_plan_commit: 8.a.R
-next_plan_commit: 8.a.C
-last_completed_numbered_bundle: 199
+implementation_plan_commits_completed: 348
+last_completed_plan_commit: 8.a.C
+next_plan_commit: 8.b.W
+last_completed_numbered_bundle: 200
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8842,10 +8842,30 @@ atomaren Snapshot gegen nicht kooperierende externe Schreiber.
 
 #### 8.a.C – Make it Clean
 
-- [ ] **8.a.C** · Position **348/885** · Voraussetzung: `8.a.R`.
+- [x] **8.a.C** · Position **348/885** · Voraussetzung: `8.a.R`.
 **Exakte Commit-Message:** `8.a.C refactor(query): Show und inverse Relationssicht bereinigen`
 
 **Bereinigung:** Showprojektion von Pretty- und JSON-Rendering trennen.
+
+**Vorbereiteter Implementierungsstand (Bundle 200):** Result 199 bestätigt R
+mit 8.833 bestandenen parallelen Apply-Tests und sauberem Commit. Die bestehende
+Berechnung von Artefakt-, eingehenden/ausgehenden Relations- und Coveragefeldern
+liegt unverändert in der reinen Funktion `query._show_projection.show_payload`.
+Die Abfrage ruft sie an derselben Stelle auf; der Fachpayload bleibt gemeinsam
+für Python, strukturierte Requests und beide CLI-Ausgabeformate.
+
+Ein Vergleich der Syntaxbäume bindet alle drei verschobenen Anweisungen exakt
+an die Result-Basis und bestätigt die unveränderte übrige Ablaufsteuerung.
+Reader, Inventur, Preflight, Abschlussprüfungen, Fehlerklassen und zulässige
+Seiteneffekte bleiben unverändert. Alle 265 bisherigen Testdateien und 8.833
+Testkennungen bleiben erhalten. Entwicklung prüft dieselben 1.404 W-/R- und
+betroffenen Integrationsfälle in 47 Dateien gezielt parallel; Apply führt vor
+diesem C-Commit erneut die vollständige Suite parallel aus. Erst erfolgreicher
+Apply-Lauf und Commit bestätigen 348/885; danach folgt 8.b.W.
+
+Die offenen Plattform-/Produkt-, Last- und Work-Engine-Nachweise bleiben offen;
+SR-REQ-0108 bleibt `partial`. Die Strukturbereinigung erteilt keine zusätzliche
+fachliche Freigabe und führt kein neues Verhalten ein.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
