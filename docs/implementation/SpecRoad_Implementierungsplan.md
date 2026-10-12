@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 362
-last_completed_plan_commit: 8.f.R
-next_plan_commit: 8.f.C
-last_completed_numbered_bundle: 214
+implementation_plan_commits_completed: 363
+last_completed_plan_commit: 8.f.C
+next_plan_commit: 8.g.W
+last_completed_numbered_bundle: 215
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9328,7 +9328,7 @@ Apply-Volltest und Commit bestätigen 362/885; danach folgt 8.f.C.
 
 #### 8.f.C – Make it Clean
 
-- [ ] **8.f.C** · Position **363/885** · Voraussetzung: `8.f.R`.
+- [x] **8.f.C** · Position **363/885** · Voraussetzung: `8.f.R`.
 **Exakte Commit-Message:** `8.f.C refactor(query): Alle kürzesten Why-Pfade bereinigen`
 
 **Bereinigung:** Vorgängergraph und Pfadmaterialisierung trennen und beide fortsetzbar halten.
@@ -9336,6 +9336,22 @@ Apply-Volltest und Commit bestätigen 362/885; danach folgt 8.f.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Umsetzung (Bundle 215, PLAN `8.f.C`):** Private Graphmodule trennen die
+Breitensuche mit allen Mindestabstands-Vorgängern von der iterativen vollständigen
+Pfadmaterialisierung. Die Suchphase verändert ausschließlich ihre Frontier und
+den Vorgängergraphen; die Pfadphase liest den fertigen Vorgängergraphen und führt
+ihre eigenen Frames und den erzeugten Präfix weiter. WhyTraversal bleibt der
+öffentliche Eigentümer des unveränderten Gesamtcheckpoints und beider Phasen.
+
+Die verschobenen Methoden und Hilfsfunktionen bleiben per AST-Vergleich gleich;
+Konstruktor, Lebenszyklus, Validierung, Wiederaufnahme, Datenformat und öffentlicher
+Projektadapter bleiben erhalten. Alle 275 bisherigen Testdateien und sämtliche
+9.170 Testkennungen bleiben unverändert. Die W-/R-Verhaltensabnahme einschließlich
+8.192 Referenzpfaden und dateibasierten Prozessneustarts bleibt maßgeblich.
+Requirements 0064/0112/0117 bleiben partial; die im R-Schritt benannten Persistenz-,
+Runtime-, Speicher-, Profil- und Plattformgrenzen bleiben offen. Erst erfolgreicher
+paralleler Apply-Volltest und Commit bestätigen 363/885; danach folgt 8.g.W.
 
 <a id="step-8-g"></a>
 ### 8.g – Direkte und reviewbezogene Impactanalyse

@@ -9,6 +9,8 @@ from copy import deepcopy
 from hashlib import sha256
 import json
 
+from ..graph._why_search import _WhySearch
+from ..graph._why_paths import _WhyPaths, _path_key
 from ..graph.hierarchies import validate_hierarchies
 from ..graph.indices import RelationIndex
 from ..graph.path_output import PathRecord
@@ -22,21 +24,12 @@ _FORMAT = 'why-traversal-checkpoint-v1'
 _ALGORITHM = 'all-shortest-origin-paths-v1'
 
 
-def _token(view):
-    return [view.relation_id, view.inverse]
-
-
-def _path_key(record):
-    return (tuple(value.id for value in record.artifacts),
-            tuple(value.id for value in record.relations), record.inverse)
-
-
 def _require(condition):
     if not condition:
         raise ValueError('Invalid Why checkpoint state.')
 
 
-class WhyTraversal:
+class WhyTraversal(_WhySearch, _WhyPaths):
     """Resume one node, edge or path-frame operation per positive work unit.
 
     Input validation, target/path sorting, checkpoint encoding and final output
@@ -71,65 +64,6 @@ class WhyTraversal:
         self._rows, self._paths = [], []
         self._phase, self._units = 'search', 0
         self._closed = self._failed = False
-
-    def _search_step(self):
-        if self._current is None:
-            current = self._pending.popleft()
-            if self._distances[current] < self._depth:
-                views = self._index.for_artifact(current)
-                if views:
-                    self._current, self._current_views = current, views
-        else:
-            view = self._current_views[self._edge_offset]
-            if not view.inverse or view.type in SYMMETRIC_RELATION_TYPES:
-                target, distance = view.target.id, self._distances[self._current] + 1
-                if target not in self._distances:
-                    self._distances[target], self._predecessors[target] = distance, []
-                    self._pending.append(target)
-                if self._distances[target] == distance:
-                    self._predecessors[target].append(_token(view))
-            self._edge_offset += 1
-            if self._edge_offset == len(self._current_views):
-                self._current, self._current_views, self._edge_offset = None, (), 0
-        if not self._pending and self._current is None:
-            self._targets = self._ordered_targets()
-            self._phase = 'paths' if self._targets else 'complete'
-            if self._targets:
-                self._frames = [{'node': self._targets[0], 'next_predecessor': 0}]
-
-    def _ordered_targets(self):
-        return sorted((name for name in self._distances
-                       if self._identities[name].artifact_type in ('goal', 'need', 'source')),
-                      key=lambda name: (self._identities[name].artifact_type, name))
-
-    def _path_step(self):
-        if not self._frames:
-            target = self._targets[self._target_position]
-            self._records.sort(key=_path_key)
-            self._rows.append({'id': target, 'artifact_type': self._identities[target].artifact_type,
-                               'distance': self._distances[target], 'path_count': len(self._records)})
-            self._paths.extend(self._records)
-            self._records = []
-            self._target_position += 1
-            if self._target_position == len(self._targets):
-                self._phase = 'complete'
-            else:
-                self._frames = [{'node': self._targets[self._target_position], 'next_predecessor': 0}]
-            return
-        frame = self._frames[-1]
-        current = frame['node']
-        if current == self._start:
-            views = tuple(self._views[tuple(token)] for token in reversed(self._reverse_views))
-            self._records.append(PathRecord.from_views(self._identities[self._start], views))
-        elif frame['next_predecessor'] < len(self._predecessors[current]):
-            token = self._predecessors[current][frame['next_predecessor']]
-            frame['next_predecessor'] += 1
-            self._reverse_views.append(token)
-            self._frames.append({'node': self._views[tuple(token)].source.id, 'next_predecessor': 0})
-            return
-        self._frames.pop()
-        if self._reverse_views:
-            self._reverse_views.pop()
 
     def advance(self, units):
         if type(units) is not int or units <= 0:

@@ -70,7 +70,8 @@ subprocess tests. This is not admission to the generic Work-v1 store or a public
 
 Input/hierarchy validation, target/path sorting, checkpoint encoding and final
 projection are indivisible. The index, predecessor graph and full result prefix
-remain materialized in memory. C will separate search from path materialization.
+remain materialized in memory. Private graph modules now separate predecessor search from path materialization;
+the public producer still owns one unchanged checkpoint across both phases.
 Durable Work integration, adaptive runtime admission, external large-result
 delivery, effective profile/default resolution and supported-platform/performance
 acceptance remain open. No sample or implicit count cap replaces the full set.
