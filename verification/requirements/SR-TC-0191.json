@@ -14,12 +14,13 @@
   ],
   "steps": [
     "Read commit-bound raw files through real temporary Git objects; compare exact bytes and identities while preserving branch, index, working tree and foreign files.",
-    "Exercise inert hooks/pager/filters, ignored inherited Git redirection, fixed refs, raw binary/Unicode, missing and corrupted objects, nested projects and unsafe paths."
+    "Exercise inert hooks/pager/filters, ignored inherited Git redirection, fixed refs, raw binary/Unicode, missing and corrupted objects, nested projects and unsafe paths.",
+    "Exercise hostile refs/configuration, unavailable Git, promisor reads, indirect/special/replaced storage and read-only roots; compare exact bytes and environmental/data/safety error contracts without changing W oracles."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Vergleich oder Merge gegen einen Git-Ref MUSS dessen SpecRoad-Dateien über feste, shellfreie Git-Plumbing-Aufrufe lesen, ohne Hooks, Pager, externe Diff-/Filterprozesse, Checkout, Branch-, Index- oder Arbeitsbaumänderung.",
-    "scope": "8.i.W adds an explicitly constructed GitObjectSource using fixed shell-free rev-parse, ls-tree and cat-file operations. The adapter pins one commit, checks commit/tree/blob object hashes and binds tree-listing paths to raw verified tree bytes. It returns raw regular blobs without working-tree fallback, filters, hooks, pager, lazy fetch, replacement objects or writes. Git environment redirection/tracing and global/system configuration are excluded. Ordinary local .git stores are required; linked/indirect/special storage, symlink/gitlink resources and nested project reads are rejected. Independent actual-object fixtures preserve arbitrary index bytes, HEAD/refs, dirty/untracked/foreign files and verify exact raw bytes. R/C adversarial completion, shared project-source resolution, CLI/Work integration, linked-worktree/alternate support, scalable resource handling and supported-platform acceptance remain open. No model validation, release approval or write authority is claimed."
+    "scope": "8.i.W adds an explicitly constructed GitObjectSource using fixed shell-free rev-parse, ls-tree and cat-file operations. The adapter pins one commit, checks commit/tree/blob object hashes and binds tree-listing paths to raw verified tree bytes. It returns raw regular blobs without working-tree fallback, filters, hooks, pager, lazy fetch, replacement objects or writes. Git environment redirection/tracing and global/system configuration are excluded. Ordinary local .git stores are required; linked/indirect/special storage, symlink/gitlink resources and nested project reads are rejected. Independent actual-object fixtures preserve arbitrary index bytes, HEAD/refs, dirty/untracked/foreign files and verify exact raw bytes. C, shared project-source resolution, CLI/Work integration, linked-worktree/alternate support, scalable resource handling and supported-platform acceptance remain open. No model validation, release approval or write authority is claimed. R explicitly binds --work-tree to the selected root and normalizes executable-start OS errors while retaining errno. New independent behavior cases cover invalid/ambiguous refs, missing Git without affecting non-Git queries, hostile worktree/alias/pager/hooks and promisor configuration, ignored config/alternate/trace environment, invalid configuration, corrupt trees, indirect/linked/special/replaced stores and read-only repositories. All 280 old test files and 9341 IDs remain unchanged; W evidence is retained. C, common-source/CLI/Work integration, broader Git layouts, supported platforms and scalable resources remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -66,9 +67,45 @@
     "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[a//b]",
     "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[a\\\\b]",
     "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[a\\x00b]",
-    "tests/test_query_git_source.py::test_wrong_blob_bytes_under_an_expected_object_name_are_rejected"
+    "tests/test_query_git_source.py::test_wrong_blob_bytes_under_an_expected_object_name_are_rejected",
+    "tests/test_query_git_source_right.py::test_ambiguous_short_ref_is_rejected_but_explicit_branch_is_usable",
+    "tests/test_query_git_source_right.py::test_corrupt_tree_cannot_supply_an_unbound_inventory",
+    "tests/test_query_git_source_right.py::test_executable_start_failures_preserve_state_and_expose_only_environmental_contract[13]",
+    "tests/test_query_git_source_right.py::test_executable_start_failures_preserve_state_and_expose_only_environmental_contract[2]",
+    "tests/test_query_git_source_right.py::test_executable_start_failures_preserve_state_and_expose_only_environmental_contract[8]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[$(touch injected)]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[--config-env=core.pager=ATTACK]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[7]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[HEAD]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[HEAD^{tree}]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[None]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[True]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[main.lock]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[main;touch injected]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[main\\x00other]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[refs//heads/main]",
+    "tests/test_query_git_source_right.py::test_hostile_ref_values_fail_before_executable_lookup[refs/heads/.hidden]",
+    "tests/test_query_git_source_right.py::test_indirect_object_stores_are_rejected_without_touching_foreign_data[commondir]",
+    "tests/test_query_git_source_right.py::test_indirect_object_stores_are_rejected_without_touching_foreign_data[info/grafts]",
+    "tests/test_query_git_source_right.py::test_indirect_object_stores_are_rejected_without_touching_foreign_data[objects/info/alternates]",
+    "tests/test_query_git_source_right.py::test_indirect_object_stores_are_rejected_without_touching_foreign_data[objects/info/http-alternates]",
+    "tests/test_query_git_source_right.py::test_inherited_config_parameters_alternates_and_trace2_are_ignored",
+    "tests/test_query_git_source_right.py::test_invalid_local_configuration_is_controlled_and_preserves_files[[broken]",
+    "tests/test_query_git_source_right.py::test_invalid_local_configuration_is_controlled_and_preserves_files[[core]\\nrepositoryformatversion = 1\\n[extensions]\\nobjectformat = unrecognized]",
+    "tests/test_query_git_source_right.py::test_invalid_local_configuration_is_controlled_and_preserves_files[[core]\\nrepositoryformatversion = 999999]",
+    "tests/test_query_git_source_right.py::test_linked_git_storage_is_rejected[False]",
+    "tests/test_query_git_source_right.py::test_linked_git_storage_is_rejected[True]",
+    "tests/test_query_git_source_right.py::test_local_aliases_pager_and_hook_paths_never_execute",
+    "tests/test_query_git_source_right.py::test_local_core_worktree_cannot_redirect_the_explicit_source[foreign]",
+    "tests/test_query_git_source_right.py::test_local_core_worktree_cannot_redirect_the_explicit_source[linked]",
+    "tests/test_query_git_source_right.py::test_local_core_worktree_cannot_redirect_the_explicit_source[missing]",
+    "tests/test_query_git_source_right.py::test_missing_git_is_environmental_and_non_git_comparison_remains_available",
+    "tests/test_query_git_source_right.py::test_promisor_remote_cannot_fetch_or_execute_a_helper_for_a_missing_blob",
+    "tests/test_query_git_source_right.py::test_replaced_git_directory_invalidates_an_existing_source",
+    "tests/test_query_git_source_right.py::test_repository_with_read_only_files_and_directories_remains_usable",
+    "tests/test_query_git_source_right.py::test_special_git_storage_is_rejected_without_opening_it"
   ],
   "open_items": [
-    "Complete R/C and shared comparison-source integration; extend adversarial/configuration/platform acceptance, Git availability contracts, linked/worktree/alternate source support and scalable inventory/resource handling. No Diff CLI, Work continuation, complete project validation or release approval yet."
+    "Complete C and shared comparison-source integration; supported-platform acceptance, broader Git-layout support and scalable inventory/resource handling remain open. No Diff CLI, Work continuation, complete project validation or release approval yet."
   ]
 }

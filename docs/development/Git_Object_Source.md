@@ -21,6 +21,10 @@ binding. The reader never checks out files, changes refs/index, invokes filters,
 text conversion, hooks or a pager, or fetches missing objects. Inherited `GIT_*`
 redirection/tracing is discarded, global/system Git configuration is excluded,
 and optional locks, replacements, protocols and automatic maintenance are disabled.
+The work tree is also explicitly bound to the chosen root, overriding local
+`core.worktree` redirection. Failure to start Git preserves the OS error number
+without publishing an untrusted child filename or diagnostic. A missing Git
+executable does not affect non-Git query operations.
 
 Only an ordinary local `.git` directory is currently accepted. Linked worktrees,
 alternate/grafted stores, linked/special storage entries, unsafe resource paths,
@@ -33,9 +37,8 @@ This W adapter supplies repository bytes, not a validated project snapshot or
 write capability. It does not interpret `specroad.json`, combine multiple roots,
 validate a complete model, invoke Diff/Work, or grant release approval. Whole
 tree inventories and Git-storage checks are materialized; streaming and Work
-continuation are not claimed. R/C, common comparison-source resolution,
-availability/adversarial/platform acceptance and broader Git-layout support
-remain open.
+continuation are not claimed. C, common comparison-source resolution, supported-platform acceptance and
+broader Git-layout support remain open.
 
 The behavior fixtures build real Git objects as owned temporary data; no Git
 write commands run against development or Apply repositories. Independent
@@ -46,3 +49,10 @@ Git contracts: [global options](https://git-scm.com/docs/git),
 [tree inventory](https://git-scm.com/docs/git-ls-tree),
 [raw objects](https://git-scm.com/docs/git-cat-file) and
 [object storage](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
+
+R regression includes malformed/ambiguous refs, missing/unusable Git, local
+worktree/alias/pager/hook configuration, promisor remotes with missing objects,
+inherited config/alternate/trace variables, corrupt trees, indirect/linked/special
+Git storage, replacement of a bound Git directory and read-only repositories.
+All W oracles remain unchanged; the tests assert bytes, IDs, error contracts and
+allowed side effects rather than Git's human diagnostics.

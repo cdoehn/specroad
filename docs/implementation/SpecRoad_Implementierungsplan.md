@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 370
-last_completed_plan_commit: 8.i.W
-next_plan_commit: 8.i.R
-last_completed_numbered_bundle: 222
+implementation_plan_commits_completed: 371
+last_completed_plan_commit: 8.i.R
+next_plan_commit: 8.i.C
+last_completed_numbered_bundle: 223
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9642,12 +9642,36 @@ parallele Apply-Volltest und Commit bestätigen 370/885; danach folgt 8.i.R.
 
 #### 8.i.R – Make it Right
 
-- [ ] **8.i.R** · Position **371/885** · Voraussetzung: `8.i.W`.
+- [x] **8.i.R** · Position **371/885** · Voraussetzung: `8.i.W`.
 **Exakte Commit-Message:** `8.i.R feat(query): Sichere Git-Objektquelle vervollständigen`
 
 **Vervollständigung:** Bösartige Ref-/Konfigurationswerte und fehlendes Git kontrolliert behandeln; keine Quellcodeausführung.
 
 **Verhaltensabnahme:** Branch, Index, Arbeitsbaum und fremde Dateien bleiben unverändert. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung (Bundle 223, PLAN `8.i.R`):** Jeder Git-Aufruf bindet auch
+seinen Arbeitsbaum ausdrücklich an den gewählten Root. Lokales core.worktree
+kann ihn damit nicht auf fremde, fehlende oder verlinkte Ziele umleiten.
+Startfehler von Git erhalten die Umgebungsfehlernummer, ohne ungeprüfte
+Kindprozess-Dateinamen oder Diagnosetexte als öffentlichen Fehler zu übernehmen.
+Git-unabhängige Vergleiche funktionieren weiterhin ohne Git.
+
+Neue unabhängige Verhaltenstests ergänzen ungültige Ref-Typen und Steuerwerte,
+mehrdeutige Branch-/Tag-Namen, fehlendes oder nicht startbares Git, bösartige
+lokale Alias-/Pager-/Hook-/Arbeitsbaumkonfiguration und Promisor-Nachladeversuche
+bei fehlenden Objekten. Fremde Konfiguration, Alternates und Trace-Umgebung
+bleiben wirkungslos. Ungültige Konfigurationen, korrupte Bäume, indirekte,
+verlinkte und spezielle Git-Ablagen sowie ausgetauschte Git-Verzeichnisse werden
+kontrolliert behandelt. Schreibgeschützte Repositories bleiben lesbar.
+
+Die Abnahme vergleicht Bytes, Identitäten, Fehlerverträge und zulässige
+Seiteneffekte; menschliche Git-Diagnosen sind kein Testvertrag. Alle 280
+bestehenden Testdateien und 9.341 Testkennungen bleiben unverändert; sämtliche
+W-Nachweise gehören zur gezielten parallelen Regression. Requirement 0191
+bleibt partial. C, der gemeinsame Projekt-/Vergleichssnapshot, Diff-/Work-
+Integration, weitere Ablageformen, Plattformabnahme und skalierbare
+Ressourcensteuerung bleiben offen. Erst erfolgreicher paralleler Apply-Volltest
+und Commit bestätigen 371/885; danach folgt 8.i.C.
 
 #### 8.i.C – Make it Clean
 

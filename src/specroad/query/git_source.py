@@ -148,13 +148,18 @@ class GitObjectSource:
         argv = [self._executable, '--no-pager', '--no-replace-objects',
                 '--no-lazy-fetch', '--no-optional-locks',
                 '--git-dir=' + str(self.root / '.git'),
+                '--work-tree=' + str(self.root),
                 '-c', 'core.hooksPath=' + os.devnull,
                 '-c', 'core.fsmonitor=false', '-c', 'gc.auto=0',
                 '-c', 'maintenance.auto=false', '-c', 'protocol.allow=never',
                 '-c', 'core.warnAmbiguousRefs=true', *arguments]
-        completed = subprocess.run(argv, cwd=self.root, stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=_environment(),
-            shell=False, check=False)
+        try:
+            completed = subprocess.run(argv, cwd=self.root, stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=_environment(),
+                shell=False, check=False)
+        except OSError as error:
+            _storage(self._boundary, self._storage_identity)
+            raise OSError(error.errno or errno.EIO, 'Git execution unavailable') from error
         _storage(self._boundary, self._storage_identity)
         if completed.returncode != 0 or completed.stderr:
             raise ModelError('git_object_read_failed')
