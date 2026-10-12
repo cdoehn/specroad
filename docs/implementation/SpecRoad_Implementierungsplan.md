@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 359
-last_completed_plan_commit: 8.e.R
-next_plan_commit: 8.e.C
-last_completed_numbered_bundle: 211
+implementation_plan_commits_completed: 360
+last_completed_plan_commit: 8.e.C
+next_plan_commit: 8.f.W
+last_completed_numbered_bundle: 212
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9215,7 +9215,7 @@ danach folgt das strukturelle 8.e.C.
 
 #### 8.e.C – Make it Clean
 
-- [ ] **8.e.C** · Position **360/885** · Voraussetzung: `8.e.R`.
+- [x] **8.e.C** · Position **360/885** · Voraussetzung: `8.e.R`.
 **Exakte Commit-Message:** `8.e.C refactor(query): Trace in beide Richtungen bereinigen`
 
 **Bereinigung:** CLI-Traversierung auf vorhandene Frontierengine reduzieren.
@@ -9223,6 +9223,24 @@ danach folgt das strukturelle 8.e.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungsstand 8.e.C (Bundle 212):** Die vorhandene kooperative
+Frontierengine und ihre Knotenidentität stehen in graph/_trace_frontier.py.
+TraceTraversal bleibt als öffentliche Klasse mit bisherigem Namen, Modul und
+Docstring im Query-Adapter und erbt die unveränderte Implementierung. CLI- und
+Projektlogik behalten Argumentprüfung, vollständige Quellbeobachtung, Preflights,
+Currentness, Ergebnisvalidierung und Fehlerabbildung.
+
+Ein an das Result gebundener Quell- und AST-Vergleich weist identische ausgelagerte
+Definitionen bis auf den privaten Engine-Klassennamen nach. Der übrige Adapter
+ist bis auf die aufgeführten Imports unverändert. Alle 273 bestehenden
+Testdateien, 9.088 Testkennungen und 488 übrigen Produktquellen bleiben bytegleich.
+Es gibt keine neuen Tests und kein neues Fachverhalten. Die 1.659 gezielten
+parallelen W/R- und betroffenen Regressionstests bleiben die Dev-Abnahme.
+
+Requirements 0111/0117 bleiben wegen der dokumentierten prozesslokalen,
+speichergebundenen und übrigen Produktgrenzen partial. Erst erfolgreicher
+paralleler Apply-Volltest und Commit bestätigen 360/885; danach folgt 8.f.W.
 
 <a id="step-8-f"></a>
 ### 8.f – Alle kürzesten Why-Pfade

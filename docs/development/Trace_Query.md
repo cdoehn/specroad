@@ -43,6 +43,13 @@ and does not serialize or admit durable runtime Work. Command description keeps
 `continuation_supported=false`. Durable Work, adaptive runtime admission, large
 external delivery and supported-platform/performance acceptance remain open.
 
+The private `graph._trace_frontier` module owns the existing cooperative engine
+and its node identities. The public `query.trace.TraceTraversal` class keeps its
+name, defining module and docstring and inherits that implementation. The project
+adapter retains argument handling, complete source observation, preflights,
+currentness checks, error mapping and result-schema validation. This separation
+changes no graph rules, lifecycle transitions or output contracts.
+
 Coverage binds every current artifact source, including unreachable sources.
 Project read preflight runs before model loading and before the final currentness
 check. Active writers, unresolved journals, invalid sources and changed membership
