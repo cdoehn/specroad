@@ -60,3 +60,12 @@ the same nested spelling remains ordinary data. Unknown query-envelope fields
 are errors; a valid projection pointer to an absent stored value still returns
 the specified Missing marker. Current verification computation, CLI and the live
 project adapter remain open; this boundary does not implement aggregation 10.5.
+
+## C: normalization, evaluation and projection
+
+The normalization statements now live in `_query_normalization.py` and the
+stored-field projection in `_selection_projection.py`. `selection.py` retains
+the public `NormalizedQuery` and `QuerySelection` classes, their module identity,
+and the evaluation/selection orchestration. The initializers and projection call
+these pure helpers at the same points in the original sequence. All W/R behavior,
+errors, result ownership, bindings and provider boundaries remain unchanged.

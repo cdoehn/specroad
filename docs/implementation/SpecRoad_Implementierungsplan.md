@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 350
-last_completed_plan_commit: 8.b.R
-next_plan_commit: 8.b.C
-last_completed_numbered_bundle: 202
+implementation_plan_commits_completed: 351
+last_completed_plan_commit: 8.b.C
+next_plan_commit: 8.c.W
+last_completed_numbered_bundle: 203
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8935,7 +8935,7 @@ folgt 8.b.C.
 
 #### 8.b.C – Make it Clean
 
-- [ ] **8.b.C** · Position **351/885** · Voraussetzung: `8.b.R`.
+- [x] **8.b.C** · Position **351/885** · Voraussetzung: `8.b.R`.
 **Exakte Commit-Message:** `8.b.C refactor(query): Queryfilter und Projektion bereinigen`
 
 **Bereinigung:** Querynormalisierung, Auswertung und Ergebnisprojektion separieren.
@@ -8943,6 +8943,19 @@ folgt 8.b.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungsstand 8.b.C (Bundle 203):** Die unveränderten Anweisungen zur
+Querynormalisierung und Feldprojektion liegen in zwei privaten reinen Modulen.
+Die öffentlichen Klassen bleiben im bisherigen Modul; die Auswertung ruft die
+extrahierten Funktionen an den bisherigen Stellen auf. Ein AST-Abgleich gegen
+das maßgebliche Result bestätigt die extrahierten Anweisungen und die bis auf
+diese Delegation identische Orchestrierung. Alle 267 bisherigen Testdateien und
+8.898 Testkennungen bleiben unverändert. Fachverhalten, Fehler, Bindungen,
+Pointerreihenfolge und die offenen Provider-/Integrationsgrenzen bleiben erhalten.
+
+Die bestehenden 1.176 betroffenen W/R- und Regressionstests werden gezielt parallel
+in Dev ausgeführt. Die Requirements bleiben partial. Erst der erfolgreiche
+parallele Apply-Volltest und Commit bestätigen 351/885; danach folgt 8.c.W.
 
 <a id="step-8-c"></a>
 ### 8.c – Unicode-Volltextsuche
