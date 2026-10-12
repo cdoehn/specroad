@@ -7,13 +7,14 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RELATIONS-v1"
   ],
   "preconditions": [
-    "Fresh owned current-project artifacts, canonical resolved relation identities and native CPython; no approval or atomic snapshot claim."
+    "Fresh owned current-project artifacts, canonical resolved relation identities and native CPython; no approval or atomic snapshot claim.",
+    "Owned complete current project artifacts and review records; Core review diagnostics, no effective profile or authentication claim."
   ],
   "steps": [
     "Invoke the same trace scope through Python, CLI, structured request and portable distribution.",
@@ -21,16 +22,22 @@
     "Trap project writes, stdin, entropy, subprocesses and lock acquisition; exercise currentness, writer/journal and invalid-input failures.",
     "Resume actual node/edge work under changing targets; compare independent graph sets and retain honest pending, failure and cancellation states without project writes.",
     "Verify exact Why paths through the same public read boundary, with no project mutation or stale-success fallback.",
-    "Resume exact search/path checkpoints, including independently trusted file-backed process restarts; preserve all shortest paths and reject changed graph/cursor data without project mutation."
+    "Resume exact search/path checkpoints, including independently trusted file-backed process restarts; preserve all shortest paths and reject changed graph/cursor data without project mutation.",
+    "Query all direct incoming/outgoing neighbours and Appendix J review observations; compare independent groups/reasons/identities and guard currentness and all read-only boundaries."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Rendering, Query, Trace, Why, Impact und Diff DÜRFEN NICHT das normative Projektmodell verändern.",
-    "scope": "This evidence covers the implemented trace and why commands and their current-project read boundaries; remaining operations in SR-REQ-0117 remain open. 8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. R adds genuine process-local TraceTraversal over a supplied resolved RelationIndex: one node removal or directed edge check per work unit, retaining the frontier and unfinished adjacency across calls. Independent cycle/diamond/multiple-relation oracles, a 513-edge node and a 1301-node chain prove unchanged scope under small or varying targets. Incomplete/failed/closed work cannot publish a result; invalid targets consume no work, and result/state copies own their data. Public trace uses this engine with the existing current-project guards. Inventory/graph/output remain materialized; durable Work, adaptive runtime admission, external delivery and supported-platform/performance acceptance remain open. C moves the unchanged frontier implementation into a private graph module while preserving the public TraceTraversal class name, defining module and docstring through inheritance. The project adapter, all W/R behavior oracles and other product sources remain unchanged. 8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. The W baseline materialized index, predecessors and all paths. Coverage is not complete semantic validation or atomic-snapshot approval. R adds WhyTraversal with actual node/edge/path-frame work and canonical data checkpoints retaining both frontiers and the complete path prefix. Restore checks an independently retained trusted SHA-256 before parsing, then a closed contract and all supplied graph identities and stored relation data, including unreachable relations. Native file-backed fresh-process tests prove exact resumption without replaying completed search or materialized paths; an independent Cartesian-product oracle covers 8192 complete shortest paths. Malformed, changed-input, failed and cancelled states cannot publish a result. The public command drives the same producer synchronously with its existing project guards. The pure codec does not perform persistence/fsync, admit Work-v1 continuation or claim bounded total memory. Input validation, sorting, codec and final projection are indivisible; durable Work integration, adaptive runtime, external delivery, profile defaults and platform/performance acceptance remain open. C moves the unchanged predecessor search and iterative path materialization into separate private graph modules. The public WhyTraversal owner, both resumable phases, checkpoint bytes/validation, lifecycle and project adapter retain their existing behavior; all W/R tests remain unchanged."
+    "scope": "This evidence covers the implemented trace and why commands and their current-project read boundaries; remaining operations in SR-REQ-0117 remain open. 8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. R adds genuine process-local TraceTraversal over a supplied resolved RelationIndex: one node removal or directed edge check per work unit, retaining the frontier and unfinished adjacency across calls. Independent cycle/diamond/multiple-relation oracles, a 513-edge node and a 1301-node chain prove unchanged scope under small or varying targets. Incomplete/failed/closed work cannot publish a result; invalid targets consume no work, and result/state copies own their data. Public trace uses this engine with the existing current-project guards. Inventory/graph/output remain materialized; durable Work, adaptive runtime admission, external delivery and supported-platform/performance acceptance remain open. C moves the unchanged frontier implementation into a private graph module while preserving the public TraceTraversal class name, defining module and docstring through inheritance. The project adapter, all W/R behavior oracles and other product sources remain unchanged. 8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. The W baseline materialized index, predecessors and all paths. Coverage is not complete semantic validation or atomic-snapshot approval. R adds WhyTraversal with actual node/edge/path-frame work and canonical data checkpoints retaining both frontiers and the complete path prefix. Restore checks an independently retained trusted SHA-256 before parsing, then a closed contract and all supplied graph identities and stored relation data, including unreachable relations. Native file-backed fresh-process tests prove exact resumption without replaying completed search or materialized paths; an independent Cartesian-product oracle covers 8192 complete shortest paths. Malformed, changed-input, failed and cancelled states cannot publish a result. The public command drives the same producer synchronously with its existing project guards. The pure codec does not perform persistence/fsync, admit Work-v1 continuation or claim bounded total memory. Input validation, sorting, codec and final projection are indivisible; durable Work integration, adaptive runtime, external delivery, profile defaults and platform/performance acceptance remain open. C moves the unchanged predecessor search and iterative path materialization into separate private graph modules. The public WhyTraversal owner, both resumable phases, checkpoint bytes/validation, lifecycle and project adapter retain their existing behavior; all W/R tests remain unchanged. 8.g.W implements actual read-only impact through Python, CLI, structured requests and the portable zipapp. A complete current artifact inventory includes all relation-review history. Every directly stored incoming/outgoing relation is grouped by original type, retaining relation identity, both endpoints, physical direction and neighbour existence. Appendix J observations provide separate unreviewed/current/suspect/invalid groups with affected IDs, exact reasons and selected/matching/historical review IDs. Structural invalid bindings and current rejections remain visible; direct invalid yields exit 1 with a complete result and SRV027/error. Unreviewed/suspect use Core warning defaults; effective profile policy is explicitly not claimed. Malformed inventory/review fields abort rather than publish partial results. Unrelated structural invalidity is outside the direct assessment, but all bytes/membership/configuration remain bound and are rechecked before completion. No normative write, cache, lock, inferred priority, invented verification, authenticated-review claim, full semantic approval or atomic snapshot is added. Inventory and output are materialized; R/C robustness/planner integration, Work continuation, external delivery, effective profiles, alternate bases and platform/performance acceptance remain open."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV025",
+    "SRV026",
+    "SRV027"
+  ],
   "expected_exit_codes": [
     0,
+    1,
     2,
     3,
     5,
@@ -39,9 +46,11 @@
   "json_pointers": [
     "/coverage",
     "/edges",
+    "/groups",
     "/nodes",
     "/path_count",
     "/paths",
+    "/review_groups",
     "/targets"
   ],
   "required_environment": {
@@ -56,6 +65,33 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_query_impact.py::test_active_writer_and_unresolved_journal_block_before_impact",
+    "tests/test_query_impact.py::test_all_direct_incoming_outgoing_neighbours_are_grouped_by_stored_type",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[configuration]",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[membership]",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[review]",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[unrelated]",
+    "tests/test_query_impact.py::test_currentness_uses_endpoint_context_not_unrelated_workflow_metadata[maturity]",
+    "tests/test_query_impact.py::test_currentness_uses_endpoint_context_not_unrelated_workflow_metadata[statement]",
+    "tests/test_query_impact.py::test_currentness_uses_endpoint_context_not_unrelated_workflow_metadata[tags]",
+    "tests/test_query_impact.py::test_distinct_relation_identities_to_one_neighbour_are_all_retained",
+    "tests/test_query_impact.py::test_incoming_count_targets_do_not_truncate_direct_neighbours",
+    "tests/test_query_impact.py::test_isolated_artifact_has_complete_empty_groups_and_unknown_start_is_error",
+    "tests/test_query_impact.py::test_machine_results_are_owned_and_registry_describes_actual_scope",
+    "tests/test_query_impact.py::test_new_matching_confirmation_replaces_rejection_without_mutating_history",
+    "tests/test_query_impact.py::test_portable_zipapp_returns_the_same_complete_impact",
+    "tests/test_query_impact.py::test_public_impact_attempts_no_writes_processes_entropy_stdin_or_writer_lock",
+    "tests/test_query_impact.py::test_python_cli_request_and_native_process_deliver_identical_machine_results[False]",
+    "tests/test_query_impact.py::test_python_cli_request_and_native_process_deliver_identical_machine_results[True]",
+    "tests/test_query_impact.py::test_review_groups_explain_original_endpoints_and_current_rejection",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[canonical-noncanonical_symmetric_relation]",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[missing-missing_relation_target]",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[pair-relation_type_pair_forbidden]",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[self-self_relation_forbidden]",
+    "tests/test_query_impact.py::test_symmetric_edge_keeps_one_normative_identity_and_physical_direction",
+    "tests/test_query_impact.py::test_unreadable_inventory_or_malformed_review_cannot_be_partial_success[invalid_review]",
+    "tests/test_query_impact.py::test_unreadable_inventory_or_malformed_review_cannot_be_partial_success[malformed_unrelated]",
+    "tests/test_query_impact.py::test_unrelated_invalid_relation_is_outside_the_direct_assessment",
     "tests/test_query_trace.py::test_changed_unreached_source_is_rejected_by_final_freshness_check",
     "tests/test_query_trace.py::test_direct_cli_and_structured_invocation_agree_on_complete_machine_result",
     "tests/test_query_trace.py::test_direction_and_depth_determine_exact_nodes_and_traversed_views[both-0-nodes2-edges2]",
@@ -216,6 +252,7 @@
   "open_items": [
     "Durable Work, large external result delivery and supported-platform/performance acceptance remain open.",
     "Complete the remaining rendering/query/impact/diff product boundaries; trace/why evidence does not close the whole multi-command requirement.",
-    "Complete 8.f.R/C and the documented Why process-local, memory and configuration-resolution boundaries."
+    "Complete 8.f.R/C and the documented Why process-local, memory and configuration-resolution boundaries.",
+    "Current Impact materializes inventory/output; Work continuation, external delivery and effective profile severity policy remain open."
   ]
 }

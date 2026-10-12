@@ -126,6 +126,23 @@ def _fields(schema_id):
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
                 'validation_scope': {'const': 'relation_references_canonical_storage_and_hierarchies_only'},
                 'atomic_snapshot': {'const': False}})})
+    if schema_id == 'artifact-impact-v1':
+        connection = _object({'relation_id': nonempty, 'source_id': nonempty, 'target_id': nonempty,
+            'related_id': nonempty, 'direction': {'enum': ['incoming', 'outgoing']},
+            'related_present': boolean, 'review_status': {'enum': ['unreviewed', 'current', 'suspect', 'invalid']},
+            'review_reason': _nullable(nonempty), 'selected_review_id': _nullable(nonempty),
+            'matching_review_ids': strings, 'historical_review_ids': strings})
+        return _object({'format_version': {'const': '1.0.0'}, 'artifact_id': nonempty,
+            'depth': {'const': 1}, 'transitive': {'const': False},
+            'groups': _array(_object({'relation_type': nonempty, 'artifact_ids': strings,
+                                      'connections': _array(connection)})),
+            'review_groups': _object({state: _object({'relation_ids': strings, 'affected_ids': strings})
+                                     for state in ('unreviewed', 'current', 'suspect', 'invalid')}),
+            'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+                'source_count': count, 'relation_count': count, 'review_record_count': count,
+                'observation_sha256': sha,
+                'validation_scope': {'const': 'artifact_fields_and_relation_review_status_only'},
+                'atomic_snapshot': {'const': False}})})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,

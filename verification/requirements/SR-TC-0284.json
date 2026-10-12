@@ -4,19 +4,43 @@
   "requirement_id": "SR-REQ-0284",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-RELATIONS-v1"
+  ],
+  "preconditions": [
+    "Owned complete current project artifacts and review records; Core review diagnostics, no effective profile or authentication claim."
+  ],
+  "steps": [
+    "Query all direct incoming/outgoing neighbours and Appendix J review observations; compare independent groups/reasons/identities and guard currentness and all read-only boundaries."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`impact`, `diff`, `traceability`, `coverage` und `release readiness` MÜSSEN unreviewed, suspect und invalid Relations getrennt ausweisen und deren betroffene Artefakte erklären.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "8.g.W implements actual read-only impact through Python, CLI, structured requests and the portable zipapp. A complete current artifact inventory includes all relation-review history. Every directly stored incoming/outgoing relation is grouped by original type, retaining relation identity, both endpoints, physical direction and neighbour existence. Appendix J observations provide separate unreviewed/current/suspect/invalid groups with affected IDs, exact reasons and selected/matching/historical review IDs. Structural invalid bindings and current rejections remain visible; direct invalid yields exit 1 with a complete result and SRV027/error. Unreviewed/suspect use Core warning defaults; effective profile policy is explicitly not claimed. Malformed inventory/review fields abort rather than publish partial results. Unrelated structural invalidity is outside the direct assessment, but all bytes/membership/configuration remain bound and are rechecked before completion. No normative write, cache, lock, inferred priority, invented verification, authenticated-review claim, full semantic approval or atomic snapshot is added. Inventory and output are materialized; R/C robustness/planner integration, Work continuation, external delivery, effective profiles, alternate bases and platform/performance acceptance remain open."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV025",
+    "SRV026",
+    "SRV027"
+  ],
+  "expected_exit_codes": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6
+  ],
+  "json_pointers": [
+    "/coverage",
+    "/groups",
+    "/review_groups"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +52,37 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_impact.py::test_active_writer_and_unresolved_journal_block_before_impact",
+    "tests/test_query_impact.py::test_all_direct_incoming_outgoing_neighbours_are_grouped_by_stored_type",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[configuration]",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[membership]",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[review]",
+    "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[unrelated]",
+    "tests/test_query_impact.py::test_currentness_uses_endpoint_context_not_unrelated_workflow_metadata[maturity]",
+    "tests/test_query_impact.py::test_currentness_uses_endpoint_context_not_unrelated_workflow_metadata[statement]",
+    "tests/test_query_impact.py::test_currentness_uses_endpoint_context_not_unrelated_workflow_metadata[tags]",
+    "tests/test_query_impact.py::test_distinct_relation_identities_to_one_neighbour_are_all_retained",
+    "tests/test_query_impact.py::test_incoming_count_targets_do_not_truncate_direct_neighbours",
+    "tests/test_query_impact.py::test_isolated_artifact_has_complete_empty_groups_and_unknown_start_is_error",
+    "tests/test_query_impact.py::test_machine_results_are_owned_and_registry_describes_actual_scope",
+    "tests/test_query_impact.py::test_new_matching_confirmation_replaces_rejection_without_mutating_history",
+    "tests/test_query_impact.py::test_portable_zipapp_returns_the_same_complete_impact",
+    "tests/test_query_impact.py::test_public_impact_attempts_no_writes_processes_entropy_stdin_or_writer_lock",
+    "tests/test_query_impact.py::test_python_cli_request_and_native_process_deliver_identical_machine_results[False]",
+    "tests/test_query_impact.py::test_python_cli_request_and_native_process_deliver_identical_machine_results[True]",
+    "tests/test_query_impact.py::test_review_groups_explain_original_endpoints_and_current_rejection",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[canonical-noncanonical_symmetric_relation]",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[missing-missing_relation_target]",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[pair-relation_type_pair_forbidden]",
+    "tests/test_query_impact.py::test_structural_invalid_edges_remain_visible_with_exact_cause[self-self_relation_forbidden]",
+    "tests/test_query_impact.py::test_symmetric_edge_keeps_one_normative_identity_and_physical_direction",
+    "tests/test_query_impact.py::test_unreadable_inventory_or_malformed_review_cannot_be_partial_success[invalid_review]",
+    "tests/test_query_impact.py::test_unreadable_inventory_or_malformed_review_cannot_be_partial_success[malformed_unrelated]",
+    "tests/test_query_impact.py::test_unrelated_invalid_relation_is_outside_the_direct_assessment"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Integrate separate review states into the remaining diff, traceability, coverage and release-readiness consumers.",
+    "Current Impact materializes inventory/output; Work continuation, external delivery and effective profile severity policy remain open."
   ]
 }

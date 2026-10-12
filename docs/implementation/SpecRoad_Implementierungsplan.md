@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 363
-last_completed_plan_commit: 8.f.C
-next_plan_commit: 8.g.W
-last_completed_numbered_bundle: 215
+implementation_plan_commits_completed: 364
+last_completed_plan_commit: 8.g.W
+next_plan_commit: 8.g.R
+last_completed_numbered_bundle: 216
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9361,12 +9361,44 @@ paralleler Apply-Volltest und Commit bestätigen 363/885; danach folgt 8.g.W.
 
 #### 8.g.W – Let it Work
 
-- [ ] **8.g.W** · Position **364/885** · Voraussetzung: `8.f.C`.
+- [x] **8.g.W** · Position **364/885** · Voraussetzung: `8.f.C`.
 **Exakte Commit-Message:** `8.g.W feat(query): Direkte und reviewbezogene Impactanalyse aufbauen`
 
 **Umsetzung:** Direkte Abhängigkeiten nach Relationstyp und Reviewstatus auswerten.
 
 **Verhaltensabnahme:** Geändertes Artefakt zeigt alle direkt betroffenen Nachbarn und invalid/suspect-Bindungen.
+
+**W-Umsetzung (Bundle 216, PLAN `8.g.W`):** Der lesende Impact-Befehl und die
+Python-API erfassen das vollständige aktuelle Artefaktinventar einschließlich
+Reviewhistorie. Alle direkten gespeicherten Ein- und Ausgänge erscheinen nach
+Relationstyp gruppiert, mit ursprünglicher Relationsidentität, beiden Endpunkten,
+Richtung und Existenz des referenzierten Nachbarn. Vier getrennte Reviewgruppen
+weisen unreviewed/current/suspect/invalid sowie betroffene Endpunkte aus.
+
+Die vorhandene Appendix-J-Berechnung liefert Auswahl, Historie und Ursachen.
+Fehlende Ziele, unzulässige Typkombinationen, Self-Links und nichtkanonische
+Speicherung bleiben als strukturell invalid sichtbar; ein aktuelles negatives
+Review bleibt SRV027/error mit current_review_rejected. Eine vollständige direkte
+Bewertung mit invalid liefert Code 1 samt vollständigem Impact-Ergebnis. Unreviewed
+und suspect verwenden Core-Warndefaults. Effektive Profilpolicy wird ausdrücklich
+nicht behauptet. Fachlich unverbundene invalid-Relationen liegen außerhalb dieser
+direkten Bewertung; ihre Quellbytes bleiben Teil der Aktualitätsbindung.
+
+Neue Verhaltenstests bestimmen Nachbarmengen, Richtungen, Reviewpartitionen,
+Ursachen und Auswahlkennungen unabhängig. Sie prüfen Referenzfehler, parallele
+Relationsidentitäten, große direkte Mengen, Prozess-/Zipapp-Parität, Read-only-
+Grenzen, Writer/Journale und Änderungen an Review, unverbundener Quelle, Inventar
+oder Konfiguration. Drei exakte Inventartests ergänzen ausschließlich impact und
+artifact-impact-v1; sonst bleiben alte Testdateien und sämtliche 9.170 Kennungen
+unverändert. Die gemeinsame Projektfixture bleibt unverändert.
+
+Requirements 0113/0117 bleiben partial; 0284 wird für die Impact-Integration partial.
+Andere Berichtsfunktionen in 0284 bleiben offen. Der W-Befehl hält Inventar und
+Ausgabe im Speicher. R/C-Robustheit und Planner-Anbindung, dauerhafte Work-
+Ausführung, externe Großausgabe, effektive Profilpolicy, alternative Basen und
+Plattform-/Performanceabnahme bleiben offen. Keine fehlende Fachinformation wird
+als Priorität, Verifikation oder vollständige Freigabe ausgegeben. Erst erfolgreicher
+paralleler Apply-Volltest und Commit bestätigen 364/885; danach folgt 8.g.R.
 
 #### 8.g.R – Make it Right
 
