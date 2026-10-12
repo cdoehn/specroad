@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 369
-last_completed_plan_commit: 8.h.C
-next_plan_commit: 8.i.W
-last_completed_numbered_bundle: 221
+implementation_plan_commits_completed: 370
+last_completed_plan_commit: 8.i.W
+next_plan_commit: 8.i.R
+last_completed_numbered_bundle: 222
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9602,12 +9602,43 @@ danach folgt 8.i.W.
 
 #### 8.i.W – Let it Work
 
-- [ ] **8.i.W** · Position **370/885** · Voraussetzung: `8.h.C`.
+- [x] **8.i.W** · Position **370/885** · Voraussetzung: `8.h.C`.
 **Exakte Commit-Message:** `8.i.W feat(query): Sichere Git-Objektquelle aufbauen`
 
 **Umsetzung:** Feste shellfreie Git-Plumbingaufrufe ohne Checkout, Hooks, Pager oder Filter anlegen.
 
 **Verhaltensabnahme:** Ein Git-Ref liefert die gebundenen Projektdateien ohne Working-Treewechsel.
+
+**W-Umsetzung (Bundle 222, PLAN `8.i.W`):** GitObjectSource wird nur für
+explizite Git-Quellen konstruiert. Feste shellfreie rev-parse-, ls-tree- und
+cat-file-Aufrufe binden einen Branch, Tag, HEAD oder vollständigen Objektnamen an
+einen Commit. Commit-, Baum- und Blob-IDs werden über ihre Rohbytes geprüft;
+die Pfad-/Blob-Zuordnung der Inventur muss den verifizierten Baumobjekten
+entsprechen. Spätere Ref-Bewegungen ändern die Bindung nicht. Fehlende Dateien
+werden niemals aus dem aktuellen Arbeitsbaum ergänzt.
+
+Git-Umgebungsumleitungen und Trace-Ausgaben sowie globale/Systemkonfiguration
+werden ausgeschlossen. Pager, Filter, Hooks, Ersetzungen, Protokollzugriffe,
+automatisches Nachladen und optionale Schreibaktionen sind deaktiviert.
+Normale lokale Git-Ablagen werden vor/nach jedem Aufruf geprüft; verlinkte,
+indirekte oder spezielle Ablagen bleiben unzulässig. Ressourcenpfade sind
+projektgebunden; Symlinks, Gitlinks und verschachtelte Projektzugriffe werden
+abgewiesen. Ausführbare Blob-Dateien bleiben rohe Daten.
+
+Echte temporäre Git-Objekte entstehen in unabhängigen Fixtures als Daten ohne
+Git-Schreibbefehle. Verhaltenstests prüfen exakte Commit-/Dateibindungen,
+unveränderte HEAD-/Ref-/Index-/Arbeits-/Fremddateien, rohe Binärdaten und
+Zeilenenden, Unicode, bewegte und annotierte Refs, wirkungslose Hooks/Filter/
+Pager, ignorierte Git-Umgebung, fehlende/korrupte Objekte und Ressourcengrenzen.
+Alle 279 vorhandenen Testdateien und 9.310 bisherigen Testkennungen bleiben
+erhalten. Der neue Fixture-Vertrag ist im gemeinsamen Katalog registriert.
+
+Requirement 0191 wird partial. R/C, gemeinsamer Projekt-/Vergleichssnapshot,
+Diff-/Work-Integration, vollständige adversarielle und Plattformabnahme,
+weitere Git-Ablageformen sowie skalierbare Ressourcensteuerung bleiben offen.
+Inventuren und Ablageprüfungen werden materialisiert; es wird keine vollständige
+Modellvalidierung, atomare Dateisystemsicht oder Freigabe behauptet. Erst der
+parallele Apply-Volltest und Commit bestätigen 370/885; danach folgt 8.i.R.
 
 #### 8.i.R – Make it Right
 

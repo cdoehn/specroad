@@ -4,15 +4,22 @@
   "requirement_id": "SR-REQ-0191",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0013",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-GIT-OBJECT-SOURCE-v1"
+  ],
+  "preconditions": [
+    "Explicit ordinary local Git repository and branch, tag, HEAD or full commit ID; trusted system Git supporting --no-lazy-fetch."
+  ],
+  "steps": [
+    "Read commit-bound raw files through real temporary Git objects; compare exact bytes and identities while preserving branch, index, working tree and foreign files.",
+    "Exercise inert hooks/pager/filters, ignored inherited Git redirection, fixed refs, raw binary/Unicode, missing and corrupted objects, nested projects and unsafe paths."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Vergleich oder Merge gegen einen Git-Ref MUSS dessen SpecRoad-Dateien über feste, shellfreie Git-Plumbing-Aufrufe lesen, ohne Hooks, Pager, externe Diff-/Filterprozesse, Checkout, Branch-, Index- oder Arbeitsbaumänderung.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "8.i.W adds an explicitly constructed GitObjectSource using fixed shell-free rev-parse, ls-tree and cat-file operations. The adapter pins one commit, checks commit/tree/blob object hashes and binds tree-listing paths to raw verified tree bytes. It returns raw regular blobs without working-tree fallback, filters, hooks, pager, lazy fetch, replacement objects or writes. Git environment redirection/tracing and global/system configuration are excluded. Ordinary local .git stores are required; linked/indirect/special storage, symlink/gitlink resources and nested project reads are rejected. Independent actual-object fixtures preserve arbitrary index bytes, HEAD/refs, dirty/untracked/foreign files and verify exact raw bytes. R/C adversarial completion, shared project-source resolution, CLI/Work integration, linked-worktree/alternate support, scalable resource handling and supported-platform acceptance remain open. No model validation, release approval or write authority is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +35,40 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_git_source.py::test_annotated_tag_peels_to_the_bound_commit",
+    "tests/test_query_git_source.py::test_attributes_filters_hooks_pager_and_fsmonitor_do_not_execute",
+    "tests/test_query_git_source.py::test_explicit_branch_tag_head_and_full_commit_bind_same_contents[HEAD]",
+    "tests/test_query_git_source.py::test_explicit_branch_tag_head_and_full_commit_bind_same_contents[main]",
+    "tests/test_query_git_source.py::test_explicit_branch_tag_head_and_full_commit_bind_same_contents[oid]",
+    "tests/test_query_git_source.py::test_explicit_branch_tag_head_and_full_commit_bind_same_contents[refs/heads/main]",
+    "tests/test_query_git_source.py::test_explicit_branch_tag_head_and_full_commit_bind_same_contents[refs/tags/release]",
+    "tests/test_query_git_source.py::test_explicit_branch_tag_head_and_full_commit_bind_same_contents[release]",
+    "tests/test_query_git_source.py::test_git_ref_returns_bound_project_bytes_without_working_tree_change",
+    "tests/test_query_git_source.py::test_inherited_git_directory_index_trace_and_config_do_not_redirect_or_write",
+    "tests/test_query_git_source.py::test_missing_blob_is_a_controlled_failure_without_fetch",
+    "tests/test_query_git_source.py::test_missing_committed_file_never_falls_back_to_working_tree",
+    "tests/test_query_git_source.py::test_nested_project_files_are_not_combined",
+    "tests/test_query_git_source.py::test_non_reference_inputs_are_rejected_before_git[--help]",
+    "tests/test_query_git_source.py::test_non_reference_inputs_are_rejected_before_git[../main]",
+    "tests/test_query_git_source.py::test_non_reference_inputs_are_rejected_before_git[HEAD:specroad.json]",
+    "tests/test_query_git_source.py::test_non_reference_inputs_are_rejected_before_git[]",
+    "tests/test_query_git_source.py::test_non_reference_inputs_are_rejected_before_git[main\\nHEAD]",
+    "tests/test_query_git_source.py::test_raw_binary_crlf_unicode_names_and_executable_blobs_remain_data",
+    "tests/test_query_git_source.py::test_replace_refs_do_not_substitute_a_different_commit",
+    "tests/test_query_git_source.py::test_source_binding_is_immutable",
+    "tests/test_query_git_source.py::test_source_stays_bound_when_branch_moves_after_construction",
+    "tests/test_query_git_source.py::test_symlink_and_gitlink_entries_are_never_followed[120000]",
+    "tests/test_query_git_source.py::test_symlink_and_gitlink_entries_are_never_followed[160000]",
+    "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[../secret]",
+    "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[/etc/passwd]",
+    "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[a/../b]",
+    "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[a//b]",
+    "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[a\\\\b]",
+    "tests/test_query_git_source.py::test_unsafe_resource_paths_are_rejected[a\\x00b]",
+    "tests/test_query_git_source.py::test_wrong_blob_bytes_under_an_expected_object_name_are_rejected"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete R/C and shared comparison-source integration; extend adversarial/configuration/platform acceptance, Git availability contracts, linked/worktree/alternate source support and scalable inventory/resource handling. No Diff CLI, Work continuation, complete project validation or release approval yet."
   ]
 }

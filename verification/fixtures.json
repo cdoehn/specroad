@@ -61,7 +61,8 @@
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
     "SR-FIX-NORMALIZATION-TRANSACTION-v1",
     "SR-FIX-NORMALIZATION-SCOPE-v1",
-    "SR-FIX-WRITER-BOUNDARIES-v1"
+    "SR-FIX-WRITER-BOUNDARIES-v1",
+    "SR-FIX-GIT-OBJECT-SOURCE-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -307,6 +308,10 @@
     "SR-FIX-WRITER-BOUNDARIES-v1": {
       "provider": "tests/support/writer_boundaries.py:fixture",
       "kind": "owned native single/multi-artifact writers, real syscall interruption without finalizers, receipt loss and repeated fresh-process recovery; independent complete byte/model-root oracles and explicit test authority only"
+    },
+    "SR-FIX-GIT-OBJECT-SOURCE-v1": {
+      "provider": "tests/support/git_objects.py:GitFixture",
+      "kind": "Owned temporary local Git repositories built as raw fixture objects without Git write commands; real system Git reads pinned commits, trees and blobs. Independent exact-byte and no-mutation oracles cover HEAD/refs/index/working/foreign data, raw encodings, hooks/filters/pagers, inherited Git environment, missing/corrupt objects and resource boundaries. No complete model, release approval, network or source execution is claimed."
     }
   }
 }
