@@ -4,6 +4,7 @@ from ..model.errors import ModelError
 from .comparison_values import ComparisonResult
 from .references import RelationReferences
 from .indices import RelationIndex
+from ._impact_projection import _group_connections
 
 
 def direct_impact(artifact_id, references):
@@ -19,11 +20,7 @@ def direct_impact(artifact_id, references):
         entry = {'relation_id': edge.relation.identity.id,
             'related_id': view.target.id, 'direction': 'incoming' if view.inverse else 'outgoing'}
         groups.setdefault(kind, []).append(entry)
-    result = []
-    for kind in sorted(groups):
-        connections = sorted(groups[kind], key=lambda c: (c['related_id'], c['direction'], c['relation_id']))
-        result.append({'relation_type': kind,
-            'artifact_ids': sorted({c['related_id'] for c in connections}), 'connections': connections})
+    result = _group_connections(groups)
     return ComparisonResult({'impact_version': 'direct-impact-v1', 'artifact_id': artifact_id,
         'groups': result, 'depth': 1, 'transitive': False,
         'input_relations_sha256': canonical_json_sha256({

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 365
-last_completed_plan_commit: 8.g.R
-next_plan_commit: 8.g.C
-last_completed_numbered_bundle: 217
+implementation_plan_commits_completed: 366
+last_completed_plan_commit: 8.g.C
+next_plan_commit: 8.h.W
+last_completed_numbered_bundle: 218
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9443,10 +9443,36 @@ bestätigen 365/885; danach folgt 8.g.C.
 
 #### 8.g.C – Make it Clean
 
-- [ ] **8.g.C** · Position **366/885** · Voraussetzung: `8.g.R`.
+- [x] **8.g.C** · Position **366/885** · Voraussetzung: `8.g.R`.
 **Exakte Commit-Message:** `8.g.C refactor(query): Direkte und reviewbezogene Impactanalyse bereinigen`
 
 **Bereinigung:** Impactkalkulation für Planner und lesende CLI gemeinsam nutzen.
+
+**C-Umsetzung (Bundle 218, PLAN `8.g.C`):** Die beiden identischen Berechnungen
+der nach Relationstyp gruppierten Nachbarmengen und stabil sortierten Verbindungen
+liegen in einem gemeinsamen Graphhelfer. Sowohl die bestehende Planner-
+Vorher-/Nachher-Bewertung über direct_impact als auch die lesende Impact-CLI
+verwenden ihn. Die reine Review- und Fachprojektion wird aus dem Projektadapter
+in dieselbe Graphschicht verlagert. Der Projektadapter behält seine vollständige
+Inventur, Preflights, Aktualitätsprüfung, Ergebnisformate und Fehlerbehandlung.
+
+Die Eingangsverträge bleiben erhalten: Der Planner verlangt aufgelöste gültige
+Relationen; die lesende aktuelle Impact-Bewertung erhält auch strukturell invalid
+gebundene direkte Kanten samt Ursachen. Es gibt keine Änderung an Fachmengen,
+Reviewauswahl, Abwesenheitszuständen, Verifikationsaussagen, Ergebniseigentum oder
+zulässigen Seiteneffekten. Die alte Gruppierungslogik beider Aufrufer wird vor
+der Extraktion strukturell verglichen; die Fachprojektion bleibt quelltext- und
+AST-identisch, der übrige Adapter und Planner bleiben bis auf Import und
+gemeinsamen Funktionsaufruf strukturell identisch.
+
+Alle 277 bestehenden Testdateien und sämtliche 9.227 Testkennungen bleiben
+unverändert. Die gezielte Regression umfasst die vorhandenen Impact-W/R- und
+Graphorakel sowie betroffene Zielmodell-, gespeicherte Plan-, Ausführungs-,
+Normalisierungs- und Reviewpolicy-Verträge. Requirements 0113/0117/0284 bleiben
+partial; weitere Berichte, dauerhafte Work-Ausführung, externe Großausgabe,
+effektive Profilpolicy, alternative Basen und Plattform-/Performanceabnahme
+bleiben offen. Erst erfolgreicher paralleler Apply-Volltest und Commit
+bestätigen 366/885; danach folgt 8.h.W.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

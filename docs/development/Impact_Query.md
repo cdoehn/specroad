@@ -63,5 +63,9 @@ inventory check also guards the projection of these domain facts.
 The command is synchronous and materializes the inventory and result. Public Work
 continuation, external large-result delivery, effective profile policy, alternate
 base providers and supported-platform/performance acceptance remain open. The
-planned C step shares the calculation with planner
-callers; existing supplied-input direct-impact primitives remain available.
+graph layer owns the review and domain-fact projections. Planner direct-impact
+and the read-only CLI share the same deterministic grouping by stored relation
+type, neighbour IDs and physical direction. Their established input boundaries
+remain distinct: the planner requires resolved valid relations, while the current
+project reader must retain invalid direct bindings in its assessment. The public
+APIs, result versions, diagnostics and project-read guards remain unchanged.
