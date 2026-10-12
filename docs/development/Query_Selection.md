@@ -194,3 +194,15 @@ page is also retained in memory. This is bounded external sorting and live page
 construction, not a whole-query RSS bound, process restart, adaptive-runtime
 admission or durable `work-v1` implementation. Public CLI/live-project delivery,
 current semantic providers and broader platform/product acceptance remain open.
+
+## Separation of spool values and work lifecycle (8.d.C)
+
+The unchanged private row codec, scalar direction wrapper, row producer and M6
+spool specialization now live in `_paging_spool.py`. `paging_work.py` retains
+the public `QueryWork` class, query preparation, actual advance/delivery steps
+and handle/error lifecycle. The same helpers are called at the same points.
+An AST/source comparison against the bound R Result verifies each moved
+definition and the remaining orchestration apart from the listed imports.
+All W/R tests, IDs, result fields, original projections, scalar ordering, source
+bindings, failure contracts and allowed storage effects remain unchanged.
+The process-local and upstream-materialization limits above still apply.

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 356
-last_completed_plan_commit: 8.d.R
-next_plan_commit: 8.d.C
-last_completed_numbered_bundle: 208
+implementation_plan_commits_completed: 357
+last_completed_plan_commit: 8.d.C
+next_plan_commit: 8.e.W
+last_completed_numbered_bundle: 209
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9112,7 +9112,7 @@ danach folgt die strukturelle Bereinigung 8.d.C.
 
 #### 8.d.C – Make it Clean
 
-- [ ] **8.d.C** · Position **357/885** · Voraussetzung: `8.d.R`.
+- [x] **8.d.C** · Position **357/885** · Voraussetzung: `8.d.R`.
 **Exakte Commit-Message:** `8.d.C refactor(query): Sortierung und exakte Pagination bereinigen`
 
 **Bereinigung:** Sortier-/Paginglogik mit M6-Spooling statt verstecktem Frühabbruch umsetzen.
@@ -9120,6 +9120,24 @@ danach folgt die strukturelle Bereinigung 8.d.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungsstand 8.d.C (Bundle 209):** Der unveränderte private Zeilencodec,
+die Richtungsordnung, der Zeilenproduzent und die M6-Spoolspezialisierung liegen
+jetzt in _paging_spool.py. QueryWork behält öffentliche Modulidentität,
+Vorbereitung, echte Sortier-/Ausgabeschritte sowie Fehler- und Handle-Lebensdauer.
+Ein AST-/Quellvergleich gegen das gebundene R-Result bestätigt fünf identisch
+verschobene Definitionen und die unveränderte verbleibende Orchestrierung bis
+auf die ausdrücklich angepassten Imports. Fachresultate, Projektion, Quellbindung,
+exakte Zählung, Fehlerverträge und erlaubte Speicherseiteneffekte bleiben erhalten.
+
+Alle 271 bisherigen Testdateien und 9.014 Kennungen bleiben unverändert;
+1.436 betroffene Verhaltenstests werden gezielt parallel geprüft. Es entstehen
+keine neuen Verhaltens-, Darstellungs- oder Dokumentationstests. Requirement 0475
+bleibt partial: vorgelagerte Auswahl/angeforderte Seite materialisieren weiterhin
+im Speicher; Fortsetzung gilt im laufenden Prozess. CLI/Live-Projektanbindung,
+aktuelle semantische Provider, adaptive Runtime-Anbindung, dauerhafte Work-
+Integration und Plattform-/Produktabnahme bleiben offen. Erst erfolgreicher
+paralleler Apply-Volltest und Commit bestätigen 357/885; danach folgt 8.e.W.
 
 <a id="step-8-e"></a>
 ### 8.e – Trace in beide Richtungen
