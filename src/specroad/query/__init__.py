@@ -9,7 +9,8 @@ from .trace import TraceTraversal, trace_artifact
 from .why import why_artifact
 from .why_work import WhyTraversal
 from .impact import impact_artifact
+from .semantic_diff import compare_semantic
 
 __all__ = ('show_artifact', 'NormalizedQuery', 'QuerySelection', 'select_query',
            'QueryPage', 'query_records', 'QueryWork', 'TraceTraversal', 'trace_artifact',
-           'WhyTraversal', 'why_artifact', 'impact_artifact')
+           'WhyTraversal', 'why_artifact', 'impact_artifact', 'compare_semantic')

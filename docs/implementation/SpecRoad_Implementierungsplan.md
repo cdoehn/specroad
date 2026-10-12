@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 366
-last_completed_plan_commit: 8.g.C
-next_plan_commit: 8.h.W
-last_completed_numbered_bundle: 218
+implementation_plan_commits_completed: 367
+last_completed_plan_commit: 8.h.W
+next_plan_commit: 8.h.R
+last_completed_numbered_bundle: 219
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9486,12 +9486,45 @@ bestätigen 366/885; danach folgt 8.h.W.
 
 #### 8.h.W – Let it Work
 
-- [ ] **8.h.W** · Position **367/885** · Voraussetzung: `8.g.C`.
+- [x] **8.h.W** · Position **367/885** · Voraussetzung: `8.g.C`.
 **Exakte Commit-Message:** `8.h.W feat(query): Semantische Diffklassen aufbauen`
 
 **Umsetzung:** Strukturierte Feld-, Timing-, Scope-, Konfigurations-, Relations-, Status- und Nachweisänderungen klassifizieren.
 
 **Verhaltensabnahme:** Strukturierte Grenzwertänderung und reine Textänderung besitzen unterschiedliche Kategorien.
+
+**W-Umsetzung (Bundle 219, PLAN `8.h.W`):** compare_semantic verbindet den
+vorhandenen kanonischen Artefakt-/Feldvergleich mit expliziten semantischen
+Klassen. Der reine Datenbaustein validiert die gespeicherten Felder sämtlicher
+beiderseitig übergebener Artefakte und erhält IDs, Vorher-/Nachher-Hashes,
+Anwesenheitsflags, Werte und JSON Pointer. Grenzwerte, Text, Scope, Ausnahmen,
+Relationen, Dokumentstruktur, Verifikation und Codebezüge bleiben unterscheidbar;
+Applicability, Produktkonfiguration und gespeicherte Workflowzustände erhalten
+eigene Klassen. Nachweisergebnis-, Bindungs- und sonstige Evidence-Änderungen
+werden getrennt berichtet, ohne daraus Verifikation oder Aktualität abzuleiten.
+
+Projektkonfigurationen müssen paarweise typisiert und an dieselbe Projekt-/
+ID-Präfix-Identität gebunden sein. Die bestehende semantische Projektion liefert
+ihren Diff; auch ausgeschlossene Darstellungs-/Betriebswerte bleiben im Hash der
+Rohdeklarationen gebunden. Fehlende Konfiguration ist ausdrücklich not_supplied.
+Nur eine explizite maximum/minimum-Zuordnung zu vorhandenen Requirements
+aktiviert die exakte Dauergrenzenbewertung. Geänderte Einheiten können als
+äquivalent erscheinen; Kalenderdauern erhalten keine erfundene Sekundenordnung.
+
+Neue unabhängige Verhaltenstests prüfen diese Klassen und Bindungen, exakte
+Feldwerte, Objekt-/Quellreihenfolge, Addition/Entfernung/Retirement, unzulässige
+Eingaben, unveränderte ungültige Artefakte, Ergebniseigentum, schreibfreie
+Ausführung und Parität im isolierten Python-Prozess. Sämtliche 277 vorhandenen
+Testdateien und 9.227 Testkennungen bleiben unverändert.
+
+Requirements 0115/0116 bleiben partial; 0403 wird für die getrennte Klassifikation
+partial. Der Inventardelta bezieht sich ausschließlich auf die übergebenen
+Artefaktmengen. Applicability-bedingter Modellumfang und Evidence-Aktualität sind
+ausdrücklich not_evaluated. R/C, die folgenden Quellenadapter, Diff-CLI, dauerhafte
+Work-Ausführung, effektive Profile und Plattform-/Performanceabnahme bleiben
+offen. Es werden keine Projektquellen ergänzt, keine Git-/Dateioperationen
+ausgeführt und keine Freigaben erteilt. Erst erfolgreicher paralleler
+Apply-Volltest und Commit bestätigen 367/885; danach folgt 8.h.R.
 
 #### 8.h.R – Make it Right
 

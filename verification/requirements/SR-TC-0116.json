@@ -7,22 +7,35 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-SCOPE-COMPARISON-v1"
   ],
   "preconditions": [
-    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority."
+    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority.",
+    "Owned explicitly supplied field-valid artifact sets; optional paired project configurations and explicit timing semantics, without source completeness or authorization claims."
   ],
   "steps": [
-    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O."
+    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O.",
+    "Compare semantic categories and exact values/identities with independent fixtures; check explicit unknown scope/currency, input hashes, read-only boundaries and isolated-process parity."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine reine Änderung unstrukturierter Aussagefelder MUSS als `text_changed` ausgewiesen werden, wenn keine deterministische semantische Klassifikation möglich ist.",
-    "scope": "Pure supplied-input primitives. Complete CLI/base providers, evaluation-derived currency, effective-profile and platform approval remain separate."
+    "scope": "8.h.W adds compare_semantic over explicit ComparisonInputs. Every supplied stored artifact field contract is validated before classification. Existing artifact identities, hashes, presence flags, values and pointers remain visible. Threshold/text, scope/exception/relation/document/verification/code-reference differences retain their structural classes; applicability, product configuration, stored statuses and evidence result/binding/content changes are distinguished. Paired typed ProjectConfigurations compare through the existing semantic projection and also bind their raw declarations. Explicit requirement timing bounds alone enable exact tightened/relaxed/equivalent/incomparable duration observations; policies bind even unchanged input. Missing configuration is not_supplied. Supplied inventory membership deltas do not imply applicability-derived scope, which remains not_evaluated alongside evidence currency. Independent tests cover classes, exact values/identities, configuration and policy binding, invalid inputs, ownership, no writes and fresh-process parity. Existing 277 test files and 9227 IDs remain unchanged. R/C, source adapters, Diff CLI, durable Work, effective profiles, applicability-derived scope, evidence-currentness services and platform/performance acceptance remain open; no release approval is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/categories",
+    "/changes",
+    "/configuration_scope",
+    "/evidence_currency",
+    "/input_sha256",
+    "/inventory_delta",
+    "/project_configuration",
+    "/timing"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -36,11 +49,47 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_scope_comparison.ScopeComparisonTests.test_text_is_never_interpreted_as_a_timing_constraint",
-    "test_scope_comparison_right.ScopeComparisonRightTests.test_unstructured_timing_prose_remains_text",
     "test_scope_comparison_right.ScopeComparisonRightTests.test_ambiguous_timing_structure_does_not_claim_tightening",
-    "test_scope_comparison_right.ScopeComparisonRightTests.test_exception_text_not_interpreted_as_numerical_threshold"
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_exception_text_not_interpreted_as_numerical_threshold",
+    "test_scope_comparison_right.ScopeComparisonRightTests.test_unstructured_timing_prose_remains_text",
+    "tests/test_query_semantic_diff.py::test_addition_removal_and_retirement_preserve_identity_and_do_not_guess_scope_exclusion",
+    "tests/test_query_semantic_diff.py::test_applicability_and_product_configuration_are_distinct_classes",
+    "tests/test_query_semantic_diff.py::test_calendar_duration_does_not_invent_a_fixed_seconds_order",
+    "tests/test_query_semantic_diff.py::test_code_reference_changes_retain_the_whole_artifact_class",
+    "tests/test_query_semantic_diff.py::test_data_only_comparison_owns_results_and_preserves_input_order_independence",
+    "tests/test_query_semantic_diff.py::test_equivalent_units_are_explicit_without_erasing_the_actual_field_delta",
+    "tests/test_query_semantic_diff.py::test_evidence_record_deltas_never_claim_subject_verification_or_currency[attachments-value3-evidence_changed]",
+    "tests/test_query_semantic_diff.py::test_evidence_record_deltas_never_claim_subject_verification_or_currency[configuration_hash-ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff-evidence_binding_changed]",
+    "tests/test_query_semantic_diff.py::test_evidence_record_deltas_never_claim_subject_verification_or_currency[result-passed-evidence_result_changed]",
+    "tests/test_query_semantic_diff.py::test_evidence_record_deltas_never_claim_subject_verification_or_currency[subjects-value1-evidence_binding_changed]",
+    "tests/test_query_semantic_diff.py::test_existing_structural_classes_survive_semantic_aggregation[exceptions-old1-new1-exception_changed]",
+    "tests/test_query_semantic_diff.py::test_existing_structural_classes_survive_semantic_aggregation[priority-mandatory-high-field_changed]",
+    "tests/test_query_semantic_diff.py::test_existing_structural_classes_survive_semantic_aggregation[scope-old0-new0-scope_changed]",
+    "tests/test_query_semantic_diff.py::test_existing_structural_classes_survive_semantic_aggregation[verification_plan_status-not_planned-planned-verification_changed]",
+    "tests/test_query_semantic_diff.py::test_explicit_policy_is_bound_even_when_the_duration_is_unchanged",
+    "tests/test_query_semantic_diff.py::test_missing_bound_does_not_interpret_free_text_or_invent_tightening",
+    "tests/test_query_semantic_diff.py::test_only_explicit_bound_direction_justifies_timing_order[maximum-PT1S-PT2S-timing_relaxed]",
+    "tests/test_query_semantic_diff.py::test_only_explicit_bound_direction_justifies_timing_order[maximum-PT2S-PT1S-timing_tightened]",
+    "tests/test_query_semantic_diff.py::test_only_explicit_bound_direction_justifies_timing_order[minimum-PT1S-PT2S-timing_tightened]",
+    "tests/test_query_semantic_diff.py::test_only_explicit_bound_direction_justifies_timing_order[minimum-PT2S-PT1S-timing_relaxed]",
+    "tests/test_query_semantic_diff.py::test_presentation_configuration_is_bound_but_does_not_claim_semantic_change",
+    "tests/test_query_semantic_diff.py::test_project_semantic_configuration_changes_are_bound_even_without_artifact_changes",
+    "tests/test_query_semantic_diff.py::test_public_comparison_has_the_same_data_contract_in_a_fresh_isolated_process",
+    "tests/test_query_semantic_diff.py::test_relation_identity_and_document_position_changes_remain_visible",
+    "tests/test_query_semantic_diff.py::test_stored_status_changes_are_separate_from_text[assumption-validation_status-pending-confirmed]",
+    "tests/test_query_semantic_diff.py::test_stored_status_changes_are_separate_from_text[issue-issue_status-open-resolved]",
+    "tests/test_query_semantic_diff.py::test_stored_status_changes_are_separate_from_text[requirement-implementation_status-not_started-in_progress]",
+    "tests/test_query_semantic_diff.py::test_structured_threshold_and_unstructured_statement_have_distinct_categories",
+    "tests/test_query_semantic_diff.py::test_unchanged_invalid_artifact_fields_are_not_hidden_by_empty_diff",
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[bad_bound]",
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[missing_timing]",
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[one_config]",
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[unknown_timing_subject]",
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[unparseable_timing]",
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[wrong_prefix]",
+    "tests/test_query_semantic_diff.py::test_unsupported_or_unbound_semantics_fail_instead_of_becoming_success[wrong_project]"
   ],
   "open_items": [
-    "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."
+    "Complete conservative R/C classification, planned source/CLI/Work integration, effective profile semantics, applicability-derived model scope, evaluated evidence currency and platform/performance acceptance; Merge integration remains a later consumer."
   ]
 }
