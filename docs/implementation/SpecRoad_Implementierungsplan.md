@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 371
-last_completed_plan_commit: 8.i.R
-next_plan_commit: 8.i.C
-last_completed_numbered_bundle: 223
+implementation_plan_commits_completed: 372
+last_completed_plan_commit: 8.i.C
+next_plan_commit: 8.j.W
+last_completed_numbered_bundle: 224
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9675,7 +9675,7 @@ und Commit bestätigen 371/885; danach folgt 8.i.C.
 
 #### 8.i.C – Make it Clean
 
-- [ ] **8.i.C** · Position **372/885** · Voraussetzung: `8.i.R`.
+- [x] **8.i.C** · Position **372/885** · Voraussetzung: `8.i.R`.
 **Exakte Commit-Message:** `8.i.C refactor(query): Sichere Git-Objektquelle bereinigen`
 
 **Bereinigung:** Git nur als expliziten Quellenadapter für Diff und später Merge halten.
@@ -9683,6 +9683,28 @@ und Commit bestätigen 371/885; danach folgt 8.i.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Umsetzung (Bundle 224, PLAN `8.i.C`):** Der private Baustein
+_git_reader übernimmt die bestehenden Umgebungs-/Ablageprüfungen und die
+unveränderten Methoden für Git-Aufruf und Rohobjektprüfung. GitObjectSource
+behält Ref-Auswahl, Commit-/Bauminventarbindung und Ressourcenzugriff; die
+technischen Methoden werden über eine private Basisklasse bereitgestellt.
+Git wird weiterhin nur bei expliziter Konstruktion einer Git-Quelle ausgeführt.
+
+Die vier ausgelagerten Funktionen/Methoden bleiben in Quelltext und AST
+identisch. Der öffentliche Konstruktor, read_bytes, Ref-/OID-Prüfung und
+Datenvertrag bleiben unverändert; die bestehende Prozessfehler-Einspeisung
+bleibt über dieselbe subprocess-Modulidentität wirksam. Die statische
+Extraktionsprüfung ersetzt keine Verhaltensabnahme. Alle 281 vorhandenen
+Testdateien und 9.377 Testkennungen bleiben unverändert; die gezielte parallele
+Regression umfasst alle W-/R-Git-Fälle und betroffenen Query-/Sicherheitsverträge.
+
+Requirement 0191 bleibt partial. Gemeinsamer Projekt-/Vergleichssnapshot,
+Diff-/Work-Integration, weitere Git-Ablageformen, Plattformabnahme und
+skalierbare Ressourcensteuerung bleiben offen. Es entstehen keine neuen
+Fachfunktionen, Fehlerverträge, Seiteneffekte oder impliziten Git-Abhängigkeiten.
+Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 372/885;
+danach folgt 8.j.W.
 
 <a id="step-8-j"></a>
 ### 8.j – Vergleichsquellen und Projektidentität

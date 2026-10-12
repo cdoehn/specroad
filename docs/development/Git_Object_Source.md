@@ -7,6 +7,11 @@ owned blob bytes. A later branch/tag movement does not change the binding.
 The working copy need not contain the same files. Missing committed paths fail;
 they are never completed from the current working tree.
 
+The private `_git_reader` module owns execution, environment/storage checks and
+raw object-hash verification. `GitObjectSource` retains reference selection,
+commit/tree inventory binding and resource access. The extracted algorithms and
+the public constructor/read methods retain their W/R behavior and source bodies.
+
 Construction is explicit. Importing the query API does not discover or execute
 Git. The adapter uses a system Git executable found through the platform's
 default executable search path. It needs Git supporting `--no-lazy-fetch`;
@@ -37,7 +42,7 @@ This W adapter supplies repository bytes, not a validated project snapshot or
 write capability. It does not interpret `specroad.json`, combine multiple roots,
 validate a complete model, invoke Diff/Work, or grant release approval. Whole
 tree inventories and Git-storage checks are materialized; streaming and Work
-continuation are not claimed. C, common comparison-source resolution, supported-platform acceptance and
+continuation are not claimed. Common comparison-source resolution, supported-platform acceptance and
 broader Git-layout support remain open.
 
 The behavior fixtures build real Git objects as owned temporary data; no Git
