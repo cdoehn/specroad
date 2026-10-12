@@ -19,10 +19,28 @@ relation. The named inverse of `supersedes` remains `superseded_by`.
 
 The existing identity frontier orders work by distance/ID and admits an artifact
 identity only once. The explicit depth defines semantic scope; the historical
-default trace depth does not silently cap it. The synchronous W handler visits
-the complete selected scope and keeps its result in memory. Command description
-reports `continuation_supported=false`; process-local stepping and broader
-cycle/multiple-path/soft-target acceptance belong to R. Durable Work, large
+default trace depth does not silently cap it. `TraceTraversal(index, artifact_id,
+direction=..., depth=...)` accepts an immutable resolved `RelationIndex` and
+advances real graph work through `advance(units)`. The exact positive integer
+budget counts node removals and individual directed edge checks. A paused object
+keeps both pending identities and the current adjacency position; a high-degree
+node does not consume all its edges in one unit. Cycles and alternative paths
+retain each node once at its minimum distance and each traversed relation view
+once. Changing the budget never changes the selected depth or final graph.
+
+`advance` returns true only after the entire requested scope is complete.
+`result` then returns owned `nodes`/`edges`; incomplete, failed or closed work
+cannot publish a result. `state` is an owned progress observation, explicitly
+`supplied_relation_set_only` and `durable_checkpoint=false`. Invalid budgets do
+not consume work. `close()` cancels live continuation and is idempotent; failed
+work cannot be restarted as a successful partial answer.
+
+The public project handler drives the same engine in batches of 128 graph steps,
+then applies its existing full observation checks. The index, accumulated graph,
+and final sorted output remain in memory; loading, adjacency lookup and output
+projection are not bounded by the graph-step budget. This API is process-local
+and does not serialize or admit durable runtime Work. Command description keeps
+`continuation_supported=false`. Durable Work, adaptive runtime admission, large
 external delivery and supported-platform/performance acceptance remain open.
 
 Coverage binds every current artifact source, including unreachable sources.

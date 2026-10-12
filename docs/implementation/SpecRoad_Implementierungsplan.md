@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 358
-last_completed_plan_commit: 8.e.W
-next_plan_commit: 8.e.R
-last_completed_numbered_bundle: 210
+implementation_plan_commits_completed: 359
+last_completed_plan_commit: 8.e.R
+next_plan_commit: 8.e.C
+last_completed_numbered_bundle: 211
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9180,12 +9180,38 @@ Commit bestätigen 358/885; danach folgt 8.e.R.
 
 #### 8.e.R – Make it Right
 
-- [ ] **8.e.R** · Position **359/885** · Voraussetzung: `8.e.W`.
+- [x] **8.e.R** · Position **359/885** · Voraussetzung: `8.e.W`.
 **Exakte Commit-Message:** `8.e.R feat(query): Trace in beide Richtungen vervollständigen`
 
 **Vervollständigung:** Zyklen, Mehrfachpfade und weiche Arbeitsziele ohne Verlust offenen Scopes verarbeiten.
 
 **Verhaltensabnahme:** Fortgesetzte Traversierung erreicht dieselbe Menge wie ungeteilter Lauf. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungsstand 8.e.R (Bundle 211):** TraceTraversal verarbeitet tatsächliche
+Knotenentnahmen und einzelne gerichtete Kanten als gezählte Arbeitseinheiten.
+Die vorhandene IdentityFrontier und der aktive Adjazenzcursor bleiben zwischen
+advance-Aufrufen erhalten. Kleine oder wechselnde Arbeitsziele verändern weder
+Tiefe noch offenen Scope. Zyklen und Mehrfachpfade liefern dieselben Knoten mit
+Mindestabständen und dieselben Relationsansichten wie ein ungeteilter Lauf.
+Der öffentliche Projektbefehl verwendet diese Engine und behält die vollständige
+aktuelle Quellbindung sowie die bestehenden Read-Preflights.
+
+41 neue Verhaltenstests vergleichen in/out/both und fünf Tiefen mit einem
+unabhängigen Graphorakel. Eine Knotenliste mit 513 ausgehenden Kanten sowie eine
+Kette mit 1.301 Knoten prüfen echte Fortsetzung ohne implizite Mengen- oder
+Rekursionsgrenze. Unfertige, fehlgeschlagene und geschlossene Arbeit liefert kein
+Endergebnis; ungültige Arbeitsziele verbrauchen keinen Scope. Zustands- und
+Ergebnisänderungen des Aufrufers verändern weder Quellen noch Folgeläufe.
+Alle 272 bisherigen Testdateien und 9.047 Testkennungen bleiben unverändert;
+1.659 gezielte parallele Dev-Prüfungen umfassen neue und betroffene Regressionen.
+
+Requirements 0111/0117 bleiben partial. Die Engine ist prozesslokal über einem
+bereits aufgelösten Index; Inventar, Graph und endgültige Ausgabe bleiben im
+Speicher. Dauerhafte Work-Aufnahme, adaptive Runtimeanbindung, externe Ausgabe
+und Plattform-/Performanceabnahme bleiben offen. Keine atomare Momentaufnahme,
+vollständige semantische Freigabe oder öffentliche Work-Fortsetzung wird behauptet.
+Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 359/885;
+danach folgt das strukturelle 8.e.C.
 
 #### 8.e.C – Make it Clean
 
