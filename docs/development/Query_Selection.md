@@ -116,3 +116,15 @@ hits, input/query bindings, projected NFC/NFD text and source bytes are compared
 across every successful switch. This measures the current environment and does
 not replace supported-platform acceptance. Public CLI/live-project integration,
 public page delivery and broader product/Work validation remain open.
+
+
+## Unicode separation of responsibilities (8.c.C)
+
+`_full_text_working_copy.py` contains the unchanged pure field selection and
+NFC/casefold derivation. It accepts only the already decoded artifact value and
+returns text copies; it has no source record, canonical writer or cache role.
+`full_text.py` retains `SearchText`, exact original-byte/hash ownership and the
+literal matching entrypoint. Calls remain at the same points. No storage format,
+search result, error, source binding or allowed side effect changes. The existing
+W/R tests remain byte-identical; an AST comparison against the bound Result also
+checks the exact moved function and unchanged remaining source module.

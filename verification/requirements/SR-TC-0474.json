@@ -23,7 +23,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabhängig anwenden.",
-    "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged."
+    "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged. 8.c.C moves the identical field-selection/normalization function into a private pure working-copy module. SearchText and literal matching retain their module identity and source ownership behavior. All W/R tests and IDs remain unchanged; an AST proof binds the moved function and remaining source module to the authoritative R Result."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -98,7 +98,7 @@
     "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[{}]"
   ],
   "open_items": [
-    "Complete 8.c.C and supported platform/product acceptance; the current run measures native CPython and locally available locales only.",
+    "Supported platform/product acceptance remains open; current evidence measures native CPython and locally available locales only.",
     "Public query CLI/live project adapter, public page delivery, load and full Work integration remain open.",
     "Full specialist artifact/document validation, rendering/include traversal and attachment indexing are outside the current explicit-input text selection."
   ]

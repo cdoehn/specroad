@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 353
-last_completed_plan_commit: 8.c.R
-next_plan_commit: 8.c.C
-last_completed_numbered_bundle: 205
+implementation_plan_commits_completed: 354
+last_completed_plan_commit: 8.c.C
+next_plan_commit: 8.d.W
+last_completed_numbered_bundle: 206
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9022,7 +9022,7 @@ danach folgt 8.c.C.
 
 #### 8.c.C – Make it Clean
 
-- [ ] **8.c.C** · Position **354/885** · Voraussetzung: `8.c.R`.
+- [x] **8.c.C** · Position **354/885** · Voraussetzung: `8.c.R`.
 **Exakte Commit-Message:** `8.c.C refactor(query): Unicode-Volltextsuche bereinigen`
 
 **Bereinigung:** Suchindex und kanonische Speicherung strikt trennen.
@@ -9030,6 +9030,20 @@ danach folgt 8.c.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungsstand 8.c.C (Bundle 206):** Die unveränderte Feldwahl und
+NFC-/Casefold-Ableitung liegen in einem privaten reinen Arbeitskopiemodul.
+SearchText, Originalbytes-/Hashbindung und der literale Vergleich bleiben im
+bisherigen Modul und werden an denselben Stellen ausgeführt. Die Ableitung
+kennt weder Quellobjekte noch kanonische Schreib- oder Cacheoperationen. Ein
+AST-Abgleich gegen das maßgebliche R-Result prüft die exakt verschobene Funktion
+und das ansonsten unveränderte Quellmodul. Alle 269 bisherigen Testdateien und
+8.951 Testkennungen bleiben unverändert.
+
+Die 1.229 betroffenen W/R- und Regressionstests werden gezielt parallel in Dev
+ausgeführt. Requirements bleiben partial; die vorhandenen Integrations- und
+Plattformgrenzen gelten weiter. Erst erfolgreicher paralleler Apply-Volltest und
+Commit bestätigen 354/885; danach folgt 8.d.W.
 
 <a id="step-8-d"></a>
 ### 8.d – Sortierung und exakte Pagination
