@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 372
-last_completed_plan_commit: 8.i.C
-next_plan_commit: 8.j.W
-last_completed_numbered_bundle: 224
+implementation_plan_commits_completed: 373
+last_completed_plan_commit: 8.j.W
+next_plan_commit: 8.j.R
+last_completed_numbered_bundle: 225
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9714,12 +9714,37 @@ danach folgt 8.j.W.
 
 #### 8.j.W – Let it Work
 
-- [ ] **8.j.W** · Position **373/885** · Voraussetzung: `8.i.C`.
+- [x] **8.j.W** · Position **373/885** · Voraussetzung: `8.i.C`.
 **Exakte Commit-Message:** `8.j.W feat(query): Vergleichsquellen und Projektidentität aufbauen`
 
 **Umsetzung:** Lokale Projekt-/Gitquellen über gemeinsamen Snapshotvertrag auflösen; Schnittstellen für Baseline und Bundle vorbereiten.
 
 **Verhaltensabnahme:** Zwei gültige Quellen derselben project_id ergeben denselben Vergleich wie direkte Daten.
+
+**Vorbereiteter Stand in Bundle 225:** ComparisonSourceSnapshot bindet lokale
+Projektdateien und fest ausgewählte Git-Commits an denselben eigenen, unveränderlichen
+Vergleichsvertrag. Projektkonfiguration und alle konfigurierten normativen JSON-Bytes
+werden erfasst; Artefakte werden einschließlich ihrer gespeicherten Felder und ihrer
+ID-/Pfadzuordnung geprüft. compare_sources ergibt für den unterstützten Ausschnitt
+exakt den bestehenden direkten semantischen Datenvergleich mit beiden Konfigurationen.
+
+Lokale Quellen durchlaufen den Project-Read-Preflight sowie erneute Byte- und
+Inventurprüfungen. Git-Quellen verwenden ausschließlich den gebundenen Commit,
+auch bei fehlendem oder ungültigem aktuellem Arbeitsstand. Unsichere/nichtklassifizierte
+Ressourcen, fremde Projektidentität und inkompatible Konfiguration werden abgewiesen.
+Baseline und Bundle besitzen explizite, noch nicht verfügbare Quellenarten; es gibt
+keine ersatzweise Ergänzung aus einem anderen Verzeichnis oder dem Arbeitsbaum.
+
+Profile, Regeln und Mappings werden als unveränderte Rohbytes gebunden, ihre Semantik
+wird hier nicht verglichen. Unterschiede solcher Ressourcen werden ausdrücklich
+abgewiesen; ein unveränderter Artefaktsatz belegt keine Gleichheit vollständiger Modelle.
+Die Bindung ist kein Modellwurzelhash und kein atomarer Snapshot. Vollständige
+Modellvalidierung, Konfigurationsauswertung, Evidence-Currentness, Diff-CLI/Work,
+Baseline-/Bundleadapter (M10/M15), weitere Git-Ablagen und Plattformabnahme bleiben offen.
+SR-TC-0114 ist deshalb partial. Die neuen Fälle und betroffenen Query-/Lesepfadtests
+werden gezielt parallel geprüft; alle bestehenden Testkennungen bleiben erhalten.
+Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 373/885;
+danach folgt 8.j.R.
 
 #### 8.j.R – Make it Right
 

@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0114",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-COMPARISON-SOURCE-v1",
+    "SR-FIX-GIT-OBJECT-SOURCE-v1"
+  ],
+  "preconditions": [
+    "Owned same-project local directories or ordinary local Git stores; Git sources require an explicit ref and trusted system Git."
+  ],
+  "steps": [
+    "Compare every local/Git source pairing against independently supplied artifact and configuration data; preserve input bytes and Git state.",
+    "Check owned snapshots, byte provenance, local read preflight and observed changes, project/schema boundaries, configured inventory and unavailable sources.",
+    "Bind other normative JSON as opaque bytes and reject unsupported resource deltas instead of claiming unchanged project semantics."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad diff --against <BASE>` MUSS als Vergleichsbasis eine Baseline-ID, einen Git-Ref, ein verifiziertes Projektbundle oder ein lokales SpecRoad-Projektverzeichnis desselben Projekts akzeptieren.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "8.j.W supplies one immutable comparison-source contract for explicit local/Git acquisition, with configuration identity, schema and complete stored artifact-field checks, path/ID binding and exact resource provenance. Local operational preflight and observed byte/membership rechecks reject unsafe mixed observations. Git data comes solely from a pinned physical commit. All local/Git pairings reproduce the direct semantic comparison of supplied configuration and artifacts. Baseline/bundle kinds explicitly fail as unavailable. Other normative JSON is opaque and byte-bound; its deltas fail until semantic adapters exist. No complete model equivalence, atomic snapshot, approval, write authorization or CLI/Work availability is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,44 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_comparison_sources.py::test_captured_local_values_remain_owned_after_the_source_disappears",
+    "tests/test_query_comparison_sources.py::test_different_projects_cannot_be_compared",
+    "tests/test_query_comparison_sources.py::test_empty_projects_still_compare_their_configuration",
+    "tests/test_query_comparison_sources.py::test_expected_project_identity_is_required_before_comparison[git]",
+    "tests/test_query_comparison_sources.py::test_expected_project_identity_is_required_before_comparison[local]",
+    "tests/test_query_comparison_sources.py::test_git_managed_root_cannot_silently_become_an_empty_inventory[100644-not a directory]",
+    "tests/test_query_comparison_sources.py::test_git_managed_root_cannot_silently_become_an_empty_inventory[120000-foreign]",
+    "tests/test_query_comparison_sources.py::test_git_managed_root_cannot_silently_become_an_empty_inventory[160000-1111111111111111111111111111111111111111]",
+    "tests/test_query_comparison_sources.py::test_git_snapshot_never_uses_current_configuration_or_artifacts",
+    "tests/test_query_comparison_sources.py::test_identical_values_at_different_roots_keep_distinct_raw_bindings[git]",
+    "tests/test_query_comparison_sources.py::test_identical_values_at_different_roots_keep_distinct_raw_bindings[local]",
+    "tests/test_query_comparison_sources.py::test_incompatible_configuration_is_rejected[git]",
+    "tests/test_query_comparison_sources.py::test_incompatible_configuration_is_rejected[local]",
+    "tests/test_query_comparison_sources.py::test_local_observed_artifact_change_is_not_a_mixed_snapshot",
+    "tests/test_query_comparison_sources.py::test_local_recovery_state_blocks_normal_source_acquisition",
+    "tests/test_query_comparison_sources.py::test_local_source_is_read_only_and_has_no_git_dependency",
+    "tests/test_query_comparison_sources.py::test_missing_explicit_artifact_is_not_silently_omitted[git]",
+    "tests/test_query_comparison_sources.py::test_missing_explicit_artifact_is_not_silently_omitted[local]",
+    "tests/test_query_comparison_sources.py::test_non_normative_bytes_do_not_become_artifacts[git]",
+    "tests/test_query_comparison_sources.py::test_non_normative_bytes_do_not_become_artifacts[local]",
+    "tests/test_query_comparison_sources.py::test_only_declared_managed_portions_are_compared[git]",
+    "tests/test_query_comparison_sources.py::test_only_declared_managed_portions_are_compared[local]",
+    "tests/test_query_comparison_sources.py::test_opaque_normative_resources_are_bound_but_deltas_need_later_semantics[git]",
+    "tests/test_query_comparison_sources.py::test_opaque_normative_resources_are_bound_but_deltas_need_later_semantics[local]",
+    "tests/test_query_comparison_sources.py::test_reserved_source_kind_is_unavailable_without_reading_any_fallback[baseline]",
+    "tests/test_query_comparison_sources.py::test_reserved_source_kind_is_unavailable_without_reading_any_fallback[bundle]",
+    "tests/test_query_comparison_sources.py::test_two_sources_equal_the_direct_data_comparison[git-git]",
+    "tests/test_query_comparison_sources.py::test_two_sources_equal_the_direct_data_comparison[git-local]",
+    "tests/test_query_comparison_sources.py::test_two_sources_equal_the_direct_data_comparison[local-git]",
+    "tests/test_query_comparison_sources.py::test_two_sources_equal_the_direct_data_comparison[local-local]",
+    "tests/test_query_comparison_sources.py::test_unclassified_json_in_a_normative_tree_is_rejected[git]",
+    "tests/test_query_comparison_sources.py::test_unclassified_json_in_a_normative_tree_is_rejected[local]",
+    "tests/test_query_comparison_sources.py::test_unknown_stored_artifact_fields_fail_during_acquisition[git]",
+    "tests/test_query_comparison_sources.py::test_unknown_stored_artifact_fields_fail_during_acquisition[local]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete R/C hardening and shared-source registry; Diff CLI/Work, Baseline and verified Bundle adapters in M10/M15 remain open.",
+    "Only project configuration and artifact fields are compared. Other normative JSON is byte-bound and differing resources are rejected; complete model/profile/configuration-scope/currentness validation, scalable acquisition, broader Git layouts and supported-platform acceptance remain open."
   ]
 }

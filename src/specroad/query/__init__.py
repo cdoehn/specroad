@@ -11,7 +11,9 @@ from .why_work import WhyTraversal
 from .impact import impact_artifact
 from .semantic_diff import compare_semantic
 from .git_source import GitObjectSource
+from .comparison_sources import ComparisonSourceSnapshot, compare_sources
 
 __all__ = ('show_artifact', 'NormalizedQuery', 'QuerySelection', 'select_query',
            'QueryPage', 'query_records', 'QueryWork', 'TraceTraversal', 'trace_artifact',
-           'WhyTraversal', 'why_artifact', 'impact_artifact', 'compare_semantic', 'GitObjectSource')
+           'WhyTraversal', 'why_artifact', 'impact_artifact', 'compare_semantic', 'GitObjectSource',
+           'ComparisonSourceSnapshot', 'compare_sources')
