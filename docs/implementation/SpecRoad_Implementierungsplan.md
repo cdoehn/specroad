@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 349
-last_completed_plan_commit: 8.b.W
-next_plan_commit: 8.b.R
-last_completed_numbered_bundle: 201
+implementation_plan_commits_completed: 350
+last_completed_plan_commit: 8.b.R
+next_plan_commit: 8.b.C
+last_completed_numbered_bundle: 202
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8908,12 +8908,30 @@ Lauf und Commit bestätigen 349/885; danach folgt 8.b.R.
 
 #### 8.b.R – Make it Right
 
-- [ ] **8.b.R** · Position **350/885** · Voraussetzung: `8.b.W`.
+- [x] **8.b.R** · Position **350/885** · Voraussetzung: `8.b.W`.
 **Exakte Commit-Message:** `8.b.R feat(query): Queryfilter und Projektion vervollständigen`
 
 **Vervollständigung:** Gespeicherten verification_plan_status und berechnetes verification_result getrennt behandeln; unbekannte Felder abweisen.
 
 **Verhaltensabnahme:** Kombinationsfälle liefern exakt die erwarteten IDs und Werte. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungsstand 8.b.R (Bundle 202):** Der normalisierte Querywert kann aus
+passiven Daten nur nach erneuter geschlossener Feld-, SRX- und Hashprüfung
+übernommen werden. Unbekannte Felder und nicht normalisierte Werte werden
+abgewiesen. Verfügbare Typ-, Reifegrad-, Status- und Relationsfilter verwenden
+die tatsächlichen Core-Vokabulare; ungültige Alternativen werden nicht ignoriert.
+Gespeicherte Statuswerte werden über alle explizit übergebenen Quellen geprüft.
+Eine angeforderte Projektion von verification_result benötigt den echten
+Berechnungsprovider auch bei leerer Auswahl; sie wird nicht als Missing oder
+als gespeichertes Fachfeld ausgegeben. Extensiondaten bleiben passive Werte.
+Kombinations-, Permutations-, Kontextwechsel- und Statusfälle haben genaue
+ID-/Wertoracles; die unveränderten W-Fälle gelten weiter.
+
+Die W-Grenzen und partial-Requirements bleiben erhalten: keine vorgezogene
+Verification-Aggregation, CLI-/Live-Projektintegration oder öffentliche Pagination.
+Neue und betroffene Verhaltenstests werden gezielt parallel geprüft. Erst der
+vollständige parallele Apply-Lauf und der Commit bestätigen 350/885; danach
+folgt 8.b.C.
 
 #### 8.b.C – Make it Clean
 

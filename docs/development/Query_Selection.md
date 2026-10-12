@@ -41,3 +41,22 @@ callback, cache write or fallback to a previous result occurs in selection.
 The development check runs the new selection cases and affected graph, SRX,
 scope and query behavior tests in parallel. The complete suite is reserved for
 Apply before the commit; requirement records remain partial.
+
+## R: checked normalized input and status boundaries
+
+`NormalizedQuery.from_data` accepts the closed materialized envelope only. It
+rechecks canonical SRX hashes, validates every program through the real SRX
+parser and rejects unknown fields and non-normalized inputs. A self-consistent
+hash cannot turn a foreign operator into an executable query. Supported type,
+maturity, stored status and relation filter values use the Core vocabularies;
+an invalid alternative is an error even alongside valid alternatives.
+
+Before returning any selection, both known stored status fields are checked over
+all supplied sources. An invalid unselected source cannot disappear behind a
+filter. An explicit projection of `/verification_result` (including descendants)
+requires the actual computation provider, even for empty input or no matches.
+It cannot become a fabricated Missing value. Passive extension metadata with
+the same nested spelling remains ordinary data. Unknown query-envelope fields
+are errors; a valid projection pointer to an absent stored value still returns
+the specified Missing marker. Current verification computation, CLI and the live
+project adapter remain open; this boundary does not implement aggregation 10.5.

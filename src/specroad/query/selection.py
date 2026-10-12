@@ -10,7 +10,11 @@ import json
 import unicodedata
 
 from ..graph._scope_selector_contract import _query
+from ..graph.relation_types import CORE_RELATION_TYPES
+from ..model.artifact_schemas import MATURITIES
+from ..model.artifact_types import artifact_types
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model.domain_fields import IMPLEMENTATION_STATUSES, VERIFICATION_PLAN_STATUSES
 from ..model.errors import ModelError
 from ..srx import EvaluationContext, LoadedGraph, SrxProgram, evaluate, require_type, MISSING
 from ..srx.pointers import parse_pointer, resolve_tokens
@@ -80,8 +84,34 @@ class NormalizedQuery:
                  'limit': default_limit if limit is None else limit}
         canonical_json_bytes(value)
         _query(value)
+        vocabularies = {'type': tuple(item.artifact_type for item in artifact_types()),
+            'maturity': MATURITIES, 'implementation_status': IMPLEMENTATION_STATUSES,
+            'verification_plan_status': VERIFICATION_PLAN_STATUSES,
+            'has_relation': (*CORE_RELATION_TYPES, 'superseded_by'),
+            'missing_relation': (*CORE_RELATION_TYPES, 'superseded_by')}
+        for name, choices in vocabularies.items():
+            if any(item not in choices for item in groups.get(name, ())):
+                raise ModelError('query_filter_value_invalid', pointer='/filters/' + name)
         value['filters'] = {name: values for name, values in groups.items() if values}
         object.__setattr__(self, '_encoded', canonical_json_bytes(value))
+
+    @classmethod
+    def from_data(cls, value):
+        """Revalidate a closed normalized envelope, including every SRX binding.
+
+        Scope metadata or a matching hash alone cannot authenticate a program.
+        No unknown field or non-normalized value is silently discarded.
+        """
+        canonical_json_bytes(value)
+        _query(value)
+        result = cls(filters=value['filters'],
+            srx_filters=[item['expression'] for item in value['srx_filters']],
+            select=value['select'],
+            sort=[item['key'] + ':' + item['direction'] for item in value['sort']],
+            evaluation=value['evaluation'], offset=value['offset'], limit=value['limit'])
+        if result.data != value:
+            raise ModelError('non_normalized_query')
+        return result
 
     @property
     def data(self):
@@ -156,12 +186,22 @@ def select_query(records, query, *, project, configuration=None):
                      for index, item in enumerate(data['srx_filters']))
     pointers = [(pointer, parse_pointer(pointer, rule_id='query-projection'))
                 for pointer in data['select']]
+    # Validate these known stored status contracts over the entire supplied
+    # inventory, including candidates which a later value filter will omit.
+    for identifier in graph.artifact_ids:
+        artifact = graph.artifact(identifier, rule_id='query')
+        if 'verification_result' in artifact:
+            raise ModelError('query_stored_verification_result', pointer='/verification_result')
+        for name, choices in (('implementation_status', IMPLEMENTATION_STATUSES),
+                              ('verification_plan_status', VERIFICATION_PLAN_STATUSES)):
+            if name in artifact and (type(artifact[name]) is not str or artifact[name] not in choices):
+                raise ModelError('query_stored_status_invalid', pointer='/' + name)
+    if any(tokens and tokens[0] == 'verification_result' for _, tokens in pointers):
+        raise ModelError('query_verification_provider_required', pointer='/select')
     selected = []
     for identifier in graph.artifact_ids:
         current = graph.candidate_roots(roots, identifier, rule_id='query')
         artifact = current['artifact']
-        if 'verification_result' in artifact:
-            raise ModelError('query_stored_verification_result', pointer='/verification_result')
         kinds = {view['type'] for view in current['relations']}
         matches = True
         for name, values in data['filters'].items():

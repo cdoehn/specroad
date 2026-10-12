@@ -16,12 +16,13 @@
   ],
   "steps": [
     "Normalize content-bound query data; execute value/SRX filtering against the entire supplied graph and project exact pointer values.",
-    "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers."
+    "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers.",
+    "R revalidates normalized envelopes and current known stored status values; assert exact combination/permutation results and explicit rejection of computed verification projection without its provider."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Query MUSS wiederholte Werte derselben Wertfilterart als ODER, unterschiedliche Wertfilterarten als UND und davon getrennt alle wiederholten SRX-`--filter`-Ausdrücke untereinander sowie mit den Wertfiltern als UND nach Kapitel 11.6 auswerten.",
-    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial."
+    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -76,7 +77,38 @@
     "tests/test_query_selection.py::test_srx_graph_reads_all_sources_before_value_filtering",
     "tests/test_query_selection.py::test_stored_verification_result_is_never_accepted_as_a_computation",
     "tests/test_query_selection.py::test_tags_and_stored_statuses_combine_without_verification_invention",
-    "tests/test_query_selection.py::test_unselected_broken_graph_cannot_create_partial_success"
+    "tests/test_query_selection.py::test_unselected_broken_graph_cannot_create_partial_success",
+    "tests/test_query_selection_right.py::test_all_source_permutations_preserve_exact_combined_selection_and_binding",
+    "tests/test_query_selection_right.py::test_computed_verification_projection_requires_provider_even_without_matches[False-/verification_result/status]",
+    "tests/test_query_selection_right.py::test_computed_verification_projection_requires_provider_even_without_matches[False-/verification_result]",
+    "tests/test_query_selection_right.py::test_computed_verification_projection_requires_provider_even_without_matches[True-/verification_result/status]",
+    "tests/test_query_selection_right.py::test_computed_verification_projection_requires_provider_even_without_matches[True-/verification_result]",
+    "tests/test_query_selection_right.py::test_empty_supported_inventory_has_exact_empty_selection",
+    "tests/test_query_selection_right.py::test_extension_metadata_named_verification_result_remains_passive_data",
+    "tests/test_query_selection_right.py::test_filter_projection_and_context_mutations_do_not_reuse_old_results",
+    "tests/test_query_selection_right.py::test_invalid_alternative_is_not_ignored_because_another_value_is_valid[options0]",
+    "tests/test_query_selection_right.py::test_invalid_alternative_is_not_ignored_because_another_value_is_valid[options1]",
+    "tests/test_query_selection_right.py::test_invalid_alternative_is_not_ignored_because_another_value_is_valid[options2]",
+    "tests/test_query_selection_right.py::test_invalid_alternative_is_not_ignored_because_another_value_is_valid[options3]",
+    "tests/test_query_selection_right.py::test_invalid_alternative_is_not_ignored_because_another_value_is_valid[options4]",
+    "tests/test_query_selection_right.py::test_invalid_alternative_is_not_ignored_because_another_value_is_valid[options5]",
+    "tests/test_query_selection_right.py::test_invalid_stored_status_on_unselected_source_rejects_partial_success[implementation_status-True]",
+    "tests/test_query_selection_right.py::test_invalid_stored_status_on_unselected_source_rejects_partial_success[implementation_status-value3]",
+    "tests/test_query_selection_right.py::test_invalid_stored_status_on_unselected_source_rejects_partial_success[verification_plan_status-None]",
+    "tests/test_query_selection_right.py::test_invalid_stored_status_on_unselected_source_rejects_partial_success[verification_plan_status-passed]",
+    "tests/test_query_selection_right.py::test_normalized_envelope_roundtrip_is_owned_and_preserves_projection_order",
+    "tests/test_query_selection_right.py::test_scope_metadata_is_not_a_query_provider_or_an_executable_query",
+    "tests/test_query_selection_right.py::test_self_consistent_srx_hash_does_not_admit_an_unknown_operator",
+    "tests/test_query_selection_right.py::test_stored_plan_status_combinations_return_exact_ids_and_values",
+    "tests/test_query_selection_right.py::test_unicode_owner_values_are_exact_and_are_not_fulltext_normalized",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[boolean_limit]",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[empty_filter]",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[empty_group]",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[missing_field]",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[operand]",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[sort]",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[top]",
+    "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[wrong_hash]"
   ],
   "open_items": [
     "Public query CLI/structured request and current project adapter remain open; this evidence covers the explicit-input Python selection kernel only.",
