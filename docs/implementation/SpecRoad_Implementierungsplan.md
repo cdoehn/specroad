@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 354
-last_completed_plan_commit: 8.c.C
-next_plan_commit: 8.d.W
-last_completed_numbered_bundle: 206
+implementation_plan_commits_completed: 355
+last_completed_plan_commit: 8.d.W
+next_plan_commit: 8.d.R
+last_completed_numbered_bundle: 207
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9053,12 +9053,32 @@ Commit bestätigen 354/885; danach folgt 8.d.W.
 
 #### 8.d.W – Let it Work
 
-- [ ] **8.d.W** · Position **355/885** · Voraussetzung: `8.c.C`.
+- [x] **8.d.W** · Position **355/885** · Voraussetzung: `8.c.C`.
 **Exakte Commit-Message:** `8.d.W feat(query): Sortierung und exakte Pagination aufbauen`
 
 **Umsetzung:** items, total, offset, limit, returned und truncated aus vollständiger Querymenge berechnen.
 
 **Verhaltensabnahme:** Limit 1 beschränkt nur items, nicht das exakte total.
+
+**Umsetzungsstand 8.d.W (Bundle 207):** query_records führt die vollständige
+Auswahl aus, sortiert alle Treffer und bildet anschließend die exakte Seite.
+QueryPage liefert genau items, total, offset, limit, returned und truncated;
+Limit 1 verkürzt nur items. Die skalare Sortierung unterscheidet Missing, null,
+Boolean, Zahl und String, nutzt NFC-/UTF-8-Stringordnung und einen abschließenden
+aufsteigenden ID-Tie-Breaker. Projektion entfernt keine Sortieroperanden. Objekte
+und Arrays werden vor Pagination abgewiesen; berechnete Verification-Sortierung
+verlangt weiterhin den tatsächlichen Provider, auch bei leerer Eingabe.
+
+31 neue Verhaltenstests prüfen konkrete Seiten, Gesamtzahlen, Wert-/SRX-Filter,
+Typordnung, Richtungen, Originalprojektion, Quellbindungen und Fehlergrenzen.
+Alle 269 bisherigen Testdateien und 8.951 Testkennungen bleiben unverändert.
+Dev prüft 1.260 neue und betroffene Verhaltenstests gezielt parallel. Requirement
+0475 ist partial; dieser synchrone W-Kern hält die explizite Eingabemenge und
+alle ausgewählten Zeilen im Speicher. Große fortsetzbare Auswahl und M6-Spooling
+folgen in R/C. Öffentliche CLI/Live-Projektanbindung, aktuelle semantische Provider,
+Plattform-/Produktabnahme und dauerhafte Work-Integration bleiben offen.
+Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 355/885;
+danach folgt 8.d.R.
 
 #### 8.d.R – Make it Right
 

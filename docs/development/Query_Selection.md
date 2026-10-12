@@ -128,3 +128,33 @@ literal matching entrypoint. Calls remain at the same points. No storage format,
 search result, error, source binding or allowed side effect changes. The existing
 W/R tests remain byte-identical; an AST comparison against the bound Result also
 checks the exact moved function and unchanged remaining source module.
+
+
+## Complete sorting and exact pages (8.d.W)
+
+`query_records(records, query, project=..., configuration=None)` uses the complete
+`select_query` result and returns an owned `QueryPage`. Its detached `.data`
+contains exactly `items`, `total`, `offset`, `limit`, `returned` and `truncated`.
+`total` counts all filtered matches; only `items` is sliced after complete sorting.
+`returned` is the delivered item count and `truncated` is exactly
+`offset + returned < total`. Query/input hashes and source count are separate
+observation attributes, not additional fields in that six-field result object.
+The existing `select_query` API remains explicitly unpaged.
+
+Sort values come from original source fields even when projection omits them.
+Ascending precedence is Missing, null, Boolean, number, string. Numbers compare
+numerically and strings use NFC UTF-8 bytes without casefolding or changing the
+projected original. Each key has its own direction; the final ID tie-breaker
+stays ascending. Default sorting is `(artifact_type, id)`. Every selected sort
+operand is validated before pagination, including for limit zero: objects and
+arrays produce `query_sort_value_not_scalar`. Computed verification-result keys
+require the actual provider even for an empty inventory. Filtered-out extension
+metadata is not a sort operand. Other unavailable semantic providers retain
+their existing explicit errors.
+
+This W kernel is synchronous and keeps the supplied inventory and selected rows
+in memory. It does not silently cap results at the historical soft count target.
+R/C will address large resumable selection and M6 spooling. Public CLI/live-project
+integration, current verification aggregation, supported-platform acceptance and
+full durable Work execution remain open; six-field kernel output is not a claim
+that all public query semantics or whole-project validation are complete.

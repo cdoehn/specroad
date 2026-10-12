@@ -4,19 +4,36 @@
   "requirement_id": "SR-REQ-0475",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-SRX-CONTEXT-v1"
+  ],
+  "preconditions": [
+    "Owned common-schema sources and real supplied-inventory Query selection on current native CPython; no CLI, whole-project validation or approval claim."
+  ],
+  "steps": [
+    "Execute value/fulltext/SRX filters over every supplied source and count all matches.",
+    "Sort original scalar fields independently of projection; apply offset/limit only after complete sorting.",
+    "Compare all six result fields and independent ID/value oracles; reject non-scalar and unavailable computed sort values before pagination."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Query-Ergebnis MUSS `items`, `total`, `offset`, `limit`, `returned` und `truncated` enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "8.d.W adds query_records and an owned QueryPage with exactly items/total/offset/limit/returned/truncated. All supplied-inventory filters execute before exact counting, full scalar sorting and pagination. Missing/null/Boolean/numeric/string precedence, NFC UTF-8 string order, mixed directions and final ascending ID tie-breaking have independent result oracles. Projection never removes sort operands. Object/array sort values fail before pagination, and computed verification sorting requires the actual provider even for empty input. Source bytes, query/input bindings and all existing selection behavior remain unchanged. The synchronous kernel is in-memory; R/C continuation and M6 spooling, public CLI/live-project delivery and current semantic providers remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/items",
+    "/total",
+    "/offset",
+    "/limit",
+    "/returned",
+    "/truncated"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +45,42 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_paging.py::test_all_input_permutations_have_the_same_sorted_page",
+    "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[False-/verification_result/status]",
+    "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[False-/verification_result]",
+    "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[False-verification_result]",
+    "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[True-/verification_result/status]",
+    "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[True-/verification_result]",
+    "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[True-verification_result]",
+    "tests/test_query_paging.py::test_default_order_is_type_then_id_not_source_order",
+    "tests/test_query_paging.py::test_effective_limit_is_materialized_without_hidden_result_count_cap",
+    "tests/test_query_paging.py::test_fulltext_value_and_srx_filters_all_precede_count_and_paging",
+    "tests/test_query_paging.py::test_limit_one_changes_only_items_not_exact_filtered_total",
+    "tests/test_query_paging.py::test_missing_null_boolean_number_string_precedence_and_numeric_order[asc]",
+    "tests/test_query_paging.py::test_missing_null_boolean_number_string_precedence_and_numeric_order[desc]",
+    "tests/test_query_paging.py::test_multiple_keys_preserve_last_ascending_id_tie_breaker",
+    "tests/test_query_paging.py::test_named_scalar_keys_use_their_typed_ascending_order[implementation_status-blocked-implemented]",
+    "tests/test_query_paging.py::test_named_scalar_keys_use_their_typed_ascending_order[maturity-draft-in_review]",
+    "tests/test_query_paging.py::test_named_scalar_keys_use_their_typed_ascending_order[owner-a-z]",
+    "tests/test_query_paging.py::test_named_scalar_keys_use_their_typed_ascending_order[revision-2-10]",
+    "tests/test_query_paging.py::test_named_scalar_keys_use_their_typed_ascending_order[title-Alpha-Zulu]",
+    "tests/test_query_paging.py::test_named_scalar_keys_use_their_typed_ascending_order[verification_plan_status-planned-running]",
+    "tests/test_query_paging.py::test_non_scalar_sort_value_is_rejected_even_beyond_the_requested_page[0-bad0]",
+    "tests/test_query_paging.py::test_non_scalar_sort_value_is_rejected_even_beyond_the_requested_page[0-bad1]",
+    "tests/test_query_paging.py::test_non_scalar_sort_value_is_rejected_even_beyond_the_requested_page[1-bad0]",
+    "tests/test_query_paging.py::test_non_scalar_sort_value_is_rejected_even_beyond_the_requested_page[1-bad1]",
+    "tests/test_query_paging.py::test_offset_is_applied_after_complete_sort_and_keeps_total",
+    "tests/test_query_paging.py::test_page_owns_projection_and_preserves_selection_input_and_query_bindings",
+    "tests/test_query_paging.py::test_query_paging_neither_consults_host_locale_nor_performs_io",
+    "tests/test_query_paging.py::test_sort_reads_original_fields_even_when_projection_omits_them",
+    "tests/test_query_paging.py::test_string_order_uses_nfc_utf8_without_casefold_or_original_rewrite",
+    "tests/test_query_paging.py::test_unselected_non_scalar_metadata_is_not_a_sort_operand",
+    "tests/test_query_paging.py::test_zero_limit_returns_no_items_with_exact_nonzero_total"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 8.d.R/C, including large resumable selection and M6 external spooling; W currently retains the supplied inventory and complete selected rows in memory.",
+    "Public query CLI/live-project adapter and current release/verification/evaluation providers remain open.",
+    "Supported platform/product acceptance, load and full durable Work integration remain open."
   ]
 }
