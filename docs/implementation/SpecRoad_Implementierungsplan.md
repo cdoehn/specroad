@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 348
-last_completed_plan_commit: 8.a.C
-next_plan_commit: 8.b.W
-last_completed_numbered_bundle: 200
+implementation_plan_commits_completed: 349
+last_completed_plan_commit: 8.b.W
+next_plan_commit: 8.b.R
+last_completed_numbered_bundle: 201
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -8879,12 +8879,32 @@ fachliche Freigabe und führt kein neues Verhalten ein.
 
 #### 8.b.W – Let it Work
 
-- [ ] **8.b.W** · Position **349/885** · Voraussetzung: `8.a.C`.
+- [x] **8.b.W** · Position **349/885** · Voraussetzung: `8.a.C`.
 **Exakte Commit-Message:** `8.b.W feat(query): Queryfilter und Projektion aufbauen`
 
 **Umsetzung:** Vollständige Query-Grammatik, Feldprojektion, Wertfilter und SRX-Filter kombinieren.
 
 **Verhaltensabnahme:** Wiederholte Wertfilter sind ODER, unterschiedliche Arten und alle SRX-Filter UND.
+
+**Umsetzungsstand 8.b.W (Bundle 201):** Der erste nutzbare Python-Querykern
+normalisiert die vollständige passive Query-Grammatik in das vorhandene
+Scope-Format und bindet SRX-Inhalte statt Dateipfade. Die Auswahl verknüpft
+Werte derselben Art mit ODER, verschiedene Arten und SRX-Prädikate mit UND.
+Die Relationsfilter und SRX-Graphoperatoren sehen alle explizit übergebenen
+Quellen einschließlich eingehender Kanten. Feldprojektion erhält Pointerreihenfolge,
+Originalwerte und die Unterscheidung zwischen Missing und null. Ergebnisse sind
+eigene, gebundene Auswahldaten, kein öffentliches paginiertes Query-Result.
+
+Die W-Grenze bleibt ausdrücklich: CLI/Structured Request und Live-Projektadapter
+sind noch offen. Volltext folgt in 8.c, Sortierung/Pagination in 8.d. Geschlossener
+Release-Scope, aktuelle Verification-Aggregation und Evaluation benötigen echte
+Provider; diese Optionen werden gebunden, bei Auswahl ohne Provider aber als
+Fehler abgewiesen. Ein gespeichertes verification_result wird niemals als
+Berechnung ausgegeben. Die Requirements 0109/0110/0449/0473 bleiben partial;
+keine vollständige Produkt-, Plattform-, Last- oder Work-Engine-Abnahme ist
+behauptet. Die neuen und betroffenen Verhaltenstests laufen gezielt parallel in
+Dev, der parallele Volltest ausschließlich in Apply. Erst dessen erfolgreicher
+Lauf und Commit bestätigen 349/885; danach folgt 8.b.R.
 
 #### 8.b.R – Make it Right
 

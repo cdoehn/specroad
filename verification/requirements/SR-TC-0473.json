@@ -4,19 +4,33 @@
   "requirement_id": "SR-REQ-0473",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-SRX-CONTEXT-v1"
+  ],
+  "preconditions": [
+    "Explicit owned SourceRelations, real immutable SRX programs and passive project/configuration contexts; current native CPython only."
+  ],
+  "steps": [
+    "Normalize content-bound query data; execute value/SRX filtering against the entire supplied graph and project exact pointer values.",
+    "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad query` MUSS die vollständige CLI-Grammatik aus Kapitel 11.6 akzeptieren.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/filters",
+    "/srx_filters",
+    "/select",
+    "/items"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +42,21 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_selection.py::test_complete_grammar_materializes_scope_values_and_binds_srx_content",
+    "tests/test_query_selection.py::test_invalid_query_shape_is_rejected_before_selection[options0]",
+    "tests/test_query_selection.py::test_invalid_query_shape_is_rejected_before_selection[options1]",
+    "tests/test_query_selection.py::test_invalid_query_shape_is_rejected_before_selection[options2]",
+    "tests/test_query_selection.py::test_invalid_query_shape_is_rejected_before_selection[options3]",
+    "tests/test_query_selection.py::test_invalid_query_shape_is_rejected_before_selection[options4]",
+    "tests/test_query_selection.py::test_invalid_query_shape_is_rejected_before_selection[options5]",
+    "tests/test_query_selection.py::test_program_structure_is_validated_even_with_empty_candidates",
+    "tests/test_query_selection.py::test_selection_is_complete_before_bound_sort_offset_and_limit"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Public query CLI/structured request and current project adapter remain open; this evidence covers the explicit-input Python selection kernel only.",
+    "Fulltext execution belongs to 8.c; custom sorting and exact public page delivery to 8.d. The current selection is explicitly unpaged.",
+    "Closed release scope, current verification aggregation and evaluation binding require actual providers; absent providers reject requested execution.",
+    "Supported platform/product acceptance, load and full Work-engine integration remain open."
   ]
 }
