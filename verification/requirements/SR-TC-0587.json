@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-CHANGED-SOURCES-v1",
     "SR-FIX-OWNED-TEMP-v1"
   ],
   "preconditions": [
@@ -17,12 +18,13 @@
     "Run actual model validation with a selected subject whose incoming graph dependencies require additional model subjects; retain the native source report and exact checked IDs.",
     "Compare completed durable results and complete policy failures with direct native evaluation, including every diagnostic and retained native detail.",
     "Reject missing required checks or unfinished batches without a false completion; preserve the prior checkpoint and complete native failure findings.",
-    "Check rehashed incomplete/contradictory retained data and actual changed input/runtime/host prerequisites; retain the actual checkpoint and all required observations, then resume only after a compatible prerequisite is restored."
+    "Check rehashed incomplete/contradictory retained data and actual changed input/runtime/host prerequisites; retain the actual checkpoint and all required observations, then resume only after a compatible prerequisite is restored.",
+    "Run Git-derived changed-only validation and Core lint; retain native structural and semantic scopes, exact seeds/checked/dependency IDs, resource bindings and absence of a full-project claim."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Inkrementelle Prüfungen MÜSSEN ihren tatsächlich geprüften Umfang einschließlich notwendiger Abhängigkeiten korrekt ausweisen.",
-    "scope": "The selected closure contains exactly three dependent goals from four supplied sources; all source bytes are structurally examined. Every completed result retains the native source report, scope and diagnostics. Malformed model inputs and unfinished work cannot claim completion. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval."
+    "scope": "The selected closure contains exactly three dependent goals from four supplied sources; all source bytes are structurally examined. Every completed result retains the native source report, scope and diagnostics. Malformed model inputs and unfinished work cannot claim completion. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval. 8.k.W composes captured Git/current sources, changed artifact/configuration seeds, byte-bound current profiles, native validation dependency expansion and Core lint. Incoming/transitive and declared gate dependencies are retained; actual SRX profile edits detect failures in unchanged artifacts. Profile/configuration changes and removals conservatively seed current artifacts; unsupported changed normative resources fail. Native reports, failure policy, exact checked/dependency IDs and raw bindings are retained. No-change/empty-current cases do not fabricate checks. This is loaded-model validation and Core lint only, not full-project, literal/full-lint, live-file, Work or approval coverage."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -43,6 +45,32 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_query_changed_only.py::test_added_artifact_is_selected_without_a_disconnected_unchanged_artifact",
+    "tests/test_query_changed_only.py::test_changed_target_pulls_incoming_and_transitive_dependencies",
+    "tests/test_query_changed_only.py::test_complete_removal_reports_empty_current_scope_without_fabricated_checks",
+    "tests/test_query_changed_only.py::test_declared_gate_dependency_can_find_failure_outside_the_changed_file",
+    "tests/test_query_changed_only.py::test_foreign_project_identity_is_rejected_before_semantic_checks",
+    "tests/test_query_changed_only.py::test_local_snapshot_cannot_substitute_for_a_git_base",
+    "tests/test_query_changed_only.py::test_missing_or_unresolved_base_fails_before_any_validation[HEAD]",
+    "tests/test_query_changed_only.py::test_missing_or_unresolved_base_fails_before_any_validation[None]",
+    "tests/test_query_changed_only.py::test_missing_or_unresolved_base_fails_before_any_validation[base1]",
+    "tests/test_query_changed_only.py::test_native_profile_rule_edit_checks_unchanged_artifacts_and_finds_failure",
+    "tests/test_query_changed_only.py::test_native_profile_warning_obeys_the_selected_failure_threshold[error-False-True]",
+    "tests/test_query_changed_only.py::test_native_profile_warning_obeys_the_selected_failure_threshold[error-True-False]",
+    "tests/test_query_changed_only.py::test_native_profile_warning_obeys_the_selected_failure_threshold[warning-False-False]",
+    "tests/test_query_changed_only.py::test_no_changes_do_not_execute_semantic_callbacks_or_claim_a_full_project_pass",
+    "tests/test_query_changed_only.py::test_presentation_only_configuration_change_does_not_claim_a_validation_run",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths0-changed_profile_paths_required]",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths1-changed_profile_source_missing]",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths2-changed_profile_identity_mismatch]",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths3-changed_profile_source_missing]",
+    "tests/test_query_changed_only.py::test_removed_target_preserves_native_dangling_reference_failure",
+    "tests/test_query_changed_only.py::test_result_is_owned_and_bound_to_both_sources_and_actual_checked_bytes",
+    "tests/test_query_changed_only.py::test_semantic_configuration_change_conservatively_selects_current_artifacts",
+    "tests/test_query_changed_only.py::test_unavailable_required_semantic_services_remain_incomplete",
+    "tests/test_query_changed_only.py::test_unsupported_resource_delta_cannot_disappear_from_the_check[mappings/other.json]",
+    "tests/test_query_changed_only.py::test_unsupported_resource_delta_cannot_disappear_from_the_check[profiles/unused.json]",
+    "tests/test_query_changed_only.py::test_unsupported_resource_delta_cannot_disappear_from_the_check[rules/other.json]",
     "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[100]",
     "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[1]",
     "tests/test_work_evaluation.py::test_direct_native_results_equal_completed_durable_windows[constrained-100]",
@@ -93,6 +121,7 @@
     "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[unknown_stage-finalize]"
   ],
   "open_items": [
-    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
+    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification.",
+    "Changed-only source composition remains a library scope: full CLI/Work, literal/full lint, broader resource semantics, live freshness and scalable processing remain open."
   ]
 }

@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0193",
   "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
   "primary_verification_id": "SR-VER-0013",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CHANGED-SOURCES-v1",
+    "SR-FIX-GIT-OBJECT-SOURCE-v1"
+  ],
+  "preconditions": [
+    "Captured same-project Git base and current source; explicitly bound current profile paths and trusted optional ModelGate callbacks."
+  ],
+  "steps": [
+    "Compare real Git/current artifact and configuration inputs to obtain changed seeds, then execute native validation closure and Core lint.",
+    "Change a relation target, a declared dependency or actual SRX profile rule; retain failures outside the directly changed artifact and exact expanded IDs.",
+    "Reject missing bases, unbound profiles and unsupported resources; preserve source bytes, native incomplete/failure states and honest empty-scope results."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Option `--changed-only --against <REF>` MUSS Validierung und Linting auf geänderte Artefakte einschließlich der für deren Regeln erforderlichen Abhängigkeiten begrenzen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "8.k.W composes captured Git/current sources, changed artifact/configuration seeds, byte-bound current profiles, native validation dependency expansion and Core lint. Incoming/transitive and declared gate dependencies are retained; actual SRX profile edits detect failures in unchanged artifacts. Profile/configuration changes and removals conservatively seed current artifacts; unsupported changed normative resources fail. Native reports, failure policy, exact checked/dependency IDs and raw bindings are retained. No-change/empty-current cases do not fabricate checks. This is loaded-model validation and Core lint only, not full-project, literal/full-lint, live-file, Work or approval coverage."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,35 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_query_changed_only.py::test_added_artifact_is_selected_without_a_disconnected_unchanged_artifact",
+    "tests/test_query_changed_only.py::test_changed_target_pulls_incoming_and_transitive_dependencies",
+    "tests/test_query_changed_only.py::test_complete_removal_reports_empty_current_scope_without_fabricated_checks",
+    "tests/test_query_changed_only.py::test_declared_gate_dependency_can_find_failure_outside_the_changed_file",
+    "tests/test_query_changed_only.py::test_foreign_project_identity_is_rejected_before_semantic_checks",
+    "tests/test_query_changed_only.py::test_local_snapshot_cannot_substitute_for_a_git_base",
+    "tests/test_query_changed_only.py::test_missing_or_unresolved_base_fails_before_any_validation[HEAD]",
+    "tests/test_query_changed_only.py::test_missing_or_unresolved_base_fails_before_any_validation[None]",
+    "tests/test_query_changed_only.py::test_missing_or_unresolved_base_fails_before_any_validation[base1]",
+    "tests/test_query_changed_only.py::test_native_profile_rule_edit_checks_unchanged_artifacts_and_finds_failure",
+    "tests/test_query_changed_only.py::test_native_profile_warning_obeys_the_selected_failure_threshold[error-False-True]",
+    "tests/test_query_changed_only.py::test_native_profile_warning_obeys_the_selected_failure_threshold[error-True-False]",
+    "tests/test_query_changed_only.py::test_native_profile_warning_obeys_the_selected_failure_threshold[warning-False-False]",
+    "tests/test_query_changed_only.py::test_no_changes_do_not_execute_semantic_callbacks_or_claim_a_full_project_pass",
+    "tests/test_query_changed_only.py::test_presentation_only_configuration_change_does_not_claim_a_validation_run",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths0-changed_profile_paths_required]",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths1-changed_profile_source_missing]",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths2-changed_profile_identity_mismatch]",
+    "tests/test_query_changed_only.py::test_profile_inputs_must_bind_exact_captured_resource_bytes[paths3-changed_profile_source_missing]",
+    "tests/test_query_changed_only.py::test_removed_target_preserves_native_dangling_reference_failure",
+    "tests/test_query_changed_only.py::test_result_is_owned_and_bound_to_both_sources_and_actual_checked_bytes",
+    "tests/test_query_changed_only.py::test_semantic_configuration_change_conservatively_selects_current_artifacts",
+    "tests/test_query_changed_only.py::test_unavailable_required_semantic_services_remain_incomplete",
+    "tests/test_query_changed_only.py::test_unsupported_resource_delta_cannot_disappear_from_the_check[mappings/other.json]",
+    "tests/test_query_changed_only.py::test_unsupported_resource_delta_cannot_disappear_from_the_check[profiles/unused.json]",
+    "tests/test_query_changed_only.py::test_unsupported_resource_delta_cannot_disappear_from_the_check[rules/other.json]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete R/C hardening and CLI/Work integration; live source freshness, full resource/model semantics, literal/full lint, language-registry binding in this adapter, scalable processing and supported-platform acceptance remain open."
   ]
 }

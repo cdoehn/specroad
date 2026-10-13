@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 375
-last_completed_plan_commit: 8.j.C
-next_plan_commit: 8.k.W
-last_completed_numbered_bundle: 227
+implementation_plan_commits_completed: 376
+last_completed_plan_commit: 8.k.W
+next_plan_commit: 8.k.R
+last_completed_numbered_bundle: 228
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9818,12 +9818,40 @@ und Commit bestätigen 375/885; danach folgt 8.k.W.
 
 #### 8.k.W – Let it Work
 
-- [ ] **8.k.W** · Position **376/885** · Voraussetzung: `8.j.C`.
+- [x] **8.k.W** · Position **376/885** · Voraussetzung: `8.j.C`.
 **Exakte Commit-Message:** `8.k.W feat(query): Changed-only mit Closure aufbauen`
 
 **Umsetzung:** Geänderte IDs aus Gitvergleich bestimmen und notwendige Validierungs-/Lintabhängigkeiten mitprüfen.
 
 **Verhaltensabnahme:** Änderung an Ziel oder Regel zieht abhängige betroffene Artefakte ein.
+
+**Vorbereiteter W-Stand in Bundle 228:** check_changed_sources leitet die
+geänderten Artefakt-IDs aus zwei eigenen Quellensnapshots ab; die Basis muss an
+einen Git-Commit gebunden sein. Die bestehende validate_model-Pipeline erweitert
+die Seeds um eingehende, ausgehende und explizite Gate-Abhängigkeiten. Der native
+Prüfbericht und Core-Lint weisen den tatsächlich erreichten Umfang aus. Struktur,
+Referenzen und Graph betrachten alle erfassten aktuellen Artefakte; fehlende
+Semantikdienste bleiben unverfügbar statt als erfolgreich zu gelten.
+
+Profile werden über eine vollständige Schlüssel-/Pfadbindung aus den aktuellen
+Snapshotbytes komponiert. Tatsächliche SRX-Profilregeln werden damit ausgeführt.
+Profilressourcen- und semantische Konfigurationsänderungen sowie entfernte Artefakte
+wählen konservativ alle verbleibenden aktuellen Artefakte als Seeds. Unterschiede
+noch nicht unterstützter Ressourcenarten werden ausdrücklich abgewiesen. Eine
+Zieländerung erreicht eingehende/transitive Abhängigkeiten; eine Profilregeländerung
+kann dadurch Fehler in unveränderten Artefakten aufdecken. Vorhandene W-/R-Tests
+und bisherige Nachweise von SR-TC-0587 bleiben erhalten.
+
+Das Ergebnis bindet Quellensnapshots, Basis-Commit, Profilbytes, geänderte/gelöschte
+IDs, Seeds, geprüfte IDs und zusätzliche Abhängigkeiten. Der Fehlerschwellwert gilt
+auch für native Profilbefunde. Keine Änderungen oder keine aktuellen Artefakte
+liefern keine erfundenen Prüfberichte und keinen bestandenen Modellnachweis.
+SR-TC-0193 und SR-TC-0587 bleiben partial: CLI/Work, Live-Freshness, weitere
+Ressourcenadapter, Literal-/Gesamtlint, Language-Registry-Anbindung dieses Adapters,
+vollständige Semantik und Skalierung bleiben offen. Es wird weder Projektvollprüfung
+noch atomarer Snapshot, Freigabe oder Schreibberechtigung zugesichert.
+Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen 376/885;
+danach folgt 8.k.R.
 
 #### 8.k.R – Make it Right
 

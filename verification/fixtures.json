@@ -10,6 +10,7 @@
     "SR-FIX-CHANGE-METADATA-v1",
     "SR-FIX-CHANGE-PLAN-v1",
     "SR-FIX-CHANGE-TARGET-v1",
+    "SR-FIX-CHANGED-SOURCES-v1",
     "SR-FIX-COMPARISON-SOURCE-v1",
     "SR-FIX-CONTAINER-LANGUAGES-v1",
     "SR-FIX-CORE-LINT-v1",
@@ -317,6 +318,10 @@
     "SR-FIX-COMPARISON-SOURCE-v1": {
       "provider": "tests/test_query_comparison_sources.py:source_files",
       "kind": "Owned configuration and domain-artifact bytes in temporary local projects or raw Git object fixtures; independent direct semantic-comparison, exact-byte, source-identity, no-mutation and explicit unsupported-resource oracles. No complete model or approval claim."
+    },
+    "SR-FIX-CHANGED-SOURCES-v1": {
+      "provider": "tests/test_query_changed_only.py:pair",
+      "kind": "Owned raw Git-object base and current project snapshots with actual bound profile JSON. Native model dependency closure, Core lint and productive SRX profile rules provide independent exact-selection and diagnostic oracles; explicit trusted host gates cover declared dependencies. No whole-project, literal/full-lint, freshness or approval claim."
     }
   }
 }
