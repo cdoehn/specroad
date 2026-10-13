@@ -4,7 +4,7 @@ from hashlib import sha256
 
 from ..graph.comparison_values import ComparisonInputs
 from ..graph.relations import SourceRelations
-from ..model.canonical import canonical_json_sha256
+from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.configuration import ProjectConfiguration
 from ..model.domain_schemas import validate_domain_fields
 from ..model.errors import ModelError
@@ -102,6 +102,8 @@ class ComparisonSourceSnapshot:
         if expected_project_id is not None and (type(expected_project_id) is not str
                 or not expected_project_id.strip() or '\0' in expected_project_id):
             raise ModelError('comparison_project_required')
+        if expected_project_id is not None:
+            canonical_json_bytes(expected_project_id)
         if kind == 'local':
             if reference is not None:
                 raise ModelError('comparison_reference_not_allowed')
@@ -146,6 +148,10 @@ class ComparisonSourceSnapshot:
             if current_json_paths(source) != names:
                 raise ModelError('comparison_source_membership_changed')
             source.check_current()
+            # A transaction can appear during the final byte/membership reads.
+            # Observe operational state again before publishing owned inputs.
+            # This remains an observation, never an atomic lock or write permit.
+            require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
         for key, value in (('kind', kind), ('source_root', source_root), ('commit_id', commit_id),
                            ('configuration', configuration), ('inputs', inputs), ('resources', resources)):
             object.__setattr__(self, key, value)
@@ -176,7 +182,8 @@ def compare_sources(before, after, *, timing_bounds=None):
     """Compare captured data with exactly the existing semantic-diff contract."""
     if type(before) is not ComparisonSourceSnapshot or type(after) is not ComparisonSourceSnapshot:
         raise ModelError('comparison_source_snapshot_required')
-    if before.configuration.project_id != after.configuration.project_id:
+    if (before.configuration.project_id != after.configuration.project_id
+            or before.configuration.id_prefix != after.configuration.id_prefix):
         raise ModelError('comparison_project_mismatch')
     # Opaque resources cannot silently turn a real profile/rule delta into an
     # unchanged project. Their interpretation remains outside this increment.

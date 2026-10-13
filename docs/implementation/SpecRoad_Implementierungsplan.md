@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 373
-last_completed_plan_commit: 8.j.W
-next_plan_commit: 8.j.R
-last_completed_numbered_bundle: 225
+implementation_plan_commits_completed: 374
+last_completed_plan_commit: 8.j.R
+next_plan_commit: 8.j.C
+last_completed_numbered_bundle: 226
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9748,12 +9748,35 @@ danach folgt 8.j.R.
 
 #### 8.j.R – Make it Right
 
-- [ ] **8.j.R** · Position **374/885** · Voraussetzung: `8.j.W`.
+- [x] **8.j.R** · Position **374/885** · Voraussetzung: `8.j.W`.
 **Exakte Commit-Message:** `8.j.R feat(query): Vergleichsquellen und Projektidentität vervollständigen`
 
 **Vervollständigung:** Fremdes Projekt, inkompatibles Schema oder noch nicht verfügbare Quellenart ausdrücklich abweisen.
 
 **Verhaltensabnahme:** Keine Quelle wird ersatzweise vom aktuellen Arbeitsstand ergänzt. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand in Bundle 226:** Erwartete Projektkennungen werden
+vollständig als zulässige JSON-Zeichenketten geprüft, bevor irgendeine Quelle
+geöffnet wird. Der Vergleich weist unterschiedliche Projekt-IDs oder ID-Präfixe
+vor der Auswertung noch nicht unterstützter Ressourcensemantik ab. Lokale Quellen
+beobachten den Betriebszustand nach der letzten Byte-/Inventurprüfung nochmals;
+eine während dieser Prüfung erschienene offene Transaktion verhindert die Rückgabe.
+Der tatsächliche Arbeits- und Recovery-Zustand bleibt dabei erhalten.
+
+Die zusätzlichen Verhaltenstests prüfen ungültige Auswahlwerte ohne Quellenöffnung,
+Identitätskonflikte, lokale Konfigurations-/Inventurwechsel, späte Recovery-Blocker,
+fehlende historische Konfigurationen und Git-Blobs bei vorhandenen aktuellen Dateien,
+inkompatible Artefaktschemata, falsche ID-/Pfadzuordnung, verschachtelte Projekte,
+Namenskollisionen, Symlinks und durch Dateien verdeckte Teilbäume. Typisierte
+Record-Artefakte behalten ihre gespeicherten Daten ohne Authentifizierung ihrer
+Statusangaben. Alle W-Nachweise, bisherigen Testdateien und Testkennungen bleiben erhalten.
+
+SR-TC-0114 bleibt partial: Diff-CLI/Work, vollständige Modell-/Profil-/Regelsemantik,
+Konfigurationsauswertung und Evidence-Currentness, Baseline-/Bundleadapter in M10/M15,
+skalierbare Erfassung, weitere Git-Ablagen und Plattformabnahme bleiben offen.
+Die Beobachtungen gewähren weder atomare Snapshotgarantie noch Freigabe oder
+Schreibberechtigung. Erst erfolgreicher paralleler Apply-Volltest und Commit
+bestätigen 374/885; danach folgt 8.j.C.
 
 #### 8.j.C – Make it Clean
 

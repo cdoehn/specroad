@@ -16,12 +16,13 @@
   "steps": [
     "Compare every local/Git source pairing against independently supplied artifact and configuration data; preserve input bytes and Git state.",
     "Check owned snapshots, byte provenance, local read preflight and observed changes, project/schema boundaries, configured inventory and unavailable sources.",
-    "Bind other normative JSON as opaque bytes and reject unsupported resource deltas instead of claiming unchanged project semantics."
+    "Bind other normative JSON as opaque bytes and reject unsupported resource deltas instead of claiming unchanged project semantics.",
+    "Exercise invalid selectors before source discovery, prefix identity, final operational blockers, observed configuration/inventory changes, missing historical inputs without working-tree fallback, schema/path and safe-inventory boundaries, and typed stored records."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad diff --against <BASE>` MUSS als Vergleichsbasis eine Baseline-ID, einen Git-Ref, ein verifiziertes Projektbundle oder ein lokales SpecRoad-Projektverzeichnis desselben Projekts akzeptieren.",
-    "scope": "8.j.W supplies one immutable comparison-source contract for explicit local/Git acquisition, with configuration identity, schema and complete stored artifact-field checks, path/ID binding and exact resource provenance. Local operational preflight and observed byte/membership rechecks reject unsafe mixed observations. Git data comes solely from a pinned physical commit. All local/Git pairings reproduce the direct semantic comparison of supplied configuration and artifacts. Baseline/bundle kinds explicitly fail as unavailable. Other normative JSON is opaque and byte-bound; its deltas fail until semantic adapters exist. No complete model equivalence, atomic snapshot, approval, write authorization or CLI/Work availability is claimed."
+    "scope": "8.j.W supplies one immutable comparison-source contract for explicit local/Git acquisition, with configuration identity, schema and complete stored artifact-field checks, path/ID binding and exact resource provenance. Local operational preflight and observed byte/membership rechecks reject unsafe mixed observations. Git data comes solely from a pinned physical commit. All local/Git pairings reproduce the direct semantic comparison of supplied configuration and artifacts. Baseline/bundle kinds explicitly fail as unavailable. Other normative JSON is opaque and byte-bound; its deltas fail until semantic adapters exist. No complete model equivalence, atomic snapshot, approval, write authorization or CLI/Work availability is claimed. R validates expected project IDs as JSON strings before source opening, checks paired project ID and prefix before unsupported resource semantics, and observes operational state again after the final local byte/membership checks. Adversarial cases preserve existing W oracles and actual source/recovery state; current valid files never replace missing or invalid committed inputs. Stored record statuses are not authenticated."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -71,10 +72,50 @@
     "tests/test_query_comparison_sources.py::test_unclassified_json_in_a_normative_tree_is_rejected[git]",
     "tests/test_query_comparison_sources.py::test_unclassified_json_in_a_normative_tree_is_rejected[local]",
     "tests/test_query_comparison_sources.py::test_unknown_stored_artifact_fields_fail_during_acquisition[git]",
-    "tests/test_query_comparison_sources.py::test_unknown_stored_artifact_fields_fail_during_acquisition[local]"
+    "tests/test_query_comparison_sources.py::test_unknown_stored_artifact_fields_fail_during_acquisition[local]",
+    "tests/test_query_comparison_sources_right.py::test_ancestor_file_cannot_hide_a_configured_subtree[git]",
+    "tests/test_query_comparison_sources_right.py::test_ancestor_file_cannot_hide_a_configured_subtree[local]",
+    "tests/test_query_comparison_sources_right.py::test_artifact_content_identity_must_match_its_path[git]",
+    "tests/test_query_comparison_sources_right.py::test_artifact_content_identity_must_match_its_path[local]",
+    "tests/test_query_comparison_sources_right.py::test_case_colliding_non_json_children_in_managed_trees_are_not_ignored[git]",
+    "tests/test_query_comparison_sources_right.py::test_case_colliding_non_json_children_in_managed_trees_are_not_ignored[local]",
+    "tests/test_query_comparison_sources_right.py::test_changed_local_configuration_cannot_complete_an_earlier_capture",
+    "tests/test_query_comparison_sources_right.py::test_incompatible_artifact_schema_is_rejected_even_with_valid_configuration[git]",
+    "tests/test_query_comparison_sources_right.py::test_incompatible_artifact_schema_is_rejected_even_with_valid_configuration[local]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_committed_configuration_is_never_replaced_by_current_valid_data[foreign-project_identity_mismatch]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_committed_configuration_is_never_replaced_by_current_valid_data[missing-git_path_missing]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_committed_configuration_is_never_replaced_by_current_valid_data[schema-unsupported_schema_version]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[ ]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[5]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[True]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[\\ud800]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[bad\\x00id]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[identity5]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[identity6]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_expected_identity_fails_before_any_source_discovery[sample]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_kind_has_no_implicit_local_source[None]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_kind_has_no_implicit_local_source[True]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_kind_has_no_implicit_local_source[kind3]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_kind_has_no_implicit_local_source[local]",
+    "tests/test_query_comparison_sources_right.py::test_invalid_kind_has_no_implicit_local_source[unknown]",
+    "tests/test_query_comparison_sources_right.py::test_local_inventory_changes_are_rejected_without_repair[add]",
+    "tests/test_query_comparison_sources_right.py::test_local_inventory_changes_are_rejected_without_repair[remove]",
+    "tests/test_query_comparison_sources_right.py::test_missing_committed_blob_is_not_replaced_by_current_artifact",
+    "tests/test_query_comparison_sources_right.py::test_nested_project_inside_managed_inventory_is_not_combined[git]",
+    "tests/test_query_comparison_sources_right.py::test_nested_project_inside_managed_inventory_is_not_combined[local]",
+    "tests/test_query_comparison_sources_right.py::test_non_json_symlink_in_managed_inventory_is_never_followed[git]",
+    "tests/test_query_comparison_sources_right.py::test_non_json_symlink_in_managed_inventory_is_never_followed[local]",
+    "tests/test_query_comparison_sources_right.py::test_prefix_identity_mismatch_precedes_unavailable_resource_semantics[False]",
+    "tests/test_query_comparison_sources_right.py::test_prefix_identity_mismatch_precedes_unavailable_resource_semantics[True]",
+    "tests/test_query_comparison_sources_right.py::test_recovery_appearing_during_final_byte_recheck_blocks_publication",
+    "tests/test_query_comparison_sources_right.py::test_source_snapshot_contract_is_required_instead_of_implicit_live_inputs",
+    "tests/test_query_comparison_sources_right.py::test_typed_record_artifacts_share_the_snapshot_without_authenticating_their_status[git]",
+    "tests/test_query_comparison_sources_right.py::test_typed_record_artifacts_share_the_snapshot_without_authenticating_their_status[local]",
+    "tests/test_query_comparison_sources_right.py::test_uncommitted_artifact_never_expands_the_selected_commit_inventory"
   ],
   "open_items": [
-    "Complete R/C hardening and shared-source registry; Diff CLI/Work, Baseline and verified Bundle adapters in M10/M15 remain open.",
+    "Complete source-registry cleanup; Diff CLI/Work, Baseline and verified Bundle adapters in M10/M15 remain open.",
     "Only project configuration and artifact fields are compared. Other normative JSON is byte-bound and differing resources are rejected; complete model/profile/configuration-scope/currentness validation, scalable acquisition, broader Git layouts and supported-platform acceptance remain open."
   ]
 }
