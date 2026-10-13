@@ -1,6 +1,7 @@
 """Owned local/Git comparison observations; no full model or approval claim."""
 from dataclasses import dataclass
 from hashlib import sha256
+from types import MappingProxyType
 
 from ..graph.comparison_values import ComparisonInputs
 from ..graph.relations import SourceRelations
@@ -79,6 +80,52 @@ def _git_json_paths(source, configuration):
     return tuple(sorted(paths))
 
 
+def _local_source(root, reference, expected_project_id):
+    if reference is not None:
+        raise ModelError('comparison_reference_not_allowed')
+    source = ProjectSource(root, expected_project_id=expected_project_id)
+    require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
+    configuration = source.configuration
+    names = current_json_paths(source)
+    resources = tuple((path, source.read_normative(path)) for path in names)
+    source_root, commit_id = str(source.boundary.root), None
+
+    def finish():
+        require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
+        if current_json_paths(source) != names:
+            raise ModelError('comparison_source_membership_changed')
+        for path, raw in resources:
+            if source.read_normative(path) != raw:
+                raise ModelError('comparison_source_changed', path=path)
+        if current_json_paths(source) != names:
+            raise ModelError('comparison_source_membership_changed')
+        source.check_current()
+        # A transaction can appear during the final byte/membership reads.
+        # Observe operational state again before publishing owned inputs.
+        # This remains an observation, never an atomic lock or write permit.
+        require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
+
+    return configuration, resources, source_root, commit_id, finish
+
+
+def _git_source(root, reference, expected_project_id):
+    source = GitObjectSource(root, reference)
+    raw = source.read_bytes('specroad.json')
+    configuration = ProjectConfiguration(JsonResource(raw, configuration_schema(), path='specroad.json').data)
+    if expected_project_id is not None and configuration.project_id != expected_project_id:
+        raise ModelError('project_identity_mismatch')
+    names = _git_json_paths(source, configuration)
+    resources = tuple((path, raw if path == 'specroad.json' else source.read_bytes(path)) for path in names)
+    source_root, commit_id = str(source.root), source.commit_id
+    return configuration, resources, source_root, commit_id, None
+
+
+_SOURCE_READERS = MappingProxyType({
+    'local': _local_source, 'git': _git_source,
+    'baseline': None, 'bundle': None,
+})
+
+
 @dataclass(frozen=True, init=False)
 class ComparisonSourceSnapshot:
     """Owned bytes observed once; neither a live reader nor an atomic snapshot.
@@ -95,33 +142,17 @@ class ComparisonSourceSnapshot:
     resources: tuple
 
     def __init__(self, root, *, kind='local', reference=None, expected_project_id=None):
-        if type(kind) is not str or kind not in ('local', 'git', 'baseline', 'bundle'):
+        if type(kind) is not str or kind not in _SOURCE_READERS:
             raise ModelError('comparison_source_kind_invalid')
-        if kind in ('baseline', 'bundle'):
+        if _SOURCE_READERS[kind] is None:
             raise ModelError('comparison_source_unavailable')
         if expected_project_id is not None and (type(expected_project_id) is not str
                 or not expected_project_id.strip() or '\0' in expected_project_id):
             raise ModelError('comparison_project_required')
         if expected_project_id is not None:
             canonical_json_bytes(expected_project_id)
-        if kind == 'local':
-            if reference is not None:
-                raise ModelError('comparison_reference_not_allowed')
-            source = ProjectSource(root, expected_project_id=expected_project_id)
-            require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
-            configuration = source.configuration
-            names = current_json_paths(source)
-            resources = tuple((path, source.read_normative(path)) for path in names)
-            source_root, commit_id = str(source.boundary.root), None
-        else:
-            source = GitObjectSource(root, reference)
-            raw = source.read_bytes('specroad.json')
-            configuration = ProjectConfiguration(JsonResource(raw, configuration_schema(), path='specroad.json').data)
-            if expected_project_id is not None and configuration.project_id != expected_project_id:
-                raise ModelError('project_identity_mismatch')
-            names = _git_json_paths(source, configuration)
-            resources = tuple((path, raw if path == 'specroad.json' else source.read_bytes(path)) for path in names)
-            source_root, commit_id = str(source.root), source.commit_id
+        configuration, resources, source_root, commit_id, finish = _SOURCE_READERS[kind](
+            root, reference, expected_project_id)
         records = []
         for path, raw in resources:
             if classify_path(path, configuration) is not PathClass.ARTIFACT:
@@ -138,20 +169,8 @@ class ComparisonSourceSnapshot:
                 raise
             records.append(record)
         inputs = ComparisonInputs(configuration.project_id, records)
-        if kind == 'local':
-            require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
-            if current_json_paths(source) != names:
-                raise ModelError('comparison_source_membership_changed')
-            for path, raw in resources:
-                if source.read_normative(path) != raw:
-                    raise ModelError('comparison_source_changed', path=path)
-            if current_json_paths(source) != names:
-                raise ModelError('comparison_source_membership_changed')
-            source.check_current()
-            # A transaction can appear during the final byte/membership reads.
-            # Observe operational state again before publishing owned inputs.
-            # This remains an observation, never an atomic lock or write permit.
-            require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
+        if finish is not None:
+            finish()
         for key, value in (('kind', kind), ('source_root', source_root), ('commit_id', commit_id),
                            ('configuration', configuration), ('inputs', inputs), ('resources', resources)):
             object.__setattr__(self, key, value)

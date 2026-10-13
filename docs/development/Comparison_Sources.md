@@ -1,4 +1,4 @@
-# Vergleichsquellen (Bibliotheksstand 8.j.R)
+# Vergleichsquellen (Bibliotheksstand 8.j.C)
 
 `ComparisonSourceSnapshot(root, kind='local')` erfasst ein lokales Projekt nach
 dem bestehenden Project-Read-Preflight. `kind='git', reference='<Ref>'` liest
@@ -6,6 +6,13 @@ ausschließlich den fest gebundenen Commit über `GitObjectSource`; dessen
 [Git-Grenzen](Git_Object_Source.md) gelten unverändert. Optional verlangt
 `expected_project_id` eine bestimmte Projektidentität. Baseline und Bundle
 sind benannte, ausdrücklich noch nicht verfügbare Quellenarten.
+
+Eine private, unveränderliche Registry ordnet die aktiven Quellenarten ihren
+Lesefunktionen zu; Baseline und Bundle behalten gesperrte Einträge. Lokale
+Erfassung und Git-Erfassung sind von der gemeinsamen Artefaktprüfung getrennt.
+Die lokale Abschlussfunktion läuft weiterhin nach dieser Prüfung und vor der
+Snapshot-Rückgabe. Reihenfolge, Fehlerverträge, Rohbyte-Bindung und zulässige
+Seiteneffekte bleiben unverändert; die Registry aktiviert keine weiteren Adapter.
 
 Der unveränderliche Snapshot enthält eine geprüfte `ProjectConfiguration`,
 `ComparisonInputs` und eigene Rohbytes aller konfigurierten normativen

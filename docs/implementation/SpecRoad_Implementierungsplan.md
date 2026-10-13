@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 374
-last_completed_plan_commit: 8.j.R
-next_plan_commit: 8.j.C
-last_completed_numbered_bundle: 226
+implementation_plan_commits_completed: 375
+last_completed_plan_commit: 8.j.C
+next_plan_commit: 8.k.W
+last_completed_numbered_bundle: 227
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9780,7 +9780,7 @@ bestätigen 374/885; danach folgt 8.j.C.
 
 #### 8.j.C – Make it Clean
 
-- [ ] **8.j.C** · Position **375/885** · Voraussetzung: `8.j.R`.
+- [x] **8.j.C** · Position **375/885** · Voraussetzung: `8.j.R`.
 **Exakte Commit-Message:** `8.j.C refactor(query): Vergleichsquellen und Projektidentität bereinigen`
 
 **Bereinigung:** Quellenregistry halten; konkrete Baseline-/Bundleadapter erst in M10/M15 vollständig aktivieren.
@@ -9788,6 +9788,27 @@ bestätigen 374/885; danach folgt 8.j.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand in Bundle 227:** Eine unveränderliche private
+Quellenregistry ordnet local und git den getrennten Erfassungsfunktionen zu;
+baseline und bundle bleiben ausdrücklich gesperrt. Die Erfassungsblöcke und
+der lokale Abschlussblock sind unverändert ausgelagert. Gemeinsame Artefaktprüfung,
+Inventur, unveränderliche Datenrückgaben und semantischer Vergleich bleiben erhalten.
+Die Abschlussfunktion wird weiterhin erst nach der gemeinsamen Prüfung ausgeführt,
+einschließlich des zuletzt in R ergänzten operativen Preflights.
+
+Eine statische Extraktionsprüfung bestätigt die unveränderten AST-Blöcke und
+prüft die begrenzte Änderung des Konstruktors sowie Registry und Aufrufreihenfolge.
+Sie ersetzt keine Verhaltensabnahme. Alle 283 vorhandenen Testdateien und 9.451
+Testkennungen bleiben unverändert; die gezielte parallele Regression umfasst
+sämtliche W-/R-Quellenfälle und die betroffenen Query-/Lesepfadverträge.
+
+SR-TC-0114 bleibt partial. Baseline-/Bundleadapter folgen erst in M10/M15;
+Diff-CLI/Work, vollständige Modell-/Ressourcensemantik, Konfigurationsauswertung,
+Evidence-Currentness, skalierbare Erfassung, weitere Git-Ablagen und Plattformabnahme
+bleiben offen. Es werden keine Fachfunktionen, Fehlerverträge, erlaubten Seiteneffekte
+oder Freigabe-/Schreibrechte hinzugefügt. Erst erfolgreicher paralleler Apply-Volltest
+und Commit bestätigen 375/885; danach folgt 8.k.W.
 
 <a id="step-8-k"></a>
 ### 8.k – Changed-only mit Closure
