@@ -14,6 +14,7 @@ def read_failure(command, error, project, details):
     elif isinstance(error, ModelError):
         changed = {'configuration_changed', 'relation_source_changed',
                    'relation_index_membership_changed', 'relation_index_source_changed',
+                   'comparison_source_changed', 'comparison_source_membership_changed',
                    'show_source_changed', 'show_source_disappeared',
                    'query_input_changed', 'diff_source_changed'}
         code = 6 if error.reason in changed else getattr(error, 'exit_code', 3)

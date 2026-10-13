@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 379
-last_completed_plan_commit: 8.l.W
-next_plan_commit: 8.l.R
-last_completed_numbered_bundle: 231
+implementation_plan_commits_completed: 380
+last_completed_plan_commit: 8.l.R
+next_plan_commit: 8.l.C
+last_completed_numbered_bundle: 232
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9958,12 +9958,35 @@ und Commit bestätigen 379/885; danach folgt 8.l.R.
 
 #### 8.l.R – Make it Right
 
-- [ ] **8.l.R** · Position **380/885** · Voraussetzung: `8.l.W`.
+- [x] **8.l.R** · Position **380/885** · Voraussetzung: `8.l.W`.
 **Exakte Commit-Message:** `8.l.R feat(query): Lesende Funktionsintegration und Workparität vervollständigen`
 
 **Vervollständigung:** Ausgabe-/Workfehler dürfen den fachlichen Scope nicht abschneiden.
 
 **Verhaltensabnahme:** Fachresultate und Projektinventur sind in Einzellauf und vollständiger Fortsetzung gleich. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand in Bundle 232:** Kurze Text-Schreibvorgänge der
+maschinenlesbaren CLI-Ausgabe werden vollständig fortgesetzt. Nicht bestätigter
+Fortschritt, Schreib- oder Flushfehler ergeben Exitcode 5, ohne ein zweites
+Dokument an einen schon angenommenen Ergebnispräfix anzuhängen. Alle sechs
+Leser behalten dabei ihren vollständigen fachlichen Befund und die unveränderte
+Projektinventur; ein erneuter Aufruf liefert den vollständigen aktuellen Befund.
+
+Prozesslokale Fortsetzungen binden relative Pfade und besitzen ihre veränderbaren
+Query-Optionswerte bereits beim Anlegen. Spätere CWD-/Listenänderungen verschieben
+den Umfang nicht. Wiedereintritt und Schließen während einer aktiven Phase werden
+abgelehnt. Abbruch und Fehler an jeder Runtime-Grenze geben keinen scheinbaren
+Erfolg frei; unbekannte optionale Messwerte kürzen keine Arbeit. Während einer
+Diff-Aufnahme geänderte Quellen werden als Konflikt ausgewiesen. Neue Nachweise
+verwenden echte Quellen, Schreibversuchsfallen, eine native Broken Pipe und
+vollständige Ergebnis-/Inventurvergleiche. Alle W-Tests bleiben unverändert.
+
+Gezielte parallele Entwicklungstests und der erforderliche vollständige parallele
+Apply-Test bleiben getrennt. Die dokumentierten Grenzen der unteilbaren Phasen,
+der materialisierten Daten, dauerhaften Work-Integration, externen Lieferung,
+Provider und Plattform-/Performanceabnahme bleiben offen. SR-TC-0117 bleibt
+teilweise umgesetzt, SR-TC-0213 bleibt offen. Erst erfolgreicher Apply-Volltest
+und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 8.l.C – Make it Clean
 

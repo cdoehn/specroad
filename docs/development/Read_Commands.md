@@ -48,7 +48,7 @@ ist `result` verfügbar. `state` meldet Phase und abgeschlossene Einheiten;
 erfolgreich war. Kontextmanager oder `close()` geben den Iterator frei.
 Ein optionaler aktiver `WorkConsumption`-Aufruf beobachtet jede Phase. Nach
 Überschreitung eines weichen Ziels kehrt `advance` am nächsten Phasenende
-zurück; der Host kann mit einem neuen Messfenster fortsetzen. Synchronous
+zurück; der Host kann mit einem neuen Messfenster fortsetzen. Synchrone
 Python- und CLI-Aufrufe treiben denselben Produzenten vollständig weiter.
 
 Die drei Phasen sind jeweils unteilbare Einheiten. Laden, native Berechnung,
@@ -65,3 +65,27 @@ Gebundene Projekt- und Query-Eingaben werden vor Veröffentlichung nachgeprüft.
 Durable Work, externe Ergebnislieferung, feingranulare Planung, vollständige
 Plattformabnahme und der gebundene 10.000-Artefakte-/2-Sekunden-Nachweis bleiben
 offen. Kleine Fixture-Messfenster stellen ausdrücklich keinen Benchmark dar.
+
+Beim Anlegen von `ReadCommandWork` werden relative Projekt-, lokale Basis- und
+Query-Filter-Ursprünge absolut gebunden. Veränderbare Query-Optionslisten werden
+als eigene JSON-Werte übernommen. Ein späteres Wechseln des Arbeitsverzeichnisses
+oder Ändern dieser Listen verschiebt den festgelegten Umfang nicht. Dateiinhalt
+und aktuelle Sicherheitsbedingungen werden weiterhin erst in der Ladephase
+geprüft und vor Abschluss nachgeprüft. Ungültige Basisargumente werden durch
+die Pfadbindung nicht zu einer impliziten Auswahl des aktuellen Verzeichnisses.
+
+Während einer aktiven Phase werden erneutes `advance()` und `close()` abgelehnt.
+Ein Abbruch vor Abschluss liefert kein Resultat; ein Fehler an einer Runtime-
+Grenze bleibt ein fehlgeschlagener Arbeitszustand ohne veröffentlichbare
+Ergebnisse. Nicht verfügbare optionale Messwerte verkürzen den Fachumfang nicht.
+Änderungen von Bytes oder Inventar während einer Diff-Aufnahme werden als
+Konflikt gemeldet, ohne eine teilweise Vergleichsaussage auszugeben.
+
+Die maschinenlesbare CLI-Ausgabe bestätigt jeden angenommenen Textabschnitt und
+den abschließenden Flush. Kurze Schreibvorgänge werden bis zum vollständigen
+Dokument fortgesetzt. Stillstand, ungültige Zähler, Broken Pipe oder Flushfehler
+führen zu Exitcode 5. Eine bereits angenommene Ausgabe kann dabei ein Präfix
+enthalten; es wird kein zweites Fehlerdokument angehängt. Ein erneuter Aufruf
+berechnet und liefert wieder den vollständigen aktuellen Befund. Diese Regel
+betrifft die maschinenlesbare Ausgabe, nicht deren menschliche Darstellung,
+und erteilt keine Schreibberechtigung für das Projekt.

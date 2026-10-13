@@ -43,8 +43,8 @@ def main(argv: list[str] | None = None, *, stdout=None, stderr=None) -> int:
             code = outcome.exit_code
             machine = serialize_result(outcome, output_format) if output_format in ("json", "sarif") else None
         if output_format in ("json", "sarif"):
-            out.write(machine + "\n")
-            out.flush()
+            from ._machine_delivery import write_machine_document
+            write_machine_document(out, machine)
         else:
             if presenter is None:
                 presenter = PrettyRenderer(out, err, no_color=response.options.get("--no-color", False),

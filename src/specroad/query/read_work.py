@@ -1,6 +1,8 @@
 """Process-local read phases; no persisted Work, early result or project write."""
+from pathlib import Path
+
 from ..cli.command_errors import CommandUsageError
-from ..cli.results import CommandResult
+from ..cli.results import CommandResult, freeze, thaw
 from ..runtime.control_points import PhaseBoundary
 from ..runtime.controlled import _invocation
 
@@ -25,6 +27,18 @@ class ReadCommandWork:
                     'impact': _impact_steps, 'diff': _diff_steps}
         if type(command) is not str or command not in handlers:
             raise CommandUsageError('Unknown read command')
+        # Retained work owns its scope before the first phase. Resolve lexical
+        # relative paths, without following symlinks or trusting future bytes.
+        root = Path(root).absolute()
+        if command == 'query':
+            if arguments.get('options') is not None:
+                arguments['options'] = thaw(freeze(arguments['options']))
+            cwd = arguments.get('cwd')
+            arguments['cwd'] = (Path.cwd() if cwd is None else Path(cwd).absolute())
+        if command == 'diff' and arguments.get('against_kind') == 'local':
+            against = arguments.get('against')
+            if type(against) is str and against.strip() and '\0' not in against:
+                arguments['against'] = str(Path(against).absolute())
         self._initialize(handlers[command](root, **arguments))
 
     def _initialize(self, steps):
@@ -33,6 +47,7 @@ class ReadCommandWork:
         self._units = 0
         self._phase = 'not_started'
         self._closed = self._failed = False
+        self._advancing = False
 
     @property
     def state(self):
@@ -51,10 +66,11 @@ class ReadCommandWork:
     def advance(self, units=1, *, call=None):
         if type(units) is not int or units < 1:
             raise ValueError('A positive work-unit count is required')
-        if self._closed or self._failed:
+        if self._closed or self._failed or self._advancing:
             raise ValueError('Read work is no longer active')
         if call is not None:
             _invocation(call)
+        self._advancing = True
         try:
             for _ in range(units):
                 if self._result is not None:
@@ -82,8 +98,12 @@ class ReadCommandWork:
             self._result = None
             self._steps.close()
             raise
+        finally:
+            self._advancing = False
 
     def close(self):
+        if self._advancing:
+            raise ValueError('Read work cannot close during an active phase')
         if not self._closed:
             self._closed = True
             if self._result is None and not self._failed:
