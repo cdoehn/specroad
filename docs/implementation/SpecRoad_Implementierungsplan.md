@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 376
-last_completed_plan_commit: 8.k.W
-next_plan_commit: 8.k.R
-last_completed_numbered_bundle: 228
+implementation_plan_commits_completed: 377
+last_completed_plan_commit: 8.k.R
+next_plan_commit: 8.k.C
+last_completed_numbered_bundle: 229
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9855,12 +9855,38 @@ danach folgt 8.k.R.
 
 #### 8.k.R – Make it Right
 
-- [ ] **8.k.R** · Position **377/885** · Voraussetzung: `8.k.W`.
+- [x] **8.k.R** · Position **377/885** · Voraussetzung: `8.k.W`.
 **Exakte Commit-Message:** `8.k.R feat(query): Changed-only mit Closure vervollständigen`
 
 **Vervollständigung:** Teilprüfung nie als Projektvollprüfung bezeichnen; fehlende Basis vor Prüfung melden.
 
 **Verhaltensabnahme:** Ein außerhalb der direkt geänderten Datei ausgelöster Regelbruch wird gefunden. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand in Bundle 229:** Die Changed-only-Zusammenführung
+behält einen bereits beobachteten Warnungsfehler bei wirksamem warning-Schwellwert
+auch dann als passed=false, wenn andere erforderliche Semantikdienste fehlen.
+Status und checks_complete bleiben dabei unvollständig; der vollständige native
+Bericht einschließlich seiner Diagnosebewertung und Exit-Code-5-Aussage bleibt
+unverändert erhalten. Reine Unverfügbarkeit ohne bekannten fachlichen Fehler
+bleibt unbekannt und wird weder zu Erfolg noch zu einem erfundenen Modellfehler.
+
+Neue Verhaltenstests führen tatsächliche unveränderte SRX-Graphregeln aus: Eine
+Zieländerung oder entfernte Kante löst einen Befund in einer unveränderten Datei
+aus. Fehlerhafte, fremd gebundene oder unvollständige Dependency-/Gate-Beobachtungen
+behalten die nativen Fehler; eine nicht bewiesene Closure startet kein engeres
+Core-Lint. Außerhalb der Seeds liegende Referenzfehler bleiben sichtbar.
+
+Zusätzliche Nachweise decken zyklische deklarierte Abhängigkeiten, fehlende reale
+Git-Refs, frühe Basisprüfung, mehrdeutige/überschüssige Profilbindungen, tatsächlich
+unausgeführte leere Umfänge und die fehlende Live-Freshness-Zusage eigener Snapshots
+ab. Bestehende W-Verhaltenstests und bisherige Testkennungen bleiben unverändert.
+Ein Umfang, der alle erfassten Artefakte enthält, behauptet weiterhin weder
+Projektvollprüfung noch vollständiges Lint, Freigabe oder Schreibberechtigung.
+
+SR-TC-0193 und SR-TC-0587 bleiben partial. CLI/Work, vollständige Ressourcen- und
+Modellsemantik, Language Registry dieses Adapters, Literal-/Gesamtlint, live
+geprüfte Aktualität und skalierbare Verarbeitung bleiben offen. Erst erfolgreicher
+paralleler Apply-Volltest und Commit bestätigen 377/885; danach folgt 8.k.C.
 
 #### 8.k.C – Make it Clean
 

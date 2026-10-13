@@ -119,10 +119,16 @@ def check_changed_sources(before, after, *, profile_paths, core_key,
     lint = (lint_core(after.inputs.records, selected_ids=checked, profile=profile,
                       fail_on=fail_on, strict=strict) if scope_checked and checked else None)
     complete = report.complete and lint is not None
+    assessed = assessment.as_dict()
+    # Missing services keep completion unknown, but do not erase an already
+    # observed warning that reaches the effective failure threshold.
+    warning_failed = (assessed['fail_on'] == 'warning'
+                      and any(d.severity == 'warning' for d in assessment.diagnostics))
     failed = (validation['model_valid'] is False or (complete and not assessment.passed)
+              or warning_failed
               or (lint is not None and not lint['core_checks_passed']))
     details.update(status='completed' if complete else 'incomplete',
-        validation=validation, validation_assessment=assessment.as_dict(), core_lint=lint, checks_complete=complete,
+        validation=validation, validation_assessment=assessed, core_lint=lint, checks_complete=complete,
         passed=False if failed else True if complete else None,
         structural_scope=validation['structural_scope'], validation_scope=validation['validation_scope'],
         checked_artifact_ids=checked if scope_checked else [],

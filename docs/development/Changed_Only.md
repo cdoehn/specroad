@@ -1,4 +1,4 @@
-# Changed-only mit Closure (Bibliotheksstand 8.k.W)
+# Changed-only mit Closure (Bibliotheksstand 8.k.R)
 
 `check_changed_sources(before, after, profile_paths=..., core_key=...)` verwendet
 zwei bereits erfasste `ComparisonSourceSnapshot`-Werte. Die Basis muss ein gebundener
@@ -37,6 +37,21 @@ aktuelle Artefakte nach Änderungen `no_current_artifacts`. In beiden Fällen bl
 die Prüfberichte leer, `checks_complete` falsch und `passed` null. Ein leerer
 Prüfumfang beweist keinen gültigen Modellzustand. Fehlende erforderliche Dienste
 bleiben im nativen Bericht unvollständig; vorhandene Fehler werden nicht verdeckt.
+
+Bei unvollständiger Validierung bleibt ein bereits beobachteter Warnungsbefund
+unter `fail_on='warning'` oder `strict=True` im Gesamtergebnis als `passed=false`
+erhalten. Fehlende Dienste lassen `checks_complete=false` und `status=incomplete`
+bestehen. Die native Diagnosebewertung mit ihrem Exit Code 5 wird unverändert
+weitergereicht; ein bekannter Befund und fehlende Vollständigkeit sind getrennte
+Aussagen. Ohne bekannten Schwellwertverstoß bleibt das Ergebnis unbekannt.
+
+Scheitert die Abhängigkeitsbestimmung, sind die äußeren geprüften/zusätzlich
+erreichten IDs leer und Core-Lint wird nicht gestartet. Der native Bericht kann
+weiterhin die versuchten Seeds enthalten; sein Scope-Status erklärt, warum daraus
+kein nachgewiesener Prüfumfang folgt. Ohne ausgeführte Modellprüfung lauten die
+äußeren strukturellen und semantischen Scopes `not_run`. Eine bereits erfasste
+Quelle wird später rein aus ihren eigenen Bytes geprüft, ohne damit aktuelle
+Dateien zu bestätigen.
 
 Dies ist eine Bibliothekskomposition für geladene Snapshots. Diff-/Changed-only-CLI,
 Work-Fortsetzung, zusätzliche Quellenadapter, live erneuerte Dateiprüfungen,
