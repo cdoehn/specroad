@@ -52,7 +52,8 @@ class CapabilityScopeTests(unittest.TestCase):
         actual_ids = {command['command_id'] for command in semantic['commands']}
         advertised_cli = {key[4:] for key in semantic['capability_ids'] if key.startswith('cli.')}
         self.assertEqual(advertised_cli, actual_ids)
-        for command in ('srx.evaluate', 'query', 'validate', 'proposal.create', 'proposal.apply'):
+        self.assertTrue({'query', 'diff'} <= actual_ids)
+        for command in ('srx.evaluate', 'validate', 'proposal.create', 'proposal.apply'):
             with self.subTest(command=command):
                 self.assertNotIn(command, actual_ids)
                 self.assertEqual(dispatch_result(command.split('.')).exit_code, 2)
@@ -125,7 +126,8 @@ program = SrxProgram({'language': 'srx', 'version': semantic['supported_versions
 context = EvaluationContext({'artifact': {'value': [3, True, None]}, 'configuration': None,
     'project': {}, 'relations': []}, rule_id='portable')
 assert evaluate(program, context) == [3, True, None]
-assert dispatch_result(['query']).exit_code == 2
+assert 'cli.query' in semantic['capability_ids']
+assert dispatch_result(['query']).exit_code == 3
 '''
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

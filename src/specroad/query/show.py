@@ -5,6 +5,7 @@ from ..cli.result_schemas import validate_result_document
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..model.errors import ModelError
+from .read_work import complete_read_steps
 from ..model.paths import PathClass
 from ..runtime.preflight import require_project_read_preflight
 from ..security import SafetyViolation
@@ -47,7 +48,7 @@ def _verify_bound_sources(source, binding):
     source.check_current()
 
 
-def show_artifact(root, artifact_id, *, index=None, strategy='indexed'):
+def _show_steps(root, artifact_id, *, index=None, strategy='indexed'):
     """Read the current complete source set even with a prior/partial index hint.
 
     The result checks common artifact fields, references and canonical relation
@@ -63,7 +64,9 @@ def show_artifact(root, artifact_id, *, index=None, strategy='indexed'):
                    'project_id': source.configuration.project_id}
         _preflight(source)
         observed = read_project_relation_views(source, artifact_id, index=index, strategy=strategy)
+        yield 'loaded'
         payload = show_payload(observed)
+        yield 'evaluated'
         _preflight(source)
         _verify_current(source, observed.binding)
         validate_result_document('artifact-show-v1', payload)
@@ -87,5 +90,11 @@ def show_artifact(root, artifact_id, *, index=None, strategy='indexed'):
                                     diagnostics=(diagnostic,), details=details)
 
 
+def show_artifact(root, artifact_id, *, index=None, strategy='indexed'):
+    """Complete the same read phases synchronously, without a durable checkpoint."""
+    return complete_read_steps(_show_steps(root, artifact_id, index=index, strategy=strategy))
+
+
 def show_command(invocation):
-    return show_artifact(invocation.resolved.project_root, invocation.arguments['id'])
+    return complete_read_steps(_show_steps(invocation.resolved.project_root, invocation.arguments['id']),
+                               call=invocation.consumption_call)

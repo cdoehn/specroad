@@ -151,6 +151,25 @@ def _fields(schema_id):
                 'observation_sha256': sha,
                 'validation_scope': {'const': 'artifact_fields_and_relation_review_status_only'},
                 'atomic_snapshot': {'const': False}})})
+    if schema_id == 'artifact-query-v1':
+        return _object({'items': _array(_object({'id': nonempty, 'artifact_type': nonempty}, extra=True)),
+            'total': count, 'offset': count, 'limit': count, 'returned': count, 'truncated': boolean})
+    if schema_id == 'artifact-diff-v1':
+        pair = _object({'before_sha256': sha, 'after_sha256': sha})
+        return _object({'comparison_version': {'const': 'semantic-diff-v1'},
+            'project_id': nonempty, 'input_sha256': sha,
+            'before_artifacts_sha256': sha, 'after_artifacts_sha256': sha,
+            'configuration_inputs': pair, 'timing_bounds': obj,
+            'changed': boolean, 'categories': strings, 'changes': _array(obj),
+            'project_configuration': _object({'state': {'const': 'compared'}, 'changed': boolean,
+                'fields': _array(obj), 'before_sha256': sha, 'after_sha256': sha}),
+            'timing': _array(obj), 'inventory_delta': _object({'scope': {'const': 'supplied_artifact_sets'},
+                'added_ids': strings, 'removed_ids': strings}),
+            'configuration_scope': _object({'state': {'const': 'not_evaluated'}}),
+            'evidence_currency': _object({'state': {'const': 'not_evaluated'}}),
+            'validation_scope': {'const': 'supplied_artifact_fields_and_declared_semantics_only'},
+            'full_semantic_validation': {'const': False}, 'approval_granted': {'const': False},
+            'write_authorized': {'const': False}})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,

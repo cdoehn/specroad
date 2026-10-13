@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 378
-last_completed_plan_commit: 8.k.C
-next_plan_commit: 8.l.W
-last_completed_numbered_bundle: 230
+implementation_plan_commits_completed: 379
+last_completed_plan_commit: 8.l.W
+next_plan_commit: 8.l.R
+last_completed_numbered_bundle: 231
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9927,12 +9927,34 @@ und Commit bestätigen 378/885; danach folgt 8.l.W.
 
 #### 8.l.W – Let it Work
 
-- [ ] **8.l.W** · Position **379/885** · Voraussetzung: `8.k.C`.
+- [x] **8.l.W** · Position **379/885** · Voraussetzung: `8.k.C`.
 **Exakte Commit-Message:** `8.l.W feat(query): Lesende Funktionsintegration und Workparität aufbauen`
 
 **Umsetzung:** Show, Query, Trace, Why, Impact und Diff vollständig an Runtime und Resultatverträge anschließen.
 
 **Verhaltensabnahme:** Jeder vorhandene Befehl arbeitet im schreibgeschützten Projekt und bei kleinem Schrittfenster.
+
+**Vorbereiteter W-Stand in Bundle 231:** Show, Query, Trace, Why, Impact und
+Diff nutzen dieselbe prozesslokal fortsetzbare Folge aus Laden, vollständiger
+Auswertung und abschließender Aktualitätsprüfung. Query und Diff besitzen
+nun öffentliche Python-/CLI-/Request-Adapter mit registrierten Resultatschemas.
+Explizite Query-SRX-Dateien und aktuelle Projektquellen bleiben gebunden;
+Git-Diff verwendet eine feste Objektbasis, lokale Basen werden ausdrücklich
+gewählt. Kleine Runtime-Ziele kürzen weder Fachumfang noch exakte Trefferzahl.
+Schreibgeschützte Projekte, Schreibversuchsfallen und echte CLI-/Zipapp-Prozesse
+sichern die unveränderte Inventur und Resultatparität ab. Gezielte parallele
+Entwicklungstests prüfen neue und betroffene Verhaltenstests; der vollständige
+parallele Apply-Lauf bleibt vor diesem Commit erforderlich.
+
+Die gemeinsamen Phasen sind unteilbar und materialisieren Eingaben/Ergebnisse.
+Sie dürfen weiche Ziele überschreiten und sind keine dauerhafte Work-v1-
+Fortsetzung, keine harte Ressourcenbegrenzung und keine atomare Freigabe.
+Externe Ergebnislieferung, feingranulare Reader-Planung, effektive Query-
+Profildefaults und weitere Basisprovider bleiben offen. SR-TC-0117 bleibt
+teilweise umgesetzt. **SR-TC-0213 bleibt offen:** kein gebundener 10.000-
+Artefakte-/2-Sekunden-Benchmark und keine daraus erfundene Performanceabnahme.
+Ein geprüftes Bundle ist noch kein abgeschlossener Commit; erst Apply-Volltest
+und Commit bestätigen 379/885; danach folgt 8.l.R.
 
 #### 8.l.R – Make it Right
 

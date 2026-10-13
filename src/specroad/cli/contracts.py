@@ -247,6 +247,7 @@ class Invocation:
     resolved: "ResolvedOptions | None" = None
     arguments: Mapping[str, str] = field(default_factory=dict)
     registry: object = field(default=None, repr=False, compare=False)
+    consumption_call: object = field(default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))

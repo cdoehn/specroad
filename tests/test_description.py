@@ -213,7 +213,8 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(document['lock_kind'], 'bootstrap' if command.command_id == 'init' else 'none')
             self.assertNotIn(8, document['exit_codes'])
             self.assertEqual(document['budget_policy_version'],
-                             'runtime-budget-v2' if command.command_id == 'environment.check' else None)
+                             'runtime-budget-v2' if command.command_id in (
+                                 'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
     def test_minimum_step_limits_are_explicitly_unmeasured(self):

@@ -3,6 +3,7 @@ from ..cli.result_schemas import validate_result_document
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..model.errors import ModelError
+from .read_work import complete_read_steps
 from ..security import SafetyViolation
 from ..storage.project import ProjectSource
 from ..storage.relation_index import build_project_relation_index
@@ -21,7 +22,7 @@ def _why_paths(index, artifact_id, depth):
         work.close()
 
 
-def why_artifact(root, artifact_id):
+def _why_steps(root, artifact_id):
     """Return every shortest path per reachable Goal, Need and Source.
 
     Stored directions and symmetric inverse views define connectivity. The
@@ -41,6 +42,7 @@ def why_artifact(root, artifact_id):
                              pointer='/resource_limits/trace_depth')
         depth = limits['trace_depth']
         observed = build_project_relation_index(source)
+        yield 'loaded'
         targets, paths = _why_paths(observed.adjacency, artifact_id, depth)
         payload = {'format_version': '1.0.0', 'start': artifact_id, 'depth': depth,
                    'traversal': 'stored_direction_with_symmetric_inverses',
@@ -50,6 +52,7 @@ def why_artifact(root, artifact_id):
                        'observation_sha256': observed.binding.sha256,
                        'validation_scope': 'relation_references_canonical_storage_and_hierarchies_only',
                        'atomic_snapshot': False}}
+        yield 'evaluated'
         _preflight(source)
         _verify_current(source, observed.binding)
         validate_result_document('artifact-why-v1', payload)
@@ -73,5 +76,11 @@ def why_artifact(root, artifact_id):
                                     diagnostics=(diagnostic,), details=details)
 
 
+def why_artifact(root, artifact_id):
+    """Complete the same read phases synchronously, without a durable checkpoint."""
+    return complete_read_steps(_why_steps(root, artifact_id))
+
+
 def why_command(invocation):
-    return why_artifact(invocation.resolved.project_root, invocation.arguments['id'])
+    return complete_read_steps(_why_steps(invocation.resolved.project_root, invocation.arguments['id']),
+                               call=invocation.consumption_call)

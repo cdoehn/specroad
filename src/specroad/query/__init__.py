@@ -13,8 +13,12 @@ from .semantic_diff import compare_semantic
 from .git_source import GitObjectSource
 from .comparison_sources import ComparisonSourceSnapshot, compare_sources
 from .changed_only import check_changed_sources
+from .project_query import query_project
+from .project_diff import diff_project
+from .read_work import ReadCommandWork
 
 __all__ = ('show_artifact', 'NormalizedQuery', 'QuerySelection', 'select_query',
            'QueryPage', 'query_records', 'QueryWork', 'TraceTraversal', 'trace_artifact',
            'WhyTraversal', 'why_artifact', 'impact_artifact', 'compare_semantic', 'GitObjectSource',
-           'ComparisonSourceSnapshot', 'compare_sources', 'check_changed_sources')
+           'ComparisonSourceSnapshot', 'compare_sources', 'check_changed_sources',
+           'query_project', 'diff_project', 'ReadCommandWork')

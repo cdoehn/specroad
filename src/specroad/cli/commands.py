@@ -1,5 +1,7 @@
 """Only completed built-in commands are installed in the runtime registry."""
 
+from dataclasses import replace
+
 from .registry import CommandClass, CommandRegistry, CommandSpec, EffectScope, OptionSpec, PreflightProfile
 from .results import CommandResult, FailureKind, OperationFailure
 from .contracts import CommandProtocol, PositionalSpec, WorkContract
@@ -118,8 +120,25 @@ def _impact(invocation):
     return impact_command(invocation)
 
 
+def _query(invocation):
+    from ..query.project_query import query_command
+    return query_command(invocation)
+
+
+def _diff(invocation):
+    from ..query.project_diff import diff_command
+    return diff_command(invocation)
+
+
+def _read_runtime_options():
+    return (OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
+            *(OptionSpec(flag, takes_value=True) for flag in ('--cpu-budget-ms', '--wall-budget-ms',
+                '--memory-budget-mib', '--scratch-budget-mib', '--step-cpu-ms', '--step-wall-ms')),
+            OptionSpec('--metrics'))
+
+
 def builtin_registry() -> CommandRegistry:
-    return CommandRegistry((CommandSpec(
+    commands = (CommandSpec(
         command_id='init', words=('init',), command_class=CommandClass.ROOT_CREATION,
         preflight_profile=PreflightProfile.ROOT_CREATION, effect_scope=EffectScope.NEW_ROOT,
         handler=_initialize, positionals=(PositionalSpec('path', required=False),),
@@ -204,6 +223,40 @@ def builtin_registry() -> CommandRegistry:
             work=WorkContract('artifact_impact', ('project_configuration', 'current_project_artifacts',
                                                 'complete_relation_review_history'))),
     ), CommandSpec(
+        command_id='query', words=('query',), command_class=CommandClass.READ_ONLY,
+        preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.NONE,
+        handler=_query, requires_project=True,
+        options=(*(OptionSpec('--' + name, takes_value=True, repeatable=True) for name in
+            ('type', 'maturity', 'implementation-status', 'verification-plan-status',
+             'verification-result', 'owner', 'tag', 'release', 'has-relation', 'missing-relation',
+             'full-text', 'filter', 'select', 'sort')),
+            *(OptionSpec('--' + name, takes_value=True) for name in ('evaluation', 'offset', 'limit')),
+            OptionSpec('--project', takes_value=True),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('artifact-query-v1', {'command_id': 'query',
+            'options': {'--type': ['goal'], '--limit': '10', '--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002', 'SRV110'),
+            work=WorkContract('artifact_query', ('project_configuration', 'current_project_artifacts',
+                                               'explicit_query_and_srx_inputs'))),
+    ), CommandSpec(
+        command_id='diff', words=('diff',), command_class=CommandClass.READ_ONLY,
+        preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.NONE,
+        handler=_diff, requires_project=True,
+        options=(OptionSpec('--against', takes_value=True, required=True),
+            OptionSpec('--against-kind', takes_value=True, choices=('git', 'local')),
+            OptionSpec('--project', takes_value=True),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('artifact-diff-v1', {'command_id': 'diff',
+            'options': {'--against': '.', '--against-kind': 'local', '--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002'),
+            work=WorkContract('artifact_diff', ('current_comparison_source', 'same_project_comparison_base'))),
+    ), CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
         command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.BOOTSTRAP,
@@ -278,4 +331,8 @@ def builtin_registry() -> CommandRegistry:
             handler_exit_codes=(0, 2, 3, 5, 6, 7),
             diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
             work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
-    )))
+    ))
+    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff'}
+    return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
+        budget_policy_version='runtime-budget-v2') if command.command_id in readers else command
+        for command in commands))

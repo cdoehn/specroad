@@ -36,6 +36,7 @@
     "SR-FIX-PROFILES-v1",
     "SR-FIX-PROJECT-LOCK-v1",
     "SR-FIX-PUBLICATION-RECHECK-v1",
+    "SR-FIX-READ-COMMANDS-v1",
     "SR-FIX-READ-ONLY-PROJECT-v1",
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-REFERENCE-FINDINGS-v1",
@@ -322,6 +323,10 @@
     "SR-FIX-CHANGED-SOURCES-v1": {
       "provider": "tests/test_query_changed_only.py:pair",
       "kind": "Owned raw Git-object base and current project snapshots with actual bound profile JSON. Native model dependency closure, Core lint and productive SRX profile rules provide independent exact-selection and diagnostic oracles; explicit trusted host gates cover declared dependencies. No whole-project, literal/full-lint, freshness or approval claim."
+    },
+    "SR-FIX-READ-COMMANDS-v1": {
+      "provider": "tests/test_query_read_integration.py:project_pair",
+      "kind": "Owned complete current/base projects with one literal goal-title delta, stored relation and low query limits; read-only file modes, native Git objects and independent tiny runtime windows. No benchmark or durable Work claim."
     }
   }
 }

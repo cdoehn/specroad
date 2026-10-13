@@ -4,13 +4,14 @@ from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..graph._impact_projection import _impact_rows, _artifact_observations
 from ..model.errors import ModelError
+from .read_work import complete_read_steps
 from ..security import SafetyViolation
 from ..storage._relation_snapshot import _capture_sources
 from ..storage.project import ProjectSource
 from .show import _preflight, _verify_current
 
 
-def impact_artifact(root, artifact_id):
+def _impact_steps(root, artifact_id):
     """Report both physical directions, retaining invalid direct bindings.
 
     This reports the existing Appendix J observation with Core diagnostic
@@ -26,6 +27,7 @@ def impact_artifact(root, artifact_id):
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         _preflight(source)
         snapshot = _capture_sources(source)
+        yield 'loaded'
         groups, review_groups, findings = _impact_rows(snapshot.records, artifact_id)
         payload = {'format_version': '1.1.0', 'artifact_id': artifact_id, 'depth': 1,
                    'transitive': False, 'groups': groups, 'review_groups': review_groups,
@@ -37,6 +39,7 @@ def impact_artifact(root, artifact_id):
                        'observation_sha256': snapshot.binding.sha256,
                        'validation_scope': 'artifact_fields_and_relation_review_status_only',
                        'atomic_snapshot': False}}
+        yield 'evaluated'
         _preflight(source)
         _verify_current(source, snapshot.binding)
         validate_result_document('artifact-impact-v1', payload)
@@ -63,5 +66,11 @@ def impact_artifact(root, artifact_id):
                                     diagnostics=(diagnostic,), details=details)
 
 
+def impact_artifact(root, artifact_id):
+    """Complete the same read phases synchronously, without a durable checkpoint."""
+    return complete_read_steps(_impact_steps(root, artifact_id))
+
+
 def impact_command(invocation):
-    return impact_artifact(invocation.resolved.project_root, invocation.arguments['id'])
+    return complete_read_steps(_impact_steps(invocation.resolved.project_root, invocation.arguments['id']),
+                               call=invocation.consumption_call)

@@ -5,6 +5,7 @@ from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..graph._trace_frontier import _TraceFrontier
 from ..model.errors import ModelError
+from .read_work import complete_read_steps
 from ..security import SafetyViolation
 from ..storage.project import ProjectSource
 from ..storage.relation_index import build_project_relation_index
@@ -31,7 +32,7 @@ def _trace_rows(index, artifact_id, direction, depth):
         traversal.close()
 
 
-def trace_artifact(root, artifact_id, *, direction, depth):
+def _trace_steps(root, artifact_id, *, direction, depth):
     """Return visited identities and the views traversed below the chosen depth.
 
     Depth zero contains just the existing start. Nodes are ordered by minimum
@@ -50,6 +51,7 @@ def trace_artifact(root, artifact_id, *, direction, depth):
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         _preflight(source)
         observed = build_project_relation_index(source)
+        yield 'loaded'
         nodes, edges = _trace_rows(observed.adjacency, artifact_id, direction, depth)
         payload = {'format_version': '1.0.0', 'start': artifact_id, 'direction': direction,
                    'depth': depth, 'nodes': nodes, 'edges': edges,
@@ -58,6 +60,7 @@ def trace_artifact(root, artifact_id, *, direction, depth):
                        'observation_sha256': observed.binding.sha256,
                        'validation_scope': 'relation_references_and_canonical_storage_only',
                        'atomic_snapshot': False}}
+        yield 'evaluated'
         _preflight(source)
         _verify_current(source, observed.binding)
         validate_result_document('artifact-trace-v1', payload)
@@ -81,6 +84,11 @@ def trace_artifact(root, artifact_id, *, direction, depth):
                                     diagnostics=(diagnostic,), details=details)
 
 
+def trace_artifact(root, artifact_id, *, direction, depth):
+    """Complete the same read phases synchronously, without a durable checkpoint."""
+    return complete_read_steps(_trace_steps(root, artifact_id, direction=direction, depth=depth))
+
+
 def trace_command(invocation):
     value = invocation.options['--depth']
     if not value or any(character not in '0123456789' for character in value):
@@ -89,5 +97,5 @@ def trace_command(invocation):
         depth = int(value)
     except ValueError as error:
         raise CommandUsageError('Trace depth is not a supported integer') from error
-    return trace_artifact(invocation.resolved.project_root, invocation.arguments['id'],
-                          direction=invocation.options['--direction'], depth=depth)
+    return complete_read_steps(_trace_steps(invocation.resolved.project_root, invocation.arguments['id'],
+        direction=invocation.options['--direction'], depth=depth), call=invocation.consumption_call)

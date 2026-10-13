@@ -60,20 +60,24 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
                       else selected.parse(arguments))
         command = invocation.command.command_id
         options = invocation.options
-        if options.get('--metrics') is True:
+        if (options.get('--metrics') is True or
+                invocation.command.budget_policy_version == 'runtime-budget-v2'):
             from ..runtime.budget_policy import RESOURCE_OPTIONS, ResourcePolicyError
             from ..runtime.consumption import WorkConsumption, ConsumptionError
             try:
-                work = WorkConsumption() if consumption is None else consumption
-                if type(work) is not WorkConsumption:
-                    raise ConsumptionError('An owned work consumption ledger is required')
-                consumption_call = work.begin({k: v for k, v in options.items() if k in RESOURCE_OPTIONS})
+                targets = {k: v for k, v in options.items() if k in RESOURCE_OPTIONS}
+                if targets or options.get('--metrics') is True:
+                    work = WorkConsumption() if consumption is None else consumption
+                    if type(work) is not WorkConsumption:
+                        raise ConsumptionError('An owned work consumption ledger is required')
+                    consumption_call = work.begin(targets)
             except (ResourcePolicyError, ConsumptionError) as error:
                 raise CommandUsageError(str(error)) from error
         builder = InvocationContextBuilder() if context_builder is None else context_builder
         invocation = builder.prepare(
             invocation, cwd=cwd, profile_layers=profile_layers,
             configuration_layer=configuration_layer)
+        invocation = replace(invocation, consumption_call=consumption_call)
         preflight = invocation.resolved.preflight
         if invocation.resolved.project_root is not None:
             # Identity and hashes remain unknown until a future model loader binds them.
@@ -101,8 +105,11 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
             Diagnostic('SRV167', 'info', 'preflight_detail_required',
                        'Additional bounded metadata phases were required.')))
     if consumption_call is not None:
-        from ._runtime_metrics import attach_runtime_summary
-        outcome = attach_runtime_summary(outcome, command, consumption_call)
+        if options.get('--metrics') is True:
+            from ._runtime_metrics import attach_runtime_summary
+            outcome = attach_runtime_summary(outcome, command, consumption_call)
+        else:
+            consumption_call.finish()
     return CommandResponse(outcome, options)
 
 
