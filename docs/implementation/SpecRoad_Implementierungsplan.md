@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 2
 implementation_plan_commits_total: 885
-implementation_plan_commits_completed: 377
-last_completed_plan_commit: 8.k.R
-next_plan_commit: 8.k.C
-last_completed_numbered_bundle: 229
+implementation_plan_commits_completed: 378
+last_completed_plan_commit: 8.k.C
+next_plan_commit: 8.l.W
+last_completed_numbered_bundle: 230
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -9890,7 +9890,7 @@ paralleler Apply-Volltest und Commit bestätigen 377/885; danach folgt 8.k.C.
 
 #### 8.k.C – Make it Clean
 
-- [ ] **8.k.C** · Position **378/885** · Voraussetzung: `8.k.R`.
+- [x] **8.k.C** · Position **378/885** · Voraussetzung: `8.k.R`.
 **Exakte Commit-Message:** `8.k.C refactor(query): Changed-only mit Closure bereinigen`
 
 **Bereinigung:** Geänderte Seedmenge und generische Closurekomposition wiederverwenden.
@@ -9898,6 +9898,26 @@ paralleler Apply-Volltest und Commit bestätigen 377/885; danach folgt 8.k.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand in Bundle 230:** Die vorhandene Seed-Bildung und
+Komposition von validate_model, Diagnosebewertung und Core-Lint sind in zwei
+private Hilfsfunktionen desselben Moduls ausgelagert. Die konservativen Gründe,
+Sortierung, Abhängigkeitsauswertung und Zusammenführung bekannter Fehler mit
+unvollständigen Prüfungen bleiben unverändert. Die tatsächliche Closure bildet
+weiterhin ausschließlich die bestehende generische Validierungspipeline.
+
+Eine statische Extraktionsprüfung vergleicht die ursprünglichen AST-Blöcke mit
+den Hilfsfunktionen und die öffentliche Orchestrierung mit genau den beiden
+Funktionsaufrufen. Profilprüfung, Guard-Reihenfolge, Quellen-/Ergebnisbindungen,
+leere Umfänge, native Berichte und dynamische Modulabhängigkeiten bleiben erhalten.
+Alle 285 vorhandenen Testdateien und alle bisherigen Testkennungen sind unverändert;
+die statische Prüfung ersetzt die gezielte parallele W-/R-Verhaltensregression nicht.
+
+SR-TC-0193 und SR-TC-0587 bleiben partial. CLI/Work, vollständige Modell-/Ressourcen-
+und Lintsemantik, Language Registry dieses Adapters, Live-Freshness und Skalierung
+bleiben offen. Es werden keine neuen Fachresultate, Fehlerverträge, Seiteneffekte,
+Freigaben oder Schreibrechte eingeführt. Erst erfolgreicher paralleler Apply-Volltest
+und Commit bestätigen 378/885; danach folgt 8.l.W.
 
 <a id="step-8-l"></a>
 ### 8.l – Lesende Funktionsintegration und Workparität

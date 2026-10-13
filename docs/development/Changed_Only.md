@@ -1,4 +1,4 @@
-# Changed-only mit Closure (Bibliotheksstand 8.k.R)
+# Changed-only mit Closure (Bibliotheksstand 8.k.C)
 
 `check_changed_sources(before, after, profile_paths=..., core_key=...)` verwendet
 zwei bereits erfasste `ComparisonSourceSnapshot`-Werte. Die Basis muss ein gebundener
@@ -60,3 +60,9 @@ Language-Registry-Anbindung in diesem Adapter und skalierbare Verarbeitung bleib
 offen. Explizite `ModelGate`-Callbacks sind vertrauenswürdiger Host-Code; es wird
 kein ausführbarer Projektinhalt entdeckt oder geladen. Die Callback-Schnittstelle
 ist kein Betriebssystem-Sandboxvertrag.
+
+Intern bündelt `_changed_seeds` die bestehende konservative Seed-Auswahl.
+`_check_selected` komponiert unverändert die generische Validierungsclosure,
+Diagnosebewertung und Core-Lint. Der öffentliche Adapter behält Basis-/Profilguards,
+Ressourcenbindungen und Ergebnisbildung; die Hilfsfunktionen sind kein zusätzlicher
+öffentlicher Vertrag und führen keine eigene zweite Closureberechnung ein.

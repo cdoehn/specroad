@@ -39,6 +39,54 @@ def _profiles(snapshot, profile_paths, core_key, cli_profiles):
     return profile, resources
 
 
+def _changed_seeds(current, changed, removed, configuration_changed, resource_changes):
+    """Keep conservative seed selection separate from dependency expansion."""
+    seeds = current.intersection(changed)
+    reasons = ['changed_artifacts'] if seeds else []
+    if configuration_changed:
+        seeds.update(current)
+        reasons.append('project_configuration_changed_conservative')
+    if resource_changes:
+        seeds.update(current)
+        reasons.append('profile_resources_changed_conservative')
+    if removed:
+        # A removed target can affect incoming references or arbitrary rule
+        # reads. Without narrower certified dependency observations, retain all.
+        seeds.update(current)
+        reasons.append('removed_artifacts_conservative')
+    selected = tuple(sorted(seeds))
+    return selected, reasons
+
+
+def _check_selected(after, selected, *, profile, resources, gates, fail_on, strict):
+    """Compose the existing validation closure, diagnostic policy and Core lint."""
+    documents = tuple(ModelDocument(record.path, record.source_bytes) for record in after.inputs.records)
+    report = validate_model(documents, profile=profile, selected_ids=selected,
+                            gates=gates, resources=resources)
+    assessment = assess_validation(report, fail_on=fail_on, strict=strict, documents=documents)
+    validation = report.data
+    checked = validation['checked_ids']
+    scope_checked = any(stage['stage'] == 'scope' and stage['status'] == 'passed'
+                        for stage in validation['stages'])
+    lint = (lint_core(after.inputs.records, selected_ids=checked, profile=profile,
+                      fail_on=fail_on, strict=strict) if scope_checked and checked else None)
+    complete = report.complete and lint is not None
+    assessed = assessment.as_dict()
+    # Missing services keep completion unknown, but do not erase an already
+    # observed warning that reaches the effective failure threshold.
+    warning_failed = (assessed['fail_on'] == 'warning'
+                      and any(d.severity == 'warning' for d in assessment.diagnostics))
+    failed = (validation['model_valid'] is False or (complete and not assessment.passed)
+              or warning_failed
+              or (lint is not None and not lint['core_checks_passed']))
+    return dict(status='completed' if complete else 'incomplete',
+        validation=validation, validation_assessment=assessed, core_lint=lint, checks_complete=complete,
+        passed=False if failed else True if complete else None,
+        structural_scope=validation['structural_scope'], validation_scope=validation['validation_scope'],
+        checked_artifact_ids=checked if scope_checked else [],
+        dependency_artifact_ids=sorted(set(checked) - set(selected)) if scope_checked else [])
+
+
 def check_changed_sources(before, after, *, profile_paths, core_key,
                           cli_profiles=(), gates=(), fail_on='error', strict=False):
     """Run loaded-model validation and Core lint over dependency-expanded seeds.
@@ -70,20 +118,8 @@ def check_changed_sources(before, after, *, profile_paths, core_key,
     current = {record.identity.id for record in after.inputs.records}
     changed = sorted(item['artifact_id'] for item in difference['changes'])
     removed = difference['inventory_delta']['removed_ids']
-    seeds = current.intersection(changed)
-    reasons = ['changed_artifacts'] if seeds else []
-    if difference['project_configuration']['changed']:
-        seeds.update(current)
-        reasons.append('project_configuration_changed_conservative')
-    if resource_changes:
-        seeds.update(current)
-        reasons.append('profile_resources_changed_conservative')
-    if removed:
-        # A removed target can affect incoming references or arbitrary rule
-        # reads. Without narrower certified dependency observations, retain all.
-        seeds.update(current)
-        reasons.append('removed_artifacts_conservative')
-    selected = tuple(sorted(seeds))
+    selected, reasons = _changed_seeds(current, changed, removed,
+        difference['project_configuration']['changed'], resource_changes)
     details = {'observation_version': 'changed-checks-v1', 'mode': 'changed_only',
         'check_scope': 'loaded_model_validation_and_core_lint',
         'project_id': after.configuration.project_id, 'base_commit': before.commit_id,
@@ -108,29 +144,6 @@ def check_changed_sources(before, after, *, profile_paths, core_key,
     if not selected:
         details['status'] = 'no_current_artifacts' if changed or reasons else 'no_changes'
         return ComparisonResult(details)
-    documents = tuple(ModelDocument(record.path, record.source_bytes) for record in after.inputs.records)
-    report = validate_model(documents, profile=profile, selected_ids=selected,
-                            gates=gates, resources=resources)
-    assessment = assess_validation(report, fail_on=fail_on, strict=strict, documents=documents)
-    validation = report.data
-    checked = validation['checked_ids']
-    scope_checked = any(stage['stage'] == 'scope' and stage['status'] == 'passed'
-                        for stage in validation['stages'])
-    lint = (lint_core(after.inputs.records, selected_ids=checked, profile=profile,
-                      fail_on=fail_on, strict=strict) if scope_checked and checked else None)
-    complete = report.complete and lint is not None
-    assessed = assessment.as_dict()
-    # Missing services keep completion unknown, but do not erase an already
-    # observed warning that reaches the effective failure threshold.
-    warning_failed = (assessed['fail_on'] == 'warning'
-                      and any(d.severity == 'warning' for d in assessment.diagnostics))
-    failed = (validation['model_valid'] is False or (complete and not assessment.passed)
-              or warning_failed
-              or (lint is not None and not lint['core_checks_passed']))
-    details.update(status='completed' if complete else 'incomplete',
-        validation=validation, validation_assessment=assessed, core_lint=lint, checks_complete=complete,
-        passed=False if failed else True if complete else None,
-        structural_scope=validation['structural_scope'], validation_scope=validation['validation_scope'],
-        checked_artifact_ids=checked if scope_checked else [],
-        dependency_artifact_ids=sorted(set(checked) - set(selected)) if scope_checked else [])
+    details.update(_check_selected(after, selected, profile=profile, resources=resources,
+        gates=gates, fail_on=fail_on, strict=strict))
     return ComparisonResult(details)
