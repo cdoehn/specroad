@@ -1,25 +1,25 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.7
+## Version 0.2.8
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.7` |
+| Dokumentversion | `0.2.8` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 14. September 2026 |
+| Stand | 14. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese vollständige Spezifikation v0.2.7, verbindlich veröffentlicht als `SpecRoad_Spezifikation_v0.2.7.pdf`.** |
-| Bearbeitbare Satzquelle | `SpecRoad_Spezifikation_v0.2.7.md`; inhaltsgleiche technische Satzquelle, keine zweite unabhängig fortgeschriebene Spezifikation. |
-| Vorgängerversion | `SpecRoad_Spezifikation_v0.2.6.pdf` vom 14. September 2026 und die zugehörige Satzquelle. |
-| Prüf- und Entscheidungsgrundlage | Implementierungsreife-Prüfbericht v0.2.6, Befunde B01 und A02; Nutzerauftrag vom 14. September 2026 zur Umsetzung der empfohlenen Korrekturen. Die Mehrsprachen-, Analyzer- und Ressourcenentscheidungen bleiben unverändert. |
-| Änderungsart | Begrenzte fachliche Korrekturfassung des unveränderten Zielreleases: automatische Analyzer-Checkpoints und ausdrücklich getrennte Analysekorrelation; keine neuen Produktfeatures oder Requirement-IDs. Die bisher noch nicht produktiv freigegebenen Vertragsversionen werden präzisiert. |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.8 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.8 liegt mit dieser Änderung nicht vor.** |
+| Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
+| Vorgängerversion | Spezifikation v0.2.7 vom 14. September 2026 und ihre zugehörige Satzquelle/PDF. |
+| Prüf- und Entscheidungsgrundlage | Nutzerentscheidung vom 14. Oktober 2026: portabler SpecRoad-Projekt-Rundweg auf Basis der öffentlichen PatchHarbor-Python-API mit der neuen, CPython 3.10/3.11 unterstützenden Version; OFF-PLAN `PH-RUNTIME-PLAN`, Bundle 233. Frühere fachliche Korrekturen bleiben erhalten. |
+| Änderungsart | Featureplanung bei unverändertem Zielrelease: zwölf neue Anforderungen SR-REQ-0731 bis SR-REQ-0742, öffentlicher API-Vertrag, Hin-/Rückpakete und kontrollierte Übernahme. Keine Behauptung implementierter Funktionen oder bestandener neuer Produktabnahme. |
 
-> **Verbindlicher Quellenwechsel:** Diese vollständige PDF ersetzt alle früheren SpecRoad-Spezifikationsfassungen als fachliche Quelle. Der py3langid-Adapter gehört bereits zum ersten hier spezifizierten Produktrelease. Sprachverständnis und semantische Textanalyse werden nicht stillschweigend mit eingeführt. Der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.8 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
-> **Freigabeabgrenzung:** Der Quellenwechsel ist keine Behauptung bestandener Produkttests. Alle Requirement-IDs sind verbindliche Sollvorgaben; ihr formaler Reifegrad bleibt bis zur dokumentierten Baseline-Entscheidung `proposed`. Die technische Implementierungsreife dieser veröffentlichten Fassung wird nach dem Versand separat geprüft und an den PDF-Hash gebunden dokumentiert. Frühere Reviewentscheidungen werden nicht ungeprüft übernommen.
+> **Freigabeabgrenzung:** Alle Requirement-IDs sind verbindliche Sollvorgaben; ihr formaler Reifegrad bleibt bis zur dokumentierten Baseline-Entscheidung `proposed`. Technische Nachweise müssen den tatsächlich geprüften Dokumenthash binden. Diese Planungsänderung erklärt weder eine PDF-Veröffentlichung noch eine Produkt- oder Baseline-Freigabe.
 
 ---
 
@@ -39,6 +39,7 @@ Zum System SpecRoad 0.2 gehören:
 
 - ein reines, nichtinteraktives CLI-Programm;
 - eine entpackbare Python-Modul-Distribution und eine Python-Zipapp;
+- ein portables Paket aus SpecRoad-Distribution, vollständigem Projekt und unverändertem PatchHarbor-Result sowie der gebundene Rückweg nach Anhang W;
 - das kanonische JSON-Modell mit versionierten Schemas;
 - vollständiges CLI-Authoring für Artefakte, Beziehungen, Lifecycle, Dokumente und Evidence;
 - ein einheitliches Change-Plan-, Transaktions-, Recovery- und Idempotenzmodell;
@@ -60,7 +61,7 @@ Zum System SpecRoad 0.2 gehören:
 
 Nicht zum Systemkern 0.2 gehören ein eingebautes Sprachmodell, ein MCP-Server, eine Web- oder Desktop-Oberfläche, Benutzerkonten, Serverbetrieb, Echtzeit-Kollaboration, ein Multi-Repository-Graph, automatische Git-Commits, beliebige Shell- oder Projektcode-Ausführung, beliebige ausführbare Projekt-/Fremdplugins, tiefe semantische Textanalyse, sprachspezifische Codeparser, externe ALM-Adapter und ein eingebauter PDF-/DOCX-Renderer.
 
-Der in Anhang T ausdrücklich zugelassene, aus der vertrauenswürdigen Zusatzdistribution stammende Analyseworker ist die einzige neue Ausführungskomponente. Er ist kein beliebig ladbares Plugin. Automatische Ausführung weiterer lokaler oder entfernter Analyzer bleibt außerhalb dieses Zielreleases; der Datenaustausch mit ihnen ist bereits generisch vorbereitet.
+Der in Anhang T zugelassene Analyseworker bleibt die einzige automatisch startbare Analyzerkomponente. Die gesonderte PatchHarbor-Integration nach Anhang W verwendet ausschließlich vertrauenswürdig ausgelieferte Transportkomponenten und ist kein Projektplugin. Automatische Ausführung weiterer lokaler oder entfernter Analyzer bleibt außerhalb dieses Zielreleases; der Datenaustausch mit ihnen ist bereits generisch vorbereitet.
 
 ### 1.2 Produktgrenze Single-User / Single-Repository
 
@@ -100,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.7 ersetzt sämtliche Vorgängerversionen vollständig. Maßgebliche Veröffentlichungsfassung ist die PDF; die inhaltsgleiche Markdown-Satzquelle dient der Bearbeitung. Bei einer Abweichung zwischen PDF und Satzquelle ist die Veröffentlichung zu korrigieren und neu zu versionieren; Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.8 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -246,7 +247,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 | SR-SCN-0010 | KI-Vorschlag übernehmen | Nach menschlicher Freigabe wird ein weiterhin aktuelles Proposal transaktional angewendet, ohne automatisch einen Git-Commit zu erzeugen. |
 | SR-SCN-0011 | CI-Gate | Eine CI-Pipeline validiert und lintet nichtinteraktiv und entscheidet anhand stabiler Exit Codes und JSON-/SARIF-Ausgaben. |
 | SR-SCN-0012 | Spezifikation rendern | SpecRoad erzeugt aus denselben Eingaben byte-identische Markdown- und HTML-Ansichten. |
-| SR-SCN-0013 | Chatbot-Sandbox-Roundtrip | Ein Nutzer lädt die portable Distribution und ein Projekt in eine isolierte Linux-Python-Umgebung; die KI bearbeitet es über die CLI und liefert ein verifiziertes Projektbundle zurück. |
+| SR-SCN-0013 | Chatbot-Sandbox-Roundtrip | Ein Nutzer exportiert ein portables SpecRoad-/Projekt-/PatchHarbor-Paket, öffnet es in einer isolierten Python-Umgebung und lässt die KI einen Proposal über die CLI vorbereiten. Derselbe Exportbefehl liefert ein an das ursprüngliche Result gebundenes Rückpaket; die lokale Übernahme führt über echte menschliche Prüfung und transaktionales Proposal-Apply. |
 | SR-SCN-0014 | Bestehendes Artefakt direkt bearbeiten | Ein menschlicher Nutzer prüft mit Dry-Run eine Änderung, aktualisiert ein Requirement und erhält Auditbericht, Diff und neue Modellwurzel. |
 | SR-SCN-0015 | Parallel neue Artefakte erzeugen | Lokaler Branch und Chatbot-Sandbox erzeugen unabhängig neue Artefakte, ohne eine zentrale ID-Sequenz und ohne Identitätskollision. |
 | SR-SCN-0016 | Prozessabbruch wiederherstellen | Ein Prozess endet während einer Mehrdateiänderung; der nächste Zugriff stellt deterministisch Basis oder vollständiges Ziel wieder her. |
@@ -339,6 +340,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 | SR-DEC-0050 | Kontrollierte Ausführungsgrenze | Nur ein vertrauenswürdiger ausgelieferter Worker ist automatisch startbar; generische externe Analyzer werden zunächst über Daten angebunden. |
 | SR-DEC-0051 | Gebundene vollständige Analyzerarbeit | Modell-, Engine-, Input- und Scorepolicybindungen sowie explizite Coverage gewährleisten nachvollziehbare Fortsetzung ohne stilles Sampling. |
 | SR-DEC-0052 | Explizite SRX-Zahlenpolicy | Projektgebundene signifikante Dezimalpräzision mit Default 34 und exakten Fehlerzuständen ersetzt den impliziten Python-Prozessdefault. |
+| SR-DEC-0053 | Portabler Rundweg mit PatchHarbor | SpecRoad verantwortet Projektmodell und Proposalprüfung; PatchHarbor verantwortet Transportbindung und lokale Paketübernahme. Integration ausschließlich über die öffentliche Python-API, mit mitgelieferter kompatibler Runtime und getrenntem äußerem Hinpaket nach Anhang W. |
 
 Die Entscheidungen begrenzen den Implementierungsspielraum, ersetzen aber keine Produktanforderung. Ein Konflikt zwischen einer Entscheidung und einer Anforderung wird nach Kapitel 2.1 zugunsten der Anforderung aufgelöst. Die Entscheidungen `SR-DEC-0016` bis `SR-DEC-0018` reduzieren keinen Standardvertrag: JSON-Schema-Prüfung, Canonicalization, ReqIF-/XML-Verarbeitung, SARIF, ZIP, Migration und Merge müssen innerhalb der ausgelieferten Python-Distribution implementiert werden.
 
@@ -1339,6 +1341,10 @@ specroad migrate plan|apply|verify ...
 specroad merge plan|conflicts|resolve|apply ...
 specroad configuration evaluate <configuration-id>
 specroad bundle create|verify|extract ...
+specroad bundle create --profile ai-runtime --direction outbound --output <ZIP>
+specroad bundle create --profile ai-runtime --direction return --reference <HINPAKET> --proposal <PROP-ID> --output <PATCH-ZIP>
+specroad bundle verify --profile ai-runtime <ZIP> [--reference <HINPAKET>]
+specroad bundle extract --profile ai-runtime <HINPAKET> --target <VERZEICHNIS>
 specroad recover status|run|discard|restore ...
 specroad lock status|recover ...
 specroad capabilities
@@ -1351,6 +1357,15 @@ specroad version
 ```
 
 Kompatible Kurzaliase wie `specroad create`, `specroad show` und `specroad retire` dürfen Version-0.1-Aufrufe erhalten, verweisen jedoch auf die 0.2-Befehlsgruppe und besitzen keine abweichende Semantik.
+
+Das explizite Profil `ai-runtime` folgt Anhang W. Ohne dieses Profil bleiben die
+Projekt-/Teilbundlebefehle aus Anhang E unverändert. Hin- und Rückexport benutzen
+`bundle create`; `--direction` legt Paketart und Voraussetzungen verbindlich fest.
+`bundle create --profile ai-runtime --direction outbound` ist die ausdrücklich
+Git-spezifische Transportvariante. Rückexport, Prüfung und Öffnen in der Sandbox
+benötigen weder Git noch Shell. Die lokale Ausführung einer PatchHarbor-Übernahme
+ist eine gesonderte, ausdrücklich autorisierte Hostoperation nach W.5 und kein
+versteckter Seiteneffekt von `bundle verify` oder `proposal apply`.
 
 ### 11.3 Globale Optionen und Anwendbarkeit
 
@@ -1500,11 +1515,12 @@ Jeder in Kapitel 11.2 aufgeführte Befehl gehört exakt einer der folgenden Klas
 |---|---|---|
 | `normative_write` | `change apply`; `format` ohne `--check`; `artifact create`, `artifact update`; `relation add`, `relation remove`, `relation review`; `lifecycle transition`; `document create`; `section add`, `section move`, `section remove`; `block add`, `block update`, `block remove`; `view create`; `evidence record`, `evidence import`; `baseline create`; `proposal create`, `proposal change`, `proposal review start`, `proposal review`, `proposal apply`; `import apply`; `migrate apply`; `merge apply` | Change Plan, exklusiver Projektwriter-Lock, Journal und Request-Receipt; `--dry-run`; Request-ID für AI/CI Pflicht und für Human/Tool optional |
 | `plan_output` | `import plan`; `migrate plan`; `merge plan`; `merge resolve` | verändert keine normative Projektressource; schreibt ein ausdrücklich angegebenes Plan-Ziel atomar oder gibt den Plan auf stdout aus; kein Projektwriter-Lock und kein Request-Receipt |
-| `generated_output` | `analyzer request`, `analyzer run`, `analyzer import`; `document render`; `view render`; `diagram trace`, `diagram architecture`, `diagram release`; `render`; `export reqif`, `export reqifz`, `export csv`, `export ndjson`; `bundle create` | erzeugt ausschließlich atomare Ausgaben außerhalb des kanonischen Modells oder unter `generated/`; kein Change Plan, Projektwriter-Lock, Request-Receipt oder `.specroad/`-Seiteneffekt |
+| `generated_output` | `analyzer request`, `analyzer run`, `analyzer import`; `document render`; `view render`; `diagram trace`, `diagram architecture`, `diagram release`; `render`; `export reqif`, `export reqifz`, `export csv`, `export ndjson`; `bundle create` außer der unten benannten Hinexportvariante | erzeugt ausschließlich atomare Ausgaben außerhalb des kanonischen Modells oder unter `generated/`; kein Change Plan, Projektwriter-Lock, Request-Receipt oder `.specroad/`-Seiteneffekt |
 | `read_only` | `language list`, `language show`, `analyzer list`, `analyzer describe`, `analyzer show`, `analyzer evaluate`; `config show`; `profile explain`; `format --check`; `artifact show`; `relation status`; `document show`; `view show`; `validate`; `lint`; `query`; `trace`; `why`; `impact`; `diff`; `coverage`; `roadmap explain`; `release readiness`; `baseline show`, `baseline verify`, `baseline compare`; `proposal show`, `proposal validate`, `proposal check`; `merge conflicts`; `migrate verify`; `configuration evaluate`; `bundle verify`; `recover status`; `lock status`; `capabilities`; `schema list`, `schema show`; `command describe`; `project inspect`; `environment check`; `version`; `work status`; `work prompt` | verändert weder Projektdateien noch `.specroad/`; funktioniert ohne Schreibberechtigung, sofern keine ausdrücklich externe Ausgabedatei angefordert wird |
 | `local_operational` | `lock recover`; explizite Cache- oder Receipt-Inspektions-/Bereinigungsbefehle | verändert ausschließlich `.specroad/`-Betriebsdaten oder Recovery-Auditdaten unter einem Betriebslock und niemals normative Projektressourcen |
 | `recovery_write` | `recover run`, `recover discard`, `recover restore` | verwendet den spezialisierten Recovery-Lock und den Zustandsvertrag aus 10.6–10.7; darf ausschließlich den im Journal gebundenen Basis- oder Zielzustand beziehungsweise den vollständig qualifizierten Restore-Zielstand nach 10.7.1 veröffentlichen; erzeugt immer Recovery-Audit |
 | `root_creation` | `init`; `bundle extract` | verwendet ein Bootstrap-Journal im Ziel und veröffentlicht die geplante Root-Struktur vollständig oder gar nicht; ist kein Change Plan eines vorhandenen SpecRoad-Projekts |
+| `transport_operational` | `bundle create --profile ai-runtime --direction outbound` | ausschließlich die nachfolgend benannten PatchHarbor-Betriebswirkungen und externe Ausgabe; keine normative Projektmutation, kein SpecRoad-Receipt und keine Git-Historienänderung |
 
 Die Work-Steuerbefehle werden ergänzend exakt so klassifiziert: `work export` ist `generated_output`; `work restore` ist `work_operational`; `work cancel` ist `work_operational`; `work resume` ist `work_operational` mit der im gespeicherten Auftrag ausdrücklich gebundenen inneren Befehlsklasse. Die Klasse `work_operational` verändert ausschließlich den angegebenen externen Work-Root; eine normative Wirkung ist nur durch den gesondert autorisierten inneren `normative_write` oder `recovery_write` zulässig. Verschachtelte oder unbekannte Command-IDs werden nicht ausgeführt.
 
@@ -1513,6 +1529,22 @@ Die Laufzeitsteuerung darf für einen aufteilbaren Befehl einen externen Work-Ro
 Für `init` darf das Ziel fehlen oder ein vorhandenes Repositoryverzeichnis sein. Vor dem ersten Write muss der Befehl für jeden geplanten Zielpfad nachweisen, dass keine Datei, kein Symlink und kein nichtleeres zu ersetzendes Verzeichnis existiert; bereits vorhandene, nicht von SpecRoad beanspruchte Repositorydateien bleiben unangetastet. `init` erzeugt insbesondere `specroad.json` und genau ein Primärspezifikationsdokument. Bei Fehler werden ausschließlich die durch denselben Bootstrap-Lauf neu erzeugten Pfade entfernt.
 
 Für `bundle extract` muss das Ziel fehlen oder leer sein. Es wird erst nach vollständiger Bundle-Verifikation geschrieben; vorhandene Zielinhalte werden niemals überschrieben. Ein unterbrochener Root-Erzeugungslauf wird vor einer Wiederholung anhand seines Bootstrap-Journals zurückgerollt oder vollständig abgeschlossen.
+
+Für `ai-runtime` ist `bundle create --direction return` wie das gewöhnliche
+`bundle create` ein `generated_output`; `bundle verify` bleibt `read_only` und
+`bundle extract` bleibt `root_creation`. Genau die ausdrücklich Git-spezifische
+Variante `bundle create --profile ai-runtime --direction outbound` erhält die
+zusätzliche Klasse `transport_operational`: Sie darf über die öffentliche API
+PatchHarbor-Betriebsdaten des bereits registrierten Repositorys sowie das
+ausdrücklich gewählte Ausgabeverzeichnis verändern. Normative Projektdateien,
+SpecRoad-Betriebsdaten unter `.specroad/`, Git-Historie und Index bleiben
+unverändert. Registrierung, Konfigurationswechsel, Apply, Commit und Push sind
+keine impliziten Exportwirkungen. Die tatsächlichen PatchHarbor-Betriebspfade
+und Wartungswirkungen werden vorab ausgewiesen; eine Konfiguration mit darüber
+hinausgehenden Wirkungen wird verweigert. Öffnen veröffentlicht getrennte
+Runtime-, Referenz- und Projektverzeichnisse unter dem neuen Zielroot; ein
+Rückpaket darf darüber nicht als Projekt entpackt oder angewendet werden.
+`command describe` weist die Varianten mit jeweils genau einer Klasse aus.
 
 `command describe` weist Klasse, Optionen, Eingaben, Ausgaben, Exit Codes, Seiteneffekte, Lockart, JSON-Schema sowie Preflightprofil und Budgetpolicy aus Anhang N/O maschinenlesbar aus. Ein Preflight verändert die Befehlsklasse nicht; besonders erzeugt ein Read-only-Aufruf keine automatische Recovery oder Cachepflege. Eine Funktion, die in einer späteren kompatiblen Version neu hinzukommt, darf erst veröffentlicht werden, wenn ihr Command Contract genau eine dieser Klassen festlegt.
 
@@ -1659,7 +1691,7 @@ Review, Rücknahmen und Receipt bilden eine Transaktion. Bei gleichem Request un
 
 ## 12. Normative Produktanforderungen
 
-Dieser Katalog enthält **730** normative Produktanforderungen. Alle Anforderungen sind für das Zielrelease 0.2.0 verpflichtend, sofern ihr Wortlaut keine Bedingung nennt. Bis zur Freigabe erben sie `maturity = proposed`, `priority = mandatory` und `target_release = SpecRoad Single-Repository Workbench 0.2.0`.
+Dieser Katalog enthält **742** normative Produktanforderungen. Alle Anforderungen sind für das Zielrelease 0.2.0 verpflichtend, sofern ihr Wortlaut keine Bedingung nennt. Bis zur Freigabe erben sie `maturity = proposed`, `priority = mandatory` und `target_release = SpecRoad Single-Repository Workbench 0.2.0`.
 
 Die Spalte `Quelle` verweist auf Stakeholder-Bedarfe; `Verifikation` nennt den primären Verification Contract. Querschnittsanforderungen dürfen zusätzlich durch andere Verträge geprüft werden. Eine Anforderung ist erst bestanden, wenn ihr primärer Vertrag und alle für sie anwendbaren Querschnittsgates bestehen.
 
@@ -1997,8 +2029,8 @@ Der vollständige Core bleibt in eingeschränkten Python-Linux-Umgebungen offlin
 | ID | Normative Anforderung | Quelle | Verifikation | Testfall |
 |---|---|---|---|---|
 | SR-REQ-0223 | Der SpecRoad Core MUSS vollständig unter CPython 3.10 ausführbar sein; CPython 3.10 ist die niedrigste unterstützte Laufzeitversion. | SR-NEED-0008, SR-NEED-0012 | SR-VER-0027 | SR-TC-0223 |
-| SR-REQ-0224 | Die entpackte Core-Distribution und die Core-Zipapp DÜRFEN NICHT für eine nicht Git-spezifische Core-Funktion externe Laufzeitpakete voraussetzen; ausschließlich die explizite Auswertung im getrennten Analyzerworker hat Zusatzvoraussetzungen nach Anhang T.6. | SR-NEED-0008, SR-NEED-0011, SR-NEED-0012 | SR-VER-0027 | SR-TC-0224 |
-| SR-REQ-0225 | Die zwingenden Umgebungsvoraussetzungen des Core DÜRFEN über eine unterstützte Python-Laufzeit, Leserechte für Distribution und Projekteingaben sowie die jeweils erforderlichen Schreibrechte für Projekt-, Ausgabe- und Temporärpfade nicht hinausgehen. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0011 | SR-VER-0017 | SR-TC-0225 |
+| SR-REQ-0224 | Die entpackte Core-Distribution und die Core-Zipapp DÜRFEN NICHT für eine nicht Git-spezifische Core-Funktion extern zu installierende Laufzeitpakete voraussetzen; die PatchHarbor-Runtime für das Transportprofil MUSS offline mitgeliefert und ausschließlich bei dessen Nutzung geladen werden, während Analyzer-Zusatzvoraussetzungen getrennt Anhang T.6 folgen. | SR-NEED-0008, SR-NEED-0011, SR-NEED-0012 | SR-VER-0027 | SR-TC-0224 |
+| SR-REQ-0225 | Die zwingenden Umgebungsvoraussetzungen nicht Git-spezifischer Core-Funktionen DÜRFEN über eine unterstützte Python-Laufzeit, Leserechte für Distribution und Projekteingaben sowie die jeweils erforderlichen Schreibrechte für Projekt-, Ausgabe- und Temporärpfade nicht hinausgehen; die ausdrücklich Git-spezifische lokale Transportseite nach Anhang W MUSS ihre zusätzlichen Voraussetzungen getrennt ausweisen. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0011 | SR-VER-0017 | SR-TC-0225 |
 | SR-REQ-0226 | Jedes Release MUSS funktional äquivalente selbstenthaltene Modul- und Zipapp-Core-Distributionen bereitstellen, die ohne Installation zusätzlicher Pakete starten; die zusätzliche Language-Detection-Distribution folgt Anhang T.6. | SR-NEED-0001, SR-NEED-0008, SR-NEED-0012 | SR-VER-0027 | SR-TC-0226 |
 | SR-REQ-0227 | Sämtliche in Kapitel 11.2 aufgeführten Kernfunktionen MÜSSEN vollständig über nichtinteraktive CLI-Aufrufe ausführbar sein und bei fehlenden Eingaben eine strukturierte Nutzungsdiagnose statt einer Rückfrage erzeugen. | SR-NEED-0001, SR-NEED-0007, SR-NEED-0008 | SR-VER-0027 | SR-TC-0227 |
 | SR-REQ-0228 | Der Mensch-KI-Roundtrip aus `SR-SCN-0013` MUSS KI-erzeugte normative Änderungen über die Folge `proposal create`, `proposal change`, `proposal validate`, `proposal check`, menschliches `proposal review` und `proposal apply` führen. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0017 | SR-TC-0228 |
@@ -2690,6 +2722,28 @@ Diese Anforderungen ergänzen die bestehenden Runtime-, Sicherheits- und Änderu
 | SR-REQ-0729 | Numerische Fehler MÜSSEN die disjunkten Diagnosegründe aus Anhang U.2 erzeugen, statt vom globalen Python-Decimal-Kontext abhängig zu sein. | SR-NEED-0007, SR-NEED-0012 | SR-VER-0050 | SR-TC-0729 |
 | SR-REQ-0730 | Die SRX-Testabnahme MUSS sämtliche Entscheidungsvektoren aus Anhang U.3 einschließlich veränderter Prozessdefaults nachweisen. | SR-NEED-0005, SR-NEED-0012 | SR-VER-0050 | SR-TC-0730 |
 
+### 12.46 Portabler Projekt-Rundweg über PatchHarbor
+
+Anhang W legt den Transportvertrag für SR-SCN-0013 fest. Die neue
+PatchHarbor-Version mit CPython-3.10-/3.11-Unterstützung ist die Produktbasis;
+das ersetzt weder einen konkreten Distributionshash noch den Nachweis der
+benötigten öffentlichen API-Fähigkeiten. Diese Anforderungen sind noch offen.
+
+| ID | Normative Anforderung | Quelle | Verifikation | Testfall |
+|---|---|---|---|---|
+| SR-REQ-0731 | Die Transportintegration MUSS PatchHarbor ausschließlich über die dokumentierte öffentliche Python-API ansprechen und fehlende erforderliche API-Fähigkeiten ohne CLI-Fallback, private Core-Imports oder eigene Nachbildung des PatchHarbor-Formats als nicht verfügbar melden. | SR-NEED-0008, SR-NEED-0012 | SR-VER-0051 | SR-TC-0731 |
+| SR-REQ-0732 | Das Transportprofil MUSS mit einer gebundenen, CPython 3.10 bis 3.14 unterstützenden PatchHarbor-Distribution offline nutzbar sein, ohne deren Laden oder Installation für die übrigen Core-Befehle vorauszusetzen. | SR-NEED-0008, SR-NEED-0012 | SR-VER-0051 | SR-TC-0732 |
+| SR-REQ-0733 | Der Hinexport MUSS ein vollständiges Paket nach W.2 mit SpecRoad-Distribution, unverändertem PatchHarbor-Result einschließlich dessen Runtime, verifiziertem Vollprojektbundle und einem lückenlosen Größen-/Hashinventar erzeugen. | SR-NEED-0008, SR-NEED-0009 | SR-VER-0051 | SR-TC-0733 |
+| SR-REQ-0734 | Der Hinexport MUSS Projekt-ID, Scope, Modellwurzel und alle Projektbytes an denselben vollständig geprüften Result-Zustand nach W.3 binden und bei Abweichung oder unvollständiger Closure ohne gültiges Hinpaket abbrechen. | SR-NEED-0003, SR-NEED-0009 | SR-VER-0051 | SR-TC-0734 |
+| SR-REQ-0735 | Das Öffnen eines Hinpakets MUSS die Vertrauens-, Versions-, Plattform- und Integritätsprüfungen aus W.4 vor dem Laden einer mitgelieferten Runtime durchführen. | SR-NEED-0008, SR-NEED-0011 | SR-VER-0051 | SR-TC-0735 |
+| SR-REQ-0736 | Die Materialisierung in der Sandbox MUSS ohne Git, Shell, Netzwerk oder Paketinstallation einen neuen, vollständig geprüften Projektroot nach W.4 erzeugen und vorhandene Ziele sowie Partial-Bundle-Schreibgrenzen erhalten. | SR-NEED-0008, SR-NEED-0011 | SR-VER-0051 | SR-TC-0736 |
+| SR-REQ-0737 | Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen. | SR-NEED-0001, SR-NEED-0008 | SR-VER-0051 | SR-TC-0737 |
+| SR-REQ-0738 | Der Rückexport MUSS nach W.5 ausschließlich einen vollständig ausgewiesenen Proposal samt benötigten passiven Daten und einem vertrauenswürdig vorgegebenen Entrypoint über `patchharbor.api.pack_patch` verpacken. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0051 | SR-TC-0738 |
+| SR-REQ-0739 | Der lokale Integrationsadapter MUSS Paketintegrität, Referenzbindung, zulässigen Payload, Entrypoint und aktuelles Ziel vor dem ersten PatchHarbor-Payloadwrite prüfen und erst nach ausdrücklicher Übernahmeautorisierung die öffentliche `patchharbor.api.apply` aufrufen. | SR-NEED-0003, SR-NEED-0011 | SR-VER-0051 | SR-TC-0739 |
+| SR-REQ-0740 | Die lokale Rückübernahme MUSS die normativen Fachänderungen bis zum gültigen menschlichen Review und transaktionalen Proposal-Apply unveröffentlicht lassen; Transporterfolg und importierter Proposal DÜRFEN NICHT als fachliche Freigabe oder angewendete Änderung gelten. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0051 | SR-TC-0740 |
+| SR-REQ-0741 | Wiederholung, geänderte Basis, Paketfehler und Abbruch MÜSSEN nach W.6 ohne doppelte Fachänderung, stilles Rebase, Verlust fremder Dateien oder fingierten Erfolg behandelt werden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0011 | SR-VER-0051 | SR-TC-0741 |
+| SR-REQ-0742 | Die Featureabnahme MUSS den vollständigen API-basierten Rundweg, die negativen Sicherheits-/Zustandsfälle und jedes angebotene Runtimeprofil nach W.7 mit realen Paketartefakten und gebundener Laufzeit-Evidence nachweisen. | SR-NEED-0005, SR-NEED-0008, SR-NEED-0012 | SR-VER-0051 | SR-TC-0742 |
+
 ---
 
 ## 13. Diagnosekatalog Version 0.2
@@ -2864,6 +2918,7 @@ Jede konkrete Diagnose muss die in `SR-REQ-0089` festgelegten Felder bereitstell
 | SR-VER-0048 | Analyzer-Portabilität und Ressourcen | Core ohne NumPy, separate Offlinepakete, Workerprozesskontrolle, Crash, Promptfortsetzung mit und ohne explizites Work-Verzeichnis nach 14.12 und reale CPU/RSS-Messung. | Kein versteckter Modellstart; gültige Checkpoints vor Code 8, volle Restmenge und konstante Analysekennung; keine Projektwrites oder Workerleaks; beide Laufzeitstufen und Ressourcenziele aus T.6/T.9/T.10 bestehen. |
 | SR-VER-0049 | Sprach-/Force-Migration und Austausch | Explizite Entwurfsmigration mit negativen Aussagen, unveränderbaren Altnachweisen und CSV-/NDJSON-/ReqIF-Roundtrip. | Keine Inferenz aus Text/Priorität, alle Metadaten erhalten, keine alten Bytes verändert und keine fingierte aktuelle Evidence. |
 | SR-VER-0050 | Explizite SRX-Zahlenpolicy | Vektoren aus Anhang U plus Precisionrange, JCS-Grenzen und absichtlich verschiedene Decimal-Prozessdefaults. | Alle exakten Ergebnisse und Fehlergründe unabhängig vom lokalen Pythonkontext; Policy in Fachhash gebunden. |
+| SR-VER-0051 | Portabler PatchHarbor-Rundweg | Reale öffentliche Python-API, ausgelieferte PYZ-/Modulartefakte, vollständiger Hin-/Rückweg und negative Zustands-/Sicherheitsfälle nach W.7. | Bindung und Fachziel stimmen; Sandbox offline ohne Git/Shell/Installation; kein ungeprüfter Payloadwrite, keine vorgezogene Fachanwendung oder fingierte menschliche Freigabe; angebotene Runtimeprofile tatsächlich geprüft. |
 
 ### 14.1 Referenzplattform für Performance
 
@@ -3001,6 +3056,15 @@ Die Implementierung führt mindestens einen großen Analyzerauftrag ohne `--work
 
 Die Kennungsprüfung umfasst automatisch und manuell vergebene Analysekennungen, einen projektlosen datentragenden Request, einen unterbrochenen Requestaufbau, ungültige Overrides, Kennungs-/Snapshotmismatch sowie dieselbe Zeichenfolge im unabhängigen Schreibnamensraum. Normative Write-Retries müssen unverändert ihre bestehenden Receipts verwenden; Analysen dürfen diese weder erzeugen noch lesen oder ändern. Eine bloße Analysekennungswiederholung ersetzt weder den Snapshotvergleich noch ein ausdrückliches `work resume`.
 
+### 14.13 PatchHarbor-Rundweg v0.2.8
+
+SR-VER-0051 ergänzt SR-VER-0012, SR-VER-0017, SR-VER-0027 und SR-VER-0033.
+Die konkrete Abnahme steht in W.7 und erweitert SR-SCN-0013 / SR-E2E-0013.
+CPython-3.10-/3.11-Unterstützung der neuen PatchHarbor-Version ist die gesetzte
+Produktbasis; öffentliche API-Verfügbarkeit, konkrete Artefakte und erfolgreiche
+Integration bleiben gesondert nachzuweisen. Ein früherer SpecRoad- oder
+PatchHarbor-Testlauf belegt die Erweiterung nicht durch bloße Hashaktualisierung.
+
 ## 15. Traceability und Vollständigkeitsnachweis
 
 ### 15.1 Ziel-zu-Bedarf-Matrix
@@ -3022,18 +3086,18 @@ Die Kennungsprüfung umfasst automatisch und manuell vergebene Analysekennungen,
 
 | Need | Anzahl Anforderungen | Exakt abgedeckte IDs |
 |---|---:|---|
-| SR-NEED-0001 | 89 | `SR-REQ-0001`–`SR-REQ-0006`<br>`SR-REQ-0009`–`SR-REQ-0012`<br>`SR-REQ-0022`<br>`SR-REQ-0024`–`SR-REQ-0026`<br>`SR-REQ-0032`<br>`SR-REQ-0066`–`SR-REQ-0067`<br>`SR-REQ-0073`<br>`SR-REQ-0075`<br>`SR-REQ-0080`<br>`SR-REQ-0087`–`SR-REQ-0088`<br>`SR-REQ-0101`<br>`SR-REQ-0105`–`SR-REQ-0106`<br>`SR-REQ-0108`<br>`SR-REQ-0123`<br>`SR-REQ-0179`<br>`SR-REQ-0181`<br>`SR-REQ-0186`–`SR-REQ-0187`<br>`SR-REQ-0190`<br>`SR-REQ-0209`–`SR-REQ-0210`<br>`SR-REQ-0216`–`SR-REQ-0217`<br>`SR-REQ-0226`–`SR-REQ-0227`<br>`SR-REQ-0231`–`SR-REQ-0235`<br>`SR-REQ-0240`<br>`SR-REQ-0251`<br>`SR-REQ-0272`<br>`SR-REQ-0278`<br>`SR-REQ-0281`<br>`SR-REQ-0299`–`SR-REQ-0302`<br>`SR-REQ-0304`<br>`SR-REQ-0308`<br>`SR-REQ-0310`–`SR-REQ-0313`<br>`SR-REQ-0320`–`SR-REQ-0321`<br>`SR-REQ-0325`<br>`SR-REQ-0332`<br>`SR-REQ-0354`<br>`SR-REQ-0372`<br>`SR-REQ-0378`<br>`SR-REQ-0380`<br>`SR-REQ-0386`<br>`SR-REQ-0393`–`SR-REQ-0394`<br>`SR-REQ-0402`<br>`SR-REQ-0409`<br>`SR-REQ-0417`<br>`SR-REQ-0443`<br>`SR-REQ-0463`<br>`SR-REQ-0467`–`SR-REQ-0468`<br>`SR-REQ-0471`<br>`SR-REQ-0501`<br>`SR-REQ-0504`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0527`<br>`SR-REQ-0530`–`SR-REQ-0531`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0649`<br>`SR-REQ-0651`–`SR-REQ-0652` |
+| SR-NEED-0001 | 90 | `SR-REQ-0001`–`SR-REQ-0006`<br>`SR-REQ-0009`–`SR-REQ-0012`<br>`SR-REQ-0022`<br>`SR-REQ-0024`–`SR-REQ-0026`<br>`SR-REQ-0032`<br>`SR-REQ-0066`–`SR-REQ-0067`<br>`SR-REQ-0073`<br>`SR-REQ-0075`<br>`SR-REQ-0080`<br>`SR-REQ-0087`–`SR-REQ-0088`<br>`SR-REQ-0101`<br>`SR-REQ-0105`–`SR-REQ-0106`<br>`SR-REQ-0108`<br>`SR-REQ-0123`<br>`SR-REQ-0179`<br>`SR-REQ-0181`<br>`SR-REQ-0186`–`SR-REQ-0187`<br>`SR-REQ-0190`<br>`SR-REQ-0209`–`SR-REQ-0210`<br>`SR-REQ-0216`–`SR-REQ-0217`<br>`SR-REQ-0226`–`SR-REQ-0227`<br>`SR-REQ-0231`–`SR-REQ-0235`<br>`SR-REQ-0240`<br>`SR-REQ-0251`<br>`SR-REQ-0272`<br>`SR-REQ-0278`<br>`SR-REQ-0281`<br>`SR-REQ-0299`–`SR-REQ-0302`<br>`SR-REQ-0304`<br>`SR-REQ-0308`<br>`SR-REQ-0310`–`SR-REQ-0313`<br>`SR-REQ-0320`–`SR-REQ-0321`<br>`SR-REQ-0325`<br>`SR-REQ-0332`<br>`SR-REQ-0354`<br>`SR-REQ-0372`<br>`SR-REQ-0378`<br>`SR-REQ-0380`<br>`SR-REQ-0386`<br>`SR-REQ-0393`–`SR-REQ-0394`<br>`SR-REQ-0402`<br>`SR-REQ-0409`<br>`SR-REQ-0417`<br>`SR-REQ-0443`<br>`SR-REQ-0463`<br>`SR-REQ-0467`–`SR-REQ-0468`<br>`SR-REQ-0471`<br>`SR-REQ-0501`<br>`SR-REQ-0504`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0527`<br>`SR-REQ-0530`–`SR-REQ-0531`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0649`<br>`SR-REQ-0651`–`SR-REQ-0652`<br>`SR-REQ-0737` |
 | SR-NEED-0002 | 116 | `SR-REQ-0007`–`SR-REQ-0008`<br>`SR-REQ-0014`–`SR-REQ-0017`<br>`SR-REQ-0027`–`SR-REQ-0029`<br>`SR-REQ-0031`<br>`SR-REQ-0037`–`SR-REQ-0043`<br>`SR-REQ-0046`<br>`SR-REQ-0051`–`SR-REQ-0052`<br>`SR-REQ-0054`–`SR-REQ-0056`<br>`SR-REQ-0059`–`SR-REQ-0061`<br>`SR-REQ-0063`<br>`SR-REQ-0065`–`SR-REQ-0072`<br>`SR-REQ-0074`<br>`SR-REQ-0076`–`SR-REQ-0079`<br>`SR-REQ-0081`–`SR-REQ-0082`<br>`SR-REQ-0084`–`SR-REQ-0086`<br>`SR-REQ-0091`<br>`SR-REQ-0093`–`SR-REQ-0097`<br>`SR-REQ-0130`<br>`SR-REQ-0143`–`SR-REQ-0144`<br>`SR-REQ-0148`–`SR-REQ-0149`<br>`SR-REQ-0218`<br>`SR-REQ-0235`<br>`SR-REQ-0238`<br>`SR-REQ-0244`<br>`SR-REQ-0246`–`SR-REQ-0247`<br>`SR-REQ-0264`<br>`SR-REQ-0276`<br>`SR-REQ-0280`<br>`SR-REQ-0282`<br>`SR-REQ-0286`–`SR-REQ-0288`<br>`SR-REQ-0290`–`SR-REQ-0293`<br>`SR-REQ-0297`<br>`SR-REQ-0307`<br>`SR-REQ-0316`<br>`SR-REQ-0326`<br>`SR-REQ-0367`<br>`SR-REQ-0369`<br>`SR-REQ-0395`–`SR-REQ-0397`<br>`SR-REQ-0399`<br>`SR-REQ-0406`<br>`SR-REQ-0414`–`SR-REQ-0415`<br>`SR-REQ-0419`<br>`SR-REQ-0421`–`SR-REQ-0424`<br>`SR-REQ-0431`<br>`SR-REQ-0433`<br>`SR-REQ-0499`<br>`SR-REQ-0505`<br>`SR-REQ-0508`<br>`SR-REQ-0515`<br>`SR-REQ-0517`<br>`SR-REQ-0519`–`SR-REQ-0521`<br>`SR-REQ-0529`<br>`SR-REQ-0542`<br>`SR-REQ-0546`–`SR-REQ-0548`<br>`SR-REQ-0636`<br>`SR-REQ-0653`<br>`SR-REQ-0656`<br>`SR-REQ-0658`<br>`SR-REQ-0662`–`SR-REQ-0663`<br>`SR-REQ-0665`<br>`SR-REQ-0667`<br>`SR-REQ-0727`–`SR-REQ-0728` |
-| SR-NEED-0003 | 163 | `SR-REQ-0012`<br>`SR-REQ-0021`–`SR-REQ-0022`<br>`SR-REQ-0024`<br>`SR-REQ-0030`<br>`SR-REQ-0032`–`SR-REQ-0034`<br>`SR-REQ-0036`<br>`SR-REQ-0042`–`SR-REQ-0045`<br>`SR-REQ-0047`–`SR-REQ-0048`<br>`SR-REQ-0052`–`SR-REQ-0053`<br>`SR-REQ-0057`–`SR-REQ-0058`<br>`SR-REQ-0060`<br>`SR-REQ-0063`–`SR-REQ-0064`<br>`SR-REQ-0068`<br>`SR-REQ-0070`<br>`SR-REQ-0072`<br>`SR-REQ-0082`<br>`SR-REQ-0089`–`SR-REQ-0090`<br>`SR-REQ-0095`<br>`SR-REQ-0097`<br>`SR-REQ-0099`<br>`SR-REQ-0103`–`SR-REQ-0104`<br>`SR-REQ-0106`–`SR-REQ-0109`<br>`SR-REQ-0111`–`SR-REQ-0116`<br>`SR-REQ-0124`<br>`SR-REQ-0126`<br>`SR-REQ-0152`<br>`SR-REQ-0154`–`SR-REQ-0155`<br>`SR-REQ-0158`<br>`SR-REQ-0161`–`SR-REQ-0162`<br>`SR-REQ-0169`<br>`SR-REQ-0171`<br>`SR-REQ-0173`–`SR-REQ-0175`<br>`SR-REQ-0191`–`SR-REQ-0193`<br>`SR-REQ-0213`<br>`SR-REQ-0219`–`SR-REQ-0220`<br>`SR-REQ-0228`<br>`SR-REQ-0231`–`SR-REQ-0234`<br>`SR-REQ-0237`<br>`SR-REQ-0239`<br>`SR-REQ-0241`–`SR-REQ-0242`<br>`SR-REQ-0248`<br>`SR-REQ-0250`–`SR-REQ-0251`<br>`SR-REQ-0269`<br>`SR-REQ-0273`<br>`SR-REQ-0275`–`SR-REQ-0281`<br>`SR-REQ-0283`–`SR-REQ-0285`<br>`SR-REQ-0293`<br>`SR-REQ-0299`<br>`SR-REQ-0302`<br>`SR-REQ-0305`<br>`SR-REQ-0309`–`SR-REQ-0311`<br>`SR-REQ-0314`<br>`SR-REQ-0317`–`SR-REQ-0318`<br>`SR-REQ-0322`<br>`SR-REQ-0331`<br>`SR-REQ-0347`<br>`SR-REQ-0349`<br>`SR-REQ-0351`<br>`SR-REQ-0353`<br>`SR-REQ-0358`<br>`SR-REQ-0361`–`SR-REQ-0362`<br>`SR-REQ-0364`–`SR-REQ-0366`<br>`SR-REQ-0368`<br>`SR-REQ-0370`–`SR-REQ-0372`<br>`SR-REQ-0374`<br>`SR-REQ-0398`–`SR-REQ-0399`<br>`SR-REQ-0402`–`SR-REQ-0403`<br>`SR-REQ-0405`<br>`SR-REQ-0410`<br>`SR-REQ-0412`<br>`SR-REQ-0415`–`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0426`–`SR-REQ-0430`<br>`SR-REQ-0434`<br>`SR-REQ-0437`<br>`SR-REQ-0441`<br>`SR-REQ-0449`<br>`SR-REQ-0456`–`SR-REQ-0457`<br>`SR-REQ-0473`<br>`SR-REQ-0475`<br>`SR-REQ-0507`<br>`SR-REQ-0509`–`SR-REQ-0510`<br>`SR-REQ-0512`<br>`SR-REQ-0514`<br>`SR-REQ-0516`<br>`SR-REQ-0521`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0530`<br>`SR-REQ-0537`<br>`SR-REQ-0541`<br>`SR-REQ-0611`<br>`SR-REQ-0637`–`SR-REQ-0638`<br>`SR-REQ-0643`–`SR-REQ-0644`<br>`SR-REQ-0646`–`SR-REQ-0648`<br>`SR-REQ-0657`<br>`SR-REQ-0673`–`SR-REQ-0674`<br>`SR-REQ-0685`<br>`SR-REQ-0693`<br>`SR-REQ-0708`<br>`SR-REQ-0712` |
+| SR-NEED-0003 | 168 | `SR-REQ-0012`<br>`SR-REQ-0021`–`SR-REQ-0022`<br>`SR-REQ-0024`<br>`SR-REQ-0030`<br>`SR-REQ-0032`–`SR-REQ-0034`<br>`SR-REQ-0036`<br>`SR-REQ-0042`–`SR-REQ-0045`<br>`SR-REQ-0047`–`SR-REQ-0048`<br>`SR-REQ-0052`–`SR-REQ-0053`<br>`SR-REQ-0057`–`SR-REQ-0058`<br>`SR-REQ-0060`<br>`SR-REQ-0063`–`SR-REQ-0064`<br>`SR-REQ-0068`<br>`SR-REQ-0070`<br>`SR-REQ-0072`<br>`SR-REQ-0082`<br>`SR-REQ-0089`–`SR-REQ-0090`<br>`SR-REQ-0095`<br>`SR-REQ-0097`<br>`SR-REQ-0099`<br>`SR-REQ-0103`–`SR-REQ-0104`<br>`SR-REQ-0106`–`SR-REQ-0109`<br>`SR-REQ-0111`–`SR-REQ-0116`<br>`SR-REQ-0124`<br>`SR-REQ-0126`<br>`SR-REQ-0152`<br>`SR-REQ-0154`–`SR-REQ-0155`<br>`SR-REQ-0158`<br>`SR-REQ-0161`–`SR-REQ-0162`<br>`SR-REQ-0169`<br>`SR-REQ-0171`<br>`SR-REQ-0173`–`SR-REQ-0175`<br>`SR-REQ-0191`–`SR-REQ-0193`<br>`SR-REQ-0213`<br>`SR-REQ-0219`–`SR-REQ-0220`<br>`SR-REQ-0228`<br>`SR-REQ-0231`–`SR-REQ-0234`<br>`SR-REQ-0237`<br>`SR-REQ-0239`<br>`SR-REQ-0241`–`SR-REQ-0242`<br>`SR-REQ-0248`<br>`SR-REQ-0250`–`SR-REQ-0251`<br>`SR-REQ-0269`<br>`SR-REQ-0273`<br>`SR-REQ-0275`–`SR-REQ-0281`<br>`SR-REQ-0283`–`SR-REQ-0285`<br>`SR-REQ-0293`<br>`SR-REQ-0299`<br>`SR-REQ-0302`<br>`SR-REQ-0305`<br>`SR-REQ-0309`–`SR-REQ-0311`<br>`SR-REQ-0314`<br>`SR-REQ-0317`–`SR-REQ-0318`<br>`SR-REQ-0322`<br>`SR-REQ-0331`<br>`SR-REQ-0347`<br>`SR-REQ-0349`<br>`SR-REQ-0351`<br>`SR-REQ-0353`<br>`SR-REQ-0358`<br>`SR-REQ-0361`–`SR-REQ-0362`<br>`SR-REQ-0364`–`SR-REQ-0366`<br>`SR-REQ-0368`<br>`SR-REQ-0370`–`SR-REQ-0372`<br>`SR-REQ-0374`<br>`SR-REQ-0398`–`SR-REQ-0399`<br>`SR-REQ-0402`–`SR-REQ-0403`<br>`SR-REQ-0405`<br>`SR-REQ-0410`<br>`SR-REQ-0412`<br>`SR-REQ-0415`–`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0426`–`SR-REQ-0430`<br>`SR-REQ-0434`<br>`SR-REQ-0437`<br>`SR-REQ-0441`<br>`SR-REQ-0449`<br>`SR-REQ-0456`–`SR-REQ-0457`<br>`SR-REQ-0473`<br>`SR-REQ-0475`<br>`SR-REQ-0507`<br>`SR-REQ-0509`–`SR-REQ-0510`<br>`SR-REQ-0512`<br>`SR-REQ-0514`<br>`SR-REQ-0516`<br>`SR-REQ-0521`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0530`<br>`SR-REQ-0537`<br>`SR-REQ-0541`<br>`SR-REQ-0611`<br>`SR-REQ-0637`–`SR-REQ-0638`<br>`SR-REQ-0643`–`SR-REQ-0644`<br>`SR-REQ-0646`–`SR-REQ-0648`<br>`SR-REQ-0657`<br>`SR-REQ-0673`–`SR-REQ-0674`<br>`SR-REQ-0685`<br>`SR-REQ-0693`<br>`SR-REQ-0708`<br>`SR-REQ-0712`<br>`SR-REQ-0734`<br>`SR-REQ-0738`–`SR-REQ-0741` |
 | SR-NEED-0004 | 17 | `SR-REQ-0010`<br>`SR-REQ-0049`<br>`SR-REQ-0078`<br>`SR-REQ-0120`<br>`SR-REQ-0127`<br>`SR-REQ-0131`<br>`SR-REQ-0153`<br>`SR-REQ-0176`<br>`SR-REQ-0342`–`SR-REQ-0347`<br>`SR-REQ-0495`<br>`SR-REQ-0536`–`SR-REQ-0537` |
-| SR-NEED-0005 | 63 | `SR-REQ-0050`<br>`SR-REQ-0062`<br>`SR-REQ-0065`<br>`SR-REQ-0074`–`SR-REQ-0077`<br>`SR-REQ-0086`<br>`SR-REQ-0096`<br>`SR-REQ-0127`<br>`SR-REQ-0129`–`SR-REQ-0134`<br>`SR-REQ-0136`–`SR-REQ-0142`<br>`SR-REQ-0177`<br>`SR-REQ-0284`<br>`SR-REQ-0333`–`SR-REQ-0341`<br>`SR-REQ-0369`<br>`SR-REQ-0374`<br>`SR-REQ-0432`<br>`SR-REQ-0444`–`SR-REQ-0452`<br>`SR-REQ-0491`–`SR-REQ-0493`<br>`SR-REQ-0500`<br>`SR-REQ-0533`–`SR-REQ-0535`<br>`SR-REQ-0622`<br>`SR-REQ-0633`<br>`SR-REQ-0642`<br>`SR-REQ-0650`<br>`SR-REQ-0668`<br>`SR-REQ-0682`<br>`SR-REQ-0686`<br>`SR-REQ-0720`–`SR-REQ-0721`<br>`SR-REQ-0730` |
+| SR-NEED-0005 | 64 | `SR-REQ-0050`<br>`SR-REQ-0062`<br>`SR-REQ-0065`<br>`SR-REQ-0074`–`SR-REQ-0077`<br>`SR-REQ-0086`<br>`SR-REQ-0096`<br>`SR-REQ-0127`<br>`SR-REQ-0129`–`SR-REQ-0134`<br>`SR-REQ-0136`–`SR-REQ-0142`<br>`SR-REQ-0177`<br>`SR-REQ-0284`<br>`SR-REQ-0333`–`SR-REQ-0341`<br>`SR-REQ-0369`<br>`SR-REQ-0374`<br>`SR-REQ-0432`<br>`SR-REQ-0444`–`SR-REQ-0452`<br>`SR-REQ-0491`–`SR-REQ-0493`<br>`SR-REQ-0500`<br>`SR-REQ-0533`–`SR-REQ-0535`<br>`SR-REQ-0622`<br>`SR-REQ-0633`<br>`SR-REQ-0642`<br>`SR-REQ-0650`<br>`SR-REQ-0668`<br>`SR-REQ-0682`<br>`SR-REQ-0686`<br>`SR-REQ-0720`–`SR-REQ-0721`<br>`SR-REQ-0730`<br>`SR-REQ-0742` |
 | SR-NEED-0006 | 35 | `SR-REQ-0049`–`SR-REQ-0050`<br>`SR-REQ-0073`<br>`SR-REQ-0101`<br>`SR-REQ-0113`<br>`SR-REQ-0115`<br>`SR-REQ-0118`–`SR-REQ-0121`<br>`SR-REQ-0125`–`SR-REQ-0126`<br>`SR-REQ-0136`–`SR-REQ-0137`<br>`SR-REQ-0139`–`SR-REQ-0141`<br>`SR-REQ-0144`<br>`SR-REQ-0150`<br>`SR-REQ-0283`–`SR-REQ-0284`<br>`SR-REQ-0347`<br>`SR-REQ-0358`<br>`SR-REQ-0400`–`SR-REQ-0401`<br>`SR-REQ-0408`<br>`SR-REQ-0411`<br>`SR-REQ-0414`<br>`SR-REQ-0444`<br>`SR-REQ-0446`<br>`SR-REQ-0450`–`SR-REQ-0451`<br>`SR-REQ-0493`<br>`SR-REQ-0516`<br>`SR-REQ-0537` |
 | SR-NEED-0007 | 239 | `SR-REQ-0001`<br>`SR-REQ-0005`–`SR-REQ-0006`<br>`SR-REQ-0009`<br>`SR-REQ-0013`<br>`SR-REQ-0016`<br>`SR-REQ-0020`–`SR-REQ-0021`<br>`SR-REQ-0029`<br>`SR-REQ-0035`<br>`SR-REQ-0041`<br>`SR-REQ-0051`<br>`SR-REQ-0054`–`SR-REQ-0056`<br>`SR-REQ-0059`<br>`SR-REQ-0083`–`SR-REQ-0085`<br>`SR-REQ-0087`–`SR-REQ-0089`<br>`SR-REQ-0091`–`SR-REQ-0094`<br>`SR-REQ-0098`–`SR-REQ-0100`<br>`SR-REQ-0102`<br>`SR-REQ-0104`<br>`SR-REQ-0110`<br>`SR-REQ-0114`<br>`SR-REQ-0117`<br>`SR-REQ-0145`<br>`SR-REQ-0147`<br>`SR-REQ-0149`<br>`SR-REQ-0151`<br>`SR-REQ-0164`<br>`SR-REQ-0179`–`SR-REQ-0189`<br>`SR-REQ-0191`<br>`SR-REQ-0193`–`SR-REQ-0195`<br>`SR-REQ-0202`–`SR-REQ-0203`<br>`SR-REQ-0205`<br>`SR-REQ-0207`–`SR-REQ-0208`<br>`SR-REQ-0210`–`SR-REQ-0215`<br>`SR-REQ-0217`<br>`SR-REQ-0221`–`SR-REQ-0222`<br>`SR-REQ-0225`<br>`SR-REQ-0227`<br>`SR-REQ-0229`–`SR-REQ-0230`<br>`SR-REQ-0237`–`SR-REQ-0238`<br>`SR-REQ-0240`<br>`SR-REQ-0243`<br>`SR-REQ-0252`<br>`SR-REQ-0254`–`SR-REQ-0256`<br>`SR-REQ-0261`–`SR-REQ-0263`<br>`SR-REQ-0267`<br>`SR-REQ-0270`–`SR-REQ-0271`<br>`SR-REQ-0281`<br>`SR-REQ-0294`–`SR-REQ-0295`<br>`SR-REQ-0297`–`SR-REQ-0298`<br>`SR-REQ-0303`<br>`SR-REQ-0314`–`SR-REQ-0315`<br>`SR-REQ-0325`<br>`SR-REQ-0327`–`SR-REQ-0328`<br>`SR-REQ-0330`<br>`SR-REQ-0332`<br>`SR-REQ-0338`<br>`SR-REQ-0340`<br>`SR-REQ-0346`<br>`SR-REQ-0352`–`SR-REQ-0354`<br>`SR-REQ-0356`–`SR-REQ-0357`<br>`SR-REQ-0359`<br>`SR-REQ-0361`<br>`SR-REQ-0363`<br>`SR-REQ-0371`<br>`SR-REQ-0373`<br>`SR-REQ-0375`–`SR-REQ-0377`<br>`SR-REQ-0379`–`SR-REQ-0382`<br>`SR-REQ-0384`–`SR-REQ-0385`<br>`SR-REQ-0388`–`SR-REQ-0389`<br>`SR-REQ-0391`–`SR-REQ-0392`<br>`SR-REQ-0397`–`SR-REQ-0398`<br>`SR-REQ-0400`<br>`SR-REQ-0404`–`SR-REQ-0407`<br>`SR-REQ-0410`<br>`SR-REQ-0412`–`SR-REQ-0413`<br>`SR-REQ-0415`<br>`SR-REQ-0417`<br>`SR-REQ-0420`<br>`SR-REQ-0423`<br>`SR-REQ-0425`<br>`SR-REQ-0435`–`SR-REQ-0436`<br>`SR-REQ-0438`–`SR-REQ-0440`<br>`SR-REQ-0442`–`SR-REQ-0443`<br>`SR-REQ-0446`<br>`SR-REQ-0449`<br>`SR-REQ-0459`<br>`SR-REQ-0463`–`SR-REQ-0465`<br>`SR-REQ-0468`<br>`SR-REQ-0470`<br>`SR-REQ-0472`–`SR-REQ-0480`<br>`SR-REQ-0484`–`SR-REQ-0492`<br>`SR-REQ-0494`–`SR-REQ-0499`<br>`SR-REQ-0506`<br>`SR-REQ-0522`–`SR-REQ-0523`<br>`SR-REQ-0526`<br>`SR-REQ-0533`–`SR-REQ-0534`<br>`SR-REQ-0539`<br>`SR-REQ-0543`<br>`SR-REQ-0548`<br>`SR-REQ-0573`–`SR-REQ-0600`<br>`SR-REQ-0603`<br>`SR-REQ-0606`<br>`SR-REQ-0614`<br>`SR-REQ-0617`<br>`SR-REQ-0622`–`SR-REQ-0623`<br>`SR-REQ-0627`<br>`SR-REQ-0631`–`SR-REQ-0633`<br>`SR-REQ-0636`–`SR-REQ-0637`<br>`SR-REQ-0645`<br>`SR-REQ-0650`<br>`SR-REQ-0666`<br>`SR-REQ-0679`<br>`SR-REQ-0689`<br>`SR-REQ-0694`<br>`SR-REQ-0697`<br>`SR-REQ-0713`–`SR-REQ-0714`<br>`SR-REQ-0722`<br>`SR-REQ-0729` |
-| SR-NEED-0008 | 121 | `SR-REQ-0018`<br>`SR-REQ-0083`<br>`SR-REQ-0090`<br>`SR-REQ-0116`<br>`SR-REQ-0142`<br>`SR-REQ-0154`–`SR-REQ-0170`<br>`SR-REQ-0172`–`SR-REQ-0174`<br>`SR-REQ-0176`–`SR-REQ-0180`<br>`SR-REQ-0182`–`SR-REQ-0183`<br>`SR-REQ-0185`<br>`SR-REQ-0192`<br>`SR-REQ-0200`<br>`SR-REQ-0219`<br>`SR-REQ-0222`–`SR-REQ-0228`<br>`SR-REQ-0230`<br>`SR-REQ-0236`<br>`SR-REQ-0240`<br>`SR-REQ-0242`<br>`SR-REQ-0327`<br>`SR-REQ-0376`–`SR-REQ-0380`<br>`SR-REQ-0382`<br>`SR-REQ-0384`<br>`SR-REQ-0386`<br>`SR-REQ-0392`<br>`SR-REQ-0426`–`SR-REQ-0429`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0481`<br>`SR-REQ-0487`–`SR-REQ-0490`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0543`<br>`SR-REQ-0549`–`SR-REQ-0572`<br>`SR-REQ-0608`<br>`SR-REQ-0610`<br>`SR-REQ-0616`<br>`SR-REQ-0624`–`SR-REQ-0628`<br>`SR-REQ-0630`<br>`SR-REQ-0632`<br>`SR-REQ-0635`<br>`SR-REQ-0643`–`SR-REQ-0649`<br>`SR-REQ-0670`<br>`SR-REQ-0675`<br>`SR-REQ-0689`<br>`SR-REQ-0691`<br>`SR-REQ-0700`<br>`SR-REQ-0705`<br>`SR-REQ-0714`<br>`SR-REQ-0726` |
-| SR-NEED-0009 | 195 | `SR-REQ-0019`–`SR-REQ-0020`<br>`SR-REQ-0023`<br>`SR-REQ-0025`–`SR-REQ-0026`<br>`SR-REQ-0030`–`SR-REQ-0031`<br>`SR-REQ-0033`–`SR-REQ-0037`<br>`SR-REQ-0040`<br>`SR-REQ-0043`–`SR-REQ-0048`<br>`SR-REQ-0061`–`SR-REQ-0062`<br>`SR-REQ-0064`<br>`SR-REQ-0071`<br>`SR-REQ-0081`<br>`SR-REQ-0092`<br>`SR-REQ-0102`–`SR-REQ-0103`<br>`SR-REQ-0105`<br>`SR-REQ-0107`<br>`SR-REQ-0111`–`SR-REQ-0112`<br>`SR-REQ-0122`<br>`SR-REQ-0129`<br>`SR-REQ-0132`–`SR-REQ-0135`<br>`SR-REQ-0138`<br>`SR-REQ-0143`<br>`SR-REQ-0145`–`SR-REQ-0148`<br>`SR-REQ-0150`–`SR-REQ-0153`<br>`SR-REQ-0156`–`SR-REQ-0157`<br>`SR-REQ-0163`<br>`SR-REQ-0171`–`SR-REQ-0172`<br>`SR-REQ-0178`<br>`SR-REQ-0184`<br>`SR-REQ-0196`–`SR-REQ-0199`<br>`SR-REQ-0204`<br>`SR-REQ-0206`–`SR-REQ-0208`<br>`SR-REQ-0216`<br>`SR-REQ-0218`<br>`SR-REQ-0220`<br>`SR-REQ-0234`<br>`SR-REQ-0241`<br>`SR-REQ-0245`–`SR-REQ-0246`<br>`SR-REQ-0250`<br>`SR-REQ-0253`<br>`SR-REQ-0257`–`SR-REQ-0260`<br>`SR-REQ-0262`<br>`SR-REQ-0265`–`SR-REQ-0266`<br>`SR-REQ-0268`–`SR-REQ-0269`<br>`SR-REQ-0271`<br>`SR-REQ-0273`–`SR-REQ-0275`<br>`SR-REQ-0279`<br>`SR-REQ-0285`<br>`SR-REQ-0317`–`SR-REQ-0319`<br>`SR-REQ-0322`<br>`SR-REQ-0328`<br>`SR-REQ-0330`–`SR-REQ-0331`<br>`SR-REQ-0339`<br>`SR-REQ-0342`<br>`SR-REQ-0345`<br>`SR-REQ-0357`<br>`SR-REQ-0364`<br>`SR-REQ-0370`<br>`SR-REQ-0375`<br>`SR-REQ-0383`<br>`SR-REQ-0385`<br>`SR-REQ-0387`–`SR-REQ-0389`<br>`SR-REQ-0401`<br>`SR-REQ-0406`–`SR-REQ-0407`<br>`SR-REQ-0412`–`SR-REQ-0413`<br>`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0425`<br>`SR-REQ-0429`–`SR-REQ-0439`<br>`SR-REQ-0441`–`SR-REQ-0442`<br>`SR-REQ-0445`<br>`SR-REQ-0447`–`SR-REQ-0448`<br>`SR-REQ-0452`–`SR-REQ-0462`<br>`SR-REQ-0464`<br>`SR-REQ-0466`<br>`SR-REQ-0478`<br>`SR-REQ-0482`–`SR-REQ-0483`<br>`SR-REQ-0485`–`SR-REQ-0486`<br>`SR-REQ-0491`–`SR-REQ-0494`<br>`SR-REQ-0496`<br>`SR-REQ-0499`–`SR-REQ-0501`<br>`SR-REQ-0504`–`SR-REQ-0505`<br>`SR-REQ-0510`–`SR-REQ-0514`<br>`SR-REQ-0536`<br>`SR-REQ-0607`<br>`SR-REQ-0609`<br>`SR-REQ-0616`<br>`SR-REQ-0618`<br>`SR-REQ-0620`–`SR-REQ-0621`<br>`SR-REQ-0629`<br>`SR-REQ-0638`–`SR-REQ-0644`<br>`SR-REQ-0648`<br>`SR-REQ-0650`<br>`SR-REQ-0655`<br>`SR-REQ-0657`<br>`SR-REQ-0660`<br>`SR-REQ-0671`<br>`SR-REQ-0674`<br>`SR-REQ-0678`–`SR-REQ-0679`<br>`SR-REQ-0683`<br>`SR-REQ-0685`–`SR-REQ-0688`<br>`SR-REQ-0690`<br>`SR-REQ-0697`<br>`SR-REQ-0724`–`SR-REQ-0725` |
+| SR-NEED-0008 | 130 | `SR-REQ-0018`<br>`SR-REQ-0083`<br>`SR-REQ-0090`<br>`SR-REQ-0116`<br>`SR-REQ-0142`<br>`SR-REQ-0154`–`SR-REQ-0170`<br>`SR-REQ-0172`–`SR-REQ-0174`<br>`SR-REQ-0176`–`SR-REQ-0180`<br>`SR-REQ-0182`–`SR-REQ-0183`<br>`SR-REQ-0185`<br>`SR-REQ-0192`<br>`SR-REQ-0200`<br>`SR-REQ-0219`<br>`SR-REQ-0222`–`SR-REQ-0228`<br>`SR-REQ-0230`<br>`SR-REQ-0236`<br>`SR-REQ-0240`<br>`SR-REQ-0242`<br>`SR-REQ-0327`<br>`SR-REQ-0376`–`SR-REQ-0380`<br>`SR-REQ-0382`<br>`SR-REQ-0384`<br>`SR-REQ-0386`<br>`SR-REQ-0392`<br>`SR-REQ-0426`–`SR-REQ-0429`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0481`<br>`SR-REQ-0487`–`SR-REQ-0490`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0543`<br>`SR-REQ-0549`–`SR-REQ-0572`<br>`SR-REQ-0608`<br>`SR-REQ-0610`<br>`SR-REQ-0616`<br>`SR-REQ-0624`–`SR-REQ-0628`<br>`SR-REQ-0630`<br>`SR-REQ-0632`<br>`SR-REQ-0635`<br>`SR-REQ-0643`–`SR-REQ-0649`<br>`SR-REQ-0670`<br>`SR-REQ-0675`<br>`SR-REQ-0689`<br>`SR-REQ-0691`<br>`SR-REQ-0700`<br>`SR-REQ-0705`<br>`SR-REQ-0714`<br>`SR-REQ-0726`<br>`SR-REQ-0731`–`SR-REQ-0733`<br>`SR-REQ-0735`–`SR-REQ-0738`<br>`SR-REQ-0740`<br>`SR-REQ-0742` |
+| SR-NEED-0009 | 198 | `SR-REQ-0019`–`SR-REQ-0020`<br>`SR-REQ-0023`<br>`SR-REQ-0025`–`SR-REQ-0026`<br>`SR-REQ-0030`–`SR-REQ-0031`<br>`SR-REQ-0033`–`SR-REQ-0037`<br>`SR-REQ-0040`<br>`SR-REQ-0043`–`SR-REQ-0048`<br>`SR-REQ-0061`–`SR-REQ-0062`<br>`SR-REQ-0064`<br>`SR-REQ-0071`<br>`SR-REQ-0081`<br>`SR-REQ-0092`<br>`SR-REQ-0102`–`SR-REQ-0103`<br>`SR-REQ-0105`<br>`SR-REQ-0107`<br>`SR-REQ-0111`–`SR-REQ-0112`<br>`SR-REQ-0122`<br>`SR-REQ-0129`<br>`SR-REQ-0132`–`SR-REQ-0135`<br>`SR-REQ-0138`<br>`SR-REQ-0143`<br>`SR-REQ-0145`–`SR-REQ-0148`<br>`SR-REQ-0150`–`SR-REQ-0153`<br>`SR-REQ-0156`–`SR-REQ-0157`<br>`SR-REQ-0163`<br>`SR-REQ-0171`–`SR-REQ-0172`<br>`SR-REQ-0178`<br>`SR-REQ-0184`<br>`SR-REQ-0196`–`SR-REQ-0199`<br>`SR-REQ-0204`<br>`SR-REQ-0206`–`SR-REQ-0208`<br>`SR-REQ-0216`<br>`SR-REQ-0218`<br>`SR-REQ-0220`<br>`SR-REQ-0234`<br>`SR-REQ-0241`<br>`SR-REQ-0245`–`SR-REQ-0246`<br>`SR-REQ-0250`<br>`SR-REQ-0253`<br>`SR-REQ-0257`–`SR-REQ-0260`<br>`SR-REQ-0262`<br>`SR-REQ-0265`–`SR-REQ-0266`<br>`SR-REQ-0268`–`SR-REQ-0269`<br>`SR-REQ-0271`<br>`SR-REQ-0273`–`SR-REQ-0275`<br>`SR-REQ-0279`<br>`SR-REQ-0285`<br>`SR-REQ-0317`–`SR-REQ-0319`<br>`SR-REQ-0322`<br>`SR-REQ-0328`<br>`SR-REQ-0330`–`SR-REQ-0331`<br>`SR-REQ-0339`<br>`SR-REQ-0342`<br>`SR-REQ-0345`<br>`SR-REQ-0357`<br>`SR-REQ-0364`<br>`SR-REQ-0370`<br>`SR-REQ-0375`<br>`SR-REQ-0383`<br>`SR-REQ-0385`<br>`SR-REQ-0387`–`SR-REQ-0389`<br>`SR-REQ-0401`<br>`SR-REQ-0406`–`SR-REQ-0407`<br>`SR-REQ-0412`–`SR-REQ-0413`<br>`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0425`<br>`SR-REQ-0429`–`SR-REQ-0439`<br>`SR-REQ-0441`–`SR-REQ-0442`<br>`SR-REQ-0445`<br>`SR-REQ-0447`–`SR-REQ-0448`<br>`SR-REQ-0452`–`SR-REQ-0462`<br>`SR-REQ-0464`<br>`SR-REQ-0466`<br>`SR-REQ-0478`<br>`SR-REQ-0482`–`SR-REQ-0483`<br>`SR-REQ-0485`–`SR-REQ-0486`<br>`SR-REQ-0491`–`SR-REQ-0494`<br>`SR-REQ-0496`<br>`SR-REQ-0499`–`SR-REQ-0501`<br>`SR-REQ-0504`–`SR-REQ-0505`<br>`SR-REQ-0510`–`SR-REQ-0514`<br>`SR-REQ-0536`<br>`SR-REQ-0607`<br>`SR-REQ-0609`<br>`SR-REQ-0616`<br>`SR-REQ-0618`<br>`SR-REQ-0620`–`SR-REQ-0621`<br>`SR-REQ-0629`<br>`SR-REQ-0638`–`SR-REQ-0644`<br>`SR-REQ-0648`<br>`SR-REQ-0650`<br>`SR-REQ-0655`<br>`SR-REQ-0657`<br>`SR-REQ-0660`<br>`SR-REQ-0671`<br>`SR-REQ-0674`<br>`SR-REQ-0678`–`SR-REQ-0679`<br>`SR-REQ-0683`<br>`SR-REQ-0685`–`SR-REQ-0688`<br>`SR-REQ-0690`<br>`SR-REQ-0697`<br>`SR-REQ-0724`–`SR-REQ-0725`<br>`SR-REQ-0733`–`SR-REQ-0734`<br>`SR-REQ-0741` |
 | SR-NEED-0010 | 14 | `SR-REQ-0058`<br>`SR-REQ-0109`<br>`SR-REQ-0118`–`SR-REQ-0119`<br>`SR-REQ-0121`–`SR-REQ-0125`<br>`SR-REQ-0128`<br>`SR-REQ-0211`<br>`SR-REQ-0395`<br>`SR-REQ-0408`<br>`SR-REQ-0546` |
-| SR-NEED-0011 | 112 | `SR-REQ-0002`–`SR-REQ-0003`<br>`SR-REQ-0023`<br>`SR-REQ-0100`<br>`SR-REQ-0117`<br>`SR-REQ-0128`<br>`SR-REQ-0135`<br>`SR-REQ-0165`–`SR-REQ-0168`<br>`SR-REQ-0170`<br>`SR-REQ-0175`<br>`SR-REQ-0188`–`SR-REQ-0191`<br>`SR-REQ-0195`–`SR-REQ-0206`<br>`SR-REQ-0221`<br>`SR-REQ-0224`–`SR-REQ-0225`<br>`SR-REQ-0229`<br>`SR-REQ-0236`<br>`SR-REQ-0239`<br>`SR-REQ-0245`<br>`SR-REQ-0249`<br>`SR-REQ-0252`–`SR-REQ-0258`<br>`SR-REQ-0260`–`SR-REQ-0261`<br>`SR-REQ-0266`–`SR-REQ-0267`<br>`SR-REQ-0274`<br>`SR-REQ-0287`<br>`SR-REQ-0289`<br>`SR-REQ-0295`–`SR-REQ-0296`<br>`SR-REQ-0304`<br>`SR-REQ-0306`<br>`SR-REQ-0315`<br>`SR-REQ-0323`–`SR-REQ-0324`<br>`SR-REQ-0329`<br>`SR-REQ-0341`<br>`SR-REQ-0344`<br>`SR-REQ-0348`<br>`SR-REQ-0350`<br>`SR-REQ-0355`<br>`SR-REQ-0359`–`SR-REQ-0360`<br>`SR-REQ-0363`<br>`SR-REQ-0373`<br>`SR-REQ-0390`<br>`SR-REQ-0393`–`SR-REQ-0394`<br>`SR-REQ-0458`<br>`SR-REQ-0460`–`SR-REQ-0461`<br>`SR-REQ-0465`–`SR-REQ-0466`<br>`SR-REQ-0469`<br>`SR-REQ-0479`–`SR-REQ-0480`<br>`SR-REQ-0484`<br>`SR-REQ-0506`–`SR-REQ-0507`<br>`SR-REQ-0511`<br>`SR-REQ-0513`<br>`SR-REQ-0518`<br>`SR-REQ-0523`<br>`SR-REQ-0527`–`SR-REQ-0528`<br>`SR-REQ-0532`<br>`SR-REQ-0535`<br>`SR-REQ-0538`<br>`SR-REQ-0540`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0609`<br>`SR-REQ-0615`<br>`SR-REQ-0619`<br>`SR-REQ-0621`<br>`SR-REQ-0625`–`SR-REQ-0626`<br>`SR-REQ-0634`<br>`SR-REQ-0645`<br>`SR-REQ-0647`<br>`SR-REQ-0677`<br>`SR-REQ-0680`<br>`SR-REQ-0690`<br>`SR-REQ-0692`<br>`SR-REQ-0695`<br>`SR-REQ-0702`–`SR-REQ-0704`<br>`SR-REQ-0717` |
-| SR-NEED-0012 | 142 | `SR-REQ-0004`<br>`SR-REQ-0007`–`SR-REQ-0008`<br>`SR-REQ-0011`<br>`SR-REQ-0013`–`SR-REQ-0015`<br>`SR-REQ-0017`–`SR-REQ-0019`<br>`SR-REQ-0027`–`SR-REQ-0028`<br>`SR-REQ-0038`–`SR-REQ-0039`<br>`SR-REQ-0053`<br>`SR-REQ-0057`<br>`SR-REQ-0069`<br>`SR-REQ-0079`–`SR-REQ-0080`<br>`SR-REQ-0098`<br>`SR-REQ-0110`<br>`SR-REQ-0146`<br>`SR-REQ-0159`–`SR-REQ-0160`<br>`SR-REQ-0194`<br>`SR-REQ-0201`–`SR-REQ-0202`<br>`SR-REQ-0209`<br>`SR-REQ-0212`<br>`SR-REQ-0214`–`SR-REQ-0215`<br>`SR-REQ-0223`–`SR-REQ-0224`<br>`SR-REQ-0226`<br>`SR-REQ-0229`–`SR-REQ-0230`<br>`SR-REQ-0243`–`SR-REQ-0244`<br>`SR-REQ-0249`<br>`SR-REQ-0263`–`SR-REQ-0265`<br>`SR-REQ-0268`<br>`SR-REQ-0272`<br>`SR-REQ-0282`<br>`SR-REQ-0286`–`SR-REQ-0296`<br>`SR-REQ-0298`<br>`SR-REQ-0301`<br>`SR-REQ-0306`<br>`SR-REQ-0316`<br>`SR-REQ-0335`<br>`SR-REQ-0337`<br>`SR-REQ-0343`<br>`SR-REQ-0348`–`SR-REQ-0350`<br>`SR-REQ-0360`<br>`SR-REQ-0367`<br>`SR-REQ-0376`–`SR-REQ-0379`<br>`SR-REQ-0381`<br>`SR-REQ-0391`–`SR-REQ-0394`<br>`SR-REQ-0396`<br>`SR-REQ-0404`<br>`SR-REQ-0419`–`SR-REQ-0425`<br>`SR-REQ-0474`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0496`–`SR-REQ-0498`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0508`<br>`SR-REQ-0515`<br>`SR-REQ-0517`–`SR-REQ-0523`<br>`SR-REQ-0528`<br>`SR-REQ-0538`<br>`SR-REQ-0542`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0547`<br>`SR-REQ-0570`<br>`SR-REQ-0581`–`SR-REQ-0582`<br>`SR-REQ-0587`–`SR-REQ-0591`<br>`SR-REQ-0596`–`SR-REQ-0597`<br>`SR-REQ-0605`<br>`SR-REQ-0615`<br>`SR-REQ-0632`<br>`SR-REQ-0640`–`SR-REQ-0641`<br>`SR-REQ-0658`–`SR-REQ-0659`<br>`SR-REQ-0661`<br>`SR-REQ-0667`<br>`SR-REQ-0669`–`SR-REQ-0670`<br>`SR-REQ-0675`–`SR-REQ-0676`<br>`SR-REQ-0684`<br>`SR-REQ-0696`<br>`SR-REQ-0699`–`SR-REQ-0701`<br>`SR-REQ-0722`<br>`SR-REQ-0727`–`SR-REQ-0730` |
+| SR-NEED-0011 | 116 | `SR-REQ-0002`–`SR-REQ-0003`<br>`SR-REQ-0023`<br>`SR-REQ-0100`<br>`SR-REQ-0117`<br>`SR-REQ-0128`<br>`SR-REQ-0135`<br>`SR-REQ-0165`–`SR-REQ-0168`<br>`SR-REQ-0170`<br>`SR-REQ-0175`<br>`SR-REQ-0188`–`SR-REQ-0191`<br>`SR-REQ-0195`–`SR-REQ-0206`<br>`SR-REQ-0221`<br>`SR-REQ-0224`–`SR-REQ-0225`<br>`SR-REQ-0229`<br>`SR-REQ-0236`<br>`SR-REQ-0239`<br>`SR-REQ-0245`<br>`SR-REQ-0249`<br>`SR-REQ-0252`–`SR-REQ-0258`<br>`SR-REQ-0260`–`SR-REQ-0261`<br>`SR-REQ-0266`–`SR-REQ-0267`<br>`SR-REQ-0274`<br>`SR-REQ-0287`<br>`SR-REQ-0289`<br>`SR-REQ-0295`–`SR-REQ-0296`<br>`SR-REQ-0304`<br>`SR-REQ-0306`<br>`SR-REQ-0315`<br>`SR-REQ-0323`–`SR-REQ-0324`<br>`SR-REQ-0329`<br>`SR-REQ-0341`<br>`SR-REQ-0344`<br>`SR-REQ-0348`<br>`SR-REQ-0350`<br>`SR-REQ-0355`<br>`SR-REQ-0359`–`SR-REQ-0360`<br>`SR-REQ-0363`<br>`SR-REQ-0373`<br>`SR-REQ-0390`<br>`SR-REQ-0393`–`SR-REQ-0394`<br>`SR-REQ-0458`<br>`SR-REQ-0460`–`SR-REQ-0461`<br>`SR-REQ-0465`–`SR-REQ-0466`<br>`SR-REQ-0469`<br>`SR-REQ-0479`–`SR-REQ-0480`<br>`SR-REQ-0484`<br>`SR-REQ-0506`–`SR-REQ-0507`<br>`SR-REQ-0511`<br>`SR-REQ-0513`<br>`SR-REQ-0518`<br>`SR-REQ-0523`<br>`SR-REQ-0527`–`SR-REQ-0528`<br>`SR-REQ-0532`<br>`SR-REQ-0535`<br>`SR-REQ-0538`<br>`SR-REQ-0540`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0609`<br>`SR-REQ-0615`<br>`SR-REQ-0619`<br>`SR-REQ-0621`<br>`SR-REQ-0625`–`SR-REQ-0626`<br>`SR-REQ-0634`<br>`SR-REQ-0645`<br>`SR-REQ-0647`<br>`SR-REQ-0677`<br>`SR-REQ-0680`<br>`SR-REQ-0690`<br>`SR-REQ-0692`<br>`SR-REQ-0695`<br>`SR-REQ-0702`–`SR-REQ-0704`<br>`SR-REQ-0717`<br>`SR-REQ-0735`–`SR-REQ-0736`<br>`SR-REQ-0739`<br>`SR-REQ-0741` |
+| SR-NEED-0012 | 145 | `SR-REQ-0004`<br>`SR-REQ-0007`–`SR-REQ-0008`<br>`SR-REQ-0011`<br>`SR-REQ-0013`–`SR-REQ-0015`<br>`SR-REQ-0017`–`SR-REQ-0019`<br>`SR-REQ-0027`–`SR-REQ-0028`<br>`SR-REQ-0038`–`SR-REQ-0039`<br>`SR-REQ-0053`<br>`SR-REQ-0057`<br>`SR-REQ-0069`<br>`SR-REQ-0079`–`SR-REQ-0080`<br>`SR-REQ-0098`<br>`SR-REQ-0110`<br>`SR-REQ-0146`<br>`SR-REQ-0159`–`SR-REQ-0160`<br>`SR-REQ-0194`<br>`SR-REQ-0201`–`SR-REQ-0202`<br>`SR-REQ-0209`<br>`SR-REQ-0212`<br>`SR-REQ-0214`–`SR-REQ-0215`<br>`SR-REQ-0223`–`SR-REQ-0224`<br>`SR-REQ-0226`<br>`SR-REQ-0229`–`SR-REQ-0230`<br>`SR-REQ-0243`–`SR-REQ-0244`<br>`SR-REQ-0249`<br>`SR-REQ-0263`–`SR-REQ-0265`<br>`SR-REQ-0268`<br>`SR-REQ-0272`<br>`SR-REQ-0282`<br>`SR-REQ-0286`–`SR-REQ-0296`<br>`SR-REQ-0298`<br>`SR-REQ-0301`<br>`SR-REQ-0306`<br>`SR-REQ-0316`<br>`SR-REQ-0335`<br>`SR-REQ-0337`<br>`SR-REQ-0343`<br>`SR-REQ-0348`–`SR-REQ-0350`<br>`SR-REQ-0360`<br>`SR-REQ-0367`<br>`SR-REQ-0376`–`SR-REQ-0379`<br>`SR-REQ-0381`<br>`SR-REQ-0391`–`SR-REQ-0394`<br>`SR-REQ-0396`<br>`SR-REQ-0404`<br>`SR-REQ-0419`–`SR-REQ-0425`<br>`SR-REQ-0474`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0496`–`SR-REQ-0498`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0508`<br>`SR-REQ-0515`<br>`SR-REQ-0517`–`SR-REQ-0523`<br>`SR-REQ-0528`<br>`SR-REQ-0538`<br>`SR-REQ-0542`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0547`<br>`SR-REQ-0570`<br>`SR-REQ-0581`–`SR-REQ-0582`<br>`SR-REQ-0587`–`SR-REQ-0591`<br>`SR-REQ-0596`–`SR-REQ-0597`<br>`SR-REQ-0605`<br>`SR-REQ-0615`<br>`SR-REQ-0632`<br>`SR-REQ-0640`–`SR-REQ-0641`<br>`SR-REQ-0658`–`SR-REQ-0659`<br>`SR-REQ-0661`<br>`SR-REQ-0667`<br>`SR-REQ-0669`–`SR-REQ-0670`<br>`SR-REQ-0675`–`SR-REQ-0676`<br>`SR-REQ-0684`<br>`SR-REQ-0696`<br>`SR-REQ-0699`–`SR-REQ-0701`<br>`SR-REQ-0722`<br>`SR-REQ-0727`–`SR-REQ-0732`<br>`SR-REQ-0742` |
 | SR-NEED-0013 | 99 | `SR-REQ-0159`–`SR-REQ-0160`<br>`SR-REQ-0175`<br>`SR-REQ-0179`–`SR-REQ-0180`<br>`SR-REQ-0189`<br>`SR-REQ-0204`–`SR-REQ-0206`<br>`SR-REQ-0209`<br>`SR-REQ-0217`–`SR-REQ-0218`<br>`SR-REQ-0221`<br>`SR-REQ-0231`–`SR-REQ-0233`<br>`SR-REQ-0235`–`SR-REQ-0239`<br>`SR-REQ-0241`–`SR-REQ-0242`<br>`SR-REQ-0252`–`SR-REQ-0262`<br>`SR-REQ-0308`<br>`SR-REQ-0333`<br>`SR-REQ-0341`<br>`SR-REQ-0382`–`SR-REQ-0385`<br>`SR-REQ-0435`–`SR-REQ-0443`<br>`SR-REQ-0458`–`SR-REQ-0459`<br>`SR-REQ-0461`–`SR-REQ-0464`<br>`SR-REQ-0471`<br>`SR-REQ-0478`<br>`SR-REQ-0480`<br>`SR-REQ-0487`<br>`SR-REQ-0489`–`SR-REQ-0490`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0505`–`SR-REQ-0507`<br>`SR-REQ-0511`<br>`SR-REQ-0535`<br>`SR-REQ-0543`<br>`SR-REQ-0549`–`SR-REQ-0551`<br>`SR-REQ-0553`–`SR-REQ-0559`<br>`SR-REQ-0561`–`SR-REQ-0564`<br>`SR-REQ-0568`–`SR-REQ-0569`<br>`SR-REQ-0572`<br>`SR-REQ-0599`<br>`SR-REQ-0607`<br>`SR-REQ-0611`<br>`SR-REQ-0616`–`SR-REQ-0618`<br>`SR-REQ-0620`–`SR-REQ-0621`<br>`SR-REQ-0637`<br>`SR-REQ-0646`<br>`SR-REQ-0649`<br>`SR-REQ-0652` |
 | SR-NEED-0014 | 87 | `SR-REQ-0011`<br>`SR-REQ-0013`<br>`SR-REQ-0030`<br>`SR-REQ-0040`<br>`SR-REQ-0090`<br>`SR-REQ-0114`<br>`SR-REQ-0143`<br>`SR-REQ-0146`<br>`SR-REQ-0151`<br>`SR-REQ-0247`<br>`SR-REQ-0263`–`SR-REQ-0274`<br>`SR-REQ-0286`<br>`SR-REQ-0298`<br>`SR-REQ-0313`–`SR-REQ-0332`<br>`SR-REQ-0334`<br>`SR-REQ-0336`<br>`SR-REQ-0356`<br>`SR-REQ-0362`<br>`SR-REQ-0386`–`SR-REQ-0391`<br>`SR-REQ-0405`<br>`SR-REQ-0407`–`SR-REQ-0408`<br>`SR-REQ-0413`<br>`SR-REQ-0416`<br>`SR-REQ-0453`–`SR-REQ-0457`<br>`SR-REQ-0481`–`SR-REQ-0486`<br>`SR-REQ-0488`<br>`SR-REQ-0512`–`SR-REQ-0513`<br>`SR-REQ-0517`<br>`SR-REQ-0532`<br>`SR-REQ-0541`<br>`SR-REQ-0628`<br>`SR-REQ-0639`–`SR-REQ-0642`<br>`SR-REQ-0660`<br>`SR-REQ-0691`<br>`SR-REQ-0723`–`SR-REQ-0726` |
 | SR-NEED-0015 | 76 | `SR-REQ-0038`<br>`SR-REQ-0053`<br>`SR-REQ-0101`<br>`SR-REQ-0115`<br>`SR-REQ-0130`<br>`SR-REQ-0136`–`SR-REQ-0137`<br>`SR-REQ-0299`–`SR-REQ-0313`<br>`SR-REQ-0320`–`SR-REQ-0321`<br>`SR-REQ-0349`–`SR-REQ-0360`<br>`SR-REQ-0395`–`SR-REQ-0398`<br>`SR-REQ-0400`–`SR-REQ-0402`<br>`SR-REQ-0404`<br>`SR-REQ-0409`<br>`SR-REQ-0411`<br>`SR-REQ-0414`<br>`SR-REQ-0417`<br>`SR-REQ-0451`<br>`SR-REQ-0467`–`SR-REQ-0472`<br>`SR-REQ-0479`<br>`SR-REQ-0482`<br>`SR-REQ-0524`–`SR-REQ-0531`<br>`SR-REQ-0538`–`SR-REQ-0540`<br>`SR-REQ-0546`–`SR-REQ-0548`<br>`SR-REQ-0623`<br>`SR-REQ-0654`–`SR-REQ-0655`<br>`SR-REQ-0664`<br>`SR-REQ-0672` |
@@ -3098,6 +3162,7 @@ Die Kennungsprüfung umfasst automatisch und manuell vergebene Analysekennungen,
 | SR-VER-0048 | 15 | `SR-REQ-0694`<br>`SR-REQ-0700`–`SR-REQ-0705`<br>`SR-REQ-0714`–`SR-REQ-0719`<br>`SR-REQ-0721`–`SR-REQ-0722` |
 | SR-VER-0049 | 4 | `SR-REQ-0723`–`SR-REQ-0726` |
 | SR-VER-0050 | 4 | `SR-REQ-0727`–`SR-REQ-0730` |
+| SR-VER-0051 | 12 | `SR-REQ-0731`–`SR-REQ-0742` |
 
 ### 15.4 Anforderungskatalog nach Bereich
 
@@ -3148,6 +3213,7 @@ Die Kennungsprüfung umfasst automatisch und manuell vergebene Analysekennungen,
 | 12.43 Allgemeine Analyzer-Schnittstelle und Findings | 23 | `SR-REQ-0675`–`SR-REQ-0697` |
 | 12.44 Implementierter py3langid-Adapter und vollständige Ausführung | 25 | `SR-REQ-0698`–`SR-REQ-0722` |
 | 12.45 Migration, Austausch und geschlossene SRX-Präzision | 8 | `SR-REQ-0723`–`SR-REQ-0730` |
+| 12.46 Portabler Projekt-Rundweg über PatchHarbor | 12 | `SR-REQ-0731`–`SR-REQ-0742` |
 
 ### 15.5 Qualitätskennzahlen dieser Spezifikation
 
@@ -3156,10 +3222,10 @@ Die Kennungsprüfung umfasst automatisch und manuell vergebene Analysekennungen,
 | Produktziele | 10 |
 | Stakeholder-Bedarfe | 21 |
 | Nutzungsszenarien | 46 |
-| Architekturentscheidungen | 52 |
-| Normative Produktanforderungen | 730 |
-| Primäre Requirement-Solltestfälle | 730 |
-| Verifikationsverträge | 50 |
+| Architekturentscheidungen | 53 |
+| Normative Produktanforderungen | 742 |
+| Primäre Requirement-Solltestfälle | 742 |
+| Verifikationsverträge | 51 |
 | Diagnosecodes | 107 |
 | Kanonische Artefakttypen | 28 |
 | Requirements ohne Need / Verification / Solltestfall | 0 / 0 / 0 |
@@ -3186,7 +3252,7 @@ Die folgende Matrix ist der exakte Mindestumfang jedes End-to-End-Szenarios. Ein
 | SR-SCN-0010 | `SR-TC-0171`–`SR-TC-0178`<br>`SR-TC-0431`–`SR-TC-0443` | SR-E2E-0010 |
 | SR-SCN-0011 | `SR-TC-0083`–`SR-TC-0100`<br>`SR-TC-0179`–`SR-TC-0194`<br>`SR-TC-0476`–`SR-TC-0477` | SR-E2E-0011 |
 | SR-SCN-0012 | `SR-TC-0101`–`SR-TC-0107`<br>`SR-TC-0299`–`SR-TC-0312`<br>`SR-TC-0467`–`SR-TC-0472`<br>`SR-TC-0524`–`SR-TC-0531` | SR-E2E-0012 |
-| SR-SCN-0013 | `SR-TC-0223`–`SR-TC-0230`<br>`SR-TC-0386`–`SR-TC-0394`<br>`SR-TC-0487`–`SR-TC-0490`<br>`SR-TC-0544`–`SR-TC-0545` | SR-E2E-0013 |
+| SR-SCN-0013 | `SR-TC-0223`–`SR-TC-0230`<br>`SR-TC-0386`–`SR-TC-0394`<br>`SR-TC-0487`–`SR-TC-0490`<br>`SR-TC-0544`–`SR-TC-0545`<br>`SR-TC-0731`–`SR-TC-0742` | SR-E2E-0013 |
 | SR-SCN-0014 | `SR-TC-0216`–`SR-TC-0218`<br>`SR-TC-0231`–`SR-TC-0243`<br>`SR-TC-0435`–`SR-TC-0443`<br>`SR-TC-0504`–`SR-TC-0505`<br>`SR-TC-0507` | SR-E2E-0014 |
 | SR-SCN-0015 | `SR-TC-0244`–`SR-TC-0251`<br>`SR-TC-0361`–`SR-TC-0375`<br>`SR-TC-0508`–`SR-TC-0510`<br>`SR-TC-0541`–`SR-TC-0542` | SR-E2E-0015 |
 | SR-SCN-0016 | `SR-TC-0252`–`SR-TC-0262`<br>`SR-TC-0458`–`SR-TC-0462`<br>`SR-TC-0511` | SR-E2E-0016 |
@@ -3233,7 +3299,7 @@ Der primäre Testfall zu `SR-REQ-NNNN` heißt `SR-TC-NNNN`. Im Implementierungsr
 - erforderliche Umgebung und Ressourcen;
 - erzeugte Evidence-Art und Bindung an Plattform-/Konfigurationshash soweit anwendbar.
 
-Ein Testfall gilt nur dann als bestanden, wenn seine aktuelle Evidence exakt Manifesthash, Requirement-ID, Spezifikationshash und Tool-Build bindet. Die 650 Zuordnungen in diesem Dokument definieren Soll-Testfälle; sie sind kein Bericht über bereits ausgeführte Produkttests. Für SR-TC-0549 bis SR-TC-0650 gelten zusätzlich Kapitel 14.6–14.8 und Anhang N bis R.
+Ein Testfall gilt nur dann als bestanden, wenn seine aktuelle Evidence exakt Manifesthash, Requirement-ID, Spezifikationshash und Tool-Build bindet. Die 742 Zuordnungen in dieser Dokumentversion definieren Soll-Testfälle; sie sind kein Bericht über bereits ausgeführte Produkttests. Für SR-TC-0549 bis SR-TC-0650 gelten zusätzlich Kapitel 14.6–14.8 und Anhang N bis R.
 
 ---
 
@@ -3255,7 +3321,7 @@ Ein `approved` Requirement kann unverifiziert sein. Ein technisch bestandener Te
 
 Das Zielrelease `SpecRoad Single-Repository Workbench 0.2.0` gilt als abnahmefähig, wenn alle folgenden Bedingungen erfüllt sind:
 
-1. Alle unbedingten Anforderungen `SR-REQ-0001` bis `SR-REQ-0730` besitzen den Umsetzungsstatus `implemented` und aktuelle bestandene Evidence für ihren primären Testfall.
+1. Alle unbedingten Anforderungen `SR-REQ-0001` bis `SR-REQ-0742` besitzen den Umsetzungsstatus `implemented` und aktuelle bestandene Evidence für ihren primären Testfall.
 2. Die Verifikationen `SR-VER-0001` bis `SR-VER-0050` bestehen; ein `waived`-Ergebnis erfüllt die Release-Abnahme nicht.
 3. Die Szenarien `SR-SCN-0001` bis `SR-SCN-0046` führen mindestens ihren exakten Umfang aus Kapitel 15.6 aus und erzeugen aktuelle `SR-E2E-*`-Evidence.
 4. `specroad validate --strict --format json` liefert für Vollprojekt, Referenzkonfigurationen und zulässige partielle Fixtures Exit Code 0.
@@ -3403,6 +3469,16 @@ Mehrsprachigkeit, explizite Verbindlichkeit und das generische Analyzer-Datenmod
 
 B01 (automatische Analyzer-Fortsetzung) wird durch den einheitlichen Vertrag in T.5/T.9/P.2 geschlossen. A02 (Analysekennung versus Schreib-Idempotenz) wird durch den eigenständigen Typ und Vergabevertrag in T.3, die CLI-Option `--analysis-id`, die Pair-Bindung in T.5 und die Beschränkung der Write-Receipts entschieden. Bestehende Requirement-IDs und Zielrelease bleiben unverändert. 14.12 und R-64 bis R-75 definieren die dazugehörigen Regressionen. „Geschlossen“ bezeichnet hier die ausdrücklich getroffene Vertragsentscheidung, nicht einen bereits ausgeführten Produktnachweis. Die technische Reviewentscheidung wird gesondert an die veröffentlichte PDF gebunden dokumentiert.
 
+### 20.7 Nutzerbeauftragte Transporterweiterung v0.2.8
+
+Die neue Sektion 12.46 und Anhang W konkretisieren den vorhandenen Sandbox-
+Rundweg auf Basis der öffentlichen PatchHarbor-Python-API. Neu sind die
+Anforderungen 0731–0742, SR-VER-0051 und SR-DEC-0053; bestehende IDs bleiben
+erhalten. Die Portabilitätsverträge 0224/0225 unterscheiden mitgelieferte
+Transportkomponenten und ausdrücklich lokale Git-Funktionen. Alle neuen
+Testfallmanifeste bleiben `open`; aktuelle Katalogbindungen ersetzen keine
+historische Evidence und erklären keine neue Produktfunktion als fertig.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -3445,6 +3521,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.8 | 2026-10-14 | Nutzerbeauftragte Featureplanung | PatchHarbor-Python-API als Basis für portablen Projekt-/PYZ-Hinweg, gebundenen Proposal-Rückweg und kontrollierte lokale Übernahme; zwölf neue Requirements und explizite öffentliche API-Abhängigkeit, keine Implementierungs-/Freigabebehauptung. |
 | 0.2.7 | 2026-09-14 | Fachliche Korrekturfassung | B01/A02 aus der Prüfung v0.2.6: automatische externe Analyzer-Checkpoints auch ohne --work-dir; explizite Analysekennung mit eigener Vergabe, Paarbindung und Resume-Erhaltung statt Schreib-Idempotenz; 730 Requirement-IDs unverändert; zwölf gekoppelte Sollfälle ergänzt. |
 | 0.2.6 | 2026-09-14 | Fachlich erweiterte Spezifikation | Explizite Requirement-Sprache und Verbindlichkeit, Mehrsprachenpolicies, getrennte Sprachpakete, allgemeines Analyzer-Protokoll samt realem py3langid-Lieferumfang, sichere optionale Worker-Ausführung, vollständige Analysefortsetzung und SRX-Zahlenpolicy; neue fachliche Quelle bei unverändertem ersten Zielrelease. |
 | 0.2.5 | 2026-09-13 | Fachliche Korrekturfassung | B01/B02/B03/H01/H02 aus der Prüfung v0.2.4 eingearbeitet: explizite Lifecycle-Ausnahme und Mischfallregel, negative Reviews mit atomarem Freigabeentzug, project/partial-Bundlevertrag, nichtrekursive Manifestliste, vollständiger erhaltender Restore mit gebundenem Ziel; 650 Requirement-IDs unverändert; 47 kontraktübergreifende Sollfälle. |
@@ -4700,7 +4777,7 @@ Diese Präzisierung schließt einen bisher unterbestimmten Entwurfsvertrag; sie 
 
 ## V.1 Fachliche Herkunft
 
-Grundlage der funktionalen Erweiterung v0.2.6 war die veröffentlichte SpecRoad-Spezifikation v0.2.5 mit den im Chat getroffenen Nutzerentscheidungen vom 14. September 2026: explizite Requirement-Sprache; sprachunabhängige Verbindlichkeit; mehrere erlaubte Inhaltssprachen; generische Analyzer statt eingebautem Textverständnis; bereits im ersten Zielrelease ein realer py3langid-Adapter; portable, ressourcensparsame und vollständig fortsetzbare Ausführung. Die numerische Präzisionsauflage stammt aus dem Implementierungsreife-Prüfbericht v0.2.5. Die vorliegende Korrekturfassung v0.2.7 übernimmt den vollständigen Umfang v0.2.6 und setzt ausschließlich dessen Reviewempfehlungen B01/A02 um; Quelle sind der Implementierungsreife-Prüfbericht v0.2.6 und der anschließende Nutzerauftrag.
+Grundlage der funktionalen Erweiterung v0.2.6 war die veröffentlichte SpecRoad-Spezifikation v0.2.5 mit den im Chat getroffenen Nutzerentscheidungen vom 14. September 2026: explizite Requirement-Sprache; sprachunabhängige Verbindlichkeit; mehrere erlaubte Inhaltssprachen; generische Analyzer statt eingebautem Textverständnis; bereits im ersten Zielrelease ein realer py3langid-Adapter; portable, ressourcensparsame und vollständig fortsetzbare Ausführung. Die numerische Präzisionsauflage stammt aus dem Implementierungsreife-Prüfbericht v0.2.5. Die damalige Korrekturfassung v0.2.7 übernahm den vollständigen Umfang v0.2.6 und setzte ausschließlich dessen Reviewempfehlungen B01/A02 um; Quelle sind der Implementierungsreife-Prüfbericht v0.2.6 und der anschließende Nutzerauftrag.
 
 Detaillierte Feldnamen, Defaultschwellen, Auswahl-/Vergleichsalgorithmen, CLI-Verträge, Paketgrenzen und Korpus-/Leistungsziele dieses Dokuments sind **neue Entwurfsfestlegungen**, keine vom Vorgängerdokument oder von Herstellerbenchmarks bereits bewiesenen Eigenschaften. Für sie sind eigene Abnahmen definiert. Frühere pauschale Aussagen über „zuverlässiges Verständnis“ oder „vollständig erkannte Locale“ werden nicht übernommen.
 
@@ -4718,4 +4795,268 @@ Detaillierte Feldnamen, Defaultschwellen, Auswahl-/Vergleichsalgorithmen, CLI-Ve
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.7.**
+## V.3 Quelle der Transportentscheidung v0.2.8
+
+Der Nutzer legte PatchHarbor und ausdrücklich dessen öffentliche Python-API als
+Basis fest und beauftragte anschließend diese Spezifikations-/Planänderung.
+Geprüfte lokale Quelle: `patch-harbor-dev (1).zip`, SHA-256
+`78467d627994a7d6175dea4a3bffcf5f840a79f0fd7914dc709393e6d9f269da`;
+maßgeblich für die Schnittstellenabgrenzung sind `docs/python-api.md`,
+`docs/runtime-bootstrap.md`, `docs/result-format-3.md`, `docs/pack.md` und
+`src/patchharbor/api.py`. Der Quellstand ist eine Entwurfsgrundlage, kein
+behaupteter Release- oder SpecRoad-Integrationsnachweis. Für die Umsetzung wird
+die neue CPython-3.10-/3.11-kompatible Version verwendet; die tatsächliche
+Runtime-/API- und Artefaktbindung erfolgt im Implementierungsschritt.
+
+---
+
+# Anhang W — Portabler SpecRoad-/PatchHarbor-Rundweg
+
+## W.1 Verantwortungsgrenzen und öffentliche API
+
+SpecRoad bestimmt Projektclosure, fachliche Validierung, Proposals, menschliche
+Reviews und transaktionale Änderungen. PatchHarbor bestimmt seine Result- und
+Patchformate, Zustandsbindung und lokale Paketübernahme. Die Integration verwendet
+`from patchharbor import api`; CLI-Subprozesse und private PatchHarbor-Module sind
+kein Ersatz. Die separat verteilte, mit CPython 3.10 bis 3.14 kompatible Runtime
+wird versions- und hashgebunden ausgeliefert. Normaler Core-Start lädt sie nicht.
+
+Die Zuständigkeiten der öffentlichen Aufrufe sind fest:
+
+| Aufgabe | API und Grenze |
+|---|---|
+| Lokalen Referenzstand erfassen | `api.bundle(repository=..., output_directory=...)`; bereits registriertes Git-Repository mit vorhandenem HEAD, explizite absolute Pfade und Ausgabe außerhalb des Projekts. Keine implizite Registrierung oder Remoteaktion. |
+| Rückpaket erzeugen | `api.pack_patch(..., reference_bundle=..., entrypoint=...)`; SpecRoad bereitet den vollständigen Payload und den festen Entrypoint vor. PatchHarbor wählt keine Änderungen aus und erzeugt keinen Proposal. |
+| Rückpaket prüfen | `api.inspect_patch` und `api.validate_patch` mit ursprünglichem Result; lokale Zielbindung wird zusätzlich gegen das registrierte Ziel geprüft. Ein gültiges Paket ist keine Freigabe seiner Fachänderungen. |
+| Lokal übernehmen | Ausschließlich der bewusst aufgerufene lokale Integrationsadapter verwendet `api.apply` mit explizitem geprüftem Paket und Repository. Keine automatische Auswahl fremder Pakete, Watcher oder rekursiven Apply-/Bundle-Aufrufe. |
+| Result prüfen und Snapshot liefern | Erforderlicher **öffentlicher** API-Vertrag für vollständige Resultprüfung und schreibfreie Ausgabe des exakten effektiven Snapshotinventars. Diese Fähigkeit ist in der geprüften API noch nicht öffentlich vorhanden; ihr Name wird erst durch PatchHarbor festgelegt. |
+
+Die letzte Zeile ist eine ausdrückliche Integrationsvoraussetzung. Sie umfasst
+Manifest, Kontext, Runtime, Base, staged/unstaged Änderungen und untracked Daten
+einschließlich Pfad-/Typ-/Hashprüfung. Eine Versionsangabe allein oder ein
+erfolgreicher Runtime-Bootstrap beweist diese Vollprüfung nicht. Vor Freigabe des
+Hinexports muss die Fähigkeit in PatchHarbor öffentlich dokumentiert, ausgeliefert
+und mit SpecRoad nachgewiesen sein. SpecRoad baut keinen privaten Resultreader,
+Patchinterpreter oder eigenen PatchHarbor-Formatvalidator als Umgehung.
+
+## W.2 Paketformat und Runtimeprofile
+
+Das Hinpaket ist ein eigenes äußeres ZIP mit Formatkennung
+`specroad-ai-handoff-v1`. Es ist weder ein PatchHarbor-Result noch ein
+SpecRoad-Projektbundle. Es enthält genau:
+
+- `handoff.json`, das Manifest des äußeren Pakets;
+- `runtime/specroad.pyz`, eine vertrauenswürdig ausgelieferte SpecRoad-Zipapp;
+- `reference/result.zip`, die unveränderten Bytes des maßgeblichen Results;
+- `project/project.zip`, ein kanonisches `kind=project`, `scope=project`,
+  `closure_mode=closed`, schreibbares Vollprojektbundle nach Anhang E;
+- nur bei explizit gewähltem, unterstütztem Profil `python-bundled` zusätzlich
+  `runtime/python-runtime.zip`, eine vollständig gebundene CPython-Distribution.
+
+Die PatchHarbor-PYZ bleibt innerhalb ihres ursprünglichen Result-Runtimeeintrags.
+Fremde SpecRoad-Dateien werden nicht in den geschlossenen PatchHarbor-Result-
+Memberraum eingefügt. Gewöhnliche Projekt-/Teilbundles nach Anhang E behalten ihre
+eigene Bedeutung und enthalten durch diese Erweiterung keine ausführbare Runtime.
+Die Moduldistribution kann dasselbe Hinpaket bedienen wie `specroad.pyz`.
+
+`handoff.json` bindet mindestens Formatversion, Paket-ID, `project_id`, relativen
+Projektpfad im Result, Scope Descriptor, Modellwurzel, die vollständige Result-
+SHA-256 sowie unveränderte `repo_id`, `base_commit`, `state_fingerprint` und
+`fingerprint_algorithm`. Für alle äußeren Payloads stehen Pfad, Größe und SHA-256
+in einer exakten, sortierten Inventarliste; das Manifest nimmt sich nicht selbst
+auf. Runtimeeinträge binden Toolversion, Artefakthash, unterstützte CPython-
+Versionen, Plattformprofil und gegebenenfalls den inneren Result-Memberpfad.
+Der vollständige äußere ZIP-Hash wird außerhalb des ZIP ausgegeben.
+
+Die zugehörigen Optionen sind `--runtime-profile python-present|python-bundled`
+(Default `python-present`) beim Hinexport und `--expected-sha256 <HEX>` für
+Prüfung und Öffnen. Ohne extern übergebenen Hash darf reine Datenprüfung einen
+Integritätsbefund liefern, aber keine vertrauenswürdige Herkunft behaupten oder
+mitgelieferte Runtime laden; dafür ist eine bereits fest gebundene
+vertrauenswürdige Distributionsidentität oder der externe Erwartungshash nötig.
+
+Für die äußeren ZIP-Bytes gelten die sicheren kanonischen Containerregeln aus
+E.2; das äußere Manifest ersetzt dort nur den Namen `bundle-manifest.json`.
+Der Inhalt eingebetteter Archive bleibt byteidentisch und hat seinen eigenen
+Formatvertrag. Jedes Archiv wird vor seiner jeweiligen Extraktion vollständig
+geprüft; ein korrekter äußerer Hash überspringt keine innere Prüfung. Absolute
+Pfade, Traversal, Namenskollisionen, Links, Sonderdateien und nicht inventarisierte
+Member sind unzulässig. Runtime-/Transportdaten gehen nicht in die Modellwurzel
+ein; notwendige Projektressourcen bleiben Teil der Closure.
+
+Das verpflichtende Profil `python-present` benötigt einen vorhandenen kompatiblen
+CPython-Interpreter. Eine PYZ ist kein Python-Interpreter und keine universelle
+Binärdistribution. Das zusätzliche Profil `python-bundled` darf nur angeboten
+werden, wenn ein vollständiger Interpreter samt Standardbibliothek, notwendigen
+nativen Bibliotheken, Lizenzen und sicherem Extraktions-/Startvertrag für genau
+das deklarierte OS-/Architektur-/ABI-Profil geliefert und geprüft wird. Eine
+einzelne kopierte Python-Binärdatei genügt nicht. Nicht verfügbare Profile werden
+vor Veröffentlichung abgewiesen; automatisches Herunterladen oder Installieren
+ist ausgeschlossen. Analyzer-/NumPy-Pakete werden dadurch nicht vorausgesetzt
+oder stillschweigend mitgeliefert.
+
+## W.3 Einheitlicher Ausgangsstand
+
+Der Hinexport erfasst das Result über W.1 und erzeugt das Projektbundle aus
+**dessen geprüftem effektivem Snapshot**, nicht durch einen zweiten ungebundenen
+Scan des veränderlichen Working Tree. Die Zuordnung umfasst genau einen
+Projektroot und dessen vollständige normative und portable betriebliche Closure
+einschließlich erforderlicher Receipts und Objektbytes nach Anhang E.
+Gitignorierte Pflichtdaten fehlen gegebenenfalls im Result; der Export darf sie
+nicht nachträglich aus einem anderen Stand ergänzen oder als optional ausgeben.
+Er meldet die fehlende Abdeckung und erzeugt kein erfolgreiches Hinpaket.
+
+Ein Result mit staged/unstaged/untracked Inhalten ist nur zulässig, wenn die
+öffentliche Snapshot-API alle diese Schichten vollständig und deterministisch
+rekonstruiert. Git-Metadaten, Hooks und Laufzeitcaches werden nicht zum
+Projektinhalt. Offene Transaktionen, unklare Snapshotzustände, falsche Projekt-ID,
+abweichende Dateihashes oder fehlende geschützte Geschichte verhindern den
+Abschluss. Die API-Runtime muss zum deklarierten Versions-/Fähigkeitsvertrag passen.
+Die Bestandteile bleiben während der Prüfung an stabile Bytes gebunden.
+
+## W.4 Öffnen in der internen Python-Laufzeitumgebung
+
+Der Nutzer startet die aus einer vertrauenswürdigen Verteilung bezogene
+SpecRoad-PYZ mit dem vorhandenen Python. Ein erwarteter Paket-/Runtimehash muss
+aus einer bereits vertrauenswürdigen Quelle stammen; Selbsthashes innerhalb
+eines beliebig austauschbaren ZIP sind kein Herkunftsbeweis. Prüfung von Manifest,
+Runtimehashes, Plattform und Pythonversion geht jedem Laden mitgelieferten Codes
+voraus. Der dokumentierte verifizierte PatchHarbor-PYZ-Bootstrap darf die öffentliche
+API bereitstellen; Projektpfade dürfen dabei keine Module unterschieben.
+
+`bundle verify --profile ai-runtime` verändert keine Projekt- oder Runtimepfade.
+`bundle extract --profile ai-runtime` prüft zuerst das vollständige Hinpaket,
+Result und Projektbundle und veröffentlicht anschließend ausschließlich einen
+neuen Zielroot mit getrennten `runtime/`, `reference/` und `project/`-Bereichen.
+Die Referenz wird byteidentisch aufbewahrt und bei jedem Rückexport neu geprüft;
+ein kopierter Marker genügt nicht. Das Modell im Projektbereich muss dieselbe
+ID, Wurzel, Ressourceninventur und Receiptwirkung wie die Ausgangsprojektion
+haben. Rechte entstehen nicht durch Entpacken: partielle Bundles werden weder
+hier noch durch Entfernen einer Kennzeichnung zu schreibbaren Vollprojekten.
+
+Diese Sandboxseite benutzt ausschließlich Python und gelieferte Dateien; weder
+Git noch Shell, Netzwerk, Paketmanager oder administrativer Zugriff ist nötig.
+Die KI bedient das Projekt über die vorhandene SpecRoad-CLI, erzeugt und prüft
+Proposals und erhält keine menschliche Freigabekompetenz. Ein neuer Prozess oder
+Sandboxpfad benötigt keinen alten Chat-/Prozesszustand. Work-Fortsetzung bleibt
+ein gesonderter, nach Anhang P geprüfter Vertrag.
+
+## W.5 Rückexport, Transportübernahme und fachliche Freigabe
+
+`bundle create --profile ai-runtime --direction return` verlangt das ursprüngliche
+Hinpaket und einen explizit ausgewählten Proposal. Der Befehl prüft Referenz,
+Projekt-ID und Proposalbasis erneut. Das Ergebnis ist genau eine native
+PatchHarbor-Patch-ZIP, kein neues Result und keine erneute äußere Runtime-ZIP.
+Alle PatchHarbor-Bindungswerte stammen unverändert aus dem Referenzresult. Das
+Hinpaket darf nicht anhand späterer KI-Änderungen neu gebunden werden.
+
+SpecRoad erzeugt vor `pack_patch` ein vollständiges passives Rückgabeinventar:
+Proposalinhalt, geordnete Operationen, referenzierte neue Daten und deren Hashes,
+Basis-/Zielbindungen sowie ausdrücklich ausgewiesene Löschungen und Umbenennungen.
+Keine automatische Dateiauswahl durch PatchHarbor, keine beliebige Working-Tree-
+Kopie und keine losgelösten Fachänderungen außerhalb des Proposals. Immutable
+historische Nachweise werden nicht neu geschrieben. Nicht benötigte Caches,
+Runtimebinärdateien, Gitdaten und Sandboxgeheimnisse gehören nicht in den Rückweg.
+Der Entrypoint stammt aus einer gebundenen SpecRoad-Verteilung; der KI-Payload
+darf weder seinen Code noch lokale Test-/Commit-/Pushbefehle vorgeben.
+
+**Payload wird von PatchHarbor vor dem Entrypoint ausgebracht.** Daher liegen
+Rückdaten ausschließlich in einem frischen, eindeutig zum Paket gehörenden
+Stagingpfad außerhalb normativer Projektressourcen. Ein Verzeichnis namens
+`payload/` ist kein Schutzmechanismus. Der lokale Integrationsadapter prüft vor
+`api.apply` das vollständige Pfadinventar, fehlende Zielkollisionen und Links,
+Referenz-/Zielbindung sowie den exakten zugelassenen Entrypoint. Ohne diese
+Prüfung darf das Paket nicht an einen allgemeinen Auto-Apply-Workflow übergeben
+werden. Prüfung und Apply müssen dieselben unveränderbaren Paketbytes und die
+gesperrte Zielbasis verwenden; fehlt eine öffentliche Möglichkeit zur sicheren
+Bindung dieser Grenze, bleibt die automatische Hostintegration gesperrt.
+
+Die ausdrücklich autorisierte Hostübernahme nimmt zunächst nur den Proposal
+über die kontrollierten SpecRoad-Authoringoperationen als lokalen Entwurf auf.
+Sie veröffentlicht seine fachlichen Zieländerungen nicht. Kollidierende IDs
+oder unpassende Basisdaten werden nicht überschrieben. Fremde Reviewbehauptungen
+werden nicht als lokale menschliche Zustimmung übernommen. Der anschließend
+sichtbare Zustand heißt `proposal_received`; `applied` wird erst nach lokalem
+`proposal validate`, `proposal check`, gültigem menschlichem `proposal review`
+und erfolgreichem transaktionalem `proposal apply` ausgegeben. Diese Trennung
+verhindert, dass vorab eingebrachte normative Dateien das Review umgehen.
+
+Die Aufnahme des Proposal-Artefakts ist selbst ein kontrollierter normativer
+Write; für seine nichtrekursive fachliche Basis gilt 10.8.1. Deshalb kann der
+normale lokale Proposal-Lifecycle nach dem Empfang fortgesetzt werden. Die
+Transportreferenz bleibt dennoch die historische Eingangsbindung und wird nicht
+für einen zweiten Transport-Apply umgeschrieben. Der Proposal-Kern führt keine
+Git-Commits, Branches oder Pushes aus. Externe Git-/Entwicklungsautomatisierung
+bleibt getrennt und erhält durch ein Paket keine zusätzliche Autorisierung.
+
+## W.6 Fehler, Wiederholung und Aussagen über Erfolg
+
+Falsche `repo_id`, Projekt-ID, Modellwurzel, Result-SHA oder geänderte Zielbasis
+verhindern eine schreibende Übernahme. Es gibt kein stilles Rebase und kein
+Ersetzen der Referenz. Benutzer können einen neuen aktuellen Hinexport erstellen
+und Änderungen über die vorhandenen Merge-/Proposalverträge erneut bewerten.
+Ein unverändert wiederholtes, nachweislich empfangenes Paket führt weder zu einem
+zweiten Proposal noch zu einer zweiten Fachänderung; bei unklarem Replayzustand
+wird blockiert statt Erfolg erfunden. PatchHarbor-Replayprüfung und SpecRoad-
+Request-Receipts bleiben getrennte, gemeinsam zu prüfende Nachweise.
+
+Abbruch vor Veröffentlichung eines Exports hinterlässt keine als fertig
+ausgewiesene ZIP. Bei Abbruch während Übernahme oder Proposal-Apply bleiben
+der tatsächliche Zustand und notwendige Diagnose-/Recoverydaten erhalten;
+bereits erfolgreiche Arbeit wird nicht blind zurückgesetzt. Bereinigung darf
+nur nachweislich eigene temporäre Pfade betreffen. Eine fehlgeschlagene Result-
+Veröffentlichung nach erfolgreicher Fachänderung wird als genau dieser
+Teilzustand berichtet und darf keinen ungeprüften zweiten Apply auslösen.
+
+Maschinenlesbare Resultate unterscheiden Paketprüfung, Transportempfang,
+Proposalprüfung, menschliche Freigabe, Fachanwendung und Result-Veröffentlichung.
+Sie binden jeweils die tatsächlich verwendeten Paket-, Projekt-, Runtime- und
+Zustandswerte. SpecRoad-Exitcodes folgen 11.8: inkompatible API/Optionen 2,
+ungültige Daten 3, I/O/Host/Recovery 5, stale-/Replay-/Zielkonflikt 6 und
+Sicherheitsverweigerung 7. PatchHarbor-Statuswerte werden zusätzlich erhalten,
+nicht numerisch als SpecRoad-Exitcode umgedeutet. Ein Erfolg eines Teilgates
+beweist keines der übrigen Gates.
+
+Die tatsächlichen harten Format-/Größenlimits der gebundenen PatchHarbor-Version
+bleiben wirksam. Eine Überschreitung darf weder zum Weglassen von Pflichtdaten
+noch zum ungeprüften Zerlegen eines logisch gebundenen Pakets führen. Weiche
+SpecRoad-Arbeitsbudgets und sichere Fortsetzung ändern diese Formatgrenzen nicht.
+
+## W.7 Verbindliche Verhaltensabnahme
+
+SR-VER-0051 und SR-E2E-0013 prüfen reale ausgelieferte SpecRoad- und
+PatchHarbor-Artefakte, keine nachgebaute Transportimplementierung:
+
+1. Registriertes lokales Repository → Hinexport → frische netzwerkisolierte
+   Linux-x86-64-Sandbox → Proposal erstellen/ändern/prüfen → Rückexport →
+   Paketprüfung und bewusst autorisierter Empfang → menschliches Reviewfixture
+   → transaktionales Apply mit unabhängig erwartetem Zielhash.
+2. Derselbe Ablauf mit Modul- und PYZ-Core unter CPython 3.10, 3.11, 3.12, 3.13
+   und 3.14; in der Sandbox keine installierten Drittanbieterpakete, kein Git,
+   keine Shell, kein Netzwerk. Lokale Git-/Entrypointvoraussetzungen werden
+   ausschließlich auf der Hostseite gemessen und ausgewiesen.
+3. Snapshotfälle clean sowie staged/unstaged/untracked, fehlende ignorierte
+   Pflichtdatei, offene Transaktion, partielle Quelle und veränderte Eingabe;
+   keine erfolgreiche Auslassung oder Vermischung von Ständen.
+4. Manipulierte äußere/innere Bytes, Manifest, Runtime, Referenz und Entrypoint,
+   fremde API-Version, Importpfadunterschiebung, Traversal, Links und belegte
+   Ziel-/Stagingpfade; keine Codeausführung oder Writes vor den erlaubten Gates.
+5. Unvollständige oder zusätzliche Rückdaten, Löschung/Umbenennung, stale Basis,
+   wiederholter Empfang, ID-Konflikt, fehlende/fingierte/geänderte Freigabe und
+   harte Abbrüche einschließlich gescheiterter Result-Veröffentlichung nach Apply.
+6. Ein unverändertes Projekt kann ohne Fachdelta zurückgegeben werden; die
+   strukturierte Meldung `no_changes` erzeugt keinen leeren Änderungs-Apply.
+   Normale Projekt-/Teilbundles, Core ohne Transportnutzung und bestehende
+   Idempotenz-/Recoveryverträge bleiben durch echte Regression nachgewiesen.
+7. Jedes zusätzlich angebotene `python-bundled`-Profil wird auf der exakt
+   deklarierten Plattform ohne vorhandenes Python geprüft; fehlende Profile
+   bleiben als nicht verfügbar erkennbar und werden nicht als bestanden gezählt.
+
+Alle Kriterien sind Sollabnahmen. Die Dokumentation dieser Erweiterung ist
+kein ausgeführter Rundweg. Die externe öffentliche API-Erweiterung aus W.1
+und gegebenenfalls die sichere Hostgrenze aus W.5 müssen vor den davon abhängigen
+Implementierungsschritten nachgewiesen sein.
+
+---
+
+**Ende der SpecRoad-Produktspezifikation v0.2.8.**

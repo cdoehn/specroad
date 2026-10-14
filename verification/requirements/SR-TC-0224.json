@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0224",
   "requirement_id": "SR-REQ-0224",
-  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0027",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die entpackte Core-Distribution und die Core-Zipapp DÜRFEN NICHT für eine nicht Git-spezifische Core-Funktion externe Laufzeitpakete voraussetzen; ausschließlich die explizite Auswertung im getrennten Analyzerworker hat Zusatzvoraussetzungen nach Anhang T.6.",
+    "requirement_contract": "Die entpackte Core-Distribution und die Core-Zipapp DÜRFEN NICHT für eine nicht Git-spezifische Core-Funktion extern zu installierende Laufzeitpakete voraussetzen; die PatchHarbor-Runtime für das Transportprofil MUSS offline mitgeliefert und ausschließlich bei dessen Nutzung geladen werden, während Analyzer-Zusatzvoraussetzungen getrennt Anhang T.6 folgen.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
   },
   "expected_diagnostics": [],
@@ -43,6 +43,7 @@
     "test_cli.EntryPointTests.test_module_and_zipapp_have_same_exit_and_file_effects"
   ],
   "open_items": [
-    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
+    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms.",
+    "SpecRoad 0.2.8 transport-profile extension remains unimplemented: verify the bundled, lazy public PatchHarbor API and explicit host-only Git prerequisites in 15.m–15.o and M20; existing tests do not prove this new scope."
   ]
 }

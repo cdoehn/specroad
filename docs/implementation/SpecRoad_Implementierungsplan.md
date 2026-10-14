@@ -1,15 +1,15 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 2 · **Stand:** 2. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.7
+**Planrevision:** 3 · **Stand:** 14. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.8
 
-Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 295 Schritte und 885 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
+Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
 ## Verbindliche Grundlagen und Rangfolge
 
-Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 730 Requirements, 50 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75 und Anhang U. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
+Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93`.  
+Gebundene Spezifikations-SHA-256: `6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -17,12 +17,12 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 2
-implementation_plan_commits_total: 885
+plan_revision: 3
+implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 380
 last_completed_plan_commit: 8.l.R
 next_plan_commit: 8.l.C
-last_completed_numbered_bundle: 232
+last_completed_numbered_bundle: 233
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -32,6 +32,22 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 ```
 
 Der ursprüngliche OFF-PLAN-Setup legte dieses Dokument mit offenen Produktpositionen an. Revision 2 ergänzt die Audit-Nacharbeiten und bereinigt überholte Testanweisungen als **OFF-PLAN / AUDIT-PLAN-UPDATE**, Commit-Message `docs(plan): Audit-Nacharbeiten vor 5.t konkretisieren`. Sie implementiert keine Produktreparatur und erhöht den Produktzähler nicht. Die Bundle-Nummer 047 bezeichnet diese Übergabe und zählt keine zusätzliche Produktposition. Ein erzeugtes ZIP oder ein hier formulierter Test ist kein abgeschlossener Commit und keine Test-Evidence; maßgeblich sind der tatsächlich entstandene Commit und sein Apply-Result.
+
+Revision 3 ergänzt auf ausdrücklichen Nutzerauftrag den portablen SpecRoad-/
+PatchHarbor-Rundweg als **OFF-PLAN / PH-RUNTIME-PLAN**, Bundle **233**, mit der
+Commit-Message `docs(spec): Portablen PatchHarbor-Rundweg spezifizieren und planen`.
+Diese Übergabe enthält ausschließlich Spezifikation, Plan und notwendige
+maschinelle Katalogbindungen. Sie implementiert das Feature nicht und erhöht
+den abgeschlossenen Produktstand nicht: **380/900**, nächster Commit **8.l.C**.
+
+Fünf neue Schritte ergänzen die bisherigen 295: **15.m–15.o** nach dem bestehenden
+Bundlekern sowie **18.q–18.r** nach dem vollständigen Proposal-Lifecycle. Jeder
+besitzt echte W/R/C-Zustände, insgesamt 15 zusätzliche Produktpositionen. Alle
+alten Schrittkennungen bleiben erhalten. Die aktuellen Positionsnummern ab M16
+verschieben sich um 9 und ab M19 um 15; historische Audit-/Ergebnisangaben mit
+dem damaligen Nenner 885 werden nicht umgeschrieben. Die Meilensteine bleiben
+in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
+in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
 
@@ -1748,13 +1764,13 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 | 12 | [Verifikation, Evidence und Quellcode-Traceability](#m12) | 20 | 60 | 487–546 |
 | 13 | [Releases, Meilensteine, Aufgaben und Roadmap](#m13) | 8 | 24 | 547–570 |
 | 14 | [Import und Export](#m14) | 15 | 45 | 571–615 |
-| 15 | [Projektbundles und portabler Austausch](#m15) | 12 | 36 | 616–651 |
-| 16 | [Schema- und Datenmigration](#m16) | 11 | 33 | 652–684 |
-| 17 | [Semantischer Dreiwege-Merge](#m17) | 12 | 36 | 685–720 |
-| 18 | [Proposals und kontrollierte KI-Bearbeitung](#m18) | 16 | 48 | 721–768 |
-| 19 | [Analyzer-Schnittstelle und echte Spracherkennung](#m19) | 25 | 75 | 769–843 |
-| 20 | [Gesamtabnahme und Release](#m20) | 14 | 42 | 844–885 |
-| **Gesamt** | **20 Meilensteine** | **295** | **885** | **1–885** |
+| 15 | [Projektbundles und portabler Austausch](#m15) | 15 | 45 | 616–660 |
+| 16 | [Schema- und Datenmigration](#m16) | 11 | 33 | 661–693 |
+| 17 | [Semantischer Dreiwege-Merge](#m17) | 12 | 36 | 694–729 |
+| 18 | [Proposals und kontrollierte KI-Bearbeitung](#m18) | 18 | 54 | 730–783 |
+| 19 | [Analyzer-Schnittstelle und echte Spracherkennung](#m19) | 25 | 75 | 784–858 |
+| 20 | [Gesamtabnahme und Release](#m20) | 14 | 42 | 859–900 |
+| **Gesamt** | **20 Meilensteine** | **300** | **900** | **1–900** |
 
 ## Detaillierter Commitplan
 
@@ -1775,7 +1791,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.a.W – Let it Work
 
-- [x] **1.a.W** · Position **1/885** · Voraussetzung: `OFF-PLAN PLAN-SETUP (Plan im tatsächlichen Git-Stand vorhanden)`.
+- [x] **1.a.W** · Position **1/900** · Voraussetzung: `OFF-PLAN PLAN-SETUP (Plan im tatsächlichen Git-Stand vorhanden)`.
 **Exakte Commit-Message:** `1.a.W build(core): Core-Paket und unterstützte Python-Syntax aufbauen`
 
 **Umsetzung:** Paketstruktur und minimalen importierbaren Standardbibliotheks-Core mit Python-3.10-kompatibler Syntax anlegen.
@@ -1784,7 +1800,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.a.R – Make it Right
 
-- [x] **1.a.R** · Position **2/885** · Voraussetzung: `1.a.W`.
+- [x] **1.a.R** · Position **2/900** · Voraussetzung: `1.a.W`.
 **Exakte Commit-Message:** `1.a.R build(core): Core-Paket und unterstützte Python-Syntax vervollständigen`
 
 **Vervollständigung:** Importpfade, fehlende optionale Pakete und nicht aktivierte virtuelle Umgebungen berücksichtigen; keine Installation beim Start.
@@ -1793,7 +1809,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.a.C – Make it Clean
 
-- [x] **1.a.C** · Position **3/885** · Voraussetzung: `1.a.R`.
+- [x] **1.a.C** · Position **3/900** · Voraussetzung: `1.a.R`.
 **Exakte Commit-Message:** `1.a.C refactor(core): Core-Paket und unterstützte Python-Syntax bereinigen`
 
 **Bereinigung:** Bootstrap, Paketmetadaten und Fachmodule klar trennen.
@@ -1810,7 +1826,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.b.W – Let it Work
 
-- [x] **1.b.W** · Position **4/885** · Voraussetzung: `1.a.C`.
+- [x] **1.b.W** · Position **4/900** · Voraussetzung: `1.a.C`.
 **Exakte Commit-Message:** `1.b.W build(core): Modul- und CLI-Einstieg aufbauen`
 
 **Umsetzung:** Gemeinsamen Dispatcher für python -m specroad und installierten Einstieg aufbauen; Entwicklungs-Zipapp erzeugbar machen.
@@ -1819,7 +1835,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.b.R – Make it Right
 
-- [x] **1.b.R** · Position **5/885** · Voraussetzung: `1.b.W`.
+- [x] **1.b.R** · Position **5/900** · Voraussetzung: `1.b.W`.
 **Exakte Commit-Message:** `1.b.R build(core): Modul- und CLI-Einstieg vervollständigen`
 
 **Vervollständigung:** Nichtinteraktive Fehlereingaben deterministisch beenden; portable Distribution nicht an das Entwicklungsverzeichnis binden.
@@ -1828,7 +1844,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.b.C – Make it Clean
 
-- [x] **1.b.C** · Position **6/885** · Voraussetzung: `1.b.R`.
+- [x] **1.b.C** · Position **6/900** · Voraussetzung: `1.b.R`.
 **Exakte Commit-Message:** `1.b.C refactor(core): Modul- und CLI-Einstieg bereinigen`
 
 **Bereinigung:** Alle Einstiegspunkte auf genau einen anwendungsbezogenen Dispatcher reduzieren.
@@ -1845,7 +1861,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.c.W – Let it Work
 
-- [x] **1.c.W** · Position **7/885** · Voraussetzung: `1.b.C`.
+- [x] **1.c.W** · Position **7/900** · Voraussetzung: `1.b.C`.
 **Exakte Commit-Message:** `1.c.W feat(core): Command Registry und Befehlsklassen aufbauen`
 
 **Umsetzung:** Deklarative Registry mit Command-ID, erlaubten Optionen, Befehlsklasse, Preflightprofil und Seiteneffektgrenzen einführen.
@@ -1854,7 +1870,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.c.R – Make it Right
 
-- [x] **1.c.R** · Position **8/885** · Voraussetzung: `1.c.W`.
+- [x] **1.c.R** · Position **8/900** · Voraussetzung: `1.c.W`.
 **Exakte Commit-Message:** `1.c.R feat(core): Command Registry und Befehlsklassen vervollständigen`
 
 **Vervollständigung:** Doppelte Kennungen, unzulässige Optionskombinationen und nicht implementierte Handler ablehnen; unfertige Fähigkeiten nicht als verfügbar ausweisen.
@@ -1863,7 +1879,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.c.C – Make it Clean
 
-- [x] **1.c.C** · Position **9/885** · Voraussetzung: `1.c.R`.
+- [x] **1.c.C** · Position **9/900** · Voraussetzung: `1.c.R`.
 **Exakte Commit-Message:** `1.c.C refactor(core): Command Registry und Befehlsklassen bereinigen`
 
 **Bereinigung:** Parser, Metadatenregistry und Handleraufruf aus derselben Definition speisen.
@@ -1880,7 +1896,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.d.W – Let it Work
 
-- [x] **1.d.W** · Position **10/885** · Voraussetzung: `1.c.C`.
+- [x] **1.d.W** · Position **10/900** · Voraussetzung: `1.c.C`.
 **Exakte Commit-Message:** `1.d.W feat(core): Globale Optionen und Präzedenz aufbauen`
 
 **Umsetzung:** Rootauswahl, explizite Optionen und Konfigurationsherkunft als normalisierte Eingabedaten auflösen.
@@ -1889,7 +1905,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.d.R – Make it Right
 
-- [x] **1.d.R** · Position **11/885** · Voraussetzung: `1.d.W`.
+- [x] **1.d.R** · Position **11/900** · Voraussetzung: `1.d.W`.
 **Exakte Commit-Message:** `1.d.R feat(core): Globale Optionen und Präzedenz vervollständigen`
 
 **Vervollständigung:** Fail-Schwelle, strict und unzulässige Optionen pro Command behandeln; strict startet keinen Analyzer.
@@ -1898,7 +1914,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.d.C – Make it Clean
 
-- [x] **1.d.C** · Position **12/885** · Voraussetzung: `1.d.R`.
+- [x] **1.d.C** · Position **12/900** · Voraussetzung: `1.d.R`.
 **Exakte Commit-Message:** `1.d.C refactor(core): Globale Optionen und Präzedenz bereinigen`
 
 **Bereinigung:** Optionsauflösung von späterer Profil- und Variantenkomposition entkoppeln.
@@ -1915,7 +1931,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.e.W – Let it Work
 
-- [x] **1.e.W** · Position **13/885** · Voraussetzung: `1.d.C`.
+- [x] **1.e.W** · Position **13/900** · Voraussetzung: `1.d.C`.
 **Exakte Commit-Message:** `1.e.W feat(core): Ergebnisobjekte und Exitcodes aufbauen`
 
 **Umsetzung:** Versioniertes Fachresultat, Diagnoseobjekte und JSON-Envelope samt zentraler Exitcodezuordnung implementieren.
@@ -1924,7 +1940,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.e.R – Make it Right
 
-- [x] **1.e.R** · Position **14/885** · Voraussetzung: `1.e.W`.
+- [x] **1.e.R** · Position **14/900** · Voraussetzung: `1.e.W`.
 **Exakte Commit-Message:** `1.e.R feat(core): Ergebnisobjekte und Exitcodes vervollständigen`
 
 **Vervollständigung:** Fehler-, Sicherheits-, Konflikt-, Blocker- und Fortsetzungszustände getrennt abbilden; kein Code 8 ohne bestätigten Checkpoint.
@@ -1933,7 +1949,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.e.C – Make it Clean
 
-- [x] **1.e.C** · Position **15/885** · Voraussetzung: `1.e.R`.
+- [x] **1.e.C** · Position **15/900** · Voraussetzung: `1.e.R`.
 **Exakte Commit-Message:** `1.e.C refactor(core): Ergebnisobjekte und Exitcodes bereinigen`
 
 **Bereinigung:** Serialisierung als dünnen Adapter um typisierte Resultate halten.
@@ -1950,7 +1966,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.f.W – Let it Work
 
-- [x] **1.f.W** · Position **16/885** · Voraussetzung: `1.e.C`.
+- [x] **1.f.W** · Position **16/900** · Voraussetzung: `1.e.C`.
 **Exakte Commit-Message:** `1.f.W style(core): Darstellungsschicht für die farbige CLI aufbauen`
 
 **Umsetzung:** Gemeinsame übersichtliche Pretty-Darstellung mit Phasen, Fortschritt, Status, Warnungen und kompaktem Abschluss aufbauen.
@@ -1959,7 +1975,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.f.R – Make it Right
 
-- [x] **1.f.R** · Position **17/885** · Voraussetzung: `1.f.W`.
+- [x] **1.f.R** · Position **17/900** · Voraussetzung: `1.f.W`.
 **Exakte Commit-Message:** `1.f.R style(core): Darstellungsschicht für die farbige CLI vervollständigen`
 
 **Vervollständigung:** TTY, NO_COLOR, no-color und quiet umsetzen; Status zusätzlich textuell unterscheiden und Maschinendaten frei von Dekoration halten.
@@ -1968,7 +1984,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.f.C – Make it Clean
 
-- [x] **1.f.C** · Position **18/885** · Voraussetzung: `1.f.R`.
+- [x] **1.f.C** · Position **18/900** · Voraussetzung: `1.f.R`.
 **Exakte Commit-Message:** `1.f.C refactor(core): Darstellungsschicht für die farbige CLI bereinigen`
 
 **Bereinigung:** Layout, Farbauswahl, Symbole und Fortschrittsanzeigen in einer austauschbaren Präsentationsschicht bündeln.
@@ -1985,7 +2001,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.g.W – Let it Work
 
-- [x] **1.g.W** · Position **19/885** · Voraussetzung: `1.f.C`.
+- [x] **1.g.W** · Position **19/900** · Voraussetzung: `1.f.C`.
 **Exakte Commit-Message:** `1.g.W feat(core): Verhaltenstest-Infrastruktur aufbauen`
 
 **Umsetzung:** Testgerüst mit temporären Projekten, kontrollierter Uhr, kontrolliertem Zufall und Subprozesshelfern für Verhalten aufbauen.
@@ -1994,7 +2010,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.g.R – Make it Right
 
-- [x] **1.g.R** · Position **20/885** · Voraussetzung: `1.g.W`.
+- [x] **1.g.R** · Position **20/900** · Voraussetzung: `1.g.W`.
 **Exakte Commit-Message:** `1.g.R feat(core): Verhaltenstest-Infrastruktur vervollständigen`
 
 **Vervollständigung:** Keine Pretty-Snapshots, Doku-Linter, Linkchecker, Doctests oder künstlich rote spätere Featuretests einführen.
@@ -2003,7 +2019,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.g.C – Make it Clean
 
-- [x] **1.g.C** · Position **21/885** · Voraussetzung: `1.g.R`.
+- [x] **1.g.C** · Position **21/900** · Voraussetzung: `1.g.R`.
 **Exakte Commit-Message:** `1.g.C refactor(core): Verhaltenstest-Infrastruktur bereinigen`
 
 **Bereinigung:** Gemeinsame Testhilfen von Produktcode trennen; nur Testabhängigkeiten dürfen optional sein.
@@ -2020,7 +2036,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.h.W – Let it Work
 
-- [x] **1.h.W** · Position **22/885** · Voraussetzung: `1.g.C`.
+- [x] **1.h.W** · Position **22/900** · Voraussetzung: `1.g.C`.
 **Exakte Commit-Message:** `1.h.W build(core): CI und Testfallzuordnung vorbereiten aufbauen`
 
 **Umsetzung:** CI für tatsächlich vorhandene Tests und versionierten Requirement-Testfall-Katalog mit stabilen SR-TC-Kennungen aufbauen.
@@ -2029,7 +2045,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.h.R – Make it Right
 
-- [x] **1.h.R** · Position **23/885** · Voraussetzung: `1.h.W`.
+- [x] **1.h.R** · Position **23/900** · Voraussetzung: `1.h.W`.
 **Exakte Commit-Message:** `1.h.R build(core): CI und Testfallzuordnung vorbereiten vervollständigen`
 
 **Vervollständigung:** Noch nicht implementierte Anforderungen als offen führen; ausgenommene Darstellung/Doku nicht mit grünen Dummytests vertreten.
@@ -2038,7 +2054,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.h.C – Make it Clean
 
-- [x] **1.h.C** · Position **24/885** · Voraussetzung: `1.h.R`.
+- [x] **1.h.C** · Position **24/900** · Voraussetzung: `1.h.R`.
 **Exakte Commit-Message:** `1.h.C refactor(core): CI und Testfallzuordnung vorbereiten bereinigen`
 
 **Bereinigung:** Testkatalog, Testausführung und Evidence-Erfassung ohne doppelte fachliche Wahrheit verbinden.
@@ -2055,7 +2071,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.i.W – Let it Work
 
-- [x] **1.i.W** · Position **25/885** · Voraussetzung: `1.h.C`.
+- [x] **1.i.W** · Position **25/900** · Voraussetzung: `1.h.C`.
 **Exakte Commit-Message:** `1.i.W build(core): Version und Distributionsidentität aufbauen`
 
 **Umsetzung:** Version, Buildidentität, Schema-/Formatunterstützung und deklarierte Pythonmatrix maschinenlesbar bereitstellen.
@@ -2064,7 +2080,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.i.R – Make it Right
 
-- [x] **1.i.R** · Position **26/885** · Voraussetzung: `1.i.W`.
+- [x] **1.i.R** · Position **26/900** · Voraussetzung: `1.i.W`.
 **Exakte Commit-Message:** `1.i.R build(core): Version und Distributionsidentität vervollständigen`
 
 **Vervollständigung:** Deklarierte und tatsächlich getestete Matrix unterscheiden; unbekannte Buildinformationen nicht erfinden.
@@ -2073,7 +2089,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.i.C – Make it Clean
 
-- [x] **1.i.C** · Position **27/885** · Voraussetzung: `1.i.R`.
+- [x] **1.i.C** · Position **27/900** · Voraussetzung: `1.i.R`.
 **Exakte Commit-Message:** `1.i.C refactor(core): Version und Distributionsidentität bereinigen`
 
 **Bereinigung:** Buildmetadaten an einer Stelle erzeugen und von der Pretty-Ausgabe unabhängig halten.
@@ -2090,7 +2106,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.j.W – Let it Work
 
-- [x] **1.j.W** · Position **28/885** · Voraussetzung: `1.i.C`.
+- [x] **1.j.W** · Position **28/900** · Voraussetzung: `1.i.C`.
 **Exakte Commit-Message:** `1.j.W feat(core): Feste Sicherheits- und Offlinegrenze aufbauen`
 
 **Umsetzung:** Verbotene Netzwerk-, Telemetrie-, Fremdcode- und Multi-Projektpfade im Core-Design ausschließen; sichere Rootprüfung aufbauen.
@@ -2099,7 +2115,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.j.R – Make it Right
 
-- [x] **1.j.R** · Position **29/885** · Voraussetzung: `1.j.W`.
+- [x] **1.j.R** · Position **29/900** · Voraussetzung: `1.j.W`.
 **Exakte Commit-Message:** `1.j.R feat(core): Feste Sicherheits- und Offlinegrenze vervollständigen`
 
 **Vervollständigung:** Traversal, externe Symlinks, Geheimnisweitergabe und dynamische Projektausführung vor Verwendung verhindern.
@@ -2108,7 +2124,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.j.C – Make it Clean
 
-- [x] **1.j.C** · Position **30/885** · Voraussetzung: `1.j.R`.
+- [x] **1.j.C** · Position **30/900** · Voraussetzung: `1.j.R`.
 **Exakte Commit-Message:** `1.j.C refactor(core): Feste Sicherheits- und Offlinegrenze bereinigen`
 
 **Bereinigung:** Sichere I/O- und Prozessgrenzen zentralisieren; später nur ausdrücklich erlaubte Git-/Workeradapter anschließen.
@@ -2125,7 +2141,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.k.W – Let it Work
 
-- [x] **1.k.W** · Position **31/885** · Voraussetzung: `1.j.C`.
+- [x] **1.k.W** · Position **31/900** · Voraussetzung: `1.j.C`.
 **Exakte Commit-Message:** `1.k.W feat(core): Lazy Bootstrap und frischer Aufrufkontext aufbauen`
 
 **Umsetzung:** Pro Aufruf nur aktuelle Eingaben prüfen und erforderliche Module laden; Bootstrap ohne Projekt erlauben.
@@ -2134,7 +2150,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.k.R – Make it Right
 
-- [x] **1.k.R** · Position **32/885** · Voraussetzung: `1.k.W`.
+- [x] **1.k.R** · Position **32/900** · Voraussetzung: `1.k.W`.
 **Exakte Commit-Message:** `1.k.R feat(core): Lazy Bootstrap und frischer Aufrufkontext vervollständigen`
 
 **Vervollständigung:** Fehlender Root bleibt ein Fehler; Hilfe und Betriebsdiagnose laden weder Vollmodell noch Analyzer.
@@ -2143,7 +2159,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.k.C – Make it Clean
 
-- [x] **1.k.C** · Position **33/885** · Voraussetzung: `1.k.R`.
+- [x] **1.k.C** · Position **33/900** · Voraussetzung: `1.k.R`.
 **Exakte Commit-Message:** `1.k.C refactor(core): Lazy Bootstrap und frischer Aufrufkontext bereinigen`
 
 **Bereinigung:** Kontextaufbau und fachliche Laufzeitdienste als getrennte Abhängigkeiten injizieren.
@@ -2160,7 +2176,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.l.W – Let it Work
 
-- [x] **1.l.W** · Position **34/885** · Voraussetzung: `1.k.C`.
+- [x] **1.l.W** · Position **34/900** · Voraussetzung: `1.k.C`.
 **Exakte Commit-Message:** `1.l.W feat(core): CLI-Integrationsbasis und Aliasregeln aufbauen`
 
 **Umsetzung:** Öffentliche Handler über strukturierte Eingaben ausführbar machen; vorhandene kompatible Aliase auf denselben Handler leiten.
@@ -2169,7 +2185,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.l.R – Make it Right
 
-- [x] **1.l.R** · Position **35/885** · Voraussetzung: `1.l.W`.
+- [x] **1.l.R** · Position **35/900** · Voraussetzung: `1.l.W`.
 **Exakte Commit-Message:** `1.l.R feat(core): CLI-Integrationsbasis und Aliasregeln vervollständigen`
 
 **Vervollständigung:** Nicht angebotene Aliase nicht behaupten; fehlende Eingaben beenden den Prozess ohne Interaktion.
@@ -2178,7 +2194,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.l.C – Make it Clean
 
-- [x] **1.l.C** · Position **36/885** · Voraussetzung: `1.l.R`.
+- [x] **1.l.C** · Position **36/900** · Voraussetzung: `1.l.R`.
 **Exakte Commit-Message:** `1.l.C refactor(core): CLI-Integrationsbasis und Aliasregeln bereinigen`
 
 **Bereinigung:** Keine zweite Fachimplementierung in Alias- oder Einstiegspunktcode zulassen.
@@ -2195,7 +2211,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.m.W – Let it Work
 
-- [x] **1.m.W** · Position **37/885** · Voraussetzung: `1.l.C`.
+- [x] **1.m.W** · Position **37/900** · Voraussetzung: `1.l.C`.
 **Exakte Commit-Message:** `1.m.W feat(core): Maschinenlesbare Command-Beschreibung aufbauen`
 
 **Umsetzung:** command describe aus der realen Registry mit Typen, Pflichtfeldern, Ausschlüssen, Seiteneffekten und gültigem strukturiertem Beispiel erzeugen.
@@ -2204,7 +2220,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.m.R – Make it Right
 
-- [x] **1.m.R** · Position **38/885** · Voraussetzung: `1.m.W`.
+- [x] **1.m.R** · Position **38/900** · Voraussetzung: `1.m.W`.
 **Exakte Commit-Message:** `1.m.R feat(core): Maschinenlesbare Command-Beschreibung vervollständigen`
 
 **Vervollständigung:** Workfähigkeit, Grenzen und Checkpointalgorithmen pro Handler korrekt erklären; nicht implementierte Funktionen nicht anbieten.
@@ -2213,7 +2229,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.m.C – Make it Clean
 
-- [x] **1.m.C** · Position **39/885** · Voraussetzung: `1.m.R`.
+- [x] **1.m.C** · Position **39/900** · Voraussetzung: `1.m.R`.
 **Exakte Commit-Message:** `1.m.C refactor(core): Maschinenlesbare Command-Beschreibung bereinigen`
 
 **Bereinigung:** Beschreibung und Parserdefinition aus einer Quelle speisen.
@@ -2230,7 +2246,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.n.W – Let it Work
 
-- [x] **1.n.W** · Position **40/885** · Voraussetzung: `1.m.C`.
+- [x] **1.n.W** · Position **40/900** · Voraussetzung: `1.m.C`.
 **Exakte Commit-Message:** `1.n.W feat(core): Frühe Capabilities ohne Modellscan aufbauen`
 
 **Umsetzung:** Projektlose capabilities für tatsächlich verfügbare Formate, Versionen und Befehlsklassen aus der Registry erzeugen.
@@ -2239,7 +2255,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.n.R – Make it Right
 
-- [x] **1.n.R** · Position **41/885** · Voraussetzung: `1.n.W`.
+- [x] **1.n.R** · Position **41/900** · Voraussetzung: `1.n.W`.
 **Exakte Commit-Message:** `1.n.R feat(core): Frühe Capabilities ohne Modellscan vervollständigen`
 
 **Vervollständigung:** Fachliche deterministische Projektion von dynamischen Laufzeitgrenzen trennen; Featureliste wächst erst mit vorhandener Implementierung.
@@ -2248,7 +2264,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 1.n.C – Make it Clean
 
-- [x] **1.n.C** · Position **42/885** · Voraussetzung: `1.n.R`.
+- [x] **1.n.C** · Position **42/900** · Voraussetzung: `1.n.R`.
 **Exakte Commit-Message:** `1.n.C refactor(core): Frühe Capabilities ohne Modellscan bereinigen`
 
 **Bereinigung:** Capabilities über vorhandene Registry- und Ergebnisadapter bündeln.
@@ -2277,7 +2293,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.a.W – Let it Work
 
-- [x] **2.a.W** · Position **43/885** · Voraussetzung: `1.n.C`.
+- [x] **2.a.W** · Position **43/900** · Voraussetzung: `1.n.C`.
 **Exakte Commit-Message:** `2.a.W feat(model): Projektkonfiguration und Pfadklassen aufbauen`
 
 **Umsetzung:** Geschlossene Projektkonfiguration, ID-Präfix und normative/generierte/betriebliche Pfadklassen definieren.
@@ -2286,7 +2302,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.a.R – Make it Right
 
-- [x] **2.a.R** · Position **44/885** · Voraussetzung: `2.a.W`.
+- [x] **2.a.R** · Position **44/900** · Voraussetzung: `2.a.W`.
 **Exakte Commit-Message:** `2.a.R feat(model): Projektkonfiguration und Pfadklassen vervollständigen`
 
 **Vervollständigung:** Fremde Roots, unzulässige Präfixe und Schreibziele außerhalb managed_paths ablehnen.
@@ -2295,7 +2311,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.a.C – Make it Clean
 
-- [x] **2.a.C** · Position **45/885** · Voraussetzung: `2.a.R`.
+- [x] **2.a.C** · Position **45/900** · Voraussetzung: `2.a.R`.
 **Exakte Commit-Message:** `2.a.C refactor(model): Projektkonfiguration und Pfadklassen bereinigen`
 
 **Bereinigung:** Pfadklassifikation als gemeinsame Funktion für Reader, Writer und spätere Bundles führen.
@@ -2312,7 +2328,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.b.W – Let it Work
 
-- [x] **2.b.W** · Position **46/885** · Voraussetzung: `2.a.C`.
+- [x] **2.b.W** · Position **46/900** · Voraussetzung: `2.a.C`.
 **Exakte Commit-Message:** `2.b.W feat(model): Strikter JSON-Reader aufbauen`
 
 **Umsetzung:** UTF-8-Objekte und unterstützte Schemaversionen strikt lesen; Parsepositionen verfügbar halten.
@@ -2321,7 +2337,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.b.R – Make it Right
 
-- [x] **2.b.R** · Position **47/885** · Voraussetzung: `2.b.W`.
+- [x] **2.b.R** · Position **47/900** · Voraussetzung: `2.b.W`.
 **Exakte Commit-Message:** `2.b.R feat(model): Strikter JSON-Reader vervollständigen`
 
 **Vervollständigung:** Doppelschlüssel, nachgestellte Daten, unbekannte Top-Level-Felder, Nichtobjekte und ungültige Zahlen sicher zurückweisen.
@@ -2330,7 +2346,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.b.C – Make it Clean
 
-- [x] **2.b.C** · Position **48/885** · Voraussetzung: `2.b.R`.
+- [x] **2.b.C** · Position **48/900** · Voraussetzung: `2.b.R`.
 **Exakte Commit-Message:** `2.b.C refactor(model): Strikter JSON-Reader bereinigen`
 
 **Bereinigung:** Syntaxlesen und Modellvalidierung in klar getrennte Stufen teilen.
@@ -2347,7 +2363,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.c.W – Let it Work
 
-- [x] **2.c.W** · Position **49/885** · Voraussetzung: `2.b.C`.
+- [x] **2.c.W** · Position **49/900** · Voraussetzung: `2.b.C`.
 **Exakte Commit-Message:** `2.c.W feat(model): Typregister und gemeinsame Schemas aufbauen`
 
 **Umsetzung:** Alle 28 Artefakttypen, Präfixe und gemeinsame Pflichtfelder als versionierte Ressourcen bereitstellen.
@@ -2356,7 +2372,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.c.R – Make it Right
 
-- [x] **2.c.R** · Position **50/885** · Voraussetzung: `2.c.W`.
+- [x] **2.c.R** · Position **50/900** · Voraussetzung: `2.c.W`.
 **Exakte Commit-Message:** `2.c.R feat(model): Typregister und gemeinsame Schemas vervollständigen`
 
 **Vervollständigung:** Unbekannte Typen, ungültige Pflichtwerte und unerlaubte Formatversionen ablehnen.
@@ -2365,7 +2381,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.c.C – Make it Clean
 
-- [x] **2.c.C** · Position **51/885** · Voraussetzung: `2.c.R`.
+- [x] **2.c.C** · Position **51/900** · Voraussetzung: `2.c.R`.
 **Exakte Commit-Message:** `2.c.C refactor(model): Typregister und gemeinsame Schemas bereinigen`
 
 **Bereinigung:** Typdefinitionen aus einer konsistenten Registry ableiten, nicht in CLI und Reader duplizieren.
@@ -2384,7 +2400,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.d.W – Let it Work
 
-- [x] **2.d.W** · Position **52/885** · Voraussetzung: `2.c.C`.
+- [x] **2.d.W** · Position **52/900** · Voraussetzung: `2.c.C`.
 **Exakte Commit-Message:** `2.d.W feat(model): Fach- und Planungstypen aufbauen`
 
 **Umsetzung:** Typspezifische Datenverträge für Ziele, Needs, Capabilities, Requirements, Szenarien, Entscheidungen, Risiken, Annahmen, Komponenten, Interfaces, Releases, Milestones und Tasks implementieren.
@@ -2393,7 +2409,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.d.R – Make it Right
 
-- [x] **2.d.R** · Position **53/885** · Voraussetzung: `2.d.W`.
+- [x] **2.d.R** · Position **53/900** · Voraussetzung: `2.d.W`.
 **Exakte Commit-Message:** `2.d.R feat(model): Fach- und Planungstypen vervollständigen`
 
 **Vervollständigung:** Pflichtfelder und zulässige Statuswerte typbezogen prüfen; Erfolgsstatus nicht aus bloßer Existenz ableiten.
@@ -2402,7 +2418,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.d.C – Make it Clean
 
-- [x] **2.d.C** · Position **54/885** · Voraussetzung: `2.d.R`.
+- [x] **2.d.C** · Position **54/900** · Voraussetzung: `2.d.R`.
 **Exakte Commit-Message:** `2.d.C refactor(model): Fach- und Planungstypen bereinigen`
 
 **Bereinigung:** Wiederverwendbare Feldtypen von typbezogenen Regeln trennen.
@@ -2421,7 +2437,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.e.W – Let it Work
 
-- [x] **2.e.W** · Position **55/885** · Voraussetzung: `2.d.C`.
+- [x] **2.e.W** · Position **55/900** · Voraussetzung: `2.d.C`.
 **Exakte Commit-Message:** `2.e.W feat(model): Dokument- und Nachweistypen aufbauen`
 
 **Umsetzung:** Datenverträge für Source, Verification, Test, Evidence, Baseline, Proposal, Issue, Document, Section, Block, View, Code-Ref, Review und Configuration vorbereiten.
@@ -2430,7 +2446,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.e.R – Make it Right
 
-- [x] **2.e.R** · Position **56/885** · Voraussetzung: `2.e.W`.
+- [x] **2.e.R** · Position **56/900** · Voraussetzung: `2.e.W`.
 **Exakte Commit-Message:** `2.e.R feat(model): Dokument- und Nachweistypen vervollständigen`
 
 **Vervollständigung:** Spezialtypen nur nach ihrem Spezialvertrag erzeugbar machen; Schemaunterstützung ist keine Freigabe für generisches Erzeugen.
@@ -2439,7 +2455,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.e.C – Make it Clean
 
-- [x] **2.e.C** · Position **57/885** · Voraussetzung: `2.e.R`.
+- [x] **2.e.C** · Position **57/900** · Voraussetzung: `2.e.R`.
 **Exakte Commit-Message:** `2.e.C refactor(model): Dokument- und Nachweistypen bereinigen`
 
 **Bereinigung:** Schemas und spätere Fachservices durch typisierte Modelle verbinden.
@@ -2456,7 +2472,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.f.W – Let it Work
 
-- [x] **2.f.W** · Position **58/885** · Voraussetzung: `2.e.C`.
+- [x] **2.f.W** · Position **58/900** · Voraussetzung: `2.e.C`.
 **Exakte Commit-Message:** `2.f.W feat(model): Namespaced Extensions und Herkunft aufbauen`
 
 **Umsetzung:** Extensions, Provenienz und nicht identitätsstiftende display_id verlustfrei modellieren.
@@ -2465,7 +2481,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.f.R – Make it Right
 
-- [x] **2.f.R** · Position **59/885** · Voraussetzung: `2.f.W`.
+- [x] **2.f.R** · Position **59/900** · Voraussetzung: `2.f.W`.
 **Exakte Commit-Message:** `2.f.R feat(model): Namespaced Extensions und Herkunft vervollständigen`
 
 **Vervollständigung:** Ungültige Namespaces und eine als Identität verwendete display_id zurückweisen.
@@ -2474,7 +2490,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.f.C – Make it Clean
 
-- [x] **2.f.C** · Position **60/885** · Voraussetzung: `2.f.R`.
+- [x] **2.f.C** · Position **60/900** · Voraussetzung: `2.f.R`.
 **Exakte Commit-Message:** `2.f.C refactor(model): Namespaced Extensions und Herkunft bereinigen`
 
 **Bereinigung:** Transparente Erweiterungsdaten nicht in implizite Plugins oder Fachregeln verwandeln.
@@ -2491,7 +2507,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.g.W – Let it Work
 
-- [x] **2.g.W** · Position **61/885** · Voraussetzung: `2.f.C`.
+- [x] **2.g.W** · Position **61/900** · Voraussetzung: `2.f.C`.
 **Exakte Commit-Message:** `2.g.W feat(model): Kryptografische Artefaktidentitäten aufbauen`
 
 **Umsetzung:** random128-v1 mit Standardbibliothekszufall, Crockford-Codierung und stabilen Pfaden implementieren.
@@ -2500,7 +2516,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.g.R – Make it Right
 
-- [x] **2.g.R** · Position **62/885** · Voraussetzung: `2.g.W`.
+- [x] **2.g.R** · Position **62/900** · Voraussetzung: `2.g.W`.
 **Exakte Commit-Message:** `2.g.R feat(model): Kryptografische Artefaktidentitäten vervollständigen`
 
 **Vervollständigung:** Kollisionen gegen aktuelle, archivierte und reservierte IDs erneut auslosen; Identität und Schema später unveränderbar halten.
@@ -2509,7 +2525,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.g.C – Make it Clean
 
-- [x] **2.g.C** · Position **63/885** · Voraussetzung: `2.g.R`.
+- [x] **2.g.C** · Position **63/900** · Voraussetzung: `2.g.R`.
 **Exakte Commit-Message:** `2.g.C refactor(model): Kryptografische Artefaktidentitäten bereinigen`
 
 **Bereinigung:** ID-Codec, Zufallsquelle und Reservierungsprüfung separieren.
@@ -2526,7 +2542,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.h.W – Let it Work
 
-- [x] **2.h.W** · Position **64/885** · Voraussetzung: `2.g.C`.
+- [x] **2.h.W** · Position **64/900** · Voraussetzung: `2.g.C`.
 **Exakte Commit-Message:** `2.h.W feat(model): Relationsidentität und Historienvergleich aufbauen`
 
 **Umsetzung:** Unabhängige zufällige Relations-IDs und Vergleich gleicher Identitäten mit Provenienz vorbereiten.
@@ -2535,7 +2551,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.h.R – Make it Right
 
-- [x] **2.h.R** · Position **65/885** · Voraussetzung: `2.h.W`.
+- [x] **2.h.R** · Position **65/900** · Voraussetzung: `2.h.W`.
 **Exakte Commit-Message:** `2.h.R feat(model): Relationsidentität und Historienvergleich vervollständigen`
 
 **Vervollständigung:** Reguläre Ableitung aus Endpunkten untersagen; unabhängige Erzeugung unter gleicher ID als Konflikt klassifizieren.
@@ -2544,7 +2560,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.h.C – Make it Clean
 
-- [x] **2.h.C** · Position **66/885** · Voraussetzung: `2.h.R`.
+- [x] **2.h.C** · Position **66/900** · Voraussetzung: `2.h.R`.
 **Exakte Commit-Message:** `2.h.C refactor(model): Relationsidentität und Historienvergleich bereinigen`
 
 **Bereinigung:** Identitätsvergleich von späterer Import-/Mergeentscheidung entkoppeln.
@@ -2561,7 +2577,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.i.W – Let it Work
 
-- [x] **2.i.W** · Position **67/885** · Voraussetzung: `2.h.C`.
+- [x] **2.i.W** · Position **67/900** · Voraussetzung: `2.h.C`.
 **Exakte Commit-Message:** `2.i.W feat(model): Revisionen, Akteure und Zeitwerte aufbauen`
 
 **Umsetzung:** Positive Revisionen, Actor und UTC-Zeittypen implementieren; Metadaten als Fachinputs behandeln.
@@ -2570,7 +2586,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.i.R – Make it Right
 
-- [x] **2.i.R** · Position **68/885** · Voraussetzung: `2.i.W`.
+- [x] **2.i.R** · Position **68/900** · Voraussetzung: `2.i.W`.
 **Exakte Commit-Message:** `2.i.R feat(model): Revisionen, Akteure und Zeitwerte vervollständigen`
 
 **Vervollständigung:** Ungültige Revisionen, Lokalzeiten und unvollständige Actorwerte ablehnen.
@@ -2579,7 +2595,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.i.C – Make it Clean
 
-- [x] **2.i.C** · Position **69/885** · Voraussetzung: `2.i.R`.
+- [x] **2.i.C** · Position **69/900** · Voraussetzung: `2.i.R`.
 **Exakte Commit-Message:** `2.i.C refactor(model): Revisionen, Akteure und Zeitwerte bereinigen`
 
 **Bereinigung:** Datentypen vorbereiten, Revisionsfortschreibung ausschließlich der späteren Metadatenpolicy überlassen.
@@ -2596,7 +2612,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.j.W – Let it Work
 
-- [x] **2.j.W** · Position **70/885** · Voraussetzung: `2.i.C`.
+- [x] **2.j.W** · Position **70/900** · Voraussetzung: `2.i.C`.
 **Exakte Commit-Message:** `2.j.W feat(model): JCS und kanonische Hashes aufbauen`
 
 **Umsetzung:** RFC-8785-konforme kanonische JSON-Bytes und SHA-256 implementieren; originale Unicodewerte erhalten.
@@ -2605,7 +2621,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.j.R – Make it Right
 
-- [x] **2.j.R** · Position **71/885** · Voraussetzung: `2.j.W`.
+- [x] **2.j.R** · Position **71/900** · Voraussetzung: `2.j.W`.
 **Exakte Commit-Message:** `2.j.R feat(model): JCS und kanonische Hashes vervollständigen`
 
 **Vervollständigung:** JCS-Zahlengrenzen, Schlüsselsortierung, Escapegrenzen und negative Null mit versionierten Datenvektoren abdecken.
@@ -2614,7 +2630,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.j.C – Make it Clean
 
-- [x] **2.j.C** · Position **72/885** · Voraussetzung: `2.j.R`.
+- [x] **2.j.C** · Position **72/900** · Voraussetzung: `2.j.R`.
 **Exakte Commit-Message:** `2.j.C refactor(model): JCS und kanonische Hashes bereinigen`
 
 **Bereinigung:** Kanonisierung und Hashprojektionen von menschenlesbarer Serialisierung trennen.
@@ -2631,7 +2647,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.k.W – Let it Work
 
-- [x] **2.k.W** · Position **73/885** · Voraussetzung: `2.j.C`.
+- [x] **2.k.W** · Position **73/900** · Voraussetzung: `2.j.C`.
 **Exakte Commit-Message:** `2.k.W feat(model): Repräsentation ohne Fachänderung aufbauen`
 
 **Umsetzung:** Menschenlesbare Normalform und generierte Kennzeichnung implementieren; Rückimport generierter Darstellungen ausschließen.
@@ -2640,7 +2656,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.k.R – Make it Right
 
-- [x] **2.k.R** · Position **74/885** · Voraussetzung: `2.k.W`.
+- [x] **2.k.R** · Position **74/900** · Voraussetzung: `2.k.W`.
 **Exakte Commit-Message:** `2.k.R feat(model): Repräsentation ohne Fachänderung vervollständigen`
 
 **Vervollständigung:** Normative Originaltextbytes nicht vereinheitlichen; geschützte Originalressourcen von Normalisierung ausnehmen.
@@ -2649,7 +2665,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.k.C – Make it Clean
 
-- [x] **2.k.C** · Position **75/885** · Voraussetzung: `2.k.R`.
+- [x] **2.k.C** · Position **75/900** · Voraussetzung: `2.k.R`.
 **Exakte Commit-Message:** `2.k.C refactor(model): Repräsentation ohne Fachänderung bereinigen`
 
 **Bereinigung:** Pretty-JSON und normative Byte-/Wertverträge getrennt anbieten.
@@ -2666,7 +2682,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.l.W – Let it Work
 
-- [x] **2.l.W** · Position **76/885** · Voraussetzung: `2.k.C`.
+- [x] **2.l.W** · Position **76/900** · Voraussetzung: `2.k.C`.
 **Exakte Commit-Message:** `2.l.W feat(model): Ressourceninventur und Anhangsdaten aufbauen`
 
 **Umsetzung:** Anhänge als sichere relative Pfade mit Medientyp, Größe und Bytehash laden; vollständige Inventur anbieten.
@@ -2675,7 +2691,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.l.R – Make it Right
 
-- [x] **2.l.R** · Position **77/885** · Voraussetzung: `2.l.W`.
+- [x] **2.l.R** · Position **77/900** · Voraussetzung: `2.l.W`.
 **Exakte Commit-Message:** `2.l.R feat(model): Ressourceninventur und Anhangsdaten vervollständigen`
 
 **Vervollständigung:** Externe Symlinks, falsche Größe, fehlende Bytes und Hashabweichung abweisen.
@@ -2684,7 +2700,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.l.C – Make it Clean
 
-- [x] **2.l.C** · Position **78/885** · Voraussetzung: `2.l.R`.
+- [x] **2.l.C** · Position **78/900** · Voraussetzung: `2.l.R`.
 **Exakte Commit-Message:** `2.l.C refactor(model): Ressourceninventur und Anhangsdaten bereinigen`
 
 **Bereinigung:** Inventarisierung und blockweises Hashen für Baselines, Exchange und Work gemeinsam nutzbar machen.
@@ -2701,7 +2717,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.m.W – Let it Work
 
-- [x] **2.m.W** · Position **79/885** · Voraussetzung: `2.l.C`.
+- [x] **2.m.W** · Position **79/900** · Voraussetzung: `2.l.C`.
 **Exakte Commit-Message:** `2.m.W feat(model): Explizite Requirement-Verbindlichkeit aufbauen`
 
 **Umsetzung:** language, normative_force, statement und strukturierte Semantik ab draft materialisieren; should verlangt Abweichungsfelder.
@@ -2710,7 +2726,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.m.R – Make it Right
 
-- [x] **2.m.R** · Position **80/885** · Voraussetzung: `2.m.W`.
+- [x] **2.m.R** · Position **80/900** · Voraussetzung: `2.m.W`.
 **Exakte Commit-Message:** `2.m.R feat(model): Explizite Requirement-Verbindlichkeit vervollständigen`
 
 **Vervollständigung:** Force nicht aus Priorität, Keywords oder Detector ableiten; fehlende Sprache und leere Abweichungsangaben ablehnen.
@@ -2719,7 +2735,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.m.C – Make it Clean
 
-- [x] **2.m.C** · Position **81/885** · Voraussetzung: `2.m.R`.
+- [x] **2.m.C** · Position **81/900** · Voraussetzung: `2.m.R`.
 **Exakte Commit-Message:** `2.m.C refactor(model): Explizite Requirement-Verbindlichkeit bereinigen`
 
 **Bereinigung:** Gemeinsamen Requirement-Konstruktor für CLI, Import und Migration vorsehen.
@@ -2736,7 +2752,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.n.W – Let it Work
 
-- [x] **2.n.W** · Position **82/885** · Voraussetzung: `2.m.C`.
+- [x] **2.n.W** · Position **82/900** · Voraussetzung: `2.m.C`.
 **Exakte Commit-Message:** `2.n.W feat(model): Sprach-Tags und Offline-Register aufbauen`
 
 **Umsetzung:** BCP-47-Syntax und Registryzustand getrennt modellieren; eingefrorenen IANA-Snapshot als gebundene Ressource liefern.
@@ -2745,7 +2761,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.n.R – Make it Right
 
-- [x] **2.n.R** · Position **83/885** · Voraussetzung: `2.n.W`.
+- [x] **2.n.R** · Position **83/900** · Voraussetzung: `2.n.W`.
 **Exakte Commit-Message:** `2.n.R feat(model): Sprach-Tags und Offline-Register vervollständigen`
 
 **Vervollständigung:** Keine stille Makrosprachenalias-Auflösung oder Onlineaktualisierung; unbekannt ist nicht automatisch ungültig.
@@ -2754,7 +2770,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.n.C – Make it Clean
 
-- [x] **2.n.C** · Position **84/885** · Voraussetzung: `2.n.R`.
+- [x] **2.n.C** · Position **84/900** · Voraussetzung: `2.n.R`.
 **Exakte Commit-Message:** `2.n.C refactor(model): Sprach-Tags und Offline-Register bereinigen`
 
 **Bereinigung:** Tagparser, Registrylookup und fachliche Sprachpolicy separieren.
@@ -2771,7 +2787,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.o.W – Let it Work
 
-- [x] **2.o.W** · Position **85/885** · Voraussetzung: `2.n.C`.
+- [x] **2.o.W** · Position **85/900** · Voraussetzung: `2.n.C`.
 **Exakte Commit-Message:** `2.o.W feat(model): Sprachpakete und Locale-Unabhängigkeit aufbauen`
 
 **Umsetzung:** Mindestlabelpakete und Sprachmetadaten als reine Ressourcen ausliefern; CLI-Locale separat halten.
@@ -2780,7 +2796,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.o.R – Make it Right
 
-- [x] **2.o.R** · Position **86/885** · Voraussetzung: `2.o.W`.
+- [x] **2.o.R** · Position **86/900** · Voraussetzung: `2.o.W`.
 **Exakte Commit-Message:** `2.o.R feat(model): Sprachpakete und Locale-Unabhängigkeit vervollständigen`
 
 **Vervollständigung:** Unicode- und Richtungsmetadaten nicht mit Detektion oder Übersetzung verwechseln.
@@ -2789,7 +2805,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.o.C – Make it Clean
 
-- [x] **2.o.C** · Position **87/885** · Voraussetzung: `2.o.R`.
+- [x] **2.o.C** · Position **87/900** · Voraussetzung: `2.o.R`.
 **Exakte Commit-Message:** `2.o.C refactor(model): Sprachpakete und Locale-Unabhängigkeit bereinigen`
 
 **Bereinigung:** Sprachlabels vollständig aus ausführbarer Fachlogik herauslösen.
@@ -2806,7 +2822,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.p.W – Let it Work
 
-- [x] **2.p.W** · Position **88/885** · Voraussetzung: `2.o.C`.
+- [x] **2.p.W** · Position **88/900** · Voraussetzung: `2.o.C`.
 **Exakte Commit-Message:** `2.p.W feat(model): Modellwurzel und Projektbindung aufbauen`
 
 **Umsetzung:** Geordnete Ressourcenhashes, Scopebindung und semantische Konfigurationsprojektion zu einer Modellwurzel verbinden.
@@ -2815,7 +2831,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.p.R – Make it Right
 
-- [x] **2.p.R** · Position **89/885** · Voraussetzung: `2.p.W`.
+- [x] **2.p.R** · Position **89/900** · Voraussetzung: `2.p.W`.
 **Exakte Commit-Message:** `2.p.R feat(model): Modellwurzel und Projektbindung vervollständigen`
 
 **Vervollständigung:** Betriebsdaten, Farbe, Laufzeitmesswerte und externe Workpfade ausschließen; mehrere project_id nicht mischen.
@@ -2824,7 +2840,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.p.C – Make it Clean
 
-- [x] **2.p.C** · Position **90/885** · Voraussetzung: `2.p.R`.
+- [x] **2.p.C** · Position **90/900** · Voraussetzung: `2.p.R`.
 **Exakte Commit-Message:** `2.p.C refactor(model): Modellwurzel und Projektbindung bereinigen`
 
 **Bereinigung:** Projektion, Inventur und Hashbildung als wiederverwendbare reine Dienste führen.
@@ -2841,7 +2857,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.q.W – Let it Work
 
-- [x] **2.q.W** · Position **91/885** · Voraussetzung: `2.p.C`.
+- [x] **2.q.W** · Position **91/900** · Voraussetzung: `2.p.C`.
 **Exakte Commit-Message:** `2.q.W feat(model): Schema-Katalog und vollständiger Schemaabruf aufbauen`
 
 **Umsetzung:** schema list/show für sämtliche vorhandenen Artefakt-, Konfigurations-, Mapping-, Ergebnis- und Austauschschemas bereitstellen.
@@ -2850,7 +2866,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.q.R – Make it Right
 
-- [x] **2.q.R** · Position **92/885** · Voraussetzung: `2.q.W`.
+- [x] **2.q.R** · Position **92/900** · Voraussetzung: `2.q.W`.
 **Exakte Commit-Message:** `2.q.R feat(model): Schema-Katalog und vollständiger Schemaabruf vervollständigen`
 
 **Vervollständigung:** Unbekannte IDs ablehnen; Beschreibungen, Defaults, Beispiele, Enums und deprecation als Vertragsdaten erhalten.
@@ -2859,7 +2875,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 2.q.C – Make it Clean
 
-- [x] **2.q.C** · Position **93/885** · Voraussetzung: `2.q.R`.
+- [x] **2.q.C** · Position **93/900** · Voraussetzung: `2.q.R`.
 **Exakte Commit-Message:** `2.q.C refactor(model): Schema-Katalog und vollständiger Schemaabruf bereinigen`
 
 **Bereinigung:** Katalog und Validator laden dieselbe kanonische Ressource.
@@ -2888,7 +2904,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.a.W – Let it Work
 
-- [x] **3.a.W** · Position **94/885** · Voraussetzung: `2.q.C`.
+- [x] **3.a.W** · Position **94/900** · Voraussetzung: `2.q.C`.
 **Exakte Commit-Message:** `3.a.W feat(graph): Relationsdaten und unveränderbare Schlüssel aufbauen`
 
 **Umsetzung:** Relationsobjekte am Quellartefakt mit stabiler ID, Typ, Ziel und Extensions laden.
@@ -2897,7 +2913,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.a.R – Make it Right
 
-- [x] **3.a.R** · Position **95/885** · Voraussetzung: `3.a.W`.
+- [x] **3.a.R** · Position **95/900** · Voraussetzung: `3.a.W`.
 **Exakte Commit-Message:** `3.a.R feat(graph): Relationsdaten und unveränderbare Schlüssel vervollständigen`
 
 **Vervollständigung:** Direkte Updates der identitätsstiftenden Relationsfelder ablehnen.
@@ -2906,7 +2922,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.a.C – Make it Clean
 
-- [x] **3.a.C** · Position **96/885** · Voraussetzung: `3.a.R`.
+- [x] **3.a.C** · Position **96/900** · Voraussetzung: `3.a.R`.
 **Exakte Commit-Message:** `3.a.C refactor(graph): Relationsdaten und unveränderbare Schlüssel bereinigen`
 
 **Bereinigung:** Relationswertmodell von Adjazenzindizes und Writeroperationen trennen.
@@ -2923,7 +2939,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.b.W – Let it Work
 
-- [x] **3.b.W** · Position **97/885** · Voraussetzung: `3.a.C`.
+- [x] **3.b.W** · Position **97/900** · Voraussetzung: `3.a.C`.
 **Exakte Commit-Message:** `3.b.W feat(graph): Quell-Ziel-Matrix und Referenzen aufbauen`
 
 **Umsetzung:** Die vollständige Kernrelationsmatrix einschließlich Self-Link-Verbot als Datenvalidator implementieren.
@@ -2932,7 +2948,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.b.R – Make it Right
 
-- [x] **3.b.R** · Position **98/885** · Voraussetzung: `3.b.W`.
+- [x] **3.b.R** · Position **98/900** · Voraussetzung: `3.b.W`.
 **Exakte Commit-Message:** `3.b.R feat(graph): Quell-Ziel-Matrix und Referenzen vervollständigen`
 
 **Vervollständigung:** Jede unzulässige Kombination und fehlende Referenz als Modellfehler behandeln.
@@ -2941,7 +2957,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.b.C – Make it Clean
 
-- [x] **3.b.C** · Position **99/885** · Voraussetzung: `3.b.R`.
+- [x] **3.b.C** · Position **99/900** · Voraussetzung: `3.b.R`.
 **Exakte Commit-Message:** `3.b.C refactor(graph): Quell-Ziel-Matrix und Referenzen bereinigen`
 
 **Bereinigung:** Ein einziges Matrixregister für Validation, Authoring und Import verwenden.
@@ -2958,7 +2974,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.c.W – Let it Work
 
-- [x] **3.c.W** · Position **100/885** · Voraussetzung: `3.b.C`.
+- [x] **3.c.W** · Position **100/900** · Voraussetzung: `3.b.C`.
 **Exakte Commit-Message:** `3.c.W feat(graph): Symmetrische und inverse Beziehungen aufbauen`
 
 **Umsetzung:** Konflikt- und Duplikatbeziehungen kanonisch speichern; inverse Sichten berechnen.
@@ -2967,7 +2983,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.c.R – Make it Right
 
-- [x] **3.c.R** · Position **101/885** · Voraussetzung: `3.c.W`.
+- [x] **3.c.R** · Position **101/900** · Voraussetzung: `3.c.W`.
 **Exakte Commit-Message:** `3.c.R feat(graph): Symmetrische und inverse Beziehungen vervollständigen`
 
 **Vervollständigung:** Umordnung darf relation_id nicht ändern; doppelte normative inverse Kopien abweisen.
@@ -2976,7 +2992,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.c.C – Make it Clean
 
-- [x] **3.c.C** · Position **102/885** · Voraussetzung: `3.c.R`.
+- [x] **3.c.C** · Position **102/900** · Voraussetzung: `3.c.R`.
 **Exakte Commit-Message:** `3.c.C refactor(graph): Symmetrische und inverse Beziehungen bereinigen`
 
 **Bereinigung:** Kanonisierung und inverse Projektion in kleine reine Funktionen aufteilen.
@@ -2993,7 +3009,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.d.W – Let it Work
 
-- [x] **3.d.W** · Position **103/885** · Voraussetzung: `3.c.C`.
+- [x] **3.d.W** · Position **103/900** · Voraussetzung: `3.c.C`.
 **Exakte Commit-Message:** `3.d.W feat(graph): Zyklen und Dokumentpositionen aufbauen`
 
 **Umsetzung:** Zyklusprüfung für die vorgeschriebenen Hierarchien und Positionstypen implementieren.
@@ -3002,7 +3018,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.d.R – Make it Right
 
-- [x] **3.d.R** · Position **104/885** · Voraussetzung: `3.d.W`.
+- [x] **3.d.R** · Position **104/900** · Voraussetzung: `3.d.W`.
 **Exakte Commit-Message:** `3.d.R feat(graph): Zyklen und Dokumentpositionen vervollständigen`
 
 **Vervollständigung:** Direkte/indirekte Zyklen, negative Positionen und Grenzfälle deterministisch erkennen.
@@ -3011,7 +3027,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.d.C – Make it Clean
 
-- [x] **3.d.C** · Position **105/885** · Voraussetzung: `3.d.R`.
+- [x] **3.d.C** · Position **105/900** · Voraussetzung: `3.d.R`.
 **Exakte Commit-Message:** `3.d.C refactor(graph): Zyklen und Dokumentpositionen bereinigen`
 
 **Bereinigung:** Gemeinsame Traversierung statt gesonderter zyklischer Sonderalgorithmen verwenden.
@@ -3028,7 +3044,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.e.W – Let it Work
 
-- [x] **3.e.W** · Position **106/885** · Voraussetzung: `3.d.C`.
+- [x] **3.e.W** · Position **106/900** · Voraussetzung: `3.d.C`.
 **Exakte Commit-Message:** `3.e.W feat(graph): Vollständige eingehende Indizes aufbauen`
 
 **Umsetzung:** Vorwärts- und Rückwärtsindex auf vollständiger Datenbasis beziehungsweise nachweislich vollständigem Index aufbauen.
@@ -3037,7 +3053,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.e.R – Make it Right
 
-- [x] **3.e.R** · Position **107/885** · Voraussetzung: `3.e.W`.
+- [x] **3.e.R** · Position **107/900** · Voraussetzung: `3.e.W`.
 **Exakte Commit-Message:** `3.e.R feat(graph): Vollständige eingehende Indizes vervollständigen`
 
 **Vervollständigung:** Teilindizes ohne Vollständigkeitsnachweis nicht als vollständig verwenden.
@@ -3046,7 +3062,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.e.C – Make it Clean
 
-- [x] **3.e.C** · Position **108/885** · Voraussetzung: `3.e.R`.
+- [x] **3.e.C** · Position **108/900** · Voraussetzung: `3.e.R`.
 **Exakte Commit-Message:** `3.e.C refactor(graph): Vollständige eingehende Indizes bereinigen`
 
 **Bereinigung:** Indexaufbau und indexunabhängige Fallback-Lesepfade hinter dieselbe API stellen.
@@ -3063,7 +3079,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.f.W – Let it Work
 
-- [x] **3.f.W** · Position **109/885** · Voraussetzung: `3.e.C`.
+- [x] **3.f.W** · Position **109/900** · Voraussetzung: `3.e.C`.
 **Exakte Commit-Message:** `3.f.W feat(graph): Scope-Descriptor und Seed-Mengen aufbauen`
 
 **Umsetzung:** Versionierte Descriptoren für specification, project, release, document, query und explicit definieren.
@@ -3072,7 +3088,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.f.R – Make it Right
 
-- [x] **3.f.R** · Position **110/885** · Voraussetzung: `3.f.W`.
+- [x] **3.f.R** · Position **110/900** · Voraussetzung: `3.f.W`.
 **Exakte Commit-Message:** `3.f.R feat(graph): Scope-Descriptor und Seed-Mengen vervollständigen`
 
 **Vervollständigung:** Unbekannte Selektorfelder, Dubletten und rekursive Konfigurationshüllen abweisen.
@@ -3081,7 +3097,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.f.C – Make it Clean
 
-- [x] **3.f.C** · Position **111/885** · Voraussetzung: `3.f.R`.
+- [x] **3.f.C** · Position **111/900** · Voraussetzung: `3.f.R`.
 **Exakte Commit-Message:** `3.f.C refactor(graph): Scope-Descriptor und Seed-Mengen bereinigen`
 
 **Bereinigung:** Selektorvalidierung von einzelnen späteren Fachresolvern trennen.
@@ -3098,7 +3114,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.g.W – Let it Work
 
-- [x] **3.g.W** · Position **112/885** · Voraussetzung: `3.f.C`.
+- [x] **3.g.W** · Position **112/900** · Voraussetzung: `3.f.C`.
 **Exakte Commit-Message:** `3.g.W feat(graph): Starke Closure und Ressourcenbindungen aufbauen`
 
 **Umsetzung:** Kleinsten Fixpunkt aus starken Relationen, Anhängen, Profilen, Regeln, Mappings und Nachweisbindungen berechnen.
@@ -3107,7 +3123,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.g.R – Make it Right
 
-- [x] **3.g.R** · Position **113/885** · Voraussetzung: `3.g.W`.
+- [x] **3.g.R** · Position **113/900** · Voraussetzung: `3.g.W`.
 **Exakte Commit-Message:** `3.g.R feat(graph): Starke Closure und Ressourcenbindungen vervollständigen`
 
 **Vervollständigung:** Fehlende Ressourcen nicht still ignorieren; zurückgezogene erreichte Artefakte bleiben erreichbar.
@@ -3116,7 +3132,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.g.C – Make it Clean
 
-- [x] **3.g.C** · Position **114/885** · Voraussetzung: `3.g.R`.
+- [x] **3.g.C** · Position **114/900** · Voraussetzung: `3.g.R`.
 **Exakte Commit-Message:** `3.g.C refactor(graph): Starke Closure und Ressourcenbindungen bereinigen`
 
 **Bereinigung:** Frontier und besuchte Identitäten so kapseln, dass M6 sie fortsetzen kann.
@@ -3133,7 +3149,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.h.W – Let it Work
 
-- [x] **3.h.W** · Position **115/885** · Voraussetzung: `3.g.C`.
+- [x] **3.h.W** · Position **115/900** · Voraussetzung: `3.g.C`.
 **Exakte Commit-Message:** `3.h.W feat(graph): Schwache Kanten und Boundary References aufbauen`
 
 **Umsetzung:** Closed- und Partial-Behandlung schwacher Relationen und vollständige Boundary-Tupel implementieren.
@@ -3142,7 +3158,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.h.R – Make it Right
 
-- [x] **3.h.R** · Position **116/885** · Voraussetzung: `3.h.W`.
+- [x] **3.h.R** · Position **116/900** · Voraussetzung: `3.h.W`.
 **Exakte Commit-Message:** `3.h.R feat(graph): Schwache Kanten und Boundary References vervollständigen`
 
 **Vervollständigung:** Fehlende starke Ziele nicht zu Boundaries abschwächen; falsche oder doppelte Boundaries ablehnen.
@@ -3151,7 +3167,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.h.C – Make it Clean
 
-- [x] **3.h.C** · Position **117/885** · Voraussetzung: `3.h.R`.
+- [x] **3.h.C** · Position **117/900** · Voraussetzung: `3.h.R`.
 **Exakte Commit-Message:** `3.h.C refactor(graph): Schwache Kanten und Boundary References bereinigen`
 
 **Bereinigung:** Boundaryerzeugung und Referenzprüfung gemeinsam für spätere Bundleleser nutzen.
@@ -3168,7 +3184,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.i.W – Let it Work
 
-- [x] **3.i.W** · Position **118/885** · Voraussetzung: `3.h.C`.
+- [x] **3.i.W** · Position **118/900** · Voraussetzung: `3.h.C`.
 **Exakte Commit-Message:** `3.i.W feat(graph): Permanente Kontrollausschlüsse aufbauen`
 
 **Umsetzung:** Proposal und Baseline im specification-Scope auch transitiv ausschließen.
@@ -3177,7 +3193,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.i.R – Make it Right
 
-- [x] **3.i.R** · Position **119/885** · Voraussetzung: `3.i.W`.
+- [x] **3.i.R** · Position **119/900** · Voraussetzung: `3.i.W`.
 **Exakte Commit-Message:** `3.i.R feat(graph): Permanente Kontrollausschlüsse vervollständigen`
 
 **Vervollständigung:** Starke oder closed-schwache Kontrollabhängigkeit mit SRV140/reason scope_control_dependency ablehnen.
@@ -3186,7 +3202,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.i.C – Make it Clean
 
-- [x] **3.i.C** · Position **120/885** · Voraussetzung: `3.i.R`.
+- [x] **3.i.C** · Position **120/900** · Voraussetzung: `3.i.R`.
 **Exakte Commit-Message:** `3.i.C refactor(graph): Permanente Kontrollausschlüsse bereinigen`
 
 **Bereinigung:** Scopezulässigkeit vor jede Ressourcenaufnahme stellen, nicht nur vor Seeds.
@@ -3203,7 +3219,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.j.W – Let it Work
 
-- [x] **3.j.W** · Position **121/885** · Voraussetzung: `3.i.C`.
+- [x] **3.j.W** · Position **121/900** · Voraussetzung: `3.i.C`.
 **Exakte Commit-Message:** `3.j.W feat(graph): Scope-Hash und fachliche Vergleichsprimitiven aufbauen`
 
 **Umsetzung:** Scopehash sowie reine direkte Impact- und Felddiff-Kerne für sichere Change Plans bereitstellen.
@@ -3212,7 +3228,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.j.R – Make it Right
 
-- [x] **3.j.R** · Position **122/885** · Voraussetzung: `3.j.W`.
+- [x] **3.j.R** · Position **122/900** · Voraussetzung: `3.j.W`.
 **Exakte Commit-Message:** `3.j.R feat(graph): Scope-Hash und fachliche Vergleichsprimitiven vervollständigen`
 
 **Vervollständigung:** Unstrukturierte Textänderung nur text_changed nennen; keine erfundene semantische Interpretation.
@@ -3221,7 +3237,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.j.C – Make it Clean
 
-- [x] **3.j.C** · Position **123/885** · Voraussetzung: `3.j.R`.
+- [x] **3.j.C** · Position **123/900** · Voraussetzung: `3.j.R`.
 **Exakte Commit-Message:** `3.j.C refactor(graph): Scope-Hash und fachliche Vergleichsprimitiven bereinigen`
 
 **Bereinigung:** Primitive von der späteren Diff-/Impact-CLI und Berichtsformatierung trennen.
@@ -3238,7 +3254,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.k.W – Let it Work
 
-- [x] **3.k.W** · Position **124/885** · Voraussetzung: `3.j.C`.
+- [x] **3.k.W** · Position **124/900** · Voraussetzung: `3.j.C`.
 **Exakte Commit-Message:** `3.k.W feat(graph): Pflichtbeziehungen und Reviewkontexte aufbauen`
 
 **Umsetzung:** Herkunfts-/Verifikationspflichten als Gategrundlage und relation_context_hash-v1 als reine Projektion implementieren.
@@ -3247,7 +3263,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.k.R – Make it Right
 
-- [x] **3.k.R** · Position **125/885** · Voraussetzung: `3.k.W`.
+- [x] **3.k.R** · Position **125/900** · Voraussetzung: `3.k.W`.
 **Exakte Commit-Message:** `3.k.R feat(graph): Pflichtbeziehungen und Reviewkontexte vervollständigen`
 
 **Vervollständigung:** Profilabhängige Pflichten und sämtliche ausgeschlossenen Audit-/Statusfelder korrekt unterscheiden.
@@ -3256,7 +3272,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 3.k.C – Make it Clean
 
-- [x] **3.k.C** · Position **126/885** · Voraussetzung: `3.k.R`.
+- [x] **3.k.C** · Position **126/900** · Voraussetzung: `3.k.R`.
 **Exakte Commit-Message:** `3.k.C refactor(graph): Pflichtbeziehungen und Reviewkontexte bereinigen`
 
 **Bereinigung:** Kontextprojektion, Relationstypregeln und spätere Reviewauswahl getrennt halten.
@@ -3287,7 +3303,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.a.W – Let it Work
 
-- [x] **4.a.W** · Position **127/885** · Voraussetzung: `3.k.C`.
+- [x] **4.a.W** · Position **127/900** · Voraussetzung: `3.k.C`.
 **Exakte Commit-Message:** `4.a.W feat(validation): SRX-AST und Kontextgrenze aufbauen`
 
 **Umsetzung:** Versionierten JSON-AST mit explizitem Artefakt-/Konfigurations-/Graphkontext einlesen.
@@ -3296,7 +3312,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.a.R – Make it Right
 
-- [x] **4.a.R** · Position **128/885** · Voraussetzung: `4.a.W`.
+- [x] **4.a.R** · Position **128/900** · Voraussetzung: `4.a.W`.
 **Exakte Commit-Message:** `4.a.R feat(validation): SRX-AST und Kontextgrenze vervollständigen`
 
 **Vervollständigung:** Unbekannte Versionen und außerhalb der erlaubten Kontextobjekte liegende Daten ablehnen.
@@ -3305,7 +3321,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.a.C – Make it Clean
 
-- [x] **4.a.C** · Position **129/885** · Voraussetzung: `4.a.R`.
+- [x] **4.a.C** · Position **129/900** · Voraussetzung: `4.a.R`.
 **Exakte Commit-Message:** `4.a.C refactor(validation): SRX-AST und Kontextgrenze bereinigen`
 
 **Bereinigung:** AST-Parsing, Validierung und Auswertung separieren.
@@ -3322,7 +3338,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.b.W – Let it Work
 
-- [x] **4.b.W** · Position **130/885** · Voraussetzung: `4.a.C`.
+- [x] **4.b.W** · Position **130/900** · Voraussetzung: `4.a.C`.
 **Exakte Commit-Message:** `4.b.W feat(validation): Feldzugriff, Missing und strikte Typen aufbauen`
 
 **Umsetzung:** RFC-6901-Felder, missing und exists samt exakter Typsemantik implementieren.
@@ -3331,7 +3347,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.b.R – Make it Right
 
-- [x] **4.b.R** · Position **131/885** · Voraussetzung: `4.b.W`.
+- [x] **4.b.R** · Position **131/900** · Voraussetzung: `4.b.W`.
 **Exakte Commit-Message:** `4.b.R feat(validation): Feldzugriff, Missing und strikte Typen vervollständigen`
 
 **Vervollständigung:** Keine implizite Konvertierung oder dynamischen Feldnamen; fehlerhafte Pointer abweisen.
@@ -3340,7 +3356,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.b.C – Make it Clean
 
-- [x] **4.b.C** · Position **132/885** · Voraussetzung: `4.b.R`.
+- [x] **4.b.C** · Position **132/900** · Voraussetzung: `4.b.R`.
 **Exakte Commit-Message:** `4.b.C refactor(validation): Feldzugriff, Missing und strikte Typen bereinigen`
 
 **Bereinigung:** Pointerauflösung und Typsignaturen zentral für alle Operatoren führen.
@@ -3357,7 +3373,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.c.W – Let it Work
 
-- [x] **4.c.W** · Position **133/885** · Voraussetzung: `4.b.C`.
+- [x] **4.c.W** · Position **133/900** · Voraussetzung: `4.b.C`.
 **Exakte Commit-Message:** `4.c.W feat(validation): Logik und Vergleich aufbauen`
 
 **Umsetzung:** not, and, or und Vergleichsoperatoren mit stabiler Argumentreihenfolge implementieren.
@@ -3366,7 +3382,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.c.R – Make it Right
 
-- [x] **4.c.R** · Position **134/885** · Voraussetzung: `4.c.W`.
+- [x] **4.c.R** · Position **134/900** · Voraussetzung: `4.c.W`.
 **Exakte Commit-Message:** `4.c.R feat(validation): Logik und Vergleich vervollständigen`
 
 **Vervollständigung:** Kurzschluss verhindert die Auswertung eines nicht benötigten fehlerhaften Zweigs.
@@ -3375,7 +3391,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.c.C – Make it Clean
 
-- [x] **4.c.C** · Position **135/885** · Voraussetzung: `4.c.R`.
+- [x] **4.c.C** · Position **135/900** · Voraussetzung: `4.c.R`.
 **Exakte Commit-Message:** `4.c.C refactor(validation): Logik und Vergleich bereinigen`
 
 **Bereinigung:** Gemeinsame Dispatch-/Fehlerlogik statt Operator-Sonderwege verwenden.
@@ -3392,7 +3408,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.d.W – Let it Work
 
-- [x] **4.d.W** · Position **136/885** · Voraussetzung: `4.c.C`.
+- [x] **4.d.W** · Position **136/900** · Voraussetzung: `4.c.C`.
 **Exakte Commit-Message:** `4.d.W feat(validation): Strings, Mengen und Aggregationen aufbauen`
 
 **Umsetzung:** in, contains, starts_with, ends_with, length und count implementieren.
@@ -3401,7 +3417,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.d.R – Make it Right
 
-- [x] **4.d.R** · Position **137/885** · Voraussetzung: `4.d.W`.
+- [x] **4.d.R** · Position **137/900** · Voraussetzung: `4.d.W`.
 **Exakte Commit-Message:** `4.d.R feat(validation): Strings, Mengen und Aggregationen vervollständigen`
 
 **Vervollständigung:** Operandentypen, leere Werte und Unicodewerte nach Anhang B behandeln.
@@ -3410,7 +3426,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.d.C – Make it Clean
 
-- [x] **4.d.C** · Position **138/885** · Voraussetzung: `4.d.R`.
+- [x] **4.d.C** · Position **138/900** · Voraussetzung: `4.d.R`.
 **Exakte Commit-Message:** `4.d.C refactor(validation): Strings, Mengen und Aggregationen bereinigen`
 
 **Bereinigung:** Wiederverwendbare typisierte Operatorbausteine schaffen.
@@ -3427,7 +3443,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.e.W – Let it Work
 
-- [x] **4.e.W** · Position **139/885** · Voraussetzung: `4.d.C`.
+- [x] **4.e.W** · Position **139/900** · Voraussetzung: `4.d.C`.
 **Exakte Commit-Message:** `4.e.W feat(validation): Quantoren und Elementkontext aufbauen`
 
 **Umsetzung:** any, all und none mit geordnetem lokalem Elementkontext implementieren.
@@ -3436,7 +3452,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.e.R – Make it Right
 
-- [x] **4.e.R** · Position **140/885** · Voraussetzung: `4.e.W`.
+- [x] **4.e.R** · Position **140/900** · Voraussetzung: `4.e.W`.
 **Exakte Commit-Message:** `4.e.R feat(validation): Quantoren und Elementkontext vervollständigen`
 
 **Vervollständigung:** Leere Arrays, verschachtelte Quantoren und Kontextschatten nach der normativen Tabelle behandeln.
@@ -3445,7 +3461,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.e.C – Make it Clean
 
-- [x] **4.e.C** · Position **141/885** · Voraussetzung: `4.e.R`.
+- [x] **4.e.C** · Position **141/900** · Voraussetzung: `4.e.R`.
 **Exakte Commit-Message:** `4.e.C refactor(validation): Quantoren und Elementkontext bereinigen`
 
 **Bereinigung:** Quantoreniteration von AST-Rekursion entkoppeln.
@@ -3462,7 +3478,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.f.W – Let it Work
 
-- [x] **4.f.W** · Position **142/885** · Voraussetzung: `4.e.C`.
+- [x] **4.f.W** · Position **142/900** · Voraussetzung: `4.e.C`.
 **Exakte Commit-Message:** `4.f.W feat(validation): Begrenzte Graphoperatoren aufbauen`
 
 **Umsetzung:** relation_count, has_relation, reachable und incoming_count über den vollständigen Graphkern auswerten.
@@ -3471,7 +3487,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.f.R – Make it Right
 
-- [x] **4.f.R** · Position **143/885** · Voraussetzung: `4.f.W`.
+- [x] **4.f.R** · Position **143/900** · Voraussetzung: `4.f.W`.
 **Exakte Commit-Message:** `4.f.R feat(validation): Begrenzte Graphoperatoren vervollständigen`
 
 **Vervollständigung:** Fehlende Tiefe, unvollständige Indizes und Zyklen korrekt behandeln.
@@ -3480,7 +3496,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.f.C – Make it Clean
 
-- [x] **4.f.C** · Position **144/885** · Voraussetzung: `4.f.R`.
+- [x] **4.f.C** · Position **144/900** · Voraussetzung: `4.f.R`.
 **Exakte Commit-Message:** `4.f.C refactor(validation): Begrenzte Graphoperatoren bereinigen`
 
 **Bereinigung:** Graphzugriff über einen kleinen lesenden Auswertungskontext kapseln.
@@ -3497,7 +3513,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.g.W – Let it Work
 
-- [x] **4.g.W** · Position **145/885** · Voraussetzung: `4.f.C`.
+- [x] **4.g.W** · Position **145/900** · Voraussetzung: `4.f.C`.
 **Exakte Commit-Message:** `4.g.W feat(validation): Exakte Arithmetik und Zahlenpolicy aufbauen`
 
 **Umsetzung:** srx-decimal-v1 mit expliziter Präzision 34 sowie add, subtract, multiply und divide implementieren.
@@ -3506,7 +3522,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.g.R – Make it Right
 
-- [x] **4.g.R** · Position **146/885** · Voraussetzung: `4.g.W`.
+- [x] **4.g.R** · Position **146/900** · Voraussetzung: `4.g.W`.
 **Exakte Commit-Message:** `4.g.R feat(validation): Exakte Arithmetik und Zahlenpolicy vervollständigen`
 
 **Vervollständigung:** Nichtterminierende Division, precision_exceeded und JCS-Roundtripverletzung getrennt abweisen; kein globaler Decimal-Kontext.
@@ -3515,7 +3531,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.g.C – Make it Clean
 
-- [x] **4.g.C** · Position **147/885** · Voraussetzung: `4.g.R`.
+- [x] **4.g.C** · Position **147/900** · Voraussetzung: `4.g.R`.
 **Exakte Commit-Message:** `4.g.C refactor(validation): Exakte Arithmetik und Zahlenpolicy bereinigen`
 
 **Bereinigung:** Exakte Zahlendarstellung, Policy und JCS-Übergang als eigenständige Schichten führen.
@@ -3532,7 +3548,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.h.W – Let it Work
 
-- [x] **4.h.W** · Position **148/885** · Voraussetzung: `4.g.C`.
+- [x] **4.h.W** · Position **148/900** · Voraussetzung: `4.g.C`.
 **Exakte Commit-Message:** `4.h.W feat(validation): SRX-Ressourcen und Sicherheitsgrenzen aufbauen`
 
 **Umsetzung:** Harte AST-Strukturgrenzen von weichen Auswertungsschritten unterscheiden; Messpunkte einbauen.
@@ -3541,7 +3557,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.h.R – Make it Right
 
-- [x] **4.h.R** · Position **149/885** · Voraussetzung: `4.h.W`.
+- [x] **4.h.R** · Position **149/900** · Voraussetzung: `4.h.W`.
 **Exakte Commit-Message:** `4.h.R feat(validation): SRX-Ressourcen und Sicherheitsgrenzen vervollständigen`
 
 **Vervollständigung:** Reflection, Regex, Datei/Netzwerk/Zeit/Zufall und unbekannte Operatoren vor Ausführung sperren.
@@ -3550,7 +3566,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.h.C – Make it Clean
 
-- [x] **4.h.C** · Position **150/885** · Voraussetzung: `4.h.R`.
+- [x] **4.h.C** · Position **150/900** · Voraussetzung: `4.h.R`.
 **Exakte Commit-Message:** `4.h.C refactor(validation): SRX-Ressourcen und Sicherheitsgrenzen bereinigen`
 
 **Bereinigung:** Zählung und spätere Checkpointadapter außerhalb der Operatorsemantik halten.
@@ -3567,7 +3583,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.i.W – Let it Work
 
-- [x] **4.i.W** · Position **151/885** · Voraussetzung: `4.h.C`.
+- [x] **4.i.W** · Position **151/900** · Voraussetzung: `4.h.C`.
 **Exakte Commit-Message:** `4.i.W feat(validation): SRX-Diagnosen und Vektorkorpus aufbauen`
 
 **Umsetzung:** Versionierte Operator- und Zahlen-Testvektoren einschließlich Fehlerpointer ausführen.
@@ -3576,7 +3592,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.i.R – Make it Right
 
-- [x] **4.i.R** · Position **152/885** · Voraussetzung: `4.i.W`.
+- [x] **4.i.R** · Position **152/900** · Voraussetzung: `4.i.W`.
 **Exakte Commit-Message:** `4.i.R feat(validation): SRX-Diagnosen und Vektorkorpus vervollständigen`
 
 **Vervollständigung:** Unterschiedliche Prozessdefaults und alternative Reihenfolgen dürfen die Ergebnisse nicht ändern.
@@ -3585,7 +3601,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.i.C – Make it Clean
 
-- [x] **4.i.C** · Position **153/885** · Voraussetzung: `4.i.R`.
+- [x] **4.i.C** · Position **153/900** · Voraussetzung: `4.i.R`.
 **Exakte Commit-Message:** `4.i.C refactor(validation): SRX-Diagnosen und Vektorkorpus bereinigen`
 
 **Bereinigung:** Gemeinsame Vektorharness nutzen; keine Ausgabe-Golden-Files einführen.
@@ -3602,7 +3618,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.j.W – Let it Work
 
-- [x] **4.j.W** · Position **154/885** · Voraussetzung: `4.i.C`.
+- [x] **4.j.W** · Position **154/900** · Voraussetzung: `4.i.C`.
 **Exakte Commit-Message:** `4.j.W feat(validation): Profilressourcen und Fachprofile aufbauen`
 
 **Umsetzung:** Deklarative Profile core, software-de und software-en mit Version und Hash bereitstellen.
@@ -3611,7 +3627,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.j.R – Make it Right
 
-- [x] **4.j.R** · Position **155/885** · Voraussetzung: `4.j.W`.
+- [x] **4.j.R** · Position **155/900** · Voraussetzung: `4.j.W`.
 **Exakte Commit-Message:** `4.j.R feat(validation): Profilressourcen und Fachprofile vervollständigen`
 
 **Vervollständigung:** Ausführbare Profilteile und inkompatible Versionen ablehnen.
@@ -3620,7 +3636,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.j.C – Make it Clean
 
-- [x] **4.j.C** · Position **156/885** · Voraussetzung: `4.j.R`.
+- [x] **4.j.C** · Position **156/900** · Voraussetzung: `4.j.R`.
 **Exakte Commit-Message:** `4.j.C refactor(validation): Profilressourcen und Fachprofile bereinigen`
 
 **Bereinigung:** Profilresolver und reine Profilwerte von CLI-Auswahl trennen.
@@ -3637,7 +3653,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.k.W – Let it Work
 
-- [x] **4.k.W** · Position **157/885** · Voraussetzung: `4.j.C`.
+- [x] **4.k.W** · Position **157/900** · Voraussetzung: `4.j.C`.
 **Exakte Commit-Message:** `4.k.W feat(validation): Profilkomposition und Konflikte aufbauen`
 
 **Umsetzung:** Core zuerst, CLI-Ersetzung, Vereinigungen, Schnittmengen, Regelidentitäten und Severity-Overrides umsetzen.
@@ -3646,7 +3662,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.k.R – Make it Right
 
-- [x] **4.k.R** · Position **158/885** · Voraussetzung: `4.k.W`.
+- [x] **4.k.R** · Position **158/900** · Voraussetzung: `4.k.W`.
 **Exakte Commit-Message:** `4.k.R feat(validation): Profilkomposition und Konflikte vervollständigen`
 
 **Vervollständigung:** Leere Schnittmenge, Pflicht/Verbot-Konflikt, Regelhashkonflikt und abgesenkte Sicherheitsfehler blockieren.
@@ -3655,7 +3671,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.k.C – Make it Clean
 
-- [x] **4.k.C** · Position **159/885** · Voraussetzung: `4.k.R`.
+- [x] **4.k.C** · Position **159/900** · Voraussetzung: `4.k.R`.
 **Exakte Commit-Message:** `4.k.C refactor(validation): Profilkomposition und Konflikte bereinigen`
 
 **Bereinigung:** Kompositionsregeln datenorientiert zentralisieren.
@@ -3672,7 +3688,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.l.W – Let it Work
 
-- [x] **4.l.W** · Position **160/885** · Voraussetzung: `4.k.C`.
+- [x] **4.l.W** · Position **160/900** · Voraussetzung: `4.k.C`.
 **Exakte Commit-Message:** `4.l.W feat(validation): Glossar und literale Lintregeln aufbauen`
 
 **Umsetzung:** Terms, verbotene Synonyme und explizite Platzhalter sprachbezogen literal prüfen.
@@ -3681,7 +3697,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.l.R – Make it Right
 
-- [x] **4.l.R** · Position **161/885** · Voraussetzung: `4.l.W`.
+- [x] **4.l.R** · Position **161/900** · Voraussetzung: `4.l.W`.
 **Exakte Commit-Message:** `4.l.R feat(validation): Glossar und literale Lintregeln vervollständigen`
 
 **Vervollständigung:** Offene Platzhalter in approved sowie undefinierte Termreferenzen diagnostizieren; keine Widerspruchs- oder Übersetzungsbehauptung.
@@ -3690,7 +3706,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.l.C – Make it Clean
 
-- [x] **4.l.C** · Position **162/885** · Voraussetzung: `4.l.R`.
+- [x] **4.l.C** · Position **162/900** · Voraussetzung: `4.l.R`.
 **Exakte Commit-Message:** `4.l.C refactor(validation): Glossar und literale Lintregeln bereinigen`
 
 **Bereinigung:** Literalregeln und menschliche Qualitätsbewertung klar trennen.
@@ -3707,7 +3723,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.m.W – Let it Work
 
-- [x] **4.m.W** · Position **163/885** · Voraussetzung: `4.l.C`.
+- [x] **4.m.W** · Position **163/900** · Voraussetzung: `4.l.C`.
 **Exakte Commit-Message:** `4.m.W feat(validation): Sprachzulässigkeit und Paketkomposition aufbauen`
 
 **Umsetzung:** Vollständige language-policy-v1, Basic Filtering und Sprachpaketauflösung implementieren.
@@ -3716,7 +3732,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.m.R – Make it Right
 
-- [x] **4.m.R** · Position **164/885** · Voraussetzung: `4.m.W`.
+- [x] **4.m.R** · Position **164/900** · Voraussetzung: `4.m.W`.
 **Exakte Commit-Message:** `4.m.R feat(validation): Sprachzulässigkeit und Paketkomposition vervollständigen`
 
 **Vervollständigung:** cmn nicht automatisch unter zh zulassen; fehlende Lintcapability als unavailable und Registerwechsel nur über Change Plan.
@@ -3725,7 +3741,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.m.C – Make it Clean
 
-- [x] **4.m.C** · Position **165/885** · Voraussetzung: `4.m.R`.
+- [x] **4.m.C** · Position **165/900** · Voraussetzung: `4.m.R`.
 **Exakte Commit-Message:** `4.m.C refactor(validation): Sprachzulässigkeit und Paketkomposition bereinigen`
 
 **Bereinigung:** Registry, Sprachfilter und Severityentscheidung getrennt komponieren.
@@ -3742,7 +3758,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.n.W – Let it Work
 
-- [x] **4.n.W** · Position **166/885** · Voraussetzung: `4.m.C`.
+- [x] **4.n.W** · Position **166/900** · Voraussetzung: `4.m.C`.
 **Exakte Commit-Message:** `4.n.W feat(validation): Containerbezogene Sprachmischung aufbauen`
 
 **Umsetzung:** Exakte deklarationsbasierte Requirementmengen pro Projekt, Dokument und Abschnitt ermitteln.
@@ -3751,7 +3767,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.n.R – Make it Right
 
-- [x] **4.n.R** · Position **167/885** · Voraussetzung: `4.n.W`.
+- [x] **4.n.R** · Position **167/900** · Voraussetzung: `4.n.W`.
 **Exakte Commit-Message:** `4.n.R feat(validation): Containerbezogene Sprachmischung vervollständigen`
 
 **Vervollständigung:** Referenzduplikate, Include-Dokumente und primary/exact-Modi korrekt behandeln.
@@ -3760,7 +3776,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.n.C – Make it Clean
 
-- [x] **4.n.C** · Position **168/885** · Voraussetzung: `4.n.R`.
+- [x] **4.n.C** · Position **168/900** · Voraussetzung: `4.n.R`.
 **Exakte Commit-Message:** `4.n.C refactor(validation): Containerbezogene Sprachmischung bereinigen`
 
 **Bereinigung:** Mischung auf Scope-/Dokumentprojektion aufsetzen statt Texte zu detektieren.
@@ -3777,7 +3793,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.o.W – Let it Work
 
-- [x] **4.o.W** · Position **169/885** · Voraussetzung: `4.n.C`.
+- [x] **4.o.W** · Position **169/900** · Voraussetzung: `4.n.C`.
 **Exakte Commit-Message:** `4.o.W feat(validation): Struktur- und Modellvalidation aufbauen`
 
 **Umsetzung:** Validierungspipeline für Parsing, Schema, Typen, IDs, Referenzen, Graph, Lifecycle und registrierte Fachgates implementieren.
@@ -3786,7 +3802,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.o.R – Make it Right
 
-- [x] **4.o.R** · Position **170/885** · Voraussetzung: `4.o.W`.
+- [x] **4.o.R** · Position **170/900** · Voraussetzung: `4.o.W`.
 **Exakte Commit-Message:** `4.o.R feat(validation): Struktur- und Modellvalidation vervollständigen`
 
 **Vervollständigung:** Fehlende Fachvalidatoren nicht durch passed-Stubs ersetzen; neue Baseline-/Evidencegates später verbindlich registrieren.
@@ -3795,7 +3811,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.o.C – Make it Clean
 
-- [x] **4.o.C** · Position **171/885** · Voraussetzung: `4.o.R`.
+- [x] **4.o.C** · Position **171/900** · Voraussetzung: `4.o.R`.
 **Exakte Commit-Message:** `4.o.C refactor(validation): Struktur- und Modellvalidation bereinigen`
 
 **Bereinigung:** Eine gemeinsame Pipeline für CLI, Planner und Fachadapter verwenden.
@@ -3812,7 +3828,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.p.W – Let it Work
 
-- [x] **4.p.W** · Position **172/885** · Voraussetzung: `4.o.C`.
+- [x] **4.p.W** · Position **172/900** · Voraussetzung: `4.o.C`.
 **Exakte Commit-Message:** `4.p.W feat(validation): Strukturierte Diagnosen und Fail-Policy aufbauen`
 
 **Umsetzung:** Vollständiges Diagnosedatenmodell mit Ursprüngen, Pointern, Severity und fachlicher Sortierung aufbauen.
@@ -3821,7 +3837,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.p.R – Make it Right
 
-- [x] **4.p.R** · Position **173/885** · Voraussetzung: `4.p.W`.
+- [x] **4.p.R** · Position **173/900** · Voraussetzung: `4.p.W`.
 **Exakte Commit-Message:** `4.p.R feat(validation): Strukturierte Diagnosen und Fail-Policy vervollständigen`
 
 **Vervollständigung:** Unbekannte IDs und mehrere gleichzeitige Fehler vollständig erhalten; Warnung erst am Fail-Schwellwert bewerten.
@@ -3830,7 +3846,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.p.C – Make it Clean
 
-- [x] **4.p.C** · Position **174/885** · Voraussetzung: `4.p.R`.
+- [x] **4.p.C** · Position **174/900** · Voraussetzung: `4.p.R`.
 **Exakte Commit-Message:** `4.p.C refactor(validation): Strukturierte Diagnosen und Fail-Policy bereinigen`
 
 **Bereinigung:** Diagnoseerzeugung, Ordnung und Präsentation entkoppeln.
@@ -3847,7 +3863,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.q.W – Let it Work
 
-- [x] **4.q.W** · Position **175/885** · Voraussetzung: `4.p.C`.
+- [x] **4.q.W** · Position **175/900** · Voraussetzung: `4.p.C`.
 **Exakte Commit-Message:** `4.q.W feat(validation): Requirement-Approval-Gates aufbauen`
 
 **Umsetzung:** Formale Pflichtdaten, messbare Qualitätsfelder, Interfacegrenzen und menschliche Reviewbindung vor Freigabe prüfen.
@@ -3856,7 +3872,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.q.R – Make it Right
 
-- [x] **4.q.R** · Position **176/885** · Voraussetzung: `4.q.W`.
+- [x] **4.q.R** · Position **176/900** · Voraussetzung: `4.q.W`.
 **Exakte Commit-Message:** `4.q.R feat(validation): Requirement-Approval-Gates vervollständigen`
 
 **Vervollständigung:** Coreprüfung und Detektion nicht als menschlichen Nachweis eines einzelnen prüfbaren Sachverhalts ausgeben.
@@ -3865,7 +3881,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.q.C – Make it Clean
 
-- [x] **4.q.C** · Position **177/885** · Voraussetzung: `4.q.R`.
+- [x] **4.q.C** · Position **177/900** · Voraussetzung: `4.q.R`.
 **Exakte Commit-Message:** `4.q.C refactor(validation): Requirement-Approval-Gates bereinigen`
 
 **Bereinigung:** Formale Gateprüfung und fachliche Reviewentscheidung getrennt modellieren.
@@ -3882,7 +3898,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.r.W – Let it Work
 
-- [x] **4.r.W** · Position **178/885** · Voraussetzung: `4.q.C`.
+- [x] **4.r.W** · Position **178/900** · Voraussetzung: `4.q.C`.
 **Exakte Commit-Message:** `4.r.W feat(validation): Read-only-Validation und Diagnoseausnahmen aufbauen`
 
 **Umsetzung:** validate, lint und diagnosebezogene Lesepfade ohne Projektwrites nutzbar machen.
@@ -3891,7 +3907,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.r.R – Make it Right
 
-- [x] **4.r.R** · Position **179/885** · Voraussetzung: `4.r.W`.
+- [x] **4.r.R** · Position **179/900** · Voraussetzung: `4.r.W`.
 **Exakte Commit-Message:** `4.r.R feat(validation): Read-only-Validation und Diagnoseausnahmen vervollständigen`
 
 **Vervollständigung:** Recoverybedarf und Profilkonflikt schreibfrei melden; Diagnosepfade bleiben ohne regulären Modellload möglich.
@@ -3900,7 +3916,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 4.r.C – Make it Clean
 
-- [x] **4.r.C** · Position **180/885** · Voraussetzung: `4.r.R`.
+- [x] **4.r.C** · Position **180/900** · Voraussetzung: `4.r.R`.
 **Exakte Commit-Message:** `4.r.C refactor(validation): Read-only-Validation und Diagnoseausnahmen bereinigen`
 
 **Bereinigung:** Lesepipeline und spätere Writeautorisierung explizit trennen.
@@ -3929,7 +3945,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.a.W – Let it Work
 
-- [x] **5.a.W** · Position **181/885** · Voraussetzung: `4.r.C`.
+- [x] **5.a.W** · Position **181/900** · Voraussetzung: `4.r.C`.
 **Exakte Commit-Message:** `5.a.W feat(changes): Change-Plan-Schema und Operationen aufbauen`
 
 **Umsetzung:** Versionierten gemeinsamen Change Plan und alle typisierten Kernoperationen definieren.
@@ -3938,7 +3954,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.a.R – Make it Right
 
-- [x] **5.a.R** · Position **182/885** · Voraussetzung: `5.a.W`.
+- [x] **5.a.R** · Position **182/900** · Voraussetzung: `5.a.W`.
 **Exakte Commit-Message:** `5.a.R feat(changes): Change-Plan-Schema und Operationen vervollständigen`
 
 **Vervollständigung:** Unbekannte Operationen und generische Umgehung spezieller Fachwrites ablehnen.
@@ -3947,7 +3963,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.a.C – Make it Clean
 
-- [x] **5.a.C** · Position **183/885** · Voraussetzung: `5.a.R`.
+- [x] **5.a.C** · Position **183/900** · Voraussetzung: `5.a.R`.
 **Exakte Commit-Message:** `5.a.C refactor(changes): Change-Plan-Schema und Operationen bereinigen`
 
 **Bereinigung:** Planmodell und Fachoperationsadapter über ein explizites Register trennen.
@@ -3964,7 +3980,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.b.W – Let it Work
 
-- [x] **5.b.W** · Position **184/885** · Voraussetzung: `5.a.C`.
+- [x] **5.b.W** · Position **184/900** · Voraussetzung: `5.a.C`.
 **Exakte Commit-Message:** `5.b.W feat(changes): RFC-6902 und Komfortpatches aufbauen`
 
 **Umsetzung:** JSON-Patch sowie set/unset nach JSON Pointer auf einem isolierten Stand auswerten.
@@ -3973,7 +3989,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.b.R – Make it Right
 
-- [x] **5.b.R** · Position **185/885** · Voraussetzung: `5.b.W`.
+- [x] **5.b.R** · Position **185/900** · Voraussetzung: `5.b.W`.
 **Exakte Commit-Message:** `5.b.R feat(changes): RFC-6902 und Komfortpatches vervollständigen`
 
 **Vervollständigung:** Erwartete Revision/Hash, Arraygrenzen, fehlende Pointer und geschützte Felder prüfen.
@@ -3982,7 +3998,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.b.C – Make it Clean
 
-- [x] **5.b.C** · Position **186/885** · Voraussetzung: `5.b.R`.
+- [x] **5.b.C** · Position **186/900** · Voraussetzung: `5.b.R`.
 **Exakte Commit-Message:** `5.b.C refactor(changes): RFC-6902 und Komfortpatches bereinigen`
 
 **Bereinigung:** Patchengine von CLI-Konvertierung und Spezialfeldschutz entkoppeln.
@@ -3999,7 +4015,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.c.W – Let it Work
 
-- [x] **5.c.W** · Position **187/885** · Voraussetzung: `5.b.C`.
+- [x] **5.c.W** · Position **187/900** · Voraussetzung: `5.b.C`.
 **Exakte Commit-Message:** `5.c.W feat(changes): Geordnete Auswertung und Faltung aufbauen`
 
 **Umsetzung:** Operationsfolge gegen Zwischenstände anwenden und je Artefakt ein Endresultat falten.
@@ -4008,7 +4024,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.c.R – Make it Right
 
-- [x] **5.c.R** · Position **188/885** · Voraussetzung: `5.c.W`.
+- [x] **5.c.R** · Position **188/900** · Voraussetzung: `5.c.W`.
 **Exakte Commit-Message:** `5.c.R feat(changes): Geordnete Auswertung und Faltung vervollständigen`
 
 **Vervollständigung:** Nach fehlgeschlagener Operation keine Folgeoperation auswerten.
@@ -4017,7 +4033,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.c.C – Make it Clean
 
-- [x] **5.c.C** · Position **189/885** · Voraussetzung: `5.c.R`.
+- [x] **5.c.C** · Position **189/900** · Voraussetzung: `5.c.R`.
 **Exakte Commit-Message:** `5.c.C refactor(changes): Geordnete Auswertung und Faltung bereinigen`
 
 **Bereinigung:** Faltung, Vorbedingungen und fachliche Operationen in getrennte reine Funktionen zerlegen.
@@ -4034,7 +4050,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.d.W – Let it Work
 
-- [x] **5.d.W** · Position **190/885** · Voraussetzung: `5.c.C`.
+- [x] **5.d.W** · Position **190/900** · Voraussetzung: `5.c.C`.
 **Exakte Commit-Message:** `5.d.W feat(changes): Gebundene Metadatenpolicy aufbauen`
 
 **Umsetzung:** change-metadata-v1 mit planned_at, Actor, IDs und genau einer Revisionsfortschreibung pro Artefakt implementieren.
@@ -4043,7 +4059,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.d.R – Make it Right
 
-- [x] **5.d.R** · Position **191/885** · Voraussetzung: `5.d.W`.
+- [x] **5.d.R** · Position **191/900** · Voraussetzung: `5.d.W`.
 **Exakte Commit-Message:** `5.d.R feat(changes): Gebundene Metadatenpolicy vervollständigen`
 
 **Vervollständigung:** No-op, mehrere Teiloperationen und historische Übernahmepolicies nicht vermischen.
@@ -4052,7 +4068,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.d.C – Make it Clean
 
-- [x] **5.d.C** · Position **192/885** · Voraussetzung: `5.d.R`.
+- [x] **5.d.C** · Position **192/900** · Voraussetzung: `5.d.R`.
 **Exakte Commit-Message:** `5.d.C refactor(changes): Gebundene Metadatenpolicy bereinigen`
 
 **Bereinigung:** Reguläre Policy über eine explizite Schnittstelle für spätere Merge-/Migrationspolicies bereitstellen.
@@ -4069,7 +4085,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.e.W – Let it Work
 
-- [x] **5.e.W** · Position **193/885** · Voraussetzung: `5.d.C`.
+- [x] **5.e.W** · Position **193/900** · Voraussetzung: `5.d.C`.
 **Exakte Commit-Message:** `5.e.W feat(changes): Lifecycle-Nachbedingungen im Plan aufbauen`
 
 **Umsetzung:** Vollständige Inhaltsprojektion gegen reine Lifecycleoperation unterscheiden und Endstatus vor Hashbildung bestimmen.
@@ -4078,7 +4094,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.e.R – Make it Right
 
-- [x] **5.e.R** · Position **194/885** · Voraussetzung: `5.e.W`.
+- [x] **5.e.R** · Position **194/900** · Voraussetzung: `5.e.W`.
 **Exakte Commit-Message:** `5.e.R feat(changes): Lifecycle-Nachbedingungen im Plan vervollständigen`
 
 **Vervollständigung:** Inhalt plus widersprüchliches Ziel ablehnen; retired bleibt final und frühere approved-Identität erhalten.
@@ -4087,7 +4103,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.e.C – Make it Clean
 
-- [x] **5.e.C** · Position **195/885** · Voraussetzung: `5.e.R`.
+- [x] **5.e.C** · Position **195/900** · Voraussetzung: `5.e.R`.
 **Exakte Commit-Message:** `5.e.C refactor(changes): Lifecycle-Nachbedingungen im Plan bereinigen`
 
 **Bereinigung:** Lifecyclepolitik nicht im Dateischreiber, sondern im sichtbaren Planner halten.
@@ -4104,7 +4120,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.f.W – Let it Work
 
-- [x] **5.f.W** · Position **196/885** · Voraussetzung: `5.e.C`.
+- [x] **5.f.W** · Position **196/900** · Voraussetzung: `5.e.C`.
 **Exakte Commit-Message:** `5.f.W feat(changes): Zielvalidation, Diff und Impact aufbauen`
 
 **Umsetzung:** Vollständiges isoliertes Ziel mit allen registrierten Gates prüfen und Plan-/Ressourcen-/Zielhash binden.
@@ -4113,7 +4129,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.f.R – Make it Right
 
-- [x] **5.f.R** · Position **197/885** · Voraussetzung: `5.f.W`.
+- [x] **5.f.R** · Position **197/900** · Voraussetzung: `5.f.W`.
 **Exakte Commit-Message:** `5.f.R feat(changes): Zielvalidation, Diff und Impact vervollständigen`
 
 **Vervollständigung:** Ungültiges Gesamtziel und manipulierte Planmetadaten verhindern prepared.
@@ -4122,7 +4138,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.f.C – Make it Clean
 
-- [x] **5.f.C** · Position **198/885** · Voraussetzung: `5.f.R`.
+- [x] **5.f.C** · Position **198/900** · Voraussetzung: `5.f.R`.
 **Exakte Commit-Message:** `5.f.C refactor(changes): Zielvalidation, Diff und Impact bereinigen`
 
 **Bereinigung:** Zielbewertung für direkten Write und spätere Proposal-/Importadapter wiederverwenden.
@@ -4139,7 +4155,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.g.W – Let it Work
 
-- [x] **5.g.W** · Position **199/885** · Voraussetzung: `5.f.C`.
+- [x] **5.g.W** · Position **199/900** · Voraussetzung: `5.f.C`.
 **Exakte Commit-Message:** `5.g.W feat(changes): Dry-Run und Change-Apply aufbauen`
 
 **Umsetzung:** Dry-Run und gespeicherten change apply auf denselben gebundenen Plan aufsetzen.
@@ -4148,7 +4164,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.g.R – Make it Right
 
-- [x] **5.g.R** · Position **200/885** · Voraussetzung: `5.g.W`.
+- [x] **5.g.R** · Position **200/900** · Voraussetzung: `5.g.W`.
 **Exakte Commit-Message:** `5.g.R feat(changes): Dry-Run und Change-Apply vervollständigen`
 
 **Vervollständigung:** Dry-Run ohne Lock/Receipt/Projektwrite; fail-on-change bei tatsächlichem Unterschied behandeln.
@@ -4157,7 +4173,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.g.C – Make it Clean
 
-- [x] **5.g.C** · Position **201/885** · Voraussetzung: `5.g.R`.
+- [x] **5.g.C** · Position **201/900** · Voraussetzung: `5.g.R`.
 **Exakte Commit-Message:** `5.g.C refactor(changes): Dry-Run und Change-Apply bereinigen`
 
 **Bereinigung:** Planung, Ausgabe und Veröffentlichung als getrennte Phasen führen.
@@ -4174,7 +4190,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.h.W – Let it Work
 
-- [x] **5.h.W** · Position **202/885** · Voraussetzung: `5.g.C`.
+- [x] **5.h.W** · Position **202/900** · Voraussetzung: `5.g.C`.
 **Exakte Commit-Message:** `5.h.W feat(changes): Akteure, Berechtigung und Request-ID aufbauen`
 
 **Umsetzung:** Actor und normative Request-ID normalisieren; AI/CI-Writepflichten und Proposalgrenze vorbereiten.
@@ -4183,7 +4199,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.h.R – Make it Right
 
-- [x] **5.h.R** · Position **203/885** · Voraussetzung: `5.h.W`.
+- [x] **5.h.R** · Position **203/900** · Voraussetzung: `5.h.W`.
 **Exakte Commit-Message:** `5.h.R feat(changes): Akteure, Berechtigung und Request-ID vervollständigen`
 
 **Vervollständigung:** Direkte KI-Änderung ohne as-proposal und AI/CI ohne Request-ID vor Mutation abweisen.
@@ -4192,7 +4208,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.h.C – Make it Clean
 
-- [x] **5.h.C** · Position **204/885** · Voraussetzung: `5.h.R`.
+- [x] **5.h.C** · Position **204/900** · Voraussetzung: `5.h.R`.
 **Exakte Commit-Message:** `5.h.C refactor(changes): Akteure, Berechtigung und Request-ID bereinigen`
 
 **Bereinigung:** Schreibautorisierung unabhängig von CLI-Anzeigen und Analyzeridentitäten halten.
@@ -4209,7 +4225,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.i.W – Let it Work
 
-- [x] **5.i.W** · Position **205/885** · Voraussetzung: `5.h.C`.
+- [x] **5.i.W** · Position **205/900** · Voraussetzung: `5.h.C`.
 **Exakte Commit-Message:** `5.i.W feat(changes): Exklusiver Projektlock aufbauen`
 
 **Umsetzung:** Writer- und Recovery-Locks mit vollständiger Eigentümer-/Startbindung einführen.
@@ -4218,7 +4234,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.i.R – Make it Right
 
-- [x] **5.i.R** · Position **206/885** · Voraussetzung: `5.i.W`.
+- [x] **5.i.R** · Position **206/900** · Voraussetzung: `5.i.W`.
 **Exakte Commit-Message:** `5.i.R feat(changes): Exklusiver Projektlock vervollständigen`
 
 **Vervollständigung:** Lebender Eigentümer, fremder/unprüfbarer Host und PID-Wiederverwendung verhindern unbegründete Übernahme.
@@ -4227,7 +4243,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.i.C – Make it Clean
 
-- [x] **5.i.C** · Position **207/885** · Voraussetzung: `5.i.R`.
+- [x] **5.i.C** · Position **207/900** · Voraussetzung: `5.i.R`.
 **Exakte Commit-Message:** `5.i.C refactor(changes): Exklusiver Projektlock bereinigen`
 
 **Bereinigung:** Eigentümerprüfung und jeweilige Lockart getrennt kapseln.
@@ -4244,7 +4260,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.j.W – Let it Work
 
-- [x] **5.j.W** · Position **208/885** · Voraussetzung: `5.i.C`.
+- [x] **5.j.W** · Position **208/900** · Voraussetzung: `5.i.C`.
 **Exakte Commit-Message:** `5.j.W feat(changes): Prüfung unmittelbar vor Veröffentlichung aufbauen`
 
 **Umsetzung:** Basis, erwartete Ressourcen, Lock und Rechte unter Writer-Lock erneut prüfen.
@@ -4253,7 +4269,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.j.R – Make it Right
 
-- [x] **5.j.R** · Position **209/885** · Voraussetzung: `5.j.W`.
+- [x] **5.j.R** · Position **209/900** · Voraussetzung: `5.j.W`.
 **Exakte Commit-Message:** `5.j.R feat(changes): Prüfung unmittelbar vor Veröffentlichung vervollständigen`
 
 **Vervollständigung:** Änderung nach Preflight/Planung führt zu Konflikt ohne stilles Rebase.
@@ -4262,7 +4278,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.j.C – Make it Clean
 
-- [x] **5.j.C** · Position **210/885** · Voraussetzung: `5.j.R`.
+- [x] **5.j.C** · Position **210/900** · Voraussetzung: `5.j.R`.
 **Exakte Commit-Message:** `5.j.C refactor(changes): Prüfung unmittelbar vor Veröffentlichung bereinigen`
 
 **Bereinigung:** Frühe Diagnose und verbindliche letzte Sicherheitsprüfung nicht vermischen.
@@ -4279,7 +4295,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.k.W – Let it Work
 
-- [x] **5.k.W** · Position **211/885** · Voraussetzung: `5.j.C`.
+- [x] **5.k.W** · Position **211/900** · Voraussetzung: `5.j.C`.
 **Exakte Commit-Message:** `5.k.W feat(changes): Journal und Building-Zustand aufbauen`
 
 **Umsetzung:** Journal mit Dateiinventur, Vorher-/Nachherhashes und Stagingbezügen vor erstem normativen Write erzeugen.
@@ -4288,7 +4304,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.k.R – Make it Right
 
-- [x] **5.k.R** · Position **212/885** · Voraussetzung: `5.k.W`.
+- [x] **5.k.R** · Position **212/900** · Voraussetzung: `5.k.W`.
 **Exakte Commit-Message:** `5.k.R feat(changes): Journal und Building-Zustand vervollständigen`
 
 **Vervollständigung:** Fehlende Einträge, widersprüchliche Existenzangaben und unzulässige Journalpfade abweisen.
@@ -4297,7 +4313,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.k.C – Make it Clean
 
-- [x] **5.k.C** · Position **213/885** · Voraussetzung: `5.k.R`.
+- [x] **5.k.C** · Position **213/900** · Voraussetzung: `5.k.R`.
 **Exakte Commit-Message:** `5.k.C refactor(changes): Journal und Building-Zustand bereinigen`
 
 **Bereinigung:** Journalcodec, Inventur und transaktionale Zustandsmaschine trennen.
@@ -4314,7 +4330,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.l.W – Let it Work
 
-- [x] **5.l.W** · Position **214/885** · Voraussetzung: `5.k.C`.
+- [x] **5.l.W** · Position **214/900** · Voraussetzung: `5.k.C`.
 **Exakte Commit-Message:** `5.l.W feat(changes): Staging, Before Images und Prepared aufbauen`
 
 **Umsetzung:** Alle Zieldaten und nötigen Before Images vollständig schreiben, hashen und dauerhaft synchronisieren.
@@ -4323,7 +4339,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.l.R – Make it Right
 
-- [x] **5.l.R** · Position **215/885** · Voraussetzung: `5.l.W`.
+- [x] **5.l.R** · Position **215/900** · Voraussetzung: `5.l.W`.
 **Exakte Commit-Message:** `5.l.R feat(changes): Staging, Before Images und Prepared vervollständigen`
 
 **Vervollständigung:** Platz-/Rechtefehler und manipulierte Stagingbytes verhindern vorbereiteten Erfolg.
@@ -4332,7 +4348,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.l.C – Make it Clean
 
-- [x] **5.l.C** · Position **216/885** · Voraussetzung: `5.l.R`.
+- [x] **5.l.C** · Position **216/900** · Voraussetzung: `5.l.R`.
 **Exakte Commit-Message:** `5.l.C refactor(changes): Staging, Before Images und Prepared bereinigen`
 
 **Bereinigung:** Sichere Dateiprimitiven mit expliziten dauerhaften Grenzen kapseln.
@@ -4349,7 +4365,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.m.W – Let it Work
 
-- [x] **5.m.W** · Position **217/885** · Voraussetzung: `5.l.C`.
+- [x] **5.m.W** · Position **217/900** · Voraussetzung: `5.l.C`.
 **Exakte Commit-Message:** `5.m.W feat(changes): Committing und atomare Dateiveröffentlichung aufbauen`
 
 **Umsetzung:** Dauerhaft committing setzen und jede atomare Veröffentlichung einzeln quittieren.
@@ -4358,7 +4374,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.m.R – Make it Right
 
-- [x] **5.m.R** · Position **218/885** · Voraussetzung: `5.m.W`.
+- [x] **5.m.R** · Position **218/900** · Voraussetzung: `5.m.W`.
 **Exakte Commit-Message:** `5.m.R feat(changes): Committing und atomare Dateiveröffentlichung vervollständigen`
 
 **Vervollständigung:** I/O-Fehler und Prozessabbruch dürfen keinen regulär ladbaren Mischstand zurücklassen.
@@ -4367,7 +4383,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.m.C – Make it Clean
 
-- [x] **5.m.C** · Position **219/885** · Voraussetzung: `5.m.R`.
+- [x] **5.m.C** · Position **219/900** · Voraussetzung: `5.m.R`.
 **Exakte Commit-Message:** `5.m.C refactor(changes): Committing und atomare Dateiveröffentlichung bereinigen`
 
 **Bereinigung:** Dateipublishing durch die Journalzustandsmaschine steuern, nicht umgekehrt.
@@ -4384,7 +4400,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.n.W – Let it Work
 
-- [x] **5.n.W** · Position **220/885** · Voraussetzung: `5.m.C`.
+- [x] **5.n.W** · Position **220/900** · Voraussetzung: `5.m.C`.
 **Exakte Commit-Message:** `5.n.W feat(changes): Audit und Abschlussreceipts aufbauen`
 
 **Umsetzung:** Unveränderbare Transaktions-/Auditbelege nach dauerhaftem Ergebnis anlegen.
@@ -4393,7 +4409,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.n.R – Make it Right
 
-- [x] **5.n.R** · Position **221/885** · Voraussetzung: `5.n.W`.
+- [x] **5.n.R** · Position **221/900** · Voraussetzung: `5.n.W`.
 **Exakte Commit-Message:** `5.n.R feat(changes): Audit und Abschlussreceipts vervollständigen`
 
 **Vervollständigung:** Verlorene Ausgabe oder spätes Cleanupversagen erzeugen keinen zweiten Fachwrite.
@@ -4402,7 +4418,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.n.C – Make it Clean
 
-- [x] **5.n.C** · Position **222/885** · Voraussetzung: `5.n.R`.
+- [x] **5.n.C** · Position **222/900** · Voraussetzung: `5.n.R`.
 **Exakte Commit-Message:** `5.n.C refactor(changes): Audit und Abschlussreceipts bereinigen`
 
 **Bereinigung:** Belege und entbehrliche Arbeitsreste strikt getrennt verwalten.
@@ -4419,7 +4435,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.o.W – Let it Work
 
-- [x] **5.o.W** · Position **223/885** · Voraussetzung: `5.n.C`.
+- [x] **5.o.W** · Position **223/900** · Voraussetzung: `5.n.C`.
 **Exakte Commit-Message:** `5.o.W feat(changes): Normative Idempotenz aufbauen`
 
 **Umsetzung:** Request-Receipt mit Operationshash, Actor, Basis, Ergebnis und erzeugten IDs speichern und auswerten.
@@ -4428,7 +4444,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.o.R – Make it Right
 
-- [x] **5.o.R** · Position **224/885** · Voraussetzung: `5.o.W`.
+- [x] **5.o.R** · Position **224/900** · Voraussetzung: `5.o.W`.
 **Exakte Commit-Message:** `5.o.R feat(changes): Normative Idempotenz vervollständigen`
 
 **Vervollständigung:** Gleiche Request-ID mit geändertem Operationshash als Code-6-Konflikt behandeln.
@@ -4437,7 +4453,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.o.C – Make it Clean
 
-- [x] **5.o.C** · Position **225/885** · Voraussetzung: `5.o.R`.
+- [x] **5.o.C** · Position **225/900** · Voraussetzung: `5.o.R`.
 **Exakte Commit-Message:** `5.o.C refactor(changes): Normative Idempotenz bereinigen`
 
 **Bereinigung:** Idempotenzentscheidung vor neuer Planung mit bereits bestätigtem Receipt ermöglichen.
@@ -4454,7 +4470,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.p.W – Let it Work
 
-- [x] **5.p.W** · Position **226/885** · Voraussetzung: `5.o.C`.
+- [x] **5.p.W** · Position **226/900** · Voraussetzung: `5.o.C`.
 **Exakte Commit-Message:** `5.p.W feat(changes): Recoverystatus und Building-Discard aufbauen`
 
 **Umsetzung:** Journalzustand und zulässige Aktionen ohne regulären Modellload bestimmen; unveröffentlichte Vorbereitung verwerfen.
@@ -4463,7 +4479,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.p.R – Make it Right
 
-- [x] **5.p.R** · Position **227/885** · Voraussetzung: `5.p.W`.
+- [x] **5.p.R** · Position **227/900** · Voraussetzung: `5.p.W`.
 **Exakte Commit-Message:** `5.p.R feat(changes): Recoverystatus und Building-Discard vervollständigen`
 
 **Vervollständigung:** Nach erfolgter Veröffentlichung oder Basisabweichung discard sperren.
@@ -4472,7 +4488,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.p.C – Make it Clean
 
-- [x] **5.p.C** · Position **228/885** · Voraussetzung: `5.p.R`.
+- [x] **5.p.C** · Position **228/900** · Voraussetzung: `5.p.R`.
 **Exakte Commit-Message:** `5.p.C refactor(changes): Recoverystatus und Building-Discard bereinigen`
 
 **Bereinigung:** Zustandsdiagnose und mutierende Recovery getrennt anbieten.
@@ -4489,7 +4505,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.q.W – Let it Work
 
-- [x] **5.q.W** · Position **229/885** · Voraussetzung: `5.p.C`.
+- [x] **5.q.W** · Position **229/900** · Voraussetzung: `5.p.C`.
 **Exakte Commit-Message:** `5.q.W feat(changes): Recovery auf vollständiges Ziel aufbauen`
 
 **Umsetzung:** Vollständig veröffentlichte Nachherhashes erkennen und fehlende Receipts rekonstruieren.
@@ -4498,7 +4514,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.q.R – Make it Right
 
-- [x] **5.q.R** · Position **230/885** · Voraussetzung: `5.q.W`.
+- [x] **5.q.R** · Position **230/900** · Voraussetzung: `5.q.W`.
 **Exakte Commit-Message:** `5.q.R feat(changes): Recovery auf vollständiges Ziel vervollständigen`
 
 **Vervollständigung:** Fehlende Zielbytes oder inkonsistente Hashes erlauben keinen Erfolgsabschluss.
@@ -4507,7 +4523,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.q.C – Make it Clean
 
-- [x] **5.q.C** · Position **231/885** · Voraussetzung: `5.q.R`.
+- [x] **5.q.C** · Position **231/900** · Voraussetzung: `5.q.R`.
 **Exakte Commit-Message:** `5.q.C refactor(changes): Recovery auf vollständiges Ziel bereinigen`
 
 **Bereinigung:** Zielerkennung, Receiptreparatur und Abschlussfolge getrennt testen und strukturieren.
@@ -4524,7 +4540,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.r.W – Let it Work
 
-- [x] **5.r.W** · Position **232/885** · Voraussetzung: `5.q.C`.
+- [x] **5.r.W** · Position **232/900** · Voraussetzung: `5.q.C`.
 **Exakte Commit-Message:** `5.r.W feat(changes): Deterministischer Rollback aufbauen`
 
 **Umsetzung:** Unvollständiges committing/rolling_back aus gesicherten Before Images vollständig auf Basis zurückführen.
@@ -4533,7 +4549,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.r.R – Make it Right
 
-- [x] **5.r.R** · Position **233/885** · Voraussetzung: `5.r.W`.
+- [x] **5.r.R** · Position **233/900** · Voraussetzung: `5.r.W`.
 **Exakte Commit-Message:** `5.r.R feat(changes): Deterministischer Rollback vervollständigen`
 
 **Vervollständigung:** Wiederholte Unterbrechung beim Rollback bleibt erneut fortsetzbar.
@@ -4542,7 +4558,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.r.C – Make it Clean
 
-- [x] **5.r.C** · Position **234/885** · Voraussetzung: `5.r.R`.
+- [x] **5.r.C** · Position **234/900** · Voraussetzung: `5.r.R`.
 **Exakte Commit-Message:** `5.r.C refactor(changes): Deterministischer Rollback bereinigen`
 
 **Bereinigung:** Rollback dieselben sicheren I/O-Primitiven wie Publishing verwenden lassen.
@@ -4559,7 +4575,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.s.W – Let it Work
 
-- [x] **5.s.W** · Position **235/885** · Voraussetzung: `5.r.C`.
+- [x] **5.s.W** · Position **235/900** · Voraussetzung: `5.r.C`.
 **Exakte Commit-Message:** `5.s.W feat(changes): Corrupt-Erkennung und Schutzinventur aufbauen`
 
 **Umsetzung:** Manipulierte/unvollständige kritische Daten als corrupt erkennen und normale Zugriffe blockieren.
@@ -4568,7 +4584,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.s.R – Make it Right
 
-- [x] **5.s.R** · Position **236/885** · Voraussetzung: `5.s.W`.
+- [x] **5.s.R** · Position **236/900** · Voraussetzung: `5.s.W`.
 **Exakte Commit-Message:** `5.s.R feat(changes): Corrupt-Erkennung und Schutzinventur vervollständigen`
 
 **Vervollständigung:** Cachepflege darf Journale, Before Images oder Belege nicht beseitigen.
@@ -4577,7 +4593,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.s.C – Make it Clean
 
-- [x] **5.s.C** · Position **237/885** · Voraussetzung: `5.s.R`.
+- [x] **5.s.C** · Position **237/900** · Voraussetzung: `5.s.R`.
 **Exakte Commit-Message:** `5.s.C refactor(changes): Corrupt-Erkennung und Schutzinventur bereinigen`
 
 **Bereinigung:** Recoverykritische Ressourcen zentral kennzeichnen; Vollquellen-Restore bleibt M15 vorbehalten.
@@ -4594,7 +4610,7 @@ Keine unbeauftragten Tags, Releases, Pushes, externen Genehmigungen oder neuen P
 
 #### 5.t.W – Let it Work
 
-- [x] **5.t.W** · Position **238/885** · Voraussetzung: `5.s.C`.
+- [x] **5.t.W** · Position **238/900** · Voraussetzung: `5.s.C`.
 **Exakte Commit-Message:** `5.t.W feat(changes): Schreibfreie und automatische Preflight-Recovery aufbauen`
 
 **Umsetzung:** Read-only-Befehle schreibfrei blockieren; autorisierte automatische Recovery mit getrenntem Abschluss/Wiederaufruf ausführen.
@@ -4643,7 +4659,7 @@ der nächste Zustand ist 5.t.R. Technische Nutzung:
 
 #### 5.t.R – Make it Right
 
-- [x] **5.t.R** · Position **239/885** · Voraussetzung: `5.t.W`.
+- [x] **5.t.R** · Position **239/900** · Voraussetzung: `5.t.W`.
 **Exakte Commit-Message:** `5.t.R feat(changes): Schreibfreie und automatische Preflight-Recovery vervollständigen`
 
 **Vervollständigung:** Normaler Fachauftrag darf nach Recovery nicht ungeprüft mit alter Basis weiterlaufen.
@@ -4690,7 +4706,7 @@ als Nächstes folgt die strukturelle Trennung in 5.t.C.
 
 #### 5.t.C – Make it Clean
 
-- [x] **5.t.C** · Position **240/885** · Voraussetzung: `5.t.R`.
+- [x] **5.t.C** · Position **240/900** · Voraussetzung: `5.t.R`.
 **Exakte Commit-Message:** `5.t.C refactor(changes): Schreibfreie und automatische Preflight-Recovery bereinigen`
 
 **Bereinigung:** Preflightentscheidung und Recoveryausführung mit klarer Rückgabestruktur entkoppeln.
@@ -4729,7 +4745,7 @@ als Nächstes folgt 5.u.W zur Repräsentationsnormalisierung.
 
 #### 5.u.W – Let it Work
 
-- [x] **5.u.W** · Position **241/885** · Voraussetzung: `5.t.C`.
+- [x] **5.u.W** · Position **241/900** · Voraussetzung: `5.t.C`.
 **Exakte Commit-Message:** `5.u.W feat(changes): Repräsentationsnormalisierung über Transaktionen aufbauen`
 
 **Umsetzung:** format-Dateiumfang und representation_normalize mit Bytehashvorbedingungen über den Writer umsetzen.
@@ -4763,7 +4779,7 @@ gilt Position 241/885. Nächster Zustand ist 5.u.R.
 
 #### 5.u.R – Make it Right
 
-- [x] **5.u.R** · Position **242/885** · Voraussetzung: `5.u.W`.
+- [x] **5.u.R** · Position **242/900** · Voraussetzung: `5.u.W`.
 **Exakte Commit-Message:** `5.u.R feat(changes): Repräsentationsnormalisierung über Transaktionen vervollständigen`
 
 **Vervollständigung:** Evidence, Baselines, Reviews und immutable Proposal-Endstände ausschließen; check bleibt schreibfrei.
@@ -4806,7 +4822,7 @@ parallelem Dev-/Apply-Volltest und Commit gilt Position 242/885. Danach folgt 5.
 
 #### 5.u.C – Make it Clean
 
-- [x] **5.u.C** · Position **243/885** · Voraussetzung: `5.u.R`.
+- [x] **5.u.C** · Position **243/900** · Voraussetzung: `5.u.R`.
 **Exakte Commit-Message:** `5.u.C refactor(changes): Repräsentationsnormalisierung über Transaktionen bereinigen`
 
 **Bereinigung:** Normalisierungsplanung als spezialisierte Operation statt zweitem Schreibweg führen.
@@ -4838,7 +4854,7 @@ vor seinem Commit bestätigen. Danach gilt Position 243/885; als Nächstes folgt
 
 #### 5.v.W – Let it Work
 
-- [x] **5.v.W** · Position **244/885** · Voraussetzung: `5.u.C`.
+- [x] **5.v.W** · Position **244/900** · Voraussetzung: `5.u.C`.
 **Exakte Commit-Message:** `5.v.W feat(changes): Fault-Injection über jede dauerhafte Grenze aufbauen`
 
 **Umsetzung:** Kontrollierten Prozessabbruch an jeder Journal-/Dateigrenze des vorhandenen Writers injizierbar machen.
@@ -4875,7 +4891,7 @@ bestätigen Position 244/885. Danach folgt 5.v.R.
 
 #### 5.v.R – Make it Right
 
-- [x] **5.v.R** · Position **245/885** · Voraussetzung: `5.v.W`.
+- [x] **5.v.R** · Position **245/900** · Voraussetzung: `5.v.W`.
 **Exakte Commit-Message:** `5.v.R feat(changes): Fault-Injection über jede dauerhafte Grenze vervollständigen`
 
 **Vervollständigung:** Mehrdateiwrites, Receiptverlust und wiederholte Recoveryabbrüche in dieselbe Matrix aufnehmen.
@@ -4905,7 +4921,7 @@ Erst nach vollständigen parallelen Dev-/Apply-Tests und Commit gilt Position
 
 #### 5.v.C – Make it Clean
 
-- [x] **5.v.C** · Position **246/885** · Voraussetzung: `5.v.R`.
+- [x] **5.v.C** · Position **246/900** · Voraussetzung: `5.v.R`.
 **Exakte Commit-Message:** `5.v.C refactor(changes): Fault-Injection über jede dauerhafte Grenze bereinigen`
 
 **Bereinigung:** Fault-Hooks ausschließlich testbar einspeisen, Produktionslogik nicht an Testreihenfolge koppeln.
@@ -4953,7 +4969,7 @@ danach folgt 6.a.W.
 
 #### 6.a.W – Let it Work
 
-- [x] **6.a.W** · Position **247/885** · Voraussetzung: `5.v.C`.
+- [x] **6.a.W** · Position **247/900** · Voraussetzung: `5.v.C`.
 **Exakte Commit-Message:** `6.a.W feat(work): Begrenzte Preflightprofile aufbauen`
 
 **Umsetzung:** Pro Command ausschließlich benötigte Root-, Metadaten-, Lock- und aktive Journalprüfungen ausführen.
@@ -4996,7 +5012,7 @@ parallelen Dev-/Apply-Tests und Commit gilt Position 247/885; danach folgt 6.a.R
 
 #### 6.a.R – Make it Right
 
-- [x] **6.a.R** · Position **248/885** · Voraussetzung: `6.a.W`.
+- [x] **6.a.R** · Position **248/900** · Voraussetzung: `6.a.W`.
 **Exakte Commit-Message:** `6.a.R feat(work): Begrenzte Preflightprofile vervollständigen`
 
 **Vervollständigung:** Metadaten-/Journalgrenzen einhalten und abgeschlossene Receipthistorie nicht zur Startprüfung durchsuchen.
@@ -5033,7 +5049,7 @@ Position 248/885; danach folgt 6.a.C.
 
 #### 6.a.C – Make it Clean
 
-- [x] **6.a.C** · Position **249/885** · Voraussetzung: `6.a.R`.
+- [x] **6.a.C** · Position **249/900** · Voraussetzung: `6.a.R`.
 **Exakte Commit-Message:** `6.a.C refactor(work): Begrenzte Preflightprofile bereinigen`
 
 **Bereinigung:** Preflightprofile aus derselben Command Registry wie CLI-Verträge ableiten.
@@ -5066,7 +5082,7 @@ Position 249/885; anschließend folgt 6.b.W.
 
 #### 6.b.W – Let it Work
 
-- [x] **6.b.W** · Position **250/885** · Voraussetzung: `6.a.C`.
+- [x] **6.b.W** · Position **250/900** · Voraussetzung: `6.a.C`.
 **Exakte Commit-Message:** `6.b.W feat(work): Environment-Check ohne Nebenwirkungen aufbauen`
 
 **Umsetzung:** environment check mit bekannten Rechten, Runtimevoraussetzungen und explizit unbekannten Hostgrenzen implementieren.
@@ -5105,7 +5121,7 @@ parallelen Dev-/Apply-Tests und Commit gilt Position 250/885; danach folgt 6.b.R
 
 #### 6.b.R – Make it Right
 
-- [x] **6.b.R** · Position **251/885** · Voraussetzung: `6.b.W`.
+- [x] **6.b.R** · Position **251/900** · Voraussetzung: `6.b.W`.
 **Exakte Commit-Message:** `6.b.R feat(work): Environment-Check ohne Nebenwirkungen vervollständigen`
 
 **Vervollständigung:** Keine Probe-Writes, Benchmarks, Netzwerkzugriffe oder Vollvalidierung ausführen.
@@ -5142,7 +5158,7 @@ Commit gilt Position 251/885; danach folgt 6.b.C.
 
 #### 6.b.C – Make it Clean
 
-- [x] **6.b.C** · Position **252/885** · Voraussetzung: `6.b.R`.
+- [x] **6.b.C** · Position **252/900** · Voraussetzung: `6.b.R`.
 **Exakte Commit-Message:** `6.b.C refactor(work): Environment-Check ohne Nebenwirkungen bereinigen`
 
 **Bereinigung:** Messbare Voraussetzungen von bloßer Verfügbarkeitsschätzung trennen.
@@ -5179,7 +5195,7 @@ anschließend folgt 6.c.W.
 
 #### 6.c.W – Let it Work
 
-- [x] **6.c.W** · Position **253/885** · Voraussetzung: `6.b.C`.
+- [x] **6.c.W** · Position **253/900** · Voraussetzung: `6.b.C`.
 **Exakte Commit-Message:** `6.c.W feat(work): Ressourcenprofile und Grenzklassen aufbauen`
 
 **Umsetzung:** runtime-budget-v2 mit constrained/standard, expliziten Fachscopes, harten Sicherheitsgrenzen und weichen Arbeitszielen auflösen.
@@ -5224,7 +5240,7 @@ parallelen Dev-/Apply-Tests und Commit gilt Position 253/885; danach folgt 6.c.R
 
 #### 6.c.R – Make it Right
 
-- [x] **6.c.R** · Position **254/885** · Voraussetzung: `6.c.W`.
+- [x] **6.c.R** · Position **254/900** · Voraussetzung: `6.c.W`.
 **Exakte Commit-Message:** `6.c.R feat(work): Ressourcenprofile und Grenzklassen vervollständigen`
 
 **Vervollständigung:** Historische Gesamtmengenziele nicht zu harten Laufzeitverboten machen; echte Sicherheitsgrenzen niemals lockern.
@@ -5265,7 +5281,7 @@ erfolgreichen vollständigen parallelen Dev-/Apply-Tests und Commit gilt Positio
 
 #### 6.c.C – Make it Clean
 
-- [x] **6.c.C** · Position **255/885** · Voraussetzung: `6.c.R`.
+- [x] **6.c.C** · Position **255/900** · Voraussetzung: `6.c.R`.
 **Exakte Commit-Message:** `6.c.C refactor(work): Ressourcenprofile und Grenzklassen bereinigen`
 
 **Bereinigung:** Semantische Konfiguration und Betriebsoptionen in getrennten Typen halten.
@@ -5304,7 +5320,7 @@ gilt Position 255/885; anschließend folgt 6.d.W.
 
 #### 6.d.W – Let it Work
 
-- [x] **6.d.W** · Position **256/885** · Voraussetzung: `6.c.C`.
+- [x] **6.d.W** · Position **256/900** · Voraussetzung: `6.c.C`.
 **Exakte Commit-Message:** `6.d.W feat(work): Verbrauchsbilanz und Kontrollpunkte aufbauen`
 
 **Umsetzung:** CPU, Wallzeit, gemessenen RSS und verbuchte Bytes unterscheiden und je Auftrag kumulieren.
@@ -5340,7 +5356,7 @@ Dev-/Apply-Tests und Commit gilt Position 256/885; danach folgt 6.d.R.
 
 #### 6.d.R – Make it Right
 
-- [x] **6.d.R** · Position **257/885** · Voraussetzung: `6.d.W`.
+- [x] **6.d.R** · Position **257/900** · Voraussetzung: `6.d.W`.
 **Exakte Commit-Message:** `6.d.R feat(work): Verbrauchsbilanz und Kontrollpunkte vervollständigen`
 
 **Vervollständigung:** Unbekannte Messwerte als unknown/null führen; Kontrollintervalle gemäß O.2 instrumentieren.
@@ -5387,7 +5403,7 @@ bestätigen Position 257/885. Danach folgt die strukturelle Bereinigung 6.d.C.
 
 #### 6.d.C – Make it Clean
 
-- [x] **6.d.C** · Position **258/885** · Voraussetzung: `6.d.R`.
+- [x] **6.d.C** · Position **258/900** · Voraussetzung: `6.d.R`.
 **Exakte Commit-Message:** `6.d.C refactor(work): Verbrauchsbilanz und Kontrollpunkte bereinigen`
 
 **Bereinigung:** Metrikadapter vom fachlichen Resultat und dessen Hash ausschließen.
@@ -5425,7 +5441,7 @@ Position 258/885. Danach folgt 6.e.W für Streaming und kleine Transferblöcke.
 
 #### 6.e.W – Let it Work
 
-- [x] **6.e.W** · Position **259/885** · Voraussetzung: `6.d.C`.
+- [x] **6.e.W** · Position **259/900** · Voraussetzung: `6.d.C`.
 **Exakte Commit-Message:** `6.e.W feat(work): Streaming und kleine Transferblöcke aufbauen`
 
 **Umsetzung:** Payloadhashing und große Datenverarbeitung in begrenzten Blöcken mit sparsamer Alternative ausführen.
@@ -5465,7 +5481,7 @@ Position 259/885. Danach folgt 6.e.R.
 
 #### 6.e.R – Make it Right
 
-- [x] **6.e.R** · Position **260/885** · Voraussetzung: `6.e.W`.
+- [x] **6.e.R** · Position **260/900** · Voraussetzung: `6.e.W`.
 **Exakte Commit-Message:** `6.e.R feat(work): Streaming und kleine Transferblöcke vervollständigen`
 
 **Vervollständigung:** Reale Speicher-/Rechtefehler und nicht teilbare Mindestoperationen kontrolliert behandeln.
@@ -5509,7 +5525,7 @@ Position 260/885. Danach folgt die gemeinsame strukturelle Bereinigung 6.e.C.
 
 #### 6.e.C – Make it Clean
 
-- [x] **6.e.C** · Position **261/885** · Voraussetzung: `6.e.R`.
+- [x] **6.e.C** · Position **261/900** · Voraussetzung: `6.e.R`.
 **Exakte Commit-Message:** `6.e.C refactor(work): Streaming und kleine Transferblöcke bereinigen`
 
 **Bereinigung:** Streamingprimitiven für Archive, Snapshotaufbau und Import gemeinsam nutzen.
@@ -5551,7 +5567,7 @@ Danach folgt 6.f.W für dateibasierte Sortierung und Diagnose-Spooling.
 
 #### 6.f.W – Let it Work
 
-- [x] **6.f.W** · Position **262/885** · Voraussetzung: `6.e.C`.
+- [x] **6.f.W** · Position **262/900** · Voraussetzung: `6.e.C`.
 **Exakte Commit-Message:** `6.f.W feat(work): Dateibasierte Sortierung und Diagnose-Spooling aufbauen`
 
 **Umsetzung:** Große geordnete Ergebnisse in gehashte Teilläufe mit Cursorzustand auslagern.
@@ -5588,7 +5604,7 @@ Dev-/Apply-Tests und Commit bestätigen Position 262/885. Danach folgt 6.f.R.
 
 #### 6.f.R – Make it Right
 
-- [x] **6.f.R** · Position **263/885** · Voraussetzung: `6.f.W`.
+- [x] **6.f.R** · Position **263/900** · Voraussetzung: `6.f.W`.
 **Exakte Commit-Message:** `6.f.R feat(work): Dateibasierte Sortierung und Diagnose-Spooling vervollständigen`
 
 **Vervollständigung:** Keine Pflichtdiagnose und keinen kürzesten Pfad wegen Ausgabeschwelle verlieren.
@@ -5626,7 +5642,7 @@ Commit bestätigen Position 263/885. Danach folgt die strukturelle Bereinigung 6
 
 #### 6.f.C – Make it Clean
 
-- [x] **6.f.C** · Position **264/885** · Voraussetzung: `6.f.R`.
+- [x] **6.f.C** · Position **264/900** · Voraussetzung: `6.f.R`.
 **Exakte Commit-Message:** `6.f.C refactor(work): Dateibasierte Sortierung und Diagnose-Spooling bereinigen`
 
 **Bereinigung:** Allgemeine Segment-/Cursorabstraktion statt befehlsspezifischer Tempformate verwenden.
@@ -5661,7 +5677,7 @@ Position 264/885. Danach folgt 6.g.W für optionale, fachlich wirkungslose Cache
 
 #### 6.g.W – Let it Work
 
-- [x] **6.g.W** · Position **265/885** · Voraussetzung: `6.f.C`.
+- [x] **6.g.W** · Position **265/900** · Voraussetzung: `6.f.C`.
 **Exakte Commit-Message:** `6.g.W feat(work): Optionale Caches ohne Fachwirkung aufbauen`
 
 **Umsetzung:** cache off/read und vollständige Inhalts-/Versions-/Abhängigkeitsbindung vorhandener Einträge implementieren.
@@ -5698,7 +5714,7 @@ Dev-/Apply-Volltests und Commit bestätigen Position 265/885. Danach folgt 6.g.R
 
 #### 6.g.R – Make it Right
 
-- [x] **6.g.R** · Position **266/885** · Voraussetzung: `6.g.W`.
+- [x] **6.g.R** · Position **266/900** · Voraussetzung: `6.g.W`.
 **Exakte Commit-Message:** `6.g.R feat(work): Optionale Caches ohne Fachwirkung vervollständigen`
 
 **Vervollständigung:** Defekte, unlesbare, falsche oder zu teure Einträge ignorieren; mtime und Größe allein nicht vertrauen.
@@ -5735,7 +5751,7 @@ Position 266/885. Danach folgt die strukturelle Bereinigung 6.g.C.
 
 #### 6.g.C – Make it Clean
 
-- [x] **6.g.C** · Position **267/885** · Voraussetzung: `6.g.R`.
+- [x] **6.g.C** · Position **267/900** · Voraussetzung: `6.g.R`.
 **Exakte Commit-Message:** `6.g.C refactor(work): Optionale Caches ohne Fachwirkung bereinigen`
 
 **Bereinigung:** Cache als austauschbaren Beschleuniger hinter dem verbindlichen Reader halten.
@@ -5769,7 +5785,7 @@ erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.h.W – Let it Work
 
-- [x] **6.h.W** · Position **268/885** · Voraussetzung: `6.g.C`.
+- [x] **6.h.W** · Position **268/900** · Voraussetzung: `6.g.C`.
 **Exakte Commit-Message:** `6.h.W feat(work): Sparsame Weiterarbeit und echter Blocker aufbauen`
 
 **Umsetzung:** Vor Zurückstellung kleinere Chargen, Streaming und sichere kleinste Arbeitseinheit versuchen.
@@ -5806,7 +5822,7 @@ Danach folgt 6.h.R.
 
 #### 6.h.R – Make it Right
 
-- [x] **6.h.R** · Position **269/885** · Voraussetzung: `6.h.W`.
+- [x] **6.h.R** · Position **269/900** · Voraussetzung: `6.h.W`.
 **Exakte Commit-Message:** `6.h.R feat(work): Sparsame Weiterarbeit und echter Blocker vervollständigen`
 
 **Vervollständigung:** Tatsächliche Unausführbarkeit mit versuchten Alternativen belegen; Recoverydaten nicht für neuen Speicher löschen.
@@ -5848,7 +5864,7 @@ Position 269/885. Danach folgt 6.h.C ohne neue Fachwirkung.
 
 #### 6.h.C – Make it Clean
 
-- [x] **6.h.C** · Position **270/885** · Voraussetzung: `6.h.R`.
+- [x] **6.h.C** · Position **270/900** · Voraussetzung: `6.h.R`.
 **Exakte Commit-Message:** `6.h.C refactor(work): Sparsame Weiterarbeit und echter Blocker bereinigen`
 
 **Bereinigung:** Adaptionsentscheidung von Fachalgorithmus und Hostmessung entkoppeln.
@@ -5884,7 +5900,7 @@ Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.i.W – Let it Work
 
-- [x] **6.i.W** · Position **271/885** · Voraussetzung: `6.h.C`.
+- [x] **6.i.W** · Position **271/900** · Voraussetzung: `6.h.C`.
 **Exakte Commit-Message:** `6.i.W feat(work): Work-Identität und geschlossenes Manifest aufbauen`
 
 **Umsetzung:** work-v1 mit stabiler Work-ID, Commandbindung, vollständigem Aufgaben-/Eingangsmanifest und Datensegmenten definieren.
@@ -5921,7 +5937,7 @@ Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.i.R – Make it Right
 
-- [x] **6.i.R** · Position **272/885** · Voraussetzung: `6.i.W`.
+- [x] **6.i.R** · Position **272/900** · Voraussetzung: `6.i.W`.
 **Exakte Commit-Message:** `6.i.R feat(work): Work-Identität und geschlossenes Manifest vervollständigen`
 
 **Vervollständigung:** Pickle, Skripte, fremde Pythonobjekte und unbekannte auszuführende Command-IDs ablehnen.
@@ -5962,7 +5978,7 @@ Dev-/Apply-Volltests und Commit bestätigen Position 272/885. Danach folgt 6.i.C
 
 #### 6.i.C – Make it Clean
 
-- [x] **6.i.C** · Position **273/885** · Voraussetzung: `6.i.R`.
+- [x] **6.i.C** · Position **273/900** · Voraussetzung: `6.i.R`.
 **Exakte Commit-Message:** `6.i.C refactor(work): Work-Identität und geschlossenes Manifest bereinigen`
 
 **Bereinigung:** Workcodec, Command Registry und Phasenzustand über schmale Verträge verbinden.
@@ -5999,7 +6015,7 @@ Erst erfolgreiche parallele Dev-/Apply-Volltests und Commit bestätigen Position
 
 #### 6.j.W – Let it Work
 
-- [x] **6.j.W** · Position **274/885** · Voraussetzung: `6.i.C`.
+- [x] **6.j.W** · Position **274/900** · Voraussetzung: `6.i.C`.
 **Exakte Commit-Message:** `6.j.W feat(work): Externer Work-Root und Locks aufbauen`
 
 **Umsetzung:** Sicheren externen Work-Root explizit oder erst beim ersten nötigen Checkpoint automatisch erzeugen.
@@ -6028,7 +6044,7 @@ Position 274/885. Danach folgt 6.j.R für weitere Pfad-, Eigentümer- und Fehler
 
 #### 6.j.R – Make it Right
 
-- [x] **6.j.R** · Position **275/885** · Voraussetzung: `6.j.W`.
+- [x] **6.j.R** · Position **275/900** · Voraussetzung: `6.j.W`.
 **Exakte Commit-Message:** `6.j.R feat(work): Externer Work-Root und Locks vervollständigen`
 
 **Vervollständigung:** Pfadüberschneidung, Symlink, fremder Auftrag und unprüfbarer Lockowner verhindern Nutzung.
@@ -6057,7 +6073,7 @@ parallele Apply-Volltest und Commit bestätigen Position 275/885.
 
 #### 6.j.C – Make it Clean
 
-- [x] **6.j.C** · Position **276/885** · Voraussetzung: `6.j.R`.
+- [x] **6.j.C** · Position **276/900** · Voraussetzung: `6.j.R`.
 **Exakte Commit-Message:** `6.j.C refactor(work): Externer Work-Root und Locks bereinigen`
 
 **Bereinigung:** Work-Lock und Projektlock strikt getrennt verwalten.
@@ -6085,7 +6101,7 @@ Erst der erfolgreiche parallele Apply-Volltest und Commit bestätigen Position
 
 #### 6.k.W – Let it Work
 
-- [x] **6.k.W** · Position **277/885** · Voraussetzung: `6.j.C`.
+- [x] **6.k.W** · Position **277/900** · Voraussetzung: `6.j.C`.
 **Exakte Commit-Message:** `6.k.W feat(work): Fortsetzbarer Eingangs-Snapshot aufbauen`
 
 **Umsetzung:** Deterministische Enumeration, blockweises Hashen und schrittweise Versiegelung des Eingangsmanifests implementieren.
@@ -6117,7 +6133,7 @@ parallele Apply-Volltest und Commit bestätigen Position 277/885.
 
 #### 6.k.R – Make it Right
 
-- [x] **6.k.R** · Position **278/885** · Voraussetzung: `6.k.W`.
+- [x] **6.k.R** · Position **278/900** · Voraussetzung: `6.k.W`.
 **Exakte Commit-Message:** `6.k.R feat(work): Fortsetzbarer Eingangs-Snapshot vervollständigen`
 
 **Vervollständigung:** Veränderte/fehlende Quellen und Writeraktivität verhindern falsche Snapshotbestätigung.
@@ -6154,7 +6170,7 @@ Erst der erfolgreiche parallele Apply-Volltest und Commit bestätigen 278/885.
 
 #### 6.k.C – Make it Clean
 
-- [x] **6.k.C** · Position **279/885** · Voraussetzung: `6.k.R`.
+- [x] **6.k.C** · Position **279/900** · Voraussetzung: `6.k.R`.
 **Exakte Commit-Message:** `6.k.C refactor(work): Fortsetzbarer Eingangs-Snapshot bereinigen`
 
 **Bereinigung:** Snapshotzustand unabhängig von absoluten Pfaden und CLI-Laufzeit halten.
@@ -6186,7 +6202,7 @@ Checkpointgenerationen.
 
 #### 6.l.W – Let it Work
 
-- [x] **6.l.W** · Position **280/885** · Voraussetzung: `6.k.C`.
+- [x] **6.l.W** · Position **280/900** · Voraussetzung: `6.k.C`.
 **Exakte Commit-Message:** `6.l.W feat(work): Dauerhafte Checkpointgenerationen aufbauen`
 
 **Umsetzung:** Alle referenzierten Teile sichern und erst danach atomar die neue aktuelle Generation veröffentlichen.
@@ -6224,7 +6240,7 @@ partiell. Erst erfolgreicher paralleler Apply-Volltest und Commit bestätigen
 
 #### 6.l.R – Make it Right
 
-- [x] **6.l.R** · Position **281/885** · Voraussetzung: `6.l.W`.
+- [x] **6.l.R** · Position **281/900** · Voraussetzung: `6.l.W`.
 **Exakte Commit-Message:** `6.l.R feat(work): Dauerhafte Checkpointgenerationen vervollständigen`
 
 **Vervollständigung:** Fehlende Segmente, falsche Hashes und Abbruch beim Generationenwechsel lassen keinen Teilcheckpoint gültig werden.
@@ -6256,7 +6272,7 @@ paralleler Apply-Volltest und Commit bestätigen 281/885.
 
 #### 6.l.C – Make it Clean
 
-- [x] **6.l.C** · Position **282/885** · Voraussetzung: `6.l.R`.
+- [x] **6.l.C** · Position **282/900** · Voraussetzung: `6.l.R`.
 **Exakte Commit-Message:** `6.l.C refactor(work): Dauerhafte Checkpointgenerationen bereinigen`
 
 **Bereinigung:** Gemeinsame atomare Dateiprimitiven nutzen, Work- und Projektjournale dennoch getrennt halten.
@@ -6289,7 +6305,7 @@ der anschließende Commit bestätigen erst 282/885. Danach folgt 6.m.W.
 
 #### 6.m.W – Let it Work
 
-- [x] **6.m.W** · Position **283/885** · Voraussetzung: `6.l.C`.
+- [x] **6.m.W** · Position **283/900** · Voraussetzung: `6.l.C`.
 **Exakte Commit-Message:** `6.m.W feat(work): Resume und Kompatibilitätsprüfung aufbauen`
 
 **Umsetzung:** work resume aus geprüften Manifests mit unveränderten IDs, Actor, Request und Planmetadaten starten.
@@ -6328,7 +6344,7 @@ Commit bestätigen 283/885; danach folgt 6.m.R.
 
 #### 6.m.R – Make it Right
 
-- [x] **6.m.R** · Position **284/885** · Voraussetzung: `6.m.W`.
+- [x] **6.m.R** · Position **284/900** · Voraussetzung: `6.m.W`.
 **Exakte Commit-Message:** `6.m.R feat(work): Resume und Kompatibilitätsprüfung vervollständigen`
 
 **Vervollständigung:** Unpassender Build-/Algorithmusvertrag, Actorwechsel oder stale Zielbasis erzeugen Konflikt statt Rebase.
@@ -6368,7 +6384,7 @@ markiert. Erst der vollständige parallele Apply-Test und Commit bestätigen
 
 #### 6.m.C – Make it Clean
 
-- [x] **6.m.C** · Position **285/885** · Voraussetzung: `6.m.R`.
+- [x] **6.m.C** · Position **285/900** · Voraussetzung: `6.m.R`.
 **Exakte Commit-Message:** `6.m.C refactor(work): Resume und Kompatibilitätsprüfung bereinigen`
 
 **Bereinigung:** Zustandsrestauration und erneute lokale Rechte-/Basisprüfung getrennt ausführen.
@@ -6401,7 +6417,7 @@ vollständige parallele Apply-Test und Commit bestätigen 285/885; danach folgt
 
 #### 6.n.W – Let it Work
 
-- [x] **6.n.W** · Position **286/885** · Voraussetzung: `6.m.C`.
+- [x] **6.n.W** · Position **286/900** · Voraussetzung: `6.m.C`.
 **Exakte Commit-Message:** `6.n.W feat(work): Monotoner Fortschritt und kleinste Einheit aufbauen`
 
 **Umsetzung:** Abgeschlossene Einheiten wiederverwenden und bei kleinem Fenster mindestens sicheren kleinsten Fortschritt versuchen.
@@ -6439,7 +6455,7 @@ bestätigen 286/885; danach folgt 6.n.R.
 
 #### 6.n.R – Make it Right
 
-- [x] **6.n.R** · Position **287/885** · Voraussetzung: `6.n.W`.
+- [x] **6.n.R** · Position **287/900** · Voraussetzung: `6.n.W`.
 **Exakte Commit-Message:** `6.n.R feat(work): Monotoner Fortschritt und kleinste Einheit vervollständigen`
 
 **Vervollständigung:** Doppelte Einheiten und endlose leere Checkpoints verhindern; echte Blocker separat behalten.
@@ -6478,7 +6494,7 @@ Apply-Test und Commit bestätigen 287/885; danach folgt 6.n.C.
 
 #### 6.n.C – Make it Clean
 
-- [x] **6.n.C** · Position **288/885** · Voraussetzung: `6.n.R`.
+- [x] **6.n.C** · Position **288/900** · Voraussetzung: `6.n.R`.
 **Exakte Commit-Message:** `6.n.C refactor(work): Monotoner Fortschritt und kleinste Einheit bereinigen`
 
 **Bereinigung:** Fortschrittsbeweis und Schedulerentscheidungen als eigene Komponenten gestalten.
@@ -6510,7 +6526,7 @@ und Commit bestätigen 288/885; danach folgt 6.o.W.
 
 #### 6.o.W – Let it Work
 
-- [x] **6.o.W** · Position **289/885** · Voraussetzung: `6.n.C`.
+- [x] **6.o.W** · Position **289/900** · Voraussetzung: `6.n.C`.
 **Exakte Commit-Message:** `6.o.W feat(work): Globale Schlussprüfung und Abschlussstatus aufbauen`
 
 **Umsetzung:** Globale Closure-/Konsistenzarbeit und Pflichtdiagnosen vor fachlichem Abschluss vollständig zusammenführen.
@@ -6553,7 +6569,7 @@ Nachweise. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.o.R – Make it Right
 
-- [x] **6.o.R** · Position **290/885** · Voraussetzung: `6.o.W`.
+- [x] **6.o.R** · Position **290/900** · Voraussetzung: `6.o.W`.
 **Exakte Commit-Message:** `6.o.R feat(work): Globale Schlussprüfung und Abschlussstatus vervollständigen`
 
 **Vervollständigung:** Lokale Teilfreigaben und noch offene Arbeit verhindern Erfolgsreceipt.
@@ -6589,7 +6605,7 @@ partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.o.C – Make it Clean
 
-- [x] **6.o.C** · Position **291/885** · Voraussetzung: `6.o.R`.
+- [x] **6.o.C** · Position **291/900** · Voraussetzung: `6.o.R`.
 **Exakte Commit-Message:** `6.o.C refactor(work): Globale Schlussprüfung und Abschlussstatus bereinigen`
 
 **Bereinigung:** Technischen Arbeitszustand von fachlichem Gateausgang trennen.
@@ -6622,7 +6638,7 @@ und Commit bestätigen 291/885; danach folgt 6.p.W.
 
 #### 6.p.W – Let it Work
 
-- [x] **6.p.W** · Position **292/885** · Voraussetzung: `6.o.C`.
+- [x] **6.p.W** · Position **292/900** · Voraussetzung: `6.o.C`.
 **Exakte Commit-Message:** `6.p.W feat(work): Atomarer Write über mehrere Vorbereitungsphasen aufbauen`
 
 **Umsetzung:** Große Change Plans vor Veröffentlichung fortsetzen und den finalen Fachwrite ungeteilt ausführen.
@@ -6662,7 +6678,7 @@ partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.p.R – Make it Right
 
-- [x] **6.p.R** · Position **293/885** · Voraussetzung: `6.p.W`.
+- [x] **6.p.R** · Position **293/900** · Voraussetzung: `6.p.W`.
 **Exakte Commit-Message:** `6.p.R feat(work): Atomarer Write über mehrere Vorbereitungsphasen vervollständigen`
 
 **Vervollständigung:** Kein freiwilliger Promptwechsel während committing; echter Abbruch geht ausschließlich durch Recovery.
@@ -6697,7 +6713,7 @@ bestätigen 293/885; anschließend folgt 6.p.C.
 
 #### 6.p.C – Make it Clean
 
-- [x] **6.p.C** · Position **294/885** · Voraussetzung: `6.p.R`.
+- [x] **6.p.C** · Position **294/900** · Voraussetzung: `6.p.R`.
 **Exakte Commit-Message:** `6.p.C refactor(work): Atomarer Write über mehrere Vorbereitungsphasen bereinigen`
 
 **Bereinigung:** Worksteuerung vor und nach Transaktion anschließen, nicht in atomare Teilcommits zerlegen.
@@ -6733,7 +6749,7 @@ anschließend folgt 6.q.W.
 
 #### 6.q.W – Let it Work
 
-- [x] **6.q.W** · Position **295/885** · Voraussetzung: `6.p.C`.
+- [x] **6.q.W** · Position **295/900** · Voraussetzung: `6.p.C`.
 **Exakte Commit-Message:** `6.q.W feat(work): Große Ergebnisdateien und Abschlusslieferung aufbauen`
 
 **Umsetzung:** Vollständige Ergebnisse über sichere Datei-/Manifestbindung statt abgeschnittener Inlinewerte liefern.
@@ -6772,7 +6788,7 @@ partiell. Erst vollständiger paralleler Apply-Test und Commit bestätigen
 
 #### 6.q.R – Make it Right
 
-- [x] **6.q.R** · Position **296/885** · Voraussetzung: `6.q.W`.
+- [x] **6.q.R** · Position **296/900** · Voraussetzung: `6.q.W`.
 **Exakte Commit-Message:** `6.q.R feat(work): Große Ergebnisdateien und Abschlusslieferung vervollständigen`
 
 **Vervollständigung:** Ausgabeausfall nach Fachcommit darf keinen zweiten Apply auslösen; unvollständige Datei nicht als geliefert markieren.
@@ -6817,7 +6833,7 @@ vollständiger paralleler Apply-Test und Commit bestätigen 296/885; danach folg
 
 #### 6.q.C – Make it Clean
 
-- [x] **6.q.C** · Position **297/885** · Voraussetzung: `6.q.R`.
+- [x] **6.q.C** · Position **297/900** · Voraussetzung: `6.q.R`.
 **Exakte Commit-Message:** `6.q.C refactor(work): Große Ergebnisdateien und Abschlusslieferung bereinigen`
 
 **Bereinigung:** Ergebnislieferung und fachlichen Commitabschluss als getrennte überprüfbare Zustände führen.
@@ -6854,7 +6870,7 @@ bestätigen 297/885; anschließend folgt 6.r.W.
 
 #### 6.r.W – Let it Work
 
-- [x] **6.r.W** · Position **298/885** · Voraussetzung: `6.q.C`.
+- [x] **6.r.W** · Position **298/900** · Voraussetzung: `6.q.C`.
 **Exakte Commit-Message:** `6.r.W feat(work): Work-Status, Prompt und Cancel aufbauen`
 
 **Umsetzung:** Status und next_action aus geprüfter Arbeit ableiten; Cancel nur für zulässig unveröffentlichte Arbeit ausführen.
@@ -6900,7 +6916,7 @@ paralleler Apply-Test und Commit bestätigen 298/885; anschließend folgt 6.r.R.
 
 #### 6.r.R – Make it Right
 
-- [x] **6.r.R** · Position **299/885** · Voraussetzung: `6.r.W`.
+- [x] **6.r.R** · Position **299/900** · Voraussetzung: `6.r.W`.
 **Exakte Commit-Message:** `6.r.R feat(work): Work-Status, Prompt und Cancel vervollständigen`
 
 **Vervollständigung:** Fremde Projektanweisungen im Prompt bleiben Daten; keine Chats, LLMs oder Nachrichten selbst starten.
@@ -6943,7 +6959,7 @@ bleibt partiell. Erst vollständiger paralleler Apply-Test und Commit bestätige
 
 #### 6.r.C – Make it Clean
 
-- [x] **6.r.C** · Position **300/885** · Voraussetzung: `6.r.R`.
+- [x] **6.r.C** · Position **300/900** · Voraussetzung: `6.r.R`.
 **Exakte Commit-Message:** `6.r.C refactor(work): Work-Status, Prompt und Cancel bereinigen`
 
 **Bereinigung:** Maschinellen Fortsetzungsvertrag vom rein menschlichen Promptrenderer trennen.
@@ -6977,7 +6993,7 @@ bestätigen 300/885; anschließend folgt 6.s.W.
 
 #### 6.s.W – Let it Work
 
-- [x] **6.s.W** · Position **301/885** · Voraussetzung: `6.r.C`.
+- [x] **6.s.W** · Position **301/900** · Voraussetzung: `6.r.C`.
 **Exakte Commit-Message:** `6.s.W feat(work): Sicherer Work-Export und Restore aufbauen`
 
 **Umsetzung:** Selbstenthaltenes gehashtes Arbeitspaket samt generischem sicheren Archivcodec implementieren.
@@ -7018,7 +7034,7 @@ vollständiger paralleler Apply-Test und Commit bestätigen 301/885; danach folg
 
 #### 6.s.R – Make it Right
 
-- [x] **6.s.R** · Position **302/885** · Voraussetzung: `6.s.W`.
+- [x] **6.s.R** · Position **302/900** · Voraussetzung: `6.s.W`.
 **Exakte Commit-Message:** `6.s.R feat(work): Sicherer Work-Export und Restore vervollständigen`
 
 **Vervollständigung:** Traversal, Sonderdateien, fehlende Payloads und unzulässige Zielüberschneidung vor Restore abweisen.
@@ -7058,7 +7074,7 @@ folgt 6.s.C.
 
 #### 6.s.C – Make it Clean
 
-- [x] **6.s.C** · Position **303/885** · Voraussetzung: `6.s.R`.
+- [x] **6.s.C** · Position **303/900** · Voraussetzung: `6.s.R`.
 **Exakte Commit-Message:** `6.s.C refactor(work): Sicherer Work-Export und Restore bereinigen`
 
 **Bereinigung:** Archivcodec als gemeinsame Basis für M14/M15 anbieten, Workmanifest fachlich separat halten.
@@ -7092,7 +7108,7 @@ Test und Commit bestätigen 303/885; anschließend folgt 6.t.W.
 
 #### 6.t.W – Let it Work
 
-- [x] **6.t.W** · Position **304/885** · Voraussetzung: `6.s.C`.
+- [x] **6.t.W** · Position **304/900** · Voraussetzung: `6.s.C`.
 **Exakte Commit-Message:** `6.t.W feat(work): Prozesslebensdauer und Cleanupgrenzen aufbauen`
 
 **Umsetzung:** Keine Core-Workerpools; zulässige Kindprozesse kontrolliert abschließen und einsammeln.
@@ -7132,7 +7148,7 @@ Test und Commit bestätigen 304/885; danach folgt 6.t.R.
 
 #### 6.t.R – Make it Right
 
-- [x] **6.t.R** · Position **305/885** · Voraussetzung: `6.t.W`.
+- [x] **6.t.R** · Position **305/900** · Voraussetzung: `6.t.W`.
 **Exakte Commit-Message:** `6.t.R feat(work): Prozesslebensdauer und Cleanupgrenzen vervollständigen`
 
 **Vervollständigung:** Ausnahme-/Abbruchpfade und gesicherte Checkpoints bei Cleanup schützen.
@@ -7174,7 +7190,7 @@ Commit bestätigen 305/885; danach folgt die Bereinigung 6.t.C.
 
 #### 6.t.C – Make it Clean
 
-- [x] **6.t.C** · Position **306/885** · Voraussetzung: `6.t.R`.
+- [x] **6.t.C** · Position **306/900** · Voraussetzung: `6.t.R`.
 **Exakte Commit-Message:** `6.t.C refactor(work): Prozesslebensdauer und Cleanupgrenzen bereinigen`
 
 **Bereinigung:** Prozessadapter und Cleanupstrategie für spätere Git-/Analyzerverwendung bündeln.
@@ -7213,7 +7229,7 @@ Commit bestätigen 306/885; danach folgt 6.u.W.
 
 #### 6.u.W – Let it Work
 
-- [x] **6.u.W** · Position **307/885** · Voraussetzung: `6.t.C`.
+- [x] **6.u.W** · Position **307/900** · Voraussetzung: `6.t.C`.
 **Exakte Commit-Message:** `6.u.W feat(work): Endergebnisparität und Runtime-Wechsel aufbauen`
 
 **Umsetzung:** Bestehende Graph-/SRX-/Validierungs-/Writepfade an die Workengine anschließen und Einzellaufparität nachweisen.
@@ -7256,7 +7272,7 @@ folgt 6.u.R. Technischer Aufrufvertrag: `docs/development/Work_Evaluation.md`.
 
 #### 6.u.R – Make it Right
 
-- [x] **6.u.R** · Position **308/885** · Voraussetzung: `6.u.W`.
+- [x] **6.u.R** · Position **308/900** · Voraussetzung: `6.u.W`.
 **Exakte Commit-Message:** `6.u.R feat(work): Endergebnisparität und Runtime-Wechsel vervollständigen`
 
 **Vervollständigung:** Unvollständige Eingänge, neue Hostgrenzen und veraltete Workdaten als konkrete Konflikte behandeln.
@@ -7294,7 +7310,7 @@ paralleler Apply-Test und Commit bestätigen 308/885; danach folgt 6.u.C.
 
 #### 6.u.C – Make it Clean
 
-- [x] **6.u.C** · Position **309/885** · Voraussetzung: `6.u.R`.
+- [x] **6.u.C** · Position **309/900** · Voraussetzung: `6.u.R`.
 **Exakte Commit-Message:** `6.u.C refactor(work): Endergebnisparität und Runtime-Wechsel bereinigen`
 
 **Bereinigung:** Wiederverwendbare Paritätsharness für jeden späteren Fachbefehl bereitstellen.
@@ -7347,7 +7363,7 @@ danach folgt 7.a.W.
 
 #### 7.a.W – Let it Work
 
-- [x] **7.a.W** · Position **310/885** · Voraussetzung: `6.u.C`.
+- [x] **7.a.W** · Position **310/900** · Voraussetzung: `6.u.C`.
 **Exakte Commit-Message:** `7.a.W feat(authoring): Atomare Projektinitialisierung aufbauen`
 
 **Umsetzung:** init mit Bootstrapjournal, Mindeststruktur und genau einem Primärdokument implementieren.
@@ -7392,7 +7408,7 @@ folgt 7.a.R. Bedienung: `docs/development/Project_Initialization.md`.
 
 #### 7.a.R – Make it Right
 
-- [x] **7.a.R** · Position **311/885** · Voraussetzung: `7.a.W`.
+- [x] **7.a.R** · Position **311/900** · Voraussetzung: `7.a.W`.
 **Exakte Commit-Message:** `7.a.R feat(authoring): Atomare Projektinitialisierung vervollständigen`
 
 **Vervollständigung:** Bestehende fremde Dateien erhalten; Konflikte und Abbruch führen zu Ausgang oder vollständig neuer Struktur.
@@ -7431,7 +7447,7 @@ Erst Apply-Volltest und Commit bestätigen 311/885; anschließend folgt 7.a.C.
 
 #### 7.a.C – Make it Clean
 
-- [x] **7.a.C** · Position **312/885** · Voraussetzung: `7.a.R`.
+- [x] **7.a.C** · Position **312/900** · Voraussetzung: `7.a.R`.
 **Exakte Commit-Message:** `7.a.C refactor(authoring): Atomare Projektinitialisierung bereinigen`
 
 **Bereinigung:** Root-Erzeugung vom Change Plan eines bereits vorhandenen Projekts trennen.
@@ -7469,7 +7485,7 @@ anschließend beginnt 7.b.W mit strukturierten Authoring-Eingaben.
 
 #### 7.b.W – Let it Work
 
-- [x] **7.b.W** · Position **313/885** · Voraussetzung: `7.a.C`.
+- [x] **7.b.W** · Position **313/900** · Voraussetzung: `7.a.C`.
 **Exakte Commit-Message:** `7.b.W feat(authoring): Strukturierte Authoring-Eingaben aufbauen`
 
 **Umsetzung:** Typspezifische Optionen und input-Datei/stdin in gemeinsame Fachinputs überführen.
@@ -7505,7 +7521,7 @@ Bedienung: `docs/development/Authoring_Inputs.md`.
 
 #### 7.b.R – Make it Right
 
-- [x] **7.b.R** · Position **314/885** · Voraussetzung: `7.b.W`.
+- [x] **7.b.R** · Position **314/900** · Voraussetzung: `7.b.W`.
 **Exakte Commit-Message:** `7.b.R feat(authoring): Strukturierte Authoring-Eingaben vervollständigen`
 
 **Vervollständigung:** Widersprüchliche Quellen, fehlende Pflichtfelder und falsche Datentypen vor Planung ablehnen.
@@ -7537,7 +7553,7 @@ speicherresident. Erst erfolgreicher Apply-Volltest und Commit bestätigen
 
 #### 7.b.C – Make it Clean
 
-- [x] **7.b.C** · Position **315/885** · Voraussetzung: `7.b.R`.
+- [x] **7.b.C** · Position **315/900** · Voraussetzung: `7.b.R`.
 **Exakte Commit-Message:** `7.b.C refactor(authoring): Strukturierte Authoring-Eingaben bereinigen`
 
 **Bereinigung:** Eingabekonvertierung aus den Handlerschritten herausziehen.
@@ -7572,7 +7588,7 @@ bleiben bestehen. Erst erfolgreicher Apply-Volltest und Commit bestätigen
 
 #### 7.c.W – Let it Work
 
-- [x] **7.c.W** · Position **316/885** · Voraussetzung: `7.b.C`.
+- [x] **7.c.W** · Position **316/900** · Voraussetzung: `7.b.C`.
 **Exakte Commit-Message:** `7.c.W feat(authoring): Artefakte erstellen aufbauen`
 
 **Umsetzung:** Zulässige Drafttypen über ID-Vergabe, vollständige Validierung und Writer erzeugen.
@@ -7609,7 +7625,7 @@ Bedienung und Reichweite: `docs/development/Artifact_Creation.md`.
 
 #### 7.c.R – Make it Right
 
-- [x] **7.c.R** · Position **317/885** · Voraussetzung: `7.c.W`.
+- [x] **7.c.R** · Position **317/900** · Voraussetzung: `7.c.W`.
 **Exakte Commit-Message:** `7.c.R feat(authoring): Artefakte erstellen vervollständigen`
 
 **Vervollständigung:** Kollision, fehlende Draftfelder und Spezialtypen ohne Fachservice abweisen.
@@ -7642,7 +7658,7 @@ Erst erfolgreicher Apply-Volltest und Commit bestätigen 317/885. Danach folgt
 
 #### 7.c.C – Make it Clean
 
-- [x] **7.c.C** · Position **318/885** · Voraussetzung: `7.c.R`.
+- [x] **7.c.C** · Position **318/900** · Voraussetzung: `7.c.R`.
 **Exakte Commit-Message:** `7.c.C refactor(authoring): Artefakte erstellen bereinigen`
 
 **Bereinigung:** Gemeinsamen Konstruktor aus M2 statt CLI-eigener Standardwerte verwenden.
@@ -7681,7 +7697,7 @@ Danach folgt 7.d.W für den kleinsten nutzbaren Ausschnitt der Artefaktaktualisi
 
 #### 7.d.W – Let it Work
 
-- [x] **7.d.W** · Position **319/885** · Voraussetzung: `7.c.C`.
+- [x] **7.d.W** · Position **319/900** · Voraussetzung: `7.c.C`.
 **Exakte Commit-Message:** `7.d.W feat(authoring): Artefakte aktualisieren aufbauen`
 
 **Umsetzung:** Updatekomfort und gespeicherte Patches mit erwarteter Revision oder Hash anbieten.
@@ -7714,7 +7730,7 @@ bestätigen 319/885; danach folgt die vertiefte Abnahme in 7.d.R.
 
 #### 7.d.R – Make it Right
 
-- [x] **7.d.R** · Position **320/885** · Voraussetzung: `7.d.W`.
+- [x] **7.d.R** · Position **320/900** · Voraussetzung: `7.d.W`.
 **Exakte Commit-Message:** `7.d.R feat(authoring): Artefakte aktualisieren vervollständigen`
 
 **Vervollständigung:** Veraltete Vorbedingungen, direkte Identitätsänderung und freies Setzen von maturity verhindern.
@@ -7757,7 +7773,7 @@ Apply-Volltest und Commit bestätigen 320/885. Danach folgt 7.d.C.
 
 #### 7.d.C – Make it Clean
 
-- [x] **7.d.C** · Position **321/885** · Voraussetzung: `7.d.R`.
+- [x] **7.d.C** · Position **321/900** · Voraussetzung: `7.d.R`.
 **Exakte Commit-Message:** `7.d.C refactor(authoring): Artefakte aktualisieren bereinigen`
 
 **Bereinigung:** Authoring nur als Adapter auf denselben Planer führen.
@@ -7796,7 +7812,7 @@ und Commit bestätigen 321/885. Danach folgt 7.e.W.
 
 #### 7.e.W – Let it Work
 
-- [x] **7.e.W** · Position **322/885** · Voraussetzung: `7.d.C`.
+- [x] **7.e.W** · Position **322/900** · Voraussetzung: `7.d.C`.
 **Exakte Commit-Message:** `7.e.W feat(authoring): Beziehungen hinzufügen und entfernen aufbauen`
 
 **Umsetzung:** relation add/remove mit eigener Relation-ID, Grund und Quellrevision implementieren.
@@ -7833,7 +7849,7 @@ Danach folgt 7.e.R mit den weiteren Rand- und Fehlerfällen.
 
 #### 7.e.R – Make it Right
 
-- [x] **7.e.R** · Position **323/885** · Voraussetzung: `7.e.W`.
+- [x] **7.e.R** · Position **323/900** · Voraussetzung: `7.e.W`.
 **Exakte Commit-Message:** `7.e.R feat(authoring): Beziehungen hinzufügen und entfernen vervollständigen`
 
 **Vervollständigung:** Typfehler, fehlendes Ziel und falsche Relation-ID ohne Teilwrite behandeln.
@@ -7872,7 +7888,7 @@ Apply-Volltest und Commit bestätigen 323/885. Danach folgt 7.e.C.
 
 #### 7.e.C – Make it Clean
 
-- [x] **7.e.C** · Position **324/885** · Voraussetzung: `7.e.R`.
+- [x] **7.e.C** · Position **324/900** · Voraussetzung: `7.e.R`.
 **Exakte Commit-Message:** `7.e.C refactor(authoring): Beziehungen hinzufügen und entfernen bereinigen`
 
 **Bereinigung:** Relationsoperationen nicht durch rohe Arraypatches in der CLI ersetzen.
@@ -7910,7 +7926,7 @@ Apply-Volltest und Commit bestätigen 324/885. Danach folgt 7.f.W.
 
 #### 7.f.W – Let it Work
 
-- [x] **7.f.W** · Position **325/885** · Voraussetzung: `7.e.C`.
+- [x] **7.f.W** · Position **325/900** · Voraussetzung: `7.e.C`.
 **Exakte Commit-Message:** `7.f.W feat(authoring): Lifecycle und Stilllegung aufbauen`
 
 **Umsetzung:** transition und retire über die vollständigen Standard-/Spezialregeln anbieten.
@@ -7955,7 +7971,7 @@ und Commit bestätigen 325/885. Danach folgt 7.f.R.
 
 #### 7.f.R – Make it Right
 
-- [x] **7.f.R** · Position **326/885** · Voraussetzung: `7.f.W`.
+- [x] **7.f.R** · Position **326/900** · Voraussetzung: `7.f.W`.
 **Exakte Commit-Message:** `7.f.R feat(authoring): Lifecycle und Stilllegung vervollständigen`
 
 **Vervollständigung:** Rejected ohne Grund, unerlaubte Rückkehr aus retired und superseded ohne Nachfolger ablehnen.
@@ -7993,7 +8009,7 @@ und Commit bestätigen 326/885. Danach folgt 7.f.C.
 
 #### 7.f.C – Make it Clean
 
-- [x] **7.f.C** · Position **327/885** · Voraussetzung: `7.f.R`.
+- [x] **7.f.C** · Position **327/900** · Voraussetzung: `7.f.R`.
 **Exakte Commit-Message:** `7.f.C refactor(authoring): Lifecycle und Stilllegung bereinigen`
 
 **Bereinigung:** Statusparser, Gateprüfung und Writeroperation sauber trennen.
@@ -8030,7 +8046,7 @@ und Commit bestätigen 327/885. Danach folgt 7.g.W.
 
 #### 7.g.W – Let it Work
 
-- [x] **7.g.W** · Position **328/885** · Voraussetzung: `7.f.C`.
+- [x] **7.g.W** · Position **328/900** · Voraussetzung: `7.f.C`.
 **Exakte Commit-Message:** `7.g.W feat(authoring): Reviewdatensatz und Kontextbindung aufbauen`
 
 **Umsetzung:** Menschlichen Relationsreview mit Relation, beiden Endpunkten und Kontext-/Vollhashes als immutable Datensatz planen.
@@ -8077,7 +8093,7 @@ SR-REQ-0434 bleiben ausdrücklich `partial`.
 
 #### 7.g.R – Make it Right
 
-- [x] **7.g.R** · Position **329/885** · Voraussetzung: `7.g.W`.
+- [x] **7.g.R** · Position **329/900** · Voraussetzung: `7.g.W`.
 **Exakte Commit-Message:** `7.g.R feat(authoring): Reviewdatensatz und Kontextbindung vervollständigen`
 
 **Vervollständigung:** AI-Reviewer und strukturell ungültige Beziehung vor Write abweisen.
@@ -8110,7 +8126,7 @@ SR-REQ-0434 bleiben `partial`.
 
 #### 7.g.C – Make it Clean
 
-- [x] **7.g.C** · Position **330/885** · Voraussetzung: `7.g.R`.
+- [x] **7.g.C** · Position **330/900** · Voraussetzung: `7.g.R`.
 **Exakte Commit-Message:** `7.g.C refactor(authoring): Reviewdatensatz und Kontextbindung bereinigen`
 
 **Bereinigung:** Reviewkonstruktion und generisches Authoring getrennt halten.
@@ -8148,7 +8164,7 @@ SR-REQ-0275 und SR-REQ-0434 bleiben ausdrücklich `partial`.
 
 #### 7.h.W – Let it Work
 
-- [x] **7.h.W** · Position **331/885** · Voraussetzung: `7.g.C`.
+- [x] **7.h.W** · Position **331/900** · Voraussetzung: `7.g.C`.
 **Exakte Commit-Message:** `7.h.W feat(authoring): Reviewstatus berechnen aufbauen`
 
 **Umsetzung:** unreviewed/current/suspect/invalid aus Relation und passender Reviewhistorie berechnen.
@@ -8186,7 +8202,7 @@ Die vier zugeordneten Anforderungen sind `partial`, nicht vollständig erfüllt.
 
 #### 7.h.R – Make it Right
 
-- [x] **7.h.R** · Position **332/885** · Voraussetzung: `7.h.W`.
+- [x] **7.h.R** · Position **332/900** · Voraussetzung: `7.h.W`.
 **Exakte Commit-Message:** `7.h.R feat(authoring): Reviewstatus berechnen vervollständigen`
 
 **Vervollständigung:** Ungültige Struktur und jüngstes passendes rejected erhalten invalid-Vorrang.
@@ -8222,7 +8238,7 @@ bleiben ausdrücklich `partial`.
 
 #### 7.h.C – Make it Clean
 
-- [x] **7.h.C** · Position **333/885** · Voraussetzung: `7.h.R`.
+- [x] **7.h.C** · Position **333/900** · Voraussetzung: `7.h.R`.
 **Exakte Commit-Message:** `7.h.C refactor(authoring): Reviewstatus berechnen bereinigen`
 
 **Bereinigung:** Reine Statusauswahl von historischen Reviewdaten und Diagnoserendering entkoppeln.
@@ -8262,7 +8278,7 @@ Freigaberücknahme gehören unverändert zu 7.i.
 
 #### 7.i.W – Let it Work
 
-- [x] **7.i.W** · Position **334/885** · Voraussetzung: `7.h.C`.
+- [x] **7.i.W** · Position **334/900** · Voraussetzung: `7.h.C`.
 **Exakte Commit-Message:** `7.i.W feat(authoring): Negativer Review mit Freigaberücknahme aufbauen`
 
 **Umsetzung:** relation_review_record einschließlich aller erforderlichen Approval-Rücknahmen als einen Plan ausführen.
@@ -8308,7 +8324,7 @@ Es gibt keine generische Fehlerausnahme und keine neue Artefaktfreigabe.
 
 #### 7.i.R – Make it Right
 
-- [x] **7.i.R** · Position **335/885** · Voraussetzung: `7.i.W`.
+- [x] **7.i.R** · Position **335/900** · Voraussetzung: `7.i.W`.
 **Exakte Commit-Message:** `7.i.R feat(authoring): Negativer Review mit Freigaberücknahme vervollständigen`
 
 **Vervollständigung:** Fachlich korrekt gespeichertes Negativurteil von ungültigem Write unterscheiden; Code 0 mit failed assessment versus später validate Code 1.
@@ -8351,7 +8367,7 @@ werden nicht als vollständige CLI-/Produkt- oder Plattformabnahme ausgewiesen.
 
 #### 7.i.C – Make it Clean
 
-- [x] **7.i.C** · Position **336/885** · Voraussetzung: `7.i.R`.
+- [x] **7.i.C** · Position **336/900** · Voraussetzung: `7.i.R`.
 **Exakte Commit-Message:** `7.i.C refactor(authoring): Negativer Review mit Freigaberücknahme bereinigen`
 
 **Bereinigung:** Eng definierte Review-Gateausnahme zentral und nicht als generelles Validierungsbypass implementieren.
@@ -8391,7 +8407,7 @@ aus R-36 sowie vollständige Produkt-/Plattformabnahmen bleiben offen.
 
 #### 7.j.W – Let it Work
 
-- [x] **7.j.W** · Position **337/885** · Voraussetzung: `7.i.C`.
+- [x] **7.j.W** · Position **337/900** · Voraussetzung: `7.i.C`.
 **Exakte Commit-Message:** `7.j.W feat(authoring): Reviewpolicy und Relationsstatus-CLI aufbauen`
 
 **Umsetzung:** Profilseverity und Relationsstatusdaten inklusive erforderlicher Reparatur bereitstellen.
@@ -8429,7 +8445,7 @@ keine vollständige Erfüllung dieser Produktanforderungen.
 
 #### 7.j.R – Make it Right
 
-- [x] **7.j.R** · Position **338/885** · Voraussetzung: `7.j.W`.
+- [x] **7.j.R** · Position **338/900** · Voraussetzung: `7.j.W`.
 **Exakte Commit-Message:** `7.j.R feat(authoring): Reviewpolicy und Relationsstatus-CLI vervollständigen`
 
 **Vervollständigung:** invalid bleibt Fehler unabhängig von Profil; keine automatische Wiederfreigabe nach Bestätigung.
@@ -8470,7 +8486,7 @@ die gesonderte explizite Lifecycle-Freigabefolge bleiben offen.
 
 #### 7.j.C – Make it Clean
 
-- [x] **7.j.C** · Position **339/885** · Voraussetzung: `7.j.R`.
+- [x] **7.j.C** · Position **339/900** · Voraussetzung: `7.j.R`.
 **Exakte Commit-Message:** `7.j.C refactor(authoring): Reviewpolicy und Relationsstatus-CLI bereinigen`
 
 **Bereinigung:** Statusprojektion für spätere Coverage/Readiness wiederverwendbar machen.
@@ -8509,7 +8525,7 @@ nachzuweisen. Nur der C-Bereinigungspunkt wird aus den offenen Nachweisen entfer
 
 #### 7.k.W – Let it Work
 
-- [x] **7.k.W** · Position **340/885** · Voraussetzung: `7.j.C`.
+- [x] **7.k.W** · Position **340/900** · Voraussetzung: `7.j.C`.
 **Exakte Commit-Message:** `7.k.W feat(authoring): Authoring-Dry-Run und Wiederholung aufbauen`
 
 **Umsetzung:** Alle vorhandenen Authoringbefehle mit einheitlicher Plan-/Audit-/Dry-Runbindung integrieren.
@@ -8548,7 +8564,7 @@ Plattform-/Produktabnahmen bleiben offen. Bedienung und Grenzen stehen in
 
 #### 7.k.R – Make it Right
 
-- [x] **7.k.R** · Position **341/885** · Voraussetzung: `7.k.W`.
+- [x] **7.k.R** · Position **341/900** · Voraussetzung: `7.k.W`.
 **Exakte Commit-Message:** `7.k.R feat(authoring): Authoring-Dry-Run und Wiederholung vervollständigen`
 
 **Vervollständigung:** Fehler, abgewiesene KI-Writes und stale Requests ohne unerwartete Dateiänderungen beenden.
@@ -8587,7 +8603,7 @@ bleiben offen. Der neue Fehlerbericht gilt für den gespeicherten Planpfad.
 
 #### 7.k.C – Make it Clean
 
-- [x] **7.k.C** · Position **342/885** · Voraussetzung: `7.k.R`.
+- [x] **7.k.C** · Position **342/900** · Voraussetzung: `7.k.R`.
 **Exakte Commit-Message:** `7.k.C refactor(authoring): Authoring-Dry-Run und Wiederholung bereinigen`
 
 **Bereinigung:** Gemeinsame Testszenarien über Fachadapter statt Kopien je Befehl verwenden.
@@ -8626,7 +8642,7 @@ des Review-/Retirement-Nachweises aus R bleiben unverändert.
 
 #### 7.l.W – Let it Work
 
-- [x] **7.l.W** · Position **343/885** · Voraussetzung: `7.k.C`.
+- [x] **7.l.W** · Position **343/900** · Voraussetzung: `7.k.C`.
 **Exakte Commit-Message:** `7.l.W feat(authoring): Projektinspektion mit getrenntem Laufzeitkontext aufbauen`
 
 **Umsetzung:** project inspect mit vollständigem semantic-/runtime-Vertrag aus vorhandenen Modelldiensten implementieren.
@@ -8683,7 +8699,7 @@ bleiben offen.
 
 #### 7.l.R – Make it Right
 
-- [x] **7.l.R** · Position **344/885** · Voraussetzung: `7.l.W`.
+- [x] **7.l.R** · Position **344/900** · Voraussetzung: `7.l.W`.
 **Exakte Commit-Message:** `7.l.R feat(authoring): Projektinspektion mit getrenntem Laufzeitkontext vervollständigen`
 
 **Vervollständigung:** Root, Writerlock und Transaktion nicht in Fachdeterminismus einrechnen; offene Transaktion nicht als gesundes Projekt verstecken.
@@ -8717,7 +8733,7 @@ erteilen keine atomare Garantie gegen nicht kooperierende externe Schreiber.
 
 #### 7.l.C – Make it Clean
 
-- [x] **7.l.C** · Position **345/885** · Voraussetzung: `7.l.R`.
+- [x] **7.l.C** · Position **345/900** · Voraussetzung: `7.l.R`.
 **Exakte Commit-Message:** `7.l.C refactor(authoring): Projektinspektion mit getrenntem Laufzeitkontext bereinigen`
 
 **Bereinigung:** Inspektion aus bestehenden Reader-/Preflightdaten aufbauen, nicht heimlich initialisieren oder reparieren.
@@ -8767,7 +8783,7 @@ Die Bereinigung erteilt keine zusätzliche Meilenstein- oder Releasefreigabe.
 
 #### 8.a.W – Let it Work
 
-- [x] **8.a.W** · Position **346/885** · Voraussetzung: `7.l.C`.
+- [x] **8.a.W** · Position **346/900** · Voraussetzung: `7.l.C`.
 **Exakte Commit-Message:** `8.a.W feat(query): Show und inverse Relationssicht aufbauen`
 
 **Umsetzung:** Vollständiges Artefakt und berechnete eingehende/ausgehende Beziehungen als Fachresultat anbieten.
@@ -8809,7 +8825,7 @@ Leseabfrage, nicht als fachliche Modellfreigabe.
 
 #### 8.a.R – Make it Right
 
-- [x] **8.a.R** · Position **347/885** · Voraussetzung: `8.a.W`.
+- [x] **8.a.R** · Position **347/900** · Voraussetzung: `8.a.W`.
 **Exakte Commit-Message:** `8.a.R feat(query): Show und inverse Relationssicht vervollständigen`
 
 **Vervollständigung:** Fehlende IDs und unvollständiger Index erhalten keine scheinbar vollständige Antwort.
@@ -8842,7 +8858,7 @@ atomaren Snapshot gegen nicht kooperierende externe Schreiber.
 
 #### 8.a.C – Make it Clean
 
-- [x] **8.a.C** · Position **348/885** · Voraussetzung: `8.a.R`.
+- [x] **8.a.C** · Position **348/900** · Voraussetzung: `8.a.R`.
 **Exakte Commit-Message:** `8.a.C refactor(query): Show und inverse Relationssicht bereinigen`
 
 **Bereinigung:** Showprojektion von Pretty- und JSON-Rendering trennen.
@@ -8879,7 +8895,7 @@ fachliche Freigabe und führt kein neues Verhalten ein.
 
 #### 8.b.W – Let it Work
 
-- [x] **8.b.W** · Position **349/885** · Voraussetzung: `8.a.C`.
+- [x] **8.b.W** · Position **349/900** · Voraussetzung: `8.a.C`.
 **Exakte Commit-Message:** `8.b.W feat(query): Queryfilter und Projektion aufbauen`
 
 **Umsetzung:** Vollständige Query-Grammatik, Feldprojektion, Wertfilter und SRX-Filter kombinieren.
@@ -8908,7 +8924,7 @@ Lauf und Commit bestätigen 349/885; danach folgt 8.b.R.
 
 #### 8.b.R – Make it Right
 
-- [x] **8.b.R** · Position **350/885** · Voraussetzung: `8.b.W`.
+- [x] **8.b.R** · Position **350/900** · Voraussetzung: `8.b.W`.
 **Exakte Commit-Message:** `8.b.R feat(query): Queryfilter und Projektion vervollständigen`
 
 **Vervollständigung:** Gespeicherten verification_plan_status und berechnetes verification_result getrennt behandeln; unbekannte Felder abweisen.
@@ -8935,7 +8951,7 @@ folgt 8.b.C.
 
 #### 8.b.C – Make it Clean
 
-- [x] **8.b.C** · Position **351/885** · Voraussetzung: `8.b.R`.
+- [x] **8.b.C** · Position **351/900** · Voraussetzung: `8.b.R`.
 **Exakte Commit-Message:** `8.b.C refactor(query): Queryfilter und Projektion bereinigen`
 
 **Bereinigung:** Querynormalisierung, Auswertung und Ergebnisprojektion separieren.
@@ -8965,7 +8981,7 @@ parallele Apply-Volltest und Commit bestätigen 351/885; danach folgt 8.c.W.
 
 #### 8.c.W – Let it Work
 
-- [x] **8.c.W** · Position **352/885** · Voraussetzung: `8.b.C`.
+- [x] **8.c.W** · Position **352/900** · Voraussetzung: `8.b.C`.
 **Exakte Commit-Message:** `8.c.W feat(query): Unicode-Volltextsuche aufbauen`
 
 **Umsetzung:** Sucharbeitskopien mit NFC und Casefold localeunabhängig vergleichen.
@@ -8992,7 +9008,7 @@ paralleler Apply-Volltest und Commit bestätigen 352/885; danach folgt 8.c.R.
 
 #### 8.c.R – Make it Right
 
-- [x] **8.c.R** · Position **353/885** · Voraussetzung: `8.c.W`.
+- [x] **8.c.R** · Position **353/900** · Voraussetzung: `8.c.W`.
 **Exakte Commit-Message:** `8.c.R feat(query): Unicode-Volltextsuche vervollständigen`
 
 **Vervollständigung:** Originaltext und Hash unverändert lassen; Normalisierung nur für Suche verwenden.
@@ -9022,7 +9038,7 @@ danach folgt 8.c.C.
 
 #### 8.c.C – Make it Clean
 
-- [x] **8.c.C** · Position **354/885** · Voraussetzung: `8.c.R`.
+- [x] **8.c.C** · Position **354/900** · Voraussetzung: `8.c.R`.
 **Exakte Commit-Message:** `8.c.C refactor(query): Unicode-Volltextsuche bereinigen`
 
 **Bereinigung:** Suchindex und kanonische Speicherung strikt trennen.
@@ -9053,7 +9069,7 @@ Commit bestätigen 354/885; danach folgt 8.d.W.
 
 #### 8.d.W – Let it Work
 
-- [x] **8.d.W** · Position **355/885** · Voraussetzung: `8.c.C`.
+- [x] **8.d.W** · Position **355/900** · Voraussetzung: `8.c.C`.
 **Exakte Commit-Message:** `8.d.W feat(query): Sortierung und exakte Pagination aufbauen`
 
 **Umsetzung:** items, total, offset, limit, returned und truncated aus vollständiger Querymenge berechnen.
@@ -9082,7 +9098,7 @@ danach folgt 8.d.R.
 
 #### 8.d.R – Make it Right
 
-- [x] **8.d.R** · Position **356/885** · Voraussetzung: `8.d.W`.
+- [x] **8.d.R** · Position **356/900** · Voraussetzung: `8.d.W`.
 **Exakte Commit-Message:** `8.d.R feat(query): Sortierung und exakte Pagination vervollständigen`
 
 **Vervollständigung:** Leere Menge, Offset jenseits Ende und große fortsetzbare Auswahl behandeln.
@@ -9112,7 +9128,7 @@ danach folgt die strukturelle Bereinigung 8.d.C.
 
 #### 8.d.C – Make it Clean
 
-- [x] **8.d.C** · Position **357/885** · Voraussetzung: `8.d.R`.
+- [x] **8.d.C** · Position **357/900** · Voraussetzung: `8.d.R`.
 **Exakte Commit-Message:** `8.d.C refactor(query): Sortierung und exakte Pagination bereinigen`
 
 **Bereinigung:** Sortier-/Paginglogik mit M6-Spooling statt verstecktem Frühabbruch umsetzen.
@@ -9147,7 +9163,7 @@ paralleler Apply-Volltest und Commit bestätigen 357/885; danach folgt 8.e.W.
 
 #### 8.e.W – Let it Work
 
-- [x] **8.e.W** · Position **358/885** · Voraussetzung: `8.d.C`.
+- [x] **8.e.W** · Position **358/900** · Voraussetzung: `8.d.C`.
 **Exakte Commit-Message:** `8.e.W feat(query): Trace in beide Richtungen aufbauen`
 
 **Umsetzung:** Gerichtete Traversierung für in/out/both mit expliziter Tiefe anbieten.
@@ -9180,7 +9196,7 @@ Commit bestätigen 358/885; danach folgt 8.e.R.
 
 #### 8.e.R – Make it Right
 
-- [x] **8.e.R** · Position **359/885** · Voraussetzung: `8.e.W`.
+- [x] **8.e.R** · Position **359/900** · Voraussetzung: `8.e.W`.
 **Exakte Commit-Message:** `8.e.R feat(query): Trace in beide Richtungen vervollständigen`
 
 **Vervollständigung:** Zyklen, Mehrfachpfade und weiche Arbeitsziele ohne Verlust offenen Scopes verarbeiten.
@@ -9215,7 +9231,7 @@ danach folgt das strukturelle 8.e.C.
 
 #### 8.e.C – Make it Clean
 
-- [x] **8.e.C** · Position **360/885** · Voraussetzung: `8.e.R`.
+- [x] **8.e.C** · Position **360/900** · Voraussetzung: `8.e.R`.
 **Exakte Commit-Message:** `8.e.C refactor(query): Trace in beide Richtungen bereinigen`
 
 **Bereinigung:** CLI-Traversierung auf vorhandene Frontierengine reduzieren.
@@ -9250,7 +9266,7 @@ paralleler Apply-Volltest und Commit bestätigen 360/885; danach folgt 8.f.W.
 
 #### 8.f.W – Let it Work
 
-- [x] **8.f.W** · Position **361/885** · Voraussetzung: `8.e.C`.
+- [x] **8.f.W** · Position **361/900** · Voraussetzung: `8.e.C`.
 **Exakte Commit-Message:** `8.f.W feat(query): Alle kürzesten Why-Pfade aufbauen`
 
 **Umsetzung:** Sämtliche kürzesten gültigen Pfade zu Goals, Needs und Sources berechnen.
@@ -9292,7 +9308,7 @@ Apply-Volltest und Commit bestätigen 361/885; danach folgt 8.f.R.
 
 #### 8.f.R – Make it Right
 
-- [x] **8.f.R** · Position **362/885** · Voraussetzung: `8.f.W`.
+- [x] **8.f.R** · Position **362/900** · Voraussetzung: `8.f.W`.
 **Exakte Commit-Message:** `8.f.R feat(query): Alle kürzesten Why-Pfade vervollständigen`
 
 **Vervollständigung:** Große Pfadanzahl checkpointen statt eine Stichprobe als vollständig ausgeben.
@@ -9328,7 +9344,7 @@ Apply-Volltest und Commit bestätigen 362/885; danach folgt 8.f.C.
 
 #### 8.f.C – Make it Clean
 
-- [x] **8.f.C** · Position **363/885** · Voraussetzung: `8.f.R`.
+- [x] **8.f.C** · Position **363/900** · Voraussetzung: `8.f.R`.
 **Exakte Commit-Message:** `8.f.C refactor(query): Alle kürzesten Why-Pfade bereinigen`
 
 **Bereinigung:** Vorgängergraph und Pfadmaterialisierung trennen und beide fortsetzbar halten.
@@ -9361,7 +9377,7 @@ paralleler Apply-Volltest und Commit bestätigen 363/885; danach folgt 8.g.W.
 
 #### 8.g.W – Let it Work
 
-- [x] **8.g.W** · Position **364/885** · Voraussetzung: `8.f.C`.
+- [x] **8.g.W** · Position **364/900** · Voraussetzung: `8.f.C`.
 **Exakte Commit-Message:** `8.g.W feat(query): Direkte und reviewbezogene Impactanalyse aufbauen`
 
 **Umsetzung:** Direkte Abhängigkeiten nach Relationstyp und Reviewstatus auswerten.
@@ -9402,7 +9418,7 @@ paralleler Apply-Volltest und Commit bestätigen 364/885; danach folgt 8.g.R.
 
 #### 8.g.R – Make it Right
 
-- [x] **8.g.R** · Position **365/885** · Voraussetzung: `8.g.W`.
+- [x] **8.g.R** · Position **365/900** · Voraussetzung: `8.g.W`.
 **Exakte Commit-Message:** `8.g.R feat(query): Direkte und reviewbezogene Impactanalyse vervollständigen`
 
 **Vervollständigung:** Fehlende fachliche Informationen nicht in eine erfundene Priorität oder Verifikation umdeuten.
@@ -9443,7 +9459,7 @@ bestätigen 365/885; danach folgt 8.g.C.
 
 #### 8.g.C – Make it Clean
 
-- [x] **8.g.C** · Position **366/885** · Voraussetzung: `8.g.R`.
+- [x] **8.g.C** · Position **366/900** · Voraussetzung: `8.g.R`.
 **Exakte Commit-Message:** `8.g.C refactor(query): Direkte und reviewbezogene Impactanalyse bereinigen`
 
 **Bereinigung:** Impactkalkulation für Planner und lesende CLI gemeinsam nutzen.
@@ -9486,7 +9502,7 @@ bestätigen 366/885; danach folgt 8.h.W.
 
 #### 8.h.W – Let it Work
 
-- [x] **8.h.W** · Position **367/885** · Voraussetzung: `8.g.C`.
+- [x] **8.h.W** · Position **367/900** · Voraussetzung: `8.g.C`.
 **Exakte Commit-Message:** `8.h.W feat(query): Semantische Diffklassen aufbauen`
 
 **Umsetzung:** Strukturierte Feld-, Timing-, Scope-, Konfigurations-, Relations-, Status- und Nachweisänderungen klassifizieren.
@@ -9528,7 +9544,7 @@ Apply-Volltest und Commit bestätigen 367/885; danach folgt 8.h.R.
 
 #### 8.h.R – Make it Right
 
-- [x] **8.h.R** · Position **368/885** · Voraussetzung: `8.h.W`.
+- [x] **8.h.R** · Position **368/900** · Voraussetzung: `8.h.W`.
 **Exakte Commit-Message:** `8.h.R feat(query): Semantische Diffklassen vervollständigen`
 
 **Vervollständigung:** Unbekannte Semantik bleibt text_changed; keine Sprachverständnisheuristik einsetzen.
@@ -9563,7 +9579,7 @@ und Commit bestätigen 368/885; danach folgt 8.h.C.
 
 #### 8.h.C – Make it Clean
 
-- [x] **8.h.C** · Position **369/885** · Voraussetzung: `8.h.R`.
+- [x] **8.h.C** · Position **369/900** · Voraussetzung: `8.h.R`.
 **Exakte Commit-Message:** `8.h.C refactor(query): Semantische Diffklassen bereinigen`
 
 **Bereinigung:** Klassifikatoren pro Feldsemantik von allgemeinem Objektvergleich trennen.
@@ -9602,7 +9618,7 @@ danach folgt 8.i.W.
 
 #### 8.i.W – Let it Work
 
-- [x] **8.i.W** · Position **370/885** · Voraussetzung: `8.h.C`.
+- [x] **8.i.W** · Position **370/900** · Voraussetzung: `8.h.C`.
 **Exakte Commit-Message:** `8.i.W feat(query): Sichere Git-Objektquelle aufbauen`
 
 **Umsetzung:** Feste shellfreie Git-Plumbingaufrufe ohne Checkout, Hooks, Pager oder Filter anlegen.
@@ -9642,7 +9658,7 @@ parallele Apply-Volltest und Commit bestätigen 370/885; danach folgt 8.i.R.
 
 #### 8.i.R – Make it Right
 
-- [x] **8.i.R** · Position **371/885** · Voraussetzung: `8.i.W`.
+- [x] **8.i.R** · Position **371/900** · Voraussetzung: `8.i.W`.
 **Exakte Commit-Message:** `8.i.R feat(query): Sichere Git-Objektquelle vervollständigen`
 
 **Vervollständigung:** Bösartige Ref-/Konfigurationswerte und fehlendes Git kontrolliert behandeln; keine Quellcodeausführung.
@@ -9675,7 +9691,7 @@ und Commit bestätigen 371/885; danach folgt 8.i.C.
 
 #### 8.i.C – Make it Clean
 
-- [x] **8.i.C** · Position **372/885** · Voraussetzung: `8.i.R`.
+- [x] **8.i.C** · Position **372/900** · Voraussetzung: `8.i.R`.
 **Exakte Commit-Message:** `8.i.C refactor(query): Sichere Git-Objektquelle bereinigen`
 
 **Bereinigung:** Git nur als expliziten Quellenadapter für Diff und später Merge halten.
@@ -9714,7 +9730,7 @@ danach folgt 8.j.W.
 
 #### 8.j.W – Let it Work
 
-- [x] **8.j.W** · Position **373/885** · Voraussetzung: `8.i.C`.
+- [x] **8.j.W** · Position **373/900** · Voraussetzung: `8.i.C`.
 **Exakte Commit-Message:** `8.j.W feat(query): Vergleichsquellen und Projektidentität aufbauen`
 
 **Umsetzung:** Lokale Projekt-/Gitquellen über gemeinsamen Snapshotvertrag auflösen; Schnittstellen für Baseline und Bundle vorbereiten.
@@ -9748,7 +9764,7 @@ danach folgt 8.j.R.
 
 #### 8.j.R – Make it Right
 
-- [x] **8.j.R** · Position **374/885** · Voraussetzung: `8.j.W`.
+- [x] **8.j.R** · Position **374/900** · Voraussetzung: `8.j.W`.
 **Exakte Commit-Message:** `8.j.R feat(query): Vergleichsquellen und Projektidentität vervollständigen`
 
 **Vervollständigung:** Fremdes Projekt, inkompatibles Schema oder noch nicht verfügbare Quellenart ausdrücklich abweisen.
@@ -9780,7 +9796,7 @@ bestätigen 374/885; danach folgt 8.j.C.
 
 #### 8.j.C – Make it Clean
 
-- [x] **8.j.C** · Position **375/885** · Voraussetzung: `8.j.R`.
+- [x] **8.j.C** · Position **375/900** · Voraussetzung: `8.j.R`.
 **Exakte Commit-Message:** `8.j.C refactor(query): Vergleichsquellen und Projektidentität bereinigen`
 
 **Bereinigung:** Quellenregistry halten; konkrete Baseline-/Bundleadapter erst in M10/M15 vollständig aktivieren.
@@ -9818,7 +9834,7 @@ und Commit bestätigen 375/885; danach folgt 8.k.W.
 
 #### 8.k.W – Let it Work
 
-- [x] **8.k.W** · Position **376/885** · Voraussetzung: `8.j.C`.
+- [x] **8.k.W** · Position **376/900** · Voraussetzung: `8.j.C`.
 **Exakte Commit-Message:** `8.k.W feat(query): Changed-only mit Closure aufbauen`
 
 **Umsetzung:** Geänderte IDs aus Gitvergleich bestimmen und notwendige Validierungs-/Lintabhängigkeiten mitprüfen.
@@ -9855,7 +9871,7 @@ danach folgt 8.k.R.
 
 #### 8.k.R – Make it Right
 
-- [x] **8.k.R** · Position **377/885** · Voraussetzung: `8.k.W`.
+- [x] **8.k.R** · Position **377/900** · Voraussetzung: `8.k.W`.
 **Exakte Commit-Message:** `8.k.R feat(query): Changed-only mit Closure vervollständigen`
 
 **Vervollständigung:** Teilprüfung nie als Projektvollprüfung bezeichnen; fehlende Basis vor Prüfung melden.
@@ -9890,7 +9906,7 @@ paralleler Apply-Volltest und Commit bestätigen 377/885; danach folgt 8.k.C.
 
 #### 8.k.C – Make it Clean
 
-- [x] **8.k.C** · Position **378/885** · Voraussetzung: `8.k.R`.
+- [x] **8.k.C** · Position **378/900** · Voraussetzung: `8.k.R`.
 **Exakte Commit-Message:** `8.k.C refactor(query): Changed-only mit Closure bereinigen`
 
 **Bereinigung:** Geänderte Seedmenge und generische Closurekomposition wiederverwenden.
@@ -9927,7 +9943,7 @@ und Commit bestätigen 378/885; danach folgt 8.l.W.
 
 #### 8.l.W – Let it Work
 
-- [x] **8.l.W** · Position **379/885** · Voraussetzung: `8.k.C`.
+- [x] **8.l.W** · Position **379/900** · Voraussetzung: `8.k.C`.
 **Exakte Commit-Message:** `8.l.W feat(query): Lesende Funktionsintegration und Workparität aufbauen`
 
 **Umsetzung:** Show, Query, Trace, Why, Impact und Diff vollständig an Runtime und Resultatverträge anschließen.
@@ -9958,7 +9974,7 @@ und Commit bestätigen 379/885; danach folgt 8.l.R.
 
 #### 8.l.R – Make it Right
 
-- [x] **8.l.R** · Position **380/885** · Voraussetzung: `8.l.W`.
+- [x] **8.l.R** · Position **380/900** · Voraussetzung: `8.l.W`.
 **Exakte Commit-Message:** `8.l.R feat(query): Lesende Funktionsintegration und Workparität vervollständigen`
 
 **Vervollständigung:** Ausgabe-/Workfehler dürfen den fachlichen Scope nicht abschneiden.
@@ -9990,7 +10006,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 8.l.C – Make it Clean
 
-- [ ] **8.l.C** · Position **381/885** · Voraussetzung: `8.l.R`.
+- [ ] **8.l.C** · Position **381/900** · Voraussetzung: `8.l.R`.
 **Exakte Commit-Message:** `8.l.C refactor(query): Lesende Funktionsintegration und Workparität bereinigen`
 
 **Bereinigung:** Gemeinsame lesende Ausführungsfolge statt Handler-spezifischer Start-/Cleanupwege verwenden.
@@ -10019,7 +10035,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.a.W – Let it Work
 
-- [ ] **9.a.W** · Position **382/885** · Voraussetzung: `8.l.C`.
+- [ ] **9.a.W** · Position **382/900** · Voraussetzung: `8.l.C`.
 **Exakte Commit-Message:** `9.a.W feat(configuration): Dimensionen und Wertauswahl aufbauen`
 
 **Umsetzung:** Konfiguration mit eindeutigen Namen, Dimensionen, zulässigen Werten und konkreter Auswahl validieren.
@@ -10028,7 +10044,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.a.R – Make it Right
 
-- [ ] **9.a.R** · Position **383/885** · Voraussetzung: `9.a.W`.
+- [ ] **9.a.R** · Position **383/900** · Voraussetzung: `9.a.W`.
 **Exakte Commit-Message:** `9.a.R feat(configuration): Dimensionen und Wertauswahl vervollständigen`
 
 **Vervollständigung:** Unbekannte Dimensionen und falsche Werte einschließlich Typgrenzen abweisen.
@@ -10037,7 +10053,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.a.C – Make it Clean
 
-- [ ] **9.a.C** · Position **384/885** · Voraussetzung: `9.a.R`.
+- [ ] **9.a.C** · Position **384/900** · Voraussetzung: `9.a.R`.
 **Exakte Commit-Message:** `9.a.C refactor(configuration): Dimensionen und Wertauswahl bereinigen`
 
 **Bereinigung:** Konfigurationsmodell und Auflösungsalgorithmus separieren.
@@ -10054,7 +10070,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.b.W – Let it Work
 
-- [ ] **9.b.W** · Position **385/885** · Voraussetzung: `9.a.C`.
+- [ ] **9.b.W** · Position **385/900** · Voraussetzung: `9.a.C`.
 **Exakte Commit-Message:** `9.b.W feat(configuration): Vererbung und zyklusfreie Elternkette aufbauen`
 
 **Umsetzung:** Genau einen optionalen Parent auflösen; applicability an Configuration selbst verbieten.
@@ -10063,7 +10079,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.b.R – Make it Right
 
-- [ ] **9.b.R** · Position **386/885** · Voraussetzung: `9.b.W`.
+- [ ] **9.b.R** · Position **386/900** · Voraussetzung: `9.b.W`.
 **Exakte Commit-Message:** `9.b.R feat(configuration): Vererbung und zyklusfreie Elternkette vervollständigen`
 
 **Vervollständigung:** Selbst-/Mehrknotenzyklen und widersprüchliche Auswahl ohne teilweises Ergebnis abweisen.
@@ -10072,7 +10088,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.b.C – Make it Clean
 
-- [ ] **9.b.C** · Position **387/885** · Voraussetzung: `9.b.R`.
+- [ ] **9.b.C** · Position **387/900** · Voraussetzung: `9.b.R`.
 **Exakte Commit-Message:** `9.b.C refactor(configuration): Vererbung und zyklusfreie Elternkette bereinigen`
 
 **Bereinigung:** Elternauflösung auf die vorhandenen Graph-/Zyklusprimitiven setzen.
@@ -10089,7 +10105,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.c.W – Let it Work
 
-- [ ] **9.c.W** · Position **388/885** · Voraussetzung: `9.b.C`.
+- [ ] **9.c.W** · Position **388/900** · Voraussetzung: `9.b.C`.
 **Exakte Commit-Message:** `9.c.W feat(configuration): Applicability-Auswertung aufbauen`
 
 **Umsetzung:** SRX-Bedingungen ausschließlich auf ausgewählte Konfiguration und konstante Metadaten auswerten.
@@ -10098,7 +10114,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.c.R – Make it Right
 
-- [ ] **9.c.R** · Position **389/885** · Voraussetzung: `9.c.W`.
+- [ ] **9.c.R** · Position **389/900** · Voraussetzung: `9.c.W`.
 **Exakte Commit-Message:** `9.c.R feat(configuration): Applicability-Auswertung vervollständigen`
 
 **Vervollständigung:** Verbotene Kontextzugriffe und fehlende verpflichtende Auswahl verhindern falsche Gateentscheidung.
@@ -10107,7 +10123,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.c.C – Make it Clean
 
-- [ ] **9.c.C** · Position **390/885** · Voraussetzung: `9.c.R`.
+- [ ] **9.c.C** · Position **390/900** · Voraussetzung: `9.c.R`.
 **Exakte Commit-Message:** `9.c.C refactor(configuration): Applicability-Auswertung bereinigen`
 
 **Bereinigung:** Applicability als reine Scopevorstufe führen.
@@ -10124,7 +10140,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.d.W – Let it Work
 
-- [ ] **9.d.W** · Position **391/885** · Voraussetzung: `9.c.C`.
+- [ ] **9.d.W** · Position **391/900** · Voraussetzung: `9.c.C`.
 **Exakte Commit-Message:** `9.d.W feat(configuration): Konfiguration vor Scope-Closure aufbauen`
 
 **Umsetzung:** Gültigkeit vor Aufnahme von Seed-/Pflichtressourcen berücksichtigen.
@@ -10133,7 +10149,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.d.R – Make it Right
 
-- [ ] **9.d.R** · Position **392/885** · Voraussetzung: `9.d.W`.
+- [ ] **9.d.R** · Position **392/900** · Voraussetzung: `9.d.W`.
 **Exakte Commit-Message:** `9.d.R feat(configuration): Konfiguration vor Scope-Closure vervollständigen`
 
 **Vervollständigung:** Ausgeschlossene starke Zielressource wird nicht aufgenommen oder zur Boundary abgeschwächt.
@@ -10142,7 +10158,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.d.C – Make it Clean
 
-- [ ] **9.d.C** · Position **393/885** · Voraussetzung: `9.d.R`.
+- [ ] **9.d.C** · Position **393/900** · Voraussetzung: `9.d.R`.
 **Exakte Commit-Message:** `9.d.C refactor(configuration): Konfiguration vor Scope-Closure bereinigen`
 
 **Bereinigung:** Vorfilter und Closurezulässigkeit gemeinsam verwenden.
@@ -10159,7 +10175,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.e.W – Let it Work
 
-- [ ] **9.e.W** · Position **394/885** · Voraussetzung: `9.d.C`.
+- [ ] **9.e.W** · Position **394/900** · Voraussetzung: `9.d.C`.
 **Exakte Commit-Message:** `9.e.W feat(configuration): Pflichtabhängigkeiten und Erklärungspfad aufbauen`
 
 **Umsetzung:** configuration evaluate mit anwendbarer Menge und kürzestem inkonsistentem Abhängigkeitspfad implementieren.
@@ -10168,7 +10184,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.e.R – Make it Right
 
-- [ ] **9.e.R** · Position **395/885** · Voraussetzung: `9.e.W`.
+- [ ] **9.e.R** · Position **395/900** · Voraussetzung: `9.e.W`.
 **Exakte Commit-Message:** `9.e.R feat(configuration): Pflichtabhängigkeiten und Erklärungspfad vervollständigen`
 
 **Vervollständigung:** Mehrere gleichartige Pfade deterministisch behandeln, ohne unnötige Textsemantik.
@@ -10177,7 +10193,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.e.C – Make it Clean
 
-- [ ] **9.e.C** · Position **396/885** · Voraussetzung: `9.e.R`.
+- [ ] **9.e.C** · Position **396/900** · Voraussetzung: `9.e.R`.
 **Exakte Commit-Message:** `9.e.C refactor(configuration): Pflichtabhängigkeiten und Erklärungspfad bereinigen`
 
 **Bereinigung:** Erklärungspfade auf denselben Traversierungskern wie Why stützen.
@@ -10194,7 +10210,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.f.W – Let it Work
 
-- [ ] **9.f.W** · Position **397/885** · Voraussetzung: `9.e.C`.
+- [ ] **9.f.W** · Position **397/900** · Voraussetzung: `9.e.C`.
 **Exakte Commit-Message:** `9.f.W feat(configuration): Explizite Gates und wiederverwendbare Identität aufbauen`
 
 **Umsetzung:** Konfigurationsgebundene Gates verlangen explizite Auswahl; Referenzen bleiben dieselben IDs.
@@ -10203,7 +10219,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.f.R – Make it Right
 
-- [ ] **9.f.R** · Position **398/885** · Voraussetzung: `9.f.W`.
+- [ ] **9.f.R** · Position **398/900** · Voraussetzung: `9.f.W`.
 **Exakte Commit-Message:** `9.f.R feat(configuration): Explizite Gates und wiederverwendbare Identität vervollständigen`
 
 **Vervollständigung:** Fehlende Auswahl darf keine willkürliche Defaultfreigabe erzeugen.
@@ -10212,7 +10228,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.f.C – Make it Clean
 
-- [ ] **9.f.C** · Position **399/885** · Voraussetzung: `9.f.R`.
+- [ ] **9.f.C** · Position **399/900** · Voraussetzung: `9.f.R`.
 **Exakte Commit-Message:** `9.f.C refactor(configuration): Explizite Gates und wiederverwendbare Identität bereinigen`
 
 **Bereinigung:** Gatekontext von gespeicherten Artefakten trennen.
@@ -10229,7 +10245,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.g.W – Let it Work
 
-- [ ] **9.g.W** · Position **400/885** · Voraussetzung: `9.f.C`.
+- [ ] **9.g.W** · Position **400/900** · Voraussetzung: `9.f.C`.
 **Exakte Commit-Message:** `9.g.W feat(configuration): Konfigurationsoption in vorhandenen Fachbefehlen aufbauen`
 
 **Umsetzung:** Validate, Query/Viewschnittstelle und Scopebereitstellung mit gebundener configuration_id integrieren.
@@ -10238,7 +10254,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.g.R – Make it Right
 
-- [ ] **9.g.R** · Position **401/885** · Voraussetzung: `9.g.W`.
+- [ ] **9.g.R** · Position **401/900** · Voraussetzung: `9.g.W`.
 **Exakte Commit-Message:** `9.g.R feat(configuration): Konfigurationsoption in vorhandenen Fachbefehlen vervollständigen`
 
 **Vervollständigung:** Später hinzukommende Baseline-, Evidence-, Export- und Bundleadapter müssen denselben Vertrag ausdrücklich übernehmen.
@@ -10247,7 +10263,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.g.C – Make it Clean
 
-- [ ] **9.g.C** · Position **402/885** · Voraussetzung: `9.g.R`.
+- [ ] **9.g.C** · Position **402/900** · Voraussetzung: `9.g.R`.
 **Exakte Commit-Message:** `9.g.C refactor(configuration): Konfigurationsoption in vorhandenen Fachbefehlen bereinigen`
 
 **Bereinigung:** Eine gemeinsame Konfigurationsauflösung statt versteckter Defaultwerte je Handler nutzen.
@@ -10264,7 +10280,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.h.W – Let it Work
 
-- [ ] **9.h.W** · Position **403/885** · Voraussetzung: `9.g.C`.
+- [ ] **9.h.W** · Position **403/900** · Voraussetzung: `9.g.C`.
 **Exakte Commit-Message:** `9.h.W feat(configuration): Varianten-Diff und Regression aufbauen`
 
 **Umsetzung:** Scopeänderungen durch Parent-/Wert-/Applicabilitywechsel separat klassifizieren.
@@ -10273,7 +10289,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.h.R – Make it Right
 
-- [ ] **9.h.R** · Position **404/885** · Voraussetzung: `9.h.W`.
+- [ ] **9.h.R** · Position **404/900** · Voraussetzung: `9.h.W`.
 **Exakte Commit-Message:** `9.h.R feat(configuration): Varianten-Diff und Regression vervollständigen`
 
 **Vervollständigung:** Verschachtelung, ungültige Werte und zyklische Vererbung im bestehenden Verhaltenstestkorpus schließen.
@@ -10282,7 +10298,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 9.h.C – Make it Clean
 
-- [ ] **9.h.C** · Position **405/885** · Voraussetzung: `9.h.R`.
+- [ ] **9.h.C** · Position **405/900** · Voraussetzung: `9.h.R`.
 **Exakte Commit-Message:** `9.h.C refactor(configuration): Varianten-Diff und Regression bereinigen`
 
 **Bereinigung:** Variantenvergleich in den allgemeinen Diffklassifikator integrieren.
@@ -10311,7 +10327,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.a.W – Let it Work
 
-- [ ] **10.a.W** · Position **406/885** · Voraussetzung: `9.h.C`.
+- [ ] **10.a.W** · Position **406/900** · Voraussetzung: `9.h.C`.
 **Exakte Commit-Message:** `10.a.W feat(baseline): Content-addressierter Objektspeicher aufbauen`
 
 **Umsetzung:** Kanonische JSON- und unveränderte Anhangsbytes unter hashgebundenen Objektpfaden speichern.
@@ -10320,7 +10336,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.a.R – Make it Right
 
-- [ ] **10.a.R** · Position **407/885** · Voraussetzung: `10.a.W`.
+- [ ] **10.a.R** · Position **407/900** · Voraussetzung: `10.a.W`.
 **Exakte Commit-Message:** `10.a.R feat(baseline): Content-addressierter Objektspeicher vervollständigen`
 
 **Vervollständigung:** Hashkollision im Zielpfad, manipulierter Inhalt und referenzierte Löschung abweisen.
@@ -10329,7 +10345,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.a.C – Make it Clean
 
-- [ ] **10.a.C** · Position **408/885** · Voraussetzung: `10.a.R`.
+- [ ] **10.a.C** · Position **408/900** · Voraussetzung: `10.a.R`.
 **Exakte Commit-Message:** `10.a.C refactor(baseline): Content-addressierter Objektspeicher bereinigen`
 
 **Bereinigung:** Objektstore von Baselinefachmodell und Gitprovenienz trennen.
@@ -10346,7 +10362,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.b.W – Let it Work
 
-- [ ] **10.b.W** · Position **409/885** · Voraussetzung: `10.a.C`.
+- [ ] **10.b.W** · Position **409/900** · Voraussetzung: `10.a.C`.
 **Exakte Commit-Message:** `10.b.W feat(baseline): Baseline-Manifest und semantische Konfiguration aufbauen`
 
 **Umsetzung:** Art, Scope, Profile, Regeln, Mappings, Konfiguration und vollständige Objektliste binden.
@@ -10355,7 +10371,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.b.R – Make it Right
 
-- [ ] **10.b.R** · Position **410/885** · Voraussetzung: `10.b.W`.
+- [ ] **10.b.R** · Position **410/900** · Voraussetzung: `10.b.W`.
 **Exakte Commit-Message:** `10.b.R feat(baseline): Baseline-Manifest und semantische Konfiguration vervollständigen`
 
 **Vervollständigung:** Eigene Baseline nicht rekursiv in ihre Basis aufnehmen; operative Daten nicht in Modellhash mischen.
@@ -10364,7 +10380,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.b.C – Make it Clean
 
-- [ ] **10.b.C** · Position **411/885** · Voraussetzung: `10.b.R`.
+- [ ] **10.b.C** · Position **411/900** · Voraussetzung: `10.b.R`.
 **Exakte Commit-Message:** `10.b.C refactor(baseline): Baseline-Manifest und semantische Konfiguration bereinigen`
 
 **Bereinigung:** Manifestaufbau denselben Scope-/Hashkern wie Projektvergleich verwenden lassen.
@@ -10381,7 +10397,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.c.W – Let it Work
 
-- [ ] **10.c.W** · Position **412/885** · Voraussetzung: `10.b.C`.
+- [ ] **10.c.W** · Position **412/900** · Voraussetzung: `10.b.C`.
 **Exakte Commit-Message:** `10.c.W feat(baseline): Working-Baseline atomar erzeugen aufbauen`
 
 **Umsetzung:** baseline create für working nach vollständiger Zielprüfung über Spezialwrite implementieren.
@@ -10390,7 +10406,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.c.R – Make it Right
 
-- [ ] **10.c.R** · Position **413/885** · Voraussetzung: `10.c.W`.
+- [ ] **10.c.R** · Position **413/900** · Voraussetzung: `10.c.W`.
 **Exakte Commit-Message:** `10.c.R feat(baseline): Working-Baseline atomar erzeugen vervollständigen`
 
 **Vervollständigung:** Ungültiges Modell oder unvollständige Objektbytes verhindern Veröffentlichung.
@@ -10399,7 +10415,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.c.C – Make it Clean
 
-- [ ] **10.c.C** · Position **414/885** · Voraussetzung: `10.c.R`.
+- [ ] **10.c.C** · Position **414/900** · Voraussetzung: `10.c.R`.
 **Exakte Commit-Message:** `10.c.C refactor(baseline): Working-Baseline atomar erzeugen bereinigen`
 
 **Bereinigung:** Snapshotvorbereitung und transaktionale Baselinepublikation klar trennen.
@@ -10416,7 +10432,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.d.W – Let it Work
 
-- [ ] **10.d.W** · Position **415/885** · Voraussetzung: `10.c.C`.
+- [ ] **10.d.W** · Position **415/900** · Voraussetzung: `10.c.C`.
 **Exakte Commit-Message:** `10.d.W feat(baseline): Baseline-Integrität prüfen aufbauen`
 
 **Umsetzung:** Objektbytes, Ressourcenhashes, Manifest und rekonstruierte Modellwurzel schreibfrei prüfen.
@@ -10425,7 +10441,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.d.R – Make it Right
 
-- [ ] **10.d.R** · Position **416/885** · Voraussetzung: `10.d.W`.
+- [ ] **10.d.R** · Position **416/900** · Voraussetzung: `10.d.W`.
 **Exakte Commit-Message:** `10.d.R feat(baseline): Baseline-Integrität prüfen vervollständigen`
 
 **Vervollständigung:** Fehlendes Objekt, geänderter Hash oder manipulierte Konfiguration wird erkannt.
@@ -10434,7 +10450,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.d.C – Make it Clean
 
-- [ ] **10.d.C** · Position **417/885** · Voraussetzung: `10.d.R`.
+- [ ] **10.d.C** · Position **417/900** · Voraussetzung: `10.d.R`.
 **Exakte Commit-Message:** `10.d.C refactor(baseline): Baseline-Integrität prüfen bereinigen`
 
 **Bereinigung:** Baselineleser als Validatorquelle in der gemeinsamen Pipeline registrieren.
@@ -10451,7 +10467,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.e.W – Let it Work
 
-- [ ] **10.e.W** · Position **418/885** · Voraussetzung: `10.d.C`.
+- [ ] **10.e.W** · Position **418/900** · Voraussetzung: `10.d.C`.
 **Exakte Commit-Message:** `10.e.W feat(baseline): Baseline anzeigen und materialisieren aufbauen`
 
 **Umsetzung:** Gespeichertes Manifest und neu berechneten Integritätsstatus liefern; verifizierten Snapshot isoliert materialisieren.
@@ -10460,7 +10476,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.e.R – Make it Right
 
-- [ ] **10.e.R** · Position **419/885** · Voraussetzung: `10.e.W`.
+- [ ] **10.e.R** · Position **419/900** · Voraussetzung: `10.e.W`.
 **Exakte Commit-Message:** `10.e.R feat(baseline): Baseline anzeigen und materialisieren vervollständigen`
 
 **Vervollständigung:** Fehlende Originalbytes nicht aus aktuellem Modell ersetzen.
@@ -10469,7 +10485,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.e.C – Make it Clean
 
-- [ ] **10.e.C** · Position **420/885** · Voraussetzung: `10.e.R`.
+- [ ] **10.e.C** · Position **420/900** · Voraussetzung: `10.e.R`.
 **Exakte Commit-Message:** `10.e.C refactor(baseline): Baseline anzeigen und materialisieren bereinigen`
 
 **Bereinigung:** Anzeigenprojektion und sichere Materialisierung trennen.
@@ -10486,7 +10502,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.f.W – Let it Work
 
-- [ ] **10.f.W** · Position **421/885** · Voraussetzung: `10.e.C`.
+- [ ] **10.f.W** · Position **421/900** · Voraussetzung: `10.e.C`.
 **Exakte Commit-Message:** `10.f.W feat(baseline): Baselinevergleich und Diffquellenadapter aufbauen`
 
 **Umsetzung:** Baselines an die Quellenregistry und denselben semantischen Diff anschließen.
@@ -10495,7 +10511,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.f.R – Make it Right
 
-- [ ] **10.f.R** · Position **422/885** · Voraussetzung: `10.f.W`.
+- [ ] **10.f.R** · Position **422/900** · Voraussetzung: `10.f.W`.
 **Exakte Commit-Message:** `10.f.R feat(baseline): Baselinevergleich und Diffquellenadapter vervollständigen`
 
 **Vervollständigung:** Fremde project_id, fehlende Objekte und inkompatible Historienleser ablehnen.
@@ -10504,7 +10520,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.f.C – Make it Clean
 
-- [ ] **10.f.C** · Position **423/885** · Voraussetzung: `10.f.R`.
+- [ ] **10.f.C** · Position **423/900** · Voraussetzung: `10.f.R`.
 **Exakte Commit-Message:** `10.f.C refactor(baseline): Baselinevergleich und Diffquellenadapter bereinigen`
 
 **Bereinigung:** Baselineadapter liefert ausschließlich geprüfte Snapshots statt eigener Diffsemantik.
@@ -10521,7 +10537,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.g.W – Let it Work
 
-- [ ] **10.g.W** · Position **424/885** · Voraussetzung: `10.f.C`.
+- [ ] **10.g.W** · Position **424/900** · Voraussetzung: `10.f.C`.
 **Exakte Commit-Message:** `10.g.W feat(baseline): Konfigurationsgebundene Baselines aufbauen`
 
 **Umsetzung:** Auswahl-ID, Revision, Hash und resultierenden Artefaktumfang in der Baseline speichern.
@@ -10530,7 +10546,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.g.R – Make it Right
 
-- [ ] **10.g.R** · Position **425/885** · Voraussetzung: `10.g.W`.
+- [ ] **10.g.R** · Position **425/900** · Voraussetzung: `10.g.W`.
 **Exakte Commit-Message:** `10.g.R feat(baseline): Konfigurationsgebundene Baselines vervollständigen`
 
 **Vervollständigung:** Veränderter Parent-/Konfigurationshash invalidiert nicht die Originalbaseline, sondern unterscheidet den aktuellen Arbeitsstand.
@@ -10539,7 +10555,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.g.C – Make it Clean
 
-- [ ] **10.g.C** · Position **426/885** · Voraussetzung: `10.g.R`.
+- [ ] **10.g.C** · Position **426/900** · Voraussetzung: `10.g.R`.
 **Exakte Commit-Message:** `10.g.C refactor(baseline): Konfigurationsgebundene Baselines bereinigen`
 
 **Bereinigung:** Variantensnapshot auf gemeinsamen Konfigurations-/Scopevertrag reduzieren.
@@ -10556,7 +10572,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.h.W – Let it Work
 
-- [ ] **10.h.W** · Position **427/885** · Voraussetzung: `10.g.C`.
+- [ ] **10.h.W** · Position **427/900** · Voraussetzung: `10.g.C`.
 **Exakte Commit-Message:** `10.h.W feat(baseline): Release-Baseline-Grenze vorbereiten aufbauen`
 
 **Umsetzung:** Releaseart und Gateanschluss vorsehen, aber Veröffentlichung ohne implementierte gespeicherte Bewertungsauswahl verweigern.
@@ -10565,7 +10581,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.h.R – Make it Right
 
-- [ ] **10.h.R** · Position **428/885** · Voraussetzung: `10.h.W`.
+- [ ] **10.h.R** · Position **428/900** · Voraussetzung: `10.h.W`.
 **Exakte Commit-Message:** `10.h.R feat(baseline): Release-Baseline-Grenze vorbereiten vervollständigen`
 
 **Vervollständigung:** Keine Stub-Readiness oder automatisch bestandene Bewertung als Ersatz zulassen.
@@ -10574,7 +10590,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.h.C – Make it Clean
 
-- [ ] **10.h.C** · Position **429/885** · Voraussetzung: `10.h.R`.
+- [ ] **10.h.C** · Position **429/900** · Voraussetzung: `10.h.R`.
 **Exakte Commit-Message:** `10.h.C refactor(baseline): Release-Baseline-Grenze vorbereiten bereinigen`
 
 **Bereinigung:** Gateinterface so kapseln, dass M13 die vollständige Releasebaseline freischaltet.
@@ -10591,7 +10607,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.i.W – Let it Work
 
-- [ ] **10.i.W** · Position **430/885** · Voraussetzung: `10.h.C`.
+- [ ] **10.i.W** · Position **430/900** · Voraussetzung: `10.h.C`.
 **Exakte Commit-Message:** `10.i.W feat(baseline): Snapshot-Workparität und Crashregression aufbauen`
 
 **Umsetzung:** Große Baselines mit blockweiser Objektsicherung und Workfortsetzung integrieren.
@@ -10600,7 +10616,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.i.R – Make it Right
 
-- [ ] **10.i.R** · Position **431/885** · Voraussetzung: `10.i.W`.
+- [ ] **10.i.R** · Position **431/900** · Voraussetzung: `10.i.W`.
 **Exakte Commit-Message:** `10.i.R feat(baseline): Snapshot-Workparität und Crashregression vervollständigen`
 
 **Vervollständigung:** Abbruch, veraltete Basis und verloren gegangene Objekte erhalten vorhandene Baselines.
@@ -10609,7 +10625,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 10.i.C – Make it Clean
 
-- [ ] **10.i.C** · Position **432/885** · Voraussetzung: `10.i.R`.
+- [ ] **10.i.C** · Position **432/900** · Voraussetzung: `10.i.R`.
 **Exakte Commit-Message:** `10.i.C refactor(baseline): Snapshot-Workparität und Crashregression bereinigen`
 
 **Bereinigung:** Wiederverwendbare Snapshottests statt paralleler Baseline-Speicherlogik führen.
@@ -10638,7 +10654,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.a.W – Let it Work
 
-- [ ] **11.a.W** · Position **433/885** · Voraussetzung: `10.i.C`.
+- [ ] **11.a.W** · Position **433/900** · Voraussetzung: `10.i.C`.
 **Exakte Commit-Message:** `11.a.W feat(documents): Dokumentrolle und Primärdokument aufbauen`
 
 **Umsetzung:** Document-Daten und genau ein aktives primary_specification im Vollprojekt validieren.
@@ -10647,7 +10663,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.a.R – Make it Right
 
-- [ ] **11.a.R** · Position **434/885** · Voraussetzung: `11.a.W`.
+- [ ] **11.a.R** · Position **434/900** · Voraussetzung: `11.a.W`.
 **Exakte Commit-Message:** `11.a.R feat(documents): Dokumentrolle und Primärdokument vervollständigen`
 
 **Vervollständigung:** Fehlendes/mehrfaches Primärdokument und unzulässige Rollen blockieren; Partial/Legacy-Fallback bleibt ausdrücklich getrennt.
@@ -10656,7 +10672,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.a.C – Make it Clean
 
-- [ ] **11.a.C** · Position **435/885** · Voraussetzung: `11.a.R`.
+- [ ] **11.a.C** · Position **435/900** · Voraussetzung: `11.a.R`.
 **Exakte Commit-Message:** `11.a.C refactor(documents): Dokumentrolle und Primärdokument bereinigen`
 
 **Bereinigung:** Dokumentinvarianten in die gemeinsame Validation registrieren.
@@ -10673,7 +10689,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.b.W – Let it Work
 
-- [ ] **11.b.W** · Position **436/885** · Voraussetzung: `11.a.C`.
+- [ ] **11.b.W** · Position **436/900** · Voraussetzung: `11.a.C`.
 **Exakte Commit-Message:** `11.b.W feat(documents): Abschnittseigentum und Ordnung aufbauen`
 
 **Umsetzung:** Eine eingehende contains-Beziehung je Abschnitt und fachliche position-/ID-Ordnung auswerten.
@@ -10682,7 +10698,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.b.R – Make it Right
 
-- [ ] **11.b.R** · Position **437/885** · Voraussetzung: `11.b.W`.
+- [ ] **11.b.R** · Position **437/900** · Voraussetzung: `11.b.W`.
 **Exakte Commit-Message:** `11.b.R feat(documents): Abschnittseigentum und Ordnung vervollständigen`
 
 **Vervollständigung:** Mehrfache Eltern, negative Position und Ordnungsdubletten nach Vertragsregeln behandeln.
@@ -10691,7 +10707,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.b.C – Make it Clean
 
-- [ ] **11.b.C** · Position **438/885** · Voraussetzung: `11.b.R`.
+- [ ] **11.b.C** · Position **438/900** · Voraussetzung: `11.b.R`.
 **Exakte Commit-Message:** `11.b.C refactor(documents): Abschnittseigentum und Ordnung bereinigen`
 
 **Bereinigung:** Kompositionsbaum aus Graphdaten ableiten statt separat speichern.
@@ -10708,7 +10724,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.c.W – Let it Work
 
-- [ ] **11.c.W** · Position **439/885** · Voraussetzung: `11.b.C`.
+- [ ] **11.c.W** · Position **439/900** · Voraussetzung: `11.b.C`.
 **Exakte Commit-Message:** `11.c.W feat(documents): Exakte Inhaltsblockschemas aufbauen`
 
 **Umsetzung:** Alle sieben Blockarten mit genau ihrem zugehörigen Payloadschema implementieren.
@@ -10717,7 +10733,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.c.R – Make it Right
 
-- [ ] **11.c.R** · Position **440/885** · Voraussetzung: `11.c.W`.
+- [ ] **11.c.R** · Position **440/900** · Voraussetzung: `11.c.W`.
 **Exakte Commit-Message:** `11.c.R feat(documents): Exakte Inhaltsblockschemas vervollständigen`
 
 **Vervollständigung:** Fremde Felder, gemischte Payloadarten und unvollständige Referenzen ablehnen.
@@ -10726,7 +10742,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.c.C – Make it Clean
 
-- [ ] **11.c.C** · Position **441/885** · Voraussetzung: `11.c.R`.
+- [ ] **11.c.C** · Position **441/900** · Voraussetzung: `11.c.R`.
 **Exakte Commit-Message:** `11.c.C refactor(documents): Exakte Inhaltsblockschemas bereinigen`
 
 **Bereinigung:** Blocktypregister und Payloadvalidatoren zentralisieren.
@@ -10743,7 +10759,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.d.W – Let it Work
 
-- [ ] **11.d.W** · Position **442/885** · Voraussetzung: `11.c.C`.
+- [ ] **11.d.W** · Position **442/900** · Voraussetzung: `11.c.C`.
 **Exakte Commit-Message:** `11.d.W feat(documents): Artefaktreferenzen ohne Kopien aufbauen`
 
 **Umsetzung:** artifact_ref ausschließlich über genau eine references-Relation auflösen.
@@ -10752,7 +10768,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.d.R – Make it Right
 
-- [ ] **11.d.R** · Position **443/885** · Voraussetzung: `11.d.W`.
+- [ ] **11.d.R** · Position **443/900** · Voraussetzung: `11.d.W`.
 **Exakte Commit-Message:** `11.d.R feat(documents): Artefaktreferenzen ohne Kopien vervollständigen`
 
 **Vervollständigung:** Doppelte Target-ID oder Fachkopie im Payload abweisen.
@@ -10761,7 +10777,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.d.C – Make it Clean
 
-- [ ] **11.d.C** · Position **444/885** · Voraussetzung: `11.d.R`.
+- [ ] **11.d.C** · Position **444/900** · Voraussetzung: `11.d.R`.
 **Exakte Commit-Message:** `11.d.C refactor(documents): Artefaktreferenzen ohne Kopien bereinigen`
 
 **Bereinigung:** Referenzauflösung von Formatausgabe und Dokumentownership trennen.
@@ -10778,7 +10794,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.e.W – Let it Work
 
-- [ ] **11.e.W** · Position **445/885** · Voraussetzung: `11.d.C`.
+- [ ] **11.e.W** · Position **445/900** · Voraussetzung: `11.d.C`.
 **Exakte Commit-Message:** `11.e.W feat(documents): Sicheres CommonMark-Kernsubset aufbauen`
 
 **Umsetzung:** Prosa/Admonition auf die erlaubten deklarativen Inhaltsknoten parsen.
@@ -10787,7 +10803,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.e.R – Make it Right
 
-- [ ] **11.e.R** · Position **446/885** · Voraussetzung: `11.e.W`.
+- [ ] **11.e.R** · Position **446/900** · Voraussetzung: `11.e.W`.
 **Exakte Commit-Message:** `11.e.R feat(documents): Sicheres CommonMark-Kernsubset vervollständigen`
 
 **Vervollständigung:** Aktives HTML, Skripte und externe Includes nicht in ausführbare Knoten übernehmen.
@@ -10796,7 +10812,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.e.C – Make it Clean
 
-- [ ] **11.e.C** · Position **447/885** · Voraussetzung: `11.e.R`.
+- [ ] **11.e.C** · Position **447/900** · Voraussetzung: `11.e.R`.
 **Exakte Commit-Message:** `11.e.C refactor(documents): Sicheres CommonMark-Kernsubset bereinigen`
 
 **Bereinigung:** Parser, sichere Knoten und Renderer als getrennte Schichten führen.
@@ -10813,7 +10829,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.f.W – Let it Work
 
-- [ ] **11.f.W** · Position **448/885** · Voraussetzung: `11.e.C`.
+- [ ] **11.f.W** · Position **448/900** · Voraussetzung: `11.e.C`.
 **Exakte Commit-Message:** `11.f.W feat(documents): Query- und Tabellenblöcke aufbauen`
 
 **Umsetzung:** Datenquellen, Spalten, Sortierung und SRX/Querybindung aus dem gewählten Snapshot auflösen.
@@ -10822,7 +10838,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.f.R – Make it Right
 
-- [ ] **11.f.R** · Position **449/885** · Voraussetzung: `11.f.W`.
+- [ ] **11.f.R** · Position **449/900** · Voraussetzung: `11.f.W`.
 **Exakte Commit-Message:** `11.f.R feat(documents): Query- und Tabellenblöcke vervollständigen`
 
 **Vervollständigung:** Templatecode, fremde Datenquellen und fehlende View-ID ablehnen.
@@ -10831,7 +10847,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.f.C – Make it Clean
 
-- [ ] **11.f.C** · Position **450/885** · Voraussetzung: `11.f.R`.
+- [ ] **11.f.C** · Position **450/900** · Voraussetzung: `11.f.R`.
 **Exakte Commit-Message:** `11.f.C refactor(documents): Query- und Tabellenblöcke bereinigen`
 
 **Bereinigung:** Bestehende Queryengine statt eigener Blockabfragesprache verwenden.
@@ -10848,7 +10864,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.g.W – Let it Work
 
-- [ ] **11.g.W** · Position **451/885** · Voraussetzung: `11.f.C`.
+- [ ] **11.g.W** · Position **451/900** · Voraussetzung: `11.f.C`.
 **Exakte Commit-Message:** `11.g.W feat(documents): Include-Graph und Zyklusprüfung aufbauen`
 
 **Umsetzung:** Include-Dokumente und contains-Komposition vor Materialisierung auf Zyklen prüfen.
@@ -10857,7 +10873,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.g.R – Make it Right
 
-- [ ] **11.g.R** · Position **452/885** · Voraussetzung: `11.g.W`.
+- [ ] **11.g.R** · Position **452/900** · Voraussetzung: `11.g.W`.
 **Exakte Commit-Message:** `11.g.R feat(documents): Include-Graph und Zyklusprüfung vervollständigen`
 
 **Vervollständigung:** Direkter/transitiver Selbstinclude wird vor Rendering abgewiesen.
@@ -10866,7 +10882,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.g.C – Make it Clean
 
-- [ ] **11.g.C** · Position **453/885** · Voraussetzung: `11.g.R`.
+- [ ] **11.g.C** · Position **453/900** · Voraussetzung: `11.g.R`.
 **Exakte Commit-Message:** `11.g.C refactor(documents): Include-Graph und Zyklusprüfung bereinigen`
 
 **Bereinigung:** Gemeinsame Graphprüfung für Dokument- und Includeabhängigkeiten nutzen.
@@ -10883,7 +10899,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.h.W – Let it Work
 
-- [ ] **11.h.W** · Position **454/885** · Voraussetzung: `11.g.C`.
+- [ ] **11.h.W** · Position **454/900** · Voraussetzung: `11.g.C`.
 **Exakte Commit-Message:** `11.h.W feat(documents): Dokument- und Abschnittsauthoring aufbauen`
 
 **Umsetzung:** document create, section add und section move über den gemeinsamen Writer anbieten.
@@ -10892,7 +10908,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.h.R – Make it Right
 
-- [ ] **11.h.R** · Position **455/885** · Voraussetzung: `11.h.W`.
+- [ ] **11.h.R** · Position **455/900** · Voraussetzung: `11.h.W`.
 **Exakte Commit-Message:** `11.h.R feat(documents): Dokument- und Abschnittsauthoring vervollständigen`
 
 **Vervollständigung:** Ungültiger Parent, Kreisbildung und stale Vorbedingung ohne Teilwrite ablehnen.
@@ -10901,7 +10917,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.h.C – Make it Clean
 
-- [ ] **11.h.C** · Position **456/885** · Voraussetzung: `11.h.R`.
+- [ ] **11.h.C** · Position **456/900** · Voraussetzung: `11.h.R`.
 **Exakte Commit-Message:** `11.h.C refactor(documents): Dokument- und Abschnittsauthoring bereinigen`
 
 **Bereinigung:** CLIkomfort ausschließlich in typisierte Graphoperationen übersetzen.
@@ -10918,7 +10934,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.i.W – Let it Work
 
-- [ ] **11.i.W** · Position **457/885** · Voraussetzung: `11.h.C`.
+- [ ] **11.i.W** · Position **457/900** · Voraussetzung: `11.h.C`.
 **Exakte Commit-Message:** `11.i.W feat(documents): Entfernen und Blockauthoring aufbauen`
 
 **Umsetzung:** block add/update/remove und section remove mit cascade oder move-children-to implementieren.
@@ -10927,7 +10943,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.i.R – Make it Right
 
-- [ ] **11.i.R** · Position **458/885** · Voraussetzung: `11.i.W`.
+- [ ] **11.i.R** · Position **458/900** · Voraussetzung: `11.i.W`.
 **Exakte Commit-Message:** `11.i.R feat(documents): Entfernen und Blockauthoring vervollständigen`
 
 **Vervollständigung:** Nichtleeren Abschnitt ohne eindeutige Strategie sowie widersprüchliche Optionen abweisen.
@@ -10936,7 +10952,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.i.C – Make it Clean
 
-- [ ] **11.i.C** · Position **459/885** · Voraussetzung: `11.i.R`.
+- [ ] **11.i.C** · Position **459/900** · Voraussetzung: `11.i.R`.
 **Exakte Commit-Message:** `11.i.C refactor(documents): Entfernen und Blockauthoring bereinigen`
 
 **Bereinigung:** Gemeinsame Operationserzeuger für Abschnitts- und Blockmutation nutzen.
@@ -10953,7 +10969,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.j.W – Let it Work
 
-- [ ] **11.j.W** · Position **460/885** · Voraussetzung: `11.i.C`.
+- [ ] **11.j.W** · Position **460/900** · Voraussetzung: `11.i.C`.
 **Exakte Commit-Message:** `11.j.W feat(documents): Revisionserhalt bei Komposition aufbauen`
 
 **Umsetzung:** Inhaltsartefakte beim Umordnen von Referenzen unverändert erhalten.
@@ -10962,7 +10978,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.j.R – Make it Right
 
-- [ ] **11.j.R** · Position **461/885** · Voraussetzung: `11.j.W`.
+- [ ] **11.j.R** · Position **461/900** · Voraussetzung: `11.j.W`.
 **Exakte Commit-Message:** `11.j.R feat(documents): Revisionserhalt bei Komposition vervollständigen`
 
 **Vervollständigung:** Referenzierter Inhalt und seine Freigabe dürfen keine künstliche Revision erhalten.
@@ -10971,7 +10987,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.j.C – Make it Clean
 
-- [ ] **11.j.C** · Position **462/885** · Voraussetzung: `11.j.R`.
+- [ ] **11.j.C** · Position **462/900** · Voraussetzung: `11.j.R`.
 **Exakte Commit-Message:** `11.j.C refactor(documents): Revisionserhalt bei Komposition bereinigen`
 
 **Bereinigung:** Ownership- und Referenzkanten im Writer explizit auseinanderhalten.
@@ -10988,7 +11004,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.k.W – Let it Work
 
-- [ ] **11.k.W** · Position **463/885** · Voraussetzung: `11.j.C`.
+- [ ] **11.k.W** · Position **463/900** · Voraussetzung: `11.j.C`.
 **Exakte Commit-Message:** `11.k.W feat(documents): Viewdefinition und Relationsprojektion aufbauen`
 
 **Umsetzung:** Deklarative View mit Scope, Spalten, Filter, Gruppierung und begrenzten Relationsprojektionen implementieren.
@@ -10997,7 +11013,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.k.R – Make it Right
 
-- [ ] **11.k.R** · Position **464/885** · Voraussetzung: `11.k.W`.
+- [ ] **11.k.R** · Position **464/900** · Voraussetzung: `11.k.W`.
 **Exakte Commit-Message:** `11.k.R feat(documents): Viewdefinition und Relationsprojektion vervollständigen`
 
 **Vervollständigung:** Fremde Funktionen, Templates und unzulässige Projektionspfade zurückweisen.
@@ -11006,7 +11022,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.k.C – Make it Clean
 
-- [ ] **11.k.C** · Position **465/885** · Voraussetzung: `11.k.R`.
+- [ ] **11.k.C** · Position **465/900** · Voraussetzung: `11.k.R`.
 **Exakte Commit-Message:** `11.k.C refactor(documents): Viewdefinition und Relationsprojektion bereinigen`
 
 **Bereinigung:** Viewplanung von Renderingformaten entkoppeln.
@@ -11023,7 +11039,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.l.W – Let it Work
 
-- [ ] **11.l.W** · Position **466/885** · Voraussetzung: `11.k.C`.
+- [ ] **11.l.W** · Position **466/900** · Voraussetzung: `11.k.C`.
 **Exakte Commit-Message:** `11.l.W feat(documents): Stabile Viewdaten und Varianten aufbauen`
 
 **Umsetzung:** ID-Tie-Breaker und Konfigurationsbindung in der fachlichen Viewprojektion einsetzen.
@@ -11032,7 +11048,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.l.R – Make it Right
 
-- [ ] **11.l.R** · Position **467/885** · Voraussetzung: `11.l.W`.
+- [ ] **11.l.R** · Position **467/900** · Voraussetzung: `11.l.W`.
 **Exakte Commit-Message:** `11.l.R feat(documents): Stabile Viewdaten und Varianten vervollständigen`
 
 **Vervollständigung:** Fehlende Werte und verschachtelte Relationsprojektionen nach deklarierter Policy behandeln.
@@ -11041,7 +11057,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.l.C – Make it Clean
 
-- [ ] **11.l.C** · Position **468/885** · Voraussetzung: `11.l.R`.
+- [ ] **11.l.C** · Position **468/900** · Voraussetzung: `11.l.R`.
 **Exakte Commit-Message:** `11.l.C refactor(documents): Stabile Viewdaten und Varianten bereinigen`
 
 **Bereinigung:** Viewprojektion auf Query-/Scope-/Konfigurationsdienste reduzieren.
@@ -11058,7 +11074,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.m.W – Let it Work
 
-- [ ] **11.m.W** · Position **469/885** · Voraussetzung: `11.l.C`.
+- [ ] **11.m.W** · Position **469/900** · Voraussetzung: `11.l.C`.
 **Exakte Commit-Message:** `11.m.W feat(documents): Markdown- und HTML-Renderer aufbauen`
 
 **Umsetzung:** Sichere selbstenthaltene Dokument-/Viewausgaben samt Ankern, Metadaten, Admonition und Seitenumbrüchen implementieren.
@@ -11067,7 +11083,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.m.R – Make it Right
 
-- [ ] **11.m.R** · Position **470/885** · Voraussetzung: `11.m.W`.
+- [ ] **11.m.R** · Position **470/900** · Voraussetzung: `11.m.W`.
 **Exakte Commit-Message:** `11.m.R feat(documents): Markdown- und HTML-Renderer vervollständigen`
 
 **Vervollständigung:** Formatausgaben deterministisch halten, HTML ohne aktive/externe Inhalte; vorhandene Darstellungsbeispiele höchstens manuell sichten.
@@ -11076,7 +11092,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.m.C – Make it Clean
 
-- [ ] **11.m.C** · Position **471/885** · Voraussetzung: `11.m.R`.
+- [ ] **11.m.C** · Position **471/900** · Voraussetzung: `11.m.R`.
 **Exakte Commit-Message:** `11.m.C refactor(documents): Markdown- und HTML-Renderer bereinigen`
 
 **Bereinigung:** Formatemitter klein halten; sichere Datenknoten statt frei ausführbarer Templates verwenden.
@@ -11093,7 +11109,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.n.W – Let it Work
 
-- [ ] **11.n.W** · Position **472/885** · Voraussetzung: `11.m.C`.
+- [ ] **11.n.W** · Position **472/900** · Voraussetzung: `11.m.C`.
 **Exakte Commit-Message:** `11.n.W feat(documents): CSV/JSON-Viewdaten und Ausgabeziele aufbauen`
 
 **Umsetzung:** Maschinenlesbare Viewexporte mit verlustbewusster Serialisierung und atomarem erlaubtem Ausgabeziel implementieren.
@@ -11102,7 +11118,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.n.R – Make it Right
 
-- [ ] **11.n.R** · Position **473/885** · Voraussetzung: `11.n.W`.
+- [ ] **11.n.R** · Position **473/900** · Voraussetzung: `11.n.W`.
 **Exakte Commit-Message:** `11.n.R feat(documents): CSV/JSON-Viewdaten und Ausgabeziele vervollständigen`
 
 **Vervollständigung:** Verschachtelte Werte ohne deklarierte Serialisierung und unerlaubte Projekt-/Betriebsziele abweisen.
@@ -11111,7 +11127,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.n.C – Make it Clean
 
-- [ ] **11.n.C** · Position **474/885** · Voraussetzung: `11.n.R`.
+- [ ] **11.n.C** · Position **474/900** · Voraussetzung: `11.n.R`.
 **Exakte Commit-Message:** `11.n.C refactor(documents): CSV/JSON-Viewdaten und Ausgabeziele bereinigen`
 
 **Bereinigung:** Gemeinsam nutzbare Datenserializer und Ausgabezielprüfung bereitstellen.
@@ -11128,7 +11144,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.o.W – Let it Work
 
-- [ ] **11.o.W** · Position **475/885** · Voraussetzung: `11.n.C`.
+- [ ] **11.o.W** · Position **475/900** · Voraussetzung: `11.n.C`.
 **Exakte Commit-Message:** `11.o.W feat(documents): Diagrammquellen aufbauen`
 
 **Umsetzung:** Trace-, Architektur- und Releasediagramme als Mermaid/DOT aus den geprüften Knoten-/Kantenprojektionen erzeugen.
@@ -11137,7 +11153,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.o.R – Make it Right
 
-- [ ] **11.o.R** · Position **476/885** · Voraussetzung: `11.o.W`.
+- [ ] **11.o.R** · Position **476/900** · Voraussetzung: `11.o.W`.
 **Exakte Commit-Message:** `11.o.R feat(documents): Diagrammquellen vervollständigen`
 
 **Vervollständigung:** Keine externen Renderer/Browser starten; Labels sicher behandeln und explizite Graphgrenzen respektieren.
@@ -11146,7 +11162,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.o.C – Make it Clean
 
-- [ ] **11.o.C** · Position **477/885** · Voraussetzung: `11.o.R`.
+- [ ] **11.o.C** · Position **477/900** · Voraussetzung: `11.o.R`.
 **Exakte Commit-Message:** `11.o.C refactor(documents): Diagrammquellen bereinigen`
 
 **Bereinigung:** Graphauswahl und rein textuelle Diagrammemitter vollständig trennen.
@@ -11163,7 +11179,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.p.W – Let it Work
 
-- [ ] **11.p.W** · Position **478/885** · Voraussetzung: `11.o.C`.
+- [ ] **11.p.W** · Position **478/900** · Voraussetzung: `11.o.C`.
 **Exakte Commit-Message:** `11.p.W feat(documents): Sprache, Verbindlichkeit und Schreibrichtung aufbauen`
 
 **Umsetzung:** Deklarierte Force getrennt vom unveränderten Statement und explizite Sprach-/Richtungsmetadaten darstellen.
@@ -11172,7 +11188,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.p.R – Make it Right
 
-- [ ] **11.p.R** · Position **479/885** · Voraussetzung: `11.p.W`.
+- [ ] **11.p.R** · Position **479/900** · Voraussetzung: `11.p.W`.
 **Exakte Commit-Message:** `11.p.R feat(documents): Sprache, Verbindlichkeit und Schreibrichtung vervollständigen`
 
 **Vervollständigung:** Keine automatische Negation, Übersetzung, Region-/Schriftdetektion oder normative Textnormalisierung.
@@ -11181,7 +11197,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.p.C – Make it Clean
 
-- [ ] **11.p.C** · Position **480/885** · Voraussetzung: `11.p.R`.
+- [ ] **11.p.C** · Position **480/900** · Voraussetzung: `11.p.R`.
 **Exakte Commit-Message:** `11.p.C refactor(documents): Sprache, Verbindlichkeit und Schreibrichtung bereinigen`
 
 **Bereinigung:** Sprachlabels über Ressourcen einsetzen statt Requirementsätze umzuschreiben.
@@ -11198,7 +11214,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.q.W – Let it Work
 
-- [ ] **11.q.W** · Position **481/885** · Voraussetzung: `11.p.C`.
+- [ ] **11.q.W** · Position **481/900** · Voraussetzung: `11.p.C`.
 **Exakte Commit-Message:** `11.q.W feat(documents): Eingebaute Ansichten und Fallback aufbauen`
 
 **Umsetzung:** Specification-/Traceability-Grundansicht und typbasierten Partial-/Legacy-Fallback anschließen.
@@ -11207,7 +11223,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.q.R – Make it Right
 
-- [ ] **11.q.R** · Position **482/885** · Voraussetzung: `11.q.W`.
+- [ ] **11.q.R** · Position **482/900** · Voraussetzung: `11.q.W`.
 **Exakte Commit-Message:** `11.q.R feat(documents): Eingebaute Ansichten und Fallback vervollständigen`
 
 **Vervollständigung:** Verification-/Roadmap-Berechnungen erst nach M12/M13 vollständig aktivieren; fehlende Ergebnisse nicht als passed ausgeben.
@@ -11216,7 +11232,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.q.C – Make it Clean
 
-- [ ] **11.q.C** · Position **483/885** · Voraussetzung: `11.q.R`.
+- [ ] **11.q.C** · Position **483/900** · Voraussetzung: `11.q.R`.
 **Exakte Commit-Message:** `11.q.C refactor(documents): Eingebaute Ansichten und Fallback bereinigen`
 
 **Bereinigung:** Eine gemeinsame Projektionsschnittstelle für die späteren berechneten Berichtsdaten anbieten.
@@ -11233,7 +11249,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.r.W – Let it Work
 
-- [ ] **11.r.W** · Position **484/885** · Voraussetzung: `11.q.C`.
+- [ ] **11.r.W** · Position **484/900** · Voraussetzung: `11.q.C`.
 **Exakte Commit-Message:** `11.r.W feat(documents): Große Dokumente und fortsetzbare Projektion aufbauen`
 
 **Umsetzung:** Komposition, Queryblöcke und Ergebnislieferung an Work-Frontier/Spooling anschließen.
@@ -11242,7 +11258,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.r.R – Make it Right
 
-- [ ] **11.r.R** · Position **485/885** · Voraussetzung: `11.r.W`.
+- [ ] **11.r.R** · Position **485/900** · Voraussetzung: `11.r.W`.
 **Exakte Commit-Message:** `11.r.R feat(documents): Große Dokumente und fortsetzbare Projektion vervollständigen`
 
 **Vervollständigung:** Noch offene Includes oder Tabellenzeilen dürfen nicht als fertiges Dokument gelten.
@@ -11251,7 +11267,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 11.r.C – Make it Clean
 
-- [ ] **11.r.C** · Position **486/885** · Voraussetzung: `11.r.R`.
+- [ ] **11.r.C** · Position **486/900** · Voraussetzung: `11.r.R`.
 **Exakte Commit-Message:** `11.r.C refactor(documents): Große Dokumente und fortsetzbare Projektion bereinigen`
 
 **Bereinigung:** Dokumentfortsetzung auf dieselbe generische Workengine setzen.
@@ -11280,7 +11296,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.a.W – Let it Work
 
-- [ ] **12.a.W** · Position **487/885** · Voraussetzung: `11.r.C`.
+- [ ] **12.a.W** · Position **487/900** · Voraussetzung: `11.r.C`.
 **Exakte Commit-Message:** `12.a.W feat(verification): Verification Contracts und Testreferenzen aufbauen`
 
 **Umsetzung:** Methoden, Verfahren, Oracle, Testidentität und vollständige evidence_slots implementieren.
@@ -11289,7 +11305,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.a.R – Make it Right
 
-- [ ] **12.a.R** · Position **488/885** · Voraussetzung: `12.a.W`.
+- [ ] **12.a.R** · Position **488/900** · Voraussetzung: `12.a.W`.
 **Exakte Commit-Message:** `12.a.R feat(verification): Verification Contracts und Testreferenzen vervollständigen`
 
 **Vervollständigung:** Fehlende Pflichtdimensionen, ungültige Test-ID und unvollständige Contracts abweisen.
@@ -11298,7 +11314,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.a.C – Make it Clean
 
-- [ ] **12.a.C** · Position **489/885** · Voraussetzung: `12.a.R`.
+- [ ] **12.a.C** · Position **489/900** · Voraussetzung: `12.a.R`.
 **Exakte Commit-Message:** `12.a.C refactor(verification): Verification Contracts und Testreferenzen bereinigen`
 
 **Bereinigung:** Contractauflösung und Testmetadaten als reine Datenfunktionen führen.
@@ -11315,7 +11331,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.b.W – Let it Work
 
-- [ ] **12.b.W** · Position **490/885** · Voraussetzung: `12.a.C`.
+- [ ] **12.b.W** · Position **490/900** · Voraussetzung: `12.a.C`.
 **Exakte Commit-Message:** `12.b.W feat(verification): Verifikationsplanung und Waiver aufbauen`
 
 **Umsetzung:** Ausschließlich verification_plan_status speichern und gebundene menschliche Waiver validieren.
@@ -11324,7 +11340,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.b.R – Make it Right
 
-- [ ] **12.b.R** · Position **491/885** · Voraussetzung: `12.b.W`.
+- [ ] **12.b.R** · Position **491/900** · Voraussetzung: `12.b.W`.
 **Exakte Commit-Message:** `12.b.R feat(verification): Verifikationsplanung und Waiver vervollständigen`
 
 **Vervollständigung:** Abgelaufene/fremde Bindung und Speicherung von verification_result verhindern.
@@ -11333,7 +11349,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.b.C – Make it Clean
 
-- [ ] **12.b.C** · Position **492/885** · Voraussetzung: `12.b.R`.
+- [ ] **12.b.C** · Position **492/900** · Voraussetzung: `12.b.R`.
 **Exakte Commit-Message:** `12.b.C refactor(verification): Verifikationsplanung und Waiver bereinigen`
 
 **Bereinigung:** Workflowwerte und Ergebnisberechnung strikt trennen.
@@ -11350,7 +11366,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.c.W – Let it Work
 
-- [ ] **12.c.W** · Position **493/885** · Voraussetzung: `12.b.C`.
+- [ ] **12.c.W** · Position **493/900** · Voraussetzung: `12.b.C`.
 **Exakte Commit-Message:** `12.c.W feat(verification): Verification-Kontextprojektion aufbauen`
 
 **Umsetzung:** verification_context_hash-v1 aus fachlich relevanten Subject-/Konfigurationsdaten bilden.
@@ -11359,7 +11375,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.c.R – Make it Right
 
-- [ ] **12.c.R** · Position **494/885** · Voraussetzung: `12.c.W`.
+- [ ] **12.c.R** · Position **494/900** · Voraussetzung: `12.c.W`.
 **Exakte Commit-Message:** `12.c.R feat(verification): Verification-Kontextprojektion vervollständigen`
 
 **Vervollständigung:** Contract-unabhängige Konfiguration nur bei explizitem independent zulassen.
@@ -11368,7 +11384,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.c.C – Make it Clean
 
-- [ ] **12.c.C** · Position **495/885** · Voraussetzung: `12.c.R`.
+- [ ] **12.c.C** · Position **495/900** · Voraussetzung: `12.c.R`.
 **Exakte Commit-Message:** `12.c.C refactor(verification): Verification-Kontextprojektion bereinigen`
 
 **Bereinigung:** Eine gemeinsame Projektion für Record, Import, Coverage und Baselines verwenden.
@@ -11385,7 +11401,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.d.W – Let it Work
 
-- [ ] **12.d.W** · Position **496/885** · Voraussetzung: `12.c.C`.
+- [ ] **12.d.W** · Position **496/900** · Voraussetzung: `12.c.C`.
 **Exakte Commit-Message:** `12.d.W feat(verification): Immutable Evidence und Laufkontext aufbauen`
 
 **Umsetzung:** Nachweise mit vollständiger Origin-, Producer-, Subject- und run_context-Bindung konstruieren.
@@ -11394,7 +11410,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.d.R – Make it Right
 
-- [ ] **12.d.R** · Position **497/885** · Voraussetzung: `12.d.W`.
+- [ ] **12.d.R** · Position **497/900** · Voraussetzung: `12.d.W`.
 **Exakte Commit-Message:** `12.d.R feat(verification): Immutable Evidence und Laufkontext vervollständigen`
 
 **Vervollständigung:** Unbekannter Produktstand bleibt unbound; KI-Herkunft erzeugt keine menschliche Freigabe.
@@ -11403,7 +11419,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.d.C – Make it Clean
 
-- [ ] **12.d.C** · Position **498/885** · Voraussetzung: `12.d.R`.
+- [ ] **12.d.C** · Position **498/900** · Voraussetzung: `12.d.R`.
 **Exakte Commit-Message:** `12.d.C refactor(verification): Immutable Evidence und Laufkontext bereinigen`
 
 **Bereinigung:** Evidencekonstruktor und Aktualitätsberechnung entkoppeln.
@@ -11420,7 +11436,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.e.W – Let it Work
 
-- [ ] **12.e.W** · Position **499/885** · Voraussetzung: `12.d.C`.
+- [ ] **12.e.W** · Position **499/900** · Voraussetzung: `12.d.C`.
 **Exakte Commit-Message:** `12.e.W feat(verification): Manuelle und werkzeuggestützte Erfassung aufbauen`
 
 **Umsetzung:** evidence record mit explizitem run-context, Attachments und gemeinsamen Writegates implementieren.
@@ -11429,7 +11445,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.e.R – Make it Right
 
-- [ ] **12.e.R** · Position **500/885** · Voraussetzung: `12.e.W`.
+- [ ] **12.e.R** · Position **500/900** · Voraussetzung: `12.e.W`.
 **Exakte Commit-Message:** `12.e.R feat(verification): Manuelle und werkzeuggestützte Erfassung vervollständigen`
 
 **Vervollständigung:** Fehlende Werte nicht aus Git-HEAD oder aktueller Modellwurzel erraten.
@@ -11438,7 +11454,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.e.C – Make it Clean
 
-- [ ] **12.e.C** · Position **501/885** · Voraussetzung: `12.e.R`.
+- [ ] **12.e.C** · Position **501/900** · Voraussetzung: `12.e.R`.
 **Exakte Commit-Message:** `12.e.C refactor(verification): Manuelle und werkzeuggestützte Erfassung bereinigen`
 
 **Bereinigung:** Erfassungsadapter nutzt vorhandenen Writer statt eigener Dateizugriffe.
@@ -11455,7 +11471,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.f.W – Let it Work
 
-- [ ] **12.f.W** · Position **502/885** · Voraussetzung: `12.e.C`.
+- [ ] **12.f.W** · Position **502/900** · Voraussetzung: `12.e.C`.
 **Exakte Commit-Message:** `12.f.W feat(verification): Sicherer XML-Kern für Evidence aufbauen`
 
 **Umsetzung:** DTD-/Entity-freien begrenzten XML-Parser für das JUnit-Kernprofil implementieren.
@@ -11464,7 +11480,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.f.R – Make it Right
 
-- [ ] **12.f.R** · Position **503/885** · Voraussetzung: `12.f.W`.
+- [ ] **12.f.R** · Position **503/900** · Voraussetzung: `12.f.W`.
 **Exakte Commit-Message:** `12.f.R feat(verification): Sicherer XML-Kern für Evidence vervollständigen`
 
 **Vervollständigung:** DTD, externe Schemas/Entitäten, Tiefe und Expansionsangriffe vor gefährlicher Verarbeitung abweisen.
@@ -11473,7 +11489,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.f.C – Make it Clean
 
-- [ ] **12.f.C** · Position **504/885** · Voraussetzung: `12.f.R`.
+- [ ] **12.f.C** · Position **504/900** · Voraussetzung: `12.f.R`.
 **Exakte Commit-Message:** `12.f.C refactor(verification): Sicherer XML-Kern für Evidence bereinigen`
 
 **Bereinigung:** Sicheren XML-Reader später für ReqIF in M14 wiederverwenden.
@@ -11490,7 +11506,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.g.W – Let it Work
 
-- [ ] **12.g.W** · Position **505/885** · Voraussetzung: `12.f.C`.
+- [ ] **12.g.W** · Position **505/900** · Voraussetzung: `12.f.C`.
 **Exakte Commit-Message:** `12.g.W feat(verification): JUnit-Mapping und Ergebnisklassen aufbauen`
 
 **Umsetzung:** Testcase-Schlüssel und failure/error/skipped/results nach explizitem Mapping auflösen.
@@ -11499,7 +11515,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.g.R – Make it Right
 
-- [ ] **12.g.R** · Position **506/885** · Voraussetzung: `12.g.W`.
+- [ ] **12.g.R** · Position **506/900** · Voraussetzung: `12.g.W`.
 **Exakte Commit-Message:** `12.g.R feat(verification): JUnit-Mapping und Ergebnisklassen vervollständigen`
 
 **Vervollständigung:** Nicht gemappte, mehrdeutige und widersprüchliche Ergebnisse getrennt behandeln.
@@ -11508,7 +11524,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.g.C – Make it Clean
 
-- [ ] **12.g.C** · Position **507/885** · Voraussetzung: `12.g.R`.
+- [ ] **12.g.C** · Position **507/900** · Voraussetzung: `12.g.R`.
 **Exakte Commit-Message:** `12.g.C refactor(verification): JUnit-Mapping und Ergebnisklassen bereinigen`
 
 **Bereinigung:** Parserwerte und fachliche Evidencezuordnung separieren.
@@ -11525,7 +11541,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.h.W – Let it Work
 
-- [ ] **12.h.W** · Position **508/885** · Voraussetzung: `12.g.C`.
+- [ ] **12.h.W** · Position **508/900** · Voraussetzung: `12.g.C`.
 **Exakte Commit-Message:** `12.h.W feat(verification): SARIF- und generischer Evidenceimport aufbauen`
 
 **Umsetzung:** Nur ausdrücklich gemappte SARIF-Daten sowie das versionierte generische Exchange-Schema lesen.
@@ -11534,7 +11550,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.h.R – Make it Right
 
-- [ ] **12.h.R** · Position **509/885** · Voraussetzung: `12.h.W`.
+- [ ] **12.h.R** · Position **509/900** · Voraussetzung: `12.h.W`.
 **Exakte Commit-Message:** `12.h.R feat(verification): SARIF- und generischer Evidenceimport vervollständigen`
 
 **Vervollständigung:** Fremde SARIF-Einträge nicht automatisch zu bestandener Evidence erklären.
@@ -11543,7 +11559,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.h.C – Make it Clean
 
-- [ ] **12.h.C** · Position **510/885** · Voraussetzung: `12.h.R`.
+- [ ] **12.h.C** · Position **510/900** · Voraussetzung: `12.h.R`.
 **Exakte Commit-Message:** `12.h.C refactor(verification): SARIF- und generischer Evidenceimport bereinigen`
 
 **Bereinigung:** Gemeinsame Kandidatenstruktur für alle Importformate verwenden.
@@ -11560,7 +11576,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.i.W – Let it Work
 
-- [ ] **12.i.W** · Position **511/885** · Voraussetzung: `12.h.C`.
+- [ ] **12.i.W** · Position **511/900** · Voraussetzung: `12.h.C`.
 **Exakte Commit-Message:** `12.i.W feat(verification): Originalbindung und Importpolicy aufbauen`
 
 **Umsetzung:** Originalbytes, Hash, Mapping und Parserprofil erhalten; abort_import versus skip_invalid_with_diagnostic explizit umsetzen.
@@ -11569,7 +11585,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.i.R – Make it Right
 
-- [ ] **12.i.R** · Position **512/885** · Voraussetzung: `12.i.W`.
+- [ ] **12.i.R** · Position **512/900** · Voraussetzung: `12.i.W`.
 **Exakte Commit-Message:** `12.i.R feat(verification): Originalbindung und Importpolicy vervollständigen`
 
 **Vervollständigung:** Ungültige Pflichtnachweise nur gemäß gewählter Policy behandeln; kein stilles Überspringen.
@@ -11578,7 +11594,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.i.C – Make it Clean
 
-- [ ] **12.i.C** · Position **513/885** · Voraussetzung: `12.i.R`.
+- [ ] **12.i.C** · Position **513/900** · Voraussetzung: `12.i.R`.
 **Exakte Commit-Message:** `12.i.C refactor(verification): Originalbindung und Importpolicy bereinigen`
 
 **Bereinigung:** Policyentscheidung und allgemeine Parserdiagnosen getrennt halten.
@@ -11595,7 +11611,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.j.W – Let it Work
 
-- [ ] **12.j.W** · Position **514/885** · Voraussetzung: `12.i.C`.
+- [ ] **12.j.W** · Position **514/900** · Voraussetzung: `12.i.C`.
 **Exakte Commit-Message:** `12.j.W feat(verification): Evidence-Idempotenz und Transaktion aufbauen`
 
 **Umsetzung:** Gesamten Evidence-Satz in einem Change Plan publizieren und Retry an Quelle, Mapping, Laufkontext und Request binden.
@@ -11604,7 +11620,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.j.R – Make it Right
 
-- [ ] **12.j.R** · Position **515/885** · Voraussetzung: `12.j.W`.
+- [ ] **12.j.R** · Position **515/900** · Voraussetzung: `12.j.W`.
 **Exakte Commit-Message:** `12.j.R feat(verification): Evidence-Idempotenz und Transaktion vervollständigen`
 
 **Vervollständigung:** Geänderter Kontext unter gleicher Request ist Konflikt; Duplikat ohne Request erkennbar, Subject unverändert.
@@ -11613,7 +11629,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.j.C – Make it Clean
 
-- [ ] **12.j.C** · Position **516/885** · Voraussetzung: `12.j.R`.
+- [ ] **12.j.C** · Position **516/900** · Voraussetzung: `12.j.R`.
 **Exakte Commit-Message:** `12.j.C refactor(verification): Evidence-Idempotenz und Transaktion bereinigen`
 
 **Bereinigung:** Alle Evidenceimporte über einen gemeinsamen Satzplanner führen.
@@ -11630,7 +11646,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.k.W – Let it Work
 
-- [ ] **12.k.W** · Position **517/885** · Voraussetzung: `12.j.C`.
+- [ ] **12.k.W** · Position **517/900** · Voraussetzung: `12.j.C`.
 **Exakte Commit-Message:** `12.k.W feat(verification): Bewertungsdescriptor und Produktstand aufbauen`
 
 **Umsetzung:** verification-evaluation-v1 mit eigenem Eingangsmanifest und state_sha256 implementieren.
@@ -11639,7 +11655,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.k.R – Make it Right
 
-- [ ] **12.k.R** · Position **518/885** · Voraussetzung: `12.k.W`.
+- [ ] **12.k.R** · Position **518/900** · Voraussetzung: `12.k.W`.
 **Exakte Commit-Message:** `12.k.R feat(verification): Bewertungsdescriptor und Produktstand vervollständigen`
 
 **Vervollständigung:** Evidence, Ergebnisdateien und eigener Descriptor dürfen keine selbstreferenzielle Inputbindung bilden.
@@ -11648,7 +11664,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.k.C – Make it Clean
 
-- [ ] **12.k.C** · Position **519/885** · Voraussetzung: `12.k.R`.
+- [ ] **12.k.C** · Position **519/900** · Voraussetzung: `12.k.R`.
 **Exakte Commit-Message:** `12.k.C refactor(verification): Bewertungsdescriptor und Produktstand bereinigen`
 
 **Bereinigung:** Bewertungsinput von SpecRoad-Projektmodell und Laufzeitmetrik unterscheiden.
@@ -11665,7 +11681,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.l.W – Let it Work
 
-- [ ] **12.l.W** · Position **520/885** · Voraussetzung: `12.k.C`.
+- [ ] **12.l.W** · Position **520/900** · Voraussetzung: `12.k.C`.
 **Exakte Commit-Message:** `12.l.W feat(verification): Unabhängig gebildete Pflichtmenge aufbauen`
 
 **Umsetzung:** Pflichtschlüssel aus anwendbaren Subjects, verified_by und evidence_slots berechnen.
@@ -11674,7 +11690,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.l.R – Make it Right
 
-- [ ] **12.l.R** · Position **521/885** · Voraussetzung: `12.l.W`.
+- [ ] **12.l.R** · Position **521/900** · Voraussetzung: `12.l.W`.
 **Exakte Commit-Message:** `12.l.R feat(verification): Unabhängig gebildete Pflichtmenge vervollständigen`
 
 **Vervollständigung:** Descriptor darf Scope nicht selbst erweitern/verkleinern; fehlende und zusätzliche Schlüssel unterscheiden.
@@ -11683,7 +11699,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.l.C – Make it Clean
 
-- [ ] **12.l.C** · Position **522/885** · Voraussetzung: `12.l.R`.
+- [ ] **12.l.C** · Position **522/900** · Voraussetzung: `12.l.R`.
 **Exakte Commit-Message:** `12.l.C refactor(verification): Unabhängig gebildete Pflichtmenge bereinigen`
 
 **Bereinigung:** Pflichtmengenbildung vor Nachweisauswahl durchführen.
@@ -11700,7 +11716,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.m.W – Let it Work
 
-- [ ] **12.m.W** · Position **523/885** · Voraussetzung: `12.l.C`.
+- [ ] **12.m.W** · Position **523/900** · Voraussetzung: `12.l.C`.
 **Exakte Commit-Message:** `12.m.W feat(verification): Vollständige Lauf- und Nachweisauswahl aufbauen`
 
 **Umsetzung:** Alle passenden beobachteten und erwarteten Läufe desselben Produktstands auswerten.
@@ -11709,7 +11725,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.m.R – Make it Right
 
-- [ ] **12.m.R** · Position **524/885** · Voraussetzung: `12.m.W`.
+- [ ] **12.m.R** · Position **524/900** · Voraussetzung: `12.m.W`.
 **Exakte Commit-Message:** `12.m.R feat(verification): Vollständige Lauf- und Nachweisauswahl vervollständigen`
 
 **Vervollständigung:** historical_other_state, unbound, missing und stale getrennt führen.
@@ -11718,7 +11734,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.m.C – Make it Clean
 
-- [ ] **12.m.C** · Position **525/885** · Voraussetzung: `12.m.R`.
+- [ ] **12.m.C** · Position **525/900** · Voraussetzung: `12.m.R`.
 **Exakte Commit-Message:** `12.m.C refactor(verification): Vollständige Lauf- und Nachweisauswahl bereinigen`
 
 **Bereinigung:** Auswahlregeln als reine Funktion über eingefrorene Eingangsdaten implementieren.
@@ -11735,7 +11751,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.n.W – Let it Work
 
-- [ ] **12.n.W** · Position **526/885** · Voraussetzung: `12.m.C`.
+- [ ] **12.n.W** · Position **526/900** · Voraussetzung: `12.m.C`.
 **Exakte Commit-Message:** `12.n.W feat(verification): Menschlich gebundene Laufablösung aufbauen`
 
 **Umsetzung:** Vollständige Replacement-Entscheidung mit Evidence-Set-Hash und azyklischen Ersatzläufen umsetzen.
@@ -11744,7 +11760,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.n.R – Make it Right
 
-- [ ] **12.n.R** · Position **527/885** · Voraussetzung: `12.n.W`.
+- [ ] **12.n.R** · Position **527/900** · Voraussetzung: `12.n.W`.
 **Exakte Commit-Message:** `12.n.R feat(verification): Menschlich gebundene Laufablösung vervollständigen`
 
 **Vervollständigung:** AI-Entscheidung, neue alte Evidence, Zyklus und fehlender/staler Ersatz machen Ablösung ungültig.
@@ -11753,7 +11769,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.n.C – Make it Clean
 
-- [ ] **12.n.C** · Position **528/885** · Voraussetzung: `12.n.R`.
+- [ ] **12.n.C** · Position **528/900** · Voraussetzung: `12.n.R`.
 **Exakte Commit-Message:** `12.n.C refactor(verification): Menschlich gebundene Laufablösung bereinigen`
 
 **Bereinigung:** Ablösungsgraph von Ergebnisaggregation getrennt berechnen.
@@ -11770,7 +11786,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.o.W – Let it Work
 
-- [ ] **12.o.W** · Position **529/885** · Voraussetzung: `12.n.C`.
+- [ ] **12.o.W** · Position **529/900** · Voraussetzung: `12.n.C`.
 **Exakte Commit-Message:** `12.o.W feat(verification): Priorisierte Ergebnisaggregation aufbauen`
 
 **Umsetzung:** not_applicable/waived/not_evaluated/incomplete/failed/running/stale/passed nach §10.5 ordnen.
@@ -11779,7 +11795,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.o.R – Make it Right
 
-- [ ] **12.o.R** · Position **530/885** · Voraussetzung: `12.o.W`.
+- [ ] **12.o.R** · Position **530/900** · Voraussetzung: `12.o.W`.
 **Exakte Commit-Message:** `12.o.R feat(verification): Priorisierte Ergebnisaggregation vervollständigen`
 
 **Vervollständigung:** Kein unbekannter oder unvollständiger Pflichtlauf darf zum positiven Default werden.
@@ -11788,7 +11804,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.o.C – Make it Clean
 
-- [ ] **12.o.C** · Position **531/885** · Voraussetzung: `12.o.R`.
+- [ ] **12.o.C** · Position **531/900** · Voraussetzung: `12.o.R`.
 **Exakte Commit-Message:** `12.o.C refactor(verification): Priorisierte Ergebnisaggregation bereinigen`
 
 **Bereinigung:** Aggregation ohne Format-/CLIabhängigkeit halten.
@@ -11805,7 +11821,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.p.W – Let it Work
 
-- [ ] **12.p.W** · Position **532/885** · Voraussetzung: `12.o.C`.
+- [ ] **12.p.W** · Position **532/900** · Voraussetzung: `12.o.C`.
 **Exakte Commit-Message:** `12.p.W feat(verification): Coverage und Evaluation-Eingaben aufbauen`
 
 **Umsetzung:** Coverageachsen und expliziten evaluationsgebundenen Query-/Viewinput bereitstellen.
@@ -11814,7 +11830,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.p.R – Make it Right
 
-- [ ] **12.p.R** · Position **533/885** · Voraussetzung: `12.p.W`.
+- [ ] **12.p.R** · Position **533/900** · Voraussetzung: `12.p.W`.
 **Exakte Commit-Message:** `12.p.R feat(verification): Coverage und Evaluation-Eingaben vervollständigen`
 
 **Vervollständigung:** Fehlende Auswahl, fehlende Tests, fehlende Evidence und stale Evidence getrennt ausweisen.
@@ -11823,7 +11839,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.p.C – Make it Clean
 
-- [ ] **12.p.C** · Position **534/885** · Voraussetzung: `12.p.R`.
+- [ ] **12.p.C** · Position **534/900** · Voraussetzung: `12.p.R`.
 **Exakte Commit-Message:** `12.p.C refactor(verification): Coverage und Evaluation-Eingaben bereinigen`
 
 **Bereinigung:** Evaluationsauflösung für Coverage, Query und spätere Readiness gemeinsam führen.
@@ -11840,7 +11856,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.q.W – Let it Work
 
-- [ ] **12.q.W** · Position **535/885** · Voraussetzung: `12.p.C`.
+- [ ] **12.q.W** · Position **535/900** · Voraussetzung: `12.p.C`.
 **Exakte Commit-Message:** `12.q.W feat(verification): Code-Referenzarten und sichere Quellen aufbauen`
 
 **Umsetzung:** File, line_range, text_anchor, symbol_hint und generated_artifact als sprachneutrale Referenzen implementieren.
@@ -11849,7 +11865,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.q.R – Make it Right
 
-- [ ] **12.q.R** · Position **536/885** · Voraussetzung: `12.q.W`.
+- [ ] **12.q.R** · Position **536/900** · Voraussetzung: `12.q.W`.
 **Exakte Commit-Message:** `12.q.R feat(verification): Code-Referenzarten und sichere Quellen vervollständigen`
 
 **Vervollständigung:** Externe Pfade und fremde Symlinks verhindern Zugriff; symbol_hint beweist allein keine Aktualität.
@@ -11858,7 +11874,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.q.C – Make it Clean
 
-- [ ] **12.q.C** · Position **537/885** · Voraussetzung: `12.q.R`.
+- [ ] **12.q.C** · Position **537/900** · Voraussetzung: `12.q.R`.
 **Exakte Commit-Message:** `12.q.C refactor(verification): Code-Referenzarten und sichere Quellen bereinigen`
 
 **Bereinigung:** Quellenleser aus M8 und sicheren I/O aus M2 wiederverwenden.
@@ -11875,7 +11891,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.r.W – Let it Work
 
-- [ ] **12.r.W** · Position **538/885** · Voraussetzung: `12.q.C`.
+- [ ] **12.r.W** · Position **538/900** · Voraussetzung: `12.q.C`.
 **Exakte Commit-Message:** `12.r.W feat(verification): Zeilenauswahl und exakte Relokation aufbauen`
 
 **Umsetzung:** Encoding, inklusive Zeilenbereiche und normalisierten Auswahlhash nach H.2 umsetzen.
@@ -11884,7 +11900,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.r.R – Make it Right
 
-- [ ] **12.r.R** · Position **539/885** · Voraussetzung: `12.r.W`.
+- [ ] **12.r.R** · Position **539/900** · Voraussetzung: `12.r.W`.
 **Exakte Commit-Message:** `12.r.R feat(verification): Zeilenauswahl und exakte Relokation vervollständigen`
 
 **Vervollständigung:** Mehrfachtreffer, fehlende Auswahl und ungültiges Encoding getrennt behandeln.
@@ -11893,7 +11909,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.r.C – Make it Clean
 
-- [ ] **12.r.C** · Position **540/885** · Voraussetzung: `12.r.R`.
+- [ ] **12.r.C** · Position **540/900** · Voraussetzung: `12.r.R`.
 **Exakte Commit-Message:** `12.r.C refactor(verification): Zeilenauswahl und exakte Relokation bereinigen`
 
 **Bereinigung:** Auswahlhash und Suchcursor für große Quellen getrennt kapseln.
@@ -11910,7 +11926,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.s.W – Let it Work
 
-- [ ] **12.s.W** · Position **541/885** · Voraussetzung: `12.r.C`.
+- [ ] **12.s.W** · Position **541/900** · Voraussetzung: `12.r.C`.
 **Exakte Commit-Message:** `12.s.W feat(verification): Disjunkter Codezustand aufbauen`
 
 **Umsetzung:** Erste zutreffende Regel aus H.3 für missing/current/relocated/stale anwenden.
@@ -11919,7 +11935,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.s.R – Make it Right
 
-- [ ] **12.s.R** · Position **542/885** · Voraussetzung: `12.s.W`.
+- [ ] **12.s.R** · Position **542/900** · Voraussetzung: `12.s.W`.
 **Exakte Commit-Message:** `12.s.R feat(verification): Disjunkter Codezustand vervollständigen`
 
 **Vervollständigung:** Kein Treffer und mehrdeutiger Treffer sind unterschiedliche stale-Gründe.
@@ -11928,7 +11944,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.s.C – Make it Clean
 
-- [ ] **12.s.C** · Position **543/885** · Voraussetzung: `12.s.R`.
+- [ ] **12.s.C** · Position **543/900** · Voraussetzung: `12.s.R`.
 **Exakte Commit-Message:** `12.s.C refactor(verification): Disjunkter Codezustand bereinigen`
 
 **Bereinigung:** Statusentscheidung unabhängig von Suchalgorithmus und Präsentation halten.
@@ -11945,7 +11961,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.t.W – Let it Work
 
-- [ ] **12.t.W** · Position **544/885** · Voraussetzung: `12.s.C`.
+- [ ] **12.t.W** · Position **544/900** · Voraussetzung: `12.s.C`.
 **Exakte Commit-Message:** `12.t.W feat(verification): Nachweis-/Codeintegration und Workparität aufbauen`
 
 **Umsetzung:** Evidence- und Codezustände in Validation, Diff, Traceability und Verification-Ansichten registrieren.
@@ -11954,7 +11970,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.t.R – Make it Right
 
-- [ ] **12.t.R** · Position **545/885** · Voraussetzung: `12.t.W`.
+- [ ] **12.t.R** · Position **545/900** · Voraussetzung: `12.t.W`.
 **Exakte Commit-Message:** `12.t.R feat(verification): Nachweis-/Codeintegration und Workparität vervollständigen`
 
 **Vervollständigung:** Noch fehlende Readiness bleibt M13 vorbehalten; geteilte Arbeit erhält vollständige Evaluation und Nachweismenge.
@@ -11963,7 +11979,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 12.t.C – Make it Clean
 
-- [ ] **12.t.C** · Position **546/885** · Voraussetzung: `12.t.R`.
+- [ ] **12.t.C** · Position **546/900** · Voraussetzung: `12.t.R`.
 **Exakte Commit-Message:** `12.t.C refactor(verification): Nachweis-/Codeintegration und Workparität bereinigen`
 
 **Bereinigung:** Gemeinsame berechnete Datenprovider statt voneinander abweichender Reportlogik verwenden.
@@ -11992,7 +12008,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.a.W – Let it Work
 
-- [ ] **13.a.W** · Position **547/885** · Voraussetzung: `12.t.C`.
+- [ ] **13.a.W** · Position **547/900** · Voraussetzung: `12.t.C`.
 **Exakte Commit-Message:** `13.a.W feat(roadmap): Release-, Milestone- und Taskbeziehungen aufbauen`
 
 **Umsetzung:** part_of und scheduled_for mit Pflichtowner, Done-Kriterien und genau einem Release je Milestone integrieren.
@@ -12001,7 +12017,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.a.R – Make it Right
 
-- [ ] **13.a.R** · Position **548/885** · Voraussetzung: `13.a.W`.
+- [ ] **13.a.R** · Position **548/900** · Voraussetzung: `13.a.W`.
 **Exakte Commit-Message:** `13.a.R feat(roadmap): Release-, Milestone- und Taskbeziehungen vervollständigen`
 
 **Vervollständigung:** Mehrfachrelease, fehlende Zuordnung und unzulässige Relationstypen blockieren.
@@ -12010,7 +12026,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.a.C – Make it Clean
 
-- [ ] **13.a.C** · Position **549/885** · Voraussetzung: `13.a.R`.
+- [ ] **13.a.C** · Position **549/900** · Voraussetzung: `13.a.R`.
 **Exakte Commit-Message:** `13.a.C refactor(roadmap): Release-, Milestone- und Taskbeziehungen bereinigen`
 
 **Bereinigung:** Planung auf generischem Authoring und Relationsmatrix aufbauen.
@@ -12027,7 +12043,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.b.W – Let it Work
 
-- [ ] **13.b.W** · Position **550/885** · Voraussetzung: `13.a.C`.
+- [ ] **13.b.W** · Position **550/900** · Voraussetzung: `13.a.C`.
 **Exakte Commit-Message:** `13.b.W feat(roadmap): Task-Umsetzung und Done-Nachweis aufbauen`
 
 **Umsetzung:** Übergang zu implemented an erfüllte und durch Review/Evidence belegte Done-Kriterien binden.
@@ -12036,7 +12052,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.b.R – Make it Right
 
-- [ ] **13.b.R** · Position **551/885** · Voraussetzung: `13.b.W`.
+- [ ] **13.b.R** · Position **551/900** · Voraussetzung: `13.b.W`.
 **Exakte Commit-Message:** `13.b.R feat(roadmap): Task-Umsetzung und Done-Nachweis vervollständigen`
 
 **Vervollständigung:** Bloßes Setzen eines Status oder KI-Behauptung ohne Nachweis zurückweisen.
@@ -12045,7 +12061,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.b.C – Make it Clean
 
-- [ ] **13.b.C** · Position **552/885** · Voraussetzung: `13.b.R`.
+- [ ] **13.b.C** · Position **552/900** · Voraussetzung: `13.b.R`.
 **Exakte Commit-Message:** `13.b.C refactor(roadmap): Task-Umsetzung und Done-Nachweis bereinigen`
 
 **Bereinigung:** Done-Gate und allgemeine Statusmutation getrennt halten.
@@ -12062,7 +12078,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.c.W – Let it Work
 
-- [ ] **13.c.W** · Position **553/885** · Voraussetzung: `13.b.C`.
+- [ ] **13.c.W** · Position **553/900** · Voraussetzung: `13.b.C`.
 **Exakte Commit-Message:** `13.c.W feat(roadmap): Roadmap aus dem einen Fachmodell aufbauen`
 
 **Umsetzung:** Roadmapdaten ausschließlich aus Artefakten, Beziehungen, Priorität, Risiken und Terminen berechnen.
@@ -12071,7 +12087,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.c.R – Make it Right
 
-- [ ] **13.c.R** · Position **554/885** · Voraussetzung: `13.c.W`.
+- [ ] **13.c.R** · Position **554/900** · Voraussetzung: `13.c.W`.
 **Exakte Commit-Message:** `13.c.R feat(roadmap): Roadmap aus dem einen Fachmodell vervollständigen`
 
 **Vervollständigung:** Automatisch berechnete Aufwände/Termine nicht als normative Fakten zurückschreiben.
@@ -12080,7 +12096,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.c.C – Make it Clean
 
-- [ ] **13.c.C** · Position **555/885** · Voraussetzung: `13.c.R`.
+- [ ] **13.c.C** · Position **555/900** · Voraussetzung: `13.c.R`.
 **Exakte Commit-Message:** `13.c.C refactor(roadmap): Roadmap aus dem einen Fachmodell bereinigen`
 
 **Bereinigung:** Roadmapprojektion von visueller Timeline/Tabellendarstellung trennen.
@@ -12097,7 +12113,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.d.W – Let it Work
 
-- [ ] **13.d.W** · Position **556/885** · Voraussetzung: `13.c.C`.
+- [ ] **13.d.W** · Position **556/900** · Voraussetzung: `13.c.C`.
 **Exakte Commit-Message:** `13.d.W feat(roadmap): Roadmap erklären aufbauen`
 
 **Umsetzung:** Ziele, Herkunft der Zuordnung, Abhängigkeiten, Risiken und Annahmen als Datenpfade auswerten.
@@ -12106,7 +12122,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.d.R – Make it Right
 
-- [ ] **13.d.R** · Position **557/885** · Voraussetzung: `13.d.W`.
+- [ ] **13.d.R** · Position **557/900** · Voraussetzung: `13.d.W`.
 **Exakte Commit-Message:** `13.d.R feat(roadmap): Roadmap erklären vervollständigen`
 
 **Vervollständigung:** Fehlende Planungsbezüge als offen statt erfundener Herkunft behandeln.
@@ -12115,7 +12131,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.d.C – Make it Clean
 
-- [ ] **13.d.C** · Position **558/885** · Voraussetzung: `13.d.R`.
+- [ ] **13.d.C** · Position **558/900** · Voraussetzung: `13.d.R`.
 **Exakte Commit-Message:** `13.d.C refactor(roadmap): Roadmap erklären bereinigen`
 
 **Bereinigung:** Why-/Scopeprimitive für Planungserklärungen wiederverwenden.
@@ -12132,7 +12148,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.e.W – Let it Work
 
-- [ ] **13.e.W** · Position **559/885** · Voraussetzung: `13.d.C`.
+- [ ] **13.e.W** · Position **559/900** · Voraussetzung: `13.d.C`.
 **Exakte Commit-Message:** `13.e.W feat(roadmap): Release-Scope und externe Pflichtabhängigkeiten aufbauen`
 
 **Umsetzung:** Release, Milestones und darauf geplante Artefakte als Seedmenge auflösen und Pflichtnachbarn einbeziehen.
@@ -12141,7 +12157,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.e.R – Make it Right
 
-- [ ] **13.e.R** · Position **560/885** · Voraussetzung: `13.e.W`.
+- [ ] **13.e.R** · Position **560/900** · Voraussetzung: `13.e.W`.
 **Exakte Commit-Message:** `13.e.R feat(roadmap): Release-Scope und externe Pflichtabhängigkeiten vervollständigen`
 
 **Vervollständigung:** Scope nicht auf direkt geplante IDs verkürzen; Variantenkonflikte verhindern gültige Freigabe.
@@ -12150,7 +12166,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.e.C – Make it Clean
 
-- [ ] **13.e.C** · Position **561/885** · Voraussetzung: `13.e.R`.
+- [ ] **13.e.C** · Position **561/900** · Voraussetzung: `13.e.R`.
 **Exakte Commit-Message:** `13.e.C refactor(roadmap): Release-Scope und externe Pflichtabhängigkeiten bereinigen`
 
 **Bereinigung:** Releaseauflösung als einen Scopeprovider statt eigene Closure führen.
@@ -12167,7 +12183,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.f.W – Let it Work
 
-- [ ] **13.f.W** · Position **562/885** · Voraussetzung: `13.e.C`.
+- [ ] **13.f.W** · Position **562/900** · Voraussetzung: `13.e.C`.
 **Exakte Commit-Message:** `13.f.W feat(roadmap): Readinessgates und aktuelle Beziehungen aufbauen`
 
 **Umsetzung:** Freigabe, Umsetzung, Verifikation, Coverage, Risiken, Issues und nur current Pflichtrelationen prüfen.
@@ -12176,7 +12192,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.f.R – Make it Right
 
-- [ ] **13.f.R** · Position **563/885** · Voraussetzung: `13.f.W`.
+- [ ] **13.f.R** · Position **563/900** · Voraussetzung: `13.f.W`.
 **Exakte Commit-Message:** `13.f.R feat(roadmap): Readinessgates und aktuelle Beziehungen vervollständigen`
 
 **Vervollständigung:** failed/incomplete/stale bleibt blockierend unabhängig von Warnungsschwellwert; KI-Review ersetzt keinen Human-Nachweis.
@@ -12185,7 +12201,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.f.C – Make it Clean
 
-- [ ] **13.f.C** · Position **564/885** · Voraussetzung: `13.f.R`.
+- [ ] **13.f.C** · Position **564/900** · Voraussetzung: `13.f.R`.
 **Exakte Commit-Message:** `13.f.C refactor(roadmap): Readinessgates und aktuelle Beziehungen bereinigen`
 
 **Bereinigung:** Gateresultate als typisierte Teilentscheidungen aggregieren.
@@ -12202,7 +12218,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.g.W – Let it Work
 
-- [ ] **13.g.W** · Position **565/885** · Voraussetzung: `13.f.C`.
+- [ ] **13.g.W** · Position **565/900** · Voraussetzung: `13.f.C`.
 **Exakte Commit-Message:** `13.g.W feat(roadmap): Gespeicherte Bewertung und Release-Baseline aufbauen`
 
 **Umsetzung:** Gespeicherte verification_evaluation priorisieren und echte Releasebaseline mit vollständigen Auswahlbytes/Hash freischalten.
@@ -12211,7 +12227,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.g.R – Make it Right
 
-- [ ] **13.g.R** · Position **566/885** · Voraussetzung: `13.g.W`.
+- [ ] **13.g.R** · Position **566/900** · Voraussetzung: `13.g.W`.
 **Exakte Commit-Message:** `13.g.R feat(roadmap): Gespeicherte Bewertung und Release-Baseline vervollständigen`
 
 **Vervollständigung:** Abweichender CLI-Descriptor ist Code 6; externe ungespeicherte Auswahl nur vorläufig read-only, nie Releasebaseline.
@@ -12220,7 +12236,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.g.C – Make it Clean
 
-- [ ] **13.g.C** · Position **567/885** · Voraussetzung: `13.g.R`.
+- [ ] **13.g.C** · Position **567/900** · Voraussetzung: `13.g.R`.
 **Exakte Commit-Message:** `13.g.C refactor(roadmap): Gespeicherte Bewertung und Release-Baseline bereinigen`
 
 **Bereinigung:** M10-Gateinterface durch tatsächlichen Readinessdienst erfüllen, keine parallele Sonderfreigabe.
@@ -12237,7 +12253,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.h.W – Let it Work
 
-- [ ] **13.h.W** · Position **568/885** · Voraussetzung: `13.g.C`.
+- [ ] **13.h.W** · Position **568/900** · Voraussetzung: `13.g.C`.
 **Exakte Commit-Message:** `13.h.W feat(roadmap): Roadmap-/Verification-Views und Workintegration aufbauen`
 
 **Umsetzung:** Berechnete Planungs- und Verifikationsprovider in die bestehenden Ansichten integrieren.
@@ -12246,7 +12262,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.h.R – Make it Right
 
-- [ ] **13.h.R** · Position **569/885** · Voraussetzung: `13.h.W`.
+- [ ] **13.h.R** · Position **569/900** · Voraussetzung: `13.h.W`.
 **Exakte Commit-Message:** `13.h.R feat(roadmap): Roadmap-/Verification-Views und Workintegration vervollständigen`
 
 **Vervollständigung:** Darstellung nicht als Testorakel verwenden und noch offene Arbeit nicht als fertige Readiness werten.
@@ -12255,7 +12271,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 13.h.C – Make it Clean
 
-- [ ] **13.h.C** · Position **570/885** · Voraussetzung: `13.h.R`.
+- [ ] **13.h.C** · Position **570/900** · Voraussetzung: `13.h.R`.
 **Exakte Commit-Message:** `13.h.C refactor(roadmap): Roadmap-/Verification-Views und Workintegration bereinigen`
 
 **Bereinigung:** Renderer benutzen ausschließlich gemeinsame geprüfte Datenprovider.
@@ -12284,7 +12300,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.a.W – Let it Work
 
-- [ ] **14.a.W** · Position **571/885** · Voraussetzung: `13.h.C`.
+- [ ] **14.a.W** · Position **571/900** · Voraussetzung: `13.h.C`.
 **Exakte Commit-Message:** `14.a.W feat(exchange): Mappingressourcen und externe Registries aufbauen`
 
 **Umsetzung:** Versionierte Typ-/Feld-/Relations-/Hierarchiemappings und Registry für externe Nichtartefaktidentitäten implementieren.
@@ -12293,7 +12309,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.a.R – Make it Right
 
-- [ ] **14.a.R** · Position **572/885** · Voraussetzung: `14.a.W`.
+- [ ] **14.a.R** · Position **572/900** · Voraussetzung: `14.a.W`.
 **Exakte Commit-Message:** `14.a.R feat(exchange): Mappingressourcen und externe Registries vervollständigen`
 
 **Vervollständigung:** Unbekannte Mappingversion und ausführbarer Konverter werden abgewiesen.
@@ -12302,7 +12318,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.a.C – Make it Clean
 
-- [ ] **14.a.C** · Position **573/885** · Voraussetzung: `14.a.R`.
+- [ ] **14.a.C** · Position **573/900** · Voraussetzung: `14.a.R`.
 **Exakte Commit-Message:** `14.a.C refactor(exchange): Mappingressourcen und externe Registries bereinigen`
 
 **Bereinigung:** Mappingauswertung von Formatparsern und Writer trennen.
@@ -12319,7 +12335,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.b.W – Let it Work
 
-- [ ] **14.b.W** · Position **574/885** · Voraussetzung: `14.a.C`.
+- [ ] **14.b.W** · Position **574/900** · Voraussetzung: `14.a.C`.
 **Exakte Commit-Message:** `14.b.W feat(exchange): External Identity und Importhistorie aufbauen`
 
 **Umsetzung:** Externe Identität an Artefakt/Relation samt letzter Quell-/Importprojektion und Payloadhash erhalten.
@@ -12328,7 +12344,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.b.R – Make it Right
 
-- [ ] **14.b.R** · Position **575/885** · Voraussetzung: `14.b.W`.
+- [ ] **14.b.R** · Position **575/900** · Voraussetzung: `14.b.W`.
 **Exakte Commit-Message:** `14.b.R feat(exchange): External Identity und Importhistorie vervollständigen`
 
 **Vervollständigung:** Gleichnamige IDs verschiedener Quelldokumente nicht vermischen.
@@ -12337,7 +12353,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.b.C – Make it Clean
 
-- [ ] **14.b.C** · Position **576/885** · Voraussetzung: `14.b.R`.
+- [ ] **14.b.C** · Position **576/900** · Voraussetzung: `14.b.R`.
 **Exakte Commit-Message:** `14.b.C refactor(exchange): External Identity und Importhistorie bereinigen`
 
 **Bereinigung:** Identitätsregistry und Importvergleich getrennt verwalten.
@@ -12354,7 +12370,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.c.W – Let it Work
 
-- [ ] **14.c.W** · Position **577/885** · Voraussetzung: `14.b.C`.
+- [ ] **14.c.W** · Position **577/900** · Voraussetzung: `14.b.C`.
 **Exakte Commit-Message:** `14.c.W feat(exchange): Dreifachvergleich und Konfliktstrategien aufbauen`
 
 **Umsetzung:** error, skip, update_if_unchanged und create_new_revision anhand lokal/importiert/extern auswerten.
@@ -12363,7 +12379,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.c.R – Make it Right
 
-- [ ] **14.c.R** · Position **578/885** · Voraussetzung: `14.c.W`.
+- [ ] **14.c.R** · Position **578/900** · Voraussetzung: `14.c.W`.
 **Exakte Commit-Message:** `14.c.R feat(exchange): Dreifachvergleich und Konfliktstrategien vervollständigen`
 
 **Vervollständigung:** Divergente lokale und externe Mappingprojektion erzeugt Konflikt.
@@ -12372,7 +12388,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.c.C – Make it Clean
 
-- [ ] **14.c.C** · Position **579/885** · Voraussetzung: `14.c.R`.
+- [ ] **14.c.C** · Position **579/900** · Voraussetzung: `14.c.R`.
 **Exakte Commit-Message:** `14.c.C refactor(exchange): Dreifachvergleich und Konfliktstrategien bereinigen`
 
 **Bereinigung:** Vergleichskern für verschiedene Austauschformate gemeinsam führen.
@@ -12389,7 +12405,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.d.W – Let it Work
 
-- [ ] **14.d.W** · Position **580/885** · Voraussetzung: `14.c.C`.
+- [ ] **14.d.W** · Position **580/900** · Voraussetzung: `14.c.C`.
 **Exakte Commit-Message:** `14.d.W feat(exchange): Importplan und Eingangsbindung aufbauen`
 
 **Umsetzung:** Read-only-Importplan mit Eingabe-/Mappinghash, Operationen, IDs, Anhängen, Konflikten, Verlusten und Zielwurzel erzeugen.
@@ -12398,7 +12414,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.d.R – Make it Right
 
-- [ ] **14.d.R** · Position **581/885** · Voraussetzung: `14.d.W`.
+- [ ] **14.d.R** · Position **581/900** · Voraussetzung: `14.d.W`.
 **Exakte Commit-Message:** `14.d.R feat(exchange): Importplan und Eingangsbindung vervollständigen`
 
 **Vervollständigung:** Plan nicht mit anderen Eingangsbytes oder anderer Basis wiederverwenden.
@@ -12407,7 +12423,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.d.C – Make it Clean
 
-- [ ] **14.d.C** · Position **582/885** · Voraussetzung: `14.d.R`.
+- [ ] **14.d.C** · Position **582/900** · Voraussetzung: `14.d.R`.
 **Exakte Commit-Message:** `14.d.C refactor(exchange): Importplan und Eingangsbindung bereinigen`
 
 **Bereinigung:** Formatparser liefern Kandidaten an denselben Change-Plan-Adapter.
@@ -12424,7 +12440,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.e.W – Let it Work
 
-- [ ] **14.e.W** · Position **583/885** · Voraussetzung: `14.d.C`.
+- [ ] **14.e.W** · Position **583/900** · Voraussetzung: `14.d.C`.
 **Exakte Commit-Message:** `14.e.W feat(exchange): Import anwenden und Verlustzustimmung aufbauen`
 
 **Umsetzung:** Gültigen gespeicherten oder neu berechneten Plan über normalen Writer anwenden.
@@ -12433,7 +12449,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.e.R – Make it Right
 
-- [ ] **14.e.R** · Position **584/885** · Voraussetzung: `14.e.W`.
+- [ ] **14.e.R** · Position **584/900** · Voraussetzung: `14.e.W`.
 **Exakte Commit-Message:** `14.e.R feat(exchange): Import anwenden und Verlustzustimmung vervollständigen`
 
 **Vervollständigung:** Nicht akzeptierte Verluste, stale Quelle und ungültiges Gesamtziel vor Veröffentlichung sperren.
@@ -12442,7 +12458,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.e.C – Make it Clean
 
-- [ ] **14.e.C** · Position **585/885** · Voraussetzung: `14.e.R`.
+- [ ] **14.e.C** · Position **585/900** · Voraussetzung: `14.e.R`.
 **Exakte Commit-Message:** `14.e.C refactor(exchange): Import anwenden und Verlustzustimmung bereinigen`
 
 **Bereinigung:** Keine Formatfamilie darf einen eigenen unsicheren Direktwriter besitzen.
@@ -12459,7 +12475,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.f.W – Let it Work
 
-- [ ] **14.f.W** · Position **586/885** · Voraussetzung: `14.e.C`.
+- [ ] **14.f.W** · Position **586/900** · Voraussetzung: `14.e.C`.
 **Exakte Commit-Message:** `14.f.W feat(exchange): CSV-Datentypen und RFC-4180 aufbauen`
 
 **Umsetzung:** CSV mit explizitem Mapping, UTF-8, Quotes, Listenregeln und eingebetteten Zeilenumbrüchen lesen/schreiben.
@@ -12468,7 +12484,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.f.R – Make it Right
 
-- [ ] **14.f.R** · Position **587/885** · Voraussetzung: `14.f.W`.
+- [ ] **14.f.R** · Position **587/900** · Voraussetzung: `14.f.W`.
 **Exakte Commit-Message:** `14.f.R feat(exchange): CSV-Datentypen und RFC-4180 vervollständigen`
 
 **Vervollständigung:** BOM nur beim Import, ungültige Typkonversion und Spaltenfehler nach Policy behandeln.
@@ -12477,7 +12493,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.f.C – Make it Clean
 
-- [ ] **14.f.C** · Position **588/885** · Voraussetzung: `14.f.R`.
+- [ ] **14.f.C** · Position **588/900** · Voraussetzung: `14.f.R`.
 **Exakte Commit-Message:** `14.f.C refactor(exchange): CSV-Datentypen und RFC-4180 bereinigen`
 
 **Bereinigung:** Gemeinsamen CSV-Codec mit Viewexporten verwenden.
@@ -12494,7 +12510,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.g.W – Let it Work
 
-- [ ] **14.g.W** · Position **589/885** · Voraussetzung: `14.f.C`.
+- [ ] **14.g.W** · Position **589/900** · Voraussetzung: `14.f.C`.
 **Exakte Commit-Message:** `14.g.W feat(exchange): NDJSON-Objektstrom aufbauen`
 
 **Umsetzung:** Pro Zeile genau ein versioniertes Artefakt oder Change-Plan-Objekt streamen.
@@ -12503,7 +12519,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.g.R – Make it Right
 
-- [ ] **14.g.R** · Position **590/885** · Voraussetzung: `14.g.W`.
+- [ ] **14.g.R** · Position **590/900** · Voraussetzung: `14.g.W`.
 **Exakte Commit-Message:** `14.g.R feat(exchange): NDJSON-Objektstrom vervollständigen`
 
 **Vervollständigung:** Leere Zeilen ignorieren, Kommentare und kaputte letzte Objekte ablehnen.
@@ -12512,7 +12528,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.g.C – Make it Clean
 
-- [ ] **14.g.C** · Position **591/885** · Voraussetzung: `14.g.R`.
+- [ ] **14.g.C** · Position **591/900** · Voraussetzung: `14.g.R`.
 **Exakte Commit-Message:** `14.g.C refactor(exchange): NDJSON-Objektstrom bereinigen`
 
 **Bereinigung:** Zeilenframing von JSON-Validierung und Fachmapping trennen.
@@ -12529,7 +12545,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.h.W – Let it Work
 
-- [ ] **14.h.W** · Position **592/885** · Voraussetzung: `14.g.C`.
+- [ ] **14.h.W** · Position **592/900** · Voraussetzung: `14.g.C`.
 **Exakte Commit-Message:** `14.h.W feat(exchange): ReqIF-Typen und Attribute aufbauen`
 
 **Umsetzung:** ReqIF-1.2-Datentypen, Spec-Objects, unterstützte Attribute und Identitäten abbilden.
@@ -12538,7 +12554,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.h.R – Make it Right
 
-- [ ] **14.h.R** · Position **593/885** · Voraussetzung: `14.h.W`.
+- [ ] **14.h.R** · Position **593/900** · Voraussetzung: `14.h.W`.
 **Exakte Commit-Message:** `14.h.R feat(exchange): ReqIF-Typen und Attribute vervollständigen`
 
 **Vervollständigung:** Nicht repräsentierbare Werte nicht still in Strings oder Defaults umwandeln.
@@ -12547,7 +12563,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.h.C – Make it Clean
 
-- [ ] **14.h.C** · Position **594/885** · Voraussetzung: `14.h.R`.
+- [ ] **14.h.C** · Position **594/900** · Voraussetzung: `14.h.R`.
 **Exakte Commit-Message:** `14.h.C refactor(exchange): ReqIF-Typen und Attribute bereinigen`
 
 **Bereinigung:** ReqIF-Objektmodell von XMLlesen und Spezifikationsartefakten trennen.
@@ -12564,7 +12580,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.i.W – Let it Work
 
-- [ ] **14.i.W** · Position **595/885** · Voraussetzung: `14.h.C`.
+- [ ] **14.i.W** · Position **595/900** · Voraussetzung: `14.h.C`.
 **Exakte Commit-Message:** `14.i.W feat(exchange): ReqIF-Hierarchien, Relationen und XHTML aufbauen`
 
 **Umsetzung:** Specification/Spec-Hierarchy, Spec-Relation und erlaubte XHTML-Kerninhalte integrieren.
@@ -12573,7 +12589,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.i.R – Make it Right
 
-- [ ] **14.i.R** · Position **596/885** · Voraussetzung: `14.i.W`.
+- [ ] **14.i.R** · Position **596/900** · Voraussetzung: `14.i.W`.
 **Exakte Commit-Message:** `14.i.R feat(exchange): ReqIF-Hierarchien, Relationen und XHTML vervollständigen`
 
 **Vervollständigung:** Zyklen, externe Inhalte und unaufgelöste referenzierte Anhänge vor Apply erkennen.
@@ -12582,7 +12598,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.i.C – Make it Clean
 
-- [ ] **14.i.C** · Position **597/885** · Voraussetzung: `14.i.R`.
+- [ ] **14.i.C** · Position **597/900** · Voraussetzung: `14.i.R`.
 **Exakte Commit-Message:** `14.i.C refactor(exchange): ReqIF-Hierarchien, Relationen und XHTML bereinigen`
 
 **Bereinigung:** Den sicheren XML-Kern aus M12 und Dokumentdaten aus M11 verwenden.
@@ -12599,7 +12615,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.j.W – Let it Work
 
-- [ ] **14.j.W** · Position **598/885** · Voraussetzung: `14.i.C`.
+- [ ] **14.j.W** · Position **598/900** · Voraussetzung: `14.i.C`.
 **Exakte Commit-Message:** `14.j.W feat(exchange): Informationsverluste und Erweiterungserhalt aufbauen`
 
 **Umsetzung:** Nicht unterstützte Inhalte entweder namespaced erhalten oder einzeln als Verlust identifizieren.
@@ -12608,7 +12624,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.j.R – Make it Right
 
-- [ ] **14.j.R** · Position **599/885** · Voraussetzung: `14.j.W`.
+- [ ] **14.j.R** · Position **599/900** · Voraussetzung: `14.j.W`.
 **Exakte Commit-Message:** `14.j.R feat(exchange): Informationsverluste und Erweiterungserhalt vervollständigen`
 
 **Vervollständigung:** Kein pauschales success bei verschwiegenen Verlusten; fail-on-loss greift.
@@ -12617,7 +12633,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.j.C – Make it Clean
 
-- [ ] **14.j.C** · Position **600/885** · Voraussetzung: `14.j.R`.
+- [ ] **14.j.C** · Position **600/900** · Voraussetzung: `14.j.R`.
 **Exakte Commit-Message:** `14.j.C refactor(exchange): Informationsverluste und Erweiterungserhalt bereinigen`
 
 **Bereinigung:** Verlustklassifikation unabhängig von menschenlesbaren Meldungen gestalten.
@@ -12634,7 +12650,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.k.W – Let it Work
 
-- [ ] **14.k.W** · Position **601/885** · Voraussetzung: `14.j.C`.
+- [ ] **14.k.W** · Position **601/900** · Voraussetzung: `14.j.C`.
 **Exakte Commit-Message:** `14.k.W feat(exchange): ReqIFZ und sicheres Archivprofil aufbauen`
 
 **Umsetzung:** ReqIFZ auf den vorhandenen sicheren kanonischen Archivcodec aufsetzen.
@@ -12643,7 +12659,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.k.R – Make it Right
 
-- [ ] **14.k.R** · Position **602/885** · Voraussetzung: `14.k.W`.
+- [ ] **14.k.R** · Position **602/900** · Voraussetzung: `14.k.W`.
 **Exakte Commit-Message:** `14.k.R feat(exchange): ReqIFZ und sicheres Archivprofil vervollständigen`
 
 **Vervollständigung:** Traversal, doppelte Ziele, Sonderdateien und harte Expansionsgrenzen vor Extraktion abweisen.
@@ -12652,7 +12668,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.k.C – Make it Clean
 
-- [ ] **14.k.C** · Position **603/885** · Voraussetzung: `14.k.R`.
+- [ ] **14.k.C** · Position **603/900** · Voraussetzung: `14.k.R`.
 **Exakte Commit-Message:** `14.k.C refactor(exchange): ReqIFZ und sicheres Archivprofil bereinigen`
 
 **Bereinigung:** ReqIFZ-Manifest und gemeinsames ZIP-Profil ohne zweite Archivimplementation verbinden.
@@ -12669,7 +12685,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.l.W – Let it Work
 
-- [ ] **14.l.W** · Position **604/885** · Voraussetzung: `14.k.C`.
+- [ ] **14.l.W** · Position **604/900** · Voraussetzung: `14.k.C`.
 **Exakte Commit-Message:** `14.l.W feat(exchange): Exportumfang und deterministisches Manifest aufbauen`
 
 **Umsetzung:** Project/document/query/release-Scopes, Mapping, Anhänge und deterministischen Snapshotzeitpunkt exportieren.
@@ -12678,7 +12694,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.l.R – Make it Right
 
-- [ ] **14.l.R** · Position **605/885** · Voraussetzung: `14.l.W`.
+- [ ] **14.l.R** · Position **605/900** · Voraussetzung: `14.l.W`.
 **Exakte Commit-Message:** `14.l.R feat(exchange): Exportumfang und deterministisches Manifest vervollständigen`
 
 **Vervollständigung:** Laufzeit und absolute Pfade nicht in den Fachcontainer mischen; Export bleibt ohne normative Writes.
@@ -12687,7 +12703,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.l.C – Make it Clean
 
-- [ ] **14.l.C** · Position **606/885** · Voraussetzung: `14.l.R`.
+- [ ] **14.l.C** · Position **606/900** · Voraussetzung: `14.l.R`.
 **Exakte Commit-Message:** `14.l.C refactor(exchange): Exportumfang und deterministisches Manifest bereinigen`
 
 **Bereinigung:** Scope-/Zeitprojektion zentral für alle Formate bereitstellen.
@@ -12704,7 +12720,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.m.W – Let it Work
 
-- [ ] **14.m.W** · Position **607/885** · Voraussetzung: `14.l.C`.
+- [ ] **14.m.W** · Position **607/900** · Voraussetzung: `14.l.C`.
 **Exakte Commit-Message:** `14.m.W feat(exchange): Mehrsprachiger Requirement-Austausch aufbauen`
 
 **Umsetzung:** language und normative_force über explizite CSV-/NDJSON-/ReqIF-Felder erhalten.
@@ -12713,7 +12729,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.m.R – Make it Right
 
-- [ ] **14.m.R** · Position **608/885** · Voraussetzung: `14.m.W`.
+- [ ] **14.m.R** · Position **608/900** · Voraussetzung: `14.m.W`.
 **Exakte Commit-Message:** `14.m.R feat(exchange): Mehrsprachiger Requirement-Austausch vervollständigen`
 
 **Vervollständigung:** Fehlende Abbildung als Verlust statt Ableitung aus Keywords oder Detektor behandeln.
@@ -12722,7 +12738,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.m.C – Make it Clean
 
-- [ ] **14.m.C** · Position **609/885** · Voraussetzung: `14.m.R`.
+- [ ] **14.m.C** · Position **609/900** · Voraussetzung: `14.m.R`.
 **Exakte Commit-Message:** `14.m.C refactor(exchange): Mehrsprachiger Requirement-Austausch bereinigen`
 
 **Bereinigung:** Sprach-/Force-Mapping auf denselben Requirement-Konstruktor aus M2 setzen.
@@ -12739,7 +12755,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.n.W – Let it Work
 
-- [ ] **14.n.W** · Position **610/885** · Voraussetzung: `14.m.C`.
+- [ ] **14.n.W** · Position **610/900** · Voraussetzung: `14.m.C`.
 **Exakte Commit-Message:** `14.n.W feat(exchange): Netzwerk-/Konverterfreiheit und Archivangriffe aufbauen`
 
 **Umsetzung:** Alle Parser ausschließlich lokal und deklarativ betreiben; negative Sicherheitskorpora integrieren.
@@ -12748,7 +12764,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.n.R – Make it Right
 
-- [ ] **14.n.R** · Position **611/885** · Voraussetzung: `14.n.W`.
+- [ ] **14.n.R** · Position **611/900** · Voraussetzung: `14.n.W`.
 **Exakte Commit-Message:** `14.n.R feat(exchange): Netzwerk-/Konverterfreiheit und Archivangriffe vervollständigen`
 
 **Vervollständigung:** Entity-Auflösung, Shellkonverter und bösartige Dateipfade vor Nutzung blockieren.
@@ -12757,7 +12773,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.n.C – Make it Clean
 
-- [ ] **14.n.C** · Position **612/885** · Voraussetzung: `14.n.R`.
+- [ ] **14.n.C** · Position **612/900** · Voraussetzung: `14.n.R`.
 **Exakte Commit-Message:** `14.n.C refactor(exchange): Netzwerk-/Konverterfreiheit und Archivangriffe bereinigen`
 
 **Bereinigung:** Wiederverwendbare Security-Fälle über die Formatadapter parametrieren.
@@ -12774,7 +12790,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.o.W – Let it Work
 
-- [ ] **14.o.W** · Position **613/885** · Voraussetzung: `14.n.C`.
+- [ ] **14.o.W** · Position **613/900** · Voraussetzung: `14.n.C`.
 **Exakte Commit-Message:** `14.o.W feat(exchange): Format-Roundtrips und Importfortsetzung aufbauen`
 
 **Umsetzung:** Vollständige Roundtripkorpora einschließlich Anhängen, Reviews und Konfigurationen je Format ausführen.
@@ -12783,7 +12799,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.o.R – Make it Right
 
-- [ ] **14.o.R** · Position **614/885** · Voraussetzung: `14.o.W`.
+- [ ] **14.o.R** · Position **614/900** · Voraussetzung: `14.o.W`.
 **Exakte Commit-Message:** `14.o.R feat(exchange): Format-Roundtrips und Importfortsetzung vervollständigen`
 
 **Vervollständigung:** Veränderte Reviewbindung wird suspect/unreviewed; geteilte Verarbeitung verliert kein Objekt.
@@ -12792,7 +12808,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 14.o.C – Make it Clean
 
-- [ ] **14.o.C** · Position **615/885** · Voraussetzung: `14.o.R`.
+- [ ] **14.o.C** · Position **615/900** · Voraussetzung: `14.o.R`.
 **Exakte Commit-Message:** `14.o.C refactor(exchange): Format-Roundtrips und Importfortsetzung bereinigen`
 
 **Bereinigung:** Formatübergreifende Datenoracles nutzen statt Exportdarstellung zu testen.
@@ -12807,9 +12823,9 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 <a id="m15"></a>
 ## Meilenstein 15 – Projektbundles und portabler Austausch
 
-**Ziel:** Verifizierbare Voll-/Teilprojekte, portierte Idempotenz und erhaltender Restore aus echten vollständigen Quelldaten.
+**Ziel:** Verifizierbare Voll-/Teilprojekte, portierte Idempotenz, erhaltender Restore und sicherer SpecRoad-/PatchHarbor-Hinweg in eine frische Python-Sandbox.
 
-**Vorgesehener Zuschnitt:** `src/specroad/bundles/, src/specroad/archive/, src/specroad/recovery/`. **Fachgrundlage:** §§ 10.7.1, 10.16, 12.28, 12.36; Anhänge C, E, P.
+**Vorgesehener Zuschnitt:** `src/specroad/bundles/, src/specroad/archive/, src/specroad/recovery/, src/specroad/transport/`. **Fachgrundlage:** §§ 10.7.1, 10.16, 12.28, 12.36, 12.46; Anhänge C, E, P, W.
 
 **Abschlussgate:** Bundleintegrität, root-sicheres Extrahieren und geschützte Geschichte werden nachgewiesen; ein Hash allein ist weder Originalbyte-Ersatz noch Authentizitätsbeweis. Die hier beschriebenen Gates sind Sollkriterien, keine behaupteten Messergebnisse.
 
@@ -12821,7 +12837,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.a.W – Let it Work
 
-- [ ] **15.a.W** · Position **616/885** · Voraussetzung: `14.o.C`.
+- [ ] **15.a.W** · Position **616/900** · Voraussetzung: `14.o.C`.
 **Exakte Commit-Message:** `15.a.W feat(bundle): Kanonisches ZIP und Manifestdomäne aufbauen`
 
 **Umsetzung:** Vollständiges ZIP-Profil und Manifest mit exakt allen Payloads ohne eigene rekursive Aufnahme ausprägen.
@@ -12830,7 +12846,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.a.R – Make it Right
 
-- [ ] **15.a.R** · Position **617/885** · Voraussetzung: `15.a.W`.
+- [ ] **15.a.R** · Position **617/900** · Voraussetzung: `15.a.W`.
 **Exakte Commit-Message:** `15.a.R feat(bundle): Kanonisches ZIP und Manifestdomäne vervollständigen`
 
 **Vervollständigung:** Dubletten, Groß-/Kleinschreibungskollision, Sondertypen und nichtkanonische Parameter erkennen.
@@ -12839,7 +12855,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.a.C – Make it Clean
 
-- [ ] **15.a.C** · Position **618/885** · Voraussetzung: `15.a.R`.
+- [ ] **15.a.C** · Position **618/900** · Voraussetzung: `15.a.R`.
 **Exakte Commit-Message:** `15.a.C refactor(bundle): Kanonisches ZIP und Manifestdomäne bereinigen`
 
 **Bereinigung:** Gemeinsamen M6-Archivcodec vervollständigen statt ein zweites Format zu erfinden.
@@ -12856,7 +12872,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.b.W – Let it Work
 
-- [ ] **15.b.W** · Position **619/885** · Voraussetzung: `15.a.C`.
+- [ ] **15.b.W** · Position **619/900** · Voraussetzung: `15.a.C`.
 **Exakte Commit-Message:** `15.b.W feat(bundle): Vollprojektbundle erzeugen aufbauen`
 
 **Umsetzung:** Project/closed-Bundle mit vollständig schreibbarem Modell und notwendigen Objekten erzeugen.
@@ -12865,7 +12881,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.b.R – Make it Right
 
-- [ ] **15.b.R** · Position **620/885** · Voraussetzung: `15.b.W`.
+- [ ] **15.b.R** · Position **620/900** · Voraussetzung: `15.b.W`.
 **Exakte Commit-Message:** `15.b.R feat(bundle): Vollprojektbundle erzeugen vervollständigen`
 
 **Vervollständigung:** Unvollständige Transaktion oder fehlende Pflichtressource verhindert normalen Vollbundleabschluss.
@@ -12874,7 +12890,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.b.C – Make it Clean
 
-- [ ] **15.b.C** · Position **621/885** · Voraussetzung: `15.b.R`.
+- [ ] **15.b.C** · Position **621/900** · Voraussetzung: `15.b.R`.
 **Exakte Commit-Message:** `15.b.C refactor(bundle): Vollprojektbundle erzeugen bereinigen`
 
 **Bereinigung:** Bundlefachmodell auf vorhandenen Scope-/Snapshotdienst aufsetzen.
@@ -12891,7 +12907,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.c.W – Let it Work
 
-- [ ] **15.c.W** · Position **622/885** · Voraussetzung: `15.b.C`.
+- [ ] **15.c.W** · Position **622/900** · Voraussetzung: `15.b.C`.
 **Exakte Commit-Message:** `15.c.W feat(bundle): Teilbundle und Boundarybindung aufbauen`
 
 **Umsetzung:** Document-/Release-Scope als partial/read_only mit Ursprungs- und Teilmodellwurzel speichern.
@@ -12900,7 +12916,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.c.R – Make it Right
 
-- [ ] **15.c.R** · Position **623/885** · Voraussetzung: `15.c.W`.
+- [ ] **15.c.R** · Position **623/900** · Voraussetzung: `15.c.W`.
 **Exakte Commit-Message:** `15.c.R feat(bundle): Teilbundle und Boundarybindung vervollständigen`
 
 **Vervollständigung:** Falsche Kind-/Read-only-/Scopekombination und fehlende starke Ziele ablehnen.
@@ -12909,7 +12925,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.c.C – Make it Clean
 
-- [ ] **15.c.C** · Position **624/885** · Voraussetzung: `15.c.R`.
+- [ ] **15.c.C** · Position **624/900** · Voraussetzung: `15.c.R`.
 **Exakte Commit-Message:** `15.c.C refactor(bundle): Teilbundle und Boundarybindung bereinigen`
 
 **Bereinigung:** Eine feste Kind-/Scope-Matrix für Erzeugen, Prüfen und Lesen verwenden.
@@ -12926,7 +12942,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.d.W – Let it Work
 
-- [ ] **15.d.W** · Position **625/885** · Voraussetzung: `15.c.C`.
+- [ ] **15.d.W** · Position **625/900** · Voraussetzung: `15.c.C`.
 **Exakte Commit-Message:** `15.d.W feat(bundle): Bundleverifikation ohne Extraktion aufbauen`
 
 **Umsetzung:** ZIP, Payloadmengen, Hashes, Referenzen und optionale externe Gesamt-ZIP-Bindung schreibfrei prüfen.
@@ -12935,7 +12951,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.d.R – Make it Right
 
-- [ ] **15.d.R** · Position **626/885** · Voraussetzung: `15.d.W`.
+- [ ] **15.d.R** · Position **626/900** · Voraussetzung: `15.d.W`.
 **Exakte Commit-Message:** `15.d.R feat(bundle): Bundleverifikation ohne Extraktion vervollständigen`
 
 **Vervollständigung:** Bitmanipulation, zusätzliche/unaufgeführte Datei und ersetztes Archiv bei altem externem Hash erkennen.
@@ -12944,7 +12960,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.d.C – Make it Clean
 
-- [ ] **15.d.C** · Position **627/885** · Voraussetzung: `15.d.R`.
+- [ ] **15.d.C** · Position **627/900** · Voraussetzung: `15.d.R`.
 **Exakte Commit-Message:** `15.d.C refactor(bundle): Bundleverifikation ohne Extraktion bereinigen`
 
 **Bereinigung:** Containerintegrität und fachliche Modellintegrität als getrennte überprüfbare Stufen führen.
@@ -12961,7 +12977,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.e.W – Let it Work
 
-- [ ] **15.e.W** · Position **628/885** · Voraussetzung: `15.d.C`.
+- [ ] **15.e.W** · Position **628/900** · Voraussetzung: `15.d.C`.
 **Exakte Commit-Message:** `15.e.W feat(bundle): Atomare Extraktion und Zielschutz aufbauen`
 
 **Umsetzung:** Ausschließlich verifiziertes Bundle in fehlendes oder leeres Ziel über Bootstrapjournal extrahieren.
@@ -12970,7 +12986,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.e.R – Make it Right
 
-- [ ] **15.e.R** · Position **629/885** · Voraussetzung: `15.e.W`.
+- [ ] **15.e.R** · Position **629/900** · Voraussetzung: `15.e.W`.
 **Exakte Commit-Message:** `15.e.R feat(bundle): Atomare Extraktion und Zielschutz vervollständigen`
 
 **Vervollständigung:** Bestehende Zieldaten, Pfadtraversal und Abbruch niemals überschreiben beziehungsweise als Erfolg behandeln.
@@ -12979,7 +12995,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.e.C – Make it Clean
 
-- [ ] **15.e.C** · Position **630/885** · Voraussetzung: `15.e.R`.
+- [ ] **15.e.C** · Position **630/900** · Voraussetzung: `15.e.R`.
 **Exakte Commit-Message:** `15.e.C refactor(bundle): Atomare Extraktion und Zielschutz bereinigen`
 
 **Bereinigung:** Rootcreationprimitiven aus init wiederverwenden.
@@ -12996,7 +13012,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.f.W – Let it Work
 
-- [ ] **15.f.W** · Position **631/885** · Voraussetzung: `15.e.C`.
+- [ ] **15.f.W** · Position **631/900** · Voraussetzung: `15.e.C`.
 **Exakte Commit-Message:** `15.f.W feat(bundle): Read-only-Befehle auf Partials aufbauen`
 
 **Umsetzung:** Zulässige lesende Funktionen und referenzielle Boundaryprüfung auf Partialmodellen aktivieren.
@@ -13005,7 +13021,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.f.R – Make it Right
 
-- [ ] **15.f.R** · Position **632/885** · Voraussetzung: `15.f.W`.
+- [ ] **15.f.R** · Position **632/900** · Voraussetzung: `15.f.W`.
 **Exakte Commit-Message:** `15.f.R feat(bundle): Read-only-Befehle auf Partials vervollständigen`
 
 **Vervollständigung:** Jeder normative Write auf Partial wird mit Code 7 abgewiesen.
@@ -13014,7 +13030,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.f.C – Make it Clean
 
-- [ ] **15.f.C** · Position **633/885** · Voraussetzung: `15.f.R`.
+- [ ] **15.f.C** · Position **633/900** · Voraussetzung: `15.f.R`.
 **Exakte Commit-Message:** `15.f.C refactor(bundle): Read-only-Befehle auf Partials bereinigen`
 
 **Bereinigung:** Partialberechtigung im gemeinsamen Command-/Readerkontext führen.
@@ -13031,7 +13047,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.g.W – Let it Work
 
-- [ ] **15.g.W** · Position **634/885** · Voraussetzung: `15.f.C`.
+- [ ] **15.g.W** · Position **634/900** · Voraussetzung: `15.f.C`.
 **Exakte Commit-Message:** `15.g.W feat(bundle): Receipts und portable Idempotenz aufbauen`
 
 **Umsetzung:** Abgeschlossene Request-/Transaktionsreceipts separat transportieren; Ausschluss setzt local_only.
@@ -13040,7 +13056,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.g.R – Make it Right
 
-- [ ] **15.g.R** · Position **635/885** · Voraussetzung: `15.g.W`.
+- [ ] **15.g.R** · Position **635/900** · Voraussetzung: `15.g.W`.
 **Exakte Commit-Message:** `15.g.R feat(bundle): Receipts und portable Idempotenz vervollständigen`
 
 **Vervollständigung:** Veränderte Operationsbindung bleibt Konflikt; ausgeschlossene Receipts nicht als portiert behaupten.
@@ -13049,7 +13065,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.g.C – Make it Clean
 
-- [ ] **15.g.C** · Position **636/885** · Voraussetzung: `15.g.R`.
+- [ ] **15.g.C** · Position **636/900** · Voraussetzung: `15.g.R`.
 **Exakte Commit-Message:** `15.g.C refactor(bundle): Receipts und portable Idempotenz bereinigen`
 
 **Bereinigung:** Fachpayload und betriebliche Nachweise getrennt hashen und auswerten.
@@ -13066,7 +13082,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.h.W – Let it Work
 
-- [ ] **15.h.W** · Position **637/885** · Voraussetzung: `15.g.C`.
+- [ ] **15.h.W** · Position **637/900** · Voraussetzung: `15.g.C`.
 **Exakte Commit-Message:** `15.h.W feat(bundle): Bundle als Vergleichsquelle aufbauen`
 
 **Umsetzung:** Verifizierte Bundles in die gemeinsame Diff-/Mergequellenregistry einbinden.
@@ -13075,7 +13091,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.h.R – Make it Right
 
-- [ ] **15.h.R** · Position **638/885** · Voraussetzung: `15.h.W`.
+- [ ] **15.h.R** · Position **638/900** · Voraussetzung: `15.h.W`.
 **Exakte Commit-Message:** `15.h.R feat(bundle): Bundle als Vergleichsquelle vervollständigen`
 
 **Vervollständigung:** Teilbundle oder fremde project_id nicht als vollständige Mergequelle verwenden.
@@ -13084,7 +13100,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.h.C – Make it Clean
 
-- [ ] **15.h.C** · Position **639/885** · Voraussetzung: `15.h.R`.
+- [ ] **15.h.C** · Position **639/900** · Voraussetzung: `15.h.R`.
 **Exakte Commit-Message:** `15.h.C refactor(bundle): Bundle als Vergleichsquelle bereinigen`
 
 **Bereinigung:** Quellenauflösung aus M8 nun mit tatsächlichem Bundleleser vollständig schließen.
@@ -13101,7 +13117,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.i.W – Let it Work
 
-- [ ] **15.i.W** · Position **640/885** · Voraussetzung: `15.h.C`.
+- [ ] **15.i.W** · Position **640/900** · Voraussetzung: `15.h.C`.
 **Exakte Commit-Message:** `15.i.W feat(bundle): Offene Transaktionen und externe Sicherung aufbauen`
 
 **Umsetzung:** Normales Projektbundle bei ungelöster Transaktion sperren; separat markierten Workexport zulassen.
@@ -13110,7 +13126,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.i.R – Make it Right
 
-- [ ] **15.i.R** · Position **641/885** · Voraussetzung: `15.i.W`.
+- [ ] **15.i.R** · Position **641/900** · Voraussetzung: `15.i.W`.
 **Exakte Commit-Message:** `15.i.R feat(bundle): Offene Transaktionen und externe Sicherung vervollständigen`
 
 **Vervollständigung:** Verlorene lokale Bytes nicht als aus einer alten Chatbeschreibung wiederherstellbar darstellen.
@@ -13119,7 +13135,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.i.C – Make it Clean
 
-- [ ] **15.i.C** · Position **642/885** · Voraussetzung: `15.i.R`.
+- [ ] **15.i.C** · Position **642/900** · Voraussetzung: `15.i.R`.
 **Exakte Commit-Message:** `15.i.C refactor(bundle): Offene Transaktionen und externe Sicherung bereinigen`
 
 **Bereinigung:** Sicherungsstatus ausdrücklich von aktuell laufender Arbeit unterscheiden.
@@ -13136,7 +13152,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.j.W – Let it Work
 
-- [ ] **15.j.W** · Position **643/885** · Voraussetzung: `15.i.C`.
+- [ ] **15.j.W** · Position **643/900** · Voraussetzung: `15.i.C`.
 **Exakte Commit-Message:** `15.j.W feat(bundle): Vollqualifizierter Restore-Plan aufbauen`
 
 **Umsetzung:** restore-preserve-v1 nur aus unfiltrierter geschlossener Vollprojekt-Baseline oder verifiziertem Vollbundle planen.
@@ -13145,7 +13161,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.j.R – Make it Right
 
-- [ ] **15.j.R** · Position **644/885** · Voraussetzung: `15.j.W`.
+- [ ] **15.j.R** · Position **644/900** · Voraussetzung: `15.j.W`.
 **Exakte Commit-Message:** `15.j.R feat(bundle): Vollqualifizierter Restore-Plan vervollständigen`
 
 **Vervollständigung:** Release-/Specification-/gefilterte Quelle oder fehlende Originalbytes ohne Vorprüfungswrite zurückweisen.
@@ -13154,7 +13170,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.j.C – Make it Clean
 
-- [ ] **15.j.C** · Position **645/885** · Voraussetzung: `15.j.R`.
+- [ ] **15.j.C** · Position **645/900** · Voraussetzung: `15.j.R`.
 **Exakte Commit-Message:** `15.j.C refactor(bundle): Vollqualifizierter Restore-Plan bereinigen`
 
 **Bereinigung:** Restoreplanung als spezialisierte Recoveryoperation von normalem Import trennen.
@@ -13171,7 +13187,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.k.W – Let it Work
 
-- [ ] **15.k.W** · Position **646/885** · Voraussetzung: `15.j.C`.
+- [ ] **15.k.W** · Position **646/900** · Voraussetzung: `15.j.C`.
 **Exakte Commit-Message:** `15.k.W feat(bundle): Geschützte Historie beim Restore aufbauen`
 
 **Umsetzung:** Jüngere gültige immutable Evidence/Baselines und ihre Referenzclosure bytegetreu im expliziten Restoreziel erhalten.
@@ -13180,7 +13196,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.k.R – Make it Right
 
-- [ ] **15.k.R** · Position **647/885** · Voraussetzung: `15.k.W`.
+- [ ] **15.k.R** · Position **647/900** · Voraussetzung: `15.k.W`.
 **Exakte Commit-Message:** `15.k.R feat(bundle): Geschützte Historie beim Restore vervollständigen`
 
 **Vervollständigung:** Gleiche ID mit anderem Inhalt oder fehlende notwendige Historienbytes als Konflikt behandeln.
@@ -13189,7 +13205,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.k.C – Make it Clean
 
-- [ ] **15.k.C** · Position **648/885** · Voraussetzung: `15.k.R`.
+- [ ] **15.k.C** · Position **648/900** · Voraussetzung: `15.k.R`.
 **Exakte Commit-Message:** `15.k.C refactor(bundle): Geschützte Historie beim Restore bereinigen`
 
 **Bereinigung:** Schutzinventur und Quellsnapshot zu einem sichtbaren Zielplan falten.
@@ -13206,7 +13222,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.l.W – Let it Work
 
-- [ ] **15.l.W** · Position **649/885** · Voraussetzung: `15.k.C`.
+- [ ] **15.l.W** · Position **649/900** · Voraussetzung: `15.k.C`.
 **Exakte Commit-Message:** `15.l.W feat(bundle): Restore veröffentlichen und Crashabsicherung aufbauen`
 
 **Umsetzung:** Gebundene Sicherung, Quellenprüfung und vollständige Recoverypublikation samt Audit ausführen.
@@ -13215,7 +13231,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.l.R – Make it Right
 
-- [ ] **15.l.R** · Position **650/885** · Voraussetzung: `15.l.W`.
+- [ ] **15.l.R** · Position **650/900** · Voraussetzung: `15.l.W`.
 **Exakte Commit-Message:** `15.l.R feat(bundle): Restore veröffentlichen und Crashabsicherung vervollständigen`
 
 **Vervollständigung:** Quellenwechsel, unvollständige Sicherung und Crash erhalten ursprüngliche Journale und Wiederherstellungsdaten.
@@ -13224,7 +13240,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 15.l.C – Make it Clean
 
-- [ ] **15.l.C** · Position **651/885** · Voraussetzung: `15.l.R`.
+- [ ] **15.l.C** · Position **651/900** · Voraussetzung: `15.l.R`.
 **Exakte Commit-Message:** `15.l.C refactor(bundle): Restore veröffentlichen und Crashabsicherung bereinigen`
 
 **Bereinigung:** Bestehende Transaktions-/Recoveryprimitiven verwenden, keine destruktive Sonderabkürzung.
@@ -13232,6 +13248,109 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+<a id="step-15-m"></a>
+### 15.m – Öffentliche PatchHarbor-API und Runtimebindung
+
+**Anforderungsbezug:** `SR-REQ-0224`–`SR-REQ-0225`, `SR-REQ-0731`–`SR-REQ-0732`.
+**Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.
+
+**Zusätzliche Voraussetzung:** Die neue CPython-3.10-/3.11-fähige PatchHarbor-Version wird verwendet. **PH-API-RESULT** bleibt als externe Arbeit offen: öffentliche vollständige Resultprüfung und schreibfreie Snapshotausgabe in PatchHarbor dokumentieren und liefern lassen. Kein erfundener Funktionsname und kein eigener Resultreader; abhängige Fähigkeiten bleiben bis dahin gesperrt.
+
+#### 15.m.W – Let it Work
+
+- [ ] **15.m.W** · Position **652/900** · Voraussetzung: `15.l.C`.
+**Exakte Commit-Message:** `15.m.W feat(transport): Öffentliche PatchHarbor-API und Runtimebindung aufbauen`
+
+**Umsetzung:** Den verzögert geladenen Adapter ausschließlich gegen patchharbor.api und den dokumentierten verifizierten PYZ-Bootstrap aufbauen. Konkrete kompatible Distribution, Version, Hash, Pythonmatrix und verfügbare API-Fähigkeiten erfassen; normale Core-Aufrufe laden PatchHarbor nicht.
+
+**Verhaltensabnahme:** Realer öffentlicher Import aus gelieferten Artefakten unter 3.10/3.11 und den weiteren unterstützten Versionen; Core ohne Transportkomponente weiterhin nutzbar. Fehlende Fähigkeiten werden maschinenlesbar verweigert.
+
+#### 15.m.R – Make it Right
+
+- [ ] **15.m.R** · Position **653/900** · Voraussetzung: `15.m.W`.
+**Exakte Commit-Message:** `15.m.R feat(transport): Öffentliche PatchHarbor-API und Runtimebindung vervollständigen`
+
+**Vervollständigung:** Falsche Version, Runtimehash, Plattform und Importpfadunterschiebung vor dem Laden abweisen; API-Fehler und SpecRoad-Exitcodes getrennt abbilden. Die öffentliche Resultprüfung muss effektive Base-/Index-/Worktree-/Untracked-Inventare liefern, nicht nur Metadaten lesen.
+
+**Verhaltensabnahme:** Manipulierte Runtime und unvollständige Resultschichten erzeugen keinen Codeimport, keine Materialisierung und keinen Scheinerfolg; echte Resultfixtures werden über die öffentliche API geprüft.
+
+#### 15.m.C – Make it Clean
+
+- [ ] **15.m.C** · Position **654/900** · Voraussetzung: `15.m.R`.
+**Exakte Commit-Message:** `15.m.C refactor(transport): Öffentliche PatchHarbor-API und Runtimebindung bereinigen`
+
+**Bereinigung:** Vertrauensprüfung, API-Fähigkeitsprüfung und Ergebnismapping bündeln; keine privaten Imports oder CLI-Subprozessabkürzung ergänzen.
+
+**Verhaltensabnahme:** Alle W-/R-Verhaltenstests sowie betroffene Regressionen prüfen unveränderte Fachwerte, Fehlerverträge und Seiteneffekte; keine Darstellungs- oder Dokumentationstests.
+
+<a id="step-15-n"></a>
+### 15.n – Gebundenes Hinpaket exportieren
+
+**Anforderungsbezug:** `SR-REQ-0733`–`SR-REQ-0734`, `SR-REQ-0737`.
+**Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.
+
+#### 15.n.W – Let it Work
+
+- [ ] **15.n.W** · Position **655/900** · Voraussetzung: `15.m.C`.
+**Exakte Commit-Message:** `15.n.W feat(transport): Gebundenes Hinpaket exportieren aufbauen`
+
+**Umsetzung:** bundle create mit explizitem ai-runtime/outbound-Profil als transport_operational registrieren. api.bundle am bereits registrierten lokalen Git-Repository verwenden, aus dessen geprüftem Snapshot ein kanonisches Vollprojektbundle erzeugen und SpecRoad-PYZ, Originalresult und Projektbundle nach W.2 atomar verpacken.
+
+**Verhaltensabnahme:** Unabhängiges Inventar bestätigt Resultbytes, Projekt-ID, Scope, Modellwurzel, Receipts und alle äußeren Hash-/Größenbindungen; Source, Index und Git-Historie bleiben unverändert, PH-Betriebswirkungen sind ausgewiesen.
+
+#### 15.n.R – Make it Right
+
+- [ ] **15.n.R** · Position **656/900** · Voraussetzung: `15.n.W`.
+**Exakte Commit-Message:** `15.n.R feat(transport): Gebundenes Hinpaket exportieren vervollständigen`
+
+**Vervollständigung:** Dirty-Resultschichten vollständig binden; ignorierte Pflichtbytes, Partialquellen, aktive Transaktionen, Paketpfadkollisionen und zwischenzeitlich geänderte Eingaben verweigern. Python-present verbindlich anbieten; Python-bundled nur mit kompletter geprüfter Plattformdistribution.
+
+**Verhaltensabnahme:** Kein gemischter oder lückenhafter Snapshot besteht. Fehlendes Runtimeprofil, Abbruch und I/O-Fehler hinterlassen kein als fertig ausgewiesenes Hinpaket; normale Anhang-E-Bundles behalten ihre Bytes und Semantik.
+
+#### 15.n.C – Make it Clean
+
+- [ ] **15.n.C** · Position **657/900** · Voraussetzung: `15.n.R`.
+**Exakte Commit-Message:** `15.n.C refactor(transport): Gebundenes Hinpaket exportieren bereinigen`
+
+**Bereinigung:** Projektbundle-, Hash-/Inventar- und atomare Ausgabeprimitiven wiederverwenden; PH-Format bleibt ausschließlich bei dessen öffentlicher API.
+
+**Verhaltensabnahme:** Alle W-/R-Verhaltenstests sowie betroffene Regressionen prüfen unveränderte Fachwerte, Fehlerverträge und Seiteneffekte; keine Darstellungs- oder Dokumentationstests.
+
+<a id="step-15-o"></a>
+### 15.o – Hinpaket prüfen und Sandbox öffnen
+
+**Anforderungsbezug:** `SR-REQ-0735`–`SR-REQ-0736`, `SR-REQ-0741`–`SR-REQ-0742`.
+**Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.
+
+**Zusätzliche Voraussetzung:** Dieser Meilenstein liefert den Hinweg. Der Rückexport wird erst nach 18.q und lokale Proposalübernahme erst nach 18.r als verfügbar angeboten; die Gesamtfreigabe folgt M20.
+
+#### 15.o.W – Let it Work
+
+- [ ] **15.o.W** · Position **658/900** · Voraussetzung: `15.n.C`.
+**Exakte Commit-Message:** `15.o.W feat(transport): Hinpaket prüfen und Sandbox öffnen aufbauen`
+
+**Umsetzung:** ai-runtime-Verify und -Extract mit read_only beziehungsweise root_creation registrieren. Nach vollständiger äußerer und innerer Prüfung Runtime, Originalreferenz und Projekt in einen neuen Root materialisieren; Referenzbindings für spätere Rückgabe erhalten.
+
+**Verhaltensabnahme:** Frische offline Linux-x86-64-Sandbox ohne Git/Shell/Paketmanager öffnet echte Pakete über Modul und PYZ; Projektwurzel, unveränderte Referenz und Receiptwirkung stimmen unabhängig nachprüfbar.
+
+#### 15.o.R – Make it Right
+
+- [ ] **15.o.R** · Position **659/900** · Voraussetzung: `15.o.W`.
+**Exakte Commit-Message:** `15.o.R feat(transport): Hinpaket prüfen und Sandbox öffnen vervollständigen`
+
+**Vervollständigung:** Vertrauenshash, fremde oder manipulierte Runtime, doppelte/gefährliche ZIP-Pfade, Links, belegte Ziele, partielle Quellen und Bootstrapabbruch prüfen. Keine dynamische Codeausführung aus Projektdateien und keine stille Rechteerweiterung.
+
+**Verhaltensabnahme:** Negativfälle führen zu keiner unerlaubten Ausführung oder Überschreibung; Prozess-/Pfadwechsel erhält die Referenz. Wiederherstellung verwendet nur belegte eigene Bootstrapdaten.
+
+#### 15.o.C – Make it Clean
+
+- [ ] **15.o.C** · Position **660/900** · Voraussetzung: `15.o.R`.
+**Exakte Commit-Message:** `15.o.C refactor(transport): Hinpaket prüfen und Sandbox öffnen bereinigen`
+
+**Bereinigung:** Gemeinsame sichere Root-Erzeugung und getrennte passive Referenzhaltung verwenden; keine neue Schreibbefugnis oder verkürzte innere Prüfung.
+
+**Verhaltensabnahme:** Alle W-/R-Verhaltenstests sowie betroffene Regressionen prüfen unveränderte Fachwerte, Fehlerverträge und Seiteneffekte; keine Darstellungs- oder Dokumentationstests.
 
 **Meilenstein 15 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 
@@ -13253,7 +13372,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.a.W – Let it Work
 
-- [ ] **16.a.W** · Position **652/885** · Voraussetzung: `15.l.C`.
+- [ ] **16.a.W** · Position **661/900** · Voraussetzung: `15.o.C`.
 **Exakte Commit-Message:** `16.a.W feat(migration): Versionsgraph und Migrationsschrittvertrag aufbauen`
 
 **Umsetzung:** Versionierte Schritte mit Quelle, Ziel, Voraussetzungen, Transformation, Nachbedingungen und Reversibilität registrieren.
@@ -13262,7 +13381,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.a.R – Make it Right
 
-- [ ] **16.a.R** · Position **653/885** · Voraussetzung: `16.a.W`.
+- [ ] **16.a.R** · Position **662/900** · Voraussetzung: `16.a.W`.
 **Exakte Commit-Message:** `16.a.R feat(migration): Versionsgraph und Migrationsschrittvertrag vervollständigen`
 
 **Vervollständigung:** Lücken, Zyklen und nicht implementierte Rückwege ablehnen; kein pauschales Downgrade anbieten.
@@ -13271,7 +13390,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.a.C – Make it Clean
 
-- [ ] **16.a.C** · Position **654/885** · Voraussetzung: `16.a.R`.
+- [ ] **16.a.C** · Position **663/900** · Voraussetzung: `16.a.R`.
 **Exakte Commit-Message:** `16.a.C refactor(migration): Versionsgraph und Migrationsschrittvertrag bereinigen`
 
 **Bereinigung:** Pfadauflösung von tatsächlicher Transformation und CLI trennen.
@@ -13288,7 +13407,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.b.W – Let it Work
 
-- [ ] **16.b.W** · Position **655/885** · Voraussetzung: `16.a.C`.
+- [ ] **16.b.W** · Position **664/900** · Voraussetzung: `16.a.C`.
 **Exakte Commit-Message:** `16.b.W feat(migration): Quellinventur und historischer Core-Leser aufbauen`
 
 **Umsetzung:** Eingebaute 0.1-Leser und Inventur mit mutable, immutable_legacy und referenced_payload bereitstellen.
@@ -13297,7 +13416,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.b.R – Make it Right
 
-- [ ] **16.b.R** · Position **656/885** · Voraussetzung: `16.b.W`.
+- [ ] **16.b.R** · Position **665/900** · Voraussetzung: `16.b.W`.
 **Exakte Commit-Message:** `16.b.R feat(migration): Quellinventur und historischer Core-Leser vervollständigen`
 
 **Vervollständigung:** Unbekannte Quellversion, fehlende referenzierte Bytes und unklare Unveränderbarkeit als Fehler behandeln.
@@ -13306,7 +13425,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.b.C – Make it Clean
 
-- [ ] **16.b.C** · Position **657/885** · Voraussetzung: `16.b.R`.
+- [ ] **16.b.C** · Position **666/900** · Voraussetzung: `16.b.R`.
 **Exakte Commit-Message:** `16.b.C refactor(migration): Quellinventur und historischer Core-Leser bereinigen`
 
 **Bereinigung:** Versionsleser strikt von regulärem 0.2-Writer und In-memory-Projektion abgrenzen.
@@ -13323,7 +13442,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.c.W – Let it Work
 
-- [ ] **16.c.W** · Position **658/885** · Voraussetzung: `16.b.C`.
+- [ ] **16.c.W** · Position **667/900** · Voraussetzung: `16.b.C`.
 **Exakte Commit-Message:** `16.c.W feat(migration): Read-only-Migrationsplan aufbauen`
 
 **Umsetzung:** Transformation samt neuen Pflichtfeldern, Verlustkennungen, Operationen und erwarteter Zielwurzel schreibfrei planen.
@@ -13332,7 +13451,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.c.R – Make it Right
 
-- [ ] **16.c.R** · Position **659/885** · Voraussetzung: `16.c.W`.
+- [ ] **16.c.R** · Position **668/900** · Voraussetzung: `16.c.W`.
 **Exakte Commit-Message:** `16.c.R feat(migration): Read-only-Migrationsplan vervollständigen`
 
 **Vervollständigung:** Übergebenes Planfile an aktuelle Quellenhashes, Versionspfad und Zielversion binden.
@@ -13341,7 +13460,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.c.C – Make it Clean
 
-- [ ] **16.c.C** · Position **660/885** · Voraussetzung: `16.c.R`.
+- [ ] **16.c.C** · Position **669/900** · Voraussetzung: `16.c.R`.
 **Exakte Commit-Message:** `16.c.C refactor(migration): Read-only-Migrationsplan bereinigen`
 
 **Bereinigung:** Den gemeinsamen Change-Plan-Kern statt eines zweiten Änderungsformats verwenden.
@@ -13358,7 +13477,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.d.W – Let it Work
 
-- [ ] **16.d.W** · Position **661/885** · Voraussetzung: `16.c.C`.
+- [ ] **16.d.W** · Position **670/900** · Voraussetzung: `16.c.C`.
 **Exakte Commit-Message:** `16.d.W feat(migration): Vollständige verifizierte Quellsicherung aufbauen`
 
 **Umsetzung:** Vor erster Migration den unfiltrierten Ausgangsstand in deterministischem Vollbundle sichern und Hash/Pfad binden.
@@ -13367,7 +13486,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.d.R – Make it Right
 
-- [ ] **16.d.R** · Position **662/885** · Voraussetzung: `16.d.W`.
+- [ ] **16.d.R** · Position **671/900** · Voraussetzung: `16.d.W`.
 **Exakte Commit-Message:** `16.d.R feat(migration): Vollständige verifizierte Quellsicherung vervollständigen`
 
 **Vervollständigung:** Fehlende Bytes, unverifiziertes Bundle und unvollständige Closure verhindern Veröffentlichung.
@@ -13376,7 +13495,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.d.C – Make it Clean
 
-- [ ] **16.d.C** · Position **663/885** · Voraussetzung: `16.d.R`.
+- [ ] **16.d.C** · Position **672/900** · Voraussetzung: `16.d.R`.
 **Exakte Commit-Message:** `16.d.C refactor(migration): Vollständige verifizierte Quellsicherung bereinigen`
 
 **Bereinigung:** Den M15-Bundlevertrag einschließlich Legacy-Rohdaten verwenden.
@@ -13393,7 +13512,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.e.W – Let it Work
 
-- [ ] **16.e.W** · Position **664/885** · Voraussetzung: `16.d.C`.
+- [ ] **16.e.W** · Position **673/900** · Voraussetzung: `16.d.C`.
 **Exakte Commit-Message:** `16.e.W feat(migration): Explizite Sprach- und Verbindlichkeitsmigration aufbauen`
 
 **Umsetzung:** Für alte veränderbare Requirements autorisierte Zuordnung von language, normative_force und Zielstatement verlangen.
@@ -13402,7 +13521,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.e.R – Make it Right
 
-- [ ] **16.e.R** · Position **665/885** · Voraussetzung: `16.e.W`.
+- [ ] **16.e.R** · Position **674/900** · Voraussetzung: `16.e.W`.
 **Exakte Commit-Message:** `16.e.R feat(migration): Explizite Sprach- und Verbindlichkeitsmigration vervollständigen`
 
 **Vervollständigung:** Fehlende Zuordnung nicht aus shall, MUSS, Priorität oder Detektor schätzen; fachliche Änderungen widerrufen alte Inhaltsfreigaben.
@@ -13411,7 +13530,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.e.C – Make it Clean
 
-- [ ] **16.e.C** · Position **666/885** · Voraussetzung: `16.e.R`.
+- [ ] **16.e.C** · Position **675/900** · Voraussetzung: `16.e.R`.
 **Exakte Commit-Message:** `16.e.C refactor(migration): Explizite Sprach- und Verbindlichkeitsmigration bereinigen`
 
 **Bereinigung:** Schemaergänzung und menschlich autorisierte Inhaltsentscheidung separat im Plan halten.
@@ -13428,7 +13547,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.f.W – Let it Work
 
-- [ ] **16.f.W** · Position **667/885** · Voraussetzung: `16.e.C`.
+- [ ] **16.f.W** · Position **676/900** · Voraussetzung: `16.e.C`.
 **Exakte Commit-Message:** `16.f.W feat(migration): Deterministische Relationsidentität aufbauen`
 
 **Umsetzung:** Bestehende 0.1-Relationen exakt nach Anhang Q.3 in derived128-v1-IDs überführen.
@@ -13437,7 +13556,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.f.R – Make it Right
 
-- [ ] **16.f.R** · Position **668/885** · Voraussetzung: `16.f.W`.
+- [ ] **16.f.R** · Position **677/900** · Voraussetzung: `16.f.W`.
 **Exakte Commit-Message:** `16.f.R feat(migration): Deterministische Relationsidentität vervollständigen`
 
 **Vervollständigung:** Kollision unterschiedlicher Ableitungsinputs ablehnen; Ausnahme auf diesen Migrationspfad beschränken.
@@ -13446,7 +13565,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.f.C – Make it Clean
 
-- [ ] **16.f.C** · Position **669/885** · Voraussetzung: `16.f.R`.
+- [ ] **16.f.C** · Position **678/900** · Voraussetzung: `16.f.R`.
 **Exakte Commit-Message:** `16.f.C refactor(migration): Deterministische Relationsidentität bereinigen`
 
 **Bereinigung:** Ableitungshilfe vom normalen random128-v1-Erzeuger trennen.
@@ -13463,7 +13582,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.g.W – Let it Work
 
-- [ ] **16.g.W** · Position **670/885** · Voraussetzung: `16.f.C`.
+- [ ] **16.g.W** · Position **679/900** · Voraussetzung: `16.f.C`.
 **Exakte Commit-Message:** `16.g.W feat(migration): Legacy-Manifest und Hashdomänen aufbauen`
 
 **Umsetzung:** legacy-manifest.json mit allen Originalhashes, Quellschema, Identitäts-/Relationsprojektionen und Payloadbindungen erzeugen.
@@ -13472,7 +13591,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.g.R – Make it Right
 
-- [ ] **16.g.R** · Position **671/885** · Voraussetzung: `16.g.W`.
+- [ ] **16.g.R** · Position **680/900** · Voraussetzung: `16.g.W`.
 **Exakte Commit-Message:** `16.g.R feat(migration): Legacy-Manifest und Hashdomänen vervollständigen`
 
 **Vervollständigung:** Projektion nicht als neue Originaldatei akzeptieren; unterschiedliche Originalbytes unter gleicher Identität blockieren.
@@ -13481,7 +13600,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.g.C – Make it Clean
 
-- [ ] **16.g.C** · Position **672/885** · Voraussetzung: `16.g.R`.
+- [ ] **16.g.C** · Position **681/900** · Voraussetzung: `16.g.R`.
 **Exakte Commit-Message:** `16.g.C refactor(migration): Legacy-Manifest und Hashdomänen bereinigen`
 
 **Bereinigung:** Manifestvalidierung und Projektionsleser auf genau einen Vertrag reduzieren.
@@ -13498,7 +13617,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.h.W – Let it Work
 
-- [ ] **16.h.W** · Position **673/885** · Voraussetzung: `16.g.C`.
+- [ ] **16.h.W** · Position **682/900** · Voraussetzung: `16.g.C`.
 **Exakte Commit-Message:** `16.h.W feat(migration): Verlustbehandlung und Erweiterungserhalt aufbauen`
 
 **Umsetzung:** Unbekannte gültige Extensions, Provenienz, Anhänge und Auditbezüge durch alle Transformationen erhalten.
@@ -13507,7 +13626,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.h.R – Make it Right
 
-- [ ] **16.h.R** · Position **674/885** · Voraussetzung: `16.h.W`.
+- [ ] **16.h.R** · Position **683/900** · Voraussetzung: `16.h.W`.
 **Exakte Commit-Message:** `16.h.R feat(migration): Verlustbehandlung und Erweiterungserhalt vervollständigen`
 
 **Vervollständigung:** Jeden möglichen Informationsverlust einzeln benennen und vollständiges accept-loss verlangen.
@@ -13516,7 +13635,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.h.C – Make it Clean
 
-- [ ] **16.h.C** · Position **675/885** · Voraussetzung: `16.h.R`.
+- [ ] **16.h.C** · Position **684/900** · Voraussetzung: `16.h.R`.
 **Exakte Commit-Message:** `16.h.C refactor(migration): Verlustbehandlung und Erweiterungserhalt bereinigen`
 
 **Bereinigung:** Verlustinventur wiederverwendbar mit Import gestalten, ohne Migrationsspezifika zu verwischen.
@@ -13533,7 +13652,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.i.W – Let it Work
 
-- [ ] **16.i.W** · Position **676/885** · Voraussetzung: `16.h.C`.
+- [ ] **16.i.W** · Position **685/900** · Voraussetzung: `16.h.C`.
 **Exakte Commit-Message:** `16.i.W feat(migration): Migrationstransaktion und Metadaten aufbauen`
 
 **Umsetzung:** Unterstützte Transformation atomar mit migration-metadata-v1 über den gemeinsamen Writer anwenden.
@@ -13542,7 +13661,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.i.R – Make it Right
 
-- [ ] **16.i.R** · Position **677/885** · Voraussetzung: `16.i.W`.
+- [ ] **16.i.R** · Position **686/900** · Voraussetzung: `16.i.W`.
 **Exakte Commit-Message:** `16.i.R feat(migration): Migrationstransaktion und Metadaten vervollständigen`
 
 **Vervollständigung:** Wiederholung bleibt No-op beziehungsweise gespeicherter Request; nach Abbruch kein regulär ladbarer Mischstand.
@@ -13551,7 +13670,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.i.C – Make it Clean
 
-- [ ] **16.i.C** · Position **678/885** · Voraussetzung: `16.i.R`.
+- [ ] **16.i.C** · Position **687/900** · Voraussetzung: `16.i.R`.
 **Exakte Commit-Message:** `16.i.C refactor(migration): Migrationstransaktion und Metadaten bereinigen`
 
 **Bereinigung:** Keine gesonderten Lock-, Journal- oder Publikationsabkürzungen zulassen.
@@ -13568,7 +13687,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.j.W – Let it Work
 
-- [ ] **16.j.W** · Position **679/885** · Voraussetzung: `16.i.C`.
+- [ ] **16.j.W** · Position **688/900** · Voraussetzung: `16.i.C`.
 **Exakte Commit-Message:** `16.j.W feat(migration): Historische Evidence und Baselines aufbauen`
 
 **Umsetzung:** Historische Originalnachweise mit ihrem Quellalgorithmus verifizieren und aktuelle Evidence als getrennte neue Prüfung behandeln.
@@ -13577,7 +13696,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.j.R – Make it Right
 
-- [ ] **16.j.R** · Position **680/885** · Voraussetzung: `16.j.W`.
+- [ ] **16.j.R** · Position **689/900** · Voraussetzung: `16.j.W`.
 **Exakte Commit-Message:** `16.j.R feat(migration): Historische Evidence und Baselines vervollständigen`
 
 **Vervollständigung:** Legacy-Evidence für transformiertes Subject bleibt ohne neuen Kontextnachweis stale mit migration_context_unverified.
@@ -13586,7 +13705,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.j.C – Make it Clean
 
-- [ ] **16.j.C** · Position **681/885** · Voraussetzung: `16.j.R`.
+- [ ] **16.j.C** · Position **690/900** · Voraussetzung: `16.j.R`.
 **Exakte Commit-Message:** `16.j.C refactor(migration): Historische Evidence und Baselines bereinigen`
 
 **Bereinigung:** Historische Gültigkeit und aktuelle Verifikationsfähigkeit als verschiedene Ergebnisse führen.
@@ -13603,7 +13722,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.k.W – Let it Work
 
-- [ ] **16.k.W** · Position **682/885** · Voraussetzung: `16.j.C`.
+- [ ] **16.k.W** · Position **691/900** · Voraussetzung: `16.j.C`.
 **Exakte Commit-Message:** `16.k.W feat(migration): Migrate verify und fortsetzbarer Abschluss aufbauen`
 
 **Umsetzung:** Quellbundle, Bericht, Zielwurzel, Referenzen, Legacy-Bytes und deklarierte Invarianten lesend verifizieren.
@@ -13612,7 +13731,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.k.R – Make it Right
 
-- [ ] **16.k.R** · Position **683/885** · Voraussetzung: `16.k.W`.
+- [ ] **16.k.R** · Position **692/900** · Voraussetzung: `16.k.W`.
 **Exakte Commit-Message:** `16.k.R feat(migration): Migrate verify und fortsetzbarer Abschluss vervollständigen`
 
 **Vervollständigung:** Planung/Prüfung über Work fortsetzen, Abschluss aber als eine Transaktion veröffentlichen.
@@ -13621,7 +13740,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 16.k.C – Make it Clean
 
-- [ ] **16.k.C** · Position **684/885** · Voraussetzung: `16.k.R`.
+- [ ] **16.k.C** · Position **693/900** · Voraussetzung: `16.k.R`.
 **Exakte Commit-Message:** `16.k.C refactor(migration): Migrate verify und fortsetzbarer Abschluss bereinigen`
 
 **Bereinigung:** Migrationsnachweise über gemeinsame Inventur-/Workresultate erzeugen.
@@ -13650,7 +13769,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.a.W – Let it Work
 
-- [ ] **17.a.W** · Position **685/885** · Voraussetzung: `16.k.C`.
+- [ ] **17.a.W** · Position **694/900** · Voraussetzung: `16.k.C`.
 **Exakte Commit-Message:** `17.a.W feat(merge): Drei unveränderbar gebundene Quellen aufbauen`
 
 **Umsetzung:** Base, Ours und Theirs aus lokalem Root, Git-Ref, Baseline oder verifiziertem Vollbundle laden und vollständig binden.
@@ -13659,7 +13778,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.a.R – Make it Right
 
-- [ ] **17.a.R** · Position **686/885** · Voraussetzung: `17.a.W`.
+- [ ] **17.a.R** · Position **695/900** · Voraussetzung: `17.a.W`.
 **Exakte Commit-Message:** `17.a.R feat(merge): Drei unveränderbar gebundene Quellen vervollständigen`
 
 **Vervollständigung:** Partials, unterschiedliche project_id und Versionsmischung ablehnen; erforderliche Migration nicht heimlich ausführen.
@@ -13668,7 +13787,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.a.C – Make it Clean
 
-- [ ] **17.a.C** · Position **687/885** · Voraussetzung: `17.a.R`.
+- [ ] **17.a.C** · Position **696/900** · Voraussetzung: `17.a.R`.
 **Exakte Commit-Message:** `17.a.C refactor(merge): Drei unveränderbar gebundene Quellen bereinigen`
 
 **Bereinigung:** Die vervollständigte Snapshotregistry aus M8/M10/M15 wiederverwenden.
@@ -13685,7 +13804,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.b.W – Let it Work
 
-- [ ] **17.b.W** · Position **688/885** · Voraussetzung: `17.a.C`.
+- [ ] **17.b.W** · Position **697/900** · Voraussetzung: `17.a.C`.
 **Exakte Commit-Message:** `17.b.W feat(merge): Ressourceninventur und Mergeplan aufbauen`
 
 **Umsetzung:** Artefakte, Relationen, Regeln, Profile, Mappings, Konfigurationen und Anhänge in einen versionierten vollständigen Plan aufnehmen.
@@ -13694,7 +13813,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.b.R – Make it Right
 
-- [ ] **17.b.R** · Position **689/885** · Voraussetzung: `17.b.W`.
+- [ ] **17.b.R** · Position **698/900** · Voraussetzung: `17.b.W`.
 **Exakte Commit-Message:** `17.b.R feat(merge): Ressourceninventur und Mergeplan vervollständigen`
 
 **Vervollständigung:** Fehlende Quellressource von bewusstem Löschen unterscheiden; kein unsichtbarer normativer Nebenbereich.
@@ -13703,7 +13822,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.b.C – Make it Clean
 
-- [ ] **17.b.C** · Position **690/885** · Voraussetzung: `17.b.R`.
+- [ ] **17.b.C** · Position **699/900** · Voraussetzung: `17.b.R`.
 **Exakte Commit-Message:** `17.b.C refactor(merge): Ressourceninventur und Mergeplan bereinigen`
 
 **Bereinigung:** Gemeinsame Ressourcenmodelle statt einer auf Artefakte verkürzten Parallelstruktur verwenden.
@@ -13720,7 +13839,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.c.W – Let it Work
 
-- [ ] **17.c.W** · Position **691/885** · Voraussetzung: `17.b.C`.
+- [ ] **17.c.W** · Position **700/900** · Voraussetzung: `17.b.C`.
 **Exakte Commit-Message:** `17.c.W feat(merge): Rekursiver Feldmerge und Skalarmatrix aufbauen`
 
 **Umsetzung:** Unabhängige Änderungen verschiedener Objektfelder sowie identische Zielwerte automatisch vereinen.
@@ -13729,7 +13848,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.c.R – Make it Right
 
-- [ ] **17.c.R** · Position **692/885** · Voraussetzung: `17.c.W`.
+- [ ] **17.c.R** · Position **701/900** · Voraussetzung: `17.c.W`.
 **Exakte Commit-Message:** `17.c.R feat(merge): Rekursiver Feldmerge und Skalarmatrix vervollständigen`
 
 **Vervollständigung:** Abweichende konkurrierende Skalaränderungen und inkompatible Typwechsel als Konflikt klassifizieren.
@@ -13738,7 +13857,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.c.C – Make it Clean
 
-- [ ] **17.c.C** · Position **693/885** · Voraussetzung: `17.c.R`.
+- [ ] **17.c.C** · Position **702/900** · Voraussetzung: `17.c.R`.
 **Exakte Commit-Message:** `17.c.C refactor(merge): Rekursiver Feldmerge und Skalarmatrix bereinigen`
 
 **Bereinigung:** Rekursion und Konfliktentstehung als reine Funktionen gestalten.
@@ -13755,7 +13874,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.d.W – Let it Work
 
-- [ ] **17.d.W** · Position **694/885** · Voraussetzung: `17.c.C`.
+- [ ] **17.d.W** · Position **703/900** · Voraussetzung: `17.c.C`.
 **Exakte Commit-Message:** `17.d.W feat(merge): Mengen, geordnete Folgen und Anhänge aufbauen`
 
 **Umsetzung:** Mengen nach schemafestem Schlüssel und Anhänge nach Pfad/Bytehash zusammenführen.
@@ -13764,7 +13883,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.d.R – Make it Right
 
-- [ ] **17.d.R** · Position **695/885** · Voraussetzung: `17.d.W`.
+- [ ] **17.d.R** · Position **704/900** · Voraussetzung: `17.d.W`.
 **Exakte Commit-Message:** `17.d.R feat(merge): Mengen, geordnete Folgen und Anhänge vervollständigen`
 
 **Vervollständigung:** Konkurrierende geordnete Folgen ohne stabile Elementidentität und remove-versus-edit nicht willkürlich sortieren oder gewinnen lassen.
@@ -13773,7 +13892,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.d.C – Make it Clean
 
-- [ ] **17.d.C** · Position **696/885** · Voraussetzung: `17.d.R`.
+- [ ] **17.d.C** · Position **705/900** · Voraussetzung: `17.d.R`.
 **Exakte Commit-Message:** `17.d.C refactor(merge): Mengen, geordnete Folgen und Anhänge bereinigen`
 
 **Bereinigung:** Feldsemantik aus dem Schema beziehen statt freie Arrayheuristiken einzubauen.
@@ -13790,7 +13909,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.e.W – Let it Work
 
-- [ ] **17.e.W** · Position **697/885** · Voraussetzung: `17.d.C`.
+- [ ] **17.e.W** · Position **706/900** · Voraussetzung: `17.d.C`.
 **Exakte Commit-Message:** `17.e.W feat(merge): Relationsmerge und Identitätskollisionen aufbauen`
 
 **Umsetzung:** Relation-ID als Vergleichsschlüssel verwenden und gemeinsame Identitätshistorie prüfen.
@@ -13799,7 +13918,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.e.R – Make it Right
 
-- [ ] **17.e.R** · Position **698/885** · Voraussetzung: `17.e.W`.
+- [ ] **17.e.R** · Position **707/900** · Voraussetzung: `17.e.W`.
 **Exakte Commit-Message:** `17.e.R feat(merge): Relationsmerge und Identitätskollisionen vervollständigen`
 
 **Vervollständigung:** Ändern gegen Entfernen derselben Relation und gleiche ID bei anderer Provenienz oder id_scheme blockieren.
@@ -13808,7 +13927,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.e.C – Make it Clean
 
-- [ ] **17.e.C** · Position **699/885** · Voraussetzung: `17.e.R`.
+- [ ] **17.e.C** · Position **708/900** · Voraussetzung: `17.e.R`.
 **Exakte Commit-Message:** `17.e.C refactor(merge): Relationsmerge und Identitätskollisionen bereinigen`
 
 **Bereinigung:** Identitätsprüfung für Artefakte, Relationen und normative Ressourcen zusammenführen.
@@ -13825,7 +13944,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.f.W – Let it Work
 
-- [ ] **17.f.W** · Position **700/885** · Voraussetzung: `17.e.C`.
+- [ ] **17.f.W** · Position **709/900** · Voraussetzung: `17.e.C`.
 **Exakte Commit-Message:** `17.f.W feat(merge): Lifecycle und unveränderbare Geschichte aufbauen`
 
 **Umsetzung:** Lifecyclekonflikte, unterschiedliche Supersessionziele und immutable Originalnachweise speziell behandeln.
@@ -13834,7 +13953,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.f.R – Make it Right
 
-- [ ] **17.f.R** · Position **701/885** · Voraussetzung: `17.f.W`.
+- [ ] **17.f.R** · Position **710/900** · Voraussetzung: `17.f.W`.
 **Exakte Commit-Message:** `17.f.R feat(merge): Lifecycle und unveränderbare Geschichte vervollständigen`
 
 **Vervollständigung:** Retirement gegen Fachänderung und abweichende Evidence-/Baseline-/Review-/abgeschlossene Proposalbytes derselben ID bleiben Konflikte.
@@ -13843,7 +13962,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.f.C – Make it Clean
 
-- [ ] **17.f.C** · Position **702/885** · Voraussetzung: `17.f.R`.
+- [ ] **17.f.C** · Position **711/900** · Voraussetzung: `17.f.R`.
 **Exakte Commit-Message:** `17.f.C refactor(merge): Lifecycle und unveränderbare Geschichte bereinigen`
 
 **Bereinigung:** Schutzregeln mit Migration, Restore und Writer teilen.
@@ -13860,7 +13979,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.g.W – Let it Work
 
-- [ ] **17.g.W** · Position **703/885** · Voraussetzung: `17.f.C`.
+- [ ] **17.g.W** · Position **712/900** · Voraussetzung: `17.f.C`.
 **Exakte Commit-Message:** `17.g.W feat(merge): Konfliktobjekte und maschinenlesbarer Zugriff aufbauen`
 
 **Umsetzung:** Stabile Konfliktkennungen mit Pointer, drei Werten, Klasse, Impact und zulässiger Auflösung bereitstellen.
@@ -13869,7 +13988,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.g.R – Make it Right
 
-- [ ] **17.g.R** · Position **704/885** · Voraussetzung: `17.g.W`.
+- [ ] **17.g.R** · Position **713/900** · Voraussetzung: `17.g.W`.
 **Exakte Commit-Message:** `17.g.R feat(merge): Konfliktobjekte und maschinenlesbarer Zugriff vervollständigen`
 
 **Vervollständigung:** Fehlender Wert bleibt von JSON-null unterscheidbar; Konfliktliste verliert keine Zweige.
@@ -13878,7 +13997,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.g.C – Make it Clean
 
-- [ ] **17.g.C** · Position **705/885** · Voraussetzung: `17.g.R`.
+- [ ] **17.g.C** · Position **714/900** · Voraussetzung: `17.g.R`.
 **Exakte Commit-Message:** `17.g.C refactor(merge): Konfliktobjekte und maschinenlesbarer Zugriff bereinigen`
 
 **Bereinigung:** Konfliktmodell von der später frei gestaltbaren Darstellung abkoppeln.
@@ -13895,7 +14014,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.h.W – Let it Work
 
-- [ ] **17.h.W** · Position **706/885** · Voraussetzung: `17.g.C`.
+- [ ] **17.h.W** · Position **715/900** · Voraussetzung: `17.g.C`.
 **Exakte Commit-Message:** `17.h.W feat(merge): Explizite auditierte Konfliktauflösung aufbauen`
 
 **Umsetzung:** take ours/theirs/base und expliziten gültigen JSON-Wert an genau einen gebundenen Konflikt anwenden.
@@ -13904,7 +14023,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.h.R – Make it Right
 
-- [ ] **17.h.R** · Position **707/885** · Voraussetzung: `17.h.W`.
+- [ ] **17.h.R** · Position **716/900** · Voraussetzung: `17.h.W`.
 **Exakte Commit-Message:** `17.h.R feat(merge): Explizite auditierte Konfliktauflösung vervollständigen`
 
 **Vervollständigung:** Unbekannter Konflikt, ungültiger Wert und nachträglich veränderte Basis verhindern Übernahme.
@@ -13913,7 +14032,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.h.C – Make it Clean
 
-- [ ] **17.h.C** · Position **708/885** · Voraussetzung: `17.h.R`.
+- [ ] **17.h.C** · Position **717/900** · Voraussetzung: `17.h.R`.
 **Exakte Commit-Message:** `17.h.C refactor(merge): Explizite auditierte Konfliktauflösung bereinigen`
 
 **Bereinigung:** Auflösungen als deklarative Planänderungen ohne direkte Projektwrites behandeln.
@@ -13930,7 +14049,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.i.W – Let it Work
 
-- [ ] **17.i.W** · Position **709/885** · Voraussetzung: `17.h.C`.
+- [ ] **17.i.W** · Position **718/900** · Voraussetzung: `17.h.C`.
 **Exakte Commit-Message:** `17.i.W feat(merge): Exakte Merge-Metadaten aufbauen`
 
 **Umsetzung:** unchanged_ours, adopt_existing, combined und conflict exakt nach merge-metadata-v1 behandeln.
@@ -13939,7 +14058,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.i.R – Make it Right
 
-- [ ] **17.i.R** · Position **710/885** · Voraussetzung: `17.i.W`.
+- [ ] **17.i.R** · Position **719/900** · Voraussetzung: `17.i.W`.
 **Exakte Commit-Message:** `17.i.R feat(merge): Exakte Merge-Metadaten vervollständigen`
 
 **Vervollständigung:** Niedrigere historische Revision nicht still übernehmen; Ursprungsmetadaten und Zeitmaxima korrekt binden.
@@ -13948,7 +14067,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.i.C – Make it Clean
 
-- [ ] **17.i.C** · Position **711/885** · Voraussetzung: `17.i.R`.
+- [ ] **17.i.C** · Position **720/900** · Voraussetzung: `17.i.R`.
 **Exakte Commit-Message:** `17.i.C refactor(merge): Exakte Merge-Metadaten bereinigen`
 
 **Bereinigung:** Policy ausschließlich im zentralen autorisierten Metadatenmechanismus implementieren.
@@ -13965,7 +14084,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.j.W – Let it Work
 
-- [ ] **17.j.W** · Position **712/885** · Voraussetzung: `17.i.C`.
+- [ ] **17.j.W** · Position **721/900** · Voraussetzung: `17.i.C`.
 **Exakte Commit-Message:** `17.j.W feat(merge): Zielvalidierung und semantische Konflikte aufbauen`
 
 **Umsetzung:** Vollständigen zusammengeführten Zielstand einschließlich Profilen, Scopes und Referenzen vor Apply validieren.
@@ -13974,7 +14093,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.j.R – Make it Right
 
-- [ ] **17.j.R** · Position **713/885** · Voraussetzung: `17.j.W`.
+- [ ] **17.j.R** · Position **722/900** · Voraussetzung: `17.j.W`.
 **Exakte Commit-Message:** `17.j.R feat(merge): Zielvalidierung und semantische Konflikte vervollständigen`
 
 **Vervollständigung:** Erst durch Kombination entstandene Zyklus-, Policy- oder Integritätsverletzung verhindert Veröffentlichung.
@@ -13983,7 +14102,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.j.C – Make it Clean
 
-- [ ] **17.j.C** · Position **714/885** · Voraussetzung: `17.j.R`.
+- [ ] **17.j.C** · Position **723/900** · Voraussetzung: `17.j.R`.
 **Exakte Commit-Message:** `17.j.C refactor(merge): Zielvalidierung und semantische Konflikte bereinigen`
 
 **Bereinigung:** Normale Validierungsengine auf virtuellen Zielsnapshot anwenden.
@@ -14000,7 +14119,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.k.W – Let it Work
 
-- [ ] **17.k.W** · Position **715/885** · Voraussetzung: `17.j.C`.
+- [ ] **17.k.W** · Position **724/900** · Voraussetzung: `17.j.C`.
 **Exakte Commit-Message:** `17.k.W feat(merge): Atomarer Apply und aktuelle Nachweisbindung aufbauen`
 
 **Umsetzung:** Final aufgelösten Merge nur auf passende aktuelle Oursbasis transaktional publizieren und Abschlussbericht binden.
@@ -14009,7 +14128,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.k.R – Make it Right
 
-- [ ] **17.k.R** · Position **716/885** · Voraussetzung: `17.k.W`.
+- [ ] **17.k.R** · Position **725/900** · Voraussetzung: `17.k.W`.
 **Exakte Commit-Message:** `17.k.R feat(merge): Atomarer Apply und aktuelle Nachweisbindung vervollständigen`
 
 **Vervollständigung:** Basiswechsel während Planung/Lockphase und manipulierte Auflösungsdaten führen zu Konflikt statt blindem Apply.
@@ -14018,7 +14137,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.k.C – Make it Clean
 
-- [ ] **17.k.C** · Position **717/885** · Voraussetzung: `17.k.R`.
+- [ ] **17.k.C** · Position **726/900** · Voraussetzung: `17.k.R`.
 **Exakte Commit-Message:** `17.k.C refactor(merge): Atomarer Apply und aktuelle Nachweisbindung bereinigen`
 
 **Bereinigung:** Merge als spezialisierten Planproduzenten auf dem allgemeinen Writer halten.
@@ -14035,7 +14154,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.l.W – Let it Work
 
-- [ ] **17.l.W** · Position **718/885** · Voraussetzung: `17.k.C`.
+- [ ] **17.l.W** · Position **727/900** · Voraussetzung: `17.k.C`.
 **Exakte Commit-Message:** `17.l.W feat(merge): Fortsetzung und Quelltypenparität aufbauen`
 
 **Umsetzung:** Große Inventur, Vergleich und Prüfung in vollständigen Workumfang integrieren.
@@ -14044,7 +14163,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.l.R – Make it Right
 
-- [ ] **17.l.R** · Position **719/885** · Voraussetzung: `17.l.W`.
+- [ ] **17.l.R** · Position **728/900** · Voraussetzung: `17.l.W`.
 **Exakte Commit-Message:** `17.l.R feat(merge): Fortsetzung und Quelltypenparität vervollständigen`
 
 **Vervollständigung:** Nach Resume müssen dieselben Quellhashes, Auflösungen und Engineverträge gelten.
@@ -14053,7 +14172,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 17.l.C – Make it Clean
 
-- [ ] **17.l.C** · Position **720/885** · Voraussetzung: `17.l.R`.
+- [ ] **17.l.C** · Position **729/900** · Voraussetzung: `17.l.R`.
 **Exakte Commit-Message:** `17.l.C refactor(merge): Fortsetzung und Quelltypenparität bereinigen`
 
 **Bereinigung:** Gemeinsame Testfallmatrix über Quellenadapter und Workmodi parametrieren.
@@ -14082,7 +14201,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.a.W – Let it Work
 
-- [ ] **18.a.W** · Position **721/885** · Voraussetzung: `17.l.C`.
+- [ ] **18.a.W** · Position **730/900** · Voraussetzung: `17.l.C`.
 **Exakte Commit-Message:** `18.a.W feat(proposal): Proposalobjekt und Provenienz aufbauen`
 
 **Umsetzung:** Proposal mit ID, Akteur, vollständigem Change Plan und nachvollziehbarer Änderungserläuterung erzeugen.
@@ -14091,7 +14210,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.a.R – Make it Right
 
-- [ ] **18.a.R** · Position **722/885** · Voraussetzung: `18.a.W`.
+- [ ] **18.a.R** · Position **731/900** · Voraussetzung: `18.a.W`.
 **Exakte Commit-Message:** `18.a.R feat(proposal): Proposalobjekt und Provenienz vervollständigen`
 
 **Vervollständigung:** KI-Provenienz bindet Provider, Modell, Version, Template und Runner beziehungsweise unknown mit Grund.
@@ -14100,7 +14219,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.a.C – Make it Clean
 
-- [ ] **18.a.C** · Position **723/885** · Voraussetzung: `18.a.R`.
+- [ ] **18.a.C** · Position **732/900** · Voraussetzung: `18.a.R`.
 **Exakte Commit-Message:** `18.a.C refactor(proposal): Proposalobjekt und Provenienz bereinigen`
 
 **Bereinigung:** Proposalinhalt und betriebliche Steuerinformationen als getrennte Modelle führen.
@@ -14117,7 +14236,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.b.W – Let it Work
 
-- [ ] **18.b.W** · Position **724/885** · Voraussetzung: `18.a.C`.
+- [ ] **18.b.W** · Position **733/900** · Voraussetzung: `18.a.C`.
 **Exakte Commit-Message:** `18.b.W feat(proposal): Feste Proposalbasis und Kontrollausschluss aufbauen`
 
 **Umsetzung:** Basis ausschließlich aus specification/closed/unconfigured mit kanonischer Wurzel berechnen.
@@ -14126,7 +14245,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.b.R – Make it Right
 
-- [ ] **18.b.R** · Position **725/885** · Voraussetzung: `18.b.W`.
+- [ ] **18.b.R** · Position **734/900** · Voraussetzung: `18.b.W`.
 **Exakte Commit-Message:** `18.b.R feat(proposal): Feste Proposalbasis und Kontrollausschluss vervollständigen`
 
 **Vervollständigung:** Konfiguration, Partialscope, Baseline/Proposal-Kontrollabhängigkeit und unzulässige Overrides abweisen.
@@ -14135,7 +14254,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.b.C – Make it Clean
 
-- [ ] **18.b.C** · Position **726/885** · Voraussetzung: `18.b.R`.
+- [ ] **18.b.C** · Position **735/900** · Voraussetzung: `18.b.R`.
 **Exakte Commit-Message:** `18.b.C refactor(proposal): Feste Proposalbasis und Kontrollausschluss bereinigen`
 
 **Bereinigung:** Basisdescriptor als feste spezialisierte Nutzung des Scopedienstes implementieren.
@@ -14152,7 +14271,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.c.W – Let it Work
 
-- [ ] **18.c.W** · Position **727/885** · Voraussetzung: `18.b.C`.
+- [ ] **18.c.W** · Position **736/900** · Voraussetzung: `18.b.C`.
 **Exakte Commit-Message:** `18.c.W feat(proposal): Geordnete Change-IDs und Positionsoperationen aufbauen`
 
 **Umsetzung:** Stabile CHG-IDs und exakt geordnete append-/insert-/move-Operationen des vollständigen Plans unterstützen.
@@ -14161,7 +14280,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.c.R – Make it Right
 
-- [ ] **18.c.R** · Position **728/885** · Voraussetzung: `18.c.W`.
+- [ ] **18.c.R** · Position **737/900** · Voraussetzung: `18.c.W`.
 **Exakte Commit-Message:** `18.c.R feat(proposal): Geordnete Change-IDs und Positionsoperationen vervollständigen`
 
 **Vervollständigung:** Indexgrenzen, gleiche Position und Verschiebung vor/nach Entnahme exakt nach Kapitel 11.10 behandeln.
@@ -14170,7 +14289,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.c.C – Make it Clean
 
-- [ ] **18.c.C** · Position **729/885** · Voraussetzung: `18.c.R`.
+- [ ] **18.c.C** · Position **738/900** · Voraussetzung: `18.c.R`.
 **Exakte Commit-Message:** `18.c.C refactor(proposal): Geordnete Change-IDs und Positionsoperationen bereinigen`
 
 **Bereinigung:** Änderungsidentität von Arrayposition und menschenlesbarer Nummerierung trennen.
@@ -14187,7 +14306,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.d.W – Let it Work
 
-- [ ] **18.d.W** · Position **730/885** · Voraussetzung: `18.c.C`.
+- [ ] **18.d.W** · Position **739/900** · Voraussetzung: `18.c.C`.
 **Exakte Commit-Message:** `18.d.W feat(proposal): Inhaltsrevision und Hashprojektion aufbauen`
 
 **Umsetzung:** content_revision und content_sha256 unabhängig von physischer Artefaktrevision führen.
@@ -14196,7 +14315,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.d.R – Make it Right
 
-- [ ] **18.d.R** · Position **731/885** · Voraussetzung: `18.d.W`.
+- [ ] **18.d.R** · Position **740/900** · Voraussetzung: `18.d.W`.
 **Exakte Commit-Message:** `18.d.R feat(proposal): Inhaltsrevision und Hashprojektion vervollständigen`
 
 **Vervollständigung:** Top-level-Ausschlussliste exakt implementieren; gleichnamige fachliche Unterfelder und Extensions nicht versehentlich ausblenden.
@@ -14205,7 +14324,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.d.C – Make it Clean
 
-- [ ] **18.d.C** · Position **732/885** · Voraussetzung: `18.d.R`.
+- [ ] **18.d.C** · Position **741/900** · Voraussetzung: `18.d.R`.
 **Exakte Commit-Message:** `18.d.C refactor(proposal): Inhaltsrevision und Hashprojektion bereinigen`
 
 **Bereinigung:** Eine feste Hashprojektionsfunktion für Erstellen, Prüfen und Freigeben verwenden.
@@ -14222,7 +14341,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.e.W – Let it Work
 
-- [ ] **18.e.W** · Position **733/885** · Voraussetzung: `18.d.C`.
+- [ ] **18.e.W** · Position **742/900** · Voraussetzung: `18.d.C`.
 **Exakte Commit-Message:** `18.e.W feat(proposal): Proposal-Authoring und Endzustandsgrenzen aufbauen`
 
 **Umsetzung:** Fachliche Änderungen in erlaubten offenen Zuständen ausführen und dabei auf draft zurücksetzen.
@@ -14231,7 +14350,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.e.R – Make it Right
 
-- [ ] **18.e.R** · Position **734/885** · Voraussetzung: `18.e.W`.
+- [ ] **18.e.R** · Position **743/900** · Voraussetzung: `18.e.W`.
 **Exakte Commit-Message:** `18.e.R feat(proposal): Proposal-Authoring und Endzustandsgrenzen vervollständigen`
 
 **Vervollständigung:** No-op stempelt keine Revision; rejected, stale und applied dürfen nicht frei weitereditiert werden.
@@ -14240,7 +14359,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.e.C – Make it Clean
 
-- [ ] **18.e.C** · Position **735/885** · Voraussetzung: `18.e.R`.
+- [ ] **18.e.C** · Position **744/900** · Voraussetzung: `18.e.R`.
 **Exakte Commit-Message:** `18.e.C refactor(proposal): Proposal-Authoring und Endzustandsgrenzen bereinigen`
 
 **Bereinigung:** Lifecycle- und Revisionsregeln über den gemeinsamen Plan-/Writervertrag laufen lassen.
@@ -14257,7 +14376,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.f.W – Let it Work
 
-- [ ] **18.f.W** · Position **736/885** · Voraussetzung: `18.e.C`.
+- [ ] **18.f.W** · Position **745/900** · Voraussetzung: `18.e.C`.
 **Exakte Commit-Message:** `18.f.W feat(proposal): Strukturvalidierung ohne Kontrollwrite aufbauen`
 
 **Umsetzung:** proposal validate als read_only-Prüfung ausschließlich von Proposal-Schema, internen Referenzen und Anwendbarkeit gegen die deklarierte Basis anbieten.
@@ -14266,7 +14385,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.f.R – Make it Right
 
-- [ ] **18.f.R** · Position **737/885** · Voraussetzung: `18.f.W`.
+- [ ] **18.f.R** · Position **746/900** · Voraussetzung: `18.f.W`.
 **Exakte Commit-Message:** `18.f.R feat(proposal): Strukturvalidierung ohne Kontrollwrite vervollständigen`
 
 **Vervollständigung:** Tatsächlich festgestellter observed_status bleibt Resultat statt normativer Nebenmutation.
@@ -14275,7 +14394,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.f.C – Make it Clean
 
-- [ ] **18.f.C** · Position **738/885** · Voraussetzung: `18.f.R`.
+- [ ] **18.f.C** · Position **747/900** · Voraussetzung: `18.f.R`.
 **Exakte Commit-Message:** `18.f.C refactor(proposal): Strukturvalidierung ohne Kontrollwrite bereinigen`
 
 **Bereinigung:** Validierungsresultat und zustandsändernde Kommandos strikt entkoppeln.
@@ -14292,7 +14411,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.g.W – Let it Work
 
-- [ ] **18.g.W** · Position **739/885** · Voraussetzung: `18.f.C`.
+- [ ] **18.g.W** · Position **748/900** · Voraussetzung: `18.f.C`.
 **Exakte Commit-Message:** `18.g.W feat(proposal): Isolierter Proposal-Check aufbauen`
 
 **Umsetzung:** Virtuellen Zielstand in kontrolliertem temporärem Arbeitsbereich mit internen Validator-/Query-/Render-/Diff-/Impactdiensten prüfen.
@@ -14301,7 +14420,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.g.R – Make it Right
 
-- [ ] **18.g.R** · Position **740/885** · Voraussetzung: `18.g.W`.
+- [ ] **18.g.R** · Position **749/900** · Voraussetzung: `18.g.W`.
 **Exakte Commit-Message:** `18.g.R feat(proposal): Isolierter Proposal-Check vervollständigen`
 
 **Vervollständigung:** Keine Tests, Builds, Shellbefehle, Plugins oder Netzaufrufe aus Projektinhalten starten; temporäre Daten standardmäßig entfernen.
@@ -14310,7 +14429,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.g.C – Make it Clean
 
-- [ ] **18.g.C** · Position **741/885** · Voraussetzung: `18.g.R`.
+- [ ] **18.g.C** · Position **750/900** · Voraussetzung: `18.g.R`.
 **Exakte Commit-Message:** `18.g.C refactor(proposal): Isolierter Proposal-Check bereinigen`
 
 **Bereinigung:** Interne Prüfdienste direkt aufrufen statt unkontrollierte CLI-/Shellketten aufzubauen.
@@ -14327,7 +14446,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.h.W – Let it Work
 
-- [ ] **18.h.W** · Position **742/885** · Voraussetzung: `18.g.C`.
+- [ ] **18.h.W** · Position **751/900** · Voraussetzung: `18.g.C`.
 **Exakte Commit-Message:** `18.h.W feat(proposal): Review start als atomare Kontrollfolge aufbauen`
 
 **Umsetzung:** Nach frischen vollständigen Prüfungen draft bis validated, checked und in_review atomar mit gebundener control_history publizieren.
@@ -14336,7 +14455,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.h.R – Make it Right
 
-- [ ] **18.h.R** · Position **743/885** · Voraussetzung: `18.h.W`.
+- [ ] **18.h.R** · Position **752/900** · Voraussetzung: `18.h.W`.
 **Exakte Commit-Message:** `18.h.R feat(proposal): Review start als atomare Kontrollfolge vervollständigen`
 
 **Vervollständigung:** Fehlgeschlagene Teilprüfung darf keinen Zwischenfreigabestatus hinterlassen.
@@ -14345,7 +14464,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.h.C – Make it Clean
 
-- [ ] **18.h.C** · Position **744/885** · Voraussetzung: `18.h.R`.
+- [ ] **18.h.C** · Position **753/900** · Voraussetzung: `18.h.R`.
 **Exakte Commit-Message:** `18.h.C refactor(proposal): Review start als atomare Kontrollfolge bereinigen`
 
 **Bereinigung:** Prüfen, Entscheiden und atomar Veröffentlichen als nachvollziehbare Stufen trennen.
@@ -14362,7 +14481,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.i.W – Let it Work
 
-- [ ] **18.i.W** · Position **745/885** · Voraussetzung: `18.h.C`.
+- [ ] **18.i.W** · Position **754/900** · Voraussetzung: `18.h.C`.
 **Exakte Commit-Message:** `18.i.W feat(proposal): Menschlicher Review und Freigabequorum aufbauen`
 
 **Umsetzung:** Echte menschliche Entscheidungen an Proposal-ID, Inhaltsrevision/-hash, Basiswurzel und Planhash binden.
@@ -14371,7 +14490,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.i.R – Make it Right
 
-- [ ] **18.i.R** · Position **746/885** · Voraussetzung: `18.i.W`.
+- [ ] **18.i.R** · Position **755/900** · Voraussetzung: `18.i.W`.
 **Exakte Commit-Message:** `18.i.R feat(proposal): Menschlicher Review und Freigabequorum vervollständigen`
 
 **Vervollständigung:** Doppelte Entscheidung desselben Menschen und actor_type ai erfüllen keine zusätzliche menschliche Freigabe.
@@ -14380,7 +14499,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.i.C – Make it Clean
 
-- [ ] **18.i.C** · Position **747/885** · Voraussetzung: `18.i.R`.
+- [ ] **18.i.C** · Position **756/900** · Voraussetzung: `18.i.R`.
 **Exakte Commit-Message:** `18.i.C refactor(proposal): Menschlicher Review und Freigabequorum bereinigen`
 
 **Bereinigung:** Quorumprüfung als zentrale Policy ohne UI-Abhängigkeit implementieren.
@@ -14397,7 +14516,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.j.W – Let it Work
 
-- [ ] **18.j.W** · Position **748/885** · Voraussetzung: `18.i.C`.
+- [ ] **18.j.W** · Position **757/900** · Voraussetzung: `18.i.C`.
 **Exakte Commit-Message:** `18.j.W feat(proposal): Ablehnung, Widerruf und veraltete Freigaben aufbauen`
 
 **Umsetzung:** Negative Entscheidungen, autorisierten Widerruf und Wirksamkeit historischer Reviews exakt modellieren.
@@ -14406,7 +14525,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.j.R – Make it Right
 
-- [ ] **18.j.R** · Position **749/885** · Voraussetzung: `18.j.W`.
+- [ ] **18.j.R** · Position **758/900** · Voraussetzung: `18.j.W`.
 **Exakte Commit-Message:** `18.j.R feat(proposal): Ablehnung, Widerruf und veraltete Freigaben vervollständigen`
 
 **Vervollständigung:** Nachträglich bearbeiteter Vorschlag darf alte Zustimmung nicht automatisch übernehmen.
@@ -14415,7 +14534,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.j.C – Make it Clean
 
-- [ ] **18.j.C** · Position **750/885** · Voraussetzung: `18.j.R`.
+- [ ] **18.j.C** · Position **759/900** · Voraussetzung: `18.j.R`.
 **Exakte Commit-Message:** `18.j.C refactor(proposal): Ablehnung, Widerruf und veraltete Freigaben bereinigen`
 
 **Bereinigung:** Reviewhistorie erhalten und effektiven Freigabestatus daraus ableiten.
@@ -14432,7 +14551,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.k.W – Let it Work
 
-- [ ] **18.k.W** · Position **751/885** · Voraussetzung: `18.j.C`.
+- [ ] **18.k.W** · Position **760/900** · Voraussetzung: `18.j.C`.
 **Exakte Commit-Message:** `18.k.W feat(proposal): Anwenden ohne veralteten Basiswrite aufbauen`
 
 **Umsetzung:** Vollständig geprüftes und aktuell freigegebenes Proposal samt Zieländerungen, applied-Status und Receipt in einer Transaktion anwenden.
@@ -14441,7 +14560,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.k.R – Make it Right
 
-- [ ] **18.k.R** · Position **752/885** · Voraussetzung: `18.k.W`.
+- [ ] **18.k.R** · Position **761/900** · Voraussetzung: `18.k.W`.
 **Exakte Commit-Message:** `18.k.R feat(proposal): Anwenden ohne veralteten Basiswrite vervollständigen`
 
 **Vervollständigung:** Stale Basis oder fehlende aktuelle Freigabe führt lesend zum Fehler; kein automatisches Umschreiben des gespeicherten Proposals auf stale.
@@ -14450,7 +14569,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.k.C – Make it Clean
 
-- [ ] **18.k.C** · Position **753/885** · Voraussetzung: `18.k.R`.
+- [ ] **18.k.C** · Position **762/900** · Voraussetzung: `18.k.R`.
 **Exakte Commit-Message:** `18.k.C refactor(proposal): Anwenden ohne veralteten Basiswrite bereinigen`
 
 **Bereinigung:** Proposal-Apply als autorisierte Writerquelle ohne Sondertransaktion ausführen.
@@ -14467,7 +14586,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.l.W – Let it Work
 
-- [ ] **18.l.W** · Position **754/885** · Voraussetzung: `18.k.C`.
+- [ ] **18.l.W** · Position **763/900** · Voraussetzung: `18.k.C`.
 **Exakte Commit-Message:** `18.l.W feat(proposal): Authoring als Proposal und KI-Schreibschutz aufbauen`
 
 **Umsetzung:** Unterstützte Änderungsbefehle mit as-proposal in denselben fachlich vollständigen Plan umleiten.
@@ -14476,7 +14595,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.l.R – Make it Right
 
-- [ ] **18.l.R** · Position **755/885** · Voraussetzung: `18.l.W`.
+- [ ] **18.l.R** · Position **764/900** · Voraussetzung: `18.l.W`.
 **Exakte Commit-Message:** `18.l.R feat(proposal): Authoring als Proposal und KI-Schreibschutz vervollständigen`
 
 **Vervollständigung:** Standardmäßig unerlaubter KI-Direktwrite endet mit Code 7; Umleitung hebt Fach-/Scopegrenzen nicht auf.
@@ -14485,7 +14604,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.l.C – Make it Clean
 
-- [ ] **18.l.C** · Position **756/885** · Voraussetzung: `18.l.R`.
+- [ ] **18.l.C** · Position **765/900** · Voraussetzung: `18.l.R`.
 **Exakte Commit-Message:** `18.l.C refactor(proposal): Authoring als Proposal und KI-Schreibschutz bereinigen`
 
 **Bereinigung:** Normalen Authoringplanner verwenden und nur die Publikationsart wechseln.
@@ -14502,7 +14621,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.m.W – Let it Work
 
-- [ ] **18.m.W** · Position **757/885** · Voraussetzung: `18.l.C`.
+- [ ] **18.m.W** · Position **766/900** · Voraussetzung: `18.l.C`.
 **Exakte Commit-Message:** `18.m.W feat(proposal): Agenten-Selbstbeschreibung und strukturierte Abläufe aufbauen`
 
 **Umsetzung:** Tatsächlich implementierte Befehle, Parameter, Schemas, Datenverträge und Seiteneffektklassen für Agenten vollständig bereitstellen.
@@ -14511,7 +14630,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.m.R – Make it Right
 
-- [ ] **18.m.R** · Position **758/885** · Voraussetzung: `18.m.W`.
+- [ ] **18.m.R** · Position **767/900** · Voraussetzung: `18.m.W`.
 **Exakte Commit-Message:** `18.m.R feat(proposal): Agenten-Selbstbeschreibung und strukturierte Abläufe vervollständigen`
 
 **Vervollständigung:** Unfertige Fähigkeiten und menschlich erforderliche Schritte nicht als autonom ausführbar ausweisen.
@@ -14520,7 +14639,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.m.C – Make it Clean
 
-- [ ] **18.m.C** · Position **759/885** · Voraussetzung: `18.m.R`.
+- [ ] **18.m.C** · Position **768/900** · Voraussetzung: `18.m.R`.
 **Exakte Commit-Message:** `18.m.C refactor(proposal): Agenten-Selbstbeschreibung und strukturierte Abläufe bereinigen`
 
 **Bereinigung:** Registry, Schemas und Capabilities aus den tatsächlichen Implementierungsquellen ableiten.
@@ -14537,7 +14656,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.n.W – Let it Work
 
-- [ ] **18.n.W** · Position **760/885** · Voraussetzung: `18.m.C`.
+- [ ] **18.n.W** · Position **769/900** · Voraussetzung: `18.m.C`.
 **Exakte Commit-Message:** `18.n.W feat(proposal): Policygrenzen ohne Git-Automatik aufbauen`
 
 **Umsetzung:** Freigabe, Policyautorität und Schreibrechte auch bei nichtinteraktiver Agentennutzung erhalten.
@@ -14546,7 +14665,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.n.R – Make it Right
 
-- [ ] **18.n.R** · Position **761/885** · Voraussetzung: `18.n.W`.
+- [ ] **18.n.R** · Position **770/900** · Voraussetzung: `18.n.W`.
 **Exakte Commit-Message:** `18.n.R feat(proposal): Policygrenzen ohne Git-Automatik vervollständigen`
 
 **Vervollständigung:** Proposalworkflow führt selbst keinen commit, branch, push oder freie Fremdbefehle aus.
@@ -14555,10 +14674,10 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.n.C – Make it Clean
 
-- [ ] **18.n.C** · Position **762/885** · Voraussetzung: `18.n.R`.
+- [ ] **18.n.C** · Position **771/900** · Voraussetzung: `18.n.R`.
 **Exakte Commit-Message:** `18.n.C refactor(proposal): Policygrenzen ohne Git-Automatik bereinigen`
 
-**Bereinigung:** Produktrechte von der externen PatchHarbor-Entwicklungsautomatik klar trennen.
+**Bereinigung:** Produktrechte von externer PatchHarbor-Entwicklungsautomatik und dem ausdrücklich autorisierten Transporthost aus 18.r trennen; Proposaloperationen selbst erhalten keine Git- oder Fremdcodebefugnis.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
@@ -14572,7 +14691,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.o.W – Let it Work
 
-- [ ] **18.o.W** · Position **763/885** · Voraussetzung: `18.n.C`.
+- [ ] **18.o.W** · Position **772/900** · Voraussetzung: `18.n.C`.
 **Exakte Commit-Message:** `18.o.W feat(proposal): Proposalfortsetzung mit echten Reviews aufbauen`
 
 **Umsetzung:** Planung, isolierte Prüfung und Arbeitsfortsetzung an dieselbe Inhalts-/Basis-/Enginebindung anschließen.
@@ -14581,7 +14700,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.o.R – Make it Right
 
-- [ ] **18.o.R** · Position **764/885** · Voraussetzung: `18.o.W`.
+- [ ] **18.o.R** · Position **773/900** · Voraussetzung: `18.o.W`.
 **Exakte Commit-Message:** `18.o.R feat(proposal): Proposalfortsetzung mit echten Reviews vervollständigen`
 
 **Vervollständigung:** Sandboxwechsel, neue Inhaltsrevision oder andere Basis erzwingen Neubewertung statt Wiederverwendung unpassender Zustimmung.
@@ -14590,7 +14709,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.o.C – Make it Clean
 
-- [ ] **18.o.C** · Position **765/885** · Voraussetzung: `18.o.R`.
+- [ ] **18.o.C** · Position **774/900** · Voraussetzung: `18.o.R`.
 **Exakte Commit-Message:** `18.o.C refactor(proposal): Proposalfortsetzung mit echten Reviews bereinigen`
 
 **Bereinigung:** Workstatus und Proposal-Lifecycle getrennt halten.
@@ -14607,7 +14726,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.p.W – Let it Work
 
-- [ ] **18.p.W** · Position **766/885** · Voraussetzung: `18.o.C`.
+- [ ] **18.p.W** · Position **775/900** · Voraussetzung: `18.o.C`.
 **Exakte Commit-Message:** `18.p.W feat(proposal): Ende-zu-Ende-Änderungsdialog aufbauen`
 
 **Umsetzung:** Vollständigen realen Ablauf Entwurf, Check, Review, Überarbeitung, erneute Freigabe und Apply über öffentliche Schnittstellen prüfen.
@@ -14616,7 +14735,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.p.R – Make it Right
 
-- [ ] **18.p.R** · Position **767/885** · Voraussetzung: `18.p.W`.
+- [ ] **18.p.R** · Position **776/900** · Voraussetzung: `18.p.W`.
 **Exakte Commit-Message:** `18.p.R feat(proposal): Ende-zu-Ende-Änderungsdialog vervollständigen`
 
 **Vervollständigung:** Rejection, stale-Basis, Scopeangriff und Abbruch erhalten Originaldaten und auditierbare Entscheidungen.
@@ -14625,7 +14744,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 18.p.C – Make it Clean
 
-- [ ] **18.p.C** · Position **768/885** · Voraussetzung: `18.p.R`.
+- [ ] **18.p.C** · Position **777/900** · Voraussetzung: `18.p.R`.
 **Exakte Commit-Message:** `18.p.C refactor(proposal): Ende-zu-Ende-Änderungsdialog bereinigen`
 
 **Bereinigung:** Wiederholte Ablaufhilfen bündeln, Testoracles und tatsächliche Freigabebindung unverändert lassen.
@@ -14633,6 +14752,76 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+<a id="step-18-q"></a>
+### 18.q – Proposal als gebundenes Rückpaket exportieren
+
+**Anforderungsbezug:** `SR-REQ-0737`–`SR-REQ-0738`, `SR-REQ-0741`.
+**Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.
+
+**Zusätzliche Voraussetzung:** 15.m–15.o und der vollständige Proposal-/Reviewvertrag aus 18.a–18.p. Der Host-Entrypoint ist Verteilungscode, kein KI-generierter Skripttext.
+
+#### 18.q.W – Let it Work
+
+- [ ] **18.q.W** · Position **778/900** · Voraussetzung: `18.p.C`.
+**Exakte Commit-Message:** `18.q.W feat(transport): Proposal als gebundenes Rückpaket exportieren aufbauen`
+
+**Umsetzung:** Den vorhandenen bundle-create-Befehl um ai-runtime/return als generated_output ergänzen. Ursprüngliches Hinpaket und expliziten Proposal prüfen, vollständige passive Rückdaten sowie festen vertrauenswürdigen Entrypoint vorbereiten und api.pack_patch aufrufen; genau eine native Patch-ZIP erzeugen.
+
+**Verhaltensabnahme:** Reale Pack-/Inspect-/Validate-API arbeitet in der Python-Sandbox ohne Git oder Shell. Original-repo_id, base_commit und Fingerprintwerte bleiben unverändert; Projektdateien und Referenz werden nicht verändert.
+
+#### 18.q.R – Make it Right
+
+- [ ] **18.q.R** · Position **779/900** · Voraussetzung: `18.q.W`.
+**Exakte Commit-Message:** `18.q.R feat(transport): Proposal als gebundenes Rückpaket exportieren vervollständigen`
+
+**Vervollständigung:** Fehlende/zusätzliche Daten, Löschungen/Umbenennungen, falsche Referenz/Projekt-ID, frei veränderten Entrypoint und Fachdelta außerhalb des Proposals verweigern. no_changes liefert kein leeres Applypaket; keine vollständige Runtime erneut in Rückpayload aufnehmen.
+
+**Verhaltensabnahme:** Positiv- und Negativfälle weisen exaktes Payloadinventar und native Referenzbindung nach; API pack wählt keine Daten still hinzu, stale oder unvollständige Quellen erzeugen kein gültiges Rückpaket.
+
+#### 18.q.C – Make it Clean
+
+- [ ] **18.q.C** · Position **780/900** · Voraussetzung: `18.q.R`.
+**Exakte Commit-Message:** `18.q.C refactor(transport): Proposal als gebundenes Rückpaket exportieren bereinigen`
+
+**Bereinigung:** Richtungsabhängige Paketvorbereitung von der gemeinsam genutzten öffentlichen API-Anbindung trennen; Projektbundle- und PatchHarbor-Formate bleiben getrennt.
+
+**Verhaltensabnahme:** Alle W-/R-Verhaltenstests sowie betroffene Regressionen prüfen unveränderte Fachwerte, Fehlerverträge und Seiteneffekte; keine Darstellungs- oder Dokumentationstests.
+
+<a id="step-18-r"></a>
+### 18.r – Rückpaket kontrolliert lokal übernehmen
+
+**Anforderungsbezug:** `SR-REQ-0739`–`SR-REQ-0742`.
+**Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.
+
+**Zusätzliche Voraussetzung:** **PH-API-APPLY-GATE:** Nachweisen, dass die öffentliche Host-API dieselben geprüften Paketbytes und gesperrte Zielbasis vor der Payload-Ausbringung garantiert. Falls nicht verfügbar, Erweiterung in PatchHarbor beauftragen und diesen Schritt blockiert lassen; keine private API und kein Review erst nach bereits überschriebenen Fachdateien.
+
+#### 18.r.W – Let it Work
+
+- [ ] **18.r.W** · Position **781/900** · Voraussetzung: `18.q.C`.
+**Exakte Commit-Message:** `18.r.W feat(transport): Rückpaket kontrolliert lokal übernehmen aufbauen`
+
+**Umsetzung:** Separaten ausdrücklich aufgerufenen lokalen Integrationsadapter mit api.inspect_patch, api.validate_patch und api.apply verbinden. Paketbytes, Zielzustand, erlaubten Entrypoint und kollisionsfreien Stagingraum vor jedem PH-Payloadwrite binden; zunächst nur einen lokalen Proposalentwurf über kontrolliertes Authoring aufnehmen.
+
+**Verhaltensabnahme:** Reale Hostübernahme meldet proposal_received, ohne fachliche Zieländerungen. Erst anschließende Validation, Check, echte lokale Reviewfixtures und Proposal-Apply erreichen den unabhängig erwarteten Fachhash. Testakteure sind keine produktive Zustimmung.
+
+#### 18.r.R – Make it Right
+
+- [ ] **18.r.R** · Position **782/900** · Voraussetzung: `18.r.W`.
+**Exakte Commit-Message:** `18.r.R feat(transport): Rückpaket kontrolliert lokal übernehmen vervollständigen`
+
+**Vervollständigung:** Reviewmanipulation, vorzeitig normative Payloadpfade, Stagingkollisionen, Paket-/Zielwechsel zwischen Prüfung und Apply, ID-Kollision, Replay sowie Abbruch/fehlende Resultpublikation behandeln. Erhaltene Zustände und PH-Replaynachweis mit SpecRoad-Receipts abgleichen; keine automatische Gitaktion.
+
+**Verhaltensabnahme:** Keine normative Fachmutation vor gültiger Freigabe, kein zweiter Proposal/Apply beim Retry, kein Verlust fremder Dateien und kein Scheinerfolg bei partiell abgeschlossenem Transport; W.7-Negativmatrix und echter Rückweg bestehen.
+
+#### 18.r.C – Make it Clean
+
+- [ ] **18.r.C** · Position **783/900** · Voraussetzung: `18.r.R`.
+**Exakte Commit-Message:** `18.r.C refactor(transport): Rückpaket kontrolliert lokal übernehmen bereinigen`
+
+**Bereinigung:** Hosttransport, Proposalaufnahme und fachliche Anwendung als getrennte wiederverwendbare Verantwortungen ordnen; Gates und zeitliche Reihenfolge bleiben identisch.
+
+**Verhaltensabnahme:** Alle W-/R-Verhaltenstests sowie betroffene Regressionen prüfen unveränderte Fachwerte, Fehlerverträge und Seiteneffekte; keine Darstellungs- oder Dokumentationstests.
 
 **Meilenstein 18 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 
@@ -14654,7 +14843,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.a.W – Let it Work
 
-- [ ] **19.a.W** · Position **769/885** · Voraussetzung: `18.p.C`.
+- [ ] **19.a.W** · Position **784/900** · Voraussetzung: `18.r.C`.
 **Exakte Commit-Message:** `19.a.W feat(analyzer): Generischer Analyzer- und Descriptorvertrag aufbauen`
 
 **Umsetzung:** Versionierte Descriptoren mit Analyzeridentität, Capabilities, Subjectmodi und Datenverträgen implementieren.
@@ -14663,7 +14852,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.a.R – Make it Right
 
-- [ ] **19.a.R** · Position **770/885** · Voraussetzung: `19.a.W`.
+- [ ] **19.a.R** · Position **785/900** · Voraussetzung: `19.a.W`.
 **Exakte Commit-Message:** `19.a.R feat(analyzer): Generischer Analyzer- und Descriptorvertrag vervollständigen`
 
 **Vervollständigung:** Ein Projekt-/Importdescriptor erzeugt niemals Ausführungsrecht oder dynamischen Import.
@@ -14672,7 +14861,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.a.C – Make it Clean
 
-- [ ] **19.a.C** · Position **771/885** · Voraussetzung: `19.a.R`.
+- [ ] **19.a.C** · Position **786/900** · Voraussetzung: `19.a.R`.
 **Exakte Commit-Message:** `19.a.C refactor(analyzer): Generischer Analyzer- und Descriptorvertrag bereinigen`
 
 **Bereinigung:** Descriptorvalidierung und vertrauenswürdige Ausführungsregistry strikt trennen.
@@ -14689,7 +14878,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.b.W – Let it Work
 
-- [ ] **19.b.W** · Position **772/885** · Voraussetzung: `19.a.C`.
+- [ ] **19.b.W** · Position **787/900** · Voraussetzung: `19.a.C`.
 **Exakte Commit-Message:** `19.b.W feat(analyzer): Requestidentität und Snapshotbindung aufbauen`
 
 **Umsetzung:** Datentragenden Analyzerrequest mit stabiler AnalysisRequestId und exakt projiziertem Snapshothash erzeugen.
@@ -14698,7 +14887,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.b.R – Make it Right
 
-- [ ] **19.b.R** · Position **773/885** · Voraussetzung: `19.b.W`.
+- [ ] **19.b.R** · Position **788/900** · Voraussetzung: `19.b.W`.
 **Exakte Commit-Message:** `19.b.R feat(analyzer): Requestidentität und Snapshotbindung vervollständigen`
 
 **Vervollständigung:** Betriebsmetadaten nicht in Fachhash aufnehmen; request_id der Schreibidempotenz nicht damit vermischen.
@@ -14707,7 +14896,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.b.C – Make it Clean
 
-- [ ] **19.b.C** · Position **774/885** · Voraussetzung: `19.b.R`.
+- [ ] **19.b.C** · Position **789/900** · Voraussetzung: `19.b.R`.
 **Exakte Commit-Message:** `19.b.C refactor(analyzer): Requestidentität und Snapshotbindung bereinigen`
 
 **Bereinigung:** Eigene Typen für AnalysisRequestId und WriteRequestId einführen, trotz ähnlicher Stringsyntax.
@@ -14724,7 +14913,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.c.W – Let it Work
 
-- [ ] **19.c.W** · Position **775/885** · Voraussetzung: `19.b.C`.
+- [ ] **19.c.W** · Position **790/900** · Voraussetzung: `19.b.C`.
 **Exakte Commit-Message:** `19.c.W feat(analyzer): Vollständige Subjects und Kontextminimierung aufbauen`
 
 **Umsetzung:** Jeden gewählten Statement-/Pointerwert vollständig und separat mit Originalhash exportieren.
@@ -14733,7 +14922,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.c.R – Make it Right
 
-- [ ] **19.c.R** · Position **776/885** · Voraussetzung: `19.c.W`.
+- [ ] **19.c.R** · Position **791/900** · Voraussetzung: `19.c.W`.
 **Exakte Commit-Message:** `19.c.R feat(analyzer): Vollständige Subjects und Kontextminimierung vervollständigen`
 
 **Vervollständigung:** Nur ausdrücklich gewählten Kontext freigeben; fehlender String und fremder Pointer sind Eingabefehler.
@@ -14742,7 +14931,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.c.C – Make it Clean
 
-- [ ] **19.c.C** · Position **777/885** · Voraussetzung: `19.c.R`.
+- [ ] **19.c.C** · Position **792/900** · Voraussetzung: `19.c.R`.
 **Exakte Commit-Message:** `19.c.C refactor(analyzer): Vollständige Subjects und Kontextminimierung bereinigen`
 
 **Bereinigung:** Subjectauswahl auf vorhandene Scope-/Pointer-/Snapshotdienste setzen.
@@ -14759,7 +14948,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.d.W – Let it Work
 
-- [ ] **19.d.W** · Position **778/885** · Voraussetzung: `19.c.C`.
+- [ ] **19.d.W** · Position **793/900** · Voraussetzung: `19.c.C`.
 **Exakte Commit-Message:** `19.d.W feat(analyzer): Findings, Coverage und Ergebnisprojektion aufbauen`
 
 **Umsetzung:** Generische Findings mit Herkunft und exakte expected/done/undetermined/failed/open-Coverage modellieren.
@@ -14768,7 +14957,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.d.R – Make it Right
 
-- [ ] **19.d.R** · Position **779/885** · Voraussetzung: `19.d.W`.
+- [ ] **19.d.R** · Position **794/900** · Voraussetzung: `19.d.W`.
 **Exakte Commit-Message:** `19.d.R feat(analyzer): Findings, Coverage und Ergebnisprojektion vervollständigen`
 
 **Vervollständigung:** Doppelte/fremde Subjects und widersprüchliche Summen ablehnen; unbekannte gültige Namespaces erhalten.
@@ -14777,7 +14966,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.d.C – Make it Clean
 
-- [ ] **19.d.C** · Position **780/885** · Voraussetzung: `19.d.R`.
+- [ ] **19.d.C** · Position **795/900** · Voraussetzung: `19.d.R`.
 **Exakte Commit-Message:** `19.d.C refactor(analyzer): Findings, Coverage und Ergebnisprojektion bereinigen`
 
 **Bereinigung:** Betriebsmetriken, Provenienz und deterministische Fachbeobachtung sauber schichten.
@@ -14794,7 +14983,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.e.W – Let it Work
 
-- [ ] **19.e.W** · Position **781/885** · Voraussetzung: `19.d.C`.
+- [ ] **19.e.W** · Position **796/900** · Voraussetzung: `19.d.C`.
 **Exakte Commit-Message:** `19.e.W feat(analyzer): Reportpackage und sichere Importprüfung aufbauen`
 
 **Umsetzung:** Package mit vollständigem datentragendem Request und sämtlichen ausgewählten Reports lesen und verifizieren.
@@ -14803,7 +14992,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.e.R – Make it Right
 
-- [ ] **19.e.R** · Position **782/885** · Voraussetzung: `19.e.W`.
+- [ ] **19.e.R** · Position **797/900** · Voraussetzung: `19.e.W`.
 **Exakte Commit-Message:** `19.e.R feat(analyzer): Reportpackage und sichere Importprüfung vervollständigen`
 
 **Vervollständigung:** Manipulierte Hashes, fehlende Pflichtsubjects, unzulässige Felder und einzelne fremde Reports blockieren.
@@ -14812,7 +15001,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.e.C – Make it Clean
 
-- [ ] **19.e.C** · Position **783/885** · Voraussetzung: `19.e.R`.
+- [ ] **19.e.C** · Position **798/900** · Voraussetzung: `19.e.R`.
 **Exakte Commit-Message:** `19.e.C refactor(analyzer): Reportpackage und sichere Importprüfung bereinigen`
 
 **Bereinigung:** Request-/Reportvalidatoren auch beim Workerresultat wiederverwenden.
@@ -14829,7 +15018,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.f.W – Let it Work
 
-- [ ] **19.f.W** · Position **784/885** · Voraussetzung: `19.e.C`.
+- [ ] **19.f.W** · Position **799/900** · Voraussetzung: `19.e.C`.
 **Exakte Commit-Message:** `19.f.W feat(analyzer): Read-only-Auswertung und Nachweisgrenze aufbauen`
 
 **Umsetzung:** Aktualität current/stale/unavailable/invalid berechnen und mehrere Reports mit abweichender Provenienz vollständig auswerten.
@@ -14838,7 +15027,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.f.R – Make it Right
 
-- [ ] **19.f.R** · Position **785/885** · Voraussetzung: `19.f.W`.
+- [ ] **19.f.R** · Position **800/900** · Voraussetzung: `19.f.W`.
 **Exakte Commit-Message:** `19.f.R feat(analyzer): Read-only-Auswertung und Nachweisgrenze vervollständigen`
 
 **Vervollständigung:** Kein Import verändert Requirementfelder, Reviews, Reifegrade oder Verification Results und gilt nicht automatisch als Evidence.
@@ -14847,7 +15036,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.f.C – Make it Clean
 
-- [ ] **19.f.C** · Position **786/885** · Voraussetzung: `19.f.R`.
+- [ ] **19.f.C** · Position **801/900** · Voraussetzung: `19.f.R`.
 **Exakte Commit-Message:** `19.f.C refactor(analyzer): Read-only-Auswertung und Nachweisgrenze bereinigen`
 
 **Bereinigung:** Analysebeobachtung ausdrücklich außerhalb des normativen Artefakt-/Evidencemodells halten.
@@ -14864,7 +15053,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.g.W – Let it Work
 
-- [ ] **19.g.W** · Position **787/885** · Voraussetzung: `19.f.C`.
+- [ ] **19.g.W** · Position **802/900** · Voraussetzung: `19.f.C`.
 **Exakte Commit-Message:** `19.g.W feat(analyzer): Analyzer-CLI und Dateiseiteneffekte aufbauen`
 
 **Umsetzung:** list, request, run, import, show und evaluate mit echten Handlern und korrekter Befehlsklasse anbieten.
@@ -14873,7 +15062,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.g.R – Make it Right
 
-- [ ] **19.g.R** · Position **788/885** · Voraussetzung: `19.g.W`.
+- [ ] **19.g.R** · Position **803/900** · Voraussetzung: `19.g.W`.
 **Exakte Commit-Message:** `19.g.R feat(analyzer): Analyzer-CLI und Dateiseiteneffekte vervollständigen`
 
 **Vervollständigung:** Gleiche Zieldateibytes sind No-op, abweichende Bytes Konflikt 6; unzulässige actor/request-id/dry-run/as-proposal-Optionen liefern Code 2.
@@ -14882,7 +15071,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.g.C – Make it Clean
 
-- [ ] **19.g.C** · Position **789/885** · Voraussetzung: `19.g.R`.
+- [ ] **19.g.C** · Position **804/900** · Voraussetzung: `19.g.R`.
 **Exakte Commit-Message:** `19.g.C refactor(analyzer): Analyzer-CLI und Dateiseiteneffekte bereinigen`
 
 **Bereinigung:** Alle Analyzeroptionen über die bestehende Command Registry beschreiben.
@@ -14899,7 +15088,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.h.W – Let it Work
 
-- [ ] **19.h.W** · Position **790/885** · Voraussetzung: `19.g.C`.
+- [ ] **19.h.W** · Position **805/900** · Voraussetzung: `19.g.C`.
 **Exakte Commit-Message:** `19.h.W feat(analyzer): Externe Analyzer als reine Dateischnittstelle aufbauen`
 
 **Umsetzung:** Gültige Requests/Reports eines nicht ausführbaren externen Backends bereits austauschen und execution_supported false führen.
@@ -14908,7 +15097,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.h.R – Make it Right
 
-- [ ] **19.h.R** · Position **791/885** · Voraussetzung: `19.h.W`.
+- [ ] **19.h.R** · Position **806/900** · Voraussetzung: `19.h.W`.
 **Exakte Commit-Message:** `19.h.R feat(analyzer): Externe Analyzer als reine Dateischnittstelle vervollständigen`
 
 **Vervollständigung:** strict, validate, lint und Anweisungstexte starten niemals Analyse, Modelle oder freie Kommandos.
@@ -14917,7 +15106,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.h.C – Make it Clean
 
-- [ ] **19.h.C** · Position **792/885** · Voraussetzung: `19.h.R`.
+- [ ] **19.h.C** · Position **807/900** · Voraussetzung: `19.h.R`.
 **Exakte Commit-Message:** `19.h.C refactor(analyzer): Externe Analyzer als reine Dateischnittstelle bereinigen`
 
 **Bereinigung:** Dateiadapter und bekannte interne Ausführungsadapter getrennt implementieren.
@@ -14934,7 +15123,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.i.W – Let it Work
 
-- [ ] **19.i.W** · Position **793/885** · Voraussetzung: `19.h.C`.
+- [ ] **19.i.W** · Position **808/900** · Voraussetzung: `19.h.C`.
 **Exakte Commit-Message:** `19.i.W feat(analyzer): Frühe Analyse-ID und Workinitialisierung aufbauen`
 
 **Umsetzung:** AnalysisRequestId vor erstem Snapshot-/Workschritt persistierbar binden, auch bei automatisch gewähltem Workverzeichnis.
@@ -14943,7 +15132,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.i.R – Make it Right
 
-- [ ] **19.i.R** · Position **794/885** · Voraussetzung: `19.i.W`.
+- [ ] **19.i.R** · Position **809/900** · Voraussetzung: `19.i.W`.
 **Exakte Commit-Message:** `19.i.R feat(analyzer): Frühe Analyse-ID und Workinitialisierung vervollständigen`
 
 **Vervollständigung:** Actor, WriteRequestId und operations_sha256 bleiben bei Analyse-Work null; analysis_id steht in normalized_arguments.
@@ -14952,7 +15141,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.i.C – Make it Clean
 
-- [ ] **19.i.C** · Position **795/885** · Voraussetzung: `19.i.R`.
+- [ ] **19.i.C** · Position **810/900** · Voraussetzung: `19.i.R`.
 **Exakte Commit-Message:** `19.i.C refactor(analyzer): Frühe Analyse-ID und Workinitialisierung bereinigen`
 
 **Bereinigung:** Analysearbeit als eigenen Workauftragstyp statt fingierten Change Plan führen.
@@ -14969,7 +15158,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.j.W – Let it Work
 
-- [ ] **19.j.W** · Position **796/885** · Voraussetzung: `19.i.C`.
+- [ ] **19.j.W** · Position **811/900** · Voraussetzung: `19.i.C`.
 **Exakte Commit-Message:** `19.j.W feat(analyzer): Dauerhafte Checkpoints und Ergebnisfortsetzung aufbauen`
 
 **Umsetzung:** Große Analyseaufträge mit oder ohne explizites work-dir durch bestätigte dauerhafte Fortschrittseinheiten fortsetzen.
@@ -14978,7 +15167,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.j.R – Make it Right
 
-- [ ] **19.j.R** · Position **797/885** · Voraussetzung: `19.j.W`.
+- [ ] **19.j.R** · Position **812/900** · Voraussetzung: `19.j.W`.
 **Exakte Commit-Message:** `19.j.R feat(analyzer): Dauerhafte Checkpoints und Ergebnisfortsetzung vervollständigen`
 
 **Vervollständigung:** Kein Code 8 vor dauerhaftem Checkpoint; unmöglicher sicherer Abschluss ohne Speicher ist echter Blocker 5.
@@ -14987,7 +15176,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.j.C – Make it Clean
 
-- [ ] **19.j.C** · Position **798/885** · Voraussetzung: `19.j.R`.
+- [ ] **19.j.C** · Position **813/900** · Voraussetzung: `19.j.R`.
 **Exakte Commit-Message:** `19.j.C refactor(analyzer): Dauerhafte Checkpoints und Ergebnisfortsetzung bereinigen`
 
 **Bereinigung:** Analysecheckpointzustand in bestehende Workjournale integrieren.
@@ -15004,7 +15193,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.k.W – Let it Work
 
-- [ ] **19.k.W** · Position **799/885** · Voraussetzung: `19.j.C`.
+- [ ] **19.k.W** · Position **814/900** · Voraussetzung: `19.j.C`.
 **Exakte Commit-Message:** `19.k.W build(analyzer): Optionale Sprachdistribution und Offlinepakete aufbauen`
 
 **Umsetzung:** Extra specroad[language] und separate Offlinepakete je Linux-x86-64-/CPython-ABI mit py3langid 0.4.0 definieren.
@@ -15013,7 +15202,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.k.R – Make it Right
 
-- [ ] **19.k.R** · Position **800/885** · Voraussetzung: `19.k.W`.
+- [ ] **19.k.R** · Position **815/900** · Voraussetzung: `19.k.W`.
 **Exakte Commit-Message:** `19.k.R build(analyzer): Optionale Sprachdistribution und Offlinepakete vervollständigen`
 
 **Vervollständigung:** CPython 3.10 bis 3.14 tatsächlich getrennt prüfen; keinen universellen NumPy-Pin oder ARM-Nachweis für x86-64 behaupten.
@@ -15022,7 +15211,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.k.C – Make it Clean
 
-- [ ] **19.k.C** · Position **801/885** · Voraussetzung: `19.k.R`.
+- [ ] **19.k.C** · Position **816/900** · Voraussetzung: `19.k.R`.
 **Exakte Commit-Message:** `19.k.C refactor(analyzer): Optionale Sprachdistribution und Offlinepakete bereinigen`
 
 **Bereinigung:** Core- und Zusatzpackaging bei gemeinsamer Releaseidentität sauber trennen.
@@ -15039,7 +15228,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.l.W – Let it Work
 
-- [ ] **19.l.W** · Position **802/885** · Voraussetzung: `19.k.C`.
+- [ ] **19.l.W** · Position **817/900** · Voraussetzung: `19.k.C`.
 **Exakte Commit-Message:** `19.l.W feat(analyzer): Vertrauenswürdiger shellfreier Workerstart aufbauen`
 
 **Umsetzung:** Genau den bekannten Distributionsworker über expliziten Interpreter, stdin-Request und JSON-Bericht starten.
@@ -15048,7 +15237,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.l.R – Make it Right
 
-- [ ] **19.l.R** · Position **803/885** · Voraussetzung: `19.l.W`.
+- [ ] **19.l.R** · Position **818/900** · Voraussetzung: `19.l.W`.
 **Exakte Commit-Message:** `19.l.R feat(analyzer): Vertrauenswürdiger shellfreier Workerstart vervollständigen`
 
 **Vervollständigung:** Keine Shell, Projekt-CWD-Imports, fremde Entry-point-Suche oder aus Projektdaten gewählten Modellpfade verwenden.
@@ -15057,7 +15246,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.l.C – Make it Clean
 
-- [ ] **19.l.C** · Position **804/885** · Voraussetzung: `19.l.R`.
+- [ ] **19.l.C** · Position **819/900** · Voraussetzung: `19.l.R`.
 **Exakte Commit-Message:** `19.l.C refactor(analyzer): Vertrauenswürdiger shellfreier Workerstart bereinigen`
 
 **Bereinigung:** Prozessadapter und Trustkonfiguration an einer schmalen Schnittstelle bündeln.
@@ -15074,7 +15263,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.m.W – Let it Work
 
-- [ ] **19.m.W** · Position **805/885** · Voraussetzung: `19.l.C`.
+- [ ] **19.m.W** · Position **820/900** · Voraussetzung: `19.l.C`.
 **Exakte Commit-Message:** `19.m.W feat(analyzer): Lazy Loading, Offlinegrenze und Prozesslebensdauer aufbauen`
 
 **Umsetzung:** Modell erst beim expliziten Run einmal je Worker laden, Analyzer seriell mit höchstens einem Modell betreiben.
@@ -15083,7 +15272,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.m.R – Make it Right
 
-- [ ] **19.m.R** · Position **806/885** · Voraussetzung: `19.m.W`.
+- [ ] **19.m.R** · Position **821/900** · Voraussetzung: `19.m.W`.
 **Exakte Commit-Message:** `19.m.R feat(analyzer): Lazy Loading, Offlinegrenze und Prozesslebensdauer vervollständigen`
 
 **Vervollständigung:** Training, URL/Webservice, Telemetrie, automatische Installation und Hintergrunddienst nicht exponieren; Kinder bei behandeltem Ende einsammeln.
@@ -15092,7 +15281,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.m.C – Make it Clean
 
-- [ ] **19.m.C** · Position **807/885** · Voraussetzung: `19.m.R`.
+- [ ] **19.m.C** · Position **822/900** · Voraussetzung: `19.m.R`.
 **Exakte Commit-Message:** `19.m.C refactor(analyzer): Lazy Loading, Offlinegrenze und Prozesslebensdauer bereinigen`
 
 **Bereinigung:** Prozesscleanup in einem gemeinsamen garantiert ausgeführten Kontrollpfad führen.
@@ -15109,7 +15298,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.n.W – Let it Work
 
-- [ ] **19.n.W** · Position **808/885** · Voraussetzung: `19.m.C`.
+- [ ] **19.n.W** · Position **823/900** · Voraussetzung: `19.m.C`.
 **Exakte Commit-Message:** `19.n.W feat(analyzer): Realer py3langid-Referenzadapter aufbauen`
 
 **Umsetzung:** py3langid 0.4.0 mit hashgebundenem mitgeliefertem Modell und vollständigem geordnetem Kandidatenraum integrieren.
@@ -15118,7 +15307,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.n.R – Make it Right
 
-- [ ] **19.n.R** · Position **809/885** · Voraussetzung: `19.n.W`.
+- [ ] **19.n.R** · Position **824/900** · Voraussetzung: `19.n.W`.
 **Exakte Commit-Message:** `19.n.R feat(analyzer): Realer py3langid-Referenzadapter vervollständigen`
 
 **Vervollständigung:** Fehlendes Paket, Modellhashfehler und unerlaubter Kandidatenfilter sind keine erfolgreiche Ersatzdetektion.
@@ -15127,7 +15316,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.n.C – Make it Clean
 
-- [ ] **19.n.C** · Position **810/885** · Voraussetzung: `19.n.R`.
+- [ ] **19.n.C** · Position **825/900** · Voraussetzung: `19.n.R`.
 **Exakte Commit-Message:** `19.n.C refactor(analyzer): Realer py3langid-Referenzadapter bereinigen`
 
 **Bereinigung:** Referenzbackend hinter dem generischen Workerprotokoll kapseln, ohne eine Wortlistenattrappe einzubauen.
@@ -15144,7 +15333,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.o.W – Let it Work
 
-- [ ] **19.o.W** · Position **811/885** · Voraussetzung: `19.n.C`.
+- [ ] **19.o.W** · Position **826/900** · Voraussetzung: `19.n.C`.
 **Exakte Commit-Message:** `19.o.W feat(analyzer): Textvollständigkeit und Abstentionsvorbereitung aufbauen`
 
 **Umsetzung:** min_text_codepoints mit Default 20 und Bereich 1 bis 10000 sowie ausschließlich ASCII-Randentfernung zur Längenentscheidung implementieren.
@@ -15153,7 +15342,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.o.R – Make it Right
 
-- [ ] **19.o.R** · Position **812/885** · Voraussetzung: `19.o.W`.
+- [ ] **19.o.R** · Position **827/900** · Voraussetzung: `19.o.W`.
 **Exakte Commit-Message:** `19.o.R feat(analyzer): Textvollständigkeit und Abstentionsvorbereitung vervollständigen`
 
 **Vervollständigung:** Unicodeoriginal nicht normalisieren oder speichern; interne Bibliotheksnormalisierung nur auf Arbeitskopie binden.
@@ -15162,7 +15351,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.o.C – Make it Clean
 
-- [ ] **19.o.C** · Position **813/885** · Voraussetzung: `19.o.R`.
+- [ ] **19.o.C** · Position **828/900** · Voraussetzung: `19.o.R`.
 **Exakte Commit-Message:** `19.o.C refactor(analyzer): Textvollständigkeit und Abstentionsvorbereitung bereinigen`
 
 **Bereinigung:** Vorverarbeitung als kleine versionierte Policy ohne semantische Segmentierung halten.
@@ -15179,7 +15368,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.p.W – Let it Work
 
-- [ ] **19.p.W** · Position **814/885** · Voraussetzung: `19.o.C`.
+- [ ] **19.p.W** · Position **829/900** · Voraussetzung: `19.o.C`.
 **Exakte Commit-Message:** `19.p.W feat(analyzer): Normalisierte Scores und exakte Entscheidung aufbauen`
 
 **Umsetzung:** norm_probs=True, Top-zwei-Rangliste und Dezimalstrings mit zwölf Stellen und half-even verwenden.
@@ -15188,7 +15377,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.p.R – Make it Right
 
-- [ ] **19.p.R** · Position **815/885** · Voraussetzung: `19.p.W`.
+- [ ] **19.p.R** · Position **830/900** · Voraussetzung: `19.p.W`.
 **Exakte Commit-Message:** `19.p.R feat(analyzer): Normalisierte Scores und exakte Entscheidung vervollständigen`
 
 **Vervollständigung:** Nichtendliche/ungültige Scores, Code-Tiebreak, und/zxx und niedriger Abstand folgen der geordneten Abstentionstabelle.
@@ -15197,7 +15386,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.p.C – Make it Clean
 
-- [ ] **19.p.C** · Position **816/885** · Voraussetzung: `19.p.R`.
+- [ ] **19.p.C** · Position **831/900** · Voraussetzung: `19.p.R`.
 **Exakte Commit-Message:** `19.p.C refactor(analyzer): Normalisierte Scores und exakte Entscheidung bereinigen`
 
 **Bereinigung:** Scorequantisierung und Entscheidungsfunktion unabhängig vom globalen Decimal-Kontext betreiben.
@@ -15214,7 +15403,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.q.W – Let it Work
 
-- [ ] **19.q.W** · Position **817/885** · Voraussetzung: `19.p.C`.
+- [ ] **19.q.W** · Position **832/900** · Voraussetzung: `19.p.C`.
 **Exakte Commit-Message:** `19.q.W feat(analyzer): Sprachvergleich ohne erfundene Präzision aufbauen`
 
 **Umsetzung:** primary_language-Vergleich und einzig vorgesehene cmn-declared/zh-detected-Grobkompatibilität umsetzen.
@@ -15223,7 +15412,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.q.R – Make it Right
 
-- [ ] **19.q.R** · Position **818/885** · Voraussetzung: `19.q.W`.
+- [ ] **19.q.R** · Position **833/900** · Voraussetzung: `19.q.W`.
 **Exakte Commit-Message:** `19.q.R feat(analyzer): Sprachvergleich ohne erfundene Präzision vervollständigen`
 
 **Vervollständigung:** Region, Script und Mandarin nicht als erkannt ausweisen; unbekannte/private Tags bleiben unverifiable.
@@ -15232,7 +15421,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.q.C – Make it Clean
 
-- [ ] **19.q.C** · Position **819/885** · Voraussetzung: `19.q.R`.
+- [ ] **19.q.C** · Position **834/900** · Voraussetzung: `19.q.R`.
 **Exakte Commit-Message:** `19.q.C refactor(analyzer): Sprachvergleich ohne erfundene Präzision bereinigen`
 
 **Bereinigung:** Vergleichsvertrag getrennt von Sprachzulässigkeit und Detektorentscheidung führen.
@@ -15249,7 +15438,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.r.W – Let it Work
 
-- [ ] **19.r.W** · Position **820/885** · Voraussetzung: `19.q.C`.
+- [ ] **19.r.W** · Position **835/900** · Voraussetzung: `19.q.C`.
 **Exakte Commit-Message:** `19.r.W feat(analyzer): Policy, Erfolgsbegriffe und Exitcodes aufbauen`
 
 **Umsetzung:** Materialisierte Severitydefaults und execution_complete, all_languages_confirmed und gate_passed separat berechnen.
@@ -15258,7 +15447,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.r.R – Make it Right
 
-- [ ] **19.r.R** · Position **821/885** · Voraussetzung: `19.r.W`.
+- [ ] **19.r.R** · Position **836/900** · Voraussetzung: `19.r.W`.
 **Exakte Commit-Message:** `19.r.R feat(analyzer): Policy, Erfolgsbegriffe und Exitcodes vervollständigen`
 
 **Vervollständigung:** Technisch nicht verfügbarer angeforderter Analyzer liefert Code 5; Findings am Fail-Schwellwert Code 1.
@@ -15267,7 +15456,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.r.C – Make it Clean
 
-- [ ] **19.r.C** · Position **822/885** · Voraussetzung: `19.r.R`.
+- [ ] **19.r.C** · Position **837/900** · Voraussetzung: `19.r.R`.
 **Exakte Commit-Message:** `19.r.C refactor(analyzer): Policy, Erfolgsbegriffe und Exitcodes bereinigen`
 
 **Bereinigung:** Fachliche Findings, technische Ausführbarkeit und CLI-Exitzuordnung zentral aber getrennt auswerten.
@@ -15284,7 +15473,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.s.W – Let it Work
 
-- [ ] **19.s.W** · Position **823/885** · Voraussetzung: `19.r.C`.
+- [ ] **19.s.W** · Position **838/900** · Voraussetzung: `19.r.C`.
 **Exakte Commit-Message:** `19.s.W feat(analyzer): Enginefingerprint und Ergebnisreproduzierbarkeit aufbauen`
 
 **Umsetzung:** Bibliothek, Modell, Kandidaten, Vorverarbeitung, Unicode, NumPy und numerisch relevante Runtime an Engineidentität binden.
@@ -15293,7 +15482,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.s.R – Make it Right
 
-- [ ] **19.s.R** · Position **824/885** · Voraussetzung: `19.s.W`.
+- [ ] **19.s.R** · Position **839/900** · Voraussetzung: `19.s.W`.
 **Exakte Commit-Message:** `19.s.R feat(analyzer): Enginefingerprint und Ergebnisreproduzierbarkeit vervollständigen`
 
 **Vervollständigung:** Cross-Runtime-Unterschiede nicht mit Core-Bytedeterminismus verwechseln; nur spezifizierte Entscheidungsparität fordern.
@@ -15302,7 +15491,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.s.C – Make it Clean
 
-- [ ] **19.s.C** · Position **825/885** · Voraussetzung: `19.s.R`.
+- [ ] **19.s.C** · Position **840/900** · Voraussetzung: `19.s.R`.
 **Exakte Commit-Message:** `19.s.C refactor(analyzer): Enginefingerprint und Ergebnisreproduzierbarkeit bereinigen`
 
 **Bereinigung:** Fingerprintquelle im Worker einmal erzeugen und über alle Resultate transportieren.
@@ -15319,7 +15508,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.t.W – Let it Work
 
-- [ ] **19.t.W** · Position **826/885** · Voraussetzung: `19.s.C`.
+- [ ] **19.t.W** · Position **841/900** · Voraussetzung: `19.s.C`.
 **Exakte Commit-Message:** `19.t.W feat(analyzer): Eingefrorener mehrsprachiger Referenzkorpus aufbauen`
 
 **Umsetzung:** Vor Adapterabnahme unabhängigen kuratierten Korpus für de/en/hi/id/pt/es/ru/ja/zh mit je mindestens 20 Requirements von 80 bis 500 Codepoints einfrieren.
@@ -15328,7 +15517,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.t.R – Make it Right
 
-- [ ] **19.t.R** · Position **827/885** · Voraussetzung: `19.t.W`.
+- [ ] **19.t.R** · Position **842/900** · Voraussetzung: `19.t.W`.
 **Exakte Commit-Message:** `19.t.R feat(analyzer): Eingefrorener mehrsprachiger Referenzkorpus vervollständigen`
 
 **Vervollständigung:** Je Sprache mindestens fünf zusätzliche Kurz-/Techniktexte; nicht nach Fehlklassifikation auf günstigere Texte umstellen.
@@ -15337,7 +15526,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.t.C – Make it Clean
 
-- [ ] **19.t.C** · Position **828/885** · Voraussetzung: `19.t.R`.
+- [ ] **19.t.C** · Position **843/900** · Voraussetzung: `19.t.R`.
 **Exakte Commit-Message:** `19.t.C refactor(analyzer): Eingefrorener mehrsprachiger Referenzkorpus bereinigen`
 
 **Bereinigung:** Korpusdaten, Prüfharness und Ergebnisbelege trennen; kein Markdown-/Dokutest.
@@ -15354,7 +15543,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.u.W – Let it Work
 
-- [ ] **19.u.W** · Position **829/885** · Voraussetzung: `19.t.C`.
+- [ ] **19.u.W** · Position **844/900** · Voraussetzung: `19.t.C`.
 **Exakte Commit-Message:** `19.u.W feat(analyzer): Fehl-, Grenz- und Angriffsabnahme aufbauen`
 
 **Umsetzung:** Ungültige Reports, fremde Subjects, manipulierte Scores und Prompt-Injection-artige Texte über den vollständigen Adapterweg prüfen.
@@ -15363,7 +15552,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.u.R – Make it Right
 
-- [ ] **19.u.R** · Position **830/885** · Voraussetzung: `19.u.W`.
+- [ ] **19.u.R** · Position **845/900** · Voraussetzung: `19.u.W`.
 **Exakte Commit-Message:** `19.u.R feat(analyzer): Fehl-, Grenz- und Angriffsabnahme vervollständigen`
 
 **Vervollständigung:** Backendunverfügbarkeit, kurze Texte, sehr lange Strings, Gleichstand und grobe Sprachlabels korrekt klassifizieren.
@@ -15372,7 +15561,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.u.C – Make it Clean
 
-- [ ] **19.u.C** · Position **831/885** · Voraussetzung: `19.u.R`.
+- [ ] **19.u.C** · Position **846/900** · Voraussetzung: `19.u.R`.
 **Exakte Commit-Message:** `19.u.C refactor(analyzer): Fehl-, Grenz- und Angriffsabnahme bereinigen`
 
 **Bereinigung:** Gemeinsame generische Vertragsfixtures um echte Workerfehler ergänzen.
@@ -15389,7 +15578,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.v.W – Let it Work
 
-- [ ] **19.v.W** · Position **832/885** · Voraussetzung: `19.u.C`.
+- [ ] **19.v.W** · Position **847/900** · Voraussetzung: `19.u.C`.
 **Exakte Commit-Message:** `19.v.W feat(analyzer): Analyzer-Ressourcenabnahme aufbauen`
 
 **Umsetzung:** Referenzlauf mit 1000 vollständigen Strings von 100 bis 500 Codepoints samt Parent-/Workerverbrauch messen.
@@ -15398,7 +15587,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.v.R – Make it Right
 
-- [ ] **19.v.R** · Position **833/885** · Voraussetzung: `19.v.W`.
+- [ ] **19.v.R** · Position **848/900** · Voraussetzung: `19.v.W`.
 **Exakte Commit-Message:** `19.v.R feat(analyzer): Analyzer-Ressourcenabnahme vervollständigen`
 
 **Vervollständigung:** Nicht messbare Plattform nicht als bestanden ausweisen; kleiner Host darf echten Blocker melden, aber niemals Text kürzen.
@@ -15407,7 +15596,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.v.C – Make it Clean
 
-- [ ] **19.v.C** · Position **834/885** · Voraussetzung: `19.v.R`.
+- [ ] **19.v.C** · Position **849/900** · Voraussetzung: `19.v.R`.
 **Exakte Commit-Message:** `19.v.C refactor(analyzer): Analyzer-Ressourcenabnahme bereinigen`
 
 **Bereinigung:** Messharness außerhalb der produktiven Abhängigkeiten halten und Corebudgets nicht vermischen.
@@ -15424,7 +15613,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.w.W – Let it Work
 
-- [ ] **19.w.W** · Position **835/885** · Voraussetzung: `19.v.C`.
+- [ ] **19.w.W** · Position **850/900** · Voraussetzung: `19.v.C`.
 **Exakte Commit-Message:** `19.w.W feat(analyzer): Analyse-Wiederaufnahme und Hostfehler aufbauen`
 
 **Umsetzung:** Reale Analyse an allen dauerhaften Subject-/Checkpointgrenzen unterbrechen und in neuem Prozess fortsetzen.
@@ -15433,7 +15622,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.w.R – Make it Right
 
-- [ ] **19.w.R** · Position **836/885** · Voraussetzung: `19.w.W`.
+- [ ] **19.w.R** · Position **851/900** · Voraussetzung: `19.w.W`.
 **Exakte Commit-Message:** `19.w.R feat(analyzer): Analyse-Wiederaufnahme und Hostfehler vervollständigen`
 
 **Vervollständigung:** Voller Scratch, Workercrash, fehlende Workdaten und bindungswidrige Engine erzeugen echte Fehler statt endlosen Retry.
@@ -15442,7 +15631,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.w.C – Make it Clean
 
-- [ ] **19.w.C** · Position **837/885** · Voraussetzung: `19.w.R`.
+- [ ] **19.w.C** · Position **852/900** · Voraussetzung: `19.w.R`.
 **Exakte Commit-Message:** `19.w.C refactor(analyzer): Analyse-Wiederaufnahme und Hostfehler bereinigen`
 
 **Bereinigung:** Worker- und Workfehlerzustände über definierte Resultate verbinden.
@@ -15459,7 +15648,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.x.W – Let it Work
 
-- [ ] **19.x.W** · Position **838/885** · Voraussetzung: `19.w.C`.
+- [ ] **19.x.W** · Position **853/900** · Voraussetzung: `19.w.C`.
 **Exakte Commit-Message:** `19.x.W feat(analyzer): Mehrsprachiger Ende-zu-Ende-Roundtrip aufbauen`
 
 **Umsetzung:** Mehrsprachige Requirements über Authoring, Darstellung, Export/Import, Bundle und Analyzer-Dateiaustausch führen.
@@ -15468,7 +15657,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.x.R – Make it Right
 
-- [ ] **19.x.R** · Position **839/885** · Voraussetzung: `19.x.W`.
+- [ ] **19.x.R** · Position **854/900** · Voraussetzung: `19.x.W`.
 **Exakte Commit-Message:** `19.x.R feat(analyzer): Mehrsprachiger Ende-zu-Ende-Roundtrip vervollständigen`
 
 **Vervollständigung:** Reports bleiben extern; Darstellung fügt keine vermeintlich erkannten Wörter, Regionen oder neue Verbindlichkeit ein.
@@ -15477,7 +15666,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.x.C – Make it Clean
 
-- [ ] **19.x.C** · Position **840/885** · Voraussetzung: `19.x.R`.
+- [ ] **19.x.C** · Position **855/900** · Voraussetzung: `19.x.R`.
 **Exakte Commit-Message:** `19.x.C refactor(analyzer): Mehrsprachiger Ende-zu-Ende-Roundtrip bereinigen`
 
 **Bereinigung:** Bestehende Featuretests zu einem echten zusammenhängenden Szenario verbinden.
@@ -15494,7 +15683,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.y.W – Let it Work
 
-- [ ] **19.y.W** · Position **841/885** · Voraussetzung: `19.x.C`.
+- [ ] **19.y.W** · Position **856/900** · Voraussetzung: `19.x.C`.
 **Exakte Commit-Message:** `19.y.W feat(analyzer): Core-/Zusatzmatrix und vollständige Analyzerfreigabe aufbauen`
 
 **Umsetzung:** Gesamte reale Adaptermatrix für CPython 3.10 bis 3.14 und Core ohne Zusatzpakete getrennt durchlaufen.
@@ -15503,7 +15692,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.y.R – Make it Right
 
-- [ ] **19.y.R** · Position **842/885** · Voraussetzung: `19.y.W`.
+- [ ] **19.y.R** · Position **857/900** · Voraussetzung: `19.y.W`.
 **Exakte Commit-Message:** `19.y.R feat(analyzer): Core-/Zusatzmatrix und vollständige Analyzerfreigabe vervollständigen`
 
 **Vervollständigung:** Fehlende Offlinewheels oder reale Adapterfehler bleiben offene Releaseblocker statt optionalem Skip.
@@ -15512,7 +15701,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 19.y.C – Make it Clean
 
-- [ ] **19.y.C** · Position **843/885** · Voraussetzung: `19.y.R`.
+- [ ] **19.y.C** · Position **858/900** · Voraussetzung: `19.y.R`.
 **Exakte Commit-Message:** `19.y.C refactor(analyzer): Core-/Zusatzmatrix und vollständige Analyzerfreigabe bereinigen`
 
 **Bereinigung:** Testmatrix bündeln, ohne verschiedene Nachweisarten oder Plattformen zu einem Scheinerfolg zusammenzufassen.
@@ -15541,7 +15730,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.a.W – Let it Work
 
-- [ ] **20.a.W** · Position **844/885** · Voraussetzung: `19.y.C`.
+- [ ] **20.a.W** · Position **859/900** · Voraussetzung: `19.y.C`.
 **Exakte Commit-Message:** `20.a.W test(acceptance): Abnahmekatalog und ehrliche Nachweisvollständigkeit aufbauen`
 
 **Umsetzung:** Tatsächliche Tests, Spezifikationshash, Fixtures und Requirement-/Verifikationszuordnung in einen ausführbaren Abnahmekatalog zusammenführen.
@@ -15550,7 +15739,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.a.R – Make it Right
 
-- [ ] **20.a.R** · Position **845/885** · Voraussetzung: `20.a.W`.
+- [ ] **20.a.R** · Position **860/900** · Voraussetzung: `20.a.W`.
 **Exakte Commit-Message:** `20.a.R test(acceptance): Abnahmekatalog und ehrliche Nachweisvollständigkeit vervollständigen`
 
 **Vervollständigung:** Die 730er-Zuordnung nicht als Ausführung ausgeben und reine Darstellung/Doku gemäß TD-001 ausdrücklich ausnehmen.
@@ -15559,7 +15748,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.a.C – Make it Clean
 
-- [ ] **20.a.C** · Position **846/885** · Voraussetzung: `20.a.R`.
+- [ ] **20.a.C** · Position **861/900** · Voraussetzung: `20.a.R`.
 **Exakte Commit-Message:** `20.a.C refactor(acceptance): Abnahmekatalog und ehrliche Nachweisvollständigkeit bereinigen`
 
 **Bereinigung:** Katalog aus bestehenden Testmarkierungen konsolidieren, ohne Dokumentation automatisiert zu testen.
@@ -15576,7 +15765,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.b.W – Let it Work
 
-- [ ] **20.b.W** · Position **847/885** · Voraussetzung: `20.a.C`.
+- [ ] **20.b.W** · Position **862/900** · Voraussetzung: `20.a.C`.
 **Exakte Commit-Message:** `20.b.W test(acceptance): Fachliche Gesamtszenarien aufbauen`
 
 **Umsetzung:** Alle 46 spezifizierten SR-SCN-/E2E-Identitäten über die tatsächlichen öffentlichen Funktionswege ausführen.
@@ -15585,7 +15774,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.b.R – Make it Right
 
-- [ ] **20.b.R** · Position **848/885** · Voraussetzung: `20.b.W`.
+- [ ] **20.b.R** · Position **863/900** · Voraussetzung: `20.b.W`.
 **Exakte Commit-Message:** `20.b.R test(acceptance): Fachliche Gesamtszenarien vervollständigen`
 
 **Vervollständigung:** Negative, veraltete, unvollständige und verbotene Abläufe dürfen nicht als vollständiger Erfolg enden.
@@ -15594,7 +15783,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.b.C – Make it Clean
 
-- [ ] **20.b.C** · Position **849/885** · Voraussetzung: `20.b.R`.
+- [ ] **20.b.C** · Position **864/900** · Voraussetzung: `20.b.R`.
 **Exakte Commit-Message:** `20.b.C refactor(acceptance): Fachliche Gesamtszenarien bereinigen`
 
 **Bereinigung:** Szenariohelpers auf vorhandene Fixtures bündeln, Einzelverhaltenstests nicht ersetzen.
@@ -15611,7 +15800,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.c.W – Let it Work
 
-- [ ] **20.c.W** · Position **850/885** · Voraussetzung: `20.b.C`.
+- [ ] **20.c.W** · Position **865/900** · Voraussetzung: `20.b.C`.
 **Exakte Commit-Message:** `20.c.W test(acceptance): Kontraktregression R-01 bis R-47 aufbauen`
 
 **Umsetzung:** Vollständige gekoppelten Regressionen zu Scope, Kontext, Lebenszyklus, Reviews, Merge, Migration, Restore und Work aus Anhang R ausführen.
@@ -15620,7 +15809,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.c.R – Make it Right
 
-- [ ] **20.c.R** · Position **851/885** · Voraussetzung: `20.c.W`.
+- [ ] **20.c.R** · Position **866/900** · Voraussetzung: `20.c.W`.
 **Exakte Commit-Message:** `20.c.R test(acceptance): Kontraktregression R-01 bis R-47 vervollständigen`
 
 **Vervollständigung:** Keine Beschränkung auf positive Algorithmenmodelle; echte CLI-, Datei- und Prozesspfade prüfen.
@@ -15629,7 +15818,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.c.C – Make it Clean
 
-- [ ] **20.c.C** · Position **852/885** · Voraussetzung: `20.c.R`.
+- [ ] **20.c.C** · Position **867/900** · Voraussetzung: `20.c.R`.
 **Exakte Commit-Message:** `20.c.C refactor(acceptance): Kontraktregression R-01 bis R-47 bereinigen`
 
 **Bereinigung:** Fälle nach vorhandenen Fachfixtures ordnen und Duplikate ohne Verlust der unabhängigen Oracles reduzieren.
@@ -15646,7 +15835,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.d.W – Let it Work
 
-- [ ] **20.d.W** · Position **853/885** · Voraussetzung: `20.c.C`.
+- [ ] **20.d.W** · Position **868/900** · Voraussetzung: `20.c.C`.
 **Exakte Commit-Message:** `20.d.W test(acceptance): Mehrsprachen-, Analyzer- und Zahlenregression aufbauen`
 
 **Umsetzung:** R-48 bis R-75, SRX-U.3-Vektoren und Sprach-/Analyzerverträge gemeinsam durchlaufen.
@@ -15655,7 +15844,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.d.R – Make it Right
 
-- [ ] **20.d.R** · Position **854/885** · Voraussetzung: `20.d.W`.
+- [ ] **20.d.R** · Position **869/900** · Voraussetzung: `20.d.W`.
 **Exakte Commit-Message:** `20.d.R test(acceptance): Mehrsprachen-, Analyzer- und Zahlenregression vervollständigen`
 
 **Vervollständigung:** Geänderter globaler Decimal-Kontext, Region-/Scriptverwechslung und vorzeitige Work-ID-Erzeugung dürfen keine falschen Ergebnisse erzeugen.
@@ -15664,7 +15853,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.d.C – Make it Clean
 
-- [ ] **20.d.C** · Position **855/885** · Voraussetzung: `20.d.R`.
+- [ ] **20.d.C** · Position **870/900** · Voraussetzung: `20.d.R`.
 **Exakte Commit-Message:** `20.d.C refactor(acceptance): Mehrsprachen-, Analyzer- und Zahlenregression bereinigen`
 
 **Bereinigung:** Kleine reine Vertragsoracles und vollständige Integrationsläufe komplementär halten.
@@ -15681,7 +15870,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.e.W – Let it Work
 
-- [ ] **20.e.W** · Position **856/885** · Voraussetzung: `20.d.C`.
+- [ ] **20.e.W** · Position **871/900** · Voraussetzung: `20.d.C`.
 **Exakte Commit-Message:** `20.e.W test(acceptance): Transaktions- und Recoverygesamtmatrix aufbauen`
 
 **Umsetzung:** Jeden tatsächlich implementierten dauerhaften Journal-/Publikationspunkt mit echten Abbrüchen und Folgerecovery prüfen.
@@ -15690,7 +15879,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.e.R – Make it Right
 
-- [ ] **20.e.R** · Position **857/885** · Voraussetzung: `20.e.W`.
+- [ ] **20.e.R** · Position **872/900** · Voraussetzung: `20.e.W`.
 **Exakte Commit-Message:** `20.e.R test(acceptance): Transaktions- und Recoverygesamtmatrix vervollständigen`
 
 **Vervollständigung:** Dateisystemfehler, fremde Locks, Korruption, verlorene Sandbox und wiederholter Request erhalten Daten statt sie blind zu überschreiben.
@@ -15699,7 +15888,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.e.C – Make it Clean
 
-- [ ] **20.e.C** · Position **858/885** · Voraussetzung: `20.e.R`.
+- [ ] **20.e.C** · Position **873/900** · Voraussetzung: `20.e.R`.
 **Exakte Commit-Message:** `20.e.C refactor(acceptance): Transaktions- und Recoverygesamtmatrix bereinigen`
 
 **Bereinigung:** Fault-Injectionpunkte zentral katalogisieren und Transaktionskunden darüber parametrieren.
@@ -15714,9 +15903,11 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 **Anforderungsbezug:** `SR-REQ-0557`–`SR-REQ-0578`, `SR-REQ-0582`–`SR-REQ-0605`.
 **Verifikationsbezug:** `SR-VER-0035`, `SR-VER-0036`, `SR-VER-0037`, `SR-VER-0038`, `SR-VER-0039`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Zusätzliche Abnahme v0.2.8:** SR-E2E-0013 umfasst den realen Hin-/Rückweg nach W.7 mit derselben Resultbindung, frischer Sandbox, bewusst autorisiertem Hostempfang und lokalem Review. Prozesswechsel, Partialgrenze, Snapshotlücken, Replay und echte Abbrüche erhalten ihr eigenes negatives Oracle; Work-Pakete bleiben getrennt nach Anhang P geprüft.
+
 #### 20.f.W – Let it Work
 
-- [ ] **20.f.W** · Position **859/885** · Voraussetzung: `20.e.C`.
+- [ ] **20.f.W** · Position **874/900** · Voraussetzung: `20.e.C`.
 **Exakte Commit-Message:** `20.f.W test(acceptance): Work-, Cache- und Sandboxparität aufbauen`
 
 **Umsetzung:** Alle großen Fachoperationen unter constrained/standard, cache off/on und frischer kompatibler Sandbox vollständig abschließen.
@@ -15725,7 +15916,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.f.R – Make it Right
 
-- [ ] **20.f.R** · Position **860/885** · Voraussetzung: `20.f.W`.
+- [ ] **20.f.R** · Position **875/900** · Voraussetzung: `20.f.W`.
 **Exakte Commit-Message:** `20.f.R test(acceptance): Work-, Cache- und Sandboxparität vervollständigen`
 
 **Vervollständigung:** Veränderte Bytes bei gleicher Größe/mtime, manipulierte Caches und reine Preflightwiederholung als vermeintlichen Fortschritt erkennen.
@@ -15734,7 +15925,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.f.C – Make it Clean
 
-- [ ] **20.f.C** · Position **861/885** · Voraussetzung: `20.f.R`.
+- [ ] **20.f.C** · Position **876/900** · Voraussetzung: `20.f.R`.
 **Exakte Commit-Message:** `20.f.C refactor(acceptance): Work-, Cache- und Sandboxparität bereinigen`
 
 **Bereinigung:** Gemeinsame Paritätsprojektion auf Fachdaten anwenden, Betriebsmetriken separat vergleichen.
@@ -15751,7 +15942,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.g.W – Let it Work
 
-- [ ] **20.g.W** · Position **862/885** · Voraussetzung: `20.f.C`.
+- [ ] **20.g.W** · Position **877/900** · Voraussetzung: `20.f.C`.
 **Exakte Commit-Message:** `20.g.W test(acceptance): Sicherheits- und Offlinegesamtprüfung aufbauen`
 
 **Umsetzung:** Core und Zusatzworker mit bösartigen Pfaden, Archiven, XML, Texten und Deskriptoren in netzwerkisolierter nichtprivilegierter Umgebung prüfen.
@@ -15760,7 +15951,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.g.R – Make it Right
 
-- [ ] **20.g.R** · Position **863/885** · Voraussetzung: `20.g.W`.
+- [ ] **20.g.R** · Position **878/900** · Voraussetzung: `20.g.W`.
 **Exakte Commit-Message:** `20.g.R test(acceptance): Sicherheits- und Offlinegesamtprüfung vervollständigen`
 
 **Vervollständigung:** Geheimnisse, fremde Dateien, Gitzustand und unerlaubte Prozess-/Netzwerkressourcen bleiben geschützt.
@@ -15769,7 +15960,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.g.C – Make it Clean
 
-- [ ] **20.g.C** · Position **864/885** · Voraussetzung: `20.g.R`.
+- [ ] **20.g.C** · Position **879/900** · Voraussetzung: `20.g.R`.
 **Exakte Commit-Message:** `20.g.C refactor(acceptance): Sicherheits- und Offlinegesamtprüfung bereinigen`
 
 **Bereinigung:** Angriffskorpus mit gemeinsamen I/O-Grenzen abgleichen und redundant gefährliche Sonderpfade entfernen.
@@ -15784,9 +15975,11 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 **Anforderungsbezug:** `SR-REQ-0223`–`SR-REQ-0227`, `SR-REQ-0229`–`SR-REQ-0230`, `SR-REQ-0392`.
 **Verifikationsbezug:** `SR-VER-0017`, `SR-VER-0027`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Zusätzliche Abnahme v0.2.8:** SpecRoad-Modul/PYZ und gebundene neue PatchHarbor-Runtime gemeinsam unter CPython 3.10–3.14 prüfen; Sandbox ohne Git/Shell/Netzwerk/Installationspakete, lokale Git-Voraussetzungen gesondert. Jedes angebotene Python-bundled-Profil zusätzlich auf seiner exakten Plattform ohne vorhandenes Python prüfen. Fehlende Plattformnachweise verhindern nur die betreffende Profilfreigabe, werden niemals als Erfolg gezählt.
+
 #### 20.h.W – Let it Work
 
-- [ ] **20.h.W** · Position **865/885** · Voraussetzung: `20.g.C`.
+- [ ] **20.h.W** · Position **880/900** · Voraussetzung: `20.g.C`.
 **Exakte Commit-Message:** `20.h.W test(acceptance): Python- und Distributionsmatrix aufbauen`
 
 **Umsetzung:** Dependency-freies Modul und Core-Zipapp unter CPython 3.10 bis 3.14 auf Linux x86-64 tatsächlich prüfen.
@@ -15795,7 +15988,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.h.R – Make it Right
 
-- [ ] **20.h.R** · Position **866/885** · Voraussetzung: `20.h.W`.
+- [ ] **20.h.R** · Position **881/900** · Voraussetzung: `20.h.W`.
 **Exakte Commit-Message:** `20.h.R test(acceptance): Python- und Distributionsmatrix vervollständigen`
 
 **Vervollständigung:** Fehlende Plattform-/ABI-Prüfung bleibt offen; Ubuntu/aarch64-Pixeltests sind Zusatznachweis und kein Ersatz der Referenzmatrix.
@@ -15804,7 +15997,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.h.C – Make it Clean
 
-- [ ] **20.h.C** · Position **867/885** · Voraussetzung: `20.h.R`.
+- [ ] **20.h.C** · Position **882/900** · Voraussetzung: `20.h.R`.
 **Exakte Commit-Message:** `20.h.C refactor(acceptance): Python- und Distributionsmatrix bereinigen`
 
 **Bereinigung:** Matrixjobs mit gemeinsamem Testharness und getrennten aussagekräftigen Evidenceobjekten erzeugen.
@@ -15821,7 +16014,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.i.W – Let it Work
 
-- [ ] **20.i.W** · Position **868/885** · Voraussetzung: `20.h.C`.
+- [ ] **20.i.W** · Position **883/900** · Voraussetzung: `20.h.C`.
 **Exakte Commit-Message:** `20.i.W test(acceptance): Standardperformance messen aufbauen`
 
 **Umsetzung:** Referenzfixtures mit 1000 Artefakten/5000 Relationen/10 MiB und 10000/50000/100 MiB bereitstellen und messen.
@@ -15830,7 +16023,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.i.R – Make it Right
 
-- [ ] **20.i.R** · Position **869/885** · Voraussetzung: `20.i.W`.
+- [ ] **20.i.R** · Position **884/900** · Voraussetzung: `20.i.W`.
 **Exakte Commit-Message:** `20.i.R test(acceptance): Standardperformance messen vervollständigen`
 
 **Vervollständigung:** Referenzplattform, Messmethode, Governor, LC_ALL=C, TZ=UTC und Fixturehashes dokumentierte Messdaten statt Annahmen.
@@ -15839,7 +16032,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.i.C – Make it Clean
 
-- [ ] **20.i.C** · Position **870/885** · Voraussetzung: `20.i.R`.
+- [ ] **20.i.C** · Position **885/900** · Voraussetzung: `20.i.R`.
 **Exakte Commit-Message:** `20.i.C refactor(acceptance): Standardperformance messen bereinigen`
 
 **Bereinigung:** Datengeneratoren und Messadapter testseitig bündeln, nicht in den Core ziehen.
@@ -15856,7 +16049,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.j.W – Let it Work
 
-- [ ] **20.j.W** · Position **871/885** · Voraussetzung: `20.i.C`.
+- [ ] **20.j.W** · Position **886/900** · Voraussetzung: `20.i.C`.
 **Exakte Commit-Message:** `20.j.W test(acceptance): Constrained-Start und Low-Resource-Abnahme aufbauen`
 
 **Umsetzung:** Bootstrap, reinen Preflight und kleine Vollvalidierung exakt gegen §14.6 messen.
@@ -15865,7 +16058,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.j.R – Make it Right
 
-- [ ] **20.j.R** · Position **872/885** · Voraussetzung: `20.j.W`.
+- [ ] **20.j.R** · Position **887/900** · Voraussetzung: `20.j.W`.
 **Exakte Commit-Message:** `20.j.R test(acceptance): Constrained-Start und Low-Resource-Abnahme vervollständigen`
 
 **Vervollständigung:** Median aus fünf Läufen nach Warm-up, kein Einzellauf über doppelter Zeitgrenze; Receiptinventur mit 0 und 100000 Einträgen nicht scannen.
@@ -15874,7 +16067,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.j.C – Make it Clean
 
-- [ ] **20.j.C** · Position **873/885** · Voraussetzung: `20.j.R`.
+- [ ] **20.j.C** · Position **888/900** · Voraussetzung: `20.j.R`.
 **Exakte Commit-Message:** `20.j.C refactor(acceptance): Constrained-Start und Low-Resource-Abnahme bereinigen`
 
 **Bereinigung:** Instrumentierung vom eigentlichen Preflight trennen und Ausgabeinhalte ungetestet lassen.
@@ -15891,7 +16084,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.k.W – Let it Work
 
-- [ ] **20.k.W** · Position **874/885** · Voraussetzung: `20.j.C`.
+- [ ] **20.k.W** · Position **889/900** · Voraussetzung: `20.j.C`.
 **Exakte Commit-Message:** `20.k.W test(acceptance): Reale Offline-Sprachpakete abnehmen aufbauen`
 
 **Umsetzung:** Pro unterstützter x86-64-Python-ABI Offlinepaket in frischer Umgebung installieren und realen Sprachkorpus ausführen.
@@ -15900,7 +16093,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.k.R – Make it Right
 
-- [ ] **20.k.R** · Position **875/885** · Voraussetzung: `20.k.W`.
+- [ ] **20.k.R** · Position **890/900** · Voraussetzung: `20.k.W`.
 **Exakte Commit-Message:** `20.k.R test(acceptance): Reale Offline-Sprachpakete abnehmen vervollständigen`
 
 **Vervollständigung:** Fehlendes Wheel, inkompatibles NumPy und falsches Modell verhindern Zusatzreleasefreigabe.
@@ -15909,7 +16102,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.k.C – Make it Clean
 
-- [ ] **20.k.C** · Position **876/885** · Voraussetzung: `20.k.R`.
+- [ ] **20.k.C** · Position **891/900** · Voraussetzung: `20.k.R`.
 **Exakte Commit-Message:** `20.k.C refactor(acceptance): Reale Offline-Sprachpakete abnehmen bereinigen`
 
 **Bereinigung:** Pakettests und Adaptertests gemeinsam parametrisieren, ohne reale Installation durch Mock zu ersetzen.
@@ -15926,7 +16119,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.l.W – Let it Work
 
-- [ ] **20.l.W** · Position **877/885** · Voraussetzung: `20.k.C`.
+- [ ] **20.l.W** · Position **892/900** · Voraussetzung: `20.k.C`.
 **Exakte Commit-Message:** `20.l.W style(acceptance): Bedienbarkeit und Betriebsdokumentation abschließen aufbauen`
 
 **Umsetzung:** Farbige CLI mit konsistenten Phasen, verständlichen Statusangaben und übersichtlichen Abschlüssen manuell durchsehen; Betriebshinweise und Beispiele fertigstellen.
@@ -15935,7 +16128,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.l.R – Make it Right
 
-- [ ] **20.l.R** · Position **878/885** · Voraussetzung: `20.l.W`.
+- [ ] **20.l.R** · Position **893/900** · Voraussetzung: `20.l.W`.
 **Exakte Commit-Message:** `20.l.R style(acceptance): Bedienbarkeit und Betriebsdokumentation abschließen vervollständigen`
 
 **Vervollständigung:** Plain-/TTY-/quiet-Nutzung, Fehlerorientierung und kleine Displays praktisch durchsehen; keine Freigabe aus ungeprüfter Darstellung behaupten.
@@ -15944,7 +16137,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.l.C – Make it Clean
 
-- [ ] **20.l.C** · Position **879/885** · Voraussetzung: `20.l.R`.
+- [ ] **20.l.C** · Position **894/900** · Voraussetzung: `20.l.R`.
 **Exakte Commit-Message:** `20.l.C refactor(acceptance): Bedienbarkeit und Betriebsdokumentation abschließen bereinigen`
 
 **Bereinigung:** Redundante Präsentations-/Hilfetexte konsolidieren, ohne neue Fachanforderungen in Clean zu verstecken.
@@ -15959,9 +16152,11 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 **Anforderungsbezug:** `SR-REQ-0226`, `SR-REQ-0391`–`SR-REQ-0392`, `SR-REQ-0659`, `SR-REQ-0669`, `SR-REQ-0701`.
 **Verifikationsbezug:** `SR-VER-0027`, `SR-VER-0045`, `SR-VER-0048`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Zusätzliche Abnahme v0.2.8:** Releasepaket liefert SpecRoad-PYZ, kompatible PatchHarbor-Runtime samt öffentlichem Bootstrap und gebundenen API-Fähigkeiten, Lizenzen und Runtime-/Plattforminventar. Reale Hinpaket-Erzeugung, ursprüngliche Resultbytes und Rückpaketvalidierung aus diesen ausgelieferten Artefakten nachweisen; ein Entwicklungsbuild ersetzt keinen Releasebeleg.
+
 #### 20.m.W – Let it Work
 
-- [ ] **20.m.W** · Position **880/885** · Voraussetzung: `20.l.C`.
+- [ ] **20.m.W** · Position **895/900** · Voraussetzung: `20.l.C`.
 **Exakte Commit-Message:** `20.m.W build(acceptance): Releaseartefakte und reproduzierbare Verpackung aufbauen`
 
 **Umsetzung:** Releaseversion 0.2.0, Coreartefakte, eingefrorenes Sprachregister, Labelpakete und getrennte Sprachzusatzpakete erzeugen.
@@ -15970,7 +16165,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.m.R – Make it Right
 
-- [ ] **20.m.R** · Position **881/885** · Voraussetzung: `20.m.W`.
+- [ ] **20.m.R** · Position **896/900** · Voraussetzung: `20.m.W`.
 **Exakte Commit-Message:** `20.m.R build(acceptance): Releaseartefakte und reproduzierbare Verpackung vervollständigen`
 
 **Vervollständigung:** Paketinhalt, Hashmanifest und erlaubte Dateitypen verifizieren; keine privaten Projektdateien, Caches oder Secrets einschleusen.
@@ -15979,7 +16174,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.m.C – Make it Clean
 
-- [ ] **20.m.C** · Position **882/885** · Voraussetzung: `20.m.R`.
+- [ ] **20.m.C** · Position **897/900** · Voraussetzung: `20.m.R`.
 **Exakte Commit-Message:** `20.m.C refactor(acceptance): Releaseartefakte und reproduzierbare Verpackung bereinigen`
 
 **Bereinigung:** Ein Release-Rezept statt abweichender manueller Verpackungspfade nutzen.
@@ -15996,7 +16191,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.n.W – Let it Work
 
-- [ ] **20.n.W** · Position **883/885** · Voraussetzung: `20.m.C`.
+- [ ] **20.n.W** · Position **898/900** · Voraussetzung: `20.m.C`.
 **Exakte Commit-Message:** `20.n.W test(acceptance): Abschlussnachweis und Freigabeentscheidung aufbauen`
 
 **Umsetzung:** Ergebnisse aller Gates gegen konkrete Source-/Spec-/Fixture-/Runtimebindungen zusammentragen und offene Punkte explizit ausweisen.
@@ -16005,7 +16200,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.n.R – Make it Right
 
-- [ ] **20.n.R** · Position **884/885** · Voraussetzung: `20.n.W`.
+- [ ] **20.n.R** · Position **899/900** · Voraussetzung: `20.n.W`.
 **Exakte Commit-Message:** `20.n.R test(acceptance): Abschlussnachweis und Freigabeentscheidung vervollständigen`
 
 **Vervollständigung:** Keine autonome menschliche Approvalentscheidung, kein bestandener Test ohne Evidence und kein ungewünschter Gitpush/Tag.
@@ -16014,7 +16209,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 20.n.C – Make it Clean
 
-- [ ] **20.n.C** · Position **885/885** · Voraussetzung: `20.n.R`.
+- [ ] **20.n.C** · Position **900/900** · Voraussetzung: `20.n.R`.
 **Exakte Commit-Message:** `20.n.C refactor(acceptance): Abschlussnachweis und Freigabeentscheidung bereinigen`
 
 **Bereinigung:** Abschlussbericht und Freigabedaten aus vorhandenen Nachweisen ableiten; C ändert keine Produktentscheidung.
@@ -16027,7 +16222,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 ## Anhang A – vollständige Requirement-zu-Schritt-Matrix
 
-Jede der 730 unveränderten Requirement-IDs ist mindestens einem konkreten Schritt zugeordnet. „Federführung“ benennt den fachnahen Hauptschritt, nicht die Behauptung, dass ein querschnittliches Requirement dort bereits releaseweit vollständig bewiesen wäre. Weitere Beiträge, die exakte primäre SR-TC-ID sowie der unveränderte SR-VER-Bezug machen Integrations- und Abnahmearbeit auffindbar. Das sind **Soll-Zuordnungen, keine Coverage-Messergebnisse**. TD-001 gilt auch dort, wo die ursprüngliche SR-TC-Identität einen ausgeschlossenen Darstellungs-/Dokuanteil enthält.
+Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens einem konkreten Schritt zugeordnet. „Federführung“ benennt den fachnahen Hauptschritt, nicht die Behauptung, dass ein querschnittliches Requirement dort bereits releaseweit vollständig bewiesen wäre. Weitere Beiträge, die exakte primäre SR-TC-ID sowie der unveränderte SR-VER-Bezug machen Integrations- und Abnahmearbeit auffindbar. Das sind **Soll-Zuordnungen, keine Coverage-Messergebnisse**. TD-001 gilt auch dort, wo die ursprüngliche SR-TC-Identität einen ausgeschlossenen Darstellungs-/Dokuanteil enthält.
 
 | Requirement | Federführung | Weitere Schritte | Primärer Testfall laut Spec | Verifikationsvertrag laut Spec |
 |---|---|---|---|---|
@@ -16761,10 +16956,22 @@ Jede der 730 unveränderten Requirement-IDs ist mindestens einem konkreten Schri
 | `SR-REQ-0728` | [4.g](#step-4-g) | [20.d](#step-20-d) | `SR-TC-0728` | SR-VER-0050 |
 | `SR-REQ-0729` | [4.g](#step-4-g) | [20.d](#step-20-d) | `SR-TC-0729` | SR-VER-0050 |
 | `SR-REQ-0730` | [4.i](#step-4-i) | [20.d](#step-20-d) | `SR-TC-0730` | SR-VER-0050 |
+| `SR-REQ-0731` | [15.m](#step-15-m) | [20.h](#step-20-h) | `SR-TC-0731` | SR-VER-0051 |
+| `SR-REQ-0732` | [15.m](#step-15-m) | [15.n](#step-15-n), [20.h](#step-20-h), [20.m](#step-20-m) | `SR-TC-0732` | SR-VER-0051 |
+| `SR-REQ-0733` | [15.n](#step-15-n) | [20.m](#step-20-m) | `SR-TC-0733` | SR-VER-0051 |
+| `SR-REQ-0734` | [15.n](#step-15-n) | [15.o](#step-15-o), [20.f](#step-20-f) | `SR-TC-0734` | SR-VER-0051 |
+| `SR-REQ-0735` | [15.o](#step-15-o) | [15.m](#step-15-m), [20.h](#step-20-h) | `SR-TC-0735` | SR-VER-0051 |
+| `SR-REQ-0736` | [15.o](#step-15-o) | [20.f](#step-20-f) | `SR-TC-0736` | SR-VER-0051 |
+| `SR-REQ-0737` | [18.q](#step-18-q) | [15.n](#step-15-n), [20.f](#step-20-f) | `SR-TC-0737` | SR-VER-0051 |
+| `SR-REQ-0738` | [18.q](#step-18-q) | [18.r](#step-18-r), [20.f](#step-20-f) | `SR-TC-0738` | SR-VER-0051 |
+| `SR-REQ-0739` | [18.r](#step-18-r) | [20.f](#step-20-f) | `SR-TC-0739` | SR-VER-0051 |
+| `SR-REQ-0740` | [18.r](#step-18-r) | [18.n](#step-18-n), [20.f](#step-20-f) | `SR-TC-0740` | SR-VER-0051 |
+| `SR-REQ-0741` | [18.r](#step-18-r) | [15.o](#step-15-o), [18.q](#step-18-q), [20.f](#step-20-f) | `SR-TC-0741` | SR-VER-0051 |
+| `SR-REQ-0742` | [20.f](#step-20-f) | [15.o](#step-15-o), [18.r](#step-18-r), [20.h](#step-20-h), [20.m](#step-20-m) | `SR-TC-0742` | SR-VER-0051 |
 
 ## Anhang B – Verifikationsregister
 
-Alle 50 ursprünglichen SR-VER-Verträge bleiben referenziert. Die nachfolgenden Meilensteine liefern Beiträge; M20 konsolidiert tatsächliche Ergebnisse, ersetzt aber keine früheren Einzeltests. Referenzplattformen, Messdaten und TD-001-Ausnahmen sind in der echten Evidence getrennt zu führen.
+Alle 50 ursprünglichen SR-VER-Verträge bleiben referenziert. SR-VER-0051 ergänzt den PatchHarbor-Rundweg; insgesamt sind 51 Verträge zugeordnet. Die nachfolgenden Meilensteine liefern Beiträge; M20 konsolidiert tatsächliche Ergebnisse, ersetzt aber keine früheren Einzeltests. Referenzplattformen, Messdaten und TD-001-Ausnahmen sind in der echten Evidence getrennt zu führen.
 
 | Verifikationsvertrag | Requirements in diesem Vertrag | Beitragende Meilensteine |
 |---|---:|---|
@@ -16818,6 +17025,7 @@ Alle 50 ursprünglichen SR-VER-Verträge bleiben referenziert. Die nachfolgenden
 | `SR-VER-0048` | 15 | M19, M20 |
 | `SR-VER-0049` | 4 | M14, M16, M19, M20 |
 | `SR-VER-0050` | 4 | M4, M20 |
+| `SR-VER-0051` | 12 | M15, M18, M20 |
 
 ## Anhang C – Szenario-/E2E-Zuordnung
 
@@ -16956,11 +17164,26 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 
 ## Anhang E – konkrete Übergabe an die nächste Implementierung
 
-**Als Nächstes:** nach erfolgreichem Result des W-Zustands der reguläre Produktpunkt `6.b.R`. Zuerst das neueste Result vollständig auswerten; weder die ursprüngliche Planungsbasis noch die historische Auditbindung als neue Patchbindung wiederverwenden. Eine sichere zusammenhängende Anzahl freigegebener Folgeschritte darf nach BD-001 hinzugenommen werden; Kennungen, Messages und Prüfungen müssen zu den tatsächlichen Zwischenständen passen.
+**Als Nächstes:** Nach erfolgreichem Result der OFF-PLAN-Übergabe 233 bleibt
+der reguläre Produktpunkt **8.l.C** an der Reihe. Zuerst das neueste Result
+vollständig auswerten; historische Planungs- oder Auditbindungen ersetzen die
+aktuelle Patchbindung nicht. Die S-Schleife wird durch diesen einzelnen
+Dokumentationsauftrag nicht wieder gestartet.
 
-Die Planaktualisierung ändert diesen Plan und die nötigen bestehenden Entwicklungsanleitungen zur Bereinigung überholter Testvorgaben. Spezifikation, Prüfbericht, Produktcode, Tests und CI-Infrastruktur bleiben unverändert. Der Entrypoint verwendet die vorhandenen vollständigen Apply-Prüfungen vor seinem einen OFF-PLAN-Commit. Eine erfolgreiche Planaktualisierung ist kein Nachweis der erst geplanten Produktreparaturen.
+**OFF-PLAN PH-RUNTIME-PLAN / -- von 900:** Spezifikation v0.2.8, Planrevision 3
+und maschinenlesbare Sollkatalogbindungen werden gemeinsam übergeben. Produktcode,
+Testcode, Runner und CI bleiben unverändert. Neue Fälle 0731–0742 sind `open`;
+aktualisierte Spezifikationshashes sind keine nachträglich umgebundenen
+Testnachweise. Der Apply-Entrypoint verlangt vor seinem einen OFF-PLAN-Commit
+die vorhandene vollständige parallele Suite; es gibt keinen Dev-Volltest.
 
-**Nach erfolgreichem W-Result bleiben 635 reguläre Produktpositionen offen.** Der Audit-Abschluss ist durch Bundle 088 bestätigt; späteren Produktpositionen zugeordnete Nachweise bleiben dort offen. Detaillierte Planung ist keine Zusage über Bundleanzahl, Dauer oder automatische Releasefreigabe. Die tatsächliche Bündelgröße wird während der Umsetzung flexibel und sicher gewählt.
+**Es bleiben 520 reguläre Produktpositionen offen.** Die aktuelle Zählung ist
+380/900; die 15 neuen Positionen sind zukünftige Implementierung, keine bereits
+abgeschlossenen Offplanarbeiten. PH-API-RESULT und gegebenenfalls
+PH-API-APPLY-GATE sind vor ihren abhängigen Schritten extern zu liefern und
+konkret zu prüfen. Dies ändert die sofortige Fortsetzung mit 8.l.C nicht.
+Bundleanzahl, Laufzeit und Releasefreigabe werden aus dieser Planerweiterung
+nicht abgeleitet. Mehrere sinnvolle Folgeschritte je Bundle bleiben zulässig.
 
 ## Historischer Testpolicy-Nachtrag vom 21. September 2026
 

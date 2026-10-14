@@ -1,6 +1,6 @@
 {
   "catalog_format_version": 1,
-  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "complete": true,
   "test_case_ids": [
     "SR-TC-0001",
@@ -732,7 +732,19 @@
     "SR-TC-0727",
     "SR-TC-0728",
     "SR-TC-0729",
-    "SR-TC-0730"
+    "SR-TC-0730",
+    "SR-TC-0731",
+    "SR-TC-0732",
+    "SR-TC-0733",
+    "SR-TC-0734",
+    "SR-TC-0735",
+    "SR-TC-0736",
+    "SR-TC-0737",
+    "SR-TC-0738",
+    "SR-TC-0739",
+    "SR-TC-0740",
+    "SR-TC-0741",
+    "SR-TC-0742"
   ],
   "required_test_case_ids": [
     "SR-TC-0001",
@@ -1464,7 +1476,19 @@
     "SR-TC-0727",
     "SR-TC-0728",
     "SR-TC-0729",
-    "SR-TC-0730"
+    "SR-TC-0730",
+    "SR-TC-0731",
+    "SR-TC-0732",
+    "SR-TC-0733",
+    "SR-TC-0734",
+    "SR-TC-0735",
+    "SR-TC-0736",
+    "SR-TC-0737",
+    "SR-TC-0738",
+    "SR-TC-0739",
+    "SR-TC-0740",
+    "SR-TC-0741",
+    "SR-TC-0742"
   ],
   "automation_policy": {
     "policy_id": "TD-001",

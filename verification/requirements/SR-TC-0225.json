@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0225",
   "requirement_id": "SR-REQ-0225",
-  "specification_sha256": "128fed57c038ab1af4a3bdbf70d65024c62f09f92866094caf802b8b807bca93",
+  "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0017",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die zwingenden Umgebungsvoraussetzungen des Core DÜRFEN über eine unterstützte Python-Laufzeit, Leserechte für Distribution und Projekteingaben sowie die jeweils erforderlichen Schreibrechte für Projekt-, Ausgabe- und Temporärpfade nicht hinausgehen.",
+    "requirement_contract": "Die zwingenden Umgebungsvoraussetzungen nicht Git-spezifischer Core-Funktionen DÜRFEN über eine unterstützte Python-Laufzeit, Leserechte für Distribution und Projekteingaben sowie die jeweils erforderlichen Schreibrechte für Projekt-, Ausgabe- und Temporärpfade nicht hinausgehen; die ausdrücklich Git-spezifische lokale Transportseite nach Anhang W MUSS ihre zusätzlichen Voraussetzungen getrennt ausweisen.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
   },
   "expected_diagnostics": [],
@@ -42,6 +42,7 @@
     "test_core.CoreRobustnessTests.test_no_installer_shell_network_or_write_during_import"
   ],
   "open_items": [
-    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
+    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms.",
+    "SpecRoad 0.2.8 transport-profile extension remains unimplemented: verify the bundled, lazy public PatchHarbor API and explicit host-only Git prerequisites in 15.m–15.o and M20; existing tests do not prove this new scope."
   ]
 }
