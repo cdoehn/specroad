@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 396
-last_completed_plan_commit: 9.e.C
-next_plan_commit: 9.f.W
-last_completed_numbered_bundle: 245
+implementation_plan_commits_completed: 397
+last_completed_plan_commit: 9.f.W
+next_plan_commit: 9.f.R
+last_completed_numbered_bundle: 246
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10494,12 +10494,37 @@ vollständiger Why-Verzweigungen und Wiederaufnahme in einem neuen Prozess.
 
 #### 9.f.W – Let it Work
 
-- [ ] **9.f.W** · Position **397/900** · Voraussetzung: `9.e.C`.
+- [x] **9.f.W** · Position **397/900** · Voraussetzung: `9.e.C`.
 **Exakte Commit-Message:** `9.f.W feat(configuration): Explizite Gates und wiederverwendbare Identität aufbauen`
 
 **Umsetzung:** Konfigurationsgebundene Gates verlangen explizite Auswahl; Referenzen bleiben dieselben IDs.
 
 **Verhaltensabnahme:** Dasselbe Requirement wird ohne Kopie in zwei Varianten verwendet.
+
+**Vorbereiteter W-Stand (Bundle 246, SR-TC-0402/0548 teilweise):**
+`validate_configured_model` verlangt eine explizite vorhandene
+Konfigurations-ID, löst deren Elternkette aus den übergebenen Originalbytes auf
+und ergänzt den bestehenden Modellvalidator um den echten Konfigurations-Gate.
+Fehlende Auswahl wird auch bei nur einer vorhandenen Konfiguration oder einem
+leeren Modell abgewiesen. Deklarierte Dimensionsdefaults gelten erst nach der
+expliziten Auswahl. Der effektive Konfigurationsmanifest bindet den Gate;
+die vorhandene Modellbindung umfasst weiterhin sämtliche Quellen.
+
+Der Gate wertet die aktuelle Anwendbarkeit und gespeicherte Pflichtrelationen
+bei jedem Aufruf erneut aus. Alle Artefakte gehören konservativ zu seinen
+Abhängigkeiten, sodass eine kleine Validierungsselektion keinen außerhalb
+liegenden Konfigurationskonflikt versteckt. Fehler behalten `SRV130`/`SRV131`
+und vollständige kürzeste Pfade; ursprüngliche IDs stehen als beteiligte
+Identitäten im Befund. Requirement, Verification Contract, Test, Code-Referenz
+und Inhaltsblock behalten ihre vorhandenen Identitäten, Revisionen und Bytes.
+Ein Requirement wird mit echten produktiven Sprach-/Profilservices in zwei
+Varianten geprüft, ohne Kopie oder normative Änderung.
+
+Strukturelle Fehler, andere fehlende Services und zusätzlich registrierte Gates
+bleiben wirksam; die normale unkonfigurierte Validierung bleibt unverändert.
+Dieser Python-Aufruf bestätigt nur den beschriebenen Konfigurations-Gate und
+verändert nicht die Prüfumfänge anderer semantischer Services. Livebefehle
+folgen in 9.g, weitere Gate-Randfälle und Trennung des Kontexts in 9.f.R/C.
 
 #### 9.f.R – Make it Right
 

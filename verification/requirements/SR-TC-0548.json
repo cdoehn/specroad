@@ -4,19 +4,39 @@
   "requirement_id": "SR-REQ-0548",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-MODEL-VALIDATION-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1"
+  ],
+  "preconditions": [
+    "Original loaded model documents, an explicit configuration identity and explicitly supplied existing semantic services."
+  ],
+  "steps": [
+    "Refuse an absent or unknown selected configuration before a configuration gate can become not applicable.",
+    "Validate the same documents under two explicitly selected variants; compare original identities, revisions and source bindings.",
+    "Run the existing model validator with a fresh stored-relation configuration gate; preserve other failures/unavailable services and complete dependency paths."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein konfigurationsspezifisches Gate MUSS eine explizite Konfiguration verlangen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV130",
+    "SRV131",
+    "configuration_id_required",
+    "configuration_missing",
+    "configuration_dependency_excluded",
+    "invalid_applicability"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/applicability",
+    "/selection"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +48,40 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_configuration_gates.py::test_a_caller_cannot_replace_the_selected_configuration_check",
+    "tests/test_configuration_gates.py::test_absent_selected_id_never_falls_back_to_an_available_variant",
+    "tests/test_configuration_gates.py::test_additional_registered_gates_still_run_and_can_fail",
+    "tests/test_configuration_gates.py::test_configuration_success_does_not_invent_a_missing_language_service",
+    "tests/test_configuration_gates.py::test_declared_dimension_default_is_allowed_only_after_explicit_selection",
+    "tests/test_configuration_gates.py::test_domain_schema_failures_remain_blocking_before_semantic_gate_success",
+    "tests/test_configuration_gates.py::test_each_invocation_rechecks_actual_applicability_instead_of_reusing_a_pass",
+    "tests/test_configuration_gates.py::test_empty_model_cannot_turn_a_configuration_gate_into_not_applicable",
+    "tests/test_configuration_gates.py::test_excluded_origin_does_not_create_a_variant_dependency",
+    "tests/test_configuration_gates.py::test_excluded_required_target_fails_the_real_gate_with_complete_path_evidence",
+    "tests/test_configuration_gates.py::test_explicit_child_override_changes_the_gate_result_without_changing_references",
+    "tests/test_configuration_gates.py::test_input_enumeration_order_does_not_change_bound_validation",
+    "tests/test_configuration_gates.py::test_inputs_must_be_real_loaded_documents",
+    "tests/test_configuration_gates.py::test_invalid_applicability_is_a_failed_gate_with_srv130_and_source_location",
+    "tests/test_configuration_gates.py::test_invalid_configuration_is_not_a_successful_empty_gate",
+    "tests/test_configuration_gates.py::test_loaded_source_bytes_and_revision_inventory_are_read_only",
+    "tests/test_configuration_gates.py::test_missing_or_nonstring_selection_cannot_pick_the_only_configuration[1]",
+    "tests/test_configuration_gates.py::test_missing_or_nonstring_selection_cannot_pick_the_only_configuration[None]",
+    "tests/test_configuration_gates.py::test_missing_or_nonstring_selection_cannot_pick_the_only_configuration[True]",
+    "tests/test_configuration_gates.py::test_missing_or_nonstring_selection_cannot_pick_the_only_configuration[]",
+    "tests/test_configuration_gates.py::test_missing_or_nonstring_selection_cannot_pick_the_only_configuration[selected4]",
+    "tests/test_configuration_gates.py::test_omitting_configuration_argument_is_a_structured_refusal",
+    "tests/test_configuration_gates.py::test_one_requirement_is_reused_by_two_variants_without_a_copy_or_revision_change",
+    "tests/test_configuration_gates.py::test_ordinary_validator_keeps_its_unavailable_configuration_service_boundary",
+    "tests/test_configuration_gates.py::test_other_reusable_artifact_kinds_retain_their_single_original_identity[code_ref]",
+    "tests/test_configuration_gates.py::test_other_reusable_artifact_kinds_retain_their_single_original_identity[content_block]",
+    "tests/test_configuration_gates.py::test_other_reusable_artifact_kinds_retain_their_single_original_identity[test]",
+    "tests/test_configuration_gates.py::test_other_reusable_artifact_kinds_retain_their_single_original_identity[verification]",
+    "tests/test_configuration_gates.py::test_report_mutation_cannot_change_a_subsequent_observation",
+    "tests/test_configuration_gates.py::test_selected_gate_runs_the_existing_validator_without_approval_or_writes",
+    "tests/test_configuration_gates.py::test_selected_validation_subject_cannot_hide_a_configuration_conflict_elsewhere"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "The current Python entrypoint supplies a stored-relation configuration gate. Live command integration follows in 9.g; document/release rendering and external-resource/review approval services are not certified. Broader gate-binding robustness and structural cleanup follow in 9.f.R/C."
   ]
 }
