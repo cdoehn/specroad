@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 404
-last_completed_plan_commit: 9.h.R
-next_plan_commit: 9.h.C
+implementation_plan_commits_completed: 405
+last_completed_plan_commit: 9.h.C
+next_plan_commit: 10.a.W
 last_completed_numbered_bundle: 251
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10720,7 +10720,7 @@ Die bisherigen W-Fälle bleiben bytegleich erhalten.
 
 #### 9.h.C – Make it Clean
 
-- [ ] **9.h.C** · Position **405/900** · Voraussetzung: `9.h.R`.
+- [x] **9.h.C** · Position **405/900** · Voraussetzung: `9.h.R`.
 **Exakte Commit-Message:** `9.h.C refactor(configuration): Varianten-Diff und Regression bereinigen`
 
 **Bereinigung:** Variantenvergleich in den allgemeinen Diffklassifikator integrieren.
@@ -10728,6 +10728,15 @@ Die bisherigen W-Fälle bleiben bytegleich erhalten.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 251):**
+Varianten-Scope und Übernahme der Originalquellen liegen nun gemeinsam mit den
+bestehenden Feld-, Projektkonfigurations- und Timingklassen im privaten
+Diffklassifikator. Die beiden verschobenen Funktionen, die öffentliche
+Vergleichsfunktion und die vorhandenen Klassifikatoren behalten identischen
+Quelltext und AST; nur Zuständigkeit und benötigte Imports ändern sich.
+Alle W-/R-Testdateien bleiben bytegleich und prüfen diesen eigenen C-Zustand.
+Die weiterhin offenen Baseline-/Provider- und Freigabenachweise bleiben offen.
 
 **Meilenstein 9 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 

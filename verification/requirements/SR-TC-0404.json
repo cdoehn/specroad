@@ -14,12 +14,13 @@
     "Owned actual artifact bytes with three-level configurations and local/Git snapshots; no Baseline provider is available."
   ],
   "steps": [
-    "Compare nested parent defaults and overrides, reject invalid inherited values and cycles on either side, preserve full dependency paths, and check actual source/CLI/Work parity, owned inputs, final currentness and read-only operation."
+    "Compare nested parent defaults and overrides, reject invalid inherited values and cycles on either side, preserve full dependency paths, and check actual source/CLI/Work parity, owned inputs, final currentness and read-only operation.",
+    "Rerun unchanged W/R variant comparison reference cases after extracting the original-byte ownership and variant-scope classifiers into the existing general Diff classifier module."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Referenztests MÜSSEN mindestens verschachtelte Konfigurationen, ungültige Dimensionswerte, zyklische Vererbung, anwendbare Artefakte mit ausgeschlossenen Pflichtabhängigkeiten und konfigurationsgebundene Baselines abdecken.",
-    "scope": "9.h.R supplies independent executable reference cases for nested defaults/overrides, invalid inherited dimension values, cyclic inheritance and applicable artifacts requiring excluded dependencies on both comparison sides. Exact IDs, values, complete shortest paths, diagnostics, source ownership/currentness, native and retained Work parity, pinned Git objects, concurrency and read-only boundaries are observed. Baseline source rejection proves only the unavailable-provider boundary; it is not a configuration-bound Baseline implementation or success proof. Configuration-bound Baseline behavior remains open for its actual provider. No full-suite, release or platform acceptance is claimed."
+    "scope": "9.h.R supplies independent executable reference cases for nested defaults/overrides, invalid inherited dimension values, cyclic inheritance and applicable artifacts requiring excluded dependencies on both comparison sides. Exact IDs, values, complete shortest paths, diagnostics, source ownership/currentness, native and retained Work parity, pinned Git objects, concurrency and read-only boundaries are observed. Baseline source rejection proves only the unavailable-provider boundary; it is not a configuration-bound Baseline implementation or success proof. Configuration-bound Baseline behavior remains open for its actual provider. No full-suite, release or platform acceptance is claimed. 9.h.C places the unchanged variant-scope and owned configured-input functions in the existing private semantic classifier module. Both extracted function sources/AST and the public comparison function remain identical; existing classifiers and all test files remain byte-identical. Only module ownership and required imports change. The same W/R behavior is rerun against this separate C state. No new semantic classes, errors, side effects, Baseline provider or approval is introduced."
   },
   "expected_diagnostics": [
     "SRV130",

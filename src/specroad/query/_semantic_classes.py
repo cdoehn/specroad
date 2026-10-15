@@ -1,5 +1,6 @@
 """Declared field, configuration and duration semantics for supplied-input diff."""
-from ..graph.comparison_values import _owned
+from ..graph.comparison_values import ComparisonInputs, _owned
+from ..graph.relations import SourceRelations
 from ..graph.field_comparison import field_diff
 from ..graph.timing_comparison import compare_duration_bounds
 from ..model.canonical import canonical_json_sha256
@@ -111,3 +112,30 @@ def _timing_comparisons(policy, before, after):
         if compared['value_changed']:
             rows.append({'artifact_id': identity, 'pointer': '/timing', **compared})
     return policy, rows
+
+
+def _owned_variant_inputs(inputs):
+    """Use one original-byte inventory for field and applicability comparison."""
+    if type(inputs.records) is not tuple:
+        raise ModelError('comparison_records_required')
+    if any(type(record) is not SourceRelations for record in inputs.records):
+        raise ModelError('source_relations_required')
+    return ComparisonInputs(inputs.project_id,
+        tuple(SourceRelations(record.source_bytes, path=record.path) for record in inputs.records))
+
+
+def _variant_scope(before, after, before_id, after_id):
+    if before_id is None and after_id is None:
+        return {'state': 'not_evaluated'}
+    from ..configurations import evaluate_configuration
+    from ..configurations.evaluation import ConfigurationEvaluationError
+    if before_id is None or after_id is None:
+        raise ConfigurationEvaluationError(ModelError('configuration_comparison_pair_required'))
+    left = evaluate_configuration(before.records, before_id).data
+    right = evaluate_configuration(after.records, after_id).data
+    old, new = set(left['applicable_artifact_ids']), set(right['applicable_artifact_ids'])
+    return {'state': 'evaluated', 'scope': 'supplied_artifact_applicability',
+        'before': left, 'after': right, 'added_ids': sorted(new - old),
+        'removed_ids': sorted(old - new), 'retained_ids': sorted(old & new),
+        'membership_changed': old != new,
+        'configuration_changed': left['configuration']['sha256'] != right['configuration']['sha256']}
