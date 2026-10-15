@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 405
-last_completed_plan_commit: 9.h.C
-next_plan_commit: 10.a.W
-last_completed_numbered_bundle: 251
+implementation_plan_commits_completed: 406
+last_completed_plan_commit: 10.a.W
+next_plan_commit: 10.a.R
+last_completed_numbered_bundle: 252
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10758,12 +10758,31 @@ Die weiterhin offenen Baseline-/Provider- und Freigabenachweise bleiben offen.
 
 #### 10.a.W – Let it Work
 
-- [ ] **10.a.W** · Position **406/900** · Voraussetzung: `9.h.C`.
+- [x] **10.a.W** · Position **406/900** · Voraussetzung: `9.h.C`.
 **Exakte Commit-Message:** `10.a.W feat(baseline): Content-addressierter Objektspeicher aufbauen`
 
 **Umsetzung:** Kanonische JSON- und unveränderte Anhangsbytes unter hashgebundenen Objektpfaden speichern.
 
 **Verhaltensabnahme:** Derselbe Inhalt wird dedupliziert und bleibt byteidentisch verfügbar.
+
+**Vorbereiteter W-Stand (Bundle 252, SR-TC-0143/0145/0148 teilweise):**
+`SnapshotObject` übernimmt JSON über den strikten Reader als kanonische Bytes
+und Anhänge bytegleich. `ObjectReference` bindet SHA-256, Länge und den daraus
+abgeleiteten Archivpfad. Der physische `SnapshotObjectStore` bereitet die Daten
+in einem vorhandenen privaten Arbeitsverzeichnis außerhalb aller ausdrücklich
+geschützten Projekt-/Eingabe-/Ausgabegrenzen vor. Vollständig geschriebene und
+synchronisierte Bytes werden atomar ohne Überschreiben veröffentlicht;
+identischer Inhalt wird nach erneuter Prüfung unverändert wiederverwendet.
+Der vorhandene native Mutex und die gesicherten Dateioperationen bleiben die
+Basis. Fehler erhalten den tatsächlichen Vorbereitungsstand.
+
+Schreibfreie Leser prüfen Länge und Hash und können bereits vorhandene
+Archivobjekte eines Projekts lesen. Die neuen Fälle prüfen kanonische und rohe
+Bytes, physische Deduplizierung, unveränderte Projektdateien, atomare Sichtbarkeit,
+fehlerhafte Ziele, Lockkonflikte, Prozessneustart und portable Ausführung.
+Diese Objektbereitstellung veröffentlicht keine Baseline im Projekt. Manifest,
+Artefakt-/Revisions-/Scopebindungen und gemeinsame normative Transaktion folgen
+in 10.b/10.c; referenzbezogene Löschgrenzen bleiben für 10.a.R offen.
 
 #### 10.a.R – Make it Right
 

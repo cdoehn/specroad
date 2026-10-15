@@ -49,6 +49,7 @@
     "SR-FIX-SCOPE-COMPARISON-v1",
     "SR-FIX-SCOPE-CONTROL-v1",
     "SR-FIX-SCOPE-SEEDS-v1",
+    "SR-FIX-SNAPSHOT-OBJECTS-v1",
     "SR-FIX-SRX-COLLECTIONS-v1",
     "SR-FIX-SRX-CONFORMANCE-v1",
     "SR-FIX-SRX-CONTEXT-v1",
@@ -327,6 +328,10 @@
     "SR-FIX-READ-COMMANDS-v1": {
       "provider": "tests/test_query_read_integration.py:project_pair",
       "kind": "Owned complete current/base projects with one literal goal-title delta, stored relation and low query limits; read-only file modes, native Git objects and independent tiny runtime windows. No benchmark or durable Work claim."
+    },
+    "SR-FIX-SNAPSHOT-OBJECTS-v1": {
+      "provider": "tests/test_snapshot_objects.py:setup_store",
+      "kind": "Owned private external Linux object store and explicitly protected real project; actual canonical/raw bytes, native locks, immutable publication and fresh-process reads. No Baseline creation, scope completeness, normative journal or release approval claim."
     }
   }
 }

@@ -7,20 +7,32 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1"
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-JCS-RFC8785-v1",
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-SNAPSHOT-OBJECTS-v1"
   ],
   "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
+    "Original JSON or attachment bytes; an existing private external store and every protected project/input/output root explicitly declared."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Create canonical/raw snapshot objects, store and read exact bytes through real native I/O, deduplicate identical objects, preserve protected projects and failed preparation state, and reopen the stored objects in an isolated process."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein erzeugtes Baseline-Artefakt und jedes von ihm referenzierte Snapshotobjekt DÜRFEN NICHT geändert oder unter derselben Identität mit anderem Inhalt neu erzeugt werden.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. 10.a.W introduces immutable SnapshotObject and ObjectReference values with exact SHA-256, byte length and archive/objects/<hh>/<sha256> paths. JSON uses the existing strict reader and RFC-8785 canonical bytes; attachment bytes remain untouched. The physical preparation store is restricted to an existing private owned root outside every declared protected boundary and project ancestor. It uses the existing native root-inode mutex, guarded directory traversal, exclusive durable temporary writes and atomic no-replace publication. Identical bytes reuse the existing object; malformed or corrupted targets are rejected without replacement. Reads verify exact length/hash without writes and can inspect an existing project archive. Independent tests cover canonical/opaque bytes, real deduplication, distinct objects, protected-root boundaries, absence of project writes, complete publication, retained failed preparation, busy locks, reopening in a new isolated process and portable distribution behavior. This is the object layer and external preparation store, not a Baseline manifest or normative create command. Complete Baseline identity/revision/scope/configuration bindings, referenced-deletion policy and journalled project publication remain in subsequent steps; no full requirement, full-suite or release success is claimed. Protected-boundary checks are independent of unrelated Git ancestry; a Git marker alone never defines a SpecRoad project root."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "project_lock_busy",
+    "snapshot_object_hash_mismatch",
+    "snapshot_object_hash_required",
+    "snapshot_object_size_mismatch",
+    "snapshot_object_size_required",
+    "snapshot_protected_roots_required"
+  ],
   "expected_exit_codes": [],
   "json_pointers": [],
   "required_environment": {
@@ -36,9 +48,58 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_schemas_never_enable_generic_special_mutations",
-    "test_record_schemas.RecordRightTests.test_all_special_endstates_refuse_every_generic_route"
+    "test_record_schemas.RecordRightTests.test_all_special_endstates_refuse_every_generic_route",
+    "tests/test_snapshot_objects.py::test_actual_project_archive_objects_can_be_verified_without_writes",
+    "tests/test_snapshot_objects.py::test_an_active_native_store_lock_prevents_a_second_put_without_creating_files",
+    "tests/test_snapshot_objects.py::test_atomic_target_publication_occurs_only_after_all_object_bytes_exist",
+    "tests/test_snapshot_objects.py::test_attachment_and_json_roles_can_share_identical_bytes_without_role_inference",
+    "tests/test_snapshot_objects.py::test_attachment_objects_preserve_every_original_byte[binary]",
+    "tests/test_snapshot_objects.py::test_attachment_objects_preserve_every_original_byte[empty]",
+    "tests/test_snapshot_objects.py::test_attachment_objects_preserve_every_original_byte[json_bytes]",
+    "tests/test_snapshot_objects.py::test_attachment_objects_preserve_every_original_byte[large]",
+    "tests/test_snapshot_objects.py::test_canonical_json_object_uses_the_exact_existing_jcs_bytes_and_digest",
+    "tests/test_snapshot_objects.py::test_declaration_and_missing_read_create_no_storage",
+    "tests/test_snapshot_objects.py::test_distinct_bytes_have_independent_references_and_both_remain_readable",
+    "tests/test_snapshot_objects.py::test_existing_corrupted_target_is_never_overwritten[bad-snapshot_object_size_mismatch]",
+    "tests/test_snapshot_objects.py::test_existing_corrupted_target_is_never_overwritten[damaged-snapshot_object_hash_mismatch]",
+    "tests/test_snapshot_objects.py::test_external_store_requires_explicit_real_protected_boundaries[protected0]",
+    "tests/test_snapshot_objects.py::test_external_store_requires_explicit_real_protected_boundaries[protected1]",
+    "tests/test_snapshot_objects.py::test_external_store_requires_explicit_real_protected_boundaries[protected2]",
+    "tests/test_snapshot_objects.py::test_failed_publication_retains_prepared_bytes_and_never_claims_an_object",
+    "tests/test_snapshot_objects.py::test_invalid_json_is_rejected_before_an_object_can_be_stored[[]-object_required]",
+    "tests/test_snapshot_objects.py::test_invalid_json_is_rejected_before_an_object_can_be_stored[\\xff-invalid_utf8]",
+    "tests/test_snapshot_objects.py::test_invalid_json_is_rejected_before_an_object_can_be_stored[{\"a\":1,\"a\":2}-duplicate_key]",
+    "tests/test_snapshot_objects.py::test_invalid_json_is_rejected_before_an_object_can_be_stored[{-invalid_json]",
+    "tests/test_snapshot_objects.py::test_nonbyte_payloads_are_rejected_without_storage[3]",
+    "tests/test_snapshot_objects.py::test_nonbyte_payloads_are_rejected_without_storage[None]",
+    "tests/test_snapshot_objects.py::test_nonbyte_payloads_are_rejected_without_storage[bytes]",
+    "tests/test_snapshot_objects.py::test_nonbyte_payloads_are_rejected_without_storage[raw1]",
+    "tests/test_snapshot_objects.py::test_normal_put_changes_only_the_owned_external_store",
+    "tests/test_snapshot_objects.py::test_object_and_reference_are_owned_immutable_values",
+    "tests/test_snapshot_objects.py::test_portable_distribution_can_store_and_read_the_same_snapshot_bytes",
+    "tests/test_snapshot_objects.py::test_reference_hash_cannot_select_an_arbitrary_path[../aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]",
+    "tests/test_snapshot_objects.py::test_reference_hash_cannot_select_an_arbitrary_path[AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "tests/test_snapshot_objects.py::test_reference_hash_cannot_select_an_arbitrary_path[None]",
+    "tests/test_snapshot_objects.py::test_reference_hash_cannot_select_an_arbitrary_path[]",
+    "tests/test_snapshot_objects.py::test_reference_hash_cannot_select_an_arbitrary_path[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]",
+    "tests/test_snapshot_objects.py::test_reference_requires_an_exact_nonnegative_integer_size[-1]",
+    "tests/test_snapshot_objects.py::test_reference_requires_an_exact_nonnegative_integer_size[1]",
+    "tests/test_snapshot_objects.py::test_reference_requires_an_exact_nonnegative_integer_size[None]",
+    "tests/test_snapshot_objects.py::test_reference_requires_an_exact_nonnegative_integer_size[True]",
+    "tests/test_snapshot_objects.py::test_semantically_equal_json_reuses_one_unchanged_physical_object",
+    "tests/test_snapshot_objects.py::test_store_cannot_be_used_as_a_project_write_bypass[child]",
+    "tests/test_snapshot_objects.py::test_store_cannot_be_used_as_a_project_write_bypass[other_project]",
+    "tests/test_snapshot_objects.py::test_store_cannot_be_used_as_a_project_write_bypass[parent]",
+    "tests/test_snapshot_objects.py::test_store_cannot_be_used_as_a_project_write_bypass[same]",
+    "tests/test_snapshot_objects.py::test_store_root_symlink_is_not_resolved_into_an_unchecked_target",
+    "tests/test_snapshot_objects.py::test_stored_objects_survive_reopening_from_an_isolated_fresh_process",
+    "tests/test_snapshot_objects.py::test_successful_reads_and_reference_checks_remain_read_only",
+    "tests/test_snapshot_objects.py::test_unrelated_git_ancestor_is_not_a_specroad_project_or_protected_boundary",
+    "tests/test_snapshot_objects.py::test_unsafe_shared_storage_permissions_are_rejected"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Complete Baseline manifest/identity/revision/scope/configuration bindings and the atomic normative Baseline writer in their assigned following plan steps.",
+    "Reference-aware deletion protection and additional corruption/crash boundaries remain in 10.a.R.",
+    "External-store observations do not constitute a complete Baseline, cross-platform acceptance, full-suite pass or release approval."
   ]
 }
