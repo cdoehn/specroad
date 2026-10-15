@@ -144,11 +144,15 @@ class ConfigurationValuesWorkTests(unittest.TestCase):
     def test_inherited_configuration_needs_the_parent_resolver(self):
         parent = source()
         child = source(id=ref('CFG', '1'), name='Child', parent=parent.identity.id)
-        for records in ([child], [parent, child]):
-            with self.subTest(parent_supplied=len(records) == 2), self.assertRaises(ModelError) as caught:
-                resolve_configuration(records, child.identity.id)
-            self.assertEqual(caught.exception.reason, 'configuration_parent_resolution_required')
-            self.assertEqual(caught.exception.pointer, '/parent')
+        with self.assertRaises(ModelError) as caught:
+            resolve_configuration([child], child.identity.id)
+        self.assertEqual(caught.exception.reason, 'configuration_parent_missing')
+        self.assertEqual(caught.exception.pointer, '/parent')
+        # 9.b supplies the previously unavailable parent resolver. Keep this
+        # scenario's stable test identity while checking its new behavior.
+        result = resolve_configuration([parent, child], child.identity.id)
+        self.assertEqual(result.effective_values, {'platform': 'linux'})
+        self.assertEqual(result.validation_scope, 'supplied_configuration_chain_only')
 
     def test_explicit_null_parent_is_a_root(self):
         record = source(parent=None)

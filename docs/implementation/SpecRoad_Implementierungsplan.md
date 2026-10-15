@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 384
-last_completed_plan_commit: 9.a.C
-next_plan_commit: 9.b.W
-last_completed_numbered_bundle: 237
+implementation_plan_commits_completed: 385
+last_completed_plan_commit: 9.b.W
+next_plan_commit: 9.b.R
+last_completed_numbered_bundle: 238
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10126,12 +10126,34 @@ teilweise. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 384/900.
 
 #### 9.b.W – Let it Work
 
-- [ ] **9.b.W** · Position **385/900** · Voraussetzung: `9.a.C`.
+- [x] **9.b.W** · Position **385/900** · Voraussetzung: `9.a.C`.
 **Exakte Commit-Message:** `9.b.W feat(configuration): Vererbung und zyklusfreie Elternkette aufbauen`
 
 **Umsetzung:** Genau einen optionalen Parent auflösen; applicability an Configuration selbst verbieten.
 
 **Verhaltensabnahme:** Mehrstufige Vererbung ergibt die normativ kombinierte Auswahl.
+
+**Vorbereiteter W-Stand (Bundle 238, SR-TC-0395/0546/0547 teilweise):**
+Der Konfigurationsdienst löst die explizit gewählte Elternkette von der Wurzel
+zum Kind auf. Kinder dürfen Dimensionen ergänzen und Auswahlwerte überschreiben;
+geerbte Dimensionsdeklarationen bleiben unverändert. Erst nach der gesamten
+Kette füllen deklarierte Defaults fehlende Werte. Fehlende Eltern, Selbst- und
+Mehrknotenzyklen sowie widersprüchliche Deklarationen liefern kein Teilergebnis.
+Die vorhandene Record-Validierung verbietet `applicability` weiterhin auf Wurzel
+und Kind.
+
+Das getrennte kanonische Manifest bindet IDs, Revisionen und vollständige
+kanonische Record-Hashes der Kette, Dimensionen und effektive Auswahl. Sein
+SHA-256 ist unabhängig von lokalen Dateipfaden, JSON-Formatierung und der
+Reihenfolge des gelieferten Inventars. Quelldaten und die bisherige
+Ergebnisprojektion bleiben erhalten. Der bisherige W-Test für noch nicht
+unterstützte Eltern erhält für die jetzt implementierte Auflösung neue
+Verhaltenserwartungen; seine stabile Testnummer bleibt bestehen.
+
+Robustheitsvervollständigung und gemeinsame Graphprimitiven folgen in 9.b.R/C.
+Projektinventur, Applicability-Auswertung und Befehlsintegration bleiben den
+späteren M9-Schritten zugeordnet. Erst erfolgreicher Apply-Testlauf und Commit
+bestätigen Position 385/900.
 
 #### 9.b.R – Make it Right
 

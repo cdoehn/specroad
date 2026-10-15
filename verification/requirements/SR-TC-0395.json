@@ -15,12 +15,13 @@
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve explicitly selected root configurations from owned SourceRelations, materialize selection/defaults and reject duplicate names or incomplete declared dimensions without changing source bytes.",
-    "Exercise the explicit JSON scalar acceptance matrix for selected values and defaults, unknown dimension names, malformed declarations and consistent name validation on both paths."
+    "Exercise the explicit JSON scalar acceptance matrix for selected values and defaults, unknown dimension names, malformed declarations and consistent name validation on both paths.",
+    "Resolve a selected multilevel parent chain, retain inherited declarations, apply child overrides before defaults, and bind canonical full-record hashes, revisions, dimensions and effective values."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `configuration`-Artefakt MUSS einen eindeutigen Namen, deklarierte Dimensionen, je Dimension zulässige Werte, eine konkrete Wertauswahl und optional genau eine Elternkonfiguration enthalten.",
-    "scope": "Root configuration resolution and passive field contracts, including exact JSON scalar type boundaries, complete materialized selection, duplicate names/IDs and source-preserving errors. Parent resolution, effective manifest/hash, project discovery, applicability and scope gates remain assigned to later M9 steps."
+    "scope": "Explicit supplied-record configuration resolution, local scalar contracts and selected parent chains. Child overrides preserve inherited dimensions; missing parents, cycles, conflicting declarations and applicability yield no effective result. The canonical manifest binds every selected ancestor. No project discovery, applicability evaluation or release gate is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,12 +38,39 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_configuration_fields_do_not_resolve_a_parent",
-    "test_record_schemas.RecordRightTests.test_config_rejects_duplicate_names_and_values",
-    "test_record_schemas.RecordRightTests.test_config_default_and_selection_must_be_declared",
-    "test_record_schemas.RecordRightTests.test_config_json_booleans_are_not_equal_to_numeric_choices",
-    "test_record_schemas.RecordRightTests.test_config_root_rejects_unknown_selections_but_child_defers_inherited_ones",
-    "test_record_schemas.RecordRightTests.test_config_valid_default_is_not_materialized_into_original",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_boolean_override_is_not_replaced_by_parent_truthiness",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_changed_inherited_allowed_values_are_rejected",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_changed_or_removed_inherited_default_is_rejected",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_changed_selection_changes_the_effective_configuration_hash",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_can_add_a_dimension_with_its_own_default",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_configuration_cannot_have_applicability",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_inherits_the_parents_declared_dimensions_and_selection",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_overrides_a_parent_selection",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_selection_has_priority_over_an_inherited_default",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_explicit_null_survives_an_inherited_non_null_default",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_identical_inherited_dimension_declaration_does_not_duplicate_it",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_inherited_boolean_is_not_a_numeric_value",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_invalid_inherited_value_is_rejected",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_inventory_order_does_not_change_the_chain_or_hash",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_json_representation_does_not_change_the_canonical_hash",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_local_source_path_is_not_an_effective_hash_input",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_manifest_dimensions_have_deterministic_name_order",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_manifest_is_detached_and_sources_stay_byte_identical",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_missing_parent_cannot_be_replaced_by_root_defaults",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_missing_selection_after_the_chain_uses_the_original_default",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_new_dimension_needs_a_selection_or_default_at_the_end",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_parent_from_a_different_project_prefix_is_rejected",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_parent_list_cannot_choose_one_arbitrary_configuration",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_parent_reference_cannot_address_a_document",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_parent_revision_and_full_record_hash_are_bound",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_root_configuration_cannot_have_applicability",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_root_manifest_binds_identity_revision_full_value_hash_and_selection",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_selected_child_revision_is_bound",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_self_parent_is_rejected",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_three_levels_combine_new_dimensions_and_child_overrides",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_two_node_cycle_terminates_without_effective_values",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_unknown_inherited_selection_is_rejected",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_unrelated_configuration_is_not_part_of_the_effective_hash",
     "test_configuration_values.ConfigurationValuesWorkTests.test_configuration_selection_is_explicit",
     "test_configuration_values.ConfigurationValuesWorkTests.test_declared_dimension_without_default_uses_explicit_selection",
     "test_configuration_values.ConfigurationValuesWorkTests.test_duplicate_configuration_names_fail_before_a_result_is_returned",
@@ -67,6 +95,12 @@
     "test_configuration_values.ConfigurationValuesWorkTests.test_result_data_and_nested_dimensions_are_detached",
     "test_configuration_values.ConfigurationValuesWorkTests.test_result_scope_does_not_claim_project_coverage_or_a_configuration_hash",
     "test_configuration_values.ConfigurationValuesWorkTests.test_unknown_id_never_chooses_the_only_available_configuration",
+    "test_record_schemas.RecordRightTests.test_config_default_and_selection_must_be_declared",
+    "test_record_schemas.RecordRightTests.test_config_json_booleans_are_not_equal_to_numeric_choices",
+    "test_record_schemas.RecordRightTests.test_config_rejects_duplicate_names_and_values",
+    "test_record_schemas.RecordRightTests.test_config_root_rejects_unknown_selections_but_child_defers_inherited_ones",
+    "test_record_schemas.RecordRightTests.test_config_valid_default_is_not_materialized_into_original",
+    "test_record_schemas.RecordWorkTests.test_configuration_fields_do_not_resolve_a_parent",
     "tests/test_configuration_values_right.py::test_a_later_invalid_dimension_does_not_return_a_partial_selection",
     "tests/test_configuration_values_right.py::test_boolean_and_number_can_be_distinct_allowed_values",
     "tests/test_configuration_values_right.py::test_configuration_names_cannot_be_empty[ ]",
@@ -283,6 +317,6 @@
     "tests/test_configuration_values_right.py::test_unknown_dimension_never_uses_a_declared_default[linux]"
   ],
   "open_items": [
-    "Parent-chain resolution and the canonical effective configuration manifest/hash are implemented in 9.b; applicability, complete project integration and configuration-bound gates follow in the assigned later M9 steps. No full requirement or release approval is claimed."
+    "Complete parent-chain robustness and graph-primitive cleanup in 9.b.R/C. Applicability, complete project integration and configuration-bound gates follow in later M9 steps; no full requirement or release approval is claimed."
   ]
 }

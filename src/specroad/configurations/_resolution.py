@@ -1,6 +1,8 @@
-"""Record validation and root-value resolution, independent of result storage."""
+"""Record validation and parent-chain resolution, independent of result storage."""
 from ..graph.relations import SourceRelations
+from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
+from ..model._schema import _json_equal
 from ..storage.record_artifact import RecordArtifact
 
 
@@ -29,15 +31,53 @@ def resolve_values(records, configuration_id):
     if configuration_id not in configurations:
         raise ModelError('configuration_missing')
     selected = configurations[configuration_id]
-    value = selected.data
-    if value.get('parent') is not None:
-        raise ModelError('configuration_parent_resolution_required', path=selected.path, pointer='/parent')
-    dimensions = value['dimensions']
-    effective = {}
+    chain, visited = [], set()
+    current = selected
+    while True:
+        if current.id in visited:
+            raise ModelError('configuration_parent_cycle', path=current.path, pointer='/parent')
+        visited.add(current.id)
+        chain.append(current)
+        parent_id = current.data.get('parent')
+        if parent_id is None:
+            break
+        if parent_id not in configurations:
+            raise ModelError('configuration_parent_missing', path=current.path, pointer='/parent')
+        parent = configurations[parent_id]
+        if parent.id.split('-', 1)[0] != current.id.split('-', 1)[0]:
+            raise ModelError('configuration_parent_project_mismatch', path=current.path, pointer='/parent')
+        current = parent
+    chain.reverse()
+    declared, effective = {}, {}
+    for configuration in chain:
+        value = configuration.data
+        for index, dimension in enumerate(value['dimensions']):
+            name = dimension['name']
+            if name in declared:
+                if canonical_json_bytes(dimension) != canonical_json_bytes(declared[name]):
+                    raise ModelError('inherited_dimension_changed', path=configuration.path,
+                                     pointer='/dimensions/' + str(index))
+            else:
+                declared[name] = dimension
+        for name, choice in value['selection'].items():
+            if name not in declared:
+                raise ModelError('unknown_dimension', path=configuration.path, pointer='/selection')
+            if not any(_json_equal(choice, allowed) for allowed in declared[name]['allowed_values']):
+                raise ModelError('invalid_dimension_selection', path=configuration.path, pointer='/selection')
+            effective[name] = choice
+    dimensions = list(declared.values())
     for dimension in dimensions:
         name = dimension['name']
-        effective[name] = (value['selection'][name] if name in value['selection']
-                           else dimension['default'])
+        if name not in effective:
+            if 'default' not in dimension:
+                raise ModelError('missing_dimension_selection', path=selected.path, pointer='/selection')
+            effective[name] = dimension['default']
+    value = selected.data
     data = {'configuration_id': selected.id, 'configuration_revision': value['revision'],
             'name': value['name'], 'dimensions': dimensions, 'effective_values': effective}
-    return selected, data
+    manifest = {'manifest_version': 'effective-configuration-v1', 'configuration_id': selected.id,
+                'configurations': [{'id': record.id, 'revision': record.data['revision'],
+                                    'sha256': canonical_json_sha256(record.data)} for record in chain],
+                'dimensions': sorted(dimensions, key=lambda item: item['name'].encode('utf-8')),
+                'effective_values': effective}
+    return selected, data, manifest
