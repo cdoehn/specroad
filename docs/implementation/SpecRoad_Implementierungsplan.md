@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 389
-last_completed_plan_commit: 9.c.R
-next_plan_commit: 9.c.C
+implementation_plan_commits_completed: 390
+last_completed_plan_commit: 9.c.C
+next_plan_commit: 9.d.W
 last_completed_numbered_bundle: 241
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10276,7 +10276,7 @@ M9-Schritten. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 389/900.
 
 #### 9.c.C – Make it Clean
 
-- [ ] **9.c.C** · Position **390/900** · Voraussetzung: `9.c.R`.
+- [x] **9.c.C** · Position **390/900** · Voraussetzung: `9.c.R`.
 **Exakte Commit-Message:** `9.c.C refactor(configuration): Applicability-Auswertung bereinigen`
 
 **Bereinigung:** Applicability als reine Scopevorstufe führen.
@@ -10284,6 +10284,19 @@ M9-Schritten. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 389/900.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 241):**
+Die Applicability-Klassifikation liegt als reine Funktion vor der Scope-Closure.
+Sie prüft Quellbindung, explizite Auswahl und SRX-Zugriffsgrenzen und liefert
+nur die drei fachlichen Zustände samt Bindungsdaten. Sie lädt kein Projekt,
+verfolgt keine Relation und entscheidet keine Closure oder Freigabe.
+
+Die unveränderbare Ergebnisprojektion und die bestehende öffentliche
+Schnittstelle verwenden diese gemeinsame Stufe. Fehlerklassen, Quell- und
+Ausdruckspfade, Statuswerte, Begründungen, Hashbindungen und die Pflicht zur
+expliziten Statusprüfung bleiben erhalten. Sämtliche W-/R-Verhaltenstests werden
+unverändert ausgeführt. Die Einbindung vor Seed- und Pflichtressourcenaufnahme
+folgt in 9.d. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 390/900.
 
 <a id="step-9-d"></a>
 ### 9.d – Konfiguration vor Scope-Closure
