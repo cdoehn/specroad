@@ -4,6 +4,7 @@ from hashlib import sha256
 import json
 
 from ._resolution import resolve_values
+from ._context import configuration_scope_hash, srx_configuration_root
 from ..model.canonical import canonical_json_bytes
 
 
@@ -56,7 +57,7 @@ class EffectiveConfiguration:
     @property
     def srx_context(self):
         """The closed SRX root; manifest provenance is carried separately."""
-        return {'configuration_id': self.configuration_id, 'effective_values': self.effective_values}
+        return srx_configuration_root(self.configuration_id, self.effective_values)
 
     def scope_sha256(self, project):
         """Bind semantic project configuration and this selected parent chain.
@@ -66,6 +67,4 @@ class EffectiveConfiguration:
         """
         from ..model.canonical import canonical_json_sha256
         from ..model.semantic_configuration import semantic_configuration
-        return canonical_json_sha256({
-            'project_configuration_sha256': canonical_json_sha256(semantic_configuration(project)),
-            'selected_configuration_sha256': self.sha256})
+        return configuration_scope_hash(canonical_json_sha256(semantic_configuration(project)), self.sha256)

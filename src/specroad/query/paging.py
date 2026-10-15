@@ -8,11 +8,11 @@ import json
 import unicodedata
 
 from ..model.errors import ModelError
-from ..graph.relations import SourceRelations
 from ..srx import MISSING
 from ..srx.pointers import parse_pointer, resolve_tokens
 from ._query_normalization import _sequence
 from .selection import NormalizedQuery, select_query
+from ._configuration_inputs import configured_sources
 
 
 @dataclass(frozen=True, init=False)
@@ -73,14 +73,7 @@ def query_records(records, query, *, project, configuration=None, configuration_
     if type(query) is not NormalizedQuery:
         raise ModelError('normalized_query_required')
     records = tuple(_sequence(records))
-    if configuration_id is not None:
-        from ..configurations.evaluation import ConfigurationEvaluationError
-        try:
-            if any(type(record) is not SourceRelations for record in records):
-                raise ModelError('configuration_source_required')
-            records = tuple(SourceRelations(record.source_bytes, path=record.path) for record in records)
-        except ModelError as error:
-            raise ConfigurationEvaluationError(error) from error
+    records = configured_sources(records, configuration_id)
     data = query.data
     ordering = []
     for index, item in enumerate(data['sort']):

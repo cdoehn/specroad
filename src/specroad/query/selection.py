@@ -9,7 +9,6 @@ from hashlib import sha256
 import json
 
 from ..graph._scope_selector_contract import _query
-from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.domain_fields import IMPLEMENTATION_STATUSES, VERIFICATION_PLAN_STATUSES
 from ..model.errors import ModelError
@@ -18,6 +17,7 @@ from ..srx.pointers import parse_pointer
 from ._query_normalization import _sequence, normalize_query
 from ._selection_projection import project_item
 from .full_text import full_text_matches
+from ._configuration_inputs import configured_sources
 
 
 @dataclass(frozen=True, init=False)
@@ -127,15 +127,11 @@ def select_query(records, query, *, project, configuration=None, configuration_i
         try:
             if configuration is not None:
                 raise ModelError('query_configuration_context_conflict')
-            if any(type(record) is not SourceRelations for record in records):
-                raise ModelError('configuration_source_required')
-            records = tuple(sorted((SourceRelations(r.source_bytes, path=r.path) for r in records),
-                                   key=lambda r: r.identity.id))
+            records = tuple(sorted(configured_sources(records, configuration_id), key=lambda r: r.identity.id))
             effective = resolve_configuration(records, configuration_id)
             eligible = [r.identity.id for r in records if evaluate_applicability(
                 r, effective, require_configuration=True).status == 'applicable']
-            configuration = {'configuration_id': effective.configuration_id,
-                             'effective_values': effective.effective_values}
+            configuration = effective.srx_context
             selected_configuration = effective.binding
         except ModelError as error:
             raise ConfigurationEvaluationError(error) from error

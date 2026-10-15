@@ -79,9 +79,9 @@ def _profile(context, resources):
             try:
                 project = _rule_project(resources, context.profile_data, rule_id)
                 selected = context.configuration_data
-                configuration = None if selected is None else {
-                    'configuration_id': selected['configuration_id'],
-                    'effective_values': selected['effective_values']}
+                from ..configurations._context import srx_configuration_root
+                configuration = None if selected is None else srx_configuration_root(
+                    selected['configuration_id'], selected['effective_values'])
                 roots = graph.candidate_roots({"project": project,
                     "configuration": configuration}, identity, rule_id=rule_id)
                 result = evaluate(SrxProgram(rule["program"], rule_id=rule_id),

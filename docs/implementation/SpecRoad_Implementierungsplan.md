@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 401
-last_completed_plan_commit: 9.g.R
-next_plan_commit: 9.g.C
+implementation_plan_commits_completed: 402
+last_completed_plan_commit: 9.g.C
+next_plan_commit: 9.h.W
 last_completed_numbered_bundle: 249
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10642,7 +10642,7 @@ bleiben offen. Alle bisherigen W-Testdateien bleiben unverändert erhalten.
 
 #### 9.g.C – Make it Clean
 
-- [ ] **9.g.C** · Position **402/900** · Voraussetzung: `9.g.R`.
+- [x] **9.g.C** · Position **402/900** · Voraussetzung: `9.g.R`.
 **Exakte Commit-Message:** `9.g.C refactor(configuration): Konfigurationsoption in vorhandenen Fachbefehlen bereinigen`
 
 **Bereinigung:** Eine gemeinsame Konfigurationsauflösung statt versteckter Defaultwerte je Handler nutzen.
@@ -10650,6 +10650,15 @@ bleiben offen. Alle bisherigen W-Testdateien bleiben unverändert erhalten.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 249):**
+Query-Auswahl, In-Memory-Pagination und externer Query-Work verwenden dieselbe
+Aufbereitung eigener Originalquellen für konfigurierte Eingaben. Die effektive
+Konfiguration und produktive Profilregeln teilen die geschlossene SRX-Projektion;
+Scope-Auswahl und Liveadapter teilen die Bildung des Konfigurationsbeitrags.
+Auflösung, Defaults nach expliziter Auswahl, Fehlerverträge, Hashwerte,
+Seiteneffekte und Prüfumfänge bleiben unverändert. Alle W-/R-Testdateien werden
+bytegleich erneut gegen diesen eigenen C-Zustand geprüft.
 
 <a id="step-9-h"></a>
 ### 9.h – Varianten-Diff und Regression

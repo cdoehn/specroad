@@ -5,7 +5,7 @@ semantic binding. This value performs no discovery, query evaluation or I/O.
 Its cached decisions are local to one resolution, never reused across inputs.
 """
 from ..configurations import evaluate_applicability, resolve_configuration
-from ..model.canonical import canonical_json_sha256
+from ..configurations._context import configuration_scope_hash
 
 
 class ScopeApplicability:
@@ -30,5 +30,4 @@ class ScopeApplicability:
     def configuration_hash(self, project_sha256, *, unconfigured=None):
         if self._effective is None:
             return unconfigured
-        return canonical_json_sha256({'project_configuration_sha256': project_sha256,
-                                      'selected_configuration_sha256': self._effective.sha256})
+        return configuration_scope_hash(project_sha256, self._effective.sha256)

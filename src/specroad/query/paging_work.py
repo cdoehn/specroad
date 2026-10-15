@@ -7,7 +7,6 @@ This is a process-local capability, not a durable Work checkpoint or CLI adapter
 
 from ..diagnostics.spooling import DiagnosticSort
 from ..model.errors import ModelError
-from ..graph.relations import SourceRelations
 from ..security.errors import SafetyViolation
 from ..srx.pointers import parse_pointer
 from ..storage._spool_segments import _positive
@@ -15,6 +14,7 @@ from ._query_normalization import _sequence
 from .paging import QueryPage
 from .selection import NormalizedQuery, select_query
 from ._paging_spool import _QuerySpool, _rows
+from ._configuration_inputs import configured_sources
 
 
 class QueryWork:
@@ -31,14 +31,7 @@ class QueryWork:
         if type(query) is not NormalizedQuery:
             raise ModelError('normalized_query_required')
         records = tuple(_sequence(records))
-        if configuration_id is not None:
-            from ..configurations.evaluation import ConfigurationEvaluationError
-            try:
-                if any(type(record) is not SourceRelations for record in records):
-                    raise ModelError('configuration_source_required')
-                records = tuple(SourceRelations(record.source_bytes, path=record.path) for record in records)
-            except ModelError as error:
-                raise ConfigurationEvaluationError(error) from error
+        records = configured_sources(records, configuration_id)
         data = query.data
         ordering = []
         for index, item in enumerate(data['sort']):
