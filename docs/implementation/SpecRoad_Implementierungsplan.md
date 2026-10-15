@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 385
-last_completed_plan_commit: 9.b.W
-next_plan_commit: 9.b.R
-last_completed_numbered_bundle: 238
+implementation_plan_commits_completed: 386
+last_completed_plan_commit: 9.b.R
+next_plan_commit: 9.b.C
+last_completed_numbered_bundle: 239
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10157,12 +10157,30 @@ bestätigen Position 385/900.
 
 #### 9.b.R – Make it Right
 
-- [ ] **9.b.R** · Position **386/900** · Voraussetzung: `9.b.W`.
+- [x] **9.b.R** · Position **386/900** · Voraussetzung: `9.b.W`.
 **Exakte Commit-Message:** `9.b.R feat(configuration): Vererbung und zyklusfreie Elternkette vervollständigen`
 
 **Vervollständigung:** Selbst-/Mehrknotenzyklen und widersprüchliche Auswahl ohne teilweises Ergebnis abweisen.
 
 **Verhaltensabnahme:** Zyklische Parentdaten terminieren mit Konfigurationsfehler. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 239, SR-TC-0395/0546/0547 weiterhin teilweise):**
+Die vorhandene W-Auflösung wird durch Verhaltenstests für tiefe Elternketten,
+Mehrknotenzyklen mit und ohne Vorlauf sowie exakte Fehlerorte vervollständigt.
+Auch oberhalb der Python-Rekursionsgrenze entstehen gültige Ergebnisse oder
+Konfigurationsfehler; Quelldaten bleiben dabei unverändert. Eine ungültige
+Vorfahr-Auswahl oder widersprüchliche Deklaration wird nicht durch einen späteren
+gültigen Kindwert verdeckt. Neue Dimensionen können bis zum Ende der Kette
+vervollständigt werden. Geerbte Skalare behalten ihre JSON-Typgrenzen.
+
+Die Tests binden außerdem das Verbot jedes vorhandenen `applicability`-Felds
+auf allen Kettenstufen und die kanonische Bindung übersteuerter Vorfahren. Die
+bisherigen W-/R-Nachweise bleiben unverändert. R erweitert hier den Nachweis
+der bereits vorhandenen Produktvalidierung; es entsteht keine zweite
+Validierungsimplementierung. Nicht ausgewählte Elternketten bleiben außerhalb
+des ausgewiesenen Auflösungsumfangs. Projektintegration und Applicability-Auswertung
+bleiben späteren M9-Schritten zugeordnet. Erst erfolgreicher Apply-Testlauf und
+Commit bestätigen Position 386/900.
 
 #### 9.b.C – Make it Clean
 

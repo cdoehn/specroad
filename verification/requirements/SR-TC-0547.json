@@ -14,12 +14,13 @@
   ],
   "steps": [
     "Add an applicability expression to an otherwise valid root or child configuration.",
-    "Resolve the selected configuration and require the unknown-field error at /applicability."
+    "Resolve the selected configuration and require the unknown-field error at /applicability.",
+    "Reject every present applicability field on roots, intermediate parents and selected children, including null, Boolean and malformed object values."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `configuration`-Artefakt DARF NICHT ein Feld `applicability` besitzen.",
-    "scope": "Root and child configuration records carrying applicability are rejected by the normative record validator before effective values are exposed. Project integration remains open."
+    "scope": "Every present applicability field on a root, intermediate parent or selected child is rejected before effective values are exposed. Null, Boolean and malformed object forms do not bypass the prohibition; project integration remains open."
   },
   "expected_diagnostics": [
     "unknown_field"
@@ -40,10 +41,22 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_configuration_cannot_have_applicability",
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_root_configuration_cannot_have_applicability",
-    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_configuration_cannot_have_applicability"
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[False-0]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[False-1]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[False-2]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[None-0]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[None-1]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[None-2]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability2-0]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability2-1]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability2-2]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability3-0]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability3-1]",
+    "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability3-2]"
   ],
   "open_items": [
-    "Complete 9.b.R/C robustness and later M9 project integration; current evidence covers the explicit supplied-record API only."
+    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
   ]
 }

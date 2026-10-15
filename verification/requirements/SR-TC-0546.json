@@ -14,12 +14,13 @@
   ],
   "steps": [
     "Resolve explicit multilevel parent records in both inventory orders.",
-    "Resolve missing-parent, self-parent and two-node-cycle records; require ModelError without an effective result."
+    "Resolve missing-parent, self-parent and two-node-cycle records; require ModelError without an effective result.",
+    "Resolve deep chains above the Python recursion limit and cycles of several sizes, including tails entering a cycle; verify exact error location and unchanged input bytes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Elternkette von `configuration`-Artefakten MUSS azyklisch sein.",
-    "scope": "Supplied selected-chain traversal terminates, rejects self-parent and two-node cycles, and returns deterministic root-to-child bindings for valid chains. This is a W-stage API contract, not project-wide validation."
+    "scope": "Selected parent-chain traversal rejects self-parent and multiple-node cycles, including deep chains and tails entering a cycle, with a bounded configuration error and unchanged input bytes. Unselected chains are not resolved; no project-wide validation is claimed."
   },
   "expected_diagnostics": [
     "configuration_parent_missing",
@@ -42,13 +43,31 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_three_levels_combine_new_dimensions_and_child_overrides",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_inventory_order_does_not_change_the_chain_or_hash",
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_missing_parent_cannot_be_replaced_by_root_defaults",
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_self_parent_is_rejected",
+    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_three_levels_combine_new_dimensions_and_child_overrides",
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_two_node_cycle_terminates_without_effective_values",
-    "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_inventory_order_does_not_change_the_chain_or_hash"
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[-1-25]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[-1-3]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[-1-4]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[-1-9]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[0-25]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[0-3]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[0-4]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[0-9]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[1-25]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[1-3]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[1-4]",
+    "tests/test_configuration_inheritance_right.py::test_cycles_fail_at_the_selected_entry_without_partial_values[1-9]",
+    "tests/test_configuration_inheritance_right.py::test_deep_cycle_fails_as_configuration_error_without_recursion_error",
+    "tests/test_configuration_inheritance_right.py::test_deep_valid_chain_does_not_depend_on_python_recursion_depth",
+    "tests/test_configuration_inheritance_right.py::test_missing_ancestor_prevents_child_defaults_from_producing_a_result",
+    "tests/test_configuration_inheritance_right.py::test_missing_grandparent_reports_the_record_with_the_broken_reference",
+    "tests/test_configuration_inheritance_right.py::test_parent_cycle_outside_the_selected_chain_does_not_change_its_scope",
+    "tests/test_configuration_inheritance_right.py::test_tail_entering_a_cycle_reports_the_first_repeated_ancestor"
   ],
   "open_items": [
-    "Complete 9.b.R/C robustness and later M9 project integration; current evidence covers the explicit supplied-record API only."
+    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
   ]
 }
