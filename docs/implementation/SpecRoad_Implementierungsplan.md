@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 383
-last_completed_plan_commit: 9.a.R
-next_plan_commit: 9.a.C
+implementation_plan_commits_completed: 384
+last_completed_plan_commit: 9.a.C
+next_plan_commit: 9.b.W
 last_completed_numbered_bundle: 237
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10099,7 +10099,7 @@ Commit bestätigen Position 383/900.
 
 #### 9.a.C – Make it Clean
 
-- [ ] **9.a.C** · Position **384/900** · Voraussetzung: `9.a.R`.
+- [x] **9.a.C** · Position **384/900** · Voraussetzung: `9.a.R`.
 **Exakte Commit-Message:** `9.a.C refactor(configuration): Dimensionen und Wertauswahl bereinigen`
 
 **Bereinigung:** Konfigurationsmodell und Auflösungsalgorithmus separieren.
@@ -10107,6 +10107,16 @@ Commit bestätigen Position 383/900.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 237):**
+Das unveränderbare Ergebnisobjekt und seine eigene Datenhaltung liegen getrennt
+von Inventarprüfung und Wertauflösung. Die öffentliche Konfigurationsschnittstelle
+einschließlich des bisherigen Imports über `configurations.values` bleibt erhalten.
+Auswahl-/Defaultreihenfolge, Fehlergründe, Diagnostikpfade, Quellbindung und
+zulässige Seiteneffekte ändern sich nicht. Alle W-/R-Verhaltenstests und die
+betroffenen bisherigen Record-/Validierungsprüfungen werden erneut ausgeführt.
+Elternauflösung und effektiver Hash bleiben 9.b zugeordnet; SR-TC-0395 bleibt
+teilweise. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 384/900.
 
 <a id="step-9-b"></a>
 ### 9.b – Vererbung und zyklusfreie Elternkette
