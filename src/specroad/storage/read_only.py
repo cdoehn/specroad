@@ -105,7 +105,12 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
             raise ModelError("operational_metadata_changed")
         data["resource_files_verified"] = profile_files is not None
         if configuration_id is not None:
+            from ..configurations import resolve_configuration
+            from ..graph.relations import SourceRelations
             data['selected_configuration'] = report.data['selected_configuration']
+            data['configuration_scope_sha256'] = resolve_configuration(
+                tuple(SourceRelations(d.content, path=d.path) for d in documents),
+                configuration_id).scope_sha256(source.configuration)
         data.update(status="completed", passed=assessment.passed, exit_code=assessment.exit_code,
                     checks_complete=report.complete, validation=assessment.as_dict())
         return ReadOnlyResult._create(data)

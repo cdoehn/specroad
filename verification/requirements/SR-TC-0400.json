@@ -18,12 +18,14 @@
     "Resolve an explicitly selected configuration from current original sources and filter applicable Query candidates before exact sorting and pagination.",
     "Use the same effective configuration in native Query API, CLI, request, external Query Work, artifact-scope query seeds and productive validation gates.",
     "Keep original artifact identities and source bytes; hide excluded nodes and edges from computed query graph traversal while checking the full structural inventory.",
-    "Reject unknown configuration identities and changed inputs at final observation checks; retain read-only behavior and portable Query execution."
+    "Reject unknown configuration identities and changed inputs at final observation checks; retain read-only behavior and portable Query execution.",
+    "Compare native Query, validation and seed configuration bindings, and derive equal real scope roots from equal verified input/descriptor/provider observations.",
+    "Reject invalid selections, stale source files and forged cached source identities; preserve concurrent variant isolation and original metadata contracts when no selection is supplied."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`validate`, `render`, `view`, `coverage`, `release readiness`, `baseline create`, `export` und `bundle create` MÜSSEN `--configuration <ID>` unterstützen.",
-    "scope": "Existing adapters resolve the same selected ID, revision and effective configuration digest from original source bytes. Query applicability precedes sort/page and graph traversal excludes filtered nodes without rewriting stored records. Native scope Query pages use the same actual Query kernel. Productive validation and registered gates receive owned effective configuration data; unavailable services and structural checks remain effective. Final freshness checks bind complete observed inputs. The unconfigured behavior and six-field Query page remain unchanged. This is partial command integration, not certification of future adapters or resource-complete scope roots."
+    "scope": "Existing adapters resolve the same selected ID, revision and effective configuration digest from original source bytes. Query applicability precedes sort/page and graph traversal excludes filtered nodes without rewriting stored records. Native scope Query pages use the same actual Query kernel. Productive validation and registered gates receive owned effective configuration data; unavailable services and structural checks remain effective. Final freshness checks bind complete observed inputs. The unconfigured behavior and six-field Query page remain unchanged. This is partial command integration, not certification of future adapters or resource-complete scope roots. R adds the same semantic configuration contribution across native adapters and an explicit contract for future adapters. Original-byte ownership also covers configured page sorting and external sort. Configuration digests alone are not scope roots, complete inventories or authority to reuse evidence. Real scope-root equivalence is checked with explicit complete fixture dependency observations."
   },
   "expected_diagnostics": [
     "SRV130",
@@ -89,10 +91,38 @@
     "tests/test_configuration_commands.py::test_srx_incoming_counts_ignore_excluded_origins",
     "tests/test_configuration_commands.py::test_srx_query_receives_the_resolved_effective_configuration",
     "tests/test_configuration_commands.py::test_srx_reachability_does_not_traverse_an_excluded_intermediate",
-    "tests/test_configuration_commands.py::test_unselected_query_keeps_all_potential_variants_and_has_no_selected_binding"
+    "tests/test_configuration_commands.py::test_unselected_query_keeps_all_potential_variants_and_has_no_selected_binding",
+    "tests/test_configuration_commands_right.py::test_cli_repeated_selection_is_usage_error_without_a_result",
+    "tests/test_configuration_commands_right.py::test_configured_paging_rejects_non_sources_as_bound_configuration_errors[None]",
+    "tests/test_configuration_commands_right.py::test_configured_paging_rejects_non_sources_as_bound_configuration_errors[bad1]",
+    "tests/test_configuration_commands_right.py::test_configured_paging_rejects_non_sources_as_bound_configuration_errors[record]",
+    "tests/test_configuration_commands_right.py::test_configured_sort_uses_owned_source_identity_instead_of_forged_cached_identity[False]",
+    "tests/test_configuration_commands_right.py::test_configured_sort_uses_owned_source_identity_instead_of_forged_cached_identity[True]",
+    "tests/test_configuration_commands_right.py::test_native_adapters_publish_the_same_project_and_parent_chain_binding[SR-CFG-00000000000000000000000001]",
+    "tests/test_configuration_commands_right.py::test_native_adapters_publish_the_same_project_and_parent_chain_binding[SR-CFG-00000000000000000000000002]",
+    "tests/test_configuration_commands_right.py::test_native_query_and_validation_do_not_invent_a_default_for_bad_selection[1]",
+    "tests/test_configuration_commands_right.py::test_native_query_and_validation_do_not_invent_a_default_for_bad_selection[SR-CFG-00000000000000000000000033]",
+    "tests/test_configuration_commands_right.py::test_native_query_and_validation_do_not_invent_a_default_for_bad_selection[True]",
+    "tests/test_configuration_commands_right.py::test_native_query_and_validation_do_not_invent_a_default_for_bad_selection[Variant 1]",
+    "tests/test_configuration_commands_right.py::test_native_query_and_validation_do_not_invent_a_default_for_bad_selection[]",
+    "tests/test_configuration_commands_right.py::test_native_validation_checks_current_configuration_bytes_after_semantic_evaluation",
+    "tests/test_configuration_commands_right.py::test_omitted_configuration_keeps_the_existing_unconfigured_metadata_contract",
+    "tests/test_configuration_commands_right.py::test_owned_srx_context_and_binding_do_not_expose_mutable_selected_values",
+    "tests/test_configuration_commands_right.py::test_portable_cli_publishes_the_same_semantic_configuration_binding",
+    "tests/test_configuration_commands_right.py::test_query_and_native_seed_adapters_produce_the_same_real_scope_root[False]",
+    "tests/test_configuration_commands_right.py::test_query_and_native_seed_adapters_produce_the_same_real_scope_root[True]",
+    "tests/test_configuration_commands_right.py::test_scope_binding_requires_real_project_configuration[None]",
+    "tests/test_configuration_commands_right.py::test_scope_binding_requires_real_project_configuration[project]",
+    "tests/test_configuration_commands_right.py::test_scope_binding_requires_real_project_configuration[project_value1]",
+    "tests/test_configuration_commands_right.py::test_semantic_binding_ignores_source_formatting_and_project_presentation",
+    "tests/test_configuration_commands_right.py::test_semantic_configuration_binding_changes_with_each_normative_input[parent_choice]",
+    "tests/test_configuration_commands_right.py::test_semantic_configuration_binding_changes_with_each_normative_input[parent_revision]",
+    "tests/test_configuration_commands_right.py::test_semantic_configuration_binding_changes_with_each_normative_input[project_semantics]",
+    "tests/test_configuration_commands_right.py::test_semantic_configuration_binding_changes_with_each_normative_input[selected_identity]",
+    "tests/test_configuration_commands_right.py::test_simultaneous_selected_queries_keep_distinct_owned_configuration_bindings"
   ],
   "open_items": [
-    "Current implementation integrates the existing Query CLI/read APIs, native validation reader and artifact-only scope provider. The separate validate/render/view/coverage/release readiness/baseline/export/bundle command adapters are not all implemented; they must explicitly adopt this contract when introduced.",
-    "Artifact seed selection is not a full resource inventory, closure or release approval. Additional configuration boundary cases and common adapter resolution follow in 9.g.R/C."
+    "Separate validate/render/view/coverage/release readiness/baseline/export/bundle command adapters are not all implemented. docs/configuration-adapters.md specifies the required explicit selection, context, binding and currentness integration; future adapters must supply their actual resource/closure providers.",
+    "Artifact seeds and the configuration digest are not full scope/model roots or approvals. Existing real scope closure/fingerprint services require complete provider observations; no missing production provider is substituted."
   ]
 }

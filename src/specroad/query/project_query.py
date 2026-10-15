@@ -79,7 +79,10 @@ def _query_steps(root, query=None, *, options=None, cwd=None, configuration_id=N
             source_count=page.source_count, observation_sha256=snapshot.binding.sha256,
             validation_scope=page.validation_scope, profile_defaults_applied=False)
         if page.configuration_binding is not None:
+            from ..configurations import resolve_configuration
             details['selected_configuration'] = page.configuration_binding
+            details['configuration_scope_sha256'] = resolve_configuration(
+                snapshot.records, configuration_id).scope_sha256(source.configuration)
         yield 'evaluated'
         for boundary, name, raw in bindings:
             if boundary.read_bytes(name) != raw:

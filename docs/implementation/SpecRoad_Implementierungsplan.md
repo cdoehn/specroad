@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 400
-last_completed_plan_commit: 9.g.W
-next_plan_commit: 9.g.R
-last_completed_numbered_bundle: 248
+implementation_plan_commits_completed: 401
+last_completed_plan_commit: 9.g.R
+next_plan_commit: 9.g.C
+last_completed_numbered_bundle: 249
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10611,12 +10611,34 @@ bestätigen weder Ressourcen-Vollständigkeit noch Closure oder Freigaben.
 
 #### 9.g.R – Make it Right
 
-- [ ] **9.g.R** · Position **401/900** · Voraussetzung: `9.g.W`.
+- [x] **9.g.R** · Position **401/900** · Voraussetzung: `9.g.W`.
 **Exakte Commit-Message:** `9.g.R feat(configuration): Konfigurationsoption in vorhandenen Fachbefehlen vervollständigen`
 
 **Vervollständigung:** Später hinzukommende Baseline-, Evidence-, Export- und Bundleadapter müssen denselben Vertrag ausdrücklich übernehmen.
 
 **Verhaltensabnahme:** Jede bereits vorhandene Operation liefert dieselbe Scopewurzel für denselben Konfigurationsinput. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 249, SR-TC-0400 weiterhin teilweise):**
+Die effektive Konfiguration stellt einen eigenen geschlossenen SRX-Kontext und
+eine Bindung an die semantische Projektkonfiguration bereit. Native Query und
+Read-only-Validierung geben denselben `configuration_scope_sha256` aus, den
+konfigurierte Scope-Seeds bereits verwenden. Parent-Kette, eigene Identität und
+normative Projektwerte sind gebunden; Darstellung und JSON-Formatierung ändern
+diesen semantischen Beitrag nicht. Aktuelle Originalbytes werden weiterhin
+unabhängig davon abschließend geprüft.
+
+Konfigurierte Sortierung und externer Query-Work übernehmen eigene Quellen aus
+Originalbytes, damit veränderte gecachte Identitäten keine Treffer vertauschen.
+Die neuen Verhaltenstests vergleichen die echten Scopewurzeln aus Query-Seiten
+und nativen Seeds mit expliziten vollständigen Fixture-Providerbeobachtungen.
+Weitere Fälle prüfen ungültige Auswahl, aktuelle Eltern-/Projektwerte,
+Parallelität, portable Ausgabe und Schreibfreiheit beziehungsweise Verwerfen
+eines Ergebnisses bei verspätet geänderten Quelldateien.
+
+`docs/configuration-adapters.md` beschreibt den ausdrücklichen Vertrag für
+spätere Adapter. Der Konfigurationshash ist keine vollständige Modellwurzel;
+fehlende Ressourcen-/Closure-Provider und noch nicht vorhandene Fachbefehle
+bleiben offen. Alle bisherigen W-Testdateien bleiben unverändert erhalten.
 
 #### 9.g.C – Make it Clean
 

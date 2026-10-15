@@ -52,3 +52,20 @@ class EffectiveConfiguration:
     def binding(self):
         return {'configuration_id': self.configuration_id,
                 'configuration_revision': self.data['configuration_revision'], 'sha256': self.sha256}
+
+    @property
+    def srx_context(self):
+        """The closed SRX root; manifest provenance is carried separately."""
+        return {'configuration_id': self.configuration_id, 'effective_values': self.effective_values}
+
+    def scope_sha256(self, project):
+        """Bind semantic project configuration and this selected parent chain.
+
+        This is the configuration contribution to a scope, not a model root,
+        resource inventory, closure proof or authority to reuse evidence.
+        """
+        from ..model.canonical import canonical_json_sha256
+        from ..model.semantic_configuration import semantic_configuration
+        return canonical_json_sha256({
+            'project_configuration_sha256': canonical_json_sha256(semantic_configuration(project)),
+            'selected_configuration_sha256': self.sha256})
