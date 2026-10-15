@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 393
-last_completed_plan_commit: 9.d.C
-next_plan_commit: 9.e.W
-last_completed_numbered_bundle: 243
+implementation_plan_commits_completed: 394
+last_completed_plan_commit: 9.e.W
+next_plan_commit: 9.e.R
+last_completed_numbered_bundle: 244
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10401,12 +10401,43 @@ und werden zusammen mit den betroffenen bisherigen Verhaltenstests geprüft.
 
 #### 9.e.W – Let it Work
 
-- [ ] **9.e.W** · Position **394/900** · Voraussetzung: `9.d.C`.
+- [x] **9.e.W** · Position **394/900** · Voraussetzung: `9.d.C`.
 **Exakte Commit-Message:** `9.e.W feat(configuration): Pflichtabhängigkeiten und Erklärungspfad aufbauen`
 
 **Umsetzung:** configuration evaluate mit anwendbarer Menge und kürzestem inkonsistentem Abhängigkeitspfad implementieren.
 
 **Verhaltensabnahme:** Exakte ausgeschlossene Pflichtabhängigkeit lässt sich aus der Fachprojektion nachvollziehen.
+
+**Vorbereiteter W-Stand (Bundle 244, SR-TC-0398/0399 teilweise):**
+`configuration evaluate <configuration-id>` ist über CLI, strukturierten Request
+und Python verfügbar. Die reine Auswertung löst die ausdrücklich ausgewählte
+Elternkette auf, klassifiziert jedes Artefakt und liefert IDs, feste
+Auswertungsgründe und die effektive Konfigurationsbindung im Schema
+`configuration-evaluation-v1`. Die Fachprojektion hängt nicht von Original-JSON-
+Formatierung oder der Aufzählreihenfolge der Quellen ab.
+
+Für jeden anwendbaren Ausgangsknoten werden alle erreichbaren ausgeschlossenen
+Ziele über gespeicherte starke Relationen ermittelt. Jeder Konflikt enthält
+einen vollständigen kürzesten Pfad mit Artefakt- und Relationsidentitäten sowie
+Richtung. Ein ausgeschlossenes Artefakt ist Endpunkt, kein Transitknoten; seine
+eigenen Pflichten gehören nicht zur ausgewählten Variante. Schwache Relationen
+werden nicht in Pflichtabhängigkeiten umgedeutet. Zyklen erlaubter
+Pflichtrelationen terminieren; es gibt keine implizite Trace-Tiefengrenze.
+
+Der echte Projektleser nutzt bestehenden Preflight, vollständige
+Artefaktaufnahme und abschließende Byte-/Mitgliedschaftsprüfung. Ein vollständig
+ausgewerteter Konflikt liefert die ganze Fachprojektion mit `SRV131`, Exit 3 und
+`complete=true`; ungültige Konfiguration/Applicability liefert `SRV130` ohne
+Erfolgsergebnis. Die drei Leseschritte bleiben über `ReadCommandWork` erhalten.
+Projektdateien, `.specroad`, Locks und normative IDs werden nicht geschrieben.
+Der Ergebnisumfang heißt ausdrücklich `stored_strong_relations`: keine
+behauptete Auswertung externer Ressourcen-/Reviewprovider, Scope-Modellwurzel
+oder Freigabe. Weitere Gleichstand-/Randfälle und die gemeinsame Why-Traversierung
+folgen in 9.e.R/C. Der bestehende Kataloginventurtest wird um das tatsächlich
+verfügbare Ergebnisschema ergänzt; seine stabile Testnummer bleibt erhalten.
+Die exakten Command-/Budgetinventare enthalten den neuen Leser. Bestehende
+Beispielvertragstests erhalten für dessen Request ein echtes CFG-Artefakt im
+Beispielprojekt; der bisherige allgemeine Projektfixture bleibt unverändert.
 
 #### 9.e.R – Make it Right
 

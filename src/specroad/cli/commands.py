@@ -130,6 +130,11 @@ def _diff(invocation):
     return diff_command(invocation)
 
 
+def _configuration_evaluate(invocation):
+    from ..configurations.project_evaluation import configuration_evaluate_command
+    return configuration_evaluate_command(invocation)
+
+
 def _read_runtime_options():
     return (OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
             *(OptionSpec(flag, takes_value=True) for flag in ('--cpu-budget-ms', '--wall-budget-ms',
@@ -242,6 +247,21 @@ def builtin_registry() -> CommandRegistry:
             work=WorkContract('artifact_query', ('project_configuration', 'current_project_artifacts',
                                                'explicit_query_and_srx_inputs'))),
     ), CommandSpec(
+        command_id='configuration.evaluate', words=('configuration', 'evaluate'),
+        command_class=CommandClass.READ_ONLY, preflight_profile=PreflightProfile.PROJECT_READ,
+        effect_scope=EffectScope.NONE, handler=_configuration_evaluate, requires_project=True,
+        positionals=(PositionalSpec('configuration_id'),),
+        options=(OptionSpec('--project', takes_value=True),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('configuration-evaluation-v1', {'command_id': 'configuration.evaluate',
+            'arguments': {'configuration_id': 'SR-CFG-' + '0' * 26}, 'options': {'--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002', 'SRV130', 'SRV131'),
+            work=WorkContract('configuration_evaluation', ('project_configuration', 'current_project_artifacts',
+                'selected_configuration_chain', 'stored_strong_relations'))),
+    ), CommandSpec(
         command_id='diff', words=('diff',), command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.NONE,
         handler=_diff, requires_project=True,
@@ -332,7 +352,7 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
             work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
     ))
-    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff'}
+    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate'}
     return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
         budget_policy_version='runtime-budget-v2') if command.command_id in readers else command
         for command in commands))

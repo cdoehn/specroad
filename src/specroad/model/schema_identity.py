@@ -7,7 +7,7 @@ ENVELOPE_ID = "json-envelope-v2"
 RESULT_IDS = (ENVELOPE_ID, "help-v1", "version-info-v1", "command-description-v1",
               "capabilities-v1", "schema-catalog-v1", "schema-document-v1", "sarif-specroad-v1", "environment-v1",
               "work-evaluation-v1", "project-init-v1", "project-inspect-v1", "artifact-show-v1", "artifact-trace-v1", "artifact-why-v1", "artifact-impact-v1",
-              "artifact-query-v1", "artifact-diff-v1")
+              "artifact-query-v1", "artifact-diff-v1", "configuration-evaluation-v1")
 CHANGE_PLAN_VERSION = "1.2.0"
 CHANGE_PLAN_FAMILY = "change-plan"
 CHANGE_PLAN_ID = "urn:specroad:schema:" + CHANGE_PLAN_VERSION + ":" + CHANGE_PLAN_FAMILY

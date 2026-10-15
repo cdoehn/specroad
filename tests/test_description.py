@@ -38,8 +38,8 @@ class DescriptionWorkTests(unittest.TestCase):
                 with self.subTest(command=command.command_id):
                     with tempfile.TemporaryDirectory() as tmp:
                         if command.requires_project:
-                            from support.inspection import inspection_project
-                            inspection_project(Path(tmp))
+                            from support.inspection import command_example_project
+                            command_example_project(Path(tmp), command.command_id)
                         result = execute_request(request, registry=registry, cwd=Path(tmp)).result
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
@@ -214,7 +214,8 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertNotIn(8, document['exit_codes'])
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
-                                 'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff') else None)
+                                 'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
+                                 'configuration.evaluate') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
     def test_minimum_step_limits_are_explicitly_unmeasured(self):

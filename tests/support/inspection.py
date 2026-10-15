@@ -31,3 +31,11 @@ def inspection_project(root, *, artifacts=None, extra_profiles=()):
         put(root, path, raw)
     (root / '.specroad/locks').mkdir(parents=True)
     return model
+
+
+def command_example_project(root, command_id):
+    """Supply the real semantic inputs required by each published example."""
+    if command_id == 'configuration.evaluate':
+        from .records import record_value
+        return inspection_project(root, artifacts=[record_value('configuration')])
+    return inspection_project(root)

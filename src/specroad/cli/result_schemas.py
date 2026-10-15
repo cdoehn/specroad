@@ -126,6 +126,23 @@ def _fields(schema_id):
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
                 'validation_scope': {'const': 'relation_references_canonical_storage_and_hierarchies_only'},
                 'atomic_snapshot': {'const': False}})})
+    if schema_id == 'configuration-evaluation-v1':
+        identity = _object({'id': nonempty, 'id_scheme': nonempty, 'artifact_type': nonempty, 'id_prefix': nonempty})
+        path = _object({'artifacts': _array(identity),
+                       'relations': _array(_object({'relation_id': nonempty, 'id_scheme': nonempty})),
+                       'inverse': _array({'const': False})})
+        return _object({'format_version': {'const': '1.0.0'},
+            'configuration': _object({'configuration_id': nonempty,
+                'configuration_revision': {'type': 'integer', 'minimum': 1},
+                'name': nonempty, 'dimensions': _array(obj), 'effective_values': obj, 'sha256': sha}),
+            'applicable_artifact_ids': strings, 'excluded_artifact_ids': strings,
+            'evaluations': _array(_object({'artifact_id': nonempty,
+                'status': {'enum': ['applicable', 'excluded']},
+                'reason': {'enum': ['unconditional', 'condition_true', 'condition_false']}})),
+            'inconsistent_dependencies': _array(_object({'source_id': nonempty, 'target_id': nonempty,
+                'distance': {'type': 'integer', 'minimum': 1}, 'path': path})),
+            'consistent': boolean, 'dependency_scope': {'const': 'stored_strong_relations'},
+            'source_count': count, 'relation_count': count})
     if schema_id == 'artifact-impact-v1':
         observed_field = {'anyOf': [
             _object({'state': {'const': 'present'}, 'value': nonempty}),

@@ -23,9 +23,11 @@ class ReadCommandWork:
         from .impact import _impact_steps
         from .project_query import _query_steps
         from .project_diff import _diff_steps
+        from ..configurations.project_evaluation import _evaluate_steps
         handlers = {'artifact.show': _show_steps, 'query': _query_steps,
                     'trace': _trace_steps, 'why': _why_steps,
-                    'impact': _impact_steps, 'diff': _diff_steps}
+                    'impact': _impact_steps, 'diff': _diff_steps,
+                    'configuration.evaluate': _evaluate_steps}
         if type(command) is not str or command not in handlers:
             raise CommandUsageError('Unknown read command')
         # Retained work owns its scope before the first phase. Resolve lexical
@@ -128,7 +130,7 @@ def complete_read_steps(steps, *, call=None):
 
 
 def complete_read_command(invocation, producer, *arguments, **options):
-    """Use one invocation-bound execution path for all six read handlers."""
+    """Use one invocation-bound execution path for the native read handlers."""
     return complete_read_steps(
         producer(invocation.resolved.project_root, *arguments, **options),
         call=invocation.consumption_call)

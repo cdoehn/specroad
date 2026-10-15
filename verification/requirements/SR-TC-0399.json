@@ -4,19 +4,45 @@
   "requirement_id": "SR-REQ-0399",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-READ-COMMANDS-v1",
+    "SR-FIX-READ-ONLY-PROJECT-v1"
+  ],
+  "preconditions": [
+    "Actual byte-bound configuration/artifact sources and canonical stored relations; the live command rereads project membership and source bytes."
+  ],
+  "steps": [
+    "Resolve the explicit selected parent chain and classify every artifact with deterministic reasons.",
+    "Report one complete shortest stored-strong-relation path for every applicable origin and reachable excluded endpoint, stopping at the first excluded node on each route.",
+    "Execute direct Python, structured command and CLI paths; preserve complete conflict data with SRV131/code3 and reject stale observations without output or writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Wenn ein anwendbares Artefakt über eine zwingende Relation von einem ausgeschlossenen Artefakt abhängt, MUSS SpecRoad einen Konfigurationsfehler mit dem vollständigen kürzesten Abhängigkeitspfad ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Configuration evaluation over all supplied/current project artifacts and stored strong relations. Explanations preserve full artifact/relation identities and direction, report all applicable-origin/excluded-endpoint conflicts, use shortest paths and never traverse an excluded intermediate. The live command is read-only and publishes only after currentness checks."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV130",
+    "SRV131",
+    "configuration_dependency_excluded",
+    "configuration_missing",
+    "invalid_applicability"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6
+  ],
+  "json_pointers": [
+    "/applicability",
+    "/configuration",
+    "/inconsistent_dependencies"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +54,35 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_configuration_evaluation.py::test_all_applicable_origins_receive_complete_shortest_dependency_paths",
+    "tests/test_configuration_evaluation.py::test_classifications_include_unconditional_matching_and_excluded_records",
+    "tests/test_configuration_evaluation.py::test_cli_request_and_direct_api_share_the_same_read_result",
+    "tests/test_configuration_evaluation.py::test_command_rejects_missing_id_and_unadvertised_configuration_option",
+    "tests/test_configuration_evaluation.py::test_configuration_only_inventory_has_a_complete_empty_conflict_set",
+    "tests/test_configuration_evaluation.py::test_configuration_revision_change_after_evaluation_is_a_conflict",
+    "tests/test_configuration_evaluation.py::test_consistent_project_command_returns_success",
+    "tests/test_configuration_evaluation.py::test_dependency_cycle_terminates_and_preserves_shortest_explanation",
+    "tests/test_configuration_evaluation.py::test_excluded_source_is_not_an_applicable_origin_or_transit_node",
+    "tests/test_configuration_evaluation.py::test_invalid_applicability_is_an_error_instead_of_an_exclusion",
+    "tests/test_configuration_evaluation.py::test_missing_configuration_command_preserves_model_reason_and_code",
+    "tests/test_configuration_evaluation.py::test_missing_explicit_configuration_is_a_configuration_error",
+    "tests/test_configuration_evaluation.py::test_missing_required_target_prevents_any_evaluation_result",
+    "tests/test_configuration_evaluation.py::test_multiple_excluded_targets_are_all_reported",
+    "tests/test_configuration_evaluation.py::test_project_evaluation_works_without_write_permission_or_write_attempts",
+    "tests/test_configuration_evaluation.py::test_public_project_command_returns_complete_conflict_data_with_model_exit_code",
+    "tests/test_configuration_evaluation.py::test_published_command_contract_and_result_schema_are_executable",
+    "tests/test_configuration_evaluation.py::test_result_is_owned_and_does_not_modify_original_sources",
+    "tests/test_configuration_evaluation.py::test_retained_read_phases_do_not_publish_before_final_source_recheck",
+    "tests/test_configuration_evaluation.py::test_selected_parent_chain_drives_both_classifications_and_explanations",
+    "tests/test_configuration_evaluation.py::test_shorter_route_wins_over_a_lexicographically_earlier_long_route",
+    "tests/test_configuration_evaluation.py::test_source_order_and_original_json_formatting_do_not_change_semantic_result",
+    "tests/test_configuration_evaluation.py::test_source_replacement_after_evaluation_cannot_publish_old_result",
+    "tests/test_configuration_evaluation.py::test_stored_direction_is_not_reversed_to_invent_a_required_path",
+    "tests/test_configuration_evaluation.py::test_weak_relations_are_not_required_variant_dependencies[conflicts_with]",
+    "tests/test_configuration_evaluation.py::test_weak_relations_are_not_required_variant_dependencies[duplicates]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Tie-path and broader adversarial graph/input robustness follow in 9.e.R; 9.e.C shares the traversal primitive with Why. This command evaluates stored strong relations, not external resource/review bindings, model roots or release approval."
   ]
 }

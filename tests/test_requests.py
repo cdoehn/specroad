@@ -124,7 +124,7 @@ assert response.result.result['python_support']['verification_status'] == 'unrec
         for command in ('retire', 'init.unavailable', 'work.resume'):
             self.assertEqual(execute_request({'command_id': command}).result.exit_code, 2)
         self.assertEqual(dispatch_result(['retire']).exit_code, 2)
-        self.assertEqual({c.command_id for c in builtin_registry().commands}, {'help', 'version', 'command.describe', 'capabilities', 'schema.list', 'schema.show', 'environment.check', 'init', 'project.inspect', 'artifact.show', 'trace', 'why', 'impact', 'query', 'diff'})
+        self.assertEqual({c.command_id for c in builtin_registry().commands}, {'help', 'version', 'command.describe', 'capabilities', 'schema.list', 'schema.show', 'environment.check', 'init', 'project.inspect', 'artifact.show', 'trace', 'why', 'impact', 'query', 'diff', 'configuration.evaluate'})
         diagnosed = execute_request({'command_id': 'environment.check'}).result
         self.assertEqual(diagnosed.exit_code, 0)
         self.assertFalse(diagnosed.result['semantic_validation_performed'])
