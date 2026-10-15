@@ -8,6 +8,7 @@ from dataclasses import dataclass
 import json
 
 from ..graph.hierarchies import validate_hierarchies
+from ..graph._shortest_search import discover_predecessor
 from ..graph.indices import RelationIndex
 from ..graph.path_output import PathRecord
 from ..graph.references import RelationReferences
@@ -55,14 +56,14 @@ def _inconsistencies(index, applicable, excluded):
     result = []
     for start in sorted(applicable):
         pending = deque([start])
-        predecessors = {start: None}
+        distances, predecessors = {start: 0}, {start: []}
         while pending:
             current = pending.popleft()
             for view in outgoing[current]:
                 target = view.target.id
-                if target in predecessors:
+                if not discover_predecessor(distances, predecessors, current, target,
+                                            view, keep_equal=False):
                     continue
-                predecessors[target] = view
                 # An excluded dependency terminates this path. Its own outgoing
                 # dependencies are not requirements of the selected variant.
                 if target in applicable:
@@ -70,7 +71,7 @@ def _inconsistencies(index, applicable, excluded):
         for target in sorted(excluded.intersection(predecessors)):
             reverse, current = [], target
             while current != start:
-                view = predecessors[current]
+                view = predecessors[current][0]
                 reverse.append(view)
                 current = view.source.id
             path = PathRecord.from_views(identities[start], tuple(reversed(reverse)))

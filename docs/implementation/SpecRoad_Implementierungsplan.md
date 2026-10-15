@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 395
-last_completed_plan_commit: 9.e.R
-next_plan_commit: 9.e.C
+implementation_plan_commits_completed: 396
+last_completed_plan_commit: 9.e.C
+next_plan_commit: 9.f.W
 last_completed_numbered_bundle: 245
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10467,7 +10467,7 @@ Nachweisumfang bleibt ausdrücklich auf gespeicherte starke Relationen begrenzt.
 
 #### 9.e.C – Make it Clean
 
-- [ ] **9.e.C** · Position **396/900** · Voraussetzung: `9.e.R`.
+- [x] **9.e.C** · Position **396/900** · Voraussetzung: `9.e.R`.
 **Exakte Commit-Message:** `9.e.C refactor(configuration): Pflichtabhängigkeiten und Erklärungspfad bereinigen`
 
 **Bereinigung:** Erklärungspfade auf denselben Traversierungskern wie Why stützen.
@@ -10475,6 +10475,16 @@ Nachweisumfang bleibt ausdrücklich auf gespeicherte starke Relationen begrenzt.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 245):**
+Konfigurationsauswertung und Why verwenden denselben reinen Kern zur
+Breitensuche: Er hält kürzeste Distanzen und Vorgängerkanten fest und meldet nur
+die erste Entdeckung für die Warteschlange. Why sammelt weiterhin alle gleich
+kurzen Vorgänger, die Konfigurationsauswertung behält den kanonisch zuerst
+entdeckten Pfad. Filterung, Queue, Tiefengrenzen und Pfadprojektion verbleiben
+beim jeweiligen Aufrufer. Why-Arbeitseinheiten und Checkpointformat bleiben
+gleich. Sämtliche vorhandenen W-/R-Tests bleiben bytegleich, einschließlich
+vollständiger Why-Verzweigungen und Wiederaufnahme in einem neuen Prozess.
 
 <a id="step-9-f"></a>
 ### 9.f – Explizite Gates und wiederverwendbare Identität

@@ -4,6 +4,7 @@ The owning traversal retains these fields in its shared checkpoint state.
 Only this search advances distances, predecessors and the adjacency frontier.
 """
 from .symmetry import SYMMETRIC_RELATION_TYPES
+from ._shortest_search import discover_predecessor
 
 
 def _token(view):
@@ -21,12 +22,10 @@ class _WhySearch:
         else:
             view = self._current_views[self._edge_offset]
             if not view.inverse or view.type in SYMMETRIC_RELATION_TYPES:
-                target, distance = view.target.id, self._distances[self._current] + 1
-                if target not in self._distances:
-                    self._distances[target], self._predecessors[target] = distance, []
+                target = view.target.id
+                if discover_predecessor(self._distances, self._predecessors,
+                                        self._current, target, _token(view), keep_equal=True):
                     self._pending.append(target)
-                if self._distances[target] == distance:
-                    self._predecessors[target].append(_token(view))
             self._edge_offset += 1
             if self._edge_offset == len(self._current_views):
                 self._current, self._current_views, self._edge_offset = None, (), 0

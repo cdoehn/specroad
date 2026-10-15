@@ -25,7 +25,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad configuration evaluate <CONFIGURATION-ID>` MUSS den anwendbaren und ausgeschlossenen Artefaktumfang, die Auswertungsbegründung und alle inkonsistenten Abhängigkeiten deterministisch ausgeben.",
-    "scope": "Configuration evaluation over all supplied/current project artifacts and stored strong relations. Explanations preserve full artifact/relation identities and direction, report all applicable-origin/excluded-endpoint conflicts, use shortest paths and never traverse an excluded intermediate. The live command is read-only and publishes only after currentness checks. Equal shortest paths use full artifact-ID order, then relation-ID order. Applicability errors are chosen in artifact identity order independently of input enumeration. Query pagination, trace depth and operational time targets never truncate these explanations."
+    "scope": "Configuration evaluation over all supplied/current project artifacts and stored strong relations. Explanations preserve full artifact/relation identities and direction, report all applicable-origin/excluded-endpoint conflicts, use shortest paths and never traverse an excluded intermediate. The live command is read-only and publishes only after currentness checks. Equal shortest paths use full artifact-ID order, then relation-ID order. Applicability errors are chosen in artifact identity order independently of input enumeration. Query pagination, trace depth and operational time targets never truncate these explanations. Configuration evaluation and Why use the same shortest predecessor discovery; Why retains all equal shortest predecessors and its existing resumable checkpoint state."
   },
   "expected_diagnostics": [
     "SRV130",
@@ -129,6 +129,6 @@
     "tests/test_configuration_evaluation_right.py::test_unrelated_excluded_component_has_no_invented_dependency"
   ],
   "open_items": [
-    "9.e.C shares shortest predecessor discovery with Why. This command evaluates stored strong relations; external resource/review providers, model roots and release approval are outside this evidence scope."
+    "This command evaluates stored strong relations; external resource/review providers, model roots and release approval are outside this evidence scope."
   ]
 }
