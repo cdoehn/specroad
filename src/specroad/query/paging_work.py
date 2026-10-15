@@ -25,7 +25,7 @@ class QueryWork:
     """
 
     def __init__(self, root, records, query, *, project, protected_roots,
-                 configuration=None, batch_bytes=65536):
+                 configuration=None, configuration_id=None, batch_bytes=65536):
         _positive(batch_bytes)
         if type(query) is not NormalizedQuery:
             raise ModelError('normalized_query_required')
@@ -39,7 +39,8 @@ class QueryWork:
             if tokens and tokens[0] == 'verification_result':
                 raise ModelError('query_verification_provider_required', pointer=pointer)
             ordering.append((tokens, item['direction'] == 'desc', pointer))
-        self._selection = select_query(records, query, project=project, configuration=configuration)
+        self._selection = select_query(records, query, project=project, configuration=configuration,
+                                       configuration_id=configuration_id)
         ids = set(self._selection.artifact_ids)
         artifacts = {record.identity.id: record.data for record in records if record.identity.id in ids}
         self._offset, self._limit = data['offset'], data['limit']

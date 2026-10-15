@@ -52,7 +52,7 @@ def _normalized(source, options, cwd):
     return query, bindings
 
 
-def _query_steps(root, query=None, *, options=None, cwd=None):
+def _query_steps(root, query=None, *, options=None, cwd=None, configuration_id=None):
     project = None
     details = read_details()
     try:
@@ -60,6 +60,10 @@ def _query_steps(root, query=None, *, options=None, cwd=None):
             raise ModelError('normalized_query_required')
         if query is not None and options is not None:
             raise CommandUsageError('An explicit query cannot also use CLI query options')
+        if options is not None and '--configuration' in options:
+            if configuration_id is not None:
+                raise CommandUsageError('Duplicate configuration selection')
+            configuration_id = options['--configuration']
         source = ProjectSource(root)
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         _preflight(source)
@@ -68,11 +72,14 @@ def _query_steps(root, query=None, *, options=None, cwd=None):
         if query is None:
             query, bindings = _normalized(source, {} if options is None else options, cwd)
         yield 'loaded'
-        page = query_records(snapshot.records, query, project=source.configuration.data)
+        page = query_records(snapshot.records, query, project=source.configuration.data,
+                             configuration_id=configuration_id)
         payload = page.data
         details.update(query_sha256=page.query_sha256, inputs_sha256=page.inputs_sha256,
             source_count=page.source_count, observation_sha256=snapshot.binding.sha256,
             validation_scope=page.validation_scope, profile_defaults_applied=False)
+        if page.configuration_binding is not None:
+            details['selected_configuration'] = page.configuration_binding
         yield 'evaluated'
         for boundary, name, raw in bindings:
             if boundary.read_bytes(name) != raw:
@@ -85,9 +92,9 @@ def _query_steps(root, query=None, *, options=None, cwd=None):
         return read_failure('query', error, project, details)
 
 
-def query_project(root, query=None):
+def query_project(root, query=None, *, configuration_id=None):
     """Return the exact native Query page over the complete current inventory."""
-    return complete_read_steps(_query_steps(root, query))
+    return complete_read_steps(_query_steps(root, query, configuration_id=configuration_id))
 
 
 def query_command(invocation):

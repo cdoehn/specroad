@@ -21,11 +21,13 @@ class QueryPage:
     inputs_sha256: str
     source_count: int
     _encoded: bytes
+    _configuration_binding: bytes
 
     def __init__(self, selection, items, offset, limit):
         object.__setattr__(self, 'query_sha256', selection.query_sha256)
         object.__setattr__(self, 'inputs_sha256', selection.inputs_sha256)
         object.__setattr__(self, 'source_count', selection.source_count)
+        object.__setattr__(self, '_configuration_binding', selection._configuration_binding)
         data = {'items': items, 'total': selection.total, 'offset': offset,
                 'limit': limit, 'returned': len(items),
                 'truncated': offset + len(items) < selection.total}
@@ -40,6 +42,10 @@ class QueryPage:
     @property
     def validation_scope(self):
         return 'supplied_query_inventory_only'
+
+    @property
+    def configuration_binding(self):
+        return json.loads(self._configuration_binding)
 
 
 def _scalar_key(value, pointer):
@@ -56,7 +62,7 @@ def _scalar_key(value, pointer):
     raise ModelError('query_sort_value_not_scalar', pointer=pointer)
 
 
-def query_records(records, query, *, project, configuration=None):
+def query_records(records, query, *, project, configuration=None, configuration_id=None):
     """Filter all supplied sources, sort all matches, then form the exact page.
 
     Sort values come from original fields, independently of projection. All
@@ -75,7 +81,8 @@ def query_records(records, query, *, project, configuration=None):
         if tokens and tokens[0] == 'verification_result':
             raise ModelError('query_verification_provider_required', pointer=pointer)
         ordering.append((tokens, item['direction'] == 'desc', pointer))
-    selection = select_query(records, query, project=project, configuration=configuration)
+    selection = select_query(records, query, project=project, configuration=configuration,
+                             configuration_id=configuration_id)
     ids = set(selection.artifact_ids)
     artifacts = {record.identity.id: record.data for record in records if record.identity.id in ids}
     rows = []

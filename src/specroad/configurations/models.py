@@ -47,3 +47,8 @@ class EffectiveConfiguration:
     @property
     def sha256(self):
         return sha256(self._manifest).hexdigest()
+
+    @property
+    def binding(self):
+        return {'configuration_id': self.configuration_id,
+                'configuration_revision': self.data['configuration_revision'], 'sha256': self.sha256}

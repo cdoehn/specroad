@@ -47,7 +47,7 @@ def diagnose_read_only(root):
 
 def validate_project_read_only(root, *, profile_resources, core_key, cli_profiles=(),
                                selected_ids=None, gates=(), fail_on="error", strict=False,
-                               expected_project_id=None, profile_paths=None):
+                               expected_project_id=None, profile_paths=None, configuration_id=None):
     """Validate current artifact sources with no project/operational writes.
 
     Profiles and semantic gates are explicitly supplied, never auto-discovered
@@ -87,8 +87,13 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         documents = _capture_documents(source)
         data["model_loaded"] = True
         data["source_bindings"] = _document_bindings(documents)
-        report = validate_model(documents, profile=profile, selected_ids=selected_ids,
-                                gates=gates, resources=resources)
+        if configuration_id is None:
+            report = validate_model(documents, profile=profile, selected_ids=selected_ids,
+                                    gates=gates, resources=resources)
+        else:
+            from ..configurations import validate_configured_model
+            report = validate_configured_model(documents, configuration_id=configuration_id,
+                profile=profile, selected_ids=selected_ids, gates=gates, resources=resources)
         assessment = assess_validation(report, fail_on=fail_on, strict=strict, documents=documents)
         if registry is not None:
             require_registry_current(source, registry)
@@ -99,6 +104,8 @@ def validate_project_read_only(root, *, profile_resources, core_key, cli_profile
         if not _ready(source, observation, data):
             raise ModelError("operational_metadata_changed")
         data["resource_files_verified"] = profile_files is not None
+        if configuration_id is not None:
+            data['selected_configuration'] = report.data['selected_configuration']
         data.update(status="completed", passed=assessment.passed, exit_code=assessment.exit_code,
                     checks_complete=report.complete, validation=assessment.as_dict())
         return ReadOnlyResult._create(data)

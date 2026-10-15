@@ -60,4 +60,4 @@ def validate_configured_model(documents, *, configuration_id=None, profile=None,
     gate = ModelGate('configuration', 'selected-stored-configuration-v1',
                      _dependencies, check, binding.resources_sha256)
     return validate_model(documents, profile=profile, selected_ids=selected_ids,
-                          gates=(*gates, gate), resources=resources)
+                          gates=(*gates, gate), resources=resources, configuration_id=binding.configuration_id)

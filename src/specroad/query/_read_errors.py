@@ -20,7 +20,8 @@ def read_failure(command, error, project, details):
         code = 6 if error.reason in changed else getattr(error, 'exit_code', 3)
         if error.reason == 'query_sort_value_not_scalar':
             code = 2
-        diagnostic = from_model_error(error)
+        from ..configurations.evaluation import ConfigurationEvaluationError
+        diagnostic = from_model_error(error, code='SRV130' if isinstance(error, ConfigurationEvaluationError) else None)
     elif isinstance(error, SrxError):
         code = 3
         diagnostic = Diagnostic(error.code, 'error', 'model', 'SRX input was rejected.',

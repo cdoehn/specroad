@@ -9,6 +9,7 @@ from hashlib import sha256
 import json
 
 from ..graph._scope_selector_contract import _query
+from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.domain_fields import IMPLEMENTATION_STATUSES, VERIFICATION_PLAN_STATUSES
 from ..model.errors import ModelError
@@ -69,8 +70,9 @@ class QuerySelection:
     source_count: int
     artifact_ids: tuple
     _items: bytes
+    _configuration_binding: bytes
 
-    def __init__(self, query, inputs_sha256, source_count, ids, items):
+    def __init__(self, query, inputs_sha256, source_count, ids, items, configuration_binding=None):
         object.__setattr__(self, 'query_sha256', query.sha256)
         object.__setattr__(self, 'inputs_sha256', inputs_sha256)
         object.__setattr__(self, 'source_count', source_count)
@@ -79,6 +81,11 @@ class QuerySelection:
         # owned projection, not the canonical hash representation of the input.
         object.__setattr__(self, '_items', json.dumps(items, ensure_ascii=False,
                                                     allow_nan=False).encode('utf-8'))
+        object.__setattr__(self, '_configuration_binding', canonical_json_bytes(configuration_binding))
+
+    @property
+    def configuration_binding(self):
+        return json.loads(self._configuration_binding)
 
     @property
     def items(self):
@@ -97,7 +104,7 @@ class QuerySelection:
         return 'supplied_query_inventory_only'
 
 
-def select_query(records, query, *, project, configuration=None):
+def select_query(records, query, *, project, configuration=None, configuration_id=None):
     """OR within a value group; AND across groups and all SRX expressions.
 
     No file access, cache hints, callbacks, implicit evaluation or early paging.
@@ -113,7 +120,27 @@ def select_query(records, query, *, project, configuration=None):
     if data['evaluation'] is not None:
         raise ModelError('query_evaluation_provider_required')
     records = _sequence(records)
-    graph = LoadedGraph(records, rule_id='query')
+    selected_configuration, eligible = None, None
+    if configuration_id is not None:
+        from ..configurations import resolve_configuration, evaluate_applicability
+        from ..configurations.evaluation import ConfigurationEvaluationError
+        try:
+            if configuration is not None:
+                raise ModelError('query_configuration_context_conflict')
+            if any(type(record) is not SourceRelations for record in records):
+                raise ModelError('configuration_source_required')
+            records = tuple(sorted((SourceRelations(r.source_bytes, path=r.path) for r in records),
+                                   key=lambda r: r.identity.id))
+            effective = resolve_configuration(records, configuration_id)
+            eligible = [r.identity.id for r in records if evaluate_applicability(
+                r, effective, require_configuration=True).status == 'applicable']
+            configuration = {'configuration_id': effective.configuration_id,
+                             'effective_values': effective.effective_values}
+            selected_configuration = effective.binding
+        except ModelError as error:
+            raise ConfigurationEvaluationError(error) from error
+    whole_graph = LoadedGraph(records, rule_id='query')
+    graph = whole_graph if eligible is None else LoadedGraph(records, rule_id='query', artifact_ids=eligible)
     search_sources = {record.identity.id: record for record in records} if 'full_text' in data['filters'] else {}
     roots = EvaluationContext({'artifact': {}, 'project': project,
         'configuration': configuration, 'relations': []}, rule_id='query').data
@@ -128,8 +155,8 @@ def select_query(records, query, *, project, configuration=None):
                 for pointer in data['select']]
     # Validate these known stored status contracts over the entire supplied
     # inventory, including candidates which a later value filter will omit.
-    for identifier in graph.artifact_ids:
-        artifact = graph.artifact(identifier, rule_id='query')
+    for identifier in whole_graph.artifact_ids:
+        artifact = whole_graph.artifact(identifier, rule_id='query')
         if 'verification_result' in artifact:
             raise ModelError('query_stored_verification_result', pointer='/verification_result')
         for name, choices in (('implementation_status', IMPLEMENTATION_STATUSES),
@@ -172,4 +199,4 @@ def select_query(records, query, *, project, configuration=None):
         selected.append((artifact['artifact_type'], identifier, item))
     selected.sort(key=lambda item: (item[0], item[1]))
     return QuerySelection(query, input_hash, len(records),
-                          [item[1] for item in selected], [item[2] for item in selected])
+                          [item[1] for item in selected], [item[2] for item in selected], selected_configuration)

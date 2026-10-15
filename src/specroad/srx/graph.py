@@ -23,9 +23,10 @@ class LoadedGraph:
     """
     _artifacts: object
     _index: RelationIndex
+    _visible_ids: frozenset
     validation_scope: str
 
-    def __init__(self, sources, *, rule_id):
+    def __init__(self, sources, *, rule_id, artifact_ids=None):
         from .validation import _rule_id
         rule_id = _rule_id(rule_id)
         if type(sources) not in (list, tuple):
@@ -56,14 +57,22 @@ class LoadedGraph:
         object.__setattr__(self, "_artifacts", MappingProxyType({
             record.identity.id: JsonSnapshot(record.data, rule_id=rule_id, subject="context")
             for record in records}))
-        object.__setattr__(self, "validation_scope", "loaded_model_only")
+        known = set(self._artifacts)
+        if artifact_ids is not None and (type(artifact_ids) not in (list, tuple)
+                or any(type(name) is not str for name in artifact_ids)
+                or len(set(artifact_ids)) != len(artifact_ids) or not set(artifact_ids) <= known):
+            raise SrxError('graph_selection_invalid', rule_id=rule_id, subject='context',
+                           pointer='/graph', expected='distinct loaded IDs', actual='invalid_selection')
+        object.__setattr__(self, '_visible_ids', frozenset(known if artifact_ids is None else artifact_ids))
+        object.__setattr__(self, "validation_scope", "loaded_model_only" if artifact_ids is None
+                           else 'selected_loaded_model_only')
 
     @property
     def artifact_ids(self):
-        return tuple(sorted(self._artifacts))
+        return tuple(sorted(self._visible_ids))
 
     def artifact(self, identifier, *, rule_id):
-        if type(identifier) is not str or identifier not in self._artifacts:
+        if type(identifier) is not str or identifier not in self._visible_ids:
             raise SrxError("graph_artifact_missing", rule_id=rule_id,
                            expected="loaded artifact ID", actual="unknown_id",
                            subject="context", pointer="/artifact/id")
@@ -88,13 +97,16 @@ class LoadedGraph:
         if controls is not None:
             yield PhaseBoundary('graph_views', 'start')
         views = self._index.for_artifact(identifier, direction=direction)
+        if identifier not in self._visible_ids:
+            raise ModelError('graph_artifact_outside_selection')
         if controls is not None:
             yield PhaseBoundary('graph_views', 'end')
         if meter is not None:
             meter.add("graph_steps", len(views), pointer=pointer)
         selected = []
         for view in views:
-            if types == "*" or view.type in types or view.stored.relation.type in types:
+            if view.target.id in self._visible_ids and (types == "*" or view.type in types
+                                                        or view.stored.relation.type in types):
                 selected.append(view)
             if controls is not None:
                 point = controls.advance('graph_steps')
@@ -119,10 +131,11 @@ class LoadedGraph:
             meter.add("graph_steps", len(views), pointer=pointer)
         result["relations"] = []
         for view in views:
-            result["relations"].append(
-                {"relation_id": view.relation_id, "type": view.type,
-                 "source": view.source.id, "target": view.target.id,
-                 "target_type": view.target.artifact_type, "inverse": view.inverse})
+            if view.target.id in self._visible_ids:
+                result["relations"].append(
+                    {"relation_id": view.relation_id, "type": view.type,
+                     "source": view.source.id, "target": view.target.id,
+                     "target_type": view.target.artifact_type, "inverse": view.inverse})
             if controls is not None:
                 point = controls.advance('graph_steps')
                 if point is not None:

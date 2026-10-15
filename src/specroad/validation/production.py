@@ -78,8 +78,12 @@ def _profile(context, resources):
             common = _profile_origin(rule, identity, paths[identity])
             try:
                 project = _rule_project(resources, context.profile_data, rule_id)
+                selected = context.configuration_data
+                configuration = None if selected is None else {
+                    'configuration_id': selected['configuration_id'],
+                    'effective_values': selected['effective_values']}
                 roots = graph.candidate_roots({"project": project,
-                    "configuration": None}, identity, rule_id=rule_id)
+                    "configuration": configuration}, identity, rule_id=rule_id)
                 result = evaluate(SrxProgram(rule["program"], rule_id=rule_id),
                     EvaluationContext(roots, rule_id=rule_id, graph=graph))
                 if type(result) is not bool:
@@ -104,7 +108,7 @@ def production_gates(resources, profile):
     return tuple(gates)
 
 
-def formal_findings(documents, records, checked, profile, resources):
+def formal_findings(documents, records, checked, profile, resources, *, configuration=None):
     findings, identities = [], []
     for record in records:
         value = record.data
@@ -113,7 +117,8 @@ def formal_findings(documents, records, checked, profile, resources):
             continue
         identities.append(record.identity.id)
         context = ApprovalContext(record.identity.id, documents, profile=profile,
-            configuration=resources.configuration.data,
+            configuration=(resources.configuration.data if configuration is None else
+                           {'project': resources.configuration.data, 'selected': configuration}),
             mode="stored" if value["maturity"] == "approved" else "transition")
         for item in formal_requirement_findings(context):
             diagnostic = item["diagnostic"]

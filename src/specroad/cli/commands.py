@@ -235,7 +235,7 @@ def builtin_registry() -> CommandRegistry:
             ('type', 'maturity', 'implementation-status', 'verification-plan-status',
              'verification-result', 'owner', 'tag', 'release', 'has-relation', 'missing-relation',
              'full-text', 'filter', 'select', 'sort')),
-            *(OptionSpec('--' + name, takes_value=True) for name in ('evaluation', 'offset', 'limit')),
+            *(OptionSpec('--' + name, takes_value=True) for name in ('evaluation', 'offset', 'limit', 'configuration')),
             OptionSpec('--project', takes_value=True),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
             OptionSpec('--no-color'), OptionSpec('--quiet')),
@@ -243,7 +243,7 @@ def builtin_registry() -> CommandRegistry:
             'options': {'--type': ['goal'], '--limit': '10', '--format': 'json'}},
             handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
             diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
-                              'SRV001', 'SRV002', 'SRV110'),
+                              'SRV001', 'SRV002', 'SRV110', 'SRV130'),
             work=WorkContract('artifact_query', ('project_configuration', 'current_project_artifacts',
                                                'explicit_query_and_srx_inputs'))),
     ), CommandSpec(

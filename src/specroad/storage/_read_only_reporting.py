@@ -21,6 +21,9 @@ def _base(operation):
 def _failure(data, error):
     if isinstance(error, ModelError):
         diagnostic = error.diagnostic()
+        from ..configurations.evaluation import ConfigurationEvaluationError
+        if isinstance(error, ConfigurationEvaluationError):
+            diagnostic['code'] = 'SRV130'
         if error.reason == "unsafe_registry_resource":
             code = 7
         elif error.reason in ("operational_metadata_changed", "read_only_membership_changed",

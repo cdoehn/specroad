@@ -29,7 +29,8 @@ from .resources import ValidationResources
 from .production import production_gates, formal_findings, profile_applies
 
 
-def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None):
+def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None,
+                   configuration_id=None):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -44,6 +45,15 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     if len({d.path for d in documents}) != len(documents):
         raise ModelError("duplicate_validation_source")
     documents = tuple(sorted(documents, key=lambda d: d.path))
+    configuration = None
+    if configuration_id is not None:
+        from ..configurations.values import resolve_configuration
+        from ..configurations.evaluation import ConfigurationEvaluationError
+        try:
+            configuration = resolve_configuration(
+                tuple(SourceRelations(d.content, path=d.path) for d in documents), configuration_id)
+        except ModelError as error:
+            raise ConfigurationEvaluationError(error) from error
     if profile is not None and type(profile) is not EffectiveProfile:
         raise ModelError("validation_effective_profile_required")
     selected = None if selected_ids is None else _ids(selected_ids)
@@ -67,6 +77,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         gate_index.update((g.gate_id, g) for g in builtins)
     basis = canonical_json_sha256({"version": VALIDATION_VERSION,
         **({"resources_sha256": resources.sha256} if resources is not None else {}),
+        **({'selected_configuration': configuration.binding} if configuration is not None else {}),
         "documents": _document_bindings(documents),
         "selection": None if selected is None else list(selected),
         "profile": profile.binding() if profile is not None else None,
@@ -89,6 +100,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         failed = any(s["status"] == "failed" for s in stages)
         complete = all(s["status"] in ("passed", "failed", "not_applicable") for s in stages)
         return ValidationReport._create({"format_version": VALIDATION_VERSION,
+            **({'selected_configuration': configuration.binding} if configuration is not None else {}),
             "input_sha256": basis, "validation_scope": "loaded_model" if selected is None else "dependency_expanded_loaded_scope",
             "source_count": len(documents), "structural_scope": "all_supplied_documents",
             "source_bindings": _document_bindings(documents),
@@ -172,7 +184,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         subjects = tuple(r.identity.id for r in records if applies(gate.gate_id, r.data))
         if not subjects:
             continue
-        context = GateContext._create(records, documents, profile, subjects, gate, "dependencies", basis)
+        context = GateContext._create(records, documents, profile, subjects, gate, "dependencies", basis,
+                                      configuration=None if configuration is None else configuration.data)
         try:
             observation = gate.dependencies(context)
             if (type(observation) is not GateDependencies or observation.input_sha256 != context.input_sha256
@@ -214,7 +227,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     # and special-state couplings. It did NOT verify historical authorization.
     stage("stored_lifecycle_fields", ids=checked)
     if resources is not None:
-        findings, formal_ids = formal_findings(documents, records, checked, profile, resources)
+        findings, formal_ids = formal_findings(documents, records, checked, profile, resources,
+                                               configuration=None if configuration is None else configuration.data)
         stage("approval_formal", findings, ids=formal_ids,
               status=None if formal_ids else "not_applicable")
     names = sorted(set(HOOK_NAMES) | set(gate_index))
@@ -228,7 +242,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
             stage(name, [{"reason":"validation_required_gate_unavailable", "severity":"error", "gate_id":name}],
                   status="unavailable", ids=subjects)
             continue
-        context = GateContext._create(records, documents, profile, subjects, gate, "check", basis)
+        context = GateContext._create(records, documents, profile, subjects, gate, "check", basis,
+                                      configuration=None if configuration is None else configuration.data)
         try:
             outcome = gate.check(context)
             if (type(outcome) is not GateResult or outcome.input_sha256 != context.input_sha256

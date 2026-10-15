@@ -153,6 +153,7 @@ class GateContext:
     phase: str
     input_sha256: str
     _profile_bytes: bytes | None
+    _configuration_bytes: bytes | None
     _records: tuple
     resources_sha256: str | None
 
@@ -160,7 +161,7 @@ class GateContext:
         raise TypeError("Gate contexts are created by the validation pipeline")
 
     @classmethod
-    def _create(cls, records, documents, profile, subjects, gate, phase, basis):
+    def _create(cls, records, documents, profile, subjects, gate, phase, basis, *, configuration=None):
         obj = object.__new__(cls)
         subjects = _ids(subjects)
         binding = canonical_json_sha256({"model": basis, "gate": gate.gate_id,
@@ -169,6 +170,7 @@ class GateContext:
                             ("gate_id", gate.gate_id), ("version", gate.version),
                             ("phase", phase), ("input_sha256", binding),
                             ("_profile_bytes", profile.canonical_bytes if profile is not None else None),
+                            ('_configuration_bytes', None if configuration is None else canonical_json_bytes(configuration)),
                             ("_records", tuple((r.identity.id, r.source_bytes) for r in records)),
                             ("resources_sha256", gate.resources_sha256)):
             object.__setattr__(obj, name, value)
@@ -187,6 +189,10 @@ class GateContext:
     @property
     def profile_data(self):
         return None if self._profile_bytes is None else parse_json_object(self._profile_bytes)
+
+    @property
+    def configuration_data(self):
+        return None if self._configuration_bytes is None else parse_json_object(self._configuration_bytes)
 
     def result(self, diagnostics=()):
         return GateResult(self.input_sha256, self.subjects, diagnostics)

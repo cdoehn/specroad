@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 399
-last_completed_plan_commit: 9.f.C
-next_plan_commit: 9.g.W
-last_completed_numbered_bundle: 247
+implementation_plan_commits_completed: 400
+last_completed_plan_commit: 9.g.W
+next_plan_commit: 9.g.R
+last_completed_numbered_bundle: 248
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10580,12 +10580,34 @@ Sämtliche bestehenden W-/R-Testdateien bleiben bytegleich.
 
 #### 9.g.W – Let it Work
 
-- [ ] **9.g.W** · Position **400/900** · Voraussetzung: `9.f.C`.
+- [x] **9.g.W** · Position **400/900** · Voraussetzung: `9.f.C`.
 **Exakte Commit-Message:** `9.g.W feat(configuration): Konfigurationsoption in vorhandenen Fachbefehlen aufbauen`
 
 **Umsetzung:** Validate, Query/Viewschnittstelle und Scopebereitstellung mit gebundener configuration_id integrieren.
 
 **Verhaltensabnahme:** Vorhandene Befehle verwenden dieselbe effektive Konfiguration.
+
+**Vorbereiteter W-Stand (Bundle 248, SR-TC-0400 teilweise):**
+Die vorhandene Query-CLI übernimmt `--configuration <ID>`; Python-Aufruf,
+strukturierter Request und externer Query-Work nutzen dieselbe explizite
+Auflösung. Anwendbarkeit wird vor Sortierung und Pagination ausgewertet.
+Der berechnete SRX-Graph enthält nur anwendbare Knoten und Kanten, während
+Originalartefakte, gespeicherte Relationen und vollständige Eingangsprüfung
+unverändert bleiben. ID, Revision und effektiver Konfigurationshash stehen
+außerhalb des unveränderten sechsfachen Query-Seitenvertrags.
+
+Der native Artefakt-Scope-Provider unterstützt konfigurierte Dokument-,
+Release-, explizite und Query-Auswahl einschließlich Konfigurationswrapper.
+Query-Seeds stammen aus der tatsächlichen paginierten Query-Auswertung.
+Der vorhandene Read-only-Validierungsaufruf übergibt die Auswahl an den
+Konfigurations-Gate, produktive Profilregeln und registrierte Gates.
+Alle Adapter prüfen ihre aktuellen Originaleingaben; sie schreiben keine
+Projektdateien und erzeugen keine normativen Variantenkopien.
+
+Dies bestätigt bestehende Schnittstellen. Noch nicht vorhandene Validate-,
+Render-, View-, Coverage-, Readiness-, Baseline-, Export- und Bundlebefehle
+bleiben offen und müssen den Vertrag ausdrücklich übernehmen. Artefakt-Seeds
+bestätigen weder Ressourcen-Vollständigkeit noch Closure oder Freigaben.
 
 #### 9.g.R – Make it Right
 

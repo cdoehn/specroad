@@ -4,19 +4,43 @@
   "requirement_id": "SR-REQ-0400",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-MODEL-VALIDATION-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1"
+  ],
+  "preconditions": [
+    "Original model records, stored configurations and existing native Query, validation and artifact-scope adapters."
+  ],
+  "steps": [
+    "Resolve an explicitly selected configuration from current original sources and filter applicable Query candidates before exact sorting and pagination.",
+    "Use the same effective configuration in native Query API, CLI, request, external Query Work, artifact-scope query seeds and productive validation gates.",
+    "Keep original artifact identities and source bytes; hide excluded nodes and edges from computed query graph traversal while checking the full structural inventory.",
+    "Reject unknown configuration identities and changed inputs at final observation checks; retain read-only behavior and portable Query execution."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`validate`, `render`, `view`, `coverage`, `release readiness`, `baseline create`, `export` und `bundle create` MÜSSEN `--configuration <ID>` unterstützen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Existing adapters resolve the same selected ID, revision and effective configuration digest from original source bytes. Query applicability precedes sort/page and graph traversal excludes filtered nodes without rewriting stored records. Native scope Query pages use the same actual Query kernel. Productive validation and registered gates receive owned effective configuration data; unavailable services and structural checks remain effective. Final freshness checks bind complete observed inputs. The unconfigured behavior and six-field Query page remain unchanged. This is partial command integration, not certification of future adapters or resource-complete scope roots."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV130",
+    "configuration_missing",
+    "query_configuration_context_conflict",
+    "graph_selection_invalid",
+    "relation_index_source_changed"
+  ],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
+  "json_pointers": [
+    "/configuration_id",
+    "/applicability"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +52,47 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_configuration_commands.py::test_applicability_is_evaluated_before_exact_sort_and_page[0-0-expected3]",
+    "tests/test_configuration_commands.py::test_applicability_is_evaluated_before_exact_sort_and_page[0-1-expected0]",
+    "tests/test_configuration_commands.py::test_applicability_is_evaluated_before_exact_sort_and_page[1-1-expected1]",
+    "tests/test_configuration_commands.py::test_applicability_is_evaluated_before_exact_sort_and_page[2-1-expected2]",
+    "tests/test_configuration_commands.py::test_existing_native_artifact_scope_selectors_accept_explicit_configuration[document]",
+    "tests/test_configuration_commands.py::test_existing_native_artifact_scope_selectors_accept_explicit_configuration[release]",
+    "tests/test_configuration_commands.py::test_external_query_work_has_the_same_filtered_page_and_configuration_binding",
+    "tests/test_configuration_commands.py::test_invalid_excluded_source_cannot_be_hidden_by_applicability",
+    "tests/test_configuration_commands.py::test_invalid_stored_derived_status_is_checked_even_on_excluded_records",
+    "tests/test_configuration_commands.py::test_live_validation_and_query_publish_the_same_effective_configuration_binding",
+    "tests/test_configuration_commands.py::test_live_validation_does_not_default_an_unknown_explicit_configuration",
+    "tests/test_configuration_commands.py::test_missing_query_configuration_has_srv130_and_no_partial_page",
+    "tests/test_configuration_commands.py::test_native_explicit_scope_filters_without_copying_or_filling_excluded_ids[False]",
+    "tests/test_configuration_commands.py::test_native_explicit_scope_filters_without_copying_or_filling_excluded_ids[True]",
+    "tests/test_configuration_commands.py::test_native_query_scope_final_currentness_rejects_late_source_changes",
+    "tests/test_configuration_commands.py::test_native_query_scope_page_matches_live_query_after_configuration_filtering[False]",
+    "tests/test_configuration_commands.py::test_native_query_scope_page_matches_live_query_after_configuration_filtering[True]",
+    "tests/test_configuration_commands.py::test_parent_revision_is_part_of_configuration_and_query_input_binding",
+    "tests/test_configuration_commands.py::test_portable_cli_uses_real_configuration_filtering",
+    "tests/test_configuration_commands.py::test_production_profile_srx_uses_the_selected_configuration",
+    "tests/test_configuration_commands.py::test_query_api_cli_and_request_share_the_exact_selected_variant",
+    "tests/test_configuration_commands.py::test_query_rejects_changed_configuration_after_evaluation",
+    "tests/test_configuration_commands.py::test_query_validation_and_native_scope_do_not_attempt_project_writes",
+    "tests/test_configuration_commands.py::test_raw_srx_context_cannot_override_an_explicit_selected_configuration",
+    "tests/test_configuration_commands.py::test_registered_validation_gates_receive_owned_selected_configuration_data",
+    "tests/test_configuration_commands.py::test_relation_filters_do_not_count_edges_to_excluded_artifacts",
+    "tests/test_configuration_commands.py::test_resource_complete_scopes_still_require_their_real_providers",
+    "tests/test_configuration_commands.py::test_selected_graph_preserves_original_records_while_restricting_adjacency",
+    "tests/test_configuration_commands.py::test_selected_graph_requires_a_distinct_subset_of_actual_loaded_ids[ids]",
+    "tests/test_configuration_commands.py::test_selected_graph_requires_a_distinct_subset_of_actual_loaded_ids[selection0]",
+    "tests/test_configuration_commands.py::test_selected_graph_requires_a_distinct_subset_of_actual_loaded_ids[selection1]",
+    "tests/test_configuration_commands.py::test_selected_graph_requires_a_distinct_subset_of_actual_loaded_ids[selection3]",
+    "tests/test_configuration_commands.py::test_selected_graph_requires_a_distinct_subset_of_actual_loaded_ids[selection4]",
+    "tests/test_configuration_commands.py::test_srx_incoming_counts_ignore_excluded_origins",
+    "tests/test_configuration_commands.py::test_srx_query_receives_the_resolved_effective_configuration",
+    "tests/test_configuration_commands.py::test_srx_reachability_does_not_traverse_an_excluded_intermediate",
+    "tests/test_configuration_commands.py::test_unselected_query_keeps_all_potential_variants_and_has_no_selected_binding"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Current implementation integrates the existing Query CLI/read APIs, native validation reader and artifact-only scope provider. The separate validate/render/view/coverage/release readiness/baseline/export/bundle command adapters are not all implemented; they must explicitly adopt this contract when introduced.",
+    "Artifact seed selection is not a full resource inventory, closure or release approval. Additional configuration boundary cases and common adapter resolution follow in 9.g.R/C."
   ]
 }
