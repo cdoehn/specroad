@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 398
-last_completed_plan_commit: 9.f.R
-next_plan_commit: 9.f.C
+implementation_plan_commits_completed: 399
+last_completed_plan_commit: 9.f.C
+next_plan_commit: 9.g.W
 last_completed_numbered_bundle: 247
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10554,7 +10554,7 @@ Alle W-Tests bleiben unverändert erhalten.
 
 #### 9.f.C – Make it Clean
 
-- [ ] **9.f.C** · Position **399/900** · Voraussetzung: `9.f.R`.
+- [x] **9.f.C** · Position **399/900** · Voraussetzung: `9.f.R`.
 **Exakte Commit-Message:** `9.f.C refactor(configuration): Explizite Gates und wiederverwendbare Identität bereinigen`
 
 **Bereinigung:** Gatekontext von gespeicherten Artefakten trennen.
@@ -10562,6 +10562,15 @@ Alle W-Tests bleiben unverändert erhalten.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 247):**
+Ein eigener unveränderlicher Gatekontext enthält ausschließlich ausgewählte
+Konfigurations-ID, effektiven Konfigurationshash und Ressourcenbindung. Die
+Auflösung verwendet weiterhin dieselben Originalquellen; gespeicherte
+Artefaktwerte werden nicht als fortlebender Gatezustand gehalten. Der gemeinsame
+Abhängigkeitscallback ist von der einzelnen Auswahl getrennt. Fachresultate,
+Fehlercodes, Hashbildung und konservative Prüfumfänge bleiben unverändert.
+Sämtliche bestehenden W-/R-Testdateien bleiben bytegleich.
 
 <a id="step-9-g"></a>
 ### 9.g – Konfigurationsoption in vorhandenen Fachbefehlen

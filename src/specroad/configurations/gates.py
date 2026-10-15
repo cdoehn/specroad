@@ -5,10 +5,13 @@ This entrypoint adds stored-relation consistency, not release approval, external
 provider checks or filtering of other services' artifact scopes.
 """
 from ..graph.relations import SourceRelations
-from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
+from ._gate_context import _ConfigurationGateContext
 from .evaluation import ConfigurationEvaluationError, evaluate_configuration
-from .values import resolve_configuration
+
+
+def _dependencies(context):
+    return context.dependency_result({name: list(context.all_ids) for name in context.subjects})
 
 
 def validate_configured_model(documents, *, configuration_id=None, profile=None,
@@ -34,32 +37,27 @@ def validate_configured_model(documents, *, configuration_id=None, profile=None,
     try:
         sources = tuple(sorted((SourceRelations(d.content, path=d.path) for d in documents),
                                key=lambda r: r.identity.id))
-        selected = resolve_configuration(sources, configuration_id)
+        binding = _ConfigurationGateContext(sources, configuration_id)
     except ModelError as error:
         raise ConfigurationEvaluationError(error) from error
-    binding = canonical_json_sha256({'gate': 'selected-stored-configuration-v1',
-                                    'configuration': selected.manifest})
-
-    def dependencies(context):
-        return context.dependency_result({name: list(context.all_ids) for name in context.subjects})
 
     def check(context):
         try:
             current = tuple(SourceRelations(d.content, path=d.path) for d in context.documents)
-            evaluation = evaluate_configuration(current, selected.configuration_id).data
+            evaluation = evaluate_configuration(current, binding.configuration_id).data
         except ModelError as error:
             return context.result([{**error.diagnostic(), 'code': 'SRV130', 'severity': 'error'}])
-        if evaluation['configuration']['sha256'] != selected.sha256:
+        if evaluation['configuration']['sha256'] != binding.configuration_sha256:
             return context.result([{'reason': 'configuration_gate_binding_changed',
-                'code': 'SRV130', 'severity': 'error', 'artifact_id': selected.configuration_id}])
+                'code': 'SRV130', 'severity': 'error', 'artifact_id': binding.configuration_id}])
         # The configuration is always a gate subject. Unconditional origins may
         # not be; retain their identities and full paths as related evidence.
         return context.result([{'reason': 'configuration_dependency_excluded',
-            'code': 'SRV131', 'severity': 'error', 'artifact_id': selected.configuration_id,
+            'code': 'SRV131', 'severity': 'error', 'artifact_id': binding.configuration_id,
             'related_ids': [item['source_id'], item['target_id']], 'dependency': item}
             for item in evaluation['inconsistent_dependencies']])
 
     gate = ModelGate('configuration', 'selected-stored-configuration-v1',
-                     dependencies, check, binding)
+                     _dependencies, check, binding.resources_sha256)
     return validate_model(documents, profile=profile, selected_ids=selected_ids,
                           gates=(*gates, gate), resources=resources)

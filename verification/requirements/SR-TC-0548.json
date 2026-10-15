@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein konfigurationsspezifisches Gate MUSS eine explizite Konfiguration verlangen.",
-    "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes. Source documents are owned copies. Duplicate logical source labels are refused; selected configuration manifests are rechecked at the gate boundary. A changed selected or inherited revision/value cannot reuse the earlier binding. JSON formatting alone does not change semantic configuration identity."
+    "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes. Source documents are owned copies. Duplicate logical source labels are refused; selected configuration manifests are rechecked at the gate boundary. A changed selected or inherited revision/value cannot reuse the earlier binding. JSON formatting alone does not change semantic configuration identity. The gate context retains only detached configuration identity and digests; original artifact records are not used as mutable gate state."
   },
   "expected_diagnostics": [
     "SRV130",
@@ -115,6 +115,6 @@
     "tests/test_configuration_gates_right.py::test_two_concurrent_variants_keep_separate_results_over_the_same_original_model"
   ],
   "open_items": [
-    "The current Python entrypoint supplies a stored-relation configuration gate. Live command integration follows in 9.g; document/release rendering and external-resource/review approval services are not certified. Separation of detached gate context follows in 9.f.C."
+    "The current Python entrypoint supplies a stored-relation configuration gate. Live command integration follows in 9.g; document/release rendering and external-resource/review approval services are not certified."
   ]
 }
