@@ -23,6 +23,9 @@ class ScopeSeeds:
     def __post_init__(self):
         if type(self.descriptor) is not ScopeDescriptor:
             raise ModelError('scope_descriptor_required')
+        data = self.descriptor.data
+        kind = (data['selector']['base_scope_descriptor']['scope_kind']
+                if data['scope_kind'] == 'configuration' else data['scope_kind'])
         for name, digest in (('inputs', self.inputs_sha256), ('configuration', self.configuration_sha256)):
             if name == 'configuration' and digest is None:
                 continue
@@ -35,7 +38,7 @@ class ScopeSeeds:
                 (_artifact_id if is_artifact else _text)(name)
             if len(set(names)) != len(names):
                 raise ModelError('duplicate_scope_seed')
-            if (not is_artifact or self.descriptor.scope_kind != 'query') and names != tuple(sorted(names, key=lambda name: name.encode('utf-8'))):
+            if (not is_artifact or kind != 'query') and names != tuple(sorted(names, key=lambda name: name.encode('utf-8'))):
                 raise ModelError('noncanonical_scope_seeds')
 
     @property
@@ -69,8 +72,8 @@ def resolve_scope_seeds(descriptor, inputs, *, query_page=None):
     """Resolve seeds only from the supplied current inventory; never expand edges.
 
     Project/specification resource completeness is a caller precondition, not an
-    outcome certified by this function. Configured non-query scopes evaluate
-    their candidates before admission; query pagination needs its bound adapter.
+    outcome certified by this function. Configured scopes evaluate candidates
+    before admission; a query requires a bound page of its applicable inventory.
     """
     if type(descriptor) is not ScopeDescriptor or type(inputs) is not ScopeSeedInputs:
         raise ModelError('scope_values_required')
@@ -85,8 +88,6 @@ def resolve_scope_seeds(descriptor, inputs, *, query_page=None):
         if data['scope_kind'] == 'configuration':
             data = data['selector']['base_scope_descriptor']
     kind, selector = data['scope_kind'], data['selector']
-    if effective is not None and kind == 'query':
-        raise ModelError('configured_query_resolver_required')
     if query_page is not None and kind != 'query':
         raise ModelError('unexpected_query_seed_page')
     resources = {resource.resource_id: resource for resource in inputs.resources}
@@ -128,7 +129,13 @@ def resolve_scope_seeds(descriptor, inputs, *, query_page=None):
             raise ModelError('bound_query_seed_page_required')
         if query_page.descriptor_sha256 != descriptor.sha256 or query_page.inputs_sha256 != inputs.fingerprint:
             raise ModelError('stale_query_seed_page')
-        return ScopeSeeds(descriptor, inputs.fingerprint, query_page.artifact_ids, (), None)
+        # Recheck supplied values without filtering, filling or reordering an
+        # already paginated result. Query execution remains the provider's job.
+        checked = QuerySeedPage(descriptor, inputs, query_page.artifact_ids, total=query_page.total)
+        if effective is not None:
+            config_hash = canonical_json_sha256({'project_configuration_sha256': inputs.configuration_sha256,
+                                                 'selected_configuration_sha256': effective.sha256})
+        return ScopeSeeds(descriptor, inputs.fingerprint, checked.artifact_ids, (), config_hash)
     else:
         raise ModelError('unsupported_scope_seed_resolver')
     selected = {name for name in selected if applicable(name)}

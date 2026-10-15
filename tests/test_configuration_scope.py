@@ -222,11 +222,13 @@ class ConfigurationScopeWorkTests(unittest.TestCase):
         self.assertEqual(fingerprint(inputs(*values)).sha256, fingerprint(inputs(*reversed(values))).sha256)
 
     def test_query_configuration_remains_explicitly_blocked_until_page_adapter_integration(self):
+        # Retain the stable test identity: callers still need a supplied bound
+        # query page; configured seed resolution must never invent one.
         inventory = inputs(configuration(), artifact())
         for wrapper in (False, True):
             with self.subTest(wrapper=wrapper), self.assertRaises(ModelError) as caught:
                 seeds(inventory, kind='query', selector={'query': query()}, wrapper=wrapper)
-            self.assertEqual(caught.exception.reason, 'configured_query_resolver_required')
+            self.assertEqual(caught.exception.reason, 'bound_query_seed_page_required')
 
     def test_resolution_preserves_all_original_artifact_bytes(self):
         inventory = inputs(configuration(), artifact())

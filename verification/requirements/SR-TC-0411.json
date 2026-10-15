@@ -15,24 +15,31 @@
     "Explicit byte-bound scope inventory and complete synthetic resource/review observations; no filesystem discovery, profile authenticity or release approval."
   ],
   "steps": [
-    "Resolve the selected configuration and filter non-query scope candidates before seed admission.",
-    "Check applicability at each required artifact admission, including transitive relations and field dependencies, and recompute the configured seed/hash binding."
+    "Resolve configuration before seed/required-artifact admission; preserve unconfigured scope behavior.",
+    "Bind direct and wrapped configured query pages to the applicable inventory; validate exact page size, order preservation and fresh descriptor/source bindings.",
+    "Reject excluded targets for every strong relation, required evidence/contract/review bindings and closed weak edges; retain partial weak origin boundaries and prevent stale successes from supplying a model root."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Konfigurationsscope MUSS `applicability` vor der Scope-Closure gegen die effektive Konfiguration auswerten.",
-    "scope": "Configured non-query seed and closure resolution over supplied bindings. Unconditional and matching artifacts are admitted; excluded required targets raise SRV141 without a closure result. The semantic configuration hash binds both project policy and the effective selected parent chain; unconfigured contracts remain unchanged."
+    "scope": "Configured seed/page/closure resolution over supplied bindings. Applicable query pages retain their exact order and pagination; excluded page members and stale/forged page values are rejected. Excluded required targets raise SRV141 with stable edge/field identity before admission. Partial weak edges retain their origin boundary; no configuration conflict produces a valid model root. Supplied query filtering/ordering and inventory completeness remain provider preconditions."
   },
   "expected_diagnostics": [
+    "bound_query_seed_page_required",
+    "invalid_applicability",
+    "query_seed_configuration_excluded",
+    "query_seed_pagination_mismatch",
     "scope_configuration_dependency",
-    "invalid_applicability"
+    "stale_query_seed_page"
   ],
   "expected_exit_codes": [
     3
   ],
   "json_pointers": [
     "/relations/0/target",
-    "/subjects/0/artifact_id"
+    "/subjects/0/artifact_id",
+    "/evidence_slots/0/test_id",
+    "/current_reviews"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -72,9 +79,82 @@
     "test_configuration_scope.ConfigurationScopeWorkTests.test_specification_wrapper_keeps_permanent_control_exclusions",
     "test_configuration_scope.ConfigurationScopeWorkTests.test_strong_only_walker_has_the_same_configuration_admission",
     "test_configuration_scope.ConfigurationScopeWorkTests.test_unselected_configuration_keeps_conditional_artifacts_as_potential_members",
-    "test_configuration_scope.ConfigurationScopeWorkTests.test_unselected_configuration_outside_explicit_scope_does_not_change_hash"
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_unselected_configuration_outside_explicit_scope_does_not_change_hash",
+    "tests/test_configuration_scope_right.py::test_a_configured_query_cannot_turn_an_excluded_strong_target_into_a_boundary",
+    "tests/test_configuration_scope_right.py::test_closed_weak_relation_also_checks_applicability[conflicts_with]",
+    "tests/test_configuration_scope_right.py::test_closed_weak_relation_also_checks_applicability[duplicates]",
+    "tests/test_configuration_scope_right.py::test_configured_query_does_not_fill_or_repaginate_a_supplied_page[0-0-ids2-2-direct]",
+    "tests/test_configuration_scope_right.py::test_configured_query_does_not_fill_or_repaginate_a_supplied_page[0-0-ids2-2-wrapper]",
+    "tests/test_configuration_scope_right.py::test_configured_query_does_not_fill_or_repaginate_a_supplied_page[1-1-ids0-2-direct]",
+    "tests/test_configuration_scope_right.py::test_configured_query_does_not_fill_or_repaginate_a_supplied_page[1-1-ids0-2-wrapper]",
+    "tests/test_configuration_scope_right.py::test_configured_query_does_not_fill_or_repaginate_a_supplied_page[3-2-ids1-2-direct]",
+    "tests/test_configuration_scope_right.py::test_configured_query_does_not_fill_or_repaginate_a_supplied_page[3-2-ids1-2-wrapper]",
+    "tests/test_configuration_scope_right.py::test_configured_query_has_a_revalidated_semantic_model_root",
+    "tests/test_configuration_scope_right.py::test_configured_query_preserves_the_bound_page_order_and_exact_membership[direct]",
+    "tests/test_configuration_scope_right.py::test_configured_query_preserves_the_bound_page_order_and_exact_membership[wrapper]",
+    "tests/test_configuration_scope_right.py::test_contract_test_slot_is_a_required_dependency[closed]",
+    "tests/test_configuration_scope_right.py::test_contract_test_slot_is_a_required_dependency[partial]",
+    "tests/test_configuration_scope_right.py::test_error_uses_relation_identity_order_but_preserves_original_pointer",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-addresses]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-allocated_to]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-constrains]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-contains]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-depends_on]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-derived_from]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-implemented_by]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-mitigates]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-part_of]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-produces]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-references]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-refines]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-scheduled_for]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-supersedes]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[closed-verified_by]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-addresses]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-allocated_to]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-constrains]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-contains]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-depends_on]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-derived_from]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-implemented_by]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-mitigates]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-part_of]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-produces]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-references]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-refines]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-scheduled_for]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-supersedes]",
+    "tests/test_configuration_scope_right.py::test_every_strong_relation_rejects_an_excluded_target[partial-verified_by]",
+    "tests/test_configuration_scope_right.py::test_excluded_dependency_is_diagnosed_before_its_usage_provider_is_required",
+    "tests/test_configuration_scope_right.py::test_invalid_applicability_in_query_inventory_is_not_lost_by_pagination",
+    "tests/test_configuration_scope_right.py::test_invalid_dependency_condition_is_not_silently_excluded",
+    "tests/test_configuration_scope_right.py::test_maturity_does_not_override_applicability[rejected]",
+    "tests/test_configuration_scope_right.py::test_maturity_does_not_override_applicability[retired]",
+    "tests/test_configuration_scope_right.py::test_old_success_cannot_hide_a_new_configuration_conflict_or_supply_a_model_root",
+    "tests/test_configuration_scope_right.py::test_partial_weak_relation_preserves_the_origin_boundary[conflicts_with]",
+    "tests/test_configuration_scope_right.py::test_partial_weak_relation_preserves_the_origin_boundary[duplicates]",
+    "tests/test_configuration_scope_right.py::test_query_page_binding_rejects_changed_inputs[configuration]",
+    "tests/test_configuration_scope_right.py::test_query_page_binding_rejects_changed_inputs[descriptor]",
+    "tests/test_configuration_scope_right.py::test_query_page_binding_rejects_changed_inputs[source]",
+    "tests/test_configuration_scope_right.py::test_query_page_rejects_an_excluded_item_instead_of_silently_shortening_the_page[direct]",
+    "tests/test_configuration_scope_right.py::test_query_page_rejects_an_excluded_item_instead_of_silently_shortening_the_page[wrapper]",
+    "tests/test_configuration_scope_right.py::test_query_page_uses_inherited_effective_selection",
+    "tests/test_configuration_scope_right.py::test_query_requires_the_full_selected_descriptor_binding[direct]",
+    "tests/test_configuration_scope_right.py::test_query_requires_the_full_selected_descriptor_binding[wrapper]",
+    "tests/test_configuration_scope_right.py::test_query_total_cannot_exceed_the_applicable_inventory_even_for_an_empty_page",
+    "tests/test_configuration_scope_right.py::test_required_cycle_of_applicable_artifacts_terminates_without_losing_members",
+    "tests/test_configuration_scope_right.py::test_seed_resolver_revalidates_supplied_page_fields[artifact_ids-value0-query_seed_configuration_excluded]",
+    "tests/test_configuration_scope_right.py::test_seed_resolver_revalidates_supplied_page_fields[artifact_ids-value2-duplicate_query_seed]",
+    "tests/test_configuration_scope_right.py::test_seed_resolver_revalidates_supplied_page_fields[total-True-query_seed_pagination_mismatch]",
+    "tests/test_configuration_scope_right.py::test_selected_current_relation_review_is_a_required_dependency[closed]",
+    "tests/test_configuration_scope_right.py::test_selected_current_relation_review_is_a_required_dependency[partial]",
+    "tests/test_configuration_scope_right.py::test_source_enumeration_does_not_change_error_projection",
+    "tests/test_configuration_scope_right.py::test_strong_only_api_keeps_excluded_weak_edge_pending",
+    "tests/test_configuration_scope_right.py::test_transitive_failure_identifies_the_actual_excluded_edge[scope]",
+    "tests/test_configuration_scope_right.py::test_transitive_failure_identifies_the_actual_excluded_edge[strong]",
+    "tests/test_configuration_scope_right.py::test_unselected_historical_review_is_not_an_implicit_dependency"
   ],
   "open_items": [
-    "Configured query-page integration, broader excluded-dependency robustness and shared admission cleanup follow in 9.d.R/C. Real provider integration and command-level configuration selection remain later M9 work."
+    "The shared-policy structural cleanup follows in 9.d.C. Live provider/command configuration integration follows in 9.g; this pure adapter does not certify query evaluation, resource discovery, review freshness or release approval."
   ]
 }

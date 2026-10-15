@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 391
-last_completed_plan_commit: 9.d.W
-next_plan_commit: 9.d.R
-last_completed_numbered_bundle: 242
+implementation_plan_commits_completed: 392
+last_completed_plan_commit: 9.d.R
+next_plan_commit: 9.d.C
+last_completed_numbered_bundle: 243
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10343,12 +10343,33 @@ folgen in 9.d.R/C. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 391/
 
 #### 9.d.R – Make it Right
 
-- [ ] **9.d.R** · Position **392/900** · Voraussetzung: `9.d.W`.
+- [x] **9.d.R** · Position **392/900** · Voraussetzung: `9.d.W`.
 **Exakte Commit-Message:** `9.d.R feat(configuration): Konfiguration vor Scope-Closure vervollständigen`
 
 **Vervollständigung:** Ausgeschlossene starke Zielressource wird nicht aufgenommen oder zur Boundary abgeschwächt.
 
 **Verhaltensabnahme:** Konfigurationskonflikt verhindert die Ausgabe einer gültigen Modellwurzel. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 243, SR-TC-0411/0414 weiterhin teilweise):**
+Direkte und umhüllte Query-Scopes akzeptieren eine ausdrücklich gelieferte,
+gebundene Seite aus dem anwendbaren Inventar. Der Adapter prüft alle
+Applicability-Ausdrücke dieses Inventars, die ausgewählten IDs, die exakte
+Seitenlänge und die Obergrenze der Gesamtzahl. Ausgeschlossene Seiteneinträge
+werden abgelehnt; die Seite wird weder verkürzt noch aufgefüllt, umsortiert oder
+neu paginiert. Query-Filterauswertung und korrekte Sortierung bleiben Pflichten
+des liefernden Query-Dienstes. Vollständige Descriptor- und Inventarbindungen
+verhindern die Wiederverwendung einer unkonfigurierten oder veralteten Seite;
+die Seed-Auflösung validiert auch die gelieferten Seitenfelder erneut.
+
+Die Verhaltenstests erfassen alle 15 starken Relationstypen unter beiden
+Grenzpolicies, Testslots, aktuelle Relationsreviews, indirekte Pflichtpfade,
+Zyklen, Revisionswechsel und die Abweisung eines alten erfolgreichen
+Closure-Ergebnisses bei neuem Konfigurationskonflikt. Geschlossene schwache
+Kanten unterliegen ebenfalls der Zulässigkeit; partielle schwache Grenzen
+behalten ihren Herkunftshash. Rejected/retired ersetzen die Applicability nicht.
+Der bestehende W-Test für die fehlende Query-Integration prüft jetzt konkret die
+fehlende gebundene Seite; seine stabile Identität bleibt erhalten. Es wird kein
+CLI-/Projektprovider-Erfolg vorweggenommen; diese Integration folgt in 9.g.
 
 #### 9.d.C – Make it Clean
 
