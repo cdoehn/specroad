@@ -17,15 +17,27 @@
   "steps": [
     "Compare semantic categories and exact values/identities with independent fixtures; check explicit unknown scope/currency, input hashes, read-only boundaries and isolated-process parity.",
     "Compare declared and opaque text changes with independent exact-value, identity and pointer oracles; preserve machine-value classes, complete containers and all W behavior.",
-    "Re-run unchanged W/R cases through the public comparison after classifier extraction; retain exact values, identities, error contracts and read-only boundaries."
+    "Re-run unchanged W/R cases through the public comparison after classifier extraction; retain exact values, identities, error contracts and read-only boundaries.",
+    "Compare explicitly paired stored configuration identities on actual before/after sources; resolve inherited values and applicability independently on both sides.",
+    "Keep stored inventory changes separate from exact added, removed and retained applicable identities; retain complete inconsistent stored dependency paths and final source-currentness checks in native Diff."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Diff und Merge MÜSSEN Änderungen an Konfigurationen und `applicability` als eigene semantische Klassen ausweisen und den daraus resultierenden hinzugefügten oder entfernten Modellumfang berechnen.",
-    "scope": "8.h.W adds compare_semantic over explicit ComparisonInputs. Every supplied stored artifact field contract is validated before classification. Existing artifact identities, hashes, presence flags, values and pointers remain visible. Threshold/text, scope/exception/relation/document/verification/code-reference differences retain their structural classes; applicability, product configuration, stored statuses and evidence result/binding/content changes are distinguished. Paired typed ProjectConfigurations compare through the existing semantic projection and also bind their raw declarations. Explicit requirement timing bounds alone enable exact tightened/relaxed/equivalent/incomparable duration observations; policies bind even unchanged input. Missing configuration is not_supplied. Supplied inventory membership deltas do not imply applicability-derived scope, which remains not_evaluated alongside evidence currency. Independent tests cover classes, exact values/identities, configuration and policy binding, invalid inputs, ownership, no writes and fresh-process parity. Existing 277 test files and 9227 IDs remain unchanged. Source adapters, Diff CLI, durable Work, effective profiles, applicability-derived scope, evidence-currentness services and platform/performance acceptance remain open; no release approval is claimed. R classifies additional unstructured domain text and text-bearing namespaced extension values as text_changed without interpreting words, languages, Markdown or numerical claims. Opaque extension keys never inherit Core timing/threshold/status/evidence semantics. Pure numeric/Boolean unknown deltas remain structural field_changed; declared enum, identity and path values keep their existing classes. Iterative value scanning retains complete containers, presence/null distinctions, escaped pointers and exact Unicode bytes. Independent tests cover twenty domain/record text positions, misleading extension names, typed machine values, deep/wide data, ownership, ordering and read-only boundaries. All 278 old test files and 9263 IDs remain unchanged; all W cases remain part of selected regression. Source/CLI/Work integration, effective profiles, evaluated scope/currency and platform/performance acceptance remain open. C moves all declared-field, opaque-text, paired-configuration and explicit-duration classifiers into a private module. All five extracted definitions and the public comparison function retain identical source and AST; only module ownership and necessary imports change. All 279 old test files and 9310 IDs remain unchanged. Existing W/R behavior is rerun through the public API; no new semantic classes, error contracts, side effects or authority are introduced. Later providers and acceptance remain open."
+    "scope": "8.h.W adds compare_semantic over explicit ComparisonInputs. Every supplied stored artifact field contract is validated before classification. Existing artifact identities, hashes, presence flags, values and pointers remain visible. Threshold/text, scope/exception/relation/document/verification/code-reference differences retain their structural classes; applicability, product configuration, stored statuses and evidence result/binding/content changes are distinguished. Paired typed ProjectConfigurations compare through the existing semantic projection and also bind their raw declarations. Explicit requirement timing bounds alone enable exact tightened/relaxed/equivalent/incomparable duration observations; policies bind even unchanged input. Missing configuration is not_supplied. Supplied inventory membership deltas do not imply applicability-derived scope, which remains not_evaluated alongside evidence currency. Independent tests cover classes, exact values/identities, configuration and policy binding, invalid inputs, ownership, no writes and fresh-process parity. Existing 277 test files and 9227 IDs remain unchanged. Source adapters, Diff CLI, durable Work, effective profiles, applicability-derived scope, evidence-currentness services and platform/performance acceptance remain open; no release approval is claimed. R classifies additional unstructured domain text and text-bearing namespaced extension values as text_changed without interpreting words, languages, Markdown or numerical claims. Opaque extension keys never inherit Core timing/threshold/status/evidence semantics. Pure numeric/Boolean unknown deltas remain structural field_changed; declared enum, identity and path values keep their existing classes. Iterative value scanning retains complete containers, presence/null distinctions, escaped pointers and exact Unicode bytes. Independent tests cover twenty domain/record text positions, misleading extension names, typed machine values, deep/wide data, ownership, ordering and read-only boundaries. All 278 old test files and 9263 IDs remain unchanged; all W cases remain part of selected regression. Source/CLI/Work integration, effective profiles, evaluated scope/currency and platform/performance acceptance remain open. C moves all declared-field, opaque-text, paired-configuration and explicit-duration classifiers into a private module. All five extracted definitions and the public comparison function retain identical source and AST; only module ownership and necessary imports change. All 279 old test files and 9310 IDs remain unchanged. Existing W/R behavior is rerun through the public API; no new semantic classes, error contracts, side effects or authority are introduced. Later providers and acceptance remain open. 9.h.W evaluates explicitly paired stored configuration IDs in the existing semantic comparison and source adapters. Parent/value/applicability changes retain their semantic classes; actual applicable ID sets yield exact added/removed/retained scope membership, distinct from the stored inventory delta. Effective manifests and complete stored dependency evaluations bind the result input hash. Native Diff --configuration selects the same ID in both actual snapshots, preserves full paths and returns complete model failure SRV131 if either variant is inconsistent. Missing or invalid selection produces SRV130 without a partial result. Unselected comparison remains byte-equivalent in data semantics, with configuration scope not_evaluated. New tests cover actual side deltas, parent switching, selection-only changes, owned values, source/CLI/request/Work parity, late source changes, no writes and portable execution. External resource closure, evidence currency, Merge and configuration-bound Baselines remain separate unavailable providers."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_diagnostics": [
+    "SRV130",
+    "SRV131",
+    "configuration_comparison_pair_required",
+    "configuration_missing",
+    "diff_source_changed"
+  ],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "json_pointers": [
     "/categories",
     "/changes",
@@ -130,9 +142,32 @@
     "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-source-excerpt-MUST verify within 10 ms-MUST verify within 5 ms]",
     "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-test-oracle-Pass at most ten-Pass at most five]",
     "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-verification-procedure-old14-new14]",
-    "tests/test_query_semantic_diff_right.py::test_wide_extension_text_changes_have_complete_identity_and_pointer_sets"
+    "tests/test_query_semantic_diff_right.py::test_wide_extension_text_changes_have_complete_identity_and_pointer_sets",
+    "tests/test_configuration_diff.py::test_applicability_change_has_its_own_class_without_a_configuration_change",
+    "tests/test_configuration_diff.py::test_configuration_comparison_is_order_independent_and_owns_its_results",
+    "tests/test_configuration_diff.py::test_configured_diff_performs_no_project_write_attempts",
+    "tests/test_configuration_diff.py::test_inconsistent_variant_retains_complete_shortest_dependency_paths",
+    "tests/test_configuration_diff.py::test_inventory_delta_is_not_mistaken_for_variant_membership[add_excluded]",
+    "tests/test_configuration_diff.py::test_inventory_delta_is_not_mistaken_for_variant_membership[add_included]",
+    "tests/test_configuration_diff.py::test_inventory_delta_is_not_mistaken_for_variant_membership[remove_excluded]",
+    "tests/test_configuration_diff.py::test_missing_or_ambiguous_selected_configuration_cannot_produce_a_delta[SR-CFG-00000000000000000000000033]",
+    "tests/test_configuration_diff.py::test_missing_or_ambiguous_selected_configuration_cannot_produce_a_delta[Variant 1]",
+    "tests/test_configuration_diff.py::test_missing_or_ambiguous_selected_configuration_cannot_produce_a_delta[]",
+    "tests/test_configuration_diff.py::test_native_conflict_is_a_complete_failed_comparison_with_path_evidence",
+    "tests/test_configuration_diff.py::test_native_sources_api_cli_and_request_use_the_same_selected_scope",
+    "tests/test_configuration_diff.py::test_only_a_complete_explicit_selection_pair_can_enable_variant_comparison[None-SR-CFG-00000000000000000000000001]",
+    "tests/test_configuration_diff.py::test_only_a_complete_explicit_selection_pair_can_enable_variant_comparison[SR-CFG-00000000000000000000000001-None]",
+    "tests/test_configuration_diff.py::test_parent_switch_uses_the_actual_effective_chain_on_each_side",
+    "tests/test_configuration_diff.py::test_portable_cli_returns_the_actual_variant_delta",
+    "tests/test_configuration_diff.py::test_retained_configured_diff_rejects_changed_sources_before_publication",
+    "tests/test_configuration_diff.py::test_retained_diff_work_has_identical_configured_results",
+    "tests/test_configuration_diff.py::test_selected_revision_change_binds_the_observation_without_inventing_membership",
+    "tests/test_configuration_diff.py::test_selection_change_reports_actual_membership_with_unchanged_stored_inventory",
+    "tests/test_configuration_diff.py::test_stored_value_change_is_separate_from_the_resulting_membership_delta",
+    "tests/test_configuration_diff.py::test_unchanged_explicit_variant_is_bound_but_not_a_fabricated_change"
   ],
   "open_items": [
-    "Complete planned source/CLI/Work integration, effective profile semantics, applicability-derived model scope, evaluated evidence currency and platform/performance acceptance; Merge integration remains a later consumer."
+    "Merge integration and external-resource/complete scope closure remain later consumers; configuration comparison covers the supplied artifact inventory and stored strong relations.",
+    "Configuration-bound Baselines, evidence currency and platform/performance acceptance require their actual later providers. Additional nested/invalid/cyclic variant and retained Work boundary cases follow in 9.h.R; general classifier organization follows in 9.h.C."
   ]
 }

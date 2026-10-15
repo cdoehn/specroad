@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 402
-last_completed_plan_commit: 9.g.C
-next_plan_commit: 9.h.W
-last_completed_numbered_bundle: 249
+implementation_plan_commits_completed: 403
+last_completed_plan_commit: 9.h.W
+next_plan_commit: 9.h.R
+last_completed_numbered_bundle: 250
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10668,12 +10668,31 @@ bytegleich erneut gegen diesen eigenen C-Zustand geprüft.
 
 #### 9.h.W – Let it Work
 
-- [ ] **9.h.W** · Position **403/900** · Voraussetzung: `9.g.C`.
+- [x] **9.h.W** · Position **403/900** · Voraussetzung: `9.g.C`.
 **Exakte Commit-Message:** `9.h.W feat(configuration): Varianten-Diff und Regression aufbauen`
 
 **Umsetzung:** Scopeänderungen durch Parent-/Wert-/Applicabilitywechsel separat klassifizieren.
 
 **Verhaltensabnahme:** Änderung zeigt die tatsächlich hinzugekommenen und entfallenen IDs.
+
+**Vorbereiteter W-Stand (Bundle 250, SR-TC-0403 teilweise):**
+Der bestehende semantische Vergleich wertet bei ausdrücklich gepaarten
+Konfigurations-IDs die jeweilige Parent-Kette und Anwendbarkeit beider
+Originalstände aus. Er zeigt tatsächlich hinzugekommene, entfallene und
+erhaltene anwendbare IDs getrennt von der gespeicherten Inventardifferenz.
+Parent-/Wert- und Applicabilityänderungen behalten eigene Klassen;
+`configuration_scope_changed` markiert eine geänderte Variantenmitgliedschaft.
+Auch ein reiner Auswahlwechsel bei identischen gespeicherten Artefakten wird
+gebunden und korrekt ausgewertet. Ohne Auswahl bleibt der bisherige Vertrag.
+
+Quellenvergleich, native Diff-API und `diff --configuration <ID>` verwenden
+dieselbe Auswertung. Vollständige kürzeste Konfliktpfade bleiben pro Seite
+sichtbar; ein inkonsistenter Vergleich wird vollständig mit Code 3/`SRV131`
+ausgegeben. Ungültige Auswahl liefert `SRV130` ohne Teilergebnis. Die neuen
+Fälle prüfen Parentwechsel, exakte Mengen, unabhängige Inventardeltas,
+Quell-/CLI-/Request-/Workparität, späte Änderungen und portable Ausführung.
+Merge, externe Ressourcen-Closure, Evidence-Gültigkeit und konfigurationsgebundene
+Baselines werden dadurch nicht als implementiert oder geprüft ausgegeben.
 
 #### 9.h.R – Make it Right
 

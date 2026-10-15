@@ -1,7 +1,7 @@
 """Deterministic semantic classes over explicitly supplied owned artifacts.
 
-No source provider, applicability evaluator, evidence-currentness service or
-natural-language interpretation is implied by this data-only comparison.
+Explicit paired configuration IDs enable applicability and stored-dependency
+comparison. Resource closure, evidence currency and approval remain separate.
 """
 from ..graph.artifact_comparison import compare_artifacts
 from ..graph.comparison_values import ComparisonInputs, ComparisonResult
@@ -13,8 +13,26 @@ from ..model.record_schemas import validate_record_fields
 from ._semantic_classes import _configuration_comparison, _field_category, _timing_comparisons
 
 
+def _variant_scope(before, after, before_id, after_id):
+    if before_id is None and after_id is None:
+        return {'state': 'not_evaluated'}
+    from ..configurations import evaluate_configuration
+    from ..configurations.evaluation import ConfigurationEvaluationError
+    if before_id is None or after_id is None:
+        raise ConfigurationEvaluationError(ModelError('configuration_comparison_pair_required'))
+    left = evaluate_configuration(before.records, before_id).data
+    right = evaluate_configuration(after.records, after_id).data
+    old, new = set(left['applicable_artifact_ids']), set(right['applicable_artifact_ids'])
+    return {'state': 'evaluated', 'scope': 'supplied_artifact_applicability',
+        'before': left, 'after': right, 'added_ids': sorted(new - old),
+        'removed_ids': sorted(old - new), 'retained_ids': sorted(old & new),
+        'membership_changed': old != new,
+        'configuration_changed': left['configuration']['sha256'] != right['configuration']['sha256']}
+
+
 def compare_semantic(before, after, *, before_configuration=None,
-                     after_configuration=None, timing_bounds=None):
+                     after_configuration=None, timing_bounds=None,
+                     before_configuration_id=None, after_configuration_id=None):
     """Classify supplied sets; explicit policies never grant approval or writes.
 
     Configuration comparison requires both typed declarations. Timing bounds
@@ -35,6 +53,7 @@ def compare_semantic(before, after, *, before_configuration=None,
     right = {record.identity.id: record.data for record in after.records}
     configuration, configuration_inputs = _configuration_comparison(
         before_configuration, after_configuration, before, after)
+    variant = _variant_scope(before, after, before_configuration_id, after_configuration_id)
     policy, timing = _timing_comparisons(timing_bounds, left, right)
     timing_by_id = {row['artifact_id']: row for row in timing}
     changes = base['changes']
@@ -54,16 +73,23 @@ def compare_semantic(before, after, *, before_configuration=None,
     categories = {category for item in changes for category in item['categories']}
     if configuration['changed']:
         categories.add('configuration_changed')
+    if variant['state'] == 'evaluated':
+        if variant['configuration_changed']:
+            categories.add('configuration_changed')
+        if variant['membership_changed']:
+            categories.add('configuration_scope_changed')
     inputs = {'before_artifacts_sha256': before.fingerprint, 'after_artifacts_sha256': after.fingerprint,
               'configuration_inputs': configuration_inputs, 'timing_bounds': policy}
     return ComparisonResult({'comparison_version': 'semantic-diff-v1',
-        'project_id': before.project_id, 'input_sha256': canonical_json_sha256(inputs),
-        **inputs, 'changed': base['changed'] or bool(configuration['changed']),
+        'project_id': before.project_id, 'input_sha256': canonical_json_sha256({**inputs,
+            **({'configuration_scope': variant} if variant['state'] == 'evaluated' else {})}),
+        **inputs, 'changed': base['changed'] or bool(configuration['changed'])
+            or variant.get('configuration_changed', False) or variant.get('membership_changed', False),
         'categories': sorted(categories), 'changes': changes,
         'project_configuration': configuration, 'timing': timing,
         'inventory_delta': {'scope': 'supplied_artifact_sets',
             'added_ids': sorted(right.keys() - left.keys()), 'removed_ids': sorted(left.keys() - right.keys())},
-        'configuration_scope': {'state': 'not_evaluated'},
+        'configuration_scope': variant,
         'evidence_currency': {'state': 'not_evaluated'},
         'validation_scope': 'supplied_artifact_fields_and_declared_semantics_only',
         'full_semantic_validation': False, 'approval_granted': False, 'write_authorized': False})

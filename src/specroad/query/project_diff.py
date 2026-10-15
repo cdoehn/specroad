@@ -2,7 +2,8 @@
 from pathlib import Path
 
 from ..cli.result_schemas import validate_result_document
-from ..cli.results import CommandResult, OperationFailure
+from ..cli.results import CommandResult, FailureKind, OperationFailure
+from ..diagnostics import Diagnostic
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ._read_errors import read_details, read_failure
@@ -10,7 +11,7 @@ from .comparison_sources import ComparisonSourceSnapshot, compare_sources
 from .read_work import complete_read_command, complete_read_steps
 
 
-def _diff_steps(root, against, *, against_kind='git'):
+def _diff_steps(root, against, *, against_kind='git', configuration_id=None):
     project = None
     details = read_details()
     try:
@@ -23,7 +24,8 @@ def _diff_steps(root, against, *, against_kind='git'):
         after = ComparisonSourceSnapshot(root, expected_project_id=before.configuration.project_id)
         project = {'project_root': after.source_root, 'project_id': after.configuration.project_id}
         yield 'loaded'
-        compared = compare_sources(before, after)
+        compared = compare_sources(before, after, before_configuration_id=configuration_id,
+                                   after_configuration_id=configuration_id)
         payload = compared.data
         details.update(before_source_sha256=before.sha256, after_source_sha256=after.sha256,
             base_commit=before.commit_id, comparison_sha256=compared.sha256,
@@ -39,14 +41,25 @@ def _diff_steps(root, against, *, against_kind='git'):
         if current.sha256 != after.sha256:
             raise ModelError('diff_source_changed')
         validate_result_document('artifact-diff-v1', payload)
+        if payload['configuration_scope']['state'] == 'evaluated':
+            diagnostics = tuple(Diagnostic('SRV131', 'error', 'model',
+                'An applicable artifact requires an excluded artifact.',
+                rule_id='configuration-diff-' + side, artifact_id=item['source_id'],
+                related_ids=(item['target_id'],), rationale='configuration_dependency_excluded')
+                for side in ('before', 'after')
+                for item in payload['configuration_scope'][side]['inconsistent_dependencies'])
+            if diagnostics:
+                return CommandResult.failed('diff', FailureKind.MODEL, complete=True, result=payload,
+                                            project=project, diagnostics=diagnostics, details=details)
         return CommandResult('diff', result=payload, project=project, details=details)
     except (OperationFailure, ModelError, SafetyViolation, OSError) as error:
         return read_failure('diff', error, project, details)
 
 
-def diff_project(root, against, *, against_kind='git'):
+def diff_project(root, against, *, against_kind='git', configuration_id=None):
     """Compare exact captured sources, rejecting unsupported resource semantics."""
-    return complete_read_steps(_diff_steps(root, against, against_kind=against_kind))
+    return complete_read_steps(_diff_steps(root, against, against_kind=against_kind,
+                                          configuration_id=configuration_id))
 
 
 def diff_command(invocation):
@@ -54,4 +67,5 @@ def diff_command(invocation):
     kind = invocation.options.get('--against-kind', 'git')
     if kind == 'local' and not Path(against).is_absolute():
         against = str(invocation.resolved.working_directory / against)
-    return complete_read_command(invocation, _diff_steps, against, against_kind=kind)
+    return complete_read_command(invocation, _diff_steps, against, against_kind=kind,
+                                 configuration_id=invocation.options.get('--configuration'))

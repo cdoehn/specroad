@@ -40,3 +40,25 @@ erfüllen. Ein Hash allein erlaubt keine Evidence-Wiederverwendung. Der besonder
 Vollprojektvertrag bleibt erhalten: `bundle create --scope project` erlaubt
 keine Konfigurationsfilterung; konfigurierte Dokument-/Release-Bundles bleiben
 partiell. Diese Anleitung registriert oder implementiert keine fehlenden Befehle.
+
+## Variantenvergleich
+
+`compare_semantic` und `compare_sources` akzeptieren zusätzlich ein vollständiges
+Paar `before_configuration_id`/`after_configuration_id`. Beide Seiten lösen ihre
+Auswahl aus ihren eigenen Originalquellen auf. Die native Diff-CLI verwendet
+`--configuration <ID>` für dieselbe ID in beiden Vergleichsständen; der Python-
+Aufruf `diff_project` bietet dazu `configuration_id`. Die bestehenden lokalen
+und Git-Quellen sowie deren abschließende Aktualitätsprüfung bleiben erhalten.
+
+`configuration_scope` enthält die beiden tatsächlichen Auswertungen sowie
+hinzugekommene, entfallene und erhaltene anwendbare IDs. `inventory_delta` bleibt
+davon getrennt: Eine gespeicherte neue Datei kann in der gewählten Variante
+ausgeschlossen sein. Die Klasse `configuration_scope_changed` kennzeichnet eine
+geänderte Mitgliedschaft; gespeicherte Konfigurations- und Applicabilityänderungen
+behalten ihre eigenen Klassen. Ohne Auswahl bleibt der Scope `not_evaluated`.
+
+Inkonsistente Pflichtabhängigkeiten bleiben mit vollständigen kürzesten Pfaden
+in der jeweiligen Seite sichtbar. Native Diff liefert dafür eine vollständige
+Vergleichsausgabe mit Exit Code 3 und `SRV131`. Ungültige Auswahl verhindert ein
+Teilergebnis (`SRV130`). Der Vergleich liefert weiterhin keinen Freigabe-,
+Evidence-Gültigkeits- oder vollständigen Ressourcen-Closure-Nachweis.

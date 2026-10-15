@@ -267,6 +267,7 @@ def builtin_registry() -> CommandRegistry:
         handler=_diff, requires_project=True,
         options=(OptionSpec('--against', takes_value=True, required=True),
             OptionSpec('--against-kind', takes_value=True, choices=('git', 'local')),
+            OptionSpec('--configuration', takes_value=True),
             OptionSpec('--project', takes_value=True),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
             OptionSpec('--no-color'), OptionSpec('--quiet')),
@@ -274,7 +275,7 @@ def builtin_registry() -> CommandRegistry:
             'options': {'--against': '.', '--against-kind': 'local', '--format': 'json'}},
             handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
             diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
-                              'SRV001', 'SRV002'),
+                              'SRV001', 'SRV002', 'SRV130', 'SRV131'),
             work=WorkContract('artifact_diff', ('current_comparison_source', 'same_project_comparison_base'))),
     ), CommandSpec(
         command_id="help", words=("--help",), aliases=(("-h",),),
