@@ -15,20 +15,26 @@
     "Original JSON or attachment bytes; an existing private external store and every protected project/input/output root explicitly declared."
   ],
   "steps": [
-    "Create canonical/raw snapshot objects, store and read exact bytes through real native I/O, deduplicate identical objects, preserve protected projects and failed preparation state, and reopen the stored objects in an isolated process."
+    "Create canonical/raw snapshot objects, store and read exact bytes through real native I/O, deduplicate identical objects, preserve protected projects and failed preparation state, and reopen the stored objects in an isolated process.",
+    "Check complete supplied byte inventories and declared references before a candidate change; reject removal of referenced objects and differing bytes under one identity. Recheck retained physical objects before and after put and exercise native corruption/path/publication failures."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Baseline MUSS für jedes enthaltene Artefakt ID, Revision, kanonischen SHA-256-Hash und den Pfad seines Snapshotobjekts im Baseline-Objektspeicher speichern.",
-    "scope": "10.a.W introduces immutable SnapshotObject and ObjectReference values with exact SHA-256, byte length and archive/objects/<hh>/<sha256> paths. JSON uses the existing strict reader and RFC-8785 canonical bytes; attachment bytes remain untouched. The physical preparation store is restricted to an existing private owned root outside every declared protected boundary and project ancestor. It uses the existing native root-inode mutex, guarded directory traversal, exclusive durable temporary writes and atomic no-replace publication. Identical bytes reuse the existing object; malformed or corrupted targets are rejected without replacement. Reads verify exact length/hash without writes and can inspect an existing project archive. Independent tests cover canonical/opaque bytes, real deduplication, distinct objects, protected-root boundaries, absence of project writes, complete publication, retained failed preparation, busy locks, reopening in a new isolated process and portable distribution behavior. This is the object layer and external preparation store, not a Baseline manifest or normative create command. Complete Baseline identity/revision/scope/configuration bindings, referenced-deletion policy and journalled project publication remain in subsequent steps; no full requirement, full-suite or release success is claimed. Protected-boundary checks are independent of unrelated Git ancestry; a Git marker alone never defines a SpecRoad project root."
+    "scope": "10.a.W introduces immutable SnapshotObject and ObjectReference values with exact SHA-256, byte length and archive/objects/<hh>/<sha256> paths. JSON uses the existing strict reader and RFC-8785 canonical bytes; attachment bytes remain untouched. The physical preparation store is restricted to an existing private owned root outside every declared protected boundary and project ancestor. It uses the existing native root-inode mutex, guarded directory traversal, exclusive durable temporary writes and atomic no-replace publication. Identical bytes reuse the existing object; malformed or corrupted targets are rejected without replacement. Reads verify exact length/hash without writes and can inspect an existing project archive. Independent tests cover canonical/opaque bytes, real deduplication, distinct objects, protected-root boundaries, absence of project writes, complete publication, retained failed preparation, busy locks, reopening in a new isolated process and portable distribution behavior. This is the object layer and external preparation store, not a Baseline manifest or normative create command. Complete Baseline identity/revision/scope/configuration bindings, referenced-deletion policy and journalled project publication remain in subsequent steps; no full requirement, full-suite or release success is claimed. Protected-boundary checks are independent of unrelated Git ancestry; a Git marker alone never defines a SpecRoad project root. 10.a.R adds the pure check_object_retention kernel over owned actual SnapshotObject inventories and explicit ObjectReferences. Shared references deduplicate, inconsistent declarations and unknown predecessor objects fail, referenced removals are rejected, and even an injected hash collision cannot replace differing original bytes. The observation grants no write or Baseline-completeness authority. Native put owns optional retained_references and rereads every retained object before preparation, immediately before publication and before success. Temporary bytes and the live hash directory are rebound immediately before linking. New tests cover shared bytes, missing/changed references, exact collision refusal, linked paths, changed roots/directories, late payload changes, target races, and preserved actual state after partial publication. Existing W tests remain unchanged. Actual Baseline discovery/manifests and atomic project publication stay in their following plan steps."
   },
   "expected_diagnostics": [
     "project_lock_busy",
+    "snapshot_object_content_collision",
     "snapshot_object_hash_mismatch",
     "snapshot_object_hash_required",
+    "snapshot_object_replacement_forbidden",
     "snapshot_object_size_mismatch",
     "snapshot_object_size_required",
-    "snapshot_protected_roots_required"
+    "snapshot_protected_roots_required",
+    "snapshot_reference_conflict",
+    "snapshot_referenced_object_missing",
+    "snapshot_referenced_object_removal"
   ],
   "expected_exit_codes": [],
   "json_pointers": [],
@@ -90,11 +96,44 @@
     "tests/test_snapshot_objects.py::test_stored_objects_survive_reopening_from_an_isolated_fresh_process",
     "tests/test_snapshot_objects.py::test_successful_reads_and_reference_checks_remain_read_only",
     "tests/test_snapshot_objects.py::test_unrelated_git_ancestor_is_not_a_specroad_project_or_protected_boundary",
-    "tests/test_snapshot_objects.py::test_unsafe_shared_storage_permissions_are_rejected"
+    "tests/test_snapshot_objects.py::test_unsafe_shared_storage_permissions_are_rejected",
+    "tests/test_snapshot_objects_right.py::test_a_late_specroad_project_marker_blocks_publication",
+    "tests/test_snapshot_objects_right.py::test_a_racing_target_is_preserved_without_clobber_or_cleanup",
+    "tests/test_snapshot_objects_right.py::test_even_a_hash_collision_cannot_alias_distinct_original_bytes[replacement]",
+    "tests/test_snapshot_objects_right.py::test_even_a_hash_collision_cannot_alias_distinct_original_bytes[within_inventory]",
+    "tests/test_snapshot_objects_right.py::test_external_removal_of_retained_bytes_cannot_return_a_successful_put[prepared]",
+    "tests/test_snapshot_objects_right.py::test_external_removal_of_retained_bytes_cannot_return_a_successful_put[published]",
+    "tests/test_snapshot_objects_right.py::test_failure_after_publication_keeps_both_actual_links_and_cannot_fake_success",
+    "tests/test_snapshot_objects_right.py::test_hardlinked_object_is_not_accepted_or_rewritten",
+    "tests/test_snapshot_objects_right.py::test_inconsistent_reference_sizes_never_validate_a_shared_hash[False]",
+    "tests/test_snapshot_objects_right.py::test_inconsistent_reference_sizes_never_validate_a_shared_hash[True]",
+    "tests/test_snapshot_objects_right.py::test_late_content_change_during_read_is_not_returned_as_verified_bytes",
+    "tests/test_snapshot_objects_right.py::test_linked_object_components_cannot_be_read_or_reused[archive]",
+    "tests/test_snapshot_objects_right.py::test_linked_object_components_cannot_be_read_or_reused[bucket]",
+    "tests/test_snapshot_objects_right.py::test_linked_object_components_cannot_be_read_or_reused[object]",
+    "tests/test_snapshot_objects_right.py::test_linked_object_components_cannot_be_read_or_reused[objects]",
+    "tests/test_snapshot_objects_right.py::test_missing_retained_file_refuses_put_before_creating_any_archive_storage",
+    "tests/test_snapshot_objects_right.py::test_reference_must_bind_a_real_supplied_predecessor_object",
+    "tests/test_snapshot_objects_right.py::test_reference_retention_contract_runs_in_a_fresh_isolated_core",
+    "tests/test_snapshot_objects_right.py::test_removing_a_shared_referenced_object_is_rejected_even_with_another_object_present",
+    "tests/test_snapshot_objects_right.py::test_replaced_root_cannot_be_used_through_an_earlier_store_binding",
+    "tests/test_snapshot_objects_right.py::test_retained_inputs_are_owned_before_native_preparation_callbacks",
+    "tests/test_snapshot_objects_right.py::test_retention_result_is_owned_order_independent_and_read_only",
+    "tests/test_snapshot_objects_right.py::test_size_mismatch_is_refused_before_reading_any_object_bytes",
+    "tests/test_snapshot_objects_right.py::test_swapped_object_directory_is_refused_before_publication",
+    "tests/test_snapshot_objects_right.py::test_tampered_preparation_image_is_rejected_before_the_hash_path_is_published",
+    "tests/test_snapshot_objects_right.py::test_transition_requires_explicit_object_sequences[None]",
+    "tests/test_snapshot_objects_right.py::test_transition_requires_explicit_object_sequences[objects]",
+    "tests/test_snapshot_objects_right.py::test_transition_requires_explicit_object_sequences[value1]",
+    "tests/test_snapshot_objects_right.py::test_transition_requires_explicit_reference_sequences[None]",
+    "tests/test_snapshot_objects_right.py::test_transition_requires_explicit_reference_sequences[references]",
+    "tests/test_snapshot_objects_right.py::test_transition_requires_explicit_reference_sequences[value1]",
+    "tests/test_snapshot_objects_right.py::test_two_reference_owners_share_one_unchanged_object_during_addition",
+    "tests/test_snapshot_objects_right.py::test_unreferenced_candidate_removal_is_only_a_data_observation_without_write_authority"
   ],
   "open_items": [
-    "Complete Baseline manifest/identity/revision/scope/configuration bindings and the atomic normative Baseline writer in their assigned following plan steps.",
-    "Reference-aware deletion protection and additional corruption/crash boundaries remain in 10.a.R.",
-    "External-store observations do not constitute a complete Baseline, cross-platform acceptance, full-suite pass or release approval."
+    "Complete actual Baseline manifest/identity/revision/scope/configuration bindings and the atomic normative Baseline writer in the assigned following plan steps.",
+    "The retention kernel verifies only explicitly supplied object/reference inventories; discovery of every actual Baseline and journalled project publication remain later integration work.",
+    "External-store and selected development observations do not constitute complete Baseline, cross-platform, full-suite or release acceptance."
   ]
 }

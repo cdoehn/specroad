@@ -70,6 +70,64 @@ def _reference(value):
     return ObjectReference(value.sha256, value.size)
 
 
+def _references(values):
+    if type(values) not in (list, tuple):
+        raise ModelError('snapshot_references_required')
+    owned = {}
+    for value in values:
+        reference = _reference(value)
+        if reference.path in owned and owned[reference.path] != reference:
+            raise ModelError('snapshot_reference_conflict', path=reference.path)
+        owned[reference.path] = reference
+    return tuple(owned[path] for path in sorted(owned))
+
+
+def _objects(values):
+    if type(values) not in (list, tuple):
+        raise ModelError('snapshot_objects_required')
+    owned = {}
+    for value in values:
+        if type(value) is not SnapshotObject:
+            raise ModelError('snapshot_object_required')
+        value = SnapshotObject(value.content)
+        path = value.reference.path
+        if path in owned and owned[path].content != value.content:
+            raise ModelError('snapshot_object_content_collision', path=path)
+        owned[path] = value
+    return owned
+
+
+def check_object_retention(before, after, *, references):
+    """Check actual supplied bytes and declared references; authorize no write.
+
+    The caller supplies the complete object/reference inventory of its scope.
+    This pure kernel cannot discover Baselines or prove project completeness.
+    """
+    left, right, retained = _objects(before), _objects(after), _references(references)
+    for path in sorted(left.keys() & right.keys()):
+        if left[path].content != right[path].content:
+            raise ModelError('snapshot_object_replacement_forbidden', path=path)
+    for reference in retained:
+        if reference.path not in left:
+            raise ModelError('snapshot_referenced_object_missing', path=reference.path)
+        if left[reference.path].reference != reference:
+            raise ModelError('snapshot_reference_conflict', path=reference.path)
+        if reference.path not in right:
+            raise ModelError('snapshot_referenced_object_removal', path=reference.path)
+    return {'scope': 'supplied_snapshot_objects_and_references',
+        'added_paths': sorted(right.keys() - left.keys()),
+        'removed_paths': sorted(left.keys() - right.keys()),
+        'retained_paths': sorted(left.keys() & right.keys()),
+        'referenced_paths': [reference.path for reference in retained],
+        'write_authorized': False, 'baseline_completeness_verified': False}
+
+
+def _same_directory(files, parts, expected):
+    with files.directory(parts) as current:
+        if current is None or guards._identity(os.fstat(current)) != guards._identity(os.fstat(expected)):
+            raise SafetyViolation('Snapshot object directory changed')
+
+
 def read_snapshot_object(boundary, reference):
     """Verify an existing archived object without writes or Baseline-validity claims."""
     if type(boundary) is not ProjectBoundary:
@@ -139,24 +197,43 @@ class SnapshotObjectStore:
         self._check()
         return content
 
-    def put(self, value):
+    def _retained_objects(self, references):
+        result = []
+        for reference in references:
+            try:
+                result.append(SnapshotObject(self.get(reference)))
+            except FileNotFoundError as error:
+                raise ModelError('snapshot_referenced_object_missing', path=reference.path) from error
+        return tuple(result)
+
+    def put(self, value, *, retained_references=()):
         if type(value) is not SnapshotObject:
             raise ModelError('snapshot_object_required')
         value = SnapshotObject(value.content)
         reference = value.reference
+        retained_references = _references(retained_references)
         self._check()
         with LockFiles(self.root) as files:
             if files.boundary._root_identity != self._boundary._root_identity:
                 raise SafetyViolation('Snapshot preparation root changed')
             files.acquire()
             self._check()
-            with files.directory(tuple(reference.path.split('/')[:-1]), create=True) as directory:
+            retained_before = self._retained_objects(retained_references)
+            check_object_retention(retained_before, (*retained_before, value), references=retained_references)
+            parts = tuple(reference.path.split('/')[:-1])
+            with files.directory(parts, create=True) as directory:
+                _same_directory(files, parts, directory)
                 try:
                     os.stat(reference.sha256, dir_fd=directory, follow_symlinks=False)
                 except FileNotFoundError:
                     temporary = '.snapshot-' + secrets.token_hex(16)
                     identity = _write_new(directory, temporary, value.content)
                     files.require_held(); self._check()
+                    _same_directory(files, parts, directory)
+                    retained_current = self._retained_objects(retained_references)
+                    check_object_retention(retained_before, (*retained_current, value),
+                                           references=retained_references)
+                    _image(directory, temporary, reference.size, reference.sha256, identity=identity)
                     # An atomic no-replace link exposes only fully written bytes.
                     # Any failure retains owned temporary data for inspection.
                     os.link(temporary, reference.sha256, src_dir_fd=directory,
@@ -172,5 +249,8 @@ class SnapshotObjectStore:
                 # Never replace an existing path, including corrupted contents.
                 if self.get(reference) != value.content:
                     raise ModelError('snapshot_object_content_collision', path=reference.path)
+                retained_after = self._retained_objects(retained_references)
+                check_object_retention(retained_before, (*retained_after, value), references=retained_references)
+                _same_directory(files, parts, directory)
                 files.require_held(); self._check()
         return reference

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 406
-last_completed_plan_commit: 10.a.W
-next_plan_commit: 10.a.R
-last_completed_numbered_bundle: 252
+implementation_plan_commits_completed: 407
+last_completed_plan_commit: 10.a.R
+next_plan_commit: 10.a.C
+last_completed_numbered_bundle: 253
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10786,12 +10786,30 @@ in 10.b/10.c; referenzbezogene Löschgrenzen bleiben für 10.a.R offen.
 
 #### 10.a.R – Make it Right
 
-- [ ] **10.a.R** · Position **407/900** · Voraussetzung: `10.a.W`.
+- [x] **10.a.R** · Position **407/900** · Voraussetzung: `10.a.W`.
 **Exakte Commit-Message:** `10.a.R feat(baseline): Content-addressierter Objektspeicher vervollständigen`
 
 **Vervollständigung:** Hashkollision im Zielpfad, manipulierter Inhalt und referenzierte Löschung abweisen.
 
 **Verhaltensabnahme:** Mehrere Baselines können dasselbe unveränderte Objekt sicher teilen. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 253):**
+Der reine Erhaltungsprüfer vergleicht eigene Objektbytes vor/nach einem
+vorgesehenen Wechsel mit ausdrücklich gebundenen Referenzen. Gemeinsame
+Referenzen auf identische Bytes werden zusammengeführt. Geänderte Bytes unter
+derselben Inhaltsidentität, widersprüchliche Referenzen und referenzierte
+Löschungen werden abgewiesen. Das Ergebnis erteilt keine Schreibberechtigung
+und behauptet keine vollständige Ermittlung sämtlicher Baselines.
+
+Die physische Vorbereitung prüft übergebene Erhaltungsreferenzen vor Beginn,
+unmittelbar vor Veröffentlichung und vor Erfolg. Temporärbytes und
+Zielverzeichnis werden vor dem finalen Link frisch gebunden. Die neuen Fälle
+prüfen tatsächliche fehlende/manipulierte Dateien, Pfad-/Rootwechsel,
+Hashkollisionen, Links, konkurrierend auftauchende Ziele und erhaltene Zustände
+nach unterbrochener Veröffentlichung. Alle W-Fälle bleiben bytegleich.
+Die vollständige Baselineinventur und normative Journalintegration bleiben
+Teil der folgenden Manifest-/Create-Schritte; der Store bleibt außerhalb des
+Projekts und kennt weder Gitprovenienz noch Freigabeentscheidungen.
 
 #### 10.a.C – Make it Clean
 

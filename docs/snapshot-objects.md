@@ -26,3 +26,18 @@ Manifest, Baseline-Artefakt und Objektdateien benötigt weiterhin den gemeinsame
 Change-Plan-, Writer-Lock-, Journal- und Receiptvertrag. Rolle, Medientyp,
 Artefaktidentität, Revision und Scopebindungen ergänzt das Baseline-Manifest;
 sie ändern nicht den Inhaltsschlüssel des einzelnen Snapshotobjekts.
+
+`check_object_retention(before, after, references=...)` prüft ausdrücklich
+übergebene Objektmengen und Referenzen. Gleiche Objektbytes dürfen von mehreren
+Verbrauchern geteilt werden. Unterschiedliche Bytes unter derselben
+Inhaltsidentität, widersprüchliche Längen und die Entfernung eines referenzierten
+Objekts werden abgewiesen. Der Bericht einer unreferenzierten Entfernung ist
+keine Löschberechtigung; die Funktion führt keine Dateisystemoperation aus und
+behauptet keine vollständige Ermittlung aller Baselines.
+
+`put(object, retained_references=(...))` übernimmt die Referenzen vor Beginn und
+prüft deren tatsächliche Dateien vor Vorbereitung, unmittelbar vor Veröffentlichung
+und erneut vor Erfolg. Fehlende oder manipulierte Referenzobjekte verhindern ein
+erfolgreiches Ergebnis. Ein Fehler nach einer bereits erfolgten Veröffentlichung
+behält die tatsächlich vorhandenen Bytes. Auch eigene temporäre Dateien und
+geöffnete Zielverzeichnisse werden vor dem finalen Link erneut gebunden.
