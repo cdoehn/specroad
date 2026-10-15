@@ -1,4 +1,5 @@
 """Record validation and parent-chain resolution, independent of result storage."""
+from ._parents import resolve_parent_chain
 from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
@@ -31,23 +32,7 @@ def resolve_values(records, configuration_id):
     if configuration_id not in configurations:
         raise ModelError('configuration_missing')
     selected = configurations[configuration_id]
-    chain, visited = [], set()
-    current = selected
-    while True:
-        if current.id in visited:
-            raise ModelError('configuration_parent_cycle', path=current.path, pointer='/parent')
-        visited.add(current.id)
-        chain.append(current)
-        parent_id = current.data.get('parent')
-        if parent_id is None:
-            break
-        if parent_id not in configurations:
-            raise ModelError('configuration_parent_missing', path=current.path, pointer='/parent')
-        parent = configurations[parent_id]
-        if parent.id.split('-', 1)[0] != current.id.split('-', 1)[0]:
-            raise ModelError('configuration_parent_project_mismatch', path=current.path, pointer='/parent')
-        current = parent
-    chain.reverse()
+    chain = resolve_parent_chain(configurations, selected)
     declared, effective = {}, {}
     for configuration in chain:
         value = configuration.data

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 386
-last_completed_plan_commit: 9.b.R
-next_plan_commit: 9.b.C
+implementation_plan_commits_completed: 387
+last_completed_plan_commit: 9.b.C
+next_plan_commit: 9.c.W
 last_completed_numbered_bundle: 239
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10184,7 +10184,7 @@ Commit bestätigen Position 386/900.
 
 #### 9.b.C – Make it Clean
 
-- [ ] **9.b.C** · Position **387/900** · Voraussetzung: `9.b.R`.
+- [x] **9.b.C** · Position **387/900** · Voraussetzung: `9.b.R`.
 **Exakte Commit-Message:** `9.b.C refactor(configuration): Vererbung und zyklusfreie Elternkette bereinigen`
 
 **Bereinigung:** Elternauflösung auf die vorhandenen Graph-/Zyklusprimitiven setzen.
@@ -10192,6 +10192,22 @@ Commit bestätigen Position 386/900.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 239):**
+Die Ermittlung der ausgewählten Elternkomponente liegt getrennt von
+Inventarprüfung und Wertvereinigung. Für die Zyklusentscheidung verwendet sie
+dieselbe iterative Graphprimitive wie die bestehenden Relationshierarchien.
+Identitätszugriffe erlauben dabei Konfigurationskanten ohne künstliche
+Relationsartefakte. Die bisherigen Relationsaufrufe und ihre deterministischen
+Zykluszeugen behalten ihre Bedeutung.
+
+Die Fehlermeldung bleibt am ersten wiederholt erreichten Vorfahren der
+gewählten Kette verortet. Auflösungsumfang, Fehlergründe, Quellbytes, effektive
+Werte und kanonische Hashes ändern sich nicht. Die eingefrorenen W-/R-Tests
+werden unverändert zusammen mit den betroffenen Hierarchie-, Query-,
+Validierungs- und Lebenszyklusfällen ausgeführt. Projektintegration bleibt
+den späteren M9-Schritten zugeordnet. Erst erfolgreicher Apply-Testlauf und
+Commit bestätigen Position 387/900.
 
 <a id="step-9-c"></a>
 ### 9.c – Applicability-Auswertung

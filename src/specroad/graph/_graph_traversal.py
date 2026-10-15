@@ -1,17 +1,19 @@
-"""Shared iterative DFS for all protected relation hierarchies.
+"""Shared iterative DFS over resolved directed edges.
 
-The caller supplies already resolved edges for one relation kind. A witness
-is deterministic for the same logical input; this is not a scope resolver.
+Identity accessors also allow configuration-parent edges to use the same
+cycle primitive. A witness is deterministic; this is not a scope resolver.
 """
 
-def _cycle_witness(edges):
+def _cycle_witness(edges, *, source_id=lambda edge: edge.source.id,
+                   target_id=lambda edge: edge.target.id,
+                   edge_id=lambda edge: edge.relation.identity.id):
     """Find one deterministic directed cycle without recursive Python frames."""
     outgoing = {}
     for edge in edges:
-        outgoing.setdefault(edge.source.id, []).append(edge)
-        outgoing.setdefault(edge.target.id, [])
+        outgoing.setdefault(source_id(edge), []).append(edge)
+        outgoing.setdefault(target_id(edge), [])
     for values in outgoing.values():
-        values.sort(key=lambda edge: (edge.target.id, edge.relation.identity.id))
+        values.sort(key=lambda edge: (target_id(edge), edge_id(edge)))
     finished = set()
     for root in sorted(outgoing):
         if root in finished:
@@ -30,10 +32,10 @@ def _cycle_witness(edges):
                 if path:
                     path.pop()
                 continue
-            target = edge.target.id
+            target = target_id(edge)
             if target in active:
                 cycle = path[active[target]:] + [edge]
-                first = min(range(len(cycle)), key=lambda index: cycle[index].source.id)
+                first = min(range(len(cycle)), key=lambda index: source_id(cycle[index]))
                 return tuple(cycle[first:] + cycle[:first])
             if target not in finished:
                 active[target] = len(nodes)
