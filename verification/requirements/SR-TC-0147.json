@@ -13,20 +13,26 @@
     "Complete explicitly supplied current scope/dependency observations and effective project policy; selected resource payloads and attachments come from owned original bytes."
   ],
   "steps": [
-    "Resolve fixture scope, prepare the Baseline manifest, independently verify all retained bytes and the existing model-root projection, exercise refusal cases and round-trip through real external storage and isolated Core/PYZ processes."
+    "Resolve fixture scope, prepare the Baseline manifest, independently verify all retained bytes and the existing model-root projection, exercise refusal cases and round-trip through real external storage and isolated Core/PYZ processes.",
+    "Bind a fresh planned Baseline identity outside its precreation model, reject self-inclusion and forged cached scope observations, and compare exact output bytes under semantic versus operational changes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Baseline MUSS den Modellumfang und den vor dem Schreiben der Baseline berechneten kanonischen Modellwurzelhash über alle enthaltenen Inhalte speichern.",
-    "scope": "10.b.W builds an owned inert BaselineManifest for working/release labels over explicitly resolved unconfigured scopes. The existing fingerprint_scope function supplies the exact precreation Scope-Hash and model root. Every selected artifact, profile, rule, mapping and attachment is retained as canonical JSON or exact raw SnapshotObject bytes; missing, surplus, stale and mismatched inputs fail. The manifest includes schema/tool versions, ordered active profile identities and hashes, the effective supplied semantic configuration snapshot/hash, recomposed effective-profile bytes, boundary references and complete object rows with role, identity/version/revision, relative source path, length, media type, hash and archive path. Identical bytes deduplicate across roles. Tests bind independent actual digests, the existing model-root contract, external-store round trips, owned values and isolated Core/PYZ behavior. Complete live-project/provider validation, configured/language/archival integration, Baseline artifact creation, journal publication and release readiness are outside this W preparation; no full-suite or release success is claimed."
+    "scope": "10.b.W builds an owned inert BaselineManifest for working/release labels over explicitly resolved unconfigured scopes. The existing fingerprint_scope function supplies the exact precreation Scope-Hash and model root. Every selected artifact, profile, rule, mapping and attachment is retained as canonical JSON or exact raw SnapshotObject bytes; missing, surplus, stale and mismatched inputs fail. The manifest includes schema/tool versions, ordered active profile identities and hashes, the effective supplied semantic configuration snapshot/hash, recomposed effective-profile bytes, boundary references and complete object rows with role, identity/version/revision, relative source path, length, media type, hash and archive path. Identical bytes deduplicate across roles. Tests bind independent actual digests, the existing model-root contract, external-store round trips, owned values and isolated Core/PYZ behavior. Complete live-project/provider validation, configured/language/archival integration, Baseline artifact creation, journal publication and release readiness are outside this W preparation; no full-suite or release success is claimed. 10.b.R rebuilds scope inventory and dependency observations from owned original artifact bytes and validated resource/attachment values before accepting closure. Stale identities, relation caches, active flags and inventory/dependency fingerprints are rejected. An optional planned baseline_id must be a project Baseline identity absent from the entire source inventory, including unselected controls; it is retained outside the precreation model root. The later writer must supply that identity. Regression cases show that local roots/inodes, runtime clocks/timezones, display/generated-path settings and soft operational limits do not affect portable model bytes, whereas normative artifact audit bytes still affect the root. Resource paths, exact mappings, actual profile recomposition and missing/stale boundaries fail conservatively. The original W tests and limited provider/publication scope remain unchanged."
   },
   "expected_diagnostics": [
     "baseline_attachment_binding_mismatch",
     "baseline_attachment_payload_set_mismatch",
+    "baseline_dependency_binding_mismatch",
     "baseline_effective_profile_mismatch",
+    "baseline_identity_already_present",
+    "baseline_inventory_binding_mismatch",
     "baseline_kind_invalid",
     "baseline_resource_binding_mismatch",
+    "baseline_resource_path_collision",
     "baseline_resource_payload_set_mismatch",
+    "baseline_source_binding_mismatch",
     "scope_closure_observation_stale"
   ],
   "expected_exit_codes": [],
@@ -78,10 +84,47 @@
     "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[Working]",
     "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[]",
     "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[draft]",
-    "tests/test_baseline_manifest.py::test_working_manifest_binds_the_actual_precreation_model_root"
+    "tests/test_baseline_manifest.py::test_working_manifest_binds_the_actual_precreation_model_root",
+    "tests/test_baseline_manifest_right.py::test_a_changed_inventory_fingerprint_is_not_accepted_as_current_scope",
+    "tests/test_baseline_manifest_right.py::test_artifact_bytes_in_a_profile_payload_cannot_be_mislabeled",
+    "tests/test_baseline_manifest_right.py::test_changed_dependency_binding_cannot_certify_the_same_closure",
+    "tests/test_baseline_manifest_right.py::test_derived_source_labels_cannot_override_the_owned_original_bytes[identity]",
+    "tests/test_baseline_manifest_right.py::test_derived_source_labels_cannot_override_the_owned_original_bytes[relations]",
+    "tests/test_baseline_manifest_right.py::test_derived_source_labels_cannot_override_the_owned_original_bytes[source_bytes]",
+    "tests/test_baseline_manifest_right.py::test_different_prior_baseline_control_does_not_enter_specification_snapshot",
+    "tests/test_baseline_manifest_right.py::test_display_and_operational_configuration_are_not_semantic_snapshot_inputs[change0]",
+    "tests/test_baseline_manifest_right.py::test_display_and_operational_configuration_are_not_semantic_snapshot_inputs[change1]",
+    "tests/test_baseline_manifest_right.py::test_display_and_operational_configuration_are_not_semantic_snapshot_inputs[change2]",
+    "tests/test_baseline_manifest_right.py::test_display_and_operational_configuration_are_not_semantic_snapshot_inputs[change3]",
+    "tests/test_baseline_manifest_right.py::test_forged_effective_profile_merge_is_rejected_against_the_actual_composition",
+    "tests/test_baseline_manifest_right.py::test_local_runtime_paths_and_inode_bindings_do_not_change_portable_bytes[/container/source-inode1]",
+    "tests/test_baseline_manifest_right.py::test_local_runtime_paths_and_inode_bindings_do_not_change_portable_bytes[/elsewhere/project-inode0]",
+    "tests/test_baseline_manifest_right.py::test_new_baseline_cannot_already_exist_even_outside_the_selected_scope[False]",
+    "tests/test_baseline_manifest_right.py::test_new_baseline_cannot_already_exist_even_outside_the_selected_scope[True]",
+    "tests/test_baseline_manifest_right.py::test_normative_artifact_audit_bytes_remain_part_of_the_model_root",
+    "tests/test_baseline_manifest_right.py::test_operational_or_git_payload_cannot_masquerade_as_a_model_resource[.git/fake.json]",
+    "tests/test_baseline_manifest_right.py::test_operational_or_git_payload_cannot_masquerade_as_a_model_resource[.specroad/receipts/fake.json]",
+    "tests/test_baseline_manifest_right.py::test_operational_or_git_payload_cannot_masquerade_as_a_model_resource[generated/fake.json]",
+    "tests/test_baseline_manifest_right.py::test_payload_inventories_must_be_explicit_mappings[None-attachment_payloads]",
+    "tests/test_baseline_manifest_right.py::test_payload_inventories_must_be_explicit_mappings[None-resource_payloads]",
+    "tests/test_baseline_manifest_right.py::test_payload_inventories_must_be_explicit_mappings[payloads-attachment_payloads]",
+    "tests/test_baseline_manifest_right.py::test_payload_inventories_must_be_explicit_mappings[payloads-resource_payloads]",
+    "tests/test_baseline_manifest_right.py::test_payload_inventories_must_be_explicit_mappings[value1-attachment_payloads]",
+    "tests/test_baseline_manifest_right.py::test_payload_inventories_must_be_explicit_mappings[value1-resource_payloads]",
+    "tests/test_baseline_manifest_right.py::test_planned_baseline_identity_is_bound_outside_its_precreation_model_root",
+    "tests/test_baseline_manifest_right.py::test_planned_identity_must_be_a_baseline_in_this_project[../baseline]",
+    "tests/test_baseline_manifest_right.py::test_planned_identity_must_be_a_baseline_in_this_project[SR-REQ-00000000000000000000000001]",
+    "tests/test_baseline_manifest_right.py::test_planned_identity_must_be_a_baseline_in_this_project[True]",
+    "tests/test_baseline_manifest_right.py::test_planned_identity_must_be_a_baseline_in_this_project[]",
+    "tests/test_baseline_manifest_right.py::test_planned_identity_must_be_a_baseline_in_this_project[other-BAS-0001]",
+    "tests/test_baseline_manifest_right.py::test_runtime_clock_and_timezone_do_not_affect_manifest_or_model_root",
+    "tests/test_baseline_manifest_right.py::test_stale_active_profile_labels_are_detected_from_fresh_inventory_binding",
+    "tests/test_baseline_manifest_right.py::test_tool_version_is_retained_as_metadata_without_changing_the_model_root",
+    "tests/test_baseline_manifest_right.py::test_two_logical_resources_cannot_claim_the_same_source_path",
+    "tests/test_baseline_manifest_right.py::test_unknown_closure_resource_is_rejected_before_payload_lookup"
   ],
   "open_items": [
-    "Complete the R/C boundary and refactoring steps for this preparation.",
+    "Complete the behavior-preserving C separation; integrate live providers and the normative writer in their assigned following steps.",
     "Connect actual project/resource providers, configured/language/archival snapshot support and the validated journalled Baseline writer in the following integration steps.",
     "Release-kind data does not grant readiness or publication authority; no full requirement, full-suite or release success claimed."
   ]

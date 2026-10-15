@@ -26,3 +26,14 @@ no project lock and creates no Baseline artifact. The following specialized
 writer must validate the actual project, enforce readiness where needed and
 publish through the existing transaction/journal contract. Owned objects can
 already be prepared in the external `SnapshotObjectStore`.
+
+For named publication, pass the planned `baseline_id`. The identity must belong
+to this project and must not already occur anywhere in the input inventory,
+even outside the selected scope. It is retained as Baseline metadata and never
+inserted into its own model root. Omission prepares unnamed data only; the
+following writer must supply its planned identity before publication.
+
+The preparation rebuilds inventory/dependency observations from original bytes
+before accepting closure. Runtime paths, inode values, display preferences,
+soft operational limits and local clock/zone do not enter the semantic root.
+Normative JSON values, including stored artifact audit fields, remain bound.

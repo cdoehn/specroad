@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 409
-last_completed_plan_commit: 10.b.W
-next_plan_commit: 10.b.R
-last_completed_numbered_bundle: 254
+implementation_plan_commits_completed: 410
+last_completed_plan_commit: 10.b.R
+next_plan_commit: 10.b.C
+last_completed_numbered_bundle: 255
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10869,12 +10869,27 @@ keine Readiness- oder Schreibfreigabe.
 
 #### 10.b.R – Make it Right
 
-- [ ] **10.b.R** · Position **410/900** · Voraussetzung: `10.b.W`.
+- [x] **10.b.R** · Position **410/900** · Voraussetzung: `10.b.W`.
 **Exakte Commit-Message:** `10.b.R feat(baseline): Baseline-Manifest und semantische Konfiguration vervollständigen`
 
 **Vervollständigung:** Eigene Baseline nicht rekursiv in ihre Basis aufnehmen; operative Daten nicht in Modellhash mischen.
 
 **Verhaltensabnahme:** Laufzeitpfad-/Zeitwechsel beeinflusst die gebundene Fachwurzel nicht. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 255):**
+Die geplante `baseline_id` wird vor der Vorbereitung gegen das gesamte
+Eingabeinventar geprüft, auch gegen nicht ausgewählte Kontrollartefakte. Sie
+bleibt außerhalb der Modellwurzel; ein vorhandener gleichnamiger Datensatz
+verhindert die Vorbereitung. Der folgende Writer muss seine geplante Identität
+übergeben, bevor er publiziert. Ohne Identität entsteht nur unbenannte Datenvorbereitung.
+
+Artefakt-/Relationsmetadaten, Scope-Ressourcen und Abhängigkeitsbeobachtungen
+werden aus Originalbytes und geprüften Werten neu aufgebaut. Veraltete oder
+manipulierte abgeleitete Bindungen werden abgewiesen. Die R-Fälle prüfen zudem
+operative Pfad-/Zeit-/Darstellungsänderungen gegen bytegleiche Fachresultate,
+behalten normative Artefakt-Auditwerte im Modellhash und sichern Ressourcenpfade,
+Profilkomposition und exakte Payload-Mengen ab. Alle W-Testdateien bleiben
+unverändert. Die dokumentierten Provider-/Publikationsgrenzen bleiben bestehen.
 
 #### 10.b.C – Make it Clean
 

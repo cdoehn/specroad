@@ -10,8 +10,11 @@ from hashlib import sha256
 
 from .._metadata import MODEL_SCHEMA_VERSION, __version__
 from ..graph.closure_inputs import ClosureBindings
-from ..graph.scope_closure import ScopeClosure
+from ..graph.relations import SourceRelations
+from ..graph.scope_closure import ScopeClosure, require_scope_closure_current
 from ..graph.scope_hash import fingerprint_scope
+from ..graph.scope_inputs import ScopeResource, ScopeSeedInputs
+from ..model.attachments import AttachmentDescriptor
 from ..model.canonical import canonical_json_bytes
 from ..model.configuration import ProjectConfiguration
 from ..model.errors import ModelError
@@ -56,6 +59,43 @@ class BaselineManifest:
                 'project_completeness_verified': False, 'atomic_snapshot': False,
                 'full_validation_passed': False, 'write_authorized': False,
                 'release_authorized': False}
+
+
+def _owned_inputs(configuration, binding, closure, dependencies, query_page):
+    """Rebuild derived observations from actual bytes before accepting a scope."""
+    configuration = ProjectConfiguration(configuration.data)
+    binding = ProjectReadBinding(binding.project_id, binding.source_root, tuple(binding.root_identity))
+    inventory = dependencies.inventory
+    if type(inventory) is not ScopeSeedInputs:
+        raise ModelError('baseline_inventory_required')
+    records = []
+    for source in inventory.records:
+        if type(source) is not SourceRelations:
+            raise ModelError('baseline_source_required')
+        checked = SourceRelations(source.source_bytes, path=source.path)
+        if checked != source:
+            raise ModelError('baseline_source_binding_mismatch')
+        records.append(checked)
+    resources = []
+    for resource in inventory.resources:
+        if type(resource) is not ScopeResource:
+            raise ModelError('baseline_scope_resource_required')
+        resources.append(ScopeResource(**resource.data))
+    owned = ScopeSeedInputs(configuration, records, resources,
+                            archive_bindings=dict(inventory.archive_bindings))
+    if owned.fingerprint != inventory.fingerprint:
+        raise ModelError('baseline_inventory_binding_mismatch')
+    attachments = {}
+    for name, value in dependencies.attachments.items():
+        if type(value) is not AttachmentDescriptor:
+            raise ModelError('baseline_attachment_descriptor_required')
+        attachments[name] = AttachmentDescriptor.from_data(value.data)
+    fresh = ClosureBindings(owned, uses=dict(dependencies.uses),
+        current_reviews=dict(dependencies.current_reviews), attachments=attachments)
+    if fresh.fingerprint != dependencies.fingerprint:
+        raise ModelError('baseline_dependency_binding_mismatch')
+    require_scope_closure_current(closure, closure.seeds, fresh, query_page=query_page)
+    return configuration, binding, fresh
 
 
 def _resource_objects(configuration, binding, closure, dependencies, payloads):
@@ -112,7 +152,7 @@ def _checked_profile(profile, profiles, dependencies):
 
 def build_baseline_manifest(configuration, binding, closure, dependencies, *,
                             baseline_kind, effective_profile, resource_payloads,
-                            attachment_payloads, query_page=None):
+                            attachment_payloads, query_page=None, baseline_id=None):
     """Bind every selected object to the existing scope/model hash projection.
 
     resource_payloads maps each selected non-attachment inventory identity to
@@ -120,6 +160,9 @@ def build_baseline_manifest(configuration, binding, closure, dependencies, *,
     selected attachment path to its exact bytes. Missing and surplus payloads
     fail. Language/archival providers and configured-scope snapshots remain
     explicit integration boundaries; they cannot produce a partial manifest.
+    A writer supplies its planned baseline_id: it must be absent from the entire
+    input inventory, including unselected controls. The identity is metadata,
+    outside the precreation model root. Omitting it prepares only unnamed data.
     """
     if type(baseline_kind) is not str or baseline_kind not in ('working', 'release'):
         raise ModelError('baseline_kind_invalid')
@@ -127,6 +170,12 @@ def build_baseline_manifest(configuration, binding, closure, dependencies, *,
         raise ModelError('baseline_project_binding_required')
     if type(closure) is not ScopeClosure or type(dependencies) is not ClosureBindings:
         raise ModelError('baseline_resolved_scope_required')
+    configuration, binding, dependencies = _owned_inputs(
+        configuration, binding, closure, dependencies, query_page)
+    if baseline_id is not None:
+        artifact_path('baseline', baseline_id, configuration.id_prefix)
+        if baseline_id in {record.identity.id for record in dependencies.inventory.records}:
+            raise ModelError('baseline_identity_already_present')
     if closure.seeds.descriptor.data['configuration_id'] is not None:
         raise ModelError('baseline_configured_scope_provider_required')
     records, resources, profiles = _resource_objects(
@@ -190,6 +239,8 @@ def build_baseline_manifest(configuration, binding, closure, dependencies, *,
              'configuration_hash': semantic.reference.sha256, 'profile_sha256': profile.sha256,
              'profiles': profile.data['profiles'],
              'boundary_references': model_value['boundary_references'], 'manifest': entries}
+    if baseline_id is not None:
+        value['baseline_id'] = baseline_id
     result = object.__new__(BaselineManifest)
     object.__setattr__(result, '_encoded', canonical_json_bytes(value))
     object.__setattr__(result, 'objects', tuple(objects[path] for path in sorted(objects)))
