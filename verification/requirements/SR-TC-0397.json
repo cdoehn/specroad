@@ -14,14 +14,18 @@
   ],
   "steps": [
     "Classify unconditional and conditional stored artifacts with and without an explicitly resolved configuration.",
-    "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access."
+    "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access.",
+    "Require explicit configuration when requested, reject implicit truth testing of classifications and cross-project binding, and validate forbidden access throughout all executable branches including skipped quantifiers."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ohne ausgewählte Konfiguration MUSS ein Artefakt ohne `applicability` als anwendbar und ein Artefakt mit `applicability` als potenziell anwendbar behandelt werden.",
-    "scope": "Supplied artifact applicability only: applicable, excluded and potentially_applicable are distinct. Missing configuration leaves conditions unevaluated after static validation. Common stored snapshot metadata excludes relations, applicability and derived/content fields; errors never become exclusion."
+    "scope": "Supplied artifact applicability only with explicit applicable/excluded/potentially_applicable states. An exact Boolean require_configuration option rejects absent required selection; classifications cannot be used as implicit Boolean gate decisions. All executable branches obey the static metadata/configuration boundary and selected configuration shares the artifact project prefix."
   },
   "expected_diagnostics": [
+    "configuration_project_mismatch",
+    "configuration_required",
+    "configuration_requirement_boolean_required",
     "invalid_applicability"
   ],
   "expected_exit_codes": [],
@@ -45,9 +49,27 @@
     "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_literal_true_without_configuration_remains_potential",
     "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_no_configuration_does_not_evaluate_runtime_operands",
     "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unconditional_artifact_with_configuration_is_applicable",
-    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unconditional_artifact_without_configuration_is_applicable"
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unconditional_artifact_without_configuration_is_applicable",
+    "tests/test_configuration_applicability_right.py::test_classifications_have_no_implicit_gate_truth_value[applicable]",
+    "tests/test_configuration_applicability_right.py::test_classifications_have_no_implicit_gate_truth_value[excluded]",
+    "tests/test_configuration_applicability_right.py::test_classifications_have_no_implicit_gate_truth_value[potential]",
+    "tests/test_configuration_applicability_right.py::test_constant_metadata_condition_stays_potential_without_selection",
+    "tests/test_configuration_applicability_right.py::test_explicit_selection_satisfies_the_requirement_without_changing_classification",
+    "tests/test_configuration_applicability_right.py::test_required_selection_also_applies_to_direct_result_construction",
+    "tests/test_configuration_applicability_right.py::test_required_selection_cannot_be_replaced_by_any_artifact_condition[false]",
+    "tests/test_configuration_applicability_right.py::test_required_selection_cannot_be_replaced_by_any_artifact_condition[missing]",
+    "tests/test_configuration_applicability_right.py::test_required_selection_cannot_be_replaced_by_any_artifact_condition[true]",
+    "tests/test_configuration_applicability_right.py::test_required_selection_cannot_be_replaced_by_any_artifact_condition[unconditional]",
+    "tests/test_configuration_applicability_right.py::test_runtime_arithmetic_failure_is_reported_only_when_configuration_is_selected",
+    "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[0]",
+    "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[1]",
+    "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[None]",
+    "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[]",
+    "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[false]",
+    "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[value5]",
+    "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[value6]"
   ],
   "open_items": [
-    "Complete 9.c.R/C robustness and pure scope-stage integration. Scope closure, configuration-bound gates and command integration remain assigned to later M9 steps; no project or release approval is claimed."
+    "Pure scope-stage cleanup follows in 9.c.C. Scope closure, project-level configuration-bound gates and command integration remain assigned to later M9 steps; the API guard is not a release approval."
   ]
 }

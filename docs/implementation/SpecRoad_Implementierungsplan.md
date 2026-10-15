@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 388
-last_completed_plan_commit: 9.c.W
-next_plan_commit: 9.c.R
-last_completed_numbered_bundle: 240
+implementation_plan_commits_completed: 389
+last_completed_plan_commit: 9.c.R
+next_plan_commit: 9.c.C
+last_completed_numbered_bundle: 241
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10249,12 +10249,30 @@ bestätigen Position 388/900.
 
 #### 9.c.R – Make it Right
 
-- [ ] **9.c.R** · Position **389/900** · Voraussetzung: `9.c.W`.
+- [x] **9.c.R** · Position **389/900** · Voraussetzung: `9.c.W`.
 **Exakte Commit-Message:** `9.c.R feat(configuration): Applicability-Auswertung vervollständigen`
 
 **Vervollständigung:** Verbotene Kontextzugriffe und fehlende verpflichtende Auswahl verhindern falsche Gateentscheidung.
 
 **Verhaltensabnahme:** Ausgewählt, ausgeschlossen und potenziell anwendbar sind getrennte fachliche Ergebnisse. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 241, SR-TC-0396/0397 weiterhin teilweise):**
+Ein ausdrücklich konfigurationsgebundener Aufruf kann die Auswahl mit
+`require_configuration=True` verlangen. Fehlt sie, entsteht auch bei einem
+unbedingten oder konstant wahren Artefakt kein Ergebnis. Die Option akzeptiert
+nur Boolean. Artefakt und ausgewählte Konfiguration müssen denselben
+Projektpräfix besitzen. Alle drei Fachzustände verlangen eine explizite
+Statusprüfung und lassen sich nicht implizit in eine Gateentscheidung umwandeln.
+
+Die statische Zugriffsprüfung wird über sämtliche Kontextwurzeln,
+Graphoperatoren, übersprungene Logikzweige und leere Quantoren abgesichert.
+Literalwerte und deklarierte Erweiterungsmetadaten bleiben passive Daten;
+lexikalische `item`-Bindungen eröffnen keinen externen Kontext. Fehlende Werte,
+Typfehler und Rechenfehler werden nicht zu Ausschlüssen. Quellen werden erneut
+aus ihren ursprünglichen Bytes geprüft; Diagnoseprojektionen enthalten keine
+privaten Operanden. Die bestehenden W-Nachweise bleiben unverändert. Die
+projektweiten Gates und Befehle folgen weiterhin den zugeordneten späteren
+M9-Schritten. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 389/900.
 
 #### 9.c.C – Make it Clean
 

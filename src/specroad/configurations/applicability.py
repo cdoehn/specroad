@@ -52,12 +52,19 @@ class ApplicabilityResult:
     configuration_sha256: str | None
     source_sha256: str
 
-    def __init__(self, record, configuration=None):
+    def __init__(self, record, configuration=None, *, require_configuration=False):
         if type(record) is not SourceRelations:
             raise ModelError('applicability_source_required')
         source = SourceRelations(record.source_bytes, path=record.path)
+        if type(require_configuration) is not bool:
+            raise ModelError('configuration_requirement_boolean_required', path=source.path)
         if configuration is not None and type(configuration) is not EffectiveConfiguration:
             raise ModelError('effective_configuration_required', path=source.path)
+        if require_configuration and configuration is None:
+            raise ModelError('configuration_required', path=source.path)
+        if (configuration is not None
+                and configuration.configuration_id.split('-', 1)[0] != source.identity.id_prefix):
+            raise ModelError('configuration_project_mismatch', path=source.path)
         data = source.data
         if 'applicability' not in data:
             status, reason = 'applicable', 'unconditional'
@@ -91,6 +98,9 @@ class ApplicabilityResult:
                            'source_sha256': sha256(source.source_bytes).hexdigest()}.items():
             object.__setattr__(self, key, value)
 
+    def __bool__(self):
+        raise TypeError('Applicability classifications require an explicit status check.')
+
     @property
     def data(self):
         return {key: getattr(self, key) for key in ('artifact_id', 'status', 'reason', 'configuration_id',
@@ -101,6 +111,6 @@ class ApplicabilityResult:
         return 'supplied_artifact_applicability_only'
 
 
-def evaluate_applicability(record, configuration=None):
+def evaluate_applicability(record, configuration=None, *, require_configuration=False):
     """Classify one stored artifact without loading a project or choosing defaults."""
-    return ApplicabilityResult(record, configuration)
+    return ApplicabilityResult(record, configuration, require_configuration=require_configuration)
