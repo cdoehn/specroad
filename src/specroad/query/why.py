@@ -3,7 +3,8 @@ from ..cli.result_schemas import validate_result_document
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..model.errors import ModelError
-from .read_work import complete_read_steps
+from .read_work import complete_read_command, complete_read_steps
+from ._read_execution import complete_work
 from ..security import SafetyViolation
 from ..storage.project import ProjectSource
 from ..storage.relation_index import build_project_relation_index
@@ -12,14 +13,8 @@ from .why_work import WhyTraversal
 
 
 def _why_paths(index, artifact_id, depth):
-    work = WhyTraversal(index, artifact_id, depth=depth)
-    try:
-        while not work.advance(128):
-            pass
-        result = work.result
-        return result['targets'], result['paths']
-    finally:
-        work.close()
+    result = complete_work(WhyTraversal(index, artifact_id, depth=depth))
+    return result['targets'], result['paths']
 
 
 def _why_steps(root, artifact_id):
@@ -82,5 +77,4 @@ def why_artifact(root, artifact_id):
 
 
 def why_command(invocation):
-    return complete_read_steps(_why_steps(invocation.resolved.project_root, invocation.arguments['id']),
-                               call=invocation.consumption_call)
+    return complete_read_command(invocation, _why_steps, invocation.arguments['id'])

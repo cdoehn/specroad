@@ -12,7 +12,7 @@ from ..storage.json_syntax import parse_json_object
 from ..storage.project import ProjectSource
 from ._read_errors import read_details, read_failure
 from .paging import query_records
-from .read_work import complete_read_steps
+from .read_work import complete_read_command, complete_read_steps
 from .selection import NormalizedQuery
 from .show import _preflight, _verify_current
 
@@ -91,6 +91,5 @@ def query_project(root, query=None):
 
 
 def query_command(invocation):
-    return complete_read_steps(_query_steps(invocation.resolved.project_root,
-        options=invocation.options, cwd=invocation.resolved.working_directory),
-        call=invocation.consumption_call)
+    return complete_read_command(invocation, _query_steps, options=invocation.options,
+                                 cwd=invocation.resolved.working_directory)

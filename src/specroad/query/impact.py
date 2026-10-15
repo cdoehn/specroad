@@ -4,7 +4,7 @@ from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..graph._impact_projection import _impact_rows, _artifact_observations
 from ..model.errors import ModelError
-from .read_work import complete_read_steps
+from .read_work import complete_read_command, complete_read_steps
 from ..security import SafetyViolation
 from ..storage._relation_snapshot import _capture_sources
 from ..storage.project import ProjectSource
@@ -72,5 +72,4 @@ def impact_artifact(root, artifact_id):
 
 
 def impact_command(invocation):
-    return complete_read_steps(_impact_steps(invocation.resolved.project_root, invocation.arguments['id']),
-                               call=invocation.consumption_call)
+    return complete_read_command(invocation, _impact_steps, invocation.arguments['id'])

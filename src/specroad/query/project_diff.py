@@ -7,7 +7,7 @@ from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ._read_errors import read_details, read_failure
 from .comparison_sources import ComparisonSourceSnapshot, compare_sources
-from .read_work import complete_read_steps
+from .read_work import complete_read_command, complete_read_steps
 
 
 def _diff_steps(root, against, *, against_kind='git'):
@@ -54,5 +54,4 @@ def diff_command(invocation):
     kind = invocation.options.get('--against-kind', 'git')
     if kind == 'local' and not Path(against).is_absolute():
         against = str(invocation.resolved.working_directory / against)
-    return complete_read_steps(_diff_steps(invocation.resolved.project_root, against, against_kind=kind),
-                               call=invocation.consumption_call)
+    return complete_read_command(invocation, _diff_steps, against, against_kind=kind)

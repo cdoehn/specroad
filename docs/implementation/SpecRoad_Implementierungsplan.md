@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 380
-last_completed_plan_commit: 8.l.R
-next_plan_commit: 8.l.C
-last_completed_numbered_bundle: 233
+implementation_plan_commits_completed: 381
+last_completed_plan_commit: 8.l.C
+next_plan_commit: 9.a.W
+last_completed_numbered_bundle: 235
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10006,7 +10006,7 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 
 #### 8.l.C – Make it Clean
 
-- [ ] **8.l.C** · Position **381/900** · Voraussetzung: `8.l.R`.
+- [x] **8.l.C** · Position **381/900** · Voraussetzung: `8.l.R`.
 **Exakte Commit-Message:** `8.l.C refactor(query): Lesende Funktionsintegration und Workparität bereinigen`
 
 **Bereinigung:** Gemeinsame lesende Ausführungsfolge statt Handler-spezifischer Start-/Cleanupwege verwenden.
@@ -10014,6 +10014,19 @@ und Commit bestätigen 380/885; anschließend folgt 8.l.C.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand in Bundle 235:** Die sechs lesenden CLI-/Request-Handler
+verwenden einen gemeinsamen Einstieg für Projektwurzel, Runtime-Aufruf und
+vollständige Ausführung. Prozesslokale Lesearbeit sowie Trace-/Why-Traversierungen
+teilen denselben Abschluss- und Cleanupweg, einschließlich Fehlern und Abbruch.
+128er-Schrittfenster, Ergebnisfreigabe, Fehlerverträge und Projektinventur bleiben
+erhalten. Vorhandene W-/R-Tests werden unverändert gezielt parallel geprüft.
+
+Die weiterhin offenen Grenzen aus W/R bleiben offen: unteilbare materialisierende
+Phasen, dauerhafte Work-v1-Fortsetzung, externe Ergebnislieferung, zusätzliche
+Provider sowie Plattform-/Performanceabnahme. SR-TC-0117 bleibt teilweise und
+SR-TC-0213 offen. Dieser vorbereitete Stand schließt diese Nachweise nicht ab;
+erst erfolgreicher Apply-Testlauf und Commit bestätigen Position 381/900.
 
 **Meilenstein 8 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 

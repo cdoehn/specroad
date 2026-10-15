@@ -5,6 +5,7 @@ from ..cli.command_errors import CommandUsageError
 from ..cli.results import CommandResult, freeze, thaw
 from ..runtime.control_points import PhaseBoundary
 from ..runtime.controlled import _invocation
+from ._read_execution import complete_work
 
 
 class ReadCommandWork:
@@ -123,9 +124,11 @@ def complete_read_steps(steps, *, call=None):
     """Run the same retained phases to completion for synchronous entry points."""
     work = object.__new__(ReadCommandWork)
     work._initialize(steps)
-    try:
-        while not work.advance(128, call=call):
-            pass
-        return work.result
-    finally:
-        work.close()
+    return complete_work(work, call=call)
+
+
+def complete_read_command(invocation, producer, *arguments, **options):
+    """Use one invocation-bound execution path for all six read handlers."""
+    return complete_read_steps(
+        producer(invocation.resolved.project_root, *arguments, **options),
+        call=invocation.consumption_call)

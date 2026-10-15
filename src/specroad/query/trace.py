@@ -5,7 +5,8 @@ from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..graph._trace_frontier import _TraceFrontier
 from ..model.errors import ModelError
-from .read_work import complete_read_steps
+from .read_work import complete_read_command, complete_read_steps
+from ._read_execution import complete_work
 from ..security import SafetyViolation
 from ..storage.project import ProjectSource
 from ..storage.relation_index import build_project_relation_index
@@ -22,14 +23,8 @@ class TraceTraversal(_TraceFrontier):
 
 
 def _trace_rows(index, artifact_id, direction, depth):
-    traversal = TraceTraversal(index, artifact_id, direction=direction, depth=depth)
-    try:
-        while not traversal.advance(128):
-            pass
-        result = traversal.result
-        return result['nodes'], result['edges']
-    finally:
-        traversal.close()
+    result = complete_work(TraceTraversal(index, artifact_id, direction=direction, depth=depth))
+    return result['nodes'], result['edges']
 
 
 def _trace_steps(root, artifact_id, *, direction, depth):
@@ -97,5 +92,5 @@ def trace_command(invocation):
         depth = int(value)
     except ValueError as error:
         raise CommandUsageError('Trace depth is not a supported integer') from error
-    return complete_read_steps(_trace_steps(invocation.resolved.project_root, invocation.arguments['id'],
-        direction=invocation.options['--direction'], depth=depth), call=invocation.consumption_call)
+    return complete_read_command(invocation, _trace_steps, invocation.arguments['id'],
+                                 direction=invocation.options['--direction'], depth=depth)
