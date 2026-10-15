@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 403
-last_completed_plan_commit: 9.h.W
-next_plan_commit: 9.h.R
-last_completed_numbered_bundle: 250
+implementation_plan_commits_completed: 404
+last_completed_plan_commit: 9.h.R
+next_plan_commit: 9.h.C
+last_completed_numbered_bundle: 251
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10696,12 +10696,27 @@ Baselines werden dadurch nicht als implementiert oder geprüft ausgegeben.
 
 #### 9.h.R – Make it Right
 
-- [ ] **9.h.R** · Position **404/900** · Voraussetzung: `9.h.W`.
+- [x] **9.h.R** · Position **404/900** · Voraussetzung: `9.h.W`.
 **Exakte Commit-Message:** `9.h.R feat(configuration): Varianten-Diff und Regression vervollständigen`
 
 **Vervollständigung:** Verschachtelung, ungültige Werte und zyklische Vererbung im bestehenden Verhaltenstestkorpus schließen.
 
 **Verhaltensabnahme:** Einzellauf-/Workparität und schreibfreie Auswertung bleiben für Varianten erhalten. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 251, SR-TC-0403/0404 teilweise):**
+Der konfigurierte Vergleich baut vor Feld- und Scopeauswertung eigene
+Originalquellen auf. Manipulierte abgeleitete Identitäten können Inventardelta
+und Variantenmitgliedschaft dadurch nicht auseinanderlaufen lassen.
+Die Referenzfälle prüfen dreistufige Vererbung mit Defaults und Overrides,
+ungültige geerbte Dimensionswerte und Zyklen auf beiden Vergleichsseiten,
+vollständige kürzeste Pflichtabhängigkeitspfade einschließlich Gleichstand,
+bereinigte Vorgängerfehler, lokale und Git-Quellen sowie CLI-/Workparität.
+Späte Änderungen beider lokalen Stände verhindern ein Ergebnis; ein bereits
+gebundener Git-Commit bleibt bei späterem Refwechsel maßgeblich. Originalbytes,
+konkurrierende Auswahlen und schreibfreie Erfolgs-/Fehlerwege sind abgesichert.
+Konfigurationsgebundene Baselines bleiben als offener Referenzfall benannt;
+die Ablehnung ihrer noch fehlenden Quelle ersetzt keinen Baseline-Nachweis.
+Die bisherigen W-Fälle bleiben bytegleich erhalten.
 
 #### 9.h.C – Make it Clean
 

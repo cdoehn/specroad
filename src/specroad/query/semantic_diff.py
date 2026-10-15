@@ -5,12 +5,23 @@ comparison. Resource closure, evidence currency and approval remain separate.
 """
 from ..graph.artifact_comparison import compare_artifacts
 from ..graph.comparison_values import ComparisonInputs, ComparisonResult
+from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_sha256
 from ..model.domain_schemas import validate_domain_fields
 from ..model.errors import ModelError
 from ..model.record_contracts import RECORD_TYPES
 from ..model.record_schemas import validate_record_fields
 from ._semantic_classes import _configuration_comparison, _field_category, _timing_comparisons
+
+
+def _owned_variant_inputs(inputs):
+    """Use one original-byte inventory for field and applicability comparison."""
+    if type(inputs.records) is not tuple:
+        raise ModelError('comparison_records_required')
+    if any(type(record) is not SourceRelations for record in inputs.records):
+        raise ModelError('source_relations_required')
+    return ComparisonInputs(inputs.project_id,
+        tuple(SourceRelations(record.source_bytes, path=record.path) for record in inputs.records))
 
 
 def _variant_scope(before, after, before_id, after_id):
@@ -41,6 +52,8 @@ def compare_semantic(before, after, *, before_configuration=None,
     """
     if type(before) is not ComparisonInputs or type(after) is not ComparisonInputs:
         raise ModelError('comparison_inputs_required')
+    if before_configuration_id is not None or after_configuration_id is not None:
+        before, after = _owned_variant_inputs(before), _owned_variant_inputs(after)
     # Validate the entire supplied field inventory before classifying changes.
     # No stored approval state authenticates the records or resolves references.
     for inputs in (before, after):

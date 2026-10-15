@@ -62,3 +62,10 @@ in der jeweiligen Seite sichtbar. Native Diff liefert dafür eine vollständige
 Vergleichsausgabe mit Exit Code 3 und `SRV131`. Ungültige Auswahl verhindert ein
 Teilergebnis (`SRV130`). Der Vergleich liefert weiterhin keinen Freigabe-,
 Evidence-Gültigkeits- oder vollständigen Ressourcen-Closure-Nachweis.
+
+Beim expliziten Variantenvergleich werden die Vergleichseingaben aus ihren
+Originalbytes neu übernommen, bevor Inventar-, Feld- und Scopeänderungen
+ausgewertet werden. Abgeleitete Identitätsdaten des Aufrufers sind keine
+separate Vergleichsbasis. Ein bereits geladener Git-Vergleich bleibt an den
+aufgelösten Commit gebunden; lokale Stände werden vor Ergebnisausgabe erneut
+auf Änderungen geprüft.
