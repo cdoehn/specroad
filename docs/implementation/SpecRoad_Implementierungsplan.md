@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 407
-last_completed_plan_commit: 10.a.R
-next_plan_commit: 10.a.C
+implementation_plan_commits_completed: 408
+last_completed_plan_commit: 10.a.C
+next_plan_commit: 10.b.W
 last_completed_numbered_bundle: 253
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10813,7 +10813,7 @@ Projekts und kennt weder Gitprovenienz noch Freigabeentscheidungen.
 
 #### 10.a.C – Make it Clean
 
-- [ ] **10.a.C** · Position **408/900** · Voraussetzung: `10.a.R`.
+- [x] **10.a.C** · Position **408/900** · Voraussetzung: `10.a.R`.
 **Exakte Commit-Message:** `10.a.C refactor(baseline): Content-addressierter Objektspeicher bereinigen`
 
 **Bereinigung:** Objektstore von Baselinefachmodell und Gitprovenienz trennen.
@@ -10821,6 +10821,15 @@ Projekts und kennt weder Gitprovenienz noch Freigabeentscheidungen.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 253):**
+Unveränderliche Objekt-/Referenzwerte und der reine Erhaltungsprüfer liegen nun
+in `archive/_object_values.py`. Der physische Store und der geprüfte Leser
+verwenden diese unveränderten Verträge; beide Schichten bleiben unabhängig vom
+Baselinefachmodell und von Gitprovenienz. Öffentliche Imports bleiben erhalten.
+Die verschobenen Funktionen und Klassen sind inhaltlich/strukturell identisch,
+die nativen Zugriffsabläufe und sämtliche W-/R-Testdateien bleiben unverändert.
+Die gezielte parallele Regression prüft dieselben 548 Fälle wie im R-Zustand.
 
 <a id="step-10-b"></a>
 ### 10.b – Baseline-Manifest und semantische Konfiguration
