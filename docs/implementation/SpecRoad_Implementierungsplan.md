@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 397
-last_completed_plan_commit: 9.f.W
-next_plan_commit: 9.f.R
-last_completed_numbered_bundle: 246
+implementation_plan_commits_completed: 398
+last_completed_plan_commit: 9.f.R
+next_plan_commit: 9.f.C
+last_completed_numbered_bundle: 247
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10528,12 +10528,29 @@ folgen in 9.g, weitere Gate-Randfälle und Trennung des Kontexts in 9.f.R/C.
 
 #### 9.f.R – Make it Right
 
-- [ ] **9.f.R** · Position **398/900** · Voraussetzung: `9.f.W`.
+- [x] **9.f.R** · Position **398/900** · Voraussetzung: `9.f.W`.
 **Exakte Commit-Message:** `9.f.R feat(configuration): Explizite Gates und wiederverwendbare Identität vervollständigen`
 
 **Vervollständigung:** Fehlende Auswahl darf keine willkürliche Defaultfreigabe erzeugen.
 
 **Verhaltensabnahme:** ID-/Revisionsinventur bleibt bei reiner Variantenauswertung unverändert. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 247, SR-TC-0402/0548 teilweise):**
+Der konfigurierte Validierungsaufruf rekonstruiert eigene Dokumentwerte,
+ordnet Quelllabels deterministisch und lehnt doppelte Labels ab. Quellen für
+die Konfigurationsauflösung werden nach Artefakt-ID geordnet. Änderungen an
+ursprünglichen Providerobjekten beeinflussen die übernommenen Bytes nicht.
+Der Konfigurations-Gate vergleicht das erneut ausgewertete effektive Manifest
+mit seiner ursprünglichen Bindung; abweichende Auswahl, eigene Revision oder
+Elternrevision ergibt `configuration_gate_binding_changed`/`SRV130`. Reine
+JSON-Formatierung bleibt dieselbe semantische Konfigurationsidentität.
+
+Die neuen Fälle prüfen fehlende Auswahl in leeren, einzelnen und mehrfachen
+Konfigurationsinventaren, Namen statt IDs, ungültige Quellen, parallele Varianten,
+vollständige mehrstufige Konfliktpfade und unveränderte ID-/Revisionsinventuren.
+Der echte Python-Aufruf läuft auch aus der gebauten PYZ. Sprach-/Profilfehler
+und die strukturelle Prüfung ausgeschlossener Artefakte bleiben wirksam.
+Alle W-Tests bleiben unverändert erhalten.
 
 #### 9.f.C – Make it Clean
 

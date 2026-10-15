@@ -17,12 +17,14 @@
   "steps": [
     "Refuse an absent or unknown selected configuration before a configuration gate can become not applicable.",
     "Validate the same documents under two explicitly selected variants; compare original identities, revisions and source bindings.",
-    "Run the existing model validator with a fresh stored-relation configuration gate; preserve other failures/unavailable services and complete dependency paths."
+    "Run the existing model validator with a fresh stored-relation configuration gate; preserve other failures/unavailable services and complete dependency paths.",
+    "Reconstruct owned documents, reject duplicate source labels and compare deterministic configuration failures across source orderings.",
+    "Inject changed model inputs at the validation boundary and require the current effective configuration manifest to match its gate binding; retain separate concurrent variant results and portable Python behavior."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein konfigurationsspezifisches Gate MUSS eine explizite Konfiguration verlangen.",
-    "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes."
+    "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes. Source documents are owned copies. Duplicate logical source labels are refused; selected configuration manifests are rechecked at the gate boundary. A changed selected or inherited revision/value cannot reuse the earlier binding. JSON formatting alone does not change semantic configuration identity."
   },
   "expected_diagnostics": [
     "SRV130",
@@ -30,7 +32,8 @@
     "configuration_id_required",
     "configuration_missing",
     "configuration_dependency_excluded",
-    "invalid_applicability"
+    "invalid_applicability",
+    "configuration_gate_binding_changed"
   ],
   "expected_exit_codes": [],
   "json_pointers": [
@@ -79,9 +82,39 @@
     "tests/test_configuration_gates.py::test_other_reusable_artifact_kinds_retain_their_single_original_identity[verification]",
     "tests/test_configuration_gates.py::test_report_mutation_cannot_change_a_subsequent_observation",
     "tests/test_configuration_gates.py::test_selected_gate_runs_the_existing_validator_without_approval_or_writes",
-    "tests/test_configuration_gates.py::test_selected_validation_subject_cannot_hide_a_configuration_conflict_elsewhere"
+    "tests/test_configuration_gates.py::test_selected_validation_subject_cannot_hide_a_configuration_conflict_elsewhere",
+    "tests/test_configuration_gates_right.py::test_complete_transitive_path_is_not_replaced_by_only_the_excluded_endpoint",
+    "tests/test_configuration_gates_right.py::test_deterministic_invalid_configuration_choice_uses_identity_not_caller_order",
+    "tests/test_configuration_gates_right.py::test_duplicate_identity_is_not_a_second_variant_copy",
+    "tests/test_configuration_gates_right.py::test_duplicate_source_labels_cannot_be_resolved_as_two_distinct_documents",
+    "tests/test_configuration_gates_right.py::test_excluded_requirement_is_still_subject_to_existing_structural_validation",
+    "tests/test_configuration_gates_right.py::test_gate_rechecks_the_selected_manifest_at_the_model_pipeline_boundary[choice]",
+    "tests/test_configuration_gates_right.py::test_gate_rechecks_the_selected_manifest_at_the_model_pipeline_boundary[parent_revision]",
+    "tests/test_configuration_gates_right.py::test_gate_rechecks_the_selected_manifest_at_the_model_pipeline_boundary[revision]",
+    "tests/test_configuration_gates_right.py::test_many_origins_preserve_the_complete_conflict_set_in_gate_findings",
+    "tests/test_configuration_gates_right.py::test_missing_selection_fails_before_any_other_registered_gate_can_supply_a_pass",
+    "tests/test_configuration_gates_right.py::test_names_types_and_display_values_cannot_stand_in_for_a_configuration_id[  ]",
+    "tests/test_configuration_gates_right.py::test_names_types_and_display_values_cannot_stand_in_for_a_configuration_id[SR-GOAL-00000000000000000000000001]",
+    "tests/test_configuration_gates_right.py::test_names_types_and_display_values_cannot_stand_in_for_a_configuration_id[Variant 1]",
+    "tests/test_configuration_gates_right.py::test_names_types_and_display_values_cannot_stand_in_for_a_configuration_id[linux]",
+    "tests/test_configuration_gates_right.py::test_names_types_and_display_values_cannot_stand_in_for_a_configuration_id[null]",
+    "tests/test_configuration_gates_right.py::test_no_inventory_shape_makes_an_implicit_selection_succeed[conditional_only]",
+    "tests/test_configuration_gates_right.py::test_no_inventory_shape_makes_an_implicit_selection_succeed[empty]",
+    "tests/test_configuration_gates_right.py::test_no_inventory_shape_makes_an_implicit_selection_succeed[one]",
+    "tests/test_configuration_gates_right.py::test_no_inventory_shape_makes_an_implicit_selection_succeed[several]",
+    "tests/test_configuration_gates_right.py::test_original_json_formatting_does_not_create_a_false_configuration_binding_mismatch",
+    "tests/test_configuration_gates_right.py::test_owned_documents_survive_a_provider_replacing_its_original_record_during_delegation",
+    "tests/test_configuration_gates_right.py::test_parent_and_child_selection_stay_distinct_even_with_equal_effective_values",
+    "tests/test_configuration_gates_right.py::test_portable_python_api_uses_the_same_explicit_configuration_gate",
+    "tests/test_configuration_gates_right.py::test_production_profile_and_language_failures_survive_configuration_gate_success",
+    "tests/test_configuration_gates_right.py::test_pure_gate_never_requests_random_identity_generation_or_filesystem_writes",
+    "tests/test_configuration_gates_right.py::test_reconstructed_documents_reject_forged_cached_fields[content-not bytes]",
+    "tests/test_configuration_gates_right.py::test_reconstructed_documents_reject_forged_cached_fields[path-None]",
+    "tests/test_configuration_gates_right.py::test_reconstructed_documents_reject_forged_cached_fields[path-]",
+    "tests/test_configuration_gates_right.py::test_same_selected_values_at_distinct_revisions_produce_distinct_bindings",
+    "tests/test_configuration_gates_right.py::test_two_concurrent_variants_keep_separate_results_over_the_same_original_model"
   ],
   "open_items": [
-    "The current Python entrypoint supplies a stored-relation configuration gate. Live command integration follows in 9.g; document/release rendering and external-resource/review approval services are not certified. Broader gate-binding robustness and structural cleanup follow in 9.f.R/C."
+    "The current Python entrypoint supplies a stored-relation configuration gate. Live command integration follows in 9.g; document/release rendering and external-resource/review approval services are not certified. Separation of detached gate context follows in 9.f.C."
   ]
 }

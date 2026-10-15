@@ -26,11 +26,14 @@ def validate_configured_model(documents, *, configuration_id=None, profile=None,
 
     if type(documents) not in (list, tuple) or any(type(d) is not ModelDocument for d in documents):
         raise ModelError('validation_documents_required')
-    documents = tuple(documents)
+    documents = tuple(sorted((ModelDocument(d.path, d.content) for d in documents), key=lambda d: d.path))
+    if len({d.path for d in documents}) != len(documents):
+        raise ModelError('duplicate_validation_source')
     if type(gates) not in (list, tuple):
         raise ModelError('validation_gates_required')
     try:
-        sources = tuple(SourceRelations(d.content, path=d.path) for d in documents)
+        sources = tuple(sorted((SourceRelations(d.content, path=d.path) for d in documents),
+                               key=lambda r: r.identity.id))
         selected = resolve_configuration(sources, configuration_id)
     except ModelError as error:
         raise ConfigurationEvaluationError(error) from error
@@ -46,6 +49,9 @@ def validate_configured_model(documents, *, configuration_id=None, profile=None,
             evaluation = evaluate_configuration(current, selected.configuration_id).data
         except ModelError as error:
             return context.result([{**error.diagnostic(), 'code': 'SRV130', 'severity': 'error'}])
+        if evaluation['configuration']['sha256'] != selected.sha256:
+            return context.result([{'reason': 'configuration_gate_binding_changed',
+                'code': 'SRV130', 'severity': 'error', 'artifact_id': selected.configuration_id}])
         # The configuration is always a gate subject. Unconditional origins may
         # not be; retain their identities and full paths as related evidence.
         return context.result([{'reason': 'configuration_dependency_excluded',
