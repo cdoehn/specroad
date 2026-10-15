@@ -178,10 +178,11 @@ class StrongClosureRightTests(unittest.TestCase):
         with self.assertRaises(ModelError):resolve_strong_closure(seeds,observe(new),query_page=page)
 
     def test_configuration_filter_is_not_silently_dropped(self):
-        inventory=inputs(artifact(),artifact('configuration'));desc=ScopeDescriptor(descriptor(configuration_id=aid('configuration')))
+        from support.records import record_value
+        inventory=inputs(artifact(),record_value('configuration', id=aid('configuration')));desc=ScopeDescriptor(descriptor(configuration_id=aid('configuration')))
         seeds=ScopeSeeds(desc,inventory.fingerprint,(aid(),),(),None)
         with self.assertRaises(ModelError) as raised:resolve_strong_closure(seeds,observe(inventory))
-        self.assertEqual(raised.exception.reason,'scope_configuration_resolver_required')
+        self.assertEqual(raised.exception.reason,'closure_seed_selection_mismatch')
 
     def test_missing_subject_rejected_for_closed_and_partial_policies(self):
         evidence=source('evidence',subjects=[subject(aid())]);inventory=inputs(evidence)

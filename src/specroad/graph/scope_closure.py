@@ -1,9 +1,9 @@
 """Policy-aware fixed point over explicit complete dependency observations.
 
 This module resolves stored outgoing edges. It does not invent reverse edges,
-read a project, evaluate applicability, decide review currency, or build a
-normative Scope-Hash. Those responsibilities stay with their existing/future
-providers. `closure_complete` refers only to the supplied bound inventory.
+read a project, decide review currency, or build a normative Scope-Hash.
+The admission walker uses the selected configuration before including a target.
+`closure_complete` refers only to the supplied bound inventory.
 """
 from dataclasses import dataclass
 

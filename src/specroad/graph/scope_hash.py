@@ -33,6 +33,10 @@ def fingerprint_scope(configuration, binding, closure, dependencies, *,
             or inventory.configuration_sha256 != config_hash):
         raise ModelError('scope_hash_project_mismatch')
     require_scope_closure_current(closure, closure.seeds, dependencies, query_page=query_page)
+    if closure.seeds.descriptor.data['configuration_id'] is not None:
+        # Fresh seed recomputation binds both semantic project policy and the
+        # selected product configuration, including its complete parent chain.
+        config_hash = closure.seeds.configuration_sha256
     if type(effective_profile) is not dict:
         raise ModelError('effective_profile_projection_required')
     if 'project_id' in effective_profile and effective_profile['project_id'] != binding.project_id:

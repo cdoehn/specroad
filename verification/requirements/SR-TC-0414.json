@@ -4,19 +4,36 @@
   "requirement_id": "SR-REQ-0414",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SCOPE-SEEDS-v1",
+    "SR-FIX-STRONG-CLOSURE-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "preconditions": [
+    "Explicit byte-bound scope inventory and complete synthetic resource/review observations; no filesystem discovery, profile authenticity or release approval."
+  ],
+  "steps": [
+    "Resolve the selected configuration and filter non-query scope candidates before seed admission.",
+    "Check applicability at each required artifact admission, including transitive relations and field dependencies, and recompute the configured seed/hash binding."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine konfigurationsbedingt ausgeschlossene Pflichtabhängigkeit MUSS den Scope als inkonsistent diagnostizieren.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Configured non-query seed and closure resolution over supplied bindings. Unconditional and matching artifacts are admitted; excluded required targets raise SRV141 without a closure result. The semantic configuration hash binds both project policy and the effective selected parent chain; unconfigured contracts remain unchanged."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "scope_configuration_dependency",
+    "invalid_applicability"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/relations/0/target",
+    "/subjects/0/artifact_id"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +45,17 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_applicable_strong_dependency_is_admitted",
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_excluded_evidence_subject_is_a_required_resource_error",
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_excluded_strong_target_is_a_configuration_error_for_both_policies",
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_forged_configuration_binding_is_recomputed",
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_forged_seed_membership_cannot_restore_an_excluded_artifact",
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_invalid_condition_is_not_an_excluded_seed",
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_permanent_control_dependency_guard_is_preserved",
+    "test_configuration_scope.ConfigurationScopeWorkTests.test_strong_only_walker_has_the_same_configuration_admission"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Configured query-page integration, broader excluded-dependency robustness and shared admission cleanup follow in 9.d.R/C. Real provider integration and command-level configuration selection remain later M9 work."
   ]
 }

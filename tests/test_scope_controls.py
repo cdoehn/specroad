@@ -197,4 +197,4 @@ class ScopeControlTests(unittest.TestCase):
         desc = ScopeDescriptor(descriptor(configuration_id=aid('configuration')))
         with self.assertRaises(ModelError) as raised:
             resolve_scope_seeds(desc, inventory)
-        self.assertEqual(raised.exception.reason, 'scope_configuration_resolver_required')
+        self.assertEqual(raised.exception.reason, 'missing_field')

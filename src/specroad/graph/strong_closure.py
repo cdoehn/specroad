@@ -1,6 +1,6 @@
 """Least strong fixed point over explicit, byte-bound source observations.
 
-No weak expansion/boundaries, configuration evaluator, review decision, model
+No weak expansion/boundaries, review decision, model
 root or transaction is implied. Unknown required providers fail closed.
 """
 from dataclasses import dataclass
@@ -169,8 +169,6 @@ def _check_seeds(seeds, bindings, query_page):
         raise ModelError('closure_values_required')
     if seeds.inputs_sha256 != bindings.inventory.fingerprint:
         raise ModelError('stale_closure_seed_inputs')
-    if seeds.descriptor.data['configuration_id'] is not None:
-        raise ModelError('scope_configuration_resolver_required')
     expected = resolve_scope_seeds(seeds.descriptor, bindings.inventory, query_page=query_page)
     if seeds != expected:
         raise ModelError('closure_seed_selection_mismatch')

@@ -28,6 +28,25 @@ class ScopeControlDependencyError(ModelError):
                 'relation_id': self.relation_id, 'exit_code': self.exit_code}
 
 
+class ScopeConfigurationDependencyError(ModelError):
+    """A selected scope requires an artifact excluded by its configuration."""
+    code = 'SRV141'
+    exit_code = 3
+
+    def __init__(self, *, source_id, target_id, configuration_id, relation_id=None, pointer=''):
+        super().__init__('scope_configuration_dependency', pointer=pointer)
+        self.source_id = source_id
+        self.target_id = target_id
+        self.relation_id = relation_id
+        self.configuration_id = configuration_id
+
+    def diagnostic(self):
+        return {**super().diagnostic(), 'code': self.code, 'severity': 'error',
+                'source_id': self.source_id, 'target_id': self.target_id,
+                'relation_id': self.relation_id, 'configuration_id': self.configuration_id,
+                'exit_code': self.exit_code}
+
+
 def excludes_control_artifacts(descriptor):
     """Return the base-scope rule; do not silently remove configuration filters."""
     if type(descriptor) is not ScopeDescriptor:

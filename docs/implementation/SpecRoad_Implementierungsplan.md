@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 390
-last_completed_plan_commit: 9.c.C
-next_plan_commit: 9.d.W
-last_completed_numbered_bundle: 241
+implementation_plan_commits_completed: 391
+last_completed_plan_commit: 9.d.W
+next_plan_commit: 9.d.R
+last_completed_numbered_bundle: 242
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10306,12 +10306,40 @@ folgt in 9.d. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 390/900.
 
 #### 9.d.W – Let it Work
 
-- [ ] **9.d.W** · Position **391/900** · Voraussetzung: `9.c.C`.
+- [x] **9.d.W** · Position **391/900** · Voraussetzung: `9.c.C`.
 **Exakte Commit-Message:** `9.d.W feat(configuration): Konfiguration vor Scope-Closure aufbauen`
 
 **Umsetzung:** Gültigkeit vor Aufnahme von Seed-/Pflichtressourcen berücksichtigen.
 
 **Verhaltensabnahme:** Unbedingte und passende Artefakte bilden den erwarteten Scope.
+
+**Vorbereiteter W-Stand (Bundle 242, SR-TC-0411/0414 teilweise):**
+Nicht-querybasierte Scopes lösen ihre ausdrücklich ausgewählte Konfiguration
+auf und filtern die Seed-Kandidaten vor der Aufnahme. Eine Konfigurationshülle
+verwendet den angegebenen Basisscope; permanente Kontrollausschlüsse bleiben
+bestehen. Bei ausgeschlossenen Projekt-Baselines werden deren Archivobjekte
+nicht als Seeds aufgenommen. Unkonfigurierte Scopes behalten ihre bisherige
+Mitgliedschaft einschließlich potenziell anwendbarer Artefakte.
+
+Der gemeinsame Closure-Frontier prüft die Applicability jedes erreichten
+Artefakts vor Aufnahme und Deduplizierung. Ein ausgeschlossenes Pflichtziel
+liefert `SRV141` mit Quell-, Ziel-, Konfigurations- und Relations-ID beziehungsweise
+JSON Pointer. Es entsteht weder eine erfolgreiche Closure noch eine daraus
+abgeleitete Modellwurzel. Gefälschte Seedmengen oder Konfigurationsbindungen
+werden durch erneute Auswahl erkannt. Der bisherige Regressionstest für die
+noch nicht verfügbare Auflösung prüft jetzt diese konkrete Neuberechnung mit
+einer gültigen Konfiguration; seine stabile Testnummer bleibt erhalten. Der
+bisherige Kontrolltest mit unvollständigem CFG-Record prüft den konkreten
+Feldvalidierungsfehler statt der früheren fehlenden Resolverimplementierung.
+
+Die semantische Konfigurationsbindung ist bei Auswahl der kanonische Hash aus
+`project_configuration_sha256` und `selected_configuration_sha256`. Damit
+bleiben sowohl Projektpolicy als auch vollständige effektive Elternkette im
+Scope-Hash gebunden, auch außerhalb der expliziten Artefakt-Seedmenge. Bestehende
+unkonfigurierte Hashes bleiben unverändert. Konfigurierte Query-Seiten bleiben
+mit `configured_query_resolver_required` gesperrt, bis ihr gebundener Adapter in
+9.d.R vervollständigt wird; weitere Fehlerfälle und gemeinsame Zulässigkeit
+folgen in 9.d.R/C. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 391/900.
 
 #### 9.d.R – Make it Right
 
