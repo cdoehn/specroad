@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 394
-last_completed_plan_commit: 9.e.W
-next_plan_commit: 9.e.R
-last_completed_numbered_bundle: 244
+implementation_plan_commits_completed: 395
+last_completed_plan_commit: 9.e.R
+next_plan_commit: 9.e.C
+last_completed_numbered_bundle: 245
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10441,12 +10441,29 @@ Beispielprojekt; der bisherige allgemeine Projektfixture bleibt unverändert.
 
 #### 9.e.R – Make it Right
 
-- [ ] **9.e.R** · Position **395/900** · Voraussetzung: `9.e.W`.
+- [x] **9.e.R** · Position **395/900** · Voraussetzung: `9.e.W`.
 **Exakte Commit-Message:** `9.e.R feat(configuration): Pflichtabhängigkeiten und Erklärungspfad vervollständigen`
 
 **Vervollständigung:** Mehrere gleichartige Pfade deterministisch behandeln, ohne unnötige Textsemantik.
 
 **Verhaltensabnahme:** Graphfixture weist kürzesten vollständigen Fehlerpfad und unverändertes Projekt nach. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 245, SR-TC-0398/0399 teilweise):**
+Die Klassifikation sortiert die erneut aus Originalbytes aufgebauten Quellen nach
+Artefakt-ID, bevor sie Bedingungen auswertet. Mehrere ungültige Bedingungen
+liefern dadurch unabhängig von der gelieferten Reihenfolge denselben ersten
+Fehler samt Quellpfad. Gleich kurze Konfliktpfade werden nach vollständiger
+Artefakt-ID-Folge, anschließend Relations-ID-Folge ausgewählt. Ein unabhängiger
+Pfadorakel prüft alle 64 gerichteten Drei-Knoten-Graphen mit allen acht
+Anwendbarkeitsmengen; weitere Fälle sichern parallele Pflichtkanten, alle 15
+starken Relationstypen, getrennte Komponenten und 132 gleichzeitige Konflikte.
+
+Vollständige Fehlerpfade bleiben von Query-Seitengröße, Trace-Tiefe und weichen
+Laufzeitzielen unabhängig. Mitgliedschafts-/Konfigurationsänderungen zwischen
+Aufnahme und Abschluss verwerfen das Ergebnis. Symlinks, ungültige Werte,
+Elternzyklen und doppelte Identitäten werden abgewiesen; der echte Befehl wird
+auch aus der gebauten PYZ geprüft. Die W-Nachweise bleiben bestehen. Der
+Nachweisumfang bleibt ausdrücklich auf gespeicherte starke Relationen begrenzt.
 
 #### 9.e.C – Make it Clean
 

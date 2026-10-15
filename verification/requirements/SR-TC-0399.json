@@ -18,12 +18,14 @@
   "steps": [
     "Resolve the explicit selected parent chain and classify every artifact with deterministic reasons.",
     "Report one complete shortest stored-strong-relation path for every applicable origin and reachable excluded endpoint, stopping at the first excluded node on each route.",
-    "Execute direct Python, structured command and CLI paths; preserve complete conflict data with SRV131/code3 and reject stale observations without output or writes."
+    "Execute direct Python, structured command and CLI paths; preserve complete conflict data with SRV131/code3 and reject stale observations without output or writes.",
+    "Compare every three-node directed graph and applicability subset with an independent simple-path oracle; check artifact/relation tie ordering, all strong relation kinds and complete large conflict sets.",
+    "Reject source membership/configuration changes, symlinks, invalid conditions and configurations; execute the real command from the built PYZ."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Wenn ein anwendbares Artefakt über eine zwingende Relation von einem ausgeschlossenen Artefakt abhängt, MUSS SpecRoad einen Konfigurationsfehler mit dem vollständigen kürzesten Abhängigkeitspfad ausgeben.",
-    "scope": "Configuration evaluation over all supplied/current project artifacts and stored strong relations. Explanations preserve full artifact/relation identities and direction, report all applicable-origin/excluded-endpoint conflicts, use shortest paths and never traverse an excluded intermediate. The live command is read-only and publishes only after currentness checks."
+    "scope": "Configuration evaluation over all supplied/current project artifacts and stored strong relations. Explanations preserve full artifact/relation identities and direction, report all applicable-origin/excluded-endpoint conflicts, use shortest paths and never traverse an excluded intermediate. The live command is read-only and publishes only after currentness checks. Equal shortest paths use full artifact-ID order, then relation-ID order. Applicability errors are chosen in artifact identity order independently of input enumeration. Query pagination, trace depth and operational time targets never truncate these explanations."
   },
   "expected_diagnostics": [
     "SRV130",
@@ -36,7 +38,8 @@
     0,
     2,
     3,
-    6
+    6,
+    7
   ],
   "json_pointers": [
     "/applicability",
@@ -80,9 +83,52 @@
     "tests/test_configuration_evaluation.py::test_source_replacement_after_evaluation_cannot_publish_old_result",
     "tests/test_configuration_evaluation.py::test_stored_direction_is_not_reversed_to_invent_a_required_path",
     "tests/test_configuration_evaluation.py::test_weak_relations_are_not_required_variant_dependencies[conflicts_with]",
-    "tests/test_configuration_evaluation.py::test_weak_relations_are_not_required_variant_dependencies[duplicates]"
+    "tests/test_configuration_evaluation.py::test_weak_relations_are_not_required_variant_dependencies[duplicates]",
+    "tests/test_configuration_evaluation_right.py::test_absent_or_wrong_explicit_configuration_is_never_a_default[None]",
+    "tests/test_configuration_evaluation_right.py::test_absent_or_wrong_explicit_configuration_is_never_a_default[SR-GOAL-00000000000000000000000001]",
+    "tests/test_configuration_evaluation_right.py::test_absent_or_wrong_explicit_configuration_is_never_a_default[]",
+    "tests/test_configuration_evaluation_right.py::test_absent_or_wrong_explicit_configuration_is_never_a_default[not-an-id]",
+    "tests/test_configuration_evaluation_right.py::test_disallowed_selected_value_cannot_become_an_empty_scope",
+    "tests/test_configuration_evaluation_right.py::test_duplicate_artifact_identity_cannot_hide_a_conflicting_variant",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[addresses]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[allocated_to]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[constrains]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[contains]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[depends_on]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[derived_from]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[implemented_by]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[mitigates]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[part_of]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[produces]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[references]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[refines]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[scheduled_for]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[supersedes]",
+    "tests/test_configuration_evaluation_right.py::test_every_stored_strong_relation_yields_the_exact_configuration_path[verified_by]",
+    "tests/test_configuration_evaluation_right.py::test_exhaustive_three_node_graphs_match_an_independent_simple_path_oracle",
+    "tests/test_configuration_evaluation_right.py::test_final_currentness_check_rejects_changed_membership_or_project_configuration[addition]",
+    "tests/test_configuration_evaluation_right.py::test_final_currentness_check_rejects_changed_membership_or_project_configuration[project_configuration]",
+    "tests/test_configuration_evaluation_right.py::test_final_currentness_check_rejects_changed_membership_or_project_configuration[removal]",
+    "tests/test_configuration_evaluation_right.py::test_installed_pyz_executes_the_registered_configuration_command",
+    "tests/test_configuration_evaluation_right.py::test_invalid_conditions_are_checked_in_identity_order_independent_of_input_order",
+    "tests/test_configuration_evaluation_right.py::test_invalid_live_applicability_preserves_location_and_srv130",
+    "tests/test_configuration_evaluation_right.py::test_inventory_must_be_an_owned_sequence[None]",
+    "tests/test_configuration_evaluation_right.py::test_inventory_must_be_an_owned_sequence[sources]",
+    "tests/test_configuration_evaluation_right.py::test_inventory_must_be_an_owned_sequence[supplied1]",
+    "tests/test_configuration_evaluation_right.py::test_inventory_must_be_an_owned_sequence[supplied3]",
+    "tests/test_configuration_evaluation_right.py::test_lifecycle_state_does_not_remove_applicable_required_origins[rejected]",
+    "tests/test_configuration_evaluation_right.py::test_lifecycle_state_does_not_remove_applicable_required_origins[retired]",
+    "tests/test_configuration_evaluation_right.py::test_linked_configuration_source_is_rejected_without_following_or_writing",
+    "tests/test_configuration_evaluation_right.py::test_many_applicable_origins_and_targets_are_not_limited_by_query_pagination",
+    "tests/test_configuration_evaluation_right.py::test_no_implicit_trace_depth_truncates_a_configuration_error_path",
+    "tests/test_configuration_evaluation_right.py::test_parallel_required_edges_use_the_smallest_relation_identity_for_the_same_node_path",
+    "tests/test_configuration_evaluation_right.py::test_parent_cycle_cannot_produce_a_partial_applicability_result",
+    "tests/test_configuration_evaluation_right.py::test_soft_runtime_targets_do_not_truncate_the_completed_semantic_result",
+    "tests/test_configuration_evaluation_right.py::test_source_and_edge_permutations_preserve_the_entire_evaluation",
+    "tests/test_configuration_evaluation_right.py::test_tied_paths_choose_complete_artifact_identity_order_before_relation_ids",
+    "tests/test_configuration_evaluation_right.py::test_unrelated_excluded_component_has_no_invented_dependency"
   ],
   "open_items": [
-    "Tie-path and broader adversarial graph/input robustness follow in 9.e.R; 9.e.C shares the traversal primitive with Why. This command evaluates stored strong relations, not external resource/review bindings, model roots or release approval."
+    "9.e.C shares shortest predecessor discovery with Why. This command evaluates stored strong relations; external resource/review providers, model roots and release approval are outside this evidence scope."
   ]
 }

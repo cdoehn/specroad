@@ -40,6 +40,9 @@ def _configuration_decisions(records, configuration_id):
 
 
 def _inconsistencies(index, applicable, excluded):
+    """One shortest path per origin/endpoint, ordered by full artifact IDs,
+    then relation IDs. Breadth-first discovery preserves that tie-break order.
+    """
     # Import only at execution time: scope admission also consumes configuration
     # classification, while this command reuses the actual strong-edge registry.
     from ..graph.strong_closure import STRONG_RELATIONS
@@ -86,7 +89,8 @@ class ConfigurationEvaluation:
             raise ModelError('configuration_inventory_required')
         if any(type(record) is not SourceRelations for record in records):
             raise ModelError('configuration_source_required')
-        records = tuple(SourceRelations(record.source_bytes, path=record.path) for record in records)
+        records = tuple(sorted((SourceRelations(record.source_bytes, path=record.path) for record in records),
+                               key=lambda record: record.identity.id.encode('utf-8')))
         effective, decisions = _configuration_decisions(records, configuration_id)
         index = RelationIndex(RelationReferences(records))
         validate_hierarchies(index.references)
