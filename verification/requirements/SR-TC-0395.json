@@ -13,12 +13,13 @@
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Resolve explicitly selected root configurations from owned SourceRelations, materialize selection/defaults and reject duplicate names or incomplete declared dimensions without changing source bytes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `configuration`-Artefakt MUSS einen eindeutigen Namen, deklarierte Dimensionen, je Dimension zulässige Werte, eine konkrete Wertauswahl und optional genau eine Elternkonfiguration enthalten.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "Passive configuration field contracts plus complete effective values for a selected root in the explicitly supplied inventory. Parent-chain resolution, applicability, project discovery and scope gates remain outside this increment."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -40,9 +41,33 @@
     "test_record_schemas.RecordRightTests.test_config_default_and_selection_must_be_declared",
     "test_record_schemas.RecordRightTests.test_config_json_booleans_are_not_equal_to_numeric_choices",
     "test_record_schemas.RecordRightTests.test_config_root_rejects_unknown_selections_but_child_defers_inherited_ones",
-    "test_record_schemas.RecordRightTests.test_config_valid_default_is_not_materialized_into_original"
+    "test_record_schemas.RecordRightTests.test_config_valid_default_is_not_materialized_into_original",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_configuration_selection_is_explicit",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_declared_dimension_without_default_uses_explicit_selection",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_duplicate_configuration_names_fail_before_a_result_is_returned",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_duplicate_inventory_ids_are_not_silently_overwritten",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_empty_root_dimensions_resolve_to_empty_values",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_explicit_null_overrides_non_null_default",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_explicit_null_parent_is_a_root",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_explicit_root_selection_materializes_all_declared_dimensions",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_explicit_selection_overrides_default",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_falsy_defaults_are_materialized_by_presence",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_inherited_configuration_needs_the_parent_resolver",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_input_requires_explicit_loaded_sources",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_inventory_order_does_not_change_resolved_values",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_json_scalar_selections_keep_their_types_and_values",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_missing_selection_uses_declared_default_without_rewriting_source",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_multiple_dimensions_mix_explicit_selection_and_defaults",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_named_configurations_keep_separate_selections_and_identifiers",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_other_artifact_types_are_not_product_configurations",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_record_field_validation_rejects_missing_selection_and_default",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_record_field_validation_rejects_unknown_dimension",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_resolution_never_uses_a_forged_cached_record_identity",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_result_data_and_nested_dimensions_are_detached",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_result_scope_does_not_claim_project_coverage_or_a_configuration_hash",
+    "test_configuration_values.ConfigurationValuesWorkTests.test_unknown_id_never_chooses_the_only_available_configuration"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Parent-chain resolution and the canonical effective configuration manifest/hash are implemented in 9.b; applicability, complete project integration and configuration-bound gates follow in the assigned later M9 steps. No full requirement or release approval is claimed."
   ]
 }

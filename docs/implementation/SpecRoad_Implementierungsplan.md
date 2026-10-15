@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 381
-last_completed_plan_commit: 8.l.C
-next_plan_commit: 9.a.W
-last_completed_numbered_bundle: 235
+implementation_plan_commits_completed: 382
+last_completed_plan_commit: 9.a.W
+next_plan_commit: 9.a.R
+last_completed_numbered_bundle: 236
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10048,12 +10048,27 @@ erst erfolgreicher Apply-Testlauf und Commit bestätigen Position 381/900.
 
 #### 9.a.W – Let it Work
 
-- [ ] **9.a.W** · Position **382/900** · Voraussetzung: `8.l.C`.
+- [x] **9.a.W** · Position **382/900** · Voraussetzung: `8.l.C`.
 **Exakte Commit-Message:** `9.a.W feat(configuration): Dimensionen und Wertauswahl aufbauen`
 
 **Umsetzung:** Konfiguration mit eindeutigen Namen, Dimensionen, zulässigen Werten und konkreter Auswahl validieren.
 
 **Verhaltensabnahme:** Gültige Auswahl ergibt eine vollständige effektive Konfiguration.
+
+**Vorbereiteter W-Stand (Bundle 236, SR-TC-0395 weiterhin teilweise):**
+Der gemeinsame Konfigurationsdienst löst eine ausdrücklich gewählte
+Wurzelkonfiguration aus einem gelieferten Inventar von `SourceRelations` auf.
+Namen sind innerhalb dieses Inventars eindeutig; deklarierte Auswahlwerte
+haben Vorrang vor Defaults. Jede Dimension erhält genau einen effektiven Wert,
+auch bei `false`, `0`, leerem String oder `null`. Das Ergebnis besitzt eigene
+Daten; gespeicherte Auswahl, IDs, Revisionen und Quellbytes bleiben unverändert.
+
+Die bestehenden Record-Prüfer bleiben für Feldgültigkeit zuständig. Doppelte
+Namen/IDs, unbekannte Auswahl und fehlende Werte werden abgewiesen. Eine
+Konfiguration mit Parent bleibt bis 9.b ausdrücklich unaufgelöst; weder eine
+Elternkette noch ein effektiver Konfigurationshash werden erfunden. Vollständige
+Projektinventur, Applicability und Scope-/Befehlsintegration folgen den späteren
+M9-Schritten. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 382/900.
 
 #### 9.a.R – Make it Right
 
