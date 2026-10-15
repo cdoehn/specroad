@@ -4,19 +4,30 @@
   "requirement_id": "SR-REQ-0397",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "preconditions": [
+    "Owned current-schema SourceRelations and optional effective configuration values; no project loading, graph traversal or configuration inference."
+  ],
+  "steps": [
+    "Classify unconditional and conditional stored artifacts with and without an explicitly resolved configuration.",
+    "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ohne ausgewählte Konfiguration MUSS ein Artefakt ohne `applicability` als anwendbar und ein Artefakt mit `applicability` als potenziell anwendbar behandelt werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Supplied artifact applicability only: applicable, excluded and potentially_applicable are distinct. Missing configuration leaves conditions unevaluated after static validation. Common stored snapshot metadata excludes relations, applicability and derived/content fields; errors never become exclusion."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "invalid_applicability"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/applicability"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +39,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_conditional_artifact_without_configuration_is_potential",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_literal_false_without_configuration_remains_potential",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_literal_true_without_configuration_remains_potential",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_no_configuration_does_not_evaluate_runtime_operands",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unconditional_artifact_with_configuration_is_applicable",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unconditional_artifact_without_configuration_is_applicable"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 9.c.R/C robustness and pure scope-stage integration. Scope closure, configuration-bound gates and command integration remain assigned to later M9 steps; no project or release approval is claimed."
   ]
 }

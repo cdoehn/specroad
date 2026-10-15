@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 387
-last_completed_plan_commit: 9.b.C
-next_plan_commit: 9.c.W
-last_completed_numbered_bundle: 239
+implementation_plan_commits_completed: 388
+last_completed_plan_commit: 9.c.W
+next_plan_commit: 9.c.R
+last_completed_numbered_bundle: 240
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10217,12 +10217,35 @@ Commit bestätigen Position 387/900.
 
 #### 9.c.W – Let it Work
 
-- [ ] **9.c.W** · Position **388/900** · Voraussetzung: `9.b.C`.
+- [x] **9.c.W** · Position **388/900** · Voraussetzung: `9.b.C`.
 **Exakte Commit-Message:** `9.c.W feat(configuration): Applicability-Auswertung aufbauen`
 
 **Umsetzung:** SRX-Bedingungen ausschließlich auf ausgewählte Konfiguration und konstante Metadaten auswerten.
 
 **Verhaltensabnahme:** Ohne Konfiguration bleibt ein bedingtes Artefakt potenziell anwendbar.
+
+**Vorbereiteter W-Stand (Bundle 240, SR-TC-0396/0397 teilweise):**
+`evaluate_applicability` liefert für ein explizites Quellartefakt eine eigene,
+unveränderbare Fachprojektion mit `applicable`, `excluded` oder
+`potentially_applicable`. Ohne ausgewählte Konfiguration bleibt jedes gültig
+bedingte Artefakt potenziell anwendbar, auch bei einem konstanten Wahrheitswert;
+unbedingte Artefakte sind anwendbar. Es wird keine Konfiguration automatisch
+gewählt und kein Scope- oder Gateerfolg behauptet.
+
+Mit Auswahl nutzt der Dienst den vorhandenen SRX-Kern und dessen exakte
+Boolean-Grenze. Der Konfigurationskontext enthält ausschließlich ID und effektive
+Werte. Konstante Artefaktmetadaten sind die gespeicherten gemeinsamen Metadaten
+des gelieferten Snapshots; Relationsdaten, der Applicability-Ausdruck, fachlicher
+Inhalt und abgeleitete Werte gehören nicht zu dieser Projektion. Lexikalische
+Quantoren bleiben auf diese passiven Werte beschränkt. Projekt-, Relations- und
+Graphzugriffe werden auch in übersprungenen Zweigen vor der Auswertung abgewiesen.
+
+Typfehler und fehlende Endwerte werden als Konfigurationsfehler mit Quell- und
+Ausdruckspfad weitergegeben. Ergebnis, Quellhash und effektiver Konfigurationshash
+bleiben gebunden; Quellen werden nicht verändert. Weitere Robustheit folgt in
+9.c.R, die reine Scopevorstufe in 9.c.C und die Closure-/Befehlsintegration in den
+zugeordneten späteren Schritten. Erst erfolgreicher Apply-Testlauf und Commit
+bestätigen Position 388/900.
 
 #### 9.c.R – Make it Right
 

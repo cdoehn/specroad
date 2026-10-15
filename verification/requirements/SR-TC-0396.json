@@ -4,19 +4,30 @@
   "requirement_id": "SR-REQ-0396",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "preconditions": [
+    "Owned current-schema SourceRelations and optional effective configuration values; no project loading, graph traversal or configuration inference."
+  ],
+  "steps": [
+    "Classify unconditional and conditional stored artifacts with and without an explicitly resolved configuration.",
+    "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein fachliches Artefakt außer `configuration` DARF ein optionales Feld `applicability` mit einer SRX-1.0-Bedingung besitzen, die ausschließlich auf die ausgewählte Konfiguration und konstante Artefaktmetadaten zugreift.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Supplied artifact applicability only: applicable, excluded and potentially_applicable are distinct. Missing configuration leaves conditions unevaluated after static validation. Common stored snapshot metadata excludes relations, applicability and derived/content fields; errors never become exclusion."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "invalid_applicability"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/applicability"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +39,46 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_artifact_must_supply_original_source_bytes",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_computed_verification_result_is_not_constant_metadata",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_conditional_artifact_without_configuration_is_potential",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_configuration_artifact_cannot_be_conditional",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_configuration_context_contains_only_the_normative_projection",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_configuration_must_be_an_effective_configuration",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_configuration_record_metadata_is_not_exposed_as_configuration_context",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_constant_artifact_metadata_is_available",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_direct_result_construction_uses_the_same_validation",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_error_preserves_source_location_and_expression_pointer",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_expression_shaped_literal_data_does_not_request_graph_access",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_forbidden_access_in_a_short_circuited_branch_is_rejected",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_graph_operations_are_forbidden",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_literal_boolean_results_remain_distinct",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_literal_false_without_configuration_remains_potential",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_literal_true_without_configuration_remains_potential",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_matching_configuration_selects_the_artifact",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_missing_configuration_does_not_bypass_static_access_restrictions",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_missing_end_value_is_not_false",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_no_configuration_does_not_evaluate_runtime_operands",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_nonboolean_end_values_are_errors_not_truthiness",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_nonmatching_configuration_excludes_the_artifact",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_operand_type_error_is_not_exclusion",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_optional_metadata_existence_is_a_boolean_condition",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_original_bytes_and_configuration_values_are_preserved",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_parent_chain_override_drives_the_condition",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_project_context_access_is_forbidden",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_quantifier_item_is_bound_to_passive_metadata_values",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_relation_fields_cannot_be_reached_through_artifact",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_relations_context_access_is_forbidden",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_result_is_frozen_and_its_projection_is_detached",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_separate_configuration_decisions_are_not_cached_by_artifact_id",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_source_projection_mutation_does_not_change_the_condition",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unconditional_artifact_with_configuration_is_applicable",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unconditional_artifact_without_configuration_is_applicable",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_unknown_language_version_is_rejected_without_a_configuration",
+    "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_whole_artifact_projection_excludes_relations_and_applicability"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 9.c.R/C robustness and pure scope-stage integration. Scope closure, configuration-bound gates and command integration remain assigned to later M9 steps; no project or release approval is claimed."
   ]
 }
