@@ -1,8 +1,9 @@
-# Testaufrufe ab 9. Oktober 2026
+# Testaufrufe ab 15. Oktober 2026
 
 Die verbindliche Arbeitsregel steht in der lokalen `AGENTS.md`. Die technische
 Aufteilung ist: gezielte parallele Verhaltenstests in `specroad-codex`,
-vollständige parallele Suite in `specroad-apply` vor jedem einzelnen Commit.
+abwechselnd gerade und ungerade Testnummern parallel in `specroad-apply`
+vor jedem einzelnen Commit.
 Das gilt für jeden W/R/C-Zustand und auch für den letzten Zustand eines Bundles.
 Der doppelte Dev-Volltest entfällt; es gibt keinen seriellen Abschlusslauf.
 
@@ -30,11 +31,24 @@ Apply-Entrypoint in `specroad-apply`, für jeden Zwischenstand:
 .venv/bin/python -I -B tools/run_apply_tests.py
 ```
 
-Der Apply-Runner startet genau einen vollständigen Lauf mit `--workers 4`.
-Das ältere Argument `--final-bundle-state` bleibt für bestehende Entrypoints
-akzeptiert und startet denselben einzelnen parallelen Lauf. Nur dessen Erfolg
-ergibt Exitcode 0. Es gibt keine Wiederholung und keinen Fallback auf einen
-anderen Testmodus, auch bei einem Fehler oder fehlgeschlagenen Prozessstart.
+Der Apply-Runner sammelt zuerst alle Tests und prüft die Katalogbindung. Die
+festen Nummern stehen in `verification/apply_test_numbers.json`; die Position
+in `test_ids` ist N, beginnend bei 0. Bei der Einführung wird die vollständige
+Sammlung nach Testidentität sortiert. Danach werden ausschließlich neue IDs
+sortiert hinten angefügt; alte Nummern bleiben auch bei Entfernung reserviert.
+
+Die Anzahl tatsächlicher First-Parent-Commits seit `anchor_commit` bestimmt die
+Hälfte: 0 prüft gerade Testnummern, 1 ungerade, 2 wieder gerade. Fehlversuche ohne
+Commit ändern die Auswahl nicht. Der Runner prüft die Nummerierung gegen den
+letzten Commit und verweigert fehlende IDs, Umnummerierung oder Ankerwechsel.
+
+Die gewählte Hälfte läuft mit vier Workern über pytest-Argumentdateien.
+`selection.json` enthält Commitbasis, Nummernfolge, Parität, exakte Testidentitäten,
+Quellbindung und `full_suite_passed: null`. Exitcode 0 setzt ausschließlich
+bestandene, vollständige Beobachtungen der gewählten Hälfte voraus. Berichte
+liegen außerhalb der Quellen; `--outdir` kann ein frisches Ziel festlegen.
+`--final-bundle-state` bleibt akzeptiert und ändert die Auswahl nicht.
+Es gibt keine Wiederholung und keinen seriellen Fallback.
 
 GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
 vom Nutzer manuell per `workflow_dispatch` gestartet und führt die vollständige
@@ -192,6 +206,6 @@ Plan- oder Requirement-Abdeckung hochgezählt. Keine neuen Produkt-Planpositione
 
 ## Historische Testauswahl
 
-Die frühere gezielte Auswahl einschließlich zusätzlicher Lieferdatenregressionen
-ist als Apply-Regel aufgehoben. `run_selected_tests.py` bleibt ein Hilfsmittel
-für die Entwicklung; Teiltests ersetzen keinen vorgeschriebenen Volltest.
+Die frühere fachbezogene Apply-Auswahl ist historisch. Seit 15. Oktober 2026
+verwendet Apply die oben beschriebene feste Gerade/Ungerade-Rotation.
+`run_selected_tests.py` bleibt das Hilfsmittel für gezielte Entwicklungstests.

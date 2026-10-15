@@ -125,60 +125,59 @@ def test_serial_option_is_preserved_for_laptop_gate():
     assert "-n" not in command and "xdist.plugin" not in command
 
 
-@pytest.mark.parametrize("code", [0, 1, 2, 4])
-def test_intermediate_apply_runs_only_full_parallel_without_retry(code, capsys):
+def _assert_apply_partition(args, code, capsys, tmp_path):
+    """The historical test IDs stay stable; the approved gate now selects a half."""
     import run_apply_tests
     calls = []
-    def execute(command, **kwargs):
-        calls.append((command, kwargs))
-        return SimpleNamespace(returncode=code)
-    with patch.object(run_apply_tests.subprocess, "run", side_effect=execute):
-        assert run_apply_tests.main([]) == (0 if code == 0 else 1)
+    report = {"purpose": "alternating_apply_tests", "workers": 4, "parity": "odd",
+              "commit_sequence": 3, "test_scope": "stable_even_odd_partition",
+              "selected_passed": code == 0, "full_suite_passed": None,
+              "process_exit_code": code, "exit_code": 0 if code == 0 else 1,
+              "nodeid_to_test_id": {"tests/test_sample.py::test_one": "sample.one"}}
+    def execute(root, outdir):
+        calls.append((root, outdir))
+        return report
+    outdir = tmp_path / "apply-report"
+    with patch.object(run_apply_tests, "run_apply_partition", side_effect=execute):
+        assert run_apply_tests.main([*args, "--outdir", str(outdir)]) == (0 if code == 0 else 1)
     assert len(calls) == 1
-    command, options = calls[0]
-    assert command == [sys.executable, "-I", "-B", str(run_apply_tests.ROOT / "tools/run_tests.py"),
-                       "--workers", "4"]
-    assert options == {"cwd": run_apply_tests.ROOT, "stdin": subprocess.DEVNULL, "check": False}
+    assert calls[0] == (run_apply_tests.ROOT, outdir)
     assert json.loads(capsys.readouterr().out) == {
-        "checks": [{"mode": "parallel", "exit_code": code}], "suite_passed": code == 0}
+        **{k: v for k, v in report.items() if k != "nodeid_to_test_id"},
+        "report_directory": str(outdir)}
 
 
 @pytest.mark.parametrize("code", [0, 1, 2, 4])
-def test_final_apply_runs_only_full_parallel_without_retry(code, capsys):
-    import run_apply_tests
-    calls = []
-    def execute(command, **kwargs):
-        calls.append((command, kwargs))
-        return SimpleNamespace(returncode=code)
-    with patch.object(run_apply_tests.subprocess, "run", side_effect=execute):
-        assert run_apply_tests.main(["--final-bundle-state"]) == (0 if code == 0 else 1)
-    assert len(calls) == 1
-    command, options = calls[0]
-    assert command == [sys.executable, "-I", "-B", str(run_apply_tests.ROOT / "tools/run_tests.py"),
-                       "--workers", "4"]
-    assert options == {"cwd": run_apply_tests.ROOT, "stdin": subprocess.DEVNULL, "check": False}
-    assert json.loads(capsys.readouterr().out) == {
-        "checks": [{"mode": "parallel", "exit_code": code}], "suite_passed": code == 0}
+def test_intermediate_apply_runs_only_full_parallel_without_retry(code, capsys, tmp_path):
+    _assert_apply_partition([], code, capsys, tmp_path)
+
+
+@pytest.mark.parametrize("code", [0, 1, 2, 4])
+def test_final_apply_runs_only_full_parallel_without_retry(code, capsys, tmp_path):
+    _assert_apply_partition(["--final-bundle-state"], code, capsys, tmp_path)
 
 
 @pytest.mark.parametrize("final", [False, True])
-def test_apply_start_failure_does_not_retry_or_fall_back(final, capsys):
+def test_apply_start_failure_does_not_retry_or_fall_back(final, capsys, tmp_path):
     import run_apply_tests
     calls = []
-    def execute(command, **kwargs):
-        calls.append(command)
+    def execute(root, outdir):
+        calls.append((root, outdir))
         raise OSError('cannot start')
-    with patch.object(run_apply_tests.subprocess, "run", side_effect=execute):
-        assert run_apply_tests.main(["--final-bundle-state"] if final else []) == 1
-    assert [c[c.index("--workers") + 1] for c in calls] == ["4"]
+    outdir = tmp_path / "failed-report"
+    args = (["--final-bundle-state"] if final else []) + ["--outdir", str(outdir)]
+    with patch.object(run_apply_tests, "run_apply_partition", side_effect=execute):
+        assert run_apply_tests.main(args) == 4
+    assert calls == [(run_apply_tests.ROOT, outdir)]
     assert json.loads(capsys.readouterr().out) == {
-        "checks": [{"mode": "parallel", "exit_code": 4}],
-        "suite_passed": False}
+        "purpose": "alternating_apply_tests", "selected_passed": False,
+        "full_suite_passed": None, "exit_code": 4, "error": "apply_partition_rejected",
+        "report_directory": str(outdir)}
 
 
 def test_apply_rejects_unknown_gate_options_before_starting_tests():
     import run_apply_tests
-    with patch.object(run_apply_tests.subprocess, "run") as start:
+    with patch.object(run_apply_tests, "run_apply_partition") as start:
         with pytest.raises(SystemExit) as failure:
             run_apply_tests.main(["--workers", "0"])
     assert failure.value.code == 2
