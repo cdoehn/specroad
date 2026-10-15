@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 382
-last_completed_plan_commit: 9.a.W
-next_plan_commit: 9.a.R
-last_completed_numbered_bundle: 236
+implementation_plan_commits_completed: 383
+last_completed_plan_commit: 9.a.R
+next_plan_commit: 9.a.C
+last_completed_numbered_bundle: 237
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10072,12 +10072,30 @@ M9-Schritten. Erst erfolgreicher Apply-Testlauf und Commit bestätigen 382/900.
 
 #### 9.a.R – Make it Right
 
-- [ ] **9.a.R** · Position **383/900** · Voraussetzung: `9.a.W`.
+- [x] **9.a.R** · Position **383/900** · Voraussetzung: `9.a.W`.
 **Exakte Commit-Message:** `9.a.R feat(configuration): Dimensionen und Wertauswahl vervollständigen`
 
 **Vervollständigung:** Unbekannte Dimensionen und falsche Werte einschließlich Typgrenzen abweisen.
 
 **Verhaltensabnahme:** Datenfälle prüfen exakte Annahme/Ablehnung und materialisierte Auswahl. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 237, SR-TC-0395 weiterhin teilweise):**
+Der R-Schritt vervollständigt den Verhaltensnachweis der vorhandenen
+Record-Validierung und ihrer Verwendung durch den Konfigurationsdienst.
+Dimensionsnamen mit Nullzeichen werden bereits vom gemeinsamen Schema bei
+Default und expliziter Auswahl abgewiesen. Die Datenfälle binden diesen
+vorhandenen Fehlervertrag an den Dienst und den direkten Record-Leser. Die
+Produktvalidierung wird wiederverwendet; R erweitert hier ihren Verhaltensnachweis.
+
+Datenfälle prüfen Annahme und Ablehnung für `null`, Boolean, Zahlen und Strings
+bei Auswahl und Default. Insbesondere bleiben `true` und `1` sowie `false` und
+`0` verschieden, während `1` und `1.0` denselben JSON-Zahlenwert bezeichnen.
+Unbekannte Dimensionen, Containerwerte, fehlerhafte Dimensionsdeklarationen und
+unvollständige Auswahl ergeben kein Teilergebnis. Gültige Dimensionsnamen sind
+exakte Schlüssel; sie werden weder normalisiert noch als JSON Pointer gelesen.
+Die W-Nachweise bleiben erhalten. Elternauflösung, effektiver Hash und die
+späteren M9-Integrationen bleiben offen. Erst erfolgreicher Apply-Testlauf und
+Commit bestätigen Position 383/900.
 
 #### 9.a.C – Make it Clean
 
