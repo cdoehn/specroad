@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 392
-last_completed_plan_commit: 9.d.R
-next_plan_commit: 9.d.C
+implementation_plan_commits_completed: 393
+last_completed_plan_commit: 9.d.C
+next_plan_commit: 9.e.W
 last_completed_numbered_bundle: 243
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10373,7 +10373,7 @@ CLI-/Projektprovider-Erfolg vorweggenommen; diese Integration folgt in 9.g.
 
 #### 9.d.C – Make it Clean
 
-- [ ] **9.d.C** · Position **393/900** · Voraussetzung: `9.d.R`.
+- [x] **9.d.C** · Position **393/900** · Voraussetzung: `9.d.R`.
 **Exakte Commit-Message:** `9.d.C refactor(configuration): Konfiguration vor Scope-Closure bereinigen`
 
 **Bereinigung:** Vorfilter und Closurezulässigkeit gemeinsam verwenden.
@@ -10381,6 +10381,17 @@ CLI-/Projektprovider-Erfolg vorweggenommen; diese Integration folgt in 9.g.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 243):**
+`ScopeApplicability` bündelt die ausgewählte Parent-Auflösung, die explizite
+Applicability-Klassifikation und die semantische Konfigurationsbindung.
+Seed-Vorfilter, Query-Seitenprüfung und Aufnahme von Pflichtabhängigkeiten
+verwenden denselben internen Vertrag. Klassifikationen bleiben innerhalb der
+einzelnen Auflösung an ihr unverändertes Inventar gebunden; es entsteht kein
+projektübergreifender oder persistenter Cache. Permanente Kontrollausschlüsse,
+Fehlerreihenfolge, Seitengröße/-reihenfolge, Boundary-Verträge und Hashes bleiben
+unverändert. Alle W-/R-Testdateien bleiben bytegleich zum eingefrorenen R-Stand
+und werden zusammen mit den betroffenen bisherigen Verhaltenstests geprüft.
 
 <a id="step-9-e"></a>
 ### 9.e – Pflichtabhängigkeiten und Erklärungspfad

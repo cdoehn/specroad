@@ -3,11 +3,11 @@
 The page adapter never evaluates filters or authenticates query outcomes.
 """
 from dataclasses import dataclass
-from ..configurations import evaluate_applicability, resolve_configuration
 from ..model.errors import ModelError
 from .scope_descriptors import ScopeDescriptor
 from ._scope_selector_contract import _artifact_id
 from .scope_inputs import ScopeSeedInputs, _sequence
+from ._scope_applicability import ScopeApplicability
 
 
 @dataclass(frozen=True, init=False)
@@ -40,9 +40,8 @@ class QuerySeedPage:
         if data['configuration_id'] is not None:
             if data['configuration_id'] not in known:
                 raise ModelError('scope_configuration_missing')
-            selected = resolve_configuration(inputs.records, data['configuration_id'])
-            eligible = {record.identity.id for record in inputs.records if evaluate_applicability(
-                record, selected, require_configuration=True).status == 'applicable'}
+            applicability = ScopeApplicability(data['configuration_id'], inputs.records)
+            eligible = {record.identity.id for record in inputs.records if applicability.includes(record)}
         for value in ids:
             _artifact_id(value)
             if value not in known:

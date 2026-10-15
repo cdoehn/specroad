@@ -3,13 +3,12 @@ from dataclasses import dataclass
 import re
 
 from ..model.errors import ModelError
-from ..model.canonical import canonical_json_sha256
-from ..configurations import evaluate_applicability, resolve_configuration
 from .scope_descriptors import ScopeDescriptor
 from ._scope_selector_contract import _artifact_id, _text
 from .scope_inputs import ScopeSeedInputs
 from .scope_query_page import QuerySeedPage
 from .scope_admission import CONTROL_ARTIFACT_TYPES
+from ._scope_applicability import ScopeApplicability
 
 
 @dataclass(frozen=True)
@@ -80,26 +79,19 @@ def resolve_scope_seeds(descriptor, inputs, *, query_page=None):
     data = descriptor.data
     by_id = {record.identity.id: record for record in inputs.records}
     config = data['configuration_id']
-    effective = None
     if config is not None:
         if config not in by_id or by_id[config].identity.artifact_type != 'configuration':
             raise ModelError('scope_configuration_missing')
-        effective = resolve_configuration(inputs.records, config)
+    applicability = ScopeApplicability(config, inputs.records)
+    if config is not None:
         if data['scope_kind'] == 'configuration':
             data = data['selector']['base_scope_descriptor']
     kind, selector = data['scope_kind'], data['selector']
     if query_page is not None and kind != 'query':
         raise ModelError('unexpected_query_seed_page')
     resources = {resource.resource_id: resource for resource in inputs.resources}
-    decisions = {}
-
     def applicable(identity):
-        if effective is None:
-            return True
-        if identity not in decisions:
-            decisions[identity] = evaluate_applicability(by_id[identity], effective,
-                                                        require_configuration=True).status == 'applicable'
-        return decisions[identity]
+        return applicability.includes(by_id[identity])
 
     selected, selected_resources, config_hash = set(), set(), None
     if kind == 'specification':
@@ -132,16 +124,12 @@ def resolve_scope_seeds(descriptor, inputs, *, query_page=None):
         # Recheck supplied values without filtering, filling or reordering an
         # already paginated result. Query execution remains the provider's job.
         checked = QuerySeedPage(descriptor, inputs, query_page.artifact_ids, total=query_page.total)
-        if effective is not None:
-            config_hash = canonical_json_sha256({'project_configuration_sha256': inputs.configuration_sha256,
-                                                 'selected_configuration_sha256': effective.sha256})
+        config_hash = applicability.configuration_hash(inputs.configuration_sha256)
         return ScopeSeeds(descriptor, inputs.fingerprint, checked.artifact_ids, (), config_hash)
     else:
         raise ModelError('unsupported_scope_seed_resolver')
     selected = {name for name in selected if applicable(name)}
-    if effective is not None:
-        config_hash = canonical_json_sha256({'project_configuration_sha256': inputs.configuration_sha256,
-                                             'selected_configuration_sha256': effective.sha256})
+    config_hash = applicability.configuration_hash(inputs.configuration_sha256, unconfigured=config_hash)
     return ScopeSeeds(descriptor, inputs.fingerprint,
                       tuple(sorted(selected, key=lambda value: value.encode('utf-8'))),
                       tuple(sorted(selected_resources, key=lambda value: value.encode('utf-8'))), config_hash)

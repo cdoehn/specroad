@@ -136,6 +136,6 @@
     "tests/test_configuration_scope_right.py::test_unselected_historical_review_is_not_an_implicit_dependency"
   ],
   "open_items": [
-    "The shared-policy structural cleanup follows in 9.d.C. Live provider/command configuration integration follows in 9.g; this pure adapter does not certify query evaluation, resource discovery, review freshness or release approval."
+    "Live provider/command configuration integration follows in 9.g; this pure adapter does not certify query evaluation, resource discovery, review freshness or release approval."
   ]
 }
