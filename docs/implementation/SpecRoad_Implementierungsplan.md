@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 410
-last_completed_plan_commit: 10.b.R
-next_plan_commit: 10.b.C
+implementation_plan_commits_completed: 411
+last_completed_plan_commit: 10.b.C
+next_plan_commit: 10.c.W
 last_completed_numbered_bundle: 255
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10893,7 +10893,7 @@ unverändert. Die dokumentierten Provider-/Publikationsgrenzen bleiben bestehen.
 
 #### 10.b.C – Make it Clean
 
-- [ ] **10.b.C** · Position **411/900** · Voraussetzung: `10.b.R`.
+- [x] **10.b.C** · Position **411/900** · Voraussetzung: `10.b.R`.
 **Exakte Commit-Message:** `10.b.C refactor(baseline): Baseline-Manifest und semantische Konfiguration bereinigen`
 
 **Bereinigung:** Manifestaufbau denselben Scope-/Hashkern wie Projektvergleich verwenden lassen.
@@ -10901,6 +10901,14 @@ unverändert. Die dokumentierten Provider-/Publikationsgrenzen bleiben bestehen.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 255):**
+Die unveränderte Eingabeprüfung liegt in `archive/_baseline_inputs.py`;
+Manifestwert und Aufbau verbleiben in der öffentlichen Baseline-Fassade. Der
+Aufbau verwendet weiterhin `graph.scope_hash.fingerprint_scope` und dessen
+vorhandene Modellprojektion. Es entsteht keine zweite Hashimplementierung.
+Funktionen/Klassen bleiben inhaltlich und strukturell identisch, alle W-/R-Tests
+bleiben bytegleich. Die gezielte Regression prüft dieselben 1.074 Fälle.
 
 <a id="step-10-c"></a>
 ### 10.c – Working-Baseline atomar erzeugen
