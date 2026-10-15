@@ -3,6 +3,7 @@
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
+    "SR-FIX-BASELINE-MANIFEST-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-CHANGE-EXECUTION-v1",
@@ -332,6 +333,10 @@
     "SR-FIX-SNAPSHOT-OBJECTS-v1": {
       "provider": "tests/test_snapshot_objects.py:setup_store",
       "kind": "Owned private external Linux object store and explicitly protected real project; actual canonical/raw bytes, native locks, immutable publication and fresh-process reads. No Baseline creation, scope completeness, normative journal or release approval claim."
+    },
+    "SR-FIX-BASELINE-MANIFEST-v1": {
+      "provider": "tests/test_baseline_manifest.py:baseline_inputs",
+      "kind": "Owned complete synthetic scope/dependency observations, real canonical artifact/profile/rule/mapping bytes and exact binary attachments, recomposed profiles and real external object-store/PYZ execution. No live-project completeness, readiness or normative publication claim."
     }
   }
 }

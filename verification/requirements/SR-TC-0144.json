@@ -7,20 +7,31 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-BASELINE-MANIFEST-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
+    "Complete explicitly supplied current scope/dependency observations and effective project policy; selected resource payloads and attachments come from owned original bytes."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Resolve fixture scope, prepare the Baseline manifest, independently verify all retained bytes and the existing model-root projection, exercise refusal cases and round-trip through real external storage and isolated Core/PYZ processes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Baseline-Artefakt MUSS die Art `working` oder `release` besitzen.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. 10.b.W builds an owned inert BaselineManifest for working/release labels over explicitly resolved unconfigured scopes. The existing fingerprint_scope function supplies the exact precreation Scope-Hash and model root. Every selected artifact, profile, rule, mapping and attachment is retained as canonical JSON or exact raw SnapshotObject bytes; missing, surplus, stale and mismatched inputs fail. The manifest includes schema/tool versions, ordered active profile identities and hashes, the effective supplied semantic configuration snapshot/hash, recomposed effective-profile bytes, boundary references and complete object rows with role, identity/version/revision, relative source path, length, media type, hash and archive path. Identical bytes deduplicate across roles. Tests bind independent actual digests, the existing model-root contract, external-store round trips, owned values and isolated Core/PYZ behavior. Complete live-project/provider validation, configured/language/archival integration, Baseline artifact creation, journal publication and release readiness are outside this W preparation; no full-suite or release success is claimed."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "baseline_attachment_binding_mismatch",
+    "baseline_attachment_payload_set_mismatch",
+    "baseline_effective_profile_mismatch",
+    "baseline_kind_invalid",
+    "baseline_resource_binding_mismatch",
+    "baseline_resource_payload_set_mismatch",
+    "scope_closure_observation_stale"
+  ],
   "expected_exit_codes": [],
   "json_pointers": [],
   "required_environment": {
@@ -35,9 +46,47 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_all_fourteen_record_types_are_readable"
+    "test_record_schemas.RecordWorkTests.test_all_fourteen_record_types_are_readable",
+    "tests/test_baseline_manifest.py::test_attachment_payloads_must_match_the_exact_declared_scope[changed]",
+    "tests/test_baseline_manifest.py::test_attachment_payloads_must_match_the_exact_declared_scope[extra]",
+    "tests/test_baseline_manifest.py::test_attachment_payloads_must_match_the_exact_declared_scope[missing]",
+    "tests/test_baseline_manifest.py::test_baseline_manifest_runs_in_an_isolated_core_or_portable_distribution[core]",
+    "tests/test_baseline_manifest.py::test_baseline_manifest_runs_in_an_isolated_core_or_portable_distribution[pyz]",
+    "tests/test_baseline_manifest.py::test_both_baseline_kinds_are_inert_data_without_publication_or_release_authority[release]",
+    "tests/test_baseline_manifest.py::test_both_baseline_kinds_are_inert_data_without_publication_or_release_authority[working]",
+    "tests/test_baseline_manifest.py::test_changed_resource_bytes_cannot_reuse_the_old_scope_identity",
+    "tests/test_baseline_manifest.py::test_effective_configuration_profile_chain_versions_and_schema_are_retained",
+    "tests/test_baseline_manifest.py::test_effective_profile_is_recomposed_from_actual_profile_bytes",
+    "tests/test_baseline_manifest.py::test_every_manifest_row_has_exact_retained_bytes_hash_length_and_object_path",
+    "tests/test_baseline_manifest.py::test_every_semantic_input_changes_the_bound_model_root[artifact]",
+    "tests/test_baseline_manifest.py::test_every_semantic_input_changes_the_bound_model_root[attachment]",
+    "tests/test_baseline_manifest.py::test_every_semantic_input_changes_the_bound_model_root[configuration]",
+    "tests/test_baseline_manifest.py::test_every_semantic_input_changes_the_bound_model_root[profile]",
+    "tests/test_baseline_manifest.py::test_every_semantic_input_changes_the_bound_model_root[revision]",
+    "tests/test_baseline_manifest.py::test_every_semantic_input_changes_the_bound_model_root[rule]",
+    "tests/test_baseline_manifest.py::test_extra_unselected_resource_payload_is_rejected",
+    "tests/test_baseline_manifest.py::test_identical_content_can_have_two_logical_roles_but_one_object",
+    "tests/test_baseline_manifest.py::test_manifest_and_object_order_are_independent_of_inventory_iteration",
+    "tests/test_baseline_manifest.py::test_missing_selected_resource_bytes_cannot_produce_a_partial_manifest[mapping:exchange]",
+    "tests/test_baseline_manifest.py::test_missing_selected_resource_bytes_cannot_produce_a_partial_manifest[profile:core]",
+    "tests/test_baseline_manifest.py::test_missing_selected_resource_bytes_cannot_produce_a_partial_manifest[profile:product]",
+    "tests/test_baseline_manifest.py::test_missing_selected_resource_bytes_cannot_produce_a_partial_manifest[rule:check]",
+    "tests/test_baseline_manifest.py::test_owned_manifest_survives_mutation_of_original_and_returned_containers",
+    "tests/test_baseline_manifest.py::test_partial_scope_retains_boundary_hash_without_materializing_the_omitted_target",
+    "tests/test_baseline_manifest.py::test_preparation_is_pure_and_does_not_modify_any_project_or_create_a_baseline",
+    "tests/test_baseline_manifest.py::test_retained_objects_round_trip_through_the_actual_external_store",
+    "tests/test_baseline_manifest.py::test_same_semantic_json_with_other_formatting_has_the_same_snapshot_objects",
+    "tests/test_baseline_manifest.py::test_stale_closure_is_rejected_instead_of_hashing_incomplete_membership",
+    "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[None]",
+    "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[True]",
+    "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[Working]",
+    "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[]",
+    "tests/test_baseline_manifest.py::test_unknown_baseline_kind_is_rejected[draft]",
+    "tests/test_baseline_manifest.py::test_working_manifest_binds_the_actual_precreation_model_root"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Complete the R/C boundary and refactoring steps for this preparation.",
+    "Connect actual project/resource providers, configured/language/archival snapshot support and the validated journalled Baseline writer in the following integration steps.",
+    "Release-kind data does not grant readiness or publication authority; no full requirement, full-suite or release success claimed."
   ]
 }

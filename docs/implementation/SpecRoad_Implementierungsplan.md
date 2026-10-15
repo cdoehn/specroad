@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 408
-last_completed_plan_commit: 10.a.C
-next_plan_commit: 10.b.W
-last_completed_numbered_bundle: 253
+implementation_plan_commits_completed: 409
+last_completed_plan_commit: 10.b.W
+next_plan_commit: 10.b.R
+last_completed_numbered_bundle: 254
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10839,12 +10839,33 @@ Die gezielte parallele Regression prüft dieselben 548 Fälle wie im R-Zustand.
 
 #### 10.b.W – Let it Work
 
-- [ ] **10.b.W** · Position **409/900** · Voraussetzung: `10.a.C`.
+- [x] **10.b.W** · Position **409/900** · Voraussetzung: `10.a.C`.
 **Exakte Commit-Message:** `10.b.W feat(baseline): Baseline-Manifest und semantische Konfiguration aufbauen`
 
 **Umsetzung:** Art, Scope, Profile, Regeln, Mappings, Konfiguration und vollständige Objektliste binden.
 
 **Verhaltensabnahme:** Manifestwurzel stimmt mit dem Snapshot vor Erzeugen des Baselineartefakts überein.
+
+**Vorbereiteter W-Stand (Bundle 254, SR-TC-0144/0146/0147 teilweise):**
+`build_baseline_manifest` bereitet aus ausdrücklich vollständig gelieferten
+Scope-/Abhängigkeitsbeobachtungen ein eigenes `BaselineManifest` mit Objektbytes
+vor. Die vorhandene Funktion `fingerprint_scope` berechnet Scope-Hash und
+Modellwurzel des Zustands vor Erzeugung eines Baselineartefakts. Art, Schema- und
+Werkzeugversion, aktive Profilkette, semantische Konfiguration, effektive
+Profilkomposition und Grenzreferenzen sind gebunden. Artefakte, Profile, Regeln,
+Mappings und Anhänge besitzen vollständige Objektzeilen; Inhalt wird nach Hash
+dedupliziert. Die Profilkomposition wird aus den tatsächlichen Profilbytes neu
+berechnet. Fehlende, zusätzliche, veraltete oder abweichende Eingaben liefern
+kein Teilmanifest.
+
+Die neuen Verhaltenstests prüfen eigene Hash-/Längenorakel, den vorhandenen
+Modellwurzelvertrag, gespeicherte Versionen und Revisionen, reine Vorbereitung,
+reale Objektstore-Rundläufe, Teilscopes, unveränderte Binärbytes, Eingabefehler
+und isolierte Core-/PYZ-Ausführung. Dies ist ein schreibfreier W-Kern über
+unkonfigurierte Scopes. Tatsächliche Projektvollständigkeit, weitere
+Konfigurations-/Sprach-/Archivprovider, Baselineartefakt und Journalpublikation
+bleiben nachfolgende Integrationsarbeit; `release` ist hier eine Datenart und
+keine Readiness- oder Schreibfreigabe.
 
 #### 10.b.R – Make it Right
 
