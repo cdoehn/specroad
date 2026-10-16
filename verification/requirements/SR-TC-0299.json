@@ -7,21 +7,30 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
+    "Trusted caller supplies owned current-schema TargetModel bytes for the full supplied-project document-role contract; this does not prove on-disk inventory completeness or complete document semantics."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `document`-Artefakt MUSS mindestens Zweck, Zielgruppe, Sprache und Render-Policy enthalten.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "11.a.W: full supplied-project document field and primary-role assessment using existing schemas. Exactly one non-retired primary produces its owned record, identity, revision, path and hashes. Missing or multiple candidates and invalid fields yield no selection; missing language is refused earlier by the common model schema. All other non-retired maturities count without lifecycle approval. This is source selection for a later specification view, not rendering, complete document-model validation, a live file inventory, a partial/legacy fallback or write authority."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_diagnostics": [
+    "document_primary_missing",
+    "document_primary_multiple",
+    "missing_field"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -35,11 +44,39 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "test_record_schemas.RecordRightTests.test_contains_target_type_is_bound_to_document_or_section",
     "test_record_schemas.RecordWorkTests.test_bad_document_roles_and_render_policy_types_fail",
     "test_record_schemas.RecordWorkTests.test_bound_reader_keeps_project_bytes_unchanged",
-    "test_record_schemas.RecordRightTests.test_contains_target_type_is_bound_to_document_or_section"
+    "tests/test_document_roles.py::test_assessment_and_selected_record_are_owned_and_cannot_be_promoted_by_detached_data",
+    "tests/test_document_roles.py::test_document_selection_contract_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_document_roles.py::test_document_selection_contract_runs_in_isolated_core_and_pyz[pyz]",
+    "tests/test_document_roles.py::test_every_nonretired_primary_is_counted_without_claiming_lifecycle_approval[approved]",
+    "tests/test_document_roles.py::test_every_nonretired_primary_is_counted_without_claiming_lifecycle_approval[draft]",
+    "tests/test_document_roles.py::test_every_nonretired_primary_is_counted_without_claiming_lifecycle_approval[in_review]",
+    "tests/test_document_roles.py::test_every_nonretired_primary_is_counted_without_claiming_lifecycle_approval[proposed]",
+    "tests/test_document_roles.py::test_every_nonretired_primary_is_counted_without_claiming_lifecycle_approval[rejected]",
+    "tests/test_document_roles.py::test_every_nonretired_primary_is_counted_without_claiming_lifecycle_approval[superseded]",
+    "tests/test_document_roles.py::test_existing_record_schema_remains_mandatory_for_document_selection[audience]",
+    "tests/test_document_roles.py::test_existing_record_schema_remains_mandatory_for_document_selection[document_role]",
+    "tests/test_document_roles.py::test_existing_record_schema_remains_mandatory_for_document_selection[purpose]",
+    "tests/test_document_roles.py::test_existing_record_schema_remains_mandatory_for_document_selection[render_policy]",
+    "tests/test_document_roles.py::test_full_supplied_project_selects_the_exact_primary_and_binds_actual_sources",
+    "tests/test_document_roles.py::test_missing_document_language_is_refused_by_the_shared_model_before_role_assessment",
+    "tests/test_document_roles.py::test_missing_or_ambiguous_primary_never_selects_a_fallback[records0-document_primary_missing]",
+    "tests/test_document_roles.py::test_missing_or_ambiguous_primary_never_selects_a_fallback[records1-document_primary_missing]",
+    "tests/test_document_roles.py::test_missing_or_ambiguous_primary_never_selects_a_fallback[records2-document_primary_missing]",
+    "tests/test_document_roles.py::test_missing_or_ambiguous_primary_never_selects_a_fallback[records3-document_primary_multiple]",
+    "tests/test_document_roles.py::test_owned_document_inventory_never_reads_a_later_project_tree",
+    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order0]",
+    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order1]",
+    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order2]",
+    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order3]",
+    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order4]",
+    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order5]"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Complete section/composition/payload/include/view semantics and shared validation integration in the assigned following document steps.",
+    "The built-in specification view and explicit partial/legacy fallback are assigned to 11.q; no rendered or fallback view is claimed here.",
+    "Targeted development observations and alternating Apply partitions are not a full-suite, cross-platform or release proof."
   ]
 }

@@ -25,6 +25,7 @@
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
+    "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
@@ -378,6 +379,10 @@
     "SR-FIX-BASELINE-WORK-v1": {
       "provider": "tests/test_baseline_work.py:large_project",
       "kind": "Actual supplied project bytes, bounded native input capture, direct/split baseline parity, existing durable Work checkpoint generations and native single publication/replay. Real older native Baseline with checked lifecycle/archived-byte providers, hash retention, stale/missing Work inputs, denied authority and five actual native process-loss boundaries with unchanged checkpoints, Recovery admission and original receipt replay."
+    },
+    "SR-FIX-DOCUMENT-ROLES-v1": {
+      "provider": "tests/test_document_roles.py:document",
+      "kind": "Actual stored current-schema Document bytes in owned TargetModel inventories, native field checks, primary cardinality, immutable selections, real read-only project inputs and isolated Core/PYZ parity."
     }
   }
 }

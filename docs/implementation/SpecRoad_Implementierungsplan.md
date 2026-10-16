@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 432
-last_completed_plan_commit: 10.i.C
-next_plan_commit: 11.a.W
-last_completed_numbered_bundle: 270
+implementation_plan_commits_completed: 433
+last_completed_plan_commit: 11.a.W
+next_plan_commit: 11.a.R
+last_completed_numbered_bundle: 271
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11409,10 +11409,20 @@ zweite Baseline-Speicherlogik entsteht nicht.
 
 #### 11.a.W – Let it Work
 
-- [ ] **11.a.W** · Position **433/900** · Voraussetzung: `10.i.C`.
+- [x] **11.a.W** · Position **433/900** · Voraussetzung: `10.i.C`.
 **Exakte Commit-Message:** `11.a.W feat(documents): Dokumentrolle und Primärdokument aufbauen`
 
 **Umsetzung:** Document-Daten und genau ein aktives primary_specification im Vollprojekt validieren.
+
+**Vorbereiteter W-Stand (Bundle 271):** Die schreibfreie Dokumentrollenprüfung
+verwendet die vorhandenen Feldschemas und die eigenen Bytes des gelieferten
+Vollprojektmodells. Genau ein nicht retirierter Primärkandidat liefert seine
+gebundenen Originaldaten mit Record-, Quell- und Modellhashes. Fehlende oder
+mehrfache Primärdokumente und ungültige Dokumentfelder liefern keine Auswahl.
+Die Beobachtung behauptet weder vollständige Dateierfassung noch Kompositions-,
+Rendering- oder Schreibfreigabe. Der vollständige `document_model`-Dienst bleibt
+von den folgenden Dokumentinvarianten abhängig; die ausdrücklich getrennte
+Partial-/Legacy-Fallbackansicht folgt in 11.q.
 
 **Verhaltensabnahme:** Ein gültiges Vollprojekt besitzt genau eine eindeutige Primärspezifikation.
 
