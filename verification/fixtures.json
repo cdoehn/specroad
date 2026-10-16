@@ -422,7 +422,7 @@
     },
     "SR-FIX-DOCUMENT-TABLES-v1": {
       "provider": "tests/test_document_tables.py:table_project",
-      "kind": "Owned native query/table blocks, bound normalized queries and basic project views, SRX/configuration filters, typed literal rows, missing/null distinctions, exact pagination/source hashes, no source effects and isolated Core/PYZ parity."
+      "kind": "Owned native query/table blocks, bound normalized queries and basic project views, SRX/configuration filters, typed literal rows, missing/null distinctions, exact pagination/source hashes, no source effects and isolated Core/PYZ parity. R adds adversarial source/view/column/scope/provider/query declarations, duplicate identities, byte-only rebinding, native collation and real-file inventories with read/process/network traps."
     }
   }
 }

@@ -49,7 +49,7 @@ def _fail(reason, source, pointer):
     raise TableBlockError(reason, path=source.path, pointer=pointer)
 
 
-def _columns(values, source, pointer, *, literal=False):
+def _columns(values, source, pointer, *, literal=False, view=False):
     """Closed column forms; a static field is not a template expression."""
     result = []
     for index, value in enumerate(values):
@@ -57,6 +57,8 @@ def _columns(values, source, pointer, *, literal=False):
         if type(value) is not dict:
             _fail('table_column_required', source, at)
         if 'field' in value:
+            if view:
+                _fail('table_column_contract', source, at)
             allowed = {'field', 'heading', 'data_type'} if literal else {'field'}
             if not set(value) <= allowed or type(value['field']) is not str:
                 _fail('table_column_contract', source, at)
@@ -112,7 +114,7 @@ def _view_query(value, source, source_count):
         _fail('table_view_projection_provider_required', source, '/relation_projections')
     # Validate every declared view column even when a query block supplies its
     # own columns. Unsupported declarations cannot disappear behind an override.
-    _columns(value['columns'], source, '/columns')
+    _columns(value['columns'], source, '/columns', view=True)
     ordering = []
     for index, item in enumerate(value['sort']):
         if (type(item) is not dict or set(item) != {'key', 'direction'}

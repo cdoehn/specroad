@@ -25,7 +25,9 @@ columns declare exactly `source={kind:"artifact_field", pointer:...}`, `heading`
 rejects unsupported formatting/missing-value providers, grouping, relation
 projections and non-project scopes; the complete view service follows in
 11.k/11.l. A query block may provide its own columns over a referenced view;
-the view's original column declarations are still checked.
+the view's original column declarations are still checked, even for empty
+results. Every view column must use the full form; the query-only `field`
+shorthand cannot replace its required declarations.
 
 Literal columns declare `field` and may add `heading` and `data_type`. Declared
 types are `null`, `boolean`, `number`, `string`, `array` or `object`; there is no
@@ -56,3 +58,10 @@ The scope is `supplied_snapshot_table_projection`. Complete on-disk inventory,
 whole-project validation, document structure, rendering, writes and approval
 remain unproved. Tests compare typed rows, bindings, errors and side effects;
 they never compare rendered table layout, Markdown or HTML.
+
+Invalid block/view references, external-source fields, executable declarations,
+unsupported scopes and unavailable providers fail before any table result is
+created. Empty filters and query-column overrides do not suppress declaration
+validation. Byte-only source changes update source/input hashes while preserving
+semantic model roots, revisions and query results. The owned snapshot is resolved
+without opening source paths, running processes or accessing the network.

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 448
-last_completed_plan_commit: 11.f.W
-next_plan_commit: 11.f.R
-last_completed_numbered_bundle: 281
+implementation_plan_commits_completed: 449
+last_completed_plan_commit: 11.f.R
+next_plan_commit: 11.f.C
+last_completed_numbered_bundle: 282
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11748,10 +11748,20 @@ Darstellungsoracle. Rendering und vollständige Projektfreigabe bleiben offen.
 
 #### 11.f.R – Make it Right
 
-- [ ] **11.f.R** · Position **449/900** · Voraussetzung: `11.f.W`.
+- [x] **11.f.R** · Position **449/900** · Voraussetzung: `11.f.W`.
 **Exakte Commit-Message:** `11.f.R feat(documents): Query- und Tabellenblöcke vervollständigen`
 
 **Vervollständigung:** Templatecode, fremde Datenquellen und fehlende View-ID ablehnen.
+
+**Vorbereiteter R-Stand (Bundle 282):** View-Spalten verlangen ihre vollständige
+Deklaration; die Query-Kurzform kann sie auch bei eigener Query-Spaltenauswahl
+oder leerem Filter nicht ersetzen. Zusätzliche Verhaltenstests prüfen fremde
+Quellen und ausführbare Felder, exakte View-Verweise, Scope-/Providergrenzen,
+gebundene native Querydaten, statische Pointer, Typfehler und doppelte IDs.
+Reine Byteänderungen binden Quellen neu, ohne Revision oder semantische
+Modellwurzel zu erfinden. Fachliche Sortierung und frühere Resultate bleiben
+erhalten; tatsächliche Dateiinventare und Zugriffssperren sichern die
+Seiteneffektgrenze. Die W-Nachweise bleiben Bestandteil der gezielten Abnahme.
 
 **Verhaltensabnahme:** Datensatz-/Scopevergleich und Sicherheitsgrenzen werden geprüft, keine Tabellenoptik. Die W-Nachweise bleiben zusätzlich grün.
 
