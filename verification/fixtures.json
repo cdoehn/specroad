@@ -372,7 +372,7 @@
     },
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1": {
       "provider": "tests/test_release_baseline_boundary.py:release_project",
-      "kind": "Actual native project and stored Release policy; unavailable readiness observations, explicit working/release dispatch, unchanged working publication, no-write release refusal and isolated Core/PYZ checks."
+      "kind": "Actual native project and stored Release policy; unavailable readiness observations, explicit working/release dispatch, unchanged working publication, no-write release refusal and isolated Core/PYZ checks. Stored object selection precedence, full value ownership, external conflict, hostile readiness reports/host gates and saved-plan publication rejection."
     }
   }
 }

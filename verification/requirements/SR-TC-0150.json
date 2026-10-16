@@ -16,7 +16,10 @@
     "Observe and bind the actual stored Release revision, record and optional evaluation hash without claiming descriptor validity or readiness.",
     "Prepare and publish ordinary and configuration-bound working Baselines through the unchanged native saved-plan path.",
     "Request release creation with missing or stored selection and asserted success labels; require refusal before archive, plan or transaction creation.",
-    "Verify identity selection, detached-value ownership, no current-tree/Git fallback, rejected working-operation relabeling and isolated Core/PYZ behavior."
+    "Verify identity selection, detached-value ownership, no current-tree/Git fallback, rejected working-operation relabeling and isolated Core/PYZ behavior.",
+    "Reject non-object stored/external selections and bind the complete actual stored value without claiming semantic validity.",
+    "Allow only canonical repetition of stored selection; reject a conflicting external value with Code 6 and missing stored selection without substitution.",
+    "Refuse forged readiness reports, host success stubs and saved release-relabelled plans before host authority or native writes."
   ],
   "oracle": {
     "kind": "behavior",
@@ -24,8 +27,14 @@
     "scope": "Closed release-admission boundary only: the native creation dispatcher preserves working behavior and cannot produce a release plan while the real readiness provider is unavailable. The read-only observation binds actual stored data but explicitly does not validate or approve an evaluation descriptor, required runs, Evidence, project or release."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    6
+  ],
+  "json_pointers": [
+    "/readiness_policy/verification_evaluation",
+    "/evaluation",
+    "/operations/0/record/baseline_kind"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -60,7 +69,34 @@
     "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[None]",
     "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[RELEASE]",
     "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[True]",
-    "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[snapshot]"
+    "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[snapshot]",
+    "tests/test_release_baseline_boundary_right.py::test_changed_stored_bytes_produce_a_new_binding_without_upgrading_an_old_observation",
+    "tests/test_release_baseline_boundary_right.py::test_different_external_selection_is_a_conflict_without_alternative_approval[evaluation0]",
+    "tests/test_release_baseline_boundary_right.py::test_different_external_selection_is_a_conflict_without_alternative_approval[evaluation1]",
+    "tests/test_release_baseline_boundary_right.py::test_different_external_selection_is_a_conflict_without_alternative_approval[evaluation2]",
+    "tests/test_release_baseline_boundary_right.py::test_equal_canonical_selection_has_the_same_observation_but_never_grants_readiness",
+    "tests/test_release_baseline_boundary_right.py::test_explicit_selection_requires_an_object_and_cannot_be_ignored[0]",
+    "tests/test_release_baseline_boundary_right.py::test_explicit_selection_requires_an_object_and_cannot_be_ignored[False]",
+    "tests/test_release_baseline_boundary_right.py::test_explicit_selection_requires_an_object_and_cannot_be_ignored[]",
+    "tests/test_release_baseline_boundary_right.py::test_explicit_selection_requires_an_object_and_cannot_be_ignored[evaluation3]",
+    "tests/test_release_baseline_boundary_right.py::test_explicit_selection_requires_an_object_and_cannot_be_ignored[evaluation4]",
+    "tests/test_release_baseline_boundary_right.py::test_external_selection_cannot_substitute_for_missing_stored_selection[policy0]",
+    "tests/test_release_baseline_boundary_right.py::test_external_selection_cannot_substitute_for_missing_stored_selection[policy1]",
+    "tests/test_release_baseline_boundary_right.py::test_forged_success_report_is_never_a_publication_permit",
+    "tests/test_release_baseline_boundary_right.py::test_host_success_gate_is_never_invoked_as_a_replacement_for_real_readiness[False]",
+    "tests/test_release_baseline_boundary_right.py::test_host_success_gate_is_never_invoked_as_a_replacement_for_real_readiness[True]",
+    "tests/test_release_baseline_boundary_right.py::test_saved_release_relabeling_fails_before_host_authority_or_native_publication[execute]",
+    "tests/test_release_baseline_boundary_right.py::test_saved_release_relabeling_fails_before_host_authority_or_native_publication[load]",
+    "tests/test_release_baseline_boundary_right.py::test_saved_release_relabeling_fails_before_host_authority_or_native_publication[prepare]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[0]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[1]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[False]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[True]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[evaluation6]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[evaluation7]",
+    "tests/test_release_baseline_boundary_right.py::test_stored_selection_requires_an_object_before_any_release_preparation[passed]",
+    "tests/test_release_baseline_boundary_right.py::test_working_creation_cannot_silently_discard_an_external_release_selection"
   ],
   "open_items": [
     "M13 must implement the complete stored evaluation selection, approved scope, actual bound Evidence/readiness policy and release publication before this boundary can open.",

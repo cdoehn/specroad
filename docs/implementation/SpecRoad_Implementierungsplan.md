@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 427
-last_completed_plan_commit: 10.h.W
-next_plan_commit: 10.h.R
-last_completed_numbered_bundle: 267
+implementation_plan_commits_completed: 428
+last_completed_plan_commit: 10.h.R
+next_plan_commit: 10.h.C
+last_completed_numbered_bundle: 268
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11293,10 +11293,18 @@ Bewertungsauswahl und Readiness-Prüfung implementieren; SR-TC-0150 bleibt parti
 
 #### 10.h.R – Make it Right
 
-- [ ] **10.h.R** · Position **428/900** · Voraussetzung: `10.h.W`.
+- [x] **10.h.R** · Position **428/900** · Voraussetzung: `10.h.W`.
 **Exakte Commit-Message:** `10.h.R feat(baseline): Release-Baseline-Grenze vorbereiten vervollständigen`
 
 **Vervollständigung:** Keine Stub-Readiness oder automatisch bestandene Bewertung als Ersatz zulassen.
+
+**Vorbereiteter R-Stand (Bundle 268):** Gespeicherte Auswahlen müssen Wertobjekte
+sein und werden mit ihren vollständigen kanonischen Inhalten gebunden. Eine
+explizite externe Auswahl darf diese nur identisch wiederholen; Abweichungen
+sind Konflikte, eine fehlende gespeicherte Auswahl wird nicht ersetzt. Auch
+identische Auswahl, manipulierte Beobachtungen, erfolgreiche Hostgates und
+umetikettierte gespeicherte Working-Pläne öffnen ohne M13 keine Releasefreigabe.
+Die Grenze prüft weiterhin keine Descriptorsemantik, Pflichtläufe oder Evidence.
 
 **Verhaltensabnahme:** Releasecreate ohne echte M13-Readiness erzeugt keine Baseline. Die W-Nachweise bleiben zusätzlich grün.
 

@@ -16,7 +16,7 @@ def prepare_working_baseline(model, *, baseline_id, name, actor, planned_at,
 
 def prepare_baseline_creation(model, *, baseline_kind, baseline_id, name, actor,
         planned_at, change_plan_id, request_id=None, gates=(), strict=False,
-        configuration_id=None, release_id=None):
+        configuration_id=None, release_id=None, evaluation=None):
     """Select the existing working path or the closed Release-Baseline gate.
 
 Release admission reads only the actual stored release. Supplied host gates
@@ -27,8 +27,9 @@ as a fallback for a release request.
         raise ModelError('baseline_kind_invalid')
     if baseline_kind == 'release':
         from .readiness import assess_release_baseline_readiness
-        return assess_release_baseline_readiness(model, release_id=release_id).require_ready()
-    if release_id is not None:
+        return assess_release_baseline_readiness(model, release_id=release_id,
+            evaluation=evaluation).require_ready()
+    if release_id is not None or evaluation is not None:
         raise ModelError('working_baseline_release_selection_not_applicable')
     return prepare_working_baseline(model, baseline_id=baseline_id, name=name,
         actor=actor, planned_at=planned_at, change_plan_id=change_plan_id,

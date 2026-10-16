@@ -257,3 +257,13 @@ values remain prepared data without release permission.
 M13 must supply the complete stored-selection and readiness contract before
 release publication can be enabled. Caller success labels and a general
 publication authority are no substitute for that service.
+
+The optional `evaluation` argument to the admission API may repeat the stored
+selection only. Non-null selections must be objects. A different external
+selection raises `ReleaseBaselineSelectionConflict` (`exit_code=6`); without a
+stored selection, external input raises `stored_release_evaluation_required`.
+This Baseline boundary does not provide provisional general release evaluation.
+The report owns the complete `stored_evaluation` value and its canonical hash;
+even an identical external value cannot authorize publication. Structural object
+checks do not validate the descriptor's semantics. Working requests reject an
+external release selection instead of discarding it.
