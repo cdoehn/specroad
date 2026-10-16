@@ -78,3 +78,8 @@ changed staged/published bytes, stale model inputs, unsafe paths and conflicting
 saved requests remain blocking. Failures after record publication or during
 finalization retain their real state without an automatic retry or a false
 completion result.
+
+The public creation facade keeps both function names. Its unchanged saved-plan
+preparation lives in the private `_working_plan` module; native publication
+remains in `creation`. The separation changes no plan, gate, failure, receipt
+or filesystem behavior.

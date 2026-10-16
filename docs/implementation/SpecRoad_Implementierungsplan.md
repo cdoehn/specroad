@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 413
-last_completed_plan_commit: 10.c.R
-next_plan_commit: 10.c.C
+implementation_plan_commits_completed: 414
+last_completed_plan_commit: 10.c.C
+next_plan_commit: 10.d.W
 last_completed_numbered_bundle: 258
 implementation_state: in_progress
 audit_followup_status: closed
@@ -10986,10 +10986,18 @@ der erfolgreiche R-Commit schaltet die weiterhin fällige ungerade Hälfte um.
 
 #### 10.c.C – Make it Clean
 
-- [ ] **10.c.C** · Position **414/900** · Voraussetzung: `10.c.R`.
+- [x] **10.c.C** · Position **414/900** · Voraussetzung: `10.c.R`.
 **Exakte Commit-Message:** `10.c.C refactor(baseline): Working-Baseline atomar erzeugen bereinigen`
 
 **Bereinigung:** Snapshotvorbereitung und transaktionale Baselinepublikation klar trennen.
+
+**Vorbereiteter C-Stand (Bundle 258):**
+Die unveränderte öffentliche Planvorbereitung liegt in
+`archive/_working_plan.py`; die bisherige Fassade `archive/creation.py` erhält
+beide öffentlichen Funktionsnamen und enthält ausschließlich den unveränderten
+nativen Publikationsadapter. Vorbereitung und Ausführung besitzen getrennte
+Importabhängigkeiten und weiterhin exakt dieselben Funktionskörper. Alle W-/R-
+Testdateien bleiben bytegleich; dieselbe gezielte Regression wird erneut geprüft.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

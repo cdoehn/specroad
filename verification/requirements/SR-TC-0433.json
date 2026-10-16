@@ -17,7 +17,8 @@
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Prepare and save a working-Baseline plan, then execute its exact bytes through the actual native transaction protocol; reject invalid model, changed sources, missing/changed objects, absent gates and denied authority.",
-    "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state."
+    "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state.",
+    "Re-run the unchanged W/R behavior tests after separating the unchanged planning function from the native publication adapter."
   ],
   "oracle": {
     "kind": "behavior",
