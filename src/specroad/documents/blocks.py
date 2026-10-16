@@ -5,7 +5,8 @@ from hashlib import sha256
 from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
-from ..model.record_schemas import BLOCK_KINDS, _block_payload, record_schema
+from ..model._content_block_fields import BLOCK_KINDS, _block_payload
+from ..model.record_schemas import record_schema
 from ..model.versions import SCHEMA_VERSION
 from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact

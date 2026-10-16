@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 440
-last_completed_plan_commit: 11.c.R
-next_plan_commit: 11.c.C
+implementation_plan_commits_completed: 441
+last_completed_plan_commit: 11.c.C
+next_plan_commit: 11.d.W
 last_completed_numbered_bundle: 276
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11567,10 +11567,19 @@ Referenzauflösung, Rendering und fachliche Freigabe werden nicht behauptet.
 
 #### 11.c.C – Make it Clean
 
-- [ ] **11.c.C** · Position **441/900** · Voraussetzung: `11.c.R`.
+- [x] **11.c.C** · Position **441/900** · Voraussetzung: `11.c.R`.
 **Exakte Commit-Message:** `11.c.C refactor(documents): Exakte Inhaltsblockschemas bereinigen`
 
 **Bereinigung:** Blocktypregister und Payloadvalidatoren zentralisieren.
+
+**Vorbereiteter C-Stand (Bundle 276):** Payloaddefinitionen und lokale
+Blockreferenzprüfung liegen in einem gemeinsamen internen Feldmodul. Das
+Blocktypregister wird aus denselben geordneten Definitionen abgeleitet;
+Record- und Standalone-Schema verwenden diese gemeinsame Quelle. Gemeinsame
+Feldbausteine sind separat gebündelt, bestehende Modulnamen bleiben per Import
+verfügbar. Die verschobenen Funktionskörper bleiben im Syntaxbaum unverändert.
+Die bestehenden W-/R-Tests und betroffenen Regressionen werden ohne angepasste
+Erwartungswerte erneut gezielt parallel geprüft. Keine neue Fachsemantik.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

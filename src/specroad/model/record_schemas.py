@@ -16,6 +16,8 @@ from .errors import ModelError
 from .paths import project_path
 from .versions import SCHEMA_VERSION
 from .record_contracts import RECORD_TYPES, SPECIAL_STATES, VALIDATION_SCOPE, record_contract
+from ._field_shapes import _object, _array, _typed_reference
+from ._content_block_fields import BLOCK_KINDS, _block_payload, _block_reference
 
 VERIFICATION_METHODS = (
     "inspection", "review", "analysis", "simulation", "automated_test", "manual_test",
@@ -23,16 +25,6 @@ VERIFICATION_METHODS = (
 )
 EVIDENCE_ORIGINS = ("recorded_manual", "imported_junit", "imported_sarif", "imported_generic", "generated_internal")
 CODE_REFERENCE_KINDS = ("file", "line_range", "text_anchor", "symbol_hint", "generated_artifact")
-BLOCK_KINDS = ("prose", "artifact_ref", "query", "table", "admonition", "page_break", "include_document")
-
-
-def _object(properties, required=None):
-    return {"type": "object", "required": list(properties if required is None else required),
-            "properties": properties, "additionalProperties": False}
-
-
-def _array(items, *, nonempty=False):
-    return {"type": "array", "items": items, "minItems": int(nonempty)}
 
 
 def _nullable(schema):
@@ -61,28 +53,6 @@ def _definitions():
         "test_identity": {"anyOf": [_object({"external_id": text}), _object({"path": text})]},
         "producer": _object({"producer_type": {"enum": ["human", "tool", "ci", "monitoring", "ai"]}, "producer_id": text}),
         "tool": _object({"name": text, "version": text}),
-    }
-
-
-def _block_payload():
-    text = {"$ref": "#/$defs/text"}
-    # The payload remains passive. Parsing/rendering prose and queries belongs
-    # to the document services, not a schema's successful read operation.
-    prose = {"type": "string"}
-    columns = _array({"type": "object"}, nonempty=True)
-    view_source = _object({"source": {"const": "view"}})
-    return {
-        "prose": _object({"markdown": prose}),
-        "artifact_ref": _object({"render_mode": {"enum": ["summary", "full", "link"]}}),
-        "query": {"anyOf": [
-            _object({"query": {"type": "object"}, "columns": columns, "empty_policy": {"enum": ["omit", "message", "error"]}}),
-            _object({"source": {"const": "view"}, "columns": columns, "empty_policy": {"enum": ["omit", "message", "error"]}}),
-        ]},
-        "table": {"anyOf": [view_source, _object({"columns": columns, "rows": _array({"type": "array"})})]},
-        "admonition": _object({"level": {"enum": ["note", "tip", "important", "warning", "caution"]},
-                               "title": text, "markdown": prose}, ("level", "markdown")),
-        "page_break": _object({}),
-        "include_document": _object({"mode": {"enum": ["content", "section"]}}),
     }
 
 
@@ -262,16 +232,11 @@ manufacture an Evidence, Baseline, Proposal or Relationsreview.
             raise ModelError("controlled_field_mutation", pointer=pointer)
 
 
-
 def _unique(values, *, reason, pointer):
     """JSON equality, not Python's equality of True and 1. No input sorting."""
     for index, value in enumerate(values):
         if any(_json_equal(value, previous) for previous in values[:index]):
             raise ModelError(reason, pointer=pointer + "/" + str(index))
-
-
-def _typed_reference(value, prefixes):
-    validate_builtin(value, {"anyOf": [reference_schema(prefix) for prefix in prefixes]})
 
 
 def _local_contains(value):
@@ -290,28 +255,6 @@ def _local_contains(value):
             raise ModelError("invalid_contains_target", pointer=pointer + "/target") from error
     # Do not decide parent cardinality or cyclic inclusion without a graph.
     # Equal positions are legal and will use the specified ID tie-breaker.
-
-
-def _block_reference(value):
-    kind, payload = value["block_kind"], value["payload"]
-    prefixes = None
-    if kind == "artifact_ref":
-        prefixes = tuple(t.prefix for t in artifact_types())
-    elif kind in ("query", "table") and payload.get("source") == "view":
-        prefixes = ("VIEW",)
-    elif kind == "include_document":
-        prefixes = ("DOC",) if payload["mode"] == "content" else ("SEC",)
-    if prefixes is None:
-        return
-    relations = [(index, relation) for index, relation in enumerate(value["relations"])
-                 if relation.get("type") == "references"]
-    if len(relations) != 1:
-        raise ModelError("block_reference_cardinality", pointer="/relations")
-    index, relation = relations[0]
-    try:
-        _typed_reference(relation.get("target"), prefixes)
-    except ModelError as error:
-        raise ModelError("block_reference_type", pointer="/relations/" + str(index) + "/target") from error
 
 
 def _configuration_fields(value):

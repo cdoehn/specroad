@@ -42,3 +42,12 @@ graph type-pair validity, review state or inclusion cycles. Complete reference
 metadata is retained without normalization or revision changes. The R tests
 cover missing relation fields, mixed payload branches, required values, bad
 choices, duplicate keys, read-only refusal and isolated Core/PYZ errors.
+
+The internal `model._content_block_fields` module owns the payload definitions
+and local reference validator. The ordered block-kind registry is derived from
+those definitions. The full record schema and the standalone payload schema
+both use this registry. Shared field-shape builders live in `model._field_shapes`;
+the existing record-module names remain available through imports. This is a
+structural consolidation: schema values, field-error contracts and block
+bindings remain unchanged. The complete relation-field validator stays in its
+existing graph module and is still called by the typed loader.

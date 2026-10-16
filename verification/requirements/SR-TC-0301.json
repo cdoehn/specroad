@@ -18,12 +18,13 @@
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Load all seven kinds through ContentBlock and validate the same payloads with their detached standalone schemas. Check alternative source/mode branches, reject foreign outer fields, preserve original bytes and immutable detached values, bind source/record/payload/schema hashes, and compare actual isolated Core/PYZ results without filesystem effects.",
-    "11.c.R: reject incomplete stored relation identities/metadata through the existing SourceRelations validator, preserve required-reference cardinality and target-kind errors, reject mixed/missing/ill-typed payload fields and duplicate JSON keys, retain complete reference bytes without resolving targets, and compare isolated Core/PYZ failures."
+    "11.c.R: reject incomplete stored relation identities/metadata through the existing SourceRelations validator, preserve required-reference cardinality and target-kind errors, reject mixed/missing/ill-typed payload fields and duplicate JSON keys, retain complete reference bytes without resolving targets, and compare isolated Core/PYZ failures.",
+    "11.c.C: rerun unchanged W/R behavior and affected stored-record/schema regressions after consolidating the native block registry, payload definitions, local reference validator and shared field-shape builders."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `content_block`-Artefakt MUSS genau eine Art aus `prose`, `artifact_ref`, `query`, `table`, `admonition`, `page_break` oder `include_document` besitzen und die dafür definierten Pflichtfelder erfüllen.",
-    "scope": "11.c.W/R: exact outer payload schemas and immutable source-bound ContentBlock records. Complete local relation fields and unique relation IDs are mandatory in addition to native common, payload and reference cardinality/type checks. Valid source/binding values remain unchanged. Errors preserve the original path and relation-array pointer. No target lookup, prose/query/table/include evaluation, rendering or approval."
+    "scope": "11.c.W/R/C: exact outer payload schemas and immutable source-bound ContentBlock records. Complete local relation fields and unique relation IDs are mandatory in addition to native common, payload and reference cardinality/type checks. Valid source/binding values remain unchanged. Errors preserve the original path and relation-array pointer. No target lookup, prose/query/table/include evaluation, rendering or approval. The C consolidation preserves schema identities/values, source bindings, errors and side effects; no test expectation is rewritten."
   },
   "expected_diagnostics": [
     "block_reference_cardinality",
@@ -156,7 +157,6 @@
     "tests/test_content_blocks_right.py::test_wrong_payload_types_or_choices_do_not_become_valid_through_coercion[table-rows-bad4]"
   ],
   "open_items": [
-    "Complete 11.c.C block registry and validator consolidation while preserving W/R behavior.",
     "Artifact-reference resolution, safe prose, query/table execution and include graphs follow 11.d through 11.g; no complete document semantics or release approval is claimed.",
     "Targeted development tests and alternating Apply partitions are partial observations on their actual source states."
   ]
