@@ -26,6 +26,7 @@ from .values import (
 )
 from ._model_checks import _issue, _applies, _foreign_edges, _reference_issues
 from .resources import ValidationResources
+from ._document_roles import _document_roles
 from .production import production_gates, formal_findings, profile_applies
 
 
@@ -179,14 +180,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         stage("model_semantics", status="blocked")
         return report()
     if document_role_scope == 'full_project':
-        document_records = tuple(r for r in records if r.data['artifact_type'] == 'document')
-        primary = [r.identity.id for r in document_records if r.data['maturity'] != 'retired'
-                   and r.data['document_role'] == 'primary_specification']
-        findings = [] if len(primary) == 1 else [{
-            'reason': 'document_primary_missing' if not primary else 'document_primary_multiple',
-            'path': None, 'pointer': '/document_role', 'artifact_id': None,
-            'related_ids': primary, 'severity': 'error'}]
-        stage('document_roles', findings, ids=tuple(r.identity.id for r in document_records))
+        document_records, _, findings = _document_roles((r.path, r.data) for r in records)
+        stage('document_roles', findings, ids=tuple(record['id'] for _, record in document_records))
     index = {r.identity.id: r for r in records}
     checked = tuple(index) if selected is None else selected
     missing = [identity for identity in checked if identity not in index]

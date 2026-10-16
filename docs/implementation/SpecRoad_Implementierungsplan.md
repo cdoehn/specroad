@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 434
-last_completed_plan_commit: 11.a.R
-next_plan_commit: 11.a.C
+implementation_plan_commits_completed: 435
+last_completed_plan_commit: 11.a.C
+next_plan_commit: 11.b.W
 last_completed_numbered_bundle: 272
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11446,10 +11446,16 @@ Dokumentsemantik-Provider werden durch den Rollencheck nicht ersetzt.
 
 #### 11.a.C – Make it Clean
 
-- [ ] **11.a.C** · Position **435/900** · Voraussetzung: `11.a.R`.
+- [x] **11.a.C** · Position **435/900** · Voraussetzung: `11.a.R`.
 **Exakte Commit-Message:** `11.a.C refactor(documents): Dokumentrolle und Primärdokument bereinigen`
 
 **Bereinigung:** Dokumentinvarianten in die gemeinsame Validation registrieren.
+
+**Vorbereiteter C-Stand (Bundle 272):** Ein gemeinsamer interner Validation-Kern
+trägt die Primärrollen-Invariante für Rollenassessment und Vollprojekt-Stufe.
+Native Feld-/Identitätsprüfung, Scope-Zulassung, Quellordnung und gebundene
+Berichtserzeugung verbleiben bei ihren bisherigen Aufrufern. W-/R-Tests und
+Fachverträge bleiben unverändert; fehlende Dokumentsemantik wird nicht ersetzt.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

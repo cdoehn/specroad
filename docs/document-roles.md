@@ -47,3 +47,8 @@ The `document_roles` stage is separate from `document_model`: a passing role
 stage does not supply missing composition, section, payload or view providers.
 Malformed fields retain native diagnostics, and duplicate identities cannot be
 misreported as two distinct primary documents. Neither path selects a fallback.
+
+Both assessments use the same pure validation kernel for primary cardinality.
+Their callers retain native field and identity validation, explicit scope
+admission, source order and owned report construction. This consolidation does
+not register an approving substitute for the remaining document semantics.

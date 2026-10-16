@@ -10,6 +10,7 @@ from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..model.record_schemas import validate_record_fields
 from ..storage.json_syntax import parse_json_object
+from ..validation._document_roles import _document_roles
 
 
 class DocumentRoleError(ModelError):
@@ -65,7 +66,7 @@ def assess_document_roles(model, *, scope_descriptor=None):
             or descriptor['configuration_id'] is not None):
         raise DocumentRoleError('document_full_project_scope_required', pointer='/scope_descriptor')
     model = model.snapshot()
-    documents, primary, diagnostics = [], [], []
+    documents, validated, diagnostics = [], [], []
     for source in model.documents:
         record = parse_json_object(source.content, path=source.path)
         if record['artifact_type'] != 'document':
@@ -79,17 +80,17 @@ def assess_document_roles(model, *, scope_descriptor=None):
             diagnostics.append({**error.diagnostic(), 'artifact_id': record['id'],
                                 'path': source.path, 'severity': 'error'})
             continue
-        if record['maturity'] != 'retired' and record['document_role'] == 'primary_specification':
-            primary.append({'artifact_id': record['id'], 'revision': record['revision'],
-                'path': source.path, 'record_sha256': canonical_json_sha256(record),
-                'record': record})
+        validated.append((source.path, record))
     fields_valid = not diagnostics
     # An invalid record may conceal its role; do not invent a second cardinality
     # finding from a partial set of successfully parsed document fields.
-    if fields_valid and len(primary) != 1:
-        diagnostics.append({'reason': 'document_primary_missing' if not primary else 'document_primary_multiple',
-            'path': None, 'pointer': '/document_role', 'artifact_id': None,
-            'related_ids': [row['artifact_id'] for row in primary], 'severity': 'error'})
+    primary = []
+    if fields_valid:
+        _, primary_records, findings = _document_roles(validated)
+        diagnostics.extend(findings)
+        primary = [{'artifact_id': record['id'], 'revision': record['revision'],
+            'path': path, 'record_sha256': canonical_json_sha256(record), 'record': record}
+            for path, record in primary_records]
     data = {'format_version': 'document-roles-v1', 'project_id': model.binding.project_id,
         'scope_descriptor': descriptor,
         'model_root_sha256': model.manifest(model.artifacts, descriptor).sha256,
