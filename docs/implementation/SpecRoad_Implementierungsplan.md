@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 423
-last_completed_plan_commit: 10.f.C
-next_plan_commit: 10.g.W
-last_completed_numbered_bundle: 264
+implementation_plan_commits_completed: 424
+last_completed_plan_commit: 10.g.W
+next_plan_commit: 10.g.R
+last_completed_numbered_bundle: 265
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11214,10 +11214,20 @@ bestehenden Vergleich. Alle W-/R-Testbytes und Fehlerverträge bleiben erhalten.
 
 #### 10.g.W – Let it Work
 
-- [ ] **10.g.W** · Position **424/900** · Voraussetzung: `10.f.C`.
+- [x] **10.g.W** · Position **424/900** · Voraussetzung: `10.f.C`.
 **Exakte Commit-Message:** `10.g.W feat(baseline): Konfigurationsgebundene Baselines aufbauen`
 
 **Umsetzung:** Auswahl-ID, Revision, Hash und resultierenden Artefaktumfang in der Baseline speichern.
+
+**Vorbereiteter W-Stand (Bundle 265):**
+Die gemeinsame Snapshot-Vorbereitung bindet die ausgewählte Konfiguration mit
+ID, Revision und Parent-Kettenhash. Ein eigenes kanonisches Archivobjekt hält
+die effektive Auswahl fest; sämtliche zugehörigen Konfigurationsrecords müssen
+im gespeicherten Scope enthalten sein. Artefaktumfang, Anwendbarkeit und
+Modellwurzel verwenden weiterhin die bestehenden Scopeverträge. Zwei Varianten
+bleiben nach Speicherung der Objekte und Wegfall ihrer Quelldateien eindeutig
+auflösbar. Native konfigurationsgebundene Veröffentlichung und vollständige
+historische Snapshotleser bleiben ausdrücklich offen; SR-TC-0401 bleibt partial.
 
 **Verhaltensabnahme:** Zwei Variantenbaselines bewahren ihre jeweils konkrete Auswahl.
 

@@ -21,7 +21,8 @@ from ..model.paths import artifact_path
 from ..model.semantic_configuration import semantic_configuration
 from ..storage.json_syntax import parse_json_object
 from .objects import SnapshotObject
-from ._baseline_inputs import _owned_inputs, _resource_objects, _checked_profile
+from ._baseline_inputs import (_owned_inputs, _resource_objects, _checked_profile,
+                               _checked_configuration)
 
 
 @dataclass(frozen=True, init=False)
@@ -65,7 +66,8 @@ def build_baseline_manifest(configuration, binding, closure, dependencies, *,
     resource_payloads maps each selected non-attachment inventory identity to
     (project-relative path, original JSON bytes). attachment_payloads maps every
     selected attachment path to its exact bytes. Missing and surplus payloads
-    fail. Language/archival providers and configured-scope snapshots remain
+    fail. Configured scopes retain their selected configuration's actual parent
+    chain and effective-value snapshot. Language/archival providers remain
     explicit integration boundaries; they cannot produce a partial manifest.
     A writer supplies its planned baseline_id: it must be absent from the entire
     input inventory, including unselected controls. The identity is metadata,
@@ -83,8 +85,7 @@ def build_baseline_manifest(configuration, binding, closure, dependencies, *,
         artifact_path('baseline', baseline_id, configuration.id_prefix)
         if baseline_id in {record.identity.id for record in dependencies.inventory.records}:
             raise ModelError('baseline_identity_already_present')
-    if closure.seeds.descriptor.data['configuration_id'] is not None:
-        raise ModelError('baseline_configured_scope_provider_required')
+    selected_configuration = _checked_configuration(closure, dependencies)
     records, resources, profiles = _resource_objects(
         configuration, binding, closure, dependencies, resource_payloads)
     profile = _checked_profile(effective_profile, profiles, dependencies)
@@ -130,8 +131,12 @@ def build_baseline_manifest(configuration, binding, closure, dependencies, *,
             raise ModelError('baseline_attachment_binding_mismatch', path=record['path'])
         include('attachment', item, record, path=record['path'], media_type=record['media_type'])
     semantic = SnapshotObject(canonical_json_bytes(semantic_configuration(configuration)))
-    include('semantic_configuration', semantic, {'sha256': model_value['configuration_sha256']},
+    include('semantic_configuration', semantic, {'sha256': semantic.reference.sha256},
             path='specroad.json')
+    if selected_configuration is not None:
+        include('effective_configuration',
+                SnapshotObject(canonical_json_bytes(selected_configuration.manifest)),
+                selected_configuration.binding)
     include('effective_profile', SnapshotObject(profile.canonical_bytes),
             {'sha256': model_value['profile_sha256']})
     include('model_manifest', SnapshotObject(model.canonical_bytes), {'sha256': model.sha256})
@@ -148,6 +153,8 @@ def build_baseline_manifest(configuration, binding, closure, dependencies, *,
              'boundary_references': model_value['boundary_references'], 'manifest': entries}
     if baseline_id is not None:
         value['baseline_id'] = baseline_id
+    if selected_configuration is not None:
+        value['configuration_binding'] = selected_configuration.binding
     result = object.__new__(BaselineManifest)
     object.__setattr__(result, '_encoded', canonical_json_bytes(value))
     object.__setattr__(result, 'objects', tuple(objects[path] for path in sorted(objects)))

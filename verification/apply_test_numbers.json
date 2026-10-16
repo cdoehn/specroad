@@ -11010,6 +11010,27 @@
     "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[record-0.1.0]",
     "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[record-99.0.0]",
     "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[semantic_configuration-0.1.0]",
-    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[semantic_configuration-99.0.0]"
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[semantic_configuration-99.0.0]",
+    "tests/test_configured_baseline.py::test_archived_configuration_selection_can_be_resolved_from_stored_objects_without_original_files",
+    "tests/test_configured_baseline.py::test_configured_snapshot_is_independent_of_input_order",
+    "tests/test_configured_baseline.py::test_configured_snapshot_refuses_a_scope_that_omits_actual_selection_chain_records[included0]",
+    "tests/test_configured_baseline.py::test_configured_snapshot_refuses_a_scope_that_omits_actual_selection_chain_records[included1]",
+    "tests/test_configured_baseline.py::test_excluded_required_dependency_prevents_variant_baseline_preparation",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[child_revision]",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[child_selection]",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[parent_revision]",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[parent_selection]",
+    "tests/test_configured_baseline.py::test_operational_project_choices_do_not_change_the_stored_variant[operational0]",
+    "tests/test_configured_baseline.py::test_operational_project_choices_do_not_change_the_stored_variant[operational1]",
+    "tests/test_configured_baseline.py::test_owned_selection_metadata_cannot_mutate_the_baseline_manifest",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[mapping:exchange]",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[profile:core]",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[profile:product]",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[rule:check]",
+    "tests/test_configured_baseline.py::test_two_variant_snapshots_retain_exact_selection_and_resulting_artifact_scope[False]",
+    "tests/test_configured_baseline.py::test_two_variant_snapshots_retain_exact_selection_and_resulting_artifact_scope[True]",
+    "tests/test_configured_baseline.py::test_unconfigured_snapshot_preserves_its_original_contract_without_selection_metadata",
+    "tests/test_configured_baseline.py::test_variant_snapshot_preparation_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_configured_baseline.py::test_variant_snapshot_preparation_runs_in_isolated_core_and_pyz[pyz]"
   ]
 }

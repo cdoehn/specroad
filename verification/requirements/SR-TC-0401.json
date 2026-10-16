@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0401",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CONFIGURED-BASELINE-v1"
+  ],
+  "preconditions": [
+    "Owned actual source records, project configuration, effective profile, resolved configured scope and complete supplied dependency observations; selected configuration and all parent records must belong to the retained scope."
+  ],
+  "steps": [
+    "Prepare two configured Baseline manifests with distinct effective selections through the shared scope/applicability/hash services.",
+    "Retain configuration ID, revision, effective chain hash, exact Scope Descriptor, selected artifact records and an independently archived effective-configuration manifest.",
+    "Persist actual snapshot objects, remove original files and resolve the selected parent chain from stored record bytes; reject incomplete retained chains and selected resource bytes.",
+    "Check ownership, operational-field independence, semantic hash bindings, required dependency rejection and isolated Core/PYZ execution."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine konfigurationsgebundene Baseline MUSS Konfigurations-ID, -Revision, -Hash, Scope Descriptor und den resultierenden Artefaktumfang speichern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Read-only BaselineManifest preparation for configured scopes supported by the existing selected JSON/attachment providers. configuration_binding uses the established EffectiveConfiguration ID/revision/chain hash. The effective_configuration object retains canonical chain/effective values, and all actual chain records must be archived. The original configuration_hash remains the semantic project hash; the common model manifest binds the combined selected-configuration scope hash. This is prepared data with no publication, complete historical verification or authority claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,31 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_configured_baseline.py::test_archived_configuration_selection_can_be_resolved_from_stored_objects_without_original_files",
+    "tests/test_configured_baseline.py::test_configured_snapshot_is_independent_of_input_order",
+    "tests/test_configured_baseline.py::test_configured_snapshot_refuses_a_scope_that_omits_actual_selection_chain_records[included0]",
+    "tests/test_configured_baseline.py::test_configured_snapshot_refuses_a_scope_that_omits_actual_selection_chain_records[included1]",
+    "tests/test_configured_baseline.py::test_excluded_required_dependency_prevents_variant_baseline_preparation",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[child_revision]",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[child_selection]",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[parent_revision]",
+    "tests/test_configured_baseline.py::test_new_parent_or_selection_bytes_change_the_new_binding_without_changing_the_saved_snapshot[parent_selection]",
+    "tests/test_configured_baseline.py::test_operational_project_choices_do_not_change_the_stored_variant[operational0]",
+    "tests/test_configured_baseline.py::test_operational_project_choices_do_not_change_the_stored_variant[operational1]",
+    "tests/test_configured_baseline.py::test_owned_selection_metadata_cannot_mutate_the_baseline_manifest",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[mapping:exchange]",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[profile:core]",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[profile:product]",
+    "tests/test_configured_baseline.py::test_selected_configuration_never_licenses_an_incomplete_resource_snapshot[rule:check]",
+    "tests/test_configured_baseline.py::test_two_variant_snapshots_retain_exact_selection_and_resulting_artifact_scope[False]",
+    "tests/test_configured_baseline.py::test_two_variant_snapshots_retain_exact_selection_and_resulting_artifact_scope[True]",
+    "tests/test_configured_baseline.py::test_unconfigured_snapshot_preserves_its_original_contract_without_selection_metadata",
+    "tests/test_configured_baseline.py::test_variant_snapshot_preparation_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_configured_baseline.py::test_variant_snapshot_preparation_runs_in_isolated_core_and_pyz[pyz]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Native configured Baseline record publication, configured historical full-snapshot verification/materialization/comparison, CLI/Work integration and language/archive providers remain explicit integrations.",
+    "The supplied inventory and dependency observations do not prove live-project completeness, full validation or release readiness."
   ]
 }

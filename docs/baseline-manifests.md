@@ -19,9 +19,10 @@ Baseline artifact exists. `working` and `release` are preparation labels.
 `assurance` explicitly reports the limited scope and absence of write/readiness
 or complete project-validation authority.
 
-This W API supports unconfigured resolved scopes with JSON artifact/profile/rule/
-mapping resources and exact attachments. Configured scopes and language/archival
-providers fail explicitly pending their integration. It writes nothing, obtains
+This preparation API supports resolved scopes with JSON artifact/profile/rule/
+mapping resources and exact attachments. Configured scopes also retain their
+actual selection chain; language/archival providers still require integration.
+It writes nothing, obtains
 no project lock and creates no Baseline artifact. The following specialized
 writer must validate the actual project, enforce readiness where needed and
 publish through the existing transaction/journal contract. Owned objects can
@@ -188,3 +189,25 @@ Die Quellenregistry bleibt für alle Quellenarten derselbe Einstieg. Der
 Baselineadapter bereitet die geprüften Snapshotbytes vor; die abschließende
 Record-/Objektbeobachtung und ihre unveränderbaren Nachweise liegen in einem
 eigenen internen Modul. Der gemeinsame semantische Vergleich bleibt unverändert.
+
+## Configured snapshot preparation
+
+A configured `build_baseline_manifest` result stores `configuration_binding`
+with the selected configuration ID, revision and the existing effective-chain
+SHA-256. Its `effective_configuration` object contains the exact canonical
+configuration manifest, including all parent bindings and effective values.
+All selected-chain configuration artifacts must themselves be retained in the
+scope; otherwise preparation fails with `baseline_configuration_chain_not_retained`.
+Applicability and required dependencies use the existing scope services.
+
+`configuration_hash` continues to identify the semantic project configuration.
+The model manifest's `configuration_sha256` is the existing combined project/
+selected-chain scope hash. These distinct inputs are never substituted for one
+another. The exact descriptor and resulting artifact inventory remain in the
+same shared model-manifest contract.
+
+The objects may be saved to an external `SnapshotObjectStore` and the selection
+can be resolved from those archived configuration records without original files.
+This prepares inert data. The native writer and full historical snapshot reader
+currently support unconfigured projects; configured publication, verification,
+materialization and comparison need their own explicit integration.

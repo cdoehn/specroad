@@ -53,6 +53,19 @@ def _owned_inputs(configuration, binding, closure, dependencies, query_page):
     return configuration, binding, fresh
 
 
+def _checked_configuration(closure, dependencies):
+    """Retain actual selected-chain records, not just their derived hash label."""
+    identity = closure.seeds.descriptor.data['configuration_id']
+    if identity is None:
+        return None
+    from ..configurations import resolve_configuration
+    selected = resolve_configuration(dependencies.inventory.records, identity)
+    chain = {item['id'] for item in selected.manifest['configurations']}
+    if not chain <= set(closure.artifact_ids):
+        raise ModelError('baseline_configuration_chain_not_retained')
+    return selected
+
+
 def _resource_objects(configuration, binding, closure, dependencies, payloads):
     if type(payloads) is not dict:
         raise ModelError('baseline_resource_payloads_required')
