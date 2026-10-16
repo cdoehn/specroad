@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 431
-last_completed_plan_commit: 10.i.R
-next_plan_commit: 10.i.C
+implementation_plan_commits_completed: 432
+last_completed_plan_commit: 10.i.C
+next_plan_commit: 11.a.W
 last_completed_numbered_bundle: 270
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11373,10 +11373,17 @@ bleiben ausdrücklich offen.
 
 #### 10.i.C – Make it Clean
 
-- [ ] **10.i.C** · Position **432/900** · Voraussetzung: `10.i.R`.
+- [x] **10.i.C** · Position **432/900** · Voraussetzung: `10.i.R`.
 **Exakte Commit-Message:** `10.i.C refactor(baseline): Snapshot-Workparität und Crashregression bereinigen`
 
 **Bereinigung:** Wiederverwendbare Snapshottests statt paralleler Baseline-Speicherlogik führen.
+
+**Vorbereiteter C-Stand (Bundle 270):** Die Bindung des gespeicherten Baselineplans
+und die Vorbereitung der nativen Gates liegen in einem gemeinsamen internen
+Helfer. Die öffentliche Fassade delegiert weiter an denselben Eingangssnapshot,
+Work-Store und Transaktionsdienst. Öffentliche Capture-Klassen, W-/R-Testbytes,
+Receipt-Vorrang, Fehlerverträge und Nebenwirkungen bleiben unverändert; eine
+zweite Baseline-Speicherlogik entsteht nicht.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

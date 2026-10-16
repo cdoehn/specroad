@@ -97,31 +97,11 @@ class BaselineSnapshotTask:
         raise TypeError('Live Baseline capture tasks cannot be copied')
 
 
-def _baseline_work_plan(store):
-    from ..work._normative_binding import read_plan
-    from ..work.checkpoints import CheckpointStore
-    if type(store) is not CheckpointStore:
-        raise ModelError('baseline_work_store_required')
-    plan = read_plan(store._initial.as_dict(), store._initial.objects)
-    value = plan.data
-    operations = value['operations']
-    if len(operations) != 1 or operations[0]['op'] != 'baseline_create':
-        raise ModelError('baseline_work_plan_required')
-    return value
-
-
-def _baseline_work_inputs(store, model, gates):
-    from ..authoring.plans import _execution_inputs
-    value = _baseline_work_plan(store)
-    _, policy, gates = _execution_inputs(model, 'baseline.create', value['operations'],
-        value['actor'], value['planned_at'], gates)
-    return policy, gates
-
-
 def advance_baseline_work(store, *, registry, model, actor, request_id,
                           gates=(), strict=False, package_files=()):
     """Confirm one existing Work preparation phase with native Baseline gates."""
     from ..work.publication import advance_normative_preparation
+    from ._work_binding import _baseline_work_inputs
     policy, gates = _baseline_work_inputs(store, model, gates)
     return advance_normative_preparation(store, registry=registry, model=model,
         policy=policy, actor=actor, request_id=request_id, gates=gates,
@@ -131,19 +111,11 @@ def advance_baseline_work(store, *, registry, model, actor, request_id,
 def publish_baseline_work(store, *, registry, model, actor, request_id,
                           transaction_id, authority, gates=(), strict=False, package_files=()):
     """Publish the exact saved Baseline once through the native Work transaction."""
-    from ..authoring.plans import _execution_inputs, _execution_policy
-    from ..changes.request_ids import AuthoringError
     from ..work.publication import _publish_normative_work
-    value = _baseline_work_plan(store)
-    if type(gates) not in (list, tuple):
-        raise AuthoringError('explicit_authoring_gates_required')
-    gates = tuple(gates)
-
-    def prepare_gates():
-        return _execution_inputs(model, 'baseline.create', value['operations'],
-            value['actor'], value['planned_at'], gates)[2]
+    from ._work_binding import _baseline_publication_inputs
+    policy, prepare_gates = _baseline_publication_inputs(store, model, gates)
 
     return _publish_normative_work(store, registry=registry, model=model,
-        policy=_execution_policy('baseline.create'), actor=actor, request_id=request_id,
+        policy=policy, actor=actor, request_id=request_id,
         gate_factory=prepare_gates, strict=strict,
         package_files=package_files, transaction_id=transaction_id, authority=authority)

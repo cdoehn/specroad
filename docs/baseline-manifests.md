@@ -312,3 +312,8 @@ owner/journal requires Recovery, and only already committed receipts can replay.
 A visible new record always has its complete verified object inventory. These
 tests observe process loss on the current filesystem, not power loss or a full
 cross-platform durability guarantee.
+
+Saved-plan binding and host-owned gate preparation share `_work_binding`.
+The public capture classes and Work facade retain the same contracts and use
+the existing input capture, checkpoint store and native transaction services.
+All W/R behavior tests are retained byte-for-byte across this internal split.
