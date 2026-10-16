@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 446
-last_completed_plan_commit: 11.e.R
-next_plan_commit: 11.e.C
+implementation_plan_commits_completed: 447
+last_completed_plan_commit: 11.e.C
+next_plan_commit: 11.f.W
 last_completed_numbered_bundle: 280
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11700,10 +11700,19 @@ Die W-Nachweise und passiven Record-/Suchverträge bleiben erhalten.
 
 #### 11.e.C – Make it Clean
 
-- [ ] **11.e.C** · Position **447/900** · Voraussetzung: `11.e.R`.
+- [x] **11.e.C** · Position **447/900** · Voraussetzung: `11.e.R`.
 **Exakte Commit-Message:** `11.e.C refactor(documents): Sicheres CommonMark-Kernsubset bereinigen`
 
 **Bereinigung:** Parser, sichere Knoten und Renderer als getrennte Schichten führen.
+
+**Vorbereiteter C-Stand (Bundle 280):** Das interne Parsermodul enthält die
+begrenzte Block-/Inlinelogik und Pfadprüfung. Die öffentliche Prosa-API hält die
+native Inhaltsblockgrenze, den unveränderlichen Datenwert und dessen Quellbindung;
+die bestehende Fehlerklasse wird explizit übergeben. Die Parserkörper und
+öffentlichen Wert-/Fehlerklassen bleiben strukturell gleich, abgesehen von dieser
+Abhängigkeitsübergabe. Ein Renderer wird weiterhin nicht eingebunden; seine
+spätere Formatschnittstelle konsumiert die geprüften Datenknoten. Die vorhandenen
+W-/R-Erwartungen, Ressourcenlimits und erlaubten Seiteneffekte bleiben unverändert.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

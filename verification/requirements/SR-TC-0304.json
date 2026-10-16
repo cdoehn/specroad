@@ -15,12 +15,13 @@
   ],
   "steps": [
     "11.e.W: parse allowed paragraph/inline/code/list/quote/break/attachment node families; compare semantic data, owned source and normalized hashes, admonition levels, structured forbidden-content errors, real unchanged files and isolated Core/PYZ results.",
-    "11.e.R: preserve unchanged W nodes while completing lazy/nested container and indentation behavior; verify one-time escape/entity decoding, multiline definition rejection, obfuscated external/traversing paths, inert extension-like text, no reads/process/network/writes, bounded parser resources and isolated Core/PYZ parity."
+    "11.e.R: preserve unchanged W nodes while completing lazy/nested container and indentation behavior; verify one-time escape/entity decoding, multiline definition rejection, obfuscated external/traversing paths, inert extension-like text, no reads/process/network/writes, bounded parser resources and isolated Core/PYZ parity.",
+    "11.e.C: rerun unchanged W/R node/security behavior and affected existing contracts after extracting the internal parser from the immutable public prose value/source-binding API. No renderer, semantic feature or changed expectation is introduced."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Prosa-Inhaltsblock MUSS UTF-8-Markdown im dokumentierten CommonMark-kompatiblen Kernsubset speichern.",
-    "scope": "11.e.W/R: owned inert prose/admonition data with explicit source hashes, LF normalization, bounded parsing, native canonical attachment paths, container/inline semantics and structured security errors. No executable HTML/include/template nodes exist. Strings in code/title/text remain data. Tests assert semantic values and forbidden effects, not rendered Markdown/HTML or presentation; no renderer or complete project approval is claimed."
+    "scope": "11.e.W/R: owned inert prose/admonition data with explicit source hashes, LF normalization, bounded parsing, native canonical attachment paths, container/inline semantics and structured security errors. No executable HTML/include/template nodes exist. Strings in code/title/text remain data. Tests assert semantic values and forbidden effects, not rendered Markdown/HTML or presentation; no renderer or complete project approval is claimed. The C split preserves the parser body and public value/error classes, with explicit error-type injection; hashes, errors, limits and side effects remain unchanged."
   },
   "expected_diagnostics": [
     "prose_active_entity",

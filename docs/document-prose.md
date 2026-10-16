@@ -49,3 +49,11 @@ parse. Attachment resolution, whole-project validation, rendering, writes and
 approval remain false. The passive `ContentBlock` loader and existing search
 APIs keep their prior contracts. Document composition and rendering are later
 plan steps; no rendered Markdown/HTML bytes are used as automated test oracles.
+
+Internally, `documents._prose_parser` owns bounded block/inline parsing and path
+checks. The public `documents.prose` module owns the native-block boundary,
+immutable `ProseContent`, source bindings and detached semantic report. Its
+existing error type is passed to the parser explicitly. Neither layer emits
+Markdown/HTML or grants rendering authority; later renderers consume these data
+through their own format boundary. The C split preserves node values, error
+contracts, source hashes, resource limits and allowed side effects.
