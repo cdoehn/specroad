@@ -22,6 +22,7 @@
     "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1",
     "SR-FIX-CONFIGURED-BASELINE-v1",
     "SR-FIX-CONTAINER-LANGUAGES-v1",
+    "SR-FIX-CONTENT-BLOCKS-RIGHT-v1",
     "SR-FIX-CONTENT-BLOCKS-v1",
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
@@ -393,6 +394,10 @@
     "SR-FIX-CONTENT-BLOCKS-v1": {
       "provider": "tests/support/records.py:block_value",
       "kind": "All seven stored ContentBlock kinds and declared alternative payload branches, original record bytes, standalone native payload schemas, local reference fields, owned source/record/payload/schema bindings and isolated Core/PYZ parity. No target resolution or payload execution."
+    },
+    "SR-FIX-CONTENT-BLOCKS-RIGHT-v1": {
+      "provider": "tests/test_content_blocks_right.py:referenced_block",
+      "kind": "Owned content-block records with missing relation fields, invalid relation metadata, mixed payload branches and exact byte-bound errors; no target resolution or rendering."
     }
   }
 }

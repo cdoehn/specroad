@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 439
-last_completed_plan_commit: 11.c.W
-next_plan_commit: 11.c.R
-last_completed_numbered_bundle: 275
+implementation_plan_commits_completed: 440
+last_completed_plan_commit: 11.c.R
+next_plan_commit: 11.c.C
+last_completed_numbered_bundle: 276
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11548,10 +11548,20 @@ Folgeschritten ausgewertet. Es entsteht keine Rendering- oder Schreibfreigabe.
 
 #### 11.c.R – Make it Right
 
-- [ ] **11.c.R** · Position **440/900** · Voraussetzung: `11.c.W`.
+- [x] **11.c.R** · Position **440/900** · Voraussetzung: `11.c.W`.
 **Exakte Commit-Message:** `11.c.R feat(documents): Exakte Inhaltsblockschemas vervollständigen`
 
 **Vervollständigung:** Fremde Felder, gemischte Payloadarten und unvollständige Referenzen ablehnen.
+
+**Vorbereiteter R-Stand (Bundle 276):** Der typisierte Block-Loader ergänzt die
+vorhandenen Feld-, Kardinalitäts- und Zieltypprüfungen um den bestehenden
+Relationsvalidator. Auch vollständige Relationsidentitäten und Metadaten sowie
+lokal eindeutige Relations-IDs sind damit verpflichtend. Der allgemeine
+Record-Reader behält seine bisherige Teilprojektion. Neue Verhaltenstests prüfen
+unvollständige Relationshüllen, gemischte/fehlende Payloadfelder, ungültige
+Auswahlwerte, doppelte JSON-Schlüssel, exakte Quellpfade/Relationspositionen und
+Core-/PYZ-Fehlerparität. Gültige Originalbytes und ihre Bindungen bleiben erhalten;
+Referenzauflösung, Rendering und fachliche Freigabe werden nicht behauptet.
 
 **Verhaltensabnahme:** Schemafälle sichern Datenvertrag ohne Rendering-Snapshots. Die W-Nachweise bleiben zusätzlich grün.
 

@@ -29,3 +29,16 @@ promoted to a complete query, view or table evaluation contract.
 The W tests compare actual payload values, source/schema hashes, allowed
 alternative branches, rejection of foreign fields, owned bytes and isolated
 Core/PYZ results. They do not compare rendered document output.
+
+The loader also checks every stored relation through `SourceRelations` after the
+native record checks. Required relation identity and metadata fields, unique
+relation IDs, allowed metadata shapes and relation-field constraints must pass.
+The general record reader keeps its existing partial projection; a successful
+payload-only schema check cannot stand in for the complete block read. Errors
+retain the original source path and the actual relation-array pointer.
+
+These checks inspect supplied bytes only. They do not establish target existence,
+graph type-pair validity, review state or inclusion cycles. Complete reference
+metadata is retained without normalization or revision changes. The R tests
+cover missing relation fields, mixed payload branches, required values, bad
+choices, duplicate keys, read-only refusal and isolated Core/PYZ errors.

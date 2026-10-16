@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from hashlib import sha256
 
+from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_sha256
 from ..model.errors import ModelError
 from ..model.record_schemas import BLOCK_KINDS, _block_payload, record_schema
@@ -34,6 +35,9 @@ class ContentBlock:
 
     def __init__(self, raw, *, path=None):
         record = RecordArtifact(raw, expected_type='content_block', path=path)
+        # Local block cardinality/target-kind checks do not establish complete
+        # relation records. Validate their stored fields without resolving them.
+        SourceRelations(record.source_bytes, expected_type='content_block', path=path)
         object.__setattr__(self, 'source_bytes', record.source_bytes)
         object.__setattr__(self, 'path', record.path)
         object.__setattr__(self, 'block_kind', record.data['block_kind'])
