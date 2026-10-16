@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0470",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-INCLUDES-v1"
+  ],
+  "preconditions": [
+    "Owned native TargetModel snapshot with actual document/section/content-block bytes and complete supplied relation inventory; no on-disk or rendering approval inferred."
+  ],
+  "steps": [
+    "11.g.W: validate native structure/ownership and the whole contains/include graph before iterative expansion. Verify repeated content/section includes, deterministic source-bound ancestry, direct/transitive cycle witnesses, missing targets, native ordering, deep acyclic chains, changed revisions, immutable results, read-only behavior and isolated Core/PYZ parity."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der durch `include_document` gebildete Graph MUSS vor jedem Rendern zyklusfrei sein.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "11.g.W: exact flat occurrences preserve every include path and original artifact identity while a shared bound record map retains original bytes/revisions/hashes. All supplied contains/include cycles are rejected before expansion with actual edge witnesses. Other block semantics and rendering remain unproved; tests never compare presentation."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "document_include_cycle",
+    "missing_relation_target",
+    "block_reference_cardinality",
+    "block_reference_type",
+    "document_section_parent_cardinality"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/relations",
+    "/relations/0/target",
+    "/document_id"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,42 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_includes.py::test_actual_source_files_are_unchanged_and_later_removal_cannot_replace_owned_input",
+    "tests/test_document_includes.py::test_changed_included_content_updates_every_new_occurrence_without_revising_owners",
+    "tests/test_document_includes.py::test_composition_and_source_files_are_detached_and_never_claim_full_or_write_approval",
+    "tests/test_document_includes.py::test_contains_positions_control_occurrences_without_rewriting_source_relations",
+    "tests/test_document_includes.py::test_direct_self_include_is_rejected_with_actual_cycle_sources_before_expansion[content]",
+    "tests/test_document_includes.py::test_direct_self_include_is_rejected_with_actual_cycle_sources_before_expansion[section]",
+    "tests/test_document_includes.py::test_empty_document_composes_its_bound_root_without_inventing_sections_or_primary_approval",
+    "tests/test_document_includes.py::test_include_composition_runs_with_identical_occurrences_and_bindings_in_core_and_pyz[core]",
+    "tests/test_document_includes.py::test_include_composition_runs_with_identical_occurrences_and_bindings_in_core_and_pyz[pyz]",
+    "tests/test_document_includes.py::test_input_file_order_does_not_change_composition_or_cycle_graph[0]",
+    "tests/test_document_includes.py::test_input_file_order_does_not_change_composition_or_cycle_graph[1]",
+    "tests/test_document_includes.py::test_input_file_order_does_not_change_composition_or_cycle_graph[2]",
+    "tests/test_document_includes.py::test_input_file_order_does_not_change_composition_or_cycle_graph[3]",
+    "tests/test_document_includes.py::test_input_file_order_does_not_change_composition_or_cycle_graph[4]",
+    "tests/test_document_includes.py::test_input_file_order_does_not_change_composition_or_cycle_graph[5]",
+    "tests/test_document_includes.py::test_input_file_order_does_not_change_composition_or_cycle_graph[6]",
+    "tests/test_document_includes.py::test_invalid_document_selector_never_falls_back_to_another_document[False]",
+    "tests/test_document_includes.py::test_invalid_document_selector_never_falls_back_to_another_document[None]",
+    "tests/test_document_includes.py::test_invalid_document_selector_never_falls_back_to_another_document[SR-DOC-22222222222222222222222222]",
+    "tests/test_document_includes.py::test_invalid_document_selector_never_falls_back_to_another_document[SR-SEC-00000000000000000000000000]",
+    "tests/test_document_includes.py::test_invalid_document_selector_never_falls_back_to_another_document[]",
+    "tests/test_document_includes.py::test_long_acyclic_include_chain_has_flat_occurrence_ancestry_and_complete_sources",
+    "tests/test_document_includes.py::test_missing_or_wrong_include_target_has_no_external_or_title_based_fallback[missing_reference]",
+    "tests/test_document_includes.py::test_missing_or_wrong_include_target_has_no_external_or_title_based_fallback[missing_target]",
+    "tests/test_document_includes.py::test_missing_or_wrong_include_target_has_no_external_or_title_based_fallback[wrong_target_kind]",
+    "tests/test_document_includes.py::test_passive_block_payload_is_not_executed_or_presented_as_semantically_valid",
+    "tests/test_document_includes.py::test_regular_artifact_reference_to_an_ancestor_is_not_an_include_edge",
+    "tests/test_document_includes.py::test_repeated_includes_expand_every_occurrence_from_the_same_native_records[content]",
+    "tests/test_document_includes.py::test_repeated_includes_expand_every_occurrence_from_the_same_native_records[section]",
+    "tests/test_document_includes.py::test_transitive_document_cycle_is_deterministic_and_never_returns_partial_composition",
+    "tests/test_document_includes.py::test_unowned_section_prevents_composition_even_for_an_otherwise_valid_selected_document"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "11.g.R completes adversarial mixed/multidocument cycles, malformed source bindings and unavailable input boundaries.",
+    "Rendering integration remains at 11.m; data composition does not execute or approve passive query/table/prose/reference payloads.",
+    "Targeted development and alternating Apply half-suite observations remain partial and do not imply full-suite or release approval."
   ]
 }

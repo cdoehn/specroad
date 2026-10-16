@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 450
-last_completed_plan_commit: 11.f.C
-next_plan_commit: 11.g.W
-last_completed_numbered_bundle: 282
+implementation_plan_commits_completed: 451
+last_completed_plan_commit: 11.g.W
+next_plan_commit: 11.g.R
+last_completed_numbered_bundle: 283
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11792,10 +11792,22 @@ Alle W-/R-Testfälle und ihre fachlichen Erwartungen bleiben unverändert.
 
 #### 11.g.W – Let it Work
 
-- [ ] **11.g.W** · Position **451/900** · Voraussetzung: `11.f.C`.
+- [x] **11.g.W** · Position **451/900** · Voraussetzung: `11.f.C`.
 **Exakte Commit-Message:** `11.g.W feat(documents): Include-Graph und Zyklusprüfung aufbauen`
 
 **Umsetzung:** Include-Dokumente und contains-Komposition vor Materialisierung auf Zyklen prüfen.
+
+**Vorbereiteter W-Stand (Bundle 283):** Die neue Datenkomposition bindet einen
+nativen Snapshot, prüft vollständigen Abschnittsbesitz und den gemeinsamen
+Contains-/Include-Graphen vor der Expansion mit der vorhandenen iterativen
+Graphprüfung. Direkte und transitive Zyklen liefern echte Artefakt-/Relations-
+zeugen mit Quellpfaden, Pointern und Hashes. Mehrfache Content-/Section-Includes
+behalten jedes Vorkommen mit eigener Elternzuordnung; alle Vorkommen teilen
+dieselbe ursprüngliche Artefaktidentität und gebundene Datensätze. Reihenfolge,
+Revisionen und Originalbytes bleiben nachvollziehbar, tiefe Ketten benötigen
+keine rekursiven Python-Frames. Verhaltenstests prüfen diese Datenverträge
+sowie Core-/PYZ-Parität ohne Darstellungsoracle. Andere Blocksemantik und
+Rendering bleiben separate Provider und werden hier nicht freigegeben.
 
 **Verhaltensabnahme:** Azyklische Mehrfachverwendung ergibt vollständige Datenkomposition.
 
