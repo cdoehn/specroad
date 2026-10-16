@@ -29,3 +29,16 @@ on disk, document ownership/role correctness, include acyclicity, complete model
 validation or payload execution. Rendering, writes and approval remain false.
 A resolution cannot be converted to a Boolean approval. Document composition
 can use these data projections after its own independent structural checks.
+
+The native schema forbids copied target IDs or normative target fields in an
+`artifact_ref` payload, even if the copy agrees with the actual target. The
+owned model and relation checks reject duplicate identities before resolution
+can select a winner. Titles or equal content never substitute for a missing ID.
+
+Resolve again from a new owned model snapshot to observe a changed target. Every
+new document projection then uses the new target bytes/revision; block bytes,
+block revisions and stored edges remain unchanged. Previously returned values
+retain their original snapshot. A byte-only reformat changes source/input hashes
+while preserving the canonical record hash, model root and stored revision.
+The R tests establish these boundaries through the existing native guards;
+no alternate validation path or additional target-copy mechanism is introduced.

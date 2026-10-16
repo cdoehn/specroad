@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1",
     "SR-FIX-DOCUMENT-REFERENCES-v1"
   ],
   "preconditions": [
@@ -15,18 +16,25 @@
   "steps": [
     "Resolve exactly one source-owned references relation from the selected artifact_ref block using the native snapshot and relation identity/matrix checks. Validate the selected target through its native type-specific field reader.",
     "Use separate blocks in two document compositions to resolve the same original target bytes, identity, revision and hashes; retain render_mode as data only, preserve source inventories and compare isolated Core/PYZ data.",
-    "Reject zero/multiple references, missing target, other source kinds and malformed target fields."
+    "Reject zero/multiple references, missing target, other source kinds and malformed target fields.",
+    "11.d.R: exercise existing native guards against copied payload target IDs/content, duplicate target and relation identities, absent target aliases, wrong selectors, self references and changed owned sources. Compare both document projections after a target revision change and after a byte-only reformat, proving stable block bytes/revisions and preserved old projections. Include legacy/native target types and Core/PYZ parity."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `artifact_ref`-Payload DARF NICHT die Ziel-ID oder normative Felder des Zielartefakts als zweite manuell gepflegte Kopie speichern.",
-    "scope": "11.d.W: resolve_artifact_reference binds one exact source relation to the actual target record in an owned model snapshot. Multiple document occurrences retain the same target identity, original bytes, revision and hashes. Returned data is detached and read-only; no target content or target ID is written into a block payload. Native field/reference errors retain source paths and pointers. No formatting, document ownership decision or approval."
+    "scope": "11.d.W/R: one source-owned references edge resolves actual target bytes. Native schema, inventory and graph guards already reject target copies and duplicate identities; the R phase adds focused behavioral evidence without changing those production guards. A new model snapshot exposes a changed target consistently in all projections while reference block bytes, revisions and edges remain unchanged. Byte-only target changes alter source/input bindings without inventing semantic revisions; previous resolutions retain their old owned bytes. No rendering, ownership decision, write or approval."
   },
   "expected_diagnostics": [
-    "block_reference_cardinality",
-    "missing_relation_target",
     "artifact_reference_block_required",
-    "document_target_model_required"
+    "block_reference_cardinality",
+    "content_block_id_required",
+    "content_block_not_found",
+    "document_target_model_required",
+    "duplicate_relation_id",
+    "missing_relation_target",
+    "self_relation_forbidden",
+    "target_duplicate_artifact_id",
+    "target_sources_changed"
   ],
   "expected_exit_codes": [],
   "json_pointers": [
@@ -73,10 +81,42 @@
     "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[3]",
     "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[4]",
     "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[5]",
-    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[6]"
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[6]",
+    "tests/test_document_references_right.py::test_a_matching_target_id_or_normative_copy_is_forbidden_in_the_block_payload[artifact]",
+    "tests/test_document_references_right.py::test_a_matching_target_id_or_normative_copy_is_forbidden_in_the_block_payload[id]",
+    "tests/test_document_references_right.py::test_a_matching_target_id_or_normative_copy_is_forbidden_in_the_block_payload[record]",
+    "tests/test_document_references_right.py::test_a_matching_target_id_or_normative_copy_is_forbidden_in_the_block_payload[revision]",
+    "tests/test_document_references_right.py::test_a_matching_target_id_or_normative_copy_is_forbidden_in_the_block_payload[statement]",
+    "tests/test_document_references_right.py::test_a_matching_target_id_or_normative_copy_is_forbidden_in_the_block_payload[target]",
+    "tests/test_document_references_right.py::test_a_matching_target_id_or_normative_copy_is_forbidden_in_the_block_payload[target_id]",
+    "tests/test_document_references_right.py::test_absent_block_selector_does_not_fall_back_to_another_reference[SR-BLOCK-22222222222222222222222222]",
+    "tests/test_document_references_right.py::test_absent_block_selector_does_not_fall_back_to_another_reference[]",
+    "tests/test_document_references_right.py::test_absent_block_selector_does_not_fall_back_to_another_reference[a document title]",
+    "tests/test_document_references_right.py::test_duplicate_reference_identity_across_document_blocks_is_not_collapsed",
+    "tests/test_document_references_right.py::test_duplicate_target_identity_is_rejected_before_an_index_can_choose_a_copy[False]",
+    "tests/test_document_references_right.py::test_duplicate_target_identity_is_rejected_before_an_index_can_choose_a_copy[True]",
+    "tests/test_document_references_right.py::test_legacy_target_identity_is_retained_and_never_renumbered",
+    "tests/test_document_references_right.py::test_modified_owned_model_cannot_reuse_its_old_snapshot_binding",
+    "tests/test_document_references_right.py::test_nonstring_block_selectors_cannot_request_a_default_or_first_block[0]",
+    "tests/test_document_references_right.py::test_nonstring_block_selectors_cannot_request_a_default_or_first_block[None]",
+    "tests/test_document_references_right.py::test_nonstring_block_selectors_cannot_request_a_default_or_first_block[True]",
+    "tests/test_document_references_right.py::test_nonstring_block_selectors_cannot_request_a_default_or_first_block[selector3]",
+    "tests/test_document_references_right.py::test_one_block_occurring_in_multiple_documents_still_resolves_one_normative_target",
+    "tests/test_document_references_right.py::test_reference_relation_cannot_be_replaced_by_another_edge_type",
+    "tests/test_document_references_right.py::test_reference_targets_keep_their_native_type_and_identity_without_document_ownership[content_block]",
+    "tests/test_document_references_right.py::test_reference_targets_keep_their_native_type_and_identity_without_document_ownership[document]",
+    "tests/test_document_references_right.py::test_reference_targets_keep_their_native_type_and_identity_without_document_ownership[goal]",
+    "tests/test_document_references_right.py::test_reference_targets_keep_their_native_type_and_identity_without_document_ownership[source]",
+    "tests/test_document_references_right.py::test_rejected_payload_copy_preserves_actual_files_and_revisions",
+    "tests/test_document_references_right.py::test_same_title_and_content_do_not_substitute_for_an_absent_target_identity",
+    "tests/test_document_references_right.py::test_self_reference_is_rejected_by_the_native_endpoint_contract",
+    "tests/test_document_references_right.py::test_target_byte_format_change_changes_source_binding_without_inventing_a_revision",
+    "tests/test_document_references_right.py::test_target_revision_change_updates_all_new_document_projections_without_revising_blocks",
+    "tests/test_document_references_right.py::test_updated_target_projects_identically_to_both_document_references_in_core_and_pyz[core]",
+    "tests/test_document_references_right.py::test_updated_target_projects_identically_to_both_document_references_in_core_and_pyz[pyz]"
   ],
   "open_items": [
-    "Complete 11.d.R duplicate-target/copy rejection and changed-target projections, then 11.d.C structural consolidation without changing W contracts.",
+    "Complete 11.d.C separation of native source resolution from output projection without changing W/R contracts.",
     "Rendering, complete document semantics, project discovery and publication approval remain separate; this read-only API resolves references in the actual supplied model only.",
     "Targeted development and alternating Apply partitions are partial observations on their actual source states."
   ]

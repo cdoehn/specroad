@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 442
-last_completed_plan_commit: 11.d.W
-next_plan_commit: 11.d.R
-last_completed_numbered_bundle: 277
+implementation_plan_commits_completed: 443
+last_completed_plan_commit: 11.d.R
+next_plan_commit: 11.d.C
+last_completed_numbered_bundle: 278
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11612,10 +11612,21 @@ und keine Rendering-, Ownership- oder Schreibfreigabe erteilt.
 
 #### 11.d.R – Make it Right
 
-- [ ] **11.d.R** · Position **443/900** · Voraussetzung: `11.d.W`.
+- [x] **11.d.R** · Position **443/900** · Voraussetzung: `11.d.W`.
 **Exakte Commit-Message:** `11.d.R feat(documents): Artefaktreferenzen ohne Kopien vervollständigen`
 
 **Vervollständigung:** Doppelte Target-ID oder Fachkopie im Payload abweisen.
+
+**Vorbereiteter R-Stand (Bundle 278):** Die bereits verwendeten nativen
+Schema-, Inventur- und Relationsprüfer weisen Payload-Kopien sowie doppelte
+Ziel-/Relationsidentitäten zurück. Neue Verhaltenstests sichern diese Grenzen
+und verhindern Titel-/Inhaltsfallbacks, Selbstreferenzen und veraltete
+Modellbindungen. Fachliche Zieländerungen erscheinen in beiden neuen
+Dokumentprojektionen bei unveränderten Blockbytes, Blockrevisionen und Kanten;
+alte Projektionen behalten ihren ursprünglichen Stand. Reine Byteformatänderung
+ändert nur die zugehörigen Quell-/Inputbindungen, keine semantische Revision.
+Die vorhandenen Produktprüfungen bleiben unverändert; dieser R-Stand ergänzt
+die geforderte Randfallabnahme einschließlich echter Core-/PYZ-Parität.
 
 **Verhaltensabnahme:** Aktualisierung des Fachartefakts wird in allen Datenprojektionen sichtbar ohne Referenzrevisionen zu fälschen. Die W-Nachweise bleiben zusätzlich grün.
 

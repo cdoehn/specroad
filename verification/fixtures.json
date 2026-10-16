@@ -27,6 +27,7 @@
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
+    "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1",
     "SR-FIX-DOCUMENT-REFERENCES-v1",
     "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-DOCUMENT-STRUCTURE-v1",
@@ -403,6 +404,10 @@
     "SR-FIX-DOCUMENT-REFERENCES-v1": {
       "provider": "tests/test_document_references.py:referenced_documents",
       "kind": "Two composed documents with separate artifact_ref blocks referring to the same owned requirement identity, source byte/hash bindings, exact relation pointers, missing/invalid target errors and actual isolated Core/PYZ parity. No rendering or write approval."
+    },
+    "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1": {
+      "provider": "tests/test_document_references_right.py:rebuild",
+      "kind": "Owned duplicate/changed target inventories, forbidden payload target copies, independent source/semantic hashes, unchanged reference revisions, legacy identities, real preserved files and isolated Core/PYZ updated-target projections."
     }
   }
 }
