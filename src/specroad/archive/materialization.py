@@ -6,6 +6,7 @@ Native restoration creates only a new root under a private external parent;
 failures retain their actual partial output and never replace an existing root.
 """
 from hashlib import sha256
+from contextlib import contextmanager
 import os
 from pathlib import Path
 import unicodedata
@@ -129,6 +130,28 @@ def _verify_materialized(boundary, raw, record, objects):
     return verify_baseline_objects(raw, tuple({o.reference.path: o for o in current}.values()))
 
 
+def _check_objects(boundary, objects):
+    """Keep missing or changed archive bytes visible through the final readback."""
+    for item in objects.values():
+        try:
+            current = read_snapshot_object(boundary, item.reference)
+        except FileNotFoundError as error:
+            raise ModelError('snapshot_referenced_object_missing', path=item.reference.path) from error
+        if current != item.content:
+            raise ModelError('baseline_snapshot_changed', path=item.reference.path)
+
+
+@contextmanager
+def _owned_directory(held, parts, inventory):
+    """Never let a missing dir_fd become an implicit write in the process cwd."""
+    with held.directory(parts) as fd:
+        if fd is None:
+            raise SafetyViolation('Materialization directory is missing')
+        if parts and guards._identity(os.fstat(fd)) != tuple(inventory['/'.join(parts)]['identity']):
+            raise SafetyViolation('Materialization directory was replaced')
+        yield fd
+
+
 def materialize_baseline_snapshot(boundary, baseline_record, destination, *,
                                   default_locale, generated_path, protected_roots):
     """Restore to a missing native Linux destination under a private parent.
@@ -147,6 +170,8 @@ def materialize_baseline_snapshot(boundary, baseline_record, destination, *,
             any(type(p) is not ProjectBoundary for p in protected_roots)):
         raise ModelError('baseline_materialization_protected_roots_required')
     _record(boundary, baseline_record)
+    if not isinstance(destination, (str, Path)):
+        raise ModelError('baseline_materialization_destination_required')
     value = os.fspath(destination)
     if type(value) is not str or not value.startswith('/') or value.startswith('//'):
         raise SafetyViolation('An absolute new materialization path is required')
@@ -179,25 +204,35 @@ def materialize_baseline_snapshot(boundary, baseline_record, destination, *,
                 if now.st_uid != os.getuid() or now.st_mode & 0o077:
                     raise SafetyViolation('Materialization root is no longer private and owned')
 
-            current()
+            current(); verify_tree(held.root_fd, inventory)
             for path in sorted(directories, key=lambda p: (p.count('/'), p)):
                 parts = tuple(path.split('/'))
-                with held.directory(parts, create=True) as fd:
-                    current(); inventory[path] = metadata(os.fstat(fd))
+                with _owned_directory(held, parts[:-1], inventory) as fd:
+                    current()
+                    # Even a concurrently created empty directory is foreign.
+                    os.mkdir(parts[-1], mode=0o700, dir_fd=fd)
+                    created = os.stat(parts[-1], dir_fd=fd, follow_symlinks=False)
+                    os.fsync(fd)
+                    with held.directory(parts) as child:
+                        current()
+                        if child is None or guards._identity(os.fstat(child)) != guards._identity(created):
+                            raise SafetyViolation('Materialization directory changed')
+                        inventory[path] = metadata(os.fstat(child))
             for path in [*sorted(set(files) - {'specroad.json'}), 'specroad.json']:
                 if path == 'specroad.json':
                     verify_tree(held.root_fd, inventory)
-                    for item in objects.values():
-                        if read_snapshot_object(boundary, item.reference) != item.content:
-                            raise ModelError('baseline_snapshot_changed')
+                    _check_objects(boundary, objects)
                 parts = path.split('/')
-                with held.directory(tuple(parts[:-1])) as fd:
-                    current(); _write_new(fd, parts[-1], files[path])
-                    inventory[path] = metadata(os.stat(parts[-1], dir_fd=fd,
-                                                       follow_symlinks=False), files[path])
+                with _owned_directory(held, tuple(parts[:-1]), inventory) as fd:
+                    current(); created = _write_new(fd, parts[-1], files[path])
+                    now = os.stat(parts[-1], dir_fd=fd, follow_symlinks=False)
+                    if guards._identity(now) != created:
+                        raise SafetyViolation('Materialized file was replaced after creation')
+                    inventory[path] = metadata(now, files[path])
             current(); verify_tree(held.root_fd, inventory)
             if _verify_materialized(held.boundary, baseline_record, record, objects) != checked:
                 raise ModelError('baseline_materialization_root_mismatch')
+            _check_objects(boundary, objects)
             current(); verify_tree(held.root_fd, inventory)
     return {'format_version': 'baseline-materialization-v1', 'project_root': str(target),
         'baseline_id': record['id'], 'model_root_sha256': checked['model_root_sha256'],

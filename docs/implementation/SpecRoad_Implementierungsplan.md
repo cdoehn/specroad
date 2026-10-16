@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 418
-last_completed_plan_commit: 10.e.W
-next_plan_commit: 10.e.R
-last_completed_numbered_bundle: 261
+implementation_plan_commits_completed: 419
+last_completed_plan_commit: 10.e.R
+next_plan_commit: 10.e.C
+last_completed_numbered_bundle: 262
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11109,10 +11109,20 @@ bleiben offen; die SR-TCs bleiben partial. Keine Vollvalidierungs-/Releasefreiga
 
 #### 10.e.R – Make it Right
 
-- [ ] **10.e.R** · Position **419/900** · Voraussetzung: `10.e.W`.
+- [x] **10.e.R** · Position **419/900** · Voraussetzung: `10.e.W`.
 **Exakte Commit-Message:** `10.e.R feat(baseline): Baseline anzeigen und materialisieren vervollständigen`
 
 **Vervollständigung:** Fehlende Originalbytes nicht aus aktuellem Modell ersetzen.
+
+**Vorbereiteter R-Stand (Bundle 262):**
+Originalobjekte werden auch nach der Ausgabe-Rekonstruktion erneut geprüft.
+Fehlende Archivbytes behalten ihren gebundenen maschinenlesbaren Fehler;
+vorhandene aktuelle Dateien ersetzen sie in keiner Phase. Neue Zielordner
+werden exklusiv erzeugt. Jeder Schreibzugriff benötigt den weiterhin gebundenen
+Verzeichnisdeskriptor; fehlende Verzeichnisse erlauben keinen CWD-Fallback.
+Fremde Anfangseinträge und ersetzte Dateiinodes werden abgewiesen.
+Fehler bewahren die tatsächlichen Ausgabebytes. Historische Baselines, deren
+Archivobjekte, binäre Anhänge und Sprachregistry bleiben unabhängig erhalten.
 
 **Verhaltensabnahme:** Unabhängige Materialisierung erhält die gespeicherten Fachwerte und Hashes. Die W-Nachweise bleiben zusätzlich grün.
 

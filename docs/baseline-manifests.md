@@ -142,3 +142,10 @@ from the actual output files before success. Failure retains partial output;
 there is no automatic cleanup, resume or atomic directory-publication claim.
 This API does not provide CLI lookup, comparison, historical full validation,
 publication approval or release readiness.
+
+Restoration also rechecks the source archive after reconstructing the output.
+A removed destination directory never falls back to the process working directory.
+Directories are created exclusively, and every output file retains its original
+created inode binding. Foreign initial entries and concurrent replacements fail
+without cleanup or overwriting. Late missing source objects retain their exact
+object path in the machine-readable failure.

@@ -351,7 +351,7 @@
     },
     "SR-FIX-BASELINE-MATERIALIZATION-v1": {
       "provider": "tests/test_baseline_materialization.py:restore",
-      "kind": "Actual archived Baseline records and object bytes; fresh read-only integrity views, new private isolated native output roots, exact semantic/binary preservation, missing-source and existing-target rejection, interrupted storage and isolated Core/PYZ execution. Explicit operational locale/output values; no current-tree or Git fallback, full validation or release authority."
+      "kind": "Actual archived Baseline records and object bytes; fresh read-only integrity views, new private isolated native output roots, exact semantic/binary preservation, missing-source and existing-target rejection, interrupted storage and isolated Core/PYZ execution. Explicit operational locale/output values; no current-tree or Git fallback, full validation or release authority. The Right cases inject late source loss/corruption, directory removal/replacement, foreign initial entries, concurrent empty directories, byte-identical inode replacement and durability failures. Independent restoration also preserves historical Baselines, their real archive objects and the original language-registry bytes."
     }
   }
 }

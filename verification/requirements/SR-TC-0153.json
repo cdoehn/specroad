@@ -15,7 +15,9 @@
   "steps": [
     "Read stored Baseline data with freshly recomputed integrity, without writes or cached success.",
     "Restore the verified whole-project snapshot without Git or current files, preserving exact resource bytes and semantic configuration hashes; reconstruct the root again from actual output bytes.",
-    "Reject missing archive objects, existing or overlapping destinations and invalid operational choices before publication; retain interrupted output without overwriting or claiming completion."
+    "Reject missing archive objects, existing or overlapping destinations and invalid operational choices before publication; retain interrupted output without overwriting or claiming completion.",
+    "Inject missing/replaced destination directories and ensure no write falls back to the process cwd; reject foreign directories and byte-identical replacement of an owned file.",
+    "Check original objects again after output reconstruction, preserving actual interrupted files on late source/storage failure; restore an older Baseline and registry without any original project."
   ],
   "oracle": {
     "kind": "behavior",
@@ -71,7 +73,33 @@
     "tests/test_baseline_materialization.py::test_show_recomputes_failure_instead_of_reusing_a_prior_success[declared_root]",
     "tests/test_baseline_materialization.py::test_show_recomputes_failure_instead_of_reusing_a_prior_success[missing]",
     "tests/test_baseline_materialization.py::test_show_returns_stored_manifest_and_fresh_integrity_without_writes[release]",
-    "tests/test_baseline_materialization.py::test_show_returns_stored_manifest_and_fresh_integrity_without_writes[working]"
+    "tests/test_baseline_materialization.py::test_show_returns_stored_manifest_and_fresh_integrity_without_writes[working]",
+    "tests/test_baseline_materialization_right.py::test_archive_is_rechecked_after_output_configuration_and_root_readback[corrupt]",
+    "tests/test_baseline_materialization_right.py::test_archive_is_rechecked_after_output_configuration_and_root_readback[missing]",
+    "tests/test_baseline_materialization_right.py::test_concurrent_empty_directory_is_not_reused_as_owned_output",
+    "tests/test_baseline_materialization_right.py::test_explicit_operational_choices_preserve_the_same_historical_model_hash",
+    "tests/test_baseline_materialization_right.py::test_final_storage_failure_retains_written_configuration_without_success",
+    "tests/test_baseline_materialization_right.py::test_foreign_entries_in_a_just_created_root_prevent_all_payload_writes",
+    "tests/test_baseline_materialization_right.py::test_host_read_failure_is_not_converted_to_a_successful_show_result",
+    "tests/test_baseline_materialization_right.py::test_identical_bytes_cannot_hide_replacement_of_a_created_file",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[artifact]",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[attachment]",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[effective_profile]",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[mapping]",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[model_manifest]",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[profile]",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[rule]",
+    "tests/test_baseline_materialization_right.py::test_late_missing_archive_bytes_cannot_be_replaced_by_current_project_files[semantic_configuration]",
+    "tests/test_baseline_materialization_right.py::test_lost_output_directory_never_becomes_a_write_in_the_process_cwd[removed]",
+    "tests/test_baseline_materialization_right.py::test_lost_output_directory_never_becomes_a_write_in_the_process_cwd[replaced]",
+    "tests/test_baseline_materialization_right.py::test_nonpath_destination_has_a_machine_readable_failure_before_writes[/tmp/unused]",
+    "tests/test_baseline_materialization_right.py::test_nonpath_destination_has_a_machine_readable_failure_before_writes[42]",
+    "tests/test_baseline_materialization_right.py::test_nonpath_destination_has_a_machine_readable_failure_before_writes[None]",
+    "tests/test_baseline_materialization_right.py::test_older_baseline_registry_and_archive_bytes_survive_without_original_project",
+    "tests/test_baseline_materialization_right.py::test_shared_snapshot_object_becomes_independent_exact_output_files",
+    "tests/test_baseline_materialization_right.py::test_show_preserves_security_failures_instead_of_showing_verified_integrity[hardlink]",
+    "tests/test_baseline_materialization_right.py::test_show_preserves_security_failures_instead_of_showing_verified_integrity[symlink]",
+    "tests/test_baseline_materialization_right.py::test_symlinked_external_parent_cannot_redirect_materialization"
   ],
   "open_items": [
     "CLI lookup/dispatch and selected/configured scopes remain separate integrations. Native materialization supports a missing destination under a private owned canonical Linux parent; no resume, atomic whole-directory publication or cross-platform write claim.",
