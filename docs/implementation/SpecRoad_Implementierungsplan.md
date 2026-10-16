@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 421
-last_completed_plan_commit: 10.f.W
-next_plan_commit: 10.f.R
-last_completed_numbered_bundle: 263
+implementation_plan_commits_completed: 422
+last_completed_plan_commit: 10.f.R
+next_plan_commit: 10.f.C
+last_completed_numbered_bundle: 264
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11173,10 +11173,19 @@ offen; die SR-TCs bleiben partial. Keine Vollmodell-/Freigabeaussage.
 
 #### 10.f.R – Make it Right
 
-- [ ] **10.f.R** · Position **422/900** · Voraussetzung: `10.f.W`.
+- [x] **10.f.R** · Position **422/900** · Voraussetzung: `10.f.W`.
 **Exakte Commit-Message:** `10.f.R feat(baseline): Baselinevergleich und Diffquellenadapter vervollständigen`
 
 **Vervollständigung:** Fremde project_id, fehlende Objekte und inkompatible Historienleser ablehnen.
+
+**Vorbereiteter R-Stand (Bundle 264):**
+Der Adapter unterscheidet fehlende Baseline-Records und Archivobjekte mit
+pfadgebundenen Diagnosen, auch bei Änderungen zwischen Vorprüfung, Übernahme
+der Bytes und Abschlussprüfung. Sicherheits- und Host-I/O-Fehler bleiben
+sichtbar. Verhaltenstests weisen fremde Projektbindungen, nicht unterstützte
+historische Schemas und unsichere Pfade zurück. Baseline-/Git-Vergleiche nutzen
+nur die gebundenen Quellbytes ohne Checkout oder Schreibzugriff. Die W-Nachweise
+bleiben erhalten; Legacy-Leser und weitere Scopes werden nicht vorgetäuscht.
 
 **Verhaltensabnahme:** Kein Vergleich benötigt Checkout oder mutiert den Arbeitsstand. Die W-Nachweise bleiben zusätzlich grün.
 

@@ -33,7 +33,10 @@ def _snapshot(boundary, raw, *, default_locale, generated_path):
     for row in record['manifest']:
         reference = ObjectReference(row['sha256'], row['size'])
         if reference.path not in objects:
-            objects[reference.path] = SnapshotObject(read_snapshot_object(boundary, reference))
+            try:
+                objects[reference.path] = SnapshotObject(read_snapshot_object(boundary, reference))
+            except FileNotFoundError as error:
+                raise ModelError('snapshot_referenced_object_missing', path=reference.path) from error
     if verify_baseline_objects(raw, tuple(objects.values())) != checked:
         raise ModelError('baseline_snapshot_changed')
     files, semantic = {}, None

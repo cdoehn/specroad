@@ -8,7 +8,8 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-BASELINE-MATERIALIZATION-v1",
-    "SR-FIX-BASELINE-COMPARISON-v1"
+    "SR-FIX-BASELINE-COMPARISON-v1",
+    "SR-FIX-BASELINE-COMPARISON-RIGHT-v1"
   ],
   "preconditions": [
     "Explicit Baseline record bytes, actual archive objects and a private owned external destination parent; every protected boundary is declared."
@@ -20,12 +21,13 @@
     "Inject missing/replaced destination directories and ensure no write falls back to the process cwd; reject foreign directories and byte-identical replacement of an owned file.",
     "Check original objects again after output reconstruction, preserving actual interrupted files on late source/storage failure; restore an older Baseline and registry without any original project.",
     "Re-run the unchanged W/R behavior tests after separating the unchanged read-only view from native materialization.",
-    "Compare verified Baseline pairs through the shared source registry and semantic diff, including successive stored history and independent materialized-project comparison."
+    "Compare verified Baseline pairs through the shared source registry and semantic diff, including successive stored history and independent materialized-project comparison.",
+    "Reject a missing or concurrently changed native Baseline record and missing archive bytes throughout capture; preserve exact missing-object paths and host/security failures. Reject foreign projects and unsupported historical schemas; compare committed Git bytes without checkout."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Baseline MUSS aufgrund ihrer Snapshotobjekte ohne Git-Commit verifizierbar, materialisierbar und vergleichbar bleiben; ein zugehöriger Git-Commit ist ausschließlich optionale Provenienz.",
-    "scope": "Fresh stored-manifest integrity view and independent materialization of the already supported unconfigured whole-project snapshot; all semantic and binary bytes come from verified archived objects."
+    "scope": "Fresh stored-manifest integrity view and independent materialization of the already supported unconfigured whole-project snapshot; all semantic and binary bytes come from verified archived objects. Capture completion rechecks the selected native record and actual archived objects. Missing records and missing objects have distinct path-bound diagnostics; host access denial and safety violations remain errors. Legacy schema migration/readers are not inferred from current data."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -69,6 +71,37 @@
     "tests/test_baseline_comparison.py::test_owned_baseline_source_survives_removal_without_live_fallback_or_mutable_evidence",
     "tests/test_baseline_comparison.py::test_successive_native_baselines_compare_stored_records_and_their_archived_history",
     "tests/test_baseline_comparison.py::test_unobserved_local_payload_bytes_cannot_replace_a_verified_baseline_payload_inventory",
+    "tests/test_baseline_comparison_right.py::test_baseline_and_git_sources_compare_owned_history_without_working_tree_or_checkout",
+    "tests/test_baseline_comparison_right.py::test_distinct_archived_project_ids_cannot_be_compared[pair]",
+    "tests/test_baseline_comparison_right.py::test_distinct_archived_project_ids_cannot_be_compared[snapshots]",
+    "tests/test_baseline_comparison_right.py::test_host_access_denial_is_not_converted_into_missing_or_success[object]",
+    "tests/test_baseline_comparison_right.py::test_host_access_denial_is_not_converted_into_missing_or_success[record]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[artifact]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[attachment]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[effective_profile]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[mapping]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[model_manifest]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[profile]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[rule]",
+    "tests/test_baseline_comparison_right.py::test_late_missing_objects_cannot_complete_an_already_parsed_comparison[semantic_configuration]",
+    "tests/test_baseline_comparison_right.py::test_missing_bytes_between_verification_and_capture_keep_the_object_diagnostic[owned_snapshot-artifact]",
+    "tests/test_baseline_comparison_right.py::test_missing_bytes_between_verification_and_capture_keep_the_object_diagnostic[semantic_read-semantic_configuration]",
+    "tests/test_baseline_comparison_right.py::test_missing_selected_baseline_record_has_a_bound_diagnostic",
+    "tests/test_baseline_comparison_right.py::test_native_record_is_rechecked_before_publishing_owned_inputs[changed-final_verification]",
+    "tests/test_baseline_comparison_right.py::test_native_record_is_rechecked_before_publishing_owned_inputs[changed-inputs]",
+    "tests/test_baseline_comparison_right.py::test_native_record_is_rechecked_before_publishing_owned_inputs[removed-final_verification]",
+    "tests/test_baseline_comparison_right.py::test_native_record_is_rechecked_before_publishing_owned_inputs[removed-inputs]",
+    "tests/test_baseline_comparison_right.py::test_unsafe_historical_paths_do_not_become_comparison_sources[object-hardlink]",
+    "tests/test_baseline_comparison_right.py::test_unsafe_historical_paths_do_not_become_comparison_sources[object-symlink]",
+    "tests/test_baseline_comparison_right.py::test_unsafe_historical_paths_do_not_become_comparison_sources[record-symlink]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[artifact-0.1.0]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[artifact-99.0.0]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[profile-0.1.0]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[profile-99.0.0]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[record-0.1.0]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[record-99.0.0]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[semantic_configuration-0.1.0]",
+    "tests/test_baseline_comparison_right.py::test_unsupported_historical_schemas_are_not_reinterpreted_as_current_data[semantic_configuration-99.0.0]",
     "tests/test_baseline_materialization.py::test_conflicting_operational_output_path_is_rejected_before_creation",
     "tests/test_baseline_materialization.py::test_destination_must_be_private_external_and_outside_protected_inputs[archive]",
     "tests/test_baseline_materialization.py::test_destination_must_be_private_external_and_outside_protected_inputs[project_parent]",

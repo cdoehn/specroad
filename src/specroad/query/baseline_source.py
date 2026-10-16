@@ -12,6 +12,13 @@ from ..security import ProjectBoundary
 from ..storage.json_syntax import parse_json_object
 
 
+def _stored_record(boundary, path):
+    try:
+        return boundary.read_bytes(path)
+    except FileNotFoundError as error:
+        raise ModelError('comparison_baseline_record_missing', path=path) from error
+
+
 def baseline_source(root, reference, expected_project_id):
     # Reject selectors for another source kind before touching a fallback root.
     path = None
@@ -23,7 +30,7 @@ def baseline_source(root, reference, expected_project_id):
     elif type(reference) is not bytes:
         raise ModelError('comparison_baseline_reference_required')
     boundary = ProjectBoundary(root)
-    raw = boundary.read_bytes(path) if path is not None else reference
+    raw = _stored_record(boundary, path) if path is not None else reference
     from ..archive._baseline_view import _record
     from ..archive.materialization import _snapshot, _check_objects
     from ..archive.objects import ObjectReference, read_snapshot_object
@@ -34,7 +41,11 @@ def baseline_source(root, reference, expected_project_id):
         raise ModelError('comparison_baseline_identity_mismatch', path=path)
     verified = verify_baseline_snapshot(boundary, raw)
     row = next(r for r in record['manifest'] if r['role'] == 'semantic_configuration')
-    semantic = read_snapshot_object(boundary, ObjectReference(row['sha256'], row['size']))
+    reference_object = ObjectReference(row['sha256'], row['size'])
+    try:
+        semantic = read_snapshot_object(boundary, reference_object)
+    except FileNotFoundError as error:
+        raise ModelError('snapshot_referenced_object_missing', path=reference_object.path) from error
     inert = _configuration(parse_json_object(semantic))
     record, objects, files, _, checked = _snapshot(boundary, raw,
         default_locale=inert.data['default_locale'], generated_path=inert.generated_path)
@@ -46,12 +57,12 @@ def baseline_source(root, reference, expected_project_id):
     resources = tuple(sorted(files.items()))
 
     def finish():
-        if path is not None and boundary.read_bytes(path) != raw:
+        if path is not None and _stored_record(boundary, path) != raw:
             raise ModelError('comparison_source_changed', path=path)
         _check_objects(boundary, objects)
         if verify_baseline_snapshot(boundary, raw) != checked:
             raise ModelError('baseline_snapshot_changed')
-        if path is not None and boundary.read_bytes(path) != raw:
+        if path is not None and _stored_record(boundary, path) != raw:
             raise ModelError('comparison_source_changed', path=path)
         return canonical_json_bytes({'baseline_id': record['id'], 'record_path': path,
             'record_sha256': checked['record_sha256'], 'model_root_sha256': checked['model_root_sha256'],

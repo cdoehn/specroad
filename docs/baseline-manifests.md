@@ -172,3 +172,14 @@ inventories fail explicitly. The current local reader does not capture binary
 payloads, so mixed local/Baseline comparisons require matching observed resource
 inventories. No complete model equivalence or release approval is implied.
 CLI/Work dispatch and additional historical scopes remain separate integrations.
+
+Der Vergleichsadapter meldet einen fehlenden, per ID gewählten Record als
+`comparison_baseline_record_missing` mit dem kanonischen Recordpfad. Das gilt
+auch, wenn er während des Lesens verschwindet; geänderte Recordbytes ergeben
+`comparison_source_changed`. Fehlende Objektbytes bleiben während aller
+Leseschritte `snapshot_referenced_object_missing` mit dem Archivpfad. I/O- und
+Sicherheitsfehler werden nicht in einen erfolgreichen Vergleich umgedeutet.
+Nicht unterstützte historische Schemas werden mit dem bestehenden
+`unsupported_schema_version` beziehungsweise bei Profilen
+`profile_unsupported_schema` abgewiesen. Ein zukünftiger Legacy-Leser muss
+seine Originalhash-/Manifestbindung ausdrücklich bereitstellen.
