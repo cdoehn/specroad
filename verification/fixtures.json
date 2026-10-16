@@ -68,7 +68,8 @@
     "SR-FIX-TRANSACTION-RECOVERY-v1",
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
-    "SR-FIX-WRITER-BOUNDARIES-v1"
+    "SR-FIX-WRITER-BOUNDARIES-v1",
+    "SR-FIX-BASELINE-VERIFICATION-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -342,6 +343,10 @@
     "SR-FIX-BASELINE-CREATION-v1": {
       "provider": "tests/test_baseline_creation.py:project",
       "kind": "Owned complete temporary projects with small synthetic and actual bundled IANA registry bytes, actual profile composition, native target validation, writer lock, journal, no-replace object publication, durable receipts, discard proof and isolated Core/PYZ execution. Explicit host IDs/audit/authority; no CLI, general historical Baseline verifier or release readiness claim."
+    },
+    "SR-FIX-BASELINE-VERIFICATION-v1": {
+      "provider": "tests/test_baseline_verification.py:stored_snapshot",
+      "kind": "Actual content-addressed archived JSON/binary objects, full project manifests and native Baseline publication; archive-only/moved sources, tampered object/configuration/profile/root data and isolated Core/PYZ. Integrity evidence only, no full validation, original-project completeness or release authority."
     }
   }
 }

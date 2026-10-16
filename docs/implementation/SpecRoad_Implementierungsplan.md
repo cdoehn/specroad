@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 414
-last_completed_plan_commit: 10.c.C
-next_plan_commit: 10.d.W
-last_completed_numbered_bundle: 258
+implementation_plan_commits_completed: 415
+last_completed_plan_commit: 10.d.W
+next_plan_commit: 10.d.R
+last_completed_numbered_bundle: 259
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11011,12 +11011,32 @@ Testdateien bleiben bytegleich; dieselbe gezielte Regression wird erneut geprüf
 
 #### 10.d.W – Let it Work
 
-- [ ] **10.d.W** · Position **415/900** · Voraussetzung: `10.c.C`.
+- [x] **10.d.W** · Position **415/900** · Voraussetzung: `10.c.C`.
 **Exakte Commit-Message:** `10.d.W feat(baseline): Baseline-Integrität prüfen aufbauen`
 
 **Umsetzung:** Objektbytes, Ressourcenhashes, Manifest und rekonstruierte Modellwurzel schreibfrei prüfen.
 
 **Verhaltensabnahme:** Intakter Snapshot ist ohne ursprünglichen Arbeitsstand verifizierbar.
+
+**Vorbereiteter W-Stand (Bundle 259):**
+`verify_baseline_snapshot` liest die tatsächlich referenzierten Archivobjekte
+unter einer geschützten Dateisystemgrenze, prüft Größen, Content-Adressen und
+kanonische JSON-Bytes und rekonstruiert das vollständige bereitgestellte Modell
+aus den gespeicherten Artefakten, Ressourcen, Profilen und der semantischen
+Konfiguration. Die vorhandene Modell- und Snapshotprojektion berechnet Manifest
+und Modellwurzel erneut. Der aktuelle Arbeitsbaum und Git werden nicht benötigt.
+
+Der Ausschnitt unterstützt unkonfigurierte, geschlossene Vollprojektsnapshots
+einschließlich IANA-Registry, Anhängen und referenzierten Archivbytes. Die
+ursprünglich ausgeschlossenen Darstellungs-/Ausgabepfade werden nicht
+wiederhergestellt: ausschließlich zur vorhandenen Konfigurationsvalidierung
+dienen inerte, nie verwendete Werte, deren semantische Projektion exakt die
+gespeicherten Bytes ergeben muss. Jeder Aufruf liest die Objekte frisch und
+prüft sie nach der Rekonstruktion erneut. Integrität verleiht keine
+Veröffentlichungs-/Releaseberechtigung und belegt weder frühere Vollvalidierung
+noch atomare Gesamtbeobachtung oder die ursprüngliche Projektvollständigkeit.
+Andere Scopes und Sprachpaketprovider bleiben ausdrücklich unverfügbar;
+CLI- und gemeinsame Validatoranbindung werden nicht vorgetäuscht.
 
 #### 10.d.R – Make it Right
 

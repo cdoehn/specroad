@@ -83,3 +83,22 @@ The public creation facade keeps both function names. Its unchanged saved-plan
 preparation lives in the private `_working_plan` module; native publication
 remains in `creation`. The separation changes no plan, gate, failure, receipt
 or filesystem behavior.
+
+## Read-only verification of archived snapshots
+
+`verify_baseline_snapshot(boundary, baseline_record_bytes)` accepts the explicit
+Baseline record and an existing `ProjectBoundary` containing its archive. It
+reads content-addressed objects with the existing descriptor-based guards and
+reconstructs the semantic configuration, composed profile, model manifest and
+precreation root. Original working files and Git are unnecessary; current files
+never substitute for missing objects. Objects are re-read before returning.
+
+The current adapter supports unconfigured closed whole-project snapshots,
+including binary attachments, IANA registry and referenced archive bytes. Other
+scopes and installed language packages fail explicitly. Inert locale/output
+values are used only to reuse configuration validation; their exact semantic
+projection must equal the stored configuration and no output path is accessed.
+The report proves the supplied snapshot bindings only. It grants no authoring
+or release authority, historical full-validation proof, atomic observation or
+original-project completeness. CLI and shared-validator integration remain
+separate work.
