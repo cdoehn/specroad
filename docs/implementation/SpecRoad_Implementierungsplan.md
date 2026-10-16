@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 425
-last_completed_plan_commit: 10.g.R
-next_plan_commit: 10.g.C
+implementation_plan_commits_completed: 426
+last_completed_plan_commit: 10.g.C
+next_plan_commit: 10.h.W
 last_completed_numbered_bundle: 266
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11252,10 +11252,17 @@ eigene Integrationen; Integrität ist kein historischer Vollvalidierungsnachweis
 
 #### 10.g.C – Make it Clean
 
-- [ ] **10.g.C** · Position **426/900** · Voraussetzung: `10.g.R`.
+- [x] **10.g.C** · Position **426/900** · Voraussetzung: `10.g.R`.
 **Exakte Commit-Message:** `10.g.C refactor(baseline): Konfigurationsgebundene Baselines bereinigen`
 
 **Bereinigung:** Variantensnapshot auf gemeinsamen Konfigurations-/Scopevertrag reduzieren.
+
+**Vorbereiteter C-Stand (Bundle 266):** Die native Variantenauswahl liegt in
+einem eigenen internen Helfer und verwendet unverändert die gemeinsamen
+Konfigurations-, Anwendbarkeits- und Relationsprüfungen. Verifikation und
+Materialisierung teilen dieselbe Definition der reinen Snapshot-Metadaten.
+Manifestbytes, Fehlerverträge, Publikationsgrenzen und sämtliche W-/R-Tests
+bleiben unverändert.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

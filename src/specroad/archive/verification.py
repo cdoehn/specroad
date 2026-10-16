@@ -25,8 +25,7 @@ from .project_snapshot import build_project_baseline_manifest
 _ROLES = frozenset(('artifact', 'profile', 'rule', 'mapping', 'attachment',
                    'archive', 'language_registry', 'semantic_configuration',
                    'effective_profile', 'model_manifest', 'effective_configuration'))
-_VALUES = frozenset(('semantic_configuration', 'effective_profile', 'model_manifest',
-                    'effective_configuration'))
+from ._snapshot_values import SNAPSHOT_VALUES as _VALUES
 _BINARY = frozenset(('attachment', 'archive', 'language_registry'))
 
 

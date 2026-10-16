@@ -25,7 +25,7 @@ def validate_configured_model(documents, *, configuration_id=None, profile=None,
     Other unavailable semantic services remain unavailable in the report.
     """
     # Keep configuration services independent of validation's import graph.
-    from ..validation import ModelDocument, ModelGate, validate_model
+    from ..validation import ModelDocument, validate_model
 
     if type(documents) not in (list, tuple) or any(type(d) is not ModelDocument for d in documents):
         raise ModelError('validation_documents_required')

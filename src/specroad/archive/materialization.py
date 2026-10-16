@@ -23,8 +23,7 @@ from .objects import ObjectReference, SnapshotObject, read_snapshot_object
 from ._baseline_view import _record, show_baseline_snapshot
 from .verification import verify_baseline_objects, verify_baseline_snapshot
 
-_VALUES = frozenset(('semantic_configuration', 'effective_profile', 'model_manifest',
-                    'effective_configuration'))
+from ._snapshot_values import SNAPSHOT_VALUES as _VALUES
 
 
 def _snapshot(boundary, raw, *, default_locale, generated_path):

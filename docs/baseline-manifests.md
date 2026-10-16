@@ -230,3 +230,8 @@ materialization and comparison evidence retain the checked selection binding.
 Other historical scopes, CLI/Work dispatch and installed language packages remain
 explicit integrations. Snapshot integrity is not historical full validation or
 release approval.
+
+The closed native variant selection is isolated in `_configured_project`;
+verification and materialization share the metadata-only role set in
+`_snapshot_values`. These internal boundaries preserve the same snapshot bytes,
+selection checks, diagnostics and publication contracts.
