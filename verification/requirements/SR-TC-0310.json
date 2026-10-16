@@ -4,19 +4,37 @@
   "requirement_id": "SR-REQ-0310",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-REFERENCES-v1"
+  ],
+  "preconditions": [
+    "Owned actual TargetModel configuration, artifact and profile bytes; the complete supplied inventory is not proof of completeness on disk or an approval."
+  ],
+  "steps": [
+    "Resolve exactly one source-owned references relation from the selected artifact_ref block using the native snapshot and relation identity/matrix checks. Validate the selected target through its native type-specific field reader.",
+    "Use separate blocks in two document compositions to resolve the same original target bytes, identity, revision and hashes; retain render_mode as data only, preserve source inventories and compare isolated Core/PYZ data.",
+    "Reject zero/multiple references, missing target, other source kinds and malformed target fields."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Mehrere Dokumente DÜRFEN dasselbe fachliche Artefakt referenzieren.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "11.d.W: resolve_artifact_reference binds one exact source relation to the actual target record in an owned model snapshot. Multiple document occurrences retain the same target identity, original bytes, revision and hashes. Returned data is detached and read-only; no target content or target ID is written into a block payload. Native field/reference errors retain source paths and pointers. No formatting, document ownership decision or approval."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "block_reference_cardinality",
+    "missing_relation_target",
+    "artifact_reference_block_required",
+    "document_target_model_required"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/relations",
+    "/relations/0/target",
+    "/block_kind",
+    "/block_id"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +46,38 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_references.py::test_a_nonblock_artifact_cannot_be_used_as_the_reference_source",
+    "tests/test_document_references.py::test_missing_target_is_a_bound_native_error_not_an_unresolved_success",
+    "tests/test_document_references.py::test_multiple_documents_resolve_the_same_actual_target_identity_without_stored_copies[full]",
+    "tests/test_document_references.py::test_multiple_documents_resolve_the_same_actual_target_identity_without_stored_copies[link]",
+    "tests/test_document_references.py::test_multiple_documents_resolve_the_same_actual_target_identity_without_stored_copies[summary]",
+    "tests/test_document_references.py::test_other_block_kinds_cannot_be_implicitly_promoted_to_artifact_references[page_break]",
+    "tests/test_document_references.py::test_other_block_kinds_cannot_be_implicitly_promoted_to_artifact_references[prose]",
+    "tests/test_document_references.py::test_owned_snapshot_resolution_neither_reopens_nor_changes_supplied_files",
+    "tests/test_document_references.py::test_reference_block_cannot_resolve_zero_or_multiple_stored_targets[0]",
+    "tests/test_document_references.py::test_reference_block_cannot_resolve_zero_or_multiple_stored_targets[2]",
+    "tests/test_document_references.py::test_reference_is_selected_by_relation_type_and_preserves_the_actual_array_pointer",
+    "tests/test_document_references.py::test_reference_resolution_has_identical_source_bindings_in_isolated_core_and_pyz[core]",
+    "tests/test_document_references.py::test_reference_resolution_has_identical_source_bindings_in_isolated_core_and_pyz[pyz]",
+    "tests/test_document_references.py::test_resolution_is_owned_and_returned_target_values_cannot_change_its_binding",
+    "tests/test_document_references.py::test_resolution_requires_actual_owned_target_model_inputs[None]",
+    "tests/test_document_references.py::test_resolution_requires_actual_owned_target_model_inputs[unbound1]",
+    "tests/test_document_references.py::test_resolution_requires_actual_owned_target_model_inputs[unbound2]",
+    "tests/test_document_references.py::test_resolution_requires_actual_owned_target_model_inputs[{}]",
+    "tests/test_document_references.py::test_resolved_target_must_pass_its_own_native_type_specific_fields[document-purpose]",
+    "tests/test_document_references.py::test_resolved_target_must_pass_its_own_native_type_specific_fields[requirement-statement]",
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[0]",
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[1]",
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[2]",
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[3]",
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[4]",
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[5]",
+    "tests/test_document_references.py::test_supplied_file_order_does_not_select_a_different_reference_or_target[6]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete 11.d.R duplicate-target/copy rejection and changed-target projections, then 11.d.C structural consolidation without changing W contracts.",
+    "Rendering, complete document semantics, project discovery and publication approval remain separate; this read-only API resolves references in the actual supplied model only.",
+    "Targeted development and alternating Apply partitions are partial observations on their actual source states."
   ]
 }

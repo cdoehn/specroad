@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 441
-last_completed_plan_commit: 11.c.C
-next_plan_commit: 11.d.W
-last_completed_numbered_bundle: 276
+implementation_plan_commits_completed: 442
+last_completed_plan_commit: 11.d.W
+next_plan_commit: 11.d.R
+last_completed_numbered_bundle: 277
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11593,10 +11593,20 @@ Erwartungswerte erneut gezielt parallel geprüft. Keine neue Fachsemantik.
 
 #### 11.d.W – Let it Work
 
-- [ ] **11.d.W** · Position **442/900** · Voraussetzung: `11.c.C`.
+- [x] **11.d.W** · Position **442/900** · Voraussetzung: `11.c.C`.
 **Exakte Commit-Message:** `11.d.W feat(documents): Artefaktreferenzen ohne Kopien aufbauen`
 
 **Umsetzung:** artifact_ref ausschließlich über genau eine references-Relation auflösen.
+
+**Vorbereiteter W-Stand (Bundle 277):** Eine schreibfreie Referenzauflösung nutzt
+den gebundenen TargetModel-Snapshot, die vollständigen Blockfelder und den
+vorhandenen Relationsprüfer. Genau die gespeicherte references-Kante bestimmt
+das Ziel; dessen native typabhängige Felder werden geprüft. Die unveränderliche
+Datenprojektion bindet Block, Kante und tatsächliche Zielbytes an Modellwurzel,
+Identität, Revision, Quellpfade und Hashes. Zwei Dokumentkompositionen können
+so dieselbe normative Artefaktidentität verwenden. Render-Modus bleibt passives
+Datum; keine Fachkopie wird in einen Block geschrieben, keine Revision verändert
+und keine Rendering-, Ownership- oder Schreibfreigabe erteilt.
 
 **Verhaltensabnahme:** Dasselbe Artefakt wird in mehreren Dokumenten mit derselben Identität verwendet.
 
