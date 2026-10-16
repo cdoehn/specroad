@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 412
-last_completed_plan_commit: 10.c.W
-next_plan_commit: 10.c.R
-last_completed_numbered_bundle: 256
+implementation_plan_commits_completed: 413
+last_completed_plan_commit: 10.c.R
+next_plan_commit: 10.c.C
+last_completed_numbered_bundle: 258
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10951,12 +10951,38 @@ Verifikation und Release-Readiness bleiben ihren Integrationen zugeordnet.
 
 #### 10.c.R – Make it Right
 
-- [ ] **10.c.R** · Position **413/900** · Voraussetzung: `10.c.W`.
+- [x] **10.c.R** · Position **413/900** · Voraussetzung: `10.c.W`.
 **Exakte Commit-Message:** `10.c.R feat(baseline): Working-Baseline atomar erzeugen vervollständigen`
 
 **Vervollständigung:** Ungültiges Modell oder unvollständige Objektbytes verhindern Veröffentlichung.
 
 **Verhaltensabnahme:** Fault-Injection hinterlässt keine gültig behauptete Teilbaseline. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 257):**
+Der letzte Objektschreibschritt liest seine Staging-Bytes nach dem letzten
+Boundary-Callback erneut und sichert den neuen Archiveintrag dauerhaft, bevor
+er den Staging-Namen entfernt. Ein fehlgeschlagenes Directory-Sync erhält beide
+tatsächlichen Namen als Wiederanlaufevidenz und schaltet weder Journal noch
+Baselineabschluss weiter.
+
+Die R-Fälle injizieren fehlende, verkürzte und veränderte Staging-/Archivbytes,
+späte Modelländerungen, Link-/Sync-/Unlinkfehler, verlorene Rückmeldungen nach
+Recordpublikation sowie Receipt-/Cleanupfehler. Weitere Fälle prüfen manipulierte
+aber lokal konsistente Pläne, reservierte Identitäten, Requestkonflikte und
+Dateisystemgrenzen. Bereits erfolgreiche normative Schritte und tatsächliche
+Journalzustände bleiben erhalten; kein Fehler wird als fertige Teilbaseline
+gemeldet. Alle W-Tests und die bestehenden fachlichen Providergrenzen bleiben
+unverändert.
+
+**Korrektur nach Apply-Result 257 (Bundle 258):**
+Der erste Apply-Lauf stoppte vor dem R-Commit: Der bestehende Schema-Katalogtest
+führte bereits alle registrierten Operationen einschließlich `baseline_create`
+auf, ließ aber deren erforderlichen Ergebniseintrag aus. Die Testdaten werden um
+diesen Baseline-Eintrag ergänzt; die produktive Eigentümerprüfung und sämtliche
+Feldgrenzen bleiben unverändert. Die gezielte parallele Regression umfasst nun
+zusätzlich die Change-Plan- und Schema-Katalogtests. Die vorhandenen R-Dateien
+bleiben erhalten; R und C werden erneut als getrennte Zustände geprüft. Erst
+der erfolgreiche R-Commit schaltet die weiterhin fällige ungerade Hälfte um.
 
 #### 10.c.C – Make it Clean
 

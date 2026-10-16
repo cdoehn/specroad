@@ -148,6 +148,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         operations = [operation(kind) for kind in OPERATION_TYPES]
         results = [result(domain_value()), result(record_value('evidence')),
                    result(record_value('relation_review')),
+                   result(record_value('baseline')),
                    result(record_value('proposal', proposal_status='validated',
                        maturity='proposed', content_sha256='b' * 64))]
         plan = prepare_change_plan(document(operations, results))

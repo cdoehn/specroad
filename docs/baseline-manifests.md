@@ -68,3 +68,13 @@ An interrupted write retains the actual native journal and file state and
 reports no completed Baseline. A failure during the no-replace object move can
 leave both image names; that state remains recovery-blocked rather than being
 silently removed. Prepared journals support independent discard-basis checking.
+
+Before publishing a new archive name, the writer checks the staged image again
+after the last boundary callback. It then synchronizes the new archive directory
+entry before removing the staged name. A directory-sync failure therefore keeps
+the staged bytes and the actual new link available as recovery evidence; it
+cannot advance the journal or create the Baseline record. Truncated, missing or
+changed staged/published bytes, stale model inputs, unsafe paths and conflicting
+saved requests remain blocking. Failures after record publication or during
+finalization retain their real state without an automatic retry or a false
+completion result.

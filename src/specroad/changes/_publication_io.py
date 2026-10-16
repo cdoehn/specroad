@@ -45,8 +45,13 @@ def replace_bound_image(source_dir, source_name, target_dir, target_name, *,
             # Atomic no-replace publication for immutable archive bytes. A
             # failed unlink leaves both actual names recovery-blocked; never
             # claim success or remove an independently existing target.
+            _image(source_dir, source_name, size, digest, identity=identity)
             os.link(source_name, target_name, src_dir_fd=source_dir,
                     dst_dir_fd=target_dir, follow_symlinks=False)
+            # Keep the staged name until the new directory entry is durable.
+            # A failed sync retains both real names and cannot advance the
+            # journal or publish the Baseline record.
+            os.fsync(target_dir)
             os.unlink(source_name, dir_fd=source_dir)
         else:
             os.replace(source_name, target_name,
