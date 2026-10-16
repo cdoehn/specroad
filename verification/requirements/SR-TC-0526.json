@@ -13,18 +13,27 @@
     "Trusted caller supplies actual owned TargetModel bytes for the complete supplied inventory; source paths are bindings, not proof of live disk completeness."
   ],
   "steps": [
-    "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity."
+    "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity.",
+    "Bind every conflicting incoming edge to its original source bytes and pointer; distinguish missing/multiple owners, preserve native position/identity/type failures, require an explicitly closed unconfigured project scope, and compare separate/deep trees and unchanged owned observations across Core/PYZ."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Dateisystemreihenfolge DARF NICHT die Reihenfolge von Abschnitten oder Inhaltsblöcken beeinflussen.",
-    "scope": "11.b.W: supplied-model section ownership and deterministic contains composition. Every section needs exactly one incoming contains edge; duplicate edges from one parent count separately. Roots come only from document contains edges, equal positions use target/relation ID ties, and content-block occurrences retain relation identity. Input/source/record hashes bind the actual data. Native field/reference/hierarchy checks precede composition. No file-discovery, primary-role, include, payload-semantic, complete model validation, rendering or write-authority claim."
+    "scope": "11.b.W: supplied-model section ownership and deterministic contains composition. Every section needs exactly one incoming contains edge; duplicate edges from one parent count separately. Roots come only from document contains edges, equal positions use target/relation ID ties, and content-block occurrences retain relation identity. Input/source/record hashes bind the actual data. Native field/reference/hierarchy checks precede composition. No file-discovery, primary-role, include, payload-semantic, complete model validation, rendering or write-authority claim. 11.b.R adds actual incoming-relations provenance for cardinality failures and explicit full-project scope admission. Native negative/Boolean/missing positions and decimal-spelled document-field positions fail without rewriting bytes. Equal integer positions retain the full target/relation tie-breaker; retired records are not omitted. No fallback, partial inventory promotion, complete semantic provider or write approval is supplied."
   },
   "expected_diagnostics": [
+    "document_id_required",
+    "document_not_found",
     "document_section_parent_cardinality",
+    "document_structure_full_project_scope_required",
+    "duplicate_relation_id",
+    "invalid_contains_position",
+    "invalid_contains_target",
+    "invalid_relation_position",
     "missing_field",
     "missing_relation_target",
-    "relation_hierarchy_cycle"
+    "relation_hierarchy_cycle",
+    "target_sources_changed"
   ],
   "expected_exit_codes": [
     3
@@ -68,10 +77,49 @@
     "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[4]",
     "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[5]",
     "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[6]",
-    "tests/test_document_structure.py::test_two_contains_edges_from_the_same_parent_do_not_count_as_one_owner"
+    "tests/test_document_structure.py::test_two_contains_edges_from_the_same_parent_do_not_count_as_one_owner",
+    "tests/test_document_structure_right.py::test_conflicting_parents_bind_original_source_paths_pointers_and_relation_bytes[False]",
+    "tests/test_document_structure_right.py::test_conflicting_parents_bind_original_source_paths_pointers_and_relation_bytes[True]",
+    "tests/test_document_structure_right.py::test_current_record_revision_changes_binding_but_does_not_rewrite_prior_observation",
+    "tests/test_document_structure_right.py::test_deep_section_chain_is_reported_as_bound_flat_data",
+    "tests/test_document_structure_right.py::test_document_field_contract_keeps_integer_positions_stricter_than_generic_edges[0.0]",
+    "tests/test_document_structure_right.py::test_document_field_contract_keeps_integer_positions_stricter_than_generic_edges[1.0]",
+    "tests/test_document_structure_right.py::test_document_selector_requires_a_string_identity[False]",
+    "tests/test_document_structure_right.py::test_document_selector_requires_a_string_identity[None]",
+    "tests/test_document_structure_right.py::test_document_selector_requires_a_string_identity[value2]",
+    "tests/test_document_structure_right.py::test_document_selector_requires_a_string_identity[value3]",
+    "tests/test_document_structure_right.py::test_duplicate_relation_identity_is_a_native_error_not_a_parent_count_result",
+    "tests/test_document_structure_right.py::test_equal_document_root_positions_use_full_target_ids_without_rewriting_relations",
+    "tests/test_document_structure_right.py::test_explicit_full_scope_preserves_default_observation_and_is_owned",
+    "tests/test_document_structure_right.py::test_invalid_document_to_block_contains_pair_preserves_native_field_diagnostic",
+    "tests/test_document_structure_right.py::test_invalid_positions_are_refused_by_the_native_model_before_structure[-0.5]",
+    "tests/test_document_structure_right.py::test_invalid_positions_are_refused_by_the_native_model_before_structure[-1]",
+    "tests/test_document_structure_right.py::test_invalid_positions_are_refused_by_the_native_model_before_structure[0]",
+    "tests/test_document_structure_right.py::test_invalid_positions_are_refused_by_the_native_model_before_structure[False]",
+    "tests/test_document_structure_right.py::test_invalid_positions_are_refused_by_the_native_model_before_structure[None]",
+    "tests/test_document_structure_right.py::test_invalid_positions_are_refused_by_the_native_model_before_structure[True]",
+    "tests/test_document_structure_right.py::test_invalid_positions_are_refused_by_the_native_model_before_structure[position6]",
+    "tests/test_document_structure_right.py::test_missing_position_is_not_replaced_with_an_implicit_zero",
+    "tests/test_document_structure_right.py::test_multiple_documents_keep_separate_roots_and_nested_ownership",
+    "tests/test_document_structure_right.py::test_mutated_model_source_bytes_cannot_reuse_the_original_model_binding",
+    "tests/test_document_structure_right.py::test_orphan_diagnostic_has_no_invented_parent_or_incoming_relation",
+    "tests/test_document_structure_right.py::test_parent_conflict_source_contract_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_document_structure_right.py::test_parent_conflict_source_contract_runs_in_isolated_core_and_pyz[pyz]",
+    "tests/test_document_structure_right.py::test_partial_configured_or_other_scope_cannot_claim_full_section_ownership[scope0]",
+    "tests/test_document_structure_right.py::test_partial_configured_or_other_scope_cannot_claim_full_section_ownership[scope1]",
+    "tests/test_document_structure_right.py::test_partial_configured_or_other_scope_cannot_claim_full_section_ownership[scope2]",
+    "tests/test_document_structure_right.py::test_partial_configured_or_other_scope_cannot_claim_full_section_ownership[scope3]",
+    "tests/test_document_structure_right.py::test_retired_parent_edge_is_still_a_stored_second_owner",
+    "tests/test_document_structure_right.py::test_section_maturity_does_not_silently_remove_its_parent_requirement[draft]",
+    "tests/test_document_structure_right.py::test_section_maturity_does_not_silently_remove_its_parent_requirement[retired]",
+    "tests/test_document_structure_right.py::test_unknown_or_wrong_kind_document_identity_never_selects_a_fallback[SR-DOC-11111111111111111111111111]",
+    "tests/test_document_structure_right.py::test_unknown_or_wrong_kind_document_identity_never_selects_a_fallback[SR-SEC-00000000000000000000000000]",
+    "tests/test_document_structure_right.py::test_unknown_or_wrong_kind_document_identity_never_selects_a_fallback[]",
+    "tests/test_document_structure_right.py::test_unowned_section_in_another_part_of_the_inventory_blocks_document_selection",
+    "tests/test_document_structure_right.py::test_valid_structure_does_not_supply_unavailable_complete_document_semantics"
   ],
   "open_items": [
-    "Complete the assigned 11.b.R edge cases and 11.b.C structural consolidation with unchanged W behavior.",
+    "Complete 11.b.C structural consolidation with unchanged W/R behavior.",
     "Remaining document payload/include/rendering/authoring services follow their assigned steps; no full requirement or release approval is claimed.",
     "Targeted development observations and alternating Apply partitions are partial tests on their actual individual source states."
   ]

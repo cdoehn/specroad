@@ -32,3 +32,21 @@ The W tests cover stored ownership, nested traversal, order independence,
 position/ID ties, duplicate parents, native missing-target and cycle findings,
 field failures, owned observations, actual read-only project input and isolated
 Core/PYZ parity. They compare data contracts, not rendered output.
+
+An explicit `scope_descriptor` must be an unconfigured, closed project scope.
+Partial, configured, document or specification selectors cannot be presented
+as a complete section-ownership check. The descriptor is owned; its acceptance
+does not prove actual file-inventory completeness. Omitting it retains the
+default supplied-project contract.
+
+Parent-cardinality findings include `incoming_relations`: the actual parent ID,
+source path, original relation-array pointer, source hash, stored relation and
+relation hash. Diagnostic ordering may differ from array order; each pointer
+still identifies the original source occurrence. An orphan has an empty list.
+Retired records and repeated edges are not silently removed from this check.
+
+Invalid positions retain native reader/field errors. In particular, the document
+field contract requires an integer position even where the generic relation
+reader accepts an integral JSON decimal. Tests of that boundary supply the
+actual original bytes, without canonicalizing the decimal spelling away first.
+Equal integer positions remain valid and use the prescribed identity ties.

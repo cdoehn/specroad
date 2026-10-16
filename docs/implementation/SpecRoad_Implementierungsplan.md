@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 436
-last_completed_plan_commit: 11.b.W
-next_plan_commit: 11.b.R
-last_completed_numbered_bundle: 273
+implementation_plan_commits_completed: 437
+last_completed_plan_commit: 11.b.R
+next_plan_commit: 11.b.C
+last_completed_numbered_bundle: 274
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11488,10 +11488,19 @@ behauptet; die folgenden R-/C-Zustände und Dokumentdienste bleiben getrennt.
 
 #### 11.b.R – Make it Right
 
-- [ ] **11.b.R** · Position **437/900** · Voraussetzung: `11.b.W`.
+- [x] **11.b.R** · Position **437/900** · Voraussetzung: `11.b.W`.
 **Exakte Commit-Message:** `11.b.R feat(documents): Abschnittseigentum und Ordnung vervollständigen`
 
 **Vervollständigung:** Mehrfache Eltern, negative Position und Ordnungsdubletten nach Vertragsregeln behandeln.
+
+**Vorbereiteter R-Stand (Bundle 274):** Elternkonflikte binden jede beteiligte
+Relation an ihre tatsächliche Quelle, den ursprünglichen JSON-Pointer und die
+Quell-/Relationshashes. Verwaiste Abschnitte erhalten keine erfundenen Eltern;
+retirierte Datensätze werden nicht still aus der Eigentumsprüfung entfernt.
+Eine ausdrückliche Scope-Angabe muss den geschlossenen, nicht konfigurierten
+Projektvertrag erfüllen. Native Positions-/Feldfehler und erlaubte Gleichstände
+bleiben erhalten. Getrennte Dokumentbäume, tiefe Abschnittsketten und Core/PYZ
+prüfen dieselben gebundenen Daten ohne Rendering- oder Schreibfreigabe.
 
 **Verhaltensabnahme:** Tests vergleichen gespeicherte Relation/Position und Kompositions-IDs, nicht visuelle Reihenfolge einer Ausgabe. Die W-Nachweise bleiben zusätzlich grün.
 

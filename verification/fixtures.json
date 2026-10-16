@@ -387,7 +387,7 @@
     },
     "SR-FIX-DOCUMENT-STRUCTURE-v1": {
       "provider": "tests/test_document_structure.py:composed_records",
-      "kind": "Actual owned Document/Section/ContentBlock source bytes and stored contains relations: nested traversal, source-bound ownership, position/target/relation order, invalid parents, native fields/references/cycles, immutable read-only observations and isolated Core/PYZ parity."
+      "kind": "Actual owned Document/Section/ContentBlock source bytes and stored contains relations: nested traversal, source-bound ownership, position/target/relation order, invalid parents, native fields/references/cycles, immutable read-only observations and isolated Core/PYZ parity. Exact conflicting-parent source pointers/hashes, original decimal-spelled positions, explicit full-project scope admission, separate document roots, retired records, deep chains, immutable source/revision bindings and native refusals."
     }
   }
 }

@@ -58,7 +58,7 @@ class DocumentStructureAssessment:
         raise TypeError('Use structure_valid explicitly; this is not full validation')
 
 
-def assess_document_structure(model):
+def assess_document_structure(model, *, scope_descriptor=None):
     """Evaluate every section's parent and ordered document composition.
 
     Every supplied section needs exactly one incoming contains relation, even
@@ -67,8 +67,13 @@ def assess_document_structure(model):
     or rewritten. Primary-role, include and payload semantics remain separate.
     """
     from ..changes.target_model import TargetModel, _default_scope
+    from ..graph.scope_descriptors import ScopeDescriptor
     if type(model) is not TargetModel:
         raise ModelError('document_target_model_required')
+    descriptor = ScopeDescriptor(_default_scope() if scope_descriptor is None else scope_descriptor).data
+    if (descriptor['scope_kind'] != 'project' or descriptor['boundary_policy'] != 'closed'
+            or descriptor['configuration_id'] is not None):
+        raise DocumentStructureError('document_structure_full_project_scope_required', pointer='/scope_descriptor')
     model = model.snapshot()
     records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
     index = {r.identity.id: r for r in records}
@@ -93,6 +98,8 @@ def assess_document_structure(model):
             diagnostics.append({**error.diagnostic(), 'severity': 'error'})
     owners, children, documents = [], {}, []
     if not diagnostics:
+        pointers = {relation.identity.id: '/relations/' + str(number)
+                    for source in records for number, relation in enumerate(source.relations)}
         incoming = {identity: [] for identity, value in values.items()
                     if value['artifact_type'] == 'section'}
         for edge in references.relations:
@@ -104,7 +111,13 @@ def assess_document_structure(model):
                 diagnostics.append({'reason': 'document_section_parent_cardinality',
                     'path': index[identity].path, 'pointer': '', 'artifact_id': identity,
                     'parent_count': len(edges), 'related_ids': [e.source.id for e in edges],
-                    'relation_ids': [e.relation.identity.id for e in edges], 'severity': 'error'})
+                    'relation_ids': [e.relation.identity.id for e in edges],
+                    'incoming_relations': [{'source_id': e.source.id,
+                        'path': index[e.source.id].path, 'pointer': pointers[e.relation.identity.id],
+                        'source_sha256': sha256(index[e.source.id].source_bytes).hexdigest(),
+                        'relation': e.relation.data,
+                        'relation_sha256': canonical_json_sha256(e.relation.data)} for e in edges],
+                    'severity': 'error'})
             else:
                 edge = edges[0]
                 owners.append({'section_id': identity, 'parent_id': edge.source.id,
@@ -137,7 +150,6 @@ def assess_document_structure(model):
             documents.append({'document_id': identity, 'revision': value['revision'],
                 'root_section_ids': [edge['artifact_id'] for edge in children[identity]],
                 'preorder': preorder})
-    descriptor = _default_scope()
     data = {'format_version': 'document-structure-v1', 'project_id': model.binding.project_id,
         'scope_descriptor': descriptor,
         'model_root_sha256': model.manifest(model.artifacts, descriptor).sha256,
