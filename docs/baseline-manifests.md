@@ -183,3 +183,8 @@ Nicht unterstützte historische Schemas werden mit dem bestehenden
 `unsupported_schema_version` beziehungsweise bei Profilen
 `profile_unsupported_schema` abgewiesen. Ein zukünftiger Legacy-Leser muss
 seine Originalhash-/Manifestbindung ausdrücklich bereitstellen.
+
+Die Quellenregistry bleibt für alle Quellenarten derselbe Einstieg. Der
+Baselineadapter bereitet die geprüften Snapshotbytes vor; die abschließende
+Record-/Objektbeobachtung und ihre unveränderbaren Nachweise liegen in einem
+eigenen internen Modul. Der gemeinsame semantische Vergleich bleibt unverändert.

@@ -4,19 +4,12 @@ Only archived bytes supply historical values. Native Baseline IDs select their
 canonical record path; explicit record bytes also support archive-only roots.
 This adapter contributes no alternative field or resource-diff semantics.
 """
-from ..model.canonical import canonical_json_bytes
 from ..model.configuration import ProjectConfiguration
 from ..model.errors import ModelError
 from ..model.paths import artifact_path
 from ..security import ProjectBoundary
 from ..storage.json_syntax import parse_json_object
-
-
-def _stored_record(boundary, path):
-    try:
-        return boundary.read_bytes(path)
-    except FileNotFoundError as error:
-        raise ModelError('comparison_baseline_record_missing', path=path) from error
+from ._baseline_observation import _stored_record, baseline_observation
 
 
 def baseline_source(root, reference, expected_project_id):
@@ -32,7 +25,7 @@ def baseline_source(root, reference, expected_project_id):
     boundary = ProjectBoundary(root)
     raw = _stored_record(boundary, path) if path is not None else reference
     from ..archive._baseline_view import _record
-    from ..archive.materialization import _snapshot, _check_objects
+    from ..archive.materialization import _snapshot
     from ..archive.objects import ObjectReference, read_snapshot_object
     from ..archive.verification import _configuration, verify_baseline_snapshot
 
@@ -56,18 +49,6 @@ def baseline_source(root, reference, expected_project_id):
         raise ModelError('project_identity_mismatch')
     resources = tuple(sorted(files.items()))
 
-    def finish():
-        if path is not None and _stored_record(boundary, path) != raw:
-            raise ModelError('comparison_source_changed', path=path)
-        _check_objects(boundary, objects)
-        if verify_baseline_snapshot(boundary, raw) != checked:
-            raise ModelError('baseline_snapshot_changed')
-        if path is not None and _stored_record(boundary, path) != raw:
-            raise ModelError('comparison_source_changed', path=path)
-        return canonical_json_bytes({'baseline_id': record['id'], 'record_path': path,
-            'record_sha256': checked['record_sha256'], 'model_root_sha256': checked['model_root_sha256'],
-            'snapshot_integrity_verified': True,
-            'objects': [item.reference.data for _, item in sorted(objects.items())],
-            'historical_full_validation_verified': False, 'release_authorized': False})
+    finish = baseline_observation(boundary, path, raw, objects, checked, record)
 
     return configuration, resources, str(boundary.root), None, finish

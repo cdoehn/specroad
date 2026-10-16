@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 422
-last_completed_plan_commit: 10.f.R
-next_plan_commit: 10.f.C
+implementation_plan_commits_completed: 423
+last_completed_plan_commit: 10.f.C
+next_plan_commit: 10.g.W
 last_completed_numbered_bundle: 264
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11191,10 +11191,16 @@ bleiben erhalten; Legacy-Leser und weitere Scopes werden nicht vorgetäuscht.
 
 #### 10.f.C – Make it Clean
 
-- [ ] **10.f.C** · Position **423/900** · Voraussetzung: `10.f.R`.
+- [x] **10.f.C** · Position **423/900** · Voraussetzung: `10.f.R`.
 **Exakte Commit-Message:** `10.f.C refactor(baseline): Baselinevergleich und Diffquellenadapter bereinigen`
 
 **Bereinigung:** Baselineadapter liefert ausschließlich geprüfte Snapshots statt eigener Diffsemantik.
+
+**Vorbereiteter C-Stand (Bundle 264):**
+Die abschließende Record-/Archivprüfung und die Erzeugung der gebundenen
+Quellnachweise sind unverändert in ein internes Beobachtungsmodul ausgelagert.
+Der Baselineadapter liefert weiterhin ausschließlich geprüfte Snapshots an den
+bestehenden Vergleich. Alle W-/R-Testbytes und Fehlerverträge bleiben erhalten.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
