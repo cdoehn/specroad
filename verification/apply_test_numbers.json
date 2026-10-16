@@ -11131,6 +11131,23 @@
     "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[False-7]",
     "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-100000]",
     "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-1]",
-    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-7]"
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-7]",
+    "tests/test_baseline_work_right.py::test_cancelled_partial_capture_preserves_all_existing_baseline_hashes",
+    "tests/test_baseline_work_right.py::test_confirmed_configured_receipt_replays_without_resolving_a_removed_current_selection",
+    "tests/test_baseline_work_right.py::test_denied_native_authority_retains_existing_baseline_and_work_checkpoint",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[advance-0]",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[advance-2]",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[publish-0]",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[publish-2]",
+    "tests/test_baseline_work_right.py::test_new_publication_still_requires_its_real_current_configuration_gate",
+    "tests/test_baseline_work_right.py::test_new_work_publication_preserves_real_older_baseline_and_shared_objects",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[baseline_record]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[cleanup]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[committed]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[first_object]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[prepared]",
+    "tests/test_baseline_work_right.py::test_stale_work_basis_never_rebases_or_changes_an_older_baseline[0]",
+    "tests/test_baseline_work_right.py::test_stale_work_basis_never_rebases_or_changes_an_older_baseline[1]",
+    "tests/test_baseline_work_right.py::test_stale_work_basis_never_rebases_or_changes_an_older_baseline[2]"
   ]
 }

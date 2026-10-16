@@ -201,6 +201,15 @@ def advance_normative_preparation(store, *, registry, model, policy, actor,
 def publish_normative_work(store, *, registry, model, policy, actor, request_id,
                            transaction_id, authority, gates=(), strict=False,
                            package_files=()):
+    """Run the original native Work transaction or replay its proven receipt."""
+    return _publish_normative_work(store, registry=registry, model=model, policy=policy,
+        actor=actor, request_id=request_id, transaction_id=transaction_id, authority=authority,
+        gate_factory=lambda: gates, strict=strict, package_files=package_files)
+
+
+def _publish_normative_work(store, *, registry, model, policy, actor, request_id,
+                           transaction_id, authority, gate_factory, strict=False,
+                           package_files=()):
     """Run one unbroken native transaction, or replay its already proven receipt.
 
     No Work generation is published during this call. Native failures retain
@@ -230,6 +239,9 @@ def publish_normative_work(store, *, registry, model, policy, actor, request_id,
             return _publication_result(current, resolution, completion, published=False)
         _require(not current.entries('remaining'), 'normative_preparation_incomplete')
         _transaction_clear(model)
+        # Host-owned gate preparation belongs to a new publication. A proven
+        # historical receipt never needs the current selection to be resolved.
+        gates = gate_factory()
         preflight = _current_target(prepare_publication_check, plan, model,
             policy=policy, gates=gates, strict=strict, package_files=package_files)
         _require(preflight.request.data['assessment_sha256'] == _assessment_sha256(current),

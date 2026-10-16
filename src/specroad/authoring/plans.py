@@ -48,13 +48,17 @@ def prepare_authoring_target(model, operations, *, policy, **fields):
     return _prepare_target(model, owned, policy=policy, **fields)
 
 
+def _execution_policy(command_id):
+    return (TargetPolicy(command_id, 'review-outcome-v1', ('extension:review-withdrawal',))
+        if command_id == 'relation.review' else TargetPolicy(command_id, '1', ()))
+
+
 def _execution_inputs(model, command_id, operations, actor, planned_at, gates):
     owned = _operations(command_id, operations)
     if type(gates) not in (list, tuple):
         raise AuthoringError('explicit_authoring_gates_required')
     gates = tuple(gates)
-    policy = (TargetPolicy(command_id, 'review-outcome-v1', ('extension:review-withdrawal',))
-        if command_id == 'relation.review' else TargetPolicy(command_id, '1', ()))
+    policy = _execution_policy(command_id)
     operation = ChangeOperation(owned[0])
     lifecycle = any(type(gate) is ModelGate and gate.gate_id == 'lifecycle' for gate in gates)
     if command_id == 'artifact.update' and not lifecycle:

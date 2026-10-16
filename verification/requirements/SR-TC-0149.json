@@ -18,12 +18,13 @@
     "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state.",
     "Re-run the unchanged W/R behavior tests after separating the unchanged planning function from the native publication adapter.",
     "Capture actual supplied Baseline inputs in bounded blocks and compare the split saved-plan/manifest/object bytes with ordinary single-run preparation.",
-    "Persist and resume the existing Work preparation generations, then use the same native Baseline transaction and original receipt replay."
+    "Persist and resume the existing Work preparation generations, then use the same native Baseline transaction and original receipt replay.",
+    "Publish an actual older Baseline, bind record/object hashes, then exercise cancelled capture, stale Work bases, missing Work objects, denied authority and real native process loss; require unchanged history/checkpoint, native Recovery and no false completion. Replay an actual configured receipt after removing its current configuration, while fresh publication remains gated."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad baseline create <NAME>` MUSS vor dem Schreiben die vollständige Projektvalidierung erfolgreich ausführen.",
-    "scope": "Native embedding API for unconfigured whole-project working Baselines: fresh complete target validation, all bound snapshot objects staged and published before one sealed/approved immutable record, exact precreation root, actual receipt replay and unchanged source bytes. Existing semantic subjects require trusted complete providers; no CLI or release readiness claim."
+    "scope": "Native embedding API for unconfigured whole-project working Baselines: fresh complete target validation, all bound snapshot objects staged and published before one sealed/approved immutable record, exact precreation root, actual receipt replay and unchanged source bytes. Existing semantic subjects require trusted complete providers; no CLI or release readiness claim. 10.i.R verifies actual older Baseline and shared-object retention through the existing Work/native writer. Five real process cuts preserve the durable preparation checkpoint and require native Recovery; only committed original receipts replay. Missing Work inputs never fall back to current files. Receipt replay precedes current configuration resolution, while fresh writes retain their gates. Process-loss observations do not prove power-loss durability or full requirement acceptance."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -117,11 +118,29 @@
     "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[False-7]",
     "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-100000]",
     "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-1]",
-    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-7]"
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-7]",
+    "tests/test_baseline_work_right.py::test_cancelled_partial_capture_preserves_all_existing_baseline_hashes",
+    "tests/test_baseline_work_right.py::test_confirmed_configured_receipt_replays_without_resolving_a_removed_current_selection",
+    "tests/test_baseline_work_right.py::test_denied_native_authority_retains_existing_baseline_and_work_checkpoint",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[advance-0]",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[advance-2]",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[publish-0]",
+    "tests/test_baseline_work_right.py::test_missing_work_object_never_falls_back_to_live_inputs_or_mutates_history[publish-2]",
+    "tests/test_baseline_work_right.py::test_new_publication_still_requires_its_real_current_configuration_gate",
+    "tests/test_baseline_work_right.py::test_new_work_publication_preserves_real_older_baseline_and_shared_objects",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[baseline_record]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[cleanup]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[committed]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[first_object]",
+    "tests/test_baseline_work_right.py::test_real_process_loss_preserves_history_and_never_promotes_partial_completion[prepared]",
+    "tests/test_baseline_work_right.py::test_stale_work_basis_never_rebases_or_changes_an_older_baseline[0]",
+    "tests/test_baseline_work_right.py::test_stale_work_basis_never_rebases_or_changes_an_older_baseline[1]",
+    "tests/test_baseline_work_right.py::test_stale_work_basis_never_rebases_or_changes_an_older_baseline[2]"
   ],
   "open_items": [
     "CLI integration, selected/configured scopes, installed language package snapshot providers, general historical verification and release readiness remain separate integration work.",
     "These targeted tests and the alternating Apply partition are not a full-suite or release proof.",
-    "Partial input capture is currently invocation-local; cross-process capture checkpoints, bounded-memory whole-model planning and the extended Baseline Work crash matrix remain open."
+    "Partial input capture is currently invocation-local; cross-process capture checkpoints, bounded-memory whole-model planning remain open.",
+    "The Baseline process-loss matrix does not prove power-loss or cross-platform durability; recovery behavior also retains the existing common native Work recovery regression coverage."
   ]
 }

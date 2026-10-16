@@ -377,7 +377,7 @@
     },
     "SR-FIX-BASELINE-WORK-v1": {
       "provider": "tests/test_baseline_work.py:large_project",
-      "kind": "Actual supplied project bytes, bounded native input capture, direct/split baseline parity, existing durable Work checkpoint generations and native single publication/replay."
+      "kind": "Actual supplied project bytes, bounded native input capture, direct/split baseline parity, existing durable Work checkpoint generations and native single publication/replay. Real older native Baseline with checked lifecycle/archived-byte providers, hash retention, stale/missing Work inputs, denied authority and five actual native process-loss boundaries with unchanged checkpoints, Recovery admission and original receipt replay."
     }
   }
 }

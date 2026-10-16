@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 430
-last_completed_plan_commit: 10.i.W
-next_plan_commit: 10.i.R
-last_completed_numbered_bundle: 269
+implementation_plan_commits_completed: 431
+last_completed_plan_commit: 10.i.R
+next_plan_commit: 10.i.C
+last_completed_numbered_bundle: 270
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11352,10 +11352,22 @@ Gesamtmodellplanung sind damit noch nicht implementiert.
 
 #### 10.i.R – Make it Right
 
-- [ ] **10.i.R** · Position **431/900** · Voraussetzung: `10.i.W`.
+- [x] **10.i.R** · Position **431/900** · Voraussetzung: `10.i.W`.
 **Exakte Commit-Message:** `10.i.R feat(baseline): Snapshot-Workparität und Crashregression vervollständigen`
 
 **Vervollständigung:** Abbruch, veraltete Basis und verloren gegangene Objekte erhalten vorhandene Baselines.
+
+**Vorbereiteter R-Stand (Bundle 270):** Bestätigtes Receipt-Replay erfolgt vor
+der erneuten Auflösung heutiger Konfigurationsgates; neue Veröffentlichungen
+behalten alle aktuellen Prüfungen. Die Nachweise erzeugen zuerst eine echte
+ältere Baseline und vergleichen deren Record- und Objekthashes bei Abbruch,
+veralteter Basis, fehlenden Work-Objekten und verweigerter Autorisierung. Fünf
+echte Prozessabbrüche an nativen Transaktionsgrenzen erhalten den Work-Checkpoint
+und den Recovery-Bedarf; nur bereits bestätigte Receipts dürfen wiedergegeben
+werden. Ein sichtbarer neuer Record besitzt vollständig geprüfte Objekte.
+Der Nachweis betrifft Prozessverlust auf dem aktuellen Dateisystem. Die im
+W-Stand genannten Grenzen des partiellen Captures und der Speicherbelegung
+bleiben ausdrücklich offen.
 
 **Verhaltensabnahme:** Hashinventur beweist immutable Bestände und vollständiges neues Ergebnis oder keinen Abschluss. Die W-Nachweise bleiben zusätzlich grün.
 

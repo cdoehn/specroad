@@ -297,3 +297,18 @@ Planning and the Work codec retain their existing whole-byte memory behavior.
 There is no partial Baseline publication, new snapshot store, automatic recovery,
 CLI registration or release permission. The adapters do not mark final Work
 result delivery completed.
+
+Confirmed receipt replay precedes preparation of the current Baseline and
+configuration gates. Removing a configuration after a successful publication
+therefore does not invalidate its original receipt. Fresh publication still
+requires all current gates, the saved Work bindings and native authorization.
+
+The interruption fixtures first publish an actual older Baseline and retain the
+hashes of its record and all referenced objects. Cancellation, stale Work bases,
+lost Work objects and denied authority preserve that inventory. Real child
+processes stop after native preparation, the first new object, the sealed record,
+receipt commitment and cleanup. The Work checkpoint stays unchanged; the native
+owner/journal requires Recovery, and only already committed receipts can replay.
+A visible new record always has its complete verified object inventory. These
+tests observe process loss on the current filesystem, not power loss or a full
+cross-platform durability guarantee.
