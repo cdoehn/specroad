@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 419
-last_completed_plan_commit: 10.e.R
-next_plan_commit: 10.e.C
+implementation_plan_commits_completed: 420
+last_completed_plan_commit: 10.e.C
+next_plan_commit: 10.f.W
 last_completed_numbered_bundle: 262
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11128,10 +11128,16 @@ Archivobjekte, binäre Anhänge und Sprachregistry bleiben unabhängig erhalten.
 
 #### 10.e.C – Make it Clean
 
-- [ ] **10.e.C** · Position **420/900** · Voraussetzung: `10.e.R`.
+- [x] **10.e.C** · Position **420/900** · Voraussetzung: `10.e.R`.
 **Exakte Commit-Message:** `10.e.C refactor(baseline): Baseline anzeigen und materialisieren bereinigen`
 
 **Bereinigung:** Anzeigenprojektion und sichere Materialisierung trennen.
+
+**Vorbereiteter C-Stand (Bundle 262):**
+Recordprüfung und Anzeigenprojektion liegen unverändert in `_baseline_view`;
+`materialization` erhält die öffentliche Aliasfunktion und den bisherigen
+Materialisierungsvertrag. Alle Funktionskörper und W-/R-Testdateien bleiben
+unverändert. Keine neuen Fachwerte, Nebenwirkungen oder Erfolgsbefugnisse.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

@@ -149,3 +149,7 @@ Directories are created exclusively, and every output file retains its original
 created inode binding. Foreign initial entries and concurrent replacements fail
 without cleanup or overwriting. Late missing source objects retain their exact
 object path in the machine-readable failure.
+
+The read-only record/view implementation is separated in `_baseline_view`.
+The public archive API and the existing materialization-module view alias keep
+the same results, exceptions and write boundaries.

@@ -17,7 +17,8 @@
     "Restore the verified whole-project snapshot without Git or current files, preserving exact resource bytes and semantic configuration hashes; reconstruct the root again from actual output bytes.",
     "Reject missing archive objects, existing or overlapping destinations and invalid operational choices before publication; retain interrupted output without overwriting or claiming completion.",
     "Inject missing/replaced destination directories and ensure no write falls back to the process cwd; reject foreign directories and byte-identical replacement of an owned file.",
-    "Check original objects again after output reconstruction, preserving actual interrupted files on late source/storage failure; restore an older Baseline and registry without any original project."
+    "Check original objects again after output reconstruction, preserving actual interrupted files on late source/storage failure; restore an older Baseline and registry without any original project.",
+    "Re-run the unchanged W/R behavior tests after separating the unchanged read-only view from native materialization."
   ],
   "oracle": {
     "kind": "behavior",
