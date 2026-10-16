@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 435
-last_completed_plan_commit: 11.a.C
-next_plan_commit: 11.b.W
-last_completed_numbered_bundle: 272
+implementation_plan_commits_completed: 436
+last_completed_plan_commit: 11.b.W
+next_plan_commit: 11.b.R
+last_completed_numbered_bundle: 273
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11469,10 +11469,20 @@ Fachverträge bleiben unverändert; fehlende Dokumentsemantik wird nicht ersetzt
 
 #### 11.b.W – Let it Work
 
-- [ ] **11.b.W** · Position **436/900** · Voraussetzung: `11.a.C`.
+- [x] **11.b.W** · Position **436/900** · Voraussetzung: `11.a.C`.
 **Exakte Commit-Message:** `11.b.W feat(documents): Abschnittseigentum und Ordnung aufbauen`
 
 **Umsetzung:** Eine eingehende contains-Beziehung je Abschnitt und fachliche position-/ID-Ordnung auswerten.
+
+**Vorbereiteter W-Stand (Bundle 273):** Eine schreibfreie Auswertung bindet die
+gelieferten Modellbytes an Abschnittseigentümer, gespeicherte Kindrelationen und
+die Traversierung je Dokument. Genau eine eingehende `contains`-Relation je
+Abschnitt ist erforderlich; Wurzeln stammen ausschließlich aus dem Dokument.
+Die vorhandene Graphordnung nach Position, Ziel-ID und Relation-ID bestimmt
+auch verschachtelte Abschnitte und Inhaltsblöcke. Native Feld-, Referenz- und
+Zyklusprüfungen bleiben vorgeschaltet. Dateierfassung, Primärrolle, Includes,
+Payloadsemantik und Rendering werden dadurch nicht als vollständig geprüft
+behauptet; die folgenden R-/C-Zustände und Dokumentdienste bleiben getrennt.
 
 **Verhaltensabnahme:** Verschachtelte Abschnitte bilden dieselbe Datenkomposition unabhängig von Dateireihenfolge.
 

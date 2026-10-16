@@ -7,21 +7,31 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-STRUCTURE-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
+    "Trusted caller supplies actual owned TargetModel bytes for the complete supplied inventory; source paths are bindings, not proof of live disk completeness."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `section`-Artefakt MUSS über genau eine eingehende `contains`-Relation einem Dokument oder Elternabschnitt zugeordnet sein und Titel sowie ausgehende `contains`-Relationen mit `position` für Kindabschnitte und Inhaltsblöcke verwenden.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "11.b.W: supplied-model section ownership and deterministic contains composition. Every section needs exactly one incoming contains edge; duplicate edges from one parent count separately. Roots come only from document contains edges, equal positions use target/relation ID ties, and content-block occurrences retain relation identity. Input/source/record hashes bind the actual data. Native field/reference/hierarchy checks precede composition. No file-discovery, primary-role, include, payload-semantic, complete model validation, rendering or write-authority claim."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_diagnostics": [
+    "document_section_parent_cardinality",
+    "missing_field",
+    "missing_relation_target",
+    "relation_hierarchy_cycle"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -35,11 +45,40 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_section_parent_is_not_fabricated_from_its_own_file",
     "test_record_schemas.RecordRightTests.test_contains_positions_must_be_nonnegative_integers",
-    "test_record_schemas.RecordRightTests.test_equal_contains_positions_are_retained_for_later_tie_breaking"
+    "test_record_schemas.RecordRightTests.test_equal_contains_positions_are_retained_for_later_tie_breaking",
+    "test_record_schemas.RecordWorkTests.test_section_parent_is_not_fabricated_from_its_own_file",
+    "tests/test_document_structure.py::test_document_structure_contract_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_document_structure.py::test_document_structure_contract_runs_in_isolated_core_and_pyz[pyz]",
+    "tests/test_document_structure.py::test_empty_document_is_valid_structure_without_claiming_a_primary_role",
+    "tests/test_document_structure.py::test_equal_positions_use_target_then_relation_id_without_collapsing_occurrences",
+    "tests/test_document_structure.py::test_missing_contains_target_retains_the_native_reference_diagnostic",
+    "tests/test_document_structure.py::test_missing_document_fields_block_structure_before_parent_cardinality",
+    "tests/test_document_structure.py::test_native_cycle_rejection_prevents_unrooted_recursive_composition",
+    "tests/test_document_structure.py::test_nested_composition_binds_actual_sources_and_stored_parent_relations",
+    "tests/test_document_structure.py::test_noncontains_reference_is_not_a_child_or_a_section_owner",
+    "tests/test_document_structure.py::test_owned_project_structure_is_read_only_and_independent_of_later_disk_changes",
+    "tests/test_document_structure.py::test_owned_report_and_returned_traversal_cannot_be_mutated_into_other_evidence",
+    "tests/test_document_structure.py::test_position_change_changes_traversal_without_revising_referenced_content",
+    "tests/test_document_structure.py::test_relation_array_order_changes_source_binding_but_not_composition",
+    "tests/test_document_structure.py::test_section_requires_exactly_one_stored_incoming_relation[0]",
+    "tests/test_document_structure.py::test_section_requires_exactly_one_stored_incoming_relation[2]",
+    "tests/test_document_structure.py::test_structure_requires_an_owned_target_model[mapping]",
+    "tests/test_document_structure.py::test_structure_requires_an_owned_target_model[none]",
+    "tests/test_document_structure.py::test_structure_requires_an_owned_target_model[object]",
+    "tests/test_document_structure.py::test_structure_requires_an_owned_target_model[sequence]",
+    "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[0]",
+    "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[1]",
+    "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[2]",
+    "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[3]",
+    "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[4]",
+    "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[5]",
+    "tests/test_document_structure.py::test_supplied_file_order_cannot_change_nested_composition[6]",
+    "tests/test_document_structure.py::test_two_contains_edges_from_the_same_parent_do_not_count_as_one_owner"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Complete the assigned 11.b.R edge cases and 11.b.C structural consolidation with unchanged W behavior.",
+    "Remaining document payload/include/rendering/authoring services follow their assigned steps; no full requirement or release approval is claimed.",
+    "Targeted development observations and alternating Apply partitions are partial tests on their actual individual source states."
   ]
 }

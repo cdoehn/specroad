@@ -26,6 +26,7 @@
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
     "SR-FIX-DOCUMENT-ROLES-v1",
+    "SR-FIX-DOCUMENT-STRUCTURE-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
@@ -383,6 +384,10 @@
     "SR-FIX-DOCUMENT-ROLES-v1": {
       "provider": "tests/test_document_roles.py:document",
       "kind": "Actual stored current-schema Document bytes in owned TargetModel inventories, native field checks, primary cardinality, immutable selections, real read-only project inputs and isolated Core/PYZ parity. Explicit full-scope admission, malformed active/retired records, fresh model bindings, global full-project validation including empty/unconnected selections, preserved native identity diagnostics and unavailable composition providers."
+    },
+    "SR-FIX-DOCUMENT-STRUCTURE-v1": {
+      "provider": "tests/test_document_structure.py:composed_records",
+      "kind": "Actual owned Document/Section/ContentBlock source bytes and stored contains relations: nested traversal, source-bound ownership, position/target/relation order, invalid parents, native fields/references/cycles, immutable read-only observations and isolated Core/PYZ parity."
     }
   }
 }
