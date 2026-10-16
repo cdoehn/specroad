@@ -140,6 +140,13 @@ class TargetModel:
                 if len(document.content) != a.size or sha256(document.content).hexdigest() != a.sha256:
                     raise TargetError('target_attachment_bytes_mismatch')
                 resource = ManifestResource(binding, {'kind': 'attachment', **a.data})
+            elif classify_path(path, configuration) is PathClass.ARCHIVE_OBJECT:
+                from ..archive.objects import SnapshotObject
+                reference = SnapshotObject(document.content).reference
+                if path != reference.path:
+                    raise TargetError('target_archive_bytes_mismatch')
+                resource = ManifestResource(binding, {'kind': 'archive', 'path': path,
+                    'sha256': reference.sha256, 'size': reference.size})
             else:
                 kind = classify_path(path, configuration)
                 if kind not in (PathClass.PROFILE, PathClass.RULE, PathClass.MAPPING):
@@ -212,7 +219,17 @@ class TargetModel:
         descriptor = _project_scope(descriptor)
         resources = list(self.resources)
         attachments = {r.data['path']:r.data for r in resources if r.data['kind'] == 'attachment'}
+        archives = {r.data['path']:r.data for r in resources if r.data['kind'] == 'archive'}
+        referenced_archives = set()
         for artifact in artifacts:
+            if artifact['artifact_type'] == 'baseline':
+                for row in artifact.get('manifest', []):
+                    if 'object_path' in row:
+                        referenced_archives.add(row['object_path'])
+                    if 'object_path' in row and archives.get(row['object_path']) != {
+                            'kind': 'archive', 'path': row['object_path'],
+                            'sha256': row.get('sha256'), 'size': row.get('size')}:
+                        raise TargetError('target_baseline_object_unbound')
             for declared in artifact.get('attachments', []):
                 a = AttachmentDescriptor.from_data(declared)
                 if attachments.get(a.path) != {'kind':'attachment', **a.data}:
@@ -220,5 +237,7 @@ class TargetModel:
             resources.append(ManifestResource(self.binding, {'kind':'artifact', 'id':artifact['id'],
                 'artifact_type':artifact['artifact_type'], 'revision':artifact['revision'],
                 'sha256':canonical_json_sha256(artifact)}))
+        if set(archives) != referenced_archives:
+            raise TargetError('target_unreferenced_archive_object')
         return assemble_model_manifest(self.configuration, self.binding, resources,
             scope_descriptor=descriptor, effective_profile=self.profile.data)

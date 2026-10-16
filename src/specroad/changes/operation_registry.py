@@ -33,6 +33,10 @@ def _review_owners(value):
     return (value["record"]["id"], *(item["target"] for item in value["approval_withdrawals"]))
 
 
+def _baseline_owner(value):
+    return (value['record']['id'],)
+
+
 def _no_owner(value):
     return ()
 
@@ -58,6 +62,7 @@ _CONTRACTS = MappingProxyType({
     "representation_normalize": OperationContract(schemas.representation_normalize_schema, adapters.validate_representation_normalize, _no_owner, "representation_normalize"),
     "relation_review_record": OperationContract(schemas.relation_review_record_schema, adapters.validate_relation_review_record, _review_owners, "relation_review_record"),
     "proposal_control": OperationContract(schemas.proposal_control_schema, adapters.validate_proposal_control, _target_owner, "proposal_control"),
+    "baseline_create": OperationContract(schemas.baseline_create_schema, adapters.validate_baseline_create, _baseline_owner, "baseline_create"),
 })
 OPERATION_TYPES = tuple(_CONTRACTS)
 

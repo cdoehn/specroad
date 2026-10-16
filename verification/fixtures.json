@@ -3,6 +3,7 @@
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
+    "SR-FIX-BASELINE-CREATION-v1",
     "SR-FIX-BASELINE-MANIFEST-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
@@ -337,6 +338,10 @@
     "SR-FIX-BASELINE-MANIFEST-v1": {
       "provider": "tests/test_baseline_manifest.py:baseline_inputs",
       "kind": "Owned complete synthetic scope/dependency observations, real canonical artifact/profile/rule/mapping bytes and exact binary attachments, recomposed profiles and real external object-store/PYZ execution. No live-project completeness, readiness or normative publication claim."
+    },
+    "SR-FIX-BASELINE-CREATION-v1": {
+      "provider": "tests/test_baseline_creation.py:project",
+      "kind": "Owned complete temporary projects with small synthetic and actual bundled IANA registry bytes, actual profile composition, native target validation, writer lock, journal, no-replace object publication, durable receipts, discard proof and isolated Core/PYZ execution. Explicit host IDs/audit/authority; no CLI, general historical Baseline verifier or release readiness claim."
     }
   }
 }

@@ -49,6 +49,7 @@ class ManifestResource:
             "mapping": {"kind", "id", "version", "sha256"},
             "language_registry": {"kind", "id", "version", "path", "size", "sha256"},
             "attachment": {"kind", "path", "size", "media_type", "sha256"},
+            "archive": {"kind", "path", "size", "sha256"},
         }
         if type(kind) is not str or kind not in fields or set(data) != fields[kind]:
             raise ModelError("invalid_manifest_resource")
@@ -76,6 +77,10 @@ class ManifestResource:
                 raise ModelError("not_manifest_input")
         if kind == "language_registry" and not data["path"].startswith("profiles/language-data/"):
             raise ModelError("not_manifest_input")
+        if kind == "archive":
+            from ..archive.objects import ObjectReference
+            if ObjectReference(data['sha256'], data['size']).path != data['path']:
+                raise ModelError('archive_object_path_mismatch')
         object.__setattr__(self, "binding", binding)
         object.__setattr__(self, "_encoded", canonical_json(data))
 
@@ -165,7 +170,8 @@ def assemble_model_manifest(configuration, binding, resources, *, scope_descript
     descriptor = _descriptor(scope_descriptor)
     artifacts = sorted((r for r in records if r["kind"] == "artifact"), key=lambda r: r["id"].encode("utf-8"))
     attachments = sorted((r for r in records if r["kind"] == "attachment"), key=lambda r: r["path"].encode("utf-8"))
-    others = sorted((r for r in records if r["kind"] not in ("artifact", "attachment")),
+    archives = [r for r in records if r['kind'] == 'archive']
+    others = sorted((r for r in records if r["kind"] not in ("artifact", "attachment", "archive")),
                     key=lambda r: (r["id"].encode("utf-8"), r["version"].encode("utf-8"), r["kind"]))
     if descriptor["scope_kind"] == "specification" and any(r["artifact_type"] in ("proposal", "baseline") for r in artifacts):
         raise ModelError("scope_control_dependency")
@@ -183,4 +189,5 @@ def assemble_model_manifest(configuration, binding, resources, *, scope_descript
     boundaries = _boundaries(boundary_references, descriptor, artifacts, configuration)
     from .manifest_projection import project_manifest_value
     return ModelManifest(project_manifest_value(binding.project_id, descriptor,
-        artifacts, others, attachments, boundaries, config_hash, profile_hash))
+        artifacts, others, attachments, boundaries, config_hash, profile_hash,
+        archive_objects=archives))

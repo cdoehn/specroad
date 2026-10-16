@@ -27,6 +27,7 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     Failure reports can be inspected but cannot be promoted to a prepared
     transaction. Mandatory command gates and missing model services fail closed.
     """
+    from .baselines import baseline_mode, prepare_baseline_candidates, object_documents
     if type(plan) is not ChangePlan or type(model) is not TargetModel or type(policy) is not TargetPolicy:
         raise TargetError('target_plan_model_policy_required')
     if type(strict) is not bool: raise TargetError('target_strict_boolean_required')
@@ -39,7 +40,15 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     if value['base']['model_root_sha256'] != base.sha256:
         raise TargetError('target_base_root_mismatch', pointer='/base/model_root_sha256')
     normalize = normalization_mode(value['operations'])
-    if review_mode(value['operations']):
+    baseline = baseline_mode(value['operations'])
+    if baseline:
+        folded = prepare_baseline_candidates(model, value['operations'],
+            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
+            planned_at=value['planned_at'], preconditions=value['preconditions'])
+        if {c.id: c.candidate_sha256 for c in folded.candidates} != {
+                r['artifact']['id']: r['sha256'] for r in value['result_artifacts']}:
+            raise TargetError('declared_baseline_result_mismatch')
+    elif review_mode(value['operations']):
         folded = prepare_review_candidates(model.artifacts, value['operations'],
             metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
             planned_at=value['planned_at'], preconditions=value['preconditions'],
@@ -59,9 +68,6 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         folded = prepare_plan_lifecycle(plan, model.artifacts, observed_base_root=base.sha256,
             observed_scope=scope, source_files=model.source_files, **model.reservations)
     artifacts = folded.artifacts
-    target = model.manifest(artifacts, scope)
-    if target.sha256 != value['expected_result']['model_root_sha256']:
-        raise TargetError('target_result_root_mismatch', pointer='/expected_result/model_root_sha256')
     originals = {parse_json_object(d.content)['id']:d for d in model.documents}
     documents = []
     for artifact in artifacts:
@@ -70,8 +76,13 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         documents.append(ModelDocument(artifact_path(artifact['artifact_type'],artifact['id'],model.configuration.id_prefix), raw))
     documents = tuple(sorted(documents,key=lambda d:d.path))
     representation = {}
-    resource_documents = ()
+    resource_documents = object_documents(value['operations'][0]) if baseline else ()
     target_model = model
+    if baseline:
+        target_model = materialize_target(model, documents + resource_documents)
+    target = target_model.manifest(artifacts, scope)
+    if target.sha256 != value['expected_result']['model_root_sha256']:
+        raise TargetError('target_result_root_mismatch', pointer='/expected_result/model_root_sha256')
     if normalize:
         documents, resource_documents, representation = normalization_documents(model, value['operations'])
         target_model = materialize_target(model, documents + resource_documents)
@@ -121,6 +132,7 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     Operations are explicit prepared data, not raw CLI drafts: create payloads
     must satisfy the existing plan contract, including bound creation metadata.
     """
+    from .baselines import baseline_mode, prepare_baseline_candidates, object_documents
     if type(model) is not TargetModel or type(policy) is not TargetPolicy:
         raise TargetError('target_model_policy_required')
     from .values import ChangeOperation
@@ -130,16 +142,25 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     operations = [ChangeOperation(v).data for v in _sequence(operations, 'target_operations_required')]
     preconditions = _snapshot(list(_sequence(preconditions, 'target_preconditions_required')), '/preconditions').data
     normalize = normalization_mode(operations)
-    prepare = prepare_review_candidates if review_mode(operations) else prepare_change_lifecycle
-    folded = prepare(model.artifacts, [] if normalize else operations,
-        metadata_policy_version=metadata_policy_version, actor=actor, planned_at=planned_at,
-        preconditions=preconditions, source_files=model.source_files, **model.reservations,
-        **({'profile': model.profile} if review_mode(operations) else {}))
+    baseline = baseline_mode(operations)
+    if baseline:
+        folded = prepare_baseline_candidates(model, operations, metadata_policy_version=metadata_policy_version,
+            actor=actor, planned_at=planned_at, preconditions=preconditions)
+        target_model = materialize_target(model, tuple(ModelDocument(
+            artifact_path(a['artifact_type'], a['id'], model.configuration.id_prefix), canonical_json_bytes(a))
+            for a in folded.artifacts) + object_documents(operations[0]))
+    else:
+        prepare = prepare_review_candidates if review_mode(operations) else prepare_change_lifecycle
+        folded = prepare(model.artifacts, [] if normalize else operations,
+            metadata_policy_version=metadata_policy_version, actor=actor, planned_at=planned_at,
+            preconditions=preconditions, source_files=model.source_files, **model.reservations,
+            **({'profile': model.profile} if review_mode(operations) else {}))
+        target_model = model
     plan = prepare_change_plan({'format_version':'1.2.0',
         'metadata_policy_version':metadata_policy_version, 'change_plan_id':change_plan_id,
         'request_id':request_id, 'actor':actor, 'planned_at':planned_at,
         'base':{'scope_descriptor':scope, 'model_root_sha256':model.manifest(model.artifacts,scope).sha256},
         'operations':operations, 'preconditions':preconditions,
         'result_artifacts':[{'artifact':c.data, 'sha256':c.candidate_sha256} for c in folded.candidates],
-        'expected_result':{'model_root_sha256':model.manifest(folded.artifacts,scope).sha256}})
+        'expected_result':{'model_root_sha256':target_model.manifest(folded.artifacts,scope).sha256}})
     return assess_change_target(plan, model, policy=policy, gates=gates, strict=strict)

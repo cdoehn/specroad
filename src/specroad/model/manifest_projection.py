@@ -7,7 +7,7 @@ from .canonical import canonical_json_sha256
 
 
 def project_manifest_value(project_id, descriptor, artifacts, resources, attachments,
-                           boundaries, configuration_sha256, profile_sha256):
+                           boundaries, configuration_sha256, profile_sha256, *, archive_objects=()):
     scope = {
         'project_id': project_id, 'scope_descriptor': descriptor,
         'artifacts': sorted(artifacts, key=lambda r: r['id'].encode('utf-8')),
@@ -18,5 +18,9 @@ def project_manifest_value(project_id, descriptor, artifacts, resources, attachm
             r.get(key, '').encode('utf-8') for key in ('source_id', 'relation_id', 'target_id'))),
         'configuration_sha256': configuration_sha256, 'profile_sha256': profile_sha256,
     }
+    # Preserve every historical archive-free hash. Actual referenced archive
+    # bytes extend the project inventory; they are never opaque hash labels.
+    if archive_objects:
+        scope['archive_objects'] = sorted(archive_objects, key=lambda r: r['path'].encode('utf-8'))
     return {'model_manifest_version': 'model-manifest-v1', **scope,
             'scope_sha256': canonical_json_sha256(scope)}

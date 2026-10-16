@@ -47,6 +47,8 @@ def _target_path(value):
     supported = (value == 'specroad.json' or
         (parts[0] in ('spec','profiles','rules','mappings') and len(parts)>1 and value.endswith('.json')) or
         (parts[0] == 'attachments' and len(parts)>1))
+    if parts[0] == 'archive' and len(parts) == 4 and parts[1] == 'objects':
+        supported = _hash(parts[3]) and parts[2] == parts[3][:2]
     if not supported:
         raise JournalError('journal_target_not_current_normative_resource')
     return value

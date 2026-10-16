@@ -21,6 +21,7 @@ def operation(kind='create'):
         'transition': {'target': goal['id'], 'from': 'draft', 'to': 'proposed', 'metadata': {'reason': 'Review requested'}},
         'retire': {'target': goal['id'], 'expected_sha256': 'b'*64, 'reason': 'Replace requirement'},
         'evidence_record': {'evidence': record_value('evidence')},
+        'baseline_create': {'record': record_value('baseline'), 'objects': []},
         'attachment_add': {'target': goal['id'], 'attachment': {'path': 'attachments/data.bin', 'media_type': 'application/octet-stream', 'size': 0, 'sha256': 'c'*64}},
         'attachment_remove': {'target': goal['id'], 'path': 'attachments/data.bin', 'expected_sha256': 'c'*64, 'reason': 'Unused data'},
         'representation_normalize': {'path': 'spec/goals/' + goal['id'] + '.json', 'expected_byte_sha256': 'd'*64, 'target_byte_sha256': 'e'*64},

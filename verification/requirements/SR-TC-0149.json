@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0149",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0011",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-BASELINE-CREATION-v1"
+  ],
+  "preconditions": [
+    "Trusted host supplies complete TargetModel/history, explicit random128 Baseline identity, audit values, native publication authority and all applicable semantic gates."
+  ],
+  "steps": [
+    "Prepare and save a working-Baseline plan, then execute its exact bytes through the actual native transaction protocol; reject invalid model, changed sources, missing/changed objects, absent gates and denied authority."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad baseline create <NAME>` MUSS vor dem Schreiben die vollständige Projektvalidierung erfolgreich ausführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native embedding API for unconfigured whole-project working Baselines: fresh complete target validation, all bound snapshot objects staged and published before one sealed/approved immutable record, exact precreation root, actual receipt replay and unchanged source bytes. Existing semantic subjects require trusted complete providers; no CLI or release readiness claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,39 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_baseline_creation.py::test_atomic_archive_publication_never_replaces_a_competing_file[at_boundary]",
+    "tests/test_baseline_creation.py::test_atomic_archive_publication_never_replaces_a_competing_file[existing]",
+    "tests/test_baseline_creation.py::test_changed_object_inventory_is_refused_before_publication[different]",
+    "tests/test_baseline_creation.py::test_changed_object_inventory_is_refused_before_publication[extra]",
+    "tests/test_baseline_creation.py::test_changed_object_inventory_is_refused_before_publication[missing]",
+    "tests/test_baseline_creation.py::test_confirmed_saved_request_replays_without_another_baseline",
+    "tests/test_baseline_creation.py::test_existing_archive_cannot_be_relabelled_or_changed",
+    "tests/test_baseline_creation.py::test_fresh_live_inventory_and_collision_checks_prevent_writes[existing_object]",
+    "tests/test_baseline_creation.py::test_fresh_live_inventory_and_collision_checks_prevent_writes[new_normative_file]",
+    "tests/test_baseline_creation.py::test_fresh_live_inventory_and_collision_checks_prevent_writes[source_bytes]",
+    "tests/test_baseline_creation.py::test_generic_writes_still_cannot_modify_the_new_baseline[attachment_add]",
+    "tests/test_baseline_creation.py::test_generic_writes_still_cannot_modify_the_new_baseline[relation_add]",
+    "tests/test_baseline_creation.py::test_generic_writes_still_cannot_modify_the_new_baseline[retire]",
+    "tests/test_baseline_creation.py::test_generic_writes_still_cannot_modify_the_new_baseline[transition]",
+    "tests/test_baseline_creation.py::test_generic_writes_still_cannot_modify_the_new_baseline[update]",
+    "tests/test_baseline_creation.py::test_host_authority_denial_creates_no_baseline_or_object",
+    "tests/test_baseline_creation.py::test_interrupted_publication_never_reports_a_valid_partial_baseline",
+    "tests/test_baseline_creation.py::test_missing_existing_semantic_gate_cannot_be_replaced_by_baseline_approval",
+    "tests/test_baseline_creation.py::test_native_baseline_publishes_sealed_record_and_all_exact_objects",
+    "tests/test_baseline_creation.py::test_native_baseline_works_in_isolated_core_and_portable_distribution[core]",
+    "tests/test_baseline_creation.py::test_native_baseline_works_in_isolated_core_and_portable_distribution[pyz]",
+    "tests/test_baseline_creation.py::test_objects_are_published_before_the_sealed_record",
+    "tests/test_baseline_creation.py::test_prepared_baseline_supports_independent_discard_basis_reconstruction",
+    "tests/test_baseline_creation.py::test_release_label_cannot_bypass_the_missing_readiness_provider",
+    "tests/test_baseline_creation.py::test_saved_baseline_plan_cannot_be_used_as_generic_artifact_create",
+    "tests/test_baseline_creation.py::test_snapshot_preparation_and_preview_are_read_only",
+    "tests/test_baseline_creation.py::test_specialized_write_retains_actor_and_request_id_policy[ai-baseline-1]",
+    "tests/test_baseline_creation.py::test_specialized_write_retains_actor_and_request_id_policy[ci-None]",
+    "tests/test_baseline_creation.py::test_unrelated_invalid_artifact_blocks_preparation_and_publication"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Further fault injection and robust boundary cases in 10.c.R; CLI integration, historical verification and release readiness remain assigned later work.",
+    "Configured scopes and installed language package snapshot providers remain explicit unsupported boundaries; partial tests are not a full-suite or release proof."
   ]
 }

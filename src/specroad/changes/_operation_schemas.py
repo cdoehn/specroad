@@ -1,4 +1,4 @@
-"""Compiled schema providers for the twelve built-in operation payloads."""
+"""Compiled schema providers for the built-in operation payloads."""
 from ..model.artifact_schemas import MATURITIES
 from ._schema_fields import obj, arr, text, digest, revision, expected, patch_schema
 
@@ -77,4 +77,9 @@ def proposal_control_schema():
     blob = {"type": "object"}
     event = obj({'from': text(), 'to': text(), 'reason': text(), 'result_sha256': digest()})
     return obj({**base, 'target': ref, 'expected_revision': revision(), 'expected_sha256': digest(), 'content_revision': revision(), 'content_sha256': digest(), 'base_model_root_sha256': digest(), 'change_plan_sha256': digest(), 'events': {'type': 'array', 'items': event, 'minItems': 1}})
+
+
+def baseline_create_schema():
+    return obj({'op': {'const': 'baseline_create'}, 'record': {'type': 'object'},
+        'objects': arr(obj({'path': text(), 'bytes_base64': {'type': 'string'}}))})
 

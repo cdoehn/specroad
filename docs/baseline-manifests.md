@@ -37,3 +37,34 @@ The preparation rebuilds inventory/dependency observations from original bytes
 before accepting closure. Runtime paths, inode values, display preferences,
 soft operational limits and local clock/zone do not enter the semantic root.
 Normative JSON values, including stored artifact audit fields, remain bound.
+
+## Native working-Baseline publication
+
+`specroad.archive.creation.prepare_working_baseline` prepares a saveable plan
+from a complete supplied `TargetModel`, a host-owned `random128-v1` Baseline ID,
+name, actor, timestamp and plan/request IDs. `create_working_baseline` executes
+exactly that saved `ChangePlan` through the native authoring transaction. The
+embedding host supplies publication authority and all applicable semantic gates.
+Preparation alone does not authorize publication; execution checks the actual
+complete JSON inventory and every bound input byte under the writer lock.
+
+The initial integration supports unconfigured whole-project working snapshots.
+It preserves canonical normative JSON and exact attachment, IANA registry and
+already bound archive bytes. Snapshot objects extend the target project manifest
+under `archive_objects`; all archive-free model hashes remain byte-identical.
+Every object is staged, independently read back and published before the new
+`sealed`/`approved` record. Content-addressed archive creation never replaces an
+existing file. Native receipts identify the new record and make an identical
+confirmed saved request replayable without another write.
+
+The built-in gates cover the newly prepared Baseline only. Existing approvals,
+older Baselines and other semantic subjects still require their trusted complete
+providers; a new Baseline cannot certify them. Selected/configured scopes,
+installed language package snapshots, a general historical Baseline verifier,
+CLI wiring and release readiness are separate integration work. Unsupported
+inputs or missing providers fail closed. No release approval is inferred.
+
+An interrupted write retains the actual native journal and file state and
+reports no completed Baseline. A failure during the no-replace object move can
+leave both image names; that state remains recovery-blocked rather than being
+silently removed. Prepared journals support independent discard-basis checking.

@@ -150,4 +150,4 @@ def test_shape_validation_never_grants_execution_or_write_authority():
 def test_all_core_operation_names_are_present():
     assert set(OPERATION_TYPES) == {"create", "update", "relation_add", "relation_remove",
         "transition", "retire", "evidence_record", "attachment_add", "attachment_remove",
-        "representation_normalize", "relation_review_record", "proposal_control"}
+        "representation_normalize", "relation_review_record", "proposal_control", "baseline_create"}

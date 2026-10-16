@@ -22,8 +22,8 @@ def _result_bindings(value):
         at = "/operations/" + str(index)
         owners.update(_targets(operation))
         kind = operation["op"]
-        if kind in ("create", "evidence_record", "relation_review_record"):
-            field = {"create": "artifact", "evidence_record": "evidence", "relation_review_record": "record"}[kind]
+        if kind in ("create", "evidence_record", "relation_review_record", "baseline_create"):
+            field = {"create": "artifact", "evidence_record": "evidence", "relation_review_record": "record", "baseline_create": "record"}[kind]
             artifact = operation[field]
             if artifact["id"] in created:
                 raise ChangePlanError("duplicate_creation_identity", pointer=at, code="SRV146")

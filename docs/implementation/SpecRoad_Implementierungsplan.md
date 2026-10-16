@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 411
-last_completed_plan_commit: 10.b.C
-next_plan_commit: 10.c.W
-last_completed_numbered_bundle: 255
+implementation_plan_commits_completed: 412
+last_completed_plan_commit: 10.c.W
+next_plan_commit: 10.c.R
+last_completed_numbered_bundle: 256
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -10918,12 +10918,36 @@ bleiben bytegleich. Die gezielte Regression prüft dieselben 1.074 Fälle.
 
 #### 10.c.W – Let it Work
 
-- [ ] **10.c.W** · Position **412/900** · Voraussetzung: `10.b.C`.
+- [x] **10.c.W** · Position **412/900** · Voraussetzung: `10.b.C`.
 **Exakte Commit-Message:** `10.c.W feat(baseline): Working-Baseline atomar erzeugen aufbauen`
 
 **Umsetzung:** baseline create für working nach vollständiger Zielprüfung über Spezialwrite implementieren.
 
 **Verhaltensabnahme:** Neuer Datensatz entsteht sealed/approved und ist unveränderbar.
+
+**Vorbereiteter W-Stand (Bundle 256):**
+Die native Einbettungs-API bereitet einen gespeicherten Working-Baseline-Plan
+aus dem vollständigen expliziten Projektmodell vor und führt genau diesen Plan
+über Writer-Lock, frische Vollzielvalidierung, Journal, Staging, Veröffentlichung
+und dauerhafte Receipts aus. Die isolierte Operation `baseline_create` bindet
+den neuen `sealed`/`approved`-Datensatz und sämtliche Objektbytes. Generische
+Schreib- und Formatierverbote für Baselines bleiben bestehen.
+
+Alle Snapshotobjekte werden vor dem Baseline-Datensatz veröffentlicht. Neue
+Archivobjekte verwenden atomare Veröffentlichung ohne Überschreiben. Die
+Projektwurzel bindet referenzierte Archivbytes zusätzlich; bisherige archivfreie
+Hashes bleiben unverändert. Der gespeicherte Baseline-Modellhash beschreibt
+weiterhin den Zustand vor ihrer eigenen Erzeugung. Wiederholte bestätigte
+Requests verwenden das echte Receipt, vorbereitete Journale die unabhängige
+Discard-Basisprüfung. Fehler erhalten den tatsächlichen Wiederanlaufzustand.
+
+Der W-Ausschnitt unterstützt unkonfigurierte Vollprojektsnapshots einschließlich
+tatsächlicher IANA-Registrybytes. Identität, Auditwerte, Historieninventar und
+Autorisierung stammen vom vertrauenswürdigen Host. Die eingebauten Gates
+bestätigen ausschließlich die neu erzeugte Baseline; vorhandene Freigaben und
+weitere semantische Subjects benötigen vollständige Fachprovider. CLI-Anbindung,
+konfigurierte/ausgewählte Scopes, installierte Sprachpakete, allgemeine historische
+Verifikation und Release-Readiness bleiben ihren Integrationen zugeordnet.
 
 #### 10.c.R – Make it Right
 

@@ -58,6 +58,8 @@ def observe_discard_basis(files, journal, *, include_images=False):
         operations = data['authoring_binding']['operations']
         if any(op['op'] == 'representation_normalize' for op in operations):
             _normalization_images(source, data, raw_files)
+        elif any(op['op'] == 'baseline_create' for op in operations):
+            _baseline_images(source, data, raw_files)
         elif any(source.classify(e['path']) is not PathClass.ARTIFACT for e in data['files']):
             raise RecoveryError('discard_basis_operation_unsupported', exit_code=6)
         root_hash = _manifest(source, raw_files, selection, data['authoring_binding']['scope_descriptor'])
@@ -82,6 +84,26 @@ def observe_discard_basis(files, journal, *, include_images=False):
         from ._discard_basis_contract import staging_images
         return observation, raw_files, staging_images(selection)
     return observation
+
+
+def _baseline_images(source, data, original):
+    from .baselines import baseline_mode, object_documents
+    from ._discard_basis_contract import staging_images
+    from ..model.paths import artifact_path
+    from ..model.canonical import canonical_json_bytes
+    operations = data['authoring_binding']['operations']
+    if not baseline_mode(operations):
+        raise RecoveryError('discard_baseline_operation_required', exit_code=6)
+    operation = operations[0]
+    record = operation['record']
+    path = artifact_path('baseline', record['id'], source.configuration.id_prefix)
+    expected = {d.path: d.content for d in object_documents(operation)}
+    expected[path] = canonical_json_bytes(record)
+    if path in original or any(p in original and original[p] != raw for p, raw in expected.items()):
+        raise RecoveryError('discard_baseline_immutable_conflict', exit_code=6)
+    expected = {p: raw for p, raw in expected.items() if original.get(p) != raw}
+    if staging_images(data['discard_basis']) != expected:
+        raise RecoveryError('discard_baseline_images_unbound', exit_code=6)
 
 
 def _normalization_images(source, data, original):
@@ -134,6 +156,13 @@ def _manifest(source, raw_files, selection, scope):
             if len(raw) != a.size or sha256(raw).hexdigest() != a.sha256:
                 raise RecoveryError('discard_basis_attachment_mismatch', path=path, exit_code=6)
             resources.append(ManifestResource(binding, {'kind': 'attachment', **a.data}))
+        elif source.classify(path) is PathClass.ARCHIVE_OBJECT:
+            from ..archive.objects import SnapshotObject
+            reference = SnapshotObject(raw).reference
+            if reference.path != path:
+                raise RecoveryError('discard_archive_bytes_mismatch', path=path, exit_code=6)
+            resources.append(ManifestResource(binding, {'kind': 'archive', 'path': path,
+                'size': reference.size, 'sha256': reference.sha256}))
         elif registry_data is not None and path == registry_data['path']:
             registry = LanguageRegistry(raw, expected_sha256=registry_data['sha256'],
                                         expected_version=registry_data['registry_version'])

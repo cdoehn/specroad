@@ -235,6 +235,7 @@ class _Publisher:
                     mode=mode,
                     source_changed=lambda: CommitPublicationError(
                         'publication_image_replaced', exit_code=6),
+                    create_only=entry['path'].startswith('archive/objects/'),
                     before_mutation=before_mutation, before_replace=before_replace,
                     after_replace=after_replace)
         self.check()

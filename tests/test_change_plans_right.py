@@ -21,13 +21,13 @@ from support.portable import build_distribution
 
 def test_all_operation_shapes_can_coexist_without_execution():
     ops = [operation(k) for k in OPERATION_TYPES]
-    results = [result(domain_value()), result(record_value('evidence')), result(record_value('relation_review')), result(record_value('proposal', proposal_status='validated', maturity='proposed', content_sha256='b'*64))]
+    results = [result(domain_value()), result(record_value('evidence')), result(record_value('relation_review')), result(record_value('proposal', proposal_status='validated', maturity='proposed', content_sha256='b'*64)), result(record_value('baseline'))]
     value = document(ops, results)
     value['preconditions'] = [{'kind':'artifact','artifact_id':ref('GOAL'),'expected_revision':1},
                               {'kind':'file','path':'attachments/a.bin','expected_byte_sha256':'f'*64},
                               {'kind':'absent','path':'spec/new.json'}]
     plan = prepare_change_plan(value)
-    assert len(plan.operations) == 12
+    assert len(plan.operations) == 13
     assert ChangePlan(plan.canonical_bytes).data == plan.data
     assert not plan.execution_ready
 

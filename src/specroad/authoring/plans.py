@@ -20,7 +20,7 @@ from ..validation import ModelGate
 _OPERATIONS = {'artifact.create': ('create',), 'artifact.update': ('update',),
     'lifecycle.transition': ('transition', 'retire'),
     'relation.add': ('relation_add',), 'relation.remove': ('relation_remove',),
-    'relation.review': ('relation_review_record',)}
+    'relation.review': ('relation_review_record',), 'baseline.create': ('baseline_create',)}
 _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
 
@@ -64,6 +64,9 @@ def _execution_inputs(model, command_id, operations, actor, planned_at, gates):
         gates += (_prepare_lifecycle_gate(model, operation, actor=actor, planned_at=planned_at),)
     elif command_id == 'relation.review':
         gates += prepare_review_outcome_gates(model, operation, actor=actor, planned_at=planned_at)
+    elif command_id == 'baseline.create':
+        from ..changes.baselines import prepare_baseline_gates
+        gates += prepare_baseline_gates(model, operation, actor=actor, planned_at=planned_at, gates=gates)
     return owned, policy, gates
 
 

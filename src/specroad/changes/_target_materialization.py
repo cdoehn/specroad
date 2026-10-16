@@ -1,6 +1,7 @@
 """Rebuild target inputs from exact supplied publication documents, without I/O."""
 from .target_model import TargetModel
 from ..validation import ValidationResources
+from ..model.paths import classify_path, PathClass
 
 
 def materialize_target(model, documents):
@@ -16,7 +17,8 @@ def materialize_target(model, documents):
     for document in documents:
         if document.path == 'specroad.json':
             configuration = document.content
-        elif document.path in resources:
+        elif (document.path in resources or
+              classify_path(document.path, model.configuration) is PathClass.ARCHIVE_OBJECT):
             resources[document.path] = document
         else:
             artifacts[document.path] = document
