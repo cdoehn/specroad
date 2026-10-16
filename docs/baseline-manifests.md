@@ -112,3 +112,7 @@ complete live inventory and freshness, and the verifier grants no disk evidence.
 Baseline and preserves each diagnostic location. Historical snapshot artifacts
 need no current model counterpart. Other gates, especially lifecycle authority,
 remain independently required. There is no cached success or default approval.
+
+The common-pipeline adapter is kept separately in `_validation_gate`; the
+verification facade retains the existing public registration function. This
+separation changes no object checks, gate binding, diagnostics or authority.

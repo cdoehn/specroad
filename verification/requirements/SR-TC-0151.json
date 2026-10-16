@@ -17,7 +17,8 @@
     "Reject missing or altered objects, forged declared roots/manifests, changed semantic configuration/profile, incomplete metadata, unsupported scopes and unsafe archive links.",
     "Observe unchanged bytes and no write attempts; verify independent Core/PYZ execution and fresh reads after a prior success.",
     "Verify immutable supplied object bytes with the same reconstruction and bind the real verifier as an explicit common-pipeline ModelGate; retain unrelated lifecycle incompleteness and every failing Baseline subject.",
-    "Inject late object deletion/corruption, noncanonical JSON aliases, resource metadata relabeling and semantic/operational mixing; verify a snapshot containing an older Baseline and its actual archive bytes."
+    "Inject late object deletion/corruption, noncanonical JSON aliases, resource metadata relabeling and semantic/operational mixing; verify a snapshot containing an older Baseline and its actual archive bytes.",
+    "Re-run unchanged W/R behavior tests after separating the unchanged common-pipeline registration adapter from snapshot verification."
   ],
   "oracle": {
     "kind": "behavior",

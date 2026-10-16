@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 416
-last_completed_plan_commit: 10.d.R
-next_plan_commit: 10.d.C
+implementation_plan_commits_completed: 417
+last_completed_plan_commit: 10.d.C
+next_plan_commit: 10.e.W
 last_completed_numbered_bundle: 260
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11065,10 +11065,16 @@ nur ihre Registrierung und Struktur unter unveränderten Verträgen.
 
 #### 10.d.C – Make it Clean
 
-- [ ] **10.d.C** · Position **417/900** · Voraussetzung: `10.d.R`.
+- [x] **10.d.C** · Position **417/900** · Voraussetzung: `10.d.R`.
 **Exakte Commit-Message:** `10.d.C refactor(baseline): Baseline-Integrität prüfen bereinigen`
 
 **Bereinigung:** Die bereits in R funktional geprüfte Registrierung des Baselinelesers als Validatorquelle von der Snapshotrekonstruktion trennen; gemeinsame Pipelineverträge und Ergebnisse erhalten.
+
+**Vorbereiteter C-Stand (Bundle 260):**
+Der unveränderte Gate-Adapter liegt separat in `archive/_validation_gate.py`.
+Die öffentliche Verifikationsfassade exportiert weiterhin dieselben Funktionen;
+Objektleser, Rekonstruktion, Ressourcen-/Subjectbindung und Fehlerverträge
+bleiben unverändert. Alle W-/R-Testdateien bleiben bytegleich.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
