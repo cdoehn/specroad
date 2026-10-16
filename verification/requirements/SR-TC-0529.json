@@ -13,19 +13,23 @@
     "Owned native TargetModel snapshot with actual document/section/content-block bytes and complete supplied relation inventory; no on-disk or rendering approval inferred."
   ],
   "steps": [
-    "11.g.W: validate native structure/ownership and the whole contains/include graph before iterative expansion. Verify repeated content/section includes, deterministic source-bound ancestry, direct/transitive cycle witnesses, missing targets, native ordering, deep acyclic chains, changed revisions, immutable results, read-only behavior and isolated Core/PYZ parity."
+    "11.g.W: validate native structure/ownership and the whole contains/include graph before iterative expansion. Verify repeated content/section includes, deterministic source-bound ancestry, direct/transitive cycle witnesses, missing targets, native ordering, deep acyclic chains, changed revisions, immutable results, read-only behavior and isolated Core/PYZ parity.",
+    "11.g.R: verify three-document and unreachable/mixed include cycles, lawful cross-document leaf-section reuse, diamonds and wide/repeated paths, exact malformed-edge/source rejection, detached cycle witnesses, byte-only rebinding, immutable source ownership and real read/process/network traps, including Core/PYZ diagnostic parity."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Inhaltsblock DARF NICHT transitiv das Dokument einschließen, in dem er gerendert wird.",
-    "scope": "11.g.W: exact flat occurrences preserve every include path and original artifact identity while a shared bound record map retains original bytes/revisions/hashes. All supplied contains/include cycles are rejected before expansion with actual edge witnesses. Other block semantics and rendering remain unproved; tests never compare presentation."
+    "scope": "11.g.W: exact flat occurrences preserve every include path and original artifact identity while a shared bound record map retains original bytes/revisions/hashes. All supplied contains/include cycles are rejected before expansion with actual edge witnesses. Other block semantics and rendering remain unproved; tests never compare presentation. 11.g.R confirms the actual artifact/edge graph rather than a coarsened document dependency graph: legal section sharing remains valid, unreachable cycles block composition, and no path or source identity is silently dropped. Existing native guards already enforce the tested failures; production behavior is unchanged."
   },
   "expected_diagnostics": [
     "document_include_cycle",
     "missing_relation_target",
     "block_reference_cardinality",
     "block_reference_type",
-    "document_section_parent_cardinality"
+    "document_section_parent_cardinality",
+    "duplicate_relation_id",
+    "target_duplicate_artifact_id",
+    "target_sources_changed"
   ],
   "expected_exit_codes": [],
   "json_pointers": [
@@ -75,10 +79,41 @@
     "tests/test_document_includes.py::test_repeated_includes_expand_every_occurrence_from_the_same_native_records[content]",
     "tests/test_document_includes.py::test_repeated_includes_expand_every_occurrence_from_the_same_native_records[section]",
     "tests/test_document_includes.py::test_transitive_document_cycle_is_deterministic_and_never_returns_partial_composition",
-    "tests/test_document_includes.py::test_unowned_section_prevents_composition_even_for_an_otherwise_valid_selected_document"
+    "tests/test_document_includes.py::test_unowned_section_prevents_composition_even_for_an_otherwise_valid_selected_document",
+    "tests/test_document_includes_right.py::test_byte_only_source_change_rebinds_without_inventing_new_revisions_or_model_content[content_block]",
+    "tests/test_document_includes_right.py::test_byte_only_source_change_rebinds_without_inventing_new_revisions_or_model_content[document]",
+    "tests/test_document_includes_right.py::test_byte_only_source_change_rebinds_without_inventing_new_revisions_or_model_content[section]",
+    "tests/test_document_includes_right.py::test_cross_document_section_reuse_is_valid_when_no_actual_include_path_returns[0]",
+    "tests/test_document_includes_right.py::test_cross_document_section_reuse_is_valid_when_no_actual_include_path_returns[1]",
+    "tests/test_document_includes_right.py::test_cycle_diagnostic_is_detached_and_reordered_arrays_keep_actual_source_pointers",
+    "tests/test_document_includes_right.py::test_diamond_include_paths_keep_both_terminal_occurrences_with_one_original_record",
+    "tests/test_document_includes_right.py::test_duplicate_document_identity_cannot_select_a_more_convenient_target_copy",
+    "tests/test_document_includes_right.py::test_exact_native_reference_contract_cannot_be_bypassed_by_an_alternative_edge[duplicate_relation_id]",
+    "tests/test_document_includes_right.py::test_exact_native_reference_contract_cannot_be_bypassed_by_an_alternative_edge[other_relation_type]",
+    "tests/test_document_includes_right.py::test_exact_native_reference_contract_cannot_be_bypassed_by_an_alternative_edge[second_reference]",
+    "tests/test_document_includes_right.py::test_exact_native_reference_contract_cannot_be_bypassed_by_an_alternative_edge[title_alias]",
+    "tests/test_document_includes_right.py::test_include_admission_and_composition_do_not_read_source_paths_or_run_external_code[False]",
+    "tests/test_document_includes_right.py::test_include_admission_and_composition_do_not_read_source_paths_or_run_external_code[True]",
+    "tests/test_document_includes_right.py::test_include_payload_cannot_supply_a_copied_target_or_executable_external_provider[document_id]",
+    "tests/test_document_includes_right.py::test_include_payload_cannot_supply_a_copied_target_or_executable_external_provider[loader]",
+    "tests/test_document_includes_right.py::test_include_payload_cannot_supply_a_copied_target_or_executable_external_provider[record]",
+    "tests/test_document_includes_right.py::test_include_payload_cannot_supply_a_copied_target_or_executable_external_provider[script]",
+    "tests/test_document_includes_right.py::test_include_payload_cannot_supply_a_copied_target_or_executable_external_provider[source_url]",
+    "tests/test_document_includes_right.py::test_include_payload_cannot_supply_a_copied_target_or_executable_external_provider[target_id]",
+    "tests/test_document_includes_right.py::test_include_payload_cannot_supply_a_copied_target_or_executable_external_provider[template]",
+    "tests/test_document_includes_right.py::test_mixed_content_and_section_include_cycle_is_detected_on_the_actual_occurrence_graph",
+    "tests/test_document_includes_right.py::test_multidocument_cycle_has_the_same_bound_machine_diagnostic_in_core_and_pyz[core]",
+    "tests/test_document_includes_right.py::test_multidocument_cycle_has_the_same_bound_machine_diagnostic_in_core_and_pyz[pyz]",
+    "tests/test_document_includes_right.py::test_repeated_contains_edges_keep_their_own_relation_provenance_and_full_include_content",
+    "tests/test_document_includes_right.py::test_tampered_owned_sources_cannot_reuse_the_previous_acyclic_model_binding",
+    "tests/test_document_includes_right.py::test_three_document_cycle_reports_the_same_actual_cycle_independently_of_selected_root[0]",
+    "tests/test_document_includes_right.py::test_three_document_cycle_reports_the_same_actual_cycle_independently_of_selected_root[1]",
+    "tests/test_document_includes_right.py::test_three_document_cycle_reports_the_same_actual_cycle_independently_of_selected_root[2]",
+    "tests/test_document_includes_right.py::test_unplaced_include_is_checked_but_does_not_invent_a_document_occurrence",
+    "tests/test_document_includes_right.py::test_unreachable_cycle_still_blocks_an_empty_selected_document",
+    "tests/test_document_includes_right.py::test_wide_acyclic_reuse_keeps_all_paths_without_a_hidden_visit_or_count_cap"
   ],
   "open_items": [
-    "11.g.R completes adversarial mixed/multidocument cycles, malformed source bindings and unavailable input boundaries.",
     "Rendering integration remains at 11.m; data composition does not execute or approve passive query/table/prose/reference payloads.",
     "Targeted development and alternating Apply half-suite observations remain partial and do not imply full-suite or release approval."
   ]

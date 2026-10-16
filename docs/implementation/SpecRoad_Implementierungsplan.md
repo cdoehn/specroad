@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 451
-last_completed_plan_commit: 11.g.W
-next_plan_commit: 11.g.R
-last_completed_numbered_bundle: 283
+implementation_plan_commits_completed: 452
+last_completed_plan_commit: 11.g.R
+next_plan_commit: 11.g.C
+last_completed_numbered_bundle: 284
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11813,10 +11813,20 @@ Rendering bleiben separate Provider und werden hier nicht freigegeben.
 
 #### 11.g.R – Make it Right
 
-- [ ] **11.g.R** · Position **452/900** · Voraussetzung: `11.g.W`.
+- [x] **11.g.R** · Position **452/900** · Voraussetzung: `11.g.W`.
 **Exakte Commit-Message:** `11.g.R feat(documents): Include-Graph und Zyklusprüfung vervollständigen`
 
 **Vervollständigung:** Direkter/transitiver Selbstinclude wird vor Rendering abgewiesen.
+
+**Vorbereiteter R-Stand (Bundle 284):** Zusätzliche Verhaltenstests sichern
+Mehrdokument- und gemischte Content-/Section-Zyklen, globale Prüfung trotz
+leeren gewählten Dokuments und zulässige gegenseitige Blattabschnitt-Includes.
+Gemeinsame Ziele über mehrere Pfade, breite Wiederverwendung und wiederholte
+Contains-Kanten behalten sämtliche Vorkommen mit echter Herkunft. Fehlerhafte
+Verweise, doppelte IDs und manipulierte Quellbindungen werden mit den bereits
+vorhandenen nativen Prüfungen abgewiesen. Zyklusbelege behalten Originalpointer
+und Hashes; Core/PYZ sowie echte Lese-/Prozess-/Netzsperren bestätigen die
+Seiteneffektgrenze. Dafür ist kein zusätzliches Produktverhalten erforderlich.
 
 **Verhaltensabnahme:** Ein Mehrdokumentzyklus terminiert als Modellfehler ohne externe Ausführung. Die W-Nachweise bleiben zusätzlich grün.
 

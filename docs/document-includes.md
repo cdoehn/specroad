@@ -37,3 +37,13 @@ role, every block's payload semantics, whole-project validity or rendering.
 Prose, query, table and artifact-reference payloads remain passive data here and
 need their own semantic services before rendering. No file discovery, external
 include loading, process execution, writes or approval occurs.
+
+The cycle graph retains actual document, section and include-block identities.
+Two documents may lawfully include each other's leaf sections when neither
+actual expansion path returns to itself. Coarsening such edges to document
+dependencies would invent a cycle. Conversely, a cycle elsewhere in the supplied
+inventory blocks composition even when the selected document is empty. Diamond
+and wide include graphs keep every occurrence and one bound source per identity.
+Cycle diagnostics are detached; reordered source arrays retain their actual
+pointers. Byte-only changes update input/source bindings without inventing new
+revisions or semantic model roots.
