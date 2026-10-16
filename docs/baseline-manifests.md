@@ -102,3 +102,13 @@ The report proves the supplied snapshot bindings only. It grants no authoring
 or release authority, historical full-validation proof, atomic observation or
 original-project completeness. CLI and shared-validator integration remain
 separate work.
+
+`verify_baseline_objects(record_bytes, objects)` checks the same snapshot from
+explicit immutable `SnapshotObject` bytes. A larger inventory may be shared by
+several Baselines; the result covers the referenced set only. The host owns
+complete live inventory and freshness, and the verifier grants no disk evidence.
+`baseline_integrity_gate(objects)` registers that real check through the common
+`ModelGate` contract. It binds actual resource bytes, examines every selected
+Baseline and preserves each diagnostic location. Historical snapshot artifacts
+need no current model counterpart. Other gates, especially lifecycle authority,
+remain independently required. There is no cached success or default approval.

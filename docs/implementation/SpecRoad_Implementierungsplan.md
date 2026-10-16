@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 415
-last_completed_plan_commit: 10.d.W
-next_plan_commit: 10.d.R
-last_completed_numbered_bundle: 259
+implementation_plan_commits_completed: 416
+last_completed_plan_commit: 10.d.R
+next_plan_commit: 10.d.C
+last_completed_numbered_bundle: 260
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11040,19 +11040,35 @@ CLI- und gemeinsame Validatoranbindung werden nicht vorgetäuscht.
 
 #### 10.d.R – Make it Right
 
-- [ ] **10.d.R** · Position **416/900** · Voraussetzung: `10.d.W`.
+- [x] **10.d.R** · Position **416/900** · Voraussetzung: `10.d.W`.
 **Exakte Commit-Message:** `10.d.R feat(baseline): Baseline-Integrität prüfen vervollständigen`
 
 **Vervollständigung:** Fehlendes Objekt, geänderter Hash oder manipulierte Konfiguration wird erkannt.
 
 **Verhaltensabnahme:** Basisverifikation verändert weder Objekte noch Projektdaten. Die W-Nachweise bleiben zusätzlich grün.
 
+**Vorbereiteter R-Stand (Bundle 260):**
+Die identische Rekonstruktion prüft auch explizit gelieferte, vollständig
+bytegebundene Snapshotobjekte. Ein öffentlicher `baseline_integrity_gate`
+registriert diesen wirklichen Prüfer über den bestehenden ModelGate-Vertrag in
+der gemeinsamen Pipeline. Ressourcenbindung und Ergebnis gelten für die jeweils
+aktuellen Baseline-Subjects; fehlende Lifecycle-/Freigabeprovider bleiben
+unvollständig. Historische Artefakte benötigen keine aktuellen Gegenstücke.
+Der Host bleibt für vollständige aktuelle Dateiinventur und frische Beobachtung
+der gelieferten Archivbytes verantwortlich.
+
+Weitere Verhaltenstests prüfen alle fehlerhaften Subjects gemeinsam, spätere
+Objektänderungen, kanonische Byteverträge, Metadatenbindungen, inerte
+Konfigurationsfelder und die Einbettung älterer Baselines samt Archivobjekten.
+Die funktionale Validatoranbindung gehört bereits in R; C trennt anschließend
+nur ihre Registrierung und Struktur unter unveränderten Verträgen.
+
 #### 10.d.C – Make it Clean
 
 - [ ] **10.d.C** · Position **417/900** · Voraussetzung: `10.d.R`.
 **Exakte Commit-Message:** `10.d.C refactor(baseline): Baseline-Integrität prüfen bereinigen`
 
-**Bereinigung:** Baselineleser als Validatorquelle in der gemeinsamen Pipeline registrieren.
+**Bereinigung:** Die bereits in R funktional geprüfte Registrierung des Baselinelesers als Validatorquelle von der Snapshotrekonstruktion trennen; gemeinsame Pipelineverträge und Ergebnisse erhalten.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

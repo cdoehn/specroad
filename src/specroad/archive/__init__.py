@@ -2,8 +2,10 @@
 from .objects import (ObjectReference, SnapshotObject, SnapshotObjectStore,
                       check_object_retention, read_snapshot_object)
 from .baseline import BaselineManifest, build_baseline_manifest
-from .verification import verify_baseline_snapshot
+from .verification import (verify_baseline_snapshot, verify_baseline_objects,
+                           baseline_integrity_gate)
 
 __all__ = ['ObjectReference', 'SnapshotObject', 'SnapshotObjectStore',
            'check_object_retention', 'read_snapshot_object',
-           'BaselineManifest', 'build_baseline_manifest', 'verify_baseline_snapshot']
+           'BaselineManifest', 'build_baseline_manifest', 'verify_baseline_snapshot',
+           'verify_baseline_objects', 'baseline_integrity_gate']

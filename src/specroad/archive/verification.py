@@ -7,7 +7,7 @@ its author, prove historical validation or grant publication/release authority.
 from hashlib import sha256
 
 from ..model.attachments import AttachmentDescriptor
-from ..model.canonical import canonical_json_bytes
+from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.configuration import ProjectConfiguration
 from ..model.errors import ModelError
 from ..model.language_registry import LanguageRegistry
@@ -53,20 +53,73 @@ def _configuration(value):
 
 
 def verify_baseline_snapshot(boundary, baseline_record):
-    """Verify a supplied record and actual archived bytes, without any writes.
+    """Verify a supplied record and fresh archived bytes without any writes."""
+    if type(boundary) is not ProjectBoundary:
+        raise ModelError('snapshot_object_boundary_required')
+    return _verify_baseline(baseline_record,
+        lambda reference: read_snapshot_object(boundary, reference),
+        str(boundary.root), boundary._root_identity)
 
-    Supports the unconfigured, closed, whole-project snapshots currently emitted
-    by the native writer. Other scopes fail explicitly. Resource identities,
-    effective profile, semantic configuration, manifest and root are rebuilt;
-    success is limited to these bytes, not full validation or an atomic read.
+
+def verify_baseline_objects(baseline_record, objects):
+    """Verify actual supplied object bytes without filesystem or Git access.
+
+    A host may supply objects shared by multiple Baselines. Only the referenced
+    set is verified for this record. The host owns live inventory/freshness;
+    the same reconstruction and error contracts apply to the native reader.
     """
+    from ._object_values import _objects
+    owned = _objects(objects)
+
+    def read(reference):
+        if reference.path not in owned:
+            raise ModelError('snapshot_referenced_object_missing', path=reference.path)
+        item = owned[reference.path]
+        if item.reference != reference:
+            raise ModelError('snapshot_reference_conflict', path=reference.path)
+        return item.content
+
+    return _verify_baseline(baseline_record, read, 'supplied-baseline-objects', (0, 0))
+
+
+def baseline_integrity_gate(objects):
+    """Bind the real snapshot verifier to the common validation gate contract.
+
+    The explicit host supplies actual immutable bytes, not a claimed success or
+    cached report. Historical snapshot references need no current counterpart.
+    Other required semantic/lifecycle gates remain independently mandatory.
+    """
+    from ._object_values import _objects
+    from ..validation import ModelGate
+    owned = tuple(_objects(objects).values())
+    binding = canonical_json_sha256(sorted((item.reference.data for item in owned),
+                                          key=lambda row: row['path']))
+
+    def dependencies(context):
+        return context.dependency_result({identity: [] for identity in context.subjects})
+
+    def check(context):
+        findings = []
+        paths = {parse_json_object(d.content)['id']: d.path for d in context.documents}
+        for identity in context.subjects:
+            try:
+                verify_baseline_objects(canonical_json_bytes(context.artifact(identity)), owned)
+            except ModelError as error:
+                findings.append({**error.diagnostic(), 'artifact_id': identity,
+                    'path': paths[identity], 'object_path': error.path, 'severity': 'error'})
+        return context.result(findings)
+
+    return ModelGate('baseline_integrity', 'archived-baseline-integrity-v1',
+                     dependencies, check, binding)
+
+
+def _verify_baseline(baseline_record, read_object, source_root, root_identity):
+    """Reconstruct the supported historical scope from owned object bytes."""
     # Keep the native target inventory dependency local: archive object values
     # are also imported while the changes package is being initialized.
     from ..changes.target_model import TargetModel, _default_scope
     from ..validation import ModelDocument
 
-    if type(boundary) is not ProjectBoundary:
-        raise ModelError('snapshot_object_boundary_required')
     if type(baseline_record) is not bytes:
         raise ModelError('baseline_record_bytes_required')
     record = parse_json_object(baseline_record)
@@ -91,7 +144,7 @@ def verify_baseline_snapshot(boundary, baseline_record):
         references[reference.path] = reference
         if reference.path not in objects:
             try:
-                objects[reference.path] = read_snapshot_object(boundary, reference)
+                objects[reference.path] = read_object(reference)
             except FileNotFoundError as error:
                 raise ModelError('snapshot_referenced_object_missing', path=reference.path) from error
         raw = objects[reference.path]
@@ -140,7 +193,7 @@ def verify_baseline_snapshot(boundary, baseline_record):
     if (profile.canonical_bytes != canonical_json_bytes(values['effective_profile'])
             or profile.data['profiles'] != record['profiles']):
         raise ModelError('baseline_effective_profile_mismatch')
-    binding = ProjectReadBinding(configuration.project_id, str(boundary.root), boundary._root_identity)
+    binding = ProjectReadBinding(configuration.project_id, source_root, root_identity)
     model = TargetModel(canonical_json_bytes(configuration.data), binding, documents,
         profile=profile, resource_files=files, attachments=attachments)
     rebuilt = build_project_baseline_manifest(model, baseline_id=record['id']).data
@@ -154,7 +207,7 @@ def verify_baseline_snapshot(boundary, baseline_record):
     # never cached across calls; concurrent changes cannot reuse old evidence.
     for path in sorted(references):
         try:
-            fresh = read_snapshot_object(boundary, references[path])
+            fresh = read_object(references[path])
         except FileNotFoundError as error:
             raise ModelError('snapshot_referenced_object_missing', path=path) from error
         if fresh != objects[path]:

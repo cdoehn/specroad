@@ -346,7 +346,7 @@
     },
     "SR-FIX-BASELINE-VERIFICATION-v1": {
       "provider": "tests/test_baseline_verification.py:stored_snapshot",
-      "kind": "Actual content-addressed archived JSON/binary objects, full project manifests and native Baseline publication; archive-only/moved sources, tampered object/configuration/profile/root data and isolated Core/PYZ. Integrity evidence only, no full validation, original-project completeness or release authority."
+      "kind": "Actual content-addressed archived JSON/binary objects, full project manifests and native Baseline publication; archive-only/moved sources, tampered object/configuration/profile/root data and isolated Core/PYZ. Integrity evidence only, no full validation, original-project completeness or release authority. The Right cases also bind actual owned object bytes to common-pipeline subjects and diagnostics, recheck late native changes and include older archived Baselines; unrelated lifecycle authority stays unavailable."
     }
   }
 }
