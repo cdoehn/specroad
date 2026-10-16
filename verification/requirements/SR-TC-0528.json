@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0528",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-TABLES-v1"
+  ],
+  "preconditions": [
+    "Exact native TargetModel snapshot with real block/view/row/configuration source bytes and complete supplied relation graph. Query/table semantics are invoked explicitly; no passive field-read success is treated as rendering approval."
+  ],
+  "steps": [
+    "11.f.W: resolve embedded normalized queries and basic project views through the existing query engine; assert ordered typed rows, independent column projection, exact query totals/pagination, configuration filtering, unchanged source/revision/hash bindings, no 100-row view cap, explicit empty policy, literal width/types/copy rejection and Core/PYZ parity."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Tabellen-Inhaltsblock DARF NICHT ausführbaren Templatecode enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "11.f.W: immutable supplied-snapshot table data from native Query/SRX and original records, with exact query page plus separately declared typed column projection. Source/view/block/configuration/row hashes remain bound. Literal JSON remains data and copied artifact identities are refused; no templates, callbacks, I/O or rendering are executed. Tests do not inspect table layout or rendered Markdown/HTML."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "table_query_empty",
+    "table_column_contract",
+    "table_row_width",
+    "table_literal_artifact_copy",
+    "table_column_value_type"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/payload/columns",
+    "/payload/rows",
+    "/payload/empty_policy"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,46 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_tables.py::test_basic_view_has_no_hidden_one_hundred_row_truncation",
+    "tests/test_document_tables.py::test_data_is_detached_and_never_claims_rendering_whole_project_or_write_approval",
+    "tests/test_document_tables.py::test_embedded_query_retains_exact_filter_sort_offset_limit_and_full_total",
+    "tests/test_document_tables.py::test_empty_query_policy_is_semantic_data_or_a_structured_error[error]",
+    "tests/test_document_tables.py::test_empty_query_policy_is_semantic_data_or_a_structured_error[message]",
+    "tests/test_document_tables.py::test_empty_query_policy_is_semantic_data_or_a_structured_error[omit]",
+    "tests/test_document_tables.py::test_input_inventory_order_does_not_change_projection_or_snapshot_bindings[0]",
+    "tests/test_document_tables.py::test_input_inventory_order_does_not_change_projection_or_snapshot_bindings[1]",
+    "tests/test_document_tables.py::test_input_inventory_order_does_not_change_projection_or_snapshot_bindings[2]",
+    "tests/test_document_tables.py::test_input_inventory_order_does_not_change_projection_or_snapshot_bindings[3]",
+    "tests/test_document_tables.py::test_input_inventory_order_does_not_change_projection_or_snapshot_bindings[4]",
+    "tests/test_document_tables.py::test_invalid_or_executable_declarations_never_produce_table_data[copied_artifact]",
+    "tests/test_document_tables.py::test_invalid_or_executable_declarations_never_produce_table_data[declared_boolean_as_number]",
+    "tests/test_document_tables.py::test_invalid_or_executable_declarations_never_produce_table_data[foreign_query]",
+    "tests/test_document_tables.py::test_invalid_or_executable_declarations_never_produce_table_data[missing_view]",
+    "tests/test_document_tables.py::test_invalid_or_executable_declarations_never_produce_table_data[row_width]",
+    "tests/test_document_tables.py::test_invalid_or_executable_declarations_never_produce_table_data[script_filter]",
+    "tests/test_document_tables.py::test_invalid_or_executable_declarations_never_produce_table_data[template_column]",
+    "tests/test_document_tables.py::test_literal_rows_have_json_types_and_do_not_coerce_values_or_execute_text[0-number]",
+    "tests/test_document_tables.py::test_literal_rows_have_json_types_and_do_not_coerce_values_or_execute_text[1.5-number]",
+    "tests/test_document_tables.py::test_literal_rows_have_json_types_and_do_not_coerce_values_or_execute_text[False-boolean]",
+    "tests/test_document_tables.py::test_literal_rows_have_json_types_and_do_not_coerce_values_or_execute_text[None-null]",
+    "tests/test_document_tables.py::test_literal_rows_have_json_types_and_do_not_coerce_values_or_execute_text[value5-array]",
+    "tests/test_document_tables.py::test_literal_rows_have_json_types_and_do_not_coerce_values_or_execute_text[value6-object]",
+    "tests/test_document_tables.py::test_literal_rows_have_json_types_and_do_not_coerce_values_or_execute_text[{{ inert text }}-string]",
+    "tests/test_document_tables.py::test_missing_null_false_and_an_actual_missing_shaped_object_remain_distinct_cells",
+    "tests/test_document_tables.py::test_new_snapshot_observes_changed_rows_without_changing_the_block_or_old_result",
+    "tests/test_document_tables.py::test_projection_reads_owned_bytes_after_external_files_are_removed",
+    "tests/test_document_tables.py::test_queries_and_basic_views_produce_the_same_bound_typed_rows[embedded]",
+    "tests/test_document_tables.py::test_queries_and_basic_views_produce_the_same_bound_typed_rows[query_view]",
+    "tests/test_document_tables.py::test_queries_and_basic_views_produce_the_same_bound_typed_rows[table_view]",
+    "tests/test_document_tables.py::test_snapshot_table_projection_runs_with_identical_bindings_in_isolated_core_and_pyz[core]",
+    "tests/test_document_tables.py::test_snapshot_table_projection_runs_with_identical_bindings_in_isolated_core_and_pyz[pyz]",
+    "tests/test_document_tables.py::test_table_columns_are_an_explicit_projection_independent_of_native_query_select",
+    "tests/test_document_tables.py::test_view_configuration_is_resolved_from_the_same_snapshot_before_row_selection"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "11.f.R completes adversarial declaration, source/view identity and snapshot/scope boundary cases.",
+    "Full view scope/grouping/relation/computed/missing-value providers follow 11.k/11.l; document rendering follows 11.m. This data API does not claim complete document/project or release approval.",
+    "Targeted development tests and alternating Apply halves remain partial observations on their actual source states."
   ]
 }

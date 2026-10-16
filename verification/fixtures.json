@@ -33,6 +33,7 @@
     "SR-FIX-DOCUMENT-REFERENCES-v1",
     "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-DOCUMENT-STRUCTURE-v1",
+    "SR-FIX-DOCUMENT-TABLES-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
@@ -418,6 +419,10 @@
     "SR-FIX-DOCUMENT-PROSE-RIGHT-v1": {
       "provider": "tests/test_document_prose_right.py:CASES",
       "kind": "Native prose/admonition bytes with lazy/nested containers, tabs, entity and escape precedence, hostile internal/foreign destinations, inert include/code/title data, structured resource limits and isolated Core/PYZ parity."
+    },
+    "SR-FIX-DOCUMENT-TABLES-v1": {
+      "provider": "tests/test_document_tables.py:table_project",
+      "kind": "Owned native query/table blocks, bound normalized queries and basic project views, SRX/configuration filters, typed literal rows, missing/null distinctions, exact pagination/source hashes, no source effects and isolated Core/PYZ parity."
     }
   }
 }

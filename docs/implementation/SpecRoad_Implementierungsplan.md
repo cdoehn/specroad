@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 447
-last_completed_plan_commit: 11.e.C
-next_plan_commit: 11.f.W
-last_completed_numbered_bundle: 280
+implementation_plan_commits_completed: 448
+last_completed_plan_commit: 11.f.W
+next_plan_commit: 11.f.R
+last_completed_numbered_bundle: 281
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11726,10 +11726,23 @@ W-/R-Erwartungen, Ressourcenlimits und erlaubten Seiteneffekte bleiben unveränd
 
 #### 11.f.W – Let it Work
 
-- [ ] **11.f.W** · Position **448/900** · Voraussetzung: `11.e.C`.
+- [x] **11.f.W** · Position **448/900** · Voraussetzung: `11.e.C`.
 **Exakte Commit-Message:** `11.f.W feat(documents): Query- und Tabellenblöcke aufbauen`
 
 **Umsetzung:** Datenquellen, Spalten, Sortierung und SRX/Querybindung aus dem gewählten Snapshot auflösen.
+
+**Vorbereiteter W-Stand (Bundle 281):** Eine eigene Tabellen-Daten-API übernimmt
+einen nativen, erneut gebundenen Modellstand und löst Query-/Viewquellen mit der
+vorhandenen Queryengine auf. Filter, SRX, Sortierung, Pagination und ausgewählte
+Konfiguration stammen aus denselben Quellen wie Block, View und Zeilen. Eine
+einfache Projekt-View liefert alle passenden Zeilen; erweiterte Viewprovider
+bleiben bei 11.k/11.l. Literalzeilen behalten ihre deklarierte Reihenfolge,
+Breite und JSON-Typen; manuelle Artefaktkopien und ausführbare Spaltenfelder
+werden abgewiesen. Explizite Spaltenprojektion verändert das native Queryresult
+nicht. Gebundene Originalbytes, Zeilenrevisionen und Hashes bleiben erhalten;
+leere Queries folgen der deklarierten Policy. Verhaltenstests prüfen fachliche
+Zeilen, Scope-/Quellbindung, Typen, Sicherheitsgrenzen und Core-/PYZ-Parität ohne
+Darstellungsoracle. Rendering und vollständige Projektfreigabe bleiben offen.
 
 **Verhaltensabnahme:** Ein Tabellenblock enthält fachlich die erwarteten Datensätze aus demselben Modellstand.
 
