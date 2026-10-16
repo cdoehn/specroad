@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 428
-last_completed_plan_commit: 10.h.R
-next_plan_commit: 10.h.C
+implementation_plan_commits_completed: 429
+last_completed_plan_commit: 10.h.C
+next_plan_commit: 10.i.W
 last_completed_numbered_bundle: 268
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11310,10 +11310,16 @@ Die Grenze prüft weiterhin keine Descriptorsemantik, Pflichtläufe oder Evidenc
 
 #### 10.h.C – Make it Clean
 
-- [ ] **10.h.C** · Position **429/900** · Voraussetzung: `10.h.R`.
+- [x] **10.h.C** · Position **429/900** · Voraussetzung: `10.h.R`.
 **Exakte Commit-Message:** `10.h.C refactor(baseline): Release-Baseline-Grenze vorbereiten bereinigen`
 
 **Bereinigung:** Gateinterface so kapseln, dass M13 die vollständige Releasebaseline freischaltet.
+
+**Vorbereiteter C-Stand (Bundle 268):** Die Prüfung und Bindung der tatsächlichen
+gespeicherten Auswahl liegen in einem internen Helfer. Die öffentliche
+Readiness-Beobachtung kapselt die weiterhin geschlossene Freigabegrenze.
+Berichtsbytes, Fehlerklassen, Working-Verhalten und alle W-/R-Tests bleiben
+unverändert; ein erfolgreicher M13-Provider wird weiterhin nicht vorgetäuscht.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

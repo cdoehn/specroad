@@ -267,3 +267,7 @@ The report owns the complete `stored_evaluation` value and its canonical hash;
 even an identical external value cannot authorize publication. Structural object
 checks do not validate the descriptor's semantics. Working requests reject an
 external release selection instead of discarding it.
+
+Stored-selection binding is kept in an internal helper. The public observation
+and its closed admission method retain the same values, conflicts and no-write
+contract; integrating a real readiness service remains M13 work.
