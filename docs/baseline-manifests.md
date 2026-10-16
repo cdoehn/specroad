@@ -49,7 +49,8 @@ embedding host supplies publication authority and all applicable semantic gates.
 Preparation alone does not authorize publication; execution checks the actual
 complete JSON inventory and every bound input byte under the writer lock.
 
-The initial integration supports unconfigured whole-project working snapshots.
+The native integration supports whole-project working snapshots, optionally
+bound to an explicit `configuration_id` during preparation.
 It preserves canonical normative JSON and exact attachment, IANA registry and
 already bound archive bytes. Snapshot objects extend the target project manifest
 under `archive_objects`; all archive-free model hashes remain byte-identical.
@@ -60,8 +61,8 @@ confirmed saved request replayable without another write.
 
 The built-in gates cover the newly prepared Baseline only. Existing approvals,
 older Baselines and other semantic subjects still require their trusted complete
-providers; a new Baseline cannot certify them. Selected/configured scopes,
-installed language package snapshots, a general historical Baseline verifier,
+providers; a new Baseline cannot certify them. Other selected scopes,
+installed language package snapshots,
 CLI wiring and release readiness are separate integration work. Unsupported
 inputs or missing providers fail closed. No release approval is inferred.
 
@@ -94,7 +95,8 @@ reconstructs the semantic configuration, composed profile, model manifest and
 precreation root. Original working files and Git are unnecessary; current files
 never substitute for missing objects. Objects are re-read before returning.
 
-The current adapter supports unconfigured closed whole-project snapshots,
+The current adapter supports closed project snapshots, including an explicitly
+stored configuration selection and its complete parent chain,
 including binary attachments, IANA registry and referenced archive bytes. Other
 scopes and installed language packages fail explicitly. Inert locale/output
 values are used only to reuse configuration validation; their exact semantic
@@ -127,7 +129,7 @@ or reuses a prior successful report.
 
 `materialize_baseline_snapshot(boundary, record_bytes, destination,
 default_locale=..., generated_path=..., protected_roots=(...))` restores the
-supported unconfigured whole-project snapshot into a missing absolute path
+supported project snapshot into a missing absolute path
 under a private owned canonical external parent. The archive is automatically
 protected; the host supplies every other protected project/input/output root.
 Native Linux descriptor guards and the existing exclusive writer primitives
@@ -208,6 +210,23 @@ same shared model-manifest contract.
 
 The objects may be saved to an external `SnapshotObjectStore` and the selection
 can be resolved from those archived configuration records without original files.
-This prepares inert data. The native writer and full historical snapshot reader
-currently support unconfigured projects; configured publication, verification,
-materialization and comparison need their own explicit integration.
+This pure preparation API returns inert data. The native project provider also
+accepts `configuration_id` in `prepare_working_baseline` and
+`build_project_baseline_manifest`. It resolves actual configuration and parent
+records, checks applicability and required dependencies, and retains the exact
+selected artifact set. The closed native scope also requires all stored relation
+targets; other scope kinds and explicit boundary providers remain separate work.
+Existing identity reservations are checked against the full project first.
+Only archives referenced by retained older Baselines enter the variant snapshot.
+The native writer preserves all original working artifacts and applies the
+existing complete target-validation and transaction gates.
+
+Historical verification rebuilds the effective selection from archived records,
+checks its exact stored object and manifest binding, and reports
+`configuration_binding`. Changed current parent revisions, selections or project
+files do not affect the stored variant. Missing archive bytes never fall back to
+current data. Show, materialization and Baseline comparison use this same verifier;
+materialization and comparison evidence retain the checked selection binding.
+Other historical scopes, CLI/Work dispatch and installed language packages remain
+explicit integrations. Snapshot integrity is not historical full validation or
+release approval.

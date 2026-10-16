@@ -3,8 +3,12 @@
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
+    "SR-FIX-BASELINE-COMPARISON-RIGHT-v1",
+    "SR-FIX-BASELINE-COMPARISON-v1",
     "SR-FIX-BASELINE-CREATION-v1",
     "SR-FIX-BASELINE-MANIFEST-v1",
+    "SR-FIX-BASELINE-MATERIALIZATION-v1",
+    "SR-FIX-BASELINE-VERIFICATION-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-CHANGE-EXECUTION-v1",
@@ -14,6 +18,8 @@
     "SR-FIX-CHANGE-TARGET-v1",
     "SR-FIX-CHANGED-SOURCES-v1",
     "SR-FIX-COMPARISON-SOURCE-v1",
+    "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1",
+    "SR-FIX-CONFIGURED-BASELINE-v1",
     "SR-FIX-CONTAINER-LANGUAGES-v1",
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
@@ -68,12 +74,7 @@
     "SR-FIX-TRANSACTION-RECOVERY-v1",
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
-    "SR-FIX-WRITER-BOUNDARIES-v1",
-    "SR-FIX-BASELINE-VERIFICATION-v1",
-    "SR-FIX-BASELINE-MATERIALIZATION-v1",
-    "SR-FIX-BASELINE-COMPARISON-v1",
-    "SR-FIX-BASELINE-COMPARISON-RIGHT-v1",
-    "SR-FIX-CONFIGURED-BASELINE-v1"
+    "SR-FIX-WRITER-BOUNDARIES-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -363,6 +364,10 @@
     "SR-FIX-CONFIGURED-BASELINE-v1": {
       "provider": "tests/test_configured_baseline.py:variant_inputs",
       "kind": "Actual configuration parent-chain records, deterministic applicability/closure, real canonical profile/rule/mapping/selection objects, exact shared scope/model hashes, private archive persistence without original files and isolated Core/PYZ preparation. Inert prepared data only; native configured publication and historical full-snapshot verification remain separate integrations."
+    },
+    "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1": {
+      "provider": "tests/test_configured_baseline_right.py:variant_project",
+      "kind": "Actual native project, inherited configuration choices and conditional requirements; saved-plan publication, archive-only historic integrity, missing/rebound chain bytes, isolated materialization/comparison and Core/PYZ verification."
     }
   }
 }

@@ -23,7 +23,8 @@ from .objects import ObjectReference, SnapshotObject, read_snapshot_object
 from ._baseline_view import _record, show_baseline_snapshot
 from .verification import verify_baseline_objects, verify_baseline_snapshot
 
-_VALUES = frozenset(('semantic_configuration', 'effective_profile', 'model_manifest'))
+_VALUES = frozenset(('semantic_configuration', 'effective_profile', 'model_manifest',
+                    'effective_configuration'))
 
 
 def _snapshot(boundary, raw, *, default_locale, generated_path):
@@ -210,6 +211,8 @@ def materialize_baseline_snapshot(boundary, baseline_record, destination, *,
     return {'format_version': 'baseline-materialization-v1', 'project_root': str(target),
         'baseline_id': record['id'], 'model_root_sha256': checked['model_root_sha256'],
         'configuration_hash': checked['configuration_hash'], 'profile_sha256': checked['profile_sha256'],
+        **({'configuration_binding': checked['configuration_binding']}
+           if 'configuration_binding' in checked else {}),
         'files': [{'path': p, 'size': len(raw), 'sha256': sha256(raw).hexdigest()}
                   for p, raw in sorted(files.items())],
         'operational_configuration': {'default_locale': default_locale, 'generated_path': generated_path},

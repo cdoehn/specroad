@@ -41,6 +41,15 @@ def validate_configured_model(documents, *, configuration_id=None, profile=None,
     except ModelError as error:
         raise ConfigurationEvaluationError(error) from error
 
+    gate = _bound_configuration_gate(binding)
+    return validate_model(documents, profile=profile, selected_ids=selected_ids,
+                          gates=(*gates, gate), resources=resources, configuration_id=binding.configuration_id)
+
+
+def _bound_configuration_gate(binding):
+    """Reuse the actual selected-chain check inside another complete model gate."""
+    from ..validation import ModelGate
+
     def check(context):
         try:
             current = tuple(SourceRelations(d.content, path=d.path) for d in context.documents)
@@ -57,7 +66,5 @@ def validate_configured_model(documents, *, configuration_id=None, profile=None,
             'related_ids': [item['source_id'], item['target_id']], 'dependency': item}
             for item in evaluation['inconsistent_dependencies']])
 
-    gate = ModelGate('configuration', 'selected-stored-configuration-v1',
+    return ModelGate('configuration', 'selected-stored-configuration-v1',
                      _dependencies, check, binding.resources_sha256)
-    return validate_model(documents, profile=profile, selected_ids=selected_ids,
-                          gates=(*gates, gate), resources=resources, configuration_id=binding.configuration_id)

@@ -44,8 +44,9 @@ def object_documents(operation):
     return tuple(result)
 
 
-def prepare_baseline_operation(model, *, baseline_id, name, actor, planned_at):
-    snapshot = build_project_baseline_manifest(model, baseline_id=baseline_id)
+def prepare_baseline_operation(model, *, baseline_id, name, actor, planned_at, configuration_id=None):
+    snapshot = build_project_baseline_manifest(model, baseline_id=baseline_id,
+                                              configuration_id=configuration_id)
     data = snapshot.data
     record = {'schema_version': SCHEMA_VERSION, 'id': baseline_id, 'id_scheme': 'random128-v1',
         'artifact_type': 'baseline', 'title': name, 'maturity': 'approved', 'baseline_state': 'sealed',
@@ -87,7 +88,8 @@ def prepare_baseline_candidates(model, operations, *, metadata_policy_version,
     if identity.id in set(base.previously_approved_ids):
         raise TargetError('baseline_identity_already_present')
     expected = prepare_baseline_operation(model, baseline_id=identity.id, name=record['title'],
-        actor=metadata['actor'], planned_at=planned_at)
+        actor=metadata['actor'], planned_at=planned_at,
+        configuration_id=record['scope_descriptor'].get('configuration_id'))
     if canonical_json_bytes(expected) != canonical_json_bytes(operations[0]):
         raise TargetError('baseline_snapshot_binding_mismatch')
     candidate = MetadataArtifact(identity.id, _snapshot(record), None,
@@ -120,5 +122,16 @@ def prepare_baseline_gates(model, operation, *, actor, planned_at, gates=()):
             return context.result([{'reason': 'baseline_target_mismatch', 'severity': 'error'}])
         return context.result()
     existing = {g.gate_id for g in gates if type(g) is ModelGate}
-    return tuple(ModelGate(name, 'bound-working-baseline-v1', dependencies, check, bound)
-                 for name in ('lifecycle', 'baseline_integrity') if name not in existing)
+    prepared = tuple(ModelGate(name, 'bound-working-baseline-v1', dependencies, check, bound)
+                     for name in ('lifecycle', 'baseline_integrity') if name not in existing)
+    configuration_id = value['record']['scope_descriptor'].get('configuration_id')
+    if configuration_id is not None:
+        from ..configurations._gate_context import _ConfigurationGateContext
+        from ..configurations.gates import _bound_configuration_gate
+        from ..graph.relations import SourceRelations
+        selected = _ConfigurationGateContext(tuple(SourceRelations(d.content, path=d.path)
+                                                   for d in owned.documents), configuration_id)
+        # A caller may add other semantic gates, but cannot replace the bound
+        # selection check. Duplicate configuration providers remain an error.
+        prepared += (_bound_configuration_gate(selected),)
+    return prepared

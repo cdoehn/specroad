@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 424
-last_completed_plan_commit: 10.g.W
-next_plan_commit: 10.g.R
-last_completed_numbered_bundle: 265
+implementation_plan_commits_completed: 425
+last_completed_plan_commit: 10.g.R
+next_plan_commit: 10.g.C
+last_completed_numbered_bundle: 266
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11233,10 +11233,20 @@ historische Snapshotleser bleiben ausdrücklich offen; SR-TC-0401 bleibt partial
 
 #### 10.g.R – Make it Right
 
-- [ ] **10.g.R** · Position **425/900** · Voraussetzung: `10.g.W`.
+- [x] **10.g.R** · Position **425/900** · Voraussetzung: `10.g.W`.
 **Exakte Commit-Message:** `10.g.R feat(baseline): Konfigurationsgebundene Baselines vervollständigen`
 
 **Vervollständigung:** Veränderter Parent-/Konfigurationshash invalidiert nicht die Originalbaseline, sondern unterscheidet den aktuellen Arbeitsstand.
+
+**Vorbereiteter R-Stand (Bundle 266):** Native geschlossene Projektbaselines
+akzeptieren eine explizite Konfigurations-ID. Die tatsächliche Auswahl und
+Parent-Kette bestimmen den gespeicherten Artefaktumfang; der vollständige
+Arbeitsstand bleibt bei der Veröffentlichung erhalten. Verifikation, Anzeige,
+Materialisierung und Vergleich rekonstruieren ausschließlich die archivierten
+Auswahlbytes. Änderungen an aktuellen Parents oder Konfigurationen verändern die
+historische Bindung nicht. Fehlende oder umgebundene Archivobjekte bleiben Fehler.
+Andere historische Scopearten, CLI/Work und installierte Sprachpakete bleiben
+eigene Integrationen; Integrität ist kein historischer Vollvalidierungsnachweis.
 
 **Verhaltensabnahme:** Snapshot bleibt verifizierbar und zeigt die historisch gebundene Variante. Die W-Nachweise bleiben zusätzlich grün.
 

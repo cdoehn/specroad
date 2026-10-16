@@ -25,6 +25,8 @@ def baseline_observation(boundary, path, raw, objects, checked, record):
             raise ModelError('comparison_source_changed', path=path)
         return canonical_json_bytes({'baseline_id': record['id'], 'record_path': path,
             'record_sha256': checked['record_sha256'], 'model_root_sha256': checked['model_root_sha256'],
+            **({'configuration_binding': checked['configuration_binding']}
+               if 'configuration_binding' in checked else {}),
             'snapshot_integrity_verified': True,
             'objects': [item.reference.data for _, item in sorted(objects.items())],
             'historical_full_validation_verified': False, 'release_authorized': False})

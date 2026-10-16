@@ -24,8 +24,9 @@ from .project_snapshot import build_project_baseline_manifest
 
 _ROLES = frozenset(('artifact', 'profile', 'rule', 'mapping', 'attachment',
                    'archive', 'language_registry', 'semantic_configuration',
-                   'effective_profile', 'model_manifest'))
-_VALUES = frozenset(('semantic_configuration', 'effective_profile', 'model_manifest'))
+                   'effective_profile', 'model_manifest', 'effective_configuration'))
+_VALUES = frozenset(('semantic_configuration', 'effective_profile', 'model_manifest',
+                    'effective_configuration'))
 _BINARY = frozenset(('attachment', 'archive', 'language_registry'))
 
 
@@ -94,7 +95,11 @@ def _verify_baseline(baseline_record, read_object, source_root, root_identity):
         raise ModelError('baseline_record_bytes_required')
     record = parse_json_object(baseline_record)
     validate_record_fields(record, expected_type='baseline')
-    if record['scope_descriptor'] != _default_scope():
+    configuration_id = record['scope_descriptor'].get('configuration_id')
+    configured = configuration_id is not None
+    expected_scope = {**_default_scope(), 'configuration_id': configuration_id}
+    if (record['scope_descriptor'] != expected_scope or configured and
+            not any(r.get('role') == 'effective_configuration' for r in record['manifest'])):
         raise ModelError('baseline_verification_scope_unsupported')
     if not {'configuration_hash', 'profiles', 'tool_version'} <= record.keys():
         raise ModelError('baseline_snapshot_metadata_missing')
@@ -128,7 +133,8 @@ def _verify_baseline(baseline_record, read_object, source_root, root_identity):
                 values[role] = value
         if role not in _VALUES:
             project_path(row.get('source_path'))
-    if set(values) != _VALUES:
+    expected_values = _VALUES if configured else _VALUES - {'effective_configuration'}
+    if set(values) != expected_values:
         raise ModelError('baseline_snapshot_value_missing')
     configuration = _configuration(values['semantic_configuration'])
     if sha256(canonical_json_bytes(values['semantic_configuration'])).hexdigest() != record['configuration_hash']:
@@ -166,7 +172,8 @@ def _verify_baseline(baseline_record, read_object, source_root, root_identity):
     binding = ProjectReadBinding(configuration.project_id, source_root, root_identity)
     model = TargetModel(canonical_json_bytes(configuration.data), binding, documents,
         profile=profile, resource_files=files, attachments=attachments)
-    rebuilt = build_project_baseline_manifest(model, baseline_id=record['id']).data
+    rebuilt = build_project_baseline_manifest(model, baseline_id=record['id'],
+                                              configuration_id=configuration_id).data
     if rebuilt['model_root_sha256'] != record['model_root_sha256']:
         raise ModelError('baseline_model_root_mismatch')
     if canonical_json_bytes(rebuilt['model_manifest']) != canonical_json_bytes(values['model_manifest']):
@@ -186,6 +193,7 @@ def _verify_baseline(baseline_record, read_object, source_root, root_identity):
         'baseline_kind': record['baseline_kind'], 'record_sha256': sha256(baseline_record).hexdigest(),
         'scope_descriptor': record['scope_descriptor'], 'model_root_sha256': rebuilt['model_root_sha256'],
         'configuration_hash': rebuilt['configuration_hash'], 'profile_sha256': rebuilt['profile_sha256'],
+        **({'configuration_binding': rebuilt['configuration_binding']} if configured else {}),
         'checked_objects': len(objects), 'checked_bytes': sum(map(len, objects.values())),
         'checked_artifacts': len(documents), 'snapshot_integrity_verified': True,
         'validation_scope': 'supplied_baseline_record_and_archive_bytes',

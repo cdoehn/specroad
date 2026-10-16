@@ -7,7 +7,8 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-CONFIGURED-BASELINE-v1"
+    "SR-FIX-CONFIGURED-BASELINE-v1",
+    "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1"
   ],
   "preconditions": [
     "Owned actual source records, project configuration, effective profile, resolved configured scope and complete supplied dependency observations; selected configuration and all parent records must belong to the retained scope."
@@ -16,12 +17,16 @@
     "Prepare two configured Baseline manifests with distinct effective selections through the shared scope/applicability/hash services.",
     "Retain configuration ID, revision, effective chain hash, exact Scope Descriptor, selected artifact records and an independently archived effective-configuration manifest.",
     "Persist actual snapshot objects, remove original files and resolve the selected parent chain from stored record bytes; reject incomplete retained chains and selected resource bytes.",
-    "Check ownership, operational-field independence, semantic hash bindings, required dependency rejection and isolated Core/PYZ execution."
+    "Check ownership, operational-field independence, semantic hash bindings, required dependency rejection and isolated Core/PYZ execution.",
+    "Publish native configured working Baselines through saved plans and the existing validated transaction; retain the full current project while archiving the applicable snapshot.",
+    "Change current parent/configuration revisions or values and remove original files. Independently verify, show, materialize and compare the exact archived variant; reject missing or rebound selection/chain bytes and excluded required dependencies.",
+    "Retain archives only for included older Baselines; preserve original identity reservations before applicability filtering.",
+    "Reuse the selected configuration gate in native complete-target validation; reject caller replacement and missing weak relation targets in the closed scope."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine konfigurationsgebundene Baseline MUSS Konfigurations-ID, -Revision, -Hash, Scope Descriptor und den resultierenden Artefaktumfang speichern.",
-    "scope": "Read-only BaselineManifest preparation for configured scopes supported by the existing selected JSON/attachment providers. configuration_binding uses the established EffectiveConfiguration ID/revision/chain hash. The effective_configuration object retains canonical chain/effective values, and all actual chain records must be archived. The original configuration_hash remains the semantic project hash; the common model manifest binds the combined selected-configuration scope hash. This is prepared data with no publication, complete historical verification or authority claim."
+    "scope": "Configured Baseline preparation plus native closed project snapshot publication, independent archived-byte verification, show, materialization and shared comparison. Selection ID/revision/chain hash and canonical effective_configuration object are rebuilt from actual archived records. Current working changes cannot invalidate or replace history. The semantic project hash and combined configured model hash retain their existing contracts. Historical integrity grants no full validation, release or publication authority."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -58,10 +63,36 @@
     "tests/test_configured_baseline.py::test_two_variant_snapshots_retain_exact_selection_and_resulting_artifact_scope[True]",
     "tests/test_configured_baseline.py::test_unconfigured_snapshot_preserves_its_original_contract_without_selection_metadata",
     "tests/test_configured_baseline.py::test_variant_snapshot_preparation_runs_in_isolated_core_and_pyz[core]",
-    "tests/test_configured_baseline.py::test_variant_snapshot_preparation_runs_in_isolated_core_and_pyz[pyz]"
+    "tests/test_configured_baseline.py::test_variant_snapshot_preparation_runs_in_isolated_core_and_pyz[pyz]",
+    "tests/test_configured_baseline_right.py::test_excluded_existing_baseline_identity_is_still_reserved_before_selection",
+    "tests/test_configured_baseline_right.py::test_excluded_older_baseline_does_not_add_its_archived_objects_to_selected_snapshot",
+    "tests/test_configured_baseline_right.py::test_historical_configured_verification_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_configured_baseline_right.py::test_historical_configured_verification_runs_in_isolated_core_and_pyz[pyz]",
+    "tests/test_configured_baseline_right.py::test_materialization_restores_historical_selection_and_exact_variant_after_source_removal",
+    "tests/test_configured_baseline_right.py::test_missing_actual_chain_object_never_uses_current_source_bytes[1]",
+    "tests/test_configured_baseline_right.py::test_missing_actual_chain_object_never_uses_current_source_bytes[2]",
+    "tests/test_configured_baseline_right.py::test_native_closed_variant_does_not_silently_drop_a_weak_relation_to_an_excluded_target",
+    "tests/test_configured_baseline_right.py::test_native_closed_variant_rejects_an_excluded_required_dependency",
+    "tests/test_configured_baseline_right.py::test_native_configured_creation_keeps_full_current_tree_and_archives_only_selected_artifacts[1-linux]",
+    "tests/test_configured_baseline_right.py::test_native_configured_creation_keeps_full_current_tree_and_archives_only_selected_artifacts[2-windows]",
+    "tests/test_configured_baseline_right.py::test_native_selection_gate_cannot_be_replaced_by_a_caller_success_stub",
+    "tests/test_configured_baseline_right.py::test_original_variant_remains_verifiable_when_current_chain_changes_and_sources_disappear[child_revision]",
+    "tests/test_configured_baseline_right.py::test_original_variant_remains_verifiable_when_current_chain_changes_and_sources_disappear[child_selection]",
+    "tests/test_configured_baseline_right.py::test_original_variant_remains_verifiable_when_current_chain_changes_and_sources_disappear[parent_revision]",
+    "tests/test_configured_baseline_right.py::test_original_variant_remains_verifiable_when_current_chain_changes_and_sources_disappear[parent_selection]",
+    "tests/test_configured_baseline_right.py::test_retained_older_baseline_keeps_its_exact_archived_objects",
+    "tests/test_configured_baseline_right.py::test_selection_object_cannot_be_replaced_by_current_configuration_or_a_hash_label[changed]",
+    "tests/test_configured_baseline_right.py::test_selection_object_cannot_be_replaced_by_current_configuration_or_a_hash_label[missing]",
+    "tests/test_configured_baseline_right.py::test_selection_object_cannot_be_replaced_by_current_configuration_or_a_hash_label[rebound]",
+    "tests/test_configured_baseline_right.py::test_selection_row_metadata_must_match_actual_archived_chain[configuration_id-SR-CFG-00000000000000000000000001]",
+    "tests/test_configured_baseline_right.py::test_selection_row_metadata_must_match_actual_archived_chain[configuration_revision-99]",
+    "tests/test_configured_baseline_right.py::test_selection_scope_cannot_be_rebound_to_another_retained_variant",
+    "tests/test_configured_baseline_right.py::test_shared_configured_project_preparation_uses_the_same_historical_snapshot_reader[1]",
+    "tests/test_configured_baseline_right.py::test_shared_configured_project_preparation_uses_the_same_historical_snapshot_reader[2]",
+    "tests/test_configured_baseline_right.py::test_two_historical_variant_sources_keep_bindings_and_shared_comparison_contract"
   ],
   "open_items": [
-    "Native configured Baseline record publication, configured historical full-snapshot verification/materialization/comparison, CLI/Work integration and language/archive providers remain explicit integrations.",
-    "The supplied inventory and dependency observations do not prove live-project completeness, full validation or release readiness."
+    "Other historical scope kinds, configuration-wrapper dispatch, CLI/Work integration and installed language-package snapshot providers remain explicit integrations.",
+    "The pure preparation API does not prove live-project completeness, full validation or release readiness. Native creation enforces its existing complete target validation and publication gates."
   ]
 }
