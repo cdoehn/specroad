@@ -153,3 +153,22 @@ object path in the machine-readable failure.
 The read-only record/view implementation is separated in `_baseline_view`.
 The public archive API and the existing materialization-module view alias keep
 the same results, exceptions and write boundaries.
+
+
+`ComparisonSourceSnapshot(root, kind='baseline', reference=baseline_id_or_bytes)`
+registers the verified historical whole-project snapshot in the existing source
+registry. A Baseline ID reads its canonical record path; explicit bytes support
+archive-only roots. Neither mode reads current configuration or artifact files,
+uses Git or materializes a temporary project. The source binding includes owned
+record/root/object hashes and explicitly retains the limited comparison scope.
+
+`compare_baselines(before_root, before_reference, after_root, after_reference)`
+uses the same `compare_sources` / `compare_semantic` contract. Optional timing
+bounds and configuration IDs use the existing semantics. Stored earlier Baseline
+records are compared as artifacts; their verified content-addressed objects stay
+byte-bound without becoming a separate opaque-resource delta. Other resource
+bytes, including attachments and the language registry, remain opaque: different
+inventories fail explicitly. The current local reader does not capture binary
+payloads, so mixed local/Baseline comparisons require matching observed resource
+inventories. No complete model equivalence or release approval is implied.
+CLI/Work dispatch and additional historical scopes remain separate integrations.

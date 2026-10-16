@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0152",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0011",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-BASELINE-COMPARISON-v1"
+  ],
+  "preconditions": [
+    "Explicit local/Git sources or verified unconfigured whole-project Baseline snapshots, with canonical Baseline IDs or supplied record bytes; source project identity must match."
+  ],
+  "steps": [
+    "Acquire owned comparison sources with their actual bytes, project identity, schema and artifact-path checks; historical Baselines use only their record and archive objects.",
+    "Compare Baseline pairs with the shared semantic-diff contract and independently materialized projects, preserving source bytes and existing local/Git behavior.",
+    "Verify every archived object and reconstructed root, retain immutable source evidence, and reject missing/tampered bytes and unsupported opaque resource deltas. Successive Baselines compare stored history records through the same artifact diff."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad baseline compare <A> <B>` MUSS die in den Baseline-Objektspeichern gesicherten Inhalte lesen und denselben strukturellen und semantischen Diffvertrag wie `specroad diff` verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Owned local/Git/Baseline source registry for project configuration and artifact fields. Baseline IDs or supplied record bytes load the already supported archived whole-project snapshot and bind its verified record/root/object hashes. The same compare_sources/compare_semantic path yields the field diff. Historical archive objects are represented by their verified stored Baseline record fields; other resource bytes remain opaque and differing inventories fail. Baseline/bundle CLI discovery, complete resource semantics and full semantic validation are not claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,37 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_baseline_comparison.py::test_baseline_and_local_sources_share_the_registry_when_resource_inventories_match",
+    "tests/test_baseline_comparison.py::test_baseline_compare_and_independently_materialized_projects_have_the_same_diff",
+    "tests/test_baseline_comparison.py::test_baseline_comparison_runs_without_git_shell_network_or_installation[core]",
+    "tests/test_baseline_comparison.py::test_baseline_comparison_runs_without_git_shell_network_or_installation[pyz]",
+    "tests/test_baseline_comparison.py::test_baseline_id_reads_only_its_record_and_archive_despite_invalid_current_files",
+    "tests/test_baseline_comparison.py::test_baseline_record_path_identity_cannot_select_a_different_record",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[bytes-bytes]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[bytes-id]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[id-bytes]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[id-id]",
+    "tests/test_baseline_comparison.py::test_changed_uninterpreted_resources_cannot_be_reported_as_an_unchanged_project[attachment]",
+    "tests/test_baseline_comparison.py::test_changed_uninterpreted_resources_cannot_be_reported_as_an_unchanged_project[rule]",
+    "tests/test_baseline_comparison.py::test_declared_baseline_root_is_not_a_comparison_integrity_proof",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[42]",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[None]",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[artifact]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[attachment]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[effective_profile]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[mapping]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[model_manifest]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[profile]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[rule]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[semantic_configuration]",
+    "tests/test_baseline_comparison.py::test_owned_baseline_source_survives_removal_without_live_fallback_or_mutable_evidence",
+    "tests/test_baseline_comparison.py::test_successive_native_baselines_compare_stored_records_and_their_archived_history",
+    "tests/test_baseline_comparison.py::test_unobserved_local_payload_bytes_cannot_replace_a_verified_baseline_payload_inventory"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Baseline CLI/Work integration, verified Bundle providers and selected/configured historical-snapshot readers remain separate integrations.",
+    "Only project configuration and artifact fields are compared. Profiles, rules, mappings, attachments and registry bytes remain opaque; differing opaque inventories fail, including mixed local/Baseline snapshots whose local reader has not observed binary payloads. No full-model equivalence, atomic observation, historical validation or write/release authority."
   ]
 }

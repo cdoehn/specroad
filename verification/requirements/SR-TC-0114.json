@@ -8,22 +8,21 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-COMPARISON-SOURCE-v1",
-    "SR-FIX-GIT-OBJECT-SOURCE-v1"
+    "SR-FIX-GIT-OBJECT-SOURCE-v1",
+    "SR-FIX-BASELINE-COMPARISON-v1"
   ],
   "preconditions": [
-    "Owned same-project local directories or ordinary local Git stores; Git sources require an explicit ref and trusted system Git."
+    "Explicit local/Git sources or verified unconfigured whole-project Baseline snapshots, with canonical Baseline IDs or supplied record bytes; source project identity must match."
   ],
   "steps": [
-    "Compare every local/Git source pairing against independently supplied artifact and configuration data; preserve input bytes and Git state.",
-    "Check owned snapshots, byte provenance, local read preflight and observed changes, project/schema boundaries, configured inventory and unavailable sources.",
-    "Bind other normative JSON as opaque bytes and reject unsupported resource deltas instead of claiming unchanged project semantics.",
-    "Exercise invalid selectors before source discovery, prefix identity, final operational blockers, observed configuration/inventory changes, missing historical inputs without working-tree fallback, schema/path and safe-inventory boundaries, and typed stored records.",
-    "Re-run unchanged W/R source and affected reader/query behavior after extracting acquisition/finalization and immutable source-registry dispatch; preserve sequencing, byte observations and error contracts."
+    "Acquire owned comparison sources with their actual bytes, project identity, schema and artifact-path checks; historical Baselines use only their record and archive objects.",
+    "Compare Baseline pairs with the shared semantic-diff contract and independently materialized projects, preserving source bytes and existing local/Git behavior.",
+    "Verify every archived object and reconstructed root, retain immutable source evidence, and reject missing/tampered bytes and unsupported opaque resource deltas. Successive Baselines compare stored history records through the same artifact diff."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad diff --against <BASE>` MUSS als Vergleichsbasis eine Baseline-ID, einen Git-Ref, ein verifiziertes Projektbundle oder ein lokales SpecRoad-Projektverzeichnis desselben Projekts akzeptieren.",
-    "scope": "8.j.W supplies one immutable comparison-source contract for explicit local/Git acquisition, with configuration identity, schema and complete stored artifact-field checks, path/ID binding and exact resource provenance. Local operational preflight and observed byte/membership rechecks reject unsafe mixed observations. Git data comes solely from a pinned physical commit. All local/Git pairings reproduce the direct semantic comparison of supplied configuration and artifacts. Baseline/bundle kinds explicitly fail as unavailable. Other normative JSON is opaque and byte-bound; its deltas fail until semantic adapters exist. No complete model equivalence, atomic snapshot, approval, write authorization or CLI/Work availability is claimed. R validates expected project IDs as JSON strings before source opening, checks paired project ID and prefix before unsupported resource semantics, and observes operational state again after the final local byte/membership checks. Adversarial cases preserve existing W oracles and actual source/recovery state; current valid files never replace missing or invalid committed inputs. Stored record statuses are not authenticated. C extracts unchanged local/Git acquisition and local finalization behind a private immutable source registry. Baseline and Bundle stay unavailable. Shared artifact checks, final preflight order, inventory, result projections, semantic comparison and source-dependency aliases remain unchanged. All 283 existing test files and 9451 test IDs are retained; static extraction proof supplements real parallel regression without replacing it."
+    "scope": "Owned local/Git/Baseline source registry for project configuration and artifact fields. Baseline IDs or supplied record bytes load the already supported archived whole-project snapshot and bind its verified record/root/object hashes. The same compare_sources/compare_semantic path yields the field diff. Historical archive objects are represented by their verified stored Baseline record fields; other resource bytes remain opaque and differing inventories fail. Baseline/bundle CLI discovery, complete resource semantics and full semantic validation are not claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -40,6 +39,33 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_baseline_comparison.py::test_baseline_and_local_sources_share_the_registry_when_resource_inventories_match",
+    "tests/test_baseline_comparison.py::test_baseline_compare_and_independently_materialized_projects_have_the_same_diff",
+    "tests/test_baseline_comparison.py::test_baseline_comparison_runs_without_git_shell_network_or_installation[core]",
+    "tests/test_baseline_comparison.py::test_baseline_comparison_runs_without_git_shell_network_or_installation[pyz]",
+    "tests/test_baseline_comparison.py::test_baseline_id_reads_only_its_record_and_archive_despite_invalid_current_files",
+    "tests/test_baseline_comparison.py::test_baseline_record_path_identity_cannot_select_a_different_record",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[bytes-bytes]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[bytes-id]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[id-bytes]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[id-id]",
+    "tests/test_baseline_comparison.py::test_changed_uninterpreted_resources_cannot_be_reported_as_an_unchanged_project[attachment]",
+    "tests/test_baseline_comparison.py::test_changed_uninterpreted_resources_cannot_be_reported_as_an_unchanged_project[rule]",
+    "tests/test_baseline_comparison.py::test_declared_baseline_root_is_not_a_comparison_integrity_proof",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[42]",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[None]",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[artifact]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[attachment]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[effective_profile]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[mapping]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[model_manifest]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[profile]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[rule]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[semantic_configuration]",
+    "tests/test_baseline_comparison.py::test_owned_baseline_source_survives_removal_without_live_fallback_or_mutable_evidence",
+    "tests/test_baseline_comparison.py::test_successive_native_baselines_compare_stored_records_and_their_archived_history",
+    "tests/test_baseline_comparison.py::test_unobserved_local_payload_bytes_cannot_replace_a_verified_baseline_payload_inventory",
     "tests/test_query_comparison_sources.py::test_captured_local_values_remain_owned_after_the_source_disappears",
     "tests/test_query_comparison_sources.py::test_different_projects_cannot_be_compared",
     "tests/test_query_comparison_sources.py::test_empty_projects_still_compare_their_configuration",
@@ -116,7 +142,7 @@
     "tests/test_query_comparison_sources_right.py::test_uncommitted_artifact_never_expands_the_selected_commit_inventory"
   ],
   "open_items": [
-    "Diff CLI/Work, Baseline and verified Bundle adapters in M10/M15 remain open.",
-    "Only project configuration and artifact fields are compared. Other normative JSON is byte-bound and differing resources are rejected; complete model/profile/configuration-scope/currentness validation, scalable acquisition, broader Git layouts and supported-platform acceptance remain open."
+    "Baseline CLI/Work integration, verified Bundle providers and selected/configured historical-snapshot readers remain separate integrations.",
+    "Only project configuration and artifact fields are compared. Profiles, rules, mappings, attachments and registry bytes remain opaque; differing opaque inventories fail, including mixed local/Baseline snapshots whose local reader has not observed binary payloads. No full-model equivalence, atomic observation, historical validation or write/release authority."
   ]
 }

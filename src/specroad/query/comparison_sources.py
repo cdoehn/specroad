@@ -1,4 +1,4 @@
-"""Owned local/Git comparison observations; no full model or approval claim."""
+"""Owned local/Git/Baseline comparisons; no full model or approval claim."""
 from dataclasses import dataclass
 from hashlib import sha256
 from types import MappingProxyType
@@ -20,6 +20,7 @@ from ..storage.project import ProjectSource
 from ..storage.resource_discovery import current_json_paths
 from .git_source import GitObjectSource
 from .semantic_diff import compare_semantic
+from .baseline_source import baseline_source
 
 
 def _git_json_paths(source, configuration):
@@ -122,7 +123,7 @@ def _git_source(root, reference, expected_project_id):
 
 _SOURCE_READERS = MappingProxyType({
     'local': _local_source, 'git': _git_source,
-    'baseline': None, 'bundle': None,
+    'baseline': baseline_source, 'bundle': None,
 })
 
 
@@ -140,6 +141,7 @@ class ComparisonSourceSnapshot:
     configuration: ProjectConfiguration
     inputs: ComparisonInputs
     resources: tuple
+    _baseline_evidence: bytes | None
 
     def __init__(self, root, *, kind='local', reference=None, expected_project_id=None):
         if type(kind) is not str or kind not in _SOURCE_READERS:
@@ -169,20 +171,28 @@ class ComparisonSourceSnapshot:
                 raise
             records.append(record)
         inputs = ComparisonInputs(configuration.project_id, records)
-        if finish is not None:
-            finish()
+        evidence = finish() if finish is not None else None
         for key, value in (('kind', kind), ('source_root', source_root), ('commit_id', commit_id),
-                           ('configuration', configuration), ('inputs', inputs), ('resources', resources)):
+                           ('configuration', configuration), ('inputs', inputs), ('resources', resources),
+                           ('_baseline_evidence', evidence)):
             object.__setattr__(self, key, value)
 
     @property
     def uncompared_resources(self):
+        # A verified Baseline's content-addressed archives are already represented
+        # by the stored Baseline artifact fields checked by the shared diff. New
+        # historical Baselines may add these bytes without inventing resource
+        # semantics or blocking the ordinary added-artifact comparison.
+        represented = {PathClass.CONFIGURATION, PathClass.ARTIFACT}
+        if self.kind == 'baseline':
+            represented.add(PathClass.ARCHIVE_OBJECT)
         return tuple((path, raw) for path, raw in self.resources
-                     if classify_path(path, self.configuration) not in (PathClass.CONFIGURATION, PathClass.ARTIFACT))
+                     if classify_path(path, self.configuration) not in represented)
 
     @property
     def binding(self):
         """Local provenance and raw bytes, explicitly not a SpecRoad model root."""
+        from ..storage.json_syntax import parse_json_object
         return {'binding_version': 'comparison-source-v1', 'kind': self.kind,
                 'source_root': self.source_root, 'commit_id': self.commit_id,
                 'project_id': self.configuration.project_id,
@@ -190,7 +200,9 @@ class ComparisonSourceSnapshot:
                 'comparison_scope': 'project_configuration_and_artifacts',
                 'uncompared_resources': [path for path, _ in self.uncompared_resources],
                 'atomic_snapshot': False, 'full_semantic_validation': False,
-                'approval_granted': False, 'write_authorized': False}
+                'approval_granted': False, 'write_authorized': False,
+                **({'baseline': parse_json_object(self._baseline_evidence)}
+                   if self._baseline_evidence is not None else {})}
 
     @property
     def sha256(self):

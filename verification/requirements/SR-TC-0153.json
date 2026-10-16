@@ -7,7 +7,8 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-BASELINE-MATERIALIZATION-v1"
+    "SR-FIX-BASELINE-MATERIALIZATION-v1",
+    "SR-FIX-BASELINE-COMPARISON-v1"
   ],
   "preconditions": [
     "Explicit Baseline record bytes, actual archive objects and a private owned external destination parent; every protected boundary is declared."
@@ -18,7 +19,8 @@
     "Reject missing archive objects, existing or overlapping destinations and invalid operational choices before publication; retain interrupted output without overwriting or claiming completion.",
     "Inject missing/replaced destination directories and ensure no write falls back to the process cwd; reject foreign directories and byte-identical replacement of an owned file.",
     "Check original objects again after output reconstruction, preserving actual interrupted files on late source/storage failure; restore an older Baseline and registry without any original project.",
-    "Re-run the unchanged W/R behavior tests after separating the unchanged read-only view from native materialization."
+    "Re-run the unchanged W/R behavior tests after separating the unchanged read-only view from native materialization.",
+    "Compare verified Baseline pairs through the shared source registry and semantic diff, including successive stored history and independent materialized-project comparison."
   ],
   "oracle": {
     "kind": "behavior",
@@ -40,6 +42,33 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_baseline_comparison.py::test_baseline_and_local_sources_share_the_registry_when_resource_inventories_match",
+    "tests/test_baseline_comparison.py::test_baseline_compare_and_independently_materialized_projects_have_the_same_diff",
+    "tests/test_baseline_comparison.py::test_baseline_comparison_runs_without_git_shell_network_or_installation[core]",
+    "tests/test_baseline_comparison.py::test_baseline_comparison_runs_without_git_shell_network_or_installation[pyz]",
+    "tests/test_baseline_comparison.py::test_baseline_id_reads_only_its_record_and_archive_despite_invalid_current_files",
+    "tests/test_baseline_comparison.py::test_baseline_record_path_identity_cannot_select_a_different_record",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[bytes-bytes]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[bytes-id]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[id-bytes]",
+    "tests/test_baseline_comparison.py::test_baseline_registry_pairings_equal_direct_semantic_comparison[id-id]",
+    "tests/test_baseline_comparison.py::test_changed_uninterpreted_resources_cannot_be_reported_as_an_unchanged_project[attachment]",
+    "tests/test_baseline_comparison.py::test_changed_uninterpreted_resources_cannot_be_reported_as_an_unchanged_project[rule]",
+    "tests/test_baseline_comparison.py::test_declared_baseline_root_is_not_a_comparison_integrity_proof",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[42]",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[None]",
+    "tests/test_baseline_comparison.py::test_expected_project_identity_is_checked_for_baseline_sources[]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[artifact]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[attachment]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[effective_profile]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[mapping]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[model_manifest]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[profile]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[rule]",
+    "tests/test_baseline_comparison.py::test_missing_baseline_object_never_uses_current_counterpart[semantic_configuration]",
+    "tests/test_baseline_comparison.py::test_owned_baseline_source_survives_removal_without_live_fallback_or_mutable_evidence",
+    "tests/test_baseline_comparison.py::test_successive_native_baselines_compare_stored_records_and_their_archived_history",
+    "tests/test_baseline_comparison.py::test_unobserved_local_payload_bytes_cannot_replace_a_verified_baseline_payload_inventory",
     "tests/test_baseline_materialization.py::test_conflicting_operational_output_path_is_rejected_before_creation",
     "tests/test_baseline_materialization.py::test_destination_must_be_private_external_and_outside_protected_inputs[archive]",
     "tests/test_baseline_materialization.py::test_destination_must_be_private_external_and_outside_protected_inputs[project_parent]",
@@ -104,6 +133,6 @@
   ],
   "open_items": [
     "CLI lookup/dispatch and selected/configured scopes remain separate integrations. Native materialization supports a missing destination under a private owned canonical Linux parent; no resume, atomic whole-directory publication or cross-platform write claim.",
-    "Comparison uses the following 10.f step. Snapshot integrity and materialization do not prove historical full validation, original-project completeness, authorship, approvals or release readiness."
+    "Baseline comparison now uses the shared 10.f source adapter; unsupported resource deltas still fail explicitly. Snapshot integrity and materialization do not prove historical full validation, original-project completeness, authorship, approvals or release readiness."
   ]
 }

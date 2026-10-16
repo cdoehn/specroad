@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 420
-last_completed_plan_commit: 10.e.C
-next_plan_commit: 10.f.W
-last_completed_numbered_bundle: 262
+implementation_plan_commits_completed: 421
+last_completed_plan_commit: 10.f.W
+next_plan_commit: 10.f.R
+last_completed_numbered_bundle: 263
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11151,10 +11151,23 @@ unverändert. Keine neuen Fachwerte, Nebenwirkungen oder Erfolgsbefugnisse.
 
 #### 10.f.W – Let it Work
 
-- [ ] **10.f.W** · Position **421/900** · Voraussetzung: `10.e.C`.
+- [x] **10.f.W** · Position **421/900** · Voraussetzung: `10.e.C`.
 **Exakte Commit-Message:** `10.f.W feat(baseline): Baselinevergleich und Diffquellenadapter aufbauen`
 
 **Umsetzung:** Baselines an die Quellenregistry und denselben semantischen Diff anschließen.
+
+**Vorbereiteter W-Stand (Bundle 263):**
+Die gemeinsame Quellenregistry liest mit `kind=baseline` eine kanonische
+Baseline-ID oder explizite Record-Bytes. Sie prüft die tatsächlichen Archivobjekte
+und die rekonstruierte Modellwurzel, bindet die historischen Bytes und liefert
+denselben Vergleichssnapshot. `compare_baselines` verwendet ausschließlich den
+gemeinsamen semantischen Diff. Aufeinanderfolgende Baselines vergleichen ihre
+gespeicherten Historienrecords über denselben Artefaktvertrag; referenzierte
+Archivobjekte bleiben bytegeprüft. Keine aktuelle Datei ersetzt Historie.
+Fremde/inkonsistente Quellen und unterschiedliche opake Ressourcenbestände
+werden abgewiesen. Felddiffs entsprechen unabhängig materialisierten Projekten.
+CLI/Work, weitere historische Scopes und weitergehende Ressourcensemantik bleiben
+offen; die SR-TCs bleiben partial. Keine Vollmodell-/Freigabeaussage.
 
 **Verhaltensabnahme:** Baseline-gegen-Baseline und materialisiertes Projekt ergeben gleichen Felddiff.
 

@@ -70,7 +70,8 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "SR-FIX-BASELINE-VERIFICATION-v1",
-    "SR-FIX-BASELINE-MATERIALIZATION-v1"
+    "SR-FIX-BASELINE-MATERIALIZATION-v1",
+    "SR-FIX-BASELINE-COMPARISON-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -352,6 +353,10 @@
     "SR-FIX-BASELINE-MATERIALIZATION-v1": {
       "provider": "tests/test_baseline_materialization.py:restore",
       "kind": "Actual archived Baseline records and object bytes; fresh read-only integrity views, new private isolated native output roots, exact semantic/binary preservation, missing-source and existing-target rejection, interrupted storage and isolated Core/PYZ execution. Explicit operational locale/output values; no current-tree or Git fallback, full validation or release authority. The Right cases inject late source loss/corruption, directory removal/replacement, foreign initial entries, concurrent empty directories, byte-identical inode replacement and durability failures. Independent restoration also preserves historical Baselines, their real archive objects and the original language-registry bytes."
+    },
+    "SR-FIX-BASELINE-COMPARISON-v1": {
+      "provider": "tests/test_baseline_comparison.py:stored_comparison",
+      "kind": "Actual archived whole-project snapshots with valid stored domain fields, canonical Baseline IDs or explicit record bytes, binary and JSON resources, successive native Baselines with registry/archive history, independent materialization, missing/tampered bytes and isolated Core/PYZ comparison. Shared field-diff oracle; unsupported opaque resource deltas fail explicitly."
     }
   }
 }
