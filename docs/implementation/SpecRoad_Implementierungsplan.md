@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 444
-last_completed_plan_commit: 11.d.C
-next_plan_commit: 11.e.W
-last_completed_numbered_bundle: 278
+implementation_plan_commits_completed: 445
+last_completed_plan_commit: 11.e.W
+next_plan_commit: 11.e.R
+last_completed_numbered_bundle: 279
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11658,10 +11658,22 @@ werden durch diese Trennung nicht erweitert.
 
 #### 11.e.W – Let it Work
 
-- [ ] **11.e.W** · Position **445/900** · Voraussetzung: `11.d.C`.
+- [x] **11.e.W** · Position **445/900** · Voraussetzung: `11.d.C`.
 **Exakte Commit-Message:** `11.e.W feat(documents): Sicheres CommonMark-Kernsubset aufbauen`
 
 **Umsetzung:** Prosa/Admonition auf die erlaubten deklarativen Inhaltsknoten parsen.
+
+**Vorbereiteter W-Stand (Bundle 279):** Eine eigene Prosa-API liest native,
+unveränderliche Inhaltsblöcke und erzeugt inerte Datenknoten für die vorgesehenen
+Block- und Inlinearten. Sie bindet Originalbytes, Revision, Payload, LF-normalisierten
+Text und Knotenhashes. Admonition-Titel und Code bleiben reine Daten; interne
+Anhangspfade werden geprüft, ohne Dateien oder URLs zu öffnen. Unzulässige aktive
+Konstrukte werden abgewiesen. Der erste nutzbare Ausschnitt verlangt explizite
+Containerfortsetzungen; Lazy-Fortsetzungen und besondere Listeneinrückungen
+werden konservativ abgewiesen und in R vervollständigt. Grenzen für Größe,
+Verschachtelung und Parseraufwand liefern strukturierte Fehler. Verhaltenstests
+prüfen Knoten, Quellbindung, Ablehnungen, Seiteneffekte und Core-/PYZ-Parität,
+keine Darstellung. Vollständige Dokumentvalidierung und Rendering bleiben offen.
 
 **Verhaltensabnahme:** Zulässiger Text wird als inert strukturierte Inhaltsdaten verarbeitet.
 

@@ -27,6 +27,7 @@
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
+    "SR-FIX-DOCUMENT-PROSE-v1",
     "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1",
     "SR-FIX-DOCUMENT-REFERENCES-v1",
     "SR-FIX-DOCUMENT-ROLES-v1",
@@ -408,6 +409,10 @@
     "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1": {
       "provider": "tests/test_document_references_right.py:rebuild",
       "kind": "Owned duplicate/changed target inventories, forbidden payload target copies, independent source/semantic hashes, unchanged reference revisions, legacy identities, real preserved files and isolated Core/PYZ updated-target projections."
+    },
+    "SR-FIX-DOCUMENT-PROSE-v1": {
+      "provider": "tests/test_document_prose.py:prose",
+      "kind": "Native prose/admonition source bytes, safe semantic node trees, LF/Unicode source bindings, internal attachment paths, forbidden active content and real isolated Core/PYZ execution. No rendered-output oracle."
     }
   }
 }

@@ -4,19 +4,37 @@
   "requirement_id": "SR-REQ-0527",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-PROSE-v1"
+  ],
+  "preconditions": [
+    "Native ContentBlock with owned original UTF-8 JSON bytes; explicit prose/admonition parser invocation, no implicit tightening of passive record or search contracts."
+  ],
+  "steps": [
+    "11.e.W: parse allowed paragraph/inline/code/list/quote/break/attachment node families; compare semantic data, owned source and normalized hashes, admonition levels, structured forbidden-content errors, real unchanged files and isolated Core/PYZ results."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Prosa-Inhaltsblock DARF NICHT ausführbares HTML, Skripte oder externe Includes enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "11.e.W: inert source-bound prose/admonition node data, no rendering, loader, executable extension or write approval. Exact source bytes survive LF parsing normalization. Native project-path checks reject remote/traversing attachment destinations. Tests assert semantic nodes and forbidden effects, never rendered Markdown/HTML or presentation."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "prose_raw_html_or_autolink_forbidden",
+    "prose_heading_forbidden",
+    "prose_reference_definition_forbidden",
+    "prose_active_entity",
+    "prose_indented_code_forbidden",
+    "prose_attachment_path_required",
+    "prose_control_character_forbidden",
+    "prose_block_kind_required"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/payload/markdown",
+    "/block_kind"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +46,67 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_prose.py::test_admonitions_use_the_same_prose_nodes_and_keep_title_as_plain_data[caution]",
+    "tests/test_document_prose.py::test_admonitions_use_the_same_prose_nodes_and_keep_title_as_plain_data[important]",
+    "tests/test_document_prose.py::test_admonitions_use_the_same_prose_nodes_and_keep_title_as_plain_data[note]",
+    "tests/test_document_prose.py::test_admonitions_use_the_same_prose_nodes_and_keep_title_as_plain_data[tip]",
+    "tests/test_document_prose.py::test_admonitions_use_the_same_prose_nodes_and_keep_title_as_plain_data[warning]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[![diagram](attachments/diagram.png \"Diagram\")-expected18]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[***both***-expected5]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[**outer _inner_**-expected4]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[*focus* and **strong**-expected2]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[- first\\n- second-expected13]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[----expected16]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[-expected23]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[3. third\\n4. fourth-expected14]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[> quoted\\n> continuation-expected15]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[A plain paragraph.-expected0]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[[**manual**](<attachments/user manual.pdf>)-expected19]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[[manual](attachments/manual.pdf)-expected17]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[\\\\*literal\\\\* &amp; &#233;-expected20]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[_focus_ and __strong__-expected3]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[`<script>never execute</script>`-expected7]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[`` `inner` ``-expected8]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[```\\nunclosed-expected12]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[```python\\nprint(\"inert\")\\n```-expected10]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[`a\\nb`-expected9]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[a  \\nb-expected21]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[a\\\\\\nb-expected22]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[first\\nline\\n\\nsecond-expected1]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[part_of_word-expected6]",
+    "tests/test_document_prose.py::test_allowed_prose_constructs_produce_inert_semantic_nodes[~~~\\n<script>alert(1)</script>\\n~~~-expected11]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[    indented code-prose_indented_code_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[![data](data:image/svg+xml,payload)-prose_attachment_path_required]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[# heading-prose_heading_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[&lt;script&gt;-prose_active_entity]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[<!-- include remote -->-prose_raw_html_or_autolink_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[<img src=\"remote\" onerror=\"execute()\">-prose_raw_html_or_autolink_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[<script>alert(1)</script>-prose_raw_html_or_autolink_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[[absolute](/attachments/a.pdf)-prose_attachment_path_required]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[[encoded](attachments/%2e%2e/secret)-prose_attachment_path_required]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[[escape](attachments/../secret)-prose_attachment_path_required]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[[ref]: attachments/manual.pdf-prose_reference_definition_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[[remote](https://invalid.example/manual.pdf)-prose_attachment_path_required]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[heading\\n----prose_heading_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[heading\\n===-prose_heading_forbidden]",
+    "tests/test_document_prose.py::test_forbidden_semantics_are_rejected_before_a_prose_value_is_returned[nul\\x00byte-prose_control_character_forbidden]",
+    "tests/test_document_prose.py::test_line_endings_normalize_without_rewriting_the_original_record[\\n]",
+    "tests/test_document_prose.py::test_line_endings_normalize_without_rewriting_the_original_record[\\r\\n]",
+    "tests/test_document_prose.py::test_line_endings_normalize_without_rewriting_the_original_record[\\r]",
+    "tests/test_document_prose.py::test_nested_lists_quotes_and_fences_have_no_executable_node_type",
+    "tests/test_document_prose.py::test_other_content_kinds_cannot_be_parsed_as_prose[artifact_ref]",
+    "tests/test_document_prose.py::test_other_content_kinds_cannot_be_parsed_as_prose[include_document]",
+    "tests/test_document_prose.py::test_other_content_kinds_cannot_be_parsed_as_prose[page_break]",
+    "tests/test_document_prose.py::test_other_content_kinds_cannot_be_parsed_as_prose[query]",
+    "tests/test_document_prose.py::test_other_content_kinds_cannot_be_parsed_as_prose[table]",
+    "tests/test_document_prose.py::test_owned_sources_are_used_after_the_real_record_is_removed_and_no_attachment_is_read",
+    "tests/test_document_prose.py::test_prose_nodes_and_refusals_match_in_isolated_core_and_pyz[core]",
+    "tests/test_document_prose.py::test_prose_nodes_and_refusals_match_in_isolated_core_and_pyz[pyz]",
+    "tests/test_document_prose.py::test_prose_values_are_owned_detached_and_do_not_claim_attachment_or_rendering_approval"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "11.e.R must complete lazy-container/list-padding and adversarial syntax/security boundaries. The W parser conservatively refuses unsupported continuation forms; complete CommonMark conformance is not claimed.",
+    "Document composition, attachment resolution/media safety and rendering remain separate later steps; partial development and Apply observations do not establish a full-suite or release pass."
   ]
 }
