@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 437
-last_completed_plan_commit: 11.b.R
-next_plan_commit: 11.b.C
+implementation_plan_commits_completed: 438
+last_completed_plan_commit: 11.b.C
+next_plan_commit: 11.c.W
 last_completed_numbered_bundle: 274
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11506,10 +11506,17 @@ prüfen dieselben gebundenen Daten ohne Rendering- oder Schreibfreigabe.
 
 #### 11.b.C – Make it Clean
 
-- [ ] **11.b.C** · Position **438/900** · Voraussetzung: `11.b.R`.
+- [x] **11.b.C** · Position **438/900** · Voraussetzung: `11.b.R`.
 **Exakte Commit-Message:** `11.b.C refactor(documents): Abschnittseigentum und Ordnung bereinigen`
 
 **Bereinigung:** Kompositionsbaum aus Graphdaten ableiten statt separat speichern.
+
+**Vorbereiteter C-Stand (Bundle 274):** Der interne Strukturkern leitet Eltern-
+und Kindadjazenz unmittelbar aus den bereits geprüften Graphrelationen ab.
+Die gemeinsame Positions-/Identitätssortierung bestimmt weiter jede Kindfolge;
+Scope-Zulassung, Quellprüfung und unveränderliche Berichtbindung bleiben im
+öffentlichen Assessment. Es entsteht kein unabhängig gepflegter oder
+persistierter Kompositionsbaum. W-/R-Testbytes und Fachresultate bleiben gleich.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

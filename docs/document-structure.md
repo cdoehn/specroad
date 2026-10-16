@@ -50,3 +50,8 @@ field contract requires an integer position even where the generic relation
 reader accepts an integral JSON decimal. Tests of that boundary supply the
 actual original bytes, without canonicalizing the decimal spelling away first.
 Equal integer positions remain valid and use the prescribed identity ties.
+
+The internal composition kernel derives parent and child adjacency directly
+from validated native relations. Child lists retain the shared graph key; the
+public layer owns scope admission, source validation and immutable report
+binding. No independently maintained or persisted composition tree is added.
