@@ -22,6 +22,7 @@
     "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1",
     "SR-FIX-CONFIGURED-BASELINE-v1",
     "SR-FIX-CONTAINER-LANGUAGES-v1",
+    "SR-FIX-CONTENT-BLOCKS-v1",
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
@@ -388,6 +389,10 @@
     "SR-FIX-DOCUMENT-STRUCTURE-v1": {
       "provider": "tests/test_document_structure.py:composed_records",
       "kind": "Actual owned Document/Section/ContentBlock source bytes and stored contains relations: nested traversal, source-bound ownership, position/target/relation order, invalid parents, native fields/references/cycles, immutable read-only observations and isolated Core/PYZ parity. Exact conflicting-parent source pointers/hashes, original decimal-spelled positions, explicit full-project scope admission, separate document roots, retired records, deep chains, immutable source/revision bindings and native refusals."
+    },
+    "SR-FIX-CONTENT-BLOCKS-v1": {
+      "provider": "tests/support/records.py:block_value",
+      "kind": "All seven stored ContentBlock kinds and declared alternative payload branches, original record bytes, standalone native payload schemas, local reference fields, owned source/record/payload/schema bindings and isolated Core/PYZ parity. No target resolution or payload execution."
     }
   }
 }

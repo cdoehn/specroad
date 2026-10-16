@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 438
-last_completed_plan_commit: 11.b.C
-next_plan_commit: 11.c.W
-last_completed_numbered_bundle: 274
+implementation_plan_commits_completed: 439
+last_completed_plan_commit: 11.c.W
+next_plan_commit: 11.c.R
+last_completed_numbered_bundle: 275
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11530,10 +11530,19 @@ persistierter Kompositionsbaum. W-/R-Testbytes und Fachresultate bleiben gleich.
 
 #### 11.c.W – Let it Work
 
-- [ ] **11.c.W** · Position **439/900** · Voraussetzung: `11.b.C`.
+- [x] **11.c.W** · Position **439/900** · Voraussetzung: `11.b.C`.
 **Exakte Commit-Message:** `11.c.W feat(documents): Exakte Inhaltsblockschemas aufbauen`
 
 **Umsetzung:** Alle sieben Blockarten mit genau ihrem zugehörigen Payloadschema implementieren.
+
+**Vorbereiteter W-Stand (Bundle 275):** Die bereits im allgemeinen Feldschema
+enthaltenen sieben Payloadverträge sind einzeln als gebundene Schemas nutzbar.
+Ein typisierter, unveränderlicher Inhaltsblock-Loader verwendet den vorhandenen
+Record-Reader und erhält die Originalbytes sowie Record-, Payload- und
+Schemahashes. Zulässige Alternativen bleiben lesbar, fremde äußere Payloadfelder
+werden abgewiesen. Lokale Referenzprüfungen bleiben erhalten; Zielauflösung,
+Prosa-, Query-/Tabellen- und Includesemantik werden erst in ihren vorgesehenen
+Folgeschritten ausgewertet. Es entsteht keine Rendering- oder Schreibfreigabe.
 
 **Verhaltensabnahme:** Gültige prose/artifact_ref/query/table/admonition/page_break/include_document-Daten sind ladbar.
 
