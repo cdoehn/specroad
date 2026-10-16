@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 433
-last_completed_plan_commit: 11.a.W
-next_plan_commit: 11.a.R
-last_completed_numbered_bundle: 271
+implementation_plan_commits_completed: 434
+last_completed_plan_commit: 11.a.R
+next_plan_commit: 11.a.C
+last_completed_numbered_bundle: 272
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11428,10 +11428,19 @@ Partial-/Legacy-Fallbackansicht folgt in 11.q.
 
 #### 11.a.R – Make it Right
 
-- [ ] **11.a.R** · Position **434/900** · Voraussetzung: `11.a.W`.
+- [x] **11.a.R** · Position **434/900** · Voraussetzung: `11.a.W`.
 **Exakte Commit-Message:** `11.a.R feat(documents): Dokumentrolle und Primärdokument vervollständigen`
 
 **Vervollständigung:** Fehlendes/mehrfaches Primärdokument und unzulässige Rollen blockieren; Partial/Legacy-Fallback bleibt ausdrücklich getrennt.
+
+**Vorbereiteter R-Stand (Bundle 272):** Die Rollenprüfung verweigert ausdrücklich
+partielle, andere oder konfigurierte Scope-Deskriptoren. Der angeforderte
+Vollprojekt-Rollenvertrag ist auch in der gemeinsamen Validierung an deren
+Eingabehash gebunden. Er prüft die gesamte gelieferte Dokumentmenge, einschließlich
+leerer Modelle und Dokumenten außerhalb ausgewählter Komponenten. Native Feld-,
+Identitäts- und Referenzfehler gehen der Kardinalitätsprüfung voraus. Die
+bisherige Loaded-Model-Prüfung bleibt ein engerer Vertrag; die vollständigen
+Dokumentsemantik-Provider werden durch den Rollencheck nicht ersetzt.
 
 **Verhaltensabnahme:** Datenfixtures prüfen Rollenanzahl und Annahme/Ablehnung statt gerenderter Überschriften. Die W-Nachweise bleiben zusätzlich grün.
 

@@ -49,7 +49,7 @@ class DocumentRoleAssessment:
         raise TypeError('Use roles_valid explicitly; this is not full validation')
 
 
-def assess_document_roles(model):
+def assess_document_roles(model, *, scope_descriptor=None):
     """Check all document records and exactly one non-retired primary.
 
     TargetModel owns the complete supplied inventory, not a proof of completeness
@@ -57,8 +57,13 @@ def assess_document_roles(model):
     legacy fallback and never substitutes a first or supporting document.
     """
     from ..changes.target_model import TargetModel, _default_scope
+    from ..graph.scope_descriptors import ScopeDescriptor
     if type(model) is not TargetModel:
         raise ModelError('document_target_model_required')
+    descriptor = ScopeDescriptor(_default_scope() if scope_descriptor is None else scope_descriptor).data
+    if (descriptor['scope_kind'] != 'project' or descriptor['boundary_policy'] != 'closed'
+            or descriptor['configuration_id'] is not None):
+        raise DocumentRoleError('document_full_project_scope_required', pointer='/scope_descriptor')
     model = model.snapshot()
     documents, primary, diagnostics = [], [], []
     for source in model.documents:
@@ -85,7 +90,6 @@ def assess_document_roles(model):
         diagnostics.append({'reason': 'document_primary_missing' if not primary else 'document_primary_multiple',
             'path': None, 'pointer': '/document_role', 'artifact_id': None,
             'related_ids': [row['artifact_id'] for row in primary], 'severity': 'error'})
-    descriptor = _default_scope()
     data = {'format_version': 'document-roles-v1', 'project_id': model.binding.project_id,
         'scope_descriptor': descriptor,
         'model_root_sha256': model.manifest(model.artifacts, descriptor).sha256,

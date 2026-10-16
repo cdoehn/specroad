@@ -30,7 +30,7 @@ from .production import production_gates, formal_findings, profile_applies
 
 
 def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None,
-                   configuration_id=None):
+                   configuration_id=None, document_role_scope=None):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -38,7 +38,19 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     dependency. Semantic checks use its dependency-expanded connected component.
     File inventory, actual prior lifecycle states and semantic service data must
     come from their trusted providers. Nothing is read, changed or downloaded.
+
+    document_role_scope='full_project' additionally checks the global primary
+    role across all supplied documents, even outside a selected component.
+    This explicit contract does not attest on-disk inventory or provide the
+    remaining document_model service. Ordinary loaded-model calls retain their
+    narrower contract. There is no partial/legacy fallback; combining this
+    contract with a configuration selection is refused.
     """
+    if document_role_scope is not None and (
+            type(document_role_scope) is not str or document_role_scope != 'full_project'):
+        raise ModelError('validation_document_role_scope_invalid')
+    if document_role_scope is not None and configuration_id is not None:
+        raise ModelError('validation_full_project_document_scope_required')
     documents = _sequence(documents, "validation_documents_required")
     if any(type(d) is not ModelDocument for d in documents):
         raise ModelError("validation_document_required")
@@ -76,6 +88,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         gates += builtins
         gate_index.update((g.gate_id, g) for g in builtins)
     basis = canonical_json_sha256({"version": VALIDATION_VERSION,
+        **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
         **({"resources_sha256": resources.sha256} if resources is not None else {}),
         **({'selected_configuration': configuration.binding} if configuration is not None else {}),
         "documents": _document_bindings(documents),
@@ -100,6 +113,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         failed = any(s["status"] == "failed" for s in stages)
         complete = all(s["status"] in ("passed", "failed", "not_applicable") for s in stages)
         return ValidationReport._create({"format_version": VALIDATION_VERSION,
+            **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
             **({'selected_configuration': configuration.binding} if configuration is not None else {}),
             "input_sha256": basis, "validation_scope": "loaded_model" if selected is None else "dependency_expanded_loaded_scope",
             "source_count": len(documents), "structural_scope": "all_supplied_documents",
@@ -164,6 +178,15 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         stage("graph", [_issue(error)])
         stage("model_semantics", status="blocked")
         return report()
+    if document_role_scope == 'full_project':
+        document_records = tuple(r for r in records if r.data['artifact_type'] == 'document')
+        primary = [r.identity.id for r in document_records if r.data['maturity'] != 'retired'
+                   and r.data['document_role'] == 'primary_specification']
+        findings = [] if len(primary) == 1 else [{
+            'reason': 'document_primary_missing' if not primary else 'document_primary_multiple',
+            'path': None, 'pointer': '/document_role', 'artifact_id': None,
+            'related_ids': primary, 'severity': 'error'}]
+        stage('document_roles', findings, ids=tuple(r.identity.id for r in document_records))
     index = {r.identity.id: r for r in records}
     checked = tuple(index) if selected is None else selected
     missing = [identity for identity in checked if identity not in index]

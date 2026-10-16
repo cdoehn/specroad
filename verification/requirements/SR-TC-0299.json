@@ -16,17 +16,26 @@
   ],
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
-    "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes."
+    "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes.",
+    "Refuse nonfull/configured declared scopes, malformed active or retired roles and invalid local fields. Request the bound full-project role stage in the actual shared validation pipeline; verify empty/missing/multiple primaries, unconnected selections, earlier schema/identity refusal, unchanged loaded-model defaults and absence of invented document services."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `document`-Artefakt MUSS mindestens Zweck, Zielgruppe, Sprache und Render-Policy enthalten.",
-    "scope": "11.a.W: full supplied-project document field and primary-role assessment using existing schemas. Exactly one non-retired primary produces its owned record, identity, revision, path and hashes. Missing or multiple candidates and invalid fields yield no selection; missing language is refused earlier by the common model schema. All other non-retired maturities count without lifecycle approval. This is source selection for a later specification view, not rendering, complete document-model validation, a live file inventory, a partial/legacy fallback or write authority."
+    "scope": "11.a.W: full supplied-project document field and primary-role assessment using existing schemas. Exactly one non-retired primary produces its owned record, identity, revision, path and hashes. Missing or multiple candidates and invalid fields yield no selection; missing language is refused earlier by the common model schema. All other non-retired maturities count without lifecycle approval. This is source selection for a later specification view, not rendering, complete document-model validation, a live file inventory, a partial/legacy fallback or write authority. 11.a.R adds explicit closed/unconfigured project scope admission and a requested document_role_scope=full_project stage in shared validation. Cardinality inspects all supplied records after native schema/identity/reference/graph checks; empty inventories and outside-selection primaries cannot bypass it. Input hashes bind the contract; missing document_model providers remain unavailable. Actual partial/legacy fallback remains 11.q."
   },
   "expected_diagnostics": [
+    "document_full_project_scope_required",
     "document_primary_missing",
     "document_primary_multiple",
-    "missing_field"
+    "duplicate_artifact_id",
+    "missing_field",
+    "schema_any_of",
+    "schema_enum",
+    "schema_min_length",
+    "schema_type",
+    "validation_document_role_scope_invalid",
+    "validation_full_project_document_scope_required"
   ],
   "expected_exit_codes": [
     3
@@ -72,10 +81,55 @@
     "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order2]",
     "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order3]",
     "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order4]",
-    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order5]"
+    "tests/test_document_roles.py::test_primary_selection_is_independent_of_input_order[order5]",
+    "tests/test_document_roles_right.py::test_a_new_model_revision_changes_selection_bindings_without_rewriting_the_old_report",
+    "tests/test_document_roles_right.py::test_a_passing_role_stage_does_not_supply_missing_document_composition_services",
+    "tests/test_document_roles_right.py::test_caller_scope_and_selection_mutations_cannot_change_an_observation",
+    "tests/test_document_roles_right.py::test_configuration_selection_cannot_claim_the_full_project_role_contract",
+    "tests/test_document_roles_right.py::test_duplicate_artifact_identity_is_not_reinterpreted_as_two_primary_documents",
+    "tests/test_document_roles_right.py::test_explicit_full_project_role_stage_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_document_roles_right.py::test_explicit_full_project_role_stage_runs_in_isolated_core_and_pyz[pyz]",
+    "tests/test_document_roles_right.py::test_explicit_full_scope_preserves_the_original_assessment",
+    "tests/test_document_roles_right.py::test_global_document_roles_cannot_be_hidden_by_an_unconnected_selected_component",
+    "tests/test_document_roles_right.py::test_invalid_document_data_does_not_invent_a_missing_or_multiple_primary_diagnosis",
+    "tests/test_document_roles_right.py::test_invalid_local_document_fields_keep_the_native_error_contract[audience-value1-schema_any_of]",
+    "tests/test_document_roles_right.py::test_invalid_local_document_fields_keep_the_native_error_contract[purpose--schema_min_length]",
+    "tests/test_document_roles_right.py::test_invalid_local_document_fields_keep_the_native_error_contract[render_policy-execute-schema_type]",
+    "tests/test_document_roles_right.py::test_loaded_model_and_requested_full_project_have_distinct_bound_validation_contracts",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[False-False]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[False-None]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[False-]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[False-primary]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[False-role2]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[False-role3]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[True-False]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[True-None]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[True-]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[True-primary]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[True-role2]",
+    "tests/test_document_roles_right.py::test_malformed_roles_in_any_document_never_leave_a_successful_selection[True-role3]",
+    "tests/test_document_roles_right.py::test_nonfull_or_configured_scope_cannot_be_relabelled_as_a_full_primary_check[scope0]",
+    "tests/test_document_roles_right.py::test_nonfull_or_configured_scope_cannot_be_relabelled_as_a_full_primary_check[scope1]",
+    "tests/test_document_roles_right.py::test_nonfull_or_configured_scope_cannot_be_relabelled_as_a_full_primary_check[scope2]",
+    "tests/test_document_roles_right.py::test_nonfull_or_configured_scope_cannot_be_relabelled_as_a_full_primary_check[scope3]",
+    "tests/test_document_roles_right.py::test_nonfull_or_configured_scope_cannot_be_relabelled_as_a_full_primary_check[scope4]",
+    "tests/test_document_roles_right.py::test_requested_full_project_validation_rejects_missing_primary_even_without_document_subjects[records0]",
+    "tests/test_document_roles_right.py::test_requested_full_project_validation_rejects_missing_primary_even_without_document_subjects[records1]",
+    "tests/test_document_roles_right.py::test_requested_full_project_validation_rejects_missing_primary_even_without_document_subjects[records2]",
+    "tests/test_document_roles_right.py::test_shared_schema_failure_precedes_role_selection_without_hiding_its_original_source",
+    "tests/test_document_roles_right.py::test_shared_validation_does_not_infer_or_alias_the_requested_role_contract[False]",
+    "tests/test_document_roles_right.py::test_shared_validation_does_not_infer_or_alias_the_requested_role_contract[True]",
+    "tests/test_document_roles_right.py::test_shared_validation_does_not_infer_or_alias_the_requested_role_contract[legacy]",
+    "tests/test_document_roles_right.py::test_shared_validation_does_not_infer_or_alias_the_requested_role_contract[partial]",
+    "tests/test_document_roles_right.py::test_shared_validation_does_not_infer_or_alias_the_requested_role_contract[project]",
+    "tests/test_document_roles_right.py::test_shared_validation_does_not_infer_or_alias_the_requested_role_contract[scope5]",
+    "tests/test_document_roles_right.py::test_unbound_model_inputs_never_become_a_document_role_observation[mapping]",
+    "tests/test_document_roles_right.py::test_unbound_model_inputs_never_become_a_document_role_observation[none]",
+    "tests/test_document_roles_right.py::test_unbound_model_inputs_never_become_a_document_role_observation[object]",
+    "tests/test_document_roles_right.py::test_unbound_model_inputs_never_become_a_document_role_observation[sequence]"
   ],
   "open_items": [
-    "Complete section/composition/payload/include/view semantics and shared validation integration in the assigned following document steps.",
+    "Complete section/composition/payload/include/view semantics in the assigned following document steps.",
     "The built-in specification view and explicit partial/legacy fallback are assigned to 11.q; no rendered or fallback view is claimed here.",
     "Targeted development observations and alternating Apply partitions are not a full-suite, cross-platform or release proof."
   ]

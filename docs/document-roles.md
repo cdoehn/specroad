@@ -27,3 +27,23 @@ The behavior tests cover exact stored selection, order independence, all
 non-retired maturity values, rejected missing/ambiguous primaries, required
 fields, owned reports, unchanged project bytes and isolated Core/PYZ parity.
 They do not compare rendered Markdown, HTML or terminal presentation.
+
+An explicit `scope_descriptor` must describe an unconfigured, closed `project`.
+Document, specification, partial and configured selectors cannot be relabelled
+as that full-project role contract. The descriptor is owned before assessment.
+This admission checks the declared scope, not the actual completeness of files
+on disk; the caller remains responsible for supplying the matching inventory.
+
+The shared `validate_model(..., document_role_scope='full_project')` pipeline
+also checks primary cardinality after native schema, identity/reference and
+graph checks. It checks all supplied document records even when `selected_ids`
+chooses an unconnected component, and rejects an empty or document-free model.
+The requested contract participates in the report's input hash. It cannot be
+combined with a configuration selection. Other role-scope values are refused.
+Ordinary loaded-model validation retains its existing contract and makes no
+claim about this additional full-project invariant.
+
+The `document_roles` stage is separate from `document_model`: a passing role
+stage does not supply missing composition, section, payload or view providers.
+Malformed fields retain native diagnostics, and duplicate identities cannot be
+misreported as two distinct primary documents. Neither path selects a fallback.
