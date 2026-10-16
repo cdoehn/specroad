@@ -14,12 +14,13 @@
   ],
   "steps": [
     "11.f.W: resolve embedded normalized queries and basic project views through the existing query engine; assert ordered typed rows, independent column projection, exact query totals/pagination, configuration filtering, unchanged source/revision/hash bindings, no 100-row view cap, explicit empty policy, literal width/types/copy rejection and Core/PYZ parity.",
-    "11.f.R: reject executable and alternate-source payloads, missing/wrong view references, incomplete view columns, unsupported scopes/providers, forged native queries and invalid pointers. Verify original byte/revision/model bindings, duplicate identity rejection, native sorting, exact cell errors and no file reads, writes, process or network effects."
+    "11.f.R: reject executable and alternate-source payloads, missing/wrong view references, incomplete view columns, unsupported scopes/providers, forged native queries and invalid pointers. Verify original byte/revision/model bindings, duplicate identity rejection, native sorting, exact cell errors and no file reads, writes, process or network effects.",
+    "11.f.C: rerun all unchanged W/R behavior tests after moving closed column/cell/literal/view declaration adaptation into a private helper. Snapshot binding and native query execution keep their original contracts; no separate block query language or new behavior is added."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Tabellen-Inhaltsblock DARF NICHT ausführbaren Templatecode enthalten.",
-    "scope": "11.f.W: immutable supplied-snapshot table data from native Query/SRX and original records, with exact query page plus separately declared typed column projection. Source/view/block/configuration/row hashes remain bound. Literal JSON remains data and copied artifact identities are refused; no templates, callbacks, I/O or rendering are executed. Tests do not inspect table layout or rendered Markdown/HTML. 11.f.R: full view columns are mandatory even when query columns override them or the filter is empty. No missing view/source identity fallback, scope widening or cached/fabricated source binding is allowed; original W contracts remain unchanged."
+    "scope": "11.f.W: immutable supplied-snapshot table data from native Query/SRX and original records, with exact query page plus separately declared typed column projection. Source/view/block/configuration/row hashes remain bound. Literal JSON remains data and copied artifact identities are refused; no templates, callbacks, I/O or rendering are executed. Tests do not inspect table layout or rendered Markdown/HTML. 11.f.R: full view columns are mandatory even when query columns override them or the filter is empty. No missing view/source identity fallback, scope widening or cached/fabricated source binding is allowed; original W contracts remain unchanged. 11.f.C changes only private structure: query normalization/filtering/order/pagination still use the existing Query/SRX engine and all W/R errors, typed rows, bindings and permitted effects remain unchanged."
   },
   "expected_diagnostics": [
     "table_query_empty",

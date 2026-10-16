@@ -65,3 +65,8 @@ created. Empty filters and query-column overrides do not suppress declaration
 validation. Byte-only source changes update source/input hashes while preserving
 semantic model roots, revisions and query results. The owned snapshot is resolved
 without opening source paths, running processes or accessing the network.
+
+The private table projection adapter owns closed column/cell/literal/view
+declarations. The public service retains snapshot binding and calls the native
+query engine. This separation introduces no block query language or additional
+execution provider. Public values and error classes retain their contracts.

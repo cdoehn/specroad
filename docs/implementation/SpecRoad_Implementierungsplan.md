@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 449
-last_completed_plan_commit: 11.f.R
-next_plan_commit: 11.f.C
+implementation_plan_commits_completed: 450
+last_completed_plan_commit: 11.f.C
+next_plan_commit: 11.g.W
 last_completed_numbered_bundle: 282
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11767,10 +11767,18 @@ Seiteneffektgrenze. Die W-Nachweise bleiben Bestandteil der gezielten Abnahme.
 
 #### 11.f.C – Make it Clean
 
-- [ ] **11.f.C** · Position **450/900** · Voraussetzung: `11.f.R`.
+- [x] **11.f.C** · Position **450/900** · Voraussetzung: `11.f.R`.
 **Exakte Commit-Message:** `11.f.C refactor(documents): Query- und Tabellenblöcke bereinigen`
 
 **Bereinigung:** Bestehende Queryengine statt eigener Blockabfragesprache verwenden.
+
+**Vorbereiteter C-Stand (Bundle 282):** Ein privater Adapter bündelt die
+geschlossenen Spalten-, Zell-, Literal- und View-Deklarationsprüfungen. Die
+öffentliche Auflösung behält Snapshot- und Quellbindung sowie den Aufruf der
+vorhandenen Queryengine; Normalisierung, Filter, Sortierung, Pagination und
+Pointerauswertung bleiben bei Query/SRX. Die extrahierten Funktionskörper
+bleiben bis auf die interne Methoden-/Fehlerklassenzuordnung identisch.
+Alle W-/R-Testfälle und ihre fachlichen Erwartungen bleiben unverändert.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
