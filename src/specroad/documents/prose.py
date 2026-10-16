@@ -83,26 +83,72 @@ class _Parser:
         if self.remaining < 0:
             self.fail('prose_complexity_limit')
 
-    def explicit_container_end(self, lines, index):
-        # The first usable subset requires explicit continuation indentation
-        # or quote markers. Refuse an ambiguous lazy continuation instead of
-        # silently assigning it to a different semantic container.
-        if index >= len(lines): return
-        line = lines[index].rstrip('\n')
-        if (line.strip(' \t') and not (self.fence(line) or _LIST.match(line)
-                or _QUOTE.match(line) or _thematic(line)
-                or re.match(r'^ {0,3}#{1,6}(?:[ \t]|$)', line))):
-            self.fail('prose_lazy_continuation_not_supported')
+    def indentation(self, line):
+        """Expand only leading indentation, preserving tabs in actual content."""
+        prefix = re.match(r'[ \t]*', line)[0]
+        return prefix.expandtabs(4) + line[len(prefix):]
+
+    def listing(self, line):
+        match = _LIST.match(self.indentation(line.rstrip('\n')))
+        if not match: return None
+        indent, marker, padding, content = match.groups()
+        column = len(indent) + len(marker)
+        expanded = ''
+        for char in padding or ' ':
+            amount = 4 - column % 4 if char == '\t' else 1
+            expanded += ' ' * amount; column += amount
+        if not content:
+            expanded = ' '; content = ''
+        elif len(expanded) > 4:
+            content = expanded[1:] + content; expanded = ' '
+        return marker, len(indent) + len(marker) + len(expanded), content
+
+    def quote_line(self, line):
+        match = re.match(r'^( {0,3})>(.*)$', self.indentation(line.rstrip('\n')))
+        if not match: return None
+        body = match[2]
+        if body.startswith('\t'):
+            body = ' ' * (3 - (len(match[1]) + 1) % 4) + body[1:]
+        elif body.startswith(' '): body = body[1:]
+        return body + ('\n' if line.endswith('\n') else '')
+
+    def interrupts(self, line):
+        line = self.indentation(line.rstrip('\n'))
+        listing = self.listing(line)
+        return (not line.strip(' \t') or self.fence(line) or _QUOTE.match(line)
+            or _thematic(line) or re.match(r'^ {0,3}#{1,6}(?:[ \t]|$)', line)
+            or listing and listing[2] and (not listing[0][0].isdigit() or int(listing[0][:-1]) == 1))
+
+    def paragraph_open(self, lines, depth):
+        if not lines or not lines[-1].strip(' \t\n'): return False
+        nodes = self.blocks(lines, depth)
+        while nodes:
+            node = nodes[-1]
+            if node['type'] == 'paragraph': return True
+            if node['type'] not in ('block_quote', 'bullet_list', 'ordered_list', 'list_item'):
+                return False
+            nodes = node['children']
+        return False
 
     def plain(self, value):
         """Decode text escapes once, with entities unable to introduce markup."""
         def entity(match):
+            if not match[0].startswith('&#') and match[0][1:] not in html.entities.html5:
+                return match[0]
             decoded = html.unescape(match[0])
             if any(char in '<>' or ord(char) < 32 or ord(char) == 127 for char in decoded):
                 self.fail('prose_active_entity')
             return decoded
-        value = _ENTITY.sub(entity, value)
-        return re.sub(r'\\([' + re.escape(string.punctuation) + r'])', r'\1', value)
+        result = []; index = 0
+        while index < len(value):
+            self.work()
+            if value[index] == '\\' and index + 1 < len(value) and value[index + 1] in string.punctuation:
+                result.append(value[index + 1]); index += 2; continue
+            match = _ENTITY.match(value, index) if value[index] == '&' else None
+            if match:
+                result.append(entity(match)); index = match.end(); continue
+            result.append(value[index]); index += 1
+        return ''.join(result)
 
     def attachment(self, value):
         value = self.plain(value)
@@ -126,9 +172,10 @@ class _Parser:
 
     def blocks(self, lines, depth=0):
         self.depth(depth)
+        self.work(sum(len(line) for line in lines))
         nodes = []; index = 0
         while index < len(lines):
-            raw = lines[index]; line = raw.rstrip('\n')
+            raw = lines[index]; line = self.indentation(raw.rstrip('\n'))
             if not line.strip(' \t'):
                 index += 1; continue
             fence = self.fence(line)
@@ -136,7 +183,7 @@ class _Parser:
                 indent, marker, info = fence.groups(); index += 1; content = []
                 closer = re.compile(r'^ {0,3}' + re.escape(marker[0]) + '{' + str(len(marker)) + r',}[ \t]*$')
                 while index < len(lines) and not closer.match(lines[index].rstrip('\n')):
-                    part = lines[index]
+                    part = self.indentation(lines[index]) if indent else lines[index]
                     trim = min(len(indent), len(part) - len(part.lstrip(' ')))
                     content.append(part[trim:]); index += 1
                 if index < len(lines): index += 1
@@ -149,72 +196,74 @@ class _Parser:
                 self.fail('prose_reference_definition_forbidden')
             if _thematic(line):
                 nodes.append({'type': 'thematic_break'}); index += 1; continue
-            quote = _QUOTE.match(line)
-            if quote:
-                quoted = []
+            quote = self.quote_line(raw)
+            if quote is not None:
+                quoted = []; lazy = None
                 while index < len(lines):
-                    match = _QUOTE.match(lines[index].rstrip('\n'))
-                    if not match: break
-                    quoted.append(match[1] + ('\n' if lines[index].endswith('\n') else ''))
-                    index += 1
+                    quoted_line = self.quote_line(lines[index])
+                    if quoted_line is not None:
+                        quoted.append(quoted_line); index += 1; lazy = None; continue
+                    if self.interrupts(lines[index]) or re.match(r'^ {0,3}(?:=+|-+)[ \t]*\n?$', lines[index]):
+                        break
+                    if lazy is None: lazy = self.paragraph_open(quoted, depth + 1)
+                    if not lazy: break
+                    quoted.append(lines[index]); index += 1
                 nodes.append({'type': 'block_quote', 'children': self.blocks(quoted, depth + 1)})
-                self.explicit_container_end(lines, index)
                 continue
-            listing = _LIST.match(line)
+            listing = self.listing(line)
             if listing:
-                marker = listing[2]; ordered = marker[0].isdigit(); items = []
+                marker = listing[0]; ordered = marker[0].isdigit(); items = []
                 kind = marker[-1] if ordered else marker
                 while index < len(lines):
-                    item = _LIST.match(lines[index].rstrip('\n'))
+                    item = self.listing(lines[index])
                     if (not item or _thematic(lines[index].rstrip('\n'))
-                            or item[2][0].isdigit() != ordered or item[2][-1] != kind):
+                            or item[0][0].isdigit() != ordered or item[0][-1] != kind):
                         break
-                    padding = item[3] or ' '
-                    width = len(item[1]) + len(item[2]) + len(padding.expandtabs(4))
-                    if '\t' in padding or len(padding) > 4:
-                        self.fail('prose_list_indentation_not_supported')
-                    content = [(item[4] or '') + ('\n' if lines[index].endswith('\n') else '')]
-                    index += 1
+                    width = item[1]
+                    content = [item[2] + ('\n' if lines[index].endswith('\n') else '')]
+                    index += 1; lazy = None
                     while index < len(lines):
-                        part = lines[index]
+                        part = self.indentation(lines[index])
                         if not part.strip(' \t\n'):
                             # Blank lines belong to the item only when a next
                             # indented block or peer item actually follows.
                             probe = index + 1
                             while probe < len(lines) and not lines[probe].strip(' \t\n'): probe += 1
                             if probe == len(lines): break
-                            if lines[probe].startswith(' ' * width):
-                                content.append(part); index += 1; continue
+                            if self.indentation(lines[probe]).startswith(' ' * width):
+                                content.append(part); index += 1; lazy = False; continue
                             break
-                        if not part.startswith(' ' * width): break
-                        content.append(part[width:]); index += 1
+                        if part.startswith(' ' * width):
+                            content.append(part[width:]); index += 1; lazy = None; continue
+                        if self.listing(part) or self.interrupts(part): break
+                        if lazy is None: lazy = self.paragraph_open(content, depth + 1)
+                        if not lazy: break
+                        content.append(part); index += 1
                     items.append({'type': 'list_item', 'children': self.blocks(content, depth + 1)})
                     probe = index
                     while probe < len(lines) and not lines[probe].strip(' \t\n'): probe += 1
-                    peer = _LIST.match(lines[probe].rstrip('\n')) if probe < len(lines) else None
-                    if peer and peer[2][0].isdigit() == ordered and peer[2][-1] == kind:
+                    peer = self.listing(lines[probe]) if probe < len(lines) else None
+                    if peer and peer[0][0].isdigit() == ordered and peer[0][-1] == kind:
                         index = probe
                     else: break
                 node = {'type': 'ordered_list' if ordered else 'bullet_list', 'children': items}
                 if ordered: node['start'] = int(marker[:-1])
-                self.explicit_container_end(lines, index)
                 nodes.append(node); continue
             if line.startswith(('    ', '\t')):
                 self.fail('prose_indented_code_forbidden')
             paragraph = [line.lstrip(' ')]; index += 1
             while index < len(lines) and lines[index].strip(' \t\n'):
-                part = lines[index].rstrip('\n')
+                part = self.indentation(lines[index].rstrip('\n'))
                 if re.match(r'^ {0,3}(?:=+|-+)[ \t]*$', part):
                     self.fail('prose_heading_forbidden')
-                if (self.fence(part) or _QUOTE.match(part) or _thematic(part)
-                        or re.match(r'^ {0,3}#{1,6}(?:[ \t]|$)', part)):
-                    break
-                listing = _LIST.match(part)
-                if listing and (not listing[2][0].isdigit() or listing[2][:-1] == '1'):
+                if self.interrupts(part):
                     break
                 paragraph.append(part.lstrip(' \t')); index += 1
+            joined = '\n'.join(paragraph).rstrip(' \t')
+            if re.match(r'^\[(?:\\.|[^\]\\])+\]:', joined, re.S):
+                self.fail('prose_reference_definition_forbidden')
             nodes.append({'type': 'paragraph',
-                          'children': self.inlines('\n'.join(paragraph).rstrip(' \t'), depth + 1)})
+                          'children': self.inlines(joined, depth + 1)})
         return nodes
 
     def code_end(self, value, index):
@@ -327,8 +376,8 @@ class _Parser:
                     tokens.append({'type': 'line_break'}); index += 2; continue
             if char == '\n' and tokens and tokens[-1].get('type') == 'text':
                 trailing = len(tokens[-1]['text']) - len(tokens[-1]['text'].rstrip(' '))
+                tokens[-1]['text'] = tokens[-1]['text'].rstrip(' \t')
                 if trailing >= 2:
-                    tokens[-1]['text'] = tokens[-1]['text'].rstrip(' ')
                     tokens.append({'type': 'line_break'}); index += 1; continue
             if char == '`':
                 run, end = self.code_end(value, index)

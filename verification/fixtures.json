@@ -27,6 +27,7 @@
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
+    "SR-FIX-DOCUMENT-PROSE-RIGHT-v1",
     "SR-FIX-DOCUMENT-PROSE-v1",
     "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1",
     "SR-FIX-DOCUMENT-REFERENCES-v1",
@@ -413,6 +414,10 @@
     "SR-FIX-DOCUMENT-PROSE-v1": {
       "provider": "tests/test_document_prose.py:prose",
       "kind": "Native prose/admonition source bytes, safe semantic node trees, LF/Unicode source bindings, internal attachment paths, forbidden active content and real isolated Core/PYZ execution. No rendered-output oracle."
+    },
+    "SR-FIX-DOCUMENT-PROSE-RIGHT-v1": {
+      "provider": "tests/test_document_prose_right.py:CASES",
+      "kind": "Native prose/admonition bytes with lazy/nested containers, tabs, entity and escape precedence, hostile internal/foreign destinations, inert include/code/title data, structured resource limits and isolated Core/PYZ parity."
     }
   }
 }

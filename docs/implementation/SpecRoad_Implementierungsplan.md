@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 445
-last_completed_plan_commit: 11.e.W
-next_plan_commit: 11.e.R
-last_completed_numbered_bundle: 279
+implementation_plan_commits_completed: 446
+last_completed_plan_commit: 11.e.R
+next_plan_commit: 11.e.C
+last_completed_numbered_bundle: 280
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11679,10 +11679,22 @@ keine Darstellung. Vollständige Dokumentvalidierung und Rendering bleiben offen
 
 #### 11.e.R – Make it Right
 
-- [ ] **11.e.R** · Position **446/900** · Voraussetzung: `11.e.W`.
+- [x] **11.e.R** · Position **446/900** · Voraussetzung: `11.e.W`.
 **Exakte Commit-Message:** `11.e.R feat(documents): Sicheres CommonMark-Kernsubset vervollständigen`
 
 **Vervollständigung:** Aktives HTML, Skripte und externe Includes nicht in ausführbare Knoten übernehmen.
+
+**Vorbereiteter R-Stand (Bundle 280):** Lazy-Absatzfortsetzungen, verschachtelte
+Container, Tabstopps und Listeneinrückung werden gemäß dem begrenzten Kernsubset
+behandelt. Unbekannte Entities bleiben Text; Escapes und Entities werden nur
+einmal ausgewertet. Mehrzeilige Referenzdefinitionen, verschleierte fremde oder
+traversierende Anhangsziele, aktive Inhalte und verschachtelte Links werden
+abgewiesen. Fremde Include-Schreibweisen erhalten ausschließlich Textsemantik;
+Code und Klartexttitel können keine ausführbaren Knoten erzeugen. Der begrenzte
+Parseraufwand erfasst auch wiederholte Such- und Containeroperationen. Neue
+Verhaltenstests prüfen diese Grenzen, echte unveränderte Dateien, blockierte
+Lese-/Netz-/Prozesszugriffe, strukturierte Ressourcenfehler und Core-/PYZ-Parität.
+Die W-Nachweise und passiven Record-/Suchverträge bleiben erhalten.
 
 **Verhaltensabnahme:** Parser-/Sicherheitsfälle prüfen erlaubte Knoten und verbotene Effekte, nicht resultierende Markdown-/HTMLbytes. Die W-Nachweise bleiben zusätzlich grün.
 

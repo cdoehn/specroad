@@ -6,7 +6,7 @@ bytes and returns detached semantic data. LF normalization affects parsing and
 the normalized-text hash only; the stored payload and its source hash remain
 unchanged. The result also binds the block, revision, payload and node hashes.
 
-The first implementation supports paragraphs, emphasis/strong, inline code,
+The parser supports paragraphs, emphasis/strong, inline code,
 backtick/tilde fenced code, ordered/bullet lists, block quotes, thematic breaks,
 and inline attachment links/images. Paragraph text includes soft line endings;
 explicit hard breaks use `line_break`. Code and admonition titles are inert
@@ -29,11 +29,20 @@ There is no extension registry, template engine, process launch or network/file
 loader. A renderer must consume the typed nodes and escape text; passing a text
 or code field to an HTML interpreter would violate this data contract.
 
-The W scope requires explicit quote markers and list continuation indentation.
-Lazy container continuations and tab/overwide list-marker padding are currently
-refused; they are robustness work for 11.e.R. This is not a claim of complete
-CommonMark conformance. Inputs are bounded to 1 MiB UTF-8, 64 semantic nesting
-levels and a parser work budget; exhaustion is a structured `ProseError`.
+The R implementation supports lazy paragraph continuations inside quotes and
+lists, including nested containers. Blank lines and closed code fences end the
+relevant paragraph context. Indentation uses four-column tab stops while actual
+text/code tabs remain literal. Excess list padding follows the block rules;
+an indented code block is still outside the declared subset. Unknown entity
+names stay literal, backslash escapes take precedence, and decoded text is never
+parsed a second time as markup. Multiline reference definitions are rejected.
+
+Foreign include directives are ordinary text, without extension/loader
+semantics. Nested links are refused; attachment query/fragment syntax remains
+outside the project-path contract. This is not a claim of complete CommonMark
+conformance. Inputs are bounded to 1 MiB UTF-8, 64 semantic nesting levels and a
+parser work budget; exhaustion is a structured `ProseError`. The budget also
+covers repeated bracket/backtick scans and container probes.
 
 `validation_scope=owned_prose_nodes` and `prose_parsed=true` attest only this
 parse. Attachment resolution, whole-project validation, rendering, writes and
