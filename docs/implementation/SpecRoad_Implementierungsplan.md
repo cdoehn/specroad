@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 429
-last_completed_plan_commit: 10.h.C
-next_plan_commit: 10.i.W
-last_completed_numbered_bundle: 268
+implementation_plan_commits_completed: 430
+last_completed_plan_commit: 10.i.W
+next_plan_commit: 10.i.R
+last_completed_numbered_bundle: 269
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11333,10 +11333,20 @@ unverändert; ein erfolgreicher M13-Provider wird weiterhin nicht vorgetäuscht.
 
 #### 10.i.W – Let it Work
 
-- [ ] **10.i.W** · Position **430/900** · Voraussetzung: `10.h.C`.
+- [x] **10.i.W** · Position **430/900** · Voraussetzung: `10.h.C`.
 **Exakte Commit-Message:** `10.i.W feat(baseline): Snapshot-Workparität und Crashregression aufbauen`
 
 **Umsetzung:** Große Baselines mit blockweiser Objektsicherung und Workfortsetzung integrieren.
+
+**Vorbereiteter W-Stand (Bundle 269):** Der Baselineadapter verwendet den
+bestehenden blockweisen Eingangssnapshot und bindet dessen vollständige Bytes
+an das gelieferte Modell. Geteilte Erfassung und Einzellauf erzeugen denselben
+nativen Working-Plan mit demselben Manifest und denselben Objekten. Nach der
+Versiegelung übernimmt das vorhandene Work-Format die dauerhaften Prüfphasen
+und genau eine native Veröffentlichung einschließlich Receipt-Replay. Die
+Erfassung selbst bleibt zunächst innerhalb des laufenden Prozesses fortsetzbar;
+partielle Capture-Checkpoints über Prozessgrenzen und speicherbegrenzte
+Gesamtmodellplanung sind damit noch nicht implementiert.
 
 **Verhaltensabnahme:** Geteilter Aufbau liefert dasselbe vollständige Manifest wie ein Einzellauf.
 

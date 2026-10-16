@@ -271,3 +271,29 @@ external release selection instead of discarding it.
 Stored-selection binding is kept in an internal helper. The public observation
 and its closed admission method retain the same values, conflicts and no-write
 contract; integrating a real readiness service remains M13 work.
+
+## Baseline capture and Work continuation
+
+`archive.work.BaselineSnapshotTask(model, block_bytes=...)` uses the existing
+`InputSnapshotTask` to capture exactly the supplied TargetModel's source files.
+`advance(max_units)` retains live progress with reads capped at 65536 bytes.
+After sealing, every captured byte must match the owned model; a different
+source or root is a `BaselineSnapshotConflict` with `exit_code=6`. The observation
+identifies its supplied-input scope and grants no write or completeness claim
+about an independently discovered project.
+
+`prepare_working_plan(...)` then returns the ordinary working-Baseline preview.
+`prepare_work(registry, ...)` requires successful target validation and returns
+the existing inert normative WorkManifest with its original saved ChangePlan.
+The caller explicitly persists it using the normal WorkDirectory/CheckpointStore.
+`advance_baseline_work(...)` supplies the native Baseline gates to each existing
+Work preparation phase. `publish_baseline_work(...)` uses the original Work
+transaction, current checks and authority, and replays a confirmed receipt.
+The caller still supplies its current model, actor, request ID and authorization.
+
+Capture can be divided across calls in one invocation; it is not itself a
+durable checkpoint. Durable continuation begins with the complete WorkManifest.
+Planning and the Work codec retain their existing whole-byte memory behavior.
+There is no partial Baseline publication, new snapshot store, automatic recovery,
+CLI registration or release permission. The adapters do not mark final Work
+result delivery completed.

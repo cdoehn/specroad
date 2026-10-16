@@ -7,7 +7,8 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-BASELINE-CREATION-v1"
+    "SR-FIX-BASELINE-CREATION-v1",
+    "SR-FIX-BASELINE-WORK-v1"
   ],
   "preconditions": [
     "Trusted host supplies complete TargetModel/history, explicit random128 Baseline identity, audit values, native publication authority and all applicable semantic gates."
@@ -15,7 +16,9 @@
   "steps": [
     "Prepare and save a working-Baseline plan, then execute its exact bytes through the actual native transaction protocol; reject invalid model, changed sources, missing/changed objects, absent gates and denied authority.",
     "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state.",
-    "Re-run the unchanged W/R behavior tests after separating the unchanged planning function from the native publication adapter."
+    "Re-run the unchanged W/R behavior tests after separating the unchanged planning function from the native publication adapter.",
+    "Capture actual supplied Baseline inputs in bounded blocks and compare the split saved-plan/manifest/object bytes with ordinary single-run preparation.",
+    "Persist and resume the existing Work preparation generations, then use the same native Baseline transaction and original receipt replay."
   ],
   "oracle": {
     "kind": "behavior",
@@ -90,10 +93,35 @@
     "tests/test_baseline_creation_right.py::test_self_consistent_saved_declarations_cannot_override_actual_snapshot_inputs[manifest_role]",
     "tests/test_baseline_creation_right.py::test_self_consistent_saved_declarations_cannot_override_actual_snapshot_inputs[model_root_sha256]",
     "tests/test_baseline_creation_right.py::test_self_consistent_saved_declarations_cannot_override_actual_snapshot_inputs[source_path]",
-    "tests/test_baseline_creation_right.py::test_source_change_after_journal_creation_cannot_enter_the_snapshot"
+    "tests/test_baseline_creation_right.py::test_source_change_after_journal_creation_cannot_enter_the_snapshot",
+    "tests/test_baseline_work.py::test_actual_captured_bytes_must_match_the_owned_model",
+    "tests/test_baseline_work.py::test_actual_target_gate_refusal_cannot_create_a_work_manifest",
+    "tests/test_baseline_work.py::test_capture_and_native_plan_parity_run_in_isolated_core_and_pyz[core]",
+    "tests/test_baseline_work.py::test_capture_and_native_plan_parity_run_in_isolated_core_and_pyz[pyz]",
+    "tests/test_baseline_work.py::test_closed_partial_capture_cannot_be_promoted_by_detached_progress",
+    "tests/test_baseline_work.py::test_fresh_work_controllers_publish_exact_saved_baseline_once[False]",
+    "tests/test_baseline_work.py::test_fresh_work_controllers_publish_exact_saved_baseline_once[True]",
+    "tests/test_baseline_work.py::test_incomplete_capture_cannot_make_a_plan_or_work_manifest[0]",
+    "tests/test_baseline_work.py::test_incomplete_capture_cannot_make_a_plan_or_work_manifest[1]",
+    "tests/test_baseline_work.py::test_incomplete_capture_cannot_make_a_plan_or_work_manifest[3]",
+    "tests/test_baseline_work.py::test_invalid_target_cannot_become_a_ready_work_preparation",
+    "tests/test_baseline_work.py::test_large_source_is_read_once_in_bounded_blocks_across_windows",
+    "tests/test_baseline_work.py::test_live_capture_is_not_a_serialized_durable_checkpoint[copy]",
+    "tests/test_baseline_work.py::test_live_capture_is_not_a_serialized_durable_checkpoint[deepcopy]",
+    "tests/test_baseline_work.py::test_live_capture_is_not_a_serialized_durable_checkpoint[dumps]",
+    "tests/test_baseline_work.py::test_missing_input_is_reported_without_publishing_any_baseline",
+    "tests/test_baseline_work.py::test_replaced_source_root_is_not_accepted_as_the_original_model",
+    "tests/test_baseline_work.py::test_sealed_owned_inputs_prepare_work_without_rereading_a_later_tree",
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[False-100000]",
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[False-1]",
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[False-7]",
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-100000]",
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-1]",
+    "tests/test_baseline_work.py::test_split_capture_builds_the_exact_single_run_manifest_objects_and_work[True-7]"
   ],
   "open_items": [
     "CLI integration, selected/configured scopes, installed language package snapshot providers, general historical verification and release readiness remain separate integration work.",
-    "These targeted tests and the alternating Apply partition are not a full-suite or release proof."
+    "These targeted tests and the alternating Apply partition are not a full-suite or release proof.",
+    "Partial input capture is currently invocation-local; cross-process capture checkpoints, bounded-memory whole-model planning and the extended Baseline Work crash matrix remain open."
   ]
 }

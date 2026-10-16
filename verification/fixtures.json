@@ -9,6 +9,7 @@
     "SR-FIX-BASELINE-MANIFEST-v1",
     "SR-FIX-BASELINE-MATERIALIZATION-v1",
     "SR-FIX-BASELINE-VERIFICATION-v1",
+    "SR-FIX-BASELINE-WORK-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-CHANGE-EXECUTION-v1",
@@ -373,6 +374,10 @@
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1": {
       "provider": "tests/test_release_baseline_boundary.py:release_project",
       "kind": "Actual native project and stored Release policy; unavailable readiness observations, explicit working/release dispatch, unchanged working publication, no-write release refusal and isolated Core/PYZ checks. Stored object selection precedence, full value ownership, external conflict, hostile readiness reports/host gates and saved-plan publication rejection."
+    },
+    "SR-FIX-BASELINE-WORK-v1": {
+      "provider": "tests/test_baseline_work.py:large_project",
+      "kind": "Actual supplied project bytes, bounded native input capture, direct/split baseline parity, existing durable Work checkpoint generations and native single publication/replay."
     }
   }
 }
