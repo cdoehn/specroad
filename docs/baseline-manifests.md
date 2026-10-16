@@ -235,3 +235,25 @@ The closed native variant selection is isolated in `_configured_project`;
 verification and materialization share the metadata-only role set in
 `_snapshot_values`. These internal boundaries preserve the same snapshot bytes,
 selection checks, diagnostics and publication contracts.
+
+## Release-Baseline admission boundary
+
+`archive.creation.prepare_baseline_creation(..., baseline_kind='working')`
+uses the same saved-plan preparation and native publication contract as
+`prepare_working_baseline`, including an optional configuration selection.
+An explicit `release` request requires its stored `release_id` and reaches the
+closed readiness boundary; it never falls back to a working snapshot.
+
+`assess_release_baseline_readiness(model, release_id=...)` returns an owned
+read-only observation of actual stored Release fields. It binds the Release ID,
+revision and record hash, and the optional stored evaluation hash. Presence of a
+descriptor does not validate its schema, model state, required runs or Evidence.
+The report always exposes the unavailable provider, unevaluated readiness and
+absent publication/release authority. `require_ready()` refuses with
+`release_baseline_readiness_required`; no release plan, object or transaction is
+created. Existing inert `build_baseline_manifest(..., baseline_kind='release')`
+values remain prepared data without release permission.
+
+M13 must supply the complete stored-selection and readiness contract before
+release publication can be enabled. Caller success labels and a general
+publication authority are no substitute for that service.

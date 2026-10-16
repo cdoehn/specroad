@@ -50,6 +50,7 @@
     "SR-FIX-REFERENCE-FINDINGS-v1",
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-RELATIONS-v1",
+    "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
@@ -368,6 +369,10 @@
     "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1": {
       "provider": "tests/test_configured_baseline_right.py:variant_project",
       "kind": "Actual native project, inherited configuration choices and conditional requirements; saved-plan publication, archive-only historic integrity, missing/rebound chain bytes, isolated materialization/comparison and Core/PYZ verification."
+    },
+    "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1": {
+      "provider": "tests/test_release_baseline_boundary.py:release_project",
+      "kind": "Actual native project and stored Release policy; unavailable readiness observations, explicit working/release dispatch, unchanged working publication, no-write release refusal and isolated Core/PYZ checks."
     }
   }
 }

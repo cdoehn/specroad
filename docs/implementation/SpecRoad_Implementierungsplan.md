@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 426
-last_completed_plan_commit: 10.g.C
-next_plan_commit: 10.h.W
-last_completed_numbered_bundle: 266
+implementation_plan_commits_completed: 427
+last_completed_plan_commit: 10.h.W
+next_plan_commit: 10.h.R
+last_completed_numbered_bundle: 267
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11276,10 +11276,18 @@ bleiben unverändert.
 
 #### 10.h.W – Let it Work
 
-- [ ] **10.h.W** · Position **427/900** · Voraussetzung: `10.g.C`.
+- [x] **10.h.W** · Position **427/900** · Voraussetzung: `10.g.C`.
 **Exakte Commit-Message:** `10.h.W feat(baseline): Release-Baseline-Grenze vorbereiten aufbauen`
 
 **Umsetzung:** Releaseart und Gateanschluss vorsehen, aber Veröffentlichung ohne implementierte gespeicherte Bewertungsauswahl verweigern.
+
+**Vorbereiteter W-Stand (Bundle 267):** Ein expliziter Baseline-Erstellungseinstieg
+verwendet für Working unverändert die vorhandene native Plan-/Transaktionskette.
+Release-Anfragen binden die tatsächlich gespeicherte Release-Identität und
+Policy, melden die noch fehlende Readiness-Auswertung und bleiben vor jeder
+Plan-, Objekt- oder Transaktionserstellung gesperrt. Eine vorhandene Auswahl
+ist kein Validierungsnachweis. M13 muss die vollständige gespeicherte
+Bewertungsauswahl und Readiness-Prüfung implementieren; SR-TC-0150 bleibt partial.
 
 **Verhaltensabnahme:** Working-Baseline ist nutzbar; nicht erfüllbares Releasegate bleibt geschlossen.
 

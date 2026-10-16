@@ -4,7 +4,7 @@ Preparation returns a saveable plan; execution never reallocates or silently
 replans it. The trusted host supplies model/history, ID/time and semantic gates.
 No CLI registration, release readiness or general historical verifier is implied.
 """
-from ._working_plan import prepare_working_baseline
+from ._working_plan import prepare_working_baseline, prepare_baseline_creation
 from ..authoring.execution import apply_authoring_plan
 
 

@@ -4,15 +4,24 @@
   "requirement_id": "SR-REQ-0150",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0011",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1"
+  ],
+  "preconditions": [
+    "Actual supplied TargetModel bytes with a structurally valid Release record and explicit identity; the M13 readiness/Evidence-evaluation provider is not implemented."
+  ],
+  "steps": [
+    "Observe and bind the actual stored Release revision, record and optional evaluation hash without claiming descriptor validity or readiness.",
+    "Prepare and publish ordinary and configuration-bound working Baselines through the unchanged native saved-plan path.",
+    "Request release creation with missing or stored selection and asserted success labels; require refusal before archive, plan or transaction creation.",
+    "Verify identity selection, detached-value ownership, no current-tree/Git fallback, rejected working-operation relabeling and isolated Core/PYZ behavior."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine Release-Baseline DARF nur erzeugt werden, wenn die Readiness-Policy einschließlich einer im Release gespeicherten, gültigen Bewertungsauswahl nach Kapitel 10.5.4 erfüllt ist.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Closed release-admission boundary only: the native creation dispatcher preserves working behavior and cannot produce a release plan while the real readiness provider is unavailable. The read-only observation binds actual stored data but explicitly does not validate or approve an evaluation descriptor, required runs, Evidence, project or release."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +37,33 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_release_baseline_boundary.py::test_detached_readiness_mutation_cannot_open_release_admission",
+    "tests/test_release_baseline_boundary.py::test_explicit_working_kind_preserves_the_existing_plan_and_native_publication[False]",
+    "tests/test_release_baseline_boundary.py::test_explicit_working_kind_preserves_the_existing_plan_and_native_publication[True]",
+    "tests/test_release_baseline_boundary.py::test_missing_release_cannot_select_a_different_existing_release",
+    "tests/test_release_baseline_boundary.py::test_relabeling_a_prepared_working_operation_keeps_the_existing_release_boundary_closed",
+    "tests/test_release_baseline_boundary.py::test_release_gate_requires_an_explicit_matching_release_identity[None]",
+    "tests/test_release_baseline_boundary.py::test_release_gate_requires_an_explicit_matching_release_identity[OTHER-REL-00000000000000000000000000]",
+    "tests/test_release_baseline_boundary.py::test_release_gate_requires_an_explicit_matching_release_identity[SR-GOAL-00000000000000000000000000]",
+    "tests/test_release_baseline_boundary.py::test_release_gate_requires_an_explicit_matching_release_identity[]",
+    "tests/test_release_baseline_boundary.py::test_release_observation_binds_stored_policy_without_inventing_readiness[None]",
+    "tests/test_release_baseline_boundary.py::test_release_observation_binds_stored_policy_without_inventing_readiness[evaluation1]",
+    "tests/test_release_baseline_boundary.py::test_release_observation_binds_stored_policy_without_inventing_readiness[evaluation2]",
+    "tests/test_release_baseline_boundary.py::test_release_observation_runs_in_isolated_core_and_pyz_without_native_services[core]",
+    "tests/test_release_baseline_boundary.py::test_release_observation_runs_in_isolated_core_and_pyz_without_native_services[pyz]",
+    "tests/test_release_baseline_boundary.py::test_release_preparation_refuses_before_any_baseline_object_plan_or_transaction_is_created[policy0]",
+    "tests/test_release_baseline_boundary.py::test_release_preparation_refuses_before_any_baseline_object_plan_or_transaction_is_created[policy1]",
+    "tests/test_release_baseline_boundary.py::test_release_preparation_refuses_before_any_baseline_object_plan_or_transaction_is_created[policy2]",
+    "tests/test_release_baseline_boundary.py::test_release_selector_cannot_be_silently_ignored_for_a_working_request",
+    "tests/test_release_baseline_boundary.py::test_unavailable_gate_uses_supplied_bytes_without_current_tree_or_git",
+    "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[None]",
+    "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[RELEASE]",
+    "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[True]",
+    "tests/test_release_baseline_boundary.py::test_unknown_baseline_kind_cannot_fall_back_to_working_creation[snapshot]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "M13 must implement the complete stored evaluation selection, approved scope, actual bound Evidence/readiness policy and release publication before this boundary can open.",
+    "CLI integration, release snapshot descriptor/value binding and successful release publication remain unimplemented."
   ]
 }
