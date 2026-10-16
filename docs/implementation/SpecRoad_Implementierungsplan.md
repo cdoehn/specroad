@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 417
-last_completed_plan_commit: 10.d.C
-next_plan_commit: 10.e.W
-last_completed_numbered_bundle: 260
+implementation_plan_commits_completed: 418
+last_completed_plan_commit: 10.e.W
+next_plan_commit: 10.e.R
+last_completed_numbered_bundle: 261
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11088,10 +11088,22 @@ bleiben unverändert. Alle W-/R-Testdateien bleiben bytegleich.
 
 #### 10.e.W – Let it Work
 
-- [ ] **10.e.W** · Position **418/900** · Voraussetzung: `10.d.C`.
+- [x] **10.e.W** · Position **418/900** · Voraussetzung: `10.d.C`.
 **Exakte Commit-Message:** `10.e.W feat(baseline): Baseline anzeigen und materialisieren aufbauen`
 
 **Umsetzung:** Gespeichertes Manifest und neu berechneten Integritätsstatus liefern; verifizierten Snapshot isoliert materialisieren.
+
+**Vorbereiteter W-Stand (Bundle 261):**
+`show_baseline_snapshot` liefert den gespeicherten Record mit frisch berechneter
+Integrität; fehlende oder veränderte Archivobjekte ergeben keinen alten Erfolg.
+`materialize_baseline_snapshot` stellt den bereits unterstützten unkonfigurierten
+Projektumfang in einem neuen privaten externen Root her. Fachbytes stammen nur
+aus geprüften Snapshotobjekten; Locale und Ausgabepfad sind explizite Betriebswerte.
+Die Konfiguration wird zuletzt geschrieben, der Modellwurzelhash danach aus den
+tatsächlichen Ausgabebytes erneut rekonstruiert. Bestehende/überlappende Ziele
+werden abgewiesen; unterbrochene Ausgaben bleiben erhalten. Keine Git-Abhängigkeit.
+CLI, weitere Scopes, Wiederaufnahme und plattformübergreifende Schreibintegration
+bleiben offen; die SR-TCs bleiben partial. Keine Vollvalidierungs-/Releasefreigabe.
 
 **Verhaltensabnahme:** Baseline funktioniert ohne Gitrepository.
 

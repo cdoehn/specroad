@@ -116,3 +116,29 @@ remain independently required. There is no cached success or default approval.
 The common-pipeline adapter is kept separately in `_validation_gate`; the
 verification facade retains the existing public registration function. This
 separation changes no object checks, gate binding, diagnostics or authority.
+
+
+`show_baseline_snapshot(boundary, record_bytes)` returns the stored Baseline
+record and a fresh integrity status. A well-formed record with missing or
+inconsistent archived bytes has `status: failed`; malformed records, unsafe
+paths and host I/O failures raise their existing exceptions. It never writes
+or reuses a prior successful report.
+
+`materialize_baseline_snapshot(boundary, record_bytes, destination,
+default_locale=..., generated_path=..., protected_roots=(...))` restores the
+supported unconfigured whole-project snapshot into a missing absolute path
+under a private owned canonical external parent. The archive is automatically
+protected; the host supplies every other protected project/input/output root.
+Native Linux descriptor guards and the existing exclusive writer primitives
+prevent replacement of an existing destination. The output has only the
+precreation project files, including any older Baselines and their referenced
+archive bytes. The new Baseline record itself is not inserted into its own root.
+
+The semantic configuration is retained exactly. Locale and generated path were
+excluded from its snapshot and therefore require explicit operational values;
+no current project supplies missing history. Configuration is written last.
+Every output byte is checked and the model root is independently reconstructed
+from the actual output files before success. Failure retains partial output;
+there is no automatic cleanup, resume or atomic directory-publication claim.
+This API does not provide CLI lookup, comparison, historical full validation,
+publication approval or release readiness.
