@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 443
-last_completed_plan_commit: 11.d.R
-next_plan_commit: 11.d.C
+implementation_plan_commits_completed: 444
+last_completed_plan_commit: 11.d.C
+next_plan_commit: 11.e.W
 last_completed_numbered_bundle: 278
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11632,10 +11632,19 @@ die geforderte Randfallabnahme einschließlich echter Core-/PYZ-Parität.
 
 #### 11.d.C – Make it Clean
 
-- [ ] **11.d.C** · Position **444/900** · Voraussetzung: `11.d.R`.
+- [x] **11.d.C** · Position **444/900** · Voraussetzung: `11.d.R`.
 **Exakte Commit-Message:** `11.d.C refactor(documents): Artefaktreferenzen ohne Kopien bereinigen`
 
 **Bereinigung:** Referenzauflösung von Formatausgabe und Dokumentownership trennen.
+
+**Vorbereiteter C-Stand (Bundle 278):** Ein internes Quellmodul bündelt die
+vorhandene Snapshot-, Block-, Relations- und Zielprüfung. Die öffentliche API
+bildet daraus dieselbe unveränderliche Datenprojektion und behält ihre
+Fehlerklasse. Der verschobene Prüfablauf bleibt strukturell gleich; weder
+Dokumentownership noch ein Renderer wird Teil der Referenzauflösung. Alle
+W-/R-Tests und betroffenen Regressionen bleiben unverändert und werden erneut
+gezielt parallel ausgeführt. Fachwerte, Bindungen, Fehler und Seiteneffekte
+werden durch diese Trennung nicht erweitert.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

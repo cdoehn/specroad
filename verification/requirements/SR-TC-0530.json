@@ -17,12 +17,13 @@
     "Resolve exactly one source-owned references relation from the selected artifact_ref block using the native snapshot and relation identity/matrix checks. Validate the selected target through its native type-specific field reader.",
     "Use separate blocks in two document compositions to resolve the same original target bytes, identity, revision and hashes; retain render_mode as data only, preserve source inventories and compare isolated Core/PYZ data.",
     "Reject zero/multiple references, missing target, other source kinds and malformed target fields.",
-    "11.d.R: exercise existing native guards against copied payload target IDs/content, duplicate target and relation identities, absent target aliases, wrong selectors, self references and changed owned sources. Compare both document projections after a target revision change and after a byte-only reformat, proving stable block bytes/revisions and preserved old projections. Include legacy/native target types and Core/PYZ parity."
+    "11.d.R: exercise existing native guards against copied payload target IDs/content, duplicate target and relation identities, absent target aliases, wrong selectors, self references and changed owned sources. Compare both document projections after a target revision change and after a byte-only reformat, proving stable block bytes/revisions and preserved old projections. Include legacy/native target types and Core/PYZ parity.",
+    "11.d.C: rerun unchanged W/R and affected native regressions after separating source/snapshot/edge/target checks from the public immutable projection; keep format rendering and document ownership external."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS Mehrfachreferenzen aus Dokumenten als Ansichten derselben normativen Artefaktidentität behandeln.",
-    "scope": "11.d.W/R: one source-owned references edge resolves actual target bytes. Native schema, inventory and graph guards already reject target copies and duplicate identities; the R phase adds focused behavioral evidence without changing those production guards. A new model snapshot exposes a changed target consistently in all projections while reference block bytes, revisions and edges remain unchanged. Byte-only target changes alter source/input bindings without inventing semantic revisions; previous resolutions retain their old owned bytes. No rendering, ownership decision, write or approval."
+    "scope": "11.d.W/R/C: one source-owned references edge resolves actual target bytes. Native schema, inventory and graph guards already reject target copies and duplicate identities; the R phase adds focused behavioral evidence without changing those production guards. A new model snapshot exposes a changed target consistently in all projections while reference block bytes, revisions and edges remain unchanged. Byte-only target changes alter source/input bindings without inventing semantic revisions; previous resolutions retain their old owned bytes. No rendering, ownership decision, write or approval. The internal source helper preserves the existing validation order, public error class, values, bindings and side effects."
   },
   "expected_diagnostics": [
     "artifact_reference_block_required",
@@ -116,7 +117,6 @@
     "tests/test_document_references_right.py::test_updated_target_projects_identically_to_both_document_references_in_core_and_pyz[pyz]"
   ],
   "open_items": [
-    "Complete 11.d.C separation of native source resolution from output projection without changing W/R contracts.",
     "Rendering, complete document semantics, project discovery and publication approval remain separate; this read-only API resolves references in the actual supplied model only.",
     "Targeted development and alternating Apply partitions are partial observations on their actual source states."
   ]

@@ -6,15 +6,10 @@ a second artifact, render output, determine document ownership or grant approval
 from dataclasses import dataclass
 from hashlib import sha256
 
-from ..graph.references import RelationReferences
-from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
-from ..model.domain_schemas import DOMAIN_TYPES
 from ..model.errors import ModelError
-from ..storage.domain_artifact import DomainArtifact
 from ..storage.json_syntax import parse_json_object
-from ..storage.record_artifact import RecordArtifact
-from .blocks import ContentBlock
+from ._reference_sources import _resolve_reference_sources
 
 
 class ArtifactReferenceError(ModelError):
@@ -56,29 +51,9 @@ def resolve_artifact_reference(model, block_id):
     on disk. Only the selected block and target receive type-specific field
     validation. Document composition and full model validation remain separate.
     """
-    from ..changes.target_model import TargetModel, _default_scope
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
-    if type(block_id) is not str:
-        raise ArtifactReferenceError('content_block_id_required', pointer='/block_id')
-    model = model.snapshot()
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
-    index = {record.identity.id: record for record in records}
-    source = index.get(block_id)
-    if source is None:
-        raise ArtifactReferenceError('content_block_not_found', pointer='/block_id')
-    if source.identity.artifact_type != 'content_block':
-        raise ArtifactReferenceError('artifact_reference_block_required', path=source.path, pointer='/block_id')
-    block = ContentBlock(source.source_bytes, path=source.path)
-    if block.block_kind != 'artifact_ref':
-        raise ArtifactReferenceError('artifact_reference_block_required', path=source.path, pointer='/block_kind')
-    RelationReferences(records)
-    position, relation = next((position, relation) for position, relation in enumerate(source.relations)
-                              if relation.type == 'references')
-    target = index[relation.target]
-    reader = DomainArtifact if target.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
-    target_record = reader(target.source_bytes, path=target.path)
-    value = target_record.data
+    from ..changes.target_model import _default_scope
+    model, source, block, position, relation, target, value = _resolve_reference_sources(
+        model, block_id, ArtifactReferenceError)
     descriptor = _default_scope()
     data = {'format_version': 'artifact-reference-v1', 'project_id': model.binding.project_id,
         'scope_descriptor': descriptor,

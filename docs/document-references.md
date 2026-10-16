@@ -42,3 +42,11 @@ retain their original snapshot. A byte-only reformat changes source/input hashes
 while preserving the canonical record hash, model root and stored revision.
 The R tests establish these boundaries through the existing native guards;
 no alternate validation path or additional target-copy mechanism is introduced.
+
+Internally, `documents._reference_sources` performs the native snapshot,
+selected-block, relation-graph and target-field checks. The public module builds
+the same immutable data projection from those source values and retains the
+public error class. The helper contains no document ownership decision or
+format renderer; those consumers can use the bound result independently.
+The existing W/R behavior, field errors, hashes and allowed side effects remain
+unchanged across this structural separation.
