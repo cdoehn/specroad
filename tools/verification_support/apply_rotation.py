@@ -1,4 +1,5 @@
 """Commit-bound Apply groups with persistent, append-only test numbers."""
+from hashlib import sha256
 import json
 import os
 from pathlib import Path
@@ -133,6 +134,20 @@ def partition_metadata(registry, sequence):
             "partition_index": sequence % 3, "rotation_anchor_commit": registry["rotation_anchor_commit"]}
 
 
+def selection_receipt(registry, raw, selected, head, sequence):
+    """Bind the actual numbered selection, without claiming a full-suite run."""
+    numbers = {identity: number for number, identity in enumerate(registry["test_ids"])}
+    binding = {"format_version": 1, "kind": "apply-selection-binding-v1",
+        "base_commit": head, "numbering_anchor_commit": registry["anchor_commit"],
+        "rotation_anchor_commit": registry["rotation_anchor_commit"],
+        "registry_sha256": sha256(raw).hexdigest(), "commit_sequence": sequence,
+        "partition_count": registry["partition_count"], "partition_index": sequence % registry["partition_count"],
+        "tests": [{"nodeid": node, "test_id": identity, "test_number": numbers[identity]}
+                  for node, identity in sorted(selected.items())]}
+    encoded = json.dumps(binding, sort_keys=True, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode()
+    return {"selection_binding": binding, "selection_sha256": sha256(encoded).hexdigest()}
+
+
 def parallel_command(root, outdir, expected, workers):
     if type(workers) is not int or workers < 2:
         raise ValueError("Apply tests require parallel workers")
@@ -154,10 +169,19 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
         raise ValueError("Full collection/catalog check failed; Apply tests not started")
     catalog = _load_report(catalog_path)
     binding = catalog["source_sha256"]
+    registry_raw = (root / REGISTRY).read_bytes()
     registry = _load_report(root / REGISTRY)
+    if (root / REGISTRY).read_bytes() != registry_raw:
+        raise ValueError("Apply registry changed while it was being read")
     validate_registry_shape(registry)
     head, sequence, previous = commit_context(root, registry)
     selected = select_partition(catalog["nodeid_to_test_id"], registry, sequence, previous)
+    receipt = {}
+    if registry["format_version"] == 2:
+        receipt = selection_receipt(registry, registry_raw, selected, head, sequence)
+        if (source_identity(root) != binding or (root / REGISTRY).read_bytes() != registry_raw
+                or commit_context(root, registry) != (head, sequence, previous)):
+            raise ValueError("Apply inputs changed before the selected tests could start")
     (outdir / "nodeids.txt").write_text("\n".join(selected) + "\n", encoding="utf-8")
     # pytest's native argument-file support avoids OS argument-length limits.
     command = parallel_command(root, outdir, len(selected), workers)
@@ -175,11 +199,12 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
         if (observation["nodeid_to_test_id"] != selected
                 or any(not name.startswith("gw") for name in observation["worker_test_counts"])
                 or code != 0 or source_identity(root) != binding
+                or (root / REGISTRY).read_bytes() != registry_raw
                 or commit_context(root, registry) != (head, sequence, previous)):
             raise ValueError("Nonpassing, changed or unbound Apply selection")
     except (OSError, ValueError, TypeError, KeyError, AttributeError, RecursionError):
         errors.append("nonpassing_or_unbound_partition")
-    result = {**partition_metadata(registry, sequence), "full_suite_passed": None,
+    result = {**partition_metadata(registry, sequence), **receipt, "full_suite_passed": None,
               "selected_passed": not errors, "source_sha256": binding,
               "base_commit": head, "anchor_commit": registry["anchor_commit"],
               "commit_sequence": sequence,

@@ -20,7 +20,7 @@ def main(argv=None):
     outdir = args.outdir or Path(tempfile.mkdtemp(prefix="specroad-apply-tests-")) / "gate"
     try:
         result = run_apply_partition(ROOT, outdir)
-        print(json.dumps({**{k: v for k, v in result.items() if k != "nodeid_to_test_id"},
+        print(json.dumps({**{k: v for k, v in result.items() if k not in ("nodeid_to_test_id", "selection_binding")},
                           "report_directory": str(outdir)}, sort_keys=True))
         return result["exit_code"]
     except (OSError, ValueError, TypeError, KeyError):

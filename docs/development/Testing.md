@@ -56,6 +56,12 @@ Testidentitäten, Quellbindung und `full_suite_passed: null`. Exitcode 0 setzt
 vollständige erfolgreiche Beobachtungen genau dieser Gruppe voraus. Über drei
 Commits sind bei unverändertem Bestand alle Tests vertreten, auf drei
 Codezuständen; das ergibt keinen Vollsuite- oder Release-Erfolgsnachweis.
+Der vollständige Bericht bindet zusätzlich die exakten Registrybytes und jede
+ausgewählte Testnummer in `selection_binding`; `selection_sha256` bindet dessen
+kanonische JSON-Darstellung. Die kompakte Prozessausgabe nennt den Hash, die
+vollständigen Zuordnungen stehen in `selection.json`. Änderungen von Quellen,
+Registry oder Commitbasis vor beziehungsweise während des Laufs verhindern
+einen Erfolgsnachweis. Fehlgeschlagene Reports bleiben erhalten.
 Berichte liegen außerhalb der Quellen; `--outdir` legt ein frisches Ziel fest.
 `--final-bundle-state` bleibt akzeptiert und ändert die Auswahl nicht.
 Es gibt keine Wiederholung und keinen seriellen Fallback.

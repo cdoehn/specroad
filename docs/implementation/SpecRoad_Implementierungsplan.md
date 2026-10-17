@@ -61,7 +61,12 @@ anschließend folgt unverändert **11.m.W**. Die Arbeitsregel steht in der lokal
 AGENTS.md, der ausführbare Vertrag in Runner und Registry.
 
 - [x] **APPLY-THIRDS.W:** Registry-Version 2, gebundene Migration und Modulo-3-Auswahl samt explizitem Teiltestbericht implementieren; historische Version 1 erhalten. Commit: `test(apply): Drei feste Testgruppen an erfolgreiche Commits binden`.
-- [ ] **APPLY-THIRDS.R:** Den Auswahlbericht um überprüfbare Nummern-/Registrybelege ergänzen und Änderungen während des Laufs abweisen. Commit: `test(apply): Drittelauswahl und Wiederholungen vollständig belegen`.
+- [x] **APPLY-THIRDS.R:** Den Auswahlbericht um überprüfbare Nummern-/Registrybelege ergänzen und Änderungen während des Laufs abweisen. Commit: `test(apply): Drittelauswahl und Wiederholungen vollständig belegen`.
+
+**R-Beleg:** Der Bericht bindet die ursprünglichen Registrybytes sowie Testidentität,
+Nummer, Gruppe und Commitbasis. Abweichende Beobachtungen, geänderte Eingaben und
+Wiederverwendung eines Reportverzeichnisses bleiben ohne Erfolgsnachweis erhalten.
+
 - [ ] **APPLY-THIRDS.C:** Unveränderte Registry- und Auswahlregeln vom Prozessrunner trennen; sämtliche W-/R-Testbytes erhalten. Commit: `refactor(testing): Registryvertrag der Apply-Rotation isolieren`.
 
 <a id="audit-nacharbeiten"></a>
