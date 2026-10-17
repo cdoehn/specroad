@@ -223,7 +223,7 @@
   ],
   "open_items": [
     "CLI writer registration, complete model/history discovery and ID allocation remain outside this explicit prepared-plan embedding API.",
-    "New mutation commands cover native block semantics; views, external attachment resources and unchanged non-draft history require actual explicit specialist services. Existing document/section commands retain their narrower service contract.",
+    "New mutation commands cover native block semantics; views, external attachment resources and unchanged non-draft history require actual explicit specialist services. Document creation and section addition retain their narrower service contract; section movement now uses the native block semantics and preservation guard under 11.j.",
     "Targeted development and alternating Apply half-suite observations do not certify a full-suite or release pass."
   ]
 }

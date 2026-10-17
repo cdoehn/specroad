@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 459
-last_completed_plan_commit: 11.i.C
-next_plan_commit: 11.j.W
-last_completed_numbered_bundle: 288
+implementation_plan_commits_completed: 460
+last_completed_plan_commit: 11.j.W
+next_plan_commit: 11.j.R
+last_completed_numbered_bundle: 289
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11939,12 +11939,14 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.j.W – Let it Work
 
-- [ ] **11.j.W** · Position **460/900** · Voraussetzung: `11.i.C`.
+- [x] **11.j.W** · Position **460/900** · Voraussetzung: `11.i.C`.
 **Exakte Commit-Message:** `11.j.W feat(documents): Revisionserhalt bei Komposition aufbauen`
 
 **Umsetzung:** Inhaltsartefakte beim Umordnen von Referenzen unverändert erhalten.
 
 **Verhaltensabnahme:** Move betrifft nur tatsächlich geänderte Dokumentressourcen.
+
+**W-Umfang:** `section.move` verwendet die vorhandenen nativen Blockprüfer und verlangt im verpflichtenden Dokumentgate ein unverändertes Artefaktinventar sowie bytegenau erhaltene Quellen außerhalb der beiden tatsächlichen Relationseigentümer. Reale Verschiebe-/Umordnungsvorgänge mit mehrfach referenziertem Inhalt prüfen Plan, Veröffentlichung, Originalbytes, Revisionen, Receipts und Readback. Nichtkanonische Originalformatierung wird bei unveränderten Artefakten ebenfalls erhalten; fehlende Lifecycle-/Fachdienste bleiben blockierend.
 
 #### 11.j.R – Make it Right
 

@@ -19,6 +19,7 @@
     "SR-FIX-CHANGE-TARGET-v1",
     "SR-FIX-CHANGED-SOURCES-v1",
     "SR-FIX-COMPARISON-SOURCE-v1",
+    "SR-FIX-COMPOSITION-PRESERVATION-v1",
     "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1",
     "SR-FIX-CONFIGURED-BASELINE-v1",
     "SR-FIX-CONTAINER-LANGUAGES-v1",
@@ -438,6 +439,10 @@
     "SR-FIX-DOCUMENT-MUTATIONS-v1": {
       "provider": "tests/test_document_mutations.py:mutation_project",
       "kind": "Real owned document project with nested sections and an owned block; prepared native operations, exact source guards and fresh relation identities. Actual publication, byte inventories, receipts and replay for seven block kinds, update, retirement, cascade and child reparenting. Host denial and invalid strategies preserve all files. R adds internally/externally shared block ownership, independent stale guards, forged saved operations, changed real source/profile bytes, conflicting replay and injected before/after-rename publication failure with actual journal/readback inventories. C retains exact W/R fixtures and behavior expectations while common native-operation construction is shared."
+    },
+    "SR-FIX-COMPOSITION-PRESERVATION-v1": {
+      "provider": "tests/test_document_composition_preservation.py:composition_project",
+      "kind": "Real temporary project with primary/supporting documents, nested sections and two reference blocks sharing one revision-7 requirement. Canonical and deliberately noncanonical original artifact bytes, actual native section moves, inventories, publication receipts, replay and reference/composition readback. Stale reference bytes and hostile host gates never authorize publication."
     }
   }
 }

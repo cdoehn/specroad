@@ -30,10 +30,11 @@ Completion-Proofs wiedererkannt. Ein Preview erteilt keine Schreibberechtigung.
 
 Rollenprüfung, eindeutiger Abschnittsparent und der native Contains-/Include-Graph
 werden für das gesamte gelieferte Zielmodell geprüft. Ein Host-Dokumentdienst
-kann diese Prüfungen nicht ersetzen. Der eingebaute Dokumentdienst deckt zunächst
-Modelle ab, deren Dokumentfachobjekte ausschließlich Dokumente und Abschnitte
-sind. Für Content Blocks und Views wird ein tatsächlich implementierter,
-expliziter `document_model`-Dienst benötigt; andere erforderliche Fachprüfungen,
+kann diese Prüfungen nicht ersetzen. Bei `document.create` und `section.add`
+deckt der eingebaute Dokumentdienst Modelle ab, deren Dokumentfachobjekte
+ausschließlich Dokumente und Abschnitte sind. Dort wird für Content Blocks und
+Views ein tatsächlich implementierter, expliziter `document_model`-Dienst benötigt;
+andere erforderliche Fachprüfungen,
 etwa Lifecycle oder externe Ressourcen, bleiben ebenfalls verbindlich.
 
 Die API registriert noch keinen CLI-Writer und übernimmt keine Projekt- oder
@@ -86,8 +87,8 @@ zusätzlich die vorhandenen Prosa-, Referenz-, Query-/Tabellen- und Include-Prü
 Ein permissiver Hostdienst kann sie nicht ersetzen. Allgemeine Views, externe
 Anhangsressourcen und unveränderte nicht im Plan behandelte Lifecycle-Historie
 benötigen weiterhin ihre wirklichen Fachdienste. Ein gespeicherter historischer
-Reifegrad allein ist kein historischer Freigabenachweis. Die drei bisherigen
-Dokument-/Abschnittsbefehle behalten ihren oben beschriebenen engeren Dienstumfang.
+Reifegrad allein ist kein historischer Freigabenachweis. `document.create` und
+`section.add` behalten ihren oben beschriebenen engeren Dienstumfang.
 
 Mehrere Contains-Vorkommen desselben Blocks innerhalb der Kaskade erzeugen genau
 eine Retire-Operation. Ihre Reihenfolge folgt dem ersten Vorkommen in der nativen
@@ -101,3 +102,13 @@ Die Komfortfunktionen teilen reine Operationserzeuger für Create-/Contains-Paar
 bewachte Relationsverschiebungen und vorbereitete Einzeloperationen. Die getrennten
 Strategie-, Fach- und Lifecycle-Prüfungen sowie der gemeinsame Saved-Plan-Writer
 bleiben dafür maßgeblich; die Erzeuger erteilen keine Schreibberechtigung.
+
+`section.move` verwendet ebenfalls die vorhandenen nativen Blockprüfer. Sein
+verpflichtendes Dokumentgate bindet zusätzlich den Revisionserhalt: Das
+Artefaktinventar bleibt gleich, und außerhalb der tatsächlich geänderten alten
+und neuen Relationseigentümer müssen sämtliche Artefaktquellen bytegleich bleiben.
+Dadurch bleiben auch nichtkanonische Originalformatierung, referenzierte IDs und
+Revisionen erhalten. Verschieben und Umordnen ändern allein die gespeicherten
+Contains-Relationen und die nativen Metadaten ihrer betroffenen Eigentümer. Ein
+weiterhin erforderlicher Lifecycle-, Evidence- oder Ressourcendienst wird durch
+diesen Erhaltsnachweis nicht ersetzt.

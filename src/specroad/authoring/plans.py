@@ -93,7 +93,8 @@ def _execution_inputs(model, command_id, operations, actor, planned_at, gates):
             _mutation_scope(model, command_id, owned)
             if not lifecycle:
                 gates += (_mutation_lifecycle(model, owned, actor=actor, planned_at=planned_at),)
-        gates = _document_gates(model, command_id, owned, gates, block_semantics=mutation)
+        gates = _document_gates(model, command_id, owned, gates,
+            block_semantics=mutation or command_id == 'section.move')
     return owned, policy, gates
 
 

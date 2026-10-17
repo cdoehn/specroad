@@ -36,6 +36,9 @@ def _document_gates(model, command_id, operations, gates, *, block_semantics=Fal
             **owned.reservations)
 
     def invariants(context):
+        if command_id == 'section.move':
+            from ._composition_preservation import _preserve_composition_sources
+            _preserve_composition_sources(owned, context.documents, operations)
         proposed = target(context)
         primary = assess_document_roles(proposed).require_primary_document()
         assess_document_structure(proposed).require_document(primary['artifact_id'])

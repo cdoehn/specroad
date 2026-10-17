@@ -4,19 +4,39 @@
   "requirement_id": "SR-REQ-0309",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-COMPOSITION-PRESERVATION-v1"
+  ],
+  "preconditions": [
+    "Complete owned TargetModel and prepared original relation hash/fresh identity; real host publication authority; canonical or original noncanonical source bytes."
+  ],
+  "steps": [
+    "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte ändern; neue Revisionen entstehen ausschließlich für tatsächlich geänderte Dokumentartefakte.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual native writer publishes only changed document relation owners. Referenced content IDs, revision values, records and original bytes remain exact, including original noncanonical formatting. Shared reference targets remain one stored artifact; native composition/reference readback sees unchanged revisions. No render/UI/documentation oracle or permissive semantic-service success stub."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "document_composition_inventory_changed",
+    "document_composition_owner_required",
+    "document_composition_content_changed"
+  ],
+  "expected_exit_codes": [
+    0,
+    1,
+    3,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/operations",
+    "/relations",
+    "/revision"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +48,22 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[False-move_document]",
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[False-move_section]",
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[False-promote]",
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[False-reorder]",
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[True-move_document]",
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[True-move_section]",
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[True-promote]",
+    "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[True-reorder]",
+    "tests/test_document_composition_preservation.py::test_move_checks_actual_block_semantics_even_with_a_permissive_host",
+    "tests/test_document_composition_preservation.py::test_referenced_content_changed_after_preview_blocks_saved_move_without_erasing_change[move_document]",
+    "tests/test_document_composition_preservation.py::test_referenced_content_changed_after_preview_blocks_saved_move_without_erasing_change[reorder]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "11.j.R/C: extend preservation evidence for approved and specialist content and consolidate explicit edge ownership without changing behavior.",
+    "Unchanged approved history, evidence/currentness and external resources still require actual specialist services. This move guard does not attest stored approvals or supply those services.",
+    "CLI model/history discovery and identity allocation remain outside the prepared-plan embedding API. Targeted and alternating test observations are partial, not full-suite or release proof."
   ]
 }
