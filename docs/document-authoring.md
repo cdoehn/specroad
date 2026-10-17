@@ -112,3 +112,19 @@ Revisionen erhalten. Verschieben und Umordnen ändern allein die gespeicherten
 Contains-Relationen und die nativen Metadaten ihrer betroffenen Eigentümer. Ein
 weiterhin erforderlicher Lifecycle-, Evidence- oder Ressourcendienst wird durch
 diesen Erhaltsnachweis nicht ersetzt.
+
+Auch bei den betroffenen Dokument- oder Abschnittseigentümern dürfen keine
+zusätzlichen Fachfelder oder Referenzrelationen als Teil einer Verschiebung
+geändert werden. Das Gate bindet eine eigene Kopie der ursprünglichen Operationen
+und akzeptiert exakt deren Contains-Entfernung und -Ergänzung. Revision, Zeitpunkt
+und Akteur stammen weiterhin aus der nativen Metadatenverarbeitung; bei einem
+inhaltlich geänderten freigegebenen Eigentümer gilt deren Rückstufung auf
+`proposed`. Referenzierter Inhalt einschließlich seines gespeicherten Reifegrads
+bleibt unverändert.
+
+Die Erhaltsprüfung bescheinigt keine historische Freigabe und keine aktuelle
+Evidence oder externe Datei. Bei referenzierten Tests, Code-Refs oder gespeicherten
+Freigaben lassen sich die unveränderten Kandidatenbytes getrennt nachweisen;
+ohne den jeweils erforderlichen echten Fachdienst bleibt die Veröffentlichung
+gesperrt. Bereits veröffentlichte Teilzustände bei I/O-Abbruch werden erhalten,
+während referenzierte Inhalte auch dort unverändert bleiben.

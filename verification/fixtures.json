@@ -19,6 +19,7 @@
     "SR-FIX-CHANGE-TARGET-v1",
     "SR-FIX-CHANGED-SOURCES-v1",
     "SR-FIX-COMPARISON-SOURCE-v1",
+    "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1",
     "SR-FIX-COMPOSITION-PRESERVATION-v1",
     "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1",
     "SR-FIX-CONFIGURED-BASELINE-v1",
@@ -443,6 +444,10 @@
     "SR-FIX-COMPOSITION-PRESERVATION-v1": {
       "provider": "tests/test_document_composition_preservation.py:composition_project",
       "kind": "Real temporary project with primary/supporting documents, nested sections and two reference blocks sharing one revision-7 requirement. Canonical and deliberately noncanonical original artifact bytes, actual native section moves, inventories, publication receipts, replay and reference/composition readback. Stale reference bytes and hostile host gates never authorize publication."
+    },
+    "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1": {
+      "provider": "tests/test_document_composition_preservation_right.py:reference_project",
+      "kind": "Actual temporary composition project with original noncanonical requirement, test or code_ref bytes and explicit stored draft/approved states. Native target assessment proves preservation; unavailable lifecycle/currentness/resource services block real publication. No approval or specialist success stub. Additional native writes, saved-plan refusals, operation binding and injected publication interruptions preserve exact content."
     }
   }
 }

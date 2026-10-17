@@ -7,28 +7,37 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-COMPOSITION-PRESERVATION-v1"
+    "SR-FIX-COMPOSITION-PRESERVATION-v1",
+    "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1"
   ],
   "preconditions": [
     "Complete owned TargetModel and prepared original relation hash/fresh identity; real host publication authority; canonical or original noncanonical source bytes."
   ],
   "steps": [
-    "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics."
+    "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics.",
+    "11.j.R: compare original and candidate hashes for requirement/test/code_ref records in draft and stored approved states; only real supported targets publish. Missing lifecycle, review, evidence and external-resource services block publication. Guard owner fields and all nonrequested relations, detach operation bindings, reject forged saved-plan result artifacts, verify sequential moves/replay and preserve actual interrupted owner publication."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte ändern; neue Revisionen entstehen ausschließlich für tatsächlich geänderte Dokumentartefakte.",
-    "scope": "Actual native writer publishes only changed document relation owners. Referenced content IDs, revision values, records and original bytes remain exact, including original noncanonical formatting. Shared reference targets remain one stored artifact; native composition/reference readback sees unchanged revisions. No render/UI/documentation oracle or permissive semantic-service success stub."
+    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte \u00e4ndern; neue Revisionen entstehen ausschlie\u00dflich f\u00fcr tats\u00e4chlich ge\u00e4nderte Dokumentartefakte.",
+    "scope": "Actual native writer publishes only changed document relation owners. Referenced content IDs, revision values, records and original bytes remain exact, including original noncanonical formatting. Shared reference targets remain one stored artifact; native composition/reference readback sees unchanged revisions. No render/UI/documentation oracle or permissive semantic-service success stub. Stored approval is preserved as data, not authenticated by this guard. Native candidate byte preservation and unavailable-service write refusal are separate from successful actual publication. Owner content and unrelated relation edges cannot be smuggled into a move."
   },
   "expected_diagnostics": [
     "document_composition_inventory_changed",
     "document_composition_owner_required",
-    "document_composition_content_changed"
+    "document_composition_content_changed",
+    "document_composition_owner_content_changed",
+    "document_composition_relations_changed",
+    "result_owner_set_mismatch",
+    "validation_required_gate_unavailable",
+    "transaction_journal_blocks_lock",
+    "complete_target_validation_required"
   ],
   "expected_exit_codes": [
     0,
     1,
     3,
+    5,
     6,
     7
   ],
@@ -59,10 +68,43 @@
     "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[True-reorder]",
     "tests/test_document_composition_preservation.py::test_move_checks_actual_block_semantics_even_with_a_permissive_host",
     "tests/test_document_composition_preservation.py::test_referenced_content_changed_after_preview_blocks_saved_move_without_erasing_change[move_document]",
-    "tests/test_document_composition_preservation.py::test_referenced_content_changed_after_preview_blocks_saved_move_without_erasing_change[reorder]"
+    "tests/test_document_composition_preservation.py::test_referenced_content_changed_after_preview_blocks_saved_move_without_erasing_change[reorder]",
+    "tests/test_document_composition_preservation_right.py::test_content_guard_rejects_artificial_revisions_and_stored_approval_edits[maturity-approved]",
+    "tests/test_document_composition_preservation_right.py::test_content_guard_rejects_artificial_revisions_and_stored_approval_edits[revision-8]",
+    "tests/test_document_composition_preservation_right.py::test_content_guard_rejects_artificial_revisions_and_stored_approval_edits[statement-Unrequested content edit.]",
+    "tests/test_document_composition_preservation_right.py::test_content_guard_rejects_artificial_revisions_and_stored_approval_edits[title-Unrequested title]",
+    "tests/test_document_composition_preservation_right.py::test_interrupted_owner_publication_never_rewrites_referenced_content[False]",
+    "tests/test_document_composition_preservation_right.py::test_interrupted_owner_publication_never_rewrites_referenced_content[True]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[code_ref-approved-move_document]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[code_ref-approved-reorder]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[code_ref-draft-move_document]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[code_ref-draft-reorder]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[requirement-approved-move_document]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[requirement-approved-reorder]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[requirement-draft-move_document]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[requirement-draft-reorder]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[test-approved-move_document]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[test-approved-reorder]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[test-draft-move_document]",
+    "tests/test_document_composition_preservation_right.py::test_native_target_preserves_referenced_content_and_stored_state_without_faking_services[test-draft-reorder]",
+    "tests/test_document_composition_preservation_right.py::test_owner_content_is_not_a_hidden_payload_of_a_section_move[created_by-value2]",
+    "tests/test_document_composition_preservation_right.py::test_owner_content_is_not_a_hidden_payload_of_a_section_move[extensions-value3]",
+    "tests/test_document_composition_preservation_right.py::test_owner_content_is_not_a_hidden_payload_of_a_section_move[maturity-approved]",
+    "tests/test_document_composition_preservation_right.py::test_owner_content_is_not_a_hidden_payload_of_a_section_move[purpose-Different purpose]",
+    "tests/test_document_composition_preservation_right.py::test_owner_content_is_not_a_hidden_payload_of_a_section_move[title-Unrequested title]",
+    "tests/test_document_composition_preservation_right.py::test_owner_relations_allow_only_the_exact_saved_contains_edit[change_position]",
+    "tests/test_document_composition_preservation_right.py::test_owner_relations_allow_only_the_exact_saved_contains_edit[drop_unrelated]",
+    "tests/test_document_composition_preservation_right.py::test_owner_relations_allow_only_the_exact_saved_contains_edit[extra_reference]",
+    "tests/test_document_composition_preservation_right.py::test_preservation_guard_requires_the_exact_original_resource_inventory[duplicate]",
+    "tests/test_document_composition_preservation_right.py::test_preservation_guard_requires_the_exact_original_resource_inventory[foreign_path]",
+    "tests/test_document_composition_preservation_right.py::test_preservation_guard_requires_the_exact_original_resource_inventory[missing]",
+    "tests/test_document_composition_preservation_right.py::test_registered_document_gate_owns_its_original_operation_bytes",
+    "tests/test_document_composition_preservation_right.py::test_rehashed_saved_plan_cannot_add_a_content_or_approval_write[maturity-approved]",
+    "tests/test_document_composition_preservation_right.py::test_rehashed_saved_plan_cannot_add_a_content_or_approval_write[revision-8]",
+    "tests/test_document_composition_preservation_right.py::test_successive_real_moves_keep_shared_content_bytes_and_commit_each_owner_once"
   ],
   "open_items": [
-    "11.j.R/C: extend preservation evidence for approved and specialist content and consolidate explicit edge ownership without changing behavior.",
+    "11.j.C: consolidate explicit ownership/reference preservation structure without changing behavior.",
     "Unchanged approved history, evidence/currentness and external resources still require actual specialist services. This move guard does not attest stored approvals or supply those services.",
     "CLI model/history discovery and identity allocation remain outside the prepared-plan embedding API. Targeted and alternating test observations are partial, not full-suite or release proof."
   ]

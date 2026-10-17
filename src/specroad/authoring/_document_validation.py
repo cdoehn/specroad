@@ -1,6 +1,7 @@
 """Mandatory native document invariants for the common authoring target checks."""
 from ..changes.request_ids import AuthoringError
 from ..changes.target_model import TargetModel
+from ..changes.values import ChangeOperation
 from ..documents.roles import assess_document_roles
 from ..documents.structure import assess_document_structure
 from ..documents.includes import DocumentIncludeCycleError
@@ -12,6 +13,7 @@ from ..validation import ModelGate
 def _document_gates(model, command_id, operations, gates, *, block_semantics=False):
     """Never let a host document service replace native command invariants."""
     owned = model.snapshot()
+    operations = [ChangeOperation(operation).data for operation in operations]
     if command_id == 'section.move':
         removal, addition = operations
         matches = [edge for value in owned.artifacts if value['id'] == removal['source']

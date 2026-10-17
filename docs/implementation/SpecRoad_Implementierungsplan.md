@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 460
-last_completed_plan_commit: 11.j.W
-next_plan_commit: 11.j.R
-last_completed_numbered_bundle: 289
+implementation_plan_commits_completed: 461
+last_completed_plan_commit: 11.j.R
+next_plan_commit: 11.j.C
+last_completed_numbered_bundle: 290
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11950,12 +11950,14 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.j.R – Make it Right
 
-- [ ] **11.j.R** · Position **461/900** · Voraussetzung: `11.j.W`.
+- [x] **11.j.R** · Position **461/900** · Voraussetzung: `11.j.W`.
 **Exakte Commit-Message:** `11.j.R feat(documents): Revisionserhalt bei Komposition vervollständigen`
 
 **Vervollständigung:** Referenzierter Inhalt und seine Freigabe dürfen keine künstliche Revision erhalten.
 
 **Verhaltensabnahme:** Vorher-/Nachherhashes belegen unveränderte Requirements, Tests und Code-Refs. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umfang:** Die gebundene Erhaltsprüfung schützt auch Fachfelder und sämtliche nicht beauftragten Relationen der geänderten Eigentümer; ihre Operationsdaten sind vom Aufrufer entkoppelt. Die Zustandsmatrix belegt bytegleiche Requirements, Tests und Code-Refs sowie unveränderte gespeicherte Reifegrade im nativen Zielkandidaten. Veröffentlichungen werden für den tatsächlich unterstützten Inhalt zusätzlich am realen Writer geprüft, einschließlich aufeinanderfolgender Moves, Replay und unterbrochener Veröffentlichung. Unveränderte Kandidatenbytes ersetzen keine fehlende Prüfung von Freigabehistorie, Evidence oder externen Ressourcen: Ohne diese Dienste bleibt der Write gesperrt. Manipulierte Pläne dürfen keine künstliche Inhaltsrevision oder Freigabeänderung einschleusen.
 
 #### 11.j.C – Make it Clean
 
