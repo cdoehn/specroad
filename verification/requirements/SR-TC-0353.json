@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1"
   ],
   "preconditions": [
     "Owned TargetModel snapshot with original native records; no discovery, approval or external verification provider is fabricated."
   ],
   "steps": [
-    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data."
+    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
+    "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Relationsprojektionen einer View MÜSSEN Richtung, zulässige Relationstypen, Maximaltiefe und Aggregationsart deklarieren und die konfigurierten Graphgrenzen einhalten.",
-    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation."
+    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -45,10 +47,32 @@
     "tests/test_document_views.py::test_relation_direction_is_evaluated_from_the_actual_stored_edges[outgoing-targets0]",
     "tests/test_document_views.py::test_row_filter_does_not_redefine_the_bound_projection_graph",
     "tests/test_document_views.py::test_unresolved_sources_and_invalid_filter_or_graph_never_produce_view_data[missing_target]",
-    "tests/test_document_views.py::test_unresolved_sources_and_invalid_filter_or_graph_never_produce_view_data[negative_depth]"
+    "tests/test_document_views.py::test_unresolved_sources_and_invalid_filter_or_graph_never_produce_view_data[negative_depth]",
+    "tests/test_document_views_right.py::test_graph_errors_remain_errors_even_for_unused_projections_and_empty_selection[duplicate_edge_identity]",
+    "tests/test_document_views_right.py::test_graph_errors_remain_errors_even_for_unused_projections_and_empty_selection[missing_target]",
+    "tests/test_document_views_right.py::test_graph_errors_remain_errors_even_for_unused_projections_and_empty_selection[noncanonical_symmetric]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[boolean_depth]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[callback]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[duplicate_id]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[duplicate_type]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[dynamic_depth]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[empty_types]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[missing_aggregation]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[missing_depth]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[missing_direction]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[missing_types]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[negative_depth]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[nested_path]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[unknown_type]",
+    "tests/test_document_views_right.py::test_relation_declarations_cannot_drop_bounds_or_load_custom_graph_functions[wildcard]",
+    "tests/test_document_views_right.py::test_scope_declarations_cannot_silently_widen_or_discover_unbound_sources[explicit]",
+    "tests/test_document_views_right.py::test_scope_declarations_cannot_silently_widen_or_discover_unbound_sources[foreign_selector]",
+    "tests/test_document_views_right.py::test_scope_declarations_cannot_silently_widen_or_discover_unbound_sources[partial]",
+    "tests/test_document_views_right.py::test_scope_declarations_cannot_silently_widen_or_discover_unbound_sources[specification]",
+    "tests/test_document_views_right.py::test_small_soft_graph_work_targets_do_not_truncate_declared_projection_depth"
   ],
   "open_items": [
-    "11.k.R expands adversarial declaration/source/path and graph-boundary coverage; 11.k.C separates declarative planning from execution.",
+    "11.k.C separates declarative planning from execution with identical W/R behavior. Partial evidence does not certify a full suite or release.",
     "11.l supplies configuration binding and remaining missing/nested projection policies; non-project closure, computed-status services and rendering adapters require real providers. No full requirement or release completion is claimed."
   ]
 }

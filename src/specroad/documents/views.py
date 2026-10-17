@@ -81,6 +81,12 @@ def resolve_view(model, view_id):
 
     # Every declaration is checked before filtering, including unused columns
     # and projections. An empty result cannot conceal an executable declaration.
+    formats = value['formats']
+    for i, name in enumerate(formats):
+        if name not in ('json', 'markdown', 'html', 'csv'):
+            fail('view_format_provider_required', '/formats/' + str(i))
+        if name in formats[:i]:
+            fail('view_format_duplicate', '/formats/' + str(i))
     projections = {}
     for i, projection in enumerate(value['relation_projections']):
         at = '/relation_projections/' + str(i)

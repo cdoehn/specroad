@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1"
   ],
   "preconditions": [
     "Owned TargetModel snapshot with original native records; no discovery, approval or external verification provider is fabricated."
   ],
   "steps": [
-    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data."
+    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
+    "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine View-Spalte MUSS Quelle, Überschrift, Datentyp, Formatierung und Verhalten bei fehlendem Wert deklarieren und als Quellen ausschließlich Artefaktfelder, berechnete Statuswerte oder begrenzte Relationsprojektionen zulassen.",
-    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation."
+    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -45,10 +47,32 @@
     "tests/test_document_views.py::test_unsupported_declarations_fail_even_when_the_filter_selects_no_rows[projection_type-view_column_data_type]",
     "tests/test_document_views.py::test_unsupported_declarations_fail_even_when_the_filter_selects_no_rows[root-view_column_field_required]",
     "tests/test_document_views.py::test_unsupported_declarations_fail_even_when_the_filter_selects_no_rows[unknown_projection-view_relation_projection_missing]",
-    "tests/test_document_views.py::test_view_projects_native_query_rows_relations_groups_and_exact_snapshot_bindings"
+    "tests/test_document_views.py::test_view_projects_native_query_rows_relations_groups_and_exact_snapshot_bindings",
+    "tests/test_document_views_right.py::test_escaped_field_names_and_exact_array_indices_preserve_inert_values",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[function-False]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[function-True]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[loader-False]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[loader-True]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[script-False]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[script-True]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[source_url-False]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[source_url-True]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[template-False]",
+    "tests/test_document_views_right.py::test_foreign_column_execution_fields_cannot_hide_behind_an_empty_filter[template-True]",
+    "tests/test_document_views_right.py::test_projection_paths_are_static_native_pointers_even_without_rows[../source]",
+    "tests/test_document_views_right.py::test_projection_paths_are_static_native_pointers_even_without_rows[/../title]",
+    "tests/test_document_views_right.py::test_projection_paths_are_static_native_pointers_even_without_rows[/./title]",
+    "tests/test_document_views_right.py::test_projection_paths_are_static_native_pointers_even_without_rows[/bad~2escape]",
+    "tests/test_document_views_right.py::test_projection_paths_are_static_native_pointers_even_without_rows[42]",
+    "tests/test_document_views_right.py::test_projection_paths_are_static_native_pointers_even_without_rows[file:///tmp/source.json]",
+    "tests/test_document_views_right.py::test_projection_paths_are_static_native_pointers_even_without_rows[https://invalid.example/data]",
+    "tests/test_document_views_right.py::test_typed_cells_never_coerce_null_boolean_objects_or_absent_values[False-number-view_column_value_type]",
+    "tests/test_document_views_right.py::test_typed_cells_never_coerce_null_boolean_objects_or_absent_values[None-string-view_column_value_type]",
+    "tests/test_document_views_right.py::test_typed_cells_never_coerce_null_boolean_objects_or_absent_values[absent-string-view_column_value_missing]",
+    "tests/test_document_views_right.py::test_typed_cells_never_coerce_null_boolean_objects_or_absent_values[value2-string-view_column_value_type]"
   ],
   "open_items": [
-    "11.k.R expands adversarial declaration/source/path and graph-boundary coverage; 11.k.C separates declarative planning from execution.",
+    "11.k.C separates declarative planning from execution with identical W/R behavior. Partial evidence does not certify a full suite or release.",
     "11.l supplies configuration binding and remaining missing/nested projection policies; non-project closure, computed-status services and rendering adapters require real providers. No full requirement or release completion is claimed."
   ]
 }

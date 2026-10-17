@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
@@ -14,12 +15,13 @@
     "Owned TargetModel snapshot with original native records; no discovery, approval or external verification provider is fabricated."
   ],
   "steps": [
-    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data."
+    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
+    "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `view`-Artefakt MUSS mindestens Titel, Eingabescope, SRX-Filter, Spalten, Sortierung, Gruppierung, Relationsprojektionen und unterstützte Ausgabeformate deklarieren.",
-    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation."
+    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -40,10 +42,15 @@
     "test_record_schemas.RecordWorkTests.test_minimum_required_fields_are_not_synthesized",
     "tests/test_document_views.py::test_new_snapshot_changes_projection_values_and_root_without_mutating_old_data",
     "tests/test_document_views.py::test_result_is_owned_and_never_grants_rendering_validation_or_write_authority",
-    "tests/test_document_views.py::test_view_projects_native_query_rows_relations_groups_and_exact_snapshot_bindings"
+    "tests/test_document_views.py::test_view_projects_native_query_rows_relations_groups_and_exact_snapshot_bindings",
+    "tests/test_document_views_right.py::test_all_declared_core_formats_are_inert_capabilities_not_render_operations",
+    "tests/test_document_views_right.py::test_isolated_core_and_pyz_resolve_identical_snapshot_view_values[core]",
+    "tests/test_document_views_right.py::test_isolated_core_and_pyz_resolve_identical_snapshot_view_values[pyz]",
+    "tests/test_document_views_right.py::test_original_byte_changes_rebind_sources_while_canonical_model_values_stay_equal[row]",
+    "tests/test_document_views_right.py::test_original_byte_changes_rebind_sources_while_canonical_model_values_stay_equal[view]"
   ],
   "open_items": [
-    "11.k.R expands adversarial declaration/source/path and graph-boundary coverage; 11.k.C separates declarative planning from execution.",
+    "11.k.C separates declarative planning from execution with identical W/R behavior. Partial evidence does not certify a full suite or release.",
     "11.l supplies configuration binding and remaining missing/nested projection policies; non-project closure, computed-status services and rendering adapters require real providers. No full requirement or release completion is claimed."
   ]
 }

@@ -39,6 +39,7 @@
     "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-DOCUMENT-STRUCTURE-v1",
     "SR-FIX-DOCUMENT-TABLES-v1",
+    "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
@@ -453,6 +454,10 @@
     "SR-FIX-DOCUMENT-VIEWS-v1": {
       "provider": "tests/test_document_views.py:view_project",
       "kind": "Owned closed-project view and four native requirements with cyclic dependency relations and a separate conflict edge. Exact snapshot/query bindings, typed field and bounded distinct-ID/count projections, direction/depth boundaries, NFC grouping, empty-filter rejection and no write or approval authority."
+    },
+    "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1": {
+      "provider": "tests/test_document_views_right.py:bound_view_model",
+      "kind": "Original native view fixture with adversarial closed declarations, static pointer/graph/scope boundaries, exact noncanonical bytes, boolean/null/missing type contracts, tiny soft graph budgets, real-file inventories and trapped file/process/network operations, and isolated Core/PYZ parity. No rendering or approval oracle."
     }
   }
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 463
-last_completed_plan_commit: 11.k.W
-next_plan_commit: 11.k.R
-last_completed_numbered_bundle: 291
+implementation_plan_commits_completed: 464
+last_completed_plan_commit: 11.k.R
+next_plan_commit: 11.k.C
+last_completed_numbered_bundle: 292
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11996,10 +11996,16 @@ weitere Scope-/Status-/Renderingdienste bleiben ausdrücklich offen.
 
 #### 11.k.R – Make it Right
 
-- [ ] **11.k.R** · Position **464/900** · Voraussetzung: `11.k.W`.
+- [x] **11.k.R** · Position **464/900** · Voraussetzung: `11.k.W`.
 **Exakte Commit-Message:** `11.k.R feat(documents): Viewdefinition und Relationsprojektion vervollständigen`
 
 **Vervollständigung:** Fremde Funktionen, Templates und unzulässige Projektionspfade zurückweisen.
+
+**R-Ausschnitt (Bundle 292):** Geschlossene, eindeutige Formatnamen; zusätzliche
+Verhaltensfälle für fremde Deklarationen, leere Filter, statische Pfade, ungültige
+Graphen, Originalbytes, fehlende/typfalsche Zellen und echte Datei-/Prozess-/Netzwerk-
+Sperren. Core und PYZ liefern dieselben gebundenen Viewdaten. Weiche Graphbudgets
+verkürzen keine deklarierte Projektion; die explizite Tiefe bleibt verbindlich.
 
 **Verhaltensabnahme:** Daten-/Sicherheitsfälle sichern Quellen und Graphgrenzen ohne Layoutassertions. Die W-Nachweise bleiben zusätzlich grün.
 

@@ -36,6 +36,13 @@ computed-status, configuration or scope providers fail explicitly. Configuration
 support and further projection policies follow in 11.l. The existing basic
 query/table-block adapter retains its separate narrower contract.
 
+Declared output formats are the distinct static names `json`, `markdown`, `html`
+and `csv`. Unknown provider names and duplicates are rejected before filtering;
+accepting a name does not perform rendering. Original source bytes, including
+noncanonical whitespace, remain bound separately from canonical model values.
+Malformed graph inventories still fail for empty selections. File, process and
+network operations are absent from the resolver; data resembling code stays data.
+
 The data binds the original view bytes/revision, full snapshot root/input hashes,
 view scope, native query result/hashes, and each row's source/record hashes.
 Returned data is detached. It does not certify live project files, complete
