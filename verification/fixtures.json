@@ -432,7 +432,7 @@
     },
     "SR-FIX-DOCUMENT-AUTHORING-v1": {
       "provider": "tests/test_document_authoring.py:document_project",
-      "kind": "Real owned temporary project with a primary/supporting document, nested sections and exact contains identities. Native saved plans publish through actual locks, authority, journal, receipts and readback; file inventories preserve unrelated bytes. Prepared explicit IDs, actor, time and original relation hash are retained. Isolated Core/PYZ publication uses the same API. R adds invalid/unrelated document states, exact stale/hash/identity refusals, permissive hostile host gates, include cycles caused by movement, all-file inventories, structured failure audits and actual interrupted multi-owner publication with retained recovery evidence."
+      "kind": "Real owned temporary project with a primary/supporting document, nested sections and exact contains identities. Native saved plans publish through actual locks, authority, journal, receipts and readback; file inventories preserve unrelated bytes. Prepared explicit IDs, actor, time and original relation hash are retained. Isolated Core/PYZ publication uses the same API. R adds invalid/unrelated document states, exact stale/hash/identity refusals, permissive hostile host gates, include cycles caused by movement, all-file inventories, structured failure audits and actual interrupted multi-owner publication with retained recovery evidence. C retains all W/R fixtures and exact behavior expectations unchanged after private operation/gate extraction."
     }
   }
 }

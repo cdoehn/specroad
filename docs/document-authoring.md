@@ -47,3 +47,8 @@ Veröffentlichung abgelehnt. Eine erfolglose I/O-Operation während der Veröffe
 kann hingegen bereits Dateien geändert haben: Der reale Zustand und das native
 Recovery-Journal bleiben erhalten. `write_state=unknown` ist kein Rollbacknachweis
 und keine Erlaubnis für einen blinden Retry.
+
+Die Komfortfunktionen übersetzen ihre Eingaben ausschließlich in die vorhandenen
+typisierten Create-/Relationsoperationen. Diese reine Konstruktion ist von den
+verpflichtenden nativen Dokumentprüfungen getrennt. Beide Wege münden weiterhin
+in denselben Authoring-Plan und Saved-Plan-Writer.

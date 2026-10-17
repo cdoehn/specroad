@@ -14,12 +14,13 @@
   ],
   "steps": [
     "11.h.W: prepare document.create, section.add and section.move as closed ordinary typed operation sequences; save and execute through the shared native writer. Verify exact affected artifacts, unchanged file inventories, native revisions and audit, receipts and idempotent replay, actor/host denial, primary-role validity, specialist closure and isolated Core/PYZ publication.",
-    "11.h.R: reject invalid parents, self/descendant/include cycles, stale relation hashes and actual on-disk bytes, identity reuse, forged operation shapes, missing lifecycle and host gate overrides. Preserve command/plan identity in structured failure audits. Verify unchanged full inventories on refusal and honest partial publication/recovery after an injected second-owner replace failure; conflicting retry preserves original receipt."
+    "11.h.R: reject invalid parents, self/descendant/include cycles, stale relation hashes and actual on-disk bytes, identity reuse, forged operation shapes, missing lifecycle and host gate overrides. Preserve command/plan identity in structured failure audits. Verify unchanged full inventories on refusal and honest partial publication/recovery after an injected second-owner replace failure; conflicting retry preserves original receipt.",
+    "11.h.C: rerun unchanged W/R and affected regression tests after separating pure document graph-operation construction from native document target gates. Public create/add wrappers and all extracted construction/check functions retain identical AST; move construction statements are unchanged inside a private helper."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Befehle `document create`, `section add`, `section move`, `section remove` und `block add`, `block update`, `block remove` MÜSSEN vollständiges nichtinteraktives Dokument-Authoring über den gemeinsamen Change Plan ermöglichen.",
-    "scope": "Native document/section saved-plan authoring over complete supplied project inputs. Creation is an empty draft, addition creates and attaches a section atomically, and movement removes the hash-bound old contains edge and adds a fresh relation in one plan. Only affected relation owners change revision; original section/descendant and unrelated file bytes remain. Required native role/ownership/include checks cannot be replaced by a host gate. No presentation, documentation or fake semantic-service oracle. R retains the native invariant guards and closes the shared failure-adapter command registry for all three document commands. No complete-target approval or rollback is inferred from a failed write."
+    "scope": "Native document/section saved-plan authoring over complete supplied project inputs. Creation is an empty draft, addition creates and attaches a section atomically, and movement removes the hash-bound old contains edge and adds a fresh relation in one plan. Only affected relation owners change revision; original section/descendant and unrelated file bytes remain. Required native role/ownership/include checks cannot be replaced by a host gate. No presentation, documentation or fake semantic-service oracle. R retains the native invariant guards and closes the shared failure-adapter command registry for all three document commands. No complete-target approval or rollback is inferred from a failed write. C changes only module structure and delegation: operation sequence, plan/audit bindings, diagnostic/refusal contracts, native writer effects and recovery behavior retain their W/R contracts."
   },
   "expected_diagnostics": [
     "creation_identity_exists",
@@ -142,7 +143,6 @@
     "tests/test_document_authoring_right.py::test_unrelated_document_invariant_cannot_be_hidden_by_a_permissive_host[unowned_section]"
   ],
   "open_items": [
-    "11.h.C: structural cleanup remains pending; W/R behavior and error/state contracts must remain unchanged.",
     "11.i: section removal and block add/update/remove remain pending.",
     "CLI writer registration, model/history discovery and ID allocation are not provided by this explicit prepared-plan embedding API.",
     "The native document semantic service covers document/section-only subjects; actual content-block/view services and other specialist gates must be supplied explicitly where required.",

@@ -29,7 +29,7 @@ _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
 
 def _operations(command_id, operations):
     if type(command_id) is str and command_id in ('document.create', 'section.add', 'section.move'):
-        from .documents import _document_operations
+        from ._document_operations import _document_operations
         return _document_operations(command_id, operations)
     if type(command_id) is not str or command_id not in _OPERATIONS:
         raise AuthoringError('supported_authoring_command_required')
@@ -79,7 +79,7 @@ def _execution_inputs(model, command_id, operations, actor, planned_at, gates):
         from ..changes.baselines import prepare_baseline_gates
         gates += prepare_baseline_gates(model, operation, actor=actor, planned_at=planned_at, gates=gates)
     elif command_id in ('document.create', 'section.add', 'section.move'):
-        from .documents import _document_gates
+        from ._document_validation import _document_gates
         gates = _document_gates(model, command_id, owned, gates)
     return owned, policy, gates
 

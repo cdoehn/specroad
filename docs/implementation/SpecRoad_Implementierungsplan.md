@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 455
-last_completed_plan_commit: 11.h.R
-next_plan_commit: 11.h.C
+implementation_plan_commits_completed: 456
+last_completed_plan_commit: 11.h.C
+next_plan_commit: 11.i.W
 last_completed_numbered_bundle: 286
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11879,10 +11879,12 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.h.C – Make it Clean
 
-- [ ] **11.h.C** · Position **456/900** · Voraussetzung: `11.h.R`.
+- [x] **11.h.C** · Position **456/900** · Voraussetzung: `11.h.R`.
 **Exakte Commit-Message:** `11.h.C refactor(documents): Dokument- und Abschnittsauthoring bereinigen`
 
 **Bereinigung:** CLIkomfort ausschließlich in typisierte Graphoperationen übersetzen.
+
+**C-Umfang:** Die Komfortfunktionen delegieren ausschließlich an private Erzeuger der bestehenden typisierten Create-/Contains-Operationen. Die unveränderten verpflichtenden Dokumentprüfungen liegen getrennt davon. Öffentliche Signaturen, native Planspeicherung und Writer-Ausführung sowie alle W-/R-Tests bleiben erhalten; eine zusätzliche CLI-Registrierung wird nicht eingeführt.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
