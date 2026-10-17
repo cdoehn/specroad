@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 453
-last_completed_plan_commit: 11.g.C
-next_plan_commit: 11.h.W
-last_completed_numbered_bundle: 284
+implementation_plan_commits_completed: 454
+last_completed_plan_commit: 11.h.W
+next_plan_commit: 11.h.R
+last_completed_numbered_bundle: 285
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11857,12 +11857,14 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.h.W – Let it Work
 
-- [ ] **11.h.W** · Position **454/900** · Voraussetzung: `11.g.C`.
+- [x] **11.h.W** · Position **454/900** · Voraussetzung: `11.g.C`.
 **Exakte Commit-Message:** `11.h.W feat(documents): Dokument- und Abschnittsauthoring aufbauen`
 
 **Umsetzung:** document create, section add und section move über den gemeinsamen Writer anbieten.
 
 **Verhaltensabnahme:** Verschieben aktualisiert genau die betroffenen Dokumentrelationen.
+
+**W-Umfang:** Explizite vorbereitete IDs und native Eingabewerte werden in speicherbare Change Plans für `document.create`, `section.add` und `section.move` übersetzt. Der gemeinsame Saved-Plan-Writer übernimmt Lock, Revalidierung, Authority, Journal, Receipt und Replay. Native Rollen-, Eigentümer- und Include-Prüfungen bleiben verbindlich; der eingebaute Dokumentdienst deckt zunächst Dokumente/Abschnitte ab. Content-Block-/View-Dienste und sonstige Fachprüfungen werden nicht durch Erfolgs-Stubs ersetzt. Diese Embedding-API behauptet keine CLI-Registrierung, Projekt-/Historienentdeckung oder ID-Allokation; `SR-TC-0308` bleibt partiell.
 
 #### 11.h.R – Make it Right
 

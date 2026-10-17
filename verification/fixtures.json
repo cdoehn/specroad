@@ -27,6 +27,7 @@
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
+    "SR-FIX-DOCUMENT-AUTHORING-v1",
     "SR-FIX-DOCUMENT-INCLUDES-v1",
     "SR-FIX-DOCUMENT-PROSE-RIGHT-v1",
     "SR-FIX-DOCUMENT-PROSE-v1",
@@ -428,6 +429,10 @@
     "SR-FIX-DOCUMENT-INCLUDES-v1": {
       "provider": "tests/test_document_includes.py:include_project",
       "kind": "Owned document/section/includes with repeated content and section destinations, actual contains/reference relation identities, source-bound occurrences, deterministic cycle witnesses, deep chains and isolated Core/PYZ execution. R adds document meshes with mixed/global cycles, legal cross-section reuse, repeated/diamond/wide paths, original source/diagnostic rebinding and explicit read/process/network traps. C reuses all W/R fixtures and exact expectations unchanged after private graph/provenance extraction."
+    },
+    "SR-FIX-DOCUMENT-AUTHORING-v1": {
+      "provider": "tests/test_document_authoring.py:document_project",
+      "kind": "Real owned temporary project with a primary/supporting document, nested sections and exact contains identities. Native saved plans publish through actual locks, authority, journal, receipts and readback; file inventories preserve unrelated bytes. Prepared explicit IDs, actor, time and original relation hash are retained. Isolated Core/PYZ publication uses the same API."
     }
   }
 }

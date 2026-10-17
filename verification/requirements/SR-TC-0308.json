@@ -4,19 +4,40 @@
   "requirement_id": "SR-REQ-0308",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-AUTHORING-v1"
+  ],
+  "preconditions": [
+    "Complete owned TargetModel and historical reservations, explicit prepared artifact/relation IDs, actor/time and saved native Change Plan; real host authority is independently required for publication."
+  ],
+  "steps": [
+    "11.h.W: prepare document.create, section.add and section.move as closed ordinary typed operation sequences; save and execute through the shared native writer. Verify exact affected artifacts, unchanged file inventories, native revisions and audit, receipts and idempotent replay, actor/host denial, primary-role validity, specialist closure and isolated Core/PYZ publication."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Befehle `document create`, `section add`, `section move`, `section remove` und `block add`, `block update`, `block remove` MÜSSEN vollständiges nichtinteraktives Dokument-Authoring über den gemeinsamen Change Plan ermöglichen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native document/section saved-plan authoring over complete supplied project inputs. Creation is an empty draft, addition creates and attaches a section atomically, and movement removes the hash-bound old contains edge and adds a fresh relation in one plan. Only affected relation owners change revision; original section/descendant and unrelated file bytes remain. Required native role/ownership/include checks cannot be replaced by a host gate. No presentation, documentation or fake semantic-service oracle."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "document_primary_missing",
+    "document_primary_multiple",
+    "document_authoring_specialist_required",
+    "document_command_operation_mismatch",
+    "one_authoring_operation_required"
+  ],
+  "expected_exit_codes": [
+    0,
+    1,
+    2,
+    7
+  ],
+  "json_pointers": [
+    "/operations",
+    "/relations",
+    "/document_role"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +49,40 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_authoring.py::test_create_enforces_the_actual_full_project_primary_role[first_document]",
+    "tests/test_document_authoring.py::test_create_enforces_the_actual_full_project_primary_role[supporting_document]",
+    "tests/test_document_authoring.py::test_document_command_cannot_smuggle_an_unrelated_operation[move_document]",
+    "tests/test_document_authoring.py::test_document_command_cannot_smuggle_an_unrelated_operation[root_section]",
+    "tests/test_document_authoring.py::test_document_command_cannot_smuggle_an_unrelated_operation[supporting_document]",
+    "tests/test_document_authoring.py::test_document_plan_and_native_writer_are_available_in_isolated_distributions[core]",
+    "tests/test_document_authoring.py::test_document_plan_and_native_writer_are_available_in_isolated_distributions[pyz]",
+    "tests/test_document_authoring.py::test_document_preview_never_authorizes_direct_actor_writes[ai-request-7-move_document]",
+    "tests/test_document_authoring.py::test_document_preview_never_authorizes_direct_actor_writes[ai-request-7-root_section]",
+    "tests/test_document_authoring.py::test_document_preview_never_authorizes_direct_actor_writes[ai-request-7-supporting_document]",
+    "tests/test_document_authoring.py::test_document_preview_never_authorizes_direct_actor_writes[ci-None-2-move_document]",
+    "tests/test_document_authoring.py::test_document_preview_never_authorizes_direct_actor_writes[ci-None-2-root_section]",
+    "tests/test_document_authoring.py::test_document_preview_never_authorizes_direct_actor_writes[ci-None-2-supporting_document]",
+    "tests/test_document_authoring.py::test_existing_single_operation_family_does_not_gain_document_multioperation_permission",
+    "tests/test_document_authoring.py::test_host_denial_cannot_publish_document_changes[move_document]",
+    "tests/test_document_authoring.py::test_host_denial_cannot_publish_document_changes[root_section]",
+    "tests/test_document_authoring.py::test_host_denial_cannot_publish_document_changes[supporting_document]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[first_document]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[move_document]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[move_section]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[nested_section]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[promote]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[reorder]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[root_section]",
+    "tests/test_document_authoring.py::test_saved_document_plan_publishes_only_expected_files_and_replays[supporting_document]",
+    "tests/test_document_authoring.py::test_unavailable_specialist_is_never_replaced_by_document_section_checks[content_block]",
+    "tests/test_document_authoring.py::test_unavailable_specialist_is_never_replaced_by_document_section_checks[view]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "11.h.R/C: adversarial invalid-parent/cycle/stale-input tests and structural cleanup remain pending.",
+    "11.i: section removal and block add/update/remove remain pending.",
+    "CLI writer registration, model/history discovery and ID allocation are not provided by this explicit prepared-plan embedding API.",
+    "The native document semantic service covers document/section-only subjects; actual content-block/view services and other specialist gates must be supplied explicitly where required.",
+    "Targeted development and alternating Apply half-suite observations do not certify a full-suite or release pass."
   ]
 }
