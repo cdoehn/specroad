@@ -29,6 +29,7 @@
     "SR-FIX-DISCARD-RESTART-v1",
     "SR-FIX-DOCUMENT-AUTHORING-v1",
     "SR-FIX-DOCUMENT-INCLUDES-v1",
+    "SR-FIX-DOCUMENT-MUTATIONS-v1",
     "SR-FIX-DOCUMENT-PROSE-RIGHT-v1",
     "SR-FIX-DOCUMENT-PROSE-v1",
     "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1",
@@ -433,6 +434,10 @@
     "SR-FIX-DOCUMENT-AUTHORING-v1": {
       "provider": "tests/test_document_authoring.py:document_project",
       "kind": "Real owned temporary project with a primary/supporting document, nested sections and exact contains identities. Native saved plans publish through actual locks, authority, journal, receipts and readback; file inventories preserve unrelated bytes. Prepared explicit IDs, actor, time and original relation hash are retained. Isolated Core/PYZ publication uses the same API. R adds invalid/unrelated document states, exact stale/hash/identity refusals, permissive hostile host gates, include cycles caused by movement, all-file inventories, structured failure audits and actual interrupted multi-owner publication with retained recovery evidence. C retains all W/R fixtures and exact behavior expectations unchanged after private operation/gate extraction."
+    },
+    "SR-FIX-DOCUMENT-MUTATIONS-v1": {
+      "provider": "tests/test_document_mutations.py:mutation_project",
+      "kind": "Real owned document project with nested sections and an owned block; prepared native operations, exact source guards and fresh relation identities. Actual publication, byte inventories, receipts and replay for seven block kinds, update, retirement, cascade and child reparenting. Host denial and invalid strategies preserve all files."
     }
   }
 }

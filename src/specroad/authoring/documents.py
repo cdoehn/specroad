@@ -40,3 +40,52 @@ def preview_section_move(model, section_id, *, parent_id, relation_identity, pos
         actor=actor, planned_at=planned_at)
     return preview_authoring_request(owned, 'section.move', operations,
         actor=actor, planned_at=planned_at, **options)
+
+
+def preview_block_add(model, prepared, *, identity, parent_id, relation_identity,
+                      position, actor, planned_at, **options):
+    """Create a prepared block and its contains edge in one saved native plan."""
+    from .plans import preview_authoring_request
+    creation = _creation(model, prepared, identity, 'content_block', actor, planned_at)
+    containment = _contains(parent_id, identity.id, relation_identity, position, actor, planned_at)
+    return preview_authoring_request(model, 'block.add', [creation, containment],
+        actor=actor, planned_at=planned_at, **options)
+
+
+def preview_block_update(model, operation, *, actor, planned_at, **options):
+    """Use the caller's retained native update guards and RFC-6902 patch."""
+    from ..changes.values import ChangeOperation
+    from ..changes.request_ids import AuthoringError
+    from .plans import preview_authoring_request
+    if type(operation) is not ChangeOperation:
+        raise AuthoringError('typed_block_update_required')
+    return preview_authoring_request(model, 'block.update', [operation.data],
+        actor=actor, planned_at=planned_at, **options)
+
+
+def preview_block_remove(model, operation, *, actor, planned_at, **options):
+    """Retire a guarded block, retaining its stored identity and relations."""
+    from ..changes.values import ChangeOperation
+    from ..changes.request_ids import AuthoringError
+    from .plans import preview_authoring_request
+    if type(operation) is not ChangeOperation:
+        raise AuthoringError('typed_block_retirement_required')
+    return preview_authoring_request(model, 'block.remove', [operation.data],
+        actor=actor, planned_at=planned_at, **options)
+
+
+def preview_section_remove(model, retirement, *, cascade=False, move_children_to=None,
+        child_retirements=(), child_moves=(), actor, planned_at, **options):
+    """Retire an empty section, its whole subtree, or reparent all children.
+
+    Retired sections retain their original owner: even historical sections must
+    have exactly one stored contains edge. No artifact or ID is physically erased.
+    All retirement guards and fresh relation identities come from the caller.
+    """
+    from ._document_mutations import _section_removal
+    from .plans import preview_authoring_request
+    owned, operations = _section_removal(model, retirement, cascade=cascade,
+        move_children_to=move_children_to, child_retirements=child_retirements,
+        child_moves=child_moves, actor=actor, planned_at=planned_at)
+    return preview_authoring_request(owned, 'section.remove', operations,
+        actor=actor, planned_at=planned_at, **options)

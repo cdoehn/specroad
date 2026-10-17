@@ -4,19 +4,39 @@
   "requirement_id": "SR-REQ-0471",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-MUTATIONS-v1"
+  ],
+  "preconditions": [
+    "Complete owned model, guarded native retirement operations, explicit strategy and prepared fresh identities/observed edge hashes for moved children."
+  ],
+  "steps": [
+    "11.i.W: retire an empty section, cascade through its complete native contains subtree, or move every child to one explicit section before publication; reject missing/conflicting strategies and incomplete/extra retirement sets without writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`section remove` MUSS für einen nichtleeren Abschnitt genau eine Strategie aus `--cascade` oder `--move-children-to` verlangen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Real saved plans and publications preserve all original IDs and files. Every stored section retains one owner; cascade retires the complete subtree, move strategy preserves child content/revisions while replacing only the original contains edges. No orphan or partial mutation is accepted on refused input."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "document_removal_strategy_required",
+    "document_removal_strategy_conflict",
+    "document_complete_retirement_required"
+  ],
+  "expected_exit_codes": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/operations",
+    "/relations"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +48,28 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_mutations.py::test_incomplete_or_conflicting_section_removal_never_writes[both]",
+    "tests/test_document_mutations.py::test_incomplete_or_conflicting_section_removal_never_writes[extra_retirement]",
+    "tests/test_document_mutations.py::test_incomplete_or_conflicting_section_removal_never_writes[missing_child]",
+    "tests/test_document_mutations.py::test_incomplete_or_conflicting_section_removal_never_writes[none]",
+    "tests/test_document_mutations.py::test_removal_and_update_preserve_ids_children_and_original_ownership[block_remove]",
+    "tests/test_document_mutations.py::test_removal_and_update_preserve_ids_children_and_original_ownership[cascade]",
+    "tests/test_document_mutations.py::test_removal_and_update_preserve_ids_children_and_original_ownership[empty]",
+    "tests/test_document_mutations.py::test_removal_and_update_preserve_ids_children_and_original_ownership[move]",
+    "tests/test_document_mutations.py::test_removal_and_update_preserve_ids_children_and_original_ownership[update]",
+    "tests/test_document_mutations.py::test_saved_command_cannot_mutate_an_unrelated_target[block_remove]",
+    "tests/test_document_mutations.py::test_saved_command_cannot_mutate_an_unrelated_target[cascade]",
+    "tests/test_document_mutations.py::test_saved_command_cannot_mutate_an_unrelated_target[empty]",
+    "tests/test_document_mutations.py::test_saved_command_cannot_mutate_an_unrelated_target[move]",
+    "tests/test_document_mutations.py::test_saved_command_cannot_mutate_an_unrelated_target[update]",
+    "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[block_remove]",
+    "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[cascade]",
+    "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[empty]",
+    "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[move]",
+    "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[update]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "11.i.R/C and CLI command registration remain pending; this prepared-plan embedding contract is not a full-suite or release pass."
   ]
 }

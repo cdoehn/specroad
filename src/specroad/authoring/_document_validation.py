@@ -9,7 +9,7 @@ from ..model.canonical import canonical_json_sha256
 from ..validation import ModelGate
 
 
-def _document_gates(model, command_id, operations, gates):
+def _document_gates(model, command_id, operations, gates, *, block_semantics=False):
     """Never let a host document service replace native command invariants."""
     owned = model.snapshot()
     if command_id == 'section.move':
@@ -40,12 +40,16 @@ def _document_gates(model, command_id, operations, gates):
         primary = assess_document_roles(proposed).require_primary_document()
         assess_document_structure(proposed).require_document(primary['artifact_id'])
         _include_graph(proposed.documents, DocumentIncludeCycleError)
+        if block_semantics:
+            from ._document_mutation_validation import _block_semantics
+            _block_semantics(proposed)
         return context.result()
 
     def document_sections(context):
         # The native field, reference, hierarchy, role and ownership checks
         # cover these two types. No block payload or view semantics is asserted.
-        if any(context.artifact(identity)['artifact_type'] not in ('document', 'section')
+        kinds = ('document', 'section', 'content_block') if block_semantics else ('document', 'section')
+        if any(context.artifact(identity)['artifact_type'] not in kinds
                for identity in context.subjects):
             return context.result([{'reason': 'document_authoring_specialist_required', 'severity': 'error'}])
         return invariants(context)

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 456
-last_completed_plan_commit: 11.h.C
-next_plan_commit: 11.i.W
-last_completed_numbered_bundle: 286
+implementation_plan_commits_completed: 457
+last_completed_plan_commit: 11.i.W
+next_plan_commit: 11.i.R
+last_completed_numbered_bundle: 287
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11898,12 +11898,14 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.i.W – Let it Work
 
-- [ ] **11.i.W** · Position **457/900** · Voraussetzung: `11.h.C`.
+- [x] **11.i.W** · Position **457/900** · Voraussetzung: `11.h.C`.
 **Exakte Commit-Message:** `11.i.W feat(documents): Entfernen und Blockauthoring aufbauen`
 
 **Umsetzung:** block add/update/remove und section remove mit cascade oder move-children-to implementieren.
 
 **Verhaltensabnahme:** Explizite Strategie ergibt das erwartete gültige Zielmodell.
+
+**W-Umfang:** Vorbereitete Block- und Abschnittsmutationen verwenden denselben speicherbaren Change Plan und nativen Writer. Entfernen retirert Artefakte; Dateien, IDs und die vorgeschriebene Eigentümerrelation historischer Abschnitte bleiben erhalten. Eine Kaskade umfasst den vollständigen Contains-Teilbaum, eine Verschiebung alle direkten Kinder mit expliziten neuen Relationsidentitäten, Positionen und ursprünglichen Hashvorbedingungen. Die neuen Befehle prüfen echte Blocksemantik und gebundene Lifecycle-Zielzustände. CLI-Registrierung, Inventur und Identitätsvergabe bleiben außerhalb dieser Einbettungs-API.
 
 #### 11.i.R – Make it Right
 

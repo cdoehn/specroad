@@ -37,7 +37,7 @@ expliziter `document_model`-Dienst benötigt; andere erforderliche Fachprüfunge
 etwa Lifecycle oder externe Ressourcen, bleiben ebenfalls verbindlich.
 
 Die API registriert noch keinen CLI-Writer und übernimmt keine Projekt- oder
-Historieninventur. Abschnittsentfernung und Blockauthoring folgen unter 11.i.
+Historieninventur.
 Gezielte Entwicklungstests und alternierende Apply-Testhälften sind Teilnachweise.
 
 Fehlerantworten des gemeinsamen `execute_authoring_plan` behalten den tatsächlichen
@@ -52,3 +52,39 @@ Die Komfortfunktionen übersetzen ihre Eingaben ausschließlich in die vorhanden
 typisierten Create-/Relationsoperationen. Diese reine Konstruktion ist von den
 verpflichtenden nativen Dokumentprüfungen getrennt. Beide Wege münden weiterhin
 in denselben Authoring-Plan und Saved-Plan-Writer.
+
+`preview_block_add` ergänzt einen vorbereiteten Content Block und seine
+`contains`-Relation zu einem Abschnitt. Referenzierende Blöcke enthalten die
+vorbereiteten nativen Referenzrelationen bereits in ihren Eingabefeldern.
+`preview_block_update` akzeptiert eine mit `normalize_artifact_update_input`
+vorbereitete, ausdrücklich revisions- beziehungsweise hashgebundene Operation.
+`preview_block_remove` verwendet entsprechend `normalize_retire_input`.
+Der gespeicherte `command_id` lautet `block.add`, `block.update` oder `block.remove`.
+
+`preview_section_remove` erhält die Retire-Operation des Abschnitts. Ein leerer
+Abschnitt benötigt keine weitere Strategie. `cascade=True` verlangt unter
+`child_retirements` die vollständigen bewachten Retire-Operationen der Nachfahren
+in der nativen Contains-Vorordnung. `move_children_to` bezeichnet einen anderen
+aktiven Abschnitt außerhalb des Teilbaums. Für jedes direkte Kind enthält
+`child_moves` in Contains-Reihenfolge genau `target`, `relation_identity`,
+`position` und `expected_relation_sha256`. Fehlende, zusätzliche oder
+widersprüchliche Angaben werden vor Veröffentlichung abgelehnt. Der gespeicherte
+Befehl lautet `section.remove`; seine Operationen werden auch beim direkten
+Einlesen eines Plans erneut gegen den tatsächlichen Ausgangsgraphen geprüft.
+
+Entfernen bedeutet Retirierung: Artefaktdateien und IDs bleiben erhalten. Auch
+ein retirierter Abschnitt behält seine ursprüngliche eingehende Eigentümerkante,
+weil der gespeicherte Abschnittsvertrag genau einen Parent verlangt. Die Kaskade
+erhält die historischen Contains-Kanten; die Verschiebestrategie ersetzt nur die
+ausgehenden Kanten des entfernten Abschnitts und lässt Kindinhalte und Revisionen
+unverändert. Neue Relations-IDs werden vom Host vorbereitet; entfernte IDs bleiben
+reserviert. Freigegebener Inhalt folgt weiter der nativen Lifecycle-Policy:
+Inhaltsänderung wird `proposed`, reine zulässige Retirierung wird `retired`.
+
+Für diese vier Mutationsbefehle umfasst die verpflichtende native Dokumentprüfung
+zusätzlich die vorhandenen Prosa-, Referenz-, Query-/Tabellen- und Include-Prüfer.
+Ein permissiver Hostdienst kann sie nicht ersetzen. Allgemeine Views, externe
+Anhangsressourcen und unveränderte nicht im Plan behandelte Lifecycle-Historie
+benötigen weiterhin ihre wirklichen Fachdienste. Ein gespeicherter historischer
+Reifegrad allein ist kein historischer Freigabenachweis. Die drei bisherigen
+Dokument-/Abschnittsbefehle behalten ihren oben beschriebenen engeren Dienstumfang.
