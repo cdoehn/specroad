@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 457
-last_completed_plan_commit: 11.i.W
-next_plan_commit: 11.i.R
-last_completed_numbered_bundle: 287
+implementation_plan_commits_completed: 458
+last_completed_plan_commit: 11.i.R
+next_plan_commit: 11.i.C
+last_completed_numbered_bundle: 288
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11909,12 +11909,14 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.i.R – Make it Right
 
-- [ ] **11.i.R** · Position **458/900** · Voraussetzung: `11.i.W`.
+- [x] **11.i.R** · Position **458/900** · Voraussetzung: `11.i.W`.
 **Exakte Commit-Message:** `11.i.R feat(documents): Entfernen und Blockauthoring vervollständigen`
 
 **Vervollständigung:** Nichtleeren Abschnitt ohne eindeutige Strategie sowie widersprüchliche Optionen abweisen.
 
 **Verhaltensabnahme:** Fehlversuch lässt Kinder und Beziehungen vollständig bestehen. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umfang:** Jede bewachte Retirierung und jede ursprüngliche Kindrelation bleiben einzeln gebunden. Ein innerhalb des Teilbaums mehrfach enthaltener Block wird genau einmal retirert; seine historischen Beziehungen bleiben erhalten. Außerhalb besessene Kinder, ungültige Ziele, fehlende/widersprüchliche Strategien und eingeschmuggelte Planoperationen werden abgewiesen. Inventuren prüfen auch geänderte Live-Bytes, konfliktbehaftete Retries und den tatsächlich erhaltenen Teilzustand samt Recovery-Journal nach einem I/O-Abbruch.
 
 #### 11.i.C – Make it Clean
 

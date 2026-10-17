@@ -88,3 +88,11 @@ Anhangsressourcen und unveränderte nicht im Plan behandelte Lifecycle-Historie
 benötigen weiterhin ihre wirklichen Fachdienste. Ein gespeicherter historischer
 Reifegrad allein ist kein historischer Freigabenachweis. Die drei bisherigen
 Dokument-/Abschnittsbefehle behalten ihren oben beschriebenen engeren Dienstumfang.
+
+Mehrere Contains-Vorkommen desselben Blocks innerhalb der Kaskade erzeugen genau
+eine Retire-Operation. Ihre Reihenfolge folgt dem ersten Vorkommen in der nativen
+Vorordnung; sämtliche historischen Eigentümerkanten bleiben bestehen. Ein weiterer
+Contains-Eigentümer außerhalb der Kaskade verhindert die Retirierung dieses
+Teilbaums. Jede ursprüngliche Revisions-/Hashvorbedingung wird unverändert geprüft.
+Ein I/O-Abbruch während der Veröffentlichung erhält den tatsächlichen Teilzustand
+und das Recovery-Journal; ein weiterer Write bleibt bis zur Recovery gesperrt.

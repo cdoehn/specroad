@@ -13,12 +13,13 @@
     "Complete owned model, guarded native retirement operations, explicit strategy and prepared fresh identities/observed edge hashes for moved children."
   ],
   "steps": [
-    "11.i.W: retire an empty section, cascade through its complete native contains subtree, or move every child to one explicit section before publication; reject missing/conflicting strategies and incomplete/extra retirement sets without writes."
+    "11.i.W: retire an empty section, cascade through its complete native contains subtree, or move every child to one explicit section before publication; reject missing/conflicting strategies and incomplete/extra retirement sets without writes.",
+    "11.i.R: reject missing/conflicting strategy options, invalid destinations, each stale retirement/relation guard, ID reuse and saved operation smuggling. Retire internally shared blocks exactly once with all historical ownership edges retained; reject outside-owned children. Check actual changed live source/profile bytes, authority boundaries, conflicting replay and real interrupted cascade publication with retained recovery journal."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`section remove` MUSS für einen nichtleeren Abschnitt genau eine Strategie aus `--cascade` oder `--move-children-to` verlangen.",
-    "scope": "Real saved plans and publications preserve all original IDs and files. Every stored section retains one owner; cascade retires the complete subtree, move strategy preserves child content/revisions while replacing only the original contains edges. No orphan or partial mutation is accepted on refused input."
+    "scope": "Real saved plans and publications preserve all original IDs and files. Every stored section retains one owner; cascade retires the complete subtree, move strategy preserves child content/revisions while replacing only the original contains edges. No orphan or partial mutation is accepted on refused input. Internal repeated block occurrences produce one guarded retirement per identity; all original contains relations remain stored. Rejected input preserves the complete file inventory. Interrupted publication honestly retains acknowledged and possibly renamed files plus committing journal; it does not claim rollback or safe automatic retry."
   },
   "expected_diagnostics": [
     "document_removal_strategy_required",
@@ -67,9 +68,53 @@
     "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[cascade]",
     "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[empty]",
     "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[move]",
-    "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[update]"
+    "tests/test_document_mutations.py::test_saved_mutation_requires_actual_publication_authority[update]",
+    "tests/test_document_mutations_right.py::test_cascade_retires_each_shared_block_once_and_never_retires_an_outside_owner_child[outside]",
+    "tests/test_document_mutations_right.py::test_cascade_retires_each_shared_block_once_and_never_retires_an_outside_owner_child[within]",
+    "tests/test_document_mutations_right.py::test_child_destination_must_be_an_existing_section_outside_the_removed_tree[SR-DOC-00000000000000000000000000]",
+    "tests/test_document_mutations_right.py::test_child_destination_must_be_an_existing_section_outside_the_removed_tree[SR-GOAL-00000000000000000000000000]",
+    "tests/test_document_mutations_right.py::test_child_destination_must_be_an_existing_section_outside_the_removed_tree[SR-SEC-00000000000000000000000000]",
+    "tests/test_document_mutations_right.py::test_child_destination_must_be_an_existing_section_outside_the_removed_tree[SR-SEC-11111111111111111111111111]",
+    "tests/test_document_mutations_right.py::test_child_destination_must_be_an_existing_section_outside_the_removed_tree[SR-SEC-77777777777777777777777777]",
+    "tests/test_document_mutations_right.py::test_child_reparenting_never_reuses_removed_live_or_reserved_relation_ids[1-False]",
+    "tests/test_document_mutations_right.py::test_child_reparenting_never_reuses_removed_live_or_reserved_relation_ids[4-False]",
+    "tests/test_document_mutations_right.py::test_child_reparenting_never_reuses_removed_live_or_reserved_relation_ids[5-True]",
+    "tests/test_document_mutations_right.py::test_children_cannot_be_moved_under_a_retired_destination",
+    "tests/test_document_mutations_right.py::test_conflicting_saved_retry_preserves_retirement_receipt_and_all_source_bytes",
+    "tests/test_document_mutations_right.py::test_each_retained_original_guard_is_checked_without_refreshing_it[child-expected_revision]",
+    "tests/test_document_mutations_right.py::test_each_retained_original_guard_is_checked_without_refreshing_it[child-expected_sha256]",
+    "tests/test_document_mutations_right.py::test_each_retained_original_guard_is_checked_without_refreshing_it[relation-expected_relation_sha256]",
+    "tests/test_document_mutations_right.py::test_each_retained_original_guard_is_checked_without_refreshing_it[root-expected_revision]",
+    "tests/test_document_mutations_right.py::test_each_retained_original_guard_is_checked_without_refreshing_it[root-expected_sha256]",
+    "tests/test_document_mutations_right.py::test_interrupted_cascade_preserves_actual_published_records_and_recovery[False]",
+    "tests/test_document_mutations_right.py::test_interrupted_cascade_preserves_actual_published_records_and_recovery[True]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[artifact-block_remove]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[artifact-cascade]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[artifact-move]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[artifact-update]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[profile-block_remove]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[profile-cascade]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[profile-move]",
+    "tests/test_document_mutations_right.py::test_live_bytes_changed_after_preview_are_preserved_and_refuse_publication[profile-update]",
+    "tests/test_document_mutations_right.py::test_saved_operations_cannot_hide_an_incomplete_or_conflicting_strategy[extra_retire]",
+    "tests/test_document_mutations_right.py::test_saved_operations_cannot_hide_an_incomplete_or_conflicting_strategy[missing_pair]",
+    "tests/test_document_mutations_right.py::test_saved_operations_cannot_hide_an_incomplete_or_conflicting_strategy[multiple_destinations]",
+    "tests/test_document_mutations_right.py::test_saved_operations_cannot_hide_an_incomplete_or_conflicting_strategy[noncontains]",
+    "tests/test_document_mutations_right.py::test_saved_operations_cannot_hide_an_incomplete_or_conflicting_strategy[reordered_cascade]",
+    "tests/test_document_mutations_right.py::test_saved_operations_cannot_hide_an_incomplete_or_conflicting_strategy[wrong_child]",
+    "tests/test_document_mutations_right.py::test_saved_operations_cannot_hide_an_incomplete_or_conflicting_strategy[wrong_source]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[boolean]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[both]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[missing]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[move_empty]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[no_moves]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[unused_moves]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[unused_retirements]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[wrong_moves_type]",
+    "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[wrong_retirements_type]",
+    "tests/test_document_mutations_right.py::test_unrelated_non_draft_history_is_not_certified_by_mutation_lifecycle_gate"
   ],
   "open_items": [
-    "11.i.R/C and CLI command registration remain pending; this prepared-plan embedding contract is not a full-suite or release pass."
+    "11.i.C and CLI command registration remain pending; this prepared-plan embedding contract is not a full-suite or release pass."
   ]
 }

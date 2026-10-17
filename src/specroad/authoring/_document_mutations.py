@@ -42,11 +42,15 @@ def _removal_inventory(model, section_id):
     children = {key: sorted((edge for edge in value['relations'] if edge['type'] == 'contains'),
         key=lambda edge: (edge['position'], edge['target'], edge['relation_id']))
         for key, value in index.items()}
-    pending = [section_id]; descendants = []
+    pending = [section_id]; descendants = []; visited = set()
     while pending:
         identity = pending.pop()
-        if identity in descendants:
-            raise AuthoringError('document_removal_shared_child', exit_code=3)
+        # Sections already have one parent and no contains cycle. A block may
+        # legitimately occur under several sections: retire its record once,
+        # while preserving every edge. Cascade separately checks outside owners.
+        if identity in visited:
+            continue
+        visited.add(identity)
         descendants.append(identity)
         pending.extend(edge['target'] for edge in reversed(children[identity]))
     return index, children, descendants
