@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 454
-last_completed_plan_commit: 11.h.W
-next_plan_commit: 11.h.R
-last_completed_numbered_bundle: 285
+implementation_plan_commits_completed: 455
+last_completed_plan_commit: 11.h.R
+next_plan_commit: 11.h.C
+last_completed_numbered_bundle: 286
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11868,12 +11868,14 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.h.R – Make it Right
 
-- [ ] **11.h.R** · Position **455/900** · Voraussetzung: `11.h.W`.
+- [x] **11.h.R** · Position **455/900** · Voraussetzung: `11.h.W`.
 **Exakte Commit-Message:** `11.h.R feat(documents): Dokument- und Abschnittsauthoring vervollständigen`
 
 **Vervollständigung:** Ungültiger Parent, Kreisbildung und stale Vorbedingung ohne Teilwrite ablehnen.
 
 **Verhaltensabnahme:** Artefakt-/Relationsinventur weist atomare Umordnung nach. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umfang:** Die nativen Parent-, Kreis-, Hash-, Historien- und Gesamtzielprüfungen bleiben erhalten. Der gemeinsame Fehleradapter kennt jetzt auch die drei Dokumentbefehle und behält ihre Command-ID im fehlgeschlagenen Plan-Audit. Reale Inventuren prüfen abgelehnte Writes, konfliktbehaftete Retries und den erhaltenen Teilzustand samt Recovery-Journal bei injiziertem I/O-Abbruch zwischen zwei Eigentümerdateien.
 
 #### 11.h.C – Make it Clean
 

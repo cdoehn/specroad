@@ -39,3 +39,11 @@ etwa Lifecycle oder externe Ressourcen, bleiben ebenfalls verbindlich.
 Die API registriert noch keinen CLI-Writer und übernimmt keine Projekt- oder
 Historieninventur. Abschnittsentfernung und Blockauthoring folgen unter 11.i.
 Gezielte Entwicklungstests und alternierende Apply-Testhälften sind Teilnachweise.
+
+Fehlerantworten des gemeinsamen `execute_authoring_plan` behalten den tatsächlichen
+Dokumentbefehl und die Bindung an den geprüften Plan. Ungültige Parents, Kreise,
+veraltete Relationshashes und inzwischen geänderte Quelldateien werden vor der
+Veröffentlichung abgelehnt. Eine erfolglose I/O-Operation während der Veröffentlichung
+kann hingegen bereits Dateien geändert haben: Der reale Zustand und das native
+Recovery-Journal bleiben erhalten. `write_state=unknown` ist kein Rollbacknachweis
+und keine Erlaubnis für einen blinden Retry.

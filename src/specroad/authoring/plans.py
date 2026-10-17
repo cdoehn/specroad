@@ -20,7 +20,9 @@ from ..validation import ModelGate
 _OPERATIONS = {'artifact.create': ('create',), 'artifact.update': ('update',),
     'lifecycle.transition': ('transition', 'retire'),
     'relation.add': ('relation_add',), 'relation.remove': ('relation_remove',),
-    'relation.review': ('relation_review_record',), 'baseline.create': ('baseline_create',)}
+    'relation.review': ('relation_review_record',), 'baseline.create': ('baseline_create',),
+    'document.create': ('create',), 'section.add': ('create', 'relation_add'),
+    'section.move': ('relation_remove', 'relation_add')}
 _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
 
