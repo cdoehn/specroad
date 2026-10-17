@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 468
-last_completed_plan_commit: 11.l.C
-next_plan_commit: 11.m.W
-last_completed_numbered_bundle: 295
+implementation_plan_commits_completed: 469
+last_completed_plan_commit: 11.m.W
+next_plan_commit: 11.m.R
+last_completed_numbered_bundle: 296
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12109,12 +12109,26 @@ Testbytes, Gruppenbildung, Daten- und Fehlerverträge bleiben unverändert.
 
 #### 11.m.W – Let it Work
 
-- [ ] **11.m.W** · Position **469/900** · Voraussetzung: `11.l.C`.
+- [x] **11.m.W** · Position **469/900** · Voraussetzung: `11.l.C`.
 **Exakte Commit-Message:** `11.m.W feat(documents): Markdown- und HTML-Renderer aufbauen`
 
 **Umsetzung:** Sichere selbstenthaltene Dokument-/Viewausgaben samt Ankern, Metadaten, Admonition und Seitenumbrüchen implementieren.
 
 **Verhaltensabnahme:** Keine automatisierten Tests des gerenderten Texts; fachliche Komposition stammt aus bereits getesteter Datenprojektion.
+
+**W-Zuschnitt (Bundle 296):** `render_document` und `render_view` liefern UTF-8-Bytes
+für Markdown/HTML aus einem eigenen `TargetModel`-Snapshot. Komposition, wiederholte
+Includes, Referenzen, sichere Prosa, Tabellen und Viewgruppen verwenden ihre nativen
+Datenprovider. Feste Emitter behandeln Nutzdaten als Text; Metadaten binden Modell,
+Profile, Tool-/Schemaversion und Dokument-/Viewrevision. Verbindlichkeit und
+unveränderter Requirement-Sachverhalt bleiben getrennte gespeicherte Felder.
+Die API entdeckt keine Dateien, schreibt keine Ausgaben und startet keine Prozesse.
+Anhangseinbettung und nichtleere Renderpolicies benötigen noch eigene sichere
+Provider und werden ausdrücklich abgewiesen. R vervollständigt diesen Ausschnitt;
+Ausgabeziele folgen in 11.n; die CLI-Anbindung bleibt offen. 13.h ergänzt die
+berechneten Roadmap-/Verifikationsprovider. Zusätzliche Tests prüfen
+nur Admission, unveränderte Quelldaten, native Fehler und verbotene Seiteneffekte;
+kein gerenderter Text dient als Oracle. TD-001 bleibt unverändert wirksam.
 
 #### 11.m.R – Make it Right
 

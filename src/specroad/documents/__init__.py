@@ -6,6 +6,7 @@ from .references import ArtifactReferenceError, ArtifactReferenceResolution, res
 from .prose import ProseContent, ProseError, parse_prose
 from .tables import TableBlockData, TableBlockError, resolve_table_block
 from .views import ViewData, ViewError, resolve_view
+from .rendering import RenderError, render_document, render_view
 
 from .includes import (DocumentComposition, DocumentIncludeError, DocumentIncludeCycleError,
                        compose_document)
@@ -17,4 +18,5 @@ __all__ = ['DocumentRoleAssessment', 'DocumentRoleError', 'assess_document_roles
            'ProseContent', 'ProseError', 'parse_prose',
            'TableBlockData', 'TableBlockError', 'resolve_table_block',
            'ViewData', 'ViewError', 'resolve_view',
+           'RenderError', 'render_document', 'render_view',
            'DocumentComposition', 'DocumentIncludeError', 'DocumentIncludeCycleError', 'compose_document']
