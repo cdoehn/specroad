@@ -1,4 +1,5 @@
 """Closed view planning, independent of row evaluation and rendering adapters."""
+from ..graph._graph_traversal import _cycle_witness
 from ..graph.scope_descriptors import ScopeDescriptor
 from ..query import NormalizedQuery
 from ..srx.errors import SrxError
@@ -25,13 +26,16 @@ def plan_view(value, source, source_count, error_type):
     projections = {}
     for i, projection in enumerate(value['relation_projections']):
         at = '/relation_projections/' + str(i)
+        fields = {'id', 'direction', 'types', 'max_depth', 'aggregation'}
+        if type(projection) is dict and projection.get('aggregation') == 'records':
+            fields.add('columns')
         if (type(projection) is not dict
-                or set(projection) != {'id', 'direction', 'types', 'max_depth', 'aggregation'}
+                or set(projection) != fields
                 or type(projection['id']) is not str or not projection['id'].strip()
                 or projection['id'].strip() != projection['id']
                 or projection['id'] in projections):
             fail('view_relation_projection_contract', at)
-        if projection['aggregation'] not in ('ids', 'count'):
+        if projection['aggregation'] not in ('ids', 'count', 'records'):
             fail('view_relation_aggregation_required', at + '/aggregation')
         if type(projection['types']) is not list or not projection['types']:
             fail('view_relation_types_required', at + '/types')
@@ -40,9 +44,7 @@ def plan_view(value, source, source_count, error_type):
             rule_id='document-view', at=at)
         projections[projection['id']] = projection
 
-    columns = []
-    for i, column in enumerate(value['columns']):
-        at = '/columns/' + str(i)
+    def plan_column(column, at):
         if (type(column) is not dict
                 or set(column) != {'source', 'heading', 'data_type', 'format', 'missing'}
                 or type(column['source']) is not dict
@@ -50,7 +52,7 @@ def plan_view(value, source, source_count, error_type):
             fail('view_column_contract', at)
         if column['format'] != 'plain':
             fail('view_column_format_provider_required', at + '/format')
-        if column['missing'] != 'error':
+        if column['missing'] not in ('error', 'preserve'):
             fail('view_column_missing_provider_required', at + '/missing')
         if type(column['data_type']) is not str or column['data_type'] not in VALUE_TYPES[1:]:
             fail('view_column_data_type', at + '/data_type')
@@ -65,17 +67,38 @@ def plan_view(value, source, source_count, error_type):
                 fail('view_column_field_required', at + '/source/pointer')
             if tokens[0] == 'verification_result':
                 fail('query_verification_provider_required', at + '/source/pointer')
-            columns.append((kind, tokens, column['data_type'], at))
+            return kind, tokens, column['data_type'], column['missing'], at
         elif kind == 'relation_projection' and set(selected) == {'kind', 'projection_id'}:
             name = selected['projection_id']
             if type(name) is not str or name not in projections:
                 fail('view_relation_projection_missing', at + '/source/projection_id')
-            expected = 'array' if projections[name]['aggregation'] == 'ids' else 'number'
+            expected = 'number' if projections[name]['aggregation'] == 'count' else 'array'
             if column['data_type'] != expected:
                 fail('view_column_data_type', at + '/data_type')
-            columns.append((kind, name, expected, at))
+            return kind, name, expected, column['missing'], at
         else:
             fail('view_column_source_provider_required', at + '/source')
+
+    columns = [plan_column(column, '/columns/' + str(i))
+               for i, column in enumerate(value['columns'])]
+    projection_columns = {}
+    dependencies = []
+    for i, (name, projection) in enumerate(projections.items()):
+        if projection['aggregation'] != 'records':
+            continue
+        at = '/relation_projections/' + str(i) + '/columns'
+        nested = projection['columns']
+        if type(nested) is not list or not nested:
+            fail('view_relation_columns_required', at)
+        projection_columns[name] = [plan_column(column, at + '/' + str(j))
+                                    for j, column in enumerate(nested)]
+        dependencies.extend((name, selector, pointer)
+            for kind, selector, _, _, pointer in projection_columns[name]
+            if kind == 'relation_projection')
+    cycle = _cycle_witness(dependencies, source_id=lambda edge: edge[0],
+                          target_id=lambda edge: edge[1], edge_id=lambda edge: edge[2])
+    if cycle is not None:
+        fail('view_relation_projection_cycle', cycle[0][2] + '/source/projection_id')
 
     grouping = []
     for i, group in enumerate(value['grouping']):
@@ -95,4 +118,4 @@ def plan_view(value, source, source_count, error_type):
             fail('view_sort_contract', '/sort/' + str(i))
         ordering.append(item['key'] + ':' + item['direction'])
     query = NormalizedQuery(srx_filters=[value['filter']], sort=ordering, limit=source_count)
-    return descriptor, projections, columns, grouping, query
+    return descriptor, projections, columns, projection_columns, grouping, query

@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1"
   ],
   "preconditions": [
     "11.l.W: complete owned snapshot with native view/configuration records; no live discovery, rendering or approval provider."
   ],
   "steps": [
-    "11.l.W: select actual configured rows and eligible graph nodes through the same native Query service, compare stable ID ties and explicit ID ordering, and bind selected scope/configuration plus original bytes. Preserve all potential variants when no selection is supplied."
+    "11.l.W: select actual configured rows and eligible graph nodes through the same native Query service, compare stable ID ties and explicit ID ordering, and bind selected scope/configuration plus original bytes. Preserve all potential variants when no selection is supplied.",
+    "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ohne expliziten letzten Sortierschlüssel MUSS die Artefakt-ID als deterministischer Tie-Breaker dienen.",
-    "scope": "11.l.W adds same-snapshot ViewData configuration selection, inherited parent/hash binding, exact original inputs, deterministic NFC/ID sorting and bounded graph traversal through applicable nodes only. No CLI/rendering completion or full-suite/release claim."
+    "requirement_contract": "Ohne expliziten letzten Sortierschl\u00fcssel MUSS die Artefakt-ID als deterministischer Tie-Breaker dienen.",
+    "scope": "11.l.W adds same-snapshot ViewData configuration selection, inherited parent/hash binding, exact original inputs, deterministic NFC/ID sorting and bounded graph traversal through applicable nodes only. No CLI/rendering completion or full-suite/release claim. 11.l.R adds explicit missing preservation and bounded nested record data in the same configured snapshot."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -47,9 +49,14 @@
     "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[4-desc]",
     "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[5-asc]",
     "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[5-desc]",
-    "tests/test_document_view_variants.py::test_explicit_id_sort_direction_is_respected_instead_of_replaced_by_default_ties"
+    "tests/test_document_view_variants.py::test_explicit_id_sort_direction_is_respected_instead_of_replaced_by_default_ties",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[0]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[1]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[2]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[3]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[4]"
   ],
   "open_items": [
-    "Remaining missing-value/nested relation projection policies and cleanup follow in11.l.R/C. Current tests cover data contracts only."
+    "Live non-project closure, computed-status services and CLI/rendering adapters remain assigned to their actual providers and later steps. These are partial behavior tests, not full-suite or release evidence."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 466
-last_completed_plan_commit: 11.l.W
-next_plan_commit: 11.l.R
-last_completed_numbered_bundle: 293
+implementation_plan_commits_completed: 467
+last_completed_plan_commit: 11.l.R
+next_plan_commit: 11.l.C
+last_completed_numbered_bundle: 294
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12049,10 +12049,17 @@ Policies bleiben ihren folgenden Schritten zugeordnet.
 
 #### 11.l.R – Make it Right
 
-- [ ] **11.l.R** · Position **467/900** · Voraussetzung: `11.l.W`.
+- [x] **11.l.R** · Position **467/900** · Voraussetzung: `11.l.W`.
 **Exakte Commit-Message:** `11.l.R feat(documents): Stabile Viewdaten und Varianten vervollständigen`
 
 **Vervollständigung:** Fehlende Werte und verschachtelte Relationsprojektionen nach deklarierter Policy behandeln.
+
+**R-Ausschnitt (Bundle 294):** `missing=preserve` erhält echte Abwesenheit als
+eigene typisierte Zelle; vorhandene Werte unterliegen weiter ihrem Datentyp.
+`aggregation=records` projiziert gebundene Zieldatensätze mit deklarierten
+Spalten. Verschachtelungen behalten pro Ebene Richtung, Typen und Tiefe im
+konfigurierten Graphen. Zyklische Definitionen, unbekannte Quellen und fehlende
+Grenzen werden auch bei leerer Auswahl zurückgewiesen.
 
 **Verhaltensabnahme:** Prüfung erfolgt am Datenmodell, nicht an Reihenfolge visueller Konsoleninformationen. Die W-Nachweise bleiben zusätzlich grün.
 

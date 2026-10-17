@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1"
   ],
@@ -16,12 +17,13 @@
   "steps": [
     "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
     "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data.",
-    "11.k.C: extract unchanged declaration planning into a private pure module; keep all W/R tests and public result/error contracts byte-for-byte unchanged."
+    "11.k.C: extract unchanged declaration planning into a private pure module; keep all W/R tests and public result/error contracts byte-for-byte unchanged.",
+    "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Sortierung und Gruppierung einer View MÜSSEN eine stabile Kollationsregel besitzen.",
-    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity."
+    "requirement_contract": "Sortierung und Gruppierung einer View M\u00dcSSEN eine stabile Kollationsregel besitzen.",
+    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity. 11.l.R adds explicit missing preservation and bounded nested record data in the same configured snapshot."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -38,6 +40,15 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_document_view_variants_right.py::test_missing_groups_are_separate_from_null_and_nfc_string_groups[null-asc]",
+    "tests/test_document_view_variants_right.py::test_missing_groups_are_separate_from_null_and_nfc_string_groups[null-desc]",
+    "tests/test_document_view_variants_right.py::test_missing_groups_are_separate_from_null_and_nfc_string_groups[string-asc]",
+    "tests/test_document_view_variants_right.py::test_missing_groups_are_separate_from_null_and_nfc_string_groups[string-desc]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[0]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[1]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[2]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[3]",
+    "tests/test_document_view_variants_right.py::test_nested_rows_are_stably_ordered_with_shared_children_and_multiple_paths[4]",
     "tests/test_document_views.py::test_grouping_uses_nfc_utf8_keys_without_rewriting_original_cells[asc]",
     "tests/test_document_views.py::test_grouping_uses_nfc_utf8_keys_without_rewriting_original_cells[desc]",
     "tests/test_document_views.py::test_reordered_inventory_preserves_values_sorting_grouping_and_bindings[0]",
@@ -52,7 +63,6 @@
     "tests/test_document_views_right.py::test_original_byte_changes_rebind_sources_while_canonical_model_values_stay_equal[view]"
   ],
   "open_items": [
-    "Remaining real providers and configuration/missing/nested projection behavior follow their assigned plan steps. Current observations are partial, not full-suite or release evidence.",
-    "11.l.W supplies actual configuration binding; remaining missing/nested projection policies follow in11.l.R; non-project closure, computed-status services and rendering adapters require real providers. No full requirement or release completion is claimed."
+    "Live non-project closure, computed-status services and CLI/rendering adapters remain assigned to their actual providers and later steps. These are partial behavior tests, not full-suite or release evidence."
   ]
 }

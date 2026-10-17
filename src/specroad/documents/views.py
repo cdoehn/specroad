@@ -48,8 +48,8 @@ class ViewData:
 def resolve_view(model, view_id, *, configuration_id=None):
     """Select project rows, project fields/relations and group typed values.
 
-    The initial contract supports a closed project scope, plain
-    columns with missing=error, distinct related IDs/counts, and scalar grouping.
+    The contract supports a closed project scope, plain columns with explicit
+    missing policy, bounded related IDs/counts/records, and scalar grouping.
     Other scopes, computed status providers and rendering need their own bound
     services. A result never supplies those services or authorizes a write.
     """
@@ -72,7 +72,8 @@ def resolve_view(model, view_id, *, configuration_id=None):
         fail('view_record_required', '/view_id')
     stored = RecordArtifact(source.source_bytes, expected_type='view', path=source.path)
     value = stored.data
-    descriptor, projections, columns, grouping, query = plan_view(value, source, len(records), ViewError)
+    descriptor, projections, columns, projection_columns, grouping, query = plan_view(
+        value, source, len(records), ViewError)
     selected_scope = descriptor.data
     if configuration_id is not None:
         if selected_scope['configuration_id'] not in (None, configuration_id):
@@ -105,39 +106,72 @@ def resolve_view(model, view_id, *, configuration_id=None):
                 if target not in seen:
                     seen.add(target)
                     frontier.append((target, depth + 1))
-        targets = sorted(seen - {start})
-        return targets if projection['aggregation'] == 'ids' else len(targets)
+        return sorted(seen - {start})
 
-    rows = []
-    for item in page.data['items']:
-        record = index[item['id']]
-        reader = DomainArtifact if record.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
-        artifact = reader(record.source_bytes, path=record.path).data
-        projected = {name: related(item['id'], projection) for name, projection in projections.items()}
+    artifacts = {}
+    projected_values = {}
+
+    def bound_row(artifact_id, planned_columns):
+        record = index[artifact_id]
+        if artifact_id not in artifacts:
+            reader = DomainArtifact if record.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
+            artifacts[artifact_id] = reader(record.source_bytes, path=record.path).data
+        artifact = artifacts[artifact_id]
         cells = []
-        for kind, selector, declared, at in columns:
+        for kind, selector, declared, missing, at in planned_columns:
             cell = (resolve_tokens(artifact, selector, rule_id='document-view', at=at)
-                    if kind == 'artifact_field' else projected[selector])
+                    if kind == 'artifact_field' else projected_values[artifact_id, selector])
             if cell is MISSING:
-                fail('view_column_value_missing', at)
+                if missing == 'error':
+                    fail('view_column_value_missing', at)
+                cells.append({'type': 'missing'})
+                continue
             actual = value_type(cell, rule_id='document-view')
             if actual != declared:
                 fail('view_column_value_type', at)
             cells.append({'type': actual, 'value': cell})
-        rows.append({'artifact_id': item['id'], 'artifact_type': item['artifact_type'],
+        return {'artifact_id': artifact_id, 'artifact_type': record.identity.artifact_type,
             'revision': artifact['revision'], 'source_sha256': sha256(record.source_bytes).hexdigest(),
-            'record_sha256': canonical_json_sha256(artifact), 'cells': cells,
-            'relation_projections': projected})
+            'record_sha256': canonical_json_sha256(artifact), 'cells': cells}
+
+    def project(start, name):
+        # Definition cycles are rejected by the planner. Evaluate the remaining
+        # DAG iteratively, including shared children, without Python recursion.
+        pending = [(start, name, None)]
+        while pending:
+            current, selected, targets = pending.pop()
+            key = current, selected
+            if key in projected_values:
+                continue
+            projection = projections[selected]
+            if targets is None:
+                targets = related(current, projection)
+                if projection['aggregation'] != 'records':
+                    projected_values[key] = (len(targets) if projection['aggregation'] == 'count' else targets)
+                    continue
+                pending.append((current, selected, targets))
+                dependencies = [selector for kind, selector, _, _, _ in projection_columns[selected]
+                                if kind == 'relation_projection']
+                pending.extend((target, dependency, None)
+                               for target in reversed(targets) for dependency in reversed(dependencies))
+            else:
+                projected_values[key] = [bound_row(target, projection_columns[selected]) for target in targets]
+        return projected_values[start, name]
+
+    rows = []
+    for item in page.data['items']:
+        projected = {name: project(item['id'], name) for name in projections}
+        rows.append({**bound_row(item['id'], columns), 'relation_projections': projected})
 
     groups = {}
     for row in rows if grouping else ():
         cells = [row['cells'][number] for number, _ in grouping]
-        keys = tuple(_scalar_key(cell['value'], '/grouping') for cell in cells)
+        keys = tuple(_scalar_key(cell.get('value', MISSING), '/grouping') for cell in cells)
         if keys not in groups:
             # Normalize grouping strings while preserving every original row
             # value. Numeric/bool/null keys retain their distinct SRX types.
-            values = [{'type': cell['type'], 'value': unicodedata.normalize('NFC', cell['value'])
-                       if cell['type'] == 'string' else cell['value']} for cell in cells]
+            values = [({'type': 'string', 'value': unicodedata.normalize('NFC', cell['value'])}
+                       if cell['type'] == 'string' else dict(cell)) for cell in cells]
             groups[keys] = {'keys': values, 'artifact_ids': []}
         groups[keys]['artifact_ids'].append(row['artifact_id'])
     group_keys = list(groups)

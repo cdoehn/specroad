@@ -93,7 +93,8 @@
     "SR-FIX-TRANSACTION-RECOVERY-v1",
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
-    "SR-FIX-WRITER-BOUNDARIES-v1"
+    "SR-FIX-WRITER-BOUNDARIES-v1",
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -463,6 +464,10 @@
     "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1": {
       "provider": "tests/test_document_view_variants.py:variant_project",
       "kind": "Owned view with actual Linux/Windows configuration, optional parent chain, native applicability and cyclic relation graph. Declared/explicit selection, NFC-equal sort keys with ID ties, excluded vs merely row-filtered intermediates, original configuration bytes and read-only source bindings."
+    },
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1": {
+      "provider": "tests/test_document_view_variants_right.py:nested_project",
+      "kind": "Owned snapshot view with explicit error/preserve missing policies and an acyclic graph of bounded records projections. Missing/null/false/zero separation, typed NFC grouping, independently bounded nested directions/depths, configured graph visibility, stable target identities, original-byte hashes, cyclic/foreign declaration rejection and unchanged sources."
     }
   }
 }
