@@ -4,7 +4,7 @@ from ..changes.target_model import TargetModel
 from ..changes.values import ChangeOperation
 from ..documents.roles import assess_document_roles
 from ..documents.structure import assess_document_structure
-from ._document_operations import _contains
+from ._document_operations import _reparent
 
 
 def _mutation_operations(command_id, operations):
@@ -123,9 +123,8 @@ def _section_removal(model, retirement, *, cascade, move_children_to,
                 raise AuthoringError('typed_child_move_required')
             if move['target'] != edge['target']:
                 raise AuthoringError('document_original_child_relation_required')
-            operations.append({'op': 'relation_remove', 'source': root,
-                'relation_id': edge['relation_id'], 'expected_sha256': move['expected_relation_sha256'],
-                'reason': retirement.data['reason']})
-            operations.append(_contains(move_children_to, edge['target'], move['relation_identity'],
-                move['position'], actor, planned_at))
+            operations.extend(_reparent(root, edge['relation_id'], edge['target'],
+                parent_id=move_children_to, relation_identity=move['relation_identity'],
+                position=move['position'], expected_relation_sha256=move['expected_relation_sha256'],
+                reason=retirement.data['reason'], actor=actor, planned_at=planned_at))
     return owned, operations

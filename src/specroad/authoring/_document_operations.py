@@ -56,6 +56,27 @@ def _contains(parent_id, section_id, identity, position, actor, planned_at):
     return _addition(intent, identity, actor, planned_at).data
 
 
+def _attached_creation(model, prepared, identity, kind, *, parent_id, relation_identity,
+                       position, actor, planned_at):
+    creation = _creation(model, prepared, identity, kind, actor, planned_at)
+    addition = _contains(parent_id, identity.id, relation_identity, position, actor, planned_at)
+    return [creation, addition]
+
+
+def _single_operation(operation, reason):
+    if type(operation) is not ChangeOperation:
+        raise AuthoringError(reason)
+    return [operation.data]
+
+
+def _reparent(source, relation_id, target, *, parent_id, relation_identity, position,
+              expected_relation_sha256, reason, actor, planned_at):
+    removal = {'op': 'relation_remove', 'source': source, 'relation_id': relation_id,
+               'expected_sha256': expected_relation_sha256, 'reason': reason}
+    addition = _contains(parent_id, target, relation_identity, position, actor, planned_at)
+    return [removal, addition]
+
+
 def _move(model, section_id, *, parent_id, relation_identity, position,
           expected_relation_sha256, reason, actor, planned_at):
     if type(model) is not TargetModel or type(section_id) is not str:
@@ -69,7 +90,7 @@ def _move(model, section_id, *, parent_id, relation_identity, position,
     if len(incoming) != 1:
         raise AuthoringError('document_original_section_relation_required', exit_code=3)
     source, edge = incoming[0]
-    removal = {'op': 'relation_remove', 'source': source, 'relation_id': edge['relation_id'],
-               'expected_sha256': expected_relation_sha256, 'reason': reason}
-    addition = _contains(parent_id, section_id, relation_identity, position, actor, planned_at)
-    return owned, [removal, addition]
+    return owned, _reparent(source, edge['relation_id'], section_id, parent_id=parent_id,
+        relation_identity=relation_identity, position=position,
+        expected_relation_sha256=expected_relation_sha256, reason=reason,
+        actor=actor, planned_at=planned_at)

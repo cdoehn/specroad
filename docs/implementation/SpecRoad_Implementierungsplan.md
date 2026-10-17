@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 458
-last_completed_plan_commit: 11.i.R
-next_plan_commit: 11.i.C
+implementation_plan_commits_completed: 459
+last_completed_plan_commit: 11.i.C
+next_plan_commit: 11.j.W
 last_completed_numbered_bundle: 288
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11920,10 +11920,12 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.i.C – Make it Clean
 
-- [ ] **11.i.C** · Position **459/900** · Voraussetzung: `11.i.R`.
+- [x] **11.i.C** · Position **459/900** · Voraussetzung: `11.i.R`.
 **Exakte Commit-Message:** `11.i.C refactor(documents): Entfernen und Blockauthoring bereinigen`
 
 **Bereinigung:** Gemeinsame Operationserzeuger für Abschnitts- und Blockmutation nutzen.
+
+**C-Umfang:** Abschnitts- und Blockanlage verwenden denselben Create-/Contains-Erzeuger. Abschnittsverschiebung und Kindverschiebung teilen den Erzeuger der bewachten Remove-/Add-Paare; Blockupdate und Retirierung teilen die unveränderte Übernahme typisierter Einzeloperationen. Öffentliche Signaturen, Strategieprüfungen, Fachgates und alle W-/R-Verhaltenstests bleiben erhalten.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

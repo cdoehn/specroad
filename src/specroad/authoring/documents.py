@@ -5,7 +5,7 @@ Previews allocate nothing and write nothing. Execute their saved Change Plan
 through apply_authoring_plan, with fresh native checks and host authority.
 This embedding API neither discovers project files nor registers a CLI writer.
 """
-from ._document_operations import _creation, _contains, _move
+from ._document_operations import _creation, _attached_creation, _single_operation, _move
 
 
 def preview_document_create(model, prepared, *, identity, actor, planned_at, **options):
@@ -20,9 +20,9 @@ def preview_section_add(model, prepared, *, identity, parent_id, relation_identi
                         position, actor, planned_at, **options):
     """Create and attach one section in the same native Change Plan."""
     from .plans import preview_authoring_request
-    creation = _creation(model, prepared, identity, 'section', actor, planned_at)
-    addition = _contains(parent_id, identity.id, relation_identity, position, actor, planned_at)
-    return preview_authoring_request(model, 'section.add', [creation, addition],
+    operations = _attached_creation(model, prepared, identity, 'section', parent_id=parent_id,
+        relation_identity=relation_identity, position=position, actor=actor, planned_at=planned_at)
+    return preview_authoring_request(model, 'section.add', operations,
         actor=actor, planned_at=planned_at, **options)
 
 
@@ -46,31 +46,25 @@ def preview_block_add(model, prepared, *, identity, parent_id, relation_identity
                       position, actor, planned_at, **options):
     """Create a prepared block and its contains edge in one saved native plan."""
     from .plans import preview_authoring_request
-    creation = _creation(model, prepared, identity, 'content_block', actor, planned_at)
-    containment = _contains(parent_id, identity.id, relation_identity, position, actor, planned_at)
-    return preview_authoring_request(model, 'block.add', [creation, containment],
+    operations = _attached_creation(model, prepared, identity, 'content_block', parent_id=parent_id,
+        relation_identity=relation_identity, position=position, actor=actor, planned_at=planned_at)
+    return preview_authoring_request(model, 'block.add', operations,
         actor=actor, planned_at=planned_at, **options)
 
 
 def preview_block_update(model, operation, *, actor, planned_at, **options):
     """Use the caller's retained native update guards and RFC-6902 patch."""
-    from ..changes.values import ChangeOperation
-    from ..changes.request_ids import AuthoringError
     from .plans import preview_authoring_request
-    if type(operation) is not ChangeOperation:
-        raise AuthoringError('typed_block_update_required')
-    return preview_authoring_request(model, 'block.update', [operation.data],
+    operations = _single_operation(operation, 'typed_block_update_required')
+    return preview_authoring_request(model, 'block.update', operations,
         actor=actor, planned_at=planned_at, **options)
 
 
 def preview_block_remove(model, operation, *, actor, planned_at, **options):
     """Retire a guarded block, retaining its stored identity and relations."""
-    from ..changes.values import ChangeOperation
-    from ..changes.request_ids import AuthoringError
     from .plans import preview_authoring_request
-    if type(operation) is not ChangeOperation:
-        raise AuthoringError('typed_block_retirement_required')
-    return preview_authoring_request(model, 'block.remove', [operation.data],
+    operations = _single_operation(operation, 'typed_block_retirement_required')
+    return preview_authoring_request(model, 'block.remove', operations,
         actor=actor, planned_at=planned_at, **options)
 
 

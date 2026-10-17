@@ -437,7 +437,7 @@
     },
     "SR-FIX-DOCUMENT-MUTATIONS-v1": {
       "provider": "tests/test_document_mutations.py:mutation_project",
-      "kind": "Real owned document project with nested sections and an owned block; prepared native operations, exact source guards and fresh relation identities. Actual publication, byte inventories, receipts and replay for seven block kinds, update, retirement, cascade and child reparenting. Host denial and invalid strategies preserve all files. R adds internally/externally shared block ownership, independent stale guards, forged saved operations, changed real source/profile bytes, conflicting replay and injected before/after-rename publication failure with actual journal/readback inventories."
+      "kind": "Real owned document project with nested sections and an owned block; prepared native operations, exact source guards and fresh relation identities. Actual publication, byte inventories, receipts and replay for seven block kinds, update, retirement, cascade and child reparenting. Host denial and invalid strategies preserve all files. R adds internally/externally shared block ownership, independent stale guards, forged saved operations, changed real source/profile bytes, conflicting replay and injected before/after-rename publication failure with actual journal/readback inventories. C retains exact W/R fixtures and behavior expectations while common native-operation construction is shared."
     }
   }
 }

@@ -96,3 +96,8 @@ Contains-Eigentümer außerhalb der Kaskade verhindert die Retirierung dieses
 Teilbaums. Jede ursprüngliche Revisions-/Hashvorbedingung wird unverändert geprüft.
 Ein I/O-Abbruch während der Veröffentlichung erhält den tatsächlichen Teilzustand
 und das Recovery-Journal; ein weiterer Write bleibt bis zur Recovery gesperrt.
+
+Die Komfortfunktionen teilen reine Operationserzeuger für Create-/Contains-Paare,
+bewachte Relationsverschiebungen und vorbereitete Einzeloperationen. Die getrennten
+Strategie-, Fach- und Lifecycle-Prüfungen sowie der gemeinsame Saved-Plan-Writer
+bleiben dafür maßgeblich; die Erzeuger erteilen keine Schreibberechtigung.
