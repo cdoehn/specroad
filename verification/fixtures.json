@@ -457,7 +457,7 @@
     },
     "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1": {
       "provider": "tests/test_document_views_right.py:bound_view_model",
-      "kind": "Original native view fixture with adversarial closed declarations, static pointer/graph/scope boundaries, exact noncanonical bytes, boolean/null/missing type contracts, tiny soft graph budgets, real-file inventories and trapped file/process/network operations, and isolated Core/PYZ parity. No rendering or approval oracle."
+      "kind": "Original native view fixture with adversarial closed declarations, static pointer/graph/scope boundaries, exact noncanonical bytes, boolean/null/missing type contracts, tiny soft graph budgets, real-file inventories and trapped file/process/network operations, and isolated Core/PYZ parity. No rendering or approval oracle. C reuses the exact W/R fixture/test bytes and outcomes across pure declaration-planning extraction."
     }
   }
 }

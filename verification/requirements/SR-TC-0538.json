@@ -15,7 +15,8 @@
   ],
   "steps": [
     "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
-    "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data."
+    "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data.",
+    "11.k.C: extract unchanged declaration planning into a private pure module; keep all W/R tests and public result/error contracts byte-for-byte unchanged."
   ],
   "oracle": {
     "kind": "behavior",
@@ -97,7 +98,7 @@
     "tests/test_document_views_right.py::test_view_resolution_has_no_file_network_process_or_source_write_effects[True]"
   ],
   "open_items": [
-    "11.k.C separates declarative planning from execution with identical W/R behavior. Partial evidence does not certify a full suite or release.",
+    "Remaining real providers and configuration/missing/nested projection behavior follow their assigned plan steps. Current observations are partial, not full-suite or release evidence.",
     "11.l supplies configuration binding and remaining missing/nested projection policies; non-project closure, computed-status services and rendering adapters require real providers. No full requirement or release completion is claimed."
   ]
 }

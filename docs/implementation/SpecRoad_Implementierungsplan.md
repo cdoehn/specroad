@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 464
-last_completed_plan_commit: 11.k.R
-next_plan_commit: 11.k.C
+implementation_plan_commits_completed: 465
+last_completed_plan_commit: 11.k.C
+next_plan_commit: 11.l.W
 last_completed_numbered_bundle: 292
 implementation_state: in_progress
 audit_followup_status: closed
@@ -12011,10 +12011,15 @@ verkürzen keine deklarierte Projektion; die explizite Tiefe bleibt verbindlich.
 
 #### 11.k.C – Make it Clean
 
-- [ ] **11.k.C** · Position **465/900** · Voraussetzung: `11.k.R`.
+- [x] **11.k.C** · Position **465/900** · Voraussetzung: `11.k.R`.
 **Exakte Commit-Message:** `11.k.C refactor(documents): Viewdefinition und Relationsprojektion bereinigen`
 
 **Bereinigung:** Viewplanung von Renderingformaten entkoppeln.
+
+**C-Ausschnitt (Bundle 292):** Unveränderte Deklarationsplanung in ein privates,
+reines Modul auslagern. Der öffentliche Resolver bindet weiter denselben Snapshot
+und wertet dieselben Zeilen und Gruppen aus. Formatdeklarationen starten keinen
+Renderer. W-/R-Testbytes, öffentliche Daten- und Fehlerverträge bleiben erhalten.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
