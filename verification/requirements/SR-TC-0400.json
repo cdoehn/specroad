@@ -7,12 +7,14 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
-    "SR-FIX-PRODUCTION-VALIDATION-v1"
+    "SR-FIX-PRODUCTION-VALIDATION-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Original model records, stored configurations and existing native Query, validation and artifact-scope adapters."
+    "Original model records, stored configurations and existing native Query, validation and artifact-scope adapters.",
+    "11.l.W: complete owned snapshot with native view/configuration records; no live discovery, rendering or approval provider."
   ],
   "steps": [
     "Resolve an explicitly selected configuration from current original sources and filter applicable Query candidates before exact sorting and pagination.",
@@ -20,12 +22,13 @@
     "Keep original artifact identities and source bytes; hide excluded nodes and edges from computed query graph traversal while checking the full structural inventory.",
     "Reject unknown configuration identities and changed inputs at final observation checks; retain read-only behavior and portable Query execution.",
     "Compare native Query, validation and seed configuration bindings, and derive equal real scope roots from equal verified input/descriptor/provider observations.",
-    "Reject invalid selections, stale source files and forged cached source identities; preserve concurrent variant isolation and original metadata contracts when no selection is supplied."
+    "Reject invalid selections, stale source files and forged cached source identities; preserve concurrent variant isolation and original metadata contracts when no selection is supplied.",
+    "11.l.W: select actual configured rows and eligible graph nodes through the same native Query service, compare stable ID ties and explicit ID ordering, and bind selected scope/configuration plus original bytes. Preserve all potential variants when no selection is supplied."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`validate`, `render`, `view`, `coverage`, `release readiness`, `baseline create`, `export` und `bundle create` MÜSSEN `--configuration <ID>` unterstützen.",
-    "scope": "Existing adapters resolve the same selected ID, revision and effective configuration digest from original source bytes. Query applicability precedes sort/page and graph traversal excludes filtered nodes without rewriting stored records. Native scope Query pages use the same actual Query kernel. Productive validation and registered gates receive owned effective configuration data; unavailable services and structural checks remain effective. Final freshness checks bind complete observed inputs. The unconfigured behavior and six-field Query page remain unchanged. This is partial command integration, not certification of future adapters or resource-complete scope roots. R adds the same semantic configuration contribution across native adapters and an explicit contract for future adapters. Original-byte ownership also covers configured page sorting and external sort. Configuration digests alone are not scope roots, complete inventories or authority to reuse evidence. Real scope-root equivalence is checked with explicit complete fixture dependency observations. C shares configured-source ownership, the closed SRX projection and semantic configuration-scope hashing while preserving the same tested behavior and error contracts."
+    "scope": "Existing adapters resolve the same selected ID, revision and effective configuration digest from original source bytes. Query applicability precedes sort/page and graph traversal excludes filtered nodes without rewriting stored records. Native scope Query pages use the same actual Query kernel. Productive validation and registered gates receive owned effective configuration data; unavailable services and structural checks remain effective. Final freshness checks bind complete observed inputs. The unconfigured behavior and six-field Query page remain unchanged. This is partial command integration, not certification of future adapters or resource-complete scope roots. R adds the same semantic configuration contribution across native adapters and an explicit contract for future adapters. Original-byte ownership also covers configured page sorting and external sort. Configuration digests alone are not scope roots, complete inventories or authority to reuse evidence. Real scope-root equivalence is checked with explicit complete fixture dependency observations. C shares configured-source ownership, the closed SRX projection and semantic configuration-scope hashing while preserving the same tested behavior and error contracts. 11.l.W adds same-snapshot ViewData configuration selection, inherited parent/hash binding, exact original inputs, deterministic NFC/ID sorting and bounded graph traversal through applicable nodes only. No CLI/rendering completion or full-suite/release claim."
   },
   "expected_diagnostics": [
     "SRV130",
@@ -119,10 +122,40 @@
     "tests/test_configuration_commands_right.py::test_semantic_configuration_binding_changes_with_each_normative_input[parent_revision]",
     "tests/test_configuration_commands_right.py::test_semantic_configuration_binding_changes_with_each_normative_input[project_semantics]",
     "tests/test_configuration_commands_right.py::test_semantic_configuration_binding_changes_with_each_normative_input[selected_identity]",
-    "tests/test_configuration_commands_right.py::test_simultaneous_selected_queries_keep_distinct_owned_configuration_bindings"
+    "tests/test_configuration_commands_right.py::test_simultaneous_selected_queries_keep_distinct_owned_configuration_bindings",
+    "tests/test_document_view_variants.py::test_configuration_byte_formatting_rebinds_inputs_without_changing_canonical_selection",
+    "tests/test_document_view_variants.py::test_conflicting_explicit_and_declared_configuration_is_not_silently_overridden",
+    "tests/test_document_view_variants.py::test_declared_and_explicit_configuration_bind_the_same_native_rows_and_graph[linux-selected0-targets0-False]",
+    "tests/test_document_view_variants.py::test_declared_and_explicit_configuration_bind_the_same_native_rows_and_graph[linux-selected0-targets0-True]",
+    "tests/test_document_view_variants.py::test_declared_and_explicit_configuration_bind_the_same_native_rows_and_graph[windows-selected1-targets1-False]",
+    "tests/test_document_view_variants.py::test_declared_and_explicit_configuration_bind_the_same_native_rows_and_graph[windows-selected1-targets1-True]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[0-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[0-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[1-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[1-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[2-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[2-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[3-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[3-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[4-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[4-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[5-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[5-desc]",
+    "tests/test_document_view_variants.py::test_explicit_id_sort_direction_is_respected_instead_of_replaced_by_default_ties",
+    "tests/test_document_view_variants.py::test_filtered_out_applicable_nodes_remain_available_but_excluded_nodes_block_traversal[linux]",
+    "tests/test_document_view_variants.py::test_filtered_out_applicable_nodes_remain_available_but_excluded_nodes_block_traversal[windows]",
+    "tests/test_document_view_variants.py::test_missing_or_invalid_configuration_inputs_never_produce_partial_view_success[bad_value]",
+    "tests/test_document_view_variants.py::test_missing_or_invalid_configuration_inputs_never_produce_partial_view_success[invalid_applicability]",
+    "tests/test_document_view_variants.py::test_missing_or_invalid_configuration_inputs_never_produce_partial_view_success[missing]",
+    "tests/test_document_view_variants.py::test_missing_or_invalid_configuration_inputs_never_produce_partial_view_success[missing_parent]",
+    "tests/test_document_view_variants.py::test_no_configuration_keeps_potential_variants_without_inventing_a_default",
+    "tests/test_document_view_variants.py::test_parent_selection_and_revision_are_bound_without_rewriting_view_or_row_sources",
+    "tests/test_document_view_variants.py::test_srx_graph_filter_and_relation_projection_use_the_same_configured_graph[linux]",
+    "tests/test_document_view_variants.py::test_srx_graph_filter_and_relation_projection_use_the_same_configured_graph[windows]"
   ],
   "open_items": [
     "Separate validate/render/view/coverage/release readiness/baseline/export/bundle command adapters are not all implemented. docs/configuration-adapters.md specifies the required explicit selection, context, binding and currentness integration; future adapters must supply their actual resource/closure providers.",
-    "Artifact seeds and the configuration digest are not full scope/model roots or approvals. Existing real scope closure/fingerprint services require complete provider observations; no missing production provider is substituted."
+    "Artifact seeds and the configuration digest are not full scope/model roots or approvals. Existing real scope closure/fingerprint services require complete provider observations; no missing production provider is substituted.",
+    "The prepared resolve_view API now supports configuration_id and a declared configured project scope. View CLI/rendering adapters remain separate; selected scopes do not replace the full supplied snapshot root."
   ]
 }

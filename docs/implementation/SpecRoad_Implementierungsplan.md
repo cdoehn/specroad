@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 465
-last_completed_plan_commit: 11.k.C
-next_plan_commit: 11.l.W
-last_completed_numbered_bundle: 292
+implementation_plan_commits_completed: 466
+last_completed_plan_commit: 11.l.W
+next_plan_commit: 11.l.R
+last_completed_numbered_bundle: 293
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12033,10 +12033,17 @@ Renderer. W-/R-Testbytes, öffentliche Daten- und Fehlerverträge bleiben erhalt
 
 #### 11.l.W – Let it Work
 
-- [ ] **11.l.W** · Position **466/900** · Voraussetzung: `11.k.C`.
+- [x] **11.l.W** · Position **466/900** · Voraussetzung: `11.k.C`.
 **Exakte Commit-Message:** `11.l.W feat(documents): Stabile Viewdaten und Varianten aufbauen`
 
 **Umsetzung:** ID-Tie-Breaker und Konfigurationsbindung in der fachlichen Viewprojektion einsetzen.
+
+**W-Ausschnitt (Bundle 293):** Deklarierte oder explizite Konfiguration aus dem
+gebundenen Snapshot auflösen. Native Query-Dienste wählen Zeilen und anwendbare
+Graphknoten; ausgeschlossene Zwischenknoten sind nicht traversierbar. Stabile
+ID-Ties, explizite ID-Sortierrichtung, Elternketten und Originalbytes werden an
+den tatsächlichen Daten geprüft. CLI-/Renderingadapter und weitere Projektions-
+Policies bleiben ihren folgenden Schritten zugeordnet.
 
 **Verhaltensabnahme:** Gleiche Werte und Auswahl ergeben dieselben geordneten Datensätze.
 

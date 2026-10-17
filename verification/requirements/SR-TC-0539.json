@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0539",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1"
+  ],
+  "preconditions": [
+    "11.l.W: complete owned snapshot with native view/configuration records; no live discovery, rendering or approval provider."
+  ],
+  "steps": [
+    "11.l.W: select actual configured rows and eligible graph nodes through the same native Query service, compare stable ID ties and explicit ID ordering, and bind selected scope/configuration plus original bytes. Preserve all potential variants when no selection is supplied."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ohne expliziten letzten Sortierschlüssel MUSS die Artefakt-ID als deterministischer Tie-Breaker dienen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "11.l.W adds same-snapshot ViewData configuration selection, inherited parent/hash binding, exact original inputs, deterministic NFC/ID sorting and bounded graph traversal through applicable nodes only. No CLI/rendering completion or full-suite/release claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,22 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[0-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[0-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[1-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[1-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[2-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[2-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[3-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[3-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[4-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[4-desc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[5-asc]",
+    "tests/test_document_view_variants.py::test_equal_sort_keys_always_use_ascending_id_ties_within_the_selected_variant[5-desc]",
+    "tests/test_document_view_variants.py::test_explicit_id_sort_direction_is_respected_instead_of_replaced_by_default_ties"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Remaining missing-value/nested relation projection policies and cleanup follow in11.l.R/C. Current tests cover data contracts only."
   ]
 }

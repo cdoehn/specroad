@@ -14,9 +14,6 @@ def plan_view(value, source, source_count, error_type):
     descriptor = ScopeDescriptor(value['scope_descriptor'])
     if descriptor.scope_kind != 'project' or descriptor.data['boundary_policy'] != 'closed':
         fail('view_scope_provider_required', '/scope_descriptor')
-    if descriptor.data['configuration_id'] is not None:
-        fail('view_configuration_provider_required', '/scope_descriptor/configuration_id')
-
     # Every declaration is checked before filtering, including unused columns
     # and projections. An empty result cannot conceal an executable declaration.
     formats = value['formats']

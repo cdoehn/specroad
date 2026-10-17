@@ -1,8 +1,8 @@
 # Declarative snapshot view data
 
-`specroad.documents.resolve_view(model, view_id)` evaluates a native stored view
-in one owned `TargetModel` snapshot. The initial service accepts a closed,
-unconfigured project scope and returns immutable `ViewData`. It performs no
+`specroad.documents.resolve_view(model, view_id, configuration_id=None)` evaluates
+a native stored view in one owned `TargetModel` snapshot. The service accepts a
+closed project scope and returns immutable `ViewData`. It performs no
 file discovery, writes, rendering, approval or external status evaluation.
 Private declaration planning validates scope, columns, formats, projection
 bounds and grouping before the resolver evaluates rows. Rendering adapters
@@ -35,8 +35,8 @@ unchanged. Each group contains typed keys and row IDs in the view's sort order.
 
 Every declaration is checked even when the filter selects no rows. Foreign
 loaders, executable column fields and unavailable formatting, missing-value,
-computed-status, configuration or scope providers fail explicitly. Configuration
-support and further projection policies follow in 11.l. The existing basic
+computed-status or scope providers fail explicitly. Further missing-value and
+nested projection policies follow in 11.l.R. The existing basic
 query/table-block adapter retains its separate narrower contract.
 
 Declared output formats are the distinct static names `json`, `markdown`, `html`
@@ -45,6 +45,26 @@ accepting a name does not perform rendering. Original source bytes, including
 noncanonical whitespace, remain bound separately from canonical model values.
 Malformed graph inventories still fail for empty selections. File, process and
 network operations are absent from the resolver; data resembling code stays data.
+
+A configuration can be declared in the view scope or supplied through the
+keyword-only `configuration_id`. Conflicting explicit and declared IDs fail.
+The actual selected record and its parent chain must be in the same snapshot;
+missing selections, invalid values or applicability expressions never produce a
+partial success. With no selection, potentially applicable variants remain
+available and no configuration is chosen implicitly.
+
+Native Query services resolve both the filtered rows and the complete applicable
+graph inventory. A row filter may omit an applicable intermediate node without
+removing it from relation traversal. An excluded node is never traversed. Sort
+ties use ascending artifact IDs, including after descending scalar keys; an
+explicit ID sort direction is retained.
+
+`selection_scope_descriptor` binds the effective selection separately from the
+stored view scope and the full supplied snapshot root. The query binding carries
+the selected configuration ID, revision and effective chain digest. Original
+configuration byte changes affect input hashes even when canonical values and
+selected results remain equal. This API does not attest a live configured scope
+closure or implement the later view CLI/rendering adapters.
 
 The data binds the original view bytes/revision, full snapshot root/input hashes,
 view scope, native query result/hashes, and each row's source/record hashes.

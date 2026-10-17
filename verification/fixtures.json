@@ -39,6 +39,7 @@
     "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-DOCUMENT-STRUCTURE-v1",
     "SR-FIX-DOCUMENT-TABLES-v1",
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1",
     "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
@@ -458,6 +459,10 @@
     "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1": {
       "provider": "tests/test_document_views_right.py:bound_view_model",
       "kind": "Original native view fixture with adversarial closed declarations, static pointer/graph/scope boundaries, exact noncanonical bytes, boolean/null/missing type contracts, tiny soft graph budgets, real-file inventories and trapped file/process/network operations, and isolated Core/PYZ parity. No rendering or approval oracle. C reuses the exact W/R fixture/test bytes and outcomes across pure declaration-planning extraction."
+    },
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1": {
+      "provider": "tests/test_document_view_variants.py:variant_project",
+      "kind": "Owned view with actual Linux/Windows configuration, optional parent chain, native applicability and cyclic relation graph. Declared/explicit selection, NFC-equal sort keys with ID ties, excluded vs merely row-filtered intermediates, original configuration bytes and read-only source bindings."
     }
   }
 }

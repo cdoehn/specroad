@@ -5,10 +5,11 @@ from hashlib import sha256
 import unicodedata
 
 from ..graph.relations import SourceRelations
+from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.domain_schemas import DOMAIN_TYPES
 from ..model.errors import ModelError
-from ..query import query_records
+from ..query import NormalizedQuery, query_records
 from ..query.paging import _scalar_key
 from ..srx import LoadedGraph, MISSING
 from ..srx.pointers import resolve_tokens
@@ -44,10 +45,10 @@ class ViewData:
         raise TypeError('View data is not rendering or project approval')
 
 
-def resolve_view(model, view_id):
+def resolve_view(model, view_id, *, configuration_id=None):
     """Select project rows, project fields/relations and group typed values.
 
-    The initial contract supports an unconfigured closed project scope, plain
+    The initial contract supports a closed project scope, plain
     columns with missing=error, distinct related IDs/counts, and scalar grouping.
     Other scopes, computed status providers and rendering need their own bound
     services. A result never supplies those services or authorizes a write.
@@ -72,8 +73,24 @@ def resolve_view(model, view_id):
     stored = RecordArtifact(source.source_bytes, expected_type='view', path=source.path)
     value = stored.data
     descriptor, projections, columns, grouping, query = plan_view(value, source, len(records), ViewError)
-    page = query_records(records, query, project=model.configuration.data)
-    graph = LoadedGraph(records, rule_id='document-view')
+    selected_scope = descriptor.data
+    if configuration_id is not None:
+        if selected_scope['configuration_id'] not in (None, configuration_id):
+            fail('view_configuration_conflict', '/scope_descriptor/configuration_id')
+        selected_scope['configuration_id'] = configuration_id
+    selected_scope = ScopeDescriptor(selected_scope)
+    selected_id = selected_scope.data['configuration_id']
+    if selected_id is not None and selected_id not in index:
+        fail('view_configuration_provider_required', '/scope_descriptor/configuration_id')
+    page = query_records(records, query, project=model.configuration.data, configuration_id=selected_id)
+    eligible_ids = None
+    if selected_id is not None:
+        # Resolve the same native configuration over all snapshot records.
+        # The row filter must not discard applicable intermediate graph nodes.
+        eligible = query_records(records, NormalizedQuery(limit=len(records)),
+            project=model.configuration.data, configuration_id=selected_id)
+        eligible_ids = [item['id'] for item in eligible.data['items']]
+    graph = LoadedGraph(records, rule_id='document-view', artifact_ids=eligible_ids)
 
     def related(start, projection):
         # IDs, not walks or inverse edge views, are counted. The source is not
@@ -131,6 +148,8 @@ def resolve_view(model, view_id):
         'scope_descriptor': _default_scope(),
         'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
         'input_sha256': model._sources_sha256,
+        'selection_scope_descriptor': selected_scope.data,
+        'selection_scope_descriptor_sha256': selected_scope.sha256,
         'view': {'artifact_id': view_id, 'revision': value['revision'], 'path': source.path,
             'source_sha256': sha256(stored.source_bytes).hexdigest(),
             'record_sha256': canonical_json_sha256(value), 'scope_descriptor': descriptor.data,
