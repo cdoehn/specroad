@@ -427,7 +427,7 @@
     },
     "SR-FIX-DOCUMENT-INCLUDES-v1": {
       "provider": "tests/test_document_includes.py:include_project",
-      "kind": "Owned document/section/includes with repeated content and section destinations, actual contains/reference relation identities, source-bound occurrences, deterministic cycle witnesses, deep chains and isolated Core/PYZ execution. R adds document meshes with mixed/global cycles, legal cross-section reuse, repeated/diamond/wide paths, original source/diagnostic rebinding and explicit read/process/network traps."
+      "kind": "Owned document/section/includes with repeated content and section destinations, actual contains/reference relation identities, source-bound occurrences, deterministic cycle witnesses, deep chains and isolated Core/PYZ execution. R adds document meshes with mixed/global cycles, legal cross-section reuse, repeated/diamond/wide paths, original source/diagnostic rebinding and explicit read/process/network traps. C reuses all W/R fixtures and exact expectations unchanged after private graph/provenance extraction."
     }
   }
 }

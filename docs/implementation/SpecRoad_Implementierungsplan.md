@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 452
-last_completed_plan_commit: 11.g.R
-next_plan_commit: 11.g.C
+implementation_plan_commits_completed: 453
+last_completed_plan_commit: 11.g.C
+next_plan_commit: 11.h.W
 last_completed_numbered_bundle: 284
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11832,10 +11832,18 @@ Seiteneffektgrenze. Dafür ist kein zusätzliches Produktverhalten erforderlich.
 
 #### 11.g.C – Make it Clean
 
-- [ ] **11.g.C** · Position **453/900** · Voraussetzung: `11.g.R`.
+- [x] **11.g.C** · Position **453/900** · Voraussetzung: `11.g.R`.
 **Exakte Commit-Message:** `11.g.C refactor(documents): Include-Graph und Zyklusprüfung bereinigen`
 
 **Bereinigung:** Gemeinsame Graphprüfung für Dokument- und Includeabhängigkeiten nutzen.
+
+**Vorbereiteter C-Stand (Bundle 284):** Ein privates Graphmodul bündelt
+native Contains-/Include-Zulassung und genaue Kantenherkunft. Komposition
+und Zyklusdiagnostik nutzen dieselben Graphdaten und weiterhin die gemeinsame
+iterative Zyklusprüfung. Die extrahierten Anweisungen bleiben bis auf die
+Übergabe von Dokumentquellen und Fehlerklasse identisch; öffentliche
+Wert-/Fehlerklassen, Vorkommensreihenfolge, Bindungen und Seiteneffekte bleiben
+erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

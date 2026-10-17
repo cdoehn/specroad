@@ -2,15 +2,11 @@
 from dataclasses import dataclass
 from hashlib import sha256
 
-from ..graph._graph_traversal import _cycle_witness
-from ..graph.hierarchies import contains_position_key
-from ..graph.references import RelationReferences
-from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
-from .blocks import ContentBlock
 from .structure import assess_document_structure
+from ._include_graph import _edge_data, _include_graph
 
 
 class DocumentIncludeError(ModelError):
@@ -56,19 +52,6 @@ class DocumentComposition:
         raise TypeError('Document composition is not rendering or project approval')
 
 
-def _edge_data(edge, index, pointers):
-    source = index[edge.source.id]
-    include = edge.relation.type == 'references'
-    return {'kind': 'include' if include else 'contains',
-        'source_id': edge.source.id, 'target_id': edge.target.id,
-        'relation_id': edge.relation.identity.id, 'path': source.path,
-        'pointer': pointers[edge.relation.identity.id],
-        'source_sha256': sha256(source.source_bytes).hexdigest(),
-        'relation_sha256': canonical_json_sha256(edge.relation.data),
-        'relation': edge.relation.data,
-        'include_mode': source.data['payload']['mode'] if include else None}
-
-
 def compose_document(model, document_id):
     """Check the whole supplied contains/include graph before expanding a root.
 
@@ -84,26 +67,7 @@ def compose_document(model, document_id):
     model = model.snapshot()
     structure = assess_document_structure(model)
     structure.require_document(document_id)
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
-    index = {record.identity.id: record for record in records}
-    references = RelationReferences(records)
-    include_ids = set()
-    for record in records:
-        value = record.data
-        if value['artifact_type'] == 'content_block' and value['block_kind'] == 'include_document':
-            block = ContentBlock(record.source_bytes, path=record.path)
-            include_ids.add(block.data['id'])
-    pointers = {relation.identity.id: '/relations/' + str(i)
-                for record in records for i, relation in enumerate(record.relations)}
-    edges = tuple(edge for edge in references.relations if edge.relation.type == 'contains'
-                  or (edge.source.id in include_ids and edge.relation.type == 'references'))
-    cycle = _cycle_witness(edges)
-    if cycle is not None:
-        raise DocumentIncludeCycleError(cycle, index, pointers)
-    outgoing = {}
-    for edge in edges: outgoing.setdefault(edge.source.id, []).append(edge)
-    for identifier, children in outgoing.items():
-        if identifier not in include_ids: children.sort(key=contains_position_key)
+    index, pointers, edges, outgoing = _include_graph(model.documents, DocumentIncludeCycleError)
     # Repeated occurrences are deliberate. A global visited set here would
     # incorrectly drop content shared by two documents or include paths.
     pending = [(document_id, None, None, 0)]

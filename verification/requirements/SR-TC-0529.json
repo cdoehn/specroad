@@ -14,12 +14,13 @@
   ],
   "steps": [
     "11.g.W: validate native structure/ownership and the whole contains/include graph before iterative expansion. Verify repeated content/section includes, deterministic source-bound ancestry, direct/transitive cycle witnesses, missing targets, native ordering, deep acyclic chains, changed revisions, immutable results, read-only behavior and isolated Core/PYZ parity.",
-    "11.g.R: verify three-document and unreachable/mixed include cycles, lawful cross-document leaf-section reuse, diamonds and wide/repeated paths, exact malformed-edge/source rejection, detached cycle witnesses, byte-only rebinding, immutable source ownership and real read/process/network traps, including Core/PYZ diagnostic parity."
+    "11.g.R: verify three-document and unreachable/mixed include cycles, lawful cross-document leaf-section reuse, diamonds and wide/repeated paths, exact malformed-edge/source rejection, detached cycle witnesses, byte-only rebinding, immutable source ownership and real read/process/network traps, including Core/PYZ diagnostic parity.",
+    "11.g.C: rerun unchanged W/R behavior tests after extracting native contains/include graph admission and exact edge provenance into one private helper. Keep shared iterative cycle validation, public error/value classes and data composition unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Inhaltsblock DARF NICHT transitiv das Dokument einschließen, in dem er gerendert wird.",
-    "scope": "11.g.W: exact flat occurrences preserve every include path and original artifact identity while a shared bound record map retains original bytes/revisions/hashes. All supplied contains/include cycles are rejected before expansion with actual edge witnesses. Other block semantics and rendering remain unproved; tests never compare presentation. 11.g.R confirms the actual artifact/edge graph rather than a coarsened document dependency graph: legal section sharing remains valid, unreachable cycles block composition, and no path or source identity is silently dropped. Existing native guards already enforce the tested failures; production behavior is unchanged."
+    "scope": "11.g.W: exact flat occurrences preserve every include path and original artifact identity while a shared bound record map retains original bytes/revisions/hashes. All supplied contains/include cycles are rejected before expansion with actual edge witnesses. Other block semantics and rendering remain unproved; tests never compare presentation. 11.g.R confirms the actual artifact/edge graph rather than a coarsened document dependency graph: legal section sharing remains valid, unreachable cycles block composition, and no path or source identity is silently dropped. Existing native guards already enforce the tested failures; production behavior is unchanged. 11.g.C changes only the private graph/provenance module; occurrence order, graph admission, source bindings, cycle diagnostics and permitted effects retain their W/R contracts."
   },
   "expected_diagnostics": [
     "document_include_cycle",

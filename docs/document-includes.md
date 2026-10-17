@@ -47,3 +47,8 @@ and wide include graphs keep every occurrence and one bound source per identity.
 Cycle diagnostics are detached; reordered source arrays retain their actual
 pointers. Byte-only changes update input/source bindings without inventing new
 revisions or semantic model roots.
+
+A private graph module now owns native contains/include admission and edge
+provenance. Composition and cycle diagnostics consume that same graph data and
+continue to use the common iterative cycle checker. This structural separation
+changes neither the public result/error types nor the accepted graph semantics.
