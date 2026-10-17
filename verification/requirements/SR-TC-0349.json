@@ -7,18 +7,19 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEWS-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
   "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+    "Owned TargetModel snapshot with original native records; no discovery, approval or external verification provider is fabricated."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `view`-Artefakt MUSS mindestens Titel, Eingabescope, SRX-Filter, Spalten, Sortierung, Gruppierung, Relationsprojektionen und unterstützte Ausgabeformate deklarieren.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,10 +36,14 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "test_record_schemas.RecordRightTests.test_view_filter_is_only_a_passive_srx_envelope",
     "test_record_schemas.RecordWorkTests.test_minimum_required_fields_are_not_synthesized",
-    "test_record_schemas.RecordRightTests.test_view_filter_is_only_a_passive_srx_envelope"
+    "tests/test_document_views.py::test_new_snapshot_changes_projection_values_and_root_without_mutating_old_data",
+    "tests/test_document_views.py::test_result_is_owned_and_never_grants_rendering_validation_or_write_authority",
+    "tests/test_document_views.py::test_view_projects_native_query_rows_relations_groups_and_exact_snapshot_bindings"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "11.k.R expands adversarial declaration/source/path and graph-boundary coverage; 11.k.C separates declarative planning from execution.",
+    "11.l supplies configuration binding and remaining missing/nested projection policies; non-project closure, computed-status services and rendering adapters require real providers. No full requirement or release completion is claimed."
   ]
 }

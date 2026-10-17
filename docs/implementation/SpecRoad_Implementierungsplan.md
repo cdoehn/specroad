@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 462
-last_completed_plan_commit: 11.j.C
-next_plan_commit: 11.k.W
-last_completed_numbered_bundle: 290
+implementation_plan_commits_completed: 463
+last_completed_plan_commit: 11.k.W
+next_plan_commit: 11.k.R
+last_completed_numbered_bundle: 291
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -11980,10 +11980,17 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.k.W – Let it Work
 
-- [ ] **11.k.W** · Position **463/900** · Voraussetzung: `11.j.C`.
+- [x] **11.k.W** · Position **463/900** · Voraussetzung: `11.j.C`.
 **Exakte Commit-Message:** `11.k.W feat(documents): Viewdefinition und Relationsprojektion aufbauen`
 
 **Umsetzung:** Deklarative View mit Scope, Spalten, Filter, Gruppierung und begrenzten Relationsprojektionen implementieren.
+
+**W-Ausschnitt (Bundle 291):** `resolve_view` bindet einen geschlossenen,
+unkonfigurierten Projektscope an einen echten Snapshot. Native SRX-/Query-Auswahl,
+typisierte Artefaktfelder, begrenzte Relationsziel-IDs/-Anzahlen und skalare
+NFC-Gruppierung liefern reine Daten mit Quellen- und Modellhashes. Fremde oder
+fehlende Provider werden nicht ergänzt. Konfigurationsbindung folgt in 11.l;
+weitere Scope-/Status-/Renderingdienste bleiben ausdrücklich offen.
 
 **Verhaltensabnahme:** Viewdaten ergeben die erwarteten fachlichen Werte für denselben Snapshot.
 

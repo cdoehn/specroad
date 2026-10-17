@@ -23,8 +23,9 @@ Query-block columns may use the closed form `{"field": "/title"}`. Full view
 columns declare exactly `source={kind:"artifact_field", pointer:...}`, `heading`,
 `data_type`, `format="plain"` and `missing="error"`. The current basic adapter
 rejects unsupported formatting/missing-value providers, grouping, relation
-projections and non-project scopes; the complete view service follows in
-11.k/11.l. A query block may provide its own columns over a referenced view;
+projections and non-project scopes. The separate `resolve_view` service adds
+grouping and bounded relation projections; see [document-views.md](document-views.md).
+A query block may provide its own columns over a referenced view;
 the view's original column declarations are still checked, even for empty
 results. Every view column must use the full form; the query-only `field`
 shorthand cannot replace its required declarations.

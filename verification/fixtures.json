@@ -39,6 +39,7 @@
     "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-DOCUMENT-STRUCTURE-v1",
     "SR-FIX-DOCUMENT-TABLES-v1",
+    "SR-FIX-DOCUMENT-VIEWS-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
@@ -448,6 +449,10 @@
     "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1": {
       "provider": "tests/test_document_composition_preservation_right.py:reference_project",
       "kind": "Actual temporary composition project with original noncanonical requirement, test or code_ref bytes and explicit stored draft/approved states. Native target assessment proves preservation; unavailable lifecycle/currentness/resource services block real publication. No approval or specialist success stub. Additional native writes, saved-plan refusals, operation binding and injected publication interruptions preserve exact content."
+    },
+    "SR-FIX-DOCUMENT-VIEWS-v1": {
+      "provider": "tests/test_document_views.py:view_project",
+      "kind": "Owned closed-project view and four native requirements with cyclic dependency relations and a separate conflict edge. Exact snapshot/query bindings, typed field and bounded distinct-ID/count projections, direction/depth boundaries, NFC grouping, empty-filter rejection and no write or approval authority."
     }
   }
 }

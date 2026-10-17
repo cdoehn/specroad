@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0350",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-VIEWS-v1"
+  ],
+  "preconditions": [
+    "Owned TargetModel snapshot with original native records; no discovery, approval or external verification provider is fabricated."
+  ],
+  "steps": [
+    "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "View-Filter MÜSSEN ausschließlich SRX 1.0 verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,13 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_document_views.py::test_row_filter_does_not_redefine_the_bound_projection_graph",
+    "tests/test_document_views.py::test_unresolved_sources_and_invalid_filter_or_graph_never_produce_view_data[script_filter]",
+    "tests/test_document_views.py::test_view_projects_native_query_rows_relations_groups_and_exact_snapshot_bindings"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "11.k.R expands adversarial declaration/source/path and graph-boundary coverage; 11.k.C separates declarative planning from execution.",
+    "11.l supplies configuration binding and remaining missing/nested projection policies; non-project closure, computed-status services and rendering adapters require real providers. No full requirement or release completion is claimed."
   ]
 }
