@@ -1,5 +1,6 @@
 """Fixed presentation emitters for internally assembled document nodes."""
 from html import escape
+from base64 import b64encode
 import json
 import re
 
@@ -19,6 +20,23 @@ def _cell(cell):
     return '[missing]' if cell['type'] == 'missing' else _value(cell['value'])
 
 
+def _attribute(value):
+    return escape(value, quote=True).replace('\r', '&#13;').replace('\n', '&#10;')
+
+
+def _label(node):
+    pending = [node]
+    parts = []
+    while pending:
+        current = pending.pop()
+        if 'text' in current:
+            parts.append(current['text'])
+        elif current['type'] == 'line_break':
+            parts.append(' ')
+        pending.extend(reversed(current.get('children', ())))
+    return ''.join(parts)
+
+
 class Emitter:
     """Only constant markup is executable syntax; source strings stay data."""
 
@@ -27,7 +45,7 @@ class Emitter:
         self.anchors = set()
 
     def text(self, value):
-        value = escape(value, quote=True)
+        value = escape(value, quote=True).replace('\r', '&#13;')
         if self.html:
             return value
         value = re.sub(r'([\\`*_{}\[\]()#+.!|>~\-])', r'\\\1', value)
@@ -72,6 +90,16 @@ class Emitter:
             return '<br>\n' if self.html else '  \n'
         if kind == 'thematic_break':
             return '<hr>\n' if self.html else '\n---\n\n'
+        if kind in ('link', 'image'):
+            asset = node['attachment']
+            # The media type comes from a closed admission list, never from a
+            # filename or untrusted URI. Both formats carry all resource bytes.
+            uri = 'data:' + asset.media_type + ';base64,' + b64encode(asset.content).decode('ascii')
+            title = ' title="' + _attribute(node['title']) + '"' if 'title' in node else ''
+            if kind == 'image':
+                return '<img src="' + uri + '" alt="' + _attribute(_label(node)) + '"' + title + '>'
+            label = ''.join(self.prose(child) for child in node['children'])
+            return '<a href="' + uri + '"' + title + '>' + label + '</a>'
         if kind in ('bullet_list', 'ordered_list'):
             items = [self.prose(item) for item in node['children']]
             if self.html:
@@ -175,17 +203,18 @@ class Emitter:
             elif kind == 'anchor':
                 body.append(self.anchor(node['id']) + '\n\n')
             elif kind == 'page_break':
-                body.append(self.anchor(node['id']) + '<div class="specroad-page-break"></div>\n\n')
+                body.append(self.anchor(node['id']) + '\n\n<div class="specroad-page-break" '
+                            'style="break-after:page;page-break-after:always"></div>\n\n')
             else:
                 raise ValueError('Unsupported internal render node: ' + kind)
         text = ''.join(body)
         if self.html:
             text = ('<!doctype html>\n<html><head><meta charset="utf-8">'
-                    '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'">'
-                    '<title>' + escape(title, quote=True) + '</title>'
+                    '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src data:; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'">'
+                    '<title>' + _attribute(title) + '</title>'
                     '<style>body{font-family:sans-serif;max-width:80em;margin:2em auto;padding:0 1em}'
                     'table{border-collapse:collapse}td,th{border:1px solid;padding:.4em;vertical-align:top}'
-                    'pre{white-space:pre-wrap}aside{border-left:.3em solid;padding:1em}'
+                    'pre,p,td{white-space:pre-wrap}img{max-width:100%}aside{border-left:.3em solid;padding:1em}'
                     '.specroad-page-break{break-after:page;page-break-after:always}</style>'
                     '</head><body>\n' + text + '</body></html>\n')
         return text.encode('utf-8')

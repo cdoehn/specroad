@@ -21,12 +21,25 @@ sortiert. HTML verwendet ausschließlich feste Elemente und eingebettete Styles;
 Nutzdaten werden escaped. Seitenumbrüche sind Druckumbrüche. Admonitions erhalten
 einen abgesetzten Hinweisbereich. Es gibt keinen ausführbaren Templatepfad.
 
-Der erste W-Ausschnitt weist Prosa-Anhangsreferenzen mit
-`render_attachment_provider_required` und nichtleere Dokument-Renderpolicies mit
-`render_policy_provider_required` ab. Diese Deklarationen dürfen weder still
-ignoriert noch als Erlaubnis zum Dateizugriff ausgelegt werden. Ein neuer sicherer
-Anhangsprovider ist Gegenstand der Vervollständigung. Eine Darstellung ist kein
-Nachweis für Freigabe, aktuelle Verifikation oder vollständige Modellvalidierung.
+Prosa-Anhangsreferenzen verwenden ausschließlich die `attachment_descriptors`
+und `resource_files` des gelieferten Modells. Pfad, Größe und SHA-256 müssen zu
+den Originalbytes passen. Der Renderer akzeptiert höchstens 8 MiB pro Anhang
+und genau `image/png`, `image/jpeg`, `image/gif` oder `image/webp` mit passender
+Dateisignatur. Ein Signaturcheck ist keine Bilddekodierung und kein Nachweis der
+Darstellbarkeit. Beide Ausgabeformate betten die Bytes als Data-URI ein; es gibt
+weder Pfadnachladen noch externe Ressourcen. Fehlende Deklarationen bleiben
+`render_attachment_provider_required`, andere Medientypen werden mit
+`render_attachment_media_provider_required` abgewiesen. SVG, HTML und PDF
+erhalten keinen aktiven Einbettungspfad.
+
+Eine leere Dokument-Renderpolicy verwendet die vorhandenen Formate. Die einzige
+unterstützte nichtleere Policy lautet `{"formats": ["markdown", "html"]}`;
+auch eine nichtleere Teilmenge ist zulässig. Jedes Format muss einmalig sein,
+und das angeforderte Format muss enthalten sein. Dies gilt ebenso für alle
+eingebundenen Dokumente. Unbekannte Policyfelder bleiben
+`render_policy_provider_required`. Deklarationen erteilen keine Dateirechte.
+Eine Darstellung ist kein Nachweis für Freigabe, aktuelle Verifikation oder
+vollständige Modellvalidierung.
 
 Die APIs führen keine Datei-, Prozess- oder Netzwerkoperationen aus. Atomare
 Ausgabeziele und CSV/JSON gehören zu 11.n; die CLI-Anbindung bleibt offen.

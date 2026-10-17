@@ -12,6 +12,7 @@ from .references import resolve_artifact_reference
 from .tables import resolve_table_block
 from .views import resolve_view
 from ._render_formats import Emitter
+from ._render_assets import resolve_render_attachment
 
 
 class RenderError(ModelError):
@@ -33,12 +34,26 @@ def _metadata(model, data):
             'profiles': list(model.profile.profile_chain), 'project_id': data['project_id']}
 
 
+def _render_policy(policy, output_format, path):
+    if not policy:
+        return
+    if set(policy) != {'formats'}:
+        raise RenderError('render_policy_provider_required', path=path, pointer='/render_policy')
+    formats = policy['formats']
+    if (type(formats) is not list or not formats
+            or any(type(item) is not str or item not in ('markdown', 'html') for item in formats)
+            or len(set(formats)) != len(formats)):
+        raise RenderError('render_policy_formats_invalid', path=path, pointer='/render_policy/formats')
+    if output_format not in formats:
+        raise RenderError('render_document_format_not_declared', path=path, pointer='/render_policy/formats')
+
+
 def render_document(model, document_id, *, output_format='markdown'):
     """Render validated composition, preserving repeated includes and data errors.
 
-    Attachments require an explicit safe embedding provider and are rejected in
-    this first slice. Nonempty document render policies likewise need a provider;
-    neither declaration is silently ignored or used to read a filesystem path.
+    Raster attachments are embedded only from exact declared resource bytes.
+    Other media and executable render policies remain unsupported. Neither
+    declaration is silently ignored or used to read a filesystem path.
     """
     model = _snapshot(model, output_format)
     composed = compose_document(model, document_id)
@@ -46,6 +61,7 @@ def render_document(model, document_id, *, output_format='markdown'):
     sources = composed.source_files
     nodes = []
     linked = {}
+    assets = {}
     shown = set(data['records'])
     for occurrence in data['occurrences']:
         identifier = occurrence['artifact_id']
@@ -53,8 +69,7 @@ def render_document(model, document_id, *, output_format='markdown'):
         record = bound['record']
         level = min(occurrence['depth'] + 1, 6)
         if occurrence['artifact_type'] in ('document', 'section'):
-            if record.get('render_policy'):
-                raise RenderError('render_policy_provider_required', path=bound['path'], pointer='/render_policy')
+            _render_policy(record.get('render_policy', {}), output_format, bound['path'])
             nodes.append({'type': 'heading', 'id': identifier, 'title': record['title'], 'level': level})
             continue
         block = ContentBlock(sources[bound['path']], path=bound['path'])
@@ -65,7 +80,10 @@ def render_document(model, document_id, *, output_format='markdown'):
             while pending:
                 node = pending.pop()
                 if node['type'] in ('link', 'image'):
-                    raise RenderError('render_attachment_provider_required', path=bound['path'], pointer='/payload/markdown')
+                    path = node['attachment_path']
+                    if path not in assets:
+                        assets[path] = resolve_render_attachment(model, path, source_path=bound['path'], error_type=RenderError)
+                    node['attachment'] = assets[path]
                 pending.extend(node.get('children', ()))
             nodes.append({'type': 'prose', 'id': identifier, 'content': content})
         elif kind in ('query', 'table'):

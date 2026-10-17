@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 469
-last_completed_plan_commit: 11.m.W
-next_plan_commit: 11.m.R
-last_completed_numbered_bundle: 296
+implementation_plan_commits_completed: 470
+last_completed_plan_commit: 11.m.R
+next_plan_commit: 11.m.C
+last_completed_numbered_bundle: 297
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12132,12 +12132,27 @@ kein gerenderter Text dient als Oracle. TD-001 bleibt unverändert wirksam.
 
 #### 11.m.R – Make it Right
 
-- [ ] **11.m.R** · Position **470/900** · Voraussetzung: `11.m.W`.
+- [x] **11.m.R** · Position **470/900** · Voraussetzung: `11.m.W`.
 **Exakte Commit-Message:** `11.m.R feat(documents): Markdown- und HTML-Renderer vervollständigen`
 
 **Vervollständigung:** Formatausgaben deterministisch halten, HTML ohne aktive/externe Inhalte; vorhandene Darstellungsbeispiele höchstens manuell sichten.
 
 **Verhaltensabnahme:** Keine Golden-File-, Snapshot-, Format- oder Doku-Tests; Testpolicy-Abweichung zu 0472 ausdrücklich erhalten. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Zuschnitt (Bundle 297):** Der Renderer bindet Rasteranhänge ausschließlich an
+die vorhandenen Deskriptoren und Originalbytes des eigenen Snapshots. PNG, JPEG,
+GIF und WebP erhalten einen geschlossenen Medientyp-/Signaturcheck und maximal
+8 MiB pro Anhang; dies ist keine Bilddekodierung. Die Ausgaben betten diese Bytes
+ein, ohne Pfade zu öffnen oder Netzwerk-/Dateireferenzen einzuführen. Andere
+Medientypen benötigen weiterhin einen sicheren Provider. Dokument-Renderpolicies
+unterstützen ausschließlich eine explizite eindeutige `formats`-Liste; dies gilt
+auch für eingebundene Dokumente. Fremde Policyfelder bleiben Fehler. Feste
+HTML-/Markdown-Emitter erhalten dieselben gebundenen Daten; Quelltexte und
+gespeicherte Referenzen werden nicht verändert. CR-Zeichen in Nutzdaten werden
+escaped, Seitenumbrüche tragen ihre feste Drucksemantik. W-Tests bleiben
+bytegleich; neue Tests prüfen Ressourcenbindung, Zulassung, veraltete Handles
+und tatsächliche verbotene Datei-/Prozess-/Netzwerkoperationen. Die Darstellung
+bleibt ohne automatisches Oracle und ohne Browser-/Decoder-Erfolgsbehauptung.
 
 #### 11.m.C – Make it Clean
 
