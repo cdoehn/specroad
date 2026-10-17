@@ -22,7 +22,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 468
 last_completed_plan_commit: 11.l.C
 next_plan_commit: 11.m.W
-last_completed_numbered_bundle: 294
+last_completed_numbered_bundle: 295
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -50,6 +50,19 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Apply-Testrotation in drei Gruppen (Bundle 295)
+
+Auf Nutzerauftrag vom 17. Oktober 2026 wird der Test-Runner von zwei auf drei
+feste Gruppen umgestellt. Die bestehenden Testnummern bleiben erhalten; der
+neue Rotationsstart bindet den bestätigten Apply-HEAD vor der Umstellung.
+Diese technischen Nacharbeiten erhöhen den Produktstand **468/900** nicht;
+anschließend folgt unverändert **11.m.W**. Die Arbeitsregel steht in der lokalen
+AGENTS.md, der ausführbare Vertrag in Runner und Registry.
+
+- [x] **APPLY-THIRDS.W:** Registry-Version 2, gebundene Migration und Modulo-3-Auswahl samt explizitem Teiltestbericht implementieren; historische Version 1 erhalten. Commit: `test(apply): Drei feste Testgruppen an erfolgreiche Commits binden`.
+- [ ] **APPLY-THIRDS.R:** Den Auswahlbericht um überprüfbare Nummern-/Registrybelege ergänzen und Änderungen während des Laufs abweisen. Commit: `test(apply): Drittelauswahl und Wiederholungen vollständig belegen`.
+- [ ] **APPLY-THIRDS.C:** Unveränderte Registry- und Auswahlregeln vom Prozessrunner trennen; sämtliche W-/R-Testbytes erhalten. Commit: `refactor(testing): Registryvertrag der Apply-Rotation isolieren`.
 
 <a id="audit-nacharbeiten"></a>
 ## Audit-Nacharbeiten vor Fortsetzung mit 5.t

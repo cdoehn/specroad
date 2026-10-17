@@ -1,8 +1,8 @@
-# Testaufrufe ab 15. Oktober 2026
+# Testaufrufe ab 17. Oktober 2026
 
 Die verbindliche Arbeitsregel steht in der lokalen `AGENTS.md`. Die technische
 Aufteilung ist: gezielte parallele Verhaltenstests in `specroad-codex`,
-abwechselnd gerade und ungerade Testnummern parallel in `specroad-apply`
+eine von drei nummerierten Testgruppen parallel in `specroad-apply`
 vor jedem einzelnen Commit.
 Das gilt für jeden W/R/C-Zustand und auch für den letzten Zustand eines Bundles.
 Der doppelte Dev-Volltest entfällt; es gibt keinen seriellen Abschlusslauf.
@@ -33,20 +33,30 @@ Apply-Entrypoint in `specroad-apply`, für jeden Zwischenstand:
 
 Der Apply-Runner sammelt zuerst alle Tests und prüft die Katalogbindung. Die
 festen Nummern stehen in `verification/apply_test_numbers.json`; die Position
-in `test_ids` ist N, beginnend bei 0. Bei der Einführung wird die vollständige
+in `test_ids` ist die Testnummer, beginnend bei 0. Bei der Einführung wird die vollständige
 Sammlung nach Testidentität sortiert. Danach werden ausschließlich neue IDs
 sortiert hinten angefügt; alte Nummern bleiben auch bei Entfernung reserviert.
 
-Die Anzahl tatsächlicher First-Parent-Commits seit `anchor_commit` bestimmt die
-Hälfte: 0 prüft gerade Testnummern, 1 ungerade, 2 wieder gerade. Fehlversuche ohne
-Commit ändern die Auswahl nicht. Der Runner prüft die Nummerierung gegen den
-letzten Commit und verweigert fehlende IDs, Umnummerierung oder Ankerwechsel.
+Registry-Version 2 enthält `partition_count: 3` und einen eigenen
+`rotation_anchor_commit`. Die stabile Nummerierung und ihr ursprünglicher
+`anchor_commit` bleiben erhalten. Der Umstellungsanker ist der bestätigte
+Apply-HEAD vor dem ersten Drittellauf. Die Migration von Version 1 darf nur
+dort beginnen; nach einem Commit bleiben beide Anker und die Gruppenzahl fest.
+Historische Registry-Version 1 behält ihren damaligen Halbierungsvertrag.
 
-Die gewählte Hälfte läuft mit vier Workern über pytest-Argumentdateien.
-`selection.json` enthält Commitbasis, Nummernfolge, Parität, exakte Testidentitäten,
-Quellbindung und `full_suite_passed: null`. Exitcode 0 setzt ausschließlich
-bestandene, vollständige Beobachtungen der gewählten Hälfte voraus. Berichte
-liegen außerhalb der Quellen; `--outdir` kann ein frisches Ziel festlegen.
+Die tatsächliche First-Parent-Commitzahl seit `rotation_anchor_commit` bestimmt
+die Gruppe modulo 3: zuerst 0, dann 1, dann 2 und wieder 0. Ein Test gehört zur
+Gruppe seiner festen Testnummer modulo 3. Fehlversuche ohne Commit schalten
+nicht weiter. Neue und entfernte Tests verändern keine vorhandenen Nummern.
+
+Die gewählte Gruppe läuft mit vier Workern über pytest-Argumentdateien.
+`selection.json` Version 2 enthält `test_scope: stable_modulo_partition`,
+`partition_count`, `partition_index`, beide Anker, Commitfolge, exakte
+Testidentitäten, Quellbindung und `full_suite_passed: null`. Exitcode 0 setzt
+vollständige erfolgreiche Beobachtungen genau dieser Gruppe voraus. Über drei
+Commits sind bei unverändertem Bestand alle Tests vertreten, auf drei
+Codezuständen; das ergibt keinen Vollsuite- oder Release-Erfolgsnachweis.
+Berichte liegen außerhalb der Quellen; `--outdir` legt ein frisches Ziel fest.
 `--final-bundle-state` bleibt akzeptiert und ändert die Auswahl nicht.
 Es gibt keine Wiederholung und keinen seriellen Fallback.
 
@@ -206,6 +216,7 @@ Plan- oder Requirement-Abdeckung hochgezählt. Keine neuen Produkt-Planpositione
 
 ## Historische Testauswahl
 
-Die frühere fachbezogene Apply-Auswahl ist historisch. Seit 15. Oktober 2026
-verwendet Apply die oben beschriebene feste Gerade/Ungerade-Rotation.
+Die frühere fachbezogene Apply-Auswahl und die am 15. Oktober 2026 eingeführte
+Gerade/Ungerade-Rotation sind historische Verfahren. Ab Bundle 295 gilt die
+oben beschriebene Drittelrotation.
 `run_selected_tests.py` bleibt das Hilfsmittel für gezielte Entwicklungstests.

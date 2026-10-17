@@ -39,7 +39,7 @@ etwa Lifecycle oder externe Ressourcen, bleiben ebenfalls verbindlich.
 
 Die API registriert noch keinen CLI-Writer und übernimmt keine Projekt- oder
 Historieninventur.
-Gezielte Entwicklungstests und alternierende Apply-Testhälften sind Teilnachweise.
+Gezielte Entwicklungstests und rotierende Apply-Testgruppen sind Teilnachweise.
 
 Fehlerantworten des gemeinsamen `execute_authoring_plan` behalten den tatsächlichen
 Dokumentbefehl und die Bindung an den geprüften Plan. Ungültige Parents, Kreise,

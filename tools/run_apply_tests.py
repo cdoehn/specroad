@@ -1,4 +1,4 @@
-"""Alternate stable even/odd test numbers after each successful Apply commit."""
+"""Run the next stable test group after each successful Apply commit."""
 import argparse
 import json
 from pathlib import Path
@@ -24,6 +24,8 @@ def main(argv=None):
                           "report_directory": str(outdir)}, sort_keys=True))
         return result["exit_code"]
     except (OSError, ValueError, TypeError, KeyError):
+        # Preflight failures have no accepted policy binding; retain the
+        # existing machine-readable error envelope for callers.
         print(json.dumps({"purpose": "alternating_apply_tests", "selected_passed": False,
                           "full_suite_passed": None, "exit_code": 4,
                           "error": "apply_partition_rejected", "report_directory": str(outdir)},

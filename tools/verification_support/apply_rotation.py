@@ -1,4 +1,4 @@
-"""Commit-bound even/odd Apply gates with persistent, append-only test numbers."""
+"""Commit-bound Apply groups with persistent, append-only test numbers."""
 import json
 import os
 from pathlib import Path
@@ -16,11 +16,21 @@ REGISTRY = "verification/apply_test_numbers.json"
 
 
 def validate_registry(value, current_ids, previous=None):
-    if (type(value) is not dict or set(value) != {"format_version", "anchor_commit", "test_ids"}
-            or type(value["format_version"]) is not int or value["format_version"] != 1
+    if type(value) is not dict:
+        raise ValueError("Invalid Apply numbering registry")
+    version = value.get("format_version")
+    fields = {"format_version", "anchor_commit", "test_ids"}
+    if version == 2:
+        fields |= {"partition_count", "rotation_anchor_commit"}
+    if (set(value) != fields
+            or type(version) is not int or version not in (1, 2)
             or type(value["anchor_commit"]) is not str
             or re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", value["anchor_commit"]) is None):
         raise ValueError("Invalid Apply numbering registry")
+    if version == 2 and (type(value["partition_count"]) is not int or value["partition_count"] != 3
+            or type(value["rotation_anchor_commit"]) is not str
+            or re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", value["rotation_anchor_commit"]) is None):
+        raise ValueError("Invalid three-group Apply rotation")
     ids = value["test_ids"]
     if (type(ids) is not list or not ids or any(type(i) is not str or not i for i in ids)
             or len(set(ids)) != len(ids) or not set(current_ids) <= set(ids)):
@@ -34,6 +44,10 @@ def validate_registry(value, current_ids, previous=None):
         if (value["anchor_commit"] != previous["anchor_commit"] or ids[:len(old)] != old
                 or ids[len(old):] != sorted(set(current_ids) - set(old))):
             raise ValueError("Existing test numbers must not change or be reused")
+        if previous["format_version"] == 2 and (version != 2
+                or value["rotation_anchor_commit"] != previous["rotation_anchor_commit"]
+                or value["partition_count"] != previous["partition_count"]):
+            raise ValueError("Committed Apply rotation must not change or restart")
     return {name: number for number, name in enumerate(ids)}
 
 
@@ -74,6 +88,21 @@ def commit_context(root, registry, *, runner=None):
                               object_pairs_hook=_unique_object)
     elif sequence:
         raise ValueError("Committed numbering registry is missing")
+    if registry["format_version"] == 2:
+        anchor = registry["rotation_anchor_commit"]
+        if anchor not in history or history.index(anchor) > sequence:
+            raise ValueError("Apply group anchor is not in the numbered first-parent history")
+        if previous is not None:
+            validate_registry_shape(previous)
+            if previous["format_version"] == 1 and anchor != history[0]:
+                raise ValueError("Three-group migration must start at the current committed HEAD")
+            if previous["format_version"] == 2 and (
+                    previous["rotation_anchor_commit"] != anchor
+                    or previous["partition_count"] != registry["partition_count"]):
+                raise ValueError("Committed Apply rotation must not change or restart")
+        elif anchor != history[0]:
+            raise ValueError("Initial Apply group anchor must be HEAD")
+        sequence = history.index(anchor)
     return history[0], sequence, previous
 
 
@@ -85,10 +114,23 @@ def select_partition(pairs, registry, sequence, previous=None):
             or len(set(pairs.values())) != len(pairs)):
         raise ValueError("Invalid collected identities or commit sequence")
     numbers = validate_registry(registry, pairs.values(), previous)
-    selected = {n: i for n, i in sorted(pairs.items()) if numbers[i] % 2 == sequence % 2}
+    if registry["format_version"] == 2 and (previous is None or previous["format_version"] == 1) and sequence:
+        raise ValueError("The first three-group commit must use group zero")
+    count = registry.get("partition_count", 2)
+    selected = {n: i for n, i in sorted(pairs.items()) if numbers[i] % count == sequence % count}
     if not selected:
         raise ValueError("An empty Apply partition cannot pass")
     return selected
+
+
+def partition_metadata(registry, sequence):
+    """Versioned partial-run identity; legacy evidence retains its old contract."""
+    if registry["format_version"] == 1:
+        return {"format_version": 1, "purpose": "alternating_apply_tests",
+                "test_scope": "stable_even_odd_partition", "parity": "even" if sequence % 2 == 0 else "odd"}
+    return {"format_version": 2, "purpose": "rotating_apply_tests",
+            "test_scope": "stable_modulo_partition", "partition_count": 3,
+            "partition_index": sequence % 3, "rotation_anchor_commit": registry["rotation_anchor_commit"]}
 
 
 def parallel_command(root, outdir, expected, workers):
@@ -137,11 +179,10 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
             raise ValueError("Nonpassing, changed or unbound Apply selection")
     except (OSError, ValueError, TypeError, KeyError, AttributeError, RecursionError):
         errors.append("nonpassing_or_unbound_partition")
-    result = {"format_version": 1, "purpose": "alternating_apply_tests",
-              "test_scope": "stable_even_odd_partition", "full_suite_passed": None,
+    result = {**partition_metadata(registry, sequence), "full_suite_passed": None,
               "selected_passed": not errors, "source_sha256": binding,
               "base_commit": head, "anchor_commit": registry["anchor_commit"],
-              "commit_sequence": sequence, "parity": "even" if sequence % 2 == 0 else "odd",
+              "commit_sequence": sequence,
               "collected_tests": catalog["collected_tests"], "expected_tests": len(selected),
               "nodeid_to_test_id": selected, "workers": workers,
               "process_exit_code": code, "errors": errors, "exit_code": 0 if not errors else 1}

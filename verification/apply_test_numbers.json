@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "anchor_commit": "1fff45ff0e1533bfa44de64c556a1688f3001628",
   "test_ids": [
     "test_artifact_identity.ArtifactIdentityRightTests.test_allocation_must_carry_exact_new_reservation",
@@ -12161,6 +12161,34 @@
     "tests/test_document_view_variants_right.py::test_preserve_does_not_relax_the_declared_type_for_present_values[0-boolean]",
     "tests/test_document_view_variants_right.py::test_preserve_does_not_relax_the_declared_type_for_present_values[False-number]",
     "tests/test_document_view_variants_right.py::test_preserve_does_not_relax_the_declared_type_for_present_values[None-string]",
-    "tests/test_document_view_variants_right.py::test_preserve_does_not_relax_the_declared_type_for_present_values[present3-array]"
-  ]
+    "tests/test_document_view_variants_right.py::test_preserve_does_not_relax_the_declared_type_for_present_values[present3-array]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[bad_anchor]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[count_bool]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[count_four]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[count_two]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[drop_old]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[duplicate]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[missing_anchor]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[reorder]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[reset_number_anchor]",
+    "tests/test_apply_thirds.py::test_invalid_migration_contract_cannot_renumber_or_choose_a_different_fraction[unknown]",
+    "tests/test_apply_thirds.py::test_migration_preserves_all_existing_numbers_and_appends_new_ids",
+    "tests/test_apply_thirds.py::test_real_parallel_runner_executes_exactly_one_third_and_retains_failure[0-False]",
+    "tests/test_apply_thirds.py::test_real_parallel_runner_executes_exactly_one_third_and_retains_failure[1-False]",
+    "tests/test_apply_thirds.py::test_real_parallel_runner_executes_exactly_one_third_and_retains_failure[2-False]",
+    "tests/test_apply_thirds.py::test_real_parallel_runner_executes_exactly_one_third_and_retains_failure[2-True]",
+    "tests/test_apply_thirds.py::test_rotation_cannot_restart_or_use_unbound_history[earlier_than_number_anchor]",
+    "tests/test_apply_thirds.py::test_rotation_cannot_restart_or_use_unbound_history[migration_sequence]",
+    "tests/test_apply_thirds.py::test_rotation_cannot_restart_or_use_unbound_history[missing_rotation_anchor]",
+    "tests/test_apply_thirds.py::test_rotation_cannot_restart_or_use_unbound_history[old_migration_anchor]",
+    "tests/test_apply_thirds.py::test_rotation_cannot_restart_or_use_unbound_history[restart_committed]",
+    "tests/test_apply_thirds.py::test_rotation_cannot_restart_or_use_unbound_history[rollback_to_halves]",
+    "tests/test_apply_thirds.py::test_same_head_retry_keeps_group_zero_and_successful_commits_advance_from_new_anchor",
+    "tests/test_apply_thirds.py::test_three_group_reports_are_explicit_partial_results_without_even_odd_labels[0]",
+    "tests/test_apply_thirds.py::test_three_group_reports_are_explicit_partial_results_without_even_odd_labels[1]",
+    "tests/test_apply_thirds.py::test_three_group_reports_are_explicit_partial_results_without_even_odd_labels[2]",
+    "tests/test_apply_thirds.py::test_three_groups_partition_stable_numbers_and_repeat_only_after_three_commits"
+  ],
+  "partition_count": 3,
+  "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc"
 }
