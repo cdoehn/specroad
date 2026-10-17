@@ -15,7 +15,8 @@
   ],
   "steps": [
     "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics.",
-    "11.j.R: compare original and candidate hashes for requirement/test/code_ref records in draft and stored approved states; only real supported targets publish. Missing lifecycle, review, evidence and external-resource services block publication. Guard owner fields and all nonrequested relations, detach operation bindings, reject forged saved-plan result artifacts, verify sequential moves/replay and preserve actual interrupted owner publication."
+    "11.j.R: compare original and candidate hashes for requirement/test/code_ref records in draft and stored approved states; only real supported targets publish. Missing lifecycle, review, evidence and external-resource services block publication. Guard owner fields and all nonrequested relations, detach operation bindings, reject forged saved-plan result artifacts, verify sequential moves/replay and preserve actual interrupted owner publication.",
+    "11.j.C: separate exact contains-edge owner checks from unchanged original source preservation, retaining all W/R behavior tests and public interfaces."
   ],
   "oracle": {
     "kind": "behavior",
@@ -104,7 +105,6 @@
     "tests/test_document_composition_preservation_right.py::test_successive_real_moves_keep_shared_content_bytes_and_commit_each_owner_once"
   ],
   "open_items": [
-    "11.j.C: consolidate explicit ownership/reference preservation structure without changing behavior.",
     "Unchanged approved history, evidence/currentness and external resources still require actual specialist services. This move guard does not attest stored approvals or supply those services.",
     "CLI model/history discovery and identity allocation remain outside the prepared-plan embedding API. Targeted and alternating test observations are partial, not full-suite or release proof."
   ]

@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 461
-last_completed_plan_commit: 11.j.R
-next_plan_commit: 11.j.C
+implementation_plan_commits_completed: 462
+last_completed_plan_commit: 11.j.C
+next_plan_commit: 11.k.W
 last_completed_numbered_bundle: 290
 implementation_state: in_progress
 audit_followup_status: closed
@@ -11961,10 +11961,12 @@ erhalten. Alle W-/R-Tests und Erwartungen bleiben unverändert.
 
 #### 11.j.C – Make it Clean
 
-- [ ] **11.j.C** · Position **462/900** · Voraussetzung: `11.j.R`.
+- [x] **11.j.C** · Position **462/900** · Voraussetzung: `11.j.R`.
 **Exakte Commit-Message:** `11.j.C refactor(documents): Revisionserhalt bei Komposition bereinigen`
 
 **Bereinigung:** Ownership- und Referenzkanten im Writer explizit auseinanderhalten.
+
+**C-Umfang:** Die bereits geprüfte Contains-Eigentümerbindung und der Schutz ihrer übrigen Inhalte liegen in einem eigenen internen Modul. Die getrennte Erhaltsprüfung behandelt das vollständige Inventar und die unveränderten Nicht-Eigentümerquellen. Der gemeinsame Writer, alle öffentlichen Signaturen, die Fehlerverträge und sämtliche W-/R-Verhaltenstests bleiben erhalten; es kommt kein Fachverhalten hinzu.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

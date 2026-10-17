@@ -8,6 +8,7 @@ from ..documents.includes import DocumentIncludeCycleError
 from ..documents._include_graph import _include_graph
 from ..model.canonical import canonical_json_sha256
 from ..validation import ModelGate
+from ._composition_ownership import _require_section_ownership
 
 
 def _document_gates(model, command_id, operations, gates, *, block_semantics=False):
@@ -15,14 +16,7 @@ def _document_gates(model, command_id, operations, gates, *, block_semantics=Fal
     owned = model.snapshot()
     operations = [ChangeOperation(operation).data for operation in operations]
     if command_id == 'section.move':
-        removal, addition = operations
-        matches = [edge for value in owned.artifacts if value['id'] == removal['source']
-                   for edge in value['relations'] if edge['relation_id'] == removal['relation_id']]
-        index = {value['id']: value for value in owned.artifacts}
-        if (len(matches) != 1 or matches[0]['type'] != 'contains'
-                or matches[0]['target'] != addition['relation']['target']
-                or index.get(matches[0]['target'], {}).get('artifact_type') != 'section'):
-            raise AuthoringError('document_original_section_relation_required', exit_code=3)
+        _require_section_ownership(owned.artifacts, operations)
     if any(type(gate) is ModelGate and gate.gate_id == 'extension:document-authoring' for gate in gates):
         raise AuthoringError('document_authoring_gate_override')
     binding = canonical_json_sha256({'sources_sha256': owned._sources_sha256,

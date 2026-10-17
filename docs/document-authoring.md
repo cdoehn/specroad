@@ -128,3 +128,10 @@ Freigaben lassen sich die unveränderten Kandidatenbytes getrennt nachweisen;
 ohne den jeweils erforderlichen echten Fachdienst bleibt die Veröffentlichung
 gesperrt. Bereits veröffentlichte Teilzustände bei I/O-Abbruch werden erhalten,
 während referenzierte Inhalte auch dort unverändert bleiben.
+
+Die interne Ownership-Prüfung behandelt ausschließlich die ursprüngliche und die
+neue Contains-Kante sowie die dadurch betroffenen Eigentümer. Die getrennte
+Quellprüfung erhält das vollständige Inventar und alle anderen Originalbytes.
+Referenzkanten werden weder als Eigentümerwechsel verfolgt noch als Schreibziel
+erweitert. Beide Prüfungen bleiben verpflichtender Teil desselben nativen
+Authoring- und Saved-Plan-Pfads.
