@@ -41,6 +41,11 @@ eingebundenen Dokumente. Unbekannte Policyfelder bleiben
 Eine Darstellung ist kein Nachweis für Freigabe, aktuelle Verifikation oder
 vollständige Modellvalidierung.
 
+Prosa, Tabellen und gemeinsame Text-/Ankerfunktionen liegen in getrennten privaten
+Modulen. Der feste Gesamtemitter fügt sie mit Metadaten und Dokumentrahmen
+zusammen. Diese Aufteilung ändert weder den zugelassenen Ressourcenbestand noch
+die Fehlerverträge, Querydaten oder zulässigen Seiteneffekte.
+
 Die APIs führen keine Datei-, Prozess- oder Netzwerkoperationen aus. Atomare
 Ausgabeziele und CSV/JSON gehören zu 11.n; die CLI-Anbindung bleibt offen.
 13.h ergänzt berechnete Roadmap-/Verifikationsprovider. Fehlende Berichtsdaten

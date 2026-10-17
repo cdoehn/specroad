@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 470
-last_completed_plan_commit: 11.m.R
-next_plan_commit: 11.m.C
+implementation_plan_commits_completed: 471
+last_completed_plan_commit: 11.m.C
+next_plan_commit: 11.n.W
 last_completed_numbered_bundle: 297
 implementation_state: in_progress
 audit_followup_status: closed
@@ -12156,12 +12156,19 @@ bleibt ohne automatisches Oracle und ohne Browser-/Decoder-Erfolgsbehauptung.
 
 #### 11.m.C – Make it Clean
 
-- [ ] **11.m.C** · Position **471/900** · Voraussetzung: `11.m.R`.
+- [x] **11.m.C** · Position **471/900** · Voraussetzung: `11.m.R`.
 **Exakte Commit-Message:** `11.m.C refactor(documents): Markdown- und HTML-Renderer bereinigen`
 
 **Bereinigung:** Formatemitter klein halten; sichere Datenknoten statt frei ausführbarer Templates verwenden.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
+
+**C-Zuschnitt (Bundle 297):** Unveränderte Prosa- und Tabellenmethoden liegen in
+eigenen festen Emittern; gemeinsame Text-/Ankerfunktionen liegen separat.
+Der zusammengesetzte Emitter behält Metadaten, Dokumentrahmen und Recordausgabe.
+Sämtliche Funktionskörper bleiben strukturell identisch, und alle W-/R-Testbytes
+bleiben unverändert. Ressourcenadmission und native Datenauflösung bleiben vor
+der Darstellung wirksam; es gibt keine dynamische Template- oder Pluginwahl.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
 
