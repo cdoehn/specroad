@@ -19,9 +19,9 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 467
-last_completed_plan_commit: 11.l.R
-next_plan_commit: 11.l.C
+implementation_plan_commits_completed: 468
+last_completed_plan_commit: 11.l.C
+next_plan_commit: 11.m.W
 last_completed_numbered_bundle: 294
 implementation_state: in_progress
 audit_followup_status: closed
@@ -12065,10 +12065,15 @@ Grenzen werden auch bei leerer Auswahl zurückgewiesen.
 
 #### 11.l.C – Make it Clean
 
-- [ ] **11.l.C** · Position **468/900** · Voraussetzung: `11.l.R`.
+- [x] **11.l.C** · Position **468/900** · Voraussetzung: `11.l.R`.
 **Exakte Commit-Message:** `11.l.C refactor(documents): Stabile Viewdaten und Varianten bereinigen`
 
 **Bereinigung:** Viewprojektion auf Query-/Scope-/Konfigurationsdienste reduzieren.
+
+**C-Ausschnitt (Bundle 294):** Die unveränderte native Scope-/Konfigurations- und
+Queryauswahl sowie die typisierte Zeilenprojektion in private Dienste auslagern.
+Der öffentliche Resolver besitzt weiter Snapshot und Ergebnisbindung. W-/R-
+Testbytes, Gruppenbildung, Daten- und Fehlerverträge bleiben unverändert.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

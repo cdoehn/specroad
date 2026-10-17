@@ -467,7 +467,7 @@
     },
     "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1": {
       "provider": "tests/test_document_view_variants_right.py:nested_project",
-      "kind": "Owned snapshot view with explicit error/preserve missing policies and an acyclic graph of bounded records projections. Missing/null/false/zero separation, typed NFC grouping, independently bounded nested directions/depths, configured graph visibility, stable target identities, original-byte hashes, cyclic/foreign declaration rejection and unchanged sources."
+      "kind": "Owned snapshot view with explicit error/preserve missing policies and an acyclic graph of bounded records projections. Missing/null/false/zero separation, typed NFC grouping, independently bounded nested directions/depths, configured graph visibility, stable target identities, original-byte hashes, cyclic/foreign declaration rejection and unchanged sources. C preserves all W/R test bytes while extracting unchanged selection and row-projection services."
     }
   }
 }

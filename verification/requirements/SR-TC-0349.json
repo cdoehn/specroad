@@ -19,7 +19,8 @@
     "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
     "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data.",
     "11.k.C: extract unchanged declaration planning into a private pure module; keep all W/R tests and public result/error contracts byte-for-byte unchanged.",
-    "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering."
+    "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering.",
+    "11.l.C: extract unchanged native scope/configuration/query selection and typed row evaluation into private services; preserve all W/R tests, public bindings, grouping, error contracts and effects."
   ],
   "oracle": {
     "kind": "behavior",

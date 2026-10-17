@@ -25,7 +25,8 @@
     "Compare native Query, validation and seed configuration bindings, and derive equal real scope roots from equal verified input/descriptor/provider observations.",
     "Reject invalid selections, stale source files and forged cached source identities; preserve concurrent variant isolation and original metadata contracts when no selection is supplied.",
     "11.l.W: select actual configured rows and eligible graph nodes through the same native Query service, compare stable ID ties and explicit ID ordering, and bind selected scope/configuration plus original bytes. Preserve all potential variants when no selection is supplied.",
-    "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering."
+    "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering.",
+    "11.l.C: extract unchanged native scope/configuration/query selection and typed row evaluation into private services; preserve all W/R tests, public bindings, grouping, error contracts and effects."
   ],
   "oracle": {
     "kind": "behavior",

@@ -6,7 +6,9 @@ closed project scope and returns immutable `ViewData`. It performs no
 file discovery, writes, rendering, approval or external status evaluation.
 Private declaration planning validates scope, columns, formats, projection
 bounds and grouping before the resolver evaluates rows. Rendering adapters
-consume the resulting data separately.
+consume the resulting data separately. Private selection and projection services
+keep native Query/Scope/configuration binding separate from typed row evaluation;
+the public resolver owns the snapshot and resulting data envelope.
 
 The filter is an SRX 1.0 document. Sort entries declare `key` and `direction`
 (`asc` or `desc`) and use native Query collation with the ascending ID tie-breaker.
