@@ -37,6 +37,10 @@ in `test_ids` ist die Testnummer, beginnend bei 0. Bei der Einführung wird die 
 Sammlung nach Testidentität sortiert. Danach werden ausschließlich neue IDs
 sortiert hinten angefügt; alte Nummern bleiben auch bei Entfernung reserviert.
 
+Der reine Registry-/Auswahlvertrag liegt in
+`tools/verification_support/_apply_registry.py`; `apply_rotation.py` bindet
+Git-Zustand, Collection, parallelen Prozess und Beobachtungen daran.
+
 Registry-Version 2 enthält `partition_count: 3` und einen eigenen
 `rotation_anchor_commit`. Die stabile Nummerierung und ihr ursprünglicher
 `anchor_commit` bleiben erhalten. Der Umstellungsanker ist der bestätigte

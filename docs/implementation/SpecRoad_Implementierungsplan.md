@@ -67,7 +67,11 @@ AGENTS.md, der ausführbare Vertrag in Runner und Registry.
 Nummer, Gruppe und Commitbasis. Abweichende Beobachtungen, geänderte Eingaben und
 Wiederverwendung eines Reportverzeichnisses bleiben ohne Erfolgsnachweis erhalten.
 
-- [ ] **APPLY-THIRDS.C:** Unveränderte Registry- und Auswahlregeln vom Prozessrunner trennen; sämtliche W-/R-Testbytes erhalten. Commit: `refactor(testing): Registryvertrag der Apply-Rotation isolieren`.
+- [x] **APPLY-THIRDS.C:** Unveränderte Registry- und Auswahlregeln vom Prozessrunner trennen; sämtliche W-/R-Testbytes erhalten. Commit: `refactor(testing): Registryvertrag der Apply-Rotation isolieren`.
+
+**C-Zustand:** Sämtliche Funktionskörper bleiben strukturell identisch; die reinen
+Nummerierungs-, Auswahl- und Belegfunktionen liegen gemeinsam in einem privaten
+Modul. Der Runner behält Git-, Prozess- und Beobachtungsbindung unverändert.
 
 <a id="audit-nacharbeiten"></a>
 ## Audit-Nacharbeiten vor Fortsetzung mit 5.t
