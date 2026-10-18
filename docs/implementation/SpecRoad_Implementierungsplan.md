@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 475
-last_completed_plan_commit: 11.o.W
-next_plan_commit: 11.o.R
-last_completed_numbered_bundle: 301
+implementation_plan_commits_completed: 476
+last_completed_plan_commit: 11.o.R
+next_plan_commit: 11.o.C
+last_completed_numbered_bundle: 302
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12282,12 +12282,25 @@ und Nebenwirkungen, keine Diagrammtexte oder Layouts. Details:
 
 #### 11.o.R – Make it Right
 
-- [ ] **11.o.R** · Position **476/900** · Voraussetzung: `11.o.W`.
+- [x] **11.o.R** · Position **476/900** · Voraussetzung: `11.o.W`.
 **Exakte Commit-Message:** `11.o.R feat(documents): Diagrammquellen vervollständigen`
 
 **Vervollständigung:** Keine externen Renderer/Browser starten; Labels sicher behandeln und explizite Graphgrenzen respektieren.
 
 **Verhaltensabnahme:** Tests prüfen Graphumfang und fehlende Fremdausführung, nicht DOT-/Mermaidtexte oder deren Layout. Die W-Nachweise bleiben zusätzlich grün.
+
+**Konkretisierter R-Umfang:** Die bestehende Snapshot-API ergänzt explizite
+`artifact_ids` und gespeicherte `relation_types`: ausschließlich einschränkende,
+eindeutige Auswahlen innerhalb des Trace-/Architektur-/Releaseumfangs. Die
+Knoten-, Kanten- und Tiefengrenzen bleiben verbindlich; auch ausgeschlossene
+Relationen werden weiterhin vom nativen Graphkern auf Gültigkeit geprüft.
+Der optionale Titelmodus behandelt Nutztext als escaped Textlabels ohne
+Templates, Direktiven, Fremdcode, Datei-/Netzwerkzugriff oder Renderer-/Browser.
+Originaltitel, Identitäten und Quellbindungen bleiben in den Diagrammdaten
+erhalten; diese stellen weiterhin keine Projektvalidierung oder Freigabe dar.
+Die bisherigen ID-Quellprofile bleiben Standard. Verhaltenstests prüfen
+Auswahl, Fehlerverträge und ausbleibende Seiteneffekte; Syntaxkodierung wird
+anhand der dokumentierten Quellprofile geprüft, ohne Layout-/Textoracles.
 
 #### 11.o.C – Make it Clean
 

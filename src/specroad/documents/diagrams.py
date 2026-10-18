@@ -1,8 +1,8 @@
 """Bound diagram projections and source bytes over an owned native graph.
 
 No project discovery, file publication, renderer, browser or template execution.
-The initial source profile labels nodes with validated artifact identities;
-original titles remain data in the separate machine-readable projection.
+Labels are either validated identities or escaped text from original titles.
+The machine-readable projection always retains the original title bytes' value.
 """
 from collections import deque
 from dataclasses import dataclass
@@ -11,6 +11,7 @@ import json
 
 from .._metadata import __version__, MODEL_SCHEMA_VERSION
 from ..graph.relations import SourceRelations
+from ..graph.relation_types import CORE_RELATION_TYPES
 from ..graph.scope_descriptors import ScopeDescriptor
 from ..graph.scope_inputs import ScopeSeedInputs
 from ..graph.scope_seeds import resolve_scope_seeds
@@ -47,13 +48,15 @@ class DiagramData:
 
 
 def resolve_diagram(model, diagram_kind, *, start_id, direction, max_depth,
-                    max_nodes, max_edges):
+                    max_nodes, max_edges, artifact_ids=None, relation_types=None):
     """Project traversed stored edges within an explicitly bounded native scope.
 
     Trace admits the supplied project graph. Architecture admits components and
     interfaces only. Release admits the native release seed set. Nodes at the
     requested depth are included without expansion. Count overflow is an error,
     never truncation. Traversal direction does not reverse normative edges.
+    Optional artifact IDs narrow the family scope; stored relation types filter
+    traversal in either direction. Neither option bypasses full graph validation.
     """
     from ..changes.target_model import TargetModel, _default_scope
     if type(model) is not TargetModel:
@@ -68,6 +71,18 @@ def resolve_diagram(model, diagram_kind, *, start_id, direction, max_depth,
                                   ('max_edges', max_edges, 0)):
         if type(value) is not int or value < minimum:
             raise DiagramError('diagram_limit_required', pointer='/' + name, exit_code=2)
+    for name, values, reason in (
+            ('artifact_ids', artifact_ids, 'diagram_artifact_selection_invalid'),
+            ('relation_types', relation_types, 'diagram_relation_types_invalid')):
+        if values is not None and (type(values) not in (list, tuple)
+                or any(type(value) is not str for value in values)
+                or len(set(values)) != len(values)):
+            raise DiagramError(reason, pointer='/' + name, exit_code=2)
+    artifact_ids = None if artifact_ids is None else tuple(sorted(artifact_ids))
+    if relation_types is not None:
+        if not set(relation_types) <= set(CORE_RELATION_TYPES):
+            raise DiagramError('diagram_relation_types_invalid', pointer='/relation_types', exit_code=2)
+        relation_types = tuple(sorted(relation_types))
     model = model.snapshot()
     records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
     by_id = {r.identity.id: r for r in records}
@@ -89,6 +104,12 @@ def resolve_diagram(model, diagram_kind, *, start_id, direction, max_depth,
     else:
         eligible = set(by_id)
         scope = {'kind': 'supplied_project_relations'}
+    if artifact_ids is not None:
+        if not set(artifact_ids) <= set(by_id):
+            raise DiagramError('diagram_artifact_not_found', pointer='/artifact_ids')
+        if not set(artifact_ids) <= eligible:
+            raise DiagramError('diagram_artifact_outside_scope', pointer='/artifact_ids')
+        eligible = set(artifact_ids)
     if start_id not in eligible:
         raise DiagramError('diagram_start_outside_scope', pointer='/start_id')
     graph = LoadedGraph(records, rule_id='document-diagram', artifact_ids=sorted(eligible))
@@ -99,7 +120,8 @@ def resolve_diagram(model, diagram_kind, *, start_id, direction, max_depth,
         distance = distances[current]
         if distance == max_depth:
             continue
-        for view in graph.neighbours(current, direction, '*'):
+        for view in graph.neighbours(current, direction,
+                                     '*' if relation_types is None else relation_types):
             target = view.target.id
             if target not in distances:
                 if len(distances) == max_nodes:
@@ -139,30 +161,42 @@ def resolve_diagram(model, diagram_kind, *, start_id, direction, max_depth,
         'validation_scope': 'supplied_snapshot_relation_projection',
         'project_files_verified': False, 'full_validation_passed': False,
         'rendering_performed': False, 'write_authorized': False, 'approval_granted': False}
+    if artifact_ids is not None:
+        data['selection']['artifact_ids'] = list(artifact_ids)
+    if relation_types is not None:
+        data['selection']['relation_types'] = list(relation_types)
     result = object.__new__(DiagramData)
     object.__setattr__(result, '_encoded', canonical_json_bytes(data))
     return result
 
 
 def render_diagram(model, diagram_kind, *, start_id, direction, max_depth,
-                   max_nodes, max_edges, output_format='mermaid'):
+                   max_nodes, max_edges, output_format='mermaid', label_mode='id',
+                   artifact_ids=None, relation_types=None):
     """Return deterministic UTF-8 source; never invoke a graphical renderer.
 
-    Source profiles are mermaid-flowchart-ids-v1 and graphviz-dot-ids-v1.
-    Only validated identities and Core relation kinds enter source labels.
-    Other artifact content is retained in DiagramData, never interpolated here.
+    Identity labels retain the original ids-v1 profiles. Title labels use the
+    text-v1 profiles: quoted text, no HTML, markdown or executable directives.
     """
     if type(output_format) is not str or output_format not in ('mermaid', 'dot'):
         raise DiagramError('diagram_format_not_supported', pointer='/output_format', exit_code=2)
+    if type(label_mode) is not str or label_mode not in ('id', 'title'):
+        raise DiagramError('diagram_label_mode_not_supported', pointer='/label_mode', exit_code=2)
     resolved = resolve_diagram(model, diagram_kind, start_id=start_id, direction=direction,
-        max_depth=max_depth, max_nodes=max_nodes, max_edges=max_edges)
+        max_depth=max_depth, max_nodes=max_nodes, max_edges=max_edges,
+        artifact_ids=artifact_ids, relation_types=relation_types)
     data = resolved.data
     nodes = {node['artifact_id']: node['diagram_id'] for node in data['nodes']}
     if output_format == 'mermaid':
         lines = ['%% GENERATED — DO NOT EDIT', '%% diagram_data_sha256: ' + resolved.sha256,
                  'flowchart LR']
         for node in data['nodes']:
-            lines.append('  ' + node['diagram_id'] + '["' + node['artifact_id'] + '"]')
+            # Encode every title character, including existing entity markers.
+            # The grammar sees only decimal entities inside a plain text label;
+            # HTML, markdown, KaTeX and diagram directives never enter it.
+            label = (node['artifact_id'] if label_mode == 'id' else
+                     ''.join('#' + str(ord(c)) + ';' for c in _label_text(node['title'])))
+            lines.append('  ' + node['diagram_id'] + '["' + label + '"]')
         for edge in data['edges']:
             lines.append('  ' + nodes[edge['source']] + ' ' + edge['diagram_id'] +
                          '@-->|"' + edge['type'] + '"| ' + nodes[edge['target']])
@@ -170,10 +204,21 @@ def render_diagram(model, diagram_kind, *, start_id, direction, max_depth,
         lines = ['// GENERATED — DO NOT EDIT', '// diagram_data_sha256: ' + resolved.sha256,
                  'digraph specroad {']
         for node in data['nodes']:
-            lines.append('  ' + node['diagram_id'] + ' [label=' + json.dumps(node['artifact_id']) + '];')
+            label = node['artifact_id'] if label_mode == 'id' else _label_text(node['title'])
+            # JSON quoting protects DOT's quoted-string boundary and doubles
+            # literal backslashes, including escString substitutions such as \N.
+            lines.append('  ' + node['diagram_id'] + ' [label=' +
+                         json.dumps(label, ensure_ascii=False) + '];')
         for edge in data['edges']:
             lines.append('  ' + nodes[edge['source']] + ' -> ' + nodes[edge['target']] +
                          ' [id=' + json.dumps(edge['diagram_id']) +
                          ', label=' + json.dumps(edge['type']) + '];')
         lines.append('}')
     return ('\n'.join(lines) + '\n').encode('utf-8')
+
+
+def _label_text(title):
+    # C0/C1 controls become visible literal escapes in source labels only.
+    # The original title in DiagramData is neither normalized nor truncated.
+    return ''.join('\\u' + format(ord(c), '04x')
+                   if ord(c) < 32 or 127 <= ord(c) <= 159 else c for c in title)
