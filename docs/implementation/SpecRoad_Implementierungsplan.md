@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 480
-last_completed_plan_commit: 11.p.C
-next_plan_commit: 11.q.W
-last_completed_numbered_bundle: 306
+implementation_plan_commits_completed: 481
+last_completed_plan_commit: 11.q.W
+next_plan_commit: 11.q.R
+last_completed_numbered_bundle: 307
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12392,10 +12392,25 @@ Requirement-Sätze noch Tests oder Testnummern.
 
 #### 11.q.W – Let it Work
 
-- [ ] **11.q.W** · Position **481/900** · Voraussetzung: `11.p.C`.
+- [x] **11.q.W** · Position **481/900** · Voraussetzung: `11.p.C`.
 **Exakte Commit-Message:** `11.q.W feat(documents): Eingebaute Ansichten und Fallback aufbauen`
 
 **Umsetzung:** Specification-/Traceability-Grundansicht und typbasierten Partial-/Legacy-Fallback anschließen.
+
+**Vorbereiteter W-Stand (Bundle 307):** Die reine Python-Projektion verwendet
+für `specification` die native Primärrollenprüfung und Include-Komposition;
+`traceability` bindet gespeicherte Herkunfts-, Umsetzungs-, Verifikations-,
+Evidence- und Release-Zuordnungen an dieselben Originalrecords und Relationen.
+Evidence-Subjectfelder bleiben ausdrücklich Feldbindungen, keine erfundenen
+Kanten oder aktuellen Erfolgsnachweise. Der typbasierte Fallback verarbeitet
+explizit gelieferte Partial-/Legacy-Originalbytes ohne neue Dokumentidentität.
+Partialfelder und schwache Boundaries werden nativ geprüft; der Legacy-Adapter
+prüft nur das 0.1.0-Identitäts-/Titel-/Revisions-Envelope und transformiert nichts.
+Die vollständigen Quellprovider bleiben wie vorgesehen in M15/M16; Herkunft,
+Legacy-Semantik und eine vollständige Modellwurzel werden im Fallback nicht
+behauptet. Verification-/Roadmap-Berechnungen bleiben bis M12/M13 unverfügbar.
+Die Renderer bleiben schreibfrei; die Verhaltenstests prüfen Daten, Bindungen,
+Fehler und Seiteneffekte einschließlich isolierter Core-/PYZ-Ausführung.
 
 **Verhaltensabnahme:** Fachprojektion verweist auf dieselben IDs und gespeicherten Modellinhalte.
 
