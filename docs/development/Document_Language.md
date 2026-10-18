@@ -34,6 +34,14 @@ stehen mit Version und Quellhash in `label_packages`. Fehlende Labels behalten
 den technischen englischen Enumwert. Inhaltssprache und Display-Locale bleiben
 unabhängig. Host-Locale und implizite Datei-/Ressourcensuche werden nicht benutzt.
 
+Die gemeinsame reine Lookup-Funktion liegt in `model.language_labels`.
+Dokumentdaten verwenden sie direkt; `cli.language_labels.label_for` behält
+seinen bisherigen Aufrufvertrag als delegierender Adapter.
+Die Lookup-Funktion erhält nur Enumwert, Domain und bereits gelieferte Pakete.
+Statement, Sprachwahl und Ressourcensuche gehören nicht zu ihren Eingaben.
+Paketprüfung, Reihenfolge, Fallback und Fehler bleiben identisch. Der explizite
+CLI-Ressourcenprovider `labels_for_locale` bleibt davon getrennt.
+
 `render_document` verwendet dieselben Daten bei Requirement-Referenzen in
 `full` und `summary` sowie für die ergänzten Zielzusammenfassungen von `link`.
 Jede wiederholte Include-Occurrence bleibt erhalten. Force-Label und

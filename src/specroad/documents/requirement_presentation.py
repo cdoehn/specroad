@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from .._metadata import __version__, MODEL_SCHEMA_VERSION
-from ..cli.language_labels import label_for
+from ..model.language_labels import label_for
 from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.content_language import ContentLanguage

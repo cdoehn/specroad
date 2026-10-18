@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 479
-last_completed_plan_commit: 11.p.R
-next_plan_commit: 11.p.C
-last_completed_numbered_bundle: 305
+implementation_plan_commits_completed: 480
+last_completed_plan_commit: 11.p.C
+next_plan_commit: 11.q.W
+last_completed_numbered_bundle: 306
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12368,10 +12368,17 @@ Daten, Bindungen und Fehlerverträge vor der Darstellung.
 
 #### 11.p.C – Make it Clean
 
-- [ ] **11.p.C** · Position **480/900** · Voraussetzung: `11.p.R`.
+- [x] **11.p.C** · Position **480/900** · Voraussetzung: `11.p.R`.
 **Exakte Commit-Message:** `11.p.C refactor(documents): Sprache, Verbindlichkeit und Schreibrichtung bereinigen`
 
 **Bereinigung:** Sprachlabels über Ressourcen einsetzen statt Requirementsätze umzuschreiben.
+
+**Konkretisierung C:** Die unveränderte reine Labelauflösung wird in
+`model.language_labels` gemeinsam verwendet. Dokumentprojektionen hängen dadurch
+nicht mehr vom CLI-Labelmodul ab; dessen bestehende Funktion delegiert weiterhin
+mit derselben Signatur. Explizite Ressourcenauswahl, Fallback, Fehler und sämtliche
+W-/R-Datenverträge bleiben unverändert. Die Bereinigung verändert weder
+Requirement-Sätze noch Tests oder Testnummern.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
