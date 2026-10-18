@@ -82,3 +82,10 @@ implizit an ein Fremdwerkzeug delegiert. CLI-Anbindung und konfigurierte Variant
 sind durch diese API-Schritte nicht implementiert. Die Tests prüfen Graphdaten,
 Auswahl- und Fehlerverträge, Bindungen und Seiteneffekte; DOT-
 oder Mermaidtexte, Layout und visuelle Darstellung sind keine Testoracles.
+
+Die öffentliche API und ihre Wert-/Fehlerklassen bleiben in `documents.diagrams`.
+Intern erzeugt `_diagram_graph` die gebundene Graphprojektion; `_diagram_sources`
+erhält ausschließlich deren eigenen `DiagramData`-Wert und die zuvor geprüften
+Ausgabeoptionen. Der Textemitter kennt weder `TargetModel` noch Graphauswahl,
+Scope-Ermittlung oder Traversierung. Die Aufteilung ändert keine Auswahl,
+Quellprofile, Prüfungsreihenfolge oder Fehlerverträge.

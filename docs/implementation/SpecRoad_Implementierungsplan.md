@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 476
-last_completed_plan_commit: 11.o.R
-next_plan_commit: 11.o.C
-last_completed_numbered_bundle: 302
+implementation_plan_commits_completed: 477
+last_completed_plan_commit: 11.o.C
+next_plan_commit: 11.p.W
+last_completed_numbered_bundle: 303
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12304,10 +12304,17 @@ anhand der dokumentierten Quellprofile geprüft, ohne Layout-/Textoracles.
 
 #### 11.o.C – Make it Clean
 
-- [ ] **11.o.C** · Position **477/900** · Voraussetzung: `11.o.R`.
+- [x] **11.o.C** · Position **477/900** · Voraussetzung: `11.o.R`.
 **Exakte Commit-Message:** `11.o.C refactor(documents): Diagrammquellen bereinigen`
 
 **Bereinigung:** Graphauswahl und rein textuelle Diagrammemitter vollständig trennen.
+
+**C-Zuschnitt:** `diagrams` behält die öffentliche API sowie `DiagramData` und
+`DiagramError`. `_diagram_graph` übernimmt die unveränderte Auswahl, Traversierung
+und Datenbindung; `_diagram_sources` erzeugt daraus ausschließlich Quellbytes.
+Der Emitter erhält keinen Modellzugang und führt keine eigene Graphauswahl aus.
+Prüfungsreihenfolge, Ausgabeprofile und Escaping bleiben erhalten. Alle bisherigen
+Verhaltenstests und die dauerhafte Testnummerierung bleiben bytegleich.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
