@@ -12,6 +12,8 @@ from ._export_output import write_view_export
 from .diagrams import DiagramData, DiagramError, resolve_diagram, render_diagram
 from .requirement_presentation import (RequirementPresentation, RequirementPresentationError,
                                        resolve_requirement_presentation)
+from .table_presentation import (TablePresentation, resolve_table_presentation,
+                                 resolve_view_presentation)
 
 from .includes import (DocumentComposition, DocumentIncludeError, DocumentIncludeCycleError,
                        compose_document)
@@ -27,4 +29,5 @@ __all__ = ['DocumentRoleAssessment', 'DocumentRoleError', 'assess_document_roles
            'ViewExportError', 'export_view', 'view_export_schema', 'write_view_export',
            'DiagramData', 'DiagramError', 'resolve_diagram', 'render_diagram',
            'RequirementPresentation', 'RequirementPresentationError', 'resolve_requirement_presentation',
+           'TablePresentation', 'resolve_table_presentation', 'resolve_view_presentation',
            'DocumentComposition', 'DocumentIncludeError', 'DocumentIncludeCycleError', 'compose_document']

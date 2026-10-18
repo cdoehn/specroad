@@ -10,8 +10,7 @@ from .blocks import ContentBlock
 from .includes import compose_document
 from .prose import parse_prose
 from .references import resolve_artifact_reference
-from .tables import resolve_table_block
-from .views import resolve_view
+from .table_presentation import resolve_table_presentation, resolve_view_presentation
 from ._render_formats import Emitter
 from ._render_assets import resolve_render_attachment
 from .requirement_presentation import resolve_requirement_presentation
@@ -103,7 +102,9 @@ def render_document(model, document_id, *, output_format='markdown'):
                 'content_language': ContentLanguage(record.get('language'),
                     record.get('text_direction', 'auto')).as_dict()})
         elif kind in ('query', 'table'):
-            nodes.append({'type': 'table', 'id': identifier, 'data': resolve_table_block(model, identifier).data})
+            presentation = resolve_table_presentation(model, identifier).data
+            nodes.append({'type': 'table', 'id': identifier, 'data': presentation['projection'],
+                          'presentation': presentation})
         elif kind == 'artifact_ref':
             reference = resolve_artifact_reference(model, identifier).data
             target = reference['target']['record']
@@ -132,14 +133,17 @@ def render_document(model, document_id, *, output_format='markdown'):
 def render_view(model, view_id, *, output_format='markdown', configuration_id=None):
     """Render the exact selected columns, rows and groups without new query rules."""
     model = _snapshot(model, output_format)
-    resolved = resolve_view(model, view_id, configuration_id=configuration_id)
-    data = resolved.data
+    resolved = resolve_view_presentation(model, view_id, configuration_id=configuration_id)
+    presentation = resolved.data
+    data = presentation['projection']
     if output_format not in data['formats']:
         raise RenderError('render_view_format_not_declared', path=data['view']['path'], pointer='/formats')
     from ..storage.json_syntax import parse_json_object
-    title = parse_json_object(resolved.view_source_bytes)['title']
+    value = parse_json_object(resolved.source_bytes)
+    title = value['title']
     metadata = {**_metadata(model, data), 'view_id': view_id,
                 'view_revision': data['view']['revision']}
-    nodes = [{'type': 'heading', 'id': view_id, 'title': title, 'level': 1},
-             {'type': 'table', 'id': view_id, 'data': data}]
+    nodes = [{'type': 'heading', 'id': view_id, 'title': title, 'level': 1,
+              'content_language': ContentLanguage(value.get('language'), value.get('text_direction', 'auto')).as_dict()},
+             {'type': 'table', 'id': view_id, 'data': data, 'presentation': presentation}]
     return Emitter(output_format).output(metadata, title, nodes)

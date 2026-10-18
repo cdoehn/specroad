@@ -43,10 +43,39 @@ HTML erhält `lang` bei vorhandener Deklaration und `dir`; Markdown kennzeichnet
 die Angaben als Metadaten. Eine Section ohne eigene Sprache übernimmt keinen
 erfundenen Sprachwert aus Konfiguration oder übergeordnetem Dokument.
 
-Dieser W-Ausschnitt verbindet Requirement-Referenzen und die genannten
-Dokumentknoten mit den bestehenden Sprachverträgen. Zellweise Sprachannotationen
-in View-/Query-Tabellen sowie weitere Randfallarbeit gehören zur anschließenden
-Vervollständigung. Der Renderer liefert weiterhin nur UTF-8-Bytes und startet
-keine Dateiausgabe, Templates, Programme oder Browser. Verhaltenstests prüfen
-die Daten vor der Darstellung, Bindungen, Fehlerverträge und Seiteneffekte;
-Markup, übersetzte Labels und Layout sind keine Testoracles.
+`resolve_view_presentation(model, view_id, configuration_id=...)` und
+`resolve_table_presentation(model, block_id)` ergänzen den eigenen
+`TablePresentation`-Vertrag `table-presentation-v1`. `projection` enthält exakt
+die native View-/Table-Projektion; `projection_sha256` bindet diesen unveränderten
+Datenvertrag. `.source_bytes` erhält die ursprüngliche View- beziehungsweise
+Blockdatei. `.data` und `.sha256` haben dieselben Eigentums- und Bindungsregeln
+wie die Requirement-Präsentation.
+
+Die separaten `rows` enthalten zu jeder Originalzeile ihre tatsächliche
+Artefaktquelle mit Revision, Pfad und Hashes, Sprach-/Richtungsdeklaration und
+gegebenenfalls die gebundenen Requirement-Daten. Die zellweisen `cells`
+unterscheiden Feldpointer und echte `statement`-/`normative_force`-Felder von
+gleichnamigen Extensionfeldern. Nur ausdrücklich deklarierte
+Relationsprojektionen mit Aggregation `records` bekommen verschachtelte
+Annotationen. Jeder Zielrecord behält seine eigene Sprache, unabhängig von
+Ausgangszeile oder View. IDs und Counts werden nicht als natürlichsprachliche
+Records interpretiert. Literale Tabellenwerte behalten ihre JSON-Typen und
+erhalten ausschließlich die Deklarationen ihrer Blockquelle; Spaltennamen
+machen aus Literalen keine Requirements.
+
+Konfigurationsauswahl, Paging, Sortierung, Gruppenmitgliedschaft, Missing-Werte,
+Leerergebnis und native Fehlerverträge bleiben erhalten. Native NFC-basierte
+Gruppierungsschlüssel bleiben in `projection.groups`; Präsentationsüberschriften
+verwenden stattdessen die unveränderten typisierten Zellen der ersten
+tatsächlichen Gruppenzeile und binden deren `representative_artifact_id`.
+Alle Originalvarianten stehen weiterhin in den unveränderten Projektionszeilen.
+Das erzeugt weder eine normalisierte Ersatzanforderung noch eine zusätzliche
+Validierungs- oder Freigabeaussage.
+
+Dokumenttabellen und `render_view` konsumieren diese getrennten Daten.
+Requirement-Verbindlichkeit bleibt Metadatum neben den Originalzellen;
+auch bei verschachtelten Records werden keine Verben, Negationen oder
+Übersetzungen in Statements eingefügt. Der Renderer liefert weiterhin nur
+UTF-8-Bytes und startet keine Dateiausgabe, Templates, Programme oder Browser.
+Verhaltenstests prüfen die Daten vor der Darstellung, Bindungen, Fehlerverträge
+und Seiteneffekte; Markup, übersetzte Labels und Layout sind keine Testoracles.

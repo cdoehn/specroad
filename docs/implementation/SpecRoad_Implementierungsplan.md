@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 478
-last_completed_plan_commit: 11.p.W
-next_plan_commit: 11.p.R
-last_completed_numbered_bundle: 304
+implementation_plan_commits_completed: 479
+last_completed_plan_commit: 11.p.R
+next_plan_commit: 11.p.C
+last_completed_numbered_bundle: 305
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12348,12 +12348,23 @@ ist kein Testoracle.
 
 #### 11.p.R – Make it Right
 
-- [ ] **11.p.R** · Position **479/900** · Voraussetzung: `11.p.W`.
+- [x] **11.p.R** · Position **479/900** · Voraussetzung: `11.p.W`.
 **Exakte Commit-Message:** `11.p.R feat(documents): Sprache, Verbindlichkeit und Schreibrichtung vervollständigen`
 
 **Vervollständigung:** Keine automatische Negation, Übersetzung, Region-/Schriftdetektion oder normative Textnormalisierung.
 
 **Verhaltensabnahme:** Tests prüfen Datenverlustfreiheit vor Präsentation; konkrete Darstellung bleibt ohne Ausgabeassertions. Die W-Nachweise bleiben zusätzlich grün.
+
+**Konkretisierung R:** Eigene Table-/View-Präsentationsdaten erhalten die native
+Projektion bytebindend und ergänzen separate Sprach-/Force-Annotationen pro
+Originalzeile, Feldzelle und ausdrücklich projiziertem Relationsrecord.
+Konfigurationsauswahl, Missing-Werte, Leerergebnisse und alle Originaltexte
+bleiben unverändert. Literale und Extensionfelder werden nicht als Requirements
+interpretiert. Gruppierungsüberschriften verwenden gebundene Originalzellen
+statt normalisierter Kollationsschlüssel als Ersatztext. HTML-/Markdownrenderer
+konsumieren diese Daten ohne Detektion, Textumbau, implizite Ressourcensuche oder
+Schreib-/Ausführungsnebenwirkungen. Nachweise prüfen ausschließlich fachliche
+Daten, Bindungen und Fehlerverträge vor der Darstellung.
 
 #### 11.p.C – Make it Clean
 

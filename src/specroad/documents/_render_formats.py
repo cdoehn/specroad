@@ -82,7 +82,7 @@ class Emitter(ProseEmitter, TableEmitter):
             elif kind == 'prose':
                 part = self.anchor(node['id']) + '\n\n' + self.prose(node['content'])
             elif kind == 'table':
-                part = self.anchor(node['id']) + '\n\n' + self.table(node['data'])
+                part = self.anchor(node['id']) + '\n\n' + self.table(node['data'], node.get('presentation'))
             elif kind == 'record':
                 part = self.record(node['record'], node['mode'], node['level'], node.get('presentation'))
             elif kind == 'anchor':
