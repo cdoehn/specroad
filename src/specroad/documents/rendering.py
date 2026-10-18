@@ -5,6 +5,7 @@ execute templates, determine approval, or replace the CLI's later providers.
 """
 from .._metadata import __version__, MODEL_SCHEMA_VERSION
 from ..model.errors import ModelError
+from ..model.content_language import ContentLanguage
 from .blocks import ContentBlock
 from .includes import compose_document
 from .prose import parse_prose
@@ -13,6 +14,7 @@ from .tables import resolve_table_block
 from .views import resolve_view
 from ._render_formats import Emitter
 from ._render_assets import resolve_render_attachment
+from .requirement_presentation import resolve_requirement_presentation
 
 
 class RenderError(ModelError):
@@ -62,6 +64,16 @@ def render_document(model, document_id, *, output_format='markdown'):
     nodes = []
     linked = {}
     assets = {}
+    presentations = {}
+    def record_node(target, mode, level):
+        node = {'type': 'record', 'record': target, 'mode': mode, 'level': level,
+                'content_language': ContentLanguage(target.get('language'),
+                    target.get('text_direction', 'auto')).as_dict()}
+        if target['artifact_type'] == 'requirement':
+            if target['id'] not in presentations:
+                presentations[target['id']] = resolve_requirement_presentation(model, target['id'])
+            node['presentation'] = presentations[target['id']].data
+        return node
     shown = set(data['records'])
     for occurrence in data['occurrences']:
         identifier = occurrence['artifact_id']
@@ -70,7 +82,9 @@ def render_document(model, document_id, *, output_format='markdown'):
         level = min(occurrence['depth'] + 1, 6)
         if occurrence['artifact_type'] in ('document', 'section'):
             _render_policy(record.get('render_policy', {}), output_format, bound['path'])
-            nodes.append({'type': 'heading', 'id': identifier, 'title': record['title'], 'level': level})
+            nodes.append({'type': 'heading', 'id': identifier, 'title': record['title'], 'level': level,
+                'content_language': ContentLanguage(record.get('language'),
+                    record.get('text_direction', 'auto')).as_dict()})
             continue
         block = ContentBlock(sources[bound['path']], path=bound['path'])
         kind = block.block_kind
@@ -85,14 +99,16 @@ def render_document(model, document_id, *, output_format='markdown'):
                         assets[path] = resolve_render_attachment(model, path, source_path=bound['path'], error_type=RenderError)
                     node['attachment'] = assets[path]
                 pending.extend(node.get('children', ()))
-            nodes.append({'type': 'prose', 'id': identifier, 'content': content})
+            nodes.append({'type': 'prose', 'id': identifier, 'content': content,
+                'content_language': ContentLanguage(record.get('language'),
+                    record.get('text_direction', 'auto')).as_dict()})
         elif kind in ('query', 'table'):
             nodes.append({'type': 'table', 'id': identifier, 'data': resolve_table_block(model, identifier).data})
         elif kind == 'artifact_ref':
             reference = resolve_artifact_reference(model, identifier).data
             target = reference['target']['record']
             nodes.append({'type': 'anchor', 'id': identifier})
-            nodes.append({'type': 'record', 'record': target, 'mode': reference['render_mode'], 'level': level})
+            nodes.append(record_node(target, reference['render_mode'], level))
             if reference['render_mode'] == 'link':
                 linked[target['id']] = target
             else:
@@ -107,7 +123,7 @@ def render_document(model, document_id, *, output_format='markdown'):
     # Local link targets outside the composed tree get an actual source summary.
     for target in sorted(linked.values(), key=lambda r: (r['artifact_type'], r['id'])):
         if target['id'] not in shown:
-            nodes.append({'type': 'record', 'record': target, 'mode': 'summary', 'level': 2})
+            nodes.append(record_node(target, 'summary', 2))
     metadata = {**_metadata(model, data), 'document_id': document_id,
                 'document_revision': data['document_revision']}
     return Emitter(output_format).output(metadata, data['records'][document_id]['record']['title'], nodes)

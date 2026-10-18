@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 477
-last_completed_plan_commit: 11.o.C
-next_plan_commit: 11.p.W
-last_completed_numbered_bundle: 303
+implementation_plan_commits_completed: 478
+last_completed_plan_commit: 11.p.W
+next_plan_commit: 11.p.R
+last_completed_numbered_bundle: 304
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12328,12 +12328,23 @@ Verhaltenstests und die dauerhafte Testnummerierung bleiben bytegleich.
 
 #### 11.p.W – Let it Work
 
-- [ ] **11.p.W** · Position **478/900** · Voraussetzung: `11.o.C`.
+- [x] **11.p.W** · Position **478/900** · Voraussetzung: `11.o.C`.
 **Exakte Commit-Message:** `11.p.W feat(documents): Sprache, Verbindlichkeit und Schreibrichtung aufbauen`
 
 **Umsetzung:** Deklarierte Force getrennt vom unveränderten Statement und explizite Sprach-/Richtungsmetadaten darstellen.
 
 **Verhaltensabnahme:** Fachliche Renderdaten erhalten Originalstatement und Force als getrennte Werte.
+
+**Konkretisierung W:** `resolve_requirement_presentation` bindet die unveränderten
+Requirement-Bytes und die getrennten Werte `statement`, `normative_force` und
+`content_language` an Identität, Revision, Quellen und Modellwurzel. Deklarierte
+Sprache und unabhängige Schreibrichtung werden in Dokumentreferenzen sowie
+Dokument-/Section- und Prosaknoten weitergegeben. Explizit gebundene
+Sprachressourcen betreffen ausschließlich Labels gemäß Display-Locale.
+Verhaltenstests prüfen die Daten vor der Darstellung, native Fehlerverträge,
+Include-Wiederholungen und fehlende externe Seiteneffekte. Zellweise
+View-/Query-Annotationen und weitere Randfälle folgen in R; die Ausgabe selbst
+ist kein Testoracle.
 
 #### 11.p.R – Make it Right
 

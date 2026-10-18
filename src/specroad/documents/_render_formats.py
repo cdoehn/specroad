@@ -40,7 +40,7 @@ class Emitter(ProseEmitter, TableEmitter):
             return marker + '<' + tag + '>' + text + '</' + tag + '>\n'
         return (marker + '\n\n' if marker else '') + '#' * level + ' ' + text + '\n\n'
 
-    def record(self, record, mode, level=3):
+    def record(self, record, mode, level=3, presentation=None):
         identifier = record['id']
         title = identifier + ' — ' + record['title']
         if mode == 'link':
@@ -49,12 +49,28 @@ class Emitter(ProseEmitter, TableEmitter):
             return ('<p><a href="' + target + '">' + label + '</a></p>\n' if self.html
                     else '[' + label + '](' + target + ')\n\n')
         result = self.heading(title, level, identifier)
+        separate = set()
+        if presentation is not None:
+            result += self.paragraph('normative_force: ' + presentation['force_label'])
+            result += self.paragraph(presentation['statement'])
+            separate = {'normative_force', 'statement', 'language', 'text_direction'}
         fields = (sorted(record) if mode == 'full' else
                   [key for key in ('artifact_type', 'revision', 'normative_force', 'statement', 'description') if key in record])
         for key in fields:
-            if key not in ('id', 'title'):
+            if key not in ('id', 'title') and key not in separate:
                 result += self.paragraph(key + ': ' + _value(record[key]))
         return result
+
+    def language_block(self, text, content_language):
+        if self.html:
+            attributes = ' dir="' + _attribute(content_language['text_direction']) + '"'
+            if content_language['language'] is not None:
+                attributes += ' lang="' + _attribute(content_language['language']) + '"'
+            return '<div' + attributes + '>' + text + '</div>\n'
+        prefix = ''
+        if content_language['language'] is not None:
+            prefix = self.paragraph('language: ' + content_language['language'])
+        return prefix + self.paragraph('text_direction: ' + content_language['text_direction']) + text
 
     def output(self, metadata, title, nodes):
         body = [self.paragraph('GENERATED — DO NOT EDIT')]
@@ -62,20 +78,23 @@ class Emitter(ProseEmitter, TableEmitter):
         for node in nodes:
             kind = node['type']
             if kind == 'heading':
-                body.append(self.heading(node['title'], node['level'], node['id']))
+                part = self.heading(node['title'], node['level'], node['id'])
             elif kind == 'prose':
-                body.append(self.anchor(node['id']) + '\n\n' + self.prose(node['content']))
+                part = self.anchor(node['id']) + '\n\n' + self.prose(node['content'])
             elif kind == 'table':
-                body.append(self.anchor(node['id']) + '\n\n' + self.table(node['data']))
+                part = self.anchor(node['id']) + '\n\n' + self.table(node['data'])
             elif kind == 'record':
-                body.append(self.record(node['record'], node['mode'], node['level']))
+                part = self.record(node['record'], node['mode'], node['level'], node.get('presentation'))
             elif kind == 'anchor':
-                body.append(self.anchor(node['id']) + '\n\n')
+                part = self.anchor(node['id']) + '\n\n'
             elif kind == 'page_break':
-                body.append(self.anchor(node['id']) + '\n\n<div class="specroad-page-break" '
-                            'style="break-after:page;page-break-after:always"></div>\n\n')
+                part = (self.anchor(node['id']) + '\n\n<div class="specroad-page-break" '
+                        'style="break-after:page;page-break-after:always"></div>\n\n')
             else:
                 raise ValueError('Unsupported internal render node: ' + kind)
+            if 'content_language' in node:
+                part = self.language_block(part, node['content_language'])
+            body.append(part)
         text = ''.join(body)
         if self.html:
             text = ('<!doctype html>\n<html><head><meta charset="utf-8">'
