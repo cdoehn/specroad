@@ -1,7 +1,7 @@
 """Versioned, non-normative exports of the native selected view columns.
 
-JSON retains typed cells, including missing and nested values. The initial CSV
-profile admits present scalar cells only. Neither adapter evaluates a second
+JSON retains typed cells, including missing and nested values. CSV admits them
+only with an explicit per-column typed JSON declaration. Neither adapter evaluates a second
 query, reads project paths, imports values, or authorizes a normative write.
 """
 import csv
@@ -37,6 +37,7 @@ def view_export_schema():
     column = obj({'source': {'type': 'object'}, 'heading': text,
                   'data_type': {'enum': ['null', 'boolean', 'number', 'string', 'array', 'object']},
                   'format': {'const': 'plain'}, 'missing': {'enum': ['error', 'preserve']}})
+    column['properties']['serialization'] = obj({'csv': {'const': 'typed-json-v1'}})
     row = obj({'artifact_id': text, 'artifact_type': text, 'revision': revision,
                'source_sha256': digest, 'record_sha256': digest, 'cells': array(cell)})
     return obj({'format_version': {'const': 1}, 'kind': {'const': 'view-export-v1'},
@@ -86,16 +87,17 @@ projections are outside this explicitly declared export scope.
         return canonical_json_bytes(exported)
 
     for number, column in enumerate(data['columns']):
-        if column['data_type'] in ('array', 'object'):
+        if column['data_type'] in ('array', 'object') and 'serialization' not in column:
             raise ViewExportError('view_csv_serialization_required',
                 path=data['view']['path'], pointer='/columns/' + str(number))
     for row in rows:
         for number, cell in enumerate(row['cells']):
-            if cell['type'] == 'missing':
+            if cell['type'] == 'missing' and 'serialization' not in data['columns'][number]:
                 raise ViewExportError('view_csv_missing_encoding_required',
                     path=data['view']['path'], pointer='/columns/' + str(number))
     metadata = {key: value for key, value in exported.items() if key != 'rows'}
-    metadata.update(kind='view-csv-v1', cell_encoding='csv-scalars-v1',
+    metadata.update(kind='view-csv-v1', cell_encoding=('csv-columns-v1'
+        if any('serialization' in column for column in data['columns']) else 'csv-scalars-v1'),
         row_bindings=[{key: value for key, value in row.items() if key != 'cells'} for row in rows])
     stream = io.StringIO(newline='')
     writer = csv.writer(stream, dialect='excel', lineterminator='\r\n')
@@ -103,7 +105,9 @@ projections are outside this explicitly declared export scope.
     writer.writerow(['metadata', canonical_json_bytes(metadata).decode('utf-8'),
                      *['' for _ in data['columns']]])
     for row in rows:
-        values = [cell['value'] if cell['type'] == 'string'
-                  else canonical_json_bytes(cell['value']).decode('utf-8') for cell in row['cells']]
+        values = [canonical_json_bytes(cell).decode('utf-8') if 'serialization' in column
+                  else cell['value'] if cell['type'] == 'string'
+                  else canonical_json_bytes(cell['value']).decode('utf-8')
+                  for column, cell in zip(data['columns'], row['cells'])]
         writer.writerow(['data', '', *values])
     return stream.getvalue().encode('utf-8')

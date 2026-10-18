@@ -31,6 +31,19 @@ typisierten Einlesen werden Werte positionsweise anhand der Spaltentypen und
 `row_bindings` zusammengesetzt. Auch eine leere View hat ihre Metadatenzeile.
 CSV-Strings sind Datenaustauschwerte; dies ist kein Spreadsheet-Ausführungsprofil.
 
+Eine Spalte kann zusätzlich exakt `serialization: {"csv": "typed-json-v1"}`
+deklarieren. Dann enthält ihre CSV-Zelle die kanonische JSON-Darstellung der
+vollständigen typisierten Zelle, einschließlich `type` und gegebenenfalls `value`.
+Dies erhält auch fehlende Werte, Null, Arrays, Objekte und verschachtelte native
+Relationsprojektionen ohne Trennzeichen- oder Leerstringheuristik. Sobald eine
+Spalte diesen Codec deklariert, trägt der CSV-Metadatensatz
+`cell_encoding=csv-columns-v1`; nicht deklarierte Spalten behalten das bisherige
+Skalarprofil. Der Reader entscheidet positionsweise anhand der Spaltendeklaration.
+Das JSON-Formschema erlaubt dieselbe optionale Deklaration. Andere Codecs oder
+zusätzliche Deklarationsfelder werden vor Auswahl/Export abgewiesen, auch bei
+leeren Views oder ungenutzten verschachtelten Projektionen. Eine Deklaration an
+einer inneren Projektionsspalte ersetzt keine Deklaration der äußeren Array-Spalte.
+
 Beide Formate tragen Modellwurzel, Inputhash, View-/Quellrevision und Hashes,
 Tool-/Schema-Version, aktive Profile sowie die explizite Generated-Kennzeichnung.
 Sie gewähren weder Approval noch Schreibrechte. Eine Dateisystemaktualität des
@@ -39,13 +52,25 @@ ganzen Projekts wird aus einem gelieferten Snapshot nicht abgeleitet.
 `write_view_export(model, view_id, source=source, path='generated/view.json')`
 veröffentlicht genau eine neue Datei. `source` ist ein an denselben tatsächlichen
 Projektroot und dieselben Konfigurationsbytes gebundener `ProjectSource`.
-Das vorhandene Zielverzeichnis muss unter dem konfigurierten `generated_path`
-liegen. Normative, betriebliche, reservierte und fremde Ziele werden abgewiesen.
+Ohne `output_root` muss das vorhandene Zielverzeichnis unter dem konfigurierten
+`generated_path` liegen. Normative, betriebliche, reservierte und fremde Ziele
+werden abgewiesen.
 Die vorhandene native Descriptor-Traversierung wird ohne Lock-Erwerb verwendet;
 der bestehende bytegebundene Writer veröffentlicht erst vollständig vorbereitete
 Bytes atomar und ohne Überschreiben. Symlinks, Spezialdateien, verschachtelte
 Projektroots und vorhandene Ziele werden nicht verfolgt oder ersetzt.
 Es entstehen weder Projektlock, Journal noch Receipt unter `.specroad/`.
+
+Mit `output_root=<absoluter externer Verzeichnispfad>` wird `path` relativ zu
+genau diesem bereits vorhandenen Root ausgelegt. Der Root muss kanonisch und
+symlinkfrei sein, darf sich mit dem Quellprojekt in keiner Richtung überlappen
+und darf weder selbst noch über einen seiner Vorfahren zu einem anderen
+SpecRoad-Projekt gehören. Reservierte Git-/PatchHarbor-/Betriebspfade und
+`specroad.json` bleiben gesperrt. Rootidentität, Konfigurationsbindung und
+Zielverzeichnis werden vor Veröffentlichung erneut und danach nochmals geprüft.
+Die Rückgabe benennt externe Dateiziele absolut; die Exportdaten selbst enthalten
+keine lokalen Rootpfade. Gleichzeitige Erzeugung des Ziels wird atomar ohne
+Überschreiben mit `view_export_target_exists` abgewiesen.
 
 Bei Fehlern bleiben tatsächliche Zustände erhalten: Eine unterbrochene
 Vorbereitung kann eine private `.view-export-*.tmp` im gewählten generierten
@@ -53,12 +78,10 @@ Verzeichnis hinterlassen; vor Veröffentlichung fehlt das endgültige Ziel.
 Ein Fehler nach Veröffentlichung kann die vollständige Zieldatei erhalten.
 Keiner dieser Fehler erzeugt einen Erfolgsnachweis oder einen automatischen Retry.
 
-Der W-Zustand unterstützt CSV zunächst nur für vorhandene skalare Zellen.
-Array-/Objektspalten werden auch bei leerer Auswahl abgewiesen; fehlende Werte
-werden nicht in Null oder Leerstring umgedeutet. Explizite verschachtelte
-CSV-Serialisierung, weitere Fehlerszenarien und zusätzliche zulässige Zielarten
-bleiben Gegenstand von 11.n.R. Externe Ziele, Verzeichniserzeugung, Ersetzen
-vorhandener Dateien und die spätere CLI-Anbindung sind hier nicht implementiert.
+Ohne ausdrückliche Codecdeklaration bleiben Array-/Objektspalten auch bei leerer
+Auswahl abgewiesen; fehlende Werte werden nicht in Null oder Leerstring umgedeutet.
+Verzeichniserzeugung, Ersetzen vorhandener Dateien und die spätere CLI-Anbindung
+sind hier nicht implementiert.
 Der native Dateiweg setzt Linux-Descriptoroperationen voraus; andere Plattformen
 erhalten durch diesen Schritt keinen nachgewiesenen Schreibsupport.
 

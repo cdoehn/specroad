@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 472
-last_completed_plan_commit: 11.n.W
-next_plan_commit: 11.n.R
-last_completed_numbered_bundle: 298
+implementation_plan_commits_completed: 473
+last_completed_plan_commit: 11.n.R
+next_plan_commit: 11.n.C
+last_completed_numbered_bundle: 299
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12207,12 +12207,28 @@ bleiben offen. Details: [`View_Exports.md`](../development/View_Exports.md).
 
 #### 11.n.R – Make it Right
 
-- [ ] **11.n.R** · Position **473/900** · Voraussetzung: `11.n.W`.
+- [x] **11.n.R** · Position **473/900** · Voraussetzung: `11.n.W`.
 **Exakte Commit-Message:** `11.n.R feat(documents): CSV/JSON-Viewdaten und Ausgabeziele vervollständigen`
 
 **Vervollständigung:** Verschachtelte Werte ohne deklarierte Serialisierung und unerlaubte Projekt-/Betriebsziele abweisen.
 
 **Verhaltensabnahme:** Datenroundtrip und atomare Seiteneffekte prüfen, keine Pretty- oder HTMLausgabe. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Zuschnitt (Bundle 299):** Eine Viewspalte kann ausschließlich den geschlossenen
+CSV-Codec `serialization: {"csv": "typed-json-v1"}` deklarieren. Dieser erhält
+die vollständige typisierte Zelle einschließlich Missing, Null, Array, Objekt
+und verschachtelter Relationswerte. Nicht deklarierte Spalten behalten ihr
+Skalarprofil und ihre bisherigen Ablehnungen; fremde Deklarationen scheitern
+auch bei leerer Auswahl oder ungenutzten inneren Projektionen. Der native
+Viewprovider bleibt die einzige Quelle für Auswahl, Werte und Graphbindungen.
+Ein ausdrücklich gesetzter externer Ausgaberoot wird zusätzlich zum bestehenden
+Generated-Ziel unterstützt: kanonisch, bereits vorhanden, ohne Projektüberlappung
+oder fremden Projektvorfahren. Konfiguration, Root und Verzeichnis werden vor und
+nach der bytegebundenen atomaren Neuanlage geprüft. Konkurrenz, ausgetauschte
+Verzeichnisse, neue Projektmarker, veränderte Vorbereitungsbytes und Fehler nach
+Veröffentlichung ergeben keinen falschen Erfolg oder Überschreibfallback.
+Die bisherigen W-Testbytes bleiben unverändert. Keine Verzeichniserzeugung,
+normativen Writes, `.specroad/`-Writes oder neue CLI-Registrierung.
 
 #### 11.n.C – Make it Clean
 

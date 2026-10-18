@@ -46,12 +46,14 @@ def plan_view(value, source, source_count, error_type):
 
     def plan_column(column, at):
         if (type(column) is not dict
-                or set(column) != {'source', 'heading', 'data_type', 'format', 'missing'}
+                or set(column) - {'serialization'} != {'source', 'heading', 'data_type', 'format', 'missing'}
                 or type(column['source']) is not dict
                 or type(column['heading']) is not str or not column['heading'].strip()):
             fail('view_column_contract', at)
         if column['format'] != 'plain':
             fail('view_column_format_provider_required', at + '/format')
+        if 'serialization' in column and column['serialization'] != {'csv': 'typed-json-v1'}:
+            fail('view_column_serialization_contract', at + '/serialization')
         if column['missing'] not in ('error', 'preserve'):
             fail('view_column_missing_provider_required', at + '/missing')
         if type(column['data_type']) is not str or column['data_type'] not in VALUE_TYPES[1:]:
