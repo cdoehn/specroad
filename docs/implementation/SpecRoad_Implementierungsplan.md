@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 471
-last_completed_plan_commit: 11.m.C
-next_plan_commit: 11.n.W
-last_completed_numbered_bundle: 297
+implementation_plan_commits_completed: 472
+last_completed_plan_commit: 11.n.W
+next_plan_commit: 11.n.R
+last_completed_numbered_bundle: 298
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12180,12 +12180,30 @@ der Darstellung wirksam; es gibt keine dynamische Template- oder Pluginwahl.
 
 #### 11.n.W – Let it Work
 
-- [ ] **11.n.W** · Position **472/900** · Voraussetzung: `11.m.C`.
+- [x] **11.n.W** · Position **472/900** · Voraussetzung: `11.m.C`.
 **Exakte Commit-Message:** `11.n.W feat(documents): CSV/JSON-Viewdaten und Ausgabeziele aufbauen`
 
 **Umsetzung:** Maschinenlesbare Viewexporte mit verlustbewusster Serialisierung und atomarem erlaubtem Ausgabeziel implementieren.
 
 **Verhaltensabnahme:** Exportdaten lassen sich gemäß ihrem Schema wieder einlesen.
+
+**W-Zuschnitt (Bundle 298):** `export_view` exportiert ausschließlich die nativen
+ausgewählten Spalten samt geordneten Zeilen- und Quellbindungen. Versioniertes
+JSON erhält typisierte Zellen einschließlich Missing, Null und verschachtelter
+Werte; das initiale RFC-4180-CSV-Profil erhält vorhandene skalare Werte und trägt
+seine Spalten-/Zeilenbindungen in einem gleich breiten Metadatensatz. Beide
+Formate deklarieren ihren Spaltenumfang und ihre Generated-Rolle. CSV verweigert
+Array-/Objektspalten ohne unterstützte deklarierte Serialisierung sowie fehlende
+Zellen, statt Werte still zu verlieren. `write_view_export` verwendet die
+vorhandenen nativen Descriptor-/Publikationsprimitive für genau eine neue Datei
+in einem bereits vorhandenen konfigurierten Generated-Verzeichnis. Kein
+Überschreiben, kein externer Zielroot, keine Verzeichniserzeugung und keine
+normative oder `.specroad/`-Mutation; der Dateiweg ist zunächst Linux-nativ.
+Fehler erhalten tatsächliche private Vorbereitungsdateien beziehungsweise eine
+bereits vollständig veröffentlichte Ausgabe ohne falschen Erfolg. Tests lesen
+JSON anhand des lokalen Formschemas und CSV mit einem unabhängigen Standardparser
+wieder ein und prüfen reale Dateieffekte. CLI-Anbindung und die R-Erweiterungen
+bleiben offen. Details: [`View_Exports.md`](../development/View_Exports.md).
 
 #### 11.n.R – Make it Right
 
