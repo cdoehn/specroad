@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 473
-last_completed_plan_commit: 11.n.R
-next_plan_commit: 11.n.C
-last_completed_numbered_bundle: 299
+implementation_plan_commits_completed: 474
+last_completed_plan_commit: 11.n.C
+next_plan_commit: 11.o.W
+last_completed_numbered_bundle: 300
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12232,10 +12232,19 @@ normativen Writes, `.specroad/`-Writes oder neue CLI-Registrierung.
 
 #### 11.n.C – Make it Clean
 
-- [ ] **11.n.C** · Position **474/900** · Voraussetzung: `11.n.R`.
+- [x] **11.n.C** · Position **474/900** · Voraussetzung: `11.n.R`.
 **Exakte Commit-Message:** `11.n.C refactor(documents): CSV/JSON-Viewdaten und Ausgabeziele bereinigen`
 
 **Bereinigung:** Gemeinsam nutzbare Datenserializer und Ausgabezielprüfung bereitstellen.
+
+**C-Zuschnitt (Bundle 300):** Das geschlossene JSON-Formschema, die gemeinsame
+Exporthülle und der CSV-Serializer liegen in einem reinen Datenmodul. Der
+öffentliche Export behält Modelladmission, native Viewauflösung und Formatwahl.
+Quellbindung, erlaubter Zielpfad und externe Rootprüfung sind als gemeinsame
+Zielprüfungen ausgelagert; der native Writer behält seine Prüf- und
+Publikationsreihenfolge. Fachwerte, Ausgabeprofile, Fehlerklassen/-codes und
+zulässige Seiteneffekte bleiben gleich. Sämtliche bisherigen Testdateien und
+die dauerhafte Testnummerierung bleiben bytegleich.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
