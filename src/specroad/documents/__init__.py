@@ -14,7 +14,8 @@ from .requirement_presentation import (RequirementPresentation, RequirementPrese
                                        resolve_requirement_presentation)
 from .table_presentation import (TablePresentation, resolve_table_presentation,
                                  resolve_view_presentation)
-from .builtin_views import BuiltinViewData, BuiltinViewError, resolve_builtin_view, render_builtin_view
+from .builtin_views import (BuiltinViewData, BuiltinViewError, BuiltinViewProviderError,
+                            resolve_builtin_view, render_builtin_view)
 from .type_fallback import resolve_type_fallback, render_type_fallback
 
 from .includes import (DocumentComposition, DocumentIncludeError, DocumentIncludeCycleError,
@@ -32,6 +33,7 @@ __all__ = ['DocumentRoleAssessment', 'DocumentRoleError', 'assess_document_roles
            'DiagramData', 'DiagramError', 'resolve_diagram', 'render_diagram',
            'RequirementPresentation', 'RequirementPresentationError', 'resolve_requirement_presentation',
            'TablePresentation', 'resolve_table_presentation', 'resolve_view_presentation',
-           'BuiltinViewData', 'BuiltinViewError', 'resolve_builtin_view', 'render_builtin_view',
+           'BuiltinViewData', 'BuiltinViewError', 'BuiltinViewProviderError',
+           'resolve_builtin_view', 'render_builtin_view',
            'resolve_type_fallback', 'render_type_fallback',
            'DocumentComposition', 'DocumentIncludeError', 'DocumentIncludeCycleError', 'compose_document']

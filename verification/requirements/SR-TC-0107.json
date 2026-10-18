@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0107",
   "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
   "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-BUILTIN-TRACEABILITY-v1"
+  ],
+  "preconditions": [
+    "Actual owned source bytes from the declared supplied model or partial/legacy input; no origin authentication, full-project validation, write authority or approval is implied."
+  ],
+  "steps": [
+    "Resolve native owned model records and actual stored relation identities into per-requirement origin, implementation, verification, evidence and release categories; preserve empty categories and terminate cyclic origin paths.",
+    "Bind each trace edge to its actual source array pointer, raw file hash and canonical record hash; preserve evidence subjects as original fields instead of fabricated relations.",
+    "Reject unavailable verification/roadmap calculation providers with a structured unavailable diagnostic and null result. Preserve stored evidence result fields without promoting them to a computed verification/readiness result.",
+    "Observe immutable projections and original source bytes, actual no-read/no-write effects, passive rendering metadata and isolated Core/PYZ machine-contract parity."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Traceability-Ansicht MUSS für jedes Requirement mindestens Herkunft, Umsetzung, Verifikation, Evidence und Release-Zuordnung darstellen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "11.q.W/R: source-bound traceability from supplied native records only. All five categories refer to actual identities, relations or explicitly bound evidence subject fields. Missing M12/M13 calculations remain unavailable/null even for empty input or stored success strings. No approval, full-suite claim, full-project discovery or calculated verification/release readiness."
   },
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "builtin_view_provider_required",
+    "document_target_model_required"
+  ],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/view_name",
+    "/relations/0",
+    "/relations/1"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,49 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_builtin_document_views.py::test_builtin_and_legacy_projection_contracts_work_in_isolated_distributions[core]",
+    "tests/test_builtin_document_views.py::test_builtin_and_legacy_projection_contracts_work_in_isolated_distributions[pyz]",
+    "tests/test_builtin_document_views.py::test_builtin_projection_refuses_nonowned_and_tampered_models",
+    "tests/test_builtin_document_views.py::test_changed_source_bytes_rebind_even_when_record_values_do_not_change",
+    "tests/test_builtin_document_views.py::test_cyclic_origin_references_terminate_without_duplicate_ids_or_reverse_edges",
+    "tests/test_builtin_document_views.py::test_evidence_subject_without_produces_is_a_bound_field_not_a_fabricated_relation",
+    "tests/test_builtin_document_views.py::test_render_entrypoints_use_original_records_without_io_or_template_execution[traceability-html]",
+    "tests/test_builtin_document_views.py::test_render_entrypoints_use_original_records_without_io_or_template_execution[traceability-markdown]",
+    "tests/test_builtin_document_views.py::test_trace_projection_is_deterministic_under_source_inventory_reordering[order0]",
+    "tests/test_builtin_document_views.py::test_trace_projection_is_deterministic_under_source_inventory_reordering[order1]",
+    "tests/test_builtin_document_views.py::test_trace_projection_is_deterministic_under_source_inventory_reordering[order2]",
+    "tests/test_builtin_document_views.py::test_trace_projection_preserves_native_rejection_of_invalid_data[invalid_pair]",
+    "tests/test_builtin_document_views.py::test_trace_projection_preserves_native_rejection_of_invalid_data[missing_statement]",
+    "tests/test_builtin_document_views.py::test_trace_projection_preserves_native_rejection_of_invalid_data[missing_target]",
+    "tests/test_builtin_document_views.py::test_traceability_binds_actual_origin_implementation_verification_evidence_and_release",
+    "tests/test_builtin_document_views.py::test_traceability_does_not_turn_text_mentions_or_stored_status_into_traces",
+    "tests/test_builtin_document_views.py::test_unavailable_computed_view_is_an_error_not_an_empty_or_successful_report[roadmap]",
+    "tests/test_builtin_document_views.py::test_unavailable_computed_view_is_an_error_not_an_empty_or_successful_report[verification]",
+    "tests/test_builtin_document_views_right.py::test_every_projection_reports_absent_calculations_without_promoting_stored_content[empty_trace]",
+    "tests/test_builtin_document_views_right.py::test_every_projection_reports_absent_calculations_without_promoting_stored_content[traceability]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[False-render-roadmap-M13]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[False-render-verification-M12]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[False-resolve-roadmap-M13]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[False-resolve-verification-M12]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[True-render-roadmap-M13]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[True-render-verification-M12]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[True-resolve-roadmap-M13]",
+    "tests/test_builtin_document_views_right.py::test_missing_computation_providers_refuse_with_owned_structured_unavailability[True-resolve-verification-M12]",
+    "tests/test_builtin_document_views_right.py::test_partial_fallback_and_provider_refusals_have_core_pyz_machine_contract_parity[core]",
+    "tests/test_builtin_document_views_right.py::test_partial_fallback_and_provider_refusals_have_core_pyz_machine_contract_parity[pyz]",
+    "tests/test_builtin_document_views_right.py::test_rendering_receives_unavailability_metadata_and_preserves_every_real_file[traceability-html]",
+    "tests/test_builtin_document_views_right.py::test_rendering_receives_unavailability_metadata_and_preserves_every_real_file[traceability-markdown]",
+    "tests/test_builtin_document_views_right.py::test_stored_evidence_results_never_become_computed_verification_or_readiness[blocked]",
+    "tests/test_builtin_document_views_right.py::test_stored_evidence_results_never_become_computed_verification_or_readiness[failed]",
+    "tests/test_builtin_document_views_right.py::test_stored_evidence_results_never_become_computed_verification_or_readiness[passed]",
+    "tests/test_builtin_document_views_right.py::test_stored_evidence_results_never_become_computed_verification_or_readiness[unknown]",
+    "tests/test_builtin_document_views_right.py::test_trace_edges_bind_the_actual_source_pointer_bytes_and_record[False]",
+    "tests/test_builtin_document_views_right.py::test_trace_edges_bind_the_actual_source_pointer_bytes_and_record[True]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "M12/M13 calculation services and their integration into verification/roadmap reports remain pending; unavailable providers are not successful results.",
+    "Complete end-user CLI/report integration and discovered-project validation are separate plan steps. This API covers only the actual supplied model.",
+    "Targeted development and rotating Apply partitions are partial observations on their actual source states."
   ]
 }

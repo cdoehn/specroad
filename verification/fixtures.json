@@ -10,6 +10,10 @@
     "SR-FIX-BASELINE-MATERIALIZATION-v1",
     "SR-FIX-BASELINE-VERIFICATION-v1",
     "SR-FIX-BASELINE-WORK-v1",
+    "SR-FIX-BUILTIN-LEGACY-v1",
+    "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1",
+    "SR-FIX-BUILTIN-PARTIAL-v1",
+    "SR-FIX-BUILTIN-TRACEABILITY-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-CHANGE-EXECUTION-v1",
@@ -39,6 +43,7 @@
     "SR-FIX-DOCUMENT-ROLES-v1",
     "SR-FIX-DOCUMENT-STRUCTURE-v1",
     "SR-FIX-DOCUMENT-TABLES-v1",
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1",
     "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1",
@@ -93,8 +98,7 @@
     "SR-FIX-TRANSACTION-RECOVERY-v1",
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
-    "SR-FIX-WRITER-BOUNDARIES-v1",
-    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1"
+    "SR-FIX-WRITER-BOUNDARIES-v1"
   ],
   "definitions": {
     "SR-FIX-OWNED-TEMP-v1": {
@@ -468,6 +472,22 @@
     "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1": {
       "provider": "tests/test_document_view_variants_right.py:nested_project",
       "kind": "Owned snapshot view with explicit error/preserve missing policies and an acyclic graph of bounded records projections. Missing/null/false/zero separation, typed NFC grouping, independently bounded nested directions/depths, configured graph visibility, stable target identities, original-byte hashes, cyclic/foreign declaration rejection and unchanged sources. C preserves all W/R test bytes while extracting unchanged selection and row-projection services."
+    },
+    "SR-FIX-BUILTIN-TRACEABILITY-v1": {
+      "provider": "tests/test_builtin_document_views.py:trace_project",
+      "kind": "Owned current-schema requirement, need, goal, task, verification, evidence, milestone and release bytes with actual relation identities and original evidence subject fields. Cyclic and missing traces, exact source/record hashes and relation-array pointers, absent calculation providers, read-only rendering metadata and isolated Core/PYZ contracts. Stored success values never become computed verification or release-readiness results."
+    },
+    "SR-FIX-BUILTIN-PARTIAL-v1": {
+      "provider": "tests/test_builtin_document_views.py:partial_project",
+      "kind": "Actual supplied requirement/release records, explicit partial scope and exact weak omitted-target boundary declarations. Deterministic type/identity ordering, strong-target and source binding refusals, no synthetic primary, preserved original bytes and no full-project or origin-proof claim."
+    },
+    "SR-FIX-BUILTIN-LEGACY-v1": {
+      "provider": "tests/test_builtin_document_views.py:legacy_documents",
+      "kind": "Original schema 0.1.0 legacy identity/title/revision envelopes including decomposed Unicode, CRLF field content, absent current-schema defaults and passive legacy relations. Stable type/ID fallback, path collision and invalid-envelope refusals, immutable read-only observations and isolated Core/PYZ execution; no legacy semantic validation or migration."
+    },
+    "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1": {
+      "provider": "tests/test_builtin_document_views_right.py:weak_partial",
+      "kind": "Native conflicts_with/duplicates edges to present or omitted targets with exact partial boundary declarations. Actual noncanonical and duplicate symmetric storage, valid parallel directed edges, tampered boundary value objects, caller mutation during projection and original-byte preservation. Shared R fixtures also observe unavailable calculations, no primary invention, no file/process/network effects and isolated Core/PYZ parity."
     }
   }
 }

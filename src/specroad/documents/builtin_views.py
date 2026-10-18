@@ -26,6 +26,24 @@ class BuiltinViewError(ModelError):
         self.exit_code = exit_code
 
 
+def _computed_reports():
+    """Explicit absence, never a result derived from stored success strings."""
+    return {name: {'status': 'unavailable', 'reason': 'provider_required',
+                   'required_milestone': milestone, 'result': None}
+            for name, milestone in (('verification', 'M12'), ('roadmap', 'M13'))}
+
+
+class BuiltinViewProviderError(BuiltinViewError):
+    """Machine-readable provider refusal without a fabricated result payload."""
+    def __init__(self, view_name):
+        super().__init__('builtin_view_provider_required', pointer='/view_name')
+        self._availability = canonical_json_bytes({
+            'view_name': view_name, 'calculation': _computed_reports()[view_name]})
+
+    def diagnostic(self):
+        return {**super().diagnostic(), **parse_json_object(self._availability)}
+
+
 @dataclass(frozen=True, init=False)
 class BuiltinViewData:
     """Detached source-bound records, not a stored View or a validation pass."""
@@ -65,7 +83,8 @@ def _result(data, sources):
         'generated': True, 'normative': False, 'project_files_verified': False,
         'full_validation_passed': False, 'rendering_performed': False,
         'write_authorized': False, 'approval_granted': False,
-        'verification_evaluated': False, 'release_readiness_evaluated': False, **data}))
+        'verification_evaluated': False, 'release_readiness_evaluated': False,
+        'computed_reports': _computed_reports(), **data}))
     object.__setattr__(result, '_sources', tuple(sorted(sources.items())))
     return result
 
@@ -84,12 +103,18 @@ def _traceability(records, references):
     """Stored edges/subject fields only; no inference from titles or statuses."""
     outgoing = {}
     edges = {}
+    pointers = {relation['relation_id']: '/relations/' + str(number)
+                for bound in records.values()
+                for number, relation in enumerate(bound['record']['relations'])}
     for edge in references.stored_relations:
         source, target = edge.source.id, edge.target.id
         identifier = edge.relation.identity.id
         edges[identifier] = {'source_id': source, 'target_id': target,
             'relation_id': identifier, 'stored_relation': edge.relation.data,
-            'relation_sha256': canonical_json_sha256(edge.relation.data)}
+            'relation_sha256': canonical_json_sha256(edge.relation.data),
+            'source_binding': {key: records[source][key]
+                               for key in ('path', 'source_sha256', 'record_sha256')},
+            'pointer': pointers[identifier]}
         outgoing.setdefault(source, []).append((edge.relation.type, target, identifier))
 
     def follow(seeds, kinds):
@@ -154,7 +179,7 @@ def resolve_builtin_view(model, view_name):
     if type(view_name) is not str or view_name not in ('specification', 'traceability', 'verification', 'roadmap'):
         raise BuiltinViewError('builtin_view_not_supported', pointer='/view_name', exit_code=2)
     if view_name in ('verification', 'roadmap'):
-        raise BuiltinViewError('builtin_view_provider_required', pointer='/view_name')
+        raise BuiltinViewProviderError(view_name)
     model = model.snapshot()
     data = {'view_name': view_name, 'source_kind': 'supplied_project',
         'schema_version': MODEL_SCHEMA_VERSION, 'profiles': list(model.profile.profile_chain),
@@ -202,6 +227,7 @@ def render_builtin_view(model, view_name, *, output_format='markdown'):
             'columns': [{'heading': name} for name in categories],
             'rows': [{'cells': [{'type': 'array', 'value': row[name]['artifact_ids']} for name in categories]}]}})
     metadata = {key: data[key] for key in ('tool_version', 'schema_version', 'profiles',
-        'project_id', 'model_root_sha256', 'input_sha256', 'verification_evaluated', 'release_readiness_evaluated')}
+        'project_id', 'model_root_sha256', 'input_sha256', 'verification_evaluated',
+        'release_readiness_evaluated', 'computed_reports')}
     metadata['projection_sha256'] = resolved.sha256
     return Emitter(output_format).output(metadata, view_name, nodes)

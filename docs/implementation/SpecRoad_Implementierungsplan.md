@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 481
-last_completed_plan_commit: 11.q.W
-next_plan_commit: 11.q.R
-last_completed_numbered_bundle: 307
+implementation_plan_commits_completed: 482
+last_completed_plan_commit: 11.q.R
+next_plan_commit: 11.q.C
+last_completed_numbered_bundle: 308
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12416,10 +12416,24 @@ Fehler und Seiteneffekte einschließlich isolierter Core-/PYZ-Ausführung.
 
 #### 11.q.R – Make it Right
 
-- [ ] **11.q.R** · Position **482/900** · Voraussetzung: `11.q.W`.
+- [x] **11.q.R** · Position **482/900** · Voraussetzung: `11.q.W`.
 **Exakte Commit-Message:** `11.q.R feat(documents): Eingebaute Ansichten und Fallback vervollständigen`
 
 **Vervollständigung:** Verification-/Roadmap-Berechnungen erst nach M12/M13 vollständig aktivieren; fehlende Ergebnisse nicht als passed ausgeben.
+
+**Vorbereiteter R-Stand (Bundle 308):** Alle Grundprojektionen benennen die fehlenden
+Berechnungen mit `unavailable`, erforderlichem Meilenstein und `result=null`.
+Der native Providerfehler liefert dieselben maschinenlesbaren Angaben; weder
+gespeicherte Erfolgsstrings noch leere Ergebnismengen erzeugen einen Erfolgsbericht.
+Trace-Kanten binden ihren tatsächlichen Quellpointer und die Originalhashes.
+Der Partial-Fallback prüft kanonische Richtung und doppelte symmetrische Paare
+auch bei ausgelassenen Zielen; Boundary-Werte werden erneut aus ihren aktuellen
+Daten geprüft. Eigene Eingabekopien und kollisionsgeprüfte Pfade halten Prüfung,
+Hash und Ausgabe zusammen. Legacy-Originale und fehlende Primärdokumente werden
+nicht ergänzt oder migriert. Die Verhaltenstests decken diese Grenzen mit
+Originaldatei-Inventuren, Lese-/Schreibfallen und isolierten Core-/PYZ-Läufen ab;
+die Requirement-Nachweise bleiben ausdrücklich partiell bis zu den vorgesehenen
+Quell-, CLI- und Berechnungsintegrationen.
 
 **Verhaltensabnahme:** Fallback bleibt lesend und erzeugt kein erfundenes Primärdokument. Die W-Nachweise bleiben zusätzlich grün.
 

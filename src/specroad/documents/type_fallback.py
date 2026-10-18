@@ -4,17 +4,41 @@ This is a read-only presentation adapter for future bundle/legacy readers, not
 one of those readers. It authenticates neither an origin root nor a bundle and
 does not transform legacy records into current-schema artifacts.
 """
+from unicodedata import normalize
+
 from .._metadata import MODEL_SCHEMA_VERSION
+from ..graph.boundaries import BoundaryReference
 from ..graph.boundary_validation import validate_boundary_references
+from ..graph._boundary_contract import require_boundary_match
 from ..graph.relations import SourceRelations
 from ..graph.scope_descriptors import ScopeDescriptor
-from ..graph._symmetry import canonical_relation
+from ..graph._symmetry import canonical_relation, SYMMETRIC_RELATION_TYPES
 from ..model.canonical import canonical_json_sha256
 from ..model.identity_values import ArtifactIdentity, LEGACY_SCHEME
 from ..model.paths import project_path
 from ..storage.json_syntax import parse_json_object
 from ..validation import ModelDocument
 from .builtin_views import BuiltinViewError, _bound_record, _result, _typed_records
+
+
+def _require_partial_symmetry(sources, checked):
+    """Apply native edge orientation also to omitted targets, without records."""
+    local = {edge.relation.identity.id: edge for edge in checked.local_relations}
+    omitted = {value.data['relation_id']: value.data for value in checked.boundary_references}
+    pairs = set()
+    for source in sources:
+        for number, relation in enumerate(source.relations):
+            edge = local.get(relation.identity.id)
+            if edge is None:
+                edge = require_boundary_match(omitted[relation.identity.id], relation)
+            pointer = '/relations/' + str(number)
+            if canonical_relation(edge) != edge:
+                raise BuiltinViewError('noncanonical_symmetric_relation', path=source.path, pointer=pointer)
+            if relation.type in SYMMETRIC_RELATION_TYPES:
+                pair = (relation.type, edge.source.id, edge.target.id)
+                if pair in pairs:
+                    raise BuiltinViewError('duplicate_symmetric_relation', path=source.path, pointer=pointer)
+                pairs.add(pair)
 
 
 def resolve_type_fallback(documents, *, source_kind, scope_descriptor=None, boundary_references=()):
@@ -31,10 +55,17 @@ def resolve_type_fallback(documents, *, source_kind, scope_descriptor=None, boun
         raise BuiltinViewError('builtin_fallback_documents_required')
     if type(boundary_references) not in (list, tuple):
         raise BuiltinViewError('builtin_fallback_boundaries_required')
-    documents = tuple(sorted(documents, key=lambda d: d.path))
+    # One owned input generation is used for validation, hashes and output.
+    # Later changes to the caller's holders cannot split these observations.
+    documents = tuple(sorted((ModelDocument(d.path, d.content) for d in documents), key=lambda d: d.path))
     paths = [project_path(d.path) for d in documents]
-    if len({p.casefold() for p in paths}) != len(paths):
+    if len({normalize('NFC', p).casefold() for p in paths}) != len(paths):
         raise BuiltinViewError('builtin_fallback_duplicate_path')
+    if source_kind == 'partial':
+        # Revalidate native value objects too; their cached type alone is not
+        # evidence that the current contents still satisfy the boundary schema.
+        boundary_references = tuple(BoundaryReference(
+            value.data if type(value) is BoundaryReference else value) for value in boundary_references)
     records = {}; prefixes = set()
     for document in documents:
         value = parse_json_object(document.content, path=document.path)
@@ -71,11 +102,9 @@ def resolve_type_fallback(documents, *, source_kind, scope_descriptor=None, boun
         if selector[descriptor.data['scope_kind'] + '_id'] not in records:
             raise BuiltinViewError('builtin_fallback_scope_root_missing', pointer='/scope_descriptor/selector')
         records = _typed_records(documents)
-        checked = validate_boundary_references(
-            [SourceRelations(d.content, path=d.path) for d in documents],
-            boundary_references, descriptor=descriptor)
-        if any(canonical_relation(edge) != edge for edge in checked.local_relations):
-            raise BuiltinViewError('noncanonical_symmetric_relation', pointer='/relations')
+        sources = tuple(SourceRelations(d.content, path=d.path) for d in documents)
+        checked = validate_boundary_references(sources, boundary_references, descriptor=descriptor)
+        _require_partial_symmetry(sources, checked)
         boundaries = [value.data for value in checked.boundary_references]
         descriptor = descriptor.data
     elif scope_descriptor is not None or boundary_references:
@@ -119,6 +148,7 @@ def render_type_fallback(documents, *, source_kind, scope_descriptor=None,
     nodes = [{'type': 'record', 'record': data['records'][identifier]['record'], 'mode': 'full', 'level': 2}
              for identifier in data['artifact_ids']]
     metadata = {key: data[key] for key in ('tool_version', 'schema_version', 'source_kind',
-        'input_sha256', 'model_root_sha256', 'source_context_verified', 'legacy_semantics_verified')}
+        'input_sha256', 'model_root_sha256', 'source_context_verified', 'legacy_semantics_verified',
+        'verification_evaluated', 'release_readiness_evaluated', 'computed_reports')}
     metadata['projection_sha256'] = result.sha256
     return Emitter(output_format).output(metadata, 'specification', nodes)
