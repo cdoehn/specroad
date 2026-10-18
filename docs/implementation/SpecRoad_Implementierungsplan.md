@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 474
-last_completed_plan_commit: 11.n.C
-next_plan_commit: 11.o.W
-last_completed_numbered_bundle: 300
+implementation_plan_commits_completed: 475
+last_completed_plan_commit: 11.o.W
+next_plan_commit: 11.o.R
+last_completed_numbered_bundle: 301
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12258,12 +12258,27 @@ die dauerhafte Testnummerierung bleiben bytegleich.
 
 #### 11.o.W – Let it Work
 
-- [ ] **11.o.W** · Position **475/900** · Voraussetzung: `11.n.C`.
+- [x] **11.o.W** · Position **475/900** · Voraussetzung: `11.n.C`.
 **Exakte Commit-Message:** `11.o.W feat(documents): Diagrammquellen aufbauen`
 
 **Umsetzung:** Trace-, Architektur- und Releasediagramme als Mermaid/DOT aus den geprüften Knoten-/Kantenprojektionen erzeugen.
 
 **Verhaltensabnahme:** Fachliche Diagrammprojektion enthält die ausgewählten Graphidentitäten.
+
+**W-Zuschnitt (Bundle 301):** `resolve_diagram` liefert eine eigene gebundene
+Knoten-/Kantenprojektion aus dem nativen Graphkern; `render_diagram` erzeugt
+daraus ausschließlich Mermaid-/DOT-Quellbytes. Trace verwendet den gelieferten
+Graphen, Architektur beschränkt sich auf Komponenten/Interfaces und Release
+verwendet die vorhandene native Release-Seed-Auswahl. Start, Richtung und
+Knoten-/Kanten-/Tiefengrenzen sind ausdrücklich erforderlich. Gespeicherte
+Relationsidentitäten und -richtungen bleiben erhalten, inverse Traversierungen
+duplizieren keine Kante. Überschrittene Zählgrenzen erzeugen keinen gekürzten
+Erfolg. Daten binden Originaltitel, Revisionen, Quellbytes, Modellwurzel und
+Auswahl; das initiale Quellprofil beschriftet ausschließlich mit validierten
+IDs/Core-Typen. Keine Fremdausführung, Dateipublikation, CLI-Anbindung oder
+Readiness-/Approvalbehauptung. Verhaltenstests prüfen die fachliche Projektion
+und Nebenwirkungen, keine Diagrammtexte oder Layouts. Details:
+[`Diagram_Sources.md`](../development/Diagram_Sources.md).
 
 #### 11.o.R – Make it Right
 
