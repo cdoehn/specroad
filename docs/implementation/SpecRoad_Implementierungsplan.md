@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 487
-last_completed_plan_commit: 12.a.W
-next_plan_commit: 12.a.R
-last_completed_numbered_bundle: 313
+implementation_plan_commits_completed: 488
+last_completed_plan_commit: 12.a.R
+next_plan_commit: 12.a.C
+last_completed_numbered_bundle: 314
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12610,10 +12610,36 @@ identische parallele Auswahl ist erfolgreich.
 
 #### 12.a.R – Make it Right
 
-- [ ] **12.a.R** · Position **488/900** · Voraussetzung: `12.a.W`.
+- [x] **12.a.R** · Position **488/900** · Voraussetzung: `12.a.W`.
 **Exakte Commit-Message:** `12.a.R feat(verification): Verification Contracts und Testreferenzen vervollständigen`
 
 **Vervollständigung:** Fehlende Pflichtdimensionen, ungültige Test-ID und unvollständige Contracts abweisen.
+
+**Vorbereiteter R-Stand (Bundle 314):** `resolve_verification_target` löst beide
+zulässigen `verified_by`-Zielarten auf. Explizite Contracts behalten das Ergebnis
+der W-API; direkte Testziele erhalten den normativen impliziten `overall`-Slot
+mit `contract_id=test_id`. Der tatsächliche Testrecord bleibt die Quelle; es
+entstehen weder ein erfundener Verification-Record noch eine geratene Methode
+oder Konfigurationspolicy. Native Identitäts-, Feld-, Pfad- und Relationsprüfungen
+weisen fehlende Dimensionen, unvollständige Metadaten, ungültige Test-IDs und
+selektiv ausgelassene Pflichtprüfungen ab. Rückgaben binden Originalbytes und
+Modellzustand auch bei veränderten Ableitungscaches. Die W-Tests bleiben
+unverändert. Keine Codeausführung, Evidence-Bewertung oder Freigabe wird behauptet.
+
+**Gezielter R-Nachweis:** 326 Verhaltenstests mit vier parallelen Workern
+bestanden (9,81 s), darunter die unveränderten 58 W-Tests und 77 neue R-Tests.
+Die vorhandenen Record-/Relations- und Katalog-/Evidence-Harnessverträge sind
+in der Auswahl enthalten. Die vollständige Collection-/Katalogprüfung bindet
+13.153 Testidentitäten ohne Testkörperausführung. Die bisherigen 13.076 Nummern
+bleiben erhalten, neue Tests erhalten die Nummern 13.076 bis 13.152.
+Geprüfter Quellstand:
+`f3f573c472b55260176b2ae152c0fa789c1b57af70ece8f92628151485cde744`.
+Das Result `specroad-apply_Result_111643_1019_e3b5e9.zip` bestätigt den W-Commit
+`890e92258c29163a2a2e5b9eef9b5dffe0f15e3e` mit 4.359 bestandenen parallelen
+Tests der Gruppe 0. Für diesen R-Stand folgt Apply-Sequenz 22, Gruppe 1 mit
+4.384 Tests. Erst der erfolgreiche Apply-Testlauf und Commit bestätigen
+488/900 und den nächsten Schritt `12.a.C`. Dies ist kein Vollsuite- oder
+Release-Erfolgsnachweis.
 
 **Verhaltensabnahme:** Direkter verified_by-Test ergibt den normativen impliziten overall-Contract. Die W-Nachweise bleiben zusätzlich grün.
 

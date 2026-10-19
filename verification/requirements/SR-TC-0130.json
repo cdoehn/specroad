@@ -8,19 +8,21 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1",
-    "SR-FIX-VERIFICATION-CONTRACTS-v1"
+    "SR-FIX-VERIFICATION-CONTRACTS-v1",
+    "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1"
   ],
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
   ],
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
-    "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared."
+    "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared.",
+    "Resolve direct verified_by tests into implicit overall contracts bound to original Test records. Preserve explicit-contract results and reject incomplete contracts, invalid identities and changed source bindings without file access or test execution."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Verification-Artefakt MUSS Vorbedingungen, Prüfgegenstand, Verfahren, Oracle oder Pass-Kriterium, erforderliche Evidence-Arten, vollständige `evidence_slots` nach Kapitel 10.5.2 und eine Konfigurationspolicy `independent` oder `bound` definieren.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -74,9 +76,57 @@
     "tests/test_verification_contracts.py::test_source_changes_are_bound_to_different_resolution_hashes[0-statement-Changed subject]",
     "tests/test_verification_contracts.py::test_source_changes_are_bound_to_different_resolution_hashes[1-oracle-Different criterion]",
     "tests/test_verification_contracts.py::test_source_changes_are_bound_to_different_resolution_hashes[2-test_identity-value2]",
-    "tests/test_verification_contracts.py::test_stored_contract_read_never_synthesizes_missing_slots"
+    "tests/test_verification_contracts.py::test_stored_contract_read_never_synthesizes_missing_slots",
+    "tests/test_verification_contracts_right.py::test_actual_test_bytes_override_tampered_model_caches_and_preserve_original_format_binding",
+    "tests/test_verification_contracts_right.py::test_changed_source_binding_cannot_be_reused_for_implicit_checks[source_bytes]",
+    "tests/test_verification_contracts_right.py::test_changed_source_binding_cannot_be_reused_for_implicit_checks[source_hash]",
+    "tests/test_verification_contracts_right.py::test_direct_test_materializes_exact_normative_overall_identity_without_inventing_a_record[Required observable behavior-identity0]",
+    "tests/test_verification_contracts_right.py::test_direct_test_materializes_exact_normative_overall_identity_without_inventing_a_record[Required observable behavior-identity1]",
+    "tests/test_verification_contracts_right.py::test_direct_test_materializes_exact_normative_overall_identity_without_inventing_a_record[oracle1-identity0]",
+    "tests/test_verification_contracts_right.py::test_direct_test_materializes_exact_normative_overall_identity_without_inventing_a_record[oracle1-identity1]",
+    "tests/test_verification_contracts_right.py::test_explicit_target_delegates_without_changing_existing_contract_results",
+    "tests/test_verification_contracts_right.py::test_implicit_projection_is_owned_and_does_not_change_its_test_record",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change0]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change1]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change2]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change3]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change4]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change5]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change6]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change7]",
+    "tests/test_verification_contracts_right.py::test_incomplete_or_selectively_optional_contracts_never_resolve_a_partial_success[change8]",
+    "tests/test_verification_contracts_right.py::test_input_order_does_not_change_implicit_contract_bindings",
+    "tests/test_verification_contracts_right.py::test_missing_subject_or_target_has_an_input_location_and_no_fallback[subject]",
+    "tests/test_verification_contracts_right.py::test_missing_subject_or_target_has_an_input_location_and_no_fallback[target]",
+    "tests/test_verification_contracts_right.py::test_mixed_explicit_and_direct_targets_have_distinct_pair_keys_without_a_project_success_claim",
+    "tests/test_verification_contracts_right.py::test_native_relation_boundaries_still_apply_to_implicit_contracts[duplicate_relation_id]",
+    "tests/test_verification_contracts_right.py::test_native_relation_boundaries_still_apply_to_implicit_contracts[invalid_type_pair]",
+    "tests/test_verification_contracts_right.py::test_native_relation_boundaries_still_apply_to_implicit_contracts[missing_target]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[subject_id-7]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[subject_id-None]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[subject_id-True]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[subject_id-value1]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[subject_id-value2]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[target_id-7]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[target_id-None]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[target_id-True]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[target_id-value1]",
+    "tests/test_verification_contracts_right.py::test_nonstring_lookup_arguments_are_typed_errors[target_id-value2]",
+    "tests/test_verification_contracts_right.py::test_normative_check_id_boundaries_preserve_required_identity[a]",
+    "tests/test_verification_contracts_right.py::test_normative_check_id_boundaries_preserve_required_identity[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]",
+    "tests/test_verification_contracts_right.py::test_normative_check_id_boundaries_preserve_required_identity[check.part:1-2_3]",
+    "tests/test_verification_contracts_right.py::test_outside_check_id_boundaries_are_not_sanitized_to_another_check[\\xe9]",
+    "tests/test_verification_contracts_right.py::test_outside_check_id_boundaries_are_not_sanitized_to_another_check[]",
+    "tests/test_verification_contracts_right.py::test_outside_check_id_boundaries_are_not_sanitized_to_another_check[_prefix]",
+    "tests/test_verification_contracts_right.py::test_outside_check_id_boundaries_are_not_sanitized_to_another_check[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]",
+    "tests/test_verification_contracts_right.py::test_outside_check_id_boundaries_are_not_sanitized_to_another_check[line\\nbreak]",
+    "tests/test_verification_contracts_right.py::test_shared_direct_test_does_not_merge_required_checks_of_different_subjects",
+    "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[None]",
+    "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[value1]",
+    "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[value2]",
+    "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[{}]"
   ],
   "open_items": [
-    "Implicit contracts for direct verified_by test targets and further hostile/incomplete input cases remain in 12.a.R. Project-wide required-check aggregation, Evidence evaluation, context freshness and write authorization remain in their assigned later steps. No full requirement or release approval."
+    "These are supplied-record and per-pair Contract checks, not project-wide required-check aggregation, configuration applicability, fresh Evidence evaluation or write authorization. Those later plan steps and broader platform/release evidence remain open."
   ]
 }

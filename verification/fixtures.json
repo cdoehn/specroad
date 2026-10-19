@@ -97,6 +97,7 @@
     "SR-FIX-TRANSACTION-RECEIPTS-v1",
     "SR-FIX-TRANSACTION-RECOVERY-v1",
     "SR-FIX-TRANSACTION-STAGING-v1",
+    "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1"
@@ -481,6 +482,10 @@
     "SR-FIX-TRANSACTION-STAGING-v1": {
       "provider": "tests/test_transaction_staging.py:begin",
       "kind": "Owned temporary Linux project and still-held native writer lock; exact building journal, real exclusive images, fsync boundaries and prepared metadata. No normative publication or recovery claim."
+    },
+    "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1": {
+      "provider": "tests/test_verification_contracts_right.py:direct_test_records",
+      "kind": "Direct verified_by test targets with bound implicit overall slots. Mixed explicit/direct contracts, shared test identities, malformed dimensions and identities, native relation and snapshot boundaries, no code/file access, and isolated Core/PYZ parity."
     },
     "SR-FIX-VERIFICATION-CONTRACTS-v1": {
       "provider": "tests/test_verification_contracts.py:referenced_test_records",
