@@ -2,24 +2,24 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0138",
   "requirement_id": "SR-REQ-0138",
-  "specification_sha256": "6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e",
+  "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0010",
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-DOMAIN-DRAFT-v1"
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-VERIFICATION-WAIVER-v1"
   ],
   "preconditions": [
-    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation."
+    "Supplied typed subject, exact scope/configuration, explicit UTC evaluation time and explicitly trusted human-review verifier. Legacy source bytes retained."
   ],
   "steps": [
-    "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes.",
-    "Check stored non-draft field gates and malformed statuses without inferring approval or evidence outcomes."
+    "Prepare guarded native workflow updates and evaluate actual waiver bindings, deadlines, human decisions and changed subject/configuration/scope without I/O."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der gespeicherte `verification_plan_status=waived` MUSS ein vollständiges `verification_waiver`-Objekt nach Kapitel 10.5 besitzen.",
-    "scope": "Common envelope and the implemented thirteen type-field contracts only. No complete graph/profile/evidence/approval validation."
+    "scope": "12.b.W: versioned content projection and waiver-only assessment with exact UTC deadline, scope/configuration and human-review bindings; legacy data remain readable but ineffective. Only workflow fields are prepared for the common writer. No complete verification_result, release readiness, write authority or production authentication claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -36,11 +36,35 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_domain_schemas.DomainWorkTests.test_waiver_requires_declared_binding_metadata",
+    "test_domain_schemas.DomainRightTests.test_waiver_hashes_and_actor_metadata_cannot_be_fabricated_from_bools",
     "test_domain_schemas.DomainWorkTests.test_all_verification_plan_values_require_no_inferred_result",
-    "test_domain_schemas.DomainRightTests.test_waiver_hashes_and_actor_metadata_cannot_be_fabricated_from_bools"
+    "test_domain_schemas.DomainWorkTests.test_waiver_requires_declared_binding_metadata",
+    "tests/test_verification_waivers.py::test_legacy_waiver_remains_readable_and_is_not_implicitly_upgraded[capability]",
+    "tests/test_verification_waivers.py::test_legacy_waiver_remains_readable_and_is_not_implicitly_upgraded[requirement]",
+    "tests/test_verification_waivers.py::test_legacy_waiver_remains_readable_and_is_not_implicitly_upgraded[task]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change0]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change1]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change2]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change3]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change4]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change5]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change6]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change7]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change8]",
+    "tests/test_verification_waivers.py::test_new_waiver_never_accepts_unknown_or_text_only_contracts[change9]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[artifact_sha256]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[configuration_sha256]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[content_hash_algorithm]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[expiry_condition]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[format_version]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[human_review_id]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[reason]",
+    "tests/test_verification_waivers.py::test_new_waiver_requires_every_declared_field[scope_descriptor]",
+    "tests/test_verification_waivers.py::test_valid_human_waiver_is_separate_from_passed_or_stored_result[capability]",
+    "tests/test_verification_waivers.py::test_valid_human_waiver_is_separate_from_passed_or_stored_result[requirement]",
+    "tests/test_verification_waivers.py::test_valid_human_waiver_is_separate_from_passed_or_stored_result[task]"
   ],
   "open_items": [
-    "Remaining graph, profile, specialized lifecycle, semantic, evidence and end-to-end checks at their assigned plan steps; no full requirement or release approval claimed."
+    "12.b.R extends hostile-input/currentness cases and native writer integration; 12.b.C preserves behavior during structural cleanup. Full verification aggregation and release workflows remain later steps."
   ]
 }

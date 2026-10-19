@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 3 · **Stand:** 14. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.8
+**Planrevision:** 4 · **Stand:** 19. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.9
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `6395b65e4cb49c015d5d81e8b4968bc4e82b470b2ae057a24ef190a948a0df1e`.
+Gebundene Spezifikations-SHA-256: `204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -17,12 +17,12 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 3
+plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 489
-last_completed_plan_commit: 12.a.C
-next_plan_commit: 12.b.W
-last_completed_numbered_bundle: 315
+implementation_plan_commits_completed: 490
+last_completed_plan_commit: 12.b.W
+next_plan_commit: 12.b.R
+last_completed_numbered_bundle: 316
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12684,34 +12684,98 @@ oder Release-Erfolgsnachweis.
 **Anforderungsbezug:** `SR-REQ-0138`, `SR-REQ-0444`–`SR-REQ-0445`, `SR-REQ-0447`.
 **Verifikationsbezug:** `SR-VER-0010`, `SR-VER-0030`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Präzisierung vom 19. Oktober 2026 (Planrevision 4):** Der Nutzer hat den
+Waiver-Inhaltshash und die UTC-Frist fachlich festgelegt. Spezifikation 0.2.9,
+10.5.5 definiert die exakte Projektion, getrennte Scope-/Konfigurationsbindung,
+explizite Bewertungszeit und den Umgang mit Bestandsdaten. Diese Präzisierung
+ist Bestandteil des regulären `12.b.W`; Positionen und Gesamtzahl bleiben
+unverändert. Sie erzeugt keinen zusätzlichen OFF-PLAN-Commit. Historische
+Spezifikationsbindungen und frühere Testergebnisse werden nicht umgedeutet.
+
 #### 12.b.W – Let it Work
 
-- [ ] **12.b.W** · Position **490/900** · Voraussetzung: `12.a.C`.
+- [x] **12.b.W** · Position **490/900** · Voraussetzung: `12.a.C`.
 **Exakte Commit-Message:** `12.b.W feat(verification): Verifikationsplanung und Waiver aufbauen`
 
-**Umsetzung:** Ausschließlich verification_plan_status speichern und gebundene menschliche Waiver validieren.
+**Umsetzung:** Ausschließlich `verification_plan_status` als Workflowwert
+vorbereiten; native Updateoperation mit Revisions-/Vollhashguards verwenden.
+`waiver-content-hash-v1` mit exakter Feldliste nach 10.5.5 implementieren;
+Waiver/Workflow/Audit ausschließen, Scope und effektive Konfiguration zusätzlich
+exakt binden. Versionierten Waiver mit UTC-Frist und ausdrücklich übergebener
+Bewertungszeit sowie konkret gebundenem menschlichem Review bewerten. Bestehende
+unversionierte Waiver bleiben byteerhaltend lesbar und fachlich unwirksam;
+keine automatische Migration und keine Auswertung von Ereignis-/Freitextbedingungen.
 
-**Verhaltensabnahme:** Gültiger zeit-/scopegebundener Waiver wird als waiver, nicht als passed bewertet.
+**Verhaltensabnahme:** Ein gültiger zeit-/scope-/konfigurationsgebundener Waiver
+liefert ausschließlich im Teilbericht `waiver_result=waived`, niemals `passed`
+oder ein gespeichertes `verification_result`. Ab Erreichen der Frist gilt er
+als abgelaufen. Fachliche Änderungen entwerten ihn; Speichern des Waivers,
+Workflow- und definierte Auditänderungen verursachen keinen Selbstbezug.
+Fehlender oder unpassender menschlicher Review gewährt keine Ausnahme. Legacy-
+Daten werden nicht still aktualisiert. Pflichtprüfungsaggregation, Evidence und
+Release-Abnahme bleiben eigenständige spätere Schritte.
+
+**Vorbereiteter W-Zustand:** Spezifikation 0.2.9 und Planrevision 4 schließen die
+fachliche Blockade gemäß Nutzerentscheidung. Die eingebettete Waiver-Version
+`1.0.0` bindet `waiver-content-hash-v1`, den vollständigen Scope Descriptor,
+die effektive Konfigurationskette und eine UTC-Frist. Die Bewertung benötigt
+einen ausdrücklich übergebenen Zeitpunkt; Nanosekunden werden nicht gerundet.
+Der menschliche Review bindet das gesamte Waiver-Objekt. Ein expliziter
+vertrauenswürdiger Hostprüfer bestätigt Herkunft und aktuelle Wirkung.
+
+`prepare_verification_plan_update` erzeugt ausschließlich native Status-/Waiver-
+Updatefelder mit erwarteter Revision und Vollhash. Gemeinsamer Writer und seine
+Gates bleiben zuständig. Legacy-Waiver bleiben unverändert lesbar und unwirksam;
+Freitext, Ereignisse, fremde oder abgelaufene Bindungen gewähren keine Ausnahme.
+Der Waiver-Teilbericht enthält niemals einen Pass-/Release-/Schreibnachweis.
+
+**Gezielter W-Nachweis:** 795 Verhaltenstests auf vier parallelen Workern
+bestanden (255,63 s), darunter 112 neue Waiver-Tests sowie betroffene Domain-/
+Schema-, Validation-, Approval-, Update-, Konfigurations-, Contract- und
+Katalog-/Evidence-Regressionen. Die isolierten Core-/PYZ-Aufrufe liefern
+identische Waiver-Bindungen. Die vollständige Collection-/Katalogprüfung
+bestätigt 13.265 Testidentitäten ohne Testkörperausführung. Alle bisherigen
+Testdateien und die ersten 13.153 Testnummern bleiben unverändert; 112 neue
+Identitäten wurden hinten angefügt. Die Katalogmanifeste binden die neue
+Spezifikationsfassung, historische Nachweise bleiben unverändert.
+Geprüfter Quellstand:
+`ed49792ee9e9035b5a4fe4a1cec8c65e868a9be13ffa70826261811f5bc278c6`.
+
+Das maßgebliche Result `specroad-apply_Result_120720_1019_f1c327.zip` bestätigt
+`12.a.C` auf `f0c6090805528a8f3a460cfc2e4d408208f3f200` mit 4.384 bestandenen
+parallelen Tests der Gruppe 2. Dieser W-Stand erhält Apply-Sequenz 24, Gruppe 0
+mit 4.422 Tests. Erst deren erfolgreicher Commit bestätigt **490/900** und den
+nächsten Schritt `12.b.R`. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.b.R – Make it Right
 
 - [ ] **12.b.R** · Position **491/900** · Voraussetzung: `12.b.W`.
 **Exakte Commit-Message:** `12.b.R feat(verification): Verifikationsplanung und Waiver vervollständigen`
 
-**Vervollständigung:** Abgelaufene/fremde Bindung und Speicherung von verification_result verhindern.
+**Vervollständigung:** Die bestehende W-Sicherheitsgrenze anhand erweiterter
+Mutations-/Fehlerfälle und nativer Writerintegration absichern: geänderte
+Eingaben während Reviewprüfung, fremde oder widerrufene Bindungen, Konfigurations-
+und Scope-Randfälle, Fristpräzision, Legacy-Neuausstellung und Speicherung von
+`verification_result` verhindern. Keine neue Hash- oder Zeitpolicy einführen.
 
-**Verhaltensabnahme:** Datenmutation kann kein berechnetes Ergebnis als normative Wahrheit festschreiben. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Datenmutation kann weder eine Ausnahme erschleichen noch
+ein berechnetes Ergebnis als normative Wahrheit festschreiben. W-Nachweise
+bleiben grün; tatsächliche Schreibpfade erhalten ihre gemeinsamen Gates.
 
 #### 12.b.C – Make it Clean
 
 - [ ] **12.b.C** · Position **492/900** · Voraussetzung: `12.b.R`.
 **Exakte Commit-Message:** `12.b.C refactor(verification): Verifikationsplanung und Waiver bereinigen`
 
-**Bereinigung:** Workflowwerte und Ergebnisberechnung strikt trennen.
+**Bereinigung:** Workflowwerte, unveränderliche Bindungswerte und Ergebnisberechnung
+strukturell trennen; Projektion und Fristvergleich gemeinsam nutzen.
 
-**Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
+**Unveränderlich:** Fachresultate, Fehlerverträge, Hash-/Zeit-/Reviewbindungen,
+Legacy-Verhalten und zulässige Seiteneffekte bleiben gleich. Keine neuen Features.
 
-**Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+**Regressionsabnahme:** Bestehende W-/R-Verhaltenstests und betroffene bisherige
+Verhaltenstests erneut ausführen; keine erwarteten Fachwerte dem Refactoring
+anpassen und keine Darstellungs-/Dokumentationstests ergänzen.
 
 <a id="step-12-c"></a>
 ### 12.c – Verification-Kontextprojektion

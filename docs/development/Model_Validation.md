@@ -43,10 +43,16 @@ tooling under tools/, not src/specroad/.
 ## Right-stage coverage and external bindings
 
 Known field references (interface endpoints, verification subjects and slots,
-evidence subjects, configuration parents, review endpoints, provenance and waiver
+evidence subjects, configuration parents, review endpoints, provenance and legacy waiver
 reviews) join the stored relation graph. The semantic scope expands in both
 directions; a missing field target never counts as valid structure. The current
 checker does not parse arbitrary prose or extension strings for references.
+
+Versioned waivers from specification 10.5.5 use a separate explicit human-waiver
+review. Their review ID is not resolved as a relation-review artifact. The
+waiver assessment requires the host's bound trusted review observation; parsing
+the versioned field does not establish an effective exception. See
+[Verification_Waivers.md](Verification_Waivers.md).
 
 A gate can additionally carry `resources_sha256` for its explicitly captured
 external inputs; this digest participates in the per-call binding. It is provided

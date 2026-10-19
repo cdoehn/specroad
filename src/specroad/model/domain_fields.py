@@ -11,6 +11,7 @@ PRIORITIES = ("mandatory", "high", "medium", "low")
 CRITICALITIES = ("normal", "important", "critical", "safety_critical")
 from enum import Enum
 from .errors import ModelError
+from .waiver_fields import waiver_schema
 
 
 class NormativeForce(str, Enum):
@@ -64,14 +65,7 @@ def field_schemas():
     # No risk/assumption vocabulary is enumerated in spec 9.4. Store nonempty
     # labels without inventing meanings or treating a label as proof of success.
     assessment = {"anyOf": [text, {"type": "number", "minimum": 0}]}
-    waiver = {
-        "type": "object", "required": ["reason", "scope_descriptor", "expiry_condition", "human_review_id", "artifact_sha256"],
-        "properties": {"reason": text, "scope_descriptor": {"type": "object"}, "expiry_condition": text,
-                       "human_review_id": text,
-                       "artifact_sha256": {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"},
-                       "configuration_sha256": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"}]}},
-        "additionalProperties": False,
-    }
+    waiver = waiver_schema()
     return {
         "text": text, "owner": owner, "texts": texts, "criteria": criteria,
         "implementation": implementation, "verification": verification,

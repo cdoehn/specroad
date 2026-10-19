@@ -99,6 +99,7 @@
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-v1",
+    "SR-FIX-VERIFICATION-WAIVER-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1"
   ],
@@ -498,6 +499,10 @@
     "SR-FIX-WRITER-BOUNDARIES-v1": {
       "provider": "tests/support/writer_boundaries.py:fixture",
       "kind": "owned native single/multi-artifact writers, real syscall interruption without finalizers, receipt loss and repeated fresh-process recovery; independent complete byte/model-root oracles and explicit test authority only"
+    },
+    "SR-FIX-VERIFICATION-WAIVER-v1": {
+      "provider": "tests/test_verification_waivers.py:fixture",
+      "kind": "Owned capability/requirement/task records, explicit scopes and resolved product configuration, versioned and historical waivers, UTC nanosecond boundaries and trusted test review service. No project-code execution, implicit clock, full verification or release approval."
     }
   }
 }

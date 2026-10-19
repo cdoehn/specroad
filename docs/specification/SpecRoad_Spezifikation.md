@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.8
+## Version 0.2.9
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.8` |
+| Dokumentversion | `0.2.9` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 14. Oktober 2026 |
+| Stand | 19. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.8 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.8 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.9 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.9 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Spezifikation v0.2.7 vom 14. September 2026 und ihre zugehörige Satzquelle/PDF. |
-| Prüf- und Entscheidungsgrundlage | Nutzerentscheidung vom 14. Oktober 2026: portabler SpecRoad-Projekt-Rundweg auf Basis der öffentlichen PatchHarbor-Python-API mit der neuen, CPython 3.10/3.11 unterstützenden Version; OFF-PLAN `PH-RUNTIME-PLAN`, Bundle 233. Frühere fachliche Korrekturen bleiben erhalten. |
-| Änderungsart | Featureplanung bei unverändertem Zielrelease: zwölf neue Anforderungen SR-REQ-0731 bis SR-REQ-0742, öffentlicher API-Vertrag, Hin-/Rückpakete und kontrollierte Übernahme. Keine Behauptung implementierter Funktionen oder bestandener neuer Produktabnahme. |
+| Vorgängerversion | Repository-Spezifikation v0.2.8 vom 14. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Nutzerentscheidung vom 19. Oktober 2026 zu 12.b.W: versionierter Waiver-Inhaltshash, exakte Scope-/Konfigurationsbindung, explizite UTC-Frist und Bewertungszeit. Der PatchHarbor-Rundweg aus v0.2.8 bleibt unverändert. |
+| Änderungsart | Präzisierung bestehender Anforderungen SR-REQ-0138/0447; keine neuen Requirement-IDs. Legacy-Waiver bleiben lesbar, ihre Ausnahme wird nicht automatisch erneuert. Kein Produkt- oder Baseline-Erfolgsnachweis. |
 
-> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.8 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.9 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.8 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.9 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -995,7 +995,7 @@ Die Aktualisierung des übernommenen Proposals auf `applied`, die fachlichen Zie
 
 Gespeichert wird ausschließlich `verification_plan_status` mit `not_planned`, `planned`, `running`, `waived` oder `not_applicable`. `verification_result` wird niemals in das fachliche Subject geschrieben. Vor der Ergebnisaggregation werden Bewertungsstand, Pflichtprüfungen und maßgebliche Prüfläufe nach 10.5.1–10.5.4 aufgelöst. „Aktuell“ nach Anhang L bezeichnet zunächst die fachliche Kontextgültigkeit eines Nachweises; **maßgeblich für eine konkrete Bewertung** ist er erst nach der hier definierten Auswahl.
 
-`waived` erfordert ein Objekt `verification_waiver` mit Grund, Scope Descriptor, Ablaufbedingung, Human-Review-ID und gebundenem Artefakt-/Konfigurationshash. Ein Waiver ersetzt keine Ergebnisdaten und hebt die strengere Release-Abnahmepolicy nicht auf.
+`waived` erfordert ein Objekt `verification_waiver` nach 10.5.5 mit Grund, Scope Descriptor, UTC-Ablauffrist, Human-Review-ID und versioniert gebundenem Inhalts-/Konfigurationshash. Historische Waiver bleiben gemäß 10.5.5 lesbar, begründen aber keine wirksame Ausnahme. Ein Waiver ersetzt keine Ergebnisdaten und hebt die strengere Release-Abnahmepolicy nicht auf.
 
 | Bedingung in Prioritätsreihenfolge | Ergebnis |
 |---|---|
@@ -1067,6 +1067,112 @@ Andere Abfragen verwenden den expliziten Descriptor. Ohne eindeutige Auswahl erf
 `evidence record` und `evidence import` akzeptieren `--run-context <FILE>` für einen expliziten Run-Kontext. Ein Importmapping kann denselben Kontext aus vorhandenen Ursprungsfeldern liefern; widersprechende Angaben sind Code 3. Fehlende Werte bleiben `null` mit Begründung; Import und Erfassung setzen keine Subjects oder Release-Policies um und behaupten keinen aktuellen Nachweis. Die spätere Ergänzung einer ungebundenen Herkunft ist ein neuer Nachweis mit eigener ID und Herkunftsverweis, keine Änderung recorded Evidence. Alle normalen Actor-, Request-, Dry-Run-, Schema- und Transaktionsregeln gelten unverändert.
 
 Evidence-Import verändert weder Subject-Revisionen noch `verification_plan_status`. Die Auswahlregeln erweitern nicht die Ausführungsrechte: SpecRoad startet weiterhin keinen Testcode und keine externen Buildprozesse.
+
+
+#### 10.5.5 Versionierter Waiver-Vertrag
+
+Ein neu ausgestellter wirksamer Waiver verwendet genau folgende Felder. Er ist
+weiterhin ein eingebettetes Objekt des Subjects, kein zusätzlicher Artefakttyp.
+
+| Feld | Vertrag |
+|---|---|
+| `format_version` | exakt `1.0.0` |
+| `content_hash_algorithm` | exakt `waiver-content-hash-v1` |
+| `reason` | nichtleerer begründender Text |
+| `scope_descriptor` | vollständiger gültiger `scope-v1`-Descriptor; kanonisch exakt gleich dem ausdrücklich ausgewerteten Descriptor |
+| `expiry_condition` | exakt `{kind: "utc_deadline", expires_at: <UTC-Zeitstempel>}` |
+| `human_review_id` | nichtleere Kennung der expliziten menschlichen Waiver-Entscheidung |
+| `artifact_sha256` | 64 kleingeschriebene Hexzeichen; ausschließlich der unten definierte Waiver-Inhaltshash |
+| `configuration_sha256` | ausdrücklich `null` bei unkonfiguriertem Scope, sonst der bestehende kanonische Manifesthash der aufgelösten effektiven Konfiguration einschließlich Elternkette |
+
+Unbekannte oder fehlende Felder und unbekannte Versionen sind unzulässig. Die
+bestehende Schreibweise `artifact_sha256` erhält durch `content_hash_algorithm`
+eine eindeutige neue Hashdomäne. Ein historischer Vollartefakthash darf niemals
+allein durch Umbenennung oder Ergänzung des Algorithmus zur aktuellen Bindung
+werden. Waiver-Daten sind passive Werte; sie laden oder starten keinen Code.
+
+**Exakte Hashprojektion.** Für Capabilities, Requirements und Tasks ist der Hash
+SHA-256 der RFC-8785-Kanonisierung von
+`{hash_algorithm: "waiver-content-hash-v1", artifact: <Projektion>}`.
+Die Projektion enthält ausschließlich tatsächlich vorhandene Felder aus dieser
+abschließenden Liste; fehlende optionale Werte werden nicht ergänzt, Arrays
+nicht umsortiert, Texte nicht normalisiert:
+
+| Geltung | Enthaltene Top-Level-Felder |
+|---|---|
+| alle drei Subjecttypen | `schema_version`, `id`, `id_scheme`, `artifact_type`, `title`, `language`, `text_direction`, `owner`, `tags`, `applicability`, `relations`, `extensions`, `provenance`, `external_identities`, `display_id` |
+| Capability zusätzlich | `description`, `outcome`, `priority` |
+| Requirement zusätzlich | `requirement_kind`, `normative_force`, `statement`, `priority`, `criticality`, `rationale`, `deviation_conditions`, `deviation_authority`, `scope`, `actor`, `trigger`, `preconditions`, `response`, `object`, `timing`, `thresholds`, `exceptions` |
+| Task zusätzlich | `description`, `done_criteria` |
+
+`verification_waiver`, `maturity`, `implementation_status`,
+`verification_plan_status`, `revision`, `created_at`, `created_by`, `updated_at`
+und `updated_by` sind ausgeschlossen. Innerhalb jedes `provenance`-Eintrags
+werden ausschließlich `source_id`, `locator`, `excerpt`, `content_sha256` und
+`extensions` übernommen; sein reiner Erfassungszeitpunkt `captured_at` entfällt.
+Alle anderen enthaltenen Werte werden vollständig übernommen, auch Relations-
+und Extensionwerte. Die Ausschlüsse sind pfadgebunden, kein rekursives Entfernen
+gleichnamiger fachlicher Felder. Unbekannte Subjectfelder oder Typen werden
+abgewiesen; zukünftige Erweiterungen dürfen nicht still aus der Projektion
+fallen. Der Vollartefakthash für Audit, Diff, Writer und Baselines bleibt
+unverändert und schließt weiterhin das gesamte Artefakt ein.
+
+Jede Änderung an diesen fachlichen Projektionswerten entwertet den alten Waiver.
+Das Speichern des Waivers selbst, ein reiner Workflowwechsel oder die genannten
+Auditänderungen erzeugen keine Selbstreferenz. Scope und Konfiguration werden
+zusätzlich exakt verglichen; ein anderer Scope, eine andere Konfigurations-ID,
+eine geänderte Konfigurationskette oder ein anderer Konfigurationshash dürfen
+keine Ausnahme erben. `null` ist kein Wildcard. Die Konfigurationsbindung benutzt
+den vorhandenen Konfigurationshash; die Subjectprojektion definiert keine neue
+Konfigurationsprojektion. Die Bewertung eines einzelnen Waivers ist kein
+Nachweis der Scope-Mitgliedschaft, Anwendbarkeit oder Release Readiness.
+
+**Zeitvertrag.** `expires_at` und der für jede Bewertung ausdrücklich übergebene
+`evaluated_at` verwenden `YYYY-MM-DDTHH:MM:SS[.fffffffff]Z`: gültiges Datum,
+Großbuchstaben `T`/`Z`, Sekunden 00–59, optional 1–9 Nachkommastellen. Offsets,
+lokale Zeiten, Schaltsekunden und eine implizit gelesene Systemzeit sind in v1
+unzulässig. Verglichen wird verlustfrei bis zur angegebenen Nanosekundenstelle;
+fehlende Nachkommastellen entsprechen Nullen. Bei `evaluated_at >= expires_at`
+ist der Waiver abgelaufen, auch exakt an der Grenze. Ereignisbedingungen und
+freie Texte werden nicht als wirksame Ablaufregel interpretiert.
+
+**Menschliche Bindung.** Der Review bestätigt die konkrete Waiver-Entscheidung,
+nicht bloß das Bestehen einer Relation. Sein passiver Wert enthält genau
+`review_id`, `subject_id`, `waiver_sha256`, `reviewer`, `reviewed_at`, `decision`.
+`waiver_sha256` ist der vollständige kanonische Hash des Waiver-Objekts inklusive
+Grund, Scope, Frist, Review-ID und beider Bindungshashes. `reviewer` ist ein
+Actor mit `actor_type=human`; `decision=confirmed` ist für Wirksamkeit nötig.
+`reviewed_at` folgt dem obigen Zeitvertrag und liegt nicht nach `evaluated_at`.
+Die Kennung muss exakt `human_review_id` entsprechen. Die bestehenden
+Relationsreview-Artefakte belegen allein keine Waiver-Freigabe.
+
+Wie beim bestehenden Requirement-Approval-Adapter muss ein ausdrücklich vom
+vertrauenswürdigen Host übergebener Reviewprüfer die menschliche Herkunft und
+aktuelle Wirkung bestätigen. Seine Beobachtung bindet die vollständige
+Bewertungseingabe und den vollständigen Reviewhash. Projekt-JSON kann diesen
+Prüfer weder benennen noch importieren. Ohne Prüfer, bei Fehlern, Widerruf,
+fremder Bindung oder nicht menschlicher Entscheidung bleibt der Waiver
+unwirksam. Dies führt kein Benutzer-/Authentifizierungssystem ein.
+
+**Bestandsdaten.** Unversionierte bisherige Waiver mit Freitext-
+`expiry_condition` und Vollartefakthash bleiben unverändert strukturell lesbar.
+Der alte Feldreferenzvertrag bleibt für diese historischen Daten erhalten.
+Sie liefern den maschinenlesbaren Grund `legacy_waiver_unsupported` und niemals
+ein wirksames `waived`. Es gibt keine automatische Migration, Fristverlängerung
+oder erfundene Reviewentscheidung. Eine ausdrücklich neu ausgestellte Ausnahme
+benötigt die aktuelle Projektion, exakten Scope/Konfiguration, eine UTC-Frist
+und einen passend bestätigten menschlichen Review. Alte Quellbytes werden
+beim Lesen nicht verändert.
+
+**Bewertung und Speicherung.** Der gespeicherte Status bleibt ausschließlich
+`verification_plan_status`. Ein gültiger aktiver Waiver liefert im getrennten
+Waiver-Teilbericht `waiver_result=waived`, andernfalls `ineffective` mit Gründen;
+nie `passed`. Dies ist kein vollständiges `verification_result`: dessen
+Prioritäten, insbesondere Nichtanwendbarkeit, bleiben 10.5 vorbehalten. Der
+Teilbericht und seine Prüferbeobachtung werden nicht im Subject gespeichert.
+Ein vorbereiteter Workflowupdate enthält nur Status und gegebenenfalls Waiver,
+bindet erwartete Revision/Vollhash und geht durch den vorhandenen gemeinsamen
+Writer. Vorbereitung ist weder Schreibautorisierung noch vollständige Validation.
 
 ### 10.6 Transaktionszustände
 
@@ -3479,6 +3585,14 @@ Transportkomponenten und ausdrücklich lokale Git-Funktionen. Alle neuen
 Testfallmanifeste bleiben `open`; aktuelle Katalogbindungen ersetzen keine
 historische Evidence und erklären keine neue Produktfunktion als fertig.
 
+### 20.8 Waiver-Präzisierung v0.2.9
+
+Die Nutzerentscheidung vom 19. Oktober 2026 löst die fachliche Blockade vor
+12.b.W durch den Vertrag 10.5.5: selbstreferenzfreier Inhaltshash, exakte Scope-/
+Konfigurationsbindung, UTC-Frist und expliziter Bewertungszeitpunkt. Historische
+Waiver bleiben lesbar, ohne automatische Ausnahmegewährung. Diese Präzisierung
+ändert weder Requirement-IDs noch den Umfang des portablen PatchHarbor-Rundwegs.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -3521,6 +3635,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.9 | 2026-10-19 | Nutzerbeauftragte Waiver-Präzisierung | Exakte versionierte Inhaltsprojektion, Scope-/Konfigurationsbindung, explizite UTC-Frist und Bewertungszeit, gebundener menschlicher Review und lesbarer unwirksamer Legacy-Bestand; bestehende Requirements bleiben erhalten. |
 | 0.2.8 | 2026-10-14 | Nutzerbeauftragte Featureplanung | PatchHarbor-Python-API als Basis für portablen Projekt-/PYZ-Hinweg, gebundenen Proposal-Rückweg und kontrollierte lokale Übernahme; zwölf neue Requirements und explizite öffentliche API-Abhängigkeit, keine Implementierungs-/Freigabebehauptung. |
 | 0.2.7 | 2026-09-14 | Fachliche Korrekturfassung | B01/A02 aus der Prüfung v0.2.6: automatische externe Analyzer-Checkpoints auch ohne --work-dir; explizite Analysekennung mit eigener Vergabe, Paarbindung und Resume-Erhaltung statt Schreib-Idempotenz; 730 Requirement-IDs unverändert; zwölf gekoppelte Sollfälle ergänzt. |
 | 0.2.6 | 2026-09-14 | Fachlich erweiterte Spezifikation | Explizite Requirement-Sprache und Verbindlichkeit, Mehrsprachenpolicies, getrennte Sprachpakete, allgemeines Analyzer-Protokoll samt realem py3langid-Lieferumfang, sichere optionale Worker-Ausführung, vollständige Analysefortsetzung und SRX-Zahlenpolicy; neue fachliche Quelle bei unverändertem ersten Zielrelease. |
@@ -5059,4 +5174,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.8.**
+**Ende der SpecRoad-Produktspezifikation v0.2.9.**

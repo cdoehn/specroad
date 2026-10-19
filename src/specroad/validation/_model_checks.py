@@ -80,7 +80,11 @@ def _field_targets(record, relations=None):
     for i, provenance in enumerate(data.get("provenance", ())):
         if provenance.get("source_id") is not None:
             candidates.append((provenance["source_id"], "/provenance/" + str(i) + "/source_id", "source"))
-    if data.get("verification_waiver") is not None:
+    # Legacy references keep their historical structural contract. Versioned
+    # waivers require a separate, explicitly verified human waiver decision;
+    # a relation review cannot confer that authority.
+    if (data.get("verification_waiver") is not None
+            and 'format_version' not in data['verification_waiver']):
         candidates.append((data["verification_waiver"]["human_review_id"], "/verification_waiver/human_review_id", "relation_review"))
     return candidates
 

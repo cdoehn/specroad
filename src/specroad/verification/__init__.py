@@ -1,10 +1,20 @@
-"""Passive verification contracts and test references; no test execution."""
+"""Verification contracts and bound waiver observations; no test execution."""
 
 from .contracts import (VerificationContract, VerificationContractResolution,
                         VerificationTest, prepare_verification_contract,
                         resolve_verification_contract)
 from .targets import resolve_verification_target
 
+from .waiver_content import waiver_content_projection, waiver_content_sha256
+from .waiver_values import (VerificationWaiver, WaiverContext, HumanWaiverReview,
+    WaiverReviewVerification, WaiverReviewVerifier, WaiverAssessment)
+from .waivers import (prepare_verification_waiver, assess_verification_waiver,
+    prepare_verification_plan_update)
+
 __all__ = ("VerificationContract", "VerificationContractResolution", "VerificationTest",
            "prepare_verification_contract", "resolve_verification_contract",
-           "resolve_verification_target")
+           "resolve_verification_target", "VerificationWaiver", "WaiverContext",
+           "HumanWaiverReview", "WaiverReviewVerification", "WaiverReviewVerifier",
+           "WaiverAssessment", "waiver_content_projection", "waiver_content_sha256",
+           "prepare_verification_waiver", "assess_verification_waiver",
+           "prepare_verification_plan_update")
