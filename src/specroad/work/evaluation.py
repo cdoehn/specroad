@@ -17,8 +17,8 @@ from ..result_contract import ResultContractError
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..runtime.controlled import _invocation, evaluate_srx, load_srx_graph
-from ..runtime.control_points import PhaseBoundary
 from ._data_contract import WorkManifestError, _copy, _object, _parse, _text
+from ._unit_window import UnitWindow
 from .checkpoints import CheckpointStore, CheckpointStorageError
 from .manifest import (WorkManifest, create_work_manifest, read_work_manifest,
                        partition_work_manifest, complete_work_manifest)
@@ -272,27 +272,14 @@ def advance_evaluation_work(store, call, *, registry, max_units=1):
     _invocation(call)
     _require(type(max_units) is int and max_units > 0, 'invalid_evaluation_window')
     build = _runtime_build(); _checked_store(store, registry, build)
-    executed, reused = [], []
-    native_error = None
+    window = UnitWindow(call); reused = []
 
     def advance(previous):
-        nonlocal native_error
         current = _checked_plan(previous, registry, _runtime_build())
         _checked_final(current, registry)
         rows = _records(current); reused.extend(row['unit_id'] for row in rows)
-        additions = {}
-        for task in current.entries('remaining')[:max_units]:
-            call.control(PhaseBoundary('work_unit', 'start'))
-            try:
-                row = _evaluate(current, task, call)
-            except ModelError as error:
-                native_error = error
-                raise
-            additions[task['unit_id']] = canonical_json_bytes(row)
-            executed.append(task['unit_id'])
-            observation = call.control(PhaseBoundary('work_unit', 'end'))
-            if observation['soft_budget_exceeded']:
-                break
+        additions = window.collect(current.entries('remaining')[:max_units],
+                                   lambda task: _evaluate(current, task, call))
         _require(_runtime_build() == build, 'runtime_build_changed')
         if not additions:
             return previous
@@ -300,15 +287,9 @@ def advance_evaluation_work(store, call, *, registry, max_units=1):
         _records(candidate)
         return candidate
 
-    try:
-        confirmed = store._update(advance)
-    except (WorkManifestError, ModelError) as error:
-        # A real profile/model failure is not corrupt checkpoint evidence.
-        if error is native_error:
-            raise
-        raise WorkResumeError('incompatible_work_contract', exit_code=6) from error
+    confirmed = window.update(store, advance)
     _require(_runtime_build() == build, 'runtime_build_changed')
-    return EvaluationWorkStep(confirmed, tuple(executed), tuple(reused))
+    return EvaluationWorkStep(confirmed, tuple(window.executed_unit_ids), tuple(reused))
 
 
 def finalize_evaluation_work(store, *, registry):

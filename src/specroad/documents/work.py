@@ -10,14 +10,13 @@ from ..cli.registry import CommandRegistry
 from ..cli.requests import CommandRequest
 from ..cli.results import CommandResult
 from ..model.canonical import canonical_json_bytes
-from ..model.errors import ModelError
 from ..runtime.controlled import _invocation
-from ..runtime.control_points import PhaseBoundary
-from ..work._data_contract import WorkManifestError, _object, _parse
+from ..work._data_contract import _object, _parse
+from ..work._unit_window import UnitWindow
 from ..work.checkpoints import CheckpointStore
 from ..work.manifest import (WorkManifest, create_work_manifest, read_work_manifest,
                              partition_work_manifest, complete_work_manifest)
-from ..work.resume import WorkResumeError, _compatible_read, _require, _runtime_build
+from ..work.resume import _compatible_read, _require, _runtime_build
 from . import _work_inputs
 from ._work_evidence import DocumentEvidence
 from .blocks import ContentBlock
@@ -198,39 +197,29 @@ def advance_document_work(store, call, *, registry, max_units=1):
     _invocation(call)
     _require(type(max_units) is int and max_units > 0, 'invalid_document_window')
     build = _runtime_build(); _checked_store(store, registry, build)
-    executed, reused = [], []; native_error = None
+    window = UnitWindow(call); reused = []
 
     def advance(previous):
-        nonlocal native_error
         current = _checked_plan(previous, registry, _runtime_build())
         _checked_final(current, registry)
         rows = _records(current); reused.extend(r['unit_id'] for r in rows)
         if not current.entries('remaining'):
             return previous
-        model = _work_inputs.restore(current, store._location); additions = {}
-        for task in current.entries('remaining')[:max_units]:
-            call.control(PhaseBoundary('work_unit', 'start'))
-            try:
-                row = _evaluate(current, task, model, rows)
-            except ModelError as error:
-                native_error = error
-                raise
-            rows.append(row); additions[task['unit_id']] = canonical_json_bytes(row)
-            executed.append(task['unit_id'])
-            if call.control(PhaseBoundary('work_unit', 'end'))['soft_budget_exceeded']:
-                break
+        model = _work_inputs.restore(current, store._location)
+
+        def evaluate(task):
+            row = _evaluate(current, task, model, rows)
+            rows.append(row)
+            return row
+
+        additions = window.collect(current.entries('remaining')[:max_units], evaluate)
         _require(_runtime_build() == build, 'runtime_build_changed')
         candidate = partition_work_manifest(current, additions); _records(candidate)
         return candidate
 
-    try:
-        confirmed = store._update(advance)
-    except (WorkManifestError, ModelError) as error:
-        if error is native_error:
-            raise
-        raise WorkResumeError('incompatible_work_contract') from error
+    confirmed = window.update(store, advance)
     _require(_runtime_build() == build, 'runtime_build_changed')
-    return DocumentWorkStep(confirmed, tuple(executed), tuple(reused))
+    return DocumentWorkStep(confirmed, tuple(window.executed_unit_ids), tuple(reused))
 
 
 def finalize_document_work(store, *, registry):

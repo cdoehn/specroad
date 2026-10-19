@@ -1,4 +1,4 @@
-# Dokumentprojektion über Work (11.r.W/R)
+# Dokumentprojektion über Work (11.r.W/R/C)
 
 Die explizite Host-API `specroad.documents.work` bindet einen vollständigen,
 bereits vom Aufrufer bereitgestellten `TargetModel`-Bestand und eine Dokument-ID.
@@ -34,6 +34,18 @@ späteren Prozessen nicht wiederholt. Bei einem Fehler bleibt der letzte
 veröffentlichte Checkpoint erhalten; noch nicht veröffentlichte Einheiten des
 aktuellen Fensters gelten nicht als bestätigt. Es gibt keinen automatischen
 Retry, keine automatische Bereinigung und keine leeren Fortschrittsgenerationen.
+
+Dokumentprojektion und der bestehende Analyseadapter verwenden dieselbe private
+`work._unit_window.UnitWindow` für die Ausführung eines Fensters. Sie bündelt
+die Start-/Endgrenzen einer Einheit, kanonische Nachweisbytes, ausgeführte
+Einheiten und den Budgetentscheid nach vollständiger Berechnung. Der gemeinsame
+Checkpointaufruf erhält echte native Modellfehler und übersetzt ausschließlich
+beschädigte Work-Verträge in den bisherigen Konflikt. Die Fachadapter behalten
+ihre Plan-, Eingangs-, Präfix-, Ergebnis- und Buildprüfungen in derselben
+Reihenfolge; der vorhandene `CheckpointStore` veröffentlicht den geprüften
+Kandidaten. Die getrennten Abschlussfunktionen und alle gespeicherten Formate
+bleiben erhalten. Der Helfer verwendet ausschließlich vom vertrauenswürdigen
+Adapter übergebene Funktionen; gespeicherte Daten wählen keinen Handler.
 
 `finalize_document_work(store, registry=registry)` ist eine separate dauerhafte
 Abschlussstufe. Solange eine deklarierte Einheit fehlt, gibt es kein fertiges
@@ -100,3 +112,10 @@ ausgeführten Testkörpern. Alle bisherigen Testdateien und Testnummern bleiben
 erhalten. Die R-Fälle prüfen auch neu gehashte unvollständige Nachweise,
 1.000 Literalzeilen, 130 ausgewählte Query-/Viewzeilen und Fehler vor beziehungsweise
 nach echter Dateiveröffentlichung. Dieser Nachweis bleibt ein Teiltestlauf.
+
+Der C-Nachweis besteht mit 351 unveränderten Verhaltenstests auf vier parallelen
+Workern: alle 160 Dokument-W-/R-Fälle, 79 Analyse-W-/R-Fälle sowie 112 Fälle
+zu Checkpoints, Ergebnisdateien und Verifikationskatalog. Die vollständige
+Collection-/Katalogprüfung erfasst unverändert 13.018 Testidentitäten ohne
+Testkörperausführung. Alle bestehenden Testdateien und Nummern sind bytegleich
+erhalten. Dieser Teiltestlauf ist kein Vollsuite- oder Release-Erfolgsnachweis.

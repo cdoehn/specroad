@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 485
-last_completed_plan_commit: 11.r.R
-next_plan_commit: 11.r.C
-last_completed_numbered_bundle: 311
+implementation_plan_commits_completed: 486
+last_completed_plan_commit: 11.r.C
+next_plan_commit: 12.a.W
+last_completed_numbered_bundle: 312
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12528,10 +12528,26 @@ Dies sind Teiltests; der Apply-Commit benötigt seine fällige parallele Drittel
 
 #### 11.r.C – Make it Clean
 
-- [ ] **11.r.C** · Position **486/900** · Voraussetzung: `11.r.R`.
+- [x] **11.r.C** · Position **486/900** · Voraussetzung: `11.r.R`.
 **Exakte Commit-Message:** `11.r.C refactor(documents): Große Dokumente und fortsetzbare Projektion bereinigen`
 
 **Bereinigung:** Dokumentfortsetzung auf dieselbe generische Workengine setzen.
+
+**Vorbereiteter C-Stand (Bundle 312):** Dokumentprojektion und bestehende
+Analysefortsetzung verwenden dieselbe private Work-Einheitenschleife für
+Kontrollpunkte, Budgetentscheid, kanonische Nachweisbytes und Checkpointaufruf.
+Die Herkunft nativer Modellfehler bleibt gegenüber fehlerhaften gespeicherten
+Verträgen unterscheidbar. Fachliche Prüfer, Eingangsrekonstruktion, Präfixbindung,
+Buildgrenzen und separate Abschlussfunktionen bleiben erhalten. Die bestehenden
+Tests und ihre Nummern sowie sämtliche gespeicherten Datenformate sind unverändert.
+
+**Entwicklungsnachweis C:** 351 unveränderte Verhaltenstests bestehen auf vier
+parallelen Workern: sämtliche Dokument- und Analyse-W-/R-Fälle sowie betroffene
+Checkpoint-, Ergebnisdatei- und Katalogregressionen. Die vollständige
+Collection-/Katalogprüfung bindet weiterhin 13.018 Testidentitäten bei null
+ausgeführten Testkörpern. Dies bleibt ein Teiltestnachweis; der Apply-Commit
+benötigt seine fällige parallele Drittelgruppe. Ein Vollsuite-, Meilenstein-
+oder Release-Erfolgsnachweis wird daraus nicht abgeleitet.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
