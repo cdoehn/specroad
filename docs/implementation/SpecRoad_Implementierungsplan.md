@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 496
-last_completed_plan_commit: 12.d.W
-next_plan_commit: 12.d.R
-last_completed_numbered_bundle: 322
+implementation_plan_commits_completed: 497
+last_completed_plan_commit: 12.d.R
+next_plan_commit: 12.d.C
+last_completed_numbered_bundle: 323
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13058,12 +13058,49 @@ Teiltestnachweis; ein Vollsuite- oder Release-Erfolg ist damit nicht belegt.
 
 #### 12.d.R – Make it Right
 
-- [ ] **12.d.R** · Position **497/900** · Voraussetzung: `12.d.W`.
+- [x] **12.d.R** · Position **497/900** · Voraussetzung: `12.d.W`.
 **Exakte Commit-Message:** `12.d.R feat(verification): Immutable Evidence und Laufkontext vervollständigen`
 
 **Vervollständigung:** Unbekannter Produktstand bleibt unbound; KI-Herkunft erzeugt keine menschliche Freigabe.
 
 **Verhaltensabnahme:** Updateversuch an recorded Evidence wird abgewiesen; Originalbytes bleiben gleich. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 323):** Der Evidence-Konstruktor unterstützt
+`run_context=None` mit einem ausdrücklich übergebenen, nichtleeren
+`unbound_reason`. Die bekannte Subject-, Contract- und Konfigurationsbindung
+bleibt erhalten; fehlende Produkt-, Lauf-, Check- oder Testdaten werden nicht
+ergänzt. Teilweise Run-Objekte und ein gleichzeitig gebundener Run mit
+Unbound-Grund werden abgewiesen. Ein übergebener Test muss auch bei unbekanntem
+Lauf zum Contract gehören. Ohne Testangabe wird kein Slot ausgewählt.
+
+KI-Producer und Audit-Actor bleiben explizite getrennte Angaben. Die vorhandenen
+Authoring-/Review-Gates verweigern direkte KI-Schreibaufträge und menschliche
+Reviews trotz `recorded`/`approved`-Aufzeichnungszustand. Gespeicherte Erfolge
+werden ohne Laufbindung nicht zu erfolgreichen Pflichtprüfungen. Generische
+Änderungsversuche und Formatierung lassen die ursprünglichen Evidence-Bytes
+unangetastet; aktuelle oder archivierte IDs können nicht über eine veraltete
+Reservierung wiederverwendet werden. Später bekannte Herkunft benötigt einen
+neuen Nachweis. Die native Speicherung, Herkunftsverweise, Laufkonfliktprüfung
+und dauerhafte Request-Idempotenz bleiben bei `12.e` und den Importfolgeschritten.
+Die vier Requirement-Manifeste behalten ihren Teilnachweisstatus.
+
+**Entwicklungsnachweis:** 1.238 gezielte Verhaltenstests in 26 betroffenen
+Dateien bestanden mit vier parallelen Workern in 35,42 Sekunden, einschließlich
+aller 54 W-Fälle und 57 neuer R-Fälle. Die neuen Nachweise prüfen unbekannte
+und widersprüchliche Laufdaten, Konfigurations- und Testbindungen, unveränderte
+Originalbytes bei Update-/Formatverweigerung, KI-Policy und isolierte
+Core-/PYZ-Parität. Alle bisherigen Testdateien bleiben bytegleich. Die
+vollständige Collection-/Katalogprüfung bestätigt 13.614 Identitäten ohne
+Testkörperausführung; 57 Nummern wurden an das bestehende Register angehängt.
+Geprüfter Quellstand:
+`22f0cedf97d6f67d49161f47b291a27396c24a31b3a190ea4919750d4c485634`.
+
+Das Result `specroad-apply_Result_195320_1019_fa2e8f.zip` bestätigt `12.d.W`
+auf `fdd406772b88317728e4142d7b7c38f786aa4d62` mit 4.519 bestandenen
+parallelen Tests der Gruppe 0 und sauberem Snapshot. Dieser R-Stand erhält
+Apply-Sequenz 31, Gruppe 1 mit 4.538 Tests. Erst deren erfolgreicher Commit
+bestätigt **497/900** und den nächsten Schritt `12.d.C`. Dies ist ein
+Teiltestnachweis; ein Vollsuite- oder Release-Erfolg ist damit nicht belegt.
 
 #### 12.d.C – Make it Clean
 

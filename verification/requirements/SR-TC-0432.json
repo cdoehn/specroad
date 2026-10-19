@@ -8,19 +8,21 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1",
-    "SR-FIX-EVIDENCE-CONSTRUCTION-v1"
+    "SR-FIX-EVIDENCE-CONSTRUCTION-v1",
+    "SR-FIX-EVIDENCE-CONSTRUCTION-RIGHT-v1"
   ],
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
   ],
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
-    "Construct immutable Evidence from a fresh identity reservation and complete explicit measurement inputs; compare actual subject, contract, optional test and configuration bindings without publishing files."
+    "Construct immutable Evidence from a fresh identity reservation and complete explicit measurement inputs; compare actual subject, contract, optional test and configuration bindings without publishing files.",
+    "Construct explicitly unbound measurements with a documented reason; reject partial/inconsistent bindings and verify unchanged recorded bytes across native mutation/normalization refusals and AI authoring/review policy checks."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Evidence-Artefakt MUSS atomar mit `evidence_state=recorded` und `maturity=approved` erzeugt werden.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Step 12.d.W adds complete immutable recorded/approved value construction with explicit origin, producer, run metadata and computed subject/contract/test bindings. New measurements use fresh native identity allocations. Deterministic reconstruction is not a durable request-replay proof."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Step 12.d.W adds complete immutable recorded/approved value construction with explicit origin, producer, run metadata and computed subject/contract/test bindings. New measurements use fresh native identity allocations. Deterministic reconstruction is not a durable request-replay proof. Step 12.d.R preserves unknown run provenance as null with explicit reason, refuses inference and inconsistent check/test inputs, and demonstrates immutable update/format/identity boundaries and no approval from AI metadata."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -57,9 +59,37 @@
     "tests/test_evidence_construction.py::test_incomplete_or_untyped_inputs_fail_without_partial_record[run_context-latest]",
     "tests/test_evidence_construction.py::test_incomplete_or_untyped_inputs_fail_without_partial_record[run_context-value9]",
     "tests/test_evidence_construction.py::test_incomplete_or_untyped_inputs_fail_without_partial_record[test-value13]",
-    "tests/test_evidence_construction.py::test_incomplete_or_untyped_inputs_fail_without_partial_record[tool-value4]"
+    "tests/test_evidence_construction.py::test_incomplete_or_untyped_inputs_fail_without_partial_record[tool-value4]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/evidence_state-draft]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/id-SR-EVD-22222222222222222222222222]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/maturity-draft]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/producer/producer_type-human]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/result-passed]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/revision-2]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/run_context-None]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/subjects-value3]",
+    "tests/test_evidence_construction_right.py::test_recorded_evidence_update_is_refused_before_writing_original_bytes[/title-Changed]",
+    "tests/test_evidence_construction_right.py::test_unbound_construction_is_identical_in_isolated_core_and_pyz[core]",
+    "tests/test_evidence_construction_right.py::test_unbound_construction_is_identical_in_isolated_core_and_pyz[pyz]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[failed-bound-False]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[failed-bound-True]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[failed-independent-False]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[failed-independent-True]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[passed-bound-False]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[passed-bound-True]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[passed-independent-False]",
+    "tests/test_evidence_construction_right.py::test_unknown_product_stays_explicitly_unbound_without_losing_measurement[passed-independent-True]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[ ]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[0]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[False]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[None]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[\\t\\r\\n]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[\\u2003]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[reason7]",
+    "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[reason8]"
   ],
   "open_items": [
-    "12.d.R/C: unbound context and strengthened immutable construction boundaries; 12.e: authorized atomic native publication, attachments, inventory/run-history rechecks and durable idempotent replay. Import adapters and full verification aggregation remain with their planned steps. No full requirement or release approval claimed."
+    "12.d.C: structural cleanup without new behavior; 12.e: authorized atomic native publication, attachments, inventory/run-history rechecks and durable request replay. Import adapters and full verification aggregation remain with their planned steps. No full requirement or release approval claimed."
   ]
 }

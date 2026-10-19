@@ -48,6 +48,7 @@
     "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-EVIDENCE-CONSTRUCTION-RIGHT-v1",
     "SR-FIX-EVIDENCE-CONSTRUCTION-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
@@ -291,6 +292,10 @@
     "SR-FIX-DOMAIN-DRAFT-v1": {
       "provider": "tests/support/domain.py:domain_value",
       "kind": "owned per-type field fixtures; no graph, review, Evidence or release-approval proof"
+    },
+    "SR-FIX-EVIDENCE-CONSTRUCTION-RIGHT-v1": {
+      "provider": "tests/test_evidence_construction_right.py:unknown_inputs",
+      "kind": "Explicit unknown product/run provenance with null context and owned reason; no inferred current product, test, check or configuration. Native Evidence source bytes retained through rejected generic update/format operations and stale identity reservations. AI producer/audit data remain passive across real authoring and human-review policy boundaries. Isolated Core/PYZ parity; no stored run proof or persistent publication/replay claim."
     },
     "SR-FIX-EVIDENCE-CONSTRUCTION-v1": {
       "provider": "tests/test_evidence_construction.py:inputs",
