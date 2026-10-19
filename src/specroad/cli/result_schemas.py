@@ -63,6 +63,11 @@ def _fields(schema_id):
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),
             "exit_codes": {"type": "object", "additionalProperties": text}, "examples": strings, "scope": text})
+    if schema_id == 'document-work-v1':
+        return _object({'format_version': {'const': 'document-work-v1'},
+            'input_manifest_sha256': sha, 'task_manifest_sha256': sha,
+            'source_scope': {'const': 'explicit_saved_model'}, 'project_files_verified': {'const': False},
+            'composition': obj, 'blocks': _array(_object({'artifact_id': nonempty, 'observation': obj}))})
     if schema_id == 'work-evaluation-v1':
         return _object({'format_version': {'const': 'work-evaluation-v1'},
             'input_manifest_sha256': sha, 'task_manifest_sha256': sha,

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 483
-last_completed_plan_commit: 11.q.C
-next_plan_commit: 11.r.W
-last_completed_numbered_bundle: 309
+implementation_plan_commits_completed: 484
+last_completed_plan_commit: 11.r.W
+next_plan_commit: 11.r.R
+last_completed_numbered_bundle: 310
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12466,12 +12466,38 @@ unverändert; dieselben Verhaltenstests prüfen die bereinigte Struktur.
 
 #### 11.r.W – Let it Work
 
-- [ ] **11.r.W** · Position **484/900** · Voraussetzung: `11.q.C`.
+- [x] **11.r.W** · Position **484/900** · Voraussetzung: `11.q.C`.
 **Exakte Commit-Message:** `11.r.W feat(documents): Große Dokumente und fortsetzbare Projektion aufbauen`
 
 **Umsetzung:** Komposition, Queryblöcke und Ergebnislieferung an Work-Frontier/Spooling anschließen.
 
 **Verhaltensabnahme:** Vollständige Datenprojektion entsteht auch über mehrere Prozesse.
+
+**Vorbereiteter W-Stand (Bundle 310):** Die explizite Host-API
+`documents.work` sichert den vollständigen bereitgestellten Modellbestand im
+vorhandenen Work-Manifest. Native Komposition und einzelne Inhaltsblöcke bilden
+echte, dauerhaft bestätigte Einheiten; abgeschlossene Einheiten werden nach
+Prozesswechsel nicht erneut berechnet. Eine eigene Abschlussgeneration liefert
+alle ausgewählten Blockdaten und alle wiederholten Include-Vorkommen. Explizite
+Query-Seiten behalten ihre native Auswahl. Der vorhandene atomare Work-Publisher
+liefert sämtliche Ergebnisbytes samt Größen-/Hash-/Schemabindung in einem
+externen Manifest; unvollständige Arbeit erzeugt kein fertiges Ergebnis.
+Gezielte parallele Verhaltenstests vergleichen native Projektionen, verschobene
+Modul-/PYZ-Prozesse, fehlende Ursprungsdateien, Fehlerzustände, vollständige
+Tabellenzeilen und unveränderte Projektbytes. Die Anforderungen bleiben teilweise
+umgesetzt: ganze native Berechnungen und die Ergebnisreduktion sind noch
+speicherresident; feinere innere Cursor und automatische CLI-Integration sind
+offen. Der Vertrag steht in `docs/development/Document_Work.md`.
+
+**Entwicklungsnachweis W:** 138 gezielte Tests einschließlich 29 neuer
+Dokumentfälle bestehen auf vier parallelen Workern. Zusätzlich bestehen
+1.013 unveränderte Regressionen bei bytegleichen Produktquellen; anschließend
+wurden die Schema-Erwartungsliste um `document-work-v1` und die kanonische
+Reihenfolge des noch unveröffentlichten Nummerierungsanhangs vervollständigt.
+Die bisherigen Testnummern bleiben unverändert.
+Die vollständige Katalogprüfung bindet 12.887 Testidentitäten bei null
+ausgeführten Testkörpern. Dies sind Teiltests; der Apply-Commit benötigt noch
+seine fällige parallele Drittelgruppe.
 
 #### 11.r.R – Make it Right
 
