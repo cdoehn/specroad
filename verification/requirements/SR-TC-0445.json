@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-VERIFICATION-WAIVER-R-v1",
     "SR-FIX-VERIFICATION-WAIVER-v1"
   ],
   "preconditions": [
     "Supplied typed subject, exact scope/configuration, explicit UTC evaluation time and explicitly trusted human-review verifier. Legacy source bytes retained."
   ],
   "steps": [
-    "Prepare guarded native workflow updates and evaluate actual waiver bindings, deadlines, human decisions and changed subject/configuration/scope without I/O."
+    "Prepare guarded native workflow updates and evaluate actual waiver bindings, deadlines, human decisions and changed subject/configuration/scope without I/O.",
+    "Exercise mutating host review callbacks and revocation; publish guarded workflow updates through the real common writer and verify refusal of stale, denied or calculated-result writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT `verification_result` als normatives Feld eines fachlichen Artefakts speichern.",
-    "scope": "12.b.W: versioned content projection and waiver-only assessment with exact UTC deadline, scope/configuration and human-review bindings; legacy data remain readable but ineffective. Only workflow fields are prepared for the common writer. No complete verification_result, release readiness, write authority or production authentication claimed."
+    "scope": "12.b.W: versioned content projection and waiver-only assessment with exact UTC deadline, scope/configuration and human-review bindings; legacy data remain readable but ineffective. Only workflow fields are prepared for the common writer. No complete verification_result, release readiness, write authority or production authentication claimed. 12.b.R: detect mutated verifier inputs and malformed confirmations, reject replayed/revoked observations, exercise exact parent-chain and nanosecond bindings, explicit legacy reissuance and actual native writer guards; calculated results cannot be persisted as subject fields."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -43,9 +45,15 @@
     "tests/test_verification_waivers.py::test_valid_human_waiver_is_separate_from_passed_or_stored_result[task]",
     "tests/test_verification_waivers.py::test_workflow_update_contains_only_stored_fields_and_native_guards[capability]",
     "tests/test_verification_waivers.py::test_workflow_update_contains_only_stored_fields_and_native_guards[requirement]",
-    "tests/test_verification_waivers.py::test_workflow_update_contains_only_stored_fields_and_native_guards[task]"
+    "tests/test_verification_waivers.py::test_workflow_update_contains_only_stored_fields_and_native_guards[task]",
+    "tests/test_verification_waivers_right.py::test_actual_writer_rejects_normative_verification_result[passed-capability]",
+    "tests/test_verification_waivers_right.py::test_actual_writer_rejects_normative_verification_result[passed-requirement]",
+    "tests/test_verification_waivers_right.py::test_actual_writer_rejects_normative_verification_result[passed-task]",
+    "tests/test_verification_waivers_right.py::test_actual_writer_rejects_normative_verification_result[value1-capability]",
+    "tests/test_verification_waivers_right.py::test_actual_writer_rejects_normative_verification_result[value1-requirement]",
+    "tests/test_verification_waivers_right.py::test_actual_writer_rejects_normative_verification_result[value1-task]"
   ],
   "open_items": [
-    "12.b.R extends hostile-input/currentness cases and native writer integration; 12.b.C preserves behavior during structural cleanup. Full verification aggregation and release workflows remain later steps."
+    "12.b.C preserves the W/R behavior during structural cleanup. Full verification aggregation and release workflows remain later steps."
   ]
 }

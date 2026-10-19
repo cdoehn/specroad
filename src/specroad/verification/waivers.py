@@ -1,4 +1,6 @@
 """Waiver-only assessment and guarded workflow preparation, without I/O."""
+from copy import copy
+
 from ..changes.update_inputs import normalize_artifact_update_input
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.domain_fields import VERIFICATION_PLAN_STATUSES
@@ -33,6 +35,9 @@ def assess_verification_waiver(context, *, review=None, verifier=None):
         raise ModelError('typed_waiver_review_required')
     if verifier is not None and type(verifier) is not WaiverReviewVerifier:
         raise ModelError('typed_waiver_verifier_required')
+    # Bind the whole observation before calling host code. A verifier receives
+    # detached values, and cannot replace the input whose result we report.
+    context_bytes, context_sha256 = context._encoded, context.sha256
     value = context.data; subject = value['subject']; reasons = []
     stored = subject.get('verification_waiver')
     waiver = None if stored is None else VerificationWaiver(stored)
@@ -52,6 +57,7 @@ def assess_verification_waiver(context, *, review=None, verifier=None):
         if waiver_time(value['evaluated_at']) >= waiver_time(stored['expiry_condition']['expires_at']):
             reasons.append('waiver_expired')
     verified = False
+    review_bytes = None if review is None else review._encoded
     review_sha256 = None if review is None else review.sha256
     # No external verifier is invoked for a missing/stale/inactive/expired waiver.
     if not reasons:
@@ -71,20 +77,34 @@ def assess_verification_waiver(context, *, review=None, verifier=None):
             elif verifier is None:
                 reasons.append('waiver_review_verifier_unavailable')
             else:
+                observed_context = copy(context)
+                observed_review = HumanWaiverReview(human)
+                verifier_id, verifier_version, check = verifier.verifier_id, verifier.version, verifier.check
                 try:
-                    observation = verifier.check(context, review)
-                    if (type(observation) is not WaiverReviewVerification
-                            or observation.input_sha256 != context.sha256
+                    observation = check(observed_context, observed_review)
+                    if (context._encoded != context_bytes or review._encoded != review_bytes
+                            or observed_context._encoded != context_bytes
+                            or observed_review._encoded != review_bytes
+                            or verifier.verifier_id != verifier_id or verifier.version != verifier_version
+                            or verifier.check is not check):
+                        reasons.append('waiver_review_inputs_changed')
+                    elif (type(observation) is not WaiverReviewVerification
+                            or observation.input_sha256 != context_sha256
                             or observation.review_sha256 != review_sha256):
                         reasons.append('waiver_review_verifier_unbound')
-                    elif not observation.authenticated_human or not observation.current:
-                        reasons.append('waiver_review_not_authenticated_or_current')
                     else:
-                        verified = True
+                        # Revalidate even typed host returns: a forged or changed
+                        # value with truthy non-booleans is not a confirmation.
+                        observation = WaiverReviewVerification(observation.input_sha256,
+                            observation.review_sha256, observation.authenticated_human, observation.current)
+                        if not observation.authenticated_human or not observation.current:
+                            reasons.append('waiver_review_not_authenticated_or_current')
+                        else:
+                            verified = True
                 except Exception:
                     reasons.append('waiver_review_verification_failed')
     return WaiverAssessment._create({'format_version': '1.0.0', 'kind': 'waiver-assessment-v1',
-        'input_sha256': context.sha256, 'subject_id': subject['id'],
+        'input_sha256': context_sha256, 'subject_id': subject['id'],
         'subject_sha256': value['subject_sha256'], 'content_sha256': value['content_sha256'],
         'waiver_sha256': None if waiver is None else waiver.sha256,
         'scope_descriptor': value['scope_descriptor'], 'configuration_sha256': value['configuration_sha256'],

@@ -1,6 +1,6 @@
 # Verification waiver values
 
-The `specroad.verification` embedding API implements the `12.b.W` subset of
+The `specroad.verification` embedding API implements the `12.b.W/R` subset of
 specification 0.2.9, section 10.5.5. It reads supplied owned values; it does not
 open a project, run test code, infer the current time or grant write authority.
 
@@ -29,6 +29,15 @@ project JSON, a human actor label or an unrelated relation review is insufficien
 A verifier observes typed context/review values and returns a bound
 `WaiverReviewVerification`. Missing, stale, rejected, nonhuman or unverified
 reviews cannot activate the exception.
+
+The review callback receives detached context/review values. A change to either
+callback input, the original inputs or the selected verifier during that call
+invalidates the observation (`waiver_review_inputs_changed`). Results retain
+their original input hashes. Typed confirmations still require actual booleans;
+exceptions produce `waiver_review_verification_failed` without host details.
+Every assessment asks the verifier again; a previous success does not override
+revocation or authorize reuse for different evaluation inputs. This is an
+in-process consistency check on trusted host code, not a Python sandbox.
 
 The returned `WaiverAssessment` reports `waiver_result=waived` or `ineffective`
 with machine-readable reasons. It never reports `passed` or writes a normative

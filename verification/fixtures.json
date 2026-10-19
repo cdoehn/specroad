@@ -99,6 +99,7 @@
     "SR-FIX-TRANSACTION-STAGING-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-v1",
+    "SR-FIX-VERIFICATION-WAIVER-R-v1",
     "SR-FIX-VERIFICATION-WAIVER-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1"
@@ -503,6 +504,10 @@
     "SR-FIX-VERIFICATION-WAIVER-v1": {
       "provider": "tests/test_verification_waivers.py:fixture",
       "kind": "Owned capability/requirement/task records, explicit scopes and resolved product configuration, versioned and historical waivers, UTC nanosecond boundaries and trusted test review service. No project-code execution, implicit clock, full verification or release approval."
+    },
+    "SR-FIX-VERIFICATION-WAIVER-R-v1": {
+      "provider": "tests/test_verification_waivers_right.py:stored_subject",
+      "kind": "Owned waiver inputs, mutating and revoked trusted test callbacks, exact UTC boundaries and effective configuration chains; real local projects exercise the native guarded update writer. No authentication, aggregate verification or release success is implied."
     }
   }
 }

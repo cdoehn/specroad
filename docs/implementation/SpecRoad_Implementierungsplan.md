@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 490
-last_completed_plan_commit: 12.b.W
-next_plan_commit: 12.b.R
-last_completed_numbered_bundle: 316
+implementation_plan_commits_completed: 491
+last_completed_plan_commit: 12.b.R
+next_plan_commit: 12.b.C
+last_completed_numbered_bundle: 317
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12749,7 +12749,7 @@ nächsten Schritt `12.b.R`. Dies ist kein Vollsuite- oder Release-Erfolgsnachwei
 
 #### 12.b.R – Make it Right
 
-- [ ] **12.b.R** · Position **491/900** · Voraussetzung: `12.b.W`.
+- [x] **12.b.R** · Position **491/900** · Voraussetzung: `12.b.W`.
 **Exakte Commit-Message:** `12.b.R feat(verification): Verifikationsplanung und Waiver vervollständigen`
 
 **Vervollständigung:** Die bestehende W-Sicherheitsgrenze anhand erweiterter
@@ -12761,6 +12761,43 @@ und Scope-Randfälle, Fristpräzision, Legacy-Neuausstellung und Speicherung von
 **Verhaltensabnahme:** Datenmutation kann weder eine Ausnahme erschleichen noch
 ein berechnetes Ergebnis als normative Wahrheit festschreiben. W-Nachweise
 bleiben grün; tatsächliche Schreibpfade erhalten ihre gemeinsamen Gates.
+
+
+**Vorbereiteter R-Zustand (Bundle 317):** Die Reviewprüfung bindet Kontext und
+Review vor dem Hostaufruf und übergibt getrennte Eingabekopien. Änderungen an
+diesen Kopien, den ursprünglichen Werten oder dem ausgewählten Prüfer während
+des Aufrufs entwerten die Beobachtung mit `waiver_review_inputs_changed`.
+Der Teilbericht behält seine ursprünglichen Hashes. Auch typisierte Prüfer-
+Rückgaben müssen echte boolesche Bestätigungen enthalten; Fehler werden ohne
+Hostdetails gemeldet. Frühere Beobachtungen gelten nicht für geänderte
+Bewertungseingaben; Widerruf wird bei jeder Bewertung erneut abgefragt.
+
+Erweiterte Abnahme bindet auch bei gleichen effektiven Konfigurationswerten die
+konkrete Elternkette und prüft UTC-Kalender-/Nanosekundengrenzen. Legacy-Daten
+bleiben beim Lesen unverändert; eine ausdrücklich vorbereitete neue Ausnahme
+braucht neue vollständige Bindungen und eine passende menschliche Bestätigung.
+Echte Writeraufrufe für Capability, Requirement und Task veröffentlichen nur
+Workflow und Waiver mit genau einer Revision. Revisions-/Vollhashguards,
+physische Basis, Hostautorität und erforderliche Lifecycle-Gates bleiben
+wirksam. Der gemeinsame Writer weist `verification_result` als normatives
+Subjectfeld ab. Dies führt keine neue Hash-/Zeitpolicy oder Aggregation ein.
+
+**Gezielter R-Nachweis:** 899 Verhaltenstests aus 21 Dateien auf vier parallelen
+Workern bestanden (207,55 s), einschließlich der unveränderten
+W-Tests, 71 neuer R-Fälle sowie betroffener Schema-, Validation-, Update-,
+Approval-, Konfigurations-, Contract- und Katalog-/Evidence-Regressionen.
+Die vollständige Collection-/Katalogprüfung bestätigt 13.336 Testidentitäten
+ohne Testkörperausführung. Die bisherigen 13.265 Testnummern bleiben erhalten;
+71 neue Identitäten wurden hinten angefügt. Vorhandene Tests und historische
+Nachweise bleiben unverändert. Geprüfter Quellstand:
+`e1bad9c251f4690e0330ddb90f1d3da095d3ead704fd30660ab83fde733daa80`.
+
+Das Result `specroad-apply_Result_142914_1019_fe79e4.zip` bestätigt `12.b.W`
+auf `f897db4889cf6d6e750409745d0102c418248e42` mit 4.422 bestandenen
+parallelen Tests der Gruppe 0 und sauberem Snapshot. Dieser R-Stand erhält
+Apply-Sequenz 25, Gruppe 1 mit 4.445 Tests. Erst deren erfolgreicher Commit
+bestätigt **491/900** und den nächsten Schritt `12.b.C`. Dies ist kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.b.C – Make it Clean
 
