@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 486
-last_completed_plan_commit: 11.r.C
-next_plan_commit: 12.a.W
-last_completed_numbered_bundle: 312
+implementation_plan_commits_completed: 487
+last_completed_plan_commit: 12.a.W
+next_plan_commit: 12.a.R
+last_completed_numbered_bundle: 313
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12573,10 +12573,38 @@ oder Release-Erfolgsnachweis wird daraus nicht abgeleitet.
 
 #### 12.a.W – Let it Work
 
-- [ ] **12.a.W** · Position **487/900** · Voraussetzung: `11.r.C`.
+- [x] **12.a.W** · Position **487/900** · Voraussetzung: `11.r.C`.
 **Exakte Commit-Message:** `12.a.W feat(verification): Verification Contracts und Testreferenzen aufbauen`
 
 **Umsetzung:** Methoden, Verfahren, Oracle, Testidentität und vollständige evidence_slots implementieren.
+
+**Vorbereiteter W-Stand (Bundle 313):** `specroad.verification` liest vollständige
+explizite Contracts und passive Testmetadaten aus Originalbytes. Die Auflösung
+eines tatsächlichen `verified_by`-Paares bindet Subject, Contract, Relation und
+Testreferenzen an ihre Quellen und liefert alle eindeutigen Pflichtschlüssel.
+Mehrere Checks desselben Tests bleiben erhalten; jede deklarierte Dimension
+benötigt einen Slot. Nur der Authoring-Helfer für neue Entwürfe materialisiert
+bei fehlender Auswahl und ohne weitere Dimensionen den `overall`-Default.
+Gespeicherte unvollständige Records werden nicht still repariert. Direkte
+Testziele bleiben bis `12.a.R` abgewiesen. Der W-Stand führt keinen Testcode aus
+und behauptet weder aktuelle Evidence noch eine vollständige Projektpflichtmenge
+oder Freigabe. Technische API-Grenzen: `docs/development/Verification_Contracts.md`.
+
+**Gezielter W-Nachweis:** 249 Verhaltenstests mit vier parallelen Workern
+bestanden (8,64 s), einschließlich der 58 neuen Contract-Tests, der vorhandenen
+Record-/Relationsprüfungen und der betroffenen Katalog-/Evidence-Harnessverträge.
+Die vollständige Collection-/Katalogprüfung bindet 13.076 Testidentitäten ohne
+Testkörperausführung; vorhandene Nummern bleiben erhalten, 58 neue folgen hinten.
+Der Quellstand ist
+`e4b65f74902cc6bc3b4c492e3bb583402a8126c9306c87afe9335f2a5fd6f8b6`.
+Das Result `specroad-apply_Result_104514_1019_8e7c4d.zip` bestätigt `11.r.C`
+auf Commit `ac90b17b9246b0ed77ee2995d3f38c11378057cd` mit 4.339 bestandenen
+parallelen Tests der Gruppe 2. Für diesen W-Stand folgt in Apply Sequenz 21,
+Gruppe 0 mit 4.359 Tests. Erst deren erfolgreicher Commit bestätigt Position
+487/900 und den nächsten Schritt `12.a.R`; dies ist kein Vollsuite- oder
+Release-Erfolgsnachweis. Der erste lokale Versuch scheiterte an der im neuen
+Test korrigierten Aufräumreihenfolge zweier Monkeypatch-Kontexte; die erneute
+identische parallele Auswahl ist erfolgreich.
 
 **Verhaltensabnahme:** Gültiger Contract hat eine eindeutige Pflichtmenge; overall-Default nur ohne ausdrücklich weitere Slots.
 

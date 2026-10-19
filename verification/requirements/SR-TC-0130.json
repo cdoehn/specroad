@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1"
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-VERIFICATION-CONTRACTS-v1"
   ],
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Verification-Artefakt MUSS Vorbedingungen, Prüfgegenstand, Verfahren, Oracle oder Pass-Kriterium, erforderliche Evidence-Arten, vollständige `evidence_slots` nach Kapitel 10.5.2 und eine Konfigurationspolicy `independent` oder `bound` definieren.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -40,9 +42,41 @@
     "test_record_schemas.RecordRightTests.test_duplicate_verification_slots_are_not_silently_lost",
     "test_record_schemas.RecordRightTests.test_verification_slot_requires_a_declared_dimension",
     "test_record_schemas.RecordRightTests.test_duplicate_verification_subjects_and_dimensions_are_rejected",
-    "test_record_schemas.RecordRightTests.test_distinct_required_checks_preserve_declaration_order"
+    "test_record_schemas.RecordRightTests.test_distinct_required_checks_preserve_declaration_order",
+    "tests/test_verification_contracts.py::test_contract_requires_actual_relation_and_resolvable_declared_subjects[edge-verification_relation_required]",
+    "tests/test_verification_contracts.py::test_contract_requires_actual_relation_and_resolvable_declared_subjects[missing-verification_subject_not_found]",
+    "tests/test_verification_contracts.py::test_contract_requires_actual_relation_and_resolvable_declared_subjects[subject-verification_subject_not_declared]",
+    "tests/test_verification_contracts.py::test_default_never_discards_an_explicit_dimension_selection[None]",
+    "tests/test_verification_contracts.py::test_default_never_discards_an_explicit_dimension_selection[dimensions0]",
+    "tests/test_verification_contracts.py::test_default_never_discards_an_explicit_dimension_selection[dimensions1]",
+    "tests/test_verification_contracts.py::test_default_never_discards_an_explicit_dimension_selection[dimensions2]",
+    "tests/test_verification_contracts.py::test_every_declared_dimension_requires_an_actual_slot",
+    "tests/test_verification_contracts.py::test_explicit_empty_or_malformed_slots_are_not_absence[None]",
+    "tests/test_verification_contracts.py::test_explicit_empty_or_malformed_slots_are_not_absence[slots1]",
+    "tests/test_verification_contracts.py::test_explicit_empty_or_malformed_slots_are_not_absence[slots2]",
+    "tests/test_verification_contracts.py::test_explicit_slots_and_declared_dimensions_are_not_replaced_by_defaults",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[configuration_policy]",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[dimensions]",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[evidence_kinds]",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[method]",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[oracle]",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[preconditions]",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[procedure]",
+    "tests/test_verification_contracts.py::test_incomplete_contracts_fail_without_synthesizing_required_data[subjects]",
+    "tests/test_verification_contracts.py::test_new_draft_helper_cannot_repair_an_existing_revision_or_approved_record[overrides0]",
+    "tests/test_verification_contracts.py::test_new_draft_helper_cannot_repair_an_existing_revision_or_approved_record[overrides1]",
+    "tests/test_verification_contracts.py::test_new_draft_materializes_overall_only_when_slots_are_absent[False]",
+    "tests/test_verification_contracts.py::test_new_draft_materializes_overall_only_when_slots_are_absent[True]",
+    "tests/test_verification_contracts.py::test_owned_resolution_neither_reads_test_code_nor_changes_or_requires_live_files",
+    "tests/test_verification_contracts.py::test_resolution_and_owned_records_do_not_expose_mutation_handles",
+    "tests/test_verification_contracts.py::test_resolution_is_deterministic_under_supplied_file_order[1]",
+    "tests/test_verification_contracts.py::test_resolution_is_deterministic_under_supplied_file_order[2]",
+    "tests/test_verification_contracts.py::test_source_changes_are_bound_to_different_resolution_hashes[0-statement-Changed subject]",
+    "tests/test_verification_contracts.py::test_source_changes_are_bound_to_different_resolution_hashes[1-oracle-Different criterion]",
+    "tests/test_verification_contracts.py::test_source_changes_are_bound_to_different_resolution_hashes[2-test_identity-value2]",
+    "tests/test_verification_contracts.py::test_stored_contract_read_never_synthesizes_missing_slots"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "Implicit contracts for direct verified_by test targets and further hostile/incomplete input cases remain in 12.a.R. Project-wide required-check aggregation, Evidence evaluation, context freshness and write authorization remain in their assigned later steps. No full requirement or release approval."
   ]
 }
