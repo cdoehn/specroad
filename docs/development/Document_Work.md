@@ -1,4 +1,4 @@
-# Dokumentprojektion über Work (11.r.W)
+# Dokumentprojektion über Work (11.r.W/R)
 
 Die explizite Host-API `specroad.documents.work` bindet einen vollständigen,
 bereits vom Aufrufer bereitgestellten `TargetModel`-Bestand und eine Dokument-ID.
@@ -52,6 +52,25 @@ Jeder Zugriff auf `delivery.as_dict()` prüft Checkpoint und Ausgabebytes erneut
 Vorhandene identische Dateien werden ohne Schreibzugriff wiederverwendet.
 Projektbytes, `.specroad/` und der abgeschlossene Work-Checkpoint bleiben gleich.
 
+Der R-Schritt prüft gespeicherte Kompositionen gegen die vollständigen gebundenen
+Quellrelationen. Jedes erforderliche Kind und jedes wiederholte Include muss als
+Vorkommen mit richtigem Elternbezug, Reihenfolge und Quellenhash vorhanden sein.
+Ein korrigierter Zähler allein macht einen abgeschnittenen Präfix nicht vollständig.
+Literaltabellen müssen alle ursprünglichen Zeilen und typisierten Werte enthalten.
+Query-Seiten behalten die gebundene Auswahl, Eingangs-/Konfigurationshashes,
+Pagination und sämtliche ausgewählten Zeilen samt originalen Feldwerten.
+Unbekannte Datenfelder, widersprüchliche Bindungen und erweiterte Erfolgs- oder
+Berechtigungsbehauptungen werden vor neuen Writes als Konflikt abgewiesen.
+
+Diese Konsistenzprüfungen wiederholen weder die abgeschlossene Komposition noch
+Filterauswertung oder Prose-Parsing. Das exakte Query-Total bleibt ein gespeichertes
+Ergebnis des nativen Auswerters. Die Prüfung ist keine Authentifizierung fremder,
+beliebig neu gehashter Work-Daten; die unabhängige Anfangsbindung und der geschützte
+Work-Speicher bleiben erforderlich. Ergebnisdateifehler erhalten den Checkpoint
+und tatsächlich entstandene vollständige oder teilweise Ausgabebytes. Erst ein
+ausdrücklicher neuer Aufruf kann fehlende Ausgabe vervollständigen. Jeder gelieferte
+Dateiverweis prüft beide Dateien erneut; es gibt keine stille Reparatur.
+
 Der W-Schritt ist ein Teilnachweis für SR-REQ-0605 und SR-REQ-0623. Komposition,
 einzelne native Blockberechnungen, Snapshot-Rekonstruktion und Ergebnisreduktion
 arbeiten weiterhin mit vollständigen Werten im Speicher. Die Fenstergrenze
@@ -73,3 +92,11 @@ Nummerierungsanhangs vervollständigt. Alle alten Testnummern bleiben gleich. Di
 Nachweise umfassen damit 1.151 unterschiedliche Testidentitäten. Die vollständige
 Collection-/Katalogprüfung erfasst 12.887 Tests und führt keine Testkörper aus.
 Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
+
+Der R-Nachweis besteht mit 184 gezielten Tests auf vier parallelen Workern:
+131 neue R-Fälle, sämtliche 29 W-Fälle und 24 Verifikationskatalogfälle.
+Die vollständige Katalogprüfung bindet 13.018 Testidentitäten bei null
+ausgeführten Testkörpern. Alle bisherigen Testdateien und Testnummern bleiben
+erhalten. Die R-Fälle prüfen auch neu gehashte unvollständige Nachweise,
+1.000 Literalzeilen, 130 ausgewählte Query-/Viewzeilen und Fehler vor beziehungsweise
+nach echter Dateiveröffentlichung. Dieser Nachweis bleibt ein Teiltestlauf.

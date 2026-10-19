@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 484
-last_completed_plan_commit: 11.r.W
-next_plan_commit: 11.r.R
-last_completed_numbered_bundle: 310
+implementation_plan_commits_completed: 485
+last_completed_plan_commit: 11.r.R
+next_plan_commit: 11.r.C
+last_completed_numbered_bundle: 311
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12501,12 +12501,30 @@ seine fällige parallele Drittelgruppe.
 
 #### 11.r.R – Make it Right
 
-- [ ] **11.r.R** · Position **485/900** · Voraussetzung: `11.r.W`.
+- [x] **11.r.R** · Position **485/900** · Voraussetzung: `11.r.W`.
 **Exakte Commit-Message:** `11.r.R feat(documents): Große Dokumente und fortsetzbare Projektion vervollständigen`
 
 **Vervollständigung:** Noch offene Includes oder Tabellenzeilen dürfen nicht als fertiges Dokument gelten.
 
 **Verhaltensabnahme:** Datenmengen-/Hash-/Seiteneffektprüfung weist vollständige Lieferung ohne Layouttests nach. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand (Bundle 311):** Gespeicherte Dokumentnachweise werden
+gegen die Originalbytes geprüft: vollständige Include-Vorkommen einschließlich
+wiederholter Teilbäume, Relationen und Quellenhashes; vollständige Literalzeilen;
+unveränderte Query-Auswahl, Pagination, Eingangs-/Konfigurationsbindung und
+Zeilenwerte. Reine Zählerkorrekturen, unbekannte Felder und falsche Freigaben
+ersetzen keinen Abschluss. Ein globales Ergebnis muss alle bestätigten Einheiten
+enthalten. Dateiausgabefehler erhalten den Checkpoint und die tatsächlichen
+Bytes; ein ausdrücklicher Retry vervollständigt nur fehlende Ausgabe. Jeder
+Dateiverweis wird frisch geprüft. Bestätigte native Auswerter werden nicht
+wiederholt. Die bisherigen Grenzen zu inneren Cursorn, Speicherverbrauch,
+CLI-Integration und Authentifizierung bleiben ausdrücklich offen.
+
+**Entwicklungsnachweis R:** 184 gezielte Verhaltenstests bestehen auf vier
+parallelen Workern, einschließlich aller 29 W-Fälle und 131 neuer R-Fälle.
+Die vollständige Collection-/Katalogprüfung erfasst 13.018 Testidentitäten
+ohne Testkörperausführung. Bestehende Tests und Nummern bleiben erhalten.
+Dies sind Teiltests; der Apply-Commit benötigt seine fällige parallele Drittelgruppe.
 
 #### 11.r.C – Make it Clean
 

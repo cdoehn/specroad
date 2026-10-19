@@ -1,5 +1,6 @@
 """Inert, relocatable inputs for the closed document Work adapter."""
 from ..changes.target_model import TargetModel, _default_scope
+from ..graph.relations import SourceRelations
 from ..model.attachments import AttachmentDescriptor
 from ..model.canonical import canonical_json_bytes
 from ..model.configuration import ProjectConfiguration
@@ -9,7 +10,7 @@ from ..model.model_manifest import ProjectReadBinding
 from ..profiles.composition import compose_profiles
 from ..profiles.values import ProfileResource
 from ..validation import ModelDocument
-from ..work._data_contract import _object, _parse
+from ..work._data_contract import _hash, _object, _parse, _path, _text
 from ..work.resume import _require
 
 
@@ -46,13 +47,26 @@ def saved(current):
              'invalid_document_context')
     for key in ('documents', 'resources', 'packages', 'profile_chain'):
         values = context[key]
-        _require(type(values) is list and all(type(p) is str for p in values)
+        _require(type(values) is list and all(type(p) is str and bool(p) for p in values)
                  and len(set(values)) == len(values), 'invalid_document_context')
     _require(bool(context['profile_chain']), 'document_profile_required')
+    _text(context['project_id']); _hash(context['input_sha256']); _hash(context['model_root_sha256'])
+    paths = context['documents'] + context['resources'] + ['specroad.json']
+    _require(len(set(paths)) == len(paths), 'overlapping_document_inputs')
+    for path in paths: _path(path)
+    _require(context['packages'] == [str(n) + '.json' for n in range(len(context['packages']))],
+             'invalid_document_package_inventory')
+    _require(type(context['attachments']) is list, 'invalid_document_attachments')
+    for attachment in context['attachments']: AttachmentDescriptor.from_data(attachment)
+    _object(context['reservations'], ('reserved_artifact_ids', 'reserved_relation_ids', 'previously_approved_ids'))
+    for values in context['reservations'].values():
+        _require(type(values) is list and all(type(v) is str and bool(v) for v in values)
+                 and len(values) == len(set(values)), 'invalid_document_reservations')
     expected = {('context', 'document.json'), ('project', 'specroad.json')}
     expected.update(('project', p) for p in context['documents'] + context['resources'])
     expected.update(('packages', p) for p in context['packages'])
     _require(set(inputs) == expected, 'document_input_inventory_changed')
+    for path in context['documents']: SourceRelations(inputs['project', path], path=path)
     return context, inputs
 
 

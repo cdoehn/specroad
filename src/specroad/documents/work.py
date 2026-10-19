@@ -19,6 +19,7 @@ from ..work.manifest import (WorkManifest, create_work_manifest, read_work_manif
                              partition_work_manifest, complete_work_manifest)
 from ..work.resume import WorkResumeError, _compatible_read, _require, _runtime_build
 from . import _work_inputs
+from ._work_evidence import DocumentEvidence
 from .blocks import ContentBlock
 from .includes import compose_document
 from .prose import parse_prose
@@ -79,6 +80,7 @@ def _records(current):
     _require([i['unit_id'] for i in completed] == [t['unit_id'] for t in tasks[:len(completed)]],
              'document_completion_must_be_prefix')
     context, inputs = _work_inputs.saved(current); value = current.as_dict(); records = []
+    evidence = DocumentEvidence(context, inputs)
     for item, task in zip(completed, tasks):
         raw = current.objects[item['evidence']['sha256']]; row = _parse(raw)
         _object(row, ('format_version', 'unit_id', 'input_manifest_sha256',
@@ -91,20 +93,8 @@ def _records(current):
             and type(row['selected']) is bool, 'invalid_document_completion')
         data = row['observation']
         if row['kind'] == 'compose':
-            _require(row['selected'] is True and type(data) is dict
-                and data.get('kind') == 'document-composition-v1'
-                and data.get('document_id') == context['document_id']
-                and data.get('input_sha256') == context['input_sha256']
-                and data.get('model_root_sha256') == context['model_root_sha256']
-                and type(data.get('occurrences')) is list and bool(data['occurrences'])
-                and data.get('occurrence_count') == len(data['occurrences'])
-                and type(data.get('records')) is dict
-                and {o['artifact_id'] for o in data['occurrences']} == set(data['records'])
-                and data.get('include_graph_acyclic') is True, 'invalid_document_composition')
-            for bound in data['records'].values():
-                _require(('project', bound['path']) in inputs
-                    and _parse(inputs['project', bound['path']]) == bound['record'],
-                    'document_composed_source_changed')
+            _require(row['selected'] is True, 'invalid_document_composition')
+            evidence.composition(data)
         else:
             selected = row['artifact_id'] in records[0]['observation']['records']
             _require(row['selected'] is selected, 'document_block_selection_changed')
@@ -116,22 +106,11 @@ def _records(current):
                 _require(type(data) is dict and data.get('block') == block.binding,
                          'document_block_binding_changed')
                 if block.block_kind in ('query', 'table'):
-                    _require(data.get('kind') == 'table-block-data-v1'
-                        and type(data.get('rows')) is list and data.get('row_count') == len(data['rows'])
-                        and data.get('input_sha256') == context['input_sha256'], 'invalid_document_table')
-                    page = data.get('query_result')
-                    if page is not None:
-                        _require(page['returned'] == len(data['rows']) == len(page['items'])
-                            and page['returned'] == min(page['limit'], max(0, page['total'] - page['offset']))
-                            and [r['artifact_id'] for r in data['rows']] == [i['id'] for i in page['items']],
-                            'unfinished_document_table_page')
+                    evidence.table(block, data)
                 elif block.block_kind in ('prose', 'admonition'):
-                    _require(data.get('kind') == 'safe-prose-v1' and data.get('prose_parsed') is True,
-                             'invalid_document_prose')
+                    evidence.prose(block, data)
                 elif block.block_kind == 'artifact_ref':
-                    _require(data.get('format_version') == 'artifact-reference-v1'
-                        and data.get('reference_resolved') is True
-                        and data.get('input_sha256') == context['input_sha256'], 'invalid_document_reference')
+                    evidence.reference(block, data)
                 else:
                     _require(data == _passive(block), 'invalid_document_passive_block')
         if data is not None:
