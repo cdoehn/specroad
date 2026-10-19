@@ -42,7 +42,8 @@ def evidence_record_schema():
     base = {"op": {"const": 'evidence_record'}}
     ref = text()
     blob = {"type": "object"}
-    return obj({**base, 'evidence': blob})
+    return obj({**base, 'evidence': blob,
+                'configuration_id': {'anyOf': [{'type': 'null'}, ref]}}, ['op', 'evidence'])
 
 def attachment_add_schema():
     base = {"op": {"const": 'attachment_add'}}

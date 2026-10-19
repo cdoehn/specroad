@@ -21,6 +21,7 @@ _OPERATIONS = {'artifact.create': ('create',), 'artifact.update': ('update',),
     'lifecycle.transition': ('transition', 'retire'),
     'relation.add': ('relation_add',), 'relation.remove': ('relation_remove',),
     'relation.review': ('relation_review_record',), 'baseline.create': ('baseline_create',),
+    'evidence.record': ('evidence_record',),
     'document.create': ('create',), 'section.add': ('create', 'relation_add'),
     'section.move': ('relation_remove', 'relation_add'),
     'block.add': ('create', 'relation_add'), 'block.update': ('update',),
@@ -60,6 +61,8 @@ def prepare_authoring_target(model, operations, *, policy, **fields):
 
 
 def _execution_policy(command_id):
+    if command_id == 'evidence.record':
+        return TargetPolicy(command_id, 'evidence-record-v1', ('extension:evidence-record',))
     if command_id in ('document.create', 'section.add', 'section.move', *_DOCUMENT_MUTATIONS):
         return TargetPolicy(command_id, 'document-authoring-v1', ('extension:document-authoring',))
     return (TargetPolicy(command_id, 'review-outcome-v1', ('extension:review-withdrawal',))
@@ -84,6 +87,9 @@ def _execution_inputs(model, command_id, operations, actor, planned_at, gates):
     elif command_id == 'baseline.create':
         from ..changes.baselines import prepare_baseline_gates
         gates += prepare_baseline_gates(model, operation, actor=actor, planned_at=planned_at, gates=gates)
+    elif command_id == 'evidence.record':
+        from ..changes.evidence import prepare_evidence_gates
+        gates += prepare_evidence_gates(model, operation, actor=actor, planned_at=planned_at, gates=gates)
     elif command_id in ('document.create', 'section.add', 'section.move', *_DOCUMENT_MUTATIONS):
         from ._document_validation import _document_gates
         mutation = command_id in _DOCUMENT_MUTATIONS

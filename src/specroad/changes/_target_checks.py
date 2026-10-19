@@ -24,6 +24,8 @@ def _gates(gates, policy, plan, model):
             'command':policy.data(), 'gate_resources':g.resources_sha256})) for g in gates)
     required = set(policy.required_gate_ids)
     operations = plan.data['operations']
+    if any(operation['op'] == 'evidence_record' for operation in operations):
+        required.add('extension:evidence-record')
     if (len(operations) == 1 and operations[0]['op'] == 'relation_review_record'
             and operations[0]['record']['decision'] == 'rejected'):
         required.add('extension:review-withdrawal')

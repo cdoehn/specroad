@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 498
-last_completed_plan_commit: 12.d.C
-next_plan_commit: 12.e.W
-last_completed_numbered_bundle: 324
+implementation_plan_commits_completed: 499
+last_completed_plan_commit: 12.e.W
+next_plan_commit: 12.e.R
+last_completed_numbered_bundle: 325
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13151,12 +13151,48 @@ Teiltestnachweis; ein Vollsuite- oder Release-Erfolg ist damit nicht belegt.
 
 #### 12.e.W – Let it Work
 
-- [ ] **12.e.W** · Position **499/900** · Voraussetzung: `12.d.C`.
+- [x] **12.e.W** · Position **499/900** · Voraussetzung: `12.d.C`.
 **Exakte Commit-Message:** `12.e.W feat(verification): Manuelle und werkzeuggestützte Erfassung aufbauen`
 
 **Umsetzung:** evidence record mit explizitem run-context, Attachments und gemeinsamen Writegates implementieren.
 
 **Verhaltensabnahme:** Autorisierter Nachweis wird einmalig mit tatsächlichen Eingangsbindungen gespeichert.
+
+**W-Ausschnitt:** Der native Adapter `specroad.authoring.evidence` übernimmt einen
+vollständig vorbereiteten Evidence-Record, die explizite Verification-ID und
+gegebenenfalls eine ausgewählte Konfiguration. Der isolierte `evidence_record`-
+Planner rekonstruiert Subject-, Contract- und Testbindungen aus den wirklichen
+Modellbytes. Vorhandene Attachment-Ressourcen werden exakt gebunden; explizite
+Run-Dateien dürfen widersprüchliche Herkunft nicht überschreiben. Bekannte IDs
+und widersprüchliche Produktstände derselben Laufidentität bleiben gesperrt.
+
+Vorschau und Veröffentlichung verwenden den bestehenden Saved-Plan-Writer mit
+echter Autorisierung, Writer-Lock, erneuter Eingangsprüfung, Journal und Receipts.
+Ein bestätigter identischer Request liefert die ursprüngliche Evidence-ID ohne
+erneute Veröffentlichung. Andere Subjects bleiben unverändert. Fehlende Dienste
+für weitere bestehende Lifecycle-/Currentness-Subjects blockieren den Writer.
+
+Der W-Stand setzt vorbereitete IDs und ein vollständiges Modell voraus. Globale
+CLI-Registrierung, Historieninventar-Discovery und Import externer Attachments
+werden damit nicht als vollständig umgesetzt behauptet; `SR-TC-0333` bleibt
+ein Teilnachweis. `Evidence_Recording.md` beschreibt die nutzbare API und ihre
+Grenzen. R und C bleiben eigene folgende Planpositionen.
+
+**Entwicklungsnachweis:** 2.089 gezielte Verhaltenstests in 44 betroffenen
+Dateien bestanden mit vier parallelen Workern in 1173.86 Sekunden, darunter
+59 neue Fälle für Speicherung, explizite Eingänge, Request-Replay, ID-Kollisionen,
+Freigabeverweigerung, Eingangsänderungen und isoliertes Core/PYZ. Die vollständige
+Collection-/Katalogprüfung bestätigt 13.673 Identitäten ohne Testkörperausführung.
+Bestehende Testnummern bleiben erhalten; neue Identitäten sind hinten angehängt.
+Geprüfter Quellstand:
+`4bd4aed3dca4c475af4edd07609aaf72e4a653392ef6d941d1895d09d5fd12d6`.
+
+Das Result `specroad-apply_Result_204549_1019_7c9db3.zip` bestätigt `12.d.C`
+auf `3648b68b0fd316513690799104697430972c84c3` mit 4.538 bestandenen
+parallelen Tests der Gruppe 2 und sauberem Snapshot. Dieser W-Stand erhält
+Apply-Sequenz 33, Gruppe 0 mit 4.558 Tests. Erst deren erfolgreicher Commit
+bestätigt **499/900** und den nächsten Schritt `12.e.R`. Dieser Auftrag liefert
+nur den W-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
 
 #### 12.e.R – Make it Right
 

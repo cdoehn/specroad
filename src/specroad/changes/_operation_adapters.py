@@ -42,6 +42,10 @@ def validate_retire(value, pointer):
 
 def validate_evidence_record(value, pointer):
     _artifact(value['evidence'], pointer + '/evidence', 'evidence')
+    if value.get('configuration_id') is not None:
+        identity = _reference(value['configuration_id'], pointer + '/configuration_id')
+        if identity.artifact_type != 'configuration':
+            raise ChangePlanError('configuration_reference_required', pointer=pointer + '/configuration_id')
 
 
 def validate_baseline_create(value, pointer):

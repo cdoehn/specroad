@@ -50,6 +50,7 @@
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-EVIDENCE-CONSTRUCTION-RIGHT-v1",
     "SR-FIX-EVIDENCE-CONSTRUCTION-v1",
+    "SR-FIX-EVIDENCE-RECORDING-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-JCS-RFC8785-v1",
@@ -300,6 +301,10 @@
     "SR-FIX-EVIDENCE-CONSTRUCTION-v1": {
       "provider": "tests/test_evidence_construction.py:inputs",
       "kind": "Owned requirement/contract/test bytes, explicit configuration, reserved random128 identities and synthetic producer/run metadata. Immutable recorded/approved value construction, new-measurement identity collision handling, exact subject hashes and check bindings, no filesystem/clock/process/network access and isolated Core/PYZ parity. No persistent recording, authentic external run, human approval or request-replay claim."
+    },
+    "SR-FIX-EVIDENCE-RECORDING-v1": {
+      "provider": "tests/test_evidence_recording.py:project",
+      "kind": "Owned temporary native projects, explicit prepared Evidence identities and synthetic run metadata. Actual saved-plan publication, writer-lock authorization, exact source/configuration/attachment bindings, durable replay and fail-closed mutation/identity boundaries. Isolated Core/PYZ publication and replay. No authentic external run, human approval, release readiness or complete CLI registration is claimed."
     },
     "SR-FIX-GIT-OBJECT-SOURCE-v1": {
       "provider": "tests/support/git_objects.py:GitFixture",

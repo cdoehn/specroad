@@ -28,6 +28,7 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     transaction. Mandatory command gates and missing model services fail closed.
     """
     from .baselines import baseline_mode, prepare_baseline_candidates, object_documents
+    from .evidence import evidence_mode, prepare_evidence_candidates
     if type(plan) is not ChangePlan or type(model) is not TargetModel or type(policy) is not TargetPolicy:
         raise TargetError('target_plan_model_policy_required')
     if type(strict) is not bool: raise TargetError('target_strict_boolean_required')
@@ -41,7 +42,15 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         raise TargetError('target_base_root_mismatch', pointer='/base/model_root_sha256')
     normalize = normalization_mode(value['operations'])
     baseline = baseline_mode(value['operations'])
-    if baseline:
+    evidence = evidence_mode(value['operations'])
+    if evidence:
+        folded = prepare_evidence_candidates(model, value['operations'],
+            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
+            planned_at=value['planned_at'], preconditions=value['preconditions'])
+        if {c.id: c.candidate_sha256 for c in folded.candidates} != {
+                r['artifact']['id']: r['sha256'] for r in value['result_artifacts']}:
+            raise TargetError('declared_evidence_result_mismatch', pointer='/result_artifacts')
+    elif baseline:
         folded = prepare_baseline_candidates(model, value['operations'],
             metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
             planned_at=value['planned_at'], preconditions=value['preconditions'])
@@ -133,6 +142,7 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     must satisfy the existing plan contract, including bound creation metadata.
     """
     from .baselines import baseline_mode, prepare_baseline_candidates, object_documents
+    from .evidence import evidence_mode, prepare_evidence_candidates
     if type(model) is not TargetModel or type(policy) is not TargetPolicy:
         raise TargetError('target_model_policy_required')
     from .values import ChangeOperation
@@ -143,7 +153,13 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     preconditions = _snapshot(list(_sequence(preconditions, 'target_preconditions_required')), '/preconditions').data
     normalize = normalization_mode(operations)
     baseline = baseline_mode(operations)
-    if baseline:
+    evidence = evidence_mode(operations)
+    if evidence:
+        folded = prepare_evidence_candidates(model, operations,
+            metadata_policy_version=metadata_policy_version, actor=actor,
+            planned_at=planned_at, preconditions=preconditions)
+        target_model = model
+    elif baseline:
         folded = prepare_baseline_candidates(model, operations, metadata_policy_version=metadata_policy_version,
             actor=actor, planned_at=planned_at, preconditions=preconditions)
         target_model = materialize_target(model, tuple(ModelDocument(

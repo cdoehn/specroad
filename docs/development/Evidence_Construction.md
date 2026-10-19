@@ -75,10 +75,13 @@ weiterhin gesperrt. Die Konstruktion prüft Reservierungen erneut und weist eine
 inzwischen aktuelle oder archivierte Evidence-ID zurück.
 
 Dieser Baustein schreibt keine Dateien und erteilt keine Schreibberechtigung.
-Die native Speicherung folgt in `12.e`: Dort werden Reservierung und tatsächliche
-Inventare unter dem gemeinsamen Writer-Lock geprüft, Berechtigungen und
-widersprechende Laufbindungen kontrolliert, Attachments gebunden und der
-Nachweis atomar veröffentlicht. Persistente identische Wiederholungen müssen
-über den bestehenden Idempotenzvertrag zum ursprünglichen Nachweis führen.
+Die native Speicherung vorbereiteter Werte steht seit `12.e.W` über den in
+`Evidence_Recording.md` beschriebenen Erfassungsadapter bereit. Dort werden
+bekannte IDs und tatsächliche Inventare unter dem gemeinsamen Writer-Lock
+geprüft, Berechtigungen und widersprechende Laufbindungen kontrolliert,
+vorhandene Attachments gebunden und der Nachweis atomar veröffentlicht.
+Persistente identische Wiederholungen liefern über den bestehenden
+Idempotenzvertrag den ursprünglichen Nachweis. Die globale CLI-Integration
+und die Vervollständigung des Erfassungsadapters bleiben getrennte Arbeit.
 Importadapter und die vollständige Ergebnisaggregation folgen ihren eigenen
 Planschritten. Die Requirement-Nachweise bleiben deshalb Teilnachweise.
