@@ -22,7 +22,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Konfigurationsgebundene Evidence MUSS exakt denselben Konfigurationshash wie der ausgewertete Scope binden, sofern der Contract sie nicht als unabhängig erklärt.",
-    "scope": "12.c.W/R: Appendix L subject hashes with exact requirement/verification/test vectors; explicit current independent-contract/check binding permits cross-configuration freshness, never erases Subject staleness or historical configuration provenance. Partial context observation only, not required-set/run selection or verification success."
+    "scope": "12.c.W/R/C: Appendix L subject hashes with exact requirement/verification/test vectors; explicit current independent-contract/check binding permits cross-configuration freshness, never erases Subject staleness or historical configuration provenance. Partial context observation only, not required-set/run selection or verification success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -116,6 +116,6 @@
     "tests/test_verification_context_right.py::test_untyped_contract_is_never_a_configuration_exception[{}]"
   ],
   "open_items": [
-    "Shared structural cleanup in 12.c.C; integration with record/import/coverage/baseline consumers in their assigned plan steps."
+    "Integration with record/import/coverage/baseline consumers in their assigned plan steps; no full verification or release-success claim."
   ]
 }

@@ -1,12 +1,21 @@
 # Verification-Kontext und fachliche Aktualität
 
-`specroad.verification` stellt den lesenden W-/R-Ausschnitt aus 12.c bereit.
+`specroad.verification` stellt die lesende Kontext-API aus 12.c bereit.
 `verification_context_projection(subject)` und `verification_context_sha256(subject)`
 verwenden lokal geprüfte `DomainArtifact`-Requirements, `VerificationContract`
 oder `VerificationTest`. Die Projektion folgt Anhang L und wird mit dem
 vorhandenen RFC-8785-Kanonisierer gehasht. Der Algorithmus heißt
 `verification_context_hash-v1`; gehasht wird unmittelbar das projizierte
 Artefaktobjekt.
+
+Die öffentlichen Funktionen bleiben der gemeinsame Einstieg für Record-,
+Import-, Coverage- und Baseline-Verbraucher. Intern bündelt
+`_context_subject` die native Subjectprüfung, Projektion, Kontexthashbildung
+und Audit-/Kontextbindung. Aktuelles Subject und ausdrücklich übergebener
+Contract verwenden dieselbe Projektion. `_context_contract` kapselt die
+bestehende Contract-/Prüfschrittbindung; `context` stellt die unveränderten
+öffentlichen Wertobjekte und den Aktualitätsbericht bereit. Die fachliche
+Integration weiterer Verbraucher erfolgt in deren jeweiligen Planschritten.
 
 Ausgeschlossen sind die obersten Felder `revision`, `created_at`, `created_by`,
 `updated_at`, `updated_by`, `maturity`, `implementation_status`,
@@ -68,8 +77,9 @@ Eingabefehler und werden nicht stillschweigend zugeordnet.
 
 Ein kontextaktueller Nachweis kann fehlgeschlagen sein oder einem anderen
 Produktstand angehören. Geprüft wird die lokale Deklaration des übergebenen
-Contracts, keine unabhängig aufgelöste Pflichtmenge. Pflichtmenge, Produktstand, maßgebliche Läufe,
-vollständige Verifikation und Release Readiness sind hier nicht bewertet.
+Contracts, keine unabhängig aufgelöste Pflichtmenge. Pflichtmenge, Produktstand,
+maßgebliche Läufe, vollständige Verifikation und Release Readiness sind hier
+nicht bewertet.
 `verification_result` wird weder erzeugt noch ins Subject geschrieben.
 Alle Eingaben bleiben unverändert; die API liest keine Dateien, führt keinen
 Testpfad aus und erteilt keine Schreib- oder Freigabeberechtigung.

@@ -9,27 +9,11 @@ from hashlib import sha256
 from ..configurations import EffectiveConfiguration
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
-from ..storage.domain_artifact import DomainArtifact
 from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact
-from .contracts import VerificationContract, VerificationTest
-
-CONTEXT_HASH_ALGORITHM = 'verification_context_hash-v1'
-# Only these top-level fields are removed. Names inside semantic extensions,
-# oracles and structured requirement data keep their original meaning.
-_EXCLUDED = frozenset({'revision', 'created_at', 'created_by', 'updated_at',
-    'updated_by', 'maturity', 'implementation_status', 'verification_plan_status',
-    'verification_waiver', 'relations', 'tags'})
-
-
-def _subject(subject):
-    if type(subject) is DomainArtifact:
-        return DomainArtifact(subject.source_bytes, expected_type='requirement', path=subject.path)
-    if type(subject) is VerificationContract:
-        return VerificationContract(subject.source_bytes, path=subject.path)
-    if type(subject) is VerificationTest:
-        return VerificationTest(subject.source_bytes, path=subject.path)
-    raise ModelError('typed_verification_subject_required')
+from ._context_subject import (CONTEXT_HASH_ALGORITHM, owned_subject as _subject,
+                              project_subject, subject_binding, subject_context_sha256)
+from ._context_contract import contract_check as _contract_check
 
 
 def verification_context_projection(subject):
@@ -41,16 +25,11 @@ def verification_context_projection(subject):
     not part of the check subject. Provenance retains source data and extensions;
     its capture timestamp is purely audit metadata.
     """
-    value = _subject(subject).data
-    projected = {key: item for key, item in value.items() if key not in _EXCLUDED}
-    if 'provenance' in value:
-        projected['provenance'] = [{key: item for key, item in source.items()
-                                    if key != 'captured_at'} for source in value['provenance']]
-    return projected
+    return project_subject(_subject(subject).data)
 
 
 def verification_context_sha256(subject):
-    return canonical_json_sha256(verification_context_projection(subject))
+    return subject_context_sha256(_subject(subject).data)
 
 
 @dataclass(frozen=True, init=False)
@@ -72,9 +51,7 @@ class VerificationContext:
             'hash_algorithm': CONTEXT_HASH_ALGORITHM,
             'subject': value,
             'subject_source_sha256': sha256(owned.source_bytes).hexdigest(),
-            'subject_binding': {'artifact_id': value['id'], 'revision': value['revision'],
-                'artifact_sha256': canonical_json_sha256(value),
-                'verification_context_sha256': verification_context_sha256(owned)},
+            'subject_binding': subject_binding(value),
             'configuration_hash': None if configuration is None else configuration.sha256}
         object.__setattr__(self, '_encoded', canonical_json_bytes(data))
 
@@ -116,55 +93,6 @@ class VerificationContextAssessment:
 
     def __bool__(self):
         raise TypeError('Context freshness is not verification success or approval')
-
-
-def _contract_check(data, record, contract):
-    """Bind supplied contract policy to this subject and recorded check.
-
-    This checks the explicit contract's local declaration, not the project's
-    independently resolved required-check set or authoritative run selection.
-    """
-    if type(contract) is not VerificationContract:
-        raise ModelError('typed_verification_contract_required')
-    contract = VerificationContract(contract.source_bytes, path=contract.path)
-    value = contract.data
-    subject = data['subject']
-    subject_id = subject['id']
-    kind = subject['artifact_type']
-    digest = verification_context_sha256(contract)
-    if kind == 'requirement':
-        matches = subject_id in value['subjects']
-    elif kind == 'test':
-        matches = any(slot['test_id'] == subject_id for slot in value['evidence_slots'])
-    else:
-        matches = subject_id == value['id']
-        if matches and digest != data['subject_binding']['verification_context_sha256']:
-            raise ModelError('verification_contract_subject_context_mismatch')
-    if not matches:
-        raise ModelError('verification_contract_subject_mismatch')
-    run = record['run_context']
-    if run is None:
-        raise ModelError('verification_contract_check_required', pointer='/run_context')
-    slots = [slot for slot in value['evidence_slots']
-             if slot['check_id'] == run['check_id'] and slot['test_id'] == run['test_id']]
-    if not slots or (kind == 'test' and run['test_id'] != subject_id):
-        raise ModelError('verification_contract_check_mismatch', pointer='/run_context')
-    recorded = next((item for item in record['subjects'] if item['artifact_id'] == value['id']), None)
-    reasons = []
-    if recorded is None:
-        reasons.append('contract_not_recorded')
-    elif recorded['verification_context_sha256'] != digest:
-        reasons.append('contract_context_changed')
-    if record['configuration_policy'] == 'independent' and value['configuration_policy'] != 'independent':
-        reasons.append('independent_contract_required')
-    independent = value['configuration_policy'] == 'independent' and not reasons
-    return {'contract': {'artifact_id': value['id'], 'revision': value['revision'],
-                'artifact_sha256': canonical_json_sha256(value),
-                'source_sha256': sha256(contract.source_bytes).hexdigest(),
-                'verification_context_sha256': digest,
-                'configuration_policy': value['configuration_policy']},
-            'recorded_contract': recorded, 'contract_check': slots[0],
-            'contract_configuration_independent': independent}, reasons
 
 
 def assess_verification_context(context, evidence, *, contract=None):

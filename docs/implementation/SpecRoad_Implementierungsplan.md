@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 494
-last_completed_plan_commit: 12.c.R
-next_plan_commit: 12.c.C
-last_completed_numbered_bundle: 320
+implementation_plan_commits_completed: 495
+last_completed_plan_commit: 12.c.C
+next_plan_commit: 12.d.W
+last_completed_numbered_bundle: 321
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12961,7 +12961,7 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.c.C – Make it Clean
 
-- [ ] **12.c.C** · Position **495/900** · Voraussetzung: `12.c.R`.
+- [x] **12.c.C** · Position **495/900** · Voraussetzung: `12.c.R`.
 **Exakte Commit-Message:** `12.c.C refactor(verification): Verification-Kontextprojektion bereinigen`
 
 **Bereinigung:** Eine gemeinsame Projektion für Record, Import, Coverage und Baselines verwenden.
@@ -12969,6 +12969,39 @@ Vollsuite- oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand (Bundle 321):** `_context_subject` bündelt die
+native Subjectprüfung, die unveränderte Anhang-L-Projektion, deren
+RFC-8785-Kontexthash und die Audit-/Kontextbindung. Öffentliche Projektion,
+aktueller Subjectkontext und ausdrücklich übergebener Verification Contract
+verwenden diese gemeinsame Umsetzung. `_context_contract` kapselt die bereits
+vorhandene lokale Contract-/Prüfschrittprüfung. `context` behält die
+öffentlichen Wertobjekte, Aufrufe und den Aktualitätsbericht.
+
+Projektion, Hashalgorithmus, Berichtsfelder, Stale-Gründe, Fehlerverträge,
+Konfigurationsausnahme und schreibfreie Seiteneffektgrenzen bleiben erhalten.
+Die gemeinsame öffentliche API ist der Einstieg für Record-, Import-,
+Coverage- und Baseline-Verbraucher; deren weitere fachliche Integration bleibt
+bei den dafür vorgesehenen Planschritten. Es wird keine neue Ergebnisaggregation,
+Produkt-/Laufauswahl oder Releasefreigabe eingeführt.
+
+**Gezielter C-Nachweis:** Alle 844 vorhandenen Verhaltenstests aus den 16
+betroffenen Dateien bestanden auf vier parallelen Workern (33,04 s),
+einschließlich der W-/R-Kontextvektoren, Fehlerfälle, Contract-/Waiver-,
+Schema-, Konfigurations-, Kanonisierungs- und Katalog-/Evidence-Regressionen
+sowie der isolierten Core-/PYZ-Prüfungen. Keine Testdatei oder erwartete
+Fachausgabe wurde verändert. Die vollständige Collection-/Katalogprüfung
+bestätigt unverändert 13.503 Testidentitäten ohne Testkörperausführung;
+Nummernregister und Testbindungen bleiben bytegleich. Geprüfter Quellstand:
+`3209d8caac5a87766384ea7b543e892114cffb0600a8cf3310280900d8fe80ed`.
+Die Requirement-Manifeste kennzeichnen weiterhin den vorhandenen Teilnachweis.
+
+Das Result `specroad-apply_Result_185705_1019_f2e825.zip` bestätigt `12.c.R`
+auf `189aac67c641874f74d3a105a531214aaec6dd65` mit 4.501 bestandenen
+parallelen Tests der Gruppe 1 und sauberem Snapshot. Dieser C-Stand erhält
+Apply-Sequenz 29, Gruppe 2 mit 4.501 Tests. Erst deren erfolgreicher Commit
+bestätigt **495/900** und den nächsten Schritt `12.d.W`. Dies ist kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-d"></a>
 ### 12.d – Immutable Evidence und Laufkontext
