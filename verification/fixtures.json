@@ -103,7 +103,8 @@
     "SR-FIX-VERIFICATION-WAIVER-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "verification-context-independent"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -513,6 +514,10 @@
     "verification-context-subjects": {
       "provider": "tests/test_verification_context.py:subject",
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success."
+    },
+    "verification-context-independent": {
+      "provider": "tests/test_verification_context_right.py:independent_case",
+      "kind": "Owned requirement, verification and test subjects, explicit typed contracts, recorded check/test identities and immutable Evidence bindings. Exact semantic projection vectors, current/stale/missing independent policies, audit-only changes, configuration provenance and isolated Core/PYZ parity. No independently resolved required-check set, authoritative run selection, code execution, full verification or release authority."
     }
   }
 }

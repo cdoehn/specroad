@@ -7,20 +7,22 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "verification-context-independent"
   ],
   "preconditions": [
-    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null."
+    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null.",
+    "For independent reuse, an explicitly supplied native contract must declare this subject/check and be recorded with its current semantic context hash."
   ],
   "steps": [
     "Project the Appendix L subject fields and calculate the RFC 8785 SHA-256.",
-    "Compare recorded subject identity/context and exact bound configuration without changing input bytes.",
+    "Compare recorded subject identity/context and exact configuration; grant independence only from the matching, context-current explicit contract and recorded check/test.",
     "Observe freshness independently of Evidence result, product/run selection and release readiness."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Konfigurationsgebundene Evidence MUSS exakt denselben Konfigurationshash wie der ausgewertete Scope binden, sofern der Contract sie nicht als unabhängig erklärt.",
-    "scope": "12.c.W: subject context hashes and bound-configuration freshness for requirement, verification and test; all results are partial observations, never verification success."
+    "scope": "12.c.W/R: Appendix L subject hashes with exact requirement/verification/test vectors; explicit current independent-contract/check binding permits cross-configuration freshness, never erases Subject staleness or historical configuration provenance. Partial context observation only, not required-set/run selection or verification success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -55,10 +57,65 @@
     "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[None]",
     "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[hash]",
     "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[value1]",
-    "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[{}]"
+    "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[{}]",
+    "tests/test_verification_context_right.py::test_actual_bound_contract_hash_decides_exception_not_the_evidence_label[bound]",
+    "tests/test_verification_context_right.py::test_actual_bound_contract_hash_decides_exception_not_the_evidence_label[independent]",
+    "tests/test_verification_context_right.py::test_bound_contract_always_preserves_exact_configuration_requirement[None-stale]",
+    "tests/test_verification_context_right.py::test_bound_contract_always_preserves_exact_configuration_requirement[linux-current]",
+    "tests/test_verification_context_right.py::test_bound_contract_always_preserves_exact_configuration_requirement[windows-stale]",
+    "tests/test_verification_context_right.py::test_bound_contract_cannot_be_overruled_by_independent_evidence_even_with_equal_null_hashes",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes0]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes1]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes2]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes3]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes4]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes5]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes6]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes7]",
+    "tests/test_verification_context_right.py::test_contract_exception_is_bound_to_actual_check_and_test_identity[changes0]",
+    "tests/test_verification_context_right.py::test_contract_exception_is_bound_to_actual_check_and_test_identity[changes1]",
+    "tests/test_verification_context_right.py::test_contract_policy_change_invalidates_previous_contract_binding",
+    "tests/test_verification_context_right.py::test_contract_subject_and_selected_contract_cannot_represent_different_semantics",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[None-requirement]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[None-test]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[None-verification]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[linux-requirement]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[linux-test]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[linux-verification]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[windows-requirement]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[windows-test]",
+    "tests/test_verification_context_right.py::test_explicit_current_independent_contract_allows_cross_configuration_freshness[windows-verification]",
+    "tests/test_verification_context_right.py::test_independent_contract_does_not_erase_original_configuration_provenance[None]",
+    "tests/test_verification_context_right.py::test_independent_contract_does_not_erase_original_configuration_provenance[linux]",
+    "tests/test_verification_context_right.py::test_independent_contract_does_not_erase_original_configuration_provenance[windows]",
+    "tests/test_verification_context_right.py::test_independent_contract_gate_has_identical_isolated_core_and_pyz_results[core]",
+    "tests/test_verification_context_right.py::test_independent_contract_gate_has_identical_isolated_core_and_pyz_results[pyz]",
+    "tests/test_verification_context_right.py::test_independent_label_without_explicit_contract_keeps_the_existing_rejection[requirement]",
+    "tests/test_verification_context_right.py::test_independent_label_without_explicit_contract_keeps_the_existing_rejection[test]",
+    "tests/test_verification_context_right.py::test_independent_label_without_explicit_contract_keeps_the_existing_rejection[verification]",
+    "tests/test_verification_context_right.py::test_missing_contract_subject_binding_cannot_be_invented_from_argument",
+    "tests/test_verification_context_right.py::test_missing_run_check_does_not_get_an_inferred_overall_slot",
+    "tests/test_verification_context_right.py::test_policy_observation_is_owned_and_does_not_execute_contract_or_touch_files",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes0]",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes1]",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes2]",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes3]",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes4]",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes5]",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes6]",
+    "tests/test_verification_context_right.py::test_stale_contract_never_authorizes_configuration_independence[changes7]",
+    "tests/test_verification_context_right.py::test_subject_changes_remain_stale_under_a_valid_independent_contract",
+    "tests/test_verification_context_right.py::test_test_subject_cannot_borrow_another_valid_slot_of_the_same_contract",
+    "tests/test_verification_context_right.py::test_unrelated_independent_contract_is_rejected_before_reuse[requirement]",
+    "tests/test_verification_context_right.py::test_unrelated_independent_contract_is_rejected_before_reuse[test]",
+    "tests/test_verification_context_right.py::test_unrelated_independent_contract_is_rejected_before_reuse[verification]",
+    "tests/test_verification_context_right.py::test_untyped_contract_is_never_a_configuration_exception[1]",
+    "tests/test_verification_context_right.py::test_untyped_contract_is_never_a_configuration_exception[True]",
+    "tests/test_verification_context_right.py::test_untyped_contract_is_never_a_configuration_exception[independent]",
+    "tests/test_verification_context_right.py::test_untyped_contract_is_never_a_configuration_exception[untyped0]",
+    "tests/test_verification_context_right.py::test_untyped_contract_is_never_a_configuration_exception[{}]"
   ],
   "open_items": [
-    "Explicit independent contract reuse and additional context vectors in 12.c.R.",
     "Shared structural cleanup in 12.c.C; integration with record/import/coverage/baseline consumers in their assigned plan steps."
   ]
 }

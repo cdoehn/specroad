@@ -1,6 +1,6 @@
 # Verification-Kontext und fachliche Aktualität
 
-`specroad.verification` stellt den lesenden W-Ausschnitt aus 12.c bereit.
+`specroad.verification` stellt den lesenden W-/R-Ausschnitt aus 12.c bereit.
 `verification_context_projection(subject)` und `verification_context_sha256(subject)`
 verwenden lokal geprüfte `DomainArtifact`-Requirements, `VerificationContract`
 oder `VerificationTest`. Die Projektion folgt Anhang L und wird mit dem
@@ -27,12 +27,28 @@ verglichen. Die reine Projektion entscheidet weder Anwendbarkeit noch
 Scopezugehörigkeit.
 
 `assess_verification_context(context, evidence)` nimmt ein lokal geprüftes
-`RecordArtifact` vom Typ `evidence`. Der W-Ausschnitt verlangt explizite
+`RecordArtifact` vom Typ `evidence`. Dieser Zweiparameteraufruf verlangt explizite
 `configuration_policy="bound"` und einen tatsächlichen `configuration_hash`.
 Der bestehende Recordvertrag weist `bound` mit fehlendem oder `null`-Hash ab.
 Ein ausdrücklich unkonfigurierter aktueller Kontext macht einen gebundenen
-Nachweis stale. `independent` bleibt bis zum Contract-Gate in 12.c.R ununterstützt;
-ein Label im Nachweis erteilt keine Ausnahme.
+Nachweis stale. Ein `independent`-Label im Nachweis allein erteilt keine Ausnahme.
+
+Für eine ausdrückliche Contract-Bindung dient
+`assess_verification_context(context, evidence, contract=contract)`. Das Argument
+muss ein nativer `VerificationContract` sein. Ein Requirement muss zu dessen
+`subjects` gehören; ein Test muss einen passenden Slot haben. Ist das Subject
+selbst ein Contract, müssen ID und fachlicher Kontexthash übereinstimmen.
+Die `check_id` und `test_id` aus dem Evidence-Laufkontext müssen exakt einen
+deklarierten Slot bezeichnen; ein Test-Subject darf keinen anderen Testslot
+desselben Contracts übernehmen.
+
+Nur ein Contract mit `configuration_policy="independent"`, dessen aktueller
+Kontexthash in der Evidence als Subjectbindung vorliegt, erlaubt die Verwendung
+über Konfigurationsgrenzen hinweg, auch bei ausdrücklich unkonfiguriertem
+Auswertungskontext. Dies gilt auch für ursprünglich als `bound` aufgezeichnete
+Evidence; ihr historischer Konfigurationshash bleibt erhalten. Ein fehlender
+oder fachlich geänderter Contract gewährt keine Ausnahme. Eine geänderte
+Subjectbindung bleibt auch unter einem unabhängigen Contract stale.
 
 Der Teilbericht enthält `freshness=current|stale`, `context_current` und
 maschinenlesbare Gründe: `subject_not_recorded`, `subject_context_changed`
@@ -41,8 +57,18 @@ Evidence-Revision und Vollhash bleiben als historischer Auditbezug im Bericht,
 entscheiden aber nicht über fachliche Aktualität. Der Bericht bindet auch die
 tatsächlichen Evidencebytes und erhält deren Ergebnis und Laufkontext.
 
+Bei übergebenem Contract ergänzt der Bericht dessen aktuelle Byte-, Voll- und
+Kontexthashes, die historische Contractbindung, den aufgezeichneten Prüfschritt
+und `contract_configuration_independent`. Zusätzliche Stale-Gründe sind
+`contract_not_recorded`, `contract_context_changed` und
+`independent_contract_required`. Reine Auditänderungen am Contract entwerten
+dessen fachliche Bindung nicht. Ein fremder Contract, ein fehlender oder
+abweichender Prüfschritt sowie widersprüchliche Contract-Subjectstände sind
+Eingabefehler und werden nicht stillschweigend zugeordnet.
+
 Ein kontextaktueller Nachweis kann fehlgeschlagen sein oder einem anderen
-Produktstand angehören. Pflichtmenge, Produktstand, maßgebliche Läufe,
+Produktstand angehören. Geprüft wird die lokale Deklaration des übergebenen
+Contracts, keine unabhängig aufgelöste Pflichtmenge. Pflichtmenge, Produktstand, maßgebliche Läufe,
 vollständige Verifikation und Release Readiness sind hier nicht bewertet.
 `verification_result` wird weder erzeugt noch ins Subject geschrieben.
 Alle Eingaben bleiben unverändert; die API liest keine Dateien, führt keinen

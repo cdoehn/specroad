@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 493
-last_completed_plan_commit: 12.c.W
-next_plan_commit: 12.c.R
-last_completed_numbered_bundle: 319
+implementation_plan_commits_completed: 494
+last_completed_plan_commit: 12.c.R
+next_plan_commit: 12.c.C
+last_completed_numbered_bundle: 320
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12909,12 +12909,55 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.c.R – Make it Right
 
-- [ ] **12.c.R** · Position **494/900** · Voraussetzung: `12.c.W`.
+- [x] **12.c.R** · Position **494/900** · Voraussetzung: `12.c.W`.
 **Exakte Commit-Message:** `12.c.R feat(verification): Verification-Kontextprojektion vervollständigen`
 
 **Vervollständigung:** Contract-unabhängige Konfiguration nur bei explizitem independent zulassen.
 
 **Verhaltensabnahme:** Kontextvektoren prüfen exakte enthaltene/ausgeschlossene Werte. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zustand (Bundle 320):** Der optionale native
+`VerificationContract` in `assess_verification_context(..., contract=...)`
+bindet die Konfigurationsausnahme ausdrücklich an seine lokale
+Subjectdeklaration, den aufgezeichneten `check_id`-/`test_id`-Slot und seine
+aktuelle fachliche Subjectbindung in der Evidence. Nur die explizite
+`independent`-Policy dieses Contracts erlaubt andere Konfigurationshashes,
+einschließlich eines ausdrücklich unkonfigurierten Auswertungskontexts.
+Ein Evidence-Label allein, ein fremder oder fehlender Contract, ein geändertes
+Oracle/Verfahren oder ein anderer Prüfschritt gewähren keine Ausnahme.
+
+Ursprünglich gebundene Evidence kann unter dem ausdrücklich unabhängigen,
+kontextaktuellen Contract wiederverwendet werden; ihre ursprüngliche
+Konfigurationsbindung bleibt als Provenienz erhalten. Fachänderungen am
+Subject bleiben stale. Reine Contract-Auditänderungen entwerten die fachliche
+Bindung nicht; alte und aktuelle Revisionen/Vollhashes bleiben nachvollziehbar.
+Der Zweiparameteraufruf behält den W-Vertrag. Die neue Prüfung entscheidet
+weder die unabhängig aufgelöste Pflichtmenge noch Produktstand, Laufauswahl,
+Anwendbarkeit oder vollständige Verifikation und erteilt keine Freigabe.
+
+**Gezielter R-Nachweis:** 844 Verhaltenstests aus 16 Dateien auf vier parallelen
+Workern bestanden (31,67 s). Die 82 neuen Fälle prüfen insbesondere exakte
+Kontextvektoren für alle drei Subjecttypen, strukturierte Semantik und
+verschachtelte fachliche Felder, Reihenfolgen, ausdrückliche Contractbindung,
+fehlende/veraltete Bindungen, Auditänderungen, native Fehlergrenzen,
+unveränderte Eingaben und identische isolierte Core-/PYZ-Werte. Sämtliche
+bestehenden W-, Contract-, Waiver-, Schema-, Konfigurations-, Kanonisierungs-
+und Katalog-/Evidence-Regressionen der Auswahl bleiben grün. Bestehende
+Testdateien wurden nicht verändert.
+
+Die vollständige Collection-/Katalogprüfung bestätigt 13.503 Testidentitäten
+ohne Ausführung der Testkörper. Alle bisherigen 13.421 Testnummern bleiben
+unverändert; 82 neue Identitäten wurden hinten angefügt. Geprüfter Quellstand:
+`2bdd297918fe70acab0a6e28e641e649a5a02b3b5abe9b2e6c53bc096706eb48`.
+Die drei Requirement-Manifeste bleiben bis zur weiteren Integration als
+Teilnachweise gekennzeichnet.
+
+Das Result `specroad-apply_Result_182527_1019_e64bec.zip` bestätigt `12.c.W`
+auf `8eee2ba1acda7e10bd1f670eff3a7ccc574163c7` mit 4.474 bestandenen
+parallelen Tests der Gruppe 0 und sauberem Snapshot. Dieser R-Stand erhält
+Apply-Sequenz 28, Gruppe 1 mit 4.501 Tests. Erst deren erfolgreicher Commit
+bestätigt **494/900** und den nächsten Schritt `12.c.C`. Dies ist kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.c.C – Make it Clean
 

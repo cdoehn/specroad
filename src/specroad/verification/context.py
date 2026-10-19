@@ -1,4 +1,4 @@
-"""Appendix L subject projection and bound-config Evidence freshness only.
+"""Appendix L subject projection and explicit configuration-context freshness.
 
 Inputs are owned model values. This layer neither selects authoritative runs
 nor aggregates verification results, reads files or executes a test procedure.
@@ -118,12 +118,62 @@ class VerificationContextAssessment:
         raise TypeError('Context freshness is not verification success or approval')
 
 
-def assess_verification_context(context, evidence):
-    """Compare a recorded subject binding and an exact bound configuration.
+def _contract_check(data, record, contract):
+    """Bind supplied contract policy to this subject and recorded check.
+
+    This checks the explicit contract's local declaration, not the project's
+    independently resolved required-check set or authoritative run selection.
+    """
+    if type(contract) is not VerificationContract:
+        raise ModelError('typed_verification_contract_required')
+    contract = VerificationContract(contract.source_bytes, path=contract.path)
+    value = contract.data
+    subject = data['subject']
+    subject_id = subject['id']
+    kind = subject['artifact_type']
+    digest = verification_context_sha256(contract)
+    if kind == 'requirement':
+        matches = subject_id in value['subjects']
+    elif kind == 'test':
+        matches = any(slot['test_id'] == subject_id for slot in value['evidence_slots'])
+    else:
+        matches = subject_id == value['id']
+        if matches and digest != data['subject_binding']['verification_context_sha256']:
+            raise ModelError('verification_contract_subject_context_mismatch')
+    if not matches:
+        raise ModelError('verification_contract_subject_mismatch')
+    run = record['run_context']
+    if run is None:
+        raise ModelError('verification_contract_check_required', pointer='/run_context')
+    slots = [slot for slot in value['evidence_slots']
+             if slot['check_id'] == run['check_id'] and slot['test_id'] == run['test_id']]
+    if not slots or (kind == 'test' and run['test_id'] != subject_id):
+        raise ModelError('verification_contract_check_mismatch', pointer='/run_context')
+    recorded = next((item for item in record['subjects'] if item['artifact_id'] == value['id']), None)
+    reasons = []
+    if recorded is None:
+        reasons.append('contract_not_recorded')
+    elif recorded['verification_context_sha256'] != digest:
+        reasons.append('contract_context_changed')
+    if record['configuration_policy'] == 'independent' and value['configuration_policy'] != 'independent':
+        reasons.append('independent_contract_required')
+    independent = value['configuration_policy'] == 'independent' and not reasons
+    return {'contract': {'artifact_id': value['id'], 'revision': value['revision'],
+                'artifact_sha256': canonical_json_sha256(value),
+                'source_sha256': sha256(contract.source_bytes).hexdigest(),
+                'verification_context_sha256': digest,
+                'configuration_policy': value['configuration_policy']},
+            'recorded_contract': recorded, 'contract_check': slots[0],
+            'contract_configuration_independent': independent}, reasons
+
+
+def assess_verification_context(context, evidence, *, contract=None):
+    """Compare subject freshness and exact or explicitly independent configuration.
 
     Evidence's old full hash and revision remain audit data. Its result and run
-    context are retained but do not decide freshness. Independent reuse needs
-    the separately implemented contract gate; a label cannot waive this check.
+    state are retained but do not decide subject freshness. Independent reuse
+    requires a supplied, matching, context-current contract and recorded check.
+    The two-argument bound-config path retains its existing result contract.
     """
     if type(context) is not VerificationContext:
         raise ModelError('typed_verification_context_required')
@@ -133,7 +183,7 @@ def assess_verification_context(context, evidence):
     record = observed.data
     if 'configuration_hash' not in record or 'configuration_policy' not in record:
         raise ModelError('evidence_configuration_binding_required', path=evidence.path)
-    if record['configuration_policy'] != 'bound':
+    if contract is None and record['configuration_policy'] != 'bound':
         raise ModelError('independent_verification_context_not_supported', path=evidence.path)
     data = context.data
     current = data['subject_binding']
@@ -144,7 +194,12 @@ def assess_verification_context(context, evidence):
         reasons.append('subject_not_recorded')
     elif recorded['verification_context_sha256'] != current['verification_context_sha256']:
         reasons.append('subject_context_changed')
-    if record['configuration_hash'] != data['configuration_hash']:
+    contract_report = {}
+    if contract is not None:
+        contract_report, contract_reasons = _contract_check(data, record, contract)
+        reasons.extend(contract_reasons)
+    independent = contract_report.get('contract_configuration_independent', False)
+    if not independent and record['configuration_hash'] != data['configuration_hash']:
         reasons.append('configuration_changed')
     report = {'format_version': 'verification-context-assessment-v1',
         'hash_algorithm': CONTEXT_HASH_ALGORITHM, 'context_binding_sha256': context.sha256,
@@ -158,7 +213,7 @@ def assess_verification_context(context, evidence):
         'reasons': reasons, 'full_verification_evaluated': False,
         'configuration_applicability_evaluated': False, 'run_selection_evaluated': False,
         'release_readiness_evaluated': False, 'test_code_executed': False,
-        'write_authorized': False, 'approval_granted': False}
+        'write_authorized': False, 'approval_granted': False, **contract_report}
     result = object.__new__(VerificationContextAssessment)
     object.__setattr__(result, '_encoded', canonical_json_bytes(report))
     return result

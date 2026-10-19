@@ -7,20 +7,22 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "verification-context-independent"
   ],
   "preconditions": [
-    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null."
+    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null.",
+    "For independent reuse, an explicitly supplied native contract must declare this subject/check and be recorded with its current semantic context hash."
   ],
   "steps": [
     "Project the Appendix L subject fields and calculate the RFC 8785 SHA-256.",
-    "Compare recorded subject identity/context and exact bound configuration without changing input bytes.",
+    "Compare recorded subject identity/context and exact configuration; grant independence only from the matching, context-current explicit contract and recorded check/test.",
     "Observe freshness independently of Evidence result, product/run selection and release readiness."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`verification_context_hash-v1` DARF NICHT Workflowstatus, berechnete Ergebnisse oder reine Auditfelder enthalten.",
-    "scope": "12.c.W: subject context hashes and bound-configuration freshness for requirement, verification and test; all results are partial observations, never verification success."
+    "scope": "12.c.W/R: Appendix L subject hashes with exact requirement/verification/test vectors; explicit current independent-contract/check binding permits cross-configuration freshness, never erases Subject staleness or historical configuration provenance. Partial context observation only, not required-set/run selection or verification success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -83,10 +85,46 @@
     "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[revision]",
     "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[tags]",
     "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[updated_at]",
-    "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[verification_result]"
+    "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[verification_result]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes0]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes10]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes11]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes12]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes13]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes14]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes15]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes1]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes2]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes3]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes4]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes5]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes6]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes7]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes8]",
+    "tests/test_verification_context_right.py::test_all_structured_requirement_inputs_participate_in_context[changes9]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes0]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes1]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes2]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes3]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes4]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes5]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes6]",
+    "tests/test_verification_context_right.py::test_contract_audit_changes_retain_independence_and_historical_audit_binding[changes7]",
+    "tests/test_verification_context_right.py::test_exact_projection_vectors_keep_semantic_metadata_and_drop_only_audit[requirement]",
+    "tests/test_verification_context_right.py::test_exact_projection_vectors_keep_semantic_metadata_and_drop_only_audit[test]",
+    "tests/test_verification_context_right.py::test_exact_projection_vectors_keep_semantic_metadata_and_drop_only_audit[verification]",
+    "tests/test_verification_context_right.py::test_independent_contract_gate_has_identical_isolated_core_and_pyz_results[core]",
+    "tests/test_verification_context_right.py::test_independent_contract_gate_has_identical_isolated_core_and_pyz_results[pyz]",
+    "tests/test_verification_context_right.py::test_nested_oracle_field_names_are_semantic_not_top_level_exclusions[created_at]",
+    "tests/test_verification_context_right.py::test_nested_oracle_field_names_are_semantic_not_top_level_exclusions[maturity]",
+    "tests/test_verification_context_right.py::test_nested_oracle_field_names_are_semantic_not_top_level_exclusions[relations]",
+    "tests/test_verification_context_right.py::test_nested_oracle_field_names_are_semantic_not_top_level_exclusions[revision]",
+    "tests/test_verification_context_right.py::test_nested_oracle_field_names_are_semantic_not_top_level_exclusions[tags]",
+    "tests/test_verification_context_right.py::test_nested_oracle_field_names_are_semantic_not_top_level_exclusions[verification_result]",
+    "tests/test_verification_context_right.py::test_ordered_procedure_and_slot_values_are_not_silently_sorted",
+    "tests/test_verification_context_right.py::test_policy_observation_is_owned_and_does_not_execute_contract_or_touch_files"
   ],
   "open_items": [
-    "Explicit independent contract reuse and additional context vectors in 12.c.R.",
     "Shared structural cleanup in 12.c.C; integration with record/import/coverage/baseline consumers in their assigned plan steps."
   ]
 }
