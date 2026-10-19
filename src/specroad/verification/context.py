@@ -11,8 +11,9 @@ from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact
-from ._context_subject import (CONTEXT_HASH_ALGORITHM, owned_subject as _subject,
-                              project_subject, subject_binding, subject_context_sha256)
+from ._context_subject import owned_subject as _subject
+from ._subject_binding import (CONTEXT_HASH_ALGORITHM, project_subject,
+                              subject_binding, subject_context_sha256)
 from ._context_contract import contract_check as _contract_check
 
 

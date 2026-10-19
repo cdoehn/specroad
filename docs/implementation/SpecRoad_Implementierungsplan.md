@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 497
-last_completed_plan_commit: 12.d.R
-next_plan_commit: 12.d.C
-last_completed_numbered_bundle: 323
+implementation_plan_commits_completed: 498
+last_completed_plan_commit: 12.d.C
+next_plan_commit: 12.e.W
+last_completed_numbered_bundle: 324
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13104,7 +13104,7 @@ Teiltestnachweis; ein Vollsuite- oder Release-Erfolg ist damit nicht belegt.
 
 #### 12.d.C – Make it Clean
 
-- [ ] **12.d.C** · Position **498/900** · Voraussetzung: `12.d.R`.
+- [x] **12.d.C** · Position **498/900** · Voraussetzung: `12.d.R`.
 **Exakte Commit-Message:** `12.d.C refactor(verification): Immutable Evidence und Laufkontext bereinigen`
 
 **Bereinigung:** Evidencekonstruktor und Aktualitätsberechnung entkoppeln.
@@ -13112,6 +13112,36 @@ Teiltestnachweis; ein Vollsuite- oder Release-Erfolg ist damit nicht belegt.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand (Bundle 324):** Die unveränderten Guards für neue
+Identitätsreservierungen, native Subject-Eingaben und explizite Run-/Testbindungen
+liegen getrennt vom Aufbau des vollständigen Evidence-Records in
+`_evidence_inputs`. Die reine Appendix-L-Projektion und Subject-Hashbildung liegen
+in `_subject_binding` und werden von Konstruktion und Context-Bewertung gemeinsam
+verwendet. Die Bewertung der Aktualität bleibt in der Context-Schicht. Keine
+Messdaten, Pflichtlaufselektion oder Schreibberechtigungen kommen hinzu.
+
+Die bisherige Reihenfolge sämtlicher Eingabeprüfungen, nativer Recordvalidierung
+und nachfolgender Contract-/Testprüfung bleibt erhalten. Öffentliche Signatur,
+Fehlercodes und JSON-Pointer, Hashdefinition und kanonische Record-Bytes sind
+unverändert. Die bestehenden W-/R-Testdateien und ihre erwarteten Fachwerte
+wurden nicht angepasst; Testnummern, Fixture-Register und Requirement-Testbindungen
+bleiben ebenfalls unverändert. Die vier Requirement-Manifeste bleiben Teilnachweise;
+native Speicherung, Attachments und dauerhafte Idempotenz folgen in `12.e`.
+
+**Entwicklungsnachweis:** 1.238 bestehende gezielte Verhaltenstests in 26 betroffenen
+Dateien bestanden mit vier parallelen Workern in 35,84 Sekunden, einschließlich
+aller 54 W- und 57 R-Fälle dieses Ausschnitts. Die vollständige
+Collection-/Katalogprüfung bestätigt 13.614 Identitäten ohne Testkörperausführung.
+Geprüfter Quellstand:
+`ec22843f4e7cdfeefeb941f042b48be5d73c23d2bc37ea1abd0736b4300a7608`.
+
+Das Result `specroad-apply_Result_201926_1019_93ee5e.zip` bestätigt `12.d.R`
+auf `9f10e4c1ca20c7c8aa225acab94fab16d518bf6a` mit 4.538 bestandenen
+parallelen Tests der Gruppe 1 und sauberem Snapshot. Dieser C-Stand erhält
+Apply-Sequenz 32, Gruppe 2 mit 4.538 Tests. Erst deren erfolgreicher Commit
+bestätigt **498/900** und den nächsten Schritt `12.e.W`. Dies ist ein
+Teiltestnachweis; ein Vollsuite- oder Release-Erfolg ist damit nicht belegt.
 
 <a id="step-12-e"></a>
 ### 12.e – Manuelle und werkzeuggestützte Erfassung

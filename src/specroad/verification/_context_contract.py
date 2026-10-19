@@ -3,7 +3,8 @@ from hashlib import sha256
 
 from ..model.errors import ModelError
 from .contracts import VerificationContract
-from ._context_subject import owned_subject, subject_binding, subject_context_sha256
+from ._context_subject import owned_subject
+from ._subject_binding import subject_binding, subject_context_sha256
 
 
 def contract_check(data, record, contract):

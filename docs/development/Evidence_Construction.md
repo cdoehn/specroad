@@ -1,4 +1,4 @@
-# Immutable Evidence: Konstruktor (12.d.W/R)
+# Immutable Evidence: Konstruktor (12.d.W/R/C)
 
 `specroad.verification.prepare_evidence_record` erzeugt einen vollständigen,
 unveränderbaren `RecordArtifact` in einem Schritt mit `evidence_state=recorded`,
@@ -57,6 +57,15 @@ Inventar für die nächste Messung; eine neue Messung erhält eine neue ID.
 Identische Konstruktion mit derselben Reservierung und denselben Daten ergibt
 dieselben Bytes. Sie ist kein Nachweis eines dauerhaft gespeicherten Requests
 und erlaubt keine Änderung eines vorhandenen Nachweises.
+
+Seit `12.d.C` sind drei interne Aufgaben getrennt: `_evidence_inputs` prüft
+die Reservierung und expliziten Eingabebindungen, `evidence` baut den vollständigen
+nativen Record, und `_subject_binding` berechnet die gemeinsamen Subject-Hashes.
+Der letzte Baustein enthält nur die bestehende Appendix-L-Projektion; Konstruktor
+und Aktualitätsbewertung verwenden dieselbe Hashdefinition. Die Entscheidung
+über Aktualität bleibt ausschließlich in der Context-Bewertung. Reihenfolge der
+Eingabe- und nativen Schema-Prüfungen, Fehlercodes und JSON-Pointer sowie
+kanonische Record-Bytes bleiben unverändert.
 
 Vorhandene Evidence bleibt auch bei später bekannt gewordener Herkunft
 unverändert. Für einen ergänzten Nachweis ist eine neue ID erforderlich; der

@@ -5,34 +5,13 @@ the complete recorded/approved value at once; there is no mutable draft state.
 This is not the recording command: the writer must bind the inventory, perform
 authorization and run-history/idempotency checks, and publish atomically.
 """
-from ..configurations import EffectiveConfiguration
 from ..model.audit import actor as read_actor, new_artifact_audit
 from ..model.audit_values import UtcTimestamp
 from ..model.canonical import canonical_json_bytes
-from ..model.errors import ModelError
-from ..model.identities import ArtifactIdentity, IdentityAllocation, IdentityInventory
 from ..model.versions import SCHEMA_VERSION
-from ..storage.domain_artifact import DomainArtifact
 from ..storage.record_artifact import RecordArtifact
-from ._context_subject import owned_subject, subject_binding
-from .contracts import VerificationContract, VerificationTest
-
-
-def _reservation(allocation):
-    if type(allocation) is not IdentityAllocation:
-        raise ModelError('evidence_identity_allocation_required')
-    identity = allocation.identity
-    inventory = allocation.inventory
-    if type(identity) is not ArtifactIdentity or type(inventory) is not IdentityInventory:
-        raise ModelError('evidence_identity_allocation_required')
-    identity = ArtifactIdentity(identity.id, identity.id_scheme,
-                                identity.artifact_type, identity.id_prefix)
-    inventory = IdentityInventory(inventory.id_prefix, inventory.current_ids,
-                                  inventory.archived_ids, inventory.reserved_ids)
-    IdentityAllocation(identity, inventory)
-    if identity.artifact_type != 'evidence':
-        raise ModelError('new_evidence_identity_required')
-    return identity, inventory
+from ._evidence_inputs import construction_inputs, validate_record_binding
+from ._subject_binding import subject_binding
 
 
 def prepare_evidence_record(subjects, contract, *, allocation, configuration,
@@ -54,42 +33,9 @@ def prepare_evidence_record(subjects, contract, *, allocation, configuration,
     allocation and inputs is deterministic, but does not authorize a repeated
     write. Request replay and persistent ID claims belong to the native writer.
     """
-    identity, inventory = _reservation(allocation)
-    if type(subjects) not in (list, tuple) or not subjects:
-        raise ModelError('evidence_subjects_required', pointer='/subjects')
-    if type(contract) is not VerificationContract:
-        raise ModelError('typed_verification_contract_required')
-    contract = owned_subject(contract)
-    values = []
-    for position, subject in enumerate(subjects):
-        if type(subject) is not DomainArtifact:
-            raise ModelError('typed_evidence_requirement_required',
-                             pointer='/subjects/' + str(position))
-        value = owned_subject(subject).data
-        if value['id'] in {item['id'] for item in values}:
-            raise ModelError('duplicate_subject', pointer='/subjects/' + str(position))
-        if value['id'] not in contract.data['subjects']:
-            raise ModelError('verification_contract_subject_mismatch',
-                             pointer='/subjects/' + str(position))
-        values.append(value)
-    values.append(contract.data)
-    if test is not None:
-        if type(test) is not VerificationTest:
-            raise ModelError('typed_verification_test_required')
-        test = owned_subject(test)
-        values.append(test.data)
-    for value in values:
-        if value['id'] not in inventory.current_ids:
-            raise ModelError('evidence_subject_inventory_mismatch', pointer='/subjects')
-    if configuration is not None and type(configuration) is not EffectiveConfiguration:
-        raise ModelError('typed_verification_configuration_required')
-    if run_context is None and unbound_reason is None:
-        raise ModelError('bound_evidence_run_context_required', pointer='/run_context')
-    if unbound_reason is not None:
-        if run_context is not None:
-            raise ModelError('bound_evidence_has_unbound_reason', pointer='/unbound_reason')
-        if type(unbound_reason) is not str or not unbound_reason.strip():
-            raise ModelError('evidence_unbound_reason_required', pointer='/unbound_reason')
+    identity, values, contract, test = construction_inputs(
+        subjects, contract, allocation=allocation, configuration=configuration,
+        run_context=run_context, test=test, unbound_reason=unbound_reason)
     value = {'schema_version': SCHEMA_VERSION, 'artifact_type': 'evidence',
         'id': identity.id, 'id_scheme': identity.id_scheme, 'title': title,
         'maturity': 'approved', 'evidence_state': 'recorded',
@@ -107,17 +53,4 @@ def prepare_evidence_record(subjects, contract, *, allocation, configuration,
     # The schema owns exact run fields, timestamps, origins and producer/tool
     # validation. Serialize first to detach all caller-owned nested values.
     record = RecordArtifact(canonical_json_bytes(value), expected_type='evidence')
-    run = record.data['run_context']
-    if run is None:
-        # A supplied test is still bound to the explicit contract. With no test
-        # supplied, do not invent one or select a check from the contract slots.
-        if test is not None and not any(slot['test_id'] == test.data['id']
-                                        for slot in contract.data['evidence_slots']):
-            raise ModelError('evidence_test_binding_mismatch', pointer='/subjects')
-        return record
-    if not any(slot['check_id'] == run['check_id'] and slot['test_id'] == run['test_id']
-               for slot in contract.data['evidence_slots']):
-        raise ModelError('verification_contract_check_mismatch', pointer='/run_context')
-    if run['test_id'] != (None if test is None else test.data['id']):
-        raise ModelError('evidence_test_binding_mismatch', pointer='/run_context/test_id')
-    return record
+    return validate_record_binding(record, contract, test)

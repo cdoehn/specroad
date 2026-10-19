@@ -22,7 +22,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Evidence-Artefakt MUSS Ergebnis, Erzeugungszeit, Erzeuger, Werkzeug mit Version, Prüfumgebung, Subject-IDs mit Revision, Vollhash und `verification_context_hash-v1`, Origin, `run_context` gemäß Kapitel 10.5.2 und optionale Anhänge enthalten.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Step 12.d.W adds complete immutable recorded/approved value construction with explicit origin, producer, run metadata and computed subject/contract/test bindings. New measurements use fresh native identity allocations. Deterministic reconstruction is not a durable request-replay proof. Step 12.d.R preserves unknown run provenance as null with explicit reason, refuses inference and inconsistent check/test inputs, and demonstrates immutable update/format/identity boundaries and no approval from AI metadata."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Step 12.d.W adds complete immutable recorded/approved value construction with explicit origin, producer, run metadata and computed subject/contract/test bindings. New measurements use fresh native identity allocations. Deterministic reconstruction is not a durable request-replay proof. Step 12.d.R preserves unknown run provenance as null with explicit reason, refuses inference and inconsistent check/test inputs, and demonstrates immutable update/format/identity boundaries and no approval from AI metadata. Step 12.d.C separates construction-input validation, immutable record assembly and shared subject-hash projection from context freshness assessment; all existing W/R contracts and test identities remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -158,6 +158,6 @@
     "tests/test_evidence_construction_right.py::test_unknown_run_requires_a_real_explicit_reason[reason8]"
   ],
   "open_items": [
-    "12.d.C: structural cleanup without new behavior; 12.e: authorized atomic native publication, attachments, inventory/run-history rechecks and durable request replay. Import adapters and full verification aggregation remain with their planned steps. No full requirement or release approval claimed."
+    "12.e: authorized atomic native publication, attachments, inventory/run-history rechecks and durable request replay. Import adapters and full verification aggregation remain with their planned steps. No full requirement or release approval claimed."
   ]
 }
