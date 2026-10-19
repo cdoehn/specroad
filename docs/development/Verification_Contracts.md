@@ -1,6 +1,6 @@
 # Verification Contracts und direkte Testziele
 
-`specroad.verification` stellt die Daten-API für Planstand `12.a.R` bereit.
+`specroad.verification` stellt die Daten-API für Planstand `12.a.C` bereit.
 Sie arbeitet ausschließlich mit übergebenen Originalbytes und einem vollständigen
 supplied `TargetModel`; sie öffnet oder startet keinen referenzierten Testcode.
 
@@ -46,3 +46,9 @@ Relationen werden mit nativen maschinenlesbaren Diagnosen abgewiesen. Es gibt
 keinen Fallback über Titel, externe Testnamen oder Pfade.
 Projektweite Aggregation, Evidence-Auswertung und Transaktionen bleiben den
 folgenden Planschritten vorbehalten.
+
+Die gemeinsame interne Quellen-/Relationsprüfung liegt in `verification._sources`;
+`verification._projection` bildet Recordbindungen, Pflichtschlüssel und passive
+Ergebnisdaten als reine Funktionen. Die öffentlichen Reader und Resolver behalten
+ihre Signaturen, Prüfungsschritte, Diagnosen und Ergebnisformate. Die C-Bereinigung
+ändert keine Testmetadaten, gespeicherten Artefakte oder Evidence-Semantik.

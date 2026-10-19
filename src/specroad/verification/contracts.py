@@ -6,22 +6,14 @@ success. Project-wide required-check aggregation is a separate operation.
 """
 
 from dataclasses import dataclass
-from hashlib import sha256
 
-from ..graph.references import RelationReferences
 from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact
-
-
-def _binding(raw, path):
-    value = parse_json_object(raw, path=path)
-    return {'artifact_id': value['id'], 'artifact_type': value['artifact_type'],
-            'revision': value['revision'], 'path': path,
-            'source_sha256': sha256(raw).hexdigest(),
-            'record_sha256': canonical_json_sha256(value), 'record': value}
+from ._projection import record_binding as _binding, required_checks, resolution_data
+from ._sources import contract_sources, verified_by_edges
 
 
 @dataclass(frozen=True, init=False)
@@ -101,7 +93,7 @@ never repairs missing fields. Applying this candidate needs the normal writer.
 
 @dataclass(frozen=True, init=False)
 class VerificationContractResolution:
-    """Bound required checks for one explicit pair, never a project-wide result."""
+    """Bound required checks for one pair, never a project-wide result."""
     _encoded: bytes
 
     def __init__(self, *args, **kwargs):
@@ -119,6 +111,12 @@ class VerificationContractResolution:
         raise TypeError('Resolved required checks are not verification success or approval')
 
 
+def _resolved(data):
+    result = object.__new__(VerificationContractResolution)
+    object.__setattr__(result, '_encoded', canonical_json_bytes(data))
+    return result
+
+
 def resolve_verification_contract(model, subject_id, contract_id):
     """Resolve every declared slot for an actual verified_by edge.
 
@@ -126,29 +124,10 @@ This first explicit-contract API rejects direct test targets. It does not infer
 an implicit contract, choose a subset of slots or execute referenced code. The
 supplied model is snapshotted and native relation identity/type checks apply.
 """
-    from ..changes.target_model import TargetModel, _default_scope
-    from ..model.domain_schemas import DOMAIN_TYPES
-    from ..storage.domain_artifact import DomainArtifact
-    if type(model) is not TargetModel:
-        raise ModelError('verification_target_model_required')
-    for field, value in (('subject_id', subject_id), ('contract_id', contract_id)):
-        if type(value) is not str:
-            raise ModelError('artifact_id_required', pointer='/' + field)
-    model = model.snapshot()
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
-    index = {record.identity.id: record for record in records}
-    for field, value in (('subject_id', subject_id), ('contract_id', contract_id)):
-        if value not in index:
-            raise ModelError('verification_artifact_not_found', pointer='/' + field)
-    source, target = index[subject_id], index[contract_id]
+    model, records, index, source, target = contract_sources(
+        model, subject_id, contract_id, target_field='contract_id')
     contract = VerificationContract(target.source_bytes, path=target.path)
-    reader = DomainArtifact if source.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
-    reader(source.source_bytes, path=source.path)
-    RelationReferences(records)
-    edges = [(position, relation) for position, relation in enumerate(source.relations)
-             if relation.type == 'verified_by' and relation.target == contract_id]
-    if not edges:
-        raise ModelError('verification_relation_required', path=source.path, pointer='/relations')
+    edges = verified_by_edges(records, source, contract_id)
     value = contract.data
     if subject_id not in value['subjects']:
         raise ModelError('verification_subject_not_declared', path=target.path, pointer='/subjects')
@@ -166,28 +145,7 @@ supplied model is snapshotted and native relation identity/type checks apply.
                              pointer='/evidence_slots/' + str(position) + '/test_id')
         test = index[test_id]
         tests[test_id] = VerificationTest(test.source_bytes, path=test.path).binding
-    checks = [{'subject_artifact_id': subject_id, 'contract_id': contract_id,
-               'test_id': slot['test_id'], 'check_id': slot['check_id'],
-               'dimension': slot['dimension']} for slot in value['evidence_slots']]
-    checks.sort(key=lambda item: ((item['test_id'] or '').encode('utf-8'),
-                                  item['check_id'].encode('utf-8')))
-    descriptor = _default_scope()
-    data = {'format_version': 'verification-contract-v1', 'project_id': model.binding.project_id,
-            'scope_descriptor': descriptor,
-            'model_root_sha256': model.manifest(model.artifacts, descriptor).sha256,
-            'input_sha256': model._sources_sha256,
-            'validation_scope': 'supplied_model_explicit_subject_contract',
-            'subject': _binding(source.source_bytes, source.path), 'contract': contract.binding,
-            'relations': [{'relation_id': relation.identity.id,
-                           'pointer': '/relations/' + str(position),
-                           'record': relation.data,
-                           'record_sha256': canonical_json_sha256(relation.data)}
-                          for position, relation in edges],
-            'tests': [tests[key] for key in sorted(tests)], 'required_checks': checks,
-            'project_files_verified': False, 'full_validation_passed': False,
-            'project_required_checks_complete': False, 'configuration_applicability_evaluated': False,
-            'evidence_evaluated': False, 'test_code_executed': False,
-            'write_authorized': False, 'approval_granted': False}
-    result = object.__new__(VerificationContractResolution)
-    object.__setattr__(result, '_encoded', canonical_json_bytes(data))
-    return result
+    checks = required_checks(subject_id, contract_id, value['evidence_slots'])
+    return _resolved(resolution_data(model, source, contract.binding, edges,
+        [tests[key] for key in sorted(tests)], checks,
+        validation_scope='supplied_model_explicit_subject_contract'))

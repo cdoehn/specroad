@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 488
-last_completed_plan_commit: 12.a.R
-next_plan_commit: 12.a.C
-last_completed_numbered_bundle: 314
+implementation_plan_commits_completed: 489
+last_completed_plan_commit: 12.a.C
+next_plan_commit: 12.b.W
+last_completed_numbered_bundle: 315
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12645,10 +12645,34 @@ Release-Erfolgsnachweis.
 
 #### 12.a.C – Make it Clean
 
-- [ ] **12.a.C** · Position **489/900** · Voraussetzung: `12.a.R`.
+- [x] **12.a.C** · Position **489/900** · Voraussetzung: `12.a.R`.
 **Exakte Commit-Message:** `12.a.C refactor(verification): Verification Contracts und Testreferenzen bereinigen`
 
 **Bereinigung:** Contractauflösung und Testmetadaten als reine Datenfunktionen führen.
+
+**Vorbereiteter C-Stand (Bundle 315):** Die gemeinsame Prüfung der tatsächlichen
+Modellquellen, Subjectfelder und `verified_by`-Relationen liegt in
+`verification._sources`. `verification._projection` bildet Originalbyte- und
+Recordbindungen, Pflichtschlüssel und passive Ergebnisdaten für explizite und
+implizite Contracts gemeinsam ab. Reader, Entwurfsdefault und öffentliche
+Resolver behalten ihre Verträge; die Reihenfolge der fachlichen Prüfungen,
+Fehlerpfade, Hashbindungen und zulässigen Seiteneffekte bleibt erhalten.
+Sämtliche vorhandenen Tests und ihre festen Nummern bleiben unverändert.
+
+**Gezielter C-Nachweis:** Alle 326 ausgewählten Verhaltenstests mit vier
+parallelen Workern bestanden (9,65 s), einschließlich aller 135 W-/R-Tests
+dieses Schritts, der Record-/Relationsregression und der Katalog-/Evidence-
+Harnessverträge. Die vollständige Collection-/Katalogprüfung bestätigt
+13.153 Testidentitäten ohne Testkörperausführung. Alle 427 vorhandenen
+Testdateien und das Nummernregister sind bytegleich zum Result-Snapshot.
+Geprüfter Quellstand:
+`705f610bc8e9649e534a82402423b76ffe50e3b5bb9c92159448e0ceb34bb2ae`.
+Das Result `specroad-apply_Result_114332_1019_4eebb9.zip` bestätigt `12.a.R`
+auf `6edc76b708e587caba280db28c3139680dee63ed` mit 4.384 bestandenen
+parallelen Tests der Gruppe 1. Dieser C-Stand erhält Apply-Sequenz 23,
+Gruppe 2 mit 4.384 Tests. Erst deren erfolgreicher Commit bestätigt
+489/900 und den nächsten Schritt `12.b.W`; es entsteht kein Vollsuite-
+oder Release-Erfolgsnachweis.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
