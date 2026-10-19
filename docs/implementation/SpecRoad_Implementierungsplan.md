@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 491
-last_completed_plan_commit: 12.b.R
-next_plan_commit: 12.b.C
-last_completed_numbered_bundle: 317
+implementation_plan_commits_completed: 492
+last_completed_plan_commit: 12.b.C
+next_plan_commit: 12.c.W
+last_completed_numbered_bundle: 318
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12801,7 +12801,7 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.b.C – Make it Clean
 
-- [ ] **12.b.C** · Position **492/900** · Voraussetzung: `12.b.R`.
+- [x] **12.b.C** · Position **492/900** · Voraussetzung: `12.b.R`.
 **Exakte Commit-Message:** `12.b.C refactor(verification): Verifikationsplanung und Waiver bereinigen`
 
 **Bereinigung:** Workflowwerte, unveränderliche Bindungswerte und Ergebnisberechnung
@@ -12813,6 +12813,39 @@ Legacy-Verhalten und zulässige Seiteneffekte bleiben gleich. Keine neuen Featur
 **Regressionsabnahme:** Bestehende W-/R-Verhaltenstests und betroffene bisherige
 Verhaltenstests erneut ausführen; keine erwarteten Fachwerte dem Refactoring
 anpassen und keine Darstellungs-/Dokumentationstests ergänzen.
+
+
+**Vorbereiteter C-Zustand (Bundle 318):** `waivers` bleibt die kompatible Fassade
+der bestehenden Importpfade. `_waiver_workflow` enthält ausschließlich die
+Vorbereitung passiver Waiver und nativer bewachter Workflowupdates;
+`_waiver_assessment` berechnet ausschließlich den lesenden Waiver-Teilbericht.
+Die drei Funktionskörper wurden unverändert verschoben. Die eigenen Werte in
+`waiver_values`, die exakte Projektion in `waiver_content` und der gemeinsame
+UTC-Fristvergleich in `model.waiver_fields` bleiben unverändert.
+
+Es gibt keine neue Hash-/Zeit-/Reviewpolicy, keine veränderten Ergebnisfelder,
+Fehlergründe, Prüfprioritäten, Legacy-Ausnahmen oder Schreibbefugnisse. Die
+Katalogeinträge entfernen nur den nun vorbereiteten Strukturierungsschritt aus
+ihren offenen Punkten; vollständige Aggregation und Release-Workflows bleiben
+ausdrücklich spätere Schritte.
+
+**Gezielter C-Nachweis:** 899 bestehende Verhaltenstests aus 21 Dateien auf vier
+parallelen Workern bestanden (212,76 s). Die vollständigen W-/R-Fälle
+einschließlich Callback-Mutationen, Widerruf, UTC-/Konfigurationsbindungen,
+Legacy-Neuausstellung, nativen Writer-Gates und isolierter Core-/PYZ-Parität
+bleiben unverändert. Betroffene Schema-, Validation-, Update-, Approval-,
+Konfigurations-, Contract- und Katalog-/Evidence-Regressionen sind enthalten.
+Die vollständige Collection-/Katalogprüfung bestätigt unverändert 13.336
+Testidentitäten ohne Testkörperausführung. Keine Testdatei und keine bestehende
+Testnummer wurde geändert. Geprüfter Quellstand:
+`a14a00158cd16983e616dd1fae343596a55369efc6aec02f64fb6832711b8952`.
+
+Das Result `specroad-apply_Result_170315_1019_097b08.zip` bestätigt `12.b.R`
+auf `8e1f2b251235b8028126d8f8915c8fc19af3a4aa` mit 4.445 bestandenen
+parallelen Tests der Gruppe 1 und sauberem Snapshot. Dieser C-Stand erhält
+Apply-Sequenz 26, Gruppe 2 mit 4.445 Tests. Erst deren erfolgreicher Commit
+bestätigt **492/900** und den nächsten Schritt `12.c.W`. Dies ist kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-c"></a>
 ### 12.c – Verification-Kontextprojektion

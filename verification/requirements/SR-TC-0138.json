@@ -73,6 +73,6 @@
     "tests/test_verification_waivers_right.py::test_native_writer_publishes_workflow_and_waiver_with_one_revision_and_no_approval[task]"
   ],
   "open_items": [
-    "12.b.C preserves the W/R behavior during structural cleanup. Full verification aggregation and release workflows remain later steps."
+    "Full verification aggregation and release workflows remain later steps."
   ]
 }

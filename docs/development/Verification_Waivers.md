@@ -1,8 +1,14 @@
 # Verification waiver values
 
-The `specroad.verification` embedding API implements the `12.b.W/R` subset of
+The `specroad.verification` embedding API implements the `12.b.W/R/C` subset of
 specification 0.2.9, section 10.5.5. It reads supplied owned values; it does not
 open a project, run test code, infer the current time or grant write authority.
+
+`waivers` retains the existing service import paths. Its private workflow module
+prepares passive candidates and guarded updates; its private assessment module
+evaluates stored exceptions. Both use the owned values in `waiver_values`, the
+single projection in `waiver_content` and the shared UTC comparison in
+`model.waiver_fields`. This separation adds no policy or verification outcome.
 
 Use `waiver_content_projection` / `waiver_content_sha256` on a `DomainArtifact`
 of type capability, requirement or task. The exact versioned field list excludes
