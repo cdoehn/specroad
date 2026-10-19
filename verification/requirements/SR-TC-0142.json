@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1"
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-EVIDENCE-CONSTRUCTION-v1"
   ],
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
   ],
   "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations."
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Construct immutable Evidence from a fresh identity reservation and complete explicit measurement inputs; compare actual subject, contract, optional test and configuration bindings without publishing files."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Evidence MUSS ihren Erzeuger als `human`, `tool`, `ci`, `monitoring` oder `ai` kennzeichnen, ohne dass diese Herkunft das deterministische Prüfergebnis ersetzt.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Step 12.d.W adds complete immutable recorded/approved value construction with explicit origin, producer, run metadata and computed subject/contract/test bindings. New measurements use fresh native identity allocations. Deterministic reconstruction is not a durable request-replay proof."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -35,9 +37,23 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
-    "test_record_schemas.RecordWorkTests.test_producer_including_monitoring_is_not_an_approval"
+    "test_record_schemas.RecordWorkTests.test_producer_including_monitoring_is_not_an_approval",
+    "tests/test_evidence_construction.py::test_declared_producer_does_not_replace_result_or_audit_actor[ai]",
+    "tests/test_evidence_construction.py::test_declared_producer_does_not_replace_result_or_audit_actor[ci]",
+    "tests/test_evidence_construction.py::test_declared_producer_does_not_replace_result_or_audit_actor[human]",
+    "tests/test_evidence_construction.py::test_declared_producer_does_not_replace_result_or_audit_actor[monitoring]",
+    "tests/test_evidence_construction.py::test_declared_producer_does_not_replace_result_or_audit_actor[tool]",
+    "tests/test_evidence_construction.py::test_explicit_origin_is_data_and_does_not_change_result[generated_internal]",
+    "tests/test_evidence_construction.py::test_explicit_origin_is_data_and_does_not_change_result[imported_generic]",
+    "tests/test_evidence_construction.py::test_explicit_origin_is_data_and_does_not_change_result[imported_junit]",
+    "tests/test_evidence_construction.py::test_explicit_origin_is_data_and_does_not_change_result[imported_sarif]",
+    "tests/test_evidence_construction.py::test_explicit_origin_is_data_and_does_not_change_result[recorded_manual]",
+    "tests/test_evidence_construction.py::test_result_is_preserved_without_successful_default_or_run_execution[failed]",
+    "tests/test_evidence_construction.py::test_result_is_preserved_without_successful_default_or_run_execution[incomplete]",
+    "tests/test_evidence_construction.py::test_result_is_preserved_without_successful_default_or_run_execution[passed]",
+    "tests/test_evidence_construction.py::test_result_is_preserved_without_successful_default_or_run_execution[skipped]"
   ],
   "open_items": [
-    "Complete graph/profile/payload verification and specialized authoring/transaction services in their assigned later plan steps; no full requirement or release approval claimed."
+    "12.d.R/C: unbound context and strengthened immutable construction boundaries; 12.e: authorized atomic native publication, attachments, inventory/run-history rechecks and durable idempotent replay. Import adapters and full verification aggregation remain with their planned steps. No full requirement or release approval claimed."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 495
-last_completed_plan_commit: 12.c.C
-next_plan_commit: 12.d.W
-last_completed_numbered_bundle: 321
+implementation_plan_commits_completed: 496
+last_completed_plan_commit: 12.d.W
+next_plan_commit: 12.d.R
+last_completed_numbered_bundle: 322
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13011,12 +13011,50 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.d.W – Let it Work
 
-- [ ] **12.d.W** · Position **496/900** · Voraussetzung: `12.c.C`.
+- [x] **12.d.W** · Position **496/900** · Voraussetzung: `12.c.C`.
 **Exakte Commit-Message:** `12.d.W feat(verification): Immutable Evidence und Laufkontext aufbauen`
 
 **Umsetzung:** Nachweise mit vollständiger Origin-, Producer-, Subject- und run_context-Bindung konstruieren.
 
 **Verhaltensabnahme:** Neue Messung erhält neue ID und entsteht atomar recorded/approved.
+
+**Vorbereiteter W-Stand (Bundle 322):** Der reine
+`prepare_evidence_record`-Konstruktor liefert aus einer neuen nativen
+ID-Reservierung einen vollständigen unveränderbaren Evidence-Wert mit
+`recorded`/`approved` und Revision 1. Origin, Producer, Werkzeugversion,
+Prüfumgebung, Ergebnis, Erzeugungszeit und Auditdaten sind ausdrücklich gebunden.
+Subject-, Contract- und optionale Testbindungen enthalten die aus den tatsächlich
+übergebenen Artefaktbytes berechneten Voll- und Kontext-Hashes. Der gewählte Check,
+Test und die Contract-Konfigurationspolicy werden abgeglichen. Eine weitere
+Messung verwendet eine neue kollisionsgeprüfte ID; bereits erzeugte Werte und
+Subject-Bytes bleiben unverändert.
+
+Der W-Ausschnitt konstruiert den vollständigen Endzustand als Wert ohne
+veränderbaren Zwischenzustand. Die in `12.e` geplante autorisierte atomare
+Dateiveröffentlichung, Attachments und persistente Request-Idempotenz werden
+damit nicht vorweggenommen. Die dortige Integration muss Inventare und
+Laufkonflikte gegen das tatsächliche Modell erneut prüfen. `12.d.R` ergänzt
+unbekannte Laufkontexte und die weiteren unveränderbaren Sicherheitsgrenzen.
+Keine Herkunft erzeugt einen berechneten Erfolg oder eine menschliche Freigabe.
+Die vier Requirement-Manifeste behalten ausdrücklich ihren Teilnachweisstatus.
+
+**Entwicklungsnachweis:** 1.098 gezielte Verhaltenstests in 22 betroffenen
+Dateien, darunter 54 neue Konstruktorfälle, bestanden parallel mit vier Workern
+in 32,68 Sekunden. Geprüft sind vollständige Bindungen, getrennte neue Messungen,
+kollisionssichere Reservierungen, unveränderte Eingangsbytes, fehlende oder
+fremde Bindungen, Konfigurationspolicy, unverfälschte Ergebnisse und Herkunft
+sowie isolierte Core-/PYZ-Parität. Die bisherigen Tests bleiben bytegleich.
+Die vollständige Collection-/Katalogprüfung bestätigt 13.557 Identitäten ohne
+Testkörperausführung. Neue Nummern sind ausschließlich an die vorhandenen
+13.503 Nummern angehängt. Geprüfter Quellstand:
+`762337bd7f8c7a26dec770c3d57d457d88b1a4df39103d91789fa9abe1d006db`.
+
+Das Result `specroad-apply_Result_192154_1019_e0af0f.zip` bestätigt `12.c.C`
+auf `20cbd0c63a17f19610cb01fffdb487fbe464a5bc` mit 4.501 bestandenen
+parallelen Tests der Gruppe 2 und sauberem Snapshot. Dieser W-Stand erhält
+Apply-Sequenz 30, Gruppe 0 mit 4.519 Tests. Erst deren erfolgreicher Commit
+bestätigt **496/900** und den nächsten Schritt `12.d.R`. Dies ist ein
+Teiltestnachweis; ein Vollsuite- oder Release-Erfolg ist damit nicht belegt.
 
 #### 12.d.R – Make it Right
 
