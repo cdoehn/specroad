@@ -16,12 +16,13 @@
     "Resolve native owned model records and actual stored relation identities into per-requirement origin, implementation, verification, evidence and release categories; preserve empty categories and terminate cyclic origin paths.",
     "Bind each trace edge to its actual source array pointer, raw file hash and canonical record hash; preserve evidence subjects as original fields instead of fabricated relations.",
     "Reject unavailable verification/roadmap calculation providers with a structured unavailable diagnostic and null result. Preserve stored evidence result fields without promoting them to a computed verification/readiness result.",
-    "Observe immutable projections and original source bytes, actual no-read/no-write effects, passive rendering metadata and isolated Core/PYZ machine-contract parity."
+    "Observe immutable projections and original source bytes, actual no-read/no-write effects, passive rendering metadata and isolated Core/PYZ machine-contract parity.",
+    "11.q.C: rerun the unchanged W/R behavior tests and affected native regressions after extracting common source binding and passive projection construction. Public result/error classes, validation order, original bytes, hashes and effects remain unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Traceability-Ansicht MUSS für jedes Requirement mindestens Herkunft, Umsetzung, Verifikation, Evidence und Release-Zuordnung darstellen.",
-    "scope": "11.q.W/R: source-bound traceability from supplied native records only. All five categories refer to actual identities, relations or explicitly bound evidence subject fields. Missing M12/M13 calculations remain unavailable/null even for empty input or stored success strings. No approval, full-suite claim, full-project discovery or calculated verification/release readiness."
+    "scope": "11.q.W/R/C: source-bound traceability from supplied native records only. All five categories refer to actual identities, relations or explicitly bound evidence subject fields. Missing M12/M13 calculations remain unavailable/null even for empty input or stored success strings. No approval, full-suite claim, full-project discovery or calculated verification/release readiness. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced."
   },
   "expected_diagnostics": [
     "builtin_view_provider_required",

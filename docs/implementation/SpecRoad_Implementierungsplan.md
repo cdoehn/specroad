@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 3
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 482
-last_completed_plan_commit: 11.q.R
-next_plan_commit: 11.q.C
-last_completed_numbered_bundle: 308
+implementation_plan_commits_completed: 483
+last_completed_plan_commit: 11.q.C
+next_plan_commit: 11.r.W
+last_completed_numbered_bundle: 309
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12439,10 +12439,20 @@ Quell-, CLI- und Berechnungsintegrationen.
 
 #### 11.q.C – Make it Clean
 
-- [ ] **11.q.C** · Position **483/900** · Voraussetzung: `11.q.R`.
+- [x] **11.q.C** · Position **483/900** · Voraussetzung: `11.q.R`.
 **Exakte Commit-Message:** `11.q.C refactor(documents): Eingebaute Ansichten und Fallback bereinigen`
 
 **Bereinigung:** Eine gemeinsame Projektionsschnittstelle für die späteren berechneten Berichtsdaten anbieten.
+
+**Vorbereiteter C-Stand (Bundle 309):** Das private Modul `_builtin_projection`
+bündelt die bestehenden Record-/Quellbindungen, die explizite
+Berechnungsverfügbarkeit und die kanonische Erzeugung von Projektionswerten.
+Die bisherige Ergebnisfabrik bindet den unveränderten öffentlichen Datentyp;
+Specification-, Traceability- und Fallback-Adapter behalten ihre bisherigen
+Zulassungsprüfungen und fachlichen Algorithmen. Fehlende Provider bleiben
+unverfügbar. Öffentliche Fehlerklassen, Hashes, Originalbytes und Seiteneffekte
+bleiben erhalten. Sämtliche W/R-Testbytes und festen Testnummern bleiben
+unverändert; dieselben Verhaltenstests prüfen die bereinigte Struktur.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

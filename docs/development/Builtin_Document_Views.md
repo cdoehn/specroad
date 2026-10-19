@@ -7,6 +7,13 @@ die gelieferten Originalbytes. Es wird kein zusätzliches `view`- oder
 `document`-Artefakt angelegt. Die Schnittstellen sind reine Python-APIs; sie
 lesen keine Pfade und schreiben keine Ausgabedateien.
 
+Die internen Adapter teilen sich `_builtin_projection` für typisierte
+Recordbindungen, Berechnungsverfügbarkeit und die kanonische Erzeugung der
+Projektionswerte. Die bestehende Ergebnisfabrik bindet dabei weiterhin den
+öffentlichen Typ `BuiltinViewData`; Herkunftsprüfung und Fachberechnung bleiben
+Aufgaben des jeweiligen Adapters. Spätere berechnete Berichte können dieselbe
+Grenze verwenden. Öffentliche Typen, Fehler und W/R-Datenverträge bleiben erhalten.
+
 `specification` verlangt das einzige aktive Primärdokument. Die vorhandene
 Rollenprüfung und Include-Komposition bestimmen seine tatsächliche Identität,
 Records und geordneten Occurrences einschließlich wiederholter Includes.

@@ -18,12 +18,13 @@
     "Use original supplied partial current-schema or legacy 0.1.0 record bytes without an active primary and project deterministically by type and identity; preserve absent legacy fields and passive relations without migration.",
     "Require the actual partial scope root, native typed fields, all strong targets and exact weak-boundary declarations. Reject reversed or duplicate symmetric storage for both present and omitted targets.",
     "Revalidate supplied boundary objects, own source holders before validation and bind output hashes to the same bytes; reject case/NFC path aliases without rewriting valid original paths.",
-    "Retain supporting or retired primary records without inventing an active primary; expose unavailable calculations and unverified origin/context flags, preserve real file inventories and observe isolated Core/PYZ parity."
+    "Retain supporting or retired primary records without inventing an active primary; expose unavailable calculations and unverified origin/context flags, preserve real file inventories and observe isolated Core/PYZ parity.",
+    "11.q.C: rerun the unchanged W/R behavior tests and affected native regressions after extracting common source binding and passive projection construction. Public result/error classes, validation order, original bytes, hashes and effects remain unchanged."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "In einem partiellen Bundle oder einem vor der Migration geladenen Legacy-Projekt ohne Primärspezifikationsdokument MUSS die deterministische typbasierte Fallback-Ansicht verfügbar bleiben.",
-    "scope": "11.q.W/R: read-only type/ID fallback over explicitly supplied partial records or legacy identity/title/revision envelopes. Native partial boundary semantics and canonical symmetric storage are checked; original record fields, identity schemes, source bytes and paths stay unchanged. No fabricated primary, missing target record, origin/hash proof, full validation, migration or calculated success."
+    "scope": "11.q.W/R/C: read-only type/ID fallback over explicitly supplied partial records or legacy identity/title/revision envelopes. Native partial boundary semantics and canonical symmetric storage are checked; original record fields, identity schemes, source bytes and paths stay unchanged. No fabricated primary, missing target record, origin/hash proof, full validation, migration or calculated success. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced."
   },
   "expected_diagnostics": [
     "builtin_fallback_duplicate_path",

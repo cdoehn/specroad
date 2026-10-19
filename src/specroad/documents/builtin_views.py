@@ -6,16 +6,14 @@ on disk, current evidence, code availability or release readiness.
 from dataclasses import dataclass
 from hashlib import sha256
 
-from .._metadata import __version__, MODEL_SCHEMA_VERSION
+from .._metadata import MODEL_SCHEMA_VERSION
 from ..graph.references import RelationReferences
 from ..graph.relations import SourceRelations
 from ..graph.relation_views import RelationViews
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
-from ..model.domain_schemas import DOMAIN_TYPES
 from ..model.errors import ModelError
-from ..storage.domain_artifact import DomainArtifact
-from ..storage.record_artifact import RecordArtifact
 from ..storage.json_syntax import parse_json_object
+from ._builtin_projection import _bound_record, _computed_reports, _project, _typed_records
 from .includes import compose_document
 from .roles import assess_document_roles
 
@@ -24,13 +22,6 @@ class BuiltinViewError(ModelError):
     def __init__(self, reason, *, path=None, pointer='', exit_code=3):
         super().__init__(reason, path=path, pointer=pointer)
         self.exit_code = exit_code
-
-
-def _computed_reports():
-    """Explicit absence, never a result derived from stored success strings."""
-    return {name: {'status': 'unavailable', 'reason': 'provider_required',
-                   'required_milestone': milestone, 'result': None}
-            for name, milestone in (('verification', 'M12'), ('roadmap', 'M13'))}
 
 
 class BuiltinViewProviderError(BuiltinViewError):
@@ -69,34 +60,8 @@ class BuiltinViewData:
         raise TypeError('Built-in projections are not validation or approval')
 
 
-def _bound_record(document, value):
-    return {'artifact_id': value['id'], 'artifact_type': value['artifact_type'],
-            'revision': value['revision'], 'path': document.path,
-            'source_sha256': sha256(document.content).hexdigest(),
-            'record_sha256': canonical_json_sha256(value), 'record': value}
-
-
 def _result(data, sources):
-    result = object.__new__(BuiltinViewData)
-    object.__setattr__(result, '_encoded', canonical_json_bytes({
-        'format_version': 1, 'kind': 'builtin-view-data-v1', 'tool_version': __version__,
-        'generated': True, 'normative': False, 'project_files_verified': False,
-        'full_validation_passed': False, 'rendering_performed': False,
-        'write_authorized': False, 'approval_granted': False,
-        'verification_evaluated': False, 'release_readiness_evaluated': False,
-        'computed_reports': _computed_reports(), **data}))
-    object.__setattr__(result, '_sources', tuple(sorted(sources.items())))
-    return result
-
-
-def _typed_records(documents):
-    records = {}
-    for document in documents:
-        source = SourceRelations(document.content, path=document.path)
-        reader = DomainArtifact if source.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
-        value = reader(document.content, path=document.path).data
-        records[value['id']] = _bound_record(document, value)
-    return records
+    return _project(BuiltinViewData, data, sources)
 
 
 def _traceability(records, references):

@@ -18,7 +18,8 @@ from ..model.identity_values import ArtifactIdentity, LEGACY_SCHEME
 from ..model.paths import project_path
 from ..storage.json_syntax import parse_json_object
 from ..validation import ModelDocument
-from .builtin_views import BuiltinViewError, _bound_record, _result, _typed_records
+from ._builtin_projection import _bound_record, _typed_records
+from .builtin_views import BuiltinViewError, _result
 
 
 def _require_partial_symmetry(sources, checked):
