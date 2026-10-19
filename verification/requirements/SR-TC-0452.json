@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0452",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "verification-context-subjects"
+  ],
+  "preconditions": [
+    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null."
+  ],
+  "steps": [
+    "Project the Appendix L subject fields and calculate the RFC 8785 SHA-256.",
+    "Compare recorded subject identity/context and exact bound configuration without changing input bytes.",
+    "Observe freshness independently of Evidence result, product/run selection and release readiness."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`verification_context_hash-v1` DARF NICHT Workflowstatus, berechnete Ergebnisse oder reine Auditfelder enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.c.W: subject context hashes and bound-configuration freshness for requirement, verification and test; all results are partial observations, never verification success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/freshness",
+    "/reasons",
+    "/subject/verification_context_sha256",
+    "/configuration_hash"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,52 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes0-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes0-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes0-verification]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes1-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes1-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes1-verification]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes2-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes2-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes2-verification]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes3-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes3-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes3-verification]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes4-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes4-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes4-verification]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes5-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes5-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes5-verification]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes6-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes6-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes6-verification]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes7-requirement]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes7-test]",
+    "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes7-verification]",
+    "tests/test_verification_context.py::test_computed_and_run_fields_are_rejected_as_normative_subject_data[result-passed]",
+    "tests/test_verification_context.py::test_computed_and_run_fields_are_rejected_as_normative_subject_data[run_context-value1]",
+    "tests/test_verification_context.py::test_computed_and_run_fields_are_rejected_as_normative_subject_data[verification_result-passed]",
+    "tests/test_verification_context.py::test_json_representation_and_path_do_not_change_semantic_hash",
+    "tests/test_verification_context.py::test_projection_has_a_fixed_requirement_vector_and_rfc8785_hash",
+    "tests/test_verification_context.py::test_provenance_source_is_bound_but_capture_time_is_only_audit",
+    "tests/test_verification_context.py::test_recorded_binding_retains_audit_and_compares_actual_context[requirement]",
+    "tests/test_verification_context.py::test_recorded_binding_retains_audit_and_compares_actual_context[test]",
+    "tests/test_verification_context.py::test_recorded_binding_retains_audit_and_compares_actual_context[verification]",
+    "tests/test_verification_context.py::test_requirement_workflow_and_waiver_decisions_do_not_change_check_subject[changes0]",
+    "tests/test_verification_context.py::test_requirement_workflow_and_waiver_decisions_do_not_change_check_subject[changes1]",
+    "tests/test_verification_context.py::test_requirement_workflow_and_waiver_decisions_do_not_change_check_subject[changes2]",
+    "tests/test_verification_context.py::test_requirement_workflow_and_waiver_decisions_do_not_change_check_subject[changes3]",
+    "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[maturity]",
+    "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[revision]",
+    "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[tags]",
+    "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[updated_at]",
+    "tests/test_verification_context.py::test_semantic_extension_members_are_not_removed_by_name[verification_result]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Explicit independent contract reuse and additional context vectors in 12.c.R.",
+    "Shared structural cleanup in 12.c.C; integration with record/import/coverage/baseline consumers in their assigned plan steps."
   ]
 }

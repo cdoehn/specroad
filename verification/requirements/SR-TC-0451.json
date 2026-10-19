@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0451",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "verification-context-subjects"
+  ],
+  "preconditions": [
+    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null."
+  ],
+  "steps": [
+    "Project the Appendix L subject fields and calculate the RFC 8785 SHA-256.",
+    "Compare recorded subject identity/context and exact bound configuration without changing input bytes.",
+    "Observe freshness independently of Evidence result, product/run selection and release readiness."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Konfigurationsgebundene Evidence MUSS exakt denselben Konfigurationshash wie der ausgewertete Scope binden, sofern der Contract sie nicht als unabhängig erklärt.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.c.W: subject context hashes and bound-configuration freshness for requirement, verification and test; all results are partial observations, never verification success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/freshness",
+    "/reasons",
+    "/subject/verification_context_sha256",
+    "/configuration_hash"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,24 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_verification_context.py::test_configuration_selection_must_be_explicit_even_when_unconfigured",
+    "tests/test_verification_context.py::test_context_and_configuration_failures_are_both_observed",
+    "tests/test_verification_context.py::test_exact_configuration_difference_is_stale_even_with_identical_subject[None-linux]",
+    "tests/test_verification_context.py::test_exact_configuration_difference_is_stale_even_with_identical_subject[linux-None]",
+    "tests/test_verification_context.py::test_exact_configuration_difference_is_stale_even_with_identical_subject[linux-windows]",
+    "tests/test_verification_context.py::test_exact_configured_binding_is_current_and_is_detached_from_caller",
+    "tests/test_verification_context.py::test_identical_values_in_different_configuration_identity_do_not_reuse_binding",
+    "tests/test_verification_context.py::test_independent_evidence_label_does_not_bypass_the_future_contract_gate",
+    "tests/test_verification_context.py::test_missing_configuration_binding_is_not_inferred_from_current_context[configuration_hash]",
+    "tests/test_verification_context.py::test_missing_configuration_binding_is_not_inferred_from_current_context[configuration_policy]",
+    "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[None]",
+    "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[hash]",
+    "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[value1]",
+    "tests/test_verification_context.py::test_untyped_subject_and_configuration_inputs_are_not_trusted[{}]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Explicit independent contract reuse and additional context vectors in 12.c.R.",
+    "Shared structural cleanup in 12.c.C; integration with record/import/coverage/baseline consumers in their assigned plan steps."
   ]
 }

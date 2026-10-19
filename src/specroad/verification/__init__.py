@@ -4,6 +4,8 @@ from .contracts import (VerificationContract, VerificationContractResolution,
                         VerificationTest, prepare_verification_contract,
                         resolve_verification_contract)
 from .targets import resolve_verification_target
+from .context import (VerificationContext, VerificationContextAssessment,
+    verification_context_projection, verification_context_sha256, assess_verification_context)
 
 from .waiver_content import waiver_content_projection, waiver_content_sha256
 from .waiver_values import (VerificationWaiver, WaiverContext, HumanWaiverReview,
@@ -17,4 +19,5 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "HumanWaiverReview", "WaiverReviewVerification", "WaiverReviewVerifier",
            "WaiverAssessment", "waiver_content_projection", "waiver_content_sha256",
            "prepare_verification_waiver", "assess_verification_waiver",
-           "prepare_verification_plan_update")
+           "prepare_verification_plan_update", "VerificationContext", "VerificationContextAssessment",
+           "verification_context_projection", "verification_context_sha256", "assess_verification_context")

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 492
-last_completed_plan_commit: 12.b.C
-next_plan_commit: 12.c.W
-last_completed_numbered_bundle: 318
+implementation_plan_commits_completed: 493
+last_completed_plan_commit: 12.c.W
+next_plan_commit: 12.c.R
+last_completed_numbered_bundle: 319
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -12855,12 +12855,57 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.c.W – Let it Work
 
-- [ ] **12.c.W** · Position **493/900** · Voraussetzung: `12.b.C`.
+- [x] **12.c.W** · Position **493/900** · Voraussetzung: `12.b.C`.
 **Exakte Commit-Message:** `12.c.W feat(verification): Verification-Kontextprojektion aufbauen`
 
 **Umsetzung:** verification_context_hash-v1 aus fachlich relevanten Subject-/Konfigurationsdaten bilden.
 
 **Verhaltensabnahme:** Fachänderung macht Evidence stale, reine Audit-/Workflowänderung nicht.
+
+
+**Vorbereiteter W-Zustand (Bundle 319):** Die lesende API
+`verification_context_projection`/`verification_context_sha256` bildet
+`verification_context_hash-v1` für Requirements, Verification Contracts und
+Tests mit dem vorhandenen RFC-8785-Kanonisierer. Subject-ID, fachliche Felder,
+Oracle, Verfahren, Applicability, Extensions und Quellenbindung bleiben
+enthalten. Die Audit-/Workflowfelder aus Anhang L sowie Waiverentscheidungen,
+Tags und Relationen entfallen; in Provenienzobjekten entfällt der reine
+Erfassungszeitpunkt. Fachliche Schlüssel in verschachtelten Extensions und
+Oracles werden nicht rekursiv nach Namen entfernt.
+
+`VerificationContext` hält tatsächliche Subjectbytes, Revision und Vollhash
+als Auditbezug sowie den getrennten Kontexthash und die ausdrücklich gewählte
+effektive Konfigurationsbindung fest. `assess_verification_context` vergleicht
+für genau ein Subject die gespeicherte Evidencebindung und liefert einen
+lesenden `current`/`stale`-Teilbericht mit Gründen. Fachänderung oder andere
+gebundene Konfiguration ist stale; ausgeschlossene Audit-/Workflowänderung
+allein nicht. Evidencebytes, Ergebnis und Laufkontext bleiben unverändert.
+
+Der W-Ausschnitt verwendet die explizite `bound`-Policy. Der native
+Evidencevertrag weist fehlende oder `null`-Hashes dabei weiterhin ab.
+Unkonfigurierte aktuelle Kontexte können gebundene Evidence nicht übernehmen.
+Eine selbstdeklarierte `independent`-Evidence wird bis zum ausdrücklichen
+Contract-Gate in 12.c.R abgewiesen. Keine implizite Produkt-/Laufauswahl, keine
+vollständige Ergebnisaggregation, keine Testausführung und keine Schreib- oder
+Releasefreigabe werden aus fachlicher Aktualität abgeleitet.
+
+**Gezielter W-Nachweis:** 762 Verhaltenstests aus 15 Dateien auf vier parallelen
+Workern bestanden (29,65 s). Enthalten sind 85 neue
+Kontextfälle sowie bestehende Contract-, Waiver-, Schema-, Konfigurations-,
+Kanonisierungs- und Katalog-/Evidence-Regressionen. Die neuen Fälle prüfen
+auch native Ablehnungen, stabile Vollhash-/Kontexthashtrennung, unveränderte
+Eingaben, ausbleibende Datei-/Prozesszugriffe und identische Core-/PYZ-Werte.
+Die vollständige Collection-/Katalogprüfung bestätigt 13.421 Testidentitäten
+ohne Testkörperausführung. Alle bisherigen Tests und ihre 13.336 Nummern
+bleiben erhalten; 85 neue Identitäten wurden hinten angefügt. Geprüfter
+Quellstand: `66c74653729ef61c7cc6592cbadd580f6ce3473bb3db13f65d5cf1936f8deab5`.
+
+Das Result `specroad-apply_Result_175454_1019_402c31.zip` bestätigt `12.b.C`
+auf `ace77ea6c62abdf5e55f823dea7b4235475d0a96` mit 4.445 bestandenen
+parallelen Tests der Gruppe 2 und sauberem Snapshot. Dieser W-Stand erhält
+Apply-Sequenz 27, Gruppe 0 mit 4.474 Tests. Erst deren erfolgreicher Commit
+bestätigt **493/900** und den nächsten Schritt `12.c.R`. Dies ist kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.c.R – Make it Right
 
