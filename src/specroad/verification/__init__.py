@@ -12,6 +12,7 @@ from .junit import JUnitDocument, JUnitLimits, XmlImportError
 from .junit_mapping import (JUnitMapping, JUnitCandidates, JUnitMappingError,
     map_junit_candidates, JUnitMappingRules, JUnitExternalIdentifiers,
     JUnitMappingAnalysis, analyze_junit_candidates)
+from .imports import EvidenceImportPreparation, prepare_junit_import
 from .context import (VerificationContext, VerificationContextAssessment,
     verification_context_projection, verification_context_sha256, assess_verification_context)
 
@@ -34,4 +35,5 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "JUnitMappingRules", "JUnitExternalIdentifiers", "JUnitMappingAnalysis",
            "analyze_junit_candidates", "EvidenceExchange", "ExchangeCandidates",
            "EvidenceImportError", "evidence_exchange_schema", "map_generic_candidates",
-           "SarifDocument", "SarifMapping", "SarifCandidates", "map_sarif_candidates")
+           "SarifDocument", "SarifMapping", "SarifCandidates", "map_sarif_candidates",
+           "EvidenceImportPreparation", "prepare_junit_import")

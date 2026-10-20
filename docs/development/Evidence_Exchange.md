@@ -4,8 +4,9 @@
 `SarifMapping` und `map_sarif_candidates` im Core und in der PYZ. Die Aufrufer
 übergeben unveränderliche JSON-Bytes und native Requirement-, Test- oder
 Verification-Werte. Die APIs lesen keine Dateien und führen keine Programme aus.
-CLI, Importpolicy und persistente Veröffentlichung folgen in den vorgesehenen
-Importschritten. Die Rückgabe ist kein Evidence-Datensatz.
+Die JUnit-Vorbereitung aus `12.i.W` ergänzt unten eine ausdrückliche Importpolicy.
+CLI, formatübergreifende Vorbereitung und persistente Veröffentlichung folgen
+in den vorgesehenen Importschritten. Die Rückgabe ist kein Evidence-Datensatz.
 
 ## SpecRoad Evidence Exchange v1
 
@@ -162,3 +163,43 @@ Hashbindungen sowie Diagnosen bleiben gleich. Die Adapter behalten ihre
 bisherigen Parser, Zuordnungen und Größenbegrenzungen; insbesondere erhält
 JUnit dadurch keine zusätzlichen Generic-/SARIF-Grenzen. Die Bereinigung
 ändert weder Importpolicy noch Laufprüfung oder Veröffentlichung.
+
+## Originalbindung und erste Importpolicy aus 12.i.W
+
+`prepare_junit_import(document, mapping, targets=[...], policy=..., tool=...,
+external_identifiers=...)` verwendet die vorhandene vollständige JUnit-Analyse.
+`document`, `mapping` und der optionale Sidecar sind die bisherigen unveränderlichen
+Core-Werte. `tool` enthält ausdrücklich deklarierte native Strings `name` und
+`version`; eine lokale Installation oder Umgebung wird dafür nicht abgefragt.
+
+`policy` muss genau einen dieser Werte enthalten:
+
+- `abort_import`: Jede Mapping-Diagnose führt zu `decision="aborted"` und einer
+  leeren Kandidatenliste. Auch sonst gültige Kandidaten werden zurückgehalten.
+- `skip_invalid_with_diagnostic`: Unabhängig gültige Kandidaten bleiben erhalten,
+  sämtliche Diagnosen und ungültigen Testcase-Indizes werden ausgewiesen.
+
+`rejected_testcase_indexes`, `withheld_testcase_indexes` und die übernommenen
+Kandidaten erklären zusammen jede beobachtete Testcase-Position. Diagnosen ohne
+Testcase, etwa eine unbenutzte Mappingzeile mit unbekanntem Ziel, bleiben ebenfalls
+sichtbar. Ein fehlgeschlagener Test ist eine gültige fehlgeschlagene Messung und
+wird nicht allein wegen seines Ergebnisses übersprungen. Ein leerer Bericht
+erzeugt keine erfolgreiche Messung. Ungültige globale Eingaben, beispielsweise
+defekte XML-/Mappingbytes oder ein falsch gebundener Sidecar, bleiben unter beiden
+Policies Fehler; sie werden nicht still in einen leeren Import umgewandelt.
+
+Die Rückgabe `EvidenceImportPreparation` enthält eine versionierte Provenienz
+mit Importformat, Parserprofil, Werkzeugdeklaration, tatsächlicher
+SpecRoad-Importerversion und den Größen und Rohhashes von Quelle, Mapping und
+gegebenenfalls Sidecar. Mapping und Sidecar tragen zusätzlich ihre kanonischen
+Hashes und Formatversionen. Jede übernommene Messung bindet den kanonischen
+Hash dieser Provenienz. `original_files` liefert eine abgetrennte Rollenabbildung
+auf die unveränderten Bytes; diese Rollen sind keine Dateipfade.
+
+`decision="prepared"` bedeutet nur, dass die ausdrückliche Policy auf die
+beobachteten Mapping-Ergebnisse angewendet wurde. Laufbeglaubigung, Projekt- und
+Contract-Slot-Prüfung, Freigabe und Veröffentlichung sind damit nicht erteilt.
+Die API liest keine Dateien, Umgebungsvariablen oder Uhrzeit und führt keine
+Programme aus. Die bestehende Grenze für expandierte Kandidaten gilt auch für
+die Vorbereitung. Die Generic-/SARIF-Erweiterung und weitere Robustheit folgen
+in `12.i.R`, die unveränderte Strukturtrennung in `12.i.C`.

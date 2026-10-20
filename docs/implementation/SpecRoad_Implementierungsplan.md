@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 510
-last_completed_plan_commit: 12.h.C
-next_plan_commit: 12.i.W
-last_completed_numbered_bundle: 336
+implementation_plan_commits_completed: 511
+last_completed_plan_commit: 12.i.W
+next_plan_commit: 12.i.R
+last_completed_numbered_bundle: 337
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13766,12 +13766,61 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.i.W – Let it Work
 
-- [ ] **12.i.W** · Position **511/900** · Voraussetzung: `12.h.C`.
+- [x] **12.i.W** · Position **511/900** · Voraussetzung: `12.h.C`.
 **Exakte Commit-Message:** `12.i.W feat(verification): Originalbindung und Importpolicy aufbauen`
 
 **Umsetzung:** Originalbytes, Hash, Mapping und Parserprofil erhalten; abort_import versus skip_invalid_with_diagnostic explizit umsetzen.
 
 **Verhaltensabnahme:** Gültige Kandidaten tragen einen nachvollziehbaren Originalnachweis.
+
+**Bundle 337, vorbereiteter W-Nachweis:** Grundlage ist das vollständig geprüfte
+Result `specroad-apply_Result_105638_1020_40edc4.zip`, SHA-256
+`43949924c9a695b59fdf7e9edb2534c397d04305d2ea2aa025cd0b89839b8814`.
+Es bestätigt den C-Commit
+`f8d4adbfc490a5f3a410fcbc37ba0cb708eb78fc` mit sauberem Apply-Zustand:
+**4.796/4.796** Tests der Gruppe **2**, Commitsequenz **44**, parallel mit
+**4 Workern** in **1.190,49 s**, bei **14.390** katalogisierten Tests.
+
+Der erste nutzbare Ausschnitt bereitet JUnit-Importe passiv vor. Er erhält die
+unveränderten XML-, Mapping- und gegebenenfalls ausgewählten Sidecarbytes,
+bindet deren Bytehashes und Größen sowie getrennte kanonische Mapping- und
+Sidecarhashes. Die versionierte Provenienz enthält Importformat, Parserprofil,
+ausdrücklich angegebenen Reportertoolnamen und dessen Version sowie die
+tatsächliche SpecRoad-Importerversion. Jeder übernommene Kandidat trägt ihren
+Hash; die Originaldateien sind als abgetrennte Rollen-zu-Bytes-Zuordnung verfügbar.
+
+Die ausdrücklich gewählte Policy `abort_import` hält bei Mapping-Diagnosen
+sämtliche Kandidaten zurück. `skip_invalid_with_diagnostic` erhält ausschließlich
+unabhängig gültige Kandidaten und alle Diagnosen. Angenommene, verworfene und
+wegen Abbruchs zurückgehaltene Vorkommen erklären gemeinsam jedes Testcase.
+Fehlgeschlagene oder übersprungene Tests bleiben gültige Messungen. Ungültige
+globale Eingaben und fehlende oder fremd gebundene Sidecars bleiben unter beiden
+Policies Fehler; sie werden nicht als leere erfolgreiche Importe behandelt.
+Die Vorbereitung erzeugt keine Dateien, Evidence-Datensätze oder Lauf-,
+Projekt-, Contractslot- oder Veröffentlichungsberechtigung.
+`SR-TC-0339` und `SR-TC-0535` werden mit diesem begrenzten JUnit-Nachweis
+**partial**. Generic/SARIF und die vollständige Robustheit folgen in `12.i.R`,
+die Trennung von Policyentscheidung und Parserdiagnosen in `12.i.C`;
+Persistenz, Idempotenz und CLI bleiben ihren anschließenden Schritten zugeordnet.
+
+**Gezielter Dev-Nachweis:** **1.020/1.020** Verhaltenstests parallel mit
+**4 Workern** in **11,52 s**, darunter **68** neue Fälle für Originalbindung,
+Policyentscheidung, vollständige Vorkommenszuordnung, manipulierte Eingabecaches,
+fehlende Pflichtangaben, unveränderte Projektbytes und Modi, Ausgabegrenzen
+sowie isolierten Core/PYZ-Betrieb. Die übrigen **952** Fälle prüfen die betroffenen
+JUnit-, Generic-, SARIF-, XML-, Contract-, Evidence-, Sicherheits- und
+Core/PYZ-Verträge; alle **443** bisherigen Testdateien bleiben bytegleich.
+Die vollständige Katalog-Collection bestätigt **14.458** Tests ohne Ausführung
+von Testbodies. Die bisherigen **14.390** Testnummern bleiben unverändert;
+die **68** neuen Identitäten werden sortiert angehängt.
+Geprüfte Source-SHA-256:
+`d3069b87965b3dc690f3110eb78be3ed0d90f914d98a703c887e1372f4d5d555`.
+
+Der Entrypoint stellt ausschließlich diesen W-Zustand her und verlangt in Apply
+Gruppe **0**, Commitsequenz **45**, mit **4.820** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**511/900**, nächster Schritt `12.i.R`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.i.R – Make it Right
 
