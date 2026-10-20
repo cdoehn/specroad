@@ -55,6 +55,10 @@ der [OASIS-Spezifikation 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/o
 Ein Schweregrad bezeichnet keinen erfolgreichen Test. Ein erfolgreicher
 Werkzeugaufruf allein belegt ebenfalls kein bestandenes Produktkriterium.
 
+Die R-Prüfungen berücksichtigen die Referenzverträge für Regeln und
+Invocations (§§3.27.5–3.27.7, 3.48.6) sowie Baseline und Suppression
+(§§3.27.23–3.27.24) derselben OASIS-Spezifikation.
+
 `sarif-mapping-v1` ist eine geschlossene JSON-Zuordnung mit:
 
 - `format_version`, `source_sha256` für die exakten SARIF-Originalbytes,
@@ -107,3 +111,40 @@ Weder boolesche Auswertung noch direkte Konstruktion eines Kandidatenobjekts
 stellt Verifikations- oder Schreibautorität bereit. Attachments,
 Produktlauf, Konfiguration und Veröffentlichung erfordern spätere explizite
 Prüfungen; lokale Konfigurationen und Zugangsdaten werden nicht gesammelt.
+
+## Ergänzungen aus 12.h.R
+
+Die unveränderten W-Formate erhalten zusätzliche Prüfungen für ausgewählte
+SARIF-Daten. Regel-ID und Index müssen auch dann zueinander passen, wenn keine
+Regel importiert wird. Eine alleinige Regel-ID darf nicht mehrdeutig auf mehrere
+Deskriptoren zeigen. Der ausdrücklich gewählte Invocation-Index darf keinen
+anderen, im Result referenzierten Aufruf ersetzen. Fehlt die Referenz, gilt bei
+genau einer Invocation deren SARIF-Standardzuordnung; diese Prüfung fügt keine
+ungewählten Anhänge hinzu. Ein bekannter fehlgeschlagener Aufruf stützt kein
+`passed`, auch wenn er nicht als Anhang gewählt wurde.
+
+`baselineState=absent` liefert keine Messung des aktuellen Laufs. Das
+konservative Importprofil lehnt außerdem ein `passed` zusammen mit einer
+nichtleeren Suppressionsliste ab. Unterdrückte Fehler bleiben Fehler; eine
+Suppression erteilt keine SpecRoad-Ausnahme oder Freigabe.
+
+Bekannte Metadatenfelder ausgewählter Results, Driver, Regeln und Artifacts
+werden typgeprüft. Artifact-Indizes und vorhandene URI-/Basisangaben müssen
+widerspruchsfrei sein. Indizes werden vor Zahlenkanonisierung aus den
+Originalbytes geprüft; `0.0`, boolesche Werte und Strings werden nicht als
+Ganzzahlindizes umgedeutet. URIs bleiben passive Zeichenketten. Ungewählte
+Fremdeinträge erzeugen weiterhin keine Messungen; die API behauptet keine
+vollständige SARIF-Schemavalidierung. Unbekannte Eigenschaften bleiben opaque
+Daten. Die spätere Importpolicy wird hier nicht vorweggenommen.
+
+Generic-Producer-ID, Werkzeugname/-version, Produkt-ID und Ergebnis dürfen
+nicht ausschließlich aus Leerraum bestehen. Andere ausdrücklich deklarierte
+Zeichen werden unverändert erhalten. Für übergebene native Ziele gelten
+höchstens 10.000 Einträge und zusammen 16 MiB Originalbytes. Ein zu großes
+Ziel wird vor erneuter nativer Interpretation zurückgewiesen.
+
+Fehler im eingebetteten Exchange tragen den Pointer-Präfix `/exchange`;
+Fehler an den separat übergebenen Zielen bleiben unter `/targets`.
+Auch ein Fehler nach gültigen Messungen liefert keinen teilweisen
+Evidence-Satz und verändert keine Projektdateien. Die bestehenden
+Autoritätsgrenzen, W-Erfolgsausgaben und Statusflags bleiben erhalten.

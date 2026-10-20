@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 508
-last_completed_plan_commit: 12.h.W
-next_plan_commit: 12.h.R
-last_completed_numbered_bundle: 334
+implementation_plan_commits_completed: 509
+last_completed_plan_commit: 12.h.R
+next_plan_commit: 12.h.C
+last_completed_numbered_bundle: 335
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13666,12 +13666,50 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.h.R – Make it Right
 
-- [ ] **12.h.R** · Position **509/900** · Voraussetzung: `12.h.W`.
+- [x] **12.h.R** · Position **509/900** · Voraussetzung: `12.h.W`.
 **Exakte Commit-Message:** `12.h.R feat(verification): SARIF- und generischer Evidenceimport vervollständigen`
 
 **Vervollständigung:** Fremde SARIF-Einträge nicht automatisch zu bestandener Evidence erklären.
 
 **Verhaltensabnahme:** Schema-/Mappingfehler verändern keine fachlichen Ressourcen. Die W-Nachweise bleiben zusätzlich grün.
+
+**Bundle 335, vorbereiteter R-Nachweis:** Grundlage ist das vollständig geprüfte
+Result `specroad-apply_Result_095140_1020_be8407.zip`, SHA-256
+`08d21d167a3d257f14991d2c6f2271374a2ac21fa40777b14f08e1a818579935`.
+Es bestätigt den W-Commit
+`9d18e14c65cd1a0ba7a23f99a84dd0069d0dfcdf` mit sauberem Apply-Zustand:
+**4.765/4.765** Tests der Gruppe **0**, Commitsequenz **42**, parallel mit
+**4 Workern** in **1.157,28 s**, bei **14.293** katalogisierten Tests.
+
+Dieser R-Zustand prüft ausgewählte SARIF-Metadaten und ihre Regel-, Invocation-
+und Artefaktreferenzen. Nur in der Baseline vorhandene Ergebnisse werden
+abgewiesen; unterdrückte Ergebnisse oder fehlgeschlagene zugeordnete Invocations
+können keine bestandene Evidence begründen. Ein explizites Mapping darf eine
+bekannte Invocation-Zuordnung nicht austauschen. Referenznummern werden aus den
+Originalbytes geprüft, damit die Kanonisierung einen ungültigen Index wie `0.0`
+nicht in einen gültigen ganzzahligen Index umdeutet. Nicht zugeordnete Fremddaten
+bleiben ohne Kandidatenwirkung. Generische Ziele sind auf **10.000** Einträge und
+zusammen **16 MiB** Originalbytes begrenzt; fehlerhafte eingebettete Exchange-Daten
+behalten ihren korrekten Diagnosepfad. Bestehende native Schemadiagnosen,
+öffentliche Signaturen und erfolgreiche Kandidatenwerte bleiben erhalten.
+Fehler verändern keine fachlichen Ressourcen und lösen keine externen Zugriffe
+aus. Gemeinsame Kandidatenstruktur, Importpolicy, CLI und Veröffentlichung bleiben
+den vorgesehenen Folgeschritten zugeordnet.
+
+**Gezielter Dev-Nachweis:** **952/952** Verhaltenstests parallel mit **4 Workern**
+in **10,40 s**, einschließlich **97** neuer R-Nachweise und aller bisherigen
+Generic-/SARIF-W-Nachweise sowie der betroffenen JUnit-, Contract-, Evidence-,
+Sicherheits- und Core/PYZ-Regressionen. Die vollständige Katalog-Collection
+bestätigt **14.390** Tests ohne Ausführung von Testbodies. Die bestehenden
+**14.293** Testnummern bleiben unverändert; die neuen Nummern werden angehängt.
+Geprüfte Source-SHA-256:
+`cdd378053268dfb3e91c985d9047c7f1d30440544ad49926e27e106bf19cfc3d`.
+
+Der Entrypoint stellt ausschließlich diesen R-Zustand her und verlangt in Apply
+Gruppe **1**, Commitsequenz **43**, mit **4.797** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**509/900**, nächster Schritt `12.h.C`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.h.C – Make it Clean
 

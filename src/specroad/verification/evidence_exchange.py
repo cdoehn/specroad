@@ -14,9 +14,11 @@ from ..model.domain_fields import reference_schema
 from ..model.errors import ModelError
 from ..model.paths import project_path
 from ..model.record_schemas import record_schema
+from ..storage.domain_artifact import DomainArtifact
 from ..storage.json_syntax import parse_json_object
 from ._context_subject import owned_subject
 from ._subject_binding import subject_binding
+from .contracts import VerificationContract, VerificationTest
 
 
 class EvidenceImportError(ModelError):
@@ -186,8 +188,18 @@ class ExchangeCandidates:
 def _targets(targets):
     if type(targets) not in (list, tuple):
         raise EvidenceImportError('typed_import_targets_required', pointer='/targets')
+    if len(targets) > 10000:
+        raise EvidenceImportError('evidence_import_target_limit', pointer='/targets')
     bindings, subjects = {}, {}
+    total_bytes = 0
     for number, target in enumerate(targets):
+        if type(target) not in (DomainArtifact, VerificationContract, VerificationTest):
+            raise EvidenceImportError('typed_verification_subject_required',
+                                      pointer=f'/targets/{number}')
+        if type(target.source_bytes) is bytes:
+            total_bytes += len(target.source_bytes)
+            if total_bytes > 16 * 1024 * 1024:
+                raise EvidenceImportError('evidence_import_target_limit', pointer=f'/targets/{number}')
         try:
             owned = owned_subject(target)
         except ModelError as error:

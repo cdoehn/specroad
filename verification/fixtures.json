@@ -114,7 +114,9 @@
     "verification-context-independent",
     "verification-context-subjects",
     "SR-FIX-EVIDENCE-EXCHANGE-v1",
-    "SR-FIX-SARIF-IMPORT-v1"
+    "SR-FIX-SARIF-IMPORT-v1",
+    "SR-FIX-EVIDENCE-EXCHANGE-RIGHT-v1",
+    "SR-FIX-SARIF-IMPORT-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -568,6 +570,14 @@
     "SR-FIX-SARIF-IMPORT-v1": {
       "provider": "tests/test_sarif_import.py:sarif_case",
       "kind": "Synthetic SARIF 2.1.0 inline runs, source-hash-bound explicit result/rule/invocation/artifact mappings and a declared generic Exchange companion. Native identities, sparse selection, no severity-to-pass inference, safe diagnostics and Core/PYZ parity. No complete SARIF validation, import policy or persistent Evidence."
+    },
+    "SR-FIX-EVIDENCE-EXCHANGE-RIGHT-v1": {
+      "provider": "tests/test_evidence_exchange_right.py:exchange_case",
+      "kind": "Owned Generic declarations, blank/opaque required values, hostile environment metadata, real native project byte/mode snapshots, source revalidation, bounded native target lists and embedded Exchange diagnostic coordinates. No project writes or external run authority."
+    },
+    "SR-FIX-SARIF-IMPORT-RIGHT-v1": {
+      "provider": "tests/test_sarif_import_right.py:sarif_case",
+      "kind": "SARIF inline references with omitted imports, ambiguous rules, conflicting invocation indices, failed linked calls, baseline-only and suppressed results, typed metadata and artifact references. Real project byte/mode preservation and isolated Core/PYZ error parity; no imported policy or full-schema claim."
     }
   }
 }

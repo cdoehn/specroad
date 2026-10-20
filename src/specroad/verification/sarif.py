@@ -12,6 +12,7 @@ from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..storage.json_syntax import parse_json_object
 from .evidence_exchange import (EvidenceExchange, EvidenceImportError, _read_json,
     _unique, _validate, _encode_candidates, evidence_exchange_schema, map_generic_candidates)
+from ._sarif_validation import validate_selected
 
 
 @dataclass(frozen=True, init=False)
@@ -72,7 +73,10 @@ class SarifMapping:
                 'rule_index': nullable_index, 'invocation_index': nullable_index,
                 'artifact_indices': _array(index)}))}), '$defs': exchange_schema['$defs']}
         _validate(value, schema)
-        exchange = EvidenceExchange(canonical_json_bytes(value['exchange'])).data
+        try:
+            exchange = EvidenceExchange(canonical_json_bytes(value['exchange'])).data
+        except EvidenceImportError as error:
+            raise EvidenceImportError(error.reason, pointer='/exchange' + error.pointer) from error
         for number, row in enumerate(value['bindings']):
             indices = [row[k] for k in ('exchange_result_index', 'run_index', 'result_index',
                                         'rule_index', 'invocation_index')]
@@ -137,15 +141,29 @@ def map_sarif_candidates(document, mapping, *, targets):
     if type(document) is not SarifDocument or type(mapping) is not SarifMapping:
         raise EvidenceImportError('typed_sarif_inputs_required')
     document, mapping = SarifDocument(document.source_bytes), SarifMapping(mapping.source_bytes)
-    settings, parsed = mapping.data, document.data
+    # Validate index types in the owned source, before canonical JSON can
+    # collapse a fractional token such as 0.0 to the integer representation 0.
+    settings, parsed = mapping.data, _read_json(document.source_bytes)
     if settings['source_sha256'] != document.sha256:
         raise EvidenceImportError('sarif_source_binding_mismatch', pointer='/source_sha256')
-    generic = map_generic_candidates(
-        EvidenceExchange(canonical_json_bytes(settings['exchange'])), targets=targets).data
+    try:
+        generic = map_generic_candidates(
+            EvidenceExchange(canonical_json_bytes(settings['exchange'])), targets=targets).data
+    except EvidenceImportError as error:
+        prefix = '' if error.pointer.startswith('/targets') else '/exchange'
+        raise EvidenceImportError(error.reason, pointer=prefix + error.pointer) from error
     candidates, mapped = [], set()
     for row in settings['bindings']:
         run_pointer = '/runs/' + str(row['run_index'])
-        run = _select(parsed['runs'], row['run_index'], '/runs')['value']
+        if row['run_index'] >= len(parsed['runs']):
+            raise EvidenceImportError('sarif_index_out_of_range', pointer='/runs')
+        # A run may contain many large result occurrences. Hash only selected
+        # objects, not the entire run again for every mapped occurrence.
+        run = parsed['runs'][row['run_index']]
+        if ('externalPropertyFileReferences' in run
+                and type(run['externalPropertyFileReferences']) is not dict):
+            raise EvidenceImportError('invalid_sarif_external_properties',
+                                      pointer=run_pointer + '/externalPropertyFileReferences')
         if run.get('externalPropertyFileReferences'):
             raise EvidenceImportError('external_sarif_properties_unsupported', pointer=run_pointer)
         result = _select(run.get('results', []), row['result_index'], run_pointer + '/results')
@@ -186,6 +204,7 @@ def map_sarif_candidates(document, mapping, *, targets):
                 raise EvidenceImportError('sarif_failed_invocation_cannot_pass', pointer=invocation['pointer'])
         artifacts = [_select(run.get('artifacts', []), index, run_pointer + '/artifacts')
                      for index in row['artifact_indices']]
+        validate_selected(run, row, result, candidate, rule, artifacts)
         candidates.append({**candidate, 'origin': 'imported_sarif',
             'sarif': {'run_index': row['run_index'], 'result': result, 'rule': rule,
                       'invocation': invocation, 'artifacts': artifacts,
