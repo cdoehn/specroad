@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 503
-last_completed_plan_commit: 12.f.R
-next_plan_commit: 12.f.C
-last_completed_numbered_bundle: 329
+implementation_plan_commits_completed: 504
+last_completed_plan_commit: 12.f.C
+next_plan_commit: 12.g.W
+last_completed_numbered_bundle: 330
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13379,7 +13379,7 @@ nur den R-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 
 #### 12.f.C – Make it Clean
 
-- [ ] **12.f.C** · Position **504/900** · Voraussetzung: `12.f.R`.
+- [x] **12.f.C** · Position **504/900** · Voraussetzung: `12.f.R`.
 **Exakte Commit-Message:** `12.f.C refactor(verification): Sicherer XML-Kern für Evidence bereinigen`
 
 **Bereinigung:** Sicheren XML-Reader später für ReqIF in M14 wiederverwenden.
@@ -13387,6 +13387,37 @@ nur den R-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Ausschnitt:** Der gemeinsame interne XML-Reader übernimmt die typisierte
+Eingabeprüfung, Parserkonfiguration, Sicherheitsgrenzen, verbotene Konstrukte und
+positionsgebundene Fehlerübersetzung. Erst nach diesen Prüfungen gehen Ereignisse
+an den vertrauenswürdigen Formatadapter. Der JUnit-Adapter enthält ausschließlich
+seine Kernprofilregeln und Ergebniszusammenstellung; seine öffentlichen Wert-,
+Limit- und Fehlertypen bleiben erhalten.
+
+Der generische Reader hängt weder vom JUnit-Profil noch von Evidence-Veröffentlichung
+ab und ist damit für den späteren ReqIF-Adapter wiederverwendbar. ReqIF-Import,
+Mapping und globale CLI werden nicht vorweggenommen. Prüfungsreihenfolge,
+Originalbytes, Ergebnisstruktur, Fehlergründe, Exit-Codes und zulässige
+Seiteneffekte bleiben unverändert. Alle W-/R-Testdateien, Erwartungen, Fixtures
+und stabilen Testnummern bleiben bytegleich. `SR-TC-0324` und `SR-TC-0334`
+bleiben aufgrund der bereits benannten Integrationsgrenzen Teilnachweise.
+
+**Entwicklungsnachweis:** 515 gezielte Verhaltenstests in neun betroffenen
+Dateien bestanden mit vier parallelen Workern in 5.27 Sekunden. Enthalten
+sind sämtliche 109 W- und 104 R-Fälle sowie betroffene Core-/Bootstrap-,
+Sicherheits-, Contract- und Evidence-Konstruktor-Verträge. Kein vorhandener
+Test und kein Erwartungswert wurde für das Refactoring geändert.
+Die vollständige Collection-/Katalogprüfung bestätigt unverändert 13.953
+Identitäten ohne Testkörperausführung. Geprüfter Quellstand:
+`184f62e2a05eb93980c6b1b38a251d48bb9012f4eb034272e58231c58a7b3834`.
+
+Das Result `specroad-apply_Result_070306_1020_aee3a8.zip` bestätigt `12.f.R`
+auf `80fa28be9f971f6948b2d85f1e5f73ab6884e995` mit 4.651 bestandenen
+parallelen Tests der Gruppe 1 und sauberem Snapshot. Dieser C-Stand erhält
+Apply-Sequenz 38, Gruppe 2 mit 4.651 Tests. Erst deren erfolgreicher Commit
+bestätigt **504/900** und den nächsten Schritt `12.g.W`. Dieser Auftrag liefert
+nur den C-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
 
 <a id="step-12-g"></a>
 ### 12.g – JUnit-Mapping und Ergebnisklassen

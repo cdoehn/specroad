@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad evidence import junit <FILE>` MUSS das dokumentierte JUnit-XML-Kernprofil aus Testsuites, Testsuite, Testcase, Failure, Error, Skipped, System-out und System-err ohne Testausführung einlesen können.",
-    "scope": "12.f.W/R provides the bounded byte-only JUnit core reader, including DTD/entity/schema defenses, namespace/expanded-name limits and a closed encoding profile. Original source bytes, reported content, error classes and passive behavior remain bound. The attack corpus verifies rejection without external file, network or process access, including ignored subtrees and Core/PYZ distributions. This remains a partial proof, not a complete import CLI, mapping, Evidence publication or ReqIF reader proof."
+    "scope": "12.f.W/R/C provides the bounded byte-only JUnit core reader. The common internal XML event reader owns input validation, parser protection, limits and error translation; the JUnit adapter owns only its documented profile and value assembly. Unmodified W/R tests preserve original bytes, reported content, errors and passive behavior, including ignored subtrees and Core/PYZ distributions. This remains a partial proof, not a complete import CLI, mapping, Evidence publication or ReqIF reader proof."
   },
   "expected_diagnostics": [
     "SRV083"
@@ -263,7 +263,6 @@
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite><!--abc--><extension name=\"de\">f</extension></testsuite>-6]"
   ],
   "open_items": [
-    "Complete the separate 12.f.C shared XML cleanup while preserving all W/R behavior and error contracts.",
     "JUnit mapping and Evidence creation/publication, the global import CLI and ReqIF integration remain separate plan steps.",
     "This proves parser behavior only, not an authentic external test run, verification success or release approval."
   ]

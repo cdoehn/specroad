@@ -1,4 +1,4 @@
-# JUnit-XML lesen (12.f.W/R)
+# JUnit-XML lesen (12.f.W/R/C)
 
 `specroad.verification.JUnitDocument(raw)` liest ein vollständiges XML-Dokument
 aus ausdrücklich übergebenen `bytes`. Es öffnet keine Datei und startet weder
@@ -87,6 +87,16 @@ Technische Grundlage sind die [Expat-Handler und Parse-API](https://docs.python.
 Die Encoding-Grenze berücksichtigt auch
 [CPythons Unknown-Encoding-Handler](https://github.com/python/cpython/blob/3.10/Modules/pyexpat.c)
 und die [Reihenfolge der XML-Deklarationsbehandlung in Expat](https://github.com/libexpat/libexpat/blob/R_2_7_3/expat/lib/xmlparse.c).
-Die W-/R-Nachweise sind Teilnachweise zu `SR-TC-0324` und `SR-TC-0334`.
-Die gemeinsame XML-Struktur für ReqIF in 12.f.C bleibt ein getrennter
-Arbeitsschritt; auch Mapping und Veröffentlichung sind noch nicht abgedeckt.
+Die W-/R-Nachweise bleiben die unveränderten Verhaltensorakel für 12.f.C.
+Sie sind Teilnachweise zu `SR-TC-0324` und `SR-TC-0334`; Mapping, globale
+Import-CLI, Veröffentlichung und ReqIF-Anbindung sind noch nicht abgedeckt.
+
+Der interne Reader `storage/_xml_reader.py` bündelt Eingabeprüfung,
+Parserkonfiguration, Sicherheitszähler, verbotene XML-Konstrukte und
+Fehlerübersetzung. Er liefert ausschließlich sicherheitsgeprüfte Ereignisse an
+vertrauenswürdigen Adaptercode. Dessen Start-Callback erhält eine Ablehnungsfunktion
+mit der aktuellen Parserposition; der Parser selbst bleibt intern.
+`verification/junit.py` hält das JUnit-Kernprofil, den eigenen Ergebnisbaum und
+die unveränderten öffentlichen Wert-, Limit- und Fehlertypen. So kann der
+spätere ReqIF-Adapter denselben XML-Lesekern nutzen, ohne JUnit-Strukturregeln
+zu übernehmen. Dies implementiert noch keinen ReqIF-Import.
