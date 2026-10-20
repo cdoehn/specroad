@@ -26,6 +26,8 @@ from .values import ChangeOperation
 
 
 def evidence_mode(operations):
+    if any('import_context' in op for op in operations):
+        return False  # The complete import set has its own mandatory planner.
     selected = any(op['op'] == 'evidence_record' for op in operations)
     if selected and len(operations) != 1:
         raise TargetError('evidence_requires_one_isolated_operation', pointer='/operations')

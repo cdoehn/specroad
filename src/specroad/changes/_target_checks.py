@@ -25,7 +25,8 @@ def _gates(gates, policy, plan, model):
     required = set(policy.required_gate_ids)
     operations = plan.data['operations']
     if any(operation['op'] == 'evidence_record' for operation in operations):
-        required.add('extension:evidence-record')
+        required.add('extension:evidence-import' if any('import_context' in op for op in operations)
+                     else 'extension:evidence-record')
     if (len(operations) == 1 and operations[0]['op'] == 'relation_review_record'
             and operations[0]['record']['decision'] == 'rejected'):
         required.add('extension:review-withdrawal')

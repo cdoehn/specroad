@@ -29,6 +29,7 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     """
     from .baselines import baseline_mode, prepare_baseline_candidates, object_documents
     from .evidence import evidence_mode, prepare_evidence_candidates
+    from .evidence_import import import_mode, prepare_import_candidates
     if type(plan) is not ChangePlan or type(model) is not TargetModel or type(policy) is not TargetPolicy:
         raise TargetError('target_plan_model_policy_required')
     if type(strict) is not bool: raise TargetError('target_strict_boolean_required')
@@ -43,8 +44,10 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     normalize = normalization_mode(value['operations'])
     baseline = baseline_mode(value['operations'])
     evidence = evidence_mode(value['operations'])
-    if evidence:
-        folded = prepare_evidence_candidates(model, value['operations'],
+    imported = import_mode(value['operations'])
+    if evidence or imported:
+        prepare = prepare_import_candidates if imported else prepare_evidence_candidates
+        folded = prepare(model, value['operations'],
             metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
             planned_at=value['planned_at'], preconditions=value['preconditions'])
         if {c.id: c.candidate_sha256 for c in folded.candidates} != {
@@ -143,6 +146,7 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     """
     from .baselines import baseline_mode, prepare_baseline_candidates, object_documents
     from .evidence import evidence_mode, prepare_evidence_candidates
+    from .evidence_import import import_mode, prepare_import_candidates
     if type(model) is not TargetModel or type(policy) is not TargetPolicy:
         raise TargetError('target_model_policy_required')
     from .values import ChangeOperation
@@ -154,8 +158,10 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     normalize = normalization_mode(operations)
     baseline = baseline_mode(operations)
     evidence = evidence_mode(operations)
-    if evidence:
-        folded = prepare_evidence_candidates(model, operations,
+    imported = import_mode(operations)
+    if evidence or imported:
+        prepare = prepare_import_candidates if imported else prepare_evidence_candidates
+        folded = prepare(model, operations,
             metadata_policy_version=metadata_policy_version, actor=actor,
             planned_at=planned_at, preconditions=preconditions)
         target_model = model

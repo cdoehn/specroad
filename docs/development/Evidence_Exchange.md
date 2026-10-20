@@ -1,12 +1,13 @@
-# Passiver Evidence-Importkern
+# Evidence-Import: Vorbereitung und native Veröffentlichung
 
 `12.h.W` bietet `EvidenceExchange`, `map_generic_candidates`, `SarifDocument`,
 `SarifMapping` und `map_sarif_candidates` im Core und in der PYZ. Die Aufrufer
 übergeben unveränderliche JSON-Bytes und native Requirement-, Test- oder
 Verification-Werte. Die APIs lesen keine Dateien und führen keine Programme aus.
 Die Vorbereitungen aus `12.i.W/R` ergänzen für JUnit, Generic und SARIF eine
-ausdrückliche Importpolicy. CLI und persistente Veröffentlichung folgen in den
-vorgesehenen Importschritten. Die Rückgabe ist kein Evidence-Datensatz.
+ausdrückliche Importpolicy. Ihre Rückgabe ist kein Evidence-Datensatz.
+`12.j.W` ergänzt die unten beschriebene native Veröffentlichung eines Generic-Satzes;
+die CLI folgt in den vorgesehenen Importschritten.
 
 ## SpecRoad Evidence Exchange v1
 
@@ -276,3 +277,52 @@ Die Bereinigung erhält Prüfungsreihenfolge, Fehler und Diagnosepositionen,
 Grenzwerte, Provenienz- und Ergebnishashes sowie sämtliche Autoritätsflags.
 Die öffentlichen Signaturen, Ergebnisfelder und zulässigen Seiteneffekte
 bleiben gleich. Die vorhandenen W-/R-Verhaltenstests werden unverändert verwendet.
+
+## Generic-Satztransaktion aus 12.j.W
+
+`specroad.authoring.evidence_import.preview_generic_import` nimmt ein vollständiges
+natives `TargetModel` sowie `source_path`, `policy`, `evidence_ids`, `title`,
+`actor`, `planned_at`, `change_plan_id` und optional `configuration_id`, `request_id`
+und Host-Gates entgegen. Die Originaldatei muss bereits als expliziter Projektanhang
+mit Descriptor und Originalbytes im Modell vorliegen. Das gilt auch für jeden
+referenzierten Anhang. Es gibt keine implizite Suche oder Übernahme externer Dateien.
+
+Der erste Writer unterstützt nichtleere Generic-Sätze mit ausdrücklich benannten
+Verification-Zielen. Requirements und optionaler Test müssen genau zum nativen
+Contract-Slot und zum deklarierten Subject-Satz gehören. Die ausdrücklich gewählte
+Konfiguration, Laufidentität und alle Subject-Hashes werden aus den nativen
+Modelldaten erneut geprüft. Der Host liefert für jede akzeptierte Beobachtung
+eine eigene neue Evidence-ID. Der Import erzeugt selbst keine IDs.
+
+Alle akzeptierten Beobachtungen bilden zusammen einen Change Plan. Jede
+`evidence_record`-Operation trägt denselben geschlossenen `import_context`:
+`format_version="evidence-import-context-v1"`, `import_format="generic"`,
+`source_path`, `source_sha256`, `preparation_sha256` und `policy`.
+Der Vorbereitungshash bindet die vollständige Analyse einschließlich
+Zuordnungen, Diagnosen und Policyentscheidung. Der Preview gibt diese
+Vorbereitung unter `import_preparation` zurück; bei ausdrücklichem Skip sind
+Diagnosen und verworfene Quellpositionen damit direkt verfügbar. Die dortigen
+passiven Autoritätsflags bleiben unverändert. Abweichende, verkürzte,
+umgeordnete oder gemischte Operationssätze werden zurückgewiesen.
+Jeder Evidence-Datensatz referenziert das unveränderte Original als Anhang
+und bindet dessen Rohhash, die versionierte Importprovenienz, den
+Vorbereitungshash, die Policy und seinen Quellpointer in `provenance`.
+
+`import_evidence(saved_plan, model, transaction_id=..., authority=...)` verwendet
+den bestehenden nativen Writer mit Lock, Frischeprüfung, Journal und dauerhafter
+Receipt. Er veröffentlicht den vollständigen Satz in einer Transaktion.
+Subjects, ihre Revisionen und Status sowie vorhandene Anhänge bleiben unverändert.
+Ein importiertes `passed` autorisiert weder eine Requirement-Freigabe noch einen
+berechneten Gesamtverifikationserfolg.
+
+Ein Retry übergibt denselben gespeicherten Plan und dieselbe Request-ID.
+Der bestätigte native Request liefert den ursprünglichen Satz und dessen IDs
+ohne neue Planung, ID-Vergabe oder Schreibtransaktion zurück, auch in einem
+neuen Core-/PYZ-Prozess. Dies bestätigt den früheren Import, nicht seine
+heutige fachliche Aktualität. Neue IDs oder veränderte Operationsdaten
+sind kein identischer Retry.
+
+Dieses W-Profil umfasst vorhandene Projektanhänge und Generic. Eingangsreplay
+vor einer ID-Vergabe, semantische Duplikate ohne Request-ID, zusätzliche
+Fehler-/Crashfälle und die weiteren Formatwriter bleiben Folgearbeiten.
+Die Anforderungsnachweise bleiben `partial`; die API startet keine Tests oder CI.

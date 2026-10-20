@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 513
-last_completed_plan_commit: 12.i.C
-next_plan_commit: 12.j.W
-last_completed_numbered_bundle: 339
+implementation_plan_commits_completed: 514
+last_completed_plan_commit: 12.j.W
+next_plan_commit: 12.j.R
+last_completed_numbered_bundle: 340
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13957,12 +13957,71 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.j.W – Let it Work
 
-- [ ] **12.j.W** · Position **514/900** · Voraussetzung: `12.i.C`.
+- [x] **12.j.W** · Position **514/900** · Voraussetzung: `12.i.C`.
 **Exakte Commit-Message:** `12.j.W feat(verification): Evidence-Idempotenz und Transaktion aufbauen`
 
 **Umsetzung:** Gesamten Evidence-Satz in einem Change Plan publizieren und Retry an Quelle, Mapping, Laufkontext und Request binden.
 
 **Verhaltensabnahme:** Gleicher Request importiert denselben Satz ohne neue IDs.
+
+**Vorbereiteter W-Zustand – Bundle 340 (20. Oktober 2026):** Technische Basis ist
+das vollständig geprüfte Result `specroad-apply_Result_124103_1020_f166a0.zip`,
+SHA-256 `1cdaa041b6d7d7d59a15b4f99e7d81e1b2993d2094bfd8cb90ed243ee3648f78`,
+mit sauberem Apply-HEAD `8c469a236d0dcd8bd6004767bee4ae5b987b9ce7`.
+Bundle 339 bestätigt `12.i.C`: Gruppe **2**, Commitsequenz **47**,
+**4.889/4.889** parallele Apply-Teiltests mit **4 Workern** in **1.164,99 s**.
+
+Der erste nutzbare Writer übernimmt einen vollständigen nichtleeren Generic-Satz
+aus ausdrücklich gelieferten Projektanhängen. `preview_generic_import` bindet
+die Originalbytes, deren vollständige Policyvorbereitung und die expliziten
+Verification-/Check-/Test-/Subject-Zuordnungen. Jeder akzeptierten Beobachtung
+entspricht eine ausdrücklich übergebene neue Evidence-ID. Alle Operationen
+tragen denselben versionierten Importkontext und denselben Konfigurationsbezug.
+Native Slot-, Subject-, Lauf-, Konfigurations- und Anhangsprüfungen bleiben
+erforderlich. Der Preview liefert auch die vollständigen Importdiagnosen.
+
+Der gespeicherte Change Plan wird über `import_evidence` mit dem vorhandenen
+Lock-, Frischeprüfungs-, Journal- und Receipt-Pfad als eine Transaktion
+veröffentlicht. Ein bestätigter Retry desselben gespeicherten Requests liefert
+den ursprünglichen Satz ohne neue IDs, Planung oder Schreibtransaktion zurück,
+auch in getrennten Core-/PYZ-Prozessen. Jedes Evidence referenziert das
+unveränderte Original und bindet dessen Hash, Importprovenienz, Policy,
+Vorbereitungshash und Quellpointer. Subjects, Revisionen, fachliche Inhalte,
+Status und vorhandene Ressourcen bleiben unverändert. Importierte Messwerte
+erteilen keine fachliche Freigabe oder Gesamtverifikation.
+
+Die Nachweise `SR-TC-0340`, `SR-TC-0341`, `SR-TC-0448` und `SR-TC-0533`
+bleiben **partial**; `SR-TC-0534` bleibt offen. Das W-Profil unterstützt Generic,
+vorhandene gebundene Projektanhänge und den gespeicherten Request. Eingangsreplay
+vor ID-Vergabe, weitere Importformate, semantische Duplikate ohne Request-ID
+und die zusätzlichen Teilfehler-/Crashfälle bleiben Folgearbeiten.
+`12.j.R` und `12.j.C` werden in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis:** **1.233/1.233** neue und betroffene Verhaltenstests
+aus 27 Dateien parallel mit **4 Workern** in **448,35 s**: Import, Evidence,
+Change Plan/Target/Metadaten, Authoring, Idempotenz, Transaktion, Receipts
+und isolierte Core/PYZ-Regressionen.
+Geprüfte Source-SHA-256:
+`90da4d457a48f67ab8d2169b17591f07ff8df35db0bd1eb0d3b8bf2a4f0ec141`.
+Danach wurde ausschließlich die Rückgabe der bereits berechneten
+Importvorbereitung samt Diagnosen im neuen Generic-Preview ergänzt; der
+zugehörige Skip-Test prüft zusätzlich Diagnoseposition, Hashbindung und
+unabhängige Rückgabedaten. Alle übrigen Produkt-, Test-, Tool- und Katalogbytes
+sind gegenüber diesem bestandenen Regressionszustand identisch.
+Die **37/37** neuen Importtests wurden am fertigen Zustand erneut parallel
+mit **4 Workern** in **48,80 s** erfolgreich ausgeführt.
+Finale Source-SHA-256:
+`986dbd70d00825fadab5679106c521e8f9955142caac8971e0ab591a218a1532`.
+
+Die vollständige Katalog-Collection bestätigt **14.704** Tests ohne Testbodies.
+Alle **445** bisherigen Testdateien und **14.667** festen Testnummern bleiben
+erhalten; **37** neue Nummern werden ausschließlich angehängt.
+Der Entrypoint stellt genau diesen W-Zustand her und verlangt in Apply
+Gruppe **0**, Commitsequenz **48**, mit **4.902** parallelen Tests.
+Erst der erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den
+Fortschrittsmarker **514/900**, nächster Schritt `12.j.R`.
+Die Dev-Teiltests sind kein Vollsuite- oder Release-Nachweis. Dieser Auftrag
+liefert genau ein Bundle und endet danach.
 
 #### 12.j.R – Make it Right
 

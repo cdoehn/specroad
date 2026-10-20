@@ -42,6 +42,9 @@ def validate_retire(value, pointer):
 
 def validate_evidence_record(value, pointer):
     _artifact(value['evidence'], pointer + '/evidence', 'evidence')
+    if 'import_context' in value:
+        _at(pointer + '/import_context/source_path', project_path,
+            value['import_context']['source_path'])
     if value.get('configuration_id') is not None:
         identity = _reference(value['configuration_id'], pointer + '/configuration_id')
         if identity.artifact_type != 'configuration':

@@ -42,7 +42,11 @@ def evidence_record_schema():
     base = {"op": {"const": 'evidence_record'}}
     ref = text()
     blob = {"type": "object"}
-    return obj({**base, 'evidence': blob,
+    imported = obj({'format_version': {'const': 'evidence-import-context-v1'},
+        'import_format': {'const': 'generic'}, 'source_path': text(),
+        'source_sha256': digest(), 'preparation_sha256': digest(),
+        'policy': {'enum': ['abort_import', 'skip_invalid_with_diagnostic']}})
+    return obj({**base, 'evidence': blob, 'import_context': imported,
                 'configuration_id': {'anyOf': [{'type': 'null'}, ref]}}, ['op', 'evidence'])
 
 def attachment_add_schema():

@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0341",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1"
+  ],
+  "preconditions": [
+    "Explicit actor/time/request/allocated IDs and complete bound native TargetModel; original Generic source and selected attachments already supplied and byte-bound."
+  ],
+  "steps": [
+    "Preview without writes, publish every accepted observation in one native transaction, replay the saved plan without allocation, reject incomplete/forged/stale inputs, and compare all original subject/resource bytes; repeat publication/replay in separate isolated Core/PYZ processes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Evidence-Import MUSS vollständig geplant, validiert und als eine Transaktion veröffentlicht werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.j.W: Complete nonempty Generic set from explicit original/project attachment bytes and native Verification subjects, one saved Change Plan and native transaction; confirmed saved-request replay preserves all allocated IDs. Original source hash, preparation/provenance, run, configuration and policy are bound. No subject status/content changes, format-wide writer, raw-input preallocation retry, semantic duplicate detection or full crash-matrix claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,46 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_evidence_import_transaction.py::test_authority_denial_keeps_entire_set_and_project_unwritten",
+    "tests/test_evidence_import_transaction.py::test_caller_must_supply_distinct_evidence_ids_for_exact_complete_set[evidence_ids0]",
+    "tests/test_evidence_import_transaction.py::test_caller_must_supply_distinct_evidence_ids_for_exact_complete_set[evidence_ids1]",
+    "tests/test_evidence_import_transaction.py::test_caller_must_supply_distinct_evidence_ids_for_exact_complete_set[evidence_ids2]",
+    "tests/test_evidence_import_transaction.py::test_caller_must_supply_distinct_evidence_ids_for_exact_complete_set[evidence_ids3]",
+    "tests/test_evidence_import_transaction.py::test_changed_live_original_blocks_the_entire_saved_import",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[failed-False-False-False]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[failed-True-False-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[failed-True-True-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[incomplete-False-False-False]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[incomplete-True-False-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[incomplete-True-True-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[passed-False-False-False]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[passed-True-False-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[passed-True-True-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[skipped-False-False-False]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[skipped-True-False-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[skipped-True-True-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[unclassified-False-False-False]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[unclassified-True-False-True]",
+    "tests/test_evidence_import_transaction.py::test_complete_import_is_one_transaction_preserving_subjects_and_originals[unclassified-True-True-True]",
+    "tests/test_evidence_import_transaction.py::test_explicit_skip_policy_plans_all_and_only_accepted_observations",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[configuration]",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[drop]",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[mixed]",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[plain_record]",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[preparation_hash]",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[provenance]",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[reorder]",
+    "tests/test_evidence_import_transaction.py::test_incomplete_or_forged_set_is_rejected_before_publication[source_hash]",
+    "tests/test_evidence_import_transaction.py::test_preview_is_read_only_and_replay_returns_original_complete_set",
+    "tests/test_evidence_import_transaction.py::test_saved_set_and_durable_replay_survive_separate_isolated_processes[core]",
+    "tests/test_evidence_import_transaction.py::test_saved_set_and_durable_replay_survive_separate_isolated_processes[pyz]",
+    "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[contract]",
+    "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[empty]",
+    "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[missing_attachment]",
+    "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[slot]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "12.j.R completes raw-input/preallocation retries, changed-request context and no-request semantic duplicates plus partial/crash behavior; additional format writers and their shared planner remain assigned work. Existing-attachment Generic W behavior is partial evidence only, not full requirement/release approval."
   ]
 }
