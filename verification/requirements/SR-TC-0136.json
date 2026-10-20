@@ -7,21 +7,23 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-VERIFICATION-EVALUATION-ROLES-v1",
     "SR-FIX-VERIFICATION-EVALUATION-v1"
   ],
   "preconditions": [
-    "Explicit logical input paths and immutable bytes, product/evaluation identifiers, native configuration or None, required runs and caller audit. No host discovery."
+    "Explicit owned descriptor or None, available input bytes or None, and independently supplied logical-path roles or None. No host discovery or inferred file roles."
   ],
   "steps": [
-    "Construct and parse the descriptor, independently compare exact manifest/state and canonical descriptor hashes, alter input bytes/paths/audit, and observe missing/mismatched inputs without inferred success. Run in isolated Core and PYZ."
+    "Retain W manifest/hash and isolated runtime checks. Check exact role/byte binding, reject Evidence/output/descriptor/selection inputs without filtering, preserve missing binding observations as incomplete/SRV176, verify ownership and isolated Core/PYZ."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Requirement DARF das berechnete `verification_result=passed` nur nach vollständiger Bewertungs- und Nachweisauswahl sowie erfolgreicher Aggregation nach Kapitel 10.5 besitzen.",
-    "scope": "12.k.W: Actual supplied input bytes determine a normalized product manifest and independent state hash. Descriptor selfhash is checked; byte assessment identifies every missing, mismatched or extra input and cannot grant verification, scope, run, write or approval authority. Initial profile supports only empty replacements."
+    "scope": "12.k.W/R: Actual bytes bind product and descriptor hashes. Explicit checker/importer role inventory excludes Evidence, check outputs, evaluation and selection metadata from inputs; unlisted declared inputs cannot disappear. Missing evaluation or unavailable binding is incomplete/SRV176; forbidden manifest roles are SRV175/code 3. Ready means input binding only, never passed or external execution/approval. Roles are declared, not authenticated."
   },
   "expected_diagnostics": [
-    "SRV175"
+    "SRV175",
+    "SRV176"
   ],
   "expected_exit_codes": [
     3
@@ -121,9 +123,66 @@
     "tests/test_verification_evaluation.py::test_untrusted_json_bytes_fail_before_producing_a_descriptor[{\"x\":\"\\ud800\"}]",
     "tests/test_verification_evaluation.py::test_untrusted_json_bytes_fail_before_producing_a_descriptor[{\"x\":1,\"x\":2}]",
     "tests/test_verification_evaluation.py::test_untrusted_json_bytes_fail_before_producing_a_descriptor[{\"x\":NaN}]",
-    "tests/test_verification_evaluation.py::test_untrusted_json_bytes_fail_before_producing_a_descriptor[{}{}]"
+    "tests/test_verification_evaluation.py::test_untrusted_json_bytes_fail_before_producing_a_descriptor[{}{}]",
+    "tests/test_verification_evaluation_right.py::test_a_descriptor_file_among_available_bytes_does_not_select_itself",
+    "tests/test_verification_evaluation_right.py::test_adding_an_excluded_file_cannot_be_silently_filtered_into_a_different_hash[observations/evidence.json-evidence]",
+    "tests/test_verification_evaluation_right.py::test_adding_an_excluded_file_cannot_be_silently_filtered_into_a_different_hash[reports/result.bin-result]",
+    "tests/test_verification_evaluation_right.py::test_adding_an_excluded_file_cannot_be_silently_filtered_into_a_different_hash[selected-evaluation.json-evaluation]",
+    "tests/test_verification_evaluation_right.py::test_adding_an_excluded_file_cannot_be_silently_filtered_into_a_different_hash[selection.json-selection_metadata]",
+    "tests/test_verification_evaluation_right.py::test_all_unavailable_dimensions_remain_visible_in_stable_order",
+    "tests/test_verification_evaluation_right.py::test_binding_gate_never_reads_project_files_environment_git_or_network[False]",
+    "tests/test_verification_evaluation_right.py::test_binding_gate_never_reads_project_files_environment_git_or_network[True]",
+    "tests/test_verification_evaluation_right.py::test_binding_gate_runs_in_isolated_core_and_pyz[core]",
+    "tests/test_verification_evaluation_right.py::test_binding_gate_runs_in_isolated_core_and_pyz[pyz]",
+    "tests/test_verification_evaluation_right.py::test_binding_report_owns_nested_values_and_cannot_authorize_by_boolean_coercion",
+    "tests/test_verification_evaluation_right.py::test_descriptor_source_is_revalidated_even_if_an_object_was_forged",
+    "tests/test_verification_evaluation_right.py::test_exact_input_and_role_binding_is_ready_but_never_verification_success",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[False-evaluation]",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[False-evidence]",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[False-result]",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[False-selection_metadata]",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[True-evaluation]",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[True-evidence]",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[True-result]",
+    "tests/test_verification_evaluation_right.py::test_excluded_role_in_manifest_is_invalid_even_without_available_bytes[True-selection_metadata]",
+    "tests/test_verification_evaluation_right.py::test_independently_declared_input_must_not_disappear_from_the_manifest",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[input]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping0]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping10]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping11]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping12]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping13]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping2]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping3]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping4]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping5]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping6]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping7]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping8]",
+    "tests/test_verification_evaluation_right.py::test_malformed_role_inventory_is_a_structured_descriptor_input_error[mapping9]",
+    "tests/test_verification_evaluation_right.py::test_missing_descriptor_is_incomplete_and_never_inferred_from_other_data[None]",
+    "tests/test_verification_evaluation_right.py::test_missing_descriptor_is_incomplete_and_never_inferred_from_other_data[supplied1]",
+    "tests/test_verification_evaluation_right.py::test_missing_descriptor_is_incomplete_and_never_inferred_from_other_data[supplied2]",
+    "tests/test_verification_evaluation_right.py::test_missing_role_information_does_not_claim_self_reference_safety[None-evaluation_input_roles_required]",
+    "tests/test_verification_evaluation_right.py::test_missing_role_information_does_not_claim_self_reference_safety[mapping1-evaluation_input_roles_missing]",
+    "tests/test_verification_evaluation_right.py::test_missing_role_information_does_not_claim_self_reference_safety[mapping2-evaluation_input_roles_missing]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_missing_descriptor[False]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_missing_descriptor[auto]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_missing_descriptor[bad1]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_missing_descriptor[bad3]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_missing_descriptor[{}]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_unavailable_input_bytes[False]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_unavailable_input_bytes[bad0]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_unavailable_input_bytes[bad2]",
+    "tests/test_verification_evaluation_right.py::test_only_explicit_none_means_unavailable_input_bytes[bad3]",
+    "tests/test_verification_evaluation_right.py::test_role_inventory_is_sorted_and_bound_separately_from_product_and_descriptor_hashes",
+    "tests/test_verification_evaluation_right.py::test_roles_are_explicit_not_guessed_from_extension_or_json_like_content",
+    "tests/test_verification_evaluation_right.py::test_unknown_or_nonmatching_product_bytes_are_incomplete[changed-evaluation_input_changed]",
+    "tests/test_verification_evaluation_right.py::test_unknown_or_nonmatching_product_bytes_are_incomplete[extra-evaluation_input_unexpected]",
+    "tests/test_verification_evaluation_right.py::test_unknown_or_nonmatching_product_bytes_are_incomplete[missing-evaluation_input_missing]",
+    "tests/test_verification_evaluation_right.py::test_unknown_or_nonmatching_product_bytes_are_incomplete[unavailable-evaluation_input_bytes_required]"
   ],
   "open_items": [
-    "Input role/self-reference checks and missing evaluation selection remain for 12.k.R. Independent required-check scope, project identity conflicts, Evidence/run selection, replacements, aggregation and command integration remain follow-up work. No full verification or release claim."
+    "Independent required-check scope, project evaluation-identity conflicts, Evidence/run selection, replacements, full aggregation and command/readiness integration remain follow-up work. Input role provenance remains the caller responsibility; no external test or release claim."
   ]
 }

@@ -50,9 +50,50 @@ Die Byteprüfung bestätigt weder Herkunft oder Ausführung eines externen Tests
 noch die fachliche Vollständigkeit der vom Aufrufer gewählten Eingänge.
 `input_roles_verified`, `project_required_checks_complete`,
 `full_verification_evaluated`, `write_authorized` und `approval_granted` bleiben
-falsch. Die Prüfung, dass keine Evidence, eigenen Ausgaben oder Descriptoren
-als fachliche Inputs gewählt wurden, sowie die Behandlung fehlender
-Bewertungsauswahl werden in `12.k.R` ergänzt. Pflichtmengenbildung, bekannte
+falsch. Diese reine Bytebeobachtung ersetzt das nachfolgende Rollengate nicht.
+Pflichtmengenbildung, bekannte
 Evaluationsidentitäten im Projekt, Nachweisauswahl, Laufablösung, Aggregation,
 CLI- und Readiness-Anbindung gehören weiterhin zu den folgenden Planstellen.
 Die zugehörigen Anforderungsnachweise bleiben `partial`.
+
+`12.k.R` ergänzt `assess_evaluation_binding(evaluation, inputs=..., input_roles=...)`
+als Gate vor der späteren Pflichtmengen- und Nachweisauswahl. `evaluation` ist
+ein `VerificationEvaluation` oder ausdrücklich `None`; `inputs` enthält die
+verfügbaren tatsächlichen Prüfbytes oder `None`. Der Prüfer beziehungsweise
+Importer liefert unabhängig vom Descriptor ein Rolleninventar `input_roles`:
+Dictionary aus logischen Pfaden und den Rollen `input`, `evidence`, `result`,
+`evaluation` oder `selection_metadata`. Zu `result` gehören Ausgaben derselben
+Prüfung; der eigene Descriptor und seine Auswahlmetadaten erhalten ihre jeweils
+ausgeschlossene Rolle. Pfade teilen den logischen Namensraum des Manifests.
+Fehlen diese Informationen, ist `None` zulässig und die Bindung unvollständig.
+
+Jede Manifestzeile muss als `input` deklariert sein. Eine ausgeschlossene Rolle
+im Manifest ist `SRV175`, Code 3, auch wenn deren Bytes gerade nicht verfügbar
+sind. Sie wird nicht stillschweigend herausgefiltert und der Produktstandhash
+wird nicht repariert. Jeder zusätzlich deklarierte `input` muss ebenfalls im
+Manifest stehen; ein Descriptor darf bekannte Prüfeingänge nicht weglassen.
+Ausgeschlossene Dateien außerhalb des Manifests benötigen keine Bytes und
+verändern den Produktstandhash nicht. Das Rolleninventar wird getrennt sortiert
+und im Beobachtungsbericht gehasht, ohne neue Descriptorfelder oder Selbstbezug.
+
+Die Rollen sind eine ausdrückliche Angabe des aufrufenden Prüfers, keine aus
+Dateiendung, Inhalt oder einem fremden Rechner abgeleitete Herkunftsaussage.
+Der Core authentifiziert diese Angaben nicht (`input_roles_authenticated=false`).
+Der Integrator muss das vollständige tatsächliche Rolleninventar liefern;
+ein Angreifer mit Kontrolle über dessen Angaben kann damit keinen externen
+Testlauf nachweisen. Dateinamen wie `evidence.json` allein bestimmen keine Rolle.
+
+Ohne Descriptor lautet `verification_result="incomplete"`, mit Diagnose
+`SRV176`, Schwere `warning`, Grund `evaluation_required`; der Descriptor wird
+auch nicht aus vorhandenen Dateien erraten. Fehlende Rollen, ausgelassene
+Inputs, unbekannte Bytes, fehlende Dateien, Byteabweichungen und zusätzliche
+Inputs werden ebenfalls als `incomplete` mit getrennten maschinenlesbaren
+Gründen berichtet. Strukturell falsche Argumente bleiben Fehler mit Code 3.
+
+Bei vollständiger Eingangsbindung lautet nur `binding_status="ready"`;
+`verification_result` bleibt `null`. Das ist keine bestandene Verifikation,
+sondern die Voraussetzung für nachfolgende fachliche Prüfungen. Weder eine
+Pflichtmenge noch ein Lauf oder Release wurde damit bewertet. Die unveränderliche
+`EvaluationBindingAssessment` hält abgetrennte Daten und einen eigenen Hash;
+boolesche Verwendung bleibt untersagt. Der Core liest keine Dateien und startet
+keine Prozesse, Tests oder implizite Suche nach einem aktuellen Build.

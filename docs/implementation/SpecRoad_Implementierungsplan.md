@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 517
-last_completed_plan_commit: 12.k.W
-next_plan_commit: 12.k.R
-last_completed_numbered_bundle: 343
+implementation_plan_commits_completed: 518
+last_completed_plan_commit: 12.k.R
+next_plan_commit: 12.k.C
+last_completed_numbered_bundle: 344
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14211,12 +14211,67 @@ einen W-Zustand; `12.k.R` wird nicht begonnen, der Auftrag endet nach der Überg
 
 #### 12.k.R – Make it Right
 
-- [ ] **12.k.R** · Position **518/900** · Voraussetzung: `12.k.W`.
+- [x] **12.k.R** · Position **518/900** · Voraussetzung: `12.k.W`.
 **Exakte Commit-Message:** `12.k.R feat(verification): Bewertungsdescriptor und Produktstand vervollständigen`
 
 **Vervollständigung:** Evidence, Ergebnisdateien und eigener Descriptor dürfen keine selbstreferenzielle Inputbindung bilden.
 
 **Verhaltensabnahme:** Unbekannter Stand und fehlender Descriptor ergeben incomplete statt geratenem aktuellen Build. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zustand – Bundle 344 (20. Oktober 2026):** Technische Basis ist
+das vollständig geprüfte Result `specroad-apply_Result_213118_1020_fbf8c5.zip`,
+SHA-256 `4c750c731d35a0284962e63ad0a6526ba20fc7da1a6603fd15f6af3fce08f46d`,
+mit sauberem Apply-HEAD `b70ebe0cb3b88182840dc630b9a216591ddbe765`.
+Bundle 343 bestätigt `12.k.W`: Gruppe **0**, Commitsequenz **51**,
+**4.942/4.942** parallele Apply-Teiltests mit **4 Workern** in **1.186,02 s**.
+
+`assess_evaluation_binding` ergänzt ein schreibfreies Gate vor der späteren
+Pflichtmengen- und Nachweisauswahl. Der aufrufende Prüfer oder Importer übergibt
+das vollständige tatsächliche Rolleninventar unabhängig vom Descriptor im selben
+logischen Namensraum. Jede Manifestdatei muss als `input` deklariert sein;
+Evidence, Ausgaben derselben Prüfung, Descriptor und Auswahlmetadaten sind als
+Inputs ausgeschlossen. Eine verbotene Manifestrolle ergibt `SRV175`, Code **3**,
+auch ohne verfügbare Bytes. Kein Herausfiltern und keine Hashreparatur verdecken
+den Fehler. Zusätzlich deklarierte Inputs müssen im Manifest vorhanden sein.
+
+Das Rolleninventar wird getrennt sortiert und gehasht, ohne zusätzliche
+Descriptorfelder oder eine Selbstabhängigkeit im Produktstandhash. Die Rollen
+sind Angaben des aufrufenden Prüfers, keine aus Namen oder Dateiinhalten
+erratene und keine authentifizierte externe Herkunft. Diese Vertrauensgrenze
+bleibt ausdrücklich als `input_roles_authenticated=false` sichtbar. Die
+vorhandene reine Bytebeobachtung gewährt weiterhin keine Rollen- oder Freigabeaussage.
+
+Fehlender Descriptor ergibt `incomplete` mit `SRV176` und `evaluation_required`.
+Fehlende Rollenangaben, ausgelassene Inputs, unbekannte Bytes, fehlende Dateien,
+Byteabweichungen und zusätzliche Inputs bleiben getrennte maschinenlesbare
+Unvollständigkeitsgründe. Hostdateien, aktueller Git-Stand und vorhandene
+Descriptorbytes werden nicht als Auswahl geraten. Bei vollständiger Bindung
+lautet nur `binding_status=ready`; `verification_result` bleibt `null`.
+Vollständige Verifikation, Run-Nachweis, Readiness und Schreibfreigabe werden
+nicht behauptet. Die Beobachtung besitzt ihre Daten und sperrt boolesche
+Erfolgsannahmen. Pflichtmengenbildung, Projekt-Identitätskonflikte, Nachweisauswahl,
+Laufablösung, Aggregation und Befehlsanbindung bleiben den Folgeschritten zugeordnet;
+`SR-TC-0136` und `SR-TC-0446` bleiben `partial`. Die Spezifikation bleibt unverändert.
+
+**Gezielter Dev-Nachweis:** **495/495** Verhaltenstests aus **9** Dateien
+parallel mit **4 Workern** in **12,61 s**. Darin enthalten sind alle **79**
+W-Fälle, **57** neue R-Fälle und die betroffenen bestehenden Regressionstests zu
+Evidence-Austausch, Verifikationskontext und Release-Baseline-Grenzen. Geprüft
+wurden insbesondere ausgeschlossene Rollen bei vorhandenen und fehlenden Bytes,
+fehlende Auswahl ohne Build-Inferenz, vollständige Fehlerbeobachtung, getrennte
+Rollenhashbindung, Wertbesitz und isolierte Core-/PYZ-Ausführung.
+Geprüfte Source-SHA-256:
+`4c67a893300288e04efb0e4e9ede83fe082c70176f36bcd0ead9f4bf6f5f1c14`.
+
+Die vollständige Katalog-Collection bestätigt **14.883** Tests ohne Testbodies.
+Alle **448** bisherigen Testdateien bleiben bytegleich zum Result. Die **14.826**
+bisherigen Testnummern bleiben unverändert; **57** neue Identitäten sind hinten
+angefügt. Der Entrypoint stellt genau diesen R-Zustand her und verlangt in Apply
+ausschließlich Gruppe **1**, Commitsequenz **52**, mit **4.961** parallelen Tests
+und **4 Workern**. Erst der erfolgreiche Apply-Lauf erlaubt den R-Commit und den
+Fortschrittsmarker **518/900** mit `12.k.C` als nächstem Schritt. Es gibt keinen
+Vollsuite-, Serienlauf- oder Release-Erfolgsnachweis. Dieses Bundle enthält genau
+einen R-Zustand; `12.k.C` wird nicht begonnen, der Auftrag endet nach der Übergabe.
 
 #### 12.k.C – Make it Clean
 
