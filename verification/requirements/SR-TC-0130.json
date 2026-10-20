@@ -9,7 +9,8 @@
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-v1",
-    "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1"
+    "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1",
+    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-v1"
   ],
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
@@ -17,12 +18,13 @@
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared.",
-    "Resolve direct verified_by tests into implicit overall contracts bound to original Test records. Preserve explicit-contract results and reject incomplete contracts, invalid identities and changed source bindings without file access or test execution."
+    "Resolve direct verified_by tests into implicit overall contracts bound to original Test records. Preserve explicit-contract results and reject incomplete contracts, invalid identities and changed source bindings without file access or test execution.",
+    "Derive required keys independently from every applicable subject in an owned whole-project model, native verified_by targets and all slots. Compare descriptor coverage without changing the scope; retain missing or unresolved obligations and reject foreign keys. Bind explicit selected configuration and preserve input files without executing tests or Evidence."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Verification-Artefakt MUSS Vorbedingungen, Prüfgegenstand, Verfahren, Oracle oder Pass-Kriterium, erforderliche Evidence-Arten, vollständige `evidence_slots` nach Kapitel 10.5.2 und eine Konfigurationspolicy `independent` oder `bound` definieren.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -124,9 +126,57 @@
     "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[None]",
     "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[value1]",
     "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[value2]",
-    "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[{}]"
+    "tests/test_verification_contracts_right.py::test_unowned_model_values_cannot_supply_contract_authority[{}]",
+    "tests/test_verification_required_checks.py::test_absent_evaluation_keeps_obligations_and_cannot_guess_an_expected_run",
+    "tests/test_verification_required_checks.py::test_actual_model_edits_change_the_independent_binding[oracle]",
+    "tests/test_verification_required_checks.py::test_actual_model_edits_change_the_independent_binding[relation]",
+    "tests/test_verification_required_checks.py::test_actual_model_edits_change_the_independent_binding[slot]",
+    "tests/test_verification_required_checks.py::test_all_slots_and_direct_tests_of_every_subject_are_independent_required_keys",
+    "tests/test_verification_required_checks.py::test_applicable_subject_without_contract_cannot_create_a_vacuous_complete_set",
+    "tests/test_verification_required_checks.py::test_changed_model_source_binding_is_not_accepted_as_old_inventory",
+    "tests/test_verification_required_checks.py::test_conditional_subject_contract_or_test_without_configuration_stays_required_and_unresolved[0]",
+    "tests/test_verification_required_checks.py::test_conditional_subject_contract_or_test_without_configuration_stays_required_and_unresolved[1]",
+    "tests/test_verification_required_checks.py::test_conditional_subject_contract_or_test_without_configuration_stays_required_and_unresolved[2]",
+    "tests/test_verification_required_checks.py::test_coverage_rejects_untyped_descriptors[True]",
+    "tests/test_verification_required_checks.py::test_coverage_rejects_untyped_descriptors[value0]",
+    "tests/test_verification_required_checks.py::test_coverage_rejects_untyped_descriptors[{}]",
+    "tests/test_verification_required_checks.py::test_descriptor_configuration_is_compared_to_the_independent_selection[None]",
+    "tests/test_verification_required_checks.py::test_descriptor_configuration_is_compared_to_the_independent_selection[SR-CFG-00000000000000000000000000]",
+    "tests/test_verification_required_checks.py::test_excluded_required_dependency_is_a_native_scope_error_not_a_removed_slot[1]",
+    "tests/test_verification_required_checks.py::test_excluded_required_dependency_is_a_native_scope_error_not_a_removed_slot[2]",
+    "tests/test_verification_required_checks.py::test_existing_unlinked_test_cannot_be_selected_as_a_required_contract",
+    "tests/test_verification_required_checks.py::test_native_contract_and_reference_failures_never_produce_partial_success[missing-slot]",
+    "tests/test_verification_required_checks.py::test_native_contract_and_reference_failures_never_produce_partial_success[undeclared-subject]",
+    "tests/test_verification_required_checks.py::test_native_contract_and_reference_failures_never_produce_partial_success[unknown-target]",
+    "tests/test_verification_required_checks.py::test_native_contract_and_reference_failures_never_produce_partial_success[unknown-test]",
+    "tests/test_verification_required_checks.py::test_no_files_or_processes_are_opened_by_required_set_resolution",
+    "tests/test_verification_required_checks.py::test_omitting_any_independently_required_key_is_incomplete[0]",
+    "tests/test_verification_required_checks.py::test_omitting_any_independently_required_key_is_incomplete[1]",
+    "tests/test_verification_required_checks.py::test_omitting_any_independently_required_key_is_incomplete[2]",
+    "tests/test_verification_required_checks.py::test_omitting_any_independently_required_key_is_incomplete[3]",
+    "tests/test_verification_required_checks.py::test_omitting_any_independently_required_key_is_incomplete[4]",
+    "tests/test_verification_required_checks.py::test_omitting_any_independently_required_key_is_incomplete[5]",
+    "tests/test_verification_required_checks.py::test_product_identity_and_run_selection_cannot_change_the_required_set",
+    "tests/test_verification_required_checks.py::test_raw_descriptor_bytes_override_tampered_cached_selection",
+    "tests/test_verification_required_checks.py::test_required_keys_and_coverage_are_identical_in_fresh_core_and_pyz[core]",
+    "tests/test_verification_required_checks.py::test_required_keys_and_coverage_are_identical_in_fresh_core_and_pyz[pyz]",
+    "tests/test_verification_required_checks.py::test_required_set_requires_a_native_owned_model[None]",
+    "tests/test_verification_required_checks.py::test_required_set_requires_a_native_owned_model[current-project]",
+    "tests/test_verification_required_checks.py::test_required_set_requires_a_native_owned_model[value0]",
+    "tests/test_verification_required_checks.py::test_results_are_owned_values_and_cannot_be_truthy_success_shortcuts",
+    "tests/test_verification_required_checks.py::test_same_configuration_id_with_changed_effective_values_does_not_reuse_the_descriptor_binding",
+    "tests/test_verification_required_checks.py::test_selected_configuration_filters_subjects_independently_and_binds_effective_values",
+    "tests/test_verification_required_checks.py::test_supply_order_and_descriptor_order_do_not_change_normalized_results",
+    "tests/test_verification_required_checks.py::test_unknown_or_unrequired_descriptor_key_never_expands_project_obligations[check_id-undeclared]",
+    "tests/test_verification_required_checks.py::test_unknown_or_unrequired_descriptor_key_never_expands_project_obligations[contract_id-SR-VER-22222222222222222222222222]",
+    "tests/test_verification_required_checks.py::test_unknown_or_unrequired_descriptor_key_never_expands_project_obligations[subject_artifact_id-SR-GOAL-00000000000000000000000000]",
+    "tests/test_verification_required_checks.py::test_unknown_or_unrequired_descriptor_key_never_expands_project_obligations[test_id-SR-TEST-11111111111111111111111111]",
+    "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[not_applicable]",
+    "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[not_planned]",
+    "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[planned]",
+    "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[running]"
   ],
   "open_items": [
-    "These are supplied-record and per-pair Contract checks, not project-wide required-check aggregation, configuration applicability, fresh Evidence evaluation or write authorization. Those later plan steps and broader platform/release evidence remain open."
+    "Further scope profiles and robust scope integration, project evaluation-identity conflicts, Evidence/run selection, replacements, full aggregation, command/readiness integration and broader release/platform evidence remain open. Input roles and live inventory provenance remain caller responsibilities. No external run or approval is certified."
   ]
 }

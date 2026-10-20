@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 519
-last_completed_plan_commit: 12.k.C
-next_plan_commit: 12.l.W
-last_completed_numbered_bundle: 345
+implementation_plan_commits_completed: 520
+last_completed_plan_commit: 12.l.W
+next_plan_commit: 12.l.R
+last_completed_numbered_bundle: 346
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14335,12 +14335,23 @@ C-Zustand; `12.l.W` wird nicht begonnen, der Auftrag endet nach der Übergabe.
 
 #### 12.l.W – Let it Work
 
-- [ ] **12.l.W** · Position **520/900** · Voraussetzung: `12.k.C`.
+- [x] **12.l.W** · Position **520/900** · Voraussetzung: `12.k.C`.
 **Exakte Commit-Message:** `12.l.W feat(verification): Unabhängig gebildete Pflichtmenge aufbauen`
 
 **Umsetzung:** Pflichtschlüssel aus anwendbaren Subjects, verified_by und evidence_slots berechnen.
 
 **Verhaltensabnahme:** Descriptor deckt diese Menge vollständig und ohne fremde Schlüssel ab.
+
+**Vorbereiteter W-Zwischenstand (Bundle 346):** Reine Core-API für die unabhängig
+gebildete Pflichtmenge des vollständig übergebenen `TargetModel`-Projektbestands,
+mit expliziter Konfigurations-ID oder `None`. Gültige `verified_by`-Ziele liefern
+alle expliziten Slots sowie direkte Test-Contracts. Fehlende Schlüssel und
+unaufgelöste Bindungen bleiben unvollständig; fremde Schlüssel sind
+Descriptorfehler. Eingangsbytes, Scope, Konfiguration und Contract-Auflösungen
+werden gebunden. `ready` bestätigt nur die Abdeckung, keinen Verifikationserfolg.
+Weitere Scope-Profile und Robustheitsfälle gehören zu R; Nachweisauswahl und
+Aggregation bleiben nachfolgende Planstellen. Der Fortschrittsmarker wird im
+Entrypoint erst nach erfolgreichem Apply-Testlauf dieses W-Zustands gesetzt.
 
 #### 12.l.R – Make it Right
 

@@ -122,7 +122,8 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {

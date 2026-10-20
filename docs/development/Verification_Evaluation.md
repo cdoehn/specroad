@@ -51,7 +51,7 @@ noch die fachliche Vollständigkeit der vom Aufrufer gewählten Eingänge.
 `input_roles_verified`, `project_required_checks_complete`,
 `full_verification_evaluated`, `write_authorized` und `approval_granted` bleiben
 falsch. Diese reine Bytebeobachtung ersetzt das nachfolgende Rollengate nicht.
-Pflichtmengenbildung, bekannte
+Weitere Scope-Profile der Pflichtmengenbildung, bekannte
 Evaluationsidentitäten im Projekt, Nachweisauswahl, Laufablösung, Aggregation,
 CLI- und Readiness-Anbindung gehören weiterhin zu den folgenden Planstellen.
 Die zugehörigen Anforderungsnachweise bleiben `partial`.
@@ -97,3 +97,34 @@ Pflichtmenge noch ein Lauf oder Release wurde damit bewertet. Die unveränderlic
 `EvaluationBindingAssessment` hält abgetrennte Daten und einen eigenen Hash;
 boolesche Verwendung bleibt untersagt. Der Core liest keine Dateien und startet
 keine Prozesse, Tests oder implizite Suche nach einem aktuellen Build.
+
+`12.l.W` stellt `resolve_required_checks(model, configuration_id=...)` und
+`assess_required_check_coverage(model, evaluation, configuration_id=...)` bereit.
+`model` ist ein `TargetModel` mit dem vollständig übergebenen Projektbestand;
+die Konfiguration wird ausdrücklich per ID aus dessen Originalbytes aufgelöst
+oder mit `None` abgewählt. Dieses erste Profil unterstützt ausschließlich den
+ganzen übergebenen Projektbestand, keine Teil-, Query- oder Release-Selectoren.
+
+Die Pflichtmenge entsteht vor dem Descriptorvergleich aus Requirement-,
+Capability- und Task-Subjects, ihren gültigen `verified_by`-Zielen und sämtlichen
+Slots. Direkt gebundene Tests tragen den impliziten `overall`-Contract bei.
+Die Schlüssel und Dimensionen werden deterministisch sortiert; Eingangsbytes,
+Scope, effektive Konfiguration und Contract-Auflösungen sind separat gebunden.
+Unverknüpfte Contracts oder im Descriptor erwähnte IDs erweitern die Menge nicht.
+
+Fehlende Schlüssel ergeben `incomplete`/SRV176, zusätzliche Schlüssel
+SRV175/Code 3. Fehlende Contracts, eine abweichende Konfigurationsbindung oder
+ungeklärte Anwendbarkeit bleiben ebenfalls unvollständig. Ohne Konfiguration
+bleiben bedingte Subjects und Abhängigkeiten potenziell erforderlich. Ein durch
+die gewählte Konfiguration ausgeschlossenes Pflichtziel ist SRV141/Code 3;
+seine Slots verschwinden nicht stillschweigend. Planstatus und Waiver werden
+hier nicht zur Reduktion der Pflichtmenge benutzt; ihre Priorität gehört zur
+späteren vollständigen Aggregation.
+
+`coverage_status="ready"` bedeutet ausschließlich vollständige Schlüssel- und
+Konfigurationsabdeckung im übergebenen Modell; `verification_result` bleibt
+`null`. Das vorherige Byte-/Rollengate bleibt zusätzlich erforderlich.
+`RequiredChecksResolution` und `RequiredCheckAssessment` sind unveränderliche
+Beobachtungen ohne booleschen Erfolgswert. Sie bestätigen weder einen live
+vollständigen Projektbestand noch bestandene Läufe oder eine Releasefreigabe.
+Nachweisauswahl, Laufablösung, Aggregation und CLI-Anbindung bleiben offen.
