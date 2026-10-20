@@ -56,6 +56,7 @@
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-JCS-RFC8785-v1",
     "SR-FIX-JSON-PATCH-v1",
+    "SR-FIX-JUNIT-MAPPING-RIGHT-v1",
     "SR-FIX-JUNIT-MAPPING-v1",
     "SR-FIX-JUNIT-XML-RIGHT-v1",
     "SR-FIX-JUNIT-XML-v1",
@@ -553,6 +554,10 @@
     "SR-FIX-JUNIT-MAPPING-v1": {
       "provider": "tests/test_junit_mapping.py:REPORT",
       "kind": "Synthetic JUnit core reports and strict versioned exact-attribute mappings to native owned Test/Verification records. Explicit outcome oracles, identity/target ambiguity refusal, immutable input/output/hash binding, native Evidence-construction composition and Core/PYZ isolation with file/network/process/clock/entropy traps. No genuine external run, persistent Evidence or approval is asserted."
+    },
+    "SR-FIX-JUNIT-MAPPING-RIGHT-v1": {
+      "provider": "tests/test_junit_mapping_right.py:report",
+      "kind": "Synthetic core reports with same-name Class/File distinctions, missing/duplicate/conflicting outcomes, versioned mapping rules and exact-source-bound external-identifier sidecars. Complete grouped diagnostic accounting, original/canonical hash boundaries, hostile/invalid/large inputs, immutability and Core/PYZ behavior with I/O/process/network/clock/entropy traps; no external run authenticity or publication is asserted."
     }
   }
 }

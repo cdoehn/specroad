@@ -6,7 +6,9 @@ from .contracts import (VerificationContract, VerificationContractResolution,
 from .targets import resolve_verification_target
 from .evidence import prepare_evidence_record
 from .junit import JUnitDocument, JUnitLimits, XmlImportError
-from .junit_mapping import JUnitMapping, JUnitCandidates, JUnitMappingError, map_junit_candidates
+from .junit_mapping import (JUnitMapping, JUnitCandidates, JUnitMappingError,
+    map_junit_candidates, JUnitMappingRules, JUnitExternalIdentifiers,
+    JUnitMappingAnalysis, analyze_junit_candidates)
 from .context import (VerificationContext, VerificationContextAssessment,
     verification_context_projection, verification_context_sha256, assess_verification_context)
 
@@ -25,4 +27,6 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "prepare_verification_plan_update", "VerificationContext", "VerificationContextAssessment",
            "verification_context_projection", "verification_context_sha256", "assess_verification_context",
            "prepare_evidence_record", "JUnitDocument", "JUnitLimits", "XmlImportError",
-           "JUnitMapping", "JUnitCandidates", "JUnitMappingError", "map_junit_candidates")
+           "JUnitMapping", "JUnitCandidates", "JUnitMappingError", "map_junit_candidates",
+           "JUnitMappingRules", "JUnitExternalIdentifiers", "JUnitMappingAnalysis",
+           "analyze_junit_candidates")

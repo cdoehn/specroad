@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 505
-last_completed_plan_commit: 12.g.W
-next_plan_commit: 12.g.R
-last_completed_numbered_bundle: 331
+implementation_plan_commits_completed: 506
+last_completed_plan_commit: 12.g.R
+next_plan_commit: 12.g.C
+last_completed_numbered_bundle: 332
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13485,12 +13485,64 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.g.R – Make it Right
 
-- [ ] **12.g.R** · Position **506/900** · Voraussetzung: `12.g.W`.
+- [x] **12.g.R** · Position **506/900** · Voraussetzung: `12.g.W`.
 **Exakte Commit-Message:** `12.g.R feat(verification): JUnit-Mapping und Ergebnisklassen vervollständigen`
 
 **Vervollständigung:** Nicht gemappte, mehrdeutige und widersprüchliche Ergebnisse getrennt behandeln.
 
 **Verhaltensabnahme:** Identische Testnamen mit unterschiedlichem Class-/Filekontext werden nicht versehentlich verschmolzen. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung (Bundle 332; regulär nach bestätigtem 12.g.W):** Das vollständig
+geprüfte Result `specroad-apply_Result_080640_1020_eca158.zip`, SHA-256
+`3277799b175f8ad58eecc1a0a6b309af03ec2e018476c804c34b36b3174be781`,
+bestätigt Commit `8a0d182783a3f9a64bffbffd3a89f4275d7daa02`, den sauberen
+Snapshot und **4.685** bestandene parallele Apply-Tests mit vier Workern in
+**1.141,59 s**, Commitsequenz **39**, Gruppe **0**. Damit sind **505/900**
+bestätigt und ausschließlich `12.g.R` beauftragt.
+
+`analyze_junit_candidates` ergänzt die bestehende strikte W-Schnittstelle um
+eine vollständige, passive Zuordnungsanalyse. `JUnitMappingRules` bindet eine
+explizite Kombination aus `classname`, `name`, `file` und `external_id`.
+Externe Identifier werden ausschließlich über `JUnitExternalIdentifiers`
+übergeben: eine versionierte Begleitdatei bindet den unveränderten XML-SHA-256
+und die nullbasierten Kern-Testcase-Ordinalzahlen. Fremde Berichte,
+Mehrfachbelegungen einer Ordinalzahl, unbekannte Ordinalzahlen und unzulässige
+Formate werden abgewiesen. Unbekannte XML-Erweiterungen, Zieltitel und
+Zielmetadaten liefern keine impliziten Identitäten.
+
+Jeder Kern-Testcase bleibt als eigene Beobachtung mit vollständigem Kontext
+erhalten. Nicht gemappte, mehrdeutige und widersprüchliche Befunde erscheinen
+getrennt, einschließlich mehrfacher Regeln und fehlerhafter unbenutzter
+Zielbindungen. Wiederholte gewählte Identitäten werden nicht zusammengeführt
+und erzeugen keine Kandidaten; abweichende Klassen- oder Dateikontexte werden
+nicht als widersprüchliche Ausführungen desselben Tests ausgegeben. Gemischte
+Ergebnisarten und unterschiedliche Ergebnisse im identischen Kontext werden
+zusätzlich als Widersprüche ausgewiesen. Unabhängige gültige Beobachtungen
+behalten ihre ursprünglichen Ordinalzahlen und exakten nativen Zielbindungen.
+Gruppierte Diagnosen vermeiden ein kartesisches Produkt aus Regeln und Fällen.
+
+Quellbytes, Mapping, externe Identifier und bereitgestellte native Ziele sind
+hashgebunden; Ausgabedaten bleiben vom Eingabezustand isoliert. Die Analyse
+entscheidet keine Abbruch-/Skip-Policy und bestätigt weder einen externen Lauf
+noch eine vollständige Verification, Evidence-Erzeugung oder Schreibfreigabe.
+Die bisherigen W-Verträge und alle bisherigen Testdateien bleiben unverändert.
+`SR-TC-0334`, `SR-TC-0335` und `SR-TC-0338` bleiben ausdrückliche Teilnachweise.
+C sowie Importpolicy, unveränderbare Originalanhänge, Lauf-/Subjectbindung,
+Idempotenz, CLI und Veröffentlichung werden nicht vorgezogen.
+
+**Gezielter Dev-Nachweis:** **712/712** Verhaltenstests mit **4 Workern** parallel
+in **7,23 s**, darunter **95** neue R-Tests sowie sämtliche W-Mappingtests und
+betroffene XML-, Contract-, Evidence-, Sicherheits- und Core/PYZ-Regressionen.
+Die vollständige Katalog-Collection enthält **14.150** Tests und führt keine
+Testbodies aus. Die bisherigen **14.055** Testnummern bleiben erhalten; neue
+Nummern werden hinten angehängt. Geprüfte Source-SHA-256:
+`b6830cb70dcdd84b963af4b2fed20485918f18708afcfa9aa8a696c665210403`.
+
+Der Entrypoint stellt ausschließlich diesen R-Zustand her und verlangt in Apply
+Gruppe **1**, Commitsequenz **40**, mit **4.717** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**506/900**, nächster Schritt `12.g.C`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.g.C – Make it Clean
 

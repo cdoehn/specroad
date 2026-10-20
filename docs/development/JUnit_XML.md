@@ -181,8 +181,138 @@ Testausführung, gespeicherter Evidence, Laufbindung, Projektprüfung,
 Gesamtverifikation, Schreibberechtigung und Freigabe bleiben ausdrücklich falsch.
 Es gibt keine Datei-, Netzwerk-, Uhrzeit-, Zufalls- oder Prozesszugriffe.
 
-Externe Identifier und die vollständige Behandlung mehrdeutiger,
-widersprüchlicher und ungemappter Ergebnisse bleiben für 12.g.R offen.
+Der W-Aufruf behält diesen strikten Vertrag. Die ergänzende Analyse aus
+12.g.R unterstützt externe Identifier und vollständige getrennte Diagnosen.
 Originalanhänge, Importpolicy, Provenienzergänzung und atomare Evidence-Erzeugung
 folgen in 12.i/12.j; fehlende Producer-, Run-, Subject- oder Konfigurationsdaten
 werden hier nicht erfunden. `SR-TC-0334` und `SR-TC-0335` bleiben Teilnachweise.
+
+## Vollständige Zuordnungsanalyse (12.g.R)
+
+`analyze_junit_candidates(document, mapping, targets=..., external_identifiers=...)`
+liefert ein eigenes `JUnitMappingAnalysis`-Wertobjekt. Der Aufruf akzeptiert
+entweder das unveränderte strikte `JUnitMapping` oder `JUnitMappingRules` aus
+eigenen JSON-Bytes:
+
+```json
+{
+  "format_version": "junit-mapping-rules-v1",
+  "identity_fields": ["classname", "name", "file", "external_id"],
+  "bindings": [
+    {
+      "identity": {
+        "classname": "suite.A",
+        "name": "accepts",
+        "file": "tests/a.py",
+        "external_id": "producer:case-7"
+      },
+      "target_id": "SR-TEST-00000000000000000000000000"
+    }
+  ]
+}
+```
+
+Die Regelstruktur behält die drei geschlossenen Top-Level-Felder des W-Mappings
+und dessen Byte-/Zeilengrenzen. Sie erlaubt zusätzlich `external_id` in jeder
+nichtleeren Kombination der vier Identitätsfelder. Mehrfache Mappingzeilen für
+denselben Schlüssel werden für die Diagnose erhalten; auch zwei identische
+Zeilen bestimmen keinen willkürlichen ersten oder letzten Gewinner.
+`JUnitMapping` und `map_junit_candidates` bleiben die strikte W-Schnittstelle
+mit unveränderten W-Ergebnissen und Fehlerverträgen.
+
+Externe Identifier stammen ausschließlich aus einem ausdrücklich übergebenen
+`JUnitExternalIdentifiers`-Wert mit diesen eigenen JSON-Bytes:
+
+```json
+{
+  "format_version": "junit-external-identifiers-v1",
+  "source_sha256": "<SHA-256 der unveränderten XML-Originalbytes>",
+  "entries": [
+    {"testcase_index": 0, "external_id": "producer:case-7"}
+  ]
+}
+```
+
+Die Ordinalzahlen beginnen bei 0 und zählen ausschließlich Kern-Testcases in
+Dokumentreihenfolge, einschließlich verschachtelter Suites. Ignorierte
+Erweiterungen zählen nicht mit. Ein Index darf nur einmal vorkommen und muss
+ein tatsächliches Vorkommen bezeichnen. Die Begleitdatei darf unvollständig
+sein; fehlende Werte werden für die betroffenen Testcases diagnostiziert.
+Jeder Identifier ist ein nichtleerer, exakt verglichener String. Wiederholte
+Identifier an unterschiedlichen Vorkommen sind zulässig, ergeben bei einem
+zu groben gewählten Schlüssel aber eine Mehrdeutigkeit.
+
+Der Originalhash ist exakt gebunden: andere XML-Bytes benötigen eine neue
+Begleitdatei, auch bei gleichem Parserbaum, anderer Formatierung oder anderem
+Encoding. Die Begleitdatei hat maximal 4 MiB und 10.000 Einträge; Indexwerte
+sind Ganzzahlen von 0 bis 9.999, keine booleschen Werte. Veraltete Hashes,
+fremde Indizes, doppelte Einträge oder unzulässige Typen ergeben
+`JUnitMappingError`/SRV090, Code 3. Wenn `external_id` ausgewählt ist, ist der
+typisierte Eingang erforderlich; ohne dieses Feld wird eine trotzdem
+übergebene Begleitdatei abgewiesen. Weder XML-Erweiterungen noch
+`test_identity.external_id` eines Zielartefakts werden automatisch ausgewertet.
+Das schränkt D.4 nicht ein und erweitert das XML-Kernprofil nicht.
+
+```python
+from specroad.verification import (
+    JUnitDocument, JUnitMappingRules, JUnitExternalIdentifiers,
+    analyze_junit_candidates,
+)
+
+analysis = analyze_junit_candidates(
+    JUnitDocument(report_bytes),
+    JUnitMappingRules(rule_bytes),
+    targets=[test_or_verification_record],
+    external_identifiers=JUnitExternalIdentifiers(identifier_bytes),
+).data
+```
+
+Das Ergebnisformat `junit-mapping-analysis-v1` umfasst:
+
+- `observations`: jedes Kernvorkommen mit Ordinalzahl, Parserpointer, gewählter
+  Identität, vollständigem Class-/Name-/File-/External-ID-Kontext und allen
+  direkt beobachteten Ergebnisarten. Fehlende Werte bleiben `null`, leere
+  Strings bleiben leer.
+- `candidates`: nur eindeutig zugeordnete, widerspruchsfreie Vorkommen mit
+  demselben Kandidatenvertrag wie W. Die Ordinalzahlen bleiben die ursprünglichen
+  Vorkommensnummern; ein ausgelassener Kandidat nummeriert spätere nicht um.
+- `diagnostics`: jede Diagnose mit `category`, `reason`, `code`, `severity`,
+  betroffenen `testcase_indexes`, `mapping_indexes` und `missing_fields`.
+  Die Indizes sind sortiert. Ein leeres Testcase-Array kennzeichnet eine auch
+  ohne Vorkommen ungültige oder mehrdeutige Mappingzeile.
+- `rejected_testcase_indexes`: vollständige Menge der Vorkommen ohne Kandidat.
+  Jedes davon ist mindestens einer Diagnose zugeordnet.
+- `targets`: die tatsächlich geprüften übergebenen Zielbindungen, nach ID
+  sortiert. Original- und Mappingbindung entsprechen W; `external_identifiers`
+  ist entweder `null` oder `{sha256, size, source_sha256}` der Begleitdatei,
+  wobei `sha256` ihren kanonischen Inhalt und `source_sha256` ihre Rohbytes bindet.
+
+| Kategorie | Bedingungen und Gründe | Diagnose |
+|---|---|---|
+| `unmapped` | `junit_testcase_identity_missing`, `junit_testcase_unmapped`, `junit_mapping_target_not_found` | SRV043, warning |
+| `ambiguous` | `junit_mapping_ambiguous`, `duplicate_junit_testcase_identity` | SRV043, warning |
+| `contradictory` | `conflicting_junit_testcase_outcomes`, `conflicting_junit_testcase_results` | SRV090, error |
+
+Mehrere Problemaspekte bleiben getrennt sichtbar, beispielsweise eine fehlende
+Identität und gleichzeitig gemischte Ergebnisarten. Ungültige Ziel-IDs in
+ungenutzten Zeilen verschwinden nicht. Diagnosen kopieren keine Ergebnistexte,
+externen Identifier oder fremden Ziel-IDs; Indizes verweisen auf die expliziten
+gebundenen Eingaben. Große Gruppen gleicher Schlüssel erzeugen gruppierte
+Diagnosen, keine quadratische Liste paarweiser Konflikte.
+
+Jeder mehrfach beobachtete gewählte Schlüssel bleibt mehrdeutig, auch bei
+gleichem Ergebnis. Unterschiedliche Ergebnisse desselben vollständigen
+Class-/Name-/File-/External-ID-Kontexts sind zusätzlich widersprüchlich.
+Unterschiedliche Kontexte bei zu grobem Schlüssel sind dagegen mehrdeutig,
+ohne sie allein deshalb zu widersprüchlichen Ergebnissen desselben Tests zu
+erklären. Eine ausdrücklich gewählte feinere Kombination kann sie trennen.
+Verschiedene eindeutige Testcases zum gleichen Ziel bleiben getrennte Messungen;
+die spätere Pflicht-/Laufaggregation wird hier nicht vorweggenommen.
+
+`mapping_complete` bedeutet ausschließlich, dass keine Zuordnungsdiagnosen
+vorliegen, auch bei einem leeren Bericht. Es ist kein Erfolg eines Testlaufs.
+`import_policy_applied` und sämtliche Autoritäts-/Ausführungsflags aus W bleiben
+falsch. Die Analyse entscheidet weder `abort_import` noch
+`skip_invalid_with_diagnostic` und veröffentlicht keine Teilmenge.
+Format-/Syntax- und Sicherheitsfehler liefern weiterhin keinen Teilbericht.
+Eigentum, boolesches Verbot und Seitenwirkungsfreiheit gelten wie bei W.
