@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 501
-last_completed_plan_commit: 12.e.C
-next_plan_commit: 12.f.W
-last_completed_numbered_bundle: 327
+implementation_plan_commits_completed: 502
+last_completed_plan_commit: 12.f.W
+next_plan_commit: 12.f.R
+last_completed_numbered_bundle: 328
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13285,12 +13285,51 @@ nur den C-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 
 #### 12.f.W – Let it Work
 
-- [ ] **12.f.W** · Position **502/900** · Voraussetzung: `12.e.C`.
+- [x] **12.f.W** · Position **502/900** · Voraussetzung: `12.e.C`.
 **Exakte Commit-Message:** `12.f.W feat(verification): Sicherer XML-Kern für Evidence aufbauen`
 
 **Umsetzung:** DTD-/Entity-freien begrenzten XML-Parser für das JUnit-Kernprofil implementieren.
 
 **Verhaltensabnahme:** Unterstützte Suite-/Testcase-Daten werden ohne Testausführung gelesen.
+
+**W-Ausschnitt:** `JUnitDocument` liest ausschließlich ausdrücklich gelieferte
+XML-Bytes. Die unterstützten Suite-/Testcase-Knoten und Kernattribute aus D.4
+werden mit ihren gemeldeten Stringwerten und geordneten Kindern ausgegeben;
+Originalbytes und SHA-256 bleiben gebunden. Unbekannte Erweiterungsunterbäume
+werden nicht als normative Tests interpretiert. Der Reader führt weder Tests
+noch Datei-, Netzwerk- oder Fremdprozesszugriffe aus und erzeugt keine Evidence.
+
+Der Expat-basierte Lesekern weist DTDs, Entity-Deklarationen, externe Schema-/
+Include-Verweise und Processing Instructions ab. Dokumentierte harte Grenzen
+für ein XML-Dokument gelten auch für ignorierte Erweiterungen. Limitparameter
+dürfen die festen Obergrenzen nur verkleinern. Syntax-/Profilfehler, verletzte
+Sicherheitsgrenzen und ungültige Limitparameter bleiben maschinenlesbar getrennt.
+
+`JUnit_XML.md` beschreibt API, Profil und Grenzen. Mapping, globale Import-CLI,
+Evidence-Veröffentlichung und ReqIF-Anbindung sind spätere Schritte;
+`SR-TC-0324` und `SR-TC-0334` bleiben Teilnachweise. R und C werden nicht
+vorweggenommen, sondern als eigene folgende Zustände umgesetzt.
+
+**Entwicklungsnachweis:** 404 gezielte Verhaltenstests in acht betroffenen
+Dateien bestanden mit vier parallelen Workern in 4.77 Sekunden, darunter
+102 neue XML-Fälle und bestehende Core-/Bootstrap-, Sicherheits-, Contract- und
+Evidence-Konstruktor-Verträge. Die neuen Nachweise umfassen Originalbytebindung,
+Kernprofilwerte, unbekannte Erweiterungen, Parsergrenzen, Fehlerverträge und
+isoliertes Core/PYZ ohne externe Testausführung. Ein Fehler im neuen PYZ-
+Testaufbau wurde vor diesem erfolgreichen Gesamtlauf korrigiert; vorhandene
+Verhaltenstests und Erwartungswerte bleiben unverändert.
+
+Die vollständige Collection-/Katalogprüfung bestätigt 13.842 Identitäten ohne
+Testkörperausführung. Die bisherigen 13.740 Nummern bleiben erhalten; 102 neue
+Identitäten sind hinten angehängt. Geprüfter Quellstand:
+`cbcd0452b0fa358ed38a4a59317b51d578a1102ae54cf564c4f212cd1989213b`.
+
+Das Result `specroad-apply_Result_060159_1020_469942.zip` bestätigt `12.e.C`
+auf `d7d8f3916dbe5d027f6a16d3cd1eaba85d1ff258` mit 4.580 bestandenen
+parallelen Tests der Gruppe 2 und sauberem Snapshot. Dieser W-Stand erhält
+Apply-Sequenz 36, Gruppe 0 mit 4.614 Tests. Erst deren erfolgreicher Commit
+bestätigt **502/900** und den nächsten Schritt `12.f.R`. Dieser Auftrag liefert
+nur den W-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
 
 #### 12.f.R – Make it Right
 

@@ -5,6 +5,7 @@ from .contracts import (VerificationContract, VerificationContractResolution,
                         resolve_verification_contract)
 from .targets import resolve_verification_target
 from .evidence import prepare_evidence_record
+from .junit import JUnitDocument, JUnitLimits, XmlImportError
 from .context import (VerificationContext, VerificationContextAssessment,
     verification_context_projection, verification_context_sha256, assess_verification_context)
 
@@ -22,4 +23,4 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "prepare_verification_waiver", "assess_verification_waiver",
            "prepare_verification_plan_update", "VerificationContext", "VerificationContextAssessment",
            "verification_context_projection", "verification_context_sha256", "assess_verification_context",
-           "prepare_evidence_record")
+           "prepare_evidence_record", "JUnitDocument", "JUnitLimits", "XmlImportError")
