@@ -56,6 +56,7 @@
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-JCS-RFC8785-v1",
     "SR-FIX-JSON-PATCH-v1",
+    "SR-FIX-JUNIT-XML-RIGHT-v1",
     "SR-FIX-JUNIT-XML-v1",
     "SR-FIX-LANGUAGE-PACKAGES-v1",
     "SR-FIX-LANGUAGE-POLICY-v1",
@@ -543,6 +544,10 @@
     "SR-FIX-JUNIT-XML-v1": {
       "provider": "tests/test_junit_xml.py:REPORT",
       "kind": "Synthetic bounded XML byte documents with the documented JUnit core elements and attributes, explicit encodings and opaque extension data. DTD/entity/schema/inclusion and resource-limit adversarial inputs with real I/O/process/network traps; native Core/PYZ parity. No external test run, Evidence publication or release approval is claimed."
+    },
+    "SR-FIX-JUNIT-XML-RIGHT-v1": {
+      "provider": "tests/test_junit_xml_right.py:DTD_ATTACKS",
+      "kind": "Synthetic recursive/quadratic/exponential DTDs, external schema/include/PI requests, namespace/name-expansion boundaries and explicit encoding profiles. Real parser and I/O/process/network traps, literal-data counterexamples and isolated Core/PYZ behavior; no actual external test run or publication is claimed."
     }
   }
 }

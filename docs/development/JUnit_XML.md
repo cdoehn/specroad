@@ -1,4 +1,4 @@
-# JUnit-XML lesen (12.f.W)
+# JUnit-XML lesen (12.f.W/R)
 
 `specroad.verification.JUnitDocument(raw)` liest ein vollständiges XML-Dokument
 aus ausdrücklich übergebenen `bytes`. Es öffnet keine Datei und startet weder
@@ -20,8 +20,13 @@ und SHA-256 der unveränderten Eingangsbytes. `format_version` ist `junit-core-v
 Ein boolescher Erfolgsgebrauch des Dokuments ist unzulässig: ein gelesener Bericht
 beweist weder einen authentischen Testlauf noch bestandene Verifikation.
 
-Der W-Lesekern unterstützt XML 1.0 und die von CPythons Expat erkannten
-XML-Encodings. Er interpretiert das nicht namensraumqualifizierte Kernprofil aus
+Der Lesekern unterstützt XML 1.0 und die ausdrücklich zugelassenen
+Encoding-Namen `UTF-8`, `UTF-16`, `UTF-16LE`, `UTF-16BE`, `ISO-8859-1`,
+`US-ASCII` und `ASCII`, ohne Beachtung der Groß-/Kleinschreibung.
+Die XML-Deklaration darf fehlen; die Byteerkennung bleibt beim Parser.
+Andere Namen, auch alternative Codec-Aliase, werden vor dem Rückgriff auf
+Pythons erweiterbare Codec-Suche als `unsupported_xml_encoding` abgelehnt.
+Der Reader interpretiert das nicht namensraumqualifizierte Kernprofil aus
 Spezifikation D.4:
 
 - Wurzel `testsuites` oder `testsuite`; unter `testsuites` stehen `testsuite`.
@@ -51,8 +56,18 @@ Arbeitsbudget. Ein Host kann sie mit `JUnitLimits` verkleinern, niemals vergrö�
 | Elementtiefe, Wurzel = 1 | 64 |
 | Elemente insgesamt | 10.000 |
 | Unicode-Zeichen in Text, Attributwerten, Kommentaren und Namespace-URIs zusammen | 1.048.576 |
-| Attribute je Element, ohne Namespace-Deklarationen | 64 |
+| Attribute je Element, einschließlich Namespace-Deklarationen | 64 |
 | expandierter Element-/Attributname sowie Namespace-Präfix/-URI in Zeichen | 256 |
+| expandierte Element- und Attributnamen zusammen, `max_expanded_name_chars` | 1.048.576 |
+
+Jede Namespace-Deklaration zählt einmal zum Attributbudget ihres Elements,
+auch ein leerer Default-Namespace. Geerbte Bindungen zählen dort nicht erneut.
+Das Namensgesamtbudget zählt jeden Start-Elementnamen und jeden gewöhnlichen
+Attributnamen, einschließlich Wiederholungen und ignorierter Erweiterungen.
+Bei qualifizierten Namen zählen URI, ein Trennzeichen und lokaler Name.
+End-Tags werden nicht erneut gezählt. Namespace-URIs unterliegen zusätzlich
+bei jeder Deklaration dem Textbudget. So können kurze Präfixe das Gesamtbudget
+nicht durch expandierte Namen umgehen.
 
 Vor dem Parse wird die Bytegrenze geprüft. Der Parser verarbeitet den begrenzten
 Eingang in einem abschließenden Aufruf und deaktiviert keine eingebauten
@@ -69,6 +84,9 @@ Diagnosen enthalten keine kopierten XML-Inhalte oder Zieladressen.
 
 Die Implementierung nutzt ausschließlich die Python-Standardbibliothek.
 Technische Grundlage sind die [Expat-Handler und Parse-API](https://docs.python.org/3/library/pyexpat.html).
-Der W-Nachweis ist ein Teilnachweis zu `SR-TC-0324` und `SR-TC-0334`.
-Weitere Robustheitsfälle in 12.f.R und die gemeinsame XML-Struktur für ReqIF
-in 12.f.C bleiben getrennte Arbeitsschritte.
+Die Encoding-Grenze berücksichtigt auch
+[CPythons Unknown-Encoding-Handler](https://github.com/python/cpython/blob/3.10/Modules/pyexpat.c)
+und die [Reihenfolge der XML-Deklarationsbehandlung in Expat](https://github.com/libexpat/libexpat/blob/R_2_7_3/expat/lib/xmlparse.c).
+Die W-/R-Nachweise sind Teilnachweise zu `SR-TC-0324` und `SR-TC-0334`.
+Die gemeinsame XML-Struktur für ReqIF in 12.f.C bleibt ein getrennter
+Arbeitsschritt; auch Mapping und Veröffentlichung sind noch nicht abgedeckt.

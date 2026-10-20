@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 502
-last_completed_plan_commit: 12.f.W
-next_plan_commit: 12.f.R
-last_completed_numbered_bundle: 328
+implementation_plan_commits_completed: 503
+last_completed_plan_commit: 12.f.R
+next_plan_commit: 12.f.C
+last_completed_numbered_bundle: 329
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13333,12 +13333,49 @@ nur den W-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 
 #### 12.f.R – Make it Right
 
-- [ ] **12.f.R** · Position **503/900** · Voraussetzung: `12.f.W`.
+- [x] **12.f.R** · Position **503/900** · Voraussetzung: `12.f.W`.
 **Exakte Commit-Message:** `12.f.R feat(verification): Sicherer XML-Kern für Evidence vervollständigen`
 
 **Vervollständigung:** DTD, externe Schemas/Entitäten, Tiefe und Expansionsangriffe vor gefährlicher Verarbeitung abweisen.
 
 **Verhaltensabnahme:** Angriffsfixtures erzeugen weder Netzwerk- noch Fremdprozesszugriff. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Ausschnitt:** Namespace-Deklarationen zählen gemeinsam mit gewöhnlichen
+Attributen zum Limit ihres Elements, auch innerhalb ignorierter Erweiterungen.
+Ein eigenes, nur verkleinerbares Gesamtbudget begrenzt die expandierten Element-
+und Attributnamen einschließlich wiederholter URI-Anteile. Kurze Präfixe können
+dadurch weder das Attributlimit noch die Namensgrenze umgehen.
+
+Der Reader akzeptiert die ausdrücklich dokumentierten Encoding-Namen und weist
+andere Deklarationen vor Pythons erweiterbarer Codec-Suche ab. XML-1.0-Inhalte,
+Originalbytes und gemeldete Werte bleiben erhalten. DTDs werden vor Interpretation
+ihres internen Subsets abgelehnt; rekursive, quadratische und exponentielle
+Entity-Angriffe sowie externe Schema-/Include-Verweise und Processing Instructions
+liefern maschinenlesbare Fehler ohne Datei-, Netzwerk- oder Fremdprozesszugriff.
+Als Kommentar oder CDATA gelieferte gleichlautende Texte bleiben passive Daten.
+
+Die R-Nachweise prüfen genaue Grenzen, ignorierte Unterbäume, Namespacekonflikte,
+unvollständige Tokens, Encoding-Auswahl und isolierte Core-/PYZ-Auslieferungen.
+Die bestehenden W-Testdateien und ihre Erwartungen bleiben bytegleich.
+`SR-TC-0324` und `SR-TC-0334` bleiben wegen der getrennten Mapping-, CLI-,
+Veröffentlichungs- und ReqIF-Schritte Teilnachweise. Die gemeinsame
+XML-Struktur wird erst in `12.f.C` bereinigt.
+
+**Entwicklungsnachweis:** 515 gezielte Verhaltenstests in neun betroffenen
+Dateien bestanden mit vier parallelen Workern in 5.35 Sekunden. Darunter sind
+104 neue R-Fälle, alle 102 bisherigen W-Fälle und sieben zusätzliche
+Limitparameter-Fälle aus deren bestehender Parametrisierung. Die vollständige
+Collection-/Katalogprüfung bestätigt 13.953 Identitäten ohne Testkörperausführung.
+Die bisherigen 13.842 Nummern bleiben unverändert; 111 neue Identitäten sind
+hinten angehängt. Geprüfter Quellstand:
+`9f3bdeea060feb414a6ce0e001e410fc7e6d40a29f0cee8897b08ee25720adb3`.
+
+Das Result `specroad-apply_Result_063132_1020_afe360.zip` bestätigt `12.f.W`
+auf `1c1715d8a2fe67c0f1e0b25404383cb410209bb6` mit 4.614 bestandenen
+parallelen Tests der Gruppe 0 und sauberem Snapshot. Dieser R-Stand erhält
+Apply-Sequenz 37, Gruppe 1 mit 4.651 Tests. Erst deren erfolgreicher Commit
+bestätigt **503/900** und den nächsten Schritt `12.f.C`. Dieser Auftrag liefert
+nur den R-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
 
 #### 12.f.C – Make it Clean
 
