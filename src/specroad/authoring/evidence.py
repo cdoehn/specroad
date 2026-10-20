@@ -62,6 +62,22 @@ def record_evidence(plan, model, *, transaction_id, authority, gates=(),
         strict=strict, package_files=package_files)
 
 
+def _input_record(input, run_context, cwd, stdin):
+    """Decode explicit inputs through the shared reader, without planning writes."""
+    value = parse_json_object(_read_input(input, cwd, stdin))
+    if run_context is not None:
+        run = parse_json_object(_read_input(run_context, cwd, stdin))
+        if 'run_context' in value and canonical_json_bytes(value['run_context']) != canonical_json_bytes(run):
+            raise AuthoringError('evidence_run_context_conflict', pointer='/run_context', exit_code=3)
+        value['run_context'] = run
+    elif 'run_context' not in value:
+        reason = value.get('unbound_reason')
+        if type(reason) is not str or not reason.strip():
+            raise AuthoringError('evidence_unbound_reason_required', pointer='/unbound_reason', exit_code=3)
+        value['run_context'] = None
+    return RecordArtifact(canonical_json_bytes(value), expected_type='evidence')
+
+
 def read_evidence_record_input(verification_id, *, input, run_context=None,
                                configuration_id=None, cwd=None, stdin=None):
     """Read explicit record/run JSON; bind contents, never paths or implicit stdin.
@@ -81,18 +97,7 @@ def read_evidence_record_input(verification_id, *, input, run_context=None,
             identity = _reference(configuration_id, '/configuration_id')
             if identity.artifact_type != 'configuration':
                 raise AuthoringError('configuration_reference_required', pointer='/configuration_id', exit_code=3)
-        value = parse_json_object(_read_input(input, cwd, stdin))
-        if run_context is not None:
-            run = parse_json_object(_read_input(run_context, cwd, stdin))
-            if 'run_context' in value and canonical_json_bytes(value['run_context']) != canonical_json_bytes(run):
-                raise AuthoringError('evidence_run_context_conflict', pointer='/run_context', exit_code=3)
-            value['run_context'] = run
-        elif 'run_context' not in value:
-            reason = value.get('unbound_reason')
-            if type(reason) is not str or not reason.strip():
-                raise AuthoringError('evidence_unbound_reason_required', pointer='/unbound_reason', exit_code=3)
-            value['run_context'] = None
-        record = RecordArtifact(canonical_json_bytes(value), expected_type='evidence')
+        record = _input_record(input, run_context, cwd, stdin)
         return prepare_evidence_operation(verification_id, record, configuration_id=configuration_id)
     except AuthoringError:
         raise

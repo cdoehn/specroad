@@ -22,8 +22,8 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad evidence record <VERIFICATION-ID>` MUSS einen manuellen oder werkzeuggest\u00fctzten Nachweis einschlie\u00dflich des Laufkontexts nach Kapitel 10.5 \u00fcber den gemeinsamen Change Plan als neues unver\u00e4nderbares Evidence-Artefakt erfassen.",
-    "scope": "12.e.W publishes exactly one prepared immutable Evidence through the existing saved-plan writer. Actual model bytes determine subject/contract/test/configuration hashes; existing attachment bytes and explicit run metadata are retained. Native receipts report the created identity and bind durable request replay. Conflicts, drift, missing services and unauthorized actors fail closed. Preview and explicit run input remain read-only. Existing records and subjects are not rewritten. The global CLI is not yet registered; this remains a partial requirement proof. Step 12.e.R makes whole-context omission with explicit reason equivalent to null without inventing provenance, validates operand identities before source reads, and demonstrates unchanged Subject revision/planning through storage and replay. Partial run objects, missing measurement/audit fields, contrary run files, changed context bindings and unsafe inputs remain failures; later Subject changes are not rewritten by historical replay."
+    "requirement_contract": "`specroad evidence record <VERIFICATION-ID>` MUSS einen manuellen oder werkzeuggestützten Nachweis einschließlich des Laufkontexts nach Kapitel 10.5 über den gemeinsamen Change Plan als neues unveränderbares Evidence-Artefakt erfassen.",
+    "scope": "12.e.W publishes exactly one prepared immutable Evidence through the existing saved-plan writer. Actual model bytes determine subject/contract/test/configuration hashes; existing attachment bytes and explicit run metadata are retained. Native receipts report the created identity and bind durable request replay. Conflicts, drift, missing services and unauthorized actors fail closed. Preview and explicit run input remain read-only. Existing records and subjects are not rewritten. The global CLI is not yet registered; this remains a partial requirement proof. Step 12.e.R makes whole-context omission with explicit reason equivalent to null without inventing provenance, validates operand identities before source reads, and demonstrates unchanged Subject revision/planning through storage and replay. Partial run objects, missing measurement/audit fields, contrary run files, changed context bindings and unsafe inputs remain failures; later Subject changes are not rewritten by historical replay. 12.e.C separates input decoding, subject reconstruction and attachment binding into internal helpers while retaining the shared reader and transactional writer; the W/R tests and expected values remain unchanged."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -168,7 +168,6 @@
     "tests/test_evidence_recording_right.py::test_unknown_input_normalization_is_identical_in_isolated_core_and_pyz[pyz]"
   ],
   "open_items": [
-    "Complete the separate 12.e.C structural cleanup with unchanged W/R behavior.",
     "Global CLI host registration and current/history identity inventory discovery remain integration work; the W API requires explicitly prepared identities and a complete TargetModel.",
     "External attachment import/allocation and additional existing lifecycle/currentness services are not supplied by this narrow recording adapter.",
     "These targeted tests prove native recording behavior only, not an authentic external test run, current verification result or release approval."

@@ -1,4 +1,4 @@
-# Evidence erfassen (12.e.W/R)
+# Evidence erfassen (12.e.W/R/C)
 
 `specroad.authoring.evidence` verbindet vorbereitete native Evidence mit dem
 bestehenden gespeicherten Change Plan und dessen Writer. Der kleinste nutzbare
@@ -92,5 +92,13 @@ Der W-Nachweis umfasst echte Speicherung und Replay auch im isolierten Core und
 PYZ. Er belegt keine vollständige CLI-Integration, authentische externe
 Testausführung, bestandene Projektverifikation oder Release-Freigabe. Die
 R-Nachweise prüfen zusätzlich Eingabegrenzen, unbekannte Herkunft sowie den
-Erhalt bestehender Revisionen und Planungszustände. Die strukturelle Bereinigung
-folgt im getrennten Schritt 12.e.C.
+Erhalt bestehender Revisionen und Planungszustände.
+
+In `12.e.C` sind das Lesen und Normalisieren des Record-Inputs, die Auflösung
+der tatsächlichen Subject-Bytes und die Bindung vorhandener Attachments in
+kleine interne Helfer getrennt. Referenzprüfung und Fehlerübersetzung bleiben
+am öffentlichen Eingaberand. Vorschau und Speicherung delegieren weiterhin
+direkt an den gemeinsamen Change-Plan-/Writer-Pfad; es gibt keinen eigenen
+Datei-Writer. Prüfungsreihenfolge, Gate-Bindungen, Request-Absicht und zulässige
+Seiteneffekte bleiben unverändert. Die bestehenden W/R-Nachweise und ihre
+Testidentitäten werden für diese Bereinigung unverändert wiederverwendet.

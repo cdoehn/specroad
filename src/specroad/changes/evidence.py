@@ -32,8 +32,8 @@ def evidence_mode(operations):
     return selected
 
 
-def _record(model, state, operation, actor, planned_at):
-    value = operation['evidence']
+def _subject_inputs(model, state, value):
+    """Reopen the declared subjects from the model's actual document bytes."""
     subjects, contracts, tests = [], [], []
     documents = {SourceRelations(d.content).identity.id: d for d in model.documents}
     for binding in value['subjects']:
@@ -52,27 +52,39 @@ def _record(model, state, operation, actor, planned_at):
             raise TargetError('evidence_subject_kind_not_supported', pointer='/evidence/subjects')
     if len(contracts) != 1 or len(tests) > 1:
         raise TargetError('evidence_explicit_contract_and_test_required', pointer='/evidence/subjects')
+    return subjects, contracts[0], None if not tests else tests[0]
+
+
+def _bound_attachments(model, values):
+    """Bind declarations to existing project resources; never import files."""
+    declared = [AttachmentDescriptor.from_data(item) for item in values]
+    available = {item.path: item.data for item in model.attachment_descriptors}
+    if len({item.path.casefold() for item in declared}) != len(declared):
+        raise TargetError('evidence_attachment_path_collision', pointer='/evidence/attachments')
+    for item in declared:
+        if (classify_path(item.path, model.configuration) is not PathClass.ATTACHMENT
+                or available.get(item.path) != item.data):
+            raise TargetError('evidence_attachment_binding_mismatch', pointer='/evidence/attachments')
+    return [item.data for item in declared]
+
+
+def _record(model, state, operation, actor, planned_at):
+    """Reconstruct the exact record before the existing target/writer pipeline."""
+    value = operation['evidence']
+    subjects, contract, test = _subject_inputs(model, state, value)
     selected_id = operation.get('configuration_id')
     configuration = (None if selected_id is None else resolve_configuration(
         tuple(SourceRelations(d.content, path=d.path) for d in model.documents), selected_id))
     identity = artifact_identity(value)
     allocation = IdentityAllocation(identity, IdentityInventory(
         model.configuration.id_prefix, list(state), (), (identity.id,)))
-    expected = prepare_evidence_record(subjects, contracts[0], allocation=allocation,
+    expected = prepare_evidence_record(subjects, contract, allocation=allocation,
         configuration=configuration, actor=actor, planned_at=planned_at,
-        test=None if not tests else tests[0], unbound_reason=value.get('unbound_reason'),
+        test=test, unbound_reason=value.get('unbound_reason'),
         **{key: value[key] for key in ('title', 'result', 'produced_at', 'producer',
             'tool', 'environment', 'origin', 'run_context')}).data
     if 'attachments' in value:
-        declared = [AttachmentDescriptor.from_data(item) for item in value['attachments']]
-        available = {item.path: item.data for item in model.attachment_descriptors}
-        if len({item.path.casefold() for item in declared}) != len(declared):
-            raise TargetError('evidence_attachment_path_collision', pointer='/evidence/attachments')
-        for item in declared:
-            if (classify_path(item.path, model.configuration) is not PathClass.ATTACHMENT
-                    or available.get(item.path) != item.data):
-                raise TargetError('evidence_attachment_binding_mismatch', pointer='/evidence/attachments')
-        expected['attachments'] = [item.data for item in declared]
+        expected['attachments'] = _bound_attachments(model, value['attachments'])
     if canonical_json_bytes(expected) != canonical_json_bytes(value):
         raise TargetError('evidence_record_binding_mismatch', pointer='/evidence')
     return expected

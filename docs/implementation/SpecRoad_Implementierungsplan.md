@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 500
-last_completed_plan_commit: 12.e.R
-next_plan_commit: 12.e.C
-last_completed_numbered_bundle: 326
+implementation_plan_commits_completed: 501
+last_completed_plan_commit: 12.e.C
+next_plan_commit: 12.f.W
+last_completed_numbered_bundle: 327
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13238,7 +13238,7 @@ nur den R-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 
 #### 12.e.C – Make it Clean
 
-- [ ] **12.e.C** · Position **501/900** · Voraussetzung: `12.e.R`.
+- [x] **12.e.C** · Position **501/900** · Voraussetzung: `12.e.R`.
 **Exakte Commit-Message:** `12.e.C refactor(verification): Manuelle und werkzeuggestützte Erfassung bereinigen`
 
 **Bereinigung:** Erfassungsadapter nutzt vorhandenen Writer statt eigener Dateizugriffe.
@@ -13246,6 +13246,36 @@ nur den R-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Ausschnitt:** Record-Eingänge werden über einen eigenen internen Helfer
+mit dem bestehenden sicheren Input-Reader normalisiert. Der öffentliche Adapter
+behält Referenzprüfung und Fehlerübersetzung bei und delegiert Vorschau und
+Speicherung weiterhin an den vorhandenen Change-Plan-/Writer-Pfad. Im Planner
+sind die Rekonstruktion tatsächlicher Subject-Bytes und die Bindung vorhandener
+Attachment-Ressourcen als getrennte interne Aufgaben sichtbar.
+
+Prüfungsreihenfolge, vollständiger Zielvergleich, Gates, Autorisierung, Lock,
+Journal, Receipts und Request-Replay bleiben unverändert. Es entstehen weder
+ein zweiter Datei-Writer noch neue Erfassungsfunktionen. Alle W/R-Testdateien,
+Erwartungen, Fixtures und stabilen Testnummern bleiben bytegleich.
+`SR-TC-0333` bleibt wegen der bereits benannten Integrationsgrenzen ein Teilnachweis.
+
+**Entwicklungsnachweis:** 782 gezielte Verhaltenstests in 14 betroffenen
+Dateien bestanden mit vier parallelen Workern in 407.28 Sekunden. Enthalten
+sind sämtliche 59 W- und 67 R-Fälle sowie die betroffenen Konstruktor-, Record-,
+Eingabe-, Zielplan-, Saved-Plan- und Request-Replay-Verträge. Kein vorhandener
+Test und kein Erwartungswert wurde für das Refactoring geändert.
+Die vollständige Collection-/Katalogprüfung bestätigt unverändert 13.740
+Identitäten ohne Testkörperausführung. Fixtures und stabile Testnummern bleiben
+bytegleich. Geprüfter Quellstand:
+`3ed324aa6a4e2f78edceedba7717732816ef66aa135c95788c308cb4c79b6bdb`.
+
+Das Result `specroad-apply_Result_052958_1020_8cb8aa.zip` bestätigt `12.e.R`
+auf `5796ebae6833968a7d22d4d8185ecac9fddee085` mit 4.580 bestandenen
+parallelen Tests der Gruppe 1 und sauberem Snapshot. Dieser C-Stand erhält
+Apply-Sequenz 35, Gruppe 2 mit 4.580 Tests. Erst deren erfolgreicher Commit
+bestätigt **501/900** und den nächsten Schritt `12.f.W`. Dieser Auftrag liefert
+nur den C-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
 
 <a id="step-12-f"></a>
 ### 12.f – Sicherer XML-Kern für Evidence
