@@ -16,6 +16,9 @@ from .imports import (EvidenceImportPreparation, prepare_junit_import,
                       prepare_generic_import, prepare_sarif_import)
 from .context import (VerificationContext, VerificationContextAssessment,
     verification_context_projection, verification_context_sha256, assess_verification_context)
+from .evaluation import (VerificationEvaluation, VerificationEvaluationError,
+    EvaluationInputAssessment, verification_evaluation_schema,
+    prepare_verification_evaluation, assess_evaluation_inputs)
 
 from .waiver_content import waiver_content_projection, waiver_content_sha256
 from .waiver_values import (VerificationWaiver, WaiverContext, HumanWaiverReview,
@@ -38,4 +41,7 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "EvidenceImportError", "evidence_exchange_schema", "map_generic_candidates",
            "SarifDocument", "SarifMapping", "SarifCandidates", "map_sarif_candidates",
            "EvidenceImportPreparation", "prepare_junit_import",
-           "prepare_generic_import", "prepare_sarif_import")
+           "prepare_generic_import", "prepare_sarif_import",
+           "VerificationEvaluation", "VerificationEvaluationError", "EvaluationInputAssessment",
+           "verification_evaluation_schema", "prepare_verification_evaluation",
+           "assess_evaluation_inputs")

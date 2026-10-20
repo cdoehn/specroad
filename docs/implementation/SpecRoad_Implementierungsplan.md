@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 516
-last_completed_plan_commit: 12.j.C
-next_plan_commit: 12.k.W
-last_completed_numbered_bundle: 342
+implementation_plan_commits_completed: 517
+last_completed_plan_commit: 12.k.W
+next_plan_commit: 12.k.R
+last_completed_numbered_bundle: 343
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14149,12 +14149,65 @@ Release-Erfolgsnachweis. Dieses Bundle enthält genau einen C-Zustand;
 
 #### 12.k.W – Let it Work
 
-- [ ] **12.k.W** · Position **517/900** · Voraussetzung: `12.j.C`.
+- [x] **12.k.W** · Position **517/900** · Voraussetzung: `12.j.C`.
 **Exakte Commit-Message:** `12.k.W feat(verification): Bewertungsdescriptor und Produktstand aufbauen`
 
 **Umsetzung:** verification-evaluation-v1 mit eigenem Eingangsmanifest und state_sha256 implementieren.
 
 **Verhaltensabnahme:** Bewerteter Produktstand ist an tatsächliche Prüfeingangsbytes gebunden.
+
+**Vorbereiteter W-Zustand – Bundle 343 (20. Oktober 2026):** Technische Basis ist
+das vollständig geprüfte Result `specroad-apply_Result_205854_1020_0c8a67.zip`,
+SHA-256 `1c7eb0addbb55fc59c23de83ae1a1049a82727fc27b67170021d9c542c290eb4`,
+mit sauberem Apply-HEAD `b5537b700d6597254618b4c115feaf5cf8a7e572`.
+Bundle 342 bestätigt `12.j.C`: Gruppe **2**, Commitsequenz **50**,
+**4.915/4.915** parallele Apply-Teiltests mit **4 Workern** in **1.192,26 s**.
+
+Der neue Core-Wert `VerificationEvaluation` prüft den geschlossenen
+`verification-evaluation-v1`-Vertrag und normalisiert Manifest, Pflichtschlüssel
+und Lauf-ID-Mengen. `prepare_verification_evaluation` berechnet das Manifest
+ausschließlich aus ausdrücklich übergebenen logischen Pfaden und tatsächlichen
+Prüfeingangsbytes. `state_sha256` bindet die RFC-8785-Bytes von
+`{subject_id, manifest}`; der getrennte Descriptorhash bindet zusätzlich Auswahl,
+Konfiguration, Identität und Audit. Konfiguration, Identität und Zeit sind
+explizite Eingaben, keine aus Host oder Git geratenen Werte.
+
+`assess_evaluation_inputs` vergleicht jeden Manifesteintrag mit den gelieferten
+Bytes und unterscheidet passende, fehlende, abweichende und zusätzliche Inputs.
+Nur vollständige Bytegleichheit ergibt `input_bytes_verified=true`. Die
+Beobachtung bestätigt weder die fachliche Vollständigkeit oder Rollen der Inputs
+noch einen externen Prüflauf, ein Verification Result oder eine Freigabe.
+Strukturfehler melden `SRV175` mit Code **3**; Werte und Beobachtungen sind
+unveränderlich, ausgelesene Daten abgetrennt und boolesche Erfolgsannahmen gesperrt.
+Der erste Descriptorstand unterstützt ausdrücklich nur `replacements=[]`.
+
+Die Prüfung von Selbstbezug und Inputrollen sowie fehlender Bewertungsauswahl
+bleibt `12.k.R` zugeordnet. Unabhängige Pflichtmenge, Projekt-Identitätskonflikte,
+Nachweisauswahl, Laufablösung, Aggregation sowie CLI-/Readiness-Anbindung bleiben
+offen. Die Belege für `SR-TC-0136` und `SR-TC-0446` weisen den abgegrenzten
+Bytebindungsumfang als `partial` aus; die Spezifikation bleibt unverändert.
+
+**Gezielter Dev-Nachweis:** **438/438** Verhaltenstests aus **8** Dateien
+parallel mit **4 Workern** in **12,37 s**, darunter **79** neue Fälle.
+Die Auswahl prüft Manifest- und Descriptorhash mit unabhängigen Erwartungswerten,
+veränderte tatsächliche Bytes, Normalisierung, fehlende Eingänge, Fehlerverträge,
+Wertbesitz und isolierten Core/PYZ sowie betroffene bestehende Tests zu
+Evidence-Austausch, Verifikationskontext und Release-Baseline-Grenzen.
+Der erste Lauf hatte **437 bestandene und 1 fehlgeschlagenen Test** wegen einer
+falschen Verwendung des Build-Helfer-Rückgabewerts im neuen PYZ-Test. Dieser
+Testaufbau wurde korrigiert; nur der danach vollständig erfolgreiche gezielte
+Lauf ist der Freigabenachweis. Geprüfte Source-SHA-256:
+`99dd34061ff257738b3a27babea94821d7dba43e346a6e422ec3a6984954b313`.
+
+Die vollständige Katalog-Collection bestätigt **14.826** Tests ohne Testbodies.
+Alle **447** bisherigen Testdateien bleiben bytegleich zum Result. Die **14.747**
+bisherigen Testnummern bleiben unverändert; **79** neue Identitäten sind hinten
+angefügt. Der Entrypoint stellt genau diesen W-Zustand her und verlangt in Apply
+ausschließlich Gruppe **0**, Commitsequenz **51**, mit **4.942** parallelen Tests
+und **4 Workern**. Erst der erfolgreiche Apply-Lauf erlaubt den W-Commit und den
+Fortschrittsmarker **517/900** mit `12.k.R` als nächstem Schritt. Es gibt keinen
+Vollsuite-, Serienlauf- oder Release-Erfolgsnachweis. Dieses Bundle enthält genau
+einen W-Zustand; `12.k.R` wird nicht begonnen, der Auftrag endet nach der Übergabe.
 
 #### 12.k.R – Make it Right
 
