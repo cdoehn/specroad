@@ -17,6 +17,12 @@ from ..storage.record_artifact import RecordArtifact
 from .inputs import _read_input
 
 
+def _verification_reference(verification_id):
+    identity = _reference(verification_id, '/verification_id')
+    if identity.artifact_type != 'verification':
+        raise AuthoringError('verification_reference_required', pointer='/verification_id', exit_code=3)
+
+
 def prepare_evidence_operation(verification_id, record, *, configuration_id=None):
     """Bind a prepared immutable record to its explicitly named contract.
 
@@ -26,9 +32,7 @@ def prepare_evidence_operation(verification_id, record, *, configuration_id=None
     """
     if type(record) is not RecordArtifact:
         raise AuthoringError('typed_evidence_record_required')
-    identity = _reference(verification_id, '/verification_id')
-    if identity.artifact_type != 'verification':
-        raise AuthoringError('verification_reference_required', exit_code=3)
+    _verification_reference(verification_id)
     value = RecordArtifact(record.source_bytes, expected_type='evidence').data
     contracts = [item['artifact_id'] for item in value['subjects']
                  if _reference(item['artifact_id'], '/subjects').artifact_type == 'verification']
@@ -64,17 +68,30 @@ def read_evidence_record_input(verification_id, *, input, run_context=None,
 
     --run-context can supply an absent run_context field or repeat an identical
     one. It cannot overwrite contrary measured provenance, including null.
+    An omitted context without a run file becomes null only when the caller
+    supplied a nonblank unbound_reason. Partial run objects are never filled in.
     Attachments are declarations for existing project bytes, not file imports.
     """
     if input == '-' and run_context == '-':
         raise AuthoringError('multiple_stdin_inputs')
     try:
+        # Validate explicit operand identities before consuming either input.
+        _verification_reference(verification_id)
+        if configuration_id is not None:
+            identity = _reference(configuration_id, '/configuration_id')
+            if identity.artifact_type != 'configuration':
+                raise AuthoringError('configuration_reference_required', pointer='/configuration_id', exit_code=3)
         value = parse_json_object(_read_input(input, cwd, stdin))
         if run_context is not None:
             run = parse_json_object(_read_input(run_context, cwd, stdin))
             if 'run_context' in value and canonical_json_bytes(value['run_context']) != canonical_json_bytes(run):
                 raise AuthoringError('evidence_run_context_conflict', pointer='/run_context', exit_code=3)
             value['run_context'] = run
+        elif 'run_context' not in value:
+            reason = value.get('unbound_reason')
+            if type(reason) is not str or not reason.strip():
+                raise AuthoringError('evidence_unbound_reason_required', pointer='/unbound_reason', exit_code=3)
+            value['run_context'] = None
         record = RecordArtifact(canonical_json_bytes(value), expected_type='evidence')
         return prepare_evidence_operation(verification_id, record, configuration_id=configuration_id)
     except AuthoringError:

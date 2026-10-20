@@ -50,6 +50,7 @@
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-EVIDENCE-CONSTRUCTION-RIGHT-v1",
     "SR-FIX-EVIDENCE-CONSTRUCTION-v1",
+    "SR-FIX-EVIDENCE-RECORDING-RIGHT-v1",
     "SR-FIX-EVIDENCE-RECORDING-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
@@ -301,6 +302,10 @@
     "SR-FIX-EVIDENCE-CONSTRUCTION-v1": {
       "provider": "tests/test_evidence_construction.py:inputs",
       "kind": "Owned requirement/contract/test bytes, explicit configuration, reserved random128 identities and synthetic producer/run metadata. Immutable recorded/approved value construction, new-measurement identity collision handling, exact subject hashes and check bindings, no filesystem/clock/process/network access and isolated Core/PYZ parity. No persistent recording, authentic external run, human approval or request-replay claim."
+    },
+    "SR-FIX-EVIDENCE-RECORDING-RIGHT-v1": {
+      "provider": "tests/test_evidence_recording_right.py:unbound_input",
+      "kind": "Owned temporary native projects and explicit incomplete source input. No-fallback input/operand guards, documented null provenance, preserved noncanonical Subject/Contract/Test bytes and revisions, durable request identity and replay after later Subject changes. Real storage and denial oracles plus isolated Core/PYZ input parity; no inference of product state, external execution, approval or full CLI integration."
     },
     "SR-FIX-EVIDENCE-RECORDING-v1": {
       "provider": "tests/test_evidence_recording.py:project",

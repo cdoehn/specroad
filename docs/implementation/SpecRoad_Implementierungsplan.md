@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 499
-last_completed_plan_commit: 12.e.W
-next_plan_commit: 12.e.R
-last_completed_numbered_bundle: 325
+implementation_plan_commits_completed: 500
+last_completed_plan_commit: 12.e.R
+next_plan_commit: 12.e.C
+last_completed_numbered_bundle: 326
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13196,12 +13196,45 @@ nur den W-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 
 #### 12.e.R – Make it Right
 
-- [ ] **12.e.R** · Position **500/900** · Voraussetzung: `12.e.W`.
+- [x] **12.e.R** · Position **500/900** · Voraussetzung: `12.e.W`.
 **Exakte Commit-Message:** `12.e.R feat(verification): Manuelle und werkzeuggestützte Erfassung vervollständigen`
 
 **Vervollständigung:** Fehlende Werte nicht aus Git-HEAD oder aktueller Modellwurzel erraten.
 
 **Verhaltensabnahme:** Record verändert weder Subject-Revision noch dessen Verifikationsplanung. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Ausschnitt:** Der Erfassungsadapter materialisiert einen vollständig
+ausgelassenen Laufkontext nur bei ausdrücklich übergebenem, nichtleerem
+`unbound_reason` als `null`. Teilweise gefüllte Run-Objekte und andere fehlende
+Mess-/Auditfelder bleiben Fehler; Git-HEAD, Modellwurzel, Uhrzeit und Contract-Slots
+werden nicht zur Ergänzung herangezogen. Falsche oder syntaktisch ungültige
+Verification-/Konfigurations-IDs scheitern vor Dateizugriff oder Standardinput.
+
+Die neuen Nachweise prüfen reale Speicherung bei verschiedenen bestehenden
+Planungszuständen, unveränderte Subject-/Contract-/Testrevisionen und den Erhalt
+nichtkanonischer Originalbytes. Alte Messungen werden nicht an überarbeitete
+Inputs neu gebunden. Ausgelassene und explizit unbekannte Herkunft haben dieselbe
+normalisierte Request-Absicht; anderer Inhalt kollidiert mit derselben Request-ID.
+Historisches Replay schreibt spätere Subject-Änderungen nicht zurück und behauptet
+keine aktuelle Verifikation. Die W-Grenzen zu globaler CLI, Identitäts-/Historien-
+Discovery und externem Attachment-Import bleiben ausdrücklich offen;
+`SR-TC-0333` bleibt ein Teilnachweis.
+
+**Entwicklungsnachweis:** 712 gezielte Verhaltenstests in zwölf betroffenen
+Dateien bestanden mit vier parallelen Workern in 251.13 Sekunden. Enthalten
+sind alle 59 bestehenden W-Fälle und die 67 neuen R-Fälle sowie die betroffenen
+Konstruktor-, Record-, Eingabe-, Saved-Plan- und Request-Replay-Verträge.
+Die vollständige Collection-/Katalogprüfung bestätigt 13.740 Identitäten ohne
+Testkörperausführung. Alle bestehenden Testnummern bleiben unverändert;
+67 neue Identitäten sind hinten angehängt. Geprüfter Quellstand:
+`aa1ad7f7e52bd9834f19a61a6da3eb78960a949c7e4e108ff1c70977428dc930`.
+
+Das Result `specroad-apply_Result_231010_1019_2707a8.zip` bestätigt `12.e.W`
+auf `b5f603c7049d7f1663ee55df96f3df5182f41b5e` mit 4.558 bestandenen
+parallelen Tests der Gruppe 0 und sauberem Snapshot. Dieser R-Stand erhält
+Apply-Sequenz 34, Gruppe 1 mit 4.580 Tests. Erst deren erfolgreicher Commit
+bestätigt **500/900** und den nächsten Schritt `12.e.C`. Dieser Auftrag liefert
+nur den R-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
 
 #### 12.e.C – Make it Clean
 

@@ -1,4 +1,4 @@
-# Evidence erfassen (12.e.W)
+# Evidence erfassen (12.e.W/R)
 
 `specroad.authoring.evidence` verbindet vorbereitete native Evidence mit dem
 bestehenden gespeicherten Change Plan und dessen Writer. Der kleinste nutzbare
@@ -48,6 +48,21 @@ Unbekannte Herkunft bleibt `null` mit ausdrücklichem Grund. Ein vorhandener
 gleichnamiger Lauf mit widersprüchlichem Produkt oder Produktstand ist ein
 Konflikt. Gemeldete Ergebnisse werden weder verbessert noch ausgeführt.
 
+Seit `12.e.R` darf das vollständige `run_context`-Feld in der Quelldatei fehlen,
+wenn keine Run-Datei gewählt wurde und ein ausdrücklich übergebener, nichtleerer
+`unbound_reason` vorliegt. Nur dann materialisiert der Eingabeadapter `null`.
+Ein teilweise gefülltes Run-Objekt wird weder ergänzt noch in `null` umgewandelt.
+Andere fehlende Mess- oder Auditfelder bleiben Fehler. Begründungen werden nicht
+erfunden; Git-HEAD, Modellwurzel, Uhrzeit und vorhandene Contract-Slots liefern
+keine Ersatzwerte. Eine gebundene Konfiguration muss auch dann ausdrücklich
+ausgewählt werden, wenn das Modell genau eine Konfiguration enthält.
+
+Syntaktisch ungültige Verification-/Konfigurations-IDs und falsche Artefakttypen
+werden vor dem Lesen der Eingabedateien oder von Standardinput zurückgewiesen.
+Dateifehler lösen keinen Standardinput-Fallback aus. Ein explizites `null` darf
+nicht durch eine Run-Datei überschrieben werden. Für später bekannt gewordene
+Herkunft bleibt ein neuer Nachweis mit eigener ID erforderlich.
+
 Vorschau und Ausführung verwenden denselben nativen Plan. Die Vorschau schreibt
 nichts. Die Ausführung übernimmt Autorisierung, Writer-Lock, erneute Eingangs-
 und Zielprüfung, Journal, atomare Veröffentlichung, Receipts und Cleanup des
@@ -55,6 +70,15 @@ vorhandenen Writers. Der Request-Receipt nennt die neue Evidence-ID; eine
 identische bestätigte Wiederholung liefert den ursprünglichen Beleg ohne
 zweiten Nachweis. Derselbe Request mit anderem Inhalt scheitert. Eine historische
 Wiederholung behauptet keine erneute Aktualitätsprüfung.
+
+Ein im Eingang ausgelassenes, ausdrücklich begründetes Run-Feld und ein
+gleichbedeutendes explizites `null` ergeben dieselbe normalisierte Request-Absicht.
+Eine andere Begründung ist dagegen anderer Inhalt und bei derselben Request-ID
+ein Konflikt. Historisches Replay schreibt inzwischen veränderte Subjects nicht
+zurück. Neue Erfassung verändert weder deren Revision noch
+`verification_plan_status`; auch ursprüngliche nichtkanonische Datei-Bytes
+bleiben erhalten. Ein alter Nachweis wird nicht automatisch an inzwischen
+geänderte Subject-, Contract- oder Testrevisionen neu gebunden.
 
 Der obligatorische Gate `extension:evidence-record` bindet das gesamte Ziel.
 Mitgelieferte Standardgates decken ausschließlich den neuen Nachweis und dessen
@@ -67,4 +91,6 @@ eine Request-ID. Bestehende Subjects und Nachweise werden nicht umgeschrieben.
 Der W-Nachweis umfasst echte Speicherung und Replay auch im isolierten Core und
 PYZ. Er belegt keine vollständige CLI-Integration, authentische externe
 Testausführung, bestandene Projektverifikation oder Release-Freigabe. Die
-Vervollständigung und Bereinigung folgen in den getrennten Schritten 12.e.R/C.
+R-Nachweise prüfen zusätzlich Eingabegrenzen, unbekannte Herkunft sowie den
+Erhalt bestehender Revisionen und Planungszustände. Die strukturelle Bereinigung
+folgt im getrennten Schritt 12.e.C.
