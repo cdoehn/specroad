@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 509
-last_completed_plan_commit: 12.h.R
-next_plan_commit: 12.h.C
-last_completed_numbered_bundle: 335
+implementation_plan_commits_completed: 510
+last_completed_plan_commit: 12.h.C
+next_plan_commit: 12.i.W
+last_completed_numbered_bundle: 336
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13713,7 +13713,7 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.h.C – Make it Clean
 
-- [ ] **12.h.C** · Position **510/900** · Voraussetzung: `12.h.R`.
+- [x] **12.h.C** · Position **510/900** · Voraussetzung: `12.h.R`.
 **Exakte Commit-Message:** `12.h.C refactor(verification): SARIF- und generischer Evidenceimport bereinigen`
 
 **Bereinigung:** Gemeinsame Kandidatenstruktur für alle Importformate verwenden.
@@ -13721,6 +13721,42 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Bundle 336, vorbereiteter C-Nachweis:** Grundlage ist das vollständig geprüfte
+Result `specroad-apply_Result_103037_1020_6bd47a.zip`, SHA-256
+`2a790376e687c5c81f00fc60fa26b25b0f8450d6be849a1c9bee9fc885832582`.
+Es bestätigt den R-Commit
+`ad96187265b93d6ee34d8b338fae34f936505015` mit sauberem Apply-Zustand:
+**4.797/4.797** Tests der Gruppe **1**, Commitsequenz **43**, parallel mit
+**4 Workern** in **1.131,43 s**, bei **14.390** katalogisierten Tests.
+
+Ein privates Modul bündelt den gemeinsamen Aufbau einzelner Messungen aus
+Ziel, Ergebnis und Herkunft sowie die formatspezifischen Zusatzfelder. JUnit,
+Generic und SARIF teilen außerdem das Einfrieren der Ergebnisbytes, das
+abgetrennte Lesen, den kanonischen Ergebnishash und die gemeinsamen
+Autoritätsflags. Die konkreten öffentlichen Kandidatentypen bleiben erhalten.
+Die Formatadapter behalten ihre Eingabeprüfungen, Diagnosen, Grenzwerte,
+Hashbindungen und Erfolgsausgaben. Die Strukturprüfung bestätigt nach Auflösung
+der gemeinsamen Helfer äquivalente Mapper-Funktionskörper und unveränderte
+Validierungsfunktionen. Alle **443** vorhandenen Testdateien bleiben bytegleich.
+Bei `SR-TC-0336` und `SR-TC-0337` entfällt ausschließlich der erledigte
+C-Strukturpunkt; die Anforderungen bleiben bis zu den vorgesehenen
+Importpolicy-, CLI- und Veröffentlichungsschritten ausdrücklich **partial**.
+
+**Gezielter Dev-Nachweis:** **952/952** unveränderte Verhaltenstests parallel
+mit **4 Workern** in **10,42 s**. Enthalten sind sämtliche JUnit-, Generic- und
+SARIF-W-/R-Nachweise sowie die betroffenen XML-, Contract-, Evidence-,
+Sicherheits- und Core/PYZ-Regressionen. Die vollständige Katalog-Collection
+bestätigt **14.390** Tests ohne Ausführung von Testbodies. Sämtliche festen
+Testnummern und Fixture-Definitionen bleiben unverändert.
+Geprüfte Source-SHA-256:
+`b017860f3dcbfbf3c2d716343dd682278572e89d5e2edf98df86b1bd28c71df8`.
+
+Der Entrypoint stellt ausschließlich diesen C-Zustand her und verlangt in Apply
+Gruppe **2**, Commitsequenz **44**, mit **4.796** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**510/900**, nächster Schritt `12.i.W`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 <a id="step-12-i"></a>
 ### 12.i – Originalbindung und Importpolicy

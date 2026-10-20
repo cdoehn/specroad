@@ -148,3 +148,17 @@ Fehler an den separat übergebenen Zielen bleiben unter `/targets`.
 Auch ein Fehler nach gültigen Messungen liefert keinen teilweisen
 Evidence-Satz und verändert keine Projektdateien. Die bestehenden
 Autoritätsgrenzen, W-Erfolgsausgaben und Statusflags bleiben erhalten.
+
+## Gemeinsame Kandidatenstruktur aus 12.h.C
+
+JUnit, Generic und SARIF verwenden intern denselben Aufbau für Ziel, Ergebnis
+und Herkunft einer einzelnen Messung. Formatspezifische Daten bleiben daran
+unverändert erhalten. Auch das Einfrieren der Ergebnisbytes, das abgetrennte
+Lesen, der kanonische Ergebnishash und die gemeinsamen Autoritätsflags liegen
+in einem privaten Modul.
+
+Die öffentlichen Typen, Formatversionen, JSON-Felder, Roh- und kanonischen
+Hashbindungen sowie Diagnosen bleiben gleich. Die Adapter behalten ihre
+bisherigen Parser, Zuordnungen und Größenbegrenzungen; insbesondere erhält
+JUnit dadurch keine zusätzlichen Generic-/SARIF-Grenzen. Die Bereinigung
+ändert weder Importpolicy noch Laufprüfung oder Veröffentlichung.

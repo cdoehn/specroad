@@ -13,6 +13,9 @@ from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .contracts import VerificationContract, VerificationTest
 from .junit import JUnitDocument
+from ._import_candidates import (
+    CandidateValue as _CandidateValue, candidate_value as _candidate_value,
+    measurement as _measurement, passive_status as _passive_status)
 from ._junit_mapping_inputs import (
     read_mapping as _read_mapping, read_external_identifiers as _read_external_identifiers,
     iter_testcases as _iter_testcases, outcome_kinds as _outcome_kinds,
@@ -56,20 +59,12 @@ class JUnitMapping:
 
 
 @dataclass(frozen=True, init=False)
-class JUnitCandidates:
+class JUnitCandidates(_CandidateValue):
     """Bound measurements awaiting provenance, run binding and native planning."""
     _encoded: bytes
 
     def __init__(self, *args, **kwargs):
         raise TypeError('Use map_junit_candidates with owned input values')
-
-    @property
-    def data(self):
-        return parse_json_object(self._encoded)
-
-    @property
-    def sha256(self):
-        return sha256(self._encoded).hexdigest()
 
     def __bool__(self):
         raise TypeError('JUnit candidates are not verified or recorded Evidence')
@@ -135,22 +130,17 @@ def map_junit_candidates(document, mapping, *, targets):
         if len(outcomes) > 1:
             raise JUnitMappingError('conflicting_junit_testcase_outcomes', pointer=pointer)
         outcome = next(iter(outcomes)) if outcomes else 'passed'
-        candidates.append({
-            'testcase_index': len(candidates), 'testcase_pointer': pointer,
-            'identity': {name: attributes[name] for name in fields},
-            'target': target_bindings[lookup[key]], 'junit_outcome': outcome,
-            'result': _RESULTS[outcome], 'origin': 'imported_junit'})
+        candidates.append(_measurement(
+            testcase_index=len(candidates), testcase_pointer=pointer,
+            identity={name: attributes[name] for name in fields},
+            target=target_bindings[lookup[key]], junit_outcome=outcome,
+            result=_RESULTS[outcome], origin='imported_junit'))
     value = {'format_version': 'junit-candidates-v1', 'source': parsed['source'],
              'parser_profile': parsed['format_version'], 'mapping_sha256': mapping.sha256,
              'mapping_source_sha256': sha256(mapping.source_bytes).hexdigest(),
              'identity_fields': fields, 'testcase_count': len(candidates), 'candidates': candidates,
-             'test_code_executed': False, 'evidence_created': False,
-             'run_context_bound': False, 'project_targets_verified': False,
-             'full_verification_evaluated': False, 'write_authorized': False,
-             'approval_granted': False}
-    result = object.__new__(JUnitCandidates)
-    object.__setattr__(result, '_encoded', canonical_json_bytes(value))
-    return result
+             **_passive_status(run_context_bound=False)}
+    return _candidate_value(JUnitCandidates, value)
 
 
 @dataclass(frozen=True, init=False)
@@ -189,20 +179,12 @@ class JUnitExternalIdentifiers:
 
 
 @dataclass(frozen=True, init=False)
-class JUnitMappingAnalysis:
+class JUnitMappingAnalysis(_CandidateValue):
     """Complete observations and diagnostics, without choosing an import policy."""
     _encoded: bytes
 
     def __init__(self, *args, **kwargs):
         raise TypeError('Use analyze_junit_candidates with owned input values')
-
-    @property
-    def data(self):
-        return parse_json_object(self._encoded)
-
-    @property
-    def sha256(self):
-        return sha256(self._encoded).hexdigest()
 
     def __bool__(self):
         raise TypeError('A mapping analysis is not successful verification or write authority')
@@ -293,10 +275,11 @@ def analyze_junit_candidates(document, mapping, *, targets, external_identifiers
         key = tuple(case['identity'].values())
         row, = rows[key]
         outcome, = case['junit_outcomes']
-        candidates.append({'testcase_index': case['testcase_index'],
-                           'testcase_pointer': case['testcase_pointer'], 'identity': case['identity'],
-                           'target': target_bindings[settings['bindings'][row]['target_id']],
-                           'junit_outcome': outcome, 'result': _RESULTS[outcome], 'origin': 'imported_junit'})
+        candidates.append(_measurement(
+            testcase_index=case['testcase_index'],
+            testcase_pointer=case['testcase_pointer'], identity=case['identity'],
+            target=target_bindings[settings['bindings'][row]['target_id']],
+            junit_outcome=outcome, result=_RESULTS[outcome], origin='imported_junit'))
     diagnostics.sort(key=lambda item: (
         item['testcase_indexes'][0] if item['testcase_indexes'] else -1,
         item['category'], item['reason'], item['mapping_indexes']))
@@ -307,10 +290,6 @@ def analyze_junit_candidates(document, mapping, *, targets, external_identifiers
              'targets': [target_bindings[key] for key in sorted(target_bindings)],
              'testcase_count': len(cases), 'observations': cases, 'candidates': candidates,
              'diagnostics': diagnostics, 'rejected_testcase_indexes': sorted(rejected),
-             'mapping_complete': not diagnostics, 'test_code_executed': False,
-             'evidence_created': False, 'run_context_bound': False,
-             'project_targets_verified': False, 'full_verification_evaluated': False,
-             'write_authorized': False, 'approval_granted': False, 'import_policy_applied': False}
-    result = object.__new__(JUnitMappingAnalysis)
-    object.__setattr__(result, '_encoded', canonical_json_bytes(value))
-    return result
+             'mapping_complete': not diagnostics,
+             **_passive_status(run_context_bound=False, import_policy_applied=False)}
+    return _candidate_value(JUnitMappingAnalysis, value)

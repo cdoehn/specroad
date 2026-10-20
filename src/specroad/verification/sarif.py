@@ -13,6 +13,9 @@ from ..storage.json_syntax import parse_json_object
 from .evidence_exchange import (EvidenceExchange, EvidenceImportError, _read_json,
     _unique, _validate, _encode_candidates, evidence_exchange_schema, map_generic_candidates)
 from ._sarif_validation import validate_selected
+from ._import_candidates import (
+    CandidateValue as _CandidateValue, candidate_value as _candidate_value,
+    measurement as _measurement)
 
 
 @dataclass(frozen=True, init=False)
@@ -104,19 +107,11 @@ class SarifMapping:
 
 
 @dataclass(frozen=True, init=False)
-class SarifCandidates:
+class SarifCandidates(_CandidateValue):
     _encoded: bytes
 
     def __init__(self, *args, **kwargs):
         raise TypeError('Use map_sarif_candidates with owned inputs')
-
-    @property
-    def data(self):
-        return parse_json_object(self._encoded)
-
-    @property
-    def sha256(self):
-        return sha256(self._encoded).hexdigest()
 
     def __bool__(self):
         raise TypeError('SARIF candidates are not successful verification or write authority')
@@ -205,12 +200,12 @@ def map_sarif_candidates(document, mapping, *, targets):
         artifacts = [_select(run.get('artifacts', []), index, run_pointer + '/artifacts')
                      for index in row['artifact_indices']]
         validate_selected(run, row, result, candidate, rule, artifacts)
-        candidates.append({**candidate, 'origin': 'imported_sarif',
-            'sarif': {'run_index': row['run_index'], 'result': result, 'rule': rule,
-                      'invocation': invocation, 'artifacts': artifacts,
-                      'driver': {k: v for k, v in run['tool']['driver'].items()
-                                 if k in ('name', 'version', 'semanticVersion')},
-                      'kind': kind}})
+        candidates.append(_measurement(**{**candidate, 'origin': 'imported_sarif'},
+            sarif={'run_index': row['run_index'], 'result': result, 'rule': rule,
+                   'invocation': invocation, 'artifacts': artifacts,
+                   'driver': {k: v for k, v in run['tool']['driver'].items()
+                              if k in ('name', 'version', 'semanticVersion')},
+                   'kind': kind}))
         mapped.add((row['run_index'], row['result_index']))
     data = {**{k: v for k, v in generic.items()
                if k not in ('source', 'exchange_sha256', 'parser_profile', 'format_version', 'candidates')},
@@ -222,6 +217,4 @@ def map_sarif_candidates(document, mapping, *, targets):
         'unmapped_results': [f'/runs/{r}/results/{i}' for r, run in enumerate(parsed['runs'])
                              for i in range(len(run.get('results', []))) if (r, i) not in mapped],
         'import_policy_applied': False}
-    output = object.__new__(SarifCandidates)
-    object.__setattr__(output, '_encoded', _encode_candidates(data))
-    return output
+    return _candidate_value(SarifCandidates, data, encoder=_encode_candidates)

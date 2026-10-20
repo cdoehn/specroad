@@ -19,6 +19,9 @@ from ..storage.json_syntax import parse_json_object
 from ._context_subject import owned_subject
 from ._subject_binding import subject_binding
 from .contracts import VerificationContract, VerificationTest
+from ._import_candidates import (
+    CandidateValue as _CandidateValue, candidate_value as _candidate_value,
+    measurement as _measurement, passive_status as _passive_status)
 
 
 class EvidenceImportError(ModelError):
@@ -166,20 +169,12 @@ class EvidenceExchange:
 
 
 @dataclass(frozen=True, init=False)
-class ExchangeCandidates:
+class ExchangeCandidates(_CandidateValue):
     """Detached measurements, with local binding but no publication authority."""
     _encoded: bytes
 
     def __init__(self, *args, **kwargs):
         raise TypeError('Use map_generic_candidates with owned inputs')
-
-    @property
-    def data(self):
-        return parse_json_object(self._encoded)
-
-    @property
-    def sha256(self):
-        return sha256(self._encoded).hexdigest()
 
     def __bool__(self):
         raise TypeError('Import candidates are not successful verification or write authority')
@@ -240,29 +235,24 @@ def map_generic_candidates(exchange, *, targets):
             raise EvidenceImportError('import_target_not_found', pointer=pointer + '/target_id')
         if result['test_id'] is not None and result['test_id'] not in bindings:
             raise EvidenceImportError('import_test_not_found', pointer=pointer + '/test_id')
-        candidates.append({
-            'result_index': number, 'target': bindings[result['target_id']],
-            'result': result['result'], 'produced_at': result['produced_at'],
-            'producer': value['producer'], 'tool': value['tool'],
-            'run_context': {**value['run'], 'check_id': result['check_id'],
-                            'test_id': result['test_id']},
-            'subjects': [subjects[s] for s in result['subject_ids']],
-            'environment': value['environment'],
-            'attachments': [attachments[p] for p in result['attachment_paths']],
-            'configuration_hash': value['configuration_hash'],
-            'configuration_policy': value['configuration_policy'],
-            'origin': 'imported_generic'})
+        candidates.append(_measurement(
+            result_index=number, target=bindings[result['target_id']],
+            result=result['result'], produced_at=result['produced_at'],
+            producer=value['producer'], tool=value['tool'],
+            run_context={**value['run'], 'check_id': result['check_id'],
+                         'test_id': result['test_id']},
+            subjects=[subjects[s] for s in result['subject_ids']],
+            environment=value['environment'],
+            attachments=[attachments[p] for p in result['attachment_paths']],
+            configuration_hash=value['configuration_hash'],
+            configuration_policy=value['configuration_policy'],
+            origin='imported_generic'))
     data = {
         'format_version': 'generic-evidence-candidates-v1',
         'source': {'sha256': exchange.sha256, 'size': len(exchange.source_bytes)},
         'exchange_sha256': canonical_json_sha256(value),
         'parser_profile': value['format_version'], 'candidates': candidates,
         'candidate_count': len(candidates), 'supplied_subjects_bound': True,
-        'external_run_verified': False, 'project_targets_verified': False,
-        'configuration_verified': False, 'attachments_verified': False,
-        'contract_slots_verified': False, 'test_code_executed': False,
-        'evidence_created': False, 'full_verification_evaluated': False,
-        'write_authorized': False, 'approval_granted': False}
-    result = object.__new__(ExchangeCandidates)
-    object.__setattr__(result, '_encoded', _encode_candidates(data))
-    return result
+        **_passive_status(external_run_verified=False, configuration_verified=False,
+                          attachments_verified=False, contract_slots_verified=False)}
+    return _candidate_value(ExchangeCandidates, data, encoder=_encode_candidates)

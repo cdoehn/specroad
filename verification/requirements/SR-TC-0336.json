@@ -168,7 +168,6 @@
     "tests/test_sarif_import_right.py::test_unselected_foreign_data_remains_unmapped_and_never_changes_a_valid_candidate"
   ],
   "open_items": [
-    "12.h.C: common candidate representation for JUnit/SARIF/generic without changing behavior.",
     "12.i/12.j and the assigned CLI step: explicit import policy, complete provenance/attachments, authoritative project/run/contract-slot checks, idempotency and atomic Evidence publication."
   ]
 }

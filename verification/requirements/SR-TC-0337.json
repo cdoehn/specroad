@@ -164,7 +164,6 @@
     "tests/test_evidence_exchange_right.py::test_whitespace_alone_does_not_supply_required_measurement_declarations[\\u2003-path4]"
   ],
   "open_items": [
-    "12.h.C: common candidate representation for JUnit/SARIF/generic without changing behavior.",
     "12.i/12.j and the assigned CLI step: explicit import policy, complete provenance/attachments, authoritative project/run/contract-slot checks, idempotency and atomic Evidence publication."
   ]
 }
