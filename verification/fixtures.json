@@ -56,6 +56,7 @@
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-JCS-RFC8785-v1",
     "SR-FIX-JSON-PATCH-v1",
+    "SR-FIX-JUNIT-MAPPING-v1",
     "SR-FIX-JUNIT-XML-RIGHT-v1",
     "SR-FIX-JUNIT-XML-v1",
     "SR-FIX-LANGUAGE-PACKAGES-v1",
@@ -548,6 +549,10 @@
     "SR-FIX-JUNIT-XML-RIGHT-v1": {
       "provider": "tests/test_junit_xml_right.py:DTD_ATTACKS",
       "kind": "Synthetic recursive/quadratic/exponential DTDs, external schema/include/PI requests, namespace/name-expansion boundaries and explicit encoding profiles. Real parser and I/O/process/network traps, literal-data counterexamples and isolated Core/PYZ behavior; no actual external test run or publication is claimed."
+    },
+    "SR-FIX-JUNIT-MAPPING-v1": {
+      "provider": "tests/test_junit_mapping.py:REPORT",
+      "kind": "Synthetic JUnit core reports and strict versioned exact-attribute mappings to native owned Test/Verification records. Explicit outcome oracles, identity/target ambiguity refusal, immutable input/output/hash binding, native Evidence-construction composition and Core/PYZ isolation with file/network/process/clock/entropy traps. No genuine external run, persistent Evidence or approval is asserted."
     }
   }
 }

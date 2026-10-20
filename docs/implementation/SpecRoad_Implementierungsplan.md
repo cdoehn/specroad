@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 504
-last_completed_plan_commit: 12.f.C
-next_plan_commit: 12.g.W
-last_completed_numbered_bundle: 330
+implementation_plan_commits_completed: 505
+last_completed_plan_commit: 12.g.W
+next_plan_commit: 12.g.R
+last_completed_numbered_bundle: 331
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13427,12 +13427,61 @@ nur den C-Stand. Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erf
 
 #### 12.g.W – Let it Work
 
-- [ ] **12.g.W** · Position **505/900** · Voraussetzung: `12.f.C`.
+- [x] **12.g.W** · Position **505/900** · Voraussetzung: `12.f.C`.
 **Exakte Commit-Message:** `12.g.W feat(verification): JUnit-Mapping und Ergebnisklassen aufbauen`
 
 **Umsetzung:** Testcase-Schlüssel und failure/error/skipped/results nach explizitem Mapping auflösen.
 
 **Verhaltensabnahme:** Gültige Testidentität liefert den vorgesehenen Evidence-Kandidaten.
+
+**W-Umsetzung (Bundle 331; regulär nach bestätigtem 12.f.C):** Das vollständig
+geprüfte Result `specroad-apply_Result_073050_1020_ff041a.zip` bestätigt Bundle 330
+und `12.f.C` auf `284a6e1cb7c3ef4bb2ae31951c28d47e03b30f26`: Gruppe **2**,
+Commitsequenz **38**, **4.651** bestandene parallele Tests in **1.186,61 s**,
+sauberer Snapshot, keine Run-Warnungen. Result-SHA-256:
+`4a4352a4e3848c421524fd1e85945b3c7f8406b228b6ee7c5e54952623f202f6`.
+
+Der erste Mappingausschnitt liest `junit-mapping-v1` als eigene strikte JSON-Bytes.
+Eine ausdrücklich gewählte Kombination aus `classname`, `name` und `file`
+bezeichnet die exakte Kern-Testcase-Identität; es gibt keine automatische
+Namens-, Pfad-, Titel- oder External-ID-Suche. Mappingziele sind ausschließlich
+ausdrücklich übergebene native Test- oder Verification-Werte. Jeder Kandidat
+bindet Ziel-ID/-Typ/-Revision und Roh-/kanonischen Zielhash sowie Testcase-Ordinal
+und Pointer. XML-Originalgröße/-hash, Parserprofil und beide Mappinghashes bleiben
+am eigenen unveränderbaren Ergebnis gebunden.
+
+Ohne Ergebnismarker lautet die Kernbeobachtung `passed`; `failure` und `error`
+ergeben jeweils `failed`, `skipped` bleibt `skipped`. Die beobachtete JUnit-Art
+bleibt zusätzlich erhalten. Suite-Summen, Ausgabetexte und unbekannte Erweiterungen
+begründen kein fachliches Ergebnis. Leere Berichte erzeugen keine Kandidaten;
+unterschiedliche Testcases für dasselbe Ziel bleiben getrennte Beobachtungen.
+Fehlende oder ungemappte Schlüssel, wiederholte gewählte Identitäten, gemischte
+Ergebnisarten und unauflösbare Ziele weisen diesen ersten Aufruf vollständig ab.
+Es wird weder Testcode ausgeführt noch Evidence gespeichert, ein Lauf erfunden
+oder Schreib-/Freigabeautorität erteilt.
+
+Externe Identifier und vollständige getrennte Konfliktdiagnosen bleiben für
+**12.g.R** offen; C und Importpolicy, Originalanhänge, Lauf-/Subjectbindung,
+Idempotenz, CLI und Veröffentlichung werden nicht vorgezogen.
+`SR-TC-0334` und `SR-TC-0335` dokumentieren ausschließlich Teilnachweise.
+
+**Gezielter Dev-Nachweis:** **617/617** Verhaltenstests mit **4 Workern** parallel
+in **5,93 s**, darunter **102** neue Mappingtests sowie die betroffenen XML-,
+Contract-, Evidence-, Sicherheits- und Core/PYZ-Regressionen. Der erste Lauf
+hatte 616 Erfolge und einen Fehler in einer neuen UTF-8-Testeingabe: der
+ASCII-Text `\xff` wurde durch das tatsächlich ungültige Byte ersetzt;
+Fehleroracle und Produktcode blieben erhalten. Der vollständige gezielte
+Umfang wurde danach erfolgreich wiederholt. Die vollständige Katalog-Collection
+enthält **14.055** Tests und führt keine Testbodies aus. Die bisherigen **13.953**
+Testnummern und sämtliche bisherigen Testdateien bleiben erhalten; neue Nummern
+werden hinten angehängt. Geprüfte Source-SHA-256:
+`c8cf7d8af9ef704fe1cf6048c38c545609821c05b720b666157d29dab46a1eb0`.
+
+Der Entrypoint stellt ausschließlich diesen W-Zustand her und verlangt in Apply
+Gruppe **0**, Commitsequenz **39**, mit **4.685** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**505/900**, nächster Schritt `12.g.R`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.g.R – Make it Right
 

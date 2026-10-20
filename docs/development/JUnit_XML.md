@@ -2,8 +2,9 @@
 
 `specroad.verification.JUnitDocument(raw)` liest ein vollständiges XML-Dokument
 aus ausdrücklich übergebenen `bytes`. Es öffnet keine Datei und startet weder
-Tests noch einen Unterprozess. Die globale Import-CLI, Testcase-Mappings,
-Evidence-Kandidaten und deren Veröffentlichung folgen in eigenen Planschritten.
+Tests noch einen Unterprozess. 12.g.W ergänzt die unten beschriebene explizite
+Zuordnung zu Evidence-Kandidaten. Globale Import-CLI und Veröffentlichung
+folgen in eigenen Planschritten.
 
 ```python
 from specroad.verification import JUnitDocument, JUnitLimits
@@ -88,8 +89,9 @@ Die Encoding-Grenze berücksichtigt auch
 [CPythons Unknown-Encoding-Handler](https://github.com/python/cpython/blob/3.10/Modules/pyexpat.c)
 und die [Reihenfolge der XML-Deklarationsbehandlung in Expat](https://github.com/libexpat/libexpat/blob/R_2_7_3/expat/lib/xmlparse.c).
 Die W-/R-Nachweise bleiben die unveränderten Verhaltensorakel für 12.f.C.
-Sie sind Teilnachweise zu `SR-TC-0324` und `SR-TC-0334`; Mapping, globale
-Import-CLI, Veröffentlichung und ReqIF-Anbindung sind noch nicht abgedeckt.
+Sie sind Teilnachweise zu `SR-TC-0324` und `SR-TC-0334`; das Mapping besitzt
+separate Nachweise. Globale Import-CLI, Veröffentlichung und ReqIF-Anbindung
+sind noch nicht abgedeckt.
 
 Der interne Reader `storage/_xml_reader.py` bündelt Eingabeprüfung,
 Parserkonfiguration, Sicherheitszähler, verbotene XML-Konstrukte und
@@ -100,3 +102,87 @@ mit der aktuellen Parserposition; der Parser selbst bleibt intern.
 die unveränderten öffentlichen Wert-, Limit- und Fehlertypen. So kann der
 spätere ReqIF-Adapter denselben XML-Lesekern nutzen, ohne JUnit-Strukturregeln
 zu übernehmen. Dies implementiert noch keinen ReqIF-Import.
+
+## Explizites Mapping und Kandidaten (12.g.W)
+
+`JUnitMapping(raw)` liest eigene UTF-8-JSON-Bytes mit genau diesen Feldern:
+
+```json
+{
+  "format_version": "junit-mapping-v1",
+  "identity_fields": ["classname", "name", "file"],
+  "bindings": [
+    {
+      "identity": {"classname": "suite.A", "name": "accepts", "file": "tests/a.py"},
+      "target_id": "SR-TEST-00000000000000000000000000"
+    }
+  ]
+}
+```
+
+`identity_fields` ist eine nichtleere, duplikatfreie Auswahl aus `classname`,
+`name` und `file`. Jede Zeile enthält exakt diese Identitätsfelder als nichtleere
+Strings und eine Ziel-ID. Verglichen werden die vom XML-Parser gelieferten
+Zeichen exakt: keine Pfadnormalisierung, keine Groß-/Kleinschreibungsanpassung,
+kein Entfernen von Leerzeichen, kein zusammengesetzter Trennzeichenstring.
+Fehlend und leer werden nicht durch Werte aus der Suite ersetzt.
+Mappingdateien dürfen höchstens 4 MiB und 10.000 Zeilen enthalten.
+Unbekannte Felder, doppelte JSON-Schlüssel und doppelte Mappingidentitäten
+werden abgewiesen. `sha256` bindet den kanonischen Mappinginhalt;
+`source_bytes` erhält auch die ursprüngliche JSON-Formatierung.
+
+```python
+from specroad.verification import JUnitDocument, JUnitMapping, map_junit_candidates
+
+mapped = map_junit_candidates(
+    JUnitDocument(report_bytes),
+    JUnitMapping(mapping_bytes),
+    targets=[test_or_verification_record],
+)
+candidates = mapped.data["candidates"]
+```
+
+`targets` enthält ausdrücklich übergebene `VerificationTest`- oder
+`VerificationContract`-Werte. Jede Mapping-Ziel-ID muss darin genau einmal
+vorhanden sein. Titel, Anzeigenamen und die `test_identity` eines Testartefakts
+ersetzen keine explizite Mappingzeile. Die Auflösung prüft ausschließlich
+übergebene Werte; sie belegt weder das Projektinventar noch einen
+`verified_by`-Bezug, Pflichtslot oder externen Testlauf.
+
+Jeder Kern-Testcase ergibt in Dokumentreihenfolge einen Kandidaten mit
+Ordinalzahl ab 0, JSON-Pointer im Parserbaum, gewählter Identität und gebundener
+Ziel-ID, Zieltyp, Revision sowie Roh- und kanonischem Zielhash. Unterschiedliche
+Testcases können dasselbe Ziel nennen und bleiben einzelne Beobachtungen.
+Ergebnis-Kindelemente werden so klassifiziert:
+
+| Beobachtung direkt im Testcase | `junit_outcome` | vorgeschlagenes `result` |
+|---|---|---|
+| kein `failure`, `error` oder `skipped` | `passed` | `passed` |
+| ein oder mehrere `failure` | `failure` | `failed` |
+| ein oder mehrere `error` | `error` | `failed` |
+| ein oder mehrere `skipped` | `skipped` | `skipped` |
+
+Eine Mischung verschiedener Ergebnisarten wird im W-Schritt abgewiesen.
+Gemeldete Summen, Zeiten und Ausgabetexte begründen kein Ergebnis; leere Suites
+erzeugen keine Kandidaten. Unbekannte Erweiterungen bleiben nach D.4 außerhalb
+des normativen Kernprofils. Ein vorgeschlagenes `passed` ist lediglich die
+Klassifikation der explizit gemappten Kernbeobachtung, keine Verifikationsfreigabe.
+
+Fehlende Identitätsfelder, ungemappte Testcases, wiederholte gewählte Schlüssel
+und unbekannte Ziel-IDs brechen diese erste Auflösung vollständig ab.
+`JUnitMappingError` liefert `reason`, Pointer, `code=SRV090` und `exit_code=3`;
+JSON-/native Artefaktfehler behalten ihre bestehenden `ModelError`-Verträge.
+Es wird kein Teilimport veröffentlicht.
+
+Das eigene unveränderbare Ergebnis `JUnitCandidates` bindet Originalgröße und
+SHA-256, Parserprofil, kanonischen und ursprünglichen Mappinghash. `data` liefert
+jeweils neue Daten; boolesche Erfolgsverwendung ist verboten. Alle Angaben zu
+Testausführung, gespeicherter Evidence, Laufbindung, Projektprüfung,
+Gesamtverifikation, Schreibberechtigung und Freigabe bleiben ausdrücklich falsch.
+Es gibt keine Datei-, Netzwerk-, Uhrzeit-, Zufalls- oder Prozesszugriffe.
+
+Externe Identifier und die vollständige Behandlung mehrdeutiger,
+widersprüchlicher und ungemappter Ergebnisse bleiben für 12.g.R offen.
+Originalanhänge, Importpolicy, Provenienzergänzung und atomare Evidence-Erzeugung
+folgen in 12.i/12.j; fehlende Producer-, Run-, Subject- oder Konfigurationsdaten
+werden hier nicht erfunden. `SR-TC-0334` und `SR-TC-0335` bleiben Teilnachweise.
