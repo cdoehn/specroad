@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 511
-last_completed_plan_commit: 12.i.W
-next_plan_commit: 12.i.R
-last_completed_numbered_bundle: 337
+implementation_plan_commits_completed: 512
+last_completed_plan_commit: 12.i.R
+next_plan_commit: 12.i.C
+last_completed_numbered_bundle: 338
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13824,12 +13824,76 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.i.R – Make it Right
 
-- [ ] **12.i.R** · Position **512/900** · Voraussetzung: `12.i.W`.
+- [x] **12.i.R** · Position **512/900** · Voraussetzung: `12.i.W`.
 **Exakte Commit-Message:** `12.i.R feat(verification): Originalbindung und Importpolicy vervollständigen`
 
 **Vervollständigung:** Ungültige Pflichtnachweise nur gemäß gewählter Policy behandeln; kein stilles Überspringen.
 
 **Verhaltensabnahme:** Importmenge und Diagnosen erklären jeden ausgelassenen Kandidaten. Die W-Nachweise bleiben zusätzlich grün.
+
+**Bundle 338, vorbereiteter R-Nachweis:** Grundlage ist das vollständig geprüfte
+Result `specroad-apply_Result_113109_1020_9519c8.zip`, SHA-256
+`b991a4f4cba7f37624c22e9432f518e3b30df2a86e229eb4886032e7631934db`.
+Es bestätigt den W-Commit
+`be55041f56ad30dc002b8e38c81adb98f7ebeda8` mit sauberem Apply-Zustand:
+**4.820/4.820** Tests der Gruppe **0**, Commitsequenz **45**, parallel mit
+**4 Workern** in **1.145,79 s**, bei **14.458** katalogisierten Tests.
+
+Die passive Vorbereitung unterstützt nun auch Generic und das vorhandene
+SARIF-Inline-Profil. Sie erhält exakte Originalbytes und bindet Rohhashes,
+kanonischen Mappinghash, Format, Parserprofil, ausdrückliche Tooldeklaration
+und tatsächliche Importerversion. Generic bindet seine eingebetteten
+Zuordnungen über das gesamte Exchange-Dokument; SARIF bindet Quelle und
+Mapping getrennt. Die APIs akzeptieren bestehende typisierte Eingaben oder
+Originalbytes, damit fehlende Pflichtfelder einzelner Datensätze vollständig
+diagnostiziert werden können. Globale Struktur-, Quellen-, Ziel- und
+Ressourcenfehler bleiben unter beiden Policies fatal.
+
+Ergebnisfelder, Subject-Bindungen und einzelne Mappingzeilen werden an ihren
+ursprünglichen Positionen geprüft. Nicht gemappte Quellvorkommen, ungebundene
+Exchange-Datensätze, mehrdeutige Zuordnungen und ungültige ausgewählte
+SARIF-Daten bleiben getrennte Diagnosen. Widersprüchliche Deklarationen desselben
+expliziten Ziel-/Check-/Test-/Subject-Satzes verwerfen alle beteiligten
+Vorkommen; ein zusätzlich fehlender Zeitpunkt oder eine doppelte Subject-Angabe
+darf dabei keinen günstigen Treffer retten. Gleichartige Wiederholungen
+bleiben einzelne Beobachtungen für die spätere Idempotenzprüfung.
+
+Angenommene, diagnostisch verworfene und wegen `abort_import` zurückgehaltene
+Quellpointer decken die gesamte Eingabe überschneidungsfrei ab.
+`skip_invalid_with_diagnostic` erhält nur unabhängig gültige Kandidaten.
+Diagnosen ohne Quellvorkommen bleiben sichtbar und lösen ebenfalls einen
+expliziten Abbruch aus. Die Vorbereitung besitzt weiterhin keine Lauf-,
+Projekt-, Slot-, Schreib- oder Veröffentlichungsberechtigung. Ein leerer
+vorbereiteter Satz ist kein Verifikationserfolg.
+
+Die bestehende JUnit-W-Implementierung bleibt strukturell unverändert.
+Generic und SARIF verwenden für ihre strikten Mapper und die neue
+Datensatzbehandlung dieselben bisherigen Feld-/Referenz-/Ergebnisprüfungen;
+die ausgelagerten Prüfungs- und Messungsblöcke bleiben strukturell äquivalent.
+Die Nachweise `SR-TC-0336`–`SR-TC-0339` und `SR-TC-0535` werden erweitert,
+bleiben wegen offener CLI-, Autorisierungs- und Veröffentlichungsschritte
+ausdrücklich **partial**. Die reine Trennung der Policyentscheidung folgt
+erst in `12.i.C`; `12.j` wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis:** Der abschließend geprüfte R-Zustand besteht
+**1.229/1.229** Verhaltenstests parallel mit **4 Workern** in **15,63 s**,
+darunter **209** neue Fälle für Originalbindung, unvollständige Pflichtnachweise,
+widersprüchliche und mehrdeutige Zuordnungen, vollständige Vorkommenszuordnung,
+Grenzwerte, unveränderte echte Projektbytes und Modi sowie isolierten
+Core/PYZ-Betrieb. Die übrigen **1.020** Fälle enthalten sämtliche
+JUnit-W-Nachweise und die betroffenen bisherigen Import-, Contract-, Evidence-,
+XML-, Sicherheits- und Core/PYZ-Regressionen. Alle **444** bisherigen
+Testdateien bleiben bytegleich. Die vollständige Katalog-Collection bestätigt
+**14.667** Tests ohne Ausführung von Testbodies. Alle bisherigen **14.458**
+Testnummern bleiben unverändert; **209** neue Identitäten sind sortiert angehängt.
+Geprüfte Source-SHA-256:
+`5029960cb823dc2fe95ee4d39b84d1929d75b845e174abee09adcb19f1cfbf33`.
+
+Der Entrypoint stellt ausschließlich diesen R-Zustand her und verlangt in Apply
+Gruppe **1**, Commitsequenz **46**, mit **4.889** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**512/900**, nächster Schritt `12.i.C`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.i.C – Make it Clean
 

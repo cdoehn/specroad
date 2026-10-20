@@ -56,6 +56,21 @@ class SarifDocument:
         raise TypeError('A SARIF report is not successful verification')
 
 
+def _mapping_schema():
+    exchange_schema = evidence_exchange_schema()
+    index = {'type': 'integer', 'minimum': 0}
+    nullable_index = {'anyOf': [{'type': 'null'}, index]}
+    schema = {**_object({
+        'format_version': {'const': 'sarif-mapping-v1'},
+        'source_sha256': {'$ref': '#/$defs/hash'},
+        'exchange': {k: v for k, v in exchange_schema.items() if k != '$defs'},
+        'bindings': _array(_object({
+            'exchange_result_index': index, 'run_index': index, 'result_index': index,
+            'rule_index': nullable_index, 'invocation_index': nullable_index,
+            'artifact_indices': _array(index)}))}), '$defs': exchange_schema['$defs']}
+    return schema
+
+
 @dataclass(frozen=True, init=False)
 class SarifMapping:
     """Exact report hash, explicit index selectors, and a declared Exchange."""
@@ -64,17 +79,7 @@ class SarifMapping:
 
     def __init__(self, raw):
         value = _read_json(raw)
-        exchange_schema = evidence_exchange_schema()
-        index = {'type': 'integer', 'minimum': 0}
-        nullable_index = {'anyOf': [{'type': 'null'}, index]}
-        schema = {**_object({
-            'format_version': {'const': 'sarif-mapping-v1'},
-            'source_sha256': {'$ref': '#/$defs/hash'},
-            'exchange': {k: v for k, v in exchange_schema.items() if k != '$defs'},
-            'bindings': _array(_object({
-                'exchange_result_index': index, 'run_index': index, 'result_index': index,
-                'rule_index': nullable_index, 'invocation_index': nullable_index,
-                'artifact_indices': _array(index)}))}), '$defs': exchange_schema['$defs']}
+        schema = _mapping_schema()
         _validate(value, schema)
         try:
             exchange = EvidenceExchange(canonical_json_bytes(value['exchange'])).data
@@ -149,63 +154,8 @@ def map_sarif_candidates(document, mapping, *, targets):
         raise EvidenceImportError(error.reason, pointer=prefix + error.pointer) from error
     candidates, mapped = [], set()
     for row in settings['bindings']:
-        run_pointer = '/runs/' + str(row['run_index'])
-        if row['run_index'] >= len(parsed['runs']):
-            raise EvidenceImportError('sarif_index_out_of_range', pointer='/runs')
-        # A run may contain many large result occurrences. Hash only selected
-        # objects, not the entire run again for every mapped occurrence.
-        run = parsed['runs'][row['run_index']]
-        if ('externalPropertyFileReferences' in run
-                and type(run['externalPropertyFileReferences']) is not dict):
-            raise EvidenceImportError('invalid_sarif_external_properties',
-                                      pointer=run_pointer + '/externalPropertyFileReferences')
-        if run.get('externalPropertyFileReferences'):
-            raise EvidenceImportError('external_sarif_properties_unsupported', pointer=run_pointer)
-        result = _select(run.get('results', []), row['result_index'], run_pointer + '/results')
-        value = result['value']
-        if (type(value.get('message')) is not dict
-                or not any(type(value['message'].get(k)) is str and value['message'][k]
-                           for k in ('text', 'markdown', 'id'))):
-            raise EvidenceImportError('invalid_sarif_message', pointer=result['pointer'] + '/message')
-        if 'rule' in value:  # Extensions/component-qualified selectors need a later explicit profile.
-            raise EvidenceImportError('sarif_rule_reference_unsupported', pointer=result['pointer'] + '/rule')
-        kind, level = value.get('kind', 'fail'), value.get('level')
-        candidate = generic['candidates'][row['exchange_result_index']]
-        expected = {'pass': 'passed', 'fail': 'failed', 'notApplicable': 'skipped'}
-        if type(kind) is not str or kind not in expected or candidate['result'] != expected[kind]:
-            raise EvidenceImportError('unsupported_sarif_outcome_mapping', pointer=result['pointer'])
-        if ('level' in value and (type(level) is not str
-                or level not in ('none', 'note', 'warning', 'error')
-                or (kind != 'fail' and level != 'none'))):
-            raise EvidenceImportError('invalid_sarif_result_level', pointer=result['pointer'] + '/level')
-        rule, invocation = None, None
-        if row['rule_index'] is not None:
-            rule = _select(run['tool']['driver'].get('rules', []), row['rule_index'],
-                           run_pointer + '/tool/driver/rules')
-            rule_id = rule['value'].get('id')
-            if type(rule_id) is not str or not rule_id:
-                raise EvidenceImportError('invalid_sarif_rule_id', pointer=rule['pointer'])
-            if (('ruleIndex' in value and (type(value['ruleIndex']) is not int
-                    or value['ruleIndex'] != row['rule_index']))
-                    or ('ruleId' in value and value['ruleId'] != rule_id)):
-                raise EvidenceImportError('sarif_rule_binding_mismatch', pointer=result['pointer'])
-        if row['invocation_index'] is not None:
-            invocation = _select(run.get('invocations', []), row['invocation_index'],
-                                 run_pointer + '/invocations')
-            success = invocation['value'].get('executionSuccessful')
-            if type(success) is not bool:
-                raise EvidenceImportError('invalid_sarif_invocation', pointer=invocation['pointer'])
-            if candidate['result'] == 'passed' and not success:
-                raise EvidenceImportError('sarif_failed_invocation_cannot_pass', pointer=invocation['pointer'])
-        artifacts = [_select(run.get('artifacts', []), index, run_pointer + '/artifacts')
-                     for index in row['artifact_indices']]
-        validate_selected(run, row, result, candidate, rule, artifacts)
-        candidates.append(_measurement(**{**candidate, 'origin': 'imported_sarif'},
-            sarif={'run_index': row['run_index'], 'result': result, 'rule': rule,
-                   'invocation': invocation, 'artifacts': artifacts,
-                   'driver': {k: v for k, v in run['tool']['driver'].items()
-                              if k in ('name', 'version', 'semanticVersion')},
-                   'kind': kind}))
+        candidates.append(_sarif_candidate(
+            parsed, row, generic['candidates'][row['exchange_result_index']]))
         mapped.add((row['run_index'], row['result_index']))
     data = {**{k: v for k, v in generic.items()
                if k not in ('source', 'exchange_sha256', 'parser_profile', 'format_version', 'candidates')},
@@ -218,3 +168,62 @@ def map_sarif_candidates(document, mapping, *, targets):
                              for i in range(len(run.get('results', []))) if (r, i) not in mapped],
         'import_policy_applied': False}
     return _candidate_value(SarifCandidates, data, encoder=_encode_candidates)
+
+
+def _sarif_candidate(parsed, row, candidate):
+    run_pointer = '/runs/' + str(row['run_index'])
+    if row['run_index'] >= len(parsed['runs']):
+        raise EvidenceImportError('sarif_index_out_of_range', pointer='/runs')
+    # A run may contain many large result occurrences. Hash only selected
+    # objects, not the entire run again for every mapped occurrence.
+    run = parsed['runs'][row['run_index']]
+    if ('externalPropertyFileReferences' in run
+            and type(run['externalPropertyFileReferences']) is not dict):
+        raise EvidenceImportError('invalid_sarif_external_properties',
+                                  pointer=run_pointer + '/externalPropertyFileReferences')
+    if run.get('externalPropertyFileReferences'):
+        raise EvidenceImportError('external_sarif_properties_unsupported', pointer=run_pointer)
+    result = _select(run.get('results', []), row['result_index'], run_pointer + '/results')
+    value = result['value']
+    if (type(value.get('message')) is not dict
+            or not any(type(value['message'].get(k)) is str and value['message'][k]
+                       for k in ('text', 'markdown', 'id'))):
+        raise EvidenceImportError('invalid_sarif_message', pointer=result['pointer'] + '/message')
+    if 'rule' in value:  # Extensions/component-qualified selectors need a later explicit profile.
+        raise EvidenceImportError('sarif_rule_reference_unsupported', pointer=result['pointer'] + '/rule')
+    kind, level = value.get('kind', 'fail'), value.get('level')
+    expected = {'pass': 'passed', 'fail': 'failed', 'notApplicable': 'skipped'}
+    if type(kind) is not str or kind not in expected or candidate['result'] != expected[kind]:
+        raise EvidenceImportError('unsupported_sarif_outcome_mapping', pointer=result['pointer'])
+    if ('level' in value and (type(level) is not str
+            or level not in ('none', 'note', 'warning', 'error')
+            or (kind != 'fail' and level != 'none'))):
+        raise EvidenceImportError('invalid_sarif_result_level', pointer=result['pointer'] + '/level')
+    rule, invocation = None, None
+    if row['rule_index'] is not None:
+        rule = _select(run['tool']['driver'].get('rules', []), row['rule_index'],
+                       run_pointer + '/tool/driver/rules')
+        rule_id = rule['value'].get('id')
+        if type(rule_id) is not str or not rule_id:
+            raise EvidenceImportError('invalid_sarif_rule_id', pointer=rule['pointer'])
+        if (('ruleIndex' in value and (type(value['ruleIndex']) is not int
+                or value['ruleIndex'] != row['rule_index']))
+                or ('ruleId' in value and value['ruleId'] != rule_id)):
+            raise EvidenceImportError('sarif_rule_binding_mismatch', pointer=result['pointer'])
+    if row['invocation_index'] is not None:
+        invocation = _select(run.get('invocations', []), row['invocation_index'],
+                             run_pointer + '/invocations')
+        success = invocation['value'].get('executionSuccessful')
+        if type(success) is not bool:
+            raise EvidenceImportError('invalid_sarif_invocation', pointer=invocation['pointer'])
+        if candidate['result'] == 'passed' and not success:
+            raise EvidenceImportError('sarif_failed_invocation_cannot_pass', pointer=invocation['pointer'])
+    artifacts = [_select(run.get('artifacts', []), index, run_pointer + '/artifacts')
+                 for index in row['artifact_indices']]
+    validate_selected(run, row, result, candidate, rule, artifacts)
+    return _measurement(**{**candidate, 'origin': 'imported_sarif'},
+        sarif={'run_index': row['run_index'], 'result': result, 'rule': rule,
+               'invocation': invocation, 'artifacts': artifacts,
+               'driver': {k: v for k, v in run['tool']['driver'].items()
+                          if k in ('name', 'version', 'semanticVersion')},
+               'kind': kind})

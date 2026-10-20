@@ -135,14 +135,18 @@ def _read_exchange(raw):
                                       pointer=f'/attachments/{number}/path') from error
     subject_ids, attachment_paths = set(subjects), set(paths)
     for number, result in enumerate(value['results']):
-        pointer = '/results/' + str(number)
-        _unique(result['subject_ids'], pointer + '/subject_ids')
-        _unique(result['attachment_paths'], pointer + '/attachment_paths')
-        if not set(result['subject_ids']) <= subject_ids:
-            raise EvidenceImportError('unknown_import_subject', pointer=pointer + '/subject_ids')
-        if not set(result['attachment_paths']) <= attachment_paths:
-            raise EvidenceImportError('unknown_import_attachment', pointer=pointer + '/attachment_paths')
+        _result_bindings(result, subject_ids, attachment_paths, '/results/' + str(number))
     return value
+
+
+def _result_bindings(result, subject_ids, attachment_paths, pointer):
+    """Check one shaped record, shared by strict and diagnostic imports."""
+    _unique(result['subject_ids'], pointer + '/subject_ids')
+    _unique(result['attachment_paths'], pointer + '/attachment_paths')
+    if not set(result['subject_ids']) <= subject_ids:
+        raise EvidenceImportError('unknown_import_subject', pointer=pointer + '/subject_ids')
+    if not set(result['attachment_paths']) <= attachment_paths:
+        raise EvidenceImportError('unknown_import_attachment', pointer=pointer + '/attachment_paths')
 
 
 @dataclass(frozen=True, init=False)
@@ -230,23 +234,7 @@ def map_generic_candidates(exchange, *, targets):
     attachments = {a['path']: a for a in value['attachments']}
     candidates = []
     for number, result in enumerate(value['results']):
-        pointer = '/results/' + str(number)
-        if result['target_id'] not in bindings:
-            raise EvidenceImportError('import_target_not_found', pointer=pointer + '/target_id')
-        if result['test_id'] is not None and result['test_id'] not in bindings:
-            raise EvidenceImportError('import_test_not_found', pointer=pointer + '/test_id')
-        candidates.append(_measurement(
-            result_index=number, target=bindings[result['target_id']],
-            result=result['result'], produced_at=result['produced_at'],
-            producer=value['producer'], tool=value['tool'],
-            run_context={**value['run'], 'check_id': result['check_id'],
-                         'test_id': result['test_id']},
-            subjects=[subjects[s] for s in result['subject_ids']],
-            environment=value['environment'],
-            attachments=[attachments[p] for p in result['attachment_paths']],
-            configuration_hash=value['configuration_hash'],
-            configuration_policy=value['configuration_policy'],
-            origin='imported_generic'))
+        candidates.append(_generic_candidate(value, result, number, bindings, subjects, attachments))
     data = {
         'format_version': 'generic-evidence-candidates-v1',
         'source': {'sha256': exchange.sha256, 'size': len(exchange.source_bytes)},
@@ -256,3 +244,23 @@ def map_generic_candidates(exchange, *, targets):
         **_passive_status(external_run_verified=False, configuration_verified=False,
                           attachments_verified=False, contract_slots_verified=False)}
     return _candidate_value(ExchangeCandidates, data, encoder=_encode_candidates)
+
+
+def _generic_candidate(value, result, number, bindings, subjects, attachments):
+    pointer = '/results/' + str(number)
+    if result['target_id'] not in bindings:
+        raise EvidenceImportError('import_target_not_found', pointer=pointer + '/target_id')
+    if result['test_id'] is not None and result['test_id'] not in bindings:
+        raise EvidenceImportError('import_test_not_found', pointer=pointer + '/test_id')
+    return _measurement(
+        result_index=number, target=bindings[result['target_id']],
+        result=result['result'], produced_at=result['produced_at'],
+        producer=value['producer'], tool=value['tool'],
+        run_context={**value['run'], 'check_id': result['check_id'],
+                     'test_id': result['test_id']},
+        subjects=[subjects[s] for s in result['subject_ids']],
+        environment=value['environment'],
+        attachments=[attachments[p] for p in result['attachment_paths']],
+        configuration_hash=value['configuration_hash'],
+        configuration_policy=value['configuration_policy'],
+        origin='imported_generic')

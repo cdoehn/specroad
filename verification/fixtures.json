@@ -117,7 +117,8 @@
     "SR-FIX-SARIF-IMPORT-v1",
     "SR-FIX-EVIDENCE-EXCHANGE-RIGHT-v1",
     "SR-FIX-SARIF-IMPORT-RIGHT-v1",
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-v1"
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-v1",
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -583,6 +584,10 @@
     "SR-FIX-EVIDENCE-IMPORT-POLICY-v1": {
       "provider": "tests/test_evidence_import_policy.py:import_case",
       "kind": "Owned JUnit XML, strict or analysis mappings, explicit native targets and tool/version declarations; exact originals and optional sidecar, mixed valid/unmapped/ambiguous/contradictory observations, abort/skip accounting, host-independent project preservation, bounded output and isolated Core/PYZ parity. No persistent Evidence or external run authority."
+    },
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1": {
+      "provider": "tests/test_evidence_import_policy_right.py:import_right_case",
+      "kind": "Owned Generic/SARIF sources and mapping bytes, malformed required records, conflicting observations, ambiguous and incomplete selections, complete pointer accounting, provenance, immutable values, unchanged real projects and bounded isolated Core/PYZ preparation."
     }
   }
 }

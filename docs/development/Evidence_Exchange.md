@@ -4,9 +4,9 @@
 `SarifMapping` und `map_sarif_candidates` im Core und in der PYZ. Die Aufrufer
 übergeben unveränderliche JSON-Bytes und native Requirement-, Test- oder
 Verification-Werte. Die APIs lesen keine Dateien und führen keine Programme aus.
-Die JUnit-Vorbereitung aus `12.i.W` ergänzt unten eine ausdrückliche Importpolicy.
-CLI, formatübergreifende Vorbereitung und persistente Veröffentlichung folgen
-in den vorgesehenen Importschritten. Die Rückgabe ist kein Evidence-Datensatz.
+Die Vorbereitungen aus `12.i.W/R` ergänzen für JUnit, Generic und SARIF eine
+ausdrückliche Importpolicy. CLI und persistente Veröffentlichung folgen in den
+vorgesehenen Importschritten. Die Rückgabe ist kein Evidence-Datensatz.
 
 ## SpecRoad Evidence Exchange v1
 
@@ -201,5 +201,63 @@ beobachteten Mapping-Ergebnisse angewendet wurde. Laufbeglaubigung, Projekt- und
 Contract-Slot-Prüfung, Freigabe und Veröffentlichung sind damit nicht erteilt.
 Die API liest keine Dateien, Umgebungsvariablen oder Uhrzeit und führt keine
 Programme aus. Die bestehende Grenze für expandierte Kandidaten gilt auch für
-die Vorbereitung. Die Generic-/SARIF-Erweiterung und weitere Robustheit folgen
-in `12.i.R`, die unveränderte Strukturtrennung in `12.i.C`.
+die Vorbereitung. Die Generic-/SARIF-Erweiterung aus `12.i.R` steht unten;
+die unveränderte Strukturtrennung folgt in `12.i.C`.
+
+## Vollständige Datensatzbehandlung aus 12.i.R
+
+`prepare_generic_import(exchange, targets=[...], policy=...)` akzeptiert
+`EvidenceExchange` oder originale JSON-Bytes. `prepare_sarif_import(document,
+mapping, targets=[...], policy=...)` akzeptiert entsprechend die bisherigen
+SARIF-Core-Werte oder deren Originalbytes. Der Bytes-Eingang erlaubt die
+Diagnose einzelner unvollständiger Pflichtnachweise, die ein strikt konstruierter
+Eingabewert bereits ablehnt. Die bisherigen strikten Parser und Mapper behalten
+ihre Verträge; insbesondere liefern sie weiterhin keinen Teilsatz bei Fehlern.
+
+Beide Vorbereitungen prüfen den globalen Vertrag vollständig. Defektes JSON,
+fehlende oder ungültige globale Angaben, unsichere Anhangspfade, ungültige
+native Ziele, eine falsche SARIF-Quellhashbindung und überschrittene
+Ressourcengrenzen bleiben unter beiden Policies Fehler. Fehlende oder
+ungültige Pflichtfelder einzelner Ergebnisdatensätze werden dagegen mit ihrer
+ursprünglichen Position diagnostiziert. Subject-Bindungsfehler verwerfen nur
+die abhängigen Datensätze; eine ungültige unbenutzte Subject-Deklaration bleibt
+als Diagnose ohne Ergebnisposition sichtbar und löst bei `abort_import`
+ebenfalls den Abbruch aus.
+
+Generic trägt seine expliziten Ziel-/Check-/Test-/Subject-Zuordnungen selbst.
+Deshalb bindet der Mappingnachweis das gesamte unveränderte Exchange-Dokument:
+`mapping.source_role="source"`, Rohhash, Größe, kanonischer Hash und Formatversion.
+SARIF erhält Quelle und Mapping als getrennte Originaldateien mit eigenen
+Rohhashes; zusätzlich wird der kanonische Mappinghash gebunden. Beide Formate
+übernehmen die ausdrückliche Tooldeklaration des Exchange. Sie authentifizieren
+weder den Reporter noch den behaupteten externen Lauf.
+
+Die neuen Vorbereitungen verwenden für jede Quellposition einen JSON-Pointer
+in `occurrences`. Kandidaten tragen `source_pointer`; `rejected_occurrences`
+und `withheld_occurrences` ergänzen die übernommene Menge lückenlos und
+überschneidungsfrei. Jede Diagnose enthält `input_role`, den ursprünglichen
+Fehlerpointer und betroffene `occurrences`; zusätzlich verweisen
+`result_indexes` auf die ursprünglichen Exchange-Messungen beziehungsweise
+`binding_indexes` auf Mappingzeilen. Eine globale Zuordnungsdiagnose ohne
+Quellvorkommen bleibt sichtbar. Indizes werden nicht nach Auslassungen neu vergeben.
+
+Generic erkennt widersprüchliche Ergebnisdeklarationen für denselben expliziten
+Ziel-/Check-/Test-/Subject-Satz innerhalb des deklarierten Laufs. Alle betroffenen
+Vorkommen werden verworfen, auch wenn eines zusätzlich ein anderes ungültiges
+Pflichtfeld enthält. Gleiche wiederholte Messungen bleiben einzelne
+Vorkommen; die spätere Idempotenzprüfung wird nicht vorweggenommen.
+SARIF diagnostiziert ungewählte Quellvorkommen, ungebundene Exchange-Messungen,
+ungültige oder mehrdeutige Zuordnungen sowie Fehler ausgewählter Result-,
+Rule-, Invocation- und Artifact-Daten getrennt. Eine fehlerhafte doppelte
+Mappingzeile lässt keinen benachbarten günstigen Treffer gewinnen.
+
+`abort_import` hält bei jeder Diagnose sämtliche ansonsten gültigen Kandidaten
+zurück; `skip_invalid_with_diagnostic` erhält nur die unabhängig gültigen
+Vorkommen samt sämtlichen Diagnosen. Fehlgeschlagene Messungen bleiben
+fehlgeschlagen. Ein `prepared`-Entscheid kann auch null Kandidaten enthalten
+und stellt keinen erfolgreichen Verifikationslauf dar.
+Eingaben, ausgeweitete Metadaten und Diagnosen bleiben begrenzt. Die
+Vorbereitung greift weder auf Hostdateien, Netzwerk, Prozesse, Uhrzeit noch
+Hostkonfiguration zu. Vollständige Lauf-/Projekt-/Slot-Autorisierung,
+Anhangspublikation, Idempotenz und atomare Evidence-Erzeugung bleiben den
+folgenden Planstellen zugeordnet.
