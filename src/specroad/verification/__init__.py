@@ -5,6 +5,9 @@ from .contracts import (VerificationContract, VerificationContractResolution,
                         resolve_verification_contract)
 from .targets import resolve_verification_target
 from .evidence import prepare_evidence_record
+from .evidence_exchange import (EvidenceExchange, ExchangeCandidates, EvidenceImportError,
+    evidence_exchange_schema, map_generic_candidates)
+from .sarif import SarifDocument, SarifMapping, SarifCandidates, map_sarif_candidates
 from .junit import JUnitDocument, JUnitLimits, XmlImportError
 from .junit_mapping import (JUnitMapping, JUnitCandidates, JUnitMappingError,
     map_junit_candidates, JUnitMappingRules, JUnitExternalIdentifiers,
@@ -29,4 +32,6 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "prepare_evidence_record", "JUnitDocument", "JUnitLimits", "XmlImportError",
            "JUnitMapping", "JUnitCandidates", "JUnitMappingError", "map_junit_candidates",
            "JUnitMappingRules", "JUnitExternalIdentifiers", "JUnitMappingAnalysis",
-           "analyze_junit_candidates")
+           "analyze_junit_candidates", "EvidenceExchange", "ExchangeCandidates",
+           "EvidenceImportError", "evidence_exchange_schema", "map_generic_candidates",
+           "SarifDocument", "SarifMapping", "SarifCandidates", "map_sarif_candidates")

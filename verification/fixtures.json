@@ -112,7 +112,9 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "SR-FIX-EVIDENCE-EXCHANGE-v1",
+    "SR-FIX-SARIF-IMPORT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -558,6 +560,14 @@
     "SR-FIX-JUNIT-MAPPING-RIGHT-v1": {
       "provider": "tests/test_junit_mapping_right.py:report",
       "kind": "Synthetic core reports with same-name Class/File distinctions, missing/duplicate/conflicting outcomes, versioned mapping rules and exact-source-bound external-identifier sidecars. Complete grouped diagnostic accounting, original/canonical hash boundaries, hostile/invalid/large inputs, immutability and Core/PYZ behavior with I/O/process/network/clock/entropy traps; no external run authenticity or publication is asserted."
+    },
+    "SR-FIX-EVIDENCE-EXCHANGE-v1": {
+      "provider": "tests/test_evidence_exchange.py:exchange_case",
+      "kind": "Owned versioned producer/run/subject/result/environment/attachment declarations with supplied native REQ/VER/TEST snapshots. Exact local subject hashes, explicit outcomes and configurations, closed fields, immutable ownership, passive I/O boundaries and Core/PYZ parity. No external run authentication or publication."
+    },
+    "SR-FIX-SARIF-IMPORT-v1": {
+      "provider": "tests/test_sarif_import.py:sarif_case",
+      "kind": "Synthetic SARIF 2.1.0 inline runs, source-hash-bound explicit result/rule/invocation/artifact mappings and a declared generic Exchange companion. Native identities, sparse selection, no severity-to-pass inference, safe diagnostics and Core/PYZ parity. No complete SARIF validation, import policy or persistent Evidence."
     }
   }
 }

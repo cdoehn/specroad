@@ -4,18 +4,31 @@
   "requirement_id": "SR-REQ-0336",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-SARIF-IMPORT-v1"
+  ],
+  "preconditions": [
+    "Owned strict JSON input bytes, explicit mapping where required and supplied native requirement/test/verification snapshots; no host or implicit project lookup."
+  ],
+  "steps": [
+    "Parse the versioned input and preserve original-byte/canonical hashes.",
+    "Bind each measurement and referenced subject/target exactly, preserving separate occurrences and explicit result semantics.",
+    "Reject unsupported or malformed inputs without file/network/process access or resource changes; check immutable values and isolated Core/PYZ behavior."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad evidence import sarif <FILE>` MUSS SARIF 2.1.0 einlesen und nur ausdrücklich gemappte Results, Rules, Artifacts und Invocations als Evidence oder Evidence-Anhang übernehmen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.h.W inline SARIF 2.1.0 candidate API only. Exact source hash and explicit index mapping select results and optional driver rules, invocations and artifacts, binding declared producer/run/subjects and outcomes to native supplied targets. No inference from severity, tool success, opaque metadata or unmapped entries. This is not full SARIF/CLI/import-policy or Evidence-publication support."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_diagnostics": [
+    "SRV091"
+  ],
+  "expected_exit_codes": [
+    0,
+    3
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +41,69 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_sarif_import.py::test_duplicate_mapping_bindings_are_rejected[artifact]",
+    "tests/test_sarif_import.py::test_duplicate_mapping_bindings_are_rejected[exchange]",
+    "tests/test_sarif_import.py::test_duplicate_mapping_bindings_are_rejected[result]",
+    "tests/test_sarif_import.py::test_explicit_inline_mapping_retains_bound_data_and_selected_sarif_objects[fail-error-failed]",
+    "tests/test_sarif_import.py::test_explicit_inline_mapping_retains_bound_data_and_selected_sarif_objects[fail-none-failed]",
+    "tests/test_sarif_import.py::test_explicit_inline_mapping_retains_bound_data_and_selected_sarif_objects[fail-note-failed]",
+    "tests/test_sarif_import.py::test_explicit_inline_mapping_retains_bound_data_and_selected_sarif_objects[fail-warning-failed]",
+    "tests/test_sarif_import.py::test_explicit_inline_mapping_retains_bound_data_and_selected_sarif_objects[notApplicable-none-skipped]",
+    "tests/test_sarif_import.py::test_explicit_inline_mapping_retains_bound_data_and_selected_sarif_objects[pass-none-passed]",
+    "tests/test_sarif_import.py::test_explicit_null_selectors_never_implicitly_import_related_objects",
+    "tests/test_sarif_import.py::test_explicit_pass_rejects_inconsistent_or_malformed_level[None]",
+    "tests/test_sarif_import.py::test_explicit_pass_rejects_inconsistent_or_malformed_level[error]",
+    "tests/test_sarif_import.py::test_explicit_pass_rejects_inconsistent_or_malformed_level[level2]",
+    "tests/test_sarif_import.py::test_explicit_pass_rejects_inconsistent_or_malformed_level[success]",
+    "tests/test_sarif_import.py::test_external_properties_and_component_rules_require_a_future_explicit_profile[externalPropertyFileReferences]",
+    "tests/test_sarif_import.py::test_external_properties_and_component_rules_require_a_future_explicit_profile[rule]",
+    "tests/test_sarif_import.py::test_invalid_document_profile_is_refused_before_mapping[change0]",
+    "tests/test_sarif_import.py::test_invalid_document_profile_is_refused_before_mapping[change1]",
+    "tests/test_sarif_import.py::test_invalid_document_profile_is_refused_before_mapping[change2]",
+    "tests/test_sarif_import.py::test_invalid_document_profile_is_refused_before_mapping[change3]",
+    "tests/test_sarif_import.py::test_invalid_document_profile_is_refused_before_mapping[change4]",
+    "tests/test_sarif_import.py::test_invocation_failure_or_invalid_success_cannot_support_a_pass[1-invalid_sarif_invocation]",
+    "tests/test_sarif_import.py::test_invocation_failure_or_invalid_success_cannot_support_a_pass[False-sarif_failed_invocation_cannot_pass]",
+    "tests/test_sarif_import.py::test_invocation_failure_or_invalid_success_cannot_support_a_pass[None-invalid_sarif_invocation]",
+    "tests/test_sarif_import.py::test_invocation_failure_or_invalid_success_cannot_support_a_pass[true-invalid_sarif_invocation]",
+    "tests/test_sarif_import.py::test_level_and_successful_invocation_alone_cannot_be_mapped_to_passed[error]",
+    "tests/test_sarif_import.py::test_level_and_successful_invocation_alone_cannot_be_mapped_to_passed[none]",
+    "tests/test_sarif_import.py::test_level_and_successful_invocation_alone_cannot_be_mapped_to_passed[note]",
+    "tests/test_sarif_import.py::test_level_and_successful_invocation_alone_cannot_be_mapped_to_passed[warning]",
+    "tests/test_sarif_import.py::test_multiple_runs_and_occurrences_follow_mapping_order_without_aggregation",
+    "tests/test_sarif_import.py::test_no_mapping_means_no_candidates_even_for_a_successful_tool_run",
+    "tests/test_sarif_import.py::test_opaque_metadata_and_uris_are_never_host_access_or_implicit_result_data",
+    "tests/test_sarif_import.py::test_owned_values_and_outputs_have_no_boolean_or_mutation_authority",
+    "tests/test_sarif_import.py::test_report_bytes_are_exactly_bound_and_cached_data_cannot_replace_them",
+    "tests/test_sarif_import.py::test_reusing_a_large_artifact_cannot_amplify_small_input_into_unbounded_output",
+    "tests/test_sarif_import.py::test_selected_driver_rule_must_agree_with_the_result_reference[ruleId-unrelated]",
+    "tests/test_sarif_import.py::test_selected_driver_rule_must_agree_with_the_result_reference[ruleIndex-1]",
+    "tests/test_sarif_import.py::test_selected_driver_rule_must_agree_with_the_result_reference[ruleIndex-True]",
+    "tests/test_sarif_import.py::test_selector_types_are_never_coerced[-1]",
+    "tests/test_sarif_import.py::test_selector_types_are_never_coerced[0.0]",
+    "tests/test_sarif_import.py::test_selector_types_are_never_coerced[0]",
+    "tests/test_sarif_import.py::test_selector_types_are_never_coerced[None]",
+    "tests/test_sarif_import.py::test_selector_types_are_never_coerced[True]",
+    "tests/test_sarif_import.py::test_selectors_require_in_range_exact_indices[artifact_indices]",
+    "tests/test_sarif_import.py::test_selectors_require_in_range_exact_indices[invocation_index]",
+    "tests/test_sarif_import.py::test_selectors_require_in_range_exact_indices[result_index]",
+    "tests/test_sarif_import.py::test_selectors_require_in_range_exact_indices[rule_index]",
+    "tests/test_sarif_import.py::test_selectors_require_in_range_exact_indices[run_index]",
+    "tests/test_sarif_import.py::test_source_and_pyz_support_the_same_passive_sarif_binding[False]",
+    "tests/test_sarif_import.py::test_source_and_pyz_support_the_same_passive_sarif_binding[True]",
+    "tests/test_sarif_import.py::test_unbound_exchange_results_and_unknown_mapping_keys_are_rejected",
+    "tests/test_sarif_import.py::test_unsupported_kinds_do_not_gain_an_implicit_interpretation[None]",
+    "tests/test_sarif_import.py::test_unsupported_kinds_do_not_gain_an_implicit_interpretation[informational]",
+    "tests/test_sarif_import.py::test_unsupported_kinds_do_not_gain_an_implicit_interpretation[kind5]",
+    "tests/test_sarif_import.py::test_unsupported_kinds_do_not_gain_an_implicit_interpretation[kind6]",
+    "tests/test_sarif_import.py::test_unsupported_kinds_do_not_gain_an_implicit_interpretation[not-a-kind]",
+    "tests/test_sarif_import.py::test_unsupported_kinds_do_not_gain_an_implicit_interpretation[open]",
+    "tests/test_sarif_import.py::test_unsupported_kinds_do_not_gain_an_implicit_interpretation[review]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "12.h.R: extend and harden the supported SARIF/generic schema and mapping boundary, including foreign entries, contradictory bindings and complete diagnostics; retain W behavior.",
+    "12.h.C: common candidate representation for JUnit/SARIF/generic without changing behavior.",
+    "12.i/12.j and the assigned CLI step: explicit import policy, complete provenance/attachments, authoritative project/run/contract-slot checks, idempotency and atomic Evidence publication."
   ]
 }

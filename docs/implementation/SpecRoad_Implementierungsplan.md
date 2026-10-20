@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 507
-last_completed_plan_commit: 12.g.C
-next_plan_commit: 12.h.W
-last_completed_numbered_bundle: 333
+implementation_plan_commits_completed: 508
+last_completed_plan_commit: 12.h.W
+next_plan_commit: 12.h.R
+last_completed_numbered_bundle: 334
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13602,12 +13602,67 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.h.W – Let it Work
 
-- [ ] **12.h.W** · Position **508/900** · Voraussetzung: `12.g.C`.
+- [x] **12.h.W** · Position **508/900** · Voraussetzung: `12.g.C`.
 **Exakte Commit-Message:** `12.h.W feat(verification): SARIF- und generischer Evidenceimport aufbauen`
 
 **Umsetzung:** Nur ausdrücklich gemappte SARIF-Daten sowie das versionierte generische Exchange-Schema lesen.
 
 **Verhaltensabnahme:** Unterstützte Eingaben liefern gebundene Producer-, Run-, Subject- und Ergebnisdaten.
+
+**Bundle 334 – vorbereiteter W-Zustand (12.h.W):**
+
+Maßgeblich ist das vollständig geprüfte Result
+`specroad-apply_Result_091156_1020_513e79.zip`, SHA-256
+`51489f58e1bf6f13e84aff4bc70c1031263bacf5de6bff426529e74612c7fda7`,
+mit sauberem Apply-Commit `4061acfa7f2706a844b40b43e59e72372b03dee8`.
+Es bestätigt Bundle 333 / `12.g.C`: **4.716** parallele Apply-Tests mit
+**4 Workern** in **1.176,88 s**, Gruppe **2**, Commitsequenz **41**.
+Snapshot, Commitinhalt, unveränderte feste Testnummern und Ausführungslogs
+stimmen mit diesem Result überein.
+
+Der kleinste nutzbare Importausschnitt ist eine passive Core-/PYZ-API:
+`EvidenceExchange` liest das geschlossene, versionierte
+`specroad-evidence-exchange-v1` mit Producer, Werkzeug, explizitem Produktlauf,
+Subjects, Ergebnissen, Umgebung, Anhangsreferenzen und Konfigurationsdeklaration.
+`map_generic_candidates` bindet Ziel-IDs und vollständige Subject-Revisionen
+und -Hashes exakt an übergebene native REQ-/TEST-/VER-Werte. Ergebnisse bleiben
+einzelne Messungen; die API erfindet keinen erfolgreichen Gesamtlauf.
+
+`SarifDocument` und `SarifMapping` lesen ein begrenztes Inline-Profil von
+SARIF 2.1.0. Eine an die exakten Originalbytes gebundene Zuordnung wählt jede
+Result-Position sowie optionale Driver-Regeln, Invocations und Artifacts
+ausdrücklich aus. Der deklarierte Exchange bindet Producer, Run und Subjects.
+Ungewählte Result-Positionen werden ausgewiesen. Schweregrad, Werkzeugerfolg,
+URLs und fremde Metadaten erzeugen weder automatisch bestandene Messungen
+noch Dateizugriffe. Das W-Profil unterstützt die expliziten Kombinationen
+pass/passed, fail/failed und notApplicable/skipped. Widersprüchliche und
+unvollständige Bindungen werden zurückgewiesen.
+
+Eingabe- und expandierte Ausgabegrenzen verhindern unbeschränkte Verarbeitung
+wiederholt referenzierter Metadaten. Originalbytes, Rohhash, kanonische Hashes
+und ausgewählte SARIF-Pointer bleiben unterscheidbar. Kandidaten sind
+unveränderliche Werte ohne Schreib-, Freigabe- oder Ausführungsautorität.
+Die knappe API-Anleitung steht in `docs/development/Evidence_Exchange.md`.
+`SR-TC-0336` und `SR-TC-0337` bleiben ausdrücklich **partial**:
+12.h.R/C, umfassendere SARIF-Profile, globale CLI-/Projekt-/Slotbindung,
+Importpolicy, Anhangsnutzdaten, Laufbeglaubigung und atomare Veröffentlichung
+bleiben bei den vorgesehenen Folgeschritten. Dieser W-Zustand schreibt keine
+fachlichen Ressourcen.
+
+**Gezielter Dev-Nachweis:** **855/855** Verhaltenstests mit **4 Workern**
+parallel in **14,51 s**, davon **143** neue Generic-/SARIF-Nachweise.
+Hinzu kommen die betroffenen JUnit-W/R-/XML-, Contract-, Evidence-,
+Sicherheits- und Core/PYZ-Regressionen. Die vollständige Katalog-Collection
+umfasst **14.293** Tests ohne Ausführung von Testbodies. Bestehende
+**14.150** Testnummern bleiben exakt erhalten; neue Nummern werden angehängt.
+Geprüfte Source-SHA-256:
+`96d3298a9cfcdaa76c3591f91f144de4198b48f1604e65843b337d87c7303294`.
+
+Der Entrypoint stellt ausschließlich diesen W-Zustand her und verlangt in Apply
+Gruppe **0**, Commitsequenz **42**, mit **4.765** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**508/900**, nächster Schritt `12.h.R`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.h.R – Make it Right
 
