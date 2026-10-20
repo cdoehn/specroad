@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 518
-last_completed_plan_commit: 12.k.R
-next_plan_commit: 12.k.C
-last_completed_numbered_bundle: 344
+implementation_plan_commits_completed: 519
+last_completed_plan_commit: 12.k.C
+next_plan_commit: 12.l.W
+last_completed_numbered_bundle: 345
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14275,7 +14275,7 @@ einen R-Zustand; `12.k.C` wird nicht begonnen, der Auftrag endet nach der Überg
 
 #### 12.k.C – Make it Clean
 
-- [ ] **12.k.C** · Position **519/900** · Voraussetzung: `12.k.R`.
+- [x] **12.k.C** · Position **519/900** · Voraussetzung: `12.k.R`.
 **Exakte Commit-Message:** `12.k.C refactor(verification): Bewertungsdescriptor und Produktstand bereinigen`
 
 **Bereinigung:** Bewertungsinput von SpecRoad-Projektmodell und Laufzeitmetrik unterscheiden.
@@ -14283,6 +14283,49 @@ einen R-Zustand; `12.k.C` wird nicht begonnen, der Auftrag endet nach der Überg
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand – Bundle 345 (21. Oktober 2026):** Technische Basis ist
+das vollständig geprüfte Result `specroad-apply_Result_220003_1020_761be7.zip`,
+SHA-256 `3610ee8c9cd7acbba971f5d366dcb4c23921a3cd25a6ff6760203c9ba4b343e2`,
+mit sauberem Apply-HEAD `ea1eafb5a084f453556d6b2ea21703be0cf7c213`.
+Bundle 344 bestätigt `12.k.R`: Gruppe **1**, Commitsequenz **52**,
+**4.961/4.961** parallele Apply-Teiltests mit **4 Workern** in **1.160,03 s**.
+
+Manifestbildung, Produktstandhash und tatsächlicher Bytevergleich liegen nun in
+einem privaten Modul für Produkteingänge. Erzeugung und Selbsthashprüfung nutzen
+dieselbe ausdrückliche Projektion aus `subject_id` und `manifest`. Die Funktionen
+arbeiten ausschließlich auf bereits validierten, übernommenen Eingabewerten;
+sie beziehen weder eine SpecRoad-Modellwurzel noch Laufwahl, Rolleninventar,
+Auditdaten oder Laufzeitmessungen in den Produktstand ein. Die bestehende
+Descriptorlogik behält Schema, Normalisierung und fachliche Rollenprüfung;
+Bewertungs- und Berechtigungsflags bleiben außerhalb der reinen Bytebeobachtung.
+
+Dies ist ausschließlich eine strukturelle Bereinigung. Öffentliche Signaturen,
+Wert- und Fehlerklassen bleiben an derselben Stelle erhalten. Feldmengen,
+Kanonisierung, Hashes, Fehlergründe und Prüfungsreihenfolge sowie zulässige
+Seiteneffekte bleiben unverändert. Es wird kein weiterer fachlicher Schritt
+vorgezogen. Alle **449** bisherigen Testdateien und sämtliche
+Verifikationsdaten bleiben bytegleich zum Result; die Anforderungsbelege bleiben
+unverändert `partial`.
+
+**Gezielter Dev-Nachweis:** **495/495** bestehende Verhaltenstests aus **9**
+Dateien parallel mit **4 Workern** in **12,77 s**. Die Auswahl umfasst alle
+**136** W-/R-Fälle zu Descriptor und Eingangsbindung einschließlich unabhängiger
+Hash-Erwartungen, ausgeschlossener Rollen, fehlender Auswahl, Fehlerverträgen,
+Wertbesitz und isoliertem Core/PYZ. Hinzu kommen die betroffenen bisherigen
+Regressionstests zu Evidence-Austausch, Verifikationskontext und
+Release-Baseline-Grenzen. Keine erwarteten Fachwerte wurden geändert.
+Geprüfte Source-SHA-256:
+`d025841f88036dbc7891c4c56ee73354897cc579a02c64d303f8df4265e93a77`.
+
+Die vollständige Katalog-Collection bestätigt unverändert **14.883** Tests ohne
+Testbodies. Alle festen Testnummern bleiben erhalten. Der Entrypoint stellt genau
+diesen C-Zustand her und verlangt in Apply ausschließlich Gruppe **2**,
+Commitsequenz **53**, mit **4.961** parallelen Tests und **4 Workern**. Erst der
+erfolgreiche Apply-Lauf erlaubt den C-Commit und den Fortschrittsmarker
+**519/900** mit `12.l.W` als nächstem Schritt. Es gibt keinen Vollsuite-,
+Serienlauf- oder Release-Erfolgsnachweis. Dieses Bundle enthält genau einen
+C-Zustand; `12.l.W` wird nicht begonnen, der Auftrag endet nach der Übergabe.
 
 <a id="step-12-l"></a>
 ### 12.l – Unabhängig gebildete Pflichtmenge

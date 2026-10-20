@@ -16,6 +16,7 @@ from ..model.errors import ModelError
 from ..model.paths import project_path
 from ..model.record_schemas import record_schema
 from ..storage.json_syntax import parse_json_object
+from ._evaluation_product import input_manifest, product_state_sha256, observe_input_bytes
 
 
 class VerificationEvaluationError(ModelError):
@@ -76,8 +77,7 @@ def _read(raw):
             paths.add(entry['logical_path'])
             entry['size'] = int(entry['size'])
         subject['manifest'].sort(key=lambda item: item['logical_path'].encode('utf-8'))
-        projection = {key: subject[key] for key in ('subject_id', 'manifest')}
-        if canonical_json_sha256(projection) != subject['state_sha256']:
+        if product_state_sha256(subject) != subject['state_sha256']:
             raise VerificationEvaluationError('evaluation_state_hash_mismatch',
                                               pointer='/evaluated_subject/state_sha256')
         keys = set()
@@ -159,12 +159,11 @@ def prepare_verification_evaluation(*, evaluation_id, subject_id, inputs,
     owned = _inputs(inputs)
     if configuration is not None and type(configuration) is not EffectiveConfiguration:
         raise VerificationEvaluationError('typed_evaluation_configuration_required')
-    manifest = [{'logical_path': path, 'size': len(raw), 'sha256': sha256(raw).hexdigest()}
-        for path, raw in sorted(owned.items(), key=lambda pair: pair[0].encode('utf-8'))]
+    manifest = input_manifest(owned)
     subject = {'subject_id': subject_id, 'manifest': manifest}
     try:
         value = {'format_version': '1.0.0', 'evaluation_id': evaluation_id,
-            'evaluated_subject': {**subject, 'state_sha256': canonical_json_sha256(subject)},
+            'evaluated_subject': {**subject, 'state_sha256': product_state_sha256(subject)},
             'configuration_hash': None if configuration is None else configuration.sha256,
             'required_runs': required_runs, 'replacements': [],
             'created_at': created_at, 'created_by': created_by}
@@ -207,22 +206,11 @@ def assess_evaluation_inputs(evaluation, *, inputs):
     owned = _inputs(inputs)
     data = evaluation.data
     subject = data['evaluated_subject']
-    missing, mismatched, matched = [], [], []
-    expected = {entry['logical_path']: entry for entry in subject['manifest']}
-    for path, entry in expected.items():
-        if path not in owned:
-            missing.append(path)
-        elif len(owned[path]) != entry['size'] or sha256(owned[path]).hexdigest() != entry['sha256']:
-            mismatched.append(path)
-        else:
-            matched.append(path)
-    unexpected = sorted(set(owned) - set(expected), key=lambda path: path.encode('utf-8'))
+    observation = observe_input_bytes(subject, owned)
     report = {'format_version': 'verification-evaluation-inputs-v1',
         'evaluation_id': data['evaluation_id'], 'evaluation_sha256': evaluation.sha256,
         'subject_id': subject['subject_id'], 'state_sha256': subject['state_sha256'],
-        'matched_inputs': matched, 'missing_inputs': missing,
-        'mismatched_inputs': mismatched, 'unexpected_inputs': unexpected,
-        'input_bytes_verified': not (missing or mismatched or unexpected),
+        **observation,
         'input_roles_verified': False, 'project_required_checks_complete': False,
         'configuration_applicability_evaluated': False, 'run_selection_evaluated': False,
         'full_verification_evaluated': False, 'external_run_verified': False,
