@@ -10,7 +10,8 @@
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1",
-    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-v1"
+    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-v1",
+    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-RIGHT-v1"
   ],
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
@@ -19,12 +20,13 @@
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared.",
     "Resolve direct verified_by tests into implicit overall contracts bound to original Test records. Preserve explicit-contract results and reject incomplete contracts, invalid identities and changed source bindings without file access or test execution.",
-    "Derive required keys independently from every applicable subject in an owned whole-project model, native verified_by targets and all slots. Compare descriptor coverage without changing the scope; retain missing or unresolved obligations and reject foreign keys. Bind explicit selected configuration and preserve input files without executing tests or Evidence."
+    "Derive required keys independently from every applicable subject in an owned whole-project model, native verified_by targets and all slots. Compare descriptor coverage without changing the scope; retain missing or unresolved obligations and reject foreign keys. Bind explicit selected configuration and preserve input files without executing tests or Evidence.",
+    "Rebuild native seeds, query pages and closure from a separately supplied ScopeDescriptor and explicit ClosureBindings matched to the whole model inventory. Verify that descriptor selections cannot replace subjects, drop strong dependencies or enlarge scope; report all missing and foreign keys separately."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Verification-Artefakt MUSS Vorbedingungen, Prüfgegenstand, Verfahren, Oracle oder Pass-Kriterium, erforderliche Evidence-Arten, vollständige `evidence_slots` nach Kapitel 10.5.2 und eine Konfigurationspolicy `independent` oder `bound` definieren.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory. 12.l.R binds independent native scopes and complete provider inventory; native closure includes required dependencies before comparison. Query pages are recomputed without a verification evaluation. Missing-only keys stay incomplete; foreign keys produce SRV175 with both missing_checks and unexpected_keys and the independently bound required_set_sha256."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -174,9 +176,51 @@
     "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[not_applicable]",
     "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[not_planned]",
     "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[planned]",
-    "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[running]"
+    "tests/test_verification_required_checks.py::test_workflow_status_does_not_silently_remove_contract_slots[running]",
+    "tests/test_verification_required_checks_right.py::test_boundary_policy_controls_weak_dependencies_not_the_descriptor[closed-expected1]",
+    "tests/test_verification_required_checks_right.py::test_boundary_policy_controls_weak_dependencies_not_the_descriptor[partial-expected0]",
+    "tests/test_verification_required_checks_right.py::test_conditional_non_subject_scope_seed_does_not_allow_an_unqualified_ready_claim",
+    "tests/test_verification_required_checks_right.py::test_configuration_is_resolved_before_scope_and_cannot_be_chosen_by_evaluation[False]",
+    "tests/test_verification_required_checks_right.py::test_configuration_is_resolved_before_scope_and_cannot_be_chosen_by_evaluation[True]",
+    "tests/test_verification_required_checks_right.py::test_descriptor_cannot_replace_seed_subject_with_another_valid_project_subject[SR-CAP-00000000000000000000000000]",
+    "tests/test_verification_required_checks_right.py::test_descriptor_cannot_replace_seed_subject_with_another_valid_project_subject[SR-TASK-00000000000000000000000000]",
+    "tests/test_verification_required_checks_right.py::test_evidence_subject_closure_can_add_required_subjects_but_descriptor_ids_cannot",
+    "tests/test_verification_required_checks_right.py::test_excluded_strong_dependency_is_not_downgraded_to_a_boundary[closed]",
+    "tests/test_verification_required_checks_right.py::test_excluded_strong_dependency_is_not_downgraded_to_a_boundary[partial]",
+    "tests/test_verification_required_checks_right.py::test_explicit_seeds_resolve_native_strong_closure_before_key_comparison",
+    "tests/test_verification_required_checks_right.py::test_independent_full_subject_scopes_preserve_every_required_check[explicit]",
+    "tests/test_verification_required_checks_right.py::test_independent_full_subject_scopes_preserve_every_required_check[project]",
+    "tests/test_verification_required_checks_right.py::test_independent_full_subject_scopes_preserve_every_required_check[specification]",
+    "tests/test_verification_required_checks_right.py::test_independent_scope_coverage_is_available_in_fresh_core_and_pyz[core]",
+    "tests/test_verification_required_checks_right.py::test_independent_scope_coverage_is_available_in_fresh_core_and_pyz[pyz]",
+    "tests/test_verification_required_checks_right.py::test_missing_dependency_provider_does_not_mean_no_dependency[reviews]",
+    "tests/test_verification_required_checks_right.py::test_missing_dependency_provider_does_not_mean_no_dependency[usage]",
+    "tests/test_verification_required_checks_right.py::test_missing_keys_are_not_confused_with_foreign_keys_when_no_foreign_key_exists",
+    "tests/test_verification_required_checks_right.py::test_multiple_extra_keys_and_missing_keys_are_reported_deterministically",
+    "tests/test_verification_required_checks_right.py::test_query_cannot_use_verification_results_or_the_descriptor_to_define_obligations[embedded-evaluation]",
+    "tests/test_verification_required_checks_right.py::test_query_cannot_use_verification_results_or_the_descriptor_to_define_obligations[verification-filter]",
+    "tests/test_verification_required_checks_right.py::test_query_cannot_use_verification_results_or_the_descriptor_to_define_obligations[verification-sort]",
+    "tests/test_verification_required_checks_right.py::test_query_is_recomputed_from_actual_records_before_closure_and_coverage",
+    "tests/test_verification_required_checks_right.py::test_release_and_document_selection_use_native_seed_and_relation_rules[document]",
+    "tests/test_verification_required_checks_right.py::test_release_and_document_selection_use_native_seed_and_relation_rules[release]",
+    "tests/test_verification_required_checks_right.py::test_required_dependency_subject_is_never_optional_in_a_partial_scope[closed]",
+    "tests/test_verification_required_checks_right.py::test_required_dependency_subject_is_never_optional_in_a_partial_scope[partial]",
+    "tests/test_verification_required_checks_right.py::test_scope_and_explicit_configuration_disagreement_is_not_silently_repaired",
+    "tests/test_verification_required_checks_right.py::test_scope_inputs_require_both_native_typed_values[scope_bindings-None]",
+    "tests/test_verification_required_checks_right.py::test_scope_inputs_require_both_native_typed_values[scope_bindings-value1]",
+    "tests/test_verification_required_checks_right.py::test_scope_inputs_require_both_native_typed_values[scope_descriptor-None]",
+    "tests/test_verification_required_checks_right.py::test_scope_inputs_require_both_native_typed_values[scope_descriptor-value0]",
+    "tests/test_verification_required_checks_right.py::test_scope_results_are_owned_and_need_no_files_or_processes",
+    "tests/test_verification_required_checks_right.py::test_specification_scope_keeps_native_permanent_control_exclusions",
+    "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[changed-record]",
+    "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[changed-resource]",
+    "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[dependency-hash]",
+    "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[foreign-project]",
+    "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[inventory-hash]",
+    "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[missing-resource]",
+    "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[omit-record]"
   ],
   "open_items": [
-    "Further scope profiles and robust scope integration, project evaluation-identity conflicts, Evidence/run selection, replacements, full aggregation, command/readiness integration and broader release/platform evidence remain open. Input roles and live inventory provenance remain caller responsibilities. No external run or approval is certified."
+    "Project evaluation-identity conflicts, Evidence/run selection, replacements, full aggregation, command/readiness integration and broader release/platform evidence remain open. Live inventory, resource-use and current-review provenance remain explicit provider responsibilities; hashes do not authenticate providers or external execution."
   ]
 }

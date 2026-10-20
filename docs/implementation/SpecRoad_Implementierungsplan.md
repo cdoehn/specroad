@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 520
-last_completed_plan_commit: 12.l.W
-next_plan_commit: 12.l.R
-last_completed_numbered_bundle: 346
+implementation_plan_commits_completed: 521
+last_completed_plan_commit: 12.l.R
+next_plan_commit: 12.l.C
+last_completed_numbered_bundle: 347
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14355,12 +14355,24 @@ Entrypoint erst nach erfolgreichem Apply-Testlauf dieses W-Zustands gesetzt.
 
 #### 12.l.R – Make it Right
 
-- [ ] **12.l.R** · Position **521/900** · Voraussetzung: `12.l.W`.
+- [x] **12.l.R** · Position **521/900** · Voraussetzung: `12.l.W`.
 **Exakte Commit-Message:** `12.l.R feat(verification): Unabhängig gebildete Pflichtmenge vervollständigen`
 
 **Vervollständigung:** Descriptor darf Scope nicht selbst erweitern/verkleinern; fehlende und zusätzliche Schlüssel unterscheiden.
 
 **Verhaltensabnahme:** Manipulierte Auswahl kann keine notwendige Prüfung wegfiltern. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zwischenstand (Bundle 347):** Unabhängiger nativer
+`ScopeDescriptor` mit ausdrücklich gelieferten `ClosureBindings`, gegen den
+vollständigen übergebenen Modellbestand geprüft. Seeds, Query-Seiten und
+Closure werden vor dem Descriptorvergleich neu berechnet; Bewertungs-IDs
+erweitern oder verkleinern sie nicht. Starke und gebundene Abhängigkeiten,
+Grenzpolicy und Konfigurationsausschlüsse behalten ihre nativen Fehlerverträge.
+Zusätzliche Schlüssel werden mit sämtlichen fehlenden Schlüsseln und der
+Pflichtmengenbindung als SRV175 berichtet; reine Fehlmengen bleiben unvollständig.
+Die Providerbeobachtungen sind gebunden, nicht authentifiziert. Kein Lauf- oder
+Readiness-Erfolg wird daraus abgeleitet. Fortschrittsmarker erst nach dem
+erfolgreichen Apply-Testlauf dieses R-Zustands.
 
 #### 12.l.C – Make it Clean
 

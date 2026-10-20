@@ -1,7 +1,7 @@
-"""Independent required checks for a supplied whole-project model.
+"""Independent required checks for a supplied model and separately bound scope.
 
-This initial profile has no partial/query/release selector. The evaluation never
-selects subjects, contracts or slots. No files, test code or Evidence are read.
+The evaluation never selects subjects, contracts or slots. No files or test code
+are opened, and Evidence results are not evaluated.
 """
 from dataclasses import dataclass
 from hashlib import sha256
@@ -20,6 +20,7 @@ from ..storage.record_artifact import RecordArtifact
 from ..storage.json_syntax import parse_json_object
 from .evaluation import VerificationEvaluation, VerificationEvaluationError, _key
 from .targets import resolve_verification_target
+from ._required_scope import resolve_required_scope
 
 
 @dataclass(frozen=True, init=False)
@@ -42,7 +43,7 @@ class RequiredChecksResolution:
         raise TypeError('Required checks are not verification success or approval')
 
 
-def resolve_required_checks(model, *, configuration_id):
+def resolve_required_checks(model, *, configuration_id, scope_descriptor=None, scope_bindings=None):
     """Derive all slots independently; None explicitly selects no configuration.
 
     Conditional subjects without a configuration remain potential obligations,
@@ -59,6 +60,12 @@ def resolve_required_checks(model, *, configuration_id):
     by_id = {record.identity.id: record for record in records}
     configuration = (None if configuration_id is None else
                      resolve_configuration(records, configuration_id))
+    closure = None
+    included = set(by_id)
+    if scope_descriptor is not None or scope_bindings is not None:
+        closure = resolve_required_scope(model, records, scope_descriptor, scope_bindings, configuration_id)
+        scope = closure.seeds.descriptor
+        included = set(closure.artifact_ids)
     source_types = {kind for rule in relation_rules('verified_by') for kind in rule.sources}
     subjects, contracts, checks, unresolved, without_checks = [], [], [], set(), []
 
@@ -74,6 +81,10 @@ def resolve_required_checks(model, *, configuration_id):
                                                      configuration_id=configuration_id)
 
     for source in sorted(records, key=lambda item: item.identity.id.encode('utf-8')):
+        if source.identity.id not in included:
+            continue
+        if closure is not None:
+            classify(source)
         if source.identity.artifact_type not in source_types:
             continue
         artifact = DomainArtifact if source.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
@@ -97,7 +108,8 @@ def resolve_required_checks(model, *, configuration_id):
                               'resolution_sha256': resolution.sha256})
     checks.sort(key=_key)
     report = {'format_version': 'verification-required-checks-v1',
-        'validation_scope': 'supplied_whole_project_required_checks',
+        'validation_scope': ('supplied_whole_project_required_checks' if closure is None
+                             else 'supplied_scope_required_checks'),
         'project_id': model.binding.project_id, 'input_sha256': model._sources_sha256,
         'scope_descriptor': scope.data, 'scope_sha256': scope.sha256,
         'configuration_hash': None if configuration is None else configuration.sha256,
@@ -110,6 +122,10 @@ def resolve_required_checks(model, *, configuration_id):
         'run_selection_evaluated': False, 'full_verification_evaluated': False,
         'external_run_verified': False, 'release_readiness_evaluated': False,
         'test_code_executed': False, 'write_authorized': False, 'approval_granted': False}
+    if closure is not None:
+        report.update(scope_resolution=closure.data,
+                      scope_resolution_sha256=closure.observation_sha256,
+                      scope_providers_authenticated=False)
     result = object.__new__(RequiredChecksResolution)
     object.__setattr__(result, '_encoded', canonical_json_bytes(report))
     return result
@@ -135,14 +151,32 @@ class RequiredCheckAssessment:
         raise TypeError('Required-key coverage is not verification success or approval')
 
 
-def assess_required_check_coverage(model, evaluation, *, configuration_id):
+class RequiredCheckCoverageError(VerificationEvaluationError):
+    """An invalid selection with both missing and foreign keys, bound to its scope."""
+
+    def __init__(self, *, missing_checks, unexpected_keys, required_set_sha256, pointer):
+        super().__init__('unexpected_evaluation_required_key', pointer=pointer)
+        self._details = canonical_json_bytes({'missing_checks': missing_checks,
+            'unexpected_keys': unexpected_keys, 'required_set_sha256': required_set_sha256})
+
+    @property
+    def details(self):
+        return parse_json_object(self._details)
+
+    def diagnostic(self):
+        return {**super().diagnostic(), **self.details}
+
+
+def assess_required_check_coverage(model, evaluation, *, configuration_id,
+                                  scope_descriptor=None, scope_bindings=None):
     """Compare a descriptor only after independently deriving model obligations.
 
     Extra keys are invalid descriptors (SRV175). Missing keys or unavailable
     bindings are incomplete (SRV176). Ready means exact key/configuration
     coverage only: it neither verifies product inputs nor evaluates any run.
     """
-    resolution = resolve_required_checks(model, configuration_id=configuration_id)
+    resolution = resolve_required_checks(model, configuration_id=configuration_id,
+        scope_descriptor=scope_descriptor, scope_bindings=scope_bindings)
     required = resolution.data
     if evaluation is not None:
         if type(evaluation) is not VerificationEvaluation:
@@ -151,11 +185,15 @@ def assess_required_check_coverage(model, evaluation, *, configuration_id):
     data = None if evaluation is None else evaluation.data
     expected = {_key(row): row for row in required['required_checks']}
     selected = {} if data is None else {_key(row): row for row in data['required_runs']}
-    for index, row in enumerate([] if data is None else data['required_runs']):
-        if _key(row) not in expected:
-            raise VerificationEvaluationError('unexpected_evaluation_required_key',
-                                              pointer=f'/required_runs/{index}')
     missing = [expected[key] for key in sorted(expected.keys() - selected.keys())]
+    extra = [index for index, row in enumerate([] if data is None else data['required_runs'])
+             if _key(row) not in expected]
+    if extra:
+        unexpected = [{field: data['required_runs'][index][field] for field in
+                       ('subject_artifact_id', 'contract_id', 'test_id', 'check_id')}
+                      for index in extra]
+        raise RequiredCheckCoverageError(missing_checks=missing, unexpected_keys=unexpected,
+            required_set_sha256=resolution.sha256, pointer=f'/required_runs/{extra[0]}')
     reasons = []
     if data is None:
         reasons.append('evaluation_required')
@@ -170,7 +208,8 @@ def assess_required_check_coverage(model, evaluation, *, configuration_id):
     report = {'format_version': 'verification-required-check-coverage-v1',
         'required_set': required, 'required_set_sha256': resolution.sha256,
         'evaluation_sha256': None if evaluation is None else evaluation.sha256,
-        'missing_checks': missing, 'required_keys_match': data is not None and not missing,
+        'missing_checks': missing, 'unexpected_keys': [],
+        'required_keys_match': data is not None and not missing,
         'coverage_status': 'incomplete' if reasons else 'ready',
         'verification_result': 'incomplete' if reasons else None,
         'reasons': reasons,

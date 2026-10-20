@@ -128,3 +128,38 @@ Konfigurationsabdeckung im übergebenen Modell; `verification_result` bleibt
 Beobachtungen ohne booleschen Erfolgswert. Sie bestätigen weder einen live
 vollständigen Projektbestand noch bestandene Läufe oder eine Releasefreigabe.
 Nachweisauswahl, Laufablösung, Aggregation und CLI-Anbindung bleiben offen.
+
+`12.l.R` ergänzt bei beiden Pflichtmengen-APIs die optionalen Argumente
+`scope_descriptor` und `scope_bindings`. Beide werden gemeinsam übergeben:
+ein nativer `ScopeDescriptor` und `ClosureBindings` mit vollständigem
+Quellinventar sowie ausdrücklichen Ressourcenverwendungs-, Review- und bei
+Bedarf Anhangsbeobachtungen. Ohne beide Argumente bleibt das W-Profil des
+ganzen übergebenen Projekts erhalten. Die gesonderte `configuration_id` muss
+exakt mit dem Scope übereinstimmen; der Bewertungsdescriptor wählt sie nicht.
+
+Quellbytes und Ressourcenbestand werden gegen das aktuelle `TargetModel`
+geprüft, danach die nativen Seed- und Closure-Regeln erneut ausgeführt.
+Eine fehlende Providerbeobachtung wird nicht als leere Abhängigkeit ergänzt.
+Diese expliziten Beobachtungen müssen vom zuständigen Ressourcen-/Reviewdienst
+stammen; ihre Herkunft wird durch einen Hash nicht authentifiziert. Der Bericht
+bindet die konkrete Closure zusätzlich und behauptet keinen vollständigen
+Live-Projektbestand oder normativen Scope-Hash allein aus einem Selectorhash.
+
+Die nativen Projekt-, Spezifikations-, Release-, Dokument-, expliziten und
+konfigurierten Scopes sowie unabhängige Query-Scopes werden unterstützt.
+Query-Seiten werden aus den tatsächlichen Records neu berechnet. Eine im
+Query-Selector eingebettete Bewertung wird abgewiesen; Filter oder Sortierung
+nach noch nicht berechnetem `verification_result` bleiben ohne entsprechenden
+Provider ebenfalls unzulässig. `required_runs` liefert weder Seeds noch
+Closure-Mitglieder. Starke Abhängigkeiten bleiben auch bei `partial` Pflicht;
+schwache Beziehungen folgen der gewählten Grenzpolicy. SRV140 und SRV141 der
+nativen Zulässigkeitsprüfung bleiben erhalten.
+
+Bei zusätzlichen Prüfschlüsseln ist `RequiredCheckCoverageError` weiterhin
+ein `VerificationEvaluationError` mit SRV175/Code 3. Seine abgetrennten
+`details` und `diagnostic()` nennen sowohl `missing_checks` als auch
+`unexpected_keys`, gebunden an `required_set_sha256`. Zusätzliche Schlüssel
+bleiben Fehler, auch wenn gleichzeitig andere fehlen. Reine Fehlmengen bleiben
+`incomplete`/SRV176 und haben eine leere Liste `unexpected_keys`. Der Vergleich
+berücksichtigt alle vier Schlüsselfelder; eine gleichnamige Prüfung eines
+anderen Subjects oder Contracts ersetzt keine Pflichtprüfung.

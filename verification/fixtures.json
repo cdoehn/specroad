@@ -123,7 +123,8 @@
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
     "verification-context-subjects",
-    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-v1"
+    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-v1",
+    "SR-FIX-VERIFICATION-REQUIRED-CHECKS-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
