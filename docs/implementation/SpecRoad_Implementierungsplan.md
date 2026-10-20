@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 506
-last_completed_plan_commit: 12.g.R
-next_plan_commit: 12.g.C
-last_completed_numbered_bundle: 332
+implementation_plan_commits_completed: 507
+last_completed_plan_commit: 12.g.C
+next_plan_commit: 12.h.W
+last_completed_numbered_bundle: 333
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13546,7 +13546,7 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.g.C – Make it Clean
 
-- [ ] **12.g.C** · Position **507/900** · Voraussetzung: `12.g.R`.
+- [x] **12.g.C** · Position **507/900** · Voraussetzung: `12.g.R`.
 **Exakte Commit-Message:** `12.g.C refactor(verification): JUnit-Mapping und Ergebnisklassen bereinigen`
 
 **Bereinigung:** Parserwerte und fachliche Evidencezuordnung separieren.
@@ -13554,6 +13554,45 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Umsetzung (Bundle 333; regulär nach bestätigtem 12.g.R):** Das vollständig
+geprüfte Result `specroad-apply_Result_084429_1020_489f77.zip`, SHA-256
+`46a09ac893fa96a0e03371c0ee92ecb604fc53bd490c9ffe1cc96f4c73efd77c`,
+bestätigt Commit `972377d75896788e1bacf9103a29ef6ee810ce2e`, den sauberen
+Snapshot und **4.717** bestandene parallele Apply-Tests mit vier Workern in
+**1.133,70 s**, Commitsequenz **40**, Gruppe **1**. Damit sind **506/900**
+bestätigt und ausschließlich `12.g.C` beauftragt.
+
+Der private Baustein `_junit_mapping_inputs.py` trennt die begrenzten
+Mapping-/Identifier-JSON-Leser und die Projektion des geprüften XML-Parserbaums
+von der fachlichen Zuordnung. Dokumentreihenfolge, Ordinalzahlen, Pointer,
+exakte Identitätsfelder, vollständige Kontexte und beobachtete Ergebnisarten
+bleiben erhalten. `junit_mapping.py` behält sämtliche öffentlichen Wert- und
+Fehlertypen an ihren bisherigen Importpfaden, bündelt die unveränderte native
+Zielprüfung und führt weiterhin die getrennte W-Auflösung und R-Analyse aus.
+Grenzen, Fehlerprioritäten, Hashbindungen, Kandidaten und Diagnosen bleiben
+gleich; weder Importpolicy noch Evidence-Veröffentlichung werden ergänzt.
+
+Der Strukturvergleich bestätigt unveränderte Anweisungsbäume der ausgelagerten
+Eingabeprüfungen und der gemeinsamen Zielbindung sowie des R-Diagnose- und
+Ergebniskerns. Alle **439** vorhandenen Testdateien, die Testnummern, Fixtures
+und fachlichen Oracles bleiben bytegleich. In `SR-TC-0334`, `SR-TC-0335` und
+`SR-TC-0338` entfällt ausschließlich der nun erledigte C-Strukturpunkt aus
+`open_items`; die Teilnachweise und späteren Importaufgaben bleiben offen.
+
+**Gezielter Dev-Nachweis:** **712/712** unveränderte Verhaltenstests mit
+**4 Workern** parallel in **7,12 s**. Enthalten sind sämtliche **197**
+W-/R-Mappingtests und die betroffenen XML-, Contract-, Evidence-, Sicherheits-
+und Core/PYZ-Regressionen. Die vollständige Katalog-Collection umfasst
+**14.150** Tests ohne Ausführung von Testbodies; alle festen Testnummern bleiben
+erhalten. Geprüfte Source-SHA-256:
+`45f03814232a4bff39c182b7fb37e89ee3cd2f6bd80631b7f7d612495039febb`.
+
+Der Entrypoint stellt ausschließlich diesen C-Zustand her und verlangt in Apply
+Gruppe **2**, Commitsequenz **41**, mit **4.716** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**507/900**, nächster Schritt `12.h.W`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 <a id="step-12-h"></a>
 ### 12.h – SARIF- und generischer Evidenceimport

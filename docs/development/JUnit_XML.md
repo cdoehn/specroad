@@ -316,3 +316,18 @@ falsch. Die Analyse entscheidet weder `abort_import` noch
 `skip_invalid_with_diagnostic` und veröffentlicht keine Teilmenge.
 Format-/Syntax- und Sicherheitsfehler liefern weiterhin keinen Teilbericht.
 Eigentum, boolesches Verbot und Seitenwirkungsfreiheit gelten wie bei W.
+
+## Interne Trennung (12.g.C)
+
+`verification/_junit_mapping_inputs.py` enthält die begrenzten JSON-Leser für
+Mapping und externe Identifier sowie die Projektion des geprüften Parserbaums
+auf Testcase-Vorkommen, Identitäten, Kontexte und Ergebnisarten. Es kennt keine
+nativen Ziele, Evidence-Zuordnung oder Importentscheidung.
+
+`verification/junit_mapping.py` hält die öffentlichen Wert- und Fehlertypen an
+ihren bisherigen Importpfaden. Dort liegen die gemeinsame Prüfung der expliziten
+nativen Ziele sowie die getrennten W- und R-Zuordnungen mit ihren unveränderten
+Fehlern, Kandidaten und Diagnosen. Reihenfolge, Original-/Mapping-/Zielhashes,
+Byte- und Zeilengrenzen, Ownership und die passiven Seiteneffektgrenzen bleiben
+erhalten. W-/R-Tests und feste Testnummern werden durch die Bereinigung nicht
+geändert.

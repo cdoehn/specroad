@@ -474,7 +474,6 @@
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite><!--abc--><extension name=\"de\">f</extension></testsuite>-6]"
   ],
   "open_items": [
-    "12.g.C: separate parser/rule input values from domain Evidence assignment while preserving all W/R behavior and diagnostics.",
     "The global evidence import junit command, cross-format diagnostic integration, abort/skip import policy, original attachments, complete run/subject/configuration binding and atomic publication remain later plan work.",
     "Synthetic parser/mapping observations do not authenticate an external run or prove project-wide verification, release readiness or approval."
   ]

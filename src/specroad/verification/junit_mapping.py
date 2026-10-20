@@ -7,13 +7,16 @@ chooses an import policy, invents a product/run binding or publishes Evidence.
 """
 from dataclasses import dataclass
 from hashlib import sha256
-import re
 
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .contracts import VerificationContract, VerificationTest
 from .junit import JUnitDocument
+from ._junit_mapping_inputs import (
+    read_mapping as _read_mapping, read_external_identifiers as _read_external_identifiers,
+    iter_testcases as _iter_testcases, outcome_kinds as _outcome_kinds,
+    observations as _observations)
 
 
 class JUnitMappingError(ModelError):
@@ -28,42 +31,6 @@ _FIELDS = frozenset({'classname', 'name', 'file'})
 _RESULTS = {'passed': 'passed', 'failure': 'failed', 'error': 'failed', 'skipped': 'skipped'}
 
 
-def _read_mapping(raw, *, version, fields_supported, unique):
-    if type(raw) is not bytes:
-        raise JUnitMappingError('junit_mapping_bytes_required')
-    if len(raw) > 4 * 1024 * 1024:
-        raise JUnitMappingError('junit_mapping_byte_limit')
-    value = parse_json_object(raw)
-    if set(value) != {'format_version', 'identity_fields', 'bindings'}:
-        raise JUnitMappingError('invalid_junit_mapping_fields')
-    if value['format_version'] != version:
-        raise JUnitMappingError('unsupported_junit_mapping_version', pointer='/format_version')
-    fields = value['identity_fields']
-    if (type(fields) is not list or not fields or
-            any(type(name) is not str or name not in fields_supported for name in fields) or
-            len(set(fields)) != len(fields)):
-        raise JUnitMappingError('invalid_junit_identity_fields', pointer='/identity_fields')
-    bindings = value['bindings']
-    if type(bindings) is not list or len(bindings) > 10000:
-        raise JUnitMappingError('invalid_junit_mapping_bindings', pointer='/bindings')
-    seen = set()
-    for number, binding in enumerate(bindings):
-        pointer = '/bindings/' + str(number)
-        if type(binding) is not dict or set(binding) != {'identity', 'target_id'}:
-            raise JUnitMappingError('invalid_junit_mapping_binding', pointer=pointer)
-        identity = binding['identity']
-        if (type(identity) is not dict or set(identity) != set(fields) or
-                any(type(item) is not str or not item for item in identity.values())):
-            raise JUnitMappingError('invalid_junit_mapping_identity', pointer=pointer + '/identity')
-        if type(binding['target_id']) is not str or not binding['target_id']:
-            raise JUnitMappingError('invalid_junit_mapping_target', pointer=pointer + '/target_id')
-        key = tuple(identity[name] for name in fields)
-        if unique and key in seen:
-            raise JUnitMappingError('duplicate_junit_mapping_identity', pointer=pointer + '/identity')
-        seen.add(key)
-    return value
-
-
 @dataclass(frozen=True, init=False)
 class JUnitMapping:
     """An owned, versioned exact-match table; never executable mapping code."""
@@ -71,7 +38,8 @@ class JUnitMapping:
     _encoded: bytes
 
     def __init__(self, raw):
-        value = _read_mapping(raw, version='junit-mapping-v1', fields_supported=_FIELDS, unique=True)
+        value = _read_mapping(raw, version='junit-mapping-v1', fields_supported=_FIELDS,
+                              unique=True, error_type=JUnitMappingError)
         object.__setattr__(self, 'source_bytes', raw)
         object.__setattr__(self, '_encoded', canonical_json_bytes(value))
 
@@ -107,21 +75,8 @@ class JUnitCandidates:
         raise TypeError('JUnit candidates are not verified or recorded Evidence')
 
 
-def map_junit_candidates(document, mapping, *, targets):
-    """Resolve every core testcase exactly once or return no candidate value.
-
-    Only actual supplied Test/Verification records can be targets. Their IDs
-    are looked up literally, never through titles, external IDs or source paths.
-    One result is retained per testcase occurrence; targets are not aggregated.
-    Missing or repeated keys and mixed outcome kinds reject this initial slice.
-    """
-    if type(document) is not JUnitDocument:
-        raise JUnitMappingError('typed_junit_document_required')
-    if type(mapping) is not JUnitMapping:
-        raise JUnitMappingError('typed_junit_mapping_required')
-    # Reconstruct from owned source bytes rather than trusting replaceable caches.
-    document = JUnitDocument(document.source_bytes)
-    mapping = JUnitMapping(mapping.source_bytes)
+def _bind_targets(targets):
+    """Bind actual native Test/Verification values without parser interpretation."""
     if type(targets) not in (tuple, list):
         raise JUnitMappingError('typed_junit_targets_required', pointer='/targets')
     target_bindings = {}
@@ -137,6 +92,25 @@ def map_junit_candidates(document, mapping, *, targets):
             'artifact_id': value['id'], 'artifact_type': value['artifact_type'],
             'revision': value['revision'], 'source_sha256': sha256(owned.source_bytes).hexdigest(),
             'record_sha256': canonical_json_sha256(value)}
+    return target_bindings
+
+
+def map_junit_candidates(document, mapping, *, targets):
+    """Resolve every core testcase exactly once or return no candidate value.
+
+    Only actual supplied Test/Verification records can be targets. Their IDs
+    are looked up literally, never through titles, external IDs or source paths.
+    One result is retained per testcase occurrence; targets are not aggregated.
+    Missing or repeated keys and mixed outcome kinds reject this initial slice.
+    """
+    if type(document) is not JUnitDocument:
+        raise JUnitMappingError('typed_junit_document_required')
+    if type(mapping) is not JUnitMapping:
+        raise JUnitMappingError('typed_junit_mapping_required')
+    # Reconstruct from owned source bytes rather than trusting replaceable caches.
+    document = JUnitDocument(document.source_bytes)
+    mapping = JUnitMapping(mapping.source_bytes)
+    target_bindings = _bind_targets(targets)
     settings = mapping.data
     fields = settings['identity_fields']
     lookup = {}
@@ -146,14 +120,8 @@ def map_junit_candidates(document, mapping, *, targets):
                                     pointer='/bindings/' + str(number) + '/target_id')
         lookup[tuple(binding['identity'][name] for name in fields)] = binding['target_id']
     parsed = document.data
-    pending = [(parsed['root'], '/root')]
     candidates, seen = [], set()
-    while pending:
-        node, pointer = pending.pop()
-        if node['tag'] != 'testcase':
-            pending.extend((child, pointer + '/children/' + str(number))
-                           for number, child in reversed(list(enumerate(node['children']))))
-            continue
+    for node, pointer in _iter_testcases(parsed):
         attributes = node['attributes']
         if any(name not in attributes or not attributes[name] for name in fields):
             raise JUnitMappingError('junit_testcase_identity_missing', pointer=pointer + '/attributes')
@@ -163,8 +131,7 @@ def map_junit_candidates(document, mapping, *, targets):
         seen.add(key)
         if key not in lookup:
             raise JUnitMappingError('junit_testcase_unmapped', pointer=pointer)
-        outcomes = {child['tag'] for child in node['children']
-                    if child['tag'] in ('failure', 'error', 'skipped')}
+        outcomes = _outcome_kinds(node)
         if len(outcomes) > 1:
             raise JUnitMappingError('conflicting_junit_testcase_outcomes', pointer=pointer)
         outcome = next(iter(outcomes)) if outcomes else 'passed'
@@ -192,7 +159,8 @@ class JUnitMappingRules(JUnitMapping):
 
     def __init__(self, raw):
         value = _read_mapping(raw, version='junit-mapping-rules-v1',
-                              fields_supported=_FIELDS | {'external_id'}, unique=False)
+                              fields_supported=_FIELDS | {'external_id'},
+                              unique=False, error_type=JUnitMappingError)
         object.__setattr__(self, 'source_bytes', raw)
         object.__setattr__(self, '_encoded', canonical_json_bytes(value))
 
@@ -204,34 +172,7 @@ class JUnitExternalIdentifiers:
     _encoded: bytes
 
     def __init__(self, raw):
-        if type(raw) is not bytes:
-            raise JUnitMappingError('junit_external_identifiers_bytes_required')
-        if len(raw) > 4 * 1024 * 1024:
-            raise JUnitMappingError('junit_external_identifiers_byte_limit')
-        value = parse_json_object(raw)
-        if set(value) != {'format_version', 'source_sha256', 'entries'}:
-            raise JUnitMappingError('invalid_junit_external_identifiers_fields')
-        if value['format_version'] != 'junit-external-identifiers-v1':
-            raise JUnitMappingError('unsupported_junit_external_identifiers_version',
-                                    pointer='/format_version')
-        if (type(value['source_sha256']) is not str or
-                re.fullmatch('[0-9a-f]{64}', value['source_sha256']) is None):
-            raise JUnitMappingError('invalid_junit_external_source_hash', pointer='/source_sha256')
-        if type(value['entries']) is not list or len(value['entries']) > 10000:
-            raise JUnitMappingError('invalid_junit_external_entries', pointer='/entries')
-        seen = set()
-        for number, entry in enumerate(value['entries']):
-            pointer = '/entries/' + str(number)
-            if type(entry) is not dict or set(entry) != {'testcase_index', 'external_id'}:
-                raise JUnitMappingError('invalid_junit_external_entry', pointer=pointer)
-            index = entry['testcase_index']
-            if type(index) is not int or not 0 <= index < 10000:
-                raise JUnitMappingError('invalid_junit_external_index', pointer=pointer + '/testcase_index')
-            if type(entry['external_id']) is not str or not entry['external_id']:
-                raise JUnitMappingError('invalid_junit_external_id', pointer=pointer + '/external_id')
-            if index in seen:
-                raise JUnitMappingError('duplicate_junit_external_index', pointer=pointer + '/testcase_index')
-            seen.add(index)
+        value = _read_external_identifiers(raw, error_type=JUnitMappingError)
         object.__setattr__(self, 'source_bytes', raw)
         object.__setattr__(self, '_encoded', canonical_json_bytes(value))
 
@@ -295,44 +236,14 @@ def analyze_junit_candidates(document, mapping, *, targets, external_identifiers
                             'source_sha256': sha256(sidecar.source_bytes).hexdigest()}
     elif external_identifiers is not None:
         raise JUnitMappingError('unused_junit_external_identifiers')
-    if type(targets) not in (tuple, list):
-        raise JUnitMappingError('typed_junit_targets_required', pointer='/targets')
-    target_bindings = {}
-    for number, target in enumerate(targets):
-        pointer = '/targets/' + str(number)
-        if type(target) not in (VerificationTest, VerificationContract):
-            raise JUnitMappingError('typed_junit_target_required', pointer=pointer)
-        owned = type(target)(target.source_bytes)
-        value = owned.data
-        if value['id'] in target_bindings:
-            raise JUnitMappingError('duplicate_junit_target', pointer=pointer)
-        target_bindings[value['id']] = {
-            'artifact_id': value['id'], 'artifact_type': value['artifact_type'],
-            'revision': value['revision'], 'source_sha256': sha256(owned.source_bytes).hexdigest(),
-            'record_sha256': canonical_json_sha256(value)}
+    target_bindings = _bind_targets(targets)
     rows, unknown_rows = {}, []
     for number, binding in enumerate(settings['bindings']):
         key = tuple(binding['identity'][name] for name in fields)
         rows.setdefault(key, []).append(number)
         if binding['target_id'] not in target_bindings:
             unknown_rows.append(number)
-    cases, groups = [], {}
-    pending = [(parsed['root'], '/root')]
-    while pending:
-        node, pointer = pending.pop()
-        if node['tag'] != 'testcase':
-            pending.extend((child, pointer + '/children/' + str(number))
-                           for number, child in reversed(list(enumerate(node['children']))))
-            continue
-        index = len(cases)
-        context = {name: node['attributes'].get(name) for name in ('classname', 'name', 'file')}
-        context['external_id'] = external.get(index)
-        identity = {name: context[name] for name in fields}
-        outcomes = sorted({child['tag'] for child in node['children']
-                           if child['tag'] in ('failure', 'error', 'skipped')}) or ['passed']
-        cases.append({'testcase_index': index, 'testcase_pointer': pointer,
-                      'identity': identity, 'context': context, 'junit_outcomes': outcomes})
-        groups.setdefault(tuple(identity.values()), []).append(index)
+    cases, groups = _observations(parsed, fields, external)
     if any(index >= len(cases) for index in external):
         raise JUnitMappingError('junit_external_index_out_of_range', pointer='/entries')
 
