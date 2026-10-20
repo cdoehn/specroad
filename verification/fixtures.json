@@ -119,7 +119,8 @@
     "SR-FIX-SARIF-IMPORT-RIGHT-v1",
     "SR-FIX-EVIDENCE-IMPORT-POLICY-v1",
     "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1",
-    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1"
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1",
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -593,6 +594,10 @@
     "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1": {
       "provider": "tests/test_evidence_import_transaction.py:import_project",
       "kind": "Owned native temporary projects with two Generic observations, explicit Verification slots, bound configuration and original attachment bytes; saved full-set plans, real native writer/receipt replay, refusal without partial publication, exact subject/source preservation, and separate isolated Core/PYZ processes. W supports existing project attachments and Generic only; no raw-input preallocation retry or complete crash/duplicate matrix claim."
+    },
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-RIGHT-v1": {
+      "provider": "tests/test_evidence_import_transaction.py:import_project",
+      "kind": "Owned native Generic import projects; historical input replay before allocation/model preparation, changed-input conflicts, duplicate observations, actual partial target replacements and isolated process exits with explicit native recovery and exact subject/source preservation."
     }
   }
 }

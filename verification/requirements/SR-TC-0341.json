@@ -7,18 +7,19 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-RIGHT-v1",
     "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1"
   ],
   "preconditions": [
-    "Explicit actor/time/request/allocated IDs and complete bound native TargetModel; original Generic source and selected attachments already supplied and byte-bound."
+    "Explicit native Generic source/attachment bytes, exact subject/configuration/run bindings and caller actor/request/IDs; owned temporary native projects only."
   ],
   "steps": [
-    "Preview without writes, publish every accepted observation in one native transaction, replay the saved plan without allocation, reject incomplete/forged/stale inputs, and compare all original subject/resource bytes; repeat publication/replay in separate isolated Core/PYZ processes."
+    "Publish a complete saved Generic set, resolve exact original inputs before planning, reject changed bound requests with code 6, diagnose all semantic duplicate occurrences, and exercise target replacement failures and abrupt process exits through native rollback/completion/cleanup. Compare subjects, sources, created IDs and durable replay."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Evidence-Import MUSS vollständig geplant, validiert und als eine Transaktion veröffentlicht werden.",
-    "scope": "12.j.W: Complete nonempty Generic set from explicit original/project attachment bytes and native Verification subjects, one saved Change Plan and native transaction; confirmed saved-request replay preserves all allocated IDs. Original source hash, preparation/provenance, run, configuration and policy are bound. No subject status/content changes, format-wide writer, raw-input preallocation retry, semantic duplicate detection or full crash-matrix claim."
+    "scope": "12.j.W/R: Existing-attachment Generic full-set transaction. Verified input replay preserves historical IDs/audit without allocation or a current TargetModel; changed bound input is conflict 6. Versioned exact measurement identity diagnoses historical duplicates without dropping repeated new occurrences. Partial I/O and abrupt process exits retain native recovery evidence; explicit rollback or complete-target finalization preserves subjects and prevents duplicate/half-set success. No format-wide writer, external attachment import or CLI/release claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -71,9 +72,20 @@
     "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[contract]",
     "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[empty]",
     "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[missing_attachment]",
-    "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[slot]"
+    "tests/test_evidence_import_transaction.py::test_unusable_source_has_no_partial_set_or_write[slot]",
+    "tests/test_evidence_import_transaction_right.py::test_damaged_completion_is_neither_replay_nor_new_request[marker]",
+    "tests/test_evidence_import_transaction_right.py::test_damaged_completion_is_neither_replay_nor_new_request[request]",
+    "tests/test_evidence_import_transaction_right.py::test_damaged_completion_is_neither_replay_nor_new_request[symlink]",
+    "tests/test_evidence_import_transaction_right.py::test_damaged_completion_is_neither_replay_nor_new_request[transaction]",
+    "tests/test_evidence_import_transaction_right.py::test_equal_occurrences_in_one_new_source_remain_two_records",
+    "tests/test_evidence_import_transaction_right.py::test_partial_publication_remains_pending_until_native_recovery[1-False]",
+    "tests/test_evidence_import_transaction_right.py::test_partial_publication_remains_pending_until_native_recovery[1-True]",
+    "tests/test_evidence_import_transaction_right.py::test_partial_publication_remains_pending_until_native_recovery[2-False]",
+    "tests/test_evidence_import_transaction_right.py::test_partial_publication_remains_pending_until_native_recovery[2-True]",
+    "tests/test_evidence_import_transaction_right.py::test_real_process_exit_retains_partial_set_and_native_recovery_proof[1]",
+    "tests/test_evidence_import_transaction_right.py::test_real_process_exit_retains_partial_set_and_native_recovery_proof[2]"
   ],
   "open_items": [
-    "12.j.R completes raw-input/preallocation retries, changed-request context and no-request semantic duplicates plus partial/crash behavior; additional format writers and their shared planner remain assigned work. Existing-attachment Generic W behavior is partial evidence only, not full requirement/release approval."
+    "Other format writers, external attachment ingestion and CLI integration remain follow-up work. This Generic Core/PYZ evidence is partial requirement evidence, not release approval."
   ]
 }

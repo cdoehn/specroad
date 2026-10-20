@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 514
-last_completed_plan_commit: 12.j.W
-next_plan_commit: 12.j.R
-last_completed_numbered_bundle: 340
+implementation_plan_commits_completed: 515
+last_completed_plan_commit: 12.j.R
+next_plan_commit: 12.j.C
+last_completed_numbered_bundle: 341
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14025,12 +14025,68 @@ liefert genau ein Bundle und endet danach.
 
 #### 12.j.R – Make it Right
 
-- [ ] **12.j.R** · Position **515/900** · Voraussetzung: `12.j.W`.
+- [x] **12.j.R** · Position **515/900** · Voraussetzung: `12.j.W`.
 **Exakte Commit-Message:** `12.j.R feat(verification): Evidence-Idempotenz und Transaktion vervollständigen`
 
 **Vervollständigung:** Geänderter Kontext unter gleicher Request ist Konflikt; Duplikat ohne Request erkennbar, Subject unverändert.
 
 **Verhaltensabnahme:** Wiederholung, Teilfehler und Crash erzeugen keine doppelte oder halbe Evidenzmenge. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zustand – Bundle 341 (20. Oktober 2026):** Technische Basis ist
+das vollständig geprüfte Result `specroad-apply_Result_132652_1020_aa02b4.zip`,
+SHA-256 `d50ae7e95da2d5120d43eb535c4d125b8edfbb30fad6e914c4f51a2d4afeb0f7`,
+mit sauberem Apply-HEAD `9677d7af3fd10869b6389e8213f063fc9a7e2c95`.
+Bundle 340 bestätigt `12.j.W`: Gruppe **0**, Commitsequenz **48**,
+**4.902/4.902** parallele Apply-Teiltests mit **4 Workern** in **1.161,67 s**.
+
+Der vorhandene Generic-Writer erhält eine native Eingangsauflösung vor neuer
+ID-Vergabe oder Planung. Ein bestätigter Request liefert anhand seines vollständigen
+Receipt-/Commitnachweises den ursprünglichen Satz und Audit zurück. Quelle,
+Mapping, Lauf, Policy, explizite Konfiguration, Pfad und Titel sind gebunden;
+veränderte Eingaben unter derselben Request-ID sind Konflikt **6**. Bestehende
+W-Receipts bleiben verwendbar. Beschädigte Belege gelten nicht als neue Requests.
+
+Die versionierte Messungsidentität `evidence-semantic-duplicate-v1` ermöglicht
+eine reine Lesediagnose mit Quellpositionen und allen passenden Evidence-IDs.
+Preview und nativer Satzplanner lehnen historische Duplikate ohne bestätigtes
+Replay ab, statt einzelne Beobachtungen still wegzulassen. Gleiche Vorkommen
+innerhalb einer neuen Quelldatei bleiben getrennt. Unterschiedliche Ergebnisse,
+Läufe, Zeitpunkte und Bindungen werden nicht vereinigt. Die genaue Feldprojektion
+steht in `docs/development/Evidence_Exchange.md`.
+
+Die neuen Verhaltenstests prüfen den vollständigen Satz bei I/O-Fehlern vor und
+nach atomarer Zielersetzung sowie bei echten isolierten Prozessabbrüchen.
+Unvollständige Ziele bleiben recoverypflichtig und werden durch den bestehenden
+nativen Recovery-Pfad zur vollständigen Basis zurückgeführt; vollständig
+veröffentlichte Ziele erhalten ihre ursprünglichen Receipts ohne erneute
+Record-Erzeugung. Lockübernahme, Abschluss und Cleanup benötigen weiterhin die
+native ausdrückliche Autorität. Subjects und Originalanhänge bleiben unverändert.
+Raw-Input-Replay ist außerdem in getrennten Core-/PYZ-Prozessen abgesichert.
+
+Entwicklung: **80/80** neue und betroffene W-/R-Verhaltenstests bestanden,
+ausschließlich parallel mit **4 Workern** in **106,61 s**. Die Testauswahl
+umfasst `tests/test_evidence_import_transaction.py` und
+`tests/test_evidence_import_transaction_right.py`. Der getestete Quellzustand ist
+`3527fd822eaa1743eb06f1e240a27da29ba96b25213a13df9d68c1e431b80ccc`.
+Ein vorgelagerter gezielter Lauf mit **709** Tests wurde wegen einer noch
+nicht normierten Sicherheitsausnahme nicht freigegeben (**708 bestanden,
+1 fehlgeschlagen**). Der API-Vertrag wurde auf maschinenlesbare Codes **7**
+für unsichere Receiptpfade und **5** für Lesefehler korrigiert und im obigen
+80-Test-Lauf einschließlich der unveränderten W-Nachweise erfolgreich geprüft.
+Der fehlgeschlagene Lauf ist kein erfolgreicher Phasennachweis.
+
+Die vollständige Collection-/Katalogprüfung umfasst **14.747** Tests und führt
+keine Testkörper aus. Die bisherigen **14.704** stabilen Testnummern bleiben
+unverändert; **43** neue Identitäten sind hinten ergänzt. Apply prüft für diesen
+einen R-Commit ausschließlich Gruppe **1**, Commitsequenz **49**, mit
+**4.916** parallelen Teiltests und **4 Workern**. Erst nach diesem erfolgreichen
+Apply-Lauf setzt der Entrypoint den Fortschrittsmarker und erzeugt den R-Commit.
+Es gibt keinen Vollsuite-, Serienlauf- oder Release-Erfolgsnachweis.
+
+Der Scope bleibt der bereits begonnene Generic-Writer mit vorhandenen
+Projektanhängen. Weitere Formatwriter, externe Anhangsübernahme und CLI-Anbindung
+bleiben Folgearbeiten; die Anforderungsbelege bleiben `partial`.
+`12.j.C` wird in diesem Bundle nicht begonnen.
 
 #### 12.j.C – Make it Clean
 

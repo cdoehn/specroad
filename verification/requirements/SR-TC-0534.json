@@ -4,15 +4,21 @@
   "requirement_id": "SR-REQ-0534",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-RIGHT-v1"
+  ],
+  "preconditions": [
+    "Explicit native Generic source/attachment bytes, exact subject/configuration/run bindings and caller actor/request/IDs; owned temporary native projects only."
+  ],
+  "steps": [
+    "Publish a complete saved Generic set, resolve exact original inputs before planning, reject changed bound requests with code 6, diagnose all semantic duplicate occurrences, and exercise target replacement failures and abrupt process exits through native rollback/completion/cleanup. Compare subjects, sources, created IDs and durable replay."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ohne passende Request-ID MUSS SpecRoad ein semantisch dupliziertes Testergebnis diagnostizieren können.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.j.W/R: Existing-attachment Generic full-set transaction. Verified input replay preserves historical IDs/audit without allocation or a current TargetModel; changed bound input is conflict 6. Versioned exact measurement identity diagnoses historical duplicates without dropping repeated new occurrences. Partial I/O and abrupt process exits retain native recovery evidence; explicit rollback or complete-target finalization preserves subjects and prevents duplicate/half-set success. No format-wide writer, external attachment import or CLI/release claim."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +34,22 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[configuration]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[environment]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[produced_at]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[producer]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[product]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[result]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[run]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[subject]",
+    "tests/test_evidence_import_transaction_right.py::test_distinct_measurements_are_not_silently_merged[tool]",
+    "tests/test_evidence_import_transaction_right.py::test_duplicate_detection_ignores_import_packaging_and_audit_but_retains_all_matches",
+    "tests/test_evidence_import_transaction_right.py::test_equal_occurrences_in_one_new_source_remain_two_records",
+    "tests/test_evidence_import_transaction_right.py::test_semantic_duplicate_reports_each_observation_and_original_ids[None]",
+    "tests/test_evidence_import_transaction_right.py::test_semantic_duplicate_reports_each_observation_and_original_ids[different-request]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Other format writers, external attachment ingestion and CLI integration remain follow-up work. This Generic Core/PYZ evidence is partial requirement evidence, not release approval."
   ]
 }

@@ -326,3 +326,65 @@ Dieses W-Profil umfasst vorhandene Projektanhänge und Generic. Eingangsreplay
 vor einer ID-Vergabe, semantische Duplikate ohne Request-ID, zusätzliche
 Fehler-/Crashfälle und die weiteren Formatwriter bleiben Folgearbeiten.
 Die Anforderungsnachweise bleiben `partial`; die API startet keine Tests oder CI.
+
+## Eingangsreplay und Fehlerfälle aus 12.j.R
+
+`specroad.authoring.evidence_import.resolve_generic_import_request` erhält eine
+native `ProjectSource`, die unveränderten `source_bytes`, `source_path`, `policy`,
+`title`, `actor`, `request_id` und optional `configuration_id`. Der Host ruft diese
+Funktion **vor** neuer ID-Vergabe und Planung auf. Eine bestätigte native Receipt
+mit vollständigem Commitnachweis liefert den ursprünglichen Ausführungsbefund
+und den gesamten Evidence-Satz samt ursprünglichen IDs und Auditdaten zurück.
+Es wird kein aktuelles TargetModel benötigt. Das Ergebnis bestätigt den früheren
+Import, nicht die heutige Aktualität seiner Subjects oder Anhänge.
+
+Quelle und Pfad, im Generic-Original enthaltenes Mapping und Laufkontext,
+Importpolicy, explizite Konfiguration und Titel müssen mit dem bestätigten
+Request übereinstimmen. Abweichungen unter derselben Request-ID sind
+`request_operations_conflict` mit Exit-Code **6**, auch bei Wiederverwendung der
+ID einer anderen Operation. Actor- und Requestpolicy werden vor dem Receiptlesen
+geprüft; der Actor eines Retry ersetzt nicht den ursprünglichen Audit-Actor.
+Die vorhandenen W-Receipts sind ausreichend; es gibt keinen zweiten Receiptstore.
+
+`None` bedeutet ausschließlich, dass keine bestätigte passende Request-Receipt
+gefunden wurde. Es erteilt keine Schreibfreigabe. Der gespeicherte Plan wird
+weiterhin durch `import_evidence` und dessen erneute Receiptprüfung unter dem
+nativen Writer-Lock veröffentlicht. Beschädigte Belege, unsichere Pfade und
+widersprüchliche Commitnachweise sind Fehler, keine unbemerkten neuen Requests.
+Unsichere Receiptpfade liefern einen maschinenlesbaren Fehler mit Code **7**,
+Receipt-Lesefehler Code **5**; beide bleiben unbestätigt und recoverypflichtig.
+
+`specroad.changes.evidence_import.diagnose_generic_import_duplicates` prüft einen
+Generic-Satz gegen bereits vorhandene native Evidence-Datensätze, ohne IDs oder
+Dateien zu erzeugen. `matches` benennt Kandidatenindex, ursprünglichen
+`source_pointer`, `semantic_sha256` und alle passenden historischen Evidence-IDs.
+Die Version `evidence-semantic-duplicate-v1` hasht ein kanonisches JSON-Objekt
+mit genau `format_version`, `subjects`, `configuration_hash`,
+`configuration_policy`, `producer`, `tool`, `run_context`, `result`, `produced_at`
+und `environment`. Nur `subjects` wird nach `artifact_id` sortiert; seine kompletten
+Bindungen bleiben enthalten. Alle übrigen Werte werden exakt verglichen.
+Evidence-ID, Titel, Record-Audit, Herkunftsformat, Importprovenienz und
+Anhangsverpackung sind nicht Teil dieser Messungsidentität. Die Diagnose behauptet
+weder eine Beglaubigung der Messung noch die heutige Gültigkeit ihrer Bindungen.
+
+Ohne bestätigtes Request-Replay lehnen Preview und nativer Satzplanner einen
+historisch duplizierten Kandidaten mit `evidence_import_semantic_duplicate` und
+der vollständigen Trefferliste ab. Sie übernehmen keinen Teilsatz und verwerfen
+keine Beobachtung still. Gleiche wiederholte Vorkommen innerhalb einer neuen
+Quelldatei bleiben getrennte Evidence-Datensätze. Unterschiedliche Ergebnisse,
+Läufe, Zeitpunkte, Subject- oder Konfigurationsbindungen werden nicht vereinigt.
+
+Ein fehlgeschlagener Schreibversuch behält Journal und tatsächliche Projektbytes;
+er bestätigt keinen halben Satz als Erfolg und startet keinen automatischen Retry.
+Bei einem abgebrochenen mehrteiligen Commit gelten die vorhandenen nativen
+Recovery-Verträge: Ein unvollständiges Ziel wird ausdrücklich zur vollständigen
+Basis zurückgerollt; ein vollständig geschriebenes Ziel wird anhand des Journals
+mit den ursprünglichen Receipts abgeschlossen. Erst nach zugehöriger Recovery
+und Cleanup wird der alte Request erneut ausgewertet. Ein Prozessabbruch mit
+verbliebenem Lock benötigt die ausdrücklich autorisierte, journalgebundene
+Recovery-Übernahme. Bereits veröffentlichte Records werden dabei nicht erneut
+als neue Messungen angelegt. Subjects und Originalanhänge bleiben unverändert.
+
+Dieser R-Stand vervollständigt den begonnenen Generic-Writer mit vorhandenen
+Projektanhängen. Weitere Formatwriter, externe Anhangsübernahme und CLI-Anbindung
+bleiben getrennte Folgearbeiten; daraus entsteht kein vollständiger Releasebeleg.

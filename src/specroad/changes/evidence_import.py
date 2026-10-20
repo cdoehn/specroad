@@ -12,6 +12,7 @@ from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.identities import ArtifactIdentity, IdentityAllocation, IdentityInventory
 from ..model.paths import classify_path, PathClass, project_path
 from ..storage.domain_artifact import DomainArtifact
+from ..storage.record_artifact import RecordArtifact
 from ..validation import ModelGate
 from ..verification import (VerificationContract, VerificationTest,
     prepare_generic_import, prepare_evidence_record)
@@ -21,7 +22,58 @@ from ._patch_values import _snapshot
 from .evidence import _EvidenceCandidates, _record, _run_history, _bound_attachments
 from .metadata_values import MetadataArtifact
 from .target_values import TargetError
+from .target_model import TargetModel
 from .values import ChangeOperation
+
+
+class EvidenceImportDuplicate(TargetError):
+    """A candidate matches historical measurements, without request replay."""
+    def __init__(self, matches):
+        super().__init__('evidence_import_semantic_duplicate')
+        self._matches = _snapshot(matches)
+
+    def diagnostic(self):
+        return {**super().diagnostic(), 'semantic_duplicates': self._matches.data,
+                'write_state': 'not_committed', 'approval_granted': False}
+
+
+def _measurement_key(value):
+    fields = ('configuration_hash', 'configuration_policy', 'producer', 'tool',
+              'run_context', 'result', 'produced_at', 'environment')
+    return canonical_json_sha256({'format_version': 'evidence-semantic-duplicate-v1',
+        **{k: value[k] for k in fields},
+        'subjects': sorted(value['subjects'], key=lambda item: item['artifact_id'])})
+
+
+def _duplicates(model, candidates):
+    existing = {}
+    for document in model.documents:
+        value = SourceRelations(document.content).data
+        if value['artifact_type'] == 'evidence':
+            record = RecordArtifact(document.content, expected_type='evidence').data
+            existing.setdefault(_measurement_key(record), []).append(record['id'])
+    matches = []
+    # Only historical records are indexed. Repeated occurrences within one new
+    # input stay separate; neither successes nor failures are silently dropped.
+    for index, candidate in enumerate(candidates):
+        key = _measurement_key(candidate)
+        if key in existing:
+            matches.append({'candidate_index': index, 'source_pointer': candidate['source_pointer'],
+                'semantic_sha256': key, 'evidence_ids': sorted(existing[key])})
+    return matches
+
+
+def diagnose_generic_import_duplicates(model, *, source_path, policy):
+    """Read-only duplicate observation over explicitly supplied native bytes."""
+    if type(model) is not TargetModel:
+        raise TargetError('typed_evidence_import_model_required')
+    model = model.snapshot()
+    _, data, context, _ = _input(model, source_path, policy)
+    matches = _duplicates(model, data['candidates'])
+    return {'format_version': 'evidence-semantic-duplicate-v1',
+        'source_sha256': context['source_sha256'], 'preparation_sha256': context['preparation_sha256'],
+        'matches': matches, 'duplicate_count': len(matches), 'write_authorized': False,
+        'current_target_verified': False, 'approval_granted': False}
 
 
 def import_mode(operations):
@@ -105,6 +157,9 @@ def prepare_generic_operations(model, *, source_path, policy, evidence_ids, titl
     """Construct the entire explicit set without allocating IDs or writing."""
     model = model.snapshot()
     targets, data, context, original = _input(model, source_path, policy)
+    matches = _duplicates(model, data['candidates'])
+    if matches:
+        raise EvidenceImportDuplicate(matches)
     if (type(evidence_ids) not in (list, tuple) or len(evidence_ids) != len(data['candidates'])
             or any(type(i) is not str for i in evidence_ids) or len(set(evidence_ids)) != len(evidence_ids)):
         raise TargetError('evidence_import_distinct_ids_for_complete_set_required')
@@ -130,6 +185,9 @@ def prepare_import_candidates(model, operations, *, metadata_policy_version,
     targets, data, expected_context, original = _input(model, context['source_path'], context['policy'])
     if context != expected_context or len(owned) != len(data['candidates']):
         raise TargetError('evidence_import_complete_preparation_mismatch')
+    matches = _duplicates(model, data['candidates'])
+    if matches:
+        raise EvidenceImportDuplicate(matches)
     candidates = []
     for index, (operation, candidate) in enumerate(zip(owned, data['candidates'])):
         value = operation['evidence']
