@@ -67,11 +67,11 @@ def diagnose_generic_import_duplicates(model, *, source_path, policy):
     """Read-only duplicate observation over explicitly supplied native bytes."""
     if type(model) is not TargetModel:
         raise TargetError('typed_evidence_import_model_required')
-    model = model.snapshot()
-    _, data, context, _ = _input(model, source_path, policy)
-    matches = _duplicates(model, data['candidates'])
+    planner = _EvidenceSetPlanner(model.snapshot(), source_path, policy)
+    matches = planner.duplicates()
     return {'format_version': 'evidence-semantic-duplicate-v1',
-        'source_sha256': context['source_sha256'], 'preparation_sha256': context['preparation_sha256'],
+        'source_sha256': planner.context['source_sha256'],
+        'preparation_sha256': planner.context['preparation_sha256'],
         'matches': matches, 'duplicate_count': len(matches), 'write_authorized': False,
         'current_target_verified': False, 'approval_granted': False}
 
@@ -113,61 +113,93 @@ def _input(model, source_path, policy):
     return targets, data, context, descriptor
 
 
-def _operation(model, targets, data, context, original, candidate, *, evidence_id,
-               title, configuration_id, actor, planned_at):
-    contract_id = candidate['target']['artifact_id']
-    contract = targets[contract_id]
-    if type(contract) is not VerificationContract:
-        raise TargetError('evidence_import_explicit_contract_target_required')
-    subject_ids = [s['artifact_id'] for s in candidate['subjects']]
-    subjects = [targets[i] for i in subject_ids if type(targets[i]) is DomainArtifact]
-    test_id = candidate['run_context']['test_id']
-    test = None if test_id is None else targets[test_id]
-    expected_ids = {contract_id, *(s.data['id'] for s in subjects)}
-    if test_id is not None:
-        expected_ids.add(test_id)
-    if set(subject_ids) != expected_ids:
-        raise TargetError('evidence_import_subject_set_mismatch')
-    configuration = (None if configuration_id is None else resolve_configuration(
-        tuple(SourceRelations(d.content, path=d.path) for d in model.documents), configuration_id))
-    identity = ArtifactIdentity(evidence_id, 'random128-v1', 'evidence', model.configuration.id_prefix)
-    allocation = IdentityAllocation(identity, IdentityInventory(
-        model.configuration.id_prefix, [a['id'] for a in model.artifacts], (), (identity.id,)))
-    record = prepare_evidence_record(subjects, contract, allocation=allocation,
-        configuration=configuration, actor=actor, planned_at=planned_at, title=title,
-        test=test, **{k: candidate[k] for k in ('result', 'produced_at', 'producer',
-            'tool', 'environment', 'origin', 'run_context')}).data
-    if any(record[k] != candidate[k] for k in ('configuration_hash', 'configuration_policy')):
-        raise TargetError('evidence_import_configuration_mismatch')
-    attachments = {a['path']: a for a in candidate['attachments']}
-    if original['path'] in attachments and attachments[original['path']] != original:
-        raise TargetError('evidence_import_original_attachment_conflict')
-    attachments[original['path']] = original
-    record['attachments'] = _bound_attachments(model, [attachments[p] for p in sorted(attachments)])
-    record['provenance'] = [{'locator': original['path'], 'captured_at': planned_at,
-        'content_sha256': original['sha256'], 'extensions': {'specroad.evidence-import': {
-            'provenance': data['provenance'], 'preparation_sha256': context['preparation_sha256'],
-            'source_pointer': candidate['source_pointer'], 'policy': context['policy']}}}]
-    return {'op': 'evidence_record', 'evidence': record, 'configuration_id': configuration_id,
-            'import_context': context}
+class _EvidenceSetPlanner:
+    """Keep preparation, original and candidates bound throughout one plan.
+
+    Preview, duplicate diagnosis and target reconstruction share this planner.
+    Each caller supplies its existing model snapshot; historical receipt replay
+    never creates a planner or claims current validity of the imported set.
+    """
+    def __init__(self, model, source_path, policy):
+        self._model = model
+        self._targets, self.preparation, self.context, self._original = _input(
+            model, source_path, policy)
+
+    @property
+    def candidate_count(self):
+        return len(self.preparation['candidates'])
+
+    def duplicates(self):
+        return _duplicates(self._model, self.preparation['candidates'])
+
+    def require_new_measurements(self):
+        matches = self.duplicates()
+        if matches:
+            raise EvidenceImportDuplicate(matches)
+
+    def require_complete_set(self, operations):
+        if (operations[0]['import_context'] != self.context
+                or len(operations) != self.candidate_count):
+            raise TargetError('evidence_import_complete_preparation_mismatch')
+
+    def new_operations(self, evidence_ids, *, title, configuration_id, actor, planned_at):
+        self.require_new_measurements()
+        if (type(evidence_ids) not in (list, tuple) or len(evidence_ids) != self.candidate_count
+                or any(type(i) is not str for i in evidence_ids)
+                or len(set(evidence_ids)) != len(evidence_ids)):
+            raise TargetError('evidence_import_distinct_ids_for_complete_set_required')
+        return [ChangeOperation(self.operation(index, evidence_id=identity, title=title,
+            configuration_id=configuration_id, actor=actor, planned_at=planned_at)).data
+            for index, identity in enumerate(evidence_ids)]
+
+    def operation(self, index, *, evidence_id, title, configuration_id, actor, planned_at):
+        model, targets = self._model, self._targets
+        data, context, original = self.preparation, self.context, self._original
+        candidate = data['candidates'][index]
+        contract_id = candidate['target']['artifact_id']
+        contract = targets[contract_id]
+        if type(contract) is not VerificationContract:
+            raise TargetError('evidence_import_explicit_contract_target_required')
+        subject_ids = [s['artifact_id'] for s in candidate['subjects']]
+        subjects = [targets[i] for i in subject_ids if type(targets[i]) is DomainArtifact]
+        test_id = candidate['run_context']['test_id']
+        test = None if test_id is None else targets[test_id]
+        expected_ids = {contract_id, *(s.data['id'] for s in subjects)}
+        if test_id is not None:
+            expected_ids.add(test_id)
+        if set(subject_ids) != expected_ids:
+            raise TargetError('evidence_import_subject_set_mismatch')
+        configuration = (None if configuration_id is None else resolve_configuration(
+            tuple(SourceRelations(d.content, path=d.path) for d in model.documents), configuration_id))
+        identity = ArtifactIdentity(evidence_id, 'random128-v1', 'evidence', model.configuration.id_prefix)
+        allocation = IdentityAllocation(identity, IdentityInventory(
+            model.configuration.id_prefix, [a['id'] for a in model.artifacts], (), (identity.id,)))
+        record = prepare_evidence_record(subjects, contract, allocation=allocation,
+            configuration=configuration, actor=actor, planned_at=planned_at, title=title,
+            test=test, **{k: candidate[k] for k in ('result', 'produced_at', 'producer',
+                'tool', 'environment', 'origin', 'run_context')}).data
+        if any(record[k] != candidate[k] for k in ('configuration_hash', 'configuration_policy')):
+            raise TargetError('evidence_import_configuration_mismatch')
+        attachments = {a['path']: a for a in candidate['attachments']}
+        if original['path'] in attachments and attachments[original['path']] != original:
+            raise TargetError('evidence_import_original_attachment_conflict')
+        attachments[original['path']] = original
+        record['attachments'] = _bound_attachments(model, [attachments[p] for p in sorted(attachments)])
+        record['provenance'] = [{'locator': original['path'], 'captured_at': planned_at,
+            'content_sha256': original['sha256'], 'extensions': {'specroad.evidence-import': {
+                'provenance': data['provenance'], 'preparation_sha256': context['preparation_sha256'],
+                'source_pointer': candidate['source_pointer'], 'policy': context['policy']}}}]
+        return {'op': 'evidence_record', 'evidence': record, 'configuration_id': configuration_id,
+                'import_context': context}
 
 
 def prepare_generic_operations(model, *, source_path, policy, evidence_ids, title,
                                configuration_id=None, actor, planned_at):
     """Construct the entire explicit set without allocating IDs or writing."""
-    model = model.snapshot()
-    targets, data, context, original = _input(model, source_path, policy)
-    matches = _duplicates(model, data['candidates'])
-    if matches:
-        raise EvidenceImportDuplicate(matches)
-    if (type(evidence_ids) not in (list, tuple) or len(evidence_ids) != len(data['candidates'])
-            or any(type(i) is not str for i in evidence_ids) or len(set(evidence_ids)) != len(evidence_ids)):
-        raise TargetError('evidence_import_distinct_ids_for_complete_set_required')
-    operations = [ChangeOperation(_operation(model, targets, data, context, original, candidate,
-        evidence_id=identity, title=title, configuration_id=configuration_id,
-        actor=actor, planned_at=planned_at)).data
-        for identity, candidate in zip(evidence_ids, data['candidates'])]
-    return operations, data
+    planner = _EvidenceSetPlanner(model.snapshot(), source_path, policy)
+    operations = planner.new_operations(evidence_ids, title=title,
+        configuration_id=configuration_id, actor=actor, planned_at=planned_at)
+    return operations, planner.preparation
 
 
 def prepare_import_candidates(model, operations, *, metadata_policy_version,
@@ -182,19 +214,16 @@ def prepare_import_candidates(model, operations, *, metadata_policy_version,
     _relation_inventory(state, model.reserved_relation_ids)
     _preflight(state, preconditions, _files(model.source_files))
     context = owned[0]['import_context']
-    targets, data, expected_context, original = _input(model, context['source_path'], context['policy'])
-    if context != expected_context or len(owned) != len(data['candidates']):
-        raise TargetError('evidence_import_complete_preparation_mismatch')
-    matches = _duplicates(model, data['candidates'])
-    if matches:
-        raise EvidenceImportDuplicate(matches)
+    planner = _EvidenceSetPlanner(model, context['source_path'], context['policy'])
+    planner.require_complete_set(owned)
+    planner.require_new_measurements()
     candidates = []
-    for index, (operation, candidate) in enumerate(zip(owned, data['candidates'])):
+    for index, operation in enumerate(owned):
         value = operation['evidence']
         identity = value['id']
         if identity in seen:
             raise TargetError('evidence_identity_exists', pointer='/evidence/id')
-        expected = _operation(model, targets, data, context, original, candidate,
+        expected = planner.operation(index,
             evidence_id=identity, title=value['title'], configuration_id=operation.get('configuration_id'),
             actor=metadata['actor'], planned_at=planned_at)
         if canonical_json_bytes(expected) != canonical_json_bytes(operation):

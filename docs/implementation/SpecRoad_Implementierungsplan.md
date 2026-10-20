@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 515
-last_completed_plan_commit: 12.j.R
-next_plan_commit: 12.j.C
-last_completed_numbered_bundle: 341
+implementation_plan_commits_completed: 516
+last_completed_plan_commit: 12.j.C
+next_plan_commit: 12.k.W
+last_completed_numbered_bundle: 342
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14090,7 +14090,7 @@ bleiben Folgearbeiten; die Anforderungsbelege bleiben `partial`.
 
 #### 12.j.C – Make it Clean
 
-- [ ] **12.j.C** · Position **516/900** · Voraussetzung: `12.j.R`.
+- [x] **12.j.C** · Position **516/900** · Voraussetzung: `12.j.R`.
 **Exakte Commit-Message:** `12.j.C refactor(verification): Evidence-Idempotenz und Transaktion bereinigen`
 
 **Bereinigung:** Alle Evidenceimporte über einen gemeinsamen Satzplanner führen.
@@ -14098,6 +14098,48 @@ bleiben Folgearbeiten; die Anforderungsbelege bleiben `partial`.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand – Bundle 342 (20. Oktober 2026):** Technische Basis ist
+das vollständig geprüfte Result `specroad-apply_Result_202732_1020_c505b9.zip`,
+SHA-256 `371d91533a7888a4e9d21e7c26a5374d179ab29e6f2d2b5197246e34046e0a92`,
+mit sauberem Apply-HEAD `434bf8381b92714932afb1a7ec480fa132041a27`.
+Bundle 341 bestätigt `12.j.R`: Gruppe **1**, Commitsequenz **49**,
+**4.916/4.916** parallele Apply-Teiltests mit **4 Workern** in **1.153,53 s**.
+
+Vorschau, Lesediagnose und die Rekonstruktion des gespeicherten Imports verwenden
+einen gemeinsamen privaten Satzplanner. Originalanhang, vollständige
+Policyvorbereitung, Importkontext und native Ziele bleiben darin zusammengebunden.
+Derselbe Operationsaufbau dient der Erzeugung und der erneuten Prüfung jeder
+Beobachtung. Vollständigkeits- und Duplikatprüfungen werden zentral auf denselben
+Satz angewandt. Die nativen Evidence-, Verlauf- und Transaktionsgates bleiben
+verbindlich. Bestätigtes historisches Request-Replay benötigt weiterhin weder
+neue Planung noch aktuelle Subjectprüfung.
+
+Dies ist ausschließlich eine strukturelle Bereinigung des vorhandenen
+Generic-Writers. Öffentliche Signaturen, Ergebnis- und Fehlerverträge,
+Prüfungsreihenfolge, Subjectschutz, Provenienz-/Messungshashes, Receipt- und
+Recoveryverhalten bleiben erhalten. Weitere Formatwriter, externe Anhangsübernahme
+und CLI-Anbindung werden nicht vorgezogen; die Anforderungsbelege bleiben
+unverändert `partial`. Alle **447** bisherigen Testdateien und sämtliche
+Verifikationsdaten bleiben bytegleich zum Result.
+
+**Gezielter Dev-Nachweis:** **578/578** bestehende Verhaltenstests aus **11**
+Dateien parallel mit **4 Workern** in **314,51 s**.
+Die Auswahl umfasst alle W-/R-Tests zu Importtransaktionen einschließlich
+Duplikaten, Eingangsreplay, I/O-Fehlern, Prozessabbrüchen und isoliertem Core/PYZ
+sowie die betroffenen Tests für Importpolicy, Evidence-Erfassung, gespeicherte
+Authoring-Pläne und native Idempotenz. Keine erwarteten Fachwerte wurden geändert.
+Geprüfte Source-SHA-256:
+`00726da9223c4973dae0b25bad586e8617a2a57d8e796061cbee8395d790a3ed`.
+
+Die vollständige Katalog-Collection bestätigt **14.747** Tests ohne Testbodies.
+Alle festen Testnummern bleiben unverändert. Der Entrypoint stellt genau diesen
+C-Zustand her und verlangt in Apply ausschließlich Gruppe **2**, Commitsequenz
+**50**, mit **4.915** parallelen Tests und **4 Workern**. Erst der erfolgreiche
+Apply-Lauf erlaubt den C-Commit und den Fortschrittsmarker **516/900** mit
+`12.k.W` als nächstem Schritt. Es gibt keinen Vollsuite-, Serienlauf- oder
+Release-Erfolgsnachweis. Dieses Bundle enthält genau einen C-Zustand;
+`12.k.W` wird nicht begonnen, der Auftrag endet nach der Übergabe.
 
 <a id="step-12-k"></a>
 ### 12.k – Bewertungsdescriptor und Produktstand

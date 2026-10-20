@@ -388,3 +388,18 @@ als neue Messungen angelegt. Subjects und Originalanhänge bleiben unverändert.
 Dieser R-Stand vervollständigt den begonnenen Generic-Writer mit vorhandenen
 Projektanhängen. Weitere Formatwriter, externe Anhangsübernahme und CLI-Anbindung
 bleiben getrennte Folgearbeiten; daraus entsteht kein vollständiger Releasebeleg.
+
+## Gemeinsamer Satzplanner aus 12.j.C
+
+Vorschau, Duplikatdiagnose und Rekonstruktion des gespeicherten Imports verwenden
+denselben privaten Satzplanner. Er hält Originalanhang, vollständige
+Policyvorbereitung, native Ziele und Importkontext zusammen und erzeugt jede
+Operation aus genau ihrem ursprünglichen Kandidaten. Die Transaktionsgates
+prüfen weiterhin den vollständig rekonstruierten Satz mit den nativen
+Evidence- und Verlaufskontrollen.
+
+Prüfungsreihenfolge, Fehlerverträge, Provenienz- und Messungshashes sowie
+öffentliche APIs bleiben unverändert. Bestätigtes historisches Request-Replay
+benötigt weiterhin weder Satzplanner noch aktuelles TargetModel. Der Writer
+bleibt auf das bisherige Generic-Profil mit vorhandenen Projektanhängen begrenzt;
+die Bereinigung führt keine weiteren Formatwriter oder Schreibrechte ein.
