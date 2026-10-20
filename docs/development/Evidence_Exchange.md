@@ -202,7 +202,7 @@ Contract-Slot-Prüfung, Freigabe und Veröffentlichung sind damit nicht erteilt.
 Die API liest keine Dateien, Umgebungsvariablen oder Uhrzeit und führt keine
 Programme aus. Die bestehende Grenze für expandierte Kandidaten gilt auch für
 die Vorbereitung. Die Generic-/SARIF-Erweiterung aus `12.i.R` steht unten;
-die unveränderte Strukturtrennung folgt in `12.i.C`.
+die Strukturtrennung aus `12.i.C` steht im abschließenden Abschnitt.
 
 ## Vollständige Datensatzbehandlung aus 12.i.R
 
@@ -261,3 +261,18 @@ Vorbereitung greift weder auf Hostdateien, Netzwerk, Prozesse, Uhrzeit noch
 Hostkonfiguration zu. Vollständige Lauf-/Projekt-/Slot-Autorisierung,
 Anhangspublikation, Idempotenz und atomare Evidence-Erzeugung bleiben den
 folgenden Planstellen zugeordnet.
+
+## Trennung von Analyse und Policy aus 12.i.C
+
+Die privaten Analysefunktionen bilden Kandidaten und vollständige Diagnosen,
+ohne eine Importpolicy auszuwerten. Die getrennten Policyfunktionen erhalten
+diese fertige Analyse und entscheiden ausschließlich, welche gültigen Kandidaten
+übernommen oder wegen `abort_import` zurückgehalten werden. Generic und SARIF
+teilen dieselbe Entscheidung für Quellpointer; JUnit behält seinen bestehenden
+Testcase-Index-Vertrag. Die öffentlichen Adapter binden weiterhin die Originale
+und frieren die Entscheidung zusammen mit deren unveränderten Bytes ein.
+
+Die Bereinigung erhält Prüfungsreihenfolge, Fehler und Diagnosepositionen,
+Grenzwerte, Provenienz- und Ergebnishashes sowie sämtliche Autoritätsflags.
+Die öffentlichen Signaturen, Ergebnisfelder und zulässigen Seiteneffekte
+bleiben gleich. Die vorhandenen W-/R-Verhaltenstests werden unverändert verwendet.

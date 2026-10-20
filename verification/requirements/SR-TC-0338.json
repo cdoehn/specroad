@@ -352,7 +352,7 @@
     "tests/test_junit_mapping_right.py::test_unselected_external_data_is_rejected_instead_of_silently_ignored"
   ],
   "open_items": [
-    "12.i.C structure separation and the assigned later CLI/publication steps remain open; complete native run/subject/configuration authority is not granted by passive diagnostics.",
+    "The assigned later CLI/publication steps remain open; complete native run/subject/configuration authority is not granted by passive diagnostics.",
     "Synthetic parser/mapping observations do not authenticate an external run or prove project-wide verification, release readiness or approval."
   ]
 }

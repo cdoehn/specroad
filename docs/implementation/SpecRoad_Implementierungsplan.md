@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 512
-last_completed_plan_commit: 12.i.R
-next_plan_commit: 12.i.C
-last_completed_numbered_bundle: 338
+implementation_plan_commits_completed: 513
+last_completed_plan_commit: 12.i.C
+next_plan_commit: 12.j.W
+last_completed_numbered_bundle: 339
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -13897,7 +13897,7 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 #### 12.i.C – Make it Clean
 
-- [ ] **12.i.C** · Position **513/900** · Voraussetzung: `12.i.R`.
+- [x] **12.i.C** · Position **513/900** · Voraussetzung: `12.i.R`.
 **Exakte Commit-Message:** `12.i.C refactor(verification): Originalbindung und Importpolicy bereinigen`
 
 **Bereinigung:** Policyentscheidung und allgemeine Parserdiagnosen getrennt halten.
@@ -13905,6 +13905,49 @@ und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Bundle 339, vorbereiteter C-Nachweis:** Grundlage ist das vollständig geprüfte
+Result `specroad-apply_Result_120841_1020_470745.zip`, SHA-256
+`ac06a4be75d860f05b34240824270db2b1de300d560787f7ca78a57cb0191598`.
+Es bestätigt den R-Commit
+`bdacde4d828bd2950a21d4fe3a1f6d332698c02c` mit sauberem Apply-Zustand:
+**4.889/4.889** Tests der Gruppe **1**, Commitsequenz **46**, parallel mit
+**4 Workern** in **1.137,55 s**, bei **14.667** katalogisierten Tests.
+
+Die unveränderten Generic-/SARIF-Analyseblöcke liegen nun im privaten
+`_import_analysis`-Modul. Sie validieren die Eingaben und bilden begrenzte
+Kandidaten und vollständige Diagnosen ohne Policyentscheidung. Das getrennte
+`_import_policy`-Modul wertet ausschließlich die ausdrücklich gewählte Policy
+auf der fertigen Analyse aus: Generic und SARIF teilen ihre Entscheidung für
+Quellpointer; JUnit behält den bestehenden Testcase-Index-Vertrag.
+Die öffentlichen Adapter binden weiterhin die Originaldateien und Provenienz;
+ein gemeinsamer Abschluss friert Entscheidung und Originalrollen ein.
+
+Die statische Prüfung bestätigt die strukturelle Gleichheit der ausgelagerten
+Analyse-, Policy- und Einfrierblöcke sowie der Provenienzbildung und
+Prüfungsreihenfolge. Die öffentlichen Signaturen und der Ergebnistyp bleiben
+erhalten. Fachwerte, Roh-/Inhaltshashes, Diagnosepositionen, Ressourcenlimits
+und Autoritätsflags werden nicht geändert. Die vorhandenen Nachweise
+`SR-TC-0336`–`SR-TC-0339` und `SR-TC-0535` behalten ihre Testidentitäten,
+erwarteten Ergebnisse und normativen Verträge; ausschließlich die erledigte
+Strukturtrennung entfällt aus den offenen Punkten. Sie bleiben **partial**.
+`12.j` wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis:** **1.229/1.229** Verhaltenstests parallel mit
+**4 Workern** in **15,61 s**. Die Auswahl enthält sämtliche W-/R-Nachweise
+dieses Schritts und die betroffenen JUnit-, Generic-, SARIF-, XML-, Evidence-,
+Contract-, Sicherheits- und isolierten Core/PYZ-Regressionen. Alle **445**
+vorhandenen Testdateien, die Fixtures und die Registry mit **14.667** festen
+Testnummern bleiben bytegleich. Die vollständige Katalog-Collection bestätigt
+**14.667** Tests ohne Ausführung von Testbodies.
+Geprüfte Source-SHA-256:
+`6051037a655014efbc4664e899b6fc2ca95736e7f3269d0178ea079b52d5d58e`.
+
+Der Entrypoint stellt ausschließlich diesen C-Zustand her und verlangt in Apply
+Gruppe **2**, Commitsequenz **47**, mit **4.889** parallelen Tests. Erst der
+erfolgreiche Apply-Lauf erlaubt den eigenen Commit und den Fortschrittsmarker
+**513/900**, nächster Schritt `12.j.W`. Dieser Auftrag liefert genau ein Bundle
+und endet danach. Der Dev-Teiltest ist kein Vollsuite- oder Release-Nachweis.
 
 <a id="step-12-j"></a>
 ### 12.j – Evidence-Idempotenz und Transaktion

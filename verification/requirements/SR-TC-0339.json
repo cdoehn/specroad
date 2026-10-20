@@ -326,7 +326,6 @@
     "tests/test_evidence_import_policy_right.py::test_whitespace_keeps_mapping_semantics_but_changes_raw_provenance[sarif]"
   ],
   "open_items": [
-    "12.i.C: separate policy decisions from general parser diagnostics without behavior changes.",
     "12.j and the assigned CLI steps: native run/project/contract-slot authority, attachment publication, idempotency and atomic persistent Evidence import."
   ]
 }
