@@ -364,3 +364,36 @@ Diese Grenzen sind als falsche Berichtflags sichtbar. Es gibt weder einen
 Gesamt-Pass noch Readiness, Schreibrechte oder eine Freigabe. Die vollständige
 gemischte Entscheidungsmatrix und Robustheit folgen in 12.o.R; CLI-/Query-
 und Releaseintegration bleiben eigene Planschritte.
+
+## Gemischte Nachweissätze und vollständige Gründe (12.o.R)
+
+Jede Pflichtprüfung ergänzt `evidence_result` und `reasons` über ihre aktiven
+Läufe. Diese Detailbewertung beschreibt ausschließlich die ausgewählte
+Evidence; Eingangsbindung, Planstatus und Waiver werden weiterhin übergeordnet
+je Subject geprüft. Ein `evidence_result="passed"` bei fehlenden Produktbytes
+ergibt deshalb kein `verification_result="passed"`.
+
+Jeder aktive Lauf enthält `blocking_observations` mit Evidence-ID,
+unverändertem Rohresultat, Freshness und allen festgestellten Gründen.
+Aktuelle Fehlschläge, ungeklärte Ergebnisse, stale Kontexte und nicht
+unterstützte Subject-Kontextbindungen bleiben nebeneinander sichtbar.
+Ein aktueller Fehlschlag behält seinen Vorrang; andere Beobachtungen werden
+nicht entfernt. Fehlt ein Lauf ganz, bleibt seine Evidence-Liste leer und
+`required_run_missing` erhalten. Fehlende und stale Nachweise bleiben getrennt.
+
+Eine ungeklärte Subject-Kontextbindung ergibt auch dann `incomplete`, wenn
+ein zugleich prüfbarer Contract-/Testkontext stale ist. Für Capability/Task
+wird weiterhin keine zusätzliche Kontextprojektion erfunden. Sind innerhalb
+einer Pflichtprüfung vollständige aktuelle und stale Läufe gemischt, bleibt
+sie mit `required_check_mixed_freshness` unvollständig. Das ist keine wirksame
+Retest-Ablösung. Bei verschiedenen Pflichtprüfungen gilt die genaue
+Subject-Priorität aus §10.5; insbesondere bleibt eine ausschließlich stale
+Pflichtprüfung stale, wenn andere Prüfungen aktuell bestanden sind.
+
+Die Matrixprüfung umfasst Bestand, Fehlschlag, stale, ungeklärtes Ergebnis,
+fehlenden Lauf und gemischte Freshness für ein oder mehrere Pflichtschlüssel.
+Native Scope-, Konfigurations-, Descriptor-, Eingangsrollen-, Laufkonflikt-,
+Ablösungs- und Waiverprüfungen bleiben vorgelagert beziehungsweise entsprechend
+der fachlichen Priorität wirksam. Originale Evidence, alte W-Testoracles und
+sämtliche Grenzen zu Livebestand, Identitätshistorie und Readiness bleiben
+erhalten. Die nächste C-Phase bereinigt ausschließlich die interne Struktur.

@@ -129,7 +129,8 @@
     "SR-FIX-VERIFICATION-RUN-SELECTION-RIGHT-v1",
     "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1",
     "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1",
-    "SR-FIX-VERIFICATION-AGGREGATION-v1"
+    "SR-FIX-VERIFICATION-AGGREGATION-v1",
+    "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -627,6 +628,10 @@
     "SR-FIX-VERIFICATION-AGGREGATION-v1": {
       "provider": "tests/test_verification_aggregation.py:scenario,waiver_case",
       "kind": "Synthetic independently bound model, product inputs and roles, native expected/observed runs and contexts, human replacement declarations, explicit UTC evaluation time and native waiver with a deliberately trusted test-host callback. Exercises computed subject priorities and isolated Core/PYZ without changing Evidence. No real human identity, live inventory, external execution or release approval is asserted."
+    },
+    "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1": {
+      "provider": "tests/test_verification_aggregation_right.py:pair,evidence_for",
+      "kind": "Literal mixed-run decision tables over synthetic native model/descriptor inputs. Current, failed, stale, unresolved, missing and mixed observations within/across keys; explicit plan status, scope, UTC waiver review, immutable human replacement bindings and native conflicts. Unknown subject contexts remain unresolved. Isolated Core/PYZ, source preservation and no live inventory, external execution or release approval claim."
     }
   }
 }

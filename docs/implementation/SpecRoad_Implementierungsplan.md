@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 529
-last_completed_plan_commit: 12.o.W
-next_plan_commit: 12.o.R
-last_completed_numbered_bundle: 355
+implementation_plan_commits_completed: 530
+last_completed_plan_commit: 12.o.R
+next_plan_commit: 12.o.C
+last_completed_numbered_bundle: 356
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14685,12 +14685,44 @@ Fortschrittsmarker 529/900. Dies ist kein Vollsuite- oder Release-Erfolgsnachwei
 
 #### 12.o.R – Make it Right
 
-- [ ] **12.o.R** · Position **530/900** · Voraussetzung: `12.o.W`.
+- [x] **12.o.R** · Position **530/900** · Voraussetzung: `12.o.W`.
 **Exakte Commit-Message:** `12.o.R feat(verification): Priorisierte Ergebnisaggregation vervollständigen`
 
 **Vervollständigung:** Kein unbekannter oder unvollständiger Pflichtlauf darf zum positiven Default werden.
 
 **Verhaltensabnahme:** Vollständige Entscheidungstabelle und gemischte Nachweissätze ergeben exakt definierte Zustände. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zwischenstand (Bundle 356):** Jede Pflichtprüfung erhält
+eine Detailbewertung ihrer aktiven Evidence samt Gründen. Jeder Lauf nennt
+sämtliche blockierenden Beobachtungen mit ID, unverändertem Ergebnis und
+Freshness. Aktuelle Fehlschläge bleiben vorrangig; zusätzliche unvollständige
+oder stale Beobachtungen verschwinden nicht. Eine ungeklärte Subject-
+Kontextbindung bleibt auch bei gleichzeitig stale Testkontext unvollständig.
+Gemischte aktuelle und stale Läufe derselben Pflichtprüfung werden ausdrücklich
+als `required_check_mixed_freshness` erklärt. Native Auswahl-, Eingangs-,
+Scope-, Konflikt-, Ablösungs- und Waiververträge werden nicht umgangen.
+Die Entscheidungsmatrix sichert mehrere Pflichtschlüssel, parallele
+Fehlschläge, fehlende oder ungeklärte Nachweise, unverändert getrennte Subjects
+und die genaue UTC-Ablaufgrenze. Ein Detail-Pass ersetzt keine übergeordnete
+Eingangsbindung. Originale Evidence und sämtliche bisherigen W-Testoracles
+bleiben unverändert. Livebestand, externe Ausführung, projektweite
+Bewertungs-ID-Historie und Release-Freigabe werden weiterhin nicht behauptet.
+Der Fortschrittsmarker folgt erst nach erfolgreichem parallelem Apply-Gate;
+12.o.C wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis (Bundle 356):** 1.288/1.288 Verhaltenstests aus
+18 Dateien mit vier parallelen Workern in 109,73 s bestanden. Dazu gehören
+201 neue R-Fälle, alle 44 W-Aggregationsfälle und 1.043 betroffene Descriptor-,
+Pflichtmengen-, Lauf-, Contract-, Kontext-, Evidence- und Waiver-Regressionsfälle.
+Die 144 Kombinationen der gemischten Entscheidungsmatrix und isolierte
+Core-/PYZ-Berichte sind enthalten. Source-SHA-256:
+`82a45814d43cc1d3276d4ed2f65b7e340d5d100aa543863fdcfbf204edf20620`.
+Die vollständige Katalog-Collection bestätigt 15.424 Tests ohne Testbodies.
+Alle 456 bisherigen Dateien unter `tests/` und die ersten 15.223 festen
+Testnummern bleiben unverändert; 201 neue Identitäten werden angehängt.
+Der Entrypoint verlangt ausschließlich Gruppe 1, Commitsequenz 64, mit
+5.141 parallelen Tests vor R-Commit und Fortschrittsmarker 530/900.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.o.C – Make it Clean
 

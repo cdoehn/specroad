@@ -87,11 +87,28 @@ def aggregate_verification_results(model, evaluation, *, configuration_id, input
         for run_id in selected['active_run_ids']:
             run = runs[run_id]
             evidence = run['evidence']
+            blockers = []
+            for item in evidence:
+                issues = list(item['reasons'])
+                if item['unsupported_subject_ids']:
+                    issues.append('subject_context_unsupported')
+                if item['freshness'] == 'stale':
+                    issues.append('required_evidence_stale')
+                elif item['freshness'] != 'current':
+                    issues.append('evidence_context_incomplete')
+                if item['result'] not in ('passed', 'failed'):
+                    issues.append('evidence_result_incomplete')
+                elif item['freshness'] == 'current' and item['result'] == 'failed':
+                    issues.append('current_required_evidence_failed')
+                if issues:
+                    blockers.append({'evidence_id': item['evidence_id'],
+                        'freshness': item['freshness'], 'result': item['result'],
+                        'reasons': sorted(set(issues))})
             if any(e['freshness'] == 'current' and e['result'] == 'failed' for e in evidence):
                 result, reason = 'failed', 'current_required_evidence_failed'
             elif not evidence:
                 result, reason = 'incomplete', 'required_run_missing'
-            elif any(e['freshness'] not in ('current', 'stale') or
+            elif any(e['unsupported_subject_ids'] or e['freshness'] not in ('current', 'stale') or
                      e['result'] not in ('passed', 'failed') for e in evidence):
                 result, reason = 'incomplete', 'required_run_incomplete'
             elif all(e['freshness'] == 'stale' for e in evidence):
@@ -102,8 +119,25 @@ def aggregate_verification_results(model, evaluation, *, configuration_id, input
                 result, reason = 'passed', 'all_required_evidence_passed'
             else:
                 result, reason = 'incomplete', 'required_run_incomplete'
-            active.append({**run, 'run_result': result, 'reason': reason})
-        checks.append({**selected, 'active_runs': active})
+            active.append({**run, 'run_result': result, 'reason': reason,
+                           'blocking_observations': blockers})
+        # This per-key value describes selected Evidence, not the input binding,
+        # plan or waiver. The Subject below still applies all higher priorities.
+        if any(run['run_result'] == 'failed' for run in active):
+            outcome, reasons = 'failed', ['current_required_evidence_failed']
+        elif not active:
+            outcome, reasons = 'incomplete', ['required_run_missing']
+        elif any(run['run_result'] == 'incomplete' for run in active):
+            outcome = 'incomplete'
+            reasons = sorted({run['reason'] for run in active if run['run_result'] == 'incomplete'})
+        elif all(run['run_result'] == 'stale' for run in active):
+            outcome, reasons = 'stale', ['required_evidence_stale']
+        elif all(run['run_result'] == 'passed' for run in active):
+            outcome, reasons = 'passed', ['all_required_evidence_passed']
+        else:
+            outcome, reasons = 'incomplete', ['required_check_mixed_freshness']
+        checks.append({**selected, 'active_runs': active,
+                       'evidence_result': outcome, 'reasons': reasons})
     results, diagnostics = [], []
     for applicability in required['subjects']:
         subject_id = applicability['artifact_id']
@@ -148,7 +182,9 @@ def aggregate_verification_results(model, evaluation, *, configuration_id, input
         elif all(run['run_result'] == 'passed' for run in runs):
             result, reasons = 'passed', ['all_required_evidence_passed']
         else:
-            result, reasons = 'incomplete', ['required_run_incomplete']
+            result = 'incomplete'
+            reasons = sorted({reason for check in selected for reason in check['reasons']
+                              if check['evidence_result'] == 'incomplete'})
         results.append({'subject_artifact_id': subject_id,
             'source_sha256': sha256(subject.source_bytes).hexdigest(),
             'artifact_sha256': canonical_json_sha256(value),
