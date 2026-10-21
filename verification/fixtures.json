@@ -135,7 +135,8 @@
     "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1",
     "SR-FIX-CODE-REFERENCE-SOURCES-v1",
     "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1",
-    "SR-FIX-CODE-LINE-SELECTION-v1"
+    "SR-FIX-CODE-LINE-SELECTION-v1",
+    "SR-FIX-CODE-RELOCATION-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -657,6 +658,10 @@
     "SR-FIX-CODE-LINE-SELECTION-v1": {
       "provider": "tests/test_code_line_selection.py:line_reference,bound_file",
       "kind": "Owned validated line_range records and native code source snapshots; explicit LF/CRLF/CR and Unicode vectors, standard-library encodings, exact inclusive positions, changed outside bytes, historical Git objects, strict decoding/range failures and detached immutable reports. Fresh Core/PYZ processes exercise the public selection API with standard-library-only imports and process/network/write traps. No relocation search, H3 state, current-source revalidation, full-suite or release claim."
+    },
+    "SR-FIX-CODE-RELOCATION-v1": {
+      "provider": "tests/test_code_relocation.py:located_file",
+      "kind": "Owned real file and historical Git sources with explicit H.2 whole-line or versioned raw-byte anchor windows; exact stored, unique, missing and overlapping/ambiguous positions; preserved reference bytes and fresh Core/PYZ audit guards."
     }
   }
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 538
-last_completed_plan_commit: 12.r.W
-next_plan_commit: 12.r.R
-last_completed_numbered_bundle: 364
+implementation_plan_commits_completed: 539
+last_completed_plan_commit: 12.r.R
+next_plan_commit: 12.r.C
+last_completed_numbered_bundle: 365
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15055,12 +15055,58 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.r.R – Make it Right
 
-- [ ] **12.r.R** · Position **539/900** · Voraussetzung: `12.r.W`.
+- [x] **12.r.R** · Position **539/900** · Voraussetzung: `12.r.W`.
 **Exakte Commit-Message:** `12.r.R feat(verification): Zeilenauswahl und exakte Relokation vervollständigen`
 
 **Vervollständigung:** Mehrfachtreffer, fehlende Auswahl und ungültiges Encoding getrennt behandeln.
 
 **Verhaltensabnahme:** Genau ein Treffer außerhalb der alten Position ergibt relocated, nicht automatische Datenänderung. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Vorbereitung (Bundle 365):** `locate_code_selection` ergänzt die rein
+lesende exakte Suche auf gebundenen Datei-/Gitbytes. Eine passende Auswahl an
+der gespeicherten Position hat Vorrang vor weiteren Treffern. Andernfalls
+werden vollständige Fenster der gespeicherten Zeilenanzahl beziehungsweise
+der ausdrücklich deklarierten Byteanzahl geprüft, einschließlich überlappender
+Fenster. Genau ein anderer Treffer liefert `relocated` und die neue Position;
+null und mehrere Treffer liefern getrennt `selection_missing` beziehungsweise
+`selection_ambiguous`, ohne beliebige Position oder Änderung der Referenz.
+Unvollständige alte Bereiche verhindern die Suche an anderen Positionen nicht.
+
+Das bisher freie Ankerobjekt erhält für die Auswertung das geschlossene
+Implementierungsprofil `code-anchor-v1`: `mode=text` mit 1-basiertem
+`start_line` und positivem `line_count` sowie explizitem Top-Level-Encoding;
+`mode=bytes` mit 0-basiertem `start_byte` und positivem `byte_count` über
+unveränderte Bytes. Bekannte redundante Textpositionen müssen übereinstimmen;
+Byteanker dürfen keine Textpositionen oder Encodinginterpretation tragen.
+Bestehende unversionierte Anker bleiben unverändert les- und speicherbar,
+erzeugen aber ohne eindeutiges Profil keinen Auswahlnachweis. Es gibt weder
+Migration noch Encoding-Vermutung, Regex-/Symbolauflösung oder Schreibfreigabe.
+Ungültige Encodings, Dekodierungs-/UTF-8-Fehler und ungültige beziehungsweise
+widersprüchliche Anker bleiben getrennte Fehlerverträge. Der bestehende
+`select_code_lines`-Ausschnitt bleibt erhalten und übersetzt zusätzlich
+unzulässige dekodierte Auswahlzeichen in den fachlichen Dekodierungsfehler.
+
+716 gezielte Verhaltenstests in 18 Dateien bestanden mit vier parallelen
+Workern in 10,70 Sekunden, darunter 113 neue Fälle für Vorwärts-/Rückwärtssuche,
+fehlende alte Positionen, vollständige Fenster, überlappende Mehrfachtreffer,
+Vorrang gespeicherter Treffer, Encodings, unveränderte Bytes und Referenzen,
+Bestandsanker, Datei-/historische Git-Parität und frische Core-/PYZ-Prozesse.
+Im ersten Lauf bestanden 714 Tests; zwei neue Fälle erwarteten bei einem
+NUL-haltigen Encodingnamen fälschlich erst die Codec-Abweisung. Nach Korrektur
+auf die tatsächlich vorgelagerte Datensatzprüfung bestand die gesamte Auswahl.
+Der erste Lauf gilt nicht als erfolgreicher Nachweis.
+
+Die vollständige Katalog-Collection bestätigt 15.807 Identitäten bei null
+Testkörpern. Alle 462 bisherigen Testdateien und alle 15.694 bestätigten
+Testnummern bleiben erhalten; 113 neue Nummern sind angehängt.
+Geprüfter Source-SHA-256:
+`947eec0d3051ba42fb500e084ba2e6721ce6146fdfc0c6386c8b0b01cfb87c11`.
+Der Entrypoint verlangt vor dem R-Commit Gruppe 1, Commitsequenz 73,
+mit 5.269 parallelen Tests. Erst danach wird 539/900 markiert.
+Die unveränderliche Ergebnisprojektion bindet ausschließlich die Auswahlposition;
+die vollständige H.3-Zustandsentscheidung und Consumer-Integration bleiben
+12.s/12.t vorbehalten. SR-TC-0346 und SR-TC-0536 bleiben ausdrücklich partiell.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.r.C – Make it Clean
 

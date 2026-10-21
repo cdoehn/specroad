@@ -44,10 +44,10 @@ def select_code_lines(source):
         raise ModelError('code_reference_line_range_required', pointer='/reference_kind')
     try:
         text = source.source_bytes.decode(value['encoding'], errors='strict')
-    except LookupError as error:
-        raise ModelError('code_reference_encoding_unavailable', pointer='/encoding') from error
     except UnicodeError as error:
         raise ModelError('code_reference_decode_failed', pointer='/encoding') from error
+    except (LookupError, ValueError) as error:
+        raise ModelError('code_reference_encoding_unavailable', pointer='/encoding') from error
     text = text.replace('\r\n', '\n').replace('\r', '\n')
     # Only LF separates normalized lines. str.splitlines would also split
     # other Unicode characters that H.2 explicitly requires us to preserve.
@@ -63,7 +63,10 @@ def select_code_lines(source):
             selected_end = offset
     if selected_end is None:
         raise ModelError('code_reference_selection_missing', pointer='/end_line')
-    selected = text[selected_start:selected_end].encode('utf-8')
+    try:
+        selected = text[selected_start:selected_end].encode('utf-8')
+    except UnicodeError as error:
+        raise ModelError('code_reference_decode_failed', pointer='/encoding') from error
     selection_sha256 = sha256(selected).hexdigest()
     report = {'format_version': 'code-line-selection-v1',
         'validation_scope': 'code_selection_at_stored_position_only',

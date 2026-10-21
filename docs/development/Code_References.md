@@ -94,5 +94,73 @@ Unbekannte oder nicht textbasierte Encodings liefern
 `code_reference_encoding_unavailable`, ungültige Eingabebytes
 `code_reference_decode_failed`. Ein nicht vollständig vorhandener Bereich
 liefert `code_reference_selection_missing`; es gibt keine gekürzte Auswahl,
-Encoding-Vermutung oder Ersetzung ungültiger Zeichen. Die Relokationssuche
-und Anker-Auswertung folgen in 12.r.R, die H.3-Zustandsentscheidung in 12.s.
+Encoding-Vermutung oder Ersetzung ungültiger Zeichen. Nicht als UTF-8 darstellbare
+dekodierte Auswahlzeichen liefern ebenfalls `code_reference_decode_failed`.
+Die H.3-Zustandsentscheidung folgt in 12.s.
+
+## Exakte Auswahlposition und Ankerprofil
+
+`specroad.verification.locate_code_selection(source)` arbeitet ebenfalls nur
+auf einem gebundenen `CodeReferenceSource`. Für `line_range` verwendet es die
+gespeicherten inklusiven Start-/Endzeilen und das Encoding. Bei `text_anchor`
+wertet es das folgende geschlossene Implementierungsprofil aus:
+
+```json
+{"format_version":"code-anchor-v1","mode":"text","start_line":1,"line_count":2}
+```
+
+Das ist der Inhalt des Felds `anchor`. `encoding` und `selection_sha256`
+stehen weiterhin am `code_ref`. `start_line` ist 1-basiert; `line_count` ist
+positiv. Die Endzeile ist `start_line + line_count - 1`. Etwaige zusätzliche
+Start-/Endzeilen am Datensatz müssen exakt damit übereinstimmen. Normalisierung
+und Auswahlhash folgen H.2; der Suchraum besteht ausschließlich aus vollständigen
+Fenstern dieser Zeilenanzahl, einschließlich vorhandener LF-Enden.
+
+Das ausdrückliche Byteprofil benötigt kein Encoding und normalisiert nichts:
+
+```json
+{"format_version":"code-anchor-v1","mode":"bytes","start_byte":0,"byte_count":4}
+```
+
+`start_byte` ist ein nichtnegativer, 0-basierter Offset; `byte_count` ist positiv.
+Der Bereich ist halboffen `[start_byte, start_byte + byte_count)`. Jeder mögliche
+Byteoffset, auch in überlappenden Fenstern, wird berücksichtigt. Top-Level-Encoding
+oder Zeilenpositionen sind in diesem Profil widersprüchlich und werden abgewiesen.
+Zahlen müssen ganze Zahlen sein, keine Booleans. Andere Profilfelder sind ungültig.
+
+Vorhandene freie Ankerobjekte bleiben unverändert les- und speicherbar. Der Locator
+interpretiert sie nicht automatisch: eine fehlende oder unbekannte Profilversion
+liefert `code_reference_anchor_unsupported`. Fehler im bekannten Profil liefern
+`code_reference_anchor_invalid`, widersprüchliche zusätzliche Positions-/Encoding-
+Angaben `code_reference_anchor_conflict`. Ohne Encoding liefert ein Textanker
+`code_reference_encoding_required`. Dies ist keine implizite Datenmigration,
+kein Regex-/Symbolresolver und keine automatische Wahl eines Encodings.
+
+Der unveränderliche `CodeSelectionLocation` enthält in `.data` die Projektion
+`code-selection-location-v1`, gebundene Quelle und erwarteten Auswahlhash sowie
+die gespeicherte Position und deren beobachteten Hash, soweit vollständig vorhanden.
+`selection_result` ist genau einer dieser Werte:
+
+- `stored_position`: Die gespeicherte Auswahl stimmt; weitere Vorkommen ändern
+  das nicht. `search_performed` ist falsch, `match_count` ist unbekannt (`null`).
+- `relocated`: Die gespeicherte Auswahl stimmt nicht oder ist nicht mehr
+  vollständig vorhanden, und genau ein anderes Fenster stimmt. `new_position`
+  berichtet seine Position. Die gespeicherte Referenz wird nicht geändert.
+- `selection_missing`: Kein vollständiges Fenster stimmt; `match_count` ist 0.
+- `selection_ambiguous`: Mehrere Fenster stimmen; `match_count` enthält deren
+  tatsächliche Anzahl. Es wird keine Position bevorzugt.
+
+Nur die ersten beiden Ergebnisse enthalten `selection_bytes`, deren SHA-256
+und eine `matched_position`; sonst sind diese Werte `null`. `new_position`
+ist ausschließlich bei `relocated` gesetzt. Ein leerer oder verkürzter Bereich
+wird niemals als Ersatz gehasht. Ein passender Rohdateihash ersetzt keinen
+passenden Auswahlhash. Ungültiges Encoding und Dekodierungs-/UTF-8-Fehler liefern
+dieselben Fehlerklassen wie die gespeicherte Zeilenauswahl, keine fehlende Auswahl.
+
+`.sha256` bindet die kanonische Projektion; `.data` ist abgetrennt und der Wert
+ist nicht boolesch auswertbar. `selection_evaluated` und `relocation_evaluated`
+sind wahr. `reference_state_evaluated`, `symbol_resolved`, `source_code_executed`
+und `write_authorized` bleiben falsch. Die disjunkte H.3-Zustandsentscheidung
+und Consumer-Integration folgen in 12.s/12.t. Die Suche hält die Quelle und bei
+Text eine normalisierte Kopie samt Zeilengrenzen im Speicher; sie führt keinen
+neuen Streaming- oder Ressourcenbudgetvertrag ein.
