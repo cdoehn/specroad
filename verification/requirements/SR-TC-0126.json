@@ -18,12 +18,13 @@
     "Resolve Release seeds with native incoming planning membership and expand the existing closed core closure.",
     "Compare stored direct depends_on edges from every closure artifact and classify targets outside Release seed membership as external.",
     "Check exact source/target hashes, edge direction and pointers, configuration exclusions, changed or missing provider inputs and isolated Core/PYZ parity.",
-    "Resolve complete indirect obligations and reject exact strong, field, current-review and closed-weak configuration conflicts. Validate every reached artifact with its native schema; retain explicit applicability status, reason and source/configuration binding."
+    "Resolve complete indirect obligations and reject exact strong, field, current-review and closed-weak configuration conflicts. Validate every reached artifact with its native schema; retain explicit applicability status, reason and source/configuration binding.",
+    "For 13.e.C, rerun unchanged Release W/R behavior and affected shared-scope, query, configuration and verification contracts after moving the bound-model provider to graph and isolating member/dependency projection."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Readiness-Prüfung MUSS direkte `depends_on`-Abhängigkeiten des Release-Scopes einbeziehen und außerhalb des Releases liegende Pflichtabhängigkeiten melden.",
-    "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority. 13.e.R additionally covers the complete indirect graph, all 15 strong edge types, resource and review paths, exact SRV141 variant diagnostics, native schemas of reached non-planning members and unresolved unconfigured applicability. Isolated Core/PYZ and no-write boundaries remain enforced."
+    "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority. 13.e.R additionally covers the complete indirect graph, all 15 strong edge types, resource and review paths, exact SRV141 variant diagnostics, native schemas of reached non-planning members and unresolved unconfigured applicability. Isolated Core/PYZ and no-write boundaries remain enforced. 13.e.C preserves these outputs, hashes, diagnostics and side-effect limits through the shared bound-model scope provider; no new release behavior is introduced."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -136,6 +137,6 @@
     "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[subject]"
   ],
   "open_items": [
-    "13.e.C structure and regression preservation remain next. Release readiness gates and authenticated currentness remain 13.f; View/Work integration remains 13.h. Supplied-input tests do not certify live inventory completeness, normative ScopeHash or full-suite success."
+    "Release readiness gates and authenticated currentness remain 13.f; View/Work integration remains 13.h. Supplied-input tests do not certify live inventory completeness, normative ScopeHash or full-suite success."
   ]
 }

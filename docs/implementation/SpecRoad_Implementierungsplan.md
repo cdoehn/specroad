@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 560
-last_completed_plan_commit: 13.e.R
-next_plan_commit: 13.e.C
-last_completed_numbered_bundle: 386
+implementation_plan_commits_completed: 561
+last_completed_plan_commit: 13.e.C
+next_plan_commit: 13.f.W
+last_completed_numbered_bundle: 387
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16052,7 +16052,7 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 13.e.C – Make it Clean
 
-- [ ] **13.e.C** · Position **561/900** · Voraussetzung: `13.e.R`.
+- [x] **13.e.C** · Position **561/900** · Voraussetzung: `13.e.R`.
 **Exakte Commit-Message:** `13.e.C refactor(roadmap): Release-Scope und externe Pflichtabhängigkeiten bereinigen`
 
 **Bereinigung:** Releaseauflösung als einen Scopeprovider statt eigene Closure führen.
@@ -16060,6 +16060,38 @@ Vollsuite- oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand (Bundle 387):** Die bytegebundene Scopeauflösung
+liegt gemeinsam in der Graphschicht. Release verwendet diesen Provider direkt;
+Verification behält seinen bisherigen Import als Kompatibilitätsalias. Der
+Funktionskörper und seine Validierungsreihenfolge bleiben unverändert:
+Quell-, Ressourcen-, Attachment-, Review- und Querybindungen werden weiter
+vor der nativen Seed- und Closureauflösung geprüft. Die bestehenden
+Diagnosegründe bleiben erhalten.
+
+Die Releaseprojektion trennt die native Mitgliedervalidierung mit
+Anwendbarkeit und Quellenbindung von der Projektion gespeicherter
+`depends_on`-Kanten. Beide verwenden die bereits aufgelöste Closure; es
+entsteht kein zusätzlicher Traversierungsalgorithmus. Release-Seedmitgliedschaft,
+externe Ziele, Kantenrichtung, Pointer, Hashes, Ergebnisfelder und
+Fehlerreihenfolge bleiben erhalten. Alle 477 bestehenden Testdateien und
+16.558 Testnummern bleiben bytegleich. `SR-TC-0126` und `SR-TC-0408` bleiben
+`partial`; Readinessgates in 13.f und View/Work in 13.h sind weiterhin offen.
+
+**Gezielter C-Nachweis:** Alle 809 ausgewählten Verhaltenstests bestanden
+parallel auf vier Workern in 107,20 Sekunden. Die unveränderten 85
+Release-W-/R-Fälle bleiben ebenso grün wie die betroffenen Planungs-/Roadmap-,
+Seed-/Closure-, Verifikationsscope-, Anwendbarkeits- und
+Konfigurationsvererbungstests einschließlich isolierter Core-/PYZ-Nachweise.
+Die vollständige Collection bestätigt 16.558 Identitäten bei null ausgeführten
+Testkörpern. Testdateien, Orakel und feste Nummerierung bleiben unverändert;
+es werden keine neuen Testnummern vergeben.
+
+Das gebundene Result bestätigt den R-Commit und 5.519 bestandene Apply-Tests
+in Gruppe 1. Vor dem C-Commit prüft Apply ausschließlich die nächste Gruppe 2
+mit 5.519 Tests parallel (Commitfolge 95). Erst danach folgen der
+Fortschrittsmarker 561/900 und `13.f.W` als nächster Schritt. Der Nachweis
+ist ein gezielter Teiltestnachweis, kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-13-f"></a>
 ### 13.f – Readinessgates und aktuelle Beziehungen

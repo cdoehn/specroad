@@ -8,16 +8,14 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from ..changes import TargetModel
-from ..configurations import evaluate_applicability, resolve_configuration
+from ..configurations import resolve_configuration
+from ..graph._model_scope import resolve_required_scope
 from ..graph.relations import SourceRelations
 from ..graph.scope_descriptors import ScopeDescriptor
-from ..model.canonical import canonical_json_bytes, canonical_json_sha256
-from ..model.domain_schemas import DOMAIN_TYPES
+from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..storage.domain_artifact import DomainArtifact
 from ..storage.json_syntax import parse_json_object
-from ..storage.record_artifact import RecordArtifact
-from ..verification._required_scope import resolve_required_scope
+from ._release_scope_projection import release_dependencies, release_members
 from .relations import assess_planning_relations
 
 
@@ -68,36 +66,8 @@ def resolve_release_scope(model, release_id, *, scope_bindings, configuration_id
 
     configuration = (None if configuration_id is None else
                      resolve_configuration(records, configuration_id))
-    included = set(closure.artifact_ids)
-    applicability = []
-    values, bindings = {}, {}
-    for record in records:
-        if record.identity.id not in included:
-            continue
-        artifact = DomainArtifact if record.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
-        value = artifact(record.source_bytes, path=record.path).data
-        applicability.append(evaluate_applicability(record, configuration).data)
-        key = value['id']
-        values[key] = value
-        bindings[key] = {'artifact_id': key, 'artifact_type': value['artifact_type'],
-            'revision': value['revision'], 'path': record.path,
-            'source_sha256': sha256(record.source_bytes).hexdigest(),
-            'record_sha256': canonical_json_sha256(value)}
-    required = []
-    for key in closure.artifact_ids:
-        for position, relation in enumerate(values[key]['relations']):
-            if relation['type'] != 'depends_on':
-                continue
-            target = relation['target']
-            required.append({'relation_id': relation['relation_id'], 'type': 'depends_on',
-                'source_id': key, 'target_id': target,
-                'path': bindings[key]['path'], 'pointer': '/relations/' + str(position),
-                'source_sha256': bindings[key]['source_sha256'],
-                'relation_sha256': canonical_json_sha256(relation),
-                'target_record_sha256': bindings[target]['record_sha256'],
-                'source_is_release_seed': key in seeds, 'target_is_release_seed': target in seeds,
-                'external': target not in seeds})
-    required.sort(key=lambda row: (row['source_id'], row['target_id'], row['relation_id']))
+    values, bindings, applicability = release_members(records, closure.artifact_ids, configuration)
+    required = release_dependencies(values, bindings, closure.artifact_ids, seeds)
     external = [row for row in required if row['external']]
     applicability.sort(key=lambda row: row['artifact_id'].encode('utf-8'))
     unresolved = [row['artifact_id'] for row in applicability if row['status'] == 'potentially_applicable']
