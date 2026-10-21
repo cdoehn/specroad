@@ -17,6 +17,7 @@ from ..model.paths import project_path
 from ..model.record_schemas import record_schema
 from ..storage.json_syntax import parse_json_object
 from ._evaluation_product import input_manifest, product_state_sha256, observe_input_bytes
+from ._required_keys import _key
 
 
 class VerificationEvaluationError(ModelError):
@@ -56,11 +57,6 @@ def _path(value, pointer):
             raise ModelError('noncanonical_evaluation_input_path')
     except ModelError as error:
         raise VerificationEvaluationError(error.reason, pointer=pointer) from error
-
-
-def _key(row):
-    return tuple((row[field] or '').encode('utf-8')
-        for field in ('subject_artifact_id', 'contract_id', 'test_id', 'check_id'))
 
 
 def _read(raw):

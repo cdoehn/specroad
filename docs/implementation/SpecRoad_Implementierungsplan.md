@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 521
-last_completed_plan_commit: 12.l.R
-next_plan_commit: 12.l.C
-last_completed_numbered_bundle: 347
+implementation_plan_commits_completed: 522
+last_completed_plan_commit: 12.l.C
+next_plan_commit: 12.m.W
+last_completed_numbered_bundle: 348
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14376,7 +14376,7 @@ erfolgreichen Apply-Testlauf dieses R-Zustands.
 
 #### 12.l.C – Make it Clean
 
-- [ ] **12.l.C** · Position **522/900** · Voraussetzung: `12.l.R`.
+- [x] **12.l.C** · Position **522/900** · Voraussetzung: `12.l.R`.
 **Exakte Commit-Message:** `12.l.C refactor(verification): Unabhängig gebildete Pflichtmenge bereinigen`
 
 **Bereinigung:** Pflichtmengenbildung vor Nachweisauswahl durchführen.
@@ -14384,6 +14384,27 @@ erfolgreichen Apply-Testlauf dieses R-Zustands.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zwischenstand (Bundle 348):** Die unabhängige
+Pflichtmengenbildung liegt in einem privaten Modul ohne Bewertungsdescriptor
+oder Laufselektion als Eingang. Der öffentliche Aufruf friert ihren Bericht ein,
+bevor der unveränderte Descriptorvergleich beginnt. Beide Seiten verwenden
+dieselbe reine UTF-8-Schlüsselordnung. Berechnungsreihenfolge, Fachwerte,
+Hashbindungen, Fehlerverträge und Seiteneffekte bleiben erhalten. Sämtliche
+W-/R-Testdateien und Verifikationsdaten bleiben unverändert. Der Fortschritt
+wird erst nach erfolgreichem Apply-Testlauf dieses C-Zustands gesetzt;
+`12.m.W` wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis:** 945/945 bestehende Verhaltenstests aus 21 Dateien
+mit 4 Workern parallel in 66,17 s bestanden. Enthalten sind sämtliche 90
+W-/R-Fälle der Pflichtmenge sowie die betroffenen Descriptor-, Contract-,
+Scope-, Query- und Konfigurationsregressionen. Die vollständige Collection
+bestätigt 14.973 Tests, ohne deren Testbodies auszuführen. Geprüfte Source-SHA-256:
+`43de171bfbb054a457e302fd1f77686a636e579206fa600e737cae9d54909c4e`.
+Alle 451 bisherigen Testdateien und die festen Testnummern bleiben erhalten.
+Der Entrypoint verlangt ausschließlich Gruppe 2, Commitsequenz 56, mit 4.991
+parallelen Tests vor dem C-Commit und dem Fortschrittsmarker 522/900.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-m"></a>
 ### 12.m – Vollständige Lauf- und Nachweisauswahl
