@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 557
-last_completed_plan_commit: 13.d.R
-next_plan_commit: 13.d.C
-last_completed_numbered_bundle: 383
+implementation_plan_commits_completed: 558
+last_completed_plan_commit: 13.d.C
+next_plan_commit: 13.e.W
+last_completed_numbered_bundle: 384
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15895,7 +15895,7 @@ Releasefreigabe. 13.d.C beginnt erst in einem nachfolgenden Auftrag.
 
 #### 13.d.C – Make it Clean
 
-- [ ] **13.d.C** · Position **558/900** · Voraussetzung: `13.d.R`.
+- [x] **13.d.C** · Position **558/900** · Voraussetzung: `13.d.R`.
 **Exakte Commit-Message:** `13.d.C refactor(roadmap): Roadmap erklären bereinigen`
 
 **Bereinigung:** Why-/Scopeprimitive für Planungserklärungen wiederverwenden.
@@ -15903,6 +15903,42 @@ Releasefreigabe. 13.d.C beginnt erst in einem nachfolgenden Auftrag.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**R-Übernahme bestätigt:** Das maßgebliche
+`specroad-apply_Result_202353_1021_a19416.zip` bestätigt Bundle 383 mit sauberem
+Apply-Commit `d2e4621da23925613ccbfb56bd271af066efab93`. Gruppe 1 bestand
+5.491 Tests parallel auf vier Workern. Snapshot, Commitinhalt und Testbindung
+stimmen mit dem übergebenen R-Zustand überein.
+
+**C-Ausschnitt (Bundle 384):** Die Kontext- und Nachbarpfadermittlung liegt
+gemeinsam in einem privaten Modul. Sie verwendet weiterhin die gemeinsame
+Kürzestpfad-Vorgängerprimitive, den Relationsindex und native Pfadwerte.
+Die identitätsgebundene Pfadsortierung wird mit Why geteilt; dessen bisheriger
+Sortierschlüssel bleibt unter seinem privaten Alias erreichbar. Why-Checkpoint-
+und Spoolverträge behalten ihre bisherigen Reihenfolgen.
+
+Die Roadmap-spezifische Kantenwahl bleibt ausdrücklich getrennt von der
+Why-Kantenwahl. Der öffentliche Provider behält seine Validierungsreihenfolge,
+die bestehende Scope-/Modellwurzelbindung aus der Roadmapprüfung und die
+vollständige Ergebnisprojektion. Kontextsuche und Nachbarerweiterungen werden
+mit unveränderten Anweisungen ausgelagert; ihre Fachwerte und Fehler ändern
+sich nicht. Weder eine neue Scope-Closure noch eine zusätzliche Readiness- oder
+Schreibbefugnis entsteht. Die Live-Inventur und der öffentliche Read-Handler
+bleiben unverändert.
+
+Alle vorhandenen Testdateien und ihre stabilen Nummern bleiben bytegleich.
+`SR-TC-0124` behält seinen begrenzten Nachweisumfang als `partial`; die spätere
+View-/Workintegration bleibt 13.h zugeordnet. 13.e.W wird hier nicht begonnen.
+
+**Gezielter C-Nachweis:** 459 Verhaltenstests bestanden parallel auf vier
+Workern in 112,51 Sekunden: alle 90 Erklärungstests aus W/R, bestehende
+Roadmap- und Planungsrelationstests, Why einschließlich Fortsetzung sowie
+Pfadspooling und dessen Konfigurationsauswertung. Die vollständige Collection
+bestätigt 16.473 Identitäten bei null ausgeführten Testkörpern. Alle 475
+bestehenden Testdateien und sämtliche Testnummern bleiben unverändert.
+Apply prüft vor dem C-Commit ausschließlich Gruppe 2 mit 5.491 Tests parallel;
+erst danach folgt der Fortschrittsmarker 558/900 mit `13.e.W` als nächstem
+Schritt. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-13-e"></a>
 ### 13.e – Release-Scope und externe Pflichtabhängigkeiten

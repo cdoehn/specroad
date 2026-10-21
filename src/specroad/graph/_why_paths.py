@@ -3,12 +3,7 @@
 The completed predecessor graph is read-only in this phase. The owner retains
 frames, relation positions and the produced prefix in the same checkpoint.
 """
-from .path_output import PathRecord
-
-
-def _path_key(record):
-    return (tuple(value.id for value in record.artifacts),
-            tuple(value.id for value in record.relations), record.inverse)
+from .path_output import PathRecord, _path_identity_key as _path_key
 
 
 class _WhyPaths:

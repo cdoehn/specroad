@@ -25,7 +25,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abhängigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erklären.",
-    "scope": "13.d.W/R: all shortest stored membership/implementation/origin paths within explicit trace_depth, with direct assignment/dependency/risk observations and exact source provenance. Missing schedule and Task subject references remain explicit for context artifacts. Public roadmap explain reads the configured inventory using native preflight and final byte/membership checks. No guessed origins, inferred scheduling, scope closure, applicability, atomic snapshot, readiness or write/approval authority."
+    "scope": "13.d.W/R/C: all shortest stored membership/implementation/origin paths within explicit trace_depth, with direct assignment/dependency/risk observations and exact source provenance. Missing schedule and Task subject references remain explicit for context artifacts. Public roadmap explain reads the configured inventory using native preflight and final byte/membership checks. No guessed origins, inferred scheduling, scope closure, applicability, atomic snapshot, readiness or write/approval authority."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -146,7 +146,7 @@
     "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[label]"
   ],
   "open_items": [
-    "13.d.C still owns structural cleanup; W/R behavior remains the immutable acceptance baseline.",
-    "View/Work integration, Release closure/readiness, full-suite and release acceptance remain outside this evidence."
+    "Roadmap View/Work integration remains assigned to 13.h; the preserved W/R contracts cover the native supplied-model provider and the public read-only command.",
+    "Targeted W/R/C behavior checks are not full-suite or Release acceptance."
   ]
 }

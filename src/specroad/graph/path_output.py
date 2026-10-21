@@ -65,6 +65,11 @@ class PathRecord:
                    tuple(RelationIdentity(**item) for item in value["relations"]), tuple(value["inverse"]))
 
 
+def _path_identity_key(record):
+    return (tuple(value.id for value in record.artifacts),
+            tuple(value.id for value in record.relations), record.inverse)
+
+
 def _path_key(value):
     if type(value) is not PathRecord:
         raise ResultContractError("Expected a typed path record")
