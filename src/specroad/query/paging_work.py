@@ -44,14 +44,8 @@ class QueryWork:
         self._selection = select_query(records, query, project=project, configuration=configuration,
                                        configuration_id=configuration_id, verification=verification)
         self._evaluation_input = None if verification is None else verification.work_input
-        ids = set(self._selection.artifact_ids)
-        artifacts = {record.identity.id: record.data for record in records if record.identity.id in ids}
-        if verification is not None:
-            for subject in verification.data['aggregation']['subjects']:
-                identifier = subject['subject_artifact_id']
-                if identifier in artifacts:
-                    artifacts[identifier] = {**artifacts[identifier],
-                        'verification_result': subject['verification_result']}
+        from ..verification._read_evaluation import selected_artifacts
+        artifacts = selected_artifacts(records, self._selection.artifact_ids, verification)
         self._offset, self._limit = data['offset'], data['limit']
         self._items = []
         self._visited = self._units = 0

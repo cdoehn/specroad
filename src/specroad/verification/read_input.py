@@ -11,43 +11,13 @@ from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .aggregation import aggregate_verification_results
-from .evaluation import VerificationEvaluation, VerificationEvaluationError
+from .evaluation import VerificationEvaluation
+from ._read_evaluation import computed_results, record_bindings, resolve_read_evaluation
 
 
 class VerificationReadBindingConflict(ModelError):
     """A changed saved input or conflicting Release selection; no fallback."""
     exit_code = 6
-
-
-def _release_selection(model, evaluation, descriptor):
-    if descriptor is None:
-        return evaluation, None
-    from ..graph.scope_descriptors import ScopeDescriptor
-    if type(descriptor) is not ScopeDescriptor:
-        raise ModelError('verification_scope_descriptor_required')
-    scope = descriptor.data
-    base = scope['selector']['base_scope_descriptor'] if scope['scope_kind'] == 'configuration' else scope
-    if base['scope_kind'] != 'release':
-        return evaluation, None
-    from ..archive._release_selection import bind_stored_release_selection
-    release = bind_stored_release_selection(model,
-        release_id=base['selector']['release_id'], evaluation=None)
-    stored = release['stored_evaluation']
-    if stored is not None:
-        stored = VerificationEvaluation(canonical_json_bytes(stored))
-        if evaluation is not None and evaluation.sha256 != stored.sha256:
-            raise VerificationReadBindingConflict('verification_release_evaluation_conflict')
-        evaluation = stored
-    return evaluation, {**release, 'selection_origin': 'stored' if stored is not None else
-        'explicit_provisional' if evaluation is not None else 'missing',
-        'provisional': stored is None, 'release_authorized': False}
-
-
-def _record_bindings(records):
-    if type(records) not in (tuple, list) or any(type(r) is not SourceRelations for r in records):
-        raise ModelError('verification_query_sources_required')
-    rows = [{'id': r.identity.id, 'sha256': sha256(r.source_bytes).hexdigest()} for r in records]
-    return sorted(rows, key=lambda row: row['id'].encode('utf-8'))
 
 
 @dataclass(frozen=True, init=False)
@@ -102,11 +72,8 @@ def prepare_verification_read_input(model, evaluation, *, configuration_id, inpu
     if type(model) is not TargetModel:
         raise ModelError('verification_target_model_required')
     model = model.snapshot()
-    if evaluation is not None:
-        if type(evaluation) is not VerificationEvaluation:
-            raise VerificationEvaluationError('typed_verification_evaluation_required')
-        evaluation = VerificationEvaluation(evaluation.source_bytes)
-    evaluation, release = _release_selection(model, evaluation, scope_descriptor)
+    evaluation, release = resolve_read_evaluation(model, evaluation, scope_descriptor,
+        conflict_type=VerificationReadBindingConflict)
     result = aggregate_verification_results(model, evaluation,
         configuration_id=configuration_id, inputs=inputs, input_roles=input_roles,
         evaluated_at=evaluated_at, waiver_reviews=waiver_reviews, waiver_verifier=waiver_verifier,
@@ -120,7 +87,7 @@ def prepare_verification_read_input(model, evaluation, *, configuration_id, inpu
         'explicit_scope': scope_descriptor is not None, 'release_selection': release,
         'project_id': model.binding.project_id, 'input_sha256': model._sources_sha256,
         'project_configuration_sha256': canonical_json_sha256(model.configuration.data),
-        'record_bindings': _record_bindings(records),
+        'record_bindings': record_bindings(records),
         'evaluation': None if evaluation is None else evaluation.data,
         'evaluation_sha256': aggregation['evaluation_sha256'], 'evaluated_at': evaluated_at,
         'scope_descriptor': required['scope_descriptor'], 'scope_sha256': required['scope_sha256'],
@@ -158,7 +125,7 @@ def checked_query_input(value, records, query, project, configuration, configura
         raise ModelError('verification_query_scoped_input_unsupported')
     if query.data['evaluation'] != data['evaluation']:
         raise ModelError('verification_query_evaluation_mismatch')
-    if (_record_bindings(records) != data['record_bindings'] or
+    if (record_bindings(records) != data['record_bindings'] or
             canonical_json_sha256(project) != data['project_configuration_sha256']):
         raise ModelError('verification_query_sources_mismatch')
     if configuration is not None or configuration_id != data['scope_descriptor']['configuration_id']:
@@ -167,8 +134,7 @@ def checked_query_input(value, records, query, project, configuration, configura
     # projections need their own integration; do not inject a stored status.
     if query.data['srx_filters']:
         raise ModelError('verification_query_srx_provider_required')
-    return {row['subject_artifact_id']: row['verification_result']
-            for row in data['aggregation']['subjects']}
+    return computed_results(data)
 
 
 def resume_verification_read_input(model, raw, *, expected_sha256, inputs, input_roles,

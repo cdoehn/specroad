@@ -91,15 +91,8 @@ def query_records(records, query, *, project, configuration=None, configuration_
         ordering.append((tokens, item['direction'] == 'desc', pointer))
     selection = select_query(records, query, project=project, configuration=configuration,
                              configuration_id=configuration_id, verification=verification)
-    ids = set(selection.artifact_ids)
-    artifacts = {record.identity.id: record.data for record in records if record.identity.id in ids}
-    if verification is not None:
-        # select_query has verified this owned input against all original bytes.
-        for subject in verification.data['aggregation']['subjects']:
-            identifier = subject['subject_artifact_id']
-            if identifier in artifacts:
-                artifacts[identifier] = {**artifacts[identifier],
-                    'verification_result': subject['verification_result']}
+    from ..verification._read_evaluation import selected_artifacts
+    artifacts = selected_artifacts(records, selection.artifact_ids, verification)
     rows = []
     for item in selection.items:
         artifact = artifacts[item['id']]

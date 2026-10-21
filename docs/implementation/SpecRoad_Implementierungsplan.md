@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 533
-last_completed_plan_commit: 12.p.R
-next_plan_commit: 12.p.C
-last_completed_numbered_bundle: 359
+implementation_plan_commits_completed: 534
+last_completed_plan_commit: 12.p.C
+next_plan_commit: 12.q.W
+last_completed_numbered_bundle: 360
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14851,7 +14851,7 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.p.C – Make it Clean
 
-- [ ] **12.p.C** · Position **534/900** · Voraussetzung: `12.p.R`.
+- [x] **12.p.C** · Position **534/900** · Voraussetzung: `12.p.R`.
 **Exakte Commit-Message:** `12.p.C refactor(verification): Coverage und Evaluation-Eingaben bereinigen`
 
 **Bereinigung:** Evaluationsauflösung für Coverage, Query und spätere Readiness gemeinsam führen.
@@ -14859,6 +14859,37 @@ Vollsuite- oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zwischenstand (Bundle 360):** Die typisierte Descriptorprüfung,
+gespeicherter Release-Vorrang, Recordbindungen und berechnete Query-Sortierdaten
+liegen in einem gemeinsamen internen Modul. Der öffentliche Leseadapter behält
+Snapshot-, Aggregations-, Scope-, Konfigurations-, Eingangs- und Waiverprüfung
+sowie die bisherigen Fehlerklassen. Synchrone Query und QueryWork verwenden
+dieselben abgetrennten Daten nach erfolgreicher Quellenprüfung; Coverage,
+Verification-View und Work-Resume behalten ihren gemeinsamen Leseeingang.
+Berichtbytes, Hashes, Fehlmengen, Prioritäten und Work-Bindungen bleiben erhalten.
+Die spätere Readiness-Integration kann diesen Weg verwenden; die vorhandene
+Release-/Baseline-Sperre wird nicht geöffnet. Alle bestehenden Testbytes und
+Testnummern bleiben unverändert. Dieses Bundle enthält nur 12.p.C; 12.q.W
+wird nicht begonnen. Der Fortschrittsmarker folgt erst nach erfolgreichem
+parallelem Apply-Gate.
+
+**Gezielter Dev-Nachweis (Bundle 360):** 2.262/2.262 unveränderte Verhaltenstests
+aus 38 betroffenen Dateien bestanden mit vier parallelen Workern in 158,02
+Sekunden. Enthalten sind alle 44 W- und 55 R-Coveragefälle sowie die betroffenen
+Verification-, Query-, View-, Konfigurations-, Release-/Baseline- und Work-
+Regressionsfälle einschließlich isolierter Core-/PYZ-Prozessneustarts. Alle
+459 bisherigen Testdateien, sämtliche 745 Verifikationsdateien und 15.523
+festen Testnummern sind bytegleich zum maßgeblichen Result. Die vollständige
+Katalog-Collection bestätigt 15.523 Identitäten bei null Testkörpern.
+Geprüfter Source-SHA-256:
+`8a2d672370e75e37848620447a96babd10355d46be17f11e985b65a4e07becc8`.
+Der zusätzliche statische Vergleich bestätigt die unveränderten Descriptor-,
+Release-, Bindungs- und Projektionsblöcke sowie die öffentlichen Werttypen,
+Fehlerklassen und Resume-Funktion. Der Entrypoint verlangt vor dem C-Commit
+ausschließlich Gruppe 2, Commitsequenz 68, mit 5.174 parallelen Tests. Erst
+danach folgt der Fortschrittsmarker 534/900. Dies ist kein Vollsuite- oder
+Release-Erfolgsnachweis.
 
 <a id="step-12-q"></a>
 ### 12.q – Code-Referenzarten und sichere Quellen

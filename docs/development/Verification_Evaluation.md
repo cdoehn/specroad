@@ -496,3 +496,19 @@ der sechs Query-Datenfelder. Sein Sortiercursor wird dadurch nicht dauerhaft
 fortsetzbar. Die Eingangsbindung über einen echten nativen Work-Store wird
 separat auch nach Prozessneustart geprüft. CLI-Anbindung, berechnete SRX-
 Graphabfragen und ein dauerhafter Query-Sortiercursor bleiben offen.
+
+## Gemeinsame Evaluationsauflösung (12.p.C)
+
+Das interne Modul `_read_evaluation` bündelt die typisierte Descriptorprüfung,
+den gespeicherten Release-Vorrang, die Bindung originaler Recordbytes und die
+abgetrennten berechneten Query-Werte. Der öffentliche Leseadapter bleibt für
+Modellsnapshot, native Aggregation, Scope-/Konfigurations- und Eingangsprüfung,
+Waiverbelege und die bisherigen Fehlerklassen zuständig. Auch Resume verwendet
+weiter denselben geprüften Leseweg. Coverage und Verification-View erhalten
+denselben gebundenen Eingang; synchrone Query und QueryWork teilen nun die
+berechneten Sortierdaten nach erfolgreicher Quellenprüfung.
+
+Berichtbytes, Hashes, Fehlmengen, Auswahlvorrang und Work-Eingänge bleiben
+unverändert. Die gemeinsame Auflösung ist für die spätere Readiness-Integration
+nutzbar; die bestehende Release-/Baseline-Sperre bleibt geschlossen. Es kommen
+keine neuen Provider, CLI-Befehle oder Fortsetzungsrechte hinzu.
