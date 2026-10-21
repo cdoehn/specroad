@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 536
-last_completed_plan_commit: 12.q.R
-next_plan_commit: 12.q.C
-last_completed_numbered_bundle: 362
+implementation_plan_commits_completed: 537
+last_completed_plan_commit: 12.q.C
+next_plan_commit: 12.r.W
+last_completed_numbered_bundle: 363
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14976,7 +14976,7 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.q.C – Make it Clean
 
-- [ ] **12.q.C** · Position **537/900** · Voraussetzung: `12.q.R`.
+- [x] **12.q.C** · Position **537/900** · Voraussetzung: `12.q.R`.
 **Exakte Commit-Message:** `12.q.C refactor(verification): Code-Referenzarten und sichere Quellen bereinigen`
 
 **Bereinigung:** Quellenleser aus M8 und sicheren I/O aus M2 wiederverwenden.
@@ -14984,6 +14984,28 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Vorbereitung (Bundle 363):** Die unveränderten Datei- und Git-Lesezweige
+liegen als private Quellenadapter getrennt von Datensatzvalidierung und
+unveränderlicher Ergebnisprojektion. Der öffentliche Einstieg behält die
+Reihenfolge seiner Zulassungsprüfungen und den verzögerten Git-Import.
+Die Adapter verwenden weiterhin den nativen M2-Anhangsschutz über den
+gesamten Lesevorgang und den M8-Gitobjektleser. Es entstehen weder ein neuer
+I/O-Pfad noch Fehlerübersetzungen, Fallbacks oder zusätzliche Seiteneffekte.
+Der Strukturvergleich bestätigt identische ausgelagerte Funktionskörper
+und nach Wiedereinsetzen identische öffentliche Lese- und Ergebnislogik.
+
+542 unveränderte W-/R- und betroffene Regressionstests in 16 Dateien bestanden
+mit vier parallelen Workern in 10,44 Sekunden. Die vollständige
+Katalog-Collection bestätigt weiterhin 15.633 Identitäten bei null
+Testkörpern. Alle 461 bisherigen Testdateien, sämtliche Verifikationsdaten
+und alle 15.633 festen Testnummern bleiben bytegleich; es gibt keine neuen
+Tests. Geprüfter Source-SHA-256:
+`2126d933e996f5a1a99f50909e688edfb83497ba216ab3607d590f09233c3ac9`.
+Der Entrypoint verlangt vor dem C-Commit Gruppe 2, Commitsequenz 71,
+mit 5.211 parallelen Tests. Erst danach wird 537/900 markiert.
+H.2/H.3 und Consumer-Integration bleiben den späteren Schritten vorbehalten.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-r"></a>
 ### 12.r – Zeilenauswahl und exakte Relokation

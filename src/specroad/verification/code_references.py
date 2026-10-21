@@ -1,14 +1,13 @@
 """Language-neutral code bytes from an explicit safe local or Git source."""
 from dataclasses import dataclass, field
-from hashlib import new as new_hash, sha256
-import os
+from hashlib import sha256
 
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..security import ProjectBoundary, SafetyViolation
-from ..security.resource_access import opened_resource
+from ..security import ProjectBoundary
 from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact
+from ._code_reference_sources import read_file_source, read_git_source
 
 
 @dataclass(frozen=True, init=False)
@@ -51,26 +50,9 @@ def read_code_reference(source, reference):
         raise ModelError('code_reference_source_required')
     git_commit = git_blob = None
     if type(source) is GitObjectSource:
-        git_commit = source.commit_id
-        if 'git_commit' in value and value['git_commit'] != git_commit:
-            raise ModelError('code_reference_git_commit_mismatch', pointer='/git_commit')
-        raw = source.read_bytes(value['path'])
-        header = b'blob ' + str(len(raw)).encode('ascii') + b'\0'
-        git_blob = new_hash('sha1' if len(git_commit) == 40 else 'sha256',
-                            header + raw, usedforsecurity=False).hexdigest()
-        if 'git_blob' in value and value['git_blob'] != git_blob:
-            raise ModelError('code_reference_git_blob_mismatch', pointer='/git_blob')
+        raw, git_commit, git_blob = read_git_source(source, value)
     else:
-        if 'git_commit' in value or 'git_blob' in value:
-            raise ModelError('code_reference_git_source_required')
-        # Use the attachment boundary for the entire read, including its final
-        # nested-root and descriptor checks. A new specroad.json in a parent
-        # directory during the read must invalidate the observation too.
-        with opened_resource(source, value['path']) as (descriptor, initial):
-            with os.fdopen(descriptor, 'rb', closefd=False) as stream:
-                raw = stream.read()
-            if len(raw) != initial.st_size:
-                raise SafetyViolation('Code source changed during the read')
+        raw = read_file_source(source, value)
     file_sha256 = sha256(raw).hexdigest()
     report = {'format_version': 'code-reference-source-v1',
         'validation_scope': 'code_reference_source_bytes_only',

@@ -56,3 +56,9 @@ gebunden; der Git-Blobhash über Header und Inhalt ist vom Rohdatei-SHA-256
 getrennt. Arbeitsdateien werden nicht als Ersatz gelesen und fehlende Objekte
 nicht nachgeladen. Die Symbol-, Auswahl- und Statusflags bleiben auch bei
 passendem Rohdateihash ausdrücklich falsch.
+
+Die privaten Quellenadapter in `verification/_code_reference_sources.py`
+kapseln die unveränderten M2-/M8-Leseoperationen und Git-Bindungsprüfungen.
+`code_references.py` behält die öffentliche Datensatz-/Quellenprüfung und
+die unveränderliche Ergebnisprojektion. Die Quellenadapter werden erst nach
+der vorhandenen Zulassungsprüfung aufgerufen und fangen keine Fehler ab.
