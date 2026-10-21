@@ -207,16 +207,37 @@ erneut. Ein nachträglich verschwundener oder erschienener Eintrag, Symlinks,
 verschachtelte Projekte und Lese-/Berechtigungsfehler liefern keinen Zustandsbericht.
 Vorhandene Dateien werden anschließend durch den unveränderten nativen Byte-Leser
 gebunden. Der bisherige `read_code_reference`-Fehlervertrag bleibt erhalten.
-Ein fehlender Pfad im unveränderlichen Gitbaum wird nur bei weiterhin gültiger
-ursprünglicher Root-/Objektspeicherbindung und lesbarem gebundenem Commit berichtet;
-es gibt keinen Ersatz durch HEAD oder Arbeitsdateien.
+Die Git-Beobachtung bleibt an die ursprüngliche Root-/Objektspeicherbindung
+gebunden; es gibt keinen Ersatz durch HEAD oder Arbeitsdateien.
 
-Der W-Ausschnitt entscheidet vorhandene `file`, `line_range` und die ausdrücklichen
+Die Auswertung entscheidet vorhandene `file`, `line_range` und die ausdrücklichen
 Text-/Byteanker aus `code-anchor-v1`. Freie Bestandsanker und fehlerhafte Encodings
 bleiben Fehler. Vorhandene `symbol_hint`-/`generated_artifact`-Referenzen liefern
 `code_reference_state_kind_unsupported`; ein Hinweis oder Rohdateihash allein
 begründet keine Aktualität. Fehlende Pfade haben nach H.3 auch bei diesen Arten
-Vorrang. Nicht verfügbare oder beschädigte Git-Objekte bleiben im W-Ausschnitt
-Fehler der nativen Quelle. Ihre genaue Abgrenzung sowie die vollständige H.3-
-Randfallmatrix werden in 12.s.R vervollständigt; die Consumer-Integration folgt
-in 12.t. Dies ist keine neue Freigabe-, Release- oder vollständige Validierungsprüfung.
+Vorrang. Die Consumer-Integration folgt in 12.t. Dies ist keine neue Freigabe-,
+Release- oder vollständige Validierungsprüfung.
+
+`GitObjectSource.read_optional_bytes(path)` ergänzt die Beobachtung einer bereits
+gebundenen Quelle. Es prüft den gebundenen Commit, den Wurzelbaum, die Bäume im
+angeforderten Pfad und den regulären Zielblob. Dazu fragt der native Git-Leser
+jeweils ausschließlich die vollständige Objektkennung über `cat-file --batch`
+ab. Nur die eindeutige Protokollantwort für genau diese fehlende Kennung bedeutet
+Abwesenheit. Vorhandene Objekte müssen Typ, Byteanzahl, vollständige Antwort und
+den hashgebundenen Originalinhalt erfüllen. Ein nicht vorhandener Commit, Baum
+oder Blob ergibt `None`; die H.3-Auswertung berichtet dann `missing` mit
+`target_missing` ohne Quellen- oder Auswahlhash. Fehlende Pfade werden ebenso
+behandelt. Unsichere Eltern, Gitlinks, Symlinks und verschachtelte Projekte sind
+Fehler, auch wenn der angeforderte Kindpfad nicht im Baum steht.
+
+Fehlerstatus, stderr, beschädigte Objekte, unvollständige/widersprüchliche
+Protokollantworten und Prozess-/Berechtigungsfehler werden nicht zu Abwesenheit
+umgedeutet. Alle vorhandenen Git-Sperren gegen Fetch, Ersatzobjekte, Hooks und
+indirekte oder ausgetauschte Objektspeicher gelten weiter. Erfolgreiche vorhandene
+Quellen werden anschließend über den bisherigen Code-Byte-Leser exakt an den
+Datensatz gebunden. Widersprüchliche Commit-/Blobangaben bleiben Fehler. Die
+Konstruktion einer nativen Git-Quelle sowie `read_bytes` und `read_code_reference`
+behalten ihre bisherigen strikten Verträge; die optionale Beobachtung erzeugt
+keine Git-Leseberechtigung aus einer fehlgeschlagenen Quellenkonstruktion. Der
+Bericht belegt die beobachtete gebundene Quelle, keine atomare Git-/Dateisystem-
+Transaktion und keine automatische Wiederholung eines fehlgeschlagenen Lesens.

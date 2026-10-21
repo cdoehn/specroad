@@ -114,3 +114,42 @@ class GitObjectSource(_GitObjectReader):
             if parent + '/specroad.json' in self._entries:
                 raise SafetyViolation('Nested project roots cannot be combined')
         return self._object('blob', oid)
+
+    def read_optional_bytes(self, path):
+        """Observe an existing binding's path, including missing Git objects.
+
+        The original constructor validated the complete immutable tree. Recheck
+        the commit and the requested path's trees before using that inventory.
+        A missing object/path yields None; unsafe paths and unreadable/corrupt
+        objects remain errors. This does not relax read_bytes or construction.
+        """
+        path = project_path(path)
+        commit = self._optional_object('commit', self.commit_id)
+        if commit is None:
+            return None
+        first = commit.split(b'\n', 1)[0]
+        if not first.startswith(b'tree '):
+            raise ModelError('git_commit_tree_missing')
+        tree = _oid(first[5:], width=len(self.commit_id))
+        if self._optional_object('tree', tree) is None:
+            return None
+        parts = path.split('/')
+        for index in range(1, len(parts)):
+            parent = '/'.join(parts[:index])
+            entry = self._entries.get(parent)
+            if entry is None:
+                return None
+            mode, kind, oid = entry
+            if mode != b'040000' or kind != b'tree':
+                raise SafetyViolation('Git path parents must be ordinary trees')
+            if parent + '/specroad.json' in self._entries:
+                raise SafetyViolation('Nested project roots cannot be combined')
+            if self._optional_object('tree', oid) is None:
+                return None
+        entry = self._entries.get(path)
+        if entry is None:
+            return None
+        mode, kind, oid = entry
+        if mode not in (b'100644', b'100755') or kind != b'blob':
+            raise SafetyViolation('Git input must be a regular blob')
+        return self._optional_object('blob', oid)

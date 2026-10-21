@@ -35,9 +35,9 @@ class CodeReferenceState:
 def assess_code_reference(source, reference):
     """Evaluate the first applicable H.3 row without updating the stored record.
 
-    This initial slice admits native working files and already bound Git trees.
-    Missing paths are observed explicitly. Unavailable/corrupt Git objects and
-    source/decoding/selector errors remain errors, never guessed currency.
+    Native working files and already bound Git trees are explicit capabilities.
+    Missing paths/objects are observed separately from source corruption or
+    read/decoding/selector errors, which remain errors, never guessed currency.
     """
     from ..query.git_source import GitObjectSource
 
@@ -56,15 +56,10 @@ def assess_code_reference(source, reference):
         if not missing:
             bound = read_code_reference(source, record)
     else:
-        try:
+        if 'git_commit' in value and value['git_commit'] != source.commit_id:
+            raise ModelError('code_reference_git_commit_mismatch', pointer='/git_commit')
+        if source.read_optional_bytes(value['path']) is not None:
             bound = read_code_reference(source, record)
-        except ModelError as error:
-            if error.reason != 'git_path_missing':
-                raise
-            # Recheck the original root/store capability and exact commit.
-            # The native constructor already verified its immutable tree;
-            # a fresh source must not silently admit a replacement root/store.
-            source._object('commit', source.commit_id)
 
     location = None
     diagnostics = []

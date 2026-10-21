@@ -3,6 +3,7 @@ import errno
 from hashlib import new as new_hash
 import os
 from pathlib import Path
+import re
 import stat
 import subprocess
 
@@ -52,7 +53,7 @@ def _storage(boundary, expected=None):
 class _GitObjectReader:
     """Execution mechanics used only by an explicitly bound Git source."""
 
-    def _run(self, *arguments):
+    def _run(self, *arguments, input_bytes=None):
         _storage(self._boundary, self._storage_identity)
         argv = [self._executable, '--no-pager', '--no-replace-objects',
                 '--no-lazy-fetch', '--no-optional-locks',
@@ -63,7 +64,8 @@ class _GitObjectReader:
                 '-c', 'maintenance.auto=false', '-c', 'protocol.allow=never',
                 '-c', 'core.warnAmbiguousRefs=true', *arguments]
         try:
-            completed = subprocess.run(argv, cwd=self.root, stdin=subprocess.DEVNULL,
+            standard_input = {'stdin': subprocess.DEVNULL} if input_bytes is None else {'input': input_bytes}
+            completed = subprocess.run(argv, cwd=self.root, **standard_input,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=_environment(),
                 shell=False, check=False)
         except OSError as error:
@@ -78,6 +80,33 @@ class _GitObjectReader:
         raw = self._run('cat-file', kind, oid)
         header = kind.encode('ascii') + b' ' + str(len(raw)).encode('ascii') + b'\0'
         digest = new_hash('sha1' if len(oid) == 40 else 'sha256', header + raw, usedforsecurity=False).hexdigest()
+        if digest != oid:
+            raise ModelError('git_object_identity_mismatch')
+        return raw
+
+    def _optional_object(self, kind, oid):
+        """Read one exact object, or the native protocol's explicit absence.
+
+        No nonzero exit, stderr, malformed reply or content/hash mismatch is
+        absence. The batch request is a full object ID, never a path/revision
+        expression. The usual local-only execution and store guards apply.
+        """
+        if (kind not in ('commit', 'tree', 'blob') or type(oid) is not str
+                or not re.fullmatch(r'(?:[0-9a-f]{40}|[0-9a-f]{64})', oid)):
+            raise ModelError('git_object_identity_invalid')
+        token = oid.encode('ascii')
+        output = self._run('cat-file', '--batch', input_bytes=token + b'\n')
+        if output == token + b' missing\n':
+            return None
+        header, separator, body = output.partition(b'\n')
+        if not separator or not body.endswith(b'\n'):
+            raise ModelError('git_object_response_invalid')
+        raw = body[:-1]
+        if header != token + b' ' + kind.encode('ascii') + b' ' + str(len(raw)).encode('ascii'):
+            raise ModelError('git_object_response_invalid')
+        object_header = kind.encode('ascii') + b' ' + str(len(raw)).encode('ascii') + b'\0'
+        digest = new_hash('sha1' if len(oid) == 40 else 'sha256',
+                          object_header + raw, usedforsecurity=False).hexdigest()
         if digest != oid:
             raise ModelError('git_object_identity_mismatch')
         return raw

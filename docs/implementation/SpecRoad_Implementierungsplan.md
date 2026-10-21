@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 541
-last_completed_plan_commit: 12.s.W
-next_plan_commit: 12.s.R
-last_completed_numbered_bundle: 367
+implementation_plan_commits_completed: 542
+last_completed_plan_commit: 12.s.R
+next_plan_commit: 12.s.C
+last_completed_numbered_bundle: 368
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15213,12 +15213,64 @@ Release-Erfolgsnachweis.
 
 #### 12.s.R – Make it Right
 
-- [ ] **12.s.R** · Position **542/900** · Voraussetzung: `12.s.W`.
+- [x] **12.s.R** · Position **542/900** · Voraussetzung: `12.s.W`.
 **Exakte Commit-Message:** `12.s.R feat(verification): Disjunkter Codezustand vervollständigen`
 
 **Vervollständigung:** Kein Treffer und mehrdeutiger Treffer sind unterschiedliche stale-Gründe.
 
 **Verhaltensabnahme:** Vollständige H.3-Matrix liefert genau einen Zustand pro Fall. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Vorbereitung (Bundle 368):** Die H.3-Matrix über zugelassene native
+Quellen ist vervollständigt. `GitObjectSource.read_optional_bytes(path)`
+prüft den gebundenen Commit, Wurzelbaum, die Bäume im angeforderten Pfad
+und den regulären Zielblob. Der vorhandene lokale Git-Leser erhält nur
+vollständige Objektkennungen über `cat-file --batch`. Ausschließlich die
+exakte native Antwort für ein fehlendes Objekt bedeutet Abwesenheit.
+Vorhandene Antworten müssen Typ, Länge, vollständige Protokollstruktur
+und die hashgebundene Objektidentität erfüllen. Ein fehlender Commit,
+Baum oder Blob ergibt `missing` mit `target_missing` und keinen Quellen-
+oder Auswahlhash. Fehlerstatus, stderr, Korruption, widersprüchliche
+Antworten und Ressourcenfehler werden nicht in Abwesenheit umgedeutet.
+
+Die ursprünglichen Root-/Objektspeicheridentitäten und alle Sperren gegen
+Fetch, Ersatzobjekte, Hooks, indirekte Speicher und unsichere Pfade bleiben
+maßgeblich. Auch fehlende Kindpfade hinter Symlinks, Gitlinks, gewöhnlichen
+Dateien oder verschachtelten Projekten ergeben keinen Zustandsbericht.
+Konstruktor und strikte Byte-Leser behalten ihre Fehlerverträge; es wird
+keine Quelle aus einer fehlgeschlagenen Zulassung synthetisiert. Der
+Dateizweig, vorhandene H.2-Suche, Vorrang gespeicherter Treffer, getrennte
+stale-Gründe und unveränderliche Ergebnisprojektion bleiben erhalten.
+Es gibt keine automatischen Wiederholungen, Referenzwrites oder Consumer-
+Integration und keine atomare Git-/Dateisystem-Transaktionszusage.
+
+946 gezielte Verhaltenstests in 20 Dateien bestanden mit vier parallelen
+Workern in 12,98 Sekunden, darunter 166 neue R-Tests. Die Matrix kombiniert
+alle Auswahlzustände mit passenden und abweichenden Rohdateihashes sowie
+Datei-, SHA-1- und SHA-256-Gitquellen. Sie prüft fehlende Commits/Bäume/Blobs
+für alle Referenzarten, beschädigte Objekte, fehlerhafte Batchantworten,
+unsichere Eltern, Berechtigungs-/Prozessfehler und unveränderte Daten.
+Leere, verkürzte, überlappende, Unicode- und Zeilenumbruchfälle behalten
+die unterschiedlichen Gründe `selection_missing` und `selection_ambiguous`.
+Frische Core-/PYZ-Prozesse prüfen den lokalen Git-Leseweg; ein eigener
+Promisor-/Helper-Köder bleibt unberührt.
+
+Die ersten beiden Läufe bestanden 942 beziehungsweise 944 Tests, scheiterten
+jedoch an neuen Auditprüfungen, die zuerst die anonyme Git-Eingabepipe und
+danach den von `subprocess` benötigten Nullgeräte-Handle als Dateischreibzugriff
+behandelten. Nach gezielter Korrektur dieser Testumgebung bestand die gesamte
+Auswahl. Reguläre Dateischreibzugriffe bleiben gesperrt und werden im frischen
+Prozess zusätzlich negativ geprüft. Die fehlgeschlagenen Läufe sind keine
+Erfolgsnachweise; Produktcode wurde dafür nicht abgeschwächt.
+
+Die vollständige Katalog-Collection bestätigt 16.037 Identitäten bei null
+Testkörpern. Alle 464 bisherigen Testdateien und 15.871 festen Testnummern
+bleiben erhalten; 166 neue Nummern sind angehängt. Geprüfter Source-SHA-256:
+`2f4bb6b6b7d47adb8ac73cab1d140fcf149323ac24a2802a13a8de06206740e6`.
+Der Entrypoint verlangt vor dem R-Commit Gruppe 1, Commitsequenz 76,
+mit 5.346 parallelen Tests. Erst danach wird 542/900 markiert.
+SR-TC-0345 und SR-TC-0495 bleiben bis zur Consumer-Integration ausdrücklich
+partiell. Die strukturelle Trennung folgt in 12.s.C, die Consumer-Integration
+in 12.t. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.s.C – Make it Clean
 

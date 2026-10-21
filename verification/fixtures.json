@@ -137,7 +137,8 @@
     "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1",
     "SR-FIX-CODE-LINE-SELECTION-v1",
     "SR-FIX-CODE-RELOCATION-v1",
-    "SR-FIX-CODE-REFERENCE-STATE-v1"
+    "SR-FIX-CODE-REFERENCE-STATE-v1",
+    "SR-FIX-CODE-REFERENCE-STATE-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -667,6 +668,10 @@
     "SR-FIX-CODE-REFERENCE-STATE-v1": {
       "provider": "tests/test_code_reference_state.py:assessed_file",
       "kind": "Owned native file and historical Git sources with explicit H.3 state expectations. Stored-position precedence despite outside changes, exact relocation, distinct absent/ambiguous selections, guarded missing paths and original root/store identities. Real descriptor mutations preserve the resulting state; fresh standard-library-only Core/PYZ audit guards forbid writes/processes/network. Initial W scope only: unavailable Git-object classification and full edge matrix remain for R; no consumer, full-suite or release claim."
+    },
+    "SR-FIX-CODE-REFERENCE-STATE-RIGHT-v1": {
+      "provider": "tests/test_code_reference_state_right.py:native_source,selection_record,path_objects",
+      "kind": "Owned H.3 matrix on native working files and SHA-1/SHA-256 Git sources. Original hashes are crossed with stored/unique/absent/ambiguous line/text/byte selections. Actual commit/tree/blob removal, corrupt loose objects, unsafe parents and immutable source identities are distinguished from injected batch protocol/process failures. Fresh Core/PYZ runtimes permit only the guarded local Git reads; an owned promisor/helper trap proves no fallback/fetch. No new source capability, consumer, full-suite or release claim."
     }
   }
 }
