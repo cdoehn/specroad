@@ -4,15 +4,27 @@
   "requirement_id": "SR-REQ-0127",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-TASK-DONE-REVIEW-v1"
+  ],
+  "preconditions": [
+    "Owned native Task and complete TargetModel with an explicit unconfigured project scope.",
+    "Passive synthetic human Done decisions plus an explicitly supplied trusted host ReviewVerifier. Test doubles do not authenticate actual humans.",
+    "Native transactional publication in an owned temporary project with ordinary independent PublicationAuthority."
+  ],
+  "steps": [
+    "Bind the complete original Task, ordered Done criteria, model sources and exact scope to an explicit status-update intention.",
+    "Require human confirmation of every criterion and a typed current host verification bound to context and full review hashes.",
+    "Publish only implementation_status through the ordinary writer with original hash/revision, one audit revision, unchanged unrelated files and historical retry.",
+    "Reject missing or partial confirmation, nonhuman claims, wrong bindings, revoked or failing host services and nonproject/configured scopes.",
+    "Recheck the human decision at the target gate and preserve the project on authorization refusal or live-source conflict; compare isolated Core/PYZ results."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erfüllt und durch Review oder Evidence nachgewiesen sind.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "13.b.W explicit human-reviewed Task implementation only. The passive review binds the full original Task and model, ordered criteria and complete unconfigured project scope. Every criterion must be confirmed by a human and an explicit trusted host verifier must return an exact current authenticated observation. Native status publication retains write authority, source/target rechecks, audit metadata, transaction recovery and historical retry. Generic mutation guards and broader Done proofs are not claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +40,47 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_task_implementation.py::test_changed_live_task_blocks_native_publication",
+    "tests/test_task_implementation.py::test_complete_human_review_prepares_only_the_guarded_status_update[blocked]",
+    "tests/test_task_implementation.py::test_complete_human_review_prepares_only_the_guarded_status_update[in_progress]",
+    "tests/test_task_implementation.py::test_complete_human_review_prepares_only_the_guarded_status_update[not_applicable]",
+    "tests/test_task_implementation.py::test_complete_human_review_prepares_only_the_guarded_status_update[not_started]",
+    "tests/test_task_implementation.py::test_every_stored_done_criterion_needs_explicit_confirmation[criteria0]",
+    "tests/test_task_implementation.py::test_every_stored_done_criterion_needs_explicit_confirmation[criteria1]",
+    "tests/test_task_implementation.py::test_every_stored_done_criterion_needs_explicit_confirmation[criteria2]",
+    "tests/test_task_implementation.py::test_every_stored_done_criterion_needs_explicit_confirmation[criteria3]",
+    "tests/test_task_implementation.py::test_every_stored_done_criterion_needs_explicit_confirmation[criteria4]",
+    "tests/test_task_implementation.py::test_host_cannot_replace_the_done_gate",
+    "tests/test_task_implementation.py::test_native_publication_authority_is_still_required",
+    "tests/test_task_implementation.py::test_native_writer_publishes_reviewed_implemented_with_one_revision_and_durable_retry",
+    "tests/test_task_implementation.py::test_nonhuman_claim_cannot_replace_a_human_done_review[ai]",
+    "tests/test_task_implementation.py::test_nonhuman_claim_cannot_replace_a_human_done_review[ci]",
+    "tests/test_task_implementation.py::test_nonhuman_claim_cannot_replace_a_human_done_review[tool]",
+    "tests/test_task_implementation.py::test_partial_or_configured_review_cannot_certify_global_task_status[configuration]",
+    "tests/test_task_implementation.py::test_partial_or_configured_review_cannot_certify_global_task_status[explicit]",
+    "tests/test_task_implementation.py::test_passive_human_label_requires_a_current_bound_host_verification[boolean]",
+    "tests/test_task_implementation.py::test_passive_human_label_requires_a_current_bound_host_verification[exception]",
+    "tests/test_task_implementation.py::test_passive_human_label_requires_a_current_bound_host_verification[missing]",
+    "tests/test_task_implementation.py::test_passive_human_label_requires_a_current_bound_host_verification[revoked]",
+    "tests/test_task_implementation.py::test_passive_human_label_requires_a_current_bound_host_verification[unauthenticated]",
+    "tests/test_task_implementation.py::test_passive_human_label_requires_a_current_bound_host_verification[wrong_context]",
+    "tests/test_task_implementation.py::test_passive_human_label_requires_a_current_bound_host_verification[wrong_review]",
+    "tests/test_task_implementation.py::test_rejected_review_is_not_a_positive_decision",
+    "tests/test_task_implementation.py::test_review_cannot_be_rebound_to_a_changed_model[other_artifact]",
+    "tests/test_task_implementation.py::test_review_cannot_be_rebound_to_a_changed_model[task]",
+    "tests/test_task_implementation.py::test_review_context_and_preparation_are_owned_not_truthy_or_serialized_authorities",
+    "tests/test_task_implementation.py::test_review_is_rechecked_at_the_target_gate_after_preparation",
+    "tests/test_task_implementation.py::test_review_must_match_the_exact_context_task_and_criteria[done_criteria_sha256]",
+    "tests/test_task_implementation.py::test_review_must_match_the_exact_context_task_and_criteria[input_sha256]",
+    "tests/test_task_implementation.py::test_review_must_match_the_exact_context_task_and_criteria[task_id]",
+    "tests/test_task_implementation.py::test_review_must_match_the_exact_context_task_and_criteria[task_sha256]",
+    "tests/test_task_implementation.py::test_review_preparation_has_identical_bindings_in_isolated_core_and_pyz[core]",
+    "tests/test_task_implementation.py::test_review_preparation_has_identical_bindings_in_isolated_core_and_pyz[pyz]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "13.b.R: common status/create/change-plan validation beyond the explicit implement_task API and further scope/robustness cases.",
+    "Evidence-backed Task Done assessment remains unsupported: normative Appendix L currently defines verification-context projections for Requirements, Verification Contracts and Tests, not Tasks. Do not invent a Task projection or promote unresolved Evidence to success.",
+    "No full SR-REQ-0127, SR-VER-0009, full-suite or release-readiness completion is claimed."
   ]
 }

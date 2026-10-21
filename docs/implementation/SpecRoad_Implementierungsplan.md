@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 549
-last_completed_plan_commit: 13.a.C
-next_plan_commit: 13.b.W
-last_completed_numbered_bundle: 375
+implementation_plan_commits_completed: 550
+last_completed_plan_commit: 13.b.W
+next_plan_commit: 13.b.R
+last_completed_numbered_bundle: 376
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15617,12 +15617,14 @@ Release-Erfolgsnachweis. SR-TC-0119 bis SR-TC-0121 bleiben partiell.
 
 #### 13.b.W – Let it Work
 
-- [ ] **13.b.W** · Position **550/900** · Voraussetzung: `13.a.C`.
+- [x] **13.b.W** · Position **550/900** · Voraussetzung: `13.a.C`.
 **Exakte Commit-Message:** `13.b.W feat(roadmap): Task-Umsetzung und Done-Nachweis aufbauen`
 
 **Umsetzung:** Übergang zu implemented an erfüllte und durch Review/Evidence belegte Done-Kriterien binden.
 
 **Verhaltensabnahme:** Tatsächlicher passender Nachweis erlaubt den Statuswechsel.
+
+**W-Abnahmeumfang (Bundle 376):** Expliziter nativer `TaskDoneContext`-/`prepare_task_implementation`-/`implement_task`-Pfad für einen menschlichen Done-Review. Der Review bindet den vollständigen ursprünglichen Task, alle geordneten Done-Kriterien, Modellquellen und den exakten unkonfigurierten Projektscope. Jede Bedingung muss ausdrücklich bestätigt und der Review durch einen separat übergebenen vertrauenswürdigen Host-Prüfer als menschlich und aktuell verifiziert sein. Der bestehende Writer prüft Basis/Ziel und Schreibautorität; das Done-Gate prüft den Review erneut. Allgemeine Status-/Create-/Change-Plan-Sperren folgen in 13.b.R. Ein Task-Evidence-Kontexthash wird nicht erfunden: Anhang L definiert bisher nur Requirements, Verification Contracts und Tests. Dieser W-Pfad behauptet keine vollständige Anforderungs- oder Releaseabnahme.
 
 #### 13.b.R – Make it Right
 
