@@ -412,3 +412,42 @@ den ausdrücklich übergebenen Bewertungszeitpunkt und die native menschliche
 Waiverprüfung. Nur er erzeugt den unveränderten kanonischen Bericht mit
 seinen Hashes und SRV176-Diagnosen. Ergebnisse, Fehlerverträge, Schreibfreiheit
 und sämtliche bestehenden W-/R-Testoracles bleiben erhalten.
+
+## Coverage und explizite Leseeingänge (12.p.W)
+
+`prepare_verification_read_input(model, evaluation, configuration_id=...,
+inputs=..., input_roles=..., evaluated_at=...)` berechnet die native Aggregation
+einmal über den gelieferten Gesamtprojektbestand. Optionale `waiver_reviews`
+und `waiver_verifier` behalten die bestehenden Grenzen. Der unveränderliche
+`VerificationReadInput` bindet die vollständigen Modellquellen, Projektkonfiguration,
+Konfigurationsauswahl, den vollständigen kanonischen Descriptor und die explizite
+UTC-Bewertungszeit. Er liest weder Uhr noch Dateien. Ein fehlender Descriptor
+bleibt `None`; er erzeugt keinen erfolgreichen Nachweis.
+
+`assess_verification_coverage(model, verification)` liefert Requirement-Zeilen,
+Gesamtsummen, `by_kind` und `by_dimension` aus genau diesem Eingang. Dimensionen
+stammen aus den deklarierten Evidence-Slots, nicht aus Testnamen. Jeder
+Pflichtschlüssel erhält getrennte aktive Läufe, Rohresultate, Freshness und
+Gründe. Evidence-Zähler zählen Beobachtungen je Pflichtschlüssel, keine eindeutigen
+externen Ausführungen. Ein Subject-Waiver bleibt von einem fehlgeschlagenen
+Evidence-Detail unterscheidbar. Fehlende Auswahl erhält die unabhängigen
+Pflichtschlüssel ohne erfundene Läufe. Die vollständige Aggregation bleibt
+mit ihren Bindungen und nicht ausgewählten Beobachtungen enthalten.
+
+`select_query` und `query_records` akzeptieren optional `verification=...`.
+Der `NormalizedQuery` muss denselben vollständigen `evaluation`-Descriptor
+enthalten; originale Records, Projektkonfiguration und `configuration_id`
+müssen exakt passen. `verification_plan_status` und `verification_result`
+lassen sich getrennt filtern. Das berechnete Ergebnis kann projiziert und
+vor der Seitenauswahl sortiert werden. Es wird niemals in gespeicherte Records
+eingetragen. `evaluation_binding` steht außerhalb des unveränderten sechsfachen
+Query-Datenobjekts und fließt in `inputs_sha256` ein. Ohne berechneten Eingang
+bleiben die bisherigen Providerfehler erhalten.
+
+`resolve_builtin_view(model, 'verification', verification=...)` liefert dieselbe
+gebundene Coverage als maschinenlesbare Viewdaten. Rendering und Release-Readiness
+werden nicht ausgeführt. Dieses W-Profil unterstützt den gelieferten Gesamtbestand
+mit optionaler Konfiguration. Release-Auflösung, SRX-Graphabfragen mit berechneten
+Werten, CLI-Einbindung und dauerhafte Work-Fortsetzung bleiben offen und werden
+nicht stillschweigend als unterstützt behandelt. Die Berichte bestätigen weder
+Live-Dateivollständigkeit noch externe Testausführung oder Freigabe.

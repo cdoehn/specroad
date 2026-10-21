@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 531
-last_completed_plan_commit: 12.o.C
-next_plan_commit: 12.p.W
-last_completed_numbered_bundle: 357
+implementation_plan_commits_completed: 532
+last_completed_plan_commit: 12.p.W
+next_plan_commit: 12.p.R
+last_completed_numbered_bundle: 358
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14769,12 +14769,43 @@ Fortschrittsmarker 531/900. Dies ist kein Vollsuite- oder Release-Erfolgsnachwei
 
 #### 12.p.W – Let it Work
 
-- [ ] **12.p.W** · Position **532/900** · Voraussetzung: `12.o.C`.
+- [x] **12.p.W** · Position **532/900** · Voraussetzung: `12.o.C`.
 **Exakte Commit-Message:** `12.p.W feat(verification): Coverage und Evaluation-Eingaben aufbauen`
 
 **Umsetzung:** Coverageachsen und expliziten evaluationsgebundenen Query-/Viewinput bereitstellen.
 
 **Verhaltensabnahme:** Gleiche Auswahl liefert gleiche fachliche Coverage je Requirement, Kind und Dimension.
+
+**Vorbereiteter W-Zwischenstand (Bundle 358):** Ein expliziter, unveränderlicher
+Bewertungseingang bindet den gesamten gelieferten Projektbestand, Konfiguration,
+vollständigen Evaluation-Descriptor, Eingangsprüfung, Auswahl und UTC-Zeit an
+die native Ergebnisaggregation. Coverage weist Requirement-, Kind- und deklarierte
+Dimensionsmengen, Pflichtprüfungen, aktive Läufe, Rohresultate und Freshness
+getrennt aus. Der synchrone Query-Kern erhält getrennte Filter für gespeicherten
+Planstatus und berechnetes Ergebnis sowie Projektion/Sortierung; die Verification-
+View verwendet dieselbe gebundene Coverage. Die sechs Query-Datenfelder bleiben
+unverändert, die Bewertungsbindung steht separat. Fremde Quellen, Konfigurationen
+oder Descriptoren werden abgelehnt. Kein Livebestand, Releaseerfolg oder externe
+Ausführung wird behauptet. Release-Auflösung, berechnete SRX-Graphabfragen,
+CLI und dauerhafte Work-Fortsetzung bleiben offen. Dieses Bundle enthält nur
+12.p.W; 12.p.R und 12.p.C werden nicht begonnen.
+
+**Gezielter Dev-Nachweis (Bundle 358):** 1.981/1.981 Verhaltenstests aus
+31 neuen beziehungsweise betroffenen Dateien bestanden parallel mit vier
+Workern in 128,69 Sekunden. Enthalten sind 44 neue Coverage-/Query-/Viewfälle,
+darunter gleiche Mengen bei umgeordneten Quellen, acht deklarierte Dimensionen,
+getrennte Ergebnis-/Freshnessachsen, exakte Eingangsbindung, schreibfreie
+Auswertung und isolierte Core/PYZ-Gleichheit. Die bisherigen 457 Testdateien
+und 15.424 Testnummern bleiben unverändert. Eine ungültige ID der neuen
+gemeinsamen Fixture wurde nach einem fehlgeschlagenen Vorbereitungslauf
+korrigiert; dieser erste Lauf ist kein Erfolgsnachweis. Die vollständige
+Collection-/Katalogprüfung bestätigt 15.468 Testidentitäten bei null Testkörpern.
+Geprüfter Source-SHA-256:
+`691d7b5ff72f0ac92fdc3efae4ae85a9f7eb0b0b4907e04f911ca0356e2d6fb2`.
+Apply prüft vor dem eigenen Commit ausschließlich Gruppe 0 aus drei festen
+Gruppen (Sequenz 66; 5.156 Tests), parallel. Erst nach diesem Gate setzt der
+Entrypoint den Fortschrittsmarker auf 532/900. Dies ist kein Vollsuite- oder
+Release-Erfolgsnachweis.
 
 #### 12.p.R – Make it Right
 

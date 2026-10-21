@@ -4,19 +4,32 @@
   "requirement_id": "SR-REQ-0139",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0010",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-VERIFICATION-COVERAGE-v1"
+  ],
+  "preconditions": [
+    "12.p.W: Explicit typed native TargetModel, descriptor or null, actual supplied input bytes/roles, optional configuration and UTC evaluation time. Evidence retains original results and context binding; synthetic waiver provenance is explicitly supplied."
+  ],
+  "steps": [
+    "12.p.W: Compute one owned read input, then compare exact requirement/kind/dimension sets and counts. Keep result/freshness and Subject/check priorities separate. Require source-order invariance, detached values, exact model/query bindings, independent plan/result filters, sorting before paging, same view coverage, explicit provider refusals, no IO and Core/PYZ equivalence."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Coverage MUSS mindestens positive Fälle, negative Fälle, Grenzwerte, Ausnahmen, zeitliches Verhalten, Fehlerzustände, Security-Aspekte, Performance-Aspekte, aktuelles Ergebnis und Evidence-Aktualität getrennt ausweisen können.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.p.W implements deterministic requirement, kind and declared-dimension coverage over the same bound native aggregation. Original results, freshness and required-key observations remain independent; no implicit selection or successful Evidence is invented. The synchronous query accepts exact bound evaluation input for separate stored plan/computed result filters, projections and sort keys. Query provenance stays outside its six-field data; the verification view shares the same coverage. Unbound sources or contexts reject, and missing providers retain their errors."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/aggregation",
+    "/by_dimension",
+    "/by_kind",
+    "/requirements",
+    "/summary",
+    "/totals"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +41,53 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_verification_coverage.py::test_absent_evaluation_preserves_required_dimensions_without_inventing_selection",
+    "tests/test_verification_coverage.py::test_bound_waiver_and_current_failure_remain_distinct_coverage_axes",
+    "tests/test_verification_coverage.py::test_builtin_view_uses_the_same_bound_coverage_without_rendering_or_release_approval",
+    "tests/test_verification_coverage.py::test_changed_model_rejects_a_previously_computed_input[coverage]",
+    "tests/test_verification_coverage.py::test_changed_model_rejects_a_previously_computed_input[view]",
+    "tests/test_verification_coverage.py::test_computed_input_does_not_silently_admit_unintegrated_srx_or_release_queries",
+    "tests/test_verification_coverage.py::test_computed_sort_precedes_paging_and_works_without_projecting_the_sort_key[asc-SR-REQ-11111111111111111111111111]",
+    "tests/test_verification_coverage.py::test_computed_sort_precedes_paging_and_works_without_projecting_the_sort_key[desc-SR-REQ-00000000000000000000000000]",
+    "tests/test_verification_coverage.py::test_configuration_exclusion_remains_visible_and_never_becomes_covered_evidence",
+    "tests/test_verification_coverage.py::test_coverage_and_computed_query_agree_in_isolated_core_and_pyz[core]",
+    "tests/test_verification_coverage.py::test_coverage_and_computed_query_agree_in_isolated_core_and_pyz[pyz]",
+    "tests/test_verification_coverage.py::test_coverage_keeps_current_result_and_evidence_freshness_separate[failed-failed-freshness1]",
+    "tests/test_verification_coverage.py::test_coverage_keeps_current_result_and_evidence_freshness_separate[missing-incomplete-freshness3]",
+    "tests/test_verification_coverage.py::test_coverage_keeps_current_result_and_evidence_freshness_separate[passed-passed-freshness0]",
+    "tests/test_verification_coverage.py::test_coverage_keeps_current_result_and_evidence_freshness_separate[stale-stale-freshness2]",
+    "tests/test_verification_coverage.py::test_coverage_keeps_current_result_and_evidence_freshness_separate[unknown-incomplete-freshness4]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[boundary]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[error]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[exception]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[negative]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[performance]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[positive]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[security]",
+    "tests/test_verification_coverage.py::test_declared_dimensions_keep_independent_exact_check_sets[timing]",
+    "tests/test_verification_coverage.py::test_missing_descriptor_in_query_remains_explicit_incomplete_and_bound",
+    "tests/test_verification_coverage.py::test_non_subject_records_have_no_fabricated_verification_result",
+    "tests/test_verification_coverage.py::test_owned_inputs_cannot_be_changed_through_report_copies",
+    "tests/test_verification_coverage.py::test_passive_descriptor_values_do_not_trigger_import_or_file_access[bad1]",
+    "tests/test_verification_coverage.py::test_passive_descriptor_values_do_not_trigger_import_or_file_access[evaluation.json]",
+    "tests/test_verification_coverage.py::test_passive_descriptor_values_do_not_trigger_import_or_file_access[{}]",
+    "tests/test_verification_coverage.py::test_plan_status_and_computed_result_are_independent_query_filters",
+    "tests/test_verification_coverage.py::test_query_identity_binds_evaluation_time_even_for_the_same_results",
+    "tests/test_verification_coverage.py::test_query_rejects_foreign_binding_even_when_no_rows_are_requested[configuration]",
+    "tests/test_verification_coverage.py::test_query_rejects_foreign_binding_even_when_no_rows_are_requested[evaluation]",
+    "tests/test_verification_coverage.py::test_query_rejects_foreign_binding_even_when_no_rows_are_requested[missing_record]",
+    "tests/test_verification_coverage.py::test_query_rejects_foreign_binding_even_when_no_rows_are_requested[project]",
+    "tests/test_verification_coverage.py::test_query_rejects_foreign_binding_even_when_no_rows_are_requested[raw_configuration]",
+    "tests/test_verification_coverage.py::test_query_rejects_foreign_binding_even_when_no_rows_are_requested[record]",
+    "tests/test_verification_coverage.py::test_requirement_and_kind_totals_do_not_count_contracts_as_requirements",
+    "tests/test_verification_coverage.py::test_requirement_without_contract_remains_in_totals_and_cannot_pass",
+    "tests/test_verification_coverage.py::test_same_selection_and_reordered_sources_produce_identical_coverage_and_binding",
+    "tests/test_verification_coverage.py::test_untyped_input_cannot_create_coverage_view_or_query_success[True]",
+    "tests/test_verification_coverage.py::test_untyped_input_cannot_create_coverage_view_or_query_success[fake0]",
+    "tests/test_verification_coverage.py::test_untyped_input_cannot_create_coverage_view_or_query_success[passed]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "12.p.W covers supplied whole-project inputs with optional configuration. Release resolution, computed SRX graph queries, CLI and durable Work continuation remain open. 12.p.R will complete missing-selection/test/evidence/freshness distinctions and continuation bindings; 12.p.C will clean the shared structure. No live inventory, external execution, full verification or release pass is claimed."
   ]
 }

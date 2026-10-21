@@ -130,7 +130,8 @@
     "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1",
     "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1",
     "SR-FIX-VERIFICATION-AGGREGATION-v1",
-    "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1"
+    "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1",
+    "SR-FIX-VERIFICATION-COVERAGE-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -632,6 +633,10 @@
     "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1": {
       "provider": "tests/test_verification_aggregation_right.py:pair,evidence_for",
       "kind": "Literal mixed-run decision tables over synthetic native model/descriptor inputs. Current, failed, stale, unresolved, missing and mixed observations within/across keys; explicit plan status, scope, UTC waiver review, immutable human replacement bindings and native conflicts. Unknown subject contexts remain unresolved. Isolated Core/PYZ, source preservation and no live inventory, external execution or release approval claim."
+    },
+    "SR-FIX-VERIFICATION-COVERAGE-v1": {
+      "provider": "tests/test_verification_coverage.py:coverage_case,prepare",
+      "kind": "Synthetic native whole-project model and explicit descriptor/input/time bindings. Two requirement kinds, eight declared dimensions, exact independent expected counts, current/failed/stale/missing observations and valid waived failure. Immutable coverage, configured exclusion, bound computed query filtering/sorting/paging, source mismatch rejection, no IO and isolated Core/PYZ. No external execution, release or live inventory claim."
     }
   }
 }

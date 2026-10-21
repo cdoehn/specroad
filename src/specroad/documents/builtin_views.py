@@ -130,28 +130,41 @@ def _traceability(records, references):
     return rows, {key: edges[key] for key in sorted(edges)}
 
 
-def resolve_builtin_view(model, view_name):
-    """Resolve specification composition or stored requirement traceability.
+def resolve_builtin_view(model, view_name, *, verification=None):
+    """Resolve specification, stored traceability or explicitly bound coverage.
 
     A full project's specification always requires its unique active primary.
     Missing/invalid primary data never implicitly opts into the fallback API.
-    Verification and roadmap providers are deliberately unavailable until their
-    actual calculations exist; stored status strings cannot stand in for them.
+    Verification requires a computed input for the exact supplied snapshot.
+    Roadmap remains unavailable; stored statuses cannot stand in for results.
     """
     from ..changes.target_model import TargetModel, _default_scope
     if type(model) is not TargetModel:
         raise ModelError('document_target_model_required')
     if type(view_name) is not str or view_name not in ('specification', 'traceability', 'verification', 'roadmap'):
         raise BuiltinViewError('builtin_view_not_supported', pointer='/view_name', exit_code=2)
-    if view_name in ('verification', 'roadmap'):
+    if view_name == 'roadmap' or (view_name == 'verification' and verification is None):
         raise BuiltinViewProviderError(view_name)
+    if verification is not None and view_name != 'verification':
+        raise BuiltinViewError('builtin_verification_input_not_applicable', pointer='/view_name')
     model = model.snapshot()
     data = {'view_name': view_name, 'source_kind': 'supplied_project',
         'schema_version': MODEL_SCHEMA_VERSION, 'profiles': list(model.profile.profile_chain),
         'project_id': model.binding.project_id, 'scope_descriptor': _default_scope(),
         'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
         'input_sha256': model._sources_sha256, 'fallback': False}
-    if view_name == 'specification':
+    if view_name == 'verification':
+        from ..verification.coverage import assess_verification_coverage
+        coverage = assess_verification_coverage(model, verification)
+        data.update(mode='evaluated_requirement_coverage',
+            selection_scope_descriptor=verification.data['scope_descriptor'],
+            summary=verification.summary, coverage=coverage.data, coverage_sha256=coverage.sha256,
+            rows=coverage.data['requirements'], row_count=coverage.data['totals']['requirements'],
+            verification_evaluated=True, computed_reports={**_computed_reports(),
+                'verification': {'status': 'computed', 'reason': None,
+                    'required_milestone': 'M12', 'result': coverage.data}},
+            validation_scope='supplied_whole_project_requirement_coverage')
+    elif view_name == 'specification':
         roles = assess_document_roles(model)
         primary = roles.require_primary_document()
         composed = compose_document(model, primary['artifact_id'])

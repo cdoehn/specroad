@@ -71,8 +71,10 @@ class QuerySelection:
     artifact_ids: tuple
     _items: bytes
     _configuration_binding: bytes
+    _evaluation_binding: bytes
 
-    def __init__(self, query, inputs_sha256, source_count, ids, items, configuration_binding=None):
+    def __init__(self, query, inputs_sha256, source_count, ids, items, configuration_binding=None,
+                 evaluation_binding=None):
         object.__setattr__(self, 'query_sha256', query.sha256)
         object.__setattr__(self, 'inputs_sha256', inputs_sha256)
         object.__setattr__(self, 'source_count', source_count)
@@ -82,6 +84,11 @@ class QuerySelection:
         object.__setattr__(self, '_items', json.dumps(items, ensure_ascii=False,
                                                     allow_nan=False).encode('utf-8'))
         object.__setattr__(self, '_configuration_binding', canonical_json_bytes(configuration_binding))
+        object.__setattr__(self, '_evaluation_binding', canonical_json_bytes(evaluation_binding))
+
+    @property
+    def evaluation_binding(self):
+        return json.loads(self._evaluation_binding)
 
     @property
     def configuration_binding(self):
@@ -104,7 +111,7 @@ class QuerySelection:
         return 'supplied_query_inventory_only'
 
 
-def select_query(records, query, *, project, configuration=None, configuration_id=None):
+def select_query(records, query, *, project, configuration=None, configuration_id=None, verification=None):
     """OR within a value group; AND across groups and all SRX expressions.
 
     No file access, cache hints, callbacks, implicit evaluation or early paging.
@@ -115,11 +122,17 @@ def select_query(records, query, *, project, configuration=None, configuration_i
         raise ModelError('normalized_query_required')
     data = query.data
     for name in ('verification_result', 'release'):
-        if name in data['filters']:
+        if name in data['filters'] and (name == 'release' or verification is None):
             raise ModelError('query_filter_provider_required', pointer='/filters/' + name)
-    if data['evaluation'] is not None:
+    if data['evaluation'] is not None and verification is None:
         raise ModelError('query_evaluation_provider_required')
     records = _sequence(records)
+    computed, evaluation_binding = {}, None
+    if verification is not None:
+        from ..verification.read_input import checked_query_input
+        computed = checked_query_input(verification, records, query, project,
+                                       configuration, configuration_id)
+        evaluation_binding = verification.summary
     selected_configuration, eligible = None, None
     if configuration_id is not None:
         from ..configurations import resolve_configuration, evaluate_applicability
@@ -142,6 +155,7 @@ def select_query(records, query, *, project, configuration=None, configuration_i
         'configuration': configuration, 'relations': []}, rule_id='query').data
     input_hash = canonical_json_sha256({'project': roots['project'],
         'configuration': roots['configuration'],
+        **({} if evaluation_binding is None else {'verification': evaluation_binding}),
         'sources': sorted(({'id': record.identity.id,
                            'sha256': sha256(record.source_bytes).hexdigest()} for record in records),
                           key=lambda item: item['id'])})
@@ -159,12 +173,14 @@ def select_query(records, query, *, project, configuration=None, configuration_i
                               ('verification_plan_status', VERIFICATION_PLAN_STATUSES)):
             if name in artifact and (type(artifact[name]) is not str or artifact[name] not in choices):
                 raise ModelError('query_stored_status_invalid', pointer='/' + name)
-    if any(tokens and tokens[0] == 'verification_result' for _, tokens in pointers):
+    if verification is None and any(tokens and tokens[0] == 'verification_result' for _, tokens in pointers):
         raise ModelError('query_verification_provider_required', pointer='/select')
     selected = []
     for identifier in graph.artifact_ids:
         current = graph.candidate_roots(roots, identifier, rule_id='query')
         artifact = current['artifact']
+        if identifier in computed:
+            artifact = {**artifact, 'verification_result': computed[identifier]}
         kinds = {view['type'] for view in current['relations']}
         matches = True
         for name, values in data['filters'].items():
@@ -195,4 +211,5 @@ def select_query(records, query, *, project, configuration=None, configuration_i
         selected.append((artifact['artifact_type'], identifier, item))
     selected.sort(key=lambda item: (item[0], item[1]))
     return QuerySelection(query, input_hash, len(records),
-                          [item[1] for item in selected], [item[2] for item in selected], selected_configuration)
+                          [item[1] for item in selected], [item[2] for item in selected],
+                          selected_configuration, evaluation_binding)

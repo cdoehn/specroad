@@ -23,12 +23,14 @@ class QueryPage:
     source_count: int
     _encoded: bytes
     _configuration_binding: bytes
+    _evaluation_binding: bytes
 
     def __init__(self, selection, items, offset, limit):
         object.__setattr__(self, 'query_sha256', selection.query_sha256)
         object.__setattr__(self, 'inputs_sha256', selection.inputs_sha256)
         object.__setattr__(self, 'source_count', selection.source_count)
         object.__setattr__(self, '_configuration_binding', selection._configuration_binding)
+        object.__setattr__(self, '_evaluation_binding', selection._evaluation_binding)
         data = {'items': items, 'total': selection.total, 'offset': offset,
                 'limit': limit, 'returned': len(items),
                 'truncated': offset + len(items) < selection.total}
@@ -48,6 +50,10 @@ class QueryPage:
     def configuration_binding(self):
         return json.loads(self._configuration_binding)
 
+    @property
+    def evaluation_binding(self):
+        return json.loads(self._evaluation_binding)
+
 
 def _scalar_key(value, pointer):
     if value is MISSING:
@@ -63,7 +69,7 @@ def _scalar_key(value, pointer):
     raise ModelError('query_sort_value_not_scalar', pointer=pointer)
 
 
-def query_records(records, query, *, project, configuration=None, configuration_id=None):
+def query_records(records, query, *, project, configuration=None, configuration_id=None, verification=None):
     """Filter all supplied sources, sort all matches, then form the exact page.
 
     Sort values come from original fields, independently of projection. All
@@ -80,13 +86,20 @@ def query_records(records, query, *, project, configuration=None, configuration_
         pointer = '/sort/' + str(index)
         key = item['key']
         tokens = parse_pointer(key, rule_id='query-sort', at=pointer + '/key') if key.startswith('/') else (key,)
-        if tokens and tokens[0] == 'verification_result':
+        if verification is None and tokens and tokens[0] == 'verification_result':
             raise ModelError('query_verification_provider_required', pointer=pointer)
         ordering.append((tokens, item['direction'] == 'desc', pointer))
     selection = select_query(records, query, project=project, configuration=configuration,
-                             configuration_id=configuration_id)
+                             configuration_id=configuration_id, verification=verification)
     ids = set(selection.artifact_ids)
     artifacts = {record.identity.id: record.data for record in records if record.identity.id in ids}
+    if verification is not None:
+        # select_query has verified this owned input against all original bytes.
+        for subject in verification.data['aggregation']['subjects']:
+            identifier = subject['subject_artifact_id']
+            if identifier in artifacts:
+                artifacts[identifier] = {**artifacts[identifier],
+                    'verification_result': subject['verification_result']}
     rows = []
     for item in selection.items:
         artifact = artifacts[item['id']]
