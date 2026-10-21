@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 558
-last_completed_plan_commit: 13.d.C
-next_plan_commit: 13.e.W
-last_completed_numbered_bundle: 384
+implementation_plan_commits_completed: 559
+last_completed_plan_commit: 13.e.W
+next_plan_commit: 13.e.R
+last_completed_numbered_bundle: 385
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15948,12 +15948,53 @@ Schritt. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 13.e.W – Let it Work
 
-- [ ] **13.e.W** · Position **559/900** · Voraussetzung: `13.d.C`.
+- [x] **13.e.W** · Position **559/900** · Voraussetzung: `13.d.C`.
 **Exakte Commit-Message:** `13.e.W feat(roadmap): Release-Scope und externe Pflichtabhängigkeiten aufbauen`
 
 **Umsetzung:** Release, Milestones und darauf geplante Artefakte als Seedmenge auflösen und Pflichtnachbarn einbeziehen.
 
 **Verhaltensabnahme:** Externe verpflichtende Abhängigkeit wird als solche erkannt.
+
+**Vorbereiteter W-Zustand (Bundle 385):** Der native, ausschließlich lesende
+Provider `resolve_release_scope` bindet ein vorhandenes `TargetModel` und
+explizite `ClosureBindings` an ihre tatsächlichen Quell- und Ressourcenbytes.
+Release, zugeordnete Milestones, eingehend darauf geplante Artefakte und Tasks
+mit `part_of` zum Release oder Milestone bilden die native Seedmenge. Die
+vorhandene geschlossene `core-closure-v1` löst anschließend Pflichtnachbarn
+und die ausdrücklich beobachteten Ressourcen-/Reviewabhängigkeiten auf;
+ein eigener Closurealgorithmus wird nicht eingeführt.
+
+Alle gespeicherten direkten `depends_on`-Kanten der Closuremitglieder bleiben
+mit Richtung, Relations-ID, Quellpfad, JSON-Pointer und Quellen-/Zielhash
+sichtbar. „Extern“ bezeichnet ein Ziel außerhalb der ausgewählten
+Release-Seedmenge, auch wenn es durch die Closure aufgenommen wurde.
+Pflichtketten, parallele Kanten und Zyklen erzeugen keine erfundenen Kanten.
+Konfigurationsausschlüsse verwenden die bestehende Admission; ein
+ausgeschlossener Pflichtnachbar oder ausgewählter Release ergibt keinen
+erfolgreich verkürzten Release-Scope.
+
+Das Ergebnis bindet Descriptor und Closurebeobachtung getrennt. Deren Hashes
+sind ausdrücklich kein normativer ScopeHash und keine Readinessentscheidung.
+Live-Vollständigkeit, Provider-Authentisierung, Verifikation, Done, Freigabe
+und Schreibbefugnis werden nicht behauptet. `SR-TC-0126` und `SR-TC-0408`
+bleiben `partial`; 13.e.R/C, die Gates in 13.f und View/Work in 13.h bleiben
+getrennte spätere Schritte. Alle bestehenden Testdateien bleiben unverändert;
+27 neue stabile Testidentitäten werden hinten angehängt.
+
+**Gezielter W-Nachweis:** 480 Verhaltenstests bestanden parallel auf vier
+Workern in 116,03 Sekunden: 27 neue Release-Scope-Fälle sowie bestehende
+Planungs-/Roadmaptests, Seed-, starke und geschlossene Closuretests und die
+Verifikations-Scoperegressionsfälle. Die vollständige Collection bestätigt
+16.500 Identitäten bei null ausgeführten Testkörpern. 475 bestehende Testdateien
+und alle 16.473 bisherigen Testnummern bleiben unverändert. Ein erster Lauf
+meldete einen Fehler im neuen Fixtureadapter für die Sprachregistrierungsbindung;
+dieser Fehlversuch ist kein Erfolgsbeleg. Nach Korrektur des Adapters bestand die
+vollständige gezielte Auswahl erneut.
+
+Apply prüft vor diesem W-Commit ausschließlich Gruppe 0 mit 5.500 Tests
+parallel (Commitfolge 93). Erst danach folgen der Fortschrittsmarker 559/900
+und `13.e.R` als nächster Schritt. Dies ist ein Teiltestnachweis und kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 13.e.R – Make it Right
 

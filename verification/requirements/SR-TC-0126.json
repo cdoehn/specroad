@@ -4,19 +4,33 @@
   "requirement_id": "SR-REQ-0126",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELEASE-SCOPE-v1"
+  ],
+  "preconditions": [
+    "Native owned TargetModel plus explicit ClosureBindings for precisely the same complete supplied source and resource bytes."
+  ],
+  "steps": [
+    "Resolve Release seeds with native incoming planning membership and expand the existing closed core closure.",
+    "Compare stored direct depends_on edges from every closure artifact and classify targets outside Release seed membership as external.",
+    "Check exact source/target hashes, edge direction and pointers, configuration exclusions, changed or missing provider inputs and isolated Core/PYZ parity."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Readiness-Prüfung MUSS direkte `depends_on`-Abhängigkeiten des Release-Scopes einbeziehen und außerhalb des Releases liegende Pflichtabhängigkeiten melden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/seed_artifact_ids",
+    "/scope_resolution",
+    "/required_dependencies",
+    "/external_required_dependencies",
+    "/scope_resolution_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +42,36 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_release_scope.py::test_changed_external_source_rebinds_observation_without_authorizing_it",
+    "tests/test_release_scope.py::test_configuration_filters_optional_seeds_and_is_bound_to_the_observation",
+    "tests/test_release_scope.py::test_cycles_parallel_edges_and_transitive_dependencies_are_not_rewritten",
+    "tests/test_release_scope.py::test_empty_release_reports_only_itself_and_never_a_readiness_pass",
+    "tests/test_release_scope.py::test_excluded_required_dependency_fails_instead_of_silently_shortening_closure",
+    "tests/test_release_scope.py::test_excluded_selected_release_is_not_an_empty_success",
+    "tests/test_release_scope.py::test_explicit_profile_and_current_review_inputs_are_followed_without_authentication_claim",
+    "tests/test_release_scope.py::test_external_required_edges_keep_actual_direction_ids_pointers_and_bytes",
+    "tests/test_release_scope.py::test_missing_explicit_dependency_observations_cannot_be_assumed_empty[reviews]",
+    "tests/test_release_scope.py::test_missing_explicit_dependency_observations_cannot_be_assumed_empty[uses]",
+    "tests/test_release_scope.py::test_model_without_explicit_scope_bindings_cannot_publish_a_scope",
+    "tests/test_release_scope.py::test_observation_is_owned_deterministic_and_cannot_be_used_as_a_boolean_gate",
+    "tests/test_release_scope.py::test_reachable_inactive_dependencies_remain_visible[rejected]",
+    "tests/test_release_scope.py::test_reachable_inactive_dependencies_remain_visible[retired]",
+    "tests/test_release_scope.py::test_reached_other_release_does_not_import_its_incoming_assignments",
+    "tests/test_release_scope.py::test_release_provider_preserves_project_files_and_does_not_reopen_them",
+    "tests/test_release_scope.py::test_release_scope_has_identical_native_core_and_pyz_contracts[core]",
+    "tests/test_release_scope.py::test_release_scope_has_identical_native_core_and_pyz_contracts[pyz]",
+    "tests/test_release_scope.py::test_release_seeds_include_milestones_schedules_and_task_memberships",
+    "tests/test_release_scope.py::test_scope_inventory_must_match_exact_model_bytes_and_resource_inventory[omission]",
+    "tests/test_release_scope.py::test_scope_inventory_must_match_exact_model_bytes_and_resource_inventory[resources]",
+    "tests/test_release_scope.py::test_scope_inventory_must_match_exact_model_bytes_and_resource_inventory[source]",
+    "tests/test_release_scope.py::test_selected_release_must_exist_in_the_bound_model",
+    "tests/test_release_scope.py::test_shared_release_assignment_is_internal_without_changing_stored_edges",
+    "tests/test_release_scope.py::test_unbound_models_are_rejected[None]",
+    "tests/test_release_scope.py::test_unbound_models_are_rejected[unbound1]",
+    "tests/test_release_scope.py::test_unbound_models_are_rejected[unbound2]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "13.e.R/C completes robustness and structure of this supplied-model provider. Release readiness gates and authenticated currentness belong to 13.f; no positive readiness, live inventory, normative ScopeHash or full-suite evidence is claimed."
   ]
 }

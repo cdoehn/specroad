@@ -98,9 +98,11 @@
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
+    "SR-FIX-RELEASE-SCOPE-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
+    "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
     "SR-FIX-ROADMAP-EXPLANATION-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",
     "SR-FIX-ROADMAP-PROJECTION-v1",
@@ -146,8 +148,7 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects",
-    "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1"
+    "verification-context-subjects"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -705,6 +706,10 @@
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
       "provider": "tests/test_roadmap_explanation_right.py:project",
       "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim."
+    },
+    "SR-FIX-RELEASE-SCOPE-v1": {
+      "provider": "tests/test_release_scope.py:release_values",
+      "kind": "Owned native multi-Release/Milestone model with incoming schedules and Task memberships, internal and external stored depends_on edges, component chains and cycles. Exact byte-bound inventory and explicit synthetic resource-use/current-review observations, configuration admission, immutable reports, no filesystem writes and isolated Core/PYZ parity. Seed membership remains distinct from the closed native closure; no live completeness, authenticated providers, normative ScopeHash, readiness or approval claim."
     }
   }
 }
