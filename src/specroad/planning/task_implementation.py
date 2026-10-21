@@ -1,10 +1,12 @@
 """Explicit human Done review and native Task implementation publication.
 
-This first path binds a human decision to the complete original Task, supplied
+This path binds a human decision to the complete original Task, supplied
 model and unconfigured project scope. It does not invent a Task verification
 context hash: Appendix L currently defines that projection for other types.
 Review labels are passive input; only the explicitly supplied trusted host
 verifier can confirm human origin and current validity. No JSON imports code.
+Core requires the reserved Done service on every implemented Task; the native
+review service certifies only its own subject, not other labelled Tasks.
 """
 from dataclasses import dataclass
 import re
@@ -21,7 +23,7 @@ from ..storage.domain_artifact import DomainArtifact
 from ..storage.json_syntax import parse_json_object
 from ..validation import ModelGate, ReviewVerifier, ReviewVerification
 
-_GATE = 'extension:task-done'
+_GATE = 'task_done'
 _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
 
@@ -188,7 +190,7 @@ def implement_task(model, prepared, *, actor, planned_at, change_plan_id,
         raise ModelError('typed_task_implementation_required')
     if type(gates) not in (tuple, list) or any(type(gate) is not ModelGate for gate in gates):
         raise ModelError('task_implementation_gates_required')
-    if any(gate.gate_id == _GATE for gate in gates):
+    if any(gate.gate_id in (_GATE, 'extension:task-done') for gate in gates):
         raise ModelError('task_done_gate_override')
     model = model.snapshot()
     context = TaskDoneContext(model, prepared.data['task_id'],
@@ -204,6 +206,16 @@ def implement_task(model, prepared, *, actor, planned_at, change_plan_id,
         return context.dependency_result({key: list(context.all_ids) for key in context.subjects})
 
     def check(target):
+        # One review certifies only its own Task, never an unreviewed neighbour
+        # already labelled implemented in the supplied project. The reserved
+        # hook is required by Core on every implemented Task, including drafts.
+        missing = [key for key in target.subjects if key != context.data['task_id']]
+        if missing:
+            return target.result([{'reason': 'task_done_review_missing',
+                'artifact_id': key, 'severity': 'error'} for key in missing])
+        if target.configuration_data is not None:
+            return target.result([{'reason': 'task_done_unconfigured_project_scope_required',
+                                   'severity': 'error'}])
         _confirmed(context, prepared._review, prepared._verifier)
         folded = prepare_change_lifecycle(model.artifacts, [operation.data],
             **metadata, source_files=model.source_files, **model.reservations)
@@ -213,7 +225,7 @@ def implement_task(model, prepared, *, actor, planned_at, change_plan_id,
             return target.result([{'reason': 'task_done_target_changed', 'severity': 'error'}])
         return target.result()
 
-    gate = ModelGate(_GATE, 'bound-task-done-v1', dependencies, check, resources)
+    gate = ModelGate(_GATE, 'bound-task-done-v2', dependencies, check, resources)
     return update_artifact(model, operation, actor=actor, planned_at=planned_at,
         change_plan_id=change_plan_id, transaction_id=transaction_id, authority=authority,
         request_id=request_id, gates=(*gates, gate), strict=strict, package_files=package_files)

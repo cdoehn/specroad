@@ -26,6 +26,8 @@ def _applies(hook, data, profile):
         return kind in ("evidence", "verification", "test")
     if hook == "review_currentness":
         return kind == "relation_review" or (kind == "requirement" and maturity == "approved")
+    if hook == "task_done":
+        return kind == "task" and data["implementation_status"] == "implemented"
     if hook == "profile_lint":
         return profile is not None and bool(profile.data["merge"]["lint_rules"])
     if hook == "language_policy":

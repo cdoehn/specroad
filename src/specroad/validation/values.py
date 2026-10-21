@@ -16,6 +16,7 @@ VALIDATION_VERSION = "model-validation-v1"
 HOOK_NAMES = (
     "lifecycle", "baseline_integrity", "evidence_currentness", "review_currentness",
     "profile_lint", "language_policy", "document_model", "external_resources", "configuration",
+    "task_done",
 )
 
 

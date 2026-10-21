@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 550
-last_completed_plan_commit: 13.b.W
-next_plan_commit: 13.b.R
-last_completed_numbered_bundle: 376
+implementation_plan_commits_completed: 551
+last_completed_plan_commit: 13.b.R
+next_plan_commit: 13.b.C
+last_completed_numbered_bundle: 377
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15628,12 +15628,14 @@ Release-Erfolgsnachweis. SR-TC-0119 bis SR-TC-0121 bleiben partiell.
 
 #### 13.b.R – Make it Right
 
-- [ ] **13.b.R** · Position **551/900** · Voraussetzung: `13.b.W`.
+- [x] **13.b.R** · Position **551/900** · Voraussetzung: `13.b.W`.
 **Exakte Commit-Message:** `13.b.R feat(roadmap): Task-Umsetzung und Done-Nachweis vervollständigen`
 
 **Vervollständigung:** Bloßes Setzen eines Status oder KI-Behauptung ohne Nachweis zurückweisen.
 
 **Verhaltensabnahme:** Fehlender, stale oder falscher Scope verhindert implemented. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Abnahmeumfang (Bundle 377):** Das reservierte Modell-Gate `task_done` ist für jeden `implemented`-Task verpflichtend, auch im Draft. Fehlende Dienste oder ungebundene beziehungsweise unvollständige Beobachtungen ergeben keinen erfolgreichen Modell-/Zielnachweis. Die gemeinsamen Writer-Grenzen sperren damit allgemeine Updates, Creates, gespeicherte Change-Pläne und No-ops mit unbelegtem Zielstatus. Der menschliche W-Review liefert das echte Gate für genau seinen Task; er bestätigt keine weiteren bereits als `implemented` markierten Tasks. Änderungen an Taskinhalt, Kriterien oder gebundenem Modell/Konfiguration entwerten die ursprüngliche Review-Bindung. Eine Rücknahme des unbelegten Status bleibt möglich. Die vorhandenen W-Tests bleiben erhalten. Der Host registriert vertrauenswürdige Prüfdienste ausdrücklich; JSON-Status und KI-Prosa registrieren keine Dienste. Die bereits in W benannte Task-Evidence-Grenze bleibt bestehen; keine vollständige Requirement-, Vollsuite- oder Releaseabnahme. 13.b.C wird erst im Folgeschritt begonnen.
 
 #### 13.b.C – Make it Clean
 
