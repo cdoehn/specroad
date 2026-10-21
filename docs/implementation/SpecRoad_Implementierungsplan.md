@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 554
-last_completed_plan_commit: 13.c.R
-next_plan_commit: 13.c.C
-last_completed_numbered_bundle: 380
+implementation_plan_commits_completed: 555
+last_completed_plan_commit: 13.c.C
+next_plan_commit: 13.d.W
+last_completed_numbered_bundle: 381
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15753,7 +15753,7 @@ erklären weder einen Vollsuite-Erfolg noch eine Releasefreigabe.
 
 #### 13.c.C – Make it Clean
 
-- [ ] **13.c.C** · Position **555/900** · Voraussetzung: `13.c.R`.
+- [x] **13.c.C** · Position **555/900** · Voraussetzung: `13.c.R`.
 **Exakte Commit-Message:** `13.c.C refactor(roadmap): Roadmap aus dem einen Fachmodell bereinigen`
 
 **Bereinigung:** Roadmapprojektion von visueller Timeline/Tabellendarstellung trennen.
@@ -15761,6 +15761,28 @@ erklären weder einen Vollsuite-Erfolg noch eine Releasefreigabe.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Ausschnitt (Bundle 381):** Die Ableitung gespeicherter Roadmapfelder,
+quellgebundener Beziehungen und direkter Planungsgruppen liegt in einem
+privaten, darstellungsunabhängigen Projektionsmodul. Die öffentliche API behält
+den nativen Snapshot, die gemeinsamen Planungsprüfungen und das unveränderliche
+Ergebnisformat. Die ausgelagerten Anweisungen, Feldlisten, Sortierungen,
+Fehlerreihenfolge und Ergebnisbildung bleiben strukturell unverändert.
+
+Alle W-/R-Testdateien und stabilen Testnummern bleiben bytegleich erhalten.
+Die vorhandenen Grenzen zu Built-in-Views bleiben bestehen; Timeline-/
+Tabellendarstellung, Erklärungspfade und spätere View-/Workintegration werden
+in diesem C-Zustand nicht ergänzt. Die Katalognachweise behalten ihren
+begrenzten Provider-Scope als `partial`.
+
+**Gezielter C-Nachweis:** Alle 339 ausgewählten Verhaltenstests bestanden
+parallel auf vier Workern: unveränderte Roadmap-W-/R-Fälle, Planungsrelationen,
+Domänenschemata und bestehende Built-in-View-Verträge. Die vollständige
+Collection bestätigt weiterhin 16.383 Identitäten bei null ausgeführten
+Testkörpern. Es gibt keine neuen oder geänderten Testnummern. Apply prüft vor
+dem C-Commit die fällige Gruppe 2 mit 5.461 Tests parallel. Diese Teiltests
+sind keine Vollsuite- oder Releasefreigabe. 13.d.W beginnt erst in einem
+nachfolgenden Auftrag.
 
 <a id="step-13-d"></a>
 ### 13.d – Roadmap erklären
