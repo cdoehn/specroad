@@ -7,24 +7,41 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-ROADMAP-EXPLANATION-v1"
+    "SR-FIX-ROADMAP-EXPLANATION-v1",
+    "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1"
   ],
   "preconditions": [
-    "Native owned TargetModel with explicit trace_depth, complete supplied relation inventory and independently declared source/path expectations."
+    "Native owned TargetModel with explicit trace_depth, complete supplied relation inventory and independently declared source/path expectations.",
+    "Owned configured project with selected profiles and all current artifact/resource bytes; clear project-read preflight."
   ],
   "steps": [
     "Invoke explain_roadmap for actual Tasks, Releases and Milestones on owned supplied inputs.",
     "Compare exact shortest origin paths, original/inverse edge directions, assignment source pointers, direct dependencies and risk/assumption paths.",
-    "Check depth limits, malformed input refusals, byte preservation, detached results and fresh isolated Core/PYZ parity."
+    "Check depth limits, malformed input refusals, byte preservation, detached results and fresh isolated Core/PYZ parity.",
+    "Invoke roadmap explain via the native live reader, CLI, structured request and isolated Core/PYZ processes.",
+    "Compare complete independently declared path/node sets and explicit missing schedule/implementation observations; validate the published closed result schema.",
+    "Reject stale sources, membership changes, operational blockers and unsafe inputs without publishing paths, writing state or performing recovery."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abhängigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erklären.",
-    "scope": "13.d.W implements a pure native explanation provider. Stored inverse membership/implementation links and forward addresses/refines/derived_from links produce all shortest context paths within explicitly configured trace_depth. Direct scheduling, ownership, dependencies and mitigations remain separate source-bound observations; no inherited schedule or sibling-origin shortcuts. Empty goal/requirement paths stay explicit. This is partial SR-REQ-0124 coverage; public command and full R/C contracts remain open."
+    "scope": "13.d.W/R: all shortest stored membership/implementation/origin paths within explicit trace_depth, with direct assignment/dependency/risk observations and exact source provenance. Missing schedule and Task subject references remain explicit for context artifacts. Public roadmap explain reads the configured inventory using native preflight and final byte/membership checks. No guessed origins, inferred scheduling, scope closure, applicability, atomic snapshot, readiness or write/approval authority."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/result/explanation/paths",
+    "/result/explanation/missing_planning_references",
+    "/result/explanation_sha256",
+    "/result/coverage/source_bytes_rechecked"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -67,11 +84,69 @@
     "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[None]",
     "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[SR-TASK-00000000000000000000000033]",
     "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[identifier1]",
-    "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[label]"
+    "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[label]",
+    "tests/test_roadmap_explanation_right.py::test_capture_cannot_silently_switch_to_a_new_configuration",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[addition-evaluated]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[addition-loaded]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[configuration-evaluated]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[configuration-loaded]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[deletion-evaluated]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[deletion-loaded]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[profile-evaluated]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[profile-loaded]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[source-evaluated]",
+    "tests/test_roadmap_explanation_right.py::test_changed_inventory_never_publishes_stale_explanations[source-loaded]",
+    "tests/test_roadmap_explanation_right.py::test_command_schema_and_capabilities_advertise_only_implemented_read_contracts",
+    "tests/test_roadmap_explanation_right.py::test_direct_cli_structured_and_isolated_runtimes_share_one_machine_contract[core]",
+    "tests/test_roadmap_explanation_right.py::test_direct_cli_structured_and_isolated_runtimes_share_one_machine_contract[pyz]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_depth_fails_without_coercion_or_a_default[-1]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_depth_fails_without_coercion_or_a_default[1.5]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_depth_fails_without_coercion_or_a_default[3]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_depth_fails_without_coercion_or_a_default[True]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_requests_are_rejected_before_loading_a_project[tail0]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_requests_are_rejected_before_loading_a_project[tail1]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_requests_are_rejected_before_loading_a_project[tail2]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_requests_are_rejected_before_loading_a_project[tail3]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_requests_are_rejected_before_loading_a_project[tail4]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_unreachable_sources_prevent_a_complete_answer[cycle]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_unreachable_sources_prevent_a_complete_answer[goal_schema]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_unreachable_sources_prevent_a_complete_answer[malformed]",
+    "tests/test_roadmap_explanation_right.py::test_invalid_unreachable_sources_prevent_a_complete_answer[missing_target]",
+    "tests/test_roadmap_explanation_right.py::test_live_results_are_detached_and_later_calls_observe_reassignment",
+    "tests/test_roadmap_explanation_right.py::test_missing_depth_is_reported_before_inventory_loading",
+    "tests/test_roadmap_explanation_right.py::test_missing_membership_and_implementation_are_explicit_without_inferred_origins",
+    "tests/test_roadmap_explanation_right.py::test_missing_planning_references_are_limited_to_context_and_use_actual_links",
+    "tests/test_roadmap_explanation_right.py::test_operational_blockers_do_not_load_or_publish_or_recover[journal-after]",
+    "tests/test_roadmap_explanation_right.py::test_operational_blockers_do_not_load_or_publish_or_recover[journal-before]",
+    "tests/test_roadmap_explanation_right.py::test_operational_blockers_do_not_load_or_publish_or_recover[writer-after]",
+    "tests/test_roadmap_explanation_right.py::test_operational_blockers_do_not_load_or_publish_or_recover[writer-before]",
+    "tests/test_roadmap_explanation_right.py::test_origin_and_dependency_cycles_terminate_without_returning_cyclic_walks",
+    "tests/test_roadmap_explanation_right.py::test_public_explanation_has_the_complete_independent_node_and_path_set[0]",
+    "tests/test_roadmap_explanation_right.py::test_public_explanation_has_the_complete_independent_node_and_path_set[1]",
+    "tests/test_roadmap_explanation_right.py::test_public_explanation_has_the_complete_independent_node_and_path_set[2]",
+    "tests/test_roadmap_explanation_right.py::test_public_explanation_has_the_complete_independent_node_and_path_set[3]",
+    "tests/test_roadmap_explanation_right.py::test_public_explanation_has_the_complete_independent_node_and_path_set[8]",
+    "tests/test_roadmap_explanation_right.py::test_read_failures_remain_environment_errors_without_fabricated_paths",
+    "tests/test_roadmap_explanation_right.py::test_read_only_project_requires_no_state_directory_lock_entropy_or_process",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[approval]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[depth]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[digest]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[extra]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[missing]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[normative]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[provenance]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[purpose]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[rechecked]",
+    "tests/test_roadmap_explanation_right.py::test_result_schema_rejects_missing_provenance_or_false_authority[revision]",
+    "tests/test_roadmap_explanation_right.py::test_soft_limits_do_not_drop_branches_parallel_edges_or_paths",
+    "tests/test_roadmap_explanation_right.py::test_symlink_sources_are_rejected_without_reading_or_modifying_foreign_bytes",
+    "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[None]",
+    "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[SR-TASK-00000000000000000000000033]",
+    "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[identifier1]",
+    "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[label]"
   ],
   "open_items": [
-    "Public roadmap explain command binding and live read/preflight/result contracts remain open within 13.d.",
-    "R completes missing-link and error/completeness boundaries; C isolates the explanation policy from reusable graph primitives.",
-    "No configured applicability, transitive Release closure, readiness, View/Work integration, full-suite or release acceptance is claimed."
+    "13.d.C still owns structural cleanup; W/R behavior remains the immutable acceptance baseline.",
+    "View/Work integration, Release closure/readiness, full-suite and release acceptance remain outside this evidence."
   ]
 }

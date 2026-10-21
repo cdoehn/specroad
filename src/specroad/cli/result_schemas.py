@@ -159,6 +159,45 @@ def _fields(schema_id):
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
                 'validation_scope': {'const': 'relation_references_canonical_storage_and_hierarchies_only'},
                 'atomic_snapshot': {'const': False}})})
+    if schema_id == 'roadmap-explain-v1':
+        identity = _object({'id': nonempty, 'id_scheme': nonempty, 'artifact_type': nonempty, 'id_prefix': nonempty})
+        path = _object({'artifacts': _array(identity),
+            'relations': _array(_object({'relation_id': nonempty, 'id_scheme': nonempty})),
+            'inverse': _array(boolean)})
+        stored = _object({field: True for field in ('title', 'name', 'statement', 'description',
+            'objective', 'decision', 'priority', 'target_date', 'probability', 'impact',
+            'risk_status', 'validation_status')}, required=())
+        explanation = _object({'format_version': {'const': 'roadmap-explanation-v1'},
+            'generated': {'const': True}, 'normative': {'const': False}, 'project_id': nonempty,
+            'scope_descriptor': {'const': {'scope_version': 'scope-v1', 'scope_kind': 'project',
+                'selector': {}, 'configuration_id': None, 'closure_profile': 'core-closure-v1',
+                'boundary_policy': 'closed'}},
+            'input_sha256': sha, 'model_root_sha256': sha, 'roadmap_sha256': sha,
+            'artifact_id': nonempty, 'depth': count,
+            'traversal_policy': {'const': 'roadmap-explanation-links-v1'},
+            'context_path_semantics': {'const': 'all_shortest_membership_implementation_and_origin_paths'},
+            'neighbor_path_semantics': {'const': 'direct_stored_edges_and_assignment_milestone_parent'},
+            'validation_scope': {'const': 'supplied_planning_origins_risks_and_stored_relations'},
+            **{key: strings for key in ('context_ids', 'goal_ids', 'requirement_ids',
+                                       'assumption_ids', 'dependency_ids', 'risk_ids')},
+            'open_items': _array({'enum': ['no_requirement_path_within_depth', 'no_goal_path_within_depth']}),
+            'missing_planning_references': _array(_object({'artifact_id': nonempty, 'reason': {'enum':
+                ['no_explicit_schedule', 'no_requirement_or_decision_implementation']}})),
+            'paths': _array(_object({'purpose': {'enum': ['context', 'assignment', 'parent', 'dependency', 'risk']},
+                'target_id': nonempty, 'path': path})),
+            'artifacts': _array(_object({'artifact_id': nonempty, 'artifact_type': nonempty,
+                'revision': {'type': 'integer', 'minimum': 1}, 'path': nonempty,
+                'source_sha256': sha, 'record_sha256': sha, 'stored': stored})),
+            'relations': _array(_object({'relation_id': nonempty, 'type': nonempty,
+                'source_id': nonempty, 'target_id': nonempty, 'path': nonempty, 'pointer': nonempty,
+                'source_sha256': sha, 'relation_sha256': sha})),
+            **{name: {'const': False} for name in ('project_files_verified', 'full_validation_passed',
+                'applicability_evaluated', 'done_evidence_evaluated', 'verification_evaluated',
+                'release_closure_evaluated', 'release_readiness_evaluated', 'write_authorized', 'approval_granted')}})
+        return _object({'format_version': {'const': '1.0.0'}, 'explanation': explanation,
+            'explanation_sha256': sha, 'coverage': _object({'scope': {'const': 'configured_project_inventory'},
+                'source_count': count, 'artifact_count': count, 'input_sha256': sha,
+                'source_bytes_rechecked': {'const': True}, 'atomic_snapshot': {'const': False}})})
     if schema_id == 'configuration-evaluation-v1':
         identity = _object({'id': nonempty, 'id_scheme': nonempty, 'artifact_type': nonempty, 'id_prefix': nonempty})
         path = _object({'artifacts': _array(identity),

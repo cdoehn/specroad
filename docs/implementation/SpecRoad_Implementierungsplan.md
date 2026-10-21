@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 556
-last_completed_plan_commit: 13.d.W
-next_plan_commit: 13.d.R
-last_completed_numbered_bundle: 382
+implementation_plan_commits_completed: 557
+last_completed_plan_commit: 13.d.R
+next_plan_commit: 13.d.C
+last_completed_numbered_bundle: 383
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15836,12 +15836,62 @@ Releasefreigabe. 13.d.R beginnt erst in einem nachfolgenden Auftrag.
 
 #### 13.d.R – Make it Right
 
-- [ ] **13.d.R** · Position **557/900** · Voraussetzung: `13.d.W`.
+- [x] **13.d.R** · Position **557/900** · Voraussetzung: `13.d.W`.
 **Exakte Commit-Message:** `13.d.R feat(roadmap): Roadmap erklären vervollständigen`
 
 **Vervollständigung:** Fehlende Planungsbezüge als offen statt erfundener Herkunft behandeln.
 
 **Verhaltensabnahme:** Erwartete Knoten-/Pfadmengen sind vollständig und read-only. Die W-Nachweise bleiben zusätzlich grün.
+
+**W-Übernahme bestätigt:** Das maßgebliche
+`specroad-apply_Result_194511_1021_55694b.zip` bestätigt Bundle 382 mit sauberem
+Apply-Commit `e209af529752595b781b0d2634f45c744e4a1435`. Gruppe 0 bestand
+5.472 Tests parallel auf vier Workern. Snapshot, Commitinhalt und Testbindung
+stimmen mit der zuvor übergebenen W-Phase überein.
+
+**R-Ausschnitt (Bundle 383):** `specroad roadmap explain <ID>` und
+`planning.explain_project_roadmap(root, artifact_id)` ergänzen den vorhandenen
+nativen Provider um den öffentlichen lesenden Zugriff. CLI, strukturierte
+Requests und Core/PYZ benutzen denselben Handler. Projekt-Preflight und die
+bestehende Inventur binden Konfiguration, Artefakte, Profile und referenzierte
+Ressourcen; abschließende Inventur-/Byteprüfungen verwerfen zwischenzeitliche
+Änderungen. Writer-/Recovery-Sperren, ungültige oder unsichere Quellen bleiben
+Fehler ohne Erklärungspayload, Reparatur oder Zustandsdateien.
+
+Der geschlossene Ergebnisvertrag `roadmap-explain-v1` enthält die native
+Erklärung, deren Inhalts-SHA und die ausdrücklich nicht atomare Live-Beobachtung.
+Fehlende `scheduled_for`-Kanten und fehlende Requirement-/Decision-Umsetzungslinks
+werden für tatsächlich erreichte Kontextartefakte ausdrücklich aufgeführt.
+Eltern, Geschwister, Titel und Freitext erzeugen weiterhin keine Zuordnung oder
+Herkunft. Die vollständigen kürzesten Pfadmengen innerhalb der konfigurierten
+Tiefe behalten Originalidentitäten, Richtungen und Quellen. Softlimits
+schneiden keine fachlichen Pfade ab.
+
+Die neuen Verhaltenstests verwenden eine unabhängig vorgegebene vollständige
+Task-Pfad-/Knotenmenge, verzweigte Graphen, fehlende Planungsbezüge, Zyklen,
+Schemafehler und veränderte Eingaben vor der Veröffentlichung. Schreibgeschützte
+Projekte funktionieren ohne `.specroad`-Anlage, Prozessstart, Writer-Lock oder
+Entropiebezug. Vorhandene W-Testbytes bleiben erhalten. Vier bestehende
+maschinelle Inventarprüfungen ergänzen ausschließlich den neuen Befehl bzw.
+Ergebnisschemaeintrag; keine frühere Erwartung wird abgeschwächt.
+
+Die native Erklärung bleibt eine Beobachtung gelieferter Eingaben; nur der
+Live-Wrapper bestätigt die erneute Prüfung der tatsächlich gelesenen Bytes.
+Weder diese Prüfung noch offene Planungshinweise bewerten Anwendbarkeit,
+Release-Closure, Done, Evidenz oder Readiness. C sowie die spätere View-/Work-
+Integration werden in diesem Bundle nicht begonnen; `SR-TC-0124` bleibt bis
+zur eigenen C-Abnahme als `partial` gekennzeichnet.
+
+**Gezielter R-Nachweis:** 635 Verhaltenstests bestanden parallel auf vier
+Workern in 144,13 Sekunden, darunter alle 59 neuen R-Tests und die bisherigen
+W-Abnahmen. Ein zunächst fehlender Eintrag des neuen Befehls in der bestehenden
+Budget-Vertragsliste wurde ergänzt; der erste fehlgeschlagene Lauf bleibt kein
+Erfolgsbeleg. Der abschließende Lauf prüft den vollständig korrigierten Stand.
+Die vollständige Collection-/Katalogprüfung bestätigt 16.473 Identitäten bei
+null ausgeführten Testkörpern. 59 neue Nummern schließen an die unveränderten
+16.414 bestehenden Nummern an. Apply prüft vor diesem R-Commit ausschließlich
+Gruppe 1 mit 5.491 Tests parallel. Diese Teiltests belegen keine Vollsuite oder
+Releasefreigabe. 13.d.C beginnt erst in einem nachfolgenden Auftrag.
 
 #### 13.d.C – Make it Clean
 

@@ -157,6 +157,12 @@ def explain_roadmap(model, artifact_id):
         'risk_ids': sorted({path.artifacts[-1].id for purpose, path in paths if purpose == 'risk'}),
         'open_items': [name for name, found in (
             ('no_requirement_path_within_depth', requirements), ('no_goal_path_within_depth', goals)) if not found],
+        'missing_planning_references': [
+            {'artifact_id': key, 'reason': reason}
+            for reason, missing in (
+                ('no_explicit_schedule', facts['unscheduled_ids']),
+                ('no_requirement_or_decision_implementation', facts['tasks_without_subject_links']))
+            for key in missing if key in context_ids],
         'paths': [{'purpose': purpose, 'target_id': path.artifacts[-1].id,
                    'path': path.as_dict()} for purpose, path in paths],
         'artifacts': [{**bindings[key], 'stored': {field: values[key][field]

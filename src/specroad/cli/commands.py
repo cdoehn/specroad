@@ -115,6 +115,11 @@ def _why(invocation):
     return why_command(invocation)
 
 
+def _roadmap_explain(invocation):
+    from ..planning.project_explanation import roadmap_explain_command
+    return roadmap_explain_command(invocation)
+
+
 def _impact(invocation):
     from ..query.impact import impact_command
     return impact_command(invocation)
@@ -213,6 +218,20 @@ def builtin_registry() -> CommandRegistry:
                               'CORE_SECURITY', 'SRV001', 'SRV002'),
             work=WorkContract('artifact_why', ('project_configuration', 'current_project_artifacts',
                                              'complete_relation_references', 'configured_trace_depth'))),
+    ), CommandSpec(
+        command_id='roadmap.explain', words=('roadmap', 'explain'), command_class=CommandClass.READ_ONLY,
+        preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.NONE,
+        handler=_roadmap_explain, requires_project=True, positionals=(PositionalSpec('id'),),
+        options=(OptionSpec('--project', takes_value=True),
+                 OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                 OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('roadmap-explain-v1', {'command_id': 'roadmap.explain',
+            'arguments': {'id': 'SR-GOAL-' + '0' * 26}, 'options': {'--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT',
+                              'CORE_SECURITY', 'SRV001', 'SRV002'),
+            work=WorkContract('roadmap_explanation', ('project_configuration', 'configured_project_inventory',
+                'complete_relation_references', 'configured_trace_depth'))),
     ), CommandSpec(
         command_id='impact', words=('impact',), command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.NONE,
@@ -353,7 +372,7 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
             work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
     ))
-    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate'}
+    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain'}
     return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
         budget_policy_version='runtime-budget-v2') if command.command_id in readers else command
         for command in commands))
