@@ -4,19 +4,34 @@
   "requirement_id": "SR-REQ-0141",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0010",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1"
+  ],
+  "preconditions": [
+    "12.p.R: Explicit native model and actual product bytes/roles, descriptor or null, UTC evaluation time and independent native scope observations. Native Work input bytes and hash are independently trusted; waiver evidence/verifier is resupplied at resume."
+  ],
+  "steps": [
+    "12.p.R: Compare exact independent gap identities/counts for missing contract/test/selection/evidence and stale observations, active versus historical/superseded runs, configured exclusions and invalid references. Resolve actual Release scope and stored selection precedence; reject conflicts. Preserve full descriptor/time/scope/hash through native Work storage and fresh Core/PYZ process; recompute and reject changed inputs. Compare incremental query pages and provenance to the synchronous path without model writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine Release-Coverage MUSS Requirements ohne Verification Contract, ohne Testbezug, ohne Evidence und mit veralteter Evidence getrennt ausweisen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.p.R provides separate overlapping gap sets without fabricated runs, excludes inapplicable requirements from gaps and retains native raw evidence dispositions. Release coverage uses native source-bound closure and stored selection precedence; conflicts yield code 6, unstored external selection is provisional only. Native Work storage preserves inert full descriptor/time/scope/hash, and resume recomputes from original model and input bytes with independently supplied trust. QueryWork computed selection/sort/page preserves provenance, without claiming a durable sorting cursor."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/by_release",
+    "/evaluation",
+    "/evaluation_sha256",
+    "/evidence_dispositions",
+    "/gaps",
+    "/input_binding_status",
+    "/selection_status",
+    "/verification_input_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +43,64 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_verification_coverage_right.py::test_absent_or_partial_selection_never_fabricates_missing_runs[False]",
+    "tests/test_verification_coverage_right.py::test_absent_or_partial_selection_never_fabricates_missing_runs[True]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[failed-False]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[failed-True]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[missing-False]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[missing-True]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[not_measured-False]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[not_measured-True]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[passed-False]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[passed-True]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[stale-False]",
+    "tests/test_verification_coverage_right.py::test_contract_test_evidence_and_freshness_gaps_are_independent[stale-True]",
+    "tests/test_verification_coverage_right.py::test_excluded_requirements_stay_in_totals_without_false_structural_gaps",
+    "tests/test_verification_coverage_right.py::test_failed_input_binding_cannot_be_hidden_by_complete_evidence_axes",
+    "tests/test_verification_coverage_right.py::test_incremental_query_keeps_full_evaluation_input_and_exact_computed_page[0-0-10000]",
+    "tests/test_verification_coverage_right.py::test_incremental_query_keeps_full_evaluation_input_and_exact_computed_page[0-0-1]",
+    "tests/test_verification_coverage_right.py::test_incremental_query_keeps_full_evaluation_input_and_exact_computed_page[0-1-10000]",
+    "tests/test_verification_coverage_right.py::test_incremental_query_keeps_full_evaluation_input_and_exact_computed_page[0-1-1]",
+    "tests/test_verification_coverage_right.py::test_incremental_query_keeps_full_evaluation_input_and_exact_computed_page[3-7-10000]",
+    "tests/test_verification_coverage_right.py::test_incremental_query_keeps_full_evaluation_input_and_exact_computed_page[3-7-1]",
+    "tests/test_verification_coverage_right.py::test_invalid_computed_query_input_cannot_create_spool_files",
+    "tests/test_verification_coverage_right.py::test_invalid_dangling_test_reference_keeps_native_rejection_instead_of_partial_success",
+    "tests/test_verification_coverage_right.py::test_invalid_stored_release_descriptor_does_not_fall_back_to_explicit_selection",
+    "tests/test_verification_coverage_right.py::test_native_work_store_and_fresh_process_preserve_saved_selection_and_coverage[core]",
+    "tests/test_verification_coverage_right.py::test_native_work_store_and_fresh_process_preserve_saved_selection_and_coverage[pyz]",
+    "tests/test_verification_coverage_right.py::test_partially_present_evidence_keeps_missing_and_stale_sets_beside_success",
+    "tests/test_verification_coverage_right.py::test_release_coverage_uses_native_scope_and_stored_selection[False-False]",
+    "tests/test_verification_coverage_right.py::test_release_coverage_uses_native_scope_and_stored_selection[False-True]",
+    "tests/test_verification_coverage_right.py::test_release_coverage_uses_native_scope_and_stored_selection[True-False]",
+    "tests/test_verification_coverage_right.py::test_release_coverage_uses_native_scope_and_stored_selection[True-True]",
+    "tests/test_verification_coverage_right.py::test_requirement_without_contract_has_two_distinct_structural_gaps_and_no_fake_run",
+    "tests/test_verification_coverage_right.py::test_resume_recomputes_and_requires_original_source_and_product_bindings[missing_product]",
+    "tests/test_verification_coverage_right.py::test_resume_recomputes_and_requires_original_source_and_product_bindings[model]",
+    "tests/test_verification_coverage_right.py::test_resume_recomputes_and_requires_original_source_and_product_bindings[product]",
+    "tests/test_verification_coverage_right.py::test_resume_recomputes_and_requires_original_source_and_product_bindings[roles]",
+    "tests/test_verification_coverage_right.py::test_scope_cannot_be_silently_used_for_whole_inventory_query",
+    "tests/test_verification_coverage_right.py::test_stored_release_selection_cannot_be_overridden[created_at]",
+    "tests/test_verification_coverage_right.py::test_stored_release_selection_cannot_be_overridden[evaluation_id]",
+    "tests/test_verification_coverage_right.py::test_stored_release_selection_cannot_be_overridden[runs]",
+    "tests/test_verification_coverage_right.py::test_superseded_stale_observation_remains_in_history_but_not_active_gap_counts",
+    "tests/test_verification_coverage_right.py::test_unbound_or_other_product_evidence_does_not_count_as_stale_or_present[historical]",
+    "tests/test_verification_coverage_right.py::test_unbound_or_other_product_evidence_does_not_count_as_stale_or_present[unbound]",
+    "tests/test_verification_coverage_right.py::test_unstored_release_selection_is_explicitly_provisional_or_missing[False]",
+    "tests/test_verification_coverage_right.py::test_unstored_release_selection_is_explicitly_provisional_or_missing[True]",
+    "tests/test_verification_coverage_right.py::test_waiver_trust_is_rechecked_and_never_serialized_as_a_saved_approval",
+    "tests/test_verification_coverage_right.py::test_work_null_selection_is_preserved_without_defaulting_to_a_current_evaluation",
+    "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[bytes]",
+    "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[configuration]",
+    "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[evaluation_hash]",
+    "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[evaluation_id]",
+    "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[input_binding]",
+    "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[time]",
+    "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[unknown]",
+    "tests/test_verification_coverage_right.py::test_work_roundtrip_preserves_full_descriptor_scope_time_and_all_observations[False]",
+    "tests/test_verification_coverage_right.py::test_work_roundtrip_preserves_full_descriptor_scope_time_and_all_observations[True]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "12.p.R completes supplied-input coverage gaps, scoped Release precedence and full evaluation inputs preserved through native Work storage and recomputation. CLI, computed SRX graph queries and a durable QueryWork sorting cursor remain open. 12.p.C will clean structure only. No live inventory, external execution, full-suite or release pass is claimed."
   ]
 }

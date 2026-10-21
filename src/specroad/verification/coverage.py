@@ -53,6 +53,45 @@ def _requirement_totals(rows):
         **_check_totals([check for row in rows for check in row['checks']])}
 
 
+def _gaps(rows):
+    """Independent overlapping sets; an unevaluated run is never a missing run."""
+    applicable = [row for row in rows if row['applicability']['status'] != 'excluded']
+    checks = [check for row in applicable for check in row['checks']]
+    missing, stale, incomplete = [], [], []
+    for check in checks:
+        key = {name: check[name] for name in ('subject_artifact_id', 'contract_id', 'test_id', 'check_id')}
+        for run in check['active_runs']:
+            if not run['evidence']:
+                missing.append({**key, 'run_id': run['run_id']})
+            for observation in run['evidence']:
+                item = {**key, 'run_id': run['run_id'], 'evidence_id': observation['evidence_id']}
+                if observation['freshness'] == 'stale':
+                    stale.append(item)
+                if observation['freshness'] not in ('current', 'stale') or observation['result'] not in ('passed', 'failed'):
+                    incomplete.append(item)
+    missing_ids = {item['subject_artifact_id'] for item in missing}
+    stale_ids = {item['subject_artifact_id'] for item in stale}
+    result = {
+        'requirements_without_contract': [r['requirement_id'] for r in applicable if not r['checks']],
+        'requirements_without_test_reference': [r['requirement_id'] for r in applicable
+            if not any(c['test_id'] is not None for c in r['checks'])],
+        'requirements_with_unselected_checks': [r['requirement_id'] for r in applicable
+            if any(not c['run_selection_evaluated'] for c in r['checks'])],
+        'requirements_without_evidence': [r['requirement_id'] for r in applicable if r['checks']
+            and all(c['run_selection_evaluated'] for c in r['checks'])
+            and not any(run['evidence'] for c in r['checks'] for run in c['active_runs'])],
+        'requirements_with_missing_runs': [r['requirement_id'] for r in applicable if r['requirement_id'] in missing_ids],
+        'requirements_with_stale_evidence': [r['requirement_id'] for r in applicable if r['requirement_id'] in stale_ids],
+        'checks_without_test_reference': [{k: c[k] for k in
+            ('subject_artifact_id', 'contract_id', 'test_id', 'check_id', 'dimension')}
+            for c in checks if c['test_id'] is None],
+        'unselected_checks': [{k: c[k] for k in
+            ('subject_artifact_id', 'contract_id', 'test_id', 'check_id', 'dimension')}
+            for c in checks if not c['run_selection_evaluated']],
+        'missing_runs': missing, 'stale_evidence': stale, 'incomplete_evidence': incomplete}
+    return {**result, 'counts': {name: len(items) for name, items in result.items()}}
+
+
 def assess_verification_coverage(model, verification):
     """Use exactly one computed selection for all independent coverage axes.
 
@@ -97,10 +136,18 @@ def assess_verification_coverage(model, verification):
             'requirement_ids': [row['requirement_id'] for row in selected],
             'verification_results': _counts(row['verification_result'] for row in selected),
             'checks': checks, 'totals': _check_totals(checks)})
+    gaps = _gaps(rows)
     report = {'format_version': 'verification-coverage-v1',
-        'validation_scope': 'supplied_whole_project_requirement_coverage',
+        'validation_scope': ('supplied_scope_requirement_coverage' if bound['explicit_scope']
+                             else 'supplied_whole_project_requirement_coverage'),
         'project_id': bound['project_id'], 'input_sha256': bound['input_sha256'],
         'summary': verification.summary, 'requirements': rows, 'totals': _requirement_totals(rows),
+        'selection_status': ('missing' if bound['evaluation'] is None else
+                             'selected' if selection['run_selection_evaluated'] else 'incomplete'),
+        'input_binding_status': aggregation['input_binding']['binding_status'], 'gaps': gaps,
+        'by_release': ([] if bound['release_selection'] is None else [{
+            **bound['release_selection'], 'totals': _requirement_totals(rows), 'gaps': gaps}]),
+        'evidence_dispositions': aggregation['replacement_assessment']['assessment']['evidence_dispositions'],
         'by_kind': [{'requirement_kind': kind,
             **_requirement_totals([row for row in rows if row['requirement_kind'] == kind])}
             for kind in kinds], 'by_dimension': by_dimension,

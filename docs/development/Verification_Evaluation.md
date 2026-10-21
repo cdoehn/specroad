@@ -451,3 +451,48 @@ mit optionaler Konfiguration. Release-Auflösung, SRX-Graphabfragen mit berechne
 Werten, CLI-Einbindung und dauerhafte Work-Fortsetzung bleiben offen und werden
 nicht stillschweigend als unterstützt behandelt. Die Berichte bestätigen weder
 Live-Dateivollständigkeit noch externe Testausführung oder Freigabe.
+
+## Fehlmengen, Release-Auswahl und Work-Eingänge (12.p.R)
+
+Coverage ergänzt `selection_status`, `input_binding_status`, die nativen
+`evidence_dispositions` und unabhängige Fehlmengen unter `gaps`: Requirements
+ohne Contract, ohne Testbezug, mit nicht ausgewählten Pflichtprüfungen, ohne
+Evidence, mit fehlenden aktiven Läufen und mit stale Evidence. Prüfungs-, Lauf-
+und Evidence-Identitäten bleiben vollständig erhalten; `counts` zählt jede
+Menge separat. Mengen können sich überschneiden. Fehlende oder unvollständige
+Auswahl erfindet keine fehlenden Läufe. Ausgeschlossene Requirements bleiben
+in den Gesamtsummen, erzeugen aber keine Fehlmengen. Historische, ungebundene
+oder wirksam abgelöste Evidence wird nicht als aktiver stale Nachweis gezählt.
+Ein Nachweisdetail mit `passed` verdeckt keine unvollständige Eingangsbindung.
+
+Der Leseeingang akzeptiert jetzt `scope_descriptor` und die unabhängig
+erhobenen nativen `scope_bindings`. Die vorhandene Scope-Auflösung prüft die
+tatsächlichen Quellen und Closure. Bei einem Release-Scope hat der in
+`readiness_policy.verification_evaluation` gespeicherte Descriptor Vorrang.
+Eine zusätzlich übergebene Auswahl muss kanonisch identisch sein; ein
+Konflikt liefert `VerificationReadBindingConflict` mit Exitcode 6.
+Ohne gespeicherte Auswahl ist ein expliziter Descriptor nur provisorischer
+Leseinput. Fehlen beide, bleibt die Auswahl fehlend. `by_release` bindet den
+tatsächlichen Release-Datensatz und weist dieselben Summen und Fehlmengen aus.
+Keine dieser Beobachtungen erteilt eine Release- oder Baselinefreigabe.
+Ein begrenzter Scope darf nicht stillschweigend eine Gesamtbestandsquery
+speisen; dieser Fall wird ausdrücklich abgelehnt.
+
+`verification.work_input` liefert kanonische, inerte Bytes mit vollständigem
+Descriptor oder `null`, Descriptorhash, expliziter UTC-Zeit, Konfigurations-ID,
+gegebenenfalls Scope-Descriptor und Hash des ursprünglichen Leseeingangs.
+Diese Bytes können als regulärer Eingang im nativen Work-Manifest und
+CheckpointStore aufbewahrt werden. `resume_verification_read_input` verlangt
+ihren unabhängig gebundenen SHA-256 sowie ursprüngliches Modell, Produktbytes,
+Eingangsrollen und gegebenenfalls native Scope- und Waiverbelege. Es berechnet
+die Beobachtungen erneut und verlangt dieselbe vollständige Bindung. Veränderte
+Bytes, Auswahl, Zeit oder Quellen werden abgelehnt. Gespeicherte Ergebnisse
+oder Freigaben werden nicht als Autorität übernommen.
+
+Der prozesslokale `QueryWork` übernimmt denselben geprüften Leseeingang für
+berechnete Filter, Projektion, Sortierung und Seitenauswahl. `evaluation_input`
+bewahrt den vollständigen Work-Eingang; `evaluation_binding` bleibt außerhalb
+der sechs Query-Datenfelder. Sein Sortiercursor wird dadurch nicht dauerhaft
+fortsetzbar. Die Eingangsbindung über einen echten nativen Work-Store wird
+separat auch nach Prozessneustart geprüft. CLI-Anbindung, berechnete SRX-
+Graphabfragen und ein dauerhafter Query-Sortiercursor bleiben offen.

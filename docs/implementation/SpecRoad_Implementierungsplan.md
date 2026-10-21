@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 532
-last_completed_plan_commit: 12.p.W
-next_plan_commit: 12.p.R
-last_completed_numbered_bundle: 358
+implementation_plan_commits_completed: 533
+last_completed_plan_commit: 12.p.R
+next_plan_commit: 12.p.C
+last_completed_numbered_bundle: 359
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14809,12 +14809,45 @@ Release-Erfolgsnachweis.
 
 #### 12.p.R – Make it Right
 
-- [ ] **12.p.R** · Position **533/900** · Voraussetzung: `12.p.W`.
+- [x] **12.p.R** · Position **533/900** · Voraussetzung: `12.p.W`.
 **Exakte Commit-Message:** `12.p.R feat(verification): Coverage und Evaluation-Eingaben vervollständigen`
 
 **Vervollständigung:** Fehlende Auswahl, fehlende Tests, fehlende Evidence und stale Evidence getrennt ausweisen.
 
 **Verhaltensabnahme:** Tests prüfen Zähler/Mengen/Status und vollständig erhaltene Workbindung, keine Berichtstexte. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zwischenstand (Bundle 359):** Coverage ergänzt unabhängig
+zählbare Fehlmengen für fehlende Contracts, Testbezüge, Auswahl, aktive Läufe
+und Evidence sowie stale Beobachtungen. Nicht ausgewählte, historische,
+ungebundene und wirksam abgelöste Nachweise bleiben unterscheidbar; ausgeschlossene
+Requirements erzeugen keine falschen Lücken. Release-Coverage verwendet die
+native, quellengebundene Scope-Auflösung und die gespeicherte Evaluation mit
+Vorrang vor zusätzlichem Leseinput. Konflikte liefern Code 6; ohne gespeicherte
+Auswahl bleibt ein expliziter Descriptor provisorisch. Der vollständige
+Descriptor, UTC-Zeit, Scope und Ergebnisbindung werden als inerte Work-Eingänge
+gesichert und bei Wiederaufnahme aus ursprünglichen Quellen neu geprüft.
+Der prozesslokale QueryWork übernimmt dieselbe berechnete Auswahl und Provenienz.
+Native Work-Speicherung und neuer Prozess werden separat geprüft; ein dauerhafter
+Query-Sortiercursor, CLI-Anbindung und berechnete SRX-Graphabfragen bleiben offen.
+Dieses Bundle enthält nur 12.p.R; der Fortschrittsmarker folgt erst nach dem
+erfolgreichen parallelen Apply-Gate. 12.p.C wird nicht begonnen.
+
+**Gezielter Dev-Nachweis (Bundle 359):** 2.262/2.262 Verhaltenstests aus
+38 neuen beziehungsweise betroffenen Dateien bestanden mit vier parallelen
+Workern in 161,72 Sekunden. Enthalten sind 55 neue R-Fälle, sämtliche 44
+W-Coveragefälle sowie betroffene Verification-, Query-, View-, Konfigurations-,
+Release-/Baseline- und Work-Regressionsfälle. Geprüft sind getrennte Fehlmengen,
+gespeicherter Release-Vorrang, provisorische Auswahl, unveränderte vollständige
+Work-Eingänge, Ablehnung geänderter Quellen und isolierte Core-/PYZ-Prozessneustarts
+mit dem nativen CheckpointStore. Alle 458 bisherigen Testdateien und 15.468
+bestehenden Testnummern bleiben unverändert; 55 Identitäten werden angehängt.
+Die vollständige Katalog-Collection bestätigt 15.523 Tests bei null Testkörpern.
+Geprüfter Source-SHA-256:
+`904dc748e23ee07b36756212fe1da247764270cdb31fa972004a60b827751a6d`.
+Apply prüft vor dem eigenen R-Commit ausschließlich Gruppe 1 aus drei festen
+Gruppen (Sequenz 67; 5.174 Tests), parallel. Erst danach setzt der Entrypoint
+den Fortschrittsmarker auf 533/900. Dies ist ein Teiltestnachweis, kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.p.C – Make it Clean
 

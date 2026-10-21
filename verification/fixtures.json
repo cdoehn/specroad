@@ -131,7 +131,8 @@
     "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1",
     "SR-FIX-VERIFICATION-AGGREGATION-v1",
     "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1",
-    "SR-FIX-VERIFICATION-COVERAGE-v1"
+    "SR-FIX-VERIFICATION-COVERAGE-v1",
+    "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -637,6 +638,10 @@
     "SR-FIX-VERIFICATION-COVERAGE-v1": {
       "provider": "tests/test_verification_coverage.py:coverage_case,prepare",
       "kind": "Synthetic native whole-project model and explicit descriptor/input/time bindings. Two requirement kinds, eight declared dimensions, exact independent expected counts, current/failed/stale/missing observations and valid waived failure. Immutable coverage, configured exclusion, bound computed query filtering/sorting/paging, source mismatch rejection, no IO and isolated Core/PYZ. No external execution, release or live inventory claim."
+    },
+    "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1": {
+      "provider": "tests/test_verification_coverage_right.py:coverage,release_case,resumed",
+      "kind": "Synthetic native independent missing contract/test/selection/evidence/stale observations and supplied Release closure. Stored/explicit descriptor precedence, exact scoped coverage, inert full Work input and native CheckpointStore process restart in Core/PYZ. Real supplied source/input/time hashes are recomputed; no live inventory, external execution, release or durable query cursor claim."
     }
   }
 }

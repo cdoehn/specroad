@@ -26,7 +26,7 @@ class QueryWork:
     """
 
     def __init__(self, root, records, query, *, project, protected_roots,
-                 configuration=None, configuration_id=None, batch_bytes=65536):
+                 configuration=None, configuration_id=None, batch_bytes=65536, verification=None):
         _positive(batch_bytes)
         if type(query) is not NormalizedQuery:
             raise ModelError('normalized_query_required')
@@ -38,13 +38,20 @@ class QueryWork:
             pointer = '/sort/' + str(index)
             key = item['key']
             tokens = parse_pointer(key, rule_id='query-sort', at=pointer + '/key') if key.startswith('/') else (key,)
-            if tokens and tokens[0] == 'verification_result':
+            if verification is None and tokens and tokens[0] == 'verification_result':
                 raise ModelError('query_verification_provider_required', pointer=pointer)
             ordering.append((tokens, item['direction'] == 'desc', pointer))
         self._selection = select_query(records, query, project=project, configuration=configuration,
-                                       configuration_id=configuration_id)
+                                       configuration_id=configuration_id, verification=verification)
+        self._evaluation_input = None if verification is None else verification.work_input
         ids = set(self._selection.artifact_ids)
         artifacts = {record.identity.id: record.data for record in records if record.identity.id in ids}
+        if verification is not None:
+            for subject in verification.data['aggregation']['subjects']:
+                identifier = subject['subject_artifact_id']
+                if identifier in artifacts:
+                    artifacts[identifier] = {**artifacts[identifier],
+                        'verification_result': subject['verification_result']}
         self._offset, self._limit = data['offset'], data['limit']
         self._items = []
         self._visited = self._units = 0
@@ -55,12 +62,17 @@ class QueryWork:
                                     _spool_type=_QuerySpool)
 
     @property
+    def evaluation_input(self):
+        return self._evaluation_input
+
+    @property
     def state(self):
         return {'format': 'query-work-cursor-v1',
                 'phase': 'complete' if self._result is not None else 'failed' if self._failed else
                          'cancelled' if self._closed else 'delivery' if self._cursor is not None else 'sorting',
                 'query_sha256': self._selection.query_sha256,
                 'inputs_sha256': self._selection.inputs_sha256,
+                'evaluation_binding': self._selection.evaluation_binding,
                 'units_completed': self._units, 'visited_records': self._visited,
                 'retained_items': len(self._items), 'complete': self._result is not None,
                 'durable_checkpoint': False, 'sort': self._sort.state,

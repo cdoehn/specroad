@@ -163,7 +163,7 @@ def resolve_builtin_view(model, view_name, *, verification=None):
             verification_evaluated=True, computed_reports={**_computed_reports(),
                 'verification': {'status': 'computed', 'reason': None,
                     'required_milestone': 'M12', 'result': coverage.data}},
-            validation_scope='supplied_whole_project_requirement_coverage')
+            validation_scope=coverage.data['validation_scope'])
     elif view_name == 'specification':
         roles = assess_document_roles(model)
         primary = roles.require_primary_document()
