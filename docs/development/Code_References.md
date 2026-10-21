@@ -164,3 +164,13 @@ und `write_authorized` bleiben falsch. Die disjunkte H.3-Zustandsentscheidung
 und Consumer-Integration folgen in 12.s/12.t. Die Suche hält die Quelle und bei
 Text eine normalisierte Kopie samt Zeilengrenzen im Speicher; sie führt keinen
 neuen Streaming- oder Ressourcenbudgetvertrag ein.
+
+Die privaten Bausteine `_code_selection_hash.py` und `_code_selection_cursor.py`
+trennen Dekodierung/Normalisierung und Auswahlhash von Zeilengrenzen und
+Fensterdurchlauf. Der Suchcursor liefert Kandidaten einzeln in der bisherigen
+Reihenfolge und zählt weiterhin überlappende Fenster; er materialisiert keine
+zusätzliche Liste aller Auswahlen. Die gespeicherte Zeilenauswahl prüft weiterhin
+zuerst das vollständige Bereichsende und kodiert erst danach den ausgewählten
+Text. Die öffentliche API behält Zulassungsprüfungen, Ankerprofil, Fehlergründe,
+Vorrangregeln und Ergebnisprojektionen. Es entsteht keine weitere I/O- oder
+Statusentscheidung.

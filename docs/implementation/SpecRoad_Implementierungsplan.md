@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 539
-last_completed_plan_commit: 12.r.R
-next_plan_commit: 12.r.C
-last_completed_numbered_bundle: 365
+implementation_plan_commits_completed: 540
+last_completed_plan_commit: 12.r.C
+next_plan_commit: 12.s.W
+last_completed_numbered_bundle: 366
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15110,7 +15110,7 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.r.C – Make it Clean
 
-- [ ] **12.r.C** · Position **540/900** · Voraussetzung: `12.r.R`.
+- [x] **12.r.C** · Position **540/900** · Voraussetzung: `12.r.R`.
 **Exakte Commit-Message:** `12.r.C refactor(verification): Zeilenauswahl und exakte Relokation bereinigen`
 
 **Bereinigung:** Auswahlhash und Suchcursor für große Quellen getrennt kapseln.
@@ -15118,6 +15118,39 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Vorbereitung (Bundle 366):** Die privaten Bausteine
+`_code_selection_hash.py` und `_code_selection_cursor.py` trennen die
+bestehende strikte Dekodierung, LF-Normalisierung und Auswahlhashbildung von
+Zeilengrenzen, gespeicherter Auswahlspanne und lazy Fensterdurchlauf. Der
+Suchcursor liefert weiterhin alle vollständigen überlappenden Kandidaten in
+der bisherigen Reihenfolge und überspringt die bereits geprüfte gespeicherte
+Position. Es entsteht keine zusätzliche Liste aller Auswahlfenster.
+
+Die öffentlichen APIs behalten ihre Zulassungsprüfung, Ankerprofile,
+Fehlerreihenfolge und unveränderlichen Ergebnisprojektionen. Insbesondere
+prüft `select_code_lines` weiterhin zuerst das vollständige Bereichsende
+und kodiert erst danach den ausgewählten Text; die Relokationssuche kodiert
+dagegen weiterhin den gesamten normalisierten Text vor ihrem Durchlauf.
+Datei-/Gitbindung, Vorrang gespeicherter Treffer, fehlende und mehrdeutige
+Auswahlen sowie alle erlaubten Seiteneffekte bleiben gleich. Es gibt weder
+neue Statusentscheidungen noch I/O, Datenmigration oder Schreibfreigaben.
+Der Strukturvergleich bestätigt unveränderte Wertklassen, Zulassungs- und
+Projektionslogik sowie die ausgelagerten Dekodierungsfehler, Zeilenschleifen
+und Hashoperationen. Der Speicherumfang der gebundenen Quelle und ihrer
+Zeilengrenzen erhält keinen neuen Streaming- oder Budgetvertrag.
+
+716 unveränderte W-/R- und betroffene Regressionstests in 18 Dateien
+bestanden mit vier parallelen Workern in 10,74 Sekunden. Die vollständige
+Katalog-Collection bestätigt weiterhin 15.807 Identitäten bei null
+Testkörpern. Alle 463 bisherigen Testdateien, sämtliche Verifikationsdaten
+und alle 15.807 festen Testnummern bleiben bytegleich; es gibt keine neuen
+Tests. Geprüfter Source-SHA-256:
+`5d1caae52e0ecf4948b09821f6af8dc96f2b8d799d7e9b5aac218d128e7cce08`.
+Der Entrypoint verlangt vor dem C-Commit Gruppe 2, Commitsequenz 74,
+mit 5.269 parallelen Tests. Erst danach wird 540/900 markiert.
+Die vollständige H.3-Zustandsentscheidung und Consumer-Integration bleiben
+12.s/12.t vorbehalten. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-s"></a>
 ### 12.s – Disjunkter Codezustand

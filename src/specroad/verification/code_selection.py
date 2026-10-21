@@ -6,6 +6,8 @@ from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .code_references import CodeReferenceSource
+from ._code_selection_cursor import stored_line_span
+from ._code_selection_hash import normalized_text, selection_digest, selection_utf8
 
 
 @dataclass(frozen=True, init=False)
@@ -42,32 +44,13 @@ def select_code_lines(source):
     value = bound['reference']
     if value['reference_kind'] != 'line_range':
         raise ModelError('code_reference_line_range_required', pointer='/reference_kind')
-    try:
-        text = source.source_bytes.decode(value['encoding'], errors='strict')
-    except UnicodeError as error:
-        raise ModelError('code_reference_decode_failed', pointer='/encoding') from error
-    except (LookupError, ValueError) as error:
-        raise ModelError('code_reference_encoding_unavailable', pointer='/encoding') from error
-    text = text.replace('\r\n', '\n').replace('\r', '\n')
-    # Only LF separates normalized lines. str.splitlines would also split
-    # other Unicode characters that H.2 explicitly requires us to preserve.
-    offset = line_count = 0
-    selected_start = selected_end = None
-    while offset < len(text):
-        line_count += 1
-        if line_count == value['start_line']:
-            selected_start = offset
-        newline = text.find('\n', offset)
-        offset = len(text) if newline == -1 else newline + 1
-        if line_count == value['end_line']:
-            selected_end = offset
+    text = normalized_text(source.source_bytes, value['encoding'])
+    selected_start, selected_end, line_count = stored_line_span(
+        text, value['start_line'], value['end_line'])
     if selected_end is None:
         raise ModelError('code_reference_selection_missing', pointer='/end_line')
-    try:
-        selected = text[selected_start:selected_end].encode('utf-8')
-    except UnicodeError as error:
-        raise ModelError('code_reference_decode_failed', pointer='/encoding') from error
-    selection_sha256 = sha256(selected).hexdigest()
+    selected = selection_utf8(text[selected_start:selected_end])
+    selection_sha256 = selection_digest(selected)
     report = {'format_version': 'code-line-selection-v1',
         'validation_scope': 'code_selection_at_stored_position_only',
         'source': bound, 'source_sha256': source.sha256,

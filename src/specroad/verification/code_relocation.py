@@ -6,6 +6,8 @@ from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .code_references import CodeReferenceSource
+from ._code_selection_cursor import line_boundaries, selection_span, selection_windows
+from ._code_selection_hash import normalized_text, selection_digest, selection_utf8
 
 
 @dataclass(frozen=True, init=False)
@@ -73,27 +75,13 @@ def locate_code_selection(source):
 
     encoding = None
     line_count = None
+    boundaries = None
     if mode == 'text':
         if 'encoding' not in value:
             raise ModelError('code_reference_encoding_required', pointer='/encoding')
         encoding = value['encoding']
-        try:
-            text = source.source_bytes.decode(encoding, errors='strict')
-        except UnicodeError as error:
-            raise ModelError('code_reference_decode_failed', pointer='/encoding') from error
-        except (LookupError, ValueError) as error:
-            raise ModelError('code_reference_encoding_unavailable', pointer='/encoding') from error
-        try:
-            content = text.replace('\r\n', '\n').replace('\r', '\n').encode('utf-8')
-        except UnicodeError as error:
-            raise ModelError('code_reference_decode_failed', pointer='/encoding') from error
-        # LF is the only separator. The final boundary is not a phantom line.
-        boundaries = [0]
-        offset = 0
-        while offset < len(content):
-            newline = content.find(b'\n', offset)
-            offset = len(content) if newline == -1 else newline + 1
-            boundaries.append(offset)
+        content = selection_utf8(normalized_text(source.source_bytes, encoding))
+        boundaries = line_boundaries(content)
         line_count = size = len(boundaries) - 1
         stored_position = {'start_line': start + 1, 'end_line': start + count}
     else:
@@ -106,9 +94,9 @@ def locate_code_selection(source):
     stored_hash = None
     stored_span = None
     if start + count <= size:
-        left, right = (boundaries[start], boundaries[start + count]) if mode == 'text' else (start, start + count)
+        left, right = selection_span(boundaries, start, count)
         stored_span = (left, right)
-        stored_hash = sha256(view[left:right]).hexdigest()
+        stored_hash = selection_digest(view[left:right])
     stored_matches = stored_hash == expected_hash
     matched_position = new_position = None
     selected = None
@@ -120,11 +108,8 @@ def locate_code_selection(source):
     else:
         match_count = 0
         match_span = match_start = None
-        for candidate in range(max(0, size - count + 1)):
-            if candidate == start:
-                continue
-            left, right = (boundaries[candidate], boundaries[candidate + count]) if mode == 'text' else (candidate, candidate + count)
-            if sha256(view[left:right]).hexdigest() == expected_hash:
+        for candidate, left, right in selection_windows(boundaries, size, count, start):
+            if selection_digest(view[left:right]) == expected_hash:
                 match_count += 1
                 if match_count == 1:
                     match_start, match_span = candidate, (left, right)
@@ -145,7 +130,7 @@ def locate_code_selection(source):
         'stored_position_matches': stored_matches, 'expected_selection_sha256': expected_hash,
         'search_performed': not stored_matches, 'match_count': match_count,
         'selection_result': outcome, 'matched_position': matched_position, 'new_position': new_position,
-        'selection_sha256': None if selected is None else sha256(selected).hexdigest(),
+        'selection_sha256': None if selected is None else selection_digest(selected),
         'selection_evaluated': True, 'relocation_evaluated': True,
         'reference_state_evaluated': False, 'symbol_resolved': False,
         'source_code_executed': False, 'write_authorized': False}
