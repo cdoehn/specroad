@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 553
-last_completed_plan_commit: 13.c.W
-next_plan_commit: 13.c.R
-last_completed_numbered_bundle: 379
+implementation_plan_commits_completed: 554
+last_completed_plan_commit: 13.c.R
+next_plan_commit: 13.c.C
+last_completed_numbered_bundle: 380
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15714,12 +15714,42 @@ ergänzt. Apply prüft vor dem W-Commit die fällige Gruppe 0 mit 5.448 Tests.
 
 #### 13.c.R – Make it Right
 
-- [ ] **13.c.R** · Position **554/900** · Voraussetzung: `13.c.W`.
+- [x] **13.c.R** · Position **554/900** · Voraussetzung: `13.c.W`.
 **Exakte Commit-Message:** `13.c.R feat(roadmap): Roadmap aus dem einen Fachmodell vervollständigen`
 
 **Vervollständigung:** Automatisch berechnete Aufwände/Termine nicht als normative Fakten zurückschreiben.
 
 **Verhaltensabnahme:** Auswertung verändert keine Projektdatei und behält gespeicherte Termine unverändert. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Ausschnitt (Bundle 380):** Die vorhandene reine Projektion und ihre gemeinsamen
+Schema-/Graphprüfer erfüllen den Schreibschutz bereits ohne zusätzlichen
+Produktpfad. Der R-Zustand vervollständigt deshalb die ausführbare
+Verhaltensmatrix und die gebundenen Katalognachweise; er ergänzt weder
+Terminberechnung noch Schreib- oder Reparaturlogik.
+
+Die R-Fixtures prüfen gespeicherte Kalendergrenzen und ungültige Termine,
+fehlende Zieldaten, widersprüchliche zeitliche Abhängigkeiten und reine
+`depends_on`-Zyklen ohne automatische Umplanung. Nicht unterstützte normative
+Schätzfelder und ungültige Risikowerte werden mit den bestehenden maschinenlesbaren
+Fehlerverträgen abgewiesen. Freitext und Erweiterungsdaten bleiben passiv.
+Quellbytes, Dateirechte und fremde Projekt-/Metadateien bleiben bei Erfolg
+und Fehler erhalten, auch ohne Schreibberechtigung. Ein veränderter Livebestand
+wird weder repariert noch als neu geprüft dargestellt; die Projektion bleibt
+ausdrücklich an ihren gelieferten Snapshot gebunden. Veränderte gebundene
+Eingabebytes werden vor einem Ergebnis abgewiesen.
+
+Weitere Nachweise decken reine JSON-Umformatierung, getrennte Ergebniswerte und
+frische Core-/PYZ-Prozesse mit Schreib-/Prozess-/Netzwerkfallen ab. Die W-Tests
+bleiben unverändert. Die SR-TC-Einträge behalten ihren begrenzten Provider-Scope
+als `partial`; C-Strukturarbeit und die spätere View-/Workintegration sind offen.
+
+**Gezielter R-Nachweis:** 206 Verhaltenstests bestanden parallel auf vier
+Workern, darunter alle 27 Roadmap-W- und 39 neuen R-Fälle sowie die betroffenen
+Planungs- und Domänenschematests. Die vollständige Collection bestätigt 16.383
+Identitäten bei null ausgeführten Testkörpern. Bestehende Testnummern und
+W-Testbytes bleiben unverändert; die neuen Nummern werden hinten angefügt.
+Apply prüft vor dem R-Commit Gruppe 1 mit 5.461 Tests parallel. Diese Teiltests
+erklären weder einen Vollsuite-Erfolg noch eine Releasefreigabe.
 
 #### 13.c.C – Make it Clean
 

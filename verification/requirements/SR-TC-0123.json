@@ -7,19 +7,22 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",
     "SR-FIX-ROADMAP-PROJECTION-v1"
   ],
   "preconditions": [
-    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures."
+    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures.",
+    "R fixtures include real read-only project modes, noncanonical input bytes, unrelated live roadmap/metadata files, passive estimates and deliberately changed bound inputs."
   ],
   "steps": [
     "Invoke the native roadmap provider on the supplied model and source variants.",
-    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations."
+    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations.",
+    "Exercise date/error boundaries and explicit dependency cycles without recomputation, mutation or live-source substitution; enforce process/network/write traps in isolated Core/PYZ."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT eine separat gepflegte normative Roadmap-Datei neben dem Artefaktgraphen verlangen.",
-    "scope": "Native projection requires only the existing TargetModel, preserves real project inventory, remains usable without a live root and needs no separately maintained roadmap file."
+    "scope": "Native projection requires only the existing TargetModel, preserves real project inventory, remains usable without a live root and needs no separately maintained roadmap file. R: calendar and schema errors preserve exact sources and file modes; dependency cycles and passive extension estimates never retime, estimate or publish data. Bound-input changes refuse output; foreign live changes remain intact and unverified. All existing W facts remain required."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -40,10 +43,19 @@
     "tests/test_roadmap_projection.py::test_roadmap_does_not_write_or_reopen_the_live_project",
     "tests/test_roadmap_projection.py::test_roadmap_facts_bind_every_original_record_and_relation",
     "tests/test_roadmap_projection.py::test_roadmap_projection_has_identical_native_core_and_pyz_contracts[core]",
-    "tests/test_roadmap_projection.py::test_roadmap_projection_has_identical_native_core_and_pyz_contracts[pyz]"
+    "tests/test_roadmap_projection.py::test_roadmap_projection_has_identical_native_core_and_pyz_contracts[pyz]",
+    "tests/test_roadmap_projection_right.py::test_detached_nested_projection_mutation_cannot_update_dates_owners_or_relations",
+    "tests/test_roadmap_projection_right.py::test_different_json_spelling_changes_byte_bindings_only_not_stored_dates",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[False-core]",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[False-pyz]",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[True-core]",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[True-pyz]",
+    "tests/test_roadmap_projection_right.py::test_live_date_changes_and_unrelated_roadmap_file_are_preserved_not_reopened",
+    "tests/test_roadmap_projection_right.py::test_projection_works_without_write_permissions_even_on_error[invalid-date]",
+    "tests/test_roadmap_projection_right.py::test_projection_works_without_write_permissions_even_on_error[valid]"
   ],
   "open_items": [
-    "13.c.R/C complete the boundary matrix and structural separation; this W proof is limited to the native supplied-model provider.",
+    "13.c.C still owns structural cleanup. This evidence covers the native supplied-model provider and its R boundary matrix only.",
     "Roadmap View/Work integration remains assigned to 13.h; no full-suite or Release acceptance is claimed."
   ]
 }

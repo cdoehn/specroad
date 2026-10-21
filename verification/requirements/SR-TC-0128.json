@@ -7,19 +7,22 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",
     "SR-FIX-ROADMAP-PROJECTION-v1"
   ],
   "preconditions": [
-    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures."
+    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures.",
+    "R fixtures include real read-only project modes, noncanonical input bytes, unrelated live roadmap/metadata files, passive estimates and deliberately changed bound inputs."
   ],
   "steps": [
     "Invoke the native roadmap provider on the supplied model and source variants.",
-    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations."
+    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations.",
+    "Exercise date/error boundaries and explicit dependency cycles without recomputation, mutation or live-source substitution; enforce process/network/write traps in isolated Core/PYZ."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT in Version 0.2 automatisch berechnete Termine, Aufwandsschätzungen oder einen kritischen Pfad als normative Daten in das Projektmodell schreiben.",
-    "scope": "Stored target dates remain exact and absent dates stay absent; parent links do not imply dates or effort. No projection writes or approval; no estimated effort, dates or critical path."
+    "scope": "Stored target dates remain exact and absent dates stay absent; parent links do not imply dates or effort. No projection writes or approval; no estimated effort, dates or critical path. R: calendar and schema errors preserve exact sources and file modes; dependency cycles and passive extension estimates never retime, estimate or publish data. Bound-input changes refuse output; foreign live changes remain intact and unverified. All existing W facts remain required."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -45,10 +48,42 @@
     "tests/test_roadmap_projection.py::test_priorities_and_dates_remain_explicit_fields_without_inheritance",
     "tests/test_roadmap_projection.py::test_projection_is_owned_order_independent_and_cannot_be_used_as_authority",
     "tests/test_roadmap_projection.py::test_reassigning_the_stored_schedule_replaces_only_the_projected_assignment",
-    "tests/test_roadmap_projection.py::test_roadmap_does_not_write_or_reopen_the_live_project"
+    "tests/test_roadmap_projection.py::test_roadmap_does_not_write_or_reopen_the_live_project",
+    "tests/test_roadmap_projection_right.py::test_changed_bound_inputs_fail_before_any_projection_or_repair[date]",
+    "tests/test_roadmap_projection_right.py::test_changed_bound_inputs_fail_before_any_projection_or_repair[input-hash]",
+    "tests/test_roadmap_projection_right.py::test_changed_bound_inputs_fail_before_any_projection_or_repair[relation]",
+    "tests/test_roadmap_projection_right.py::test_dependency_cycles_are_observed_without_solving_or_rewriting_the_schedule",
+    "tests/test_roadmap_projection_right.py::test_detached_nested_projection_mutation_cannot_update_dates_owners_or_relations",
+    "tests/test_roadmap_projection_right.py::test_different_json_spelling_changes_byte_bindings_only_not_stored_dates",
+    "tests/test_roadmap_projection_right.py::test_extension_estimates_and_text_do_not_become_normative_planning_fields",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[0000-01-01-schema_format]",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[2023-02-29-schema_format]",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[2026-2-03-schema_format]",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[2027-03-10T00:00:00Z-schema_format]",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[20270310-schema_type]",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[2100-02-29-schema_format]",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[None-schema_type]",
+    "tests/test_roadmap_projection_right.py::test_invalid_dates_fail_without_normalizing_or_repairing_project_bytes[next release-schema_format]",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[False-core]",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[False-pyz]",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[True-core]",
+    "tests/test_roadmap_projection_right.py::test_isolated_runtime_preserves_sources_and_rejects_writes_on_success_and_failure[True-pyz]",
+    "tests/test_roadmap_projection_right.py::test_live_date_changes_and_unrelated_roadmap_file_are_preserved_not_reopened",
+    "tests/test_roadmap_projection_right.py::test_missing_dates_are_not_filled_from_dependencies_or_milestone_membership",
+    "tests/test_roadmap_projection_right.py::test_projection_works_without_write_permissions_even_on_error[invalid-date]",
+    "tests/test_roadmap_projection_right.py::test_projection_works_without_write_permissions_even_on_error[valid]",
+    "tests/test_roadmap_projection_right.py::test_stored_dates_are_not_retimed_by_dependency_order_or_current_time[0001-01-01]",
+    "tests/test_roadmap_projection_right.py::test_stored_dates_are_not_retimed_by_dependency_order_or_current_time[2000-02-29]",
+    "tests/test_roadmap_projection_right.py::test_stored_dates_are_not_retimed_by_dependency_order_or_current_time[2024-02-29]",
+    "tests/test_roadmap_projection_right.py::test_stored_dates_are_not_retimed_by_dependency_order_or_current_time[2100-03-01]",
+    "tests/test_roadmap_projection_right.py::test_stored_dates_are_not_retimed_by_dependency_order_or_current_time[9999-12-31]",
+    "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[release-critical_path-value2]",
+    "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[release-estimated_date-2027-02-01]",
+    "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[task-effort-13]",
+    "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[task-target_date-2027-02-01]"
   ],
   "open_items": [
-    "13.c.R/C complete the boundary matrix and structural separation; this W proof is limited to the native supplied-model provider.",
+    "13.c.C still owns structural cleanup. This evidence covers the native supplied-model provider and its R boundary matrix only.",
     "Roadmap View/Work integration remains assigned to 13.h; no full-suite or Release acceptance is claimed."
   ]
 }
