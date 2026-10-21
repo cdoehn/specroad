@@ -101,6 +101,7 @@
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
+    "SR-FIX-ROADMAP-EXPLANATION-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",
     "SR-FIX-ROADMAP-PROJECTION-v1",
     "SR-FIX-SARIF-IMPORT-RIGHT-v1",
@@ -695,6 +696,10 @@
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1": {
       "provider": "tests/test_roadmap_projection_right.py:dated_values",
       "kind": "Owned native snapshots with calendar boundaries, absent/invalid dates, temporal conflicts and dependency cycles; passive text/extension estimates, invalid risks and unsupported normative fields, actual read-only files/directories and preserved foreign live data. Changed source bindings fail; formatting and detached results preserve facts. Fresh Core/PYZ audit hooks prohibit writes/processes/network on successful and failed projections. Existing W provider and test bytes remain unchanged; no scheduling engine, full inventory, readiness or View/Work acceptance claim."
+    },
+    "SR-FIX-ROADMAP-EXPLANATION-v1": {
+      "provider": "tests/test_roadmap_explanation.py:explanation_values",
+      "kind": "Native bound multi-Release/Milestone model with Tasks, actual incoming implementation links, parallel edges, Requirements, Goals, Needs, Assumptions, Sources, direct dependencies and risks. Independently specified shortest explanation paths preserve stored IDs, inverse flags, source bytes and JSON pointers. Configured depth, exact refusals, unchanged project files and isolated Core/PYZ parity. Pure supplied-model provider; no public CLI, live completeness, Release closure/readiness or Work integration claim."
     }
   }
 }

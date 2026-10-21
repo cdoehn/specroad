@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0124",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ROADMAP-EXPLANATION-v1"
+  ],
+  "preconditions": [
+    "Native owned TargetModel with explicit trace_depth, complete supplied relation inventory and independently declared source/path expectations."
+  ],
+  "steps": [
+    "Invoke explain_roadmap for actual Tasks, Releases and Milestones on owned supplied inputs.",
+    "Compare exact shortest origin paths, original/inverse edge directions, assignment source pointers, direct dependencies and risk/assumption paths.",
+    "Check depth limits, malformed input refusals, byte preservation, detached results and fresh isolated Core/PYZ parity."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abhängigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erklären.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "13.d.W implements a pure native explanation provider. Stored inverse membership/implementation links and forward addresses/refines/derived_from links produce all shortest context paths within explicitly configured trace_depth. Direct scheduling, ownership, dependencies and mitigations remain separate source-bound observations; no inherited schedule or sibling-origin shortcuts. Empty goal/requirement paths stay explicit. This is partial SR-REQ-0124 coverage; public command and full R/C contracts remain open."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,42 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_roadmap_explanation.py::test_assignments_keep_their_exact_source_and_parentage_is_separate",
+    "tests/test_roadmap_explanation.py::test_assumptions_and_sources_remain_explicit_derived_from_paths",
+    "tests/test_roadmap_explanation.py::test_changed_bound_input_is_not_used_as_a_fresh_explanation",
+    "tests/test_roadmap_explanation.py::test_configured_depth_bounds_every_path_and_missing_origins_remain_open[0]",
+    "tests/test_roadmap_explanation.py::test_configured_depth_bounds_every_path_and_missing_origins_remain_open[1]",
+    "tests/test_roadmap_explanation.py::test_configured_depth_bounds_every_path_and_missing_origins_remain_open[2]",
+    "tests/test_roadmap_explanation.py::test_configured_depth_bounds_every_path_and_missing_origins_remain_open[3]",
+    "tests/test_roadmap_explanation.py::test_container_explanation_retains_member_assignment_and_task_origin_paths[milestone]",
+    "tests/test_roadmap_explanation.py::test_container_explanation_retains_member_assignment_and_task_origin_paths[release]",
+    "tests/test_roadmap_explanation.py::test_dependencies_are_direct_observations_without_transitive_release_closure",
+    "tests/test_roadmap_explanation.py::test_explanation_requires_a_native_owned_model[None]",
+    "tests/test_roadmap_explanation.py::test_explanation_requires_a_native_owned_model[value1]",
+    "tests/test_roadmap_explanation.py::test_explanations_are_owned_order_independent_and_cannot_authorize_changes",
+    "tests/test_roadmap_explanation.py::test_invalid_unreachable_inputs_block_an_answer_without_repair[goal_schema-missing_field]",
+    "tests/test_roadmap_explanation.py::test_invalid_unreachable_inputs_block_an_answer_without_repair[missing_target-missing_relation_target]",
+    "tests/test_roadmap_explanation.py::test_live_project_bytes_are_preserved_and_are_not_required_for_supplied_paths",
+    "tests/test_roadmap_explanation.py::test_missing_depth_does_not_invent_a_default",
+    "tests/test_roadmap_explanation.py::test_native_explanation_contract_matches_isolated_core_and_pyz[core]",
+    "tests/test_roadmap_explanation.py::test_native_explanation_contract_matches_isolated_core_and_pyz[pyz]",
+    "tests/test_roadmap_explanation.py::test_nonprojected_hierarchy_cycle_keeps_the_shared_error_contract",
+    "tests/test_roadmap_explanation.py::test_parallel_implementation_links_remain_distinct_shortest_paths",
+    "tests/test_roadmap_explanation.py::test_reassignment_updates_real_provenance_and_hashes_without_inheriting_dates",
+    "tests/test_roadmap_explanation.py::test_requirement_scheduled_in_another_release_does_not_schedule_its_task_there",
+    "tests/test_roadmap_explanation.py::test_risk_paths_preserve_each_mitigating_source_without_rating_or_approval",
+    "tests/test_roadmap_explanation.py::test_task_does_not_acquire_the_goals_of_a_sibling_on_the_same_milestone",
+    "tests/test_roadmap_explanation.py::test_task_explanation_binds_real_sources_and_original_path_directions",
+    "tests/test_roadmap_explanation.py::test_task_has_both_shortest_goal_paths_and_the_requirement_chain",
+    "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[None]",
+    "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[SR-TASK-00000000000000000000000033]",
+    "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[identifier1]",
+    "tests/test_roadmap_explanation.py::test_unknown_or_untyped_identity_never_yields_an_explanation[label]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Public roadmap explain command binding and live read/preflight/result contracts remain open within 13.d.",
+    "R completes missing-link and error/completeness boundaries; C isolates the explanation policy from reusable graph primitives.",
+    "No configured applicability, transitive Release closure, readiness, View/Work integration, full-suite or release acceptance is claimed."
   ]
 }

@@ -3,8 +3,9 @@ from .relations import PlanningRelations, assess_planning_relations
 from .task_implementation import (TaskDoneContext, HumanTaskDoneReview, TaskImplementation,
                                   prepare_task_implementation, implement_task)
 from .roadmap import RoadmapProjection, project_roadmap
+from .explanation import RoadmapExplanation, explain_roadmap
 
 __all__ = ['PlanningRelations', 'assess_planning_relations', 'TaskDoneContext',
            'HumanTaskDoneReview', 'TaskImplementation',
            'prepare_task_implementation', 'implement_task',
-           'RoadmapProjection', 'project_roadmap']
+           'RoadmapProjection', 'project_roadmap', 'RoadmapExplanation', 'explain_roadmap']

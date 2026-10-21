@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 555
-last_completed_plan_commit: 13.c.C
-next_plan_commit: 13.d.W
-last_completed_numbered_bundle: 381
+implementation_plan_commits_completed: 556
+last_completed_plan_commit: 13.d.W
+next_plan_commit: 13.d.R
+last_completed_numbered_bundle: 382
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15792,12 +15792,47 @@ nachfolgenden Auftrag.
 
 #### 13.d.W – Let it Work
 
-- [ ] **13.d.W** · Position **556/900** · Voraussetzung: `13.c.C`.
+- [x] **13.d.W** · Position **556/900** · Voraussetzung: `13.c.C`.
 **Exakte Commit-Message:** `13.d.W feat(roadmap): Roadmap erklären aufbauen`
 
 **Umsetzung:** Ziele, Herkunft der Zuordnung, Abhängigkeiten, Risiken und Annahmen als Datenpfade auswerten.
 
 **Verhaltensabnahme:** Ein geplanter Task lässt sich bis zur zugehörigen Anforderung und zum Ziel zurückverfolgen.
+
+**W-Ausschnitt (Bundle 382):** Der native Provider
+`planning.explain_roadmap(TargetModel, artifact_id)` liefert unveränderliche,
+quellgebundene Erklärungspfade. Er verwendet die vorhandene Roadmapprüfung,
+den gemeinsamen Relationsindex, die bestehende Kürzestpfad-Vorgängerprimitive
+und native Pfadwerte. Gespeicherte Zuordnungen zu Releases/Milestones und
+Task-Umsetzungsbeziehungen werden ausdrücklich invers betrachtet;
+`addresses`, `refines` und `derived_from` behalten ihre gespeicherte Richtung.
+Alle kürzesten Kontextpfade innerhalb des ausdrücklich konfigurierten
+`trace_depth` bleiben mit Artefakt-/Relations-IDs und Richtungsflags erhalten.
+
+Ziele, Requirements, Annahmen und Quellen sind aus diesen Kontextpfaden
+nachvollziehbar. Direkte Terminzuordnungen einschließlich Milestone-Eltern,
+Eigentümerschaft, Abhängigkeiten und Risikominderungen bleiben getrennte
+Beobachtungen ihrer tatsächlichen Quelle. Eine Task-Zuordnung zieht weder
+Geschwisterziele noch die Termine ihrer Requirements still nach sich. Fehlende
+Ziel-/Requirementpfade bleiben offen; Labels, Freitext und ähnliche IDs erzeugen
+keine Beziehung. Die Erklärung ist weder vollständige Release-Closure noch
+Anwendbarkeits-, Done-, Evidenz- oder Readinessbewertung.
+
+Die W-Fixture prüft konkrete Datenpfade, parallele Kanten, Originalquellen und
+Richtungen, Tiefengrenzen, native Schema-/Graphfehler, erhaltene Projektbytes,
+getrennte Ergebniswerte und frische Core-/PYZ-Prozesse. `SR-TC-0124` bleibt
+`partial`: Der öffentliche `roadmap explain`-Befehl samt Live-Read-/Preflight-
+und Ergebnisvertrag sowie die vollständigen R-/C-Abnahmen sind innerhalb von
+13.d noch offen. Die spätere View-/Workintegration wird nicht vorgezogen.
+
+**Gezielter W-Nachweis:** 319 Verhaltenstests bestanden parallel auf vier
+Workern, darunter 31 neue Erklärungstests sowie bestehende Roadmap-,
+Planungsrelations-, Why- und Domänenschematests. Die vollständige Collection
+bestätigt 16.414 Testidentitäten bei null ausgeführten Testkörpern. Die 473
+bestehenden Testdateien und ihre 16.383 Nummern bleiben unverändert; 31 neue
+Identitäten werden hinten angefügt. Apply prüft vor dem W-Commit Gruppe 0
+mit 5.472 Tests parallel. Diese Teiltests sind keine Vollsuite- oder
+Releasefreigabe. 13.d.R beginnt erst in einem nachfolgenden Auftrag.
 
 #### 13.d.R – Make it Right
 
