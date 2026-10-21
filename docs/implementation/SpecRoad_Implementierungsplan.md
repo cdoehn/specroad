@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 548
-last_completed_plan_commit: 13.a.R
-next_plan_commit: 13.a.C
-last_completed_numbered_bundle: 374
+implementation_plan_commits_completed: 549
+last_completed_plan_commit: 13.a.C
+next_plan_commit: 13.b.W
+last_completed_numbered_bundle: 375
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15564,7 +15564,7 @@ bei den nachfolgenden M13-Schritten.
 
 #### 13.a.C – Make it Clean
 
-- [ ] **13.a.C** · Position **549/900** · Voraussetzung: `13.a.R`.
+- [x] **13.a.C** · Position **549/900** · Voraussetzung: `13.a.R`.
 **Exakte Commit-Message:** `13.a.C refactor(roadmap): Release-, Milestone- und Taskbeziehungen bereinigen`
 
 **Bereinigung:** Planung auf generischem Authoring und Relationsmatrix aufbauen.
@@ -15572,6 +15572,42 @@ bei den nachfolgenden M13-Schritten.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand, Bundle 375:**
+Die Projektionen der gespeicherten Quelldaten, aufgelösten Beziehungen und
+Release-/Milestone-/Taskfelder liegen in drei privaten Helfern. Der öffentliche
+Provider behält den nativen `TargetModel`-Snapshot, die gemeinsamen
+Relationsmatrix-, Symmetrie- und Hierarchieprüfungen in unveränderter Reihenfolge
+sowie den gebundenen, abgelösten Ergebnisvertrag. Die Helfer projizieren erst
+nach den jeweiligen gemeinsamen Prüfungen; sie führen weder einen zweiten
+Authoring-Pfad noch eine eigene Relationsmatrix ein. Der vorhandene generische
+Writer bleibt der einzige Schreibweg.
+
+Der strukturelle Abgleich setzt die ausgelagerten Anweisungen wieder ein und
+bestätigt denselben AST der bisherigen Bewertungsfunktion. Auch die öffentliche
+Ergebnisklasse bleibt AST-identisch. Fachwerte, Sortierung, Originalidentitäten,
+Quellbindungen, Fehlergrenzen und fehlende Freigabe-/Schreibautorität bleiben
+erhalten. Die Verifikationsmetadaten entfernen lediglich den erledigten
+C-Strukturpunkt; weitergehende Done-, Roadmap- und Readiness-Nachweise bleiben offen.
+
+Das maßgebliche Result `specroad-apply_Result_145121_1021_e98328.zip`
+bestätigt 13.a.R auf Commit
+`4922deced9b1807a09f6ef48e70508ec0c7d5d06` mit 5.414 bestandenen
+Apply-Tests der Gruppe 1. Der gezielte C-Dev-Lauf hat **667 Tests** aus
+19 Testdateien mit vier Workern in **517,30 Sekunden** bestanden:
+sämtliche W-/R-Planungsfälle einschließlich echter Authoring-/Erzeugungswege
+und isolierter Core-/PYZ-Verträge sowie die betroffenen Domain-, Graph-,
+Referenz-, Hierarchie-, Modellvalidierungs- und Read-only-Regressionen.
+Die vollständige Katalogprüfung bestätigt **16.243 Identitäten** bei null
+Testkörpern. Alle 469 bisherigen Testdateien und die vollständige Registry
+mit ihren 16.243 Testnummern bleiben bytegleich; keine neuen Testnummern.
+Geprüfter Source-SHA-256:
+`a6e0a1a78e48918db980f8234aa32ebce7b6bc9f9e4e5ce82a3602037aa70922`.
+Der Entrypoint verlangt vor dem C-Commit Gruppe 2, Commitsequenz 83,
+mit 5.414 parallelen Tests. Erst danach wird 549/900 markiert.
+Dies ist ein Teiltestnachweis, kein Vollsuite-, Meilensteinfreigabe- oder
+Release-Erfolgsnachweis. SR-TC-0119 bis SR-TC-0121 bleiben partiell.
+13.b.W wird in diesem Bundle nicht begonnen.
 
 <a id="step-13-b"></a>
 ### 13.b – Task-Umsetzung und Done-Nachweis

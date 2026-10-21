@@ -86,6 +86,6 @@
     "tests/test_planning_relations_right.py::test_unreported_symmetric_edges_still_use_the_common_graph_boundary[reverse-noncanonical_symmetric_relation]"
   ],
   "open_items": [
-    "13.a.C structural cleanup remains separate. Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
+    "Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
   ]
 }

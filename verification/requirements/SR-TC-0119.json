@@ -64,6 +64,6 @@
     "tests/test_planning_relations_right.py::test_two_milestone_links_are_not_deduplicated_or_arbitrarily_selected[2]"
   ],
   "open_items": [
-    "13.a.C structural cleanup remains separate. Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
+    "Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
   ]
 }

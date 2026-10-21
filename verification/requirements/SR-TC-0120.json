@@ -87,6 +87,6 @@
     "tests/test_planning_relations_right.py::test_removing_last_required_incoming_task_link_is_blocked_by_common_writer[requirement]"
   ],
   "open_items": [
-    "13.a.C structural cleanup remains separate. Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
+    "Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
   ]
 }
