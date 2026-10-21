@@ -15,7 +15,8 @@ from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .code_reference_state import CodeReferenceState
 from .coverage import assess_verification_coverage
-from .read_input import checked_model_input
+from .read_input import (checked_model_input, resume_verification_read_input,
+                         VerificationReadBindingConflict)
 from ._read_evaluation import record_bindings
 
 
@@ -45,6 +46,25 @@ class CurrentnessReadInput:
         """The same native input for existing computed query/filter adapters."""
         return self._verification
 
+    @property
+    def work_input(self):
+        """Inert semantic input; the Work host must also retain all source bytes.
+
+        Bind all records, including unselected/historical evidence, and every
+        native code observation. No saved result is promoted to a capability.
+        """
+        data = self.data
+        verification = self._verification.work_input
+        return canonical_json_bytes({'format_version': 'currentness-read-work-input-v1',
+            'input_sha256': data['input_sha256'],
+            'record_bindings': data['record_bindings'],
+            'verification_input': parse_json_object(verification),
+            'verification_work_input_sha256': sha256(verification).hexdigest(),
+            'code_bindings': [{k: row[k] for k in
+                ('artifact_id', 'reference_sha256', 'assessment_sha256')}
+                for row in data['code_states']],
+            'currentness_input_sha256': self.sha256})
+
     def __bool__(self):
         raise TypeError('Currentness observations are not readiness or approval')
 
@@ -53,13 +73,11 @@ def prepare_currentness_read_input(model, verification, *, code_states=()):
     """Combine complete native observations for an explicitly supplied model.
 
     A missing code file is a native H.3 ``missing`` observation, not an omitted
-    code_ref. All code references must occur exactly once. The whole-inventory
-    adapters do not accept a partial verification scope. No serialized results
-    are deserialized into native capabilities and no record is updated.
+    code_ref. All code references must occur exactly once, even outside a
+    verification scope. Whole-inventory adapters separately refuse partial
+    scopes. No serialized result becomes a capability; no record is updated.
     """
     model, bound = checked_model_input(model, verification)
-    if bound['explicit_scope']:
-        raise ModelError('currentness_whole_project_input_required')
     if type(code_states) not in (tuple, list) or any(type(v) is not CodeReferenceState for v in code_states):
         raise ModelError('currentness_native_code_states_required')
     records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
@@ -113,6 +131,8 @@ def checked_currentness_records(value, records, configuration, configuration_id=
     """Bind record adapters to the full supplied inventory and exact selection."""
     if type(value) is not CurrentnessReadInput:
         raise ModelError('typed_currentness_read_input_required')
+    if value.verification.data['explicit_scope']:
+        raise ModelError('currentness_whole_project_input_required')
     if type(configuration) is not ProjectConfiguration:
         raise ModelError('currentness_project_configuration_required')
     data = value.data
@@ -123,3 +143,35 @@ def checked_currentness_records(value, records, configuration, configuration_id=
     if configuration_id != data['verification_summary']['scope_descriptor']['configuration_id']:
         raise ModelError('currentness_configuration_mismatch')
     return value.observation
+
+
+def resume_currentness_read_input(model, raw, *, expected_sha256, inputs,
+        input_roles, code_states=(), scope_bindings=None, waiver_reviews=None,
+        waiver_verifier=None):
+    """Recompute the complete observation from independently bound Work inputs.
+
+    The host supplies the original model/product bytes, native scope bindings
+    and code states freshly assessed from its preserved source snapshot. This
+    function opens no saved locator and trusts no stored status or callback.
+    """
+    if (type(raw) is not bytes or type(expected_sha256) is not str or
+            len(expected_sha256) != 64 or any(c not in '0123456789abcdef' for c in expected_sha256)):
+        raise ModelError('currentness_work_input_binding_required')
+    if sha256(raw).hexdigest() != expected_sha256:
+        raise VerificationReadBindingConflict('currentness_work_input_changed')
+    data = parse_json_object(raw)
+    if (set(data) != {'format_version', 'input_sha256', 'record_bindings',
+            'verification_input', 'verification_work_input_sha256', 'code_bindings',
+            'currentness_input_sha256'} or
+            data['format_version'] != 'currentness-read-work-input-v1' or
+            type(data['verification_input']) is not dict or canonical_json_bytes(data) != raw):
+        raise ModelError('currentness_work_input_invalid')
+    verification = resume_verification_read_input(model,
+        canonical_json_bytes(data['verification_input']),
+        expected_sha256=data['verification_work_input_sha256'],
+        inputs=inputs, input_roles=input_roles, scope_bindings=scope_bindings,
+        waiver_reviews=waiver_reviews, waiver_verifier=waiver_verifier)
+    result = prepare_currentness_read_input(model, verification, code_states=code_states)
+    if result.work_input != raw:
+        raise VerificationReadBindingConflict('currentness_work_observation_changed')
+    return result

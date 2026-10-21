@@ -37,6 +37,7 @@
     "SR-FIX-CONTENT-BLOCKS-RIGHT-v1",
     "SR-FIX-CONTENT-BLOCKS-v1",
     "SR-FIX-CORE-LINT-v1",
+    "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1",
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1",
     "SR-FIX-DIAGNOSTICS-v1",
     "SR-FIX-DISCARD-RESTART-v1",
@@ -677,6 +678,10 @@
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1": {
       "provider": "tests/test_currentness_read_integration.py:case",
       "kind": "Owned native whole-project snapshots, explicit VerificationEvaluation and product input bytes/time, complete H.3 code observations and relation review histories. Current/stale/missing/relocated code crosses current/failed/stale/missing/unselected evidence. Validation, coverage, built-in views, direct impact, trace and semantic/local diff retain one immutable observation without subject writes or invented live, release or approval claims."
+    },
+    "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1": {
+      "provider": "tests/test_currentness_read_integration_right.py:resumed",
+      "kind": "Owned complete native model/product/code sources and inert versioned currentness Work inputs. All code/evidence states, superseded and concurrent Evidence, exact Evaluation/time/scope/configuration, native Waiver trust and tamper rejection. Scoped model views retain full input inventories; whole-inventory adapters refuse partial scopes. Real CheckpointStore snapshots are rehydrated into a new native location and consumed in fresh Core/stdlib-only PYZ processes without the original source locator. Incremental QueryWork preserves all inputs beyond filtered/empty pages. No Subject writes, release readiness, executable checkpoint, durable query-cursor or full-suite claim."
     }
   }
 }

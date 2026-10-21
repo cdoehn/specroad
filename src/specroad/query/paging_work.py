@@ -26,12 +26,23 @@ class QueryWork:
     """
 
     def __init__(self, root, records, query, *, project, protected_roots,
-                 configuration=None, configuration_id=None, batch_bytes=65536, verification=None):
+                 configuration=None, configuration_id=None, batch_bytes=65536, verification=None,
+                 currentness=None):
         _positive(batch_bytes)
         if type(query) is not NormalizedQuery:
             raise ModelError('normalized_query_required')
         records = tuple(_sequence(records))
         records = configured_sources(records, configuration_id)
+        if currentness is not None:
+            from ..model.configuration import ProjectConfiguration
+            from ..verification.currentness_input import checked_currentness_records
+            checked_currentness_records(currentness, records,
+                ProjectConfiguration(project), configuration_id)
+            if verification is not None and (type(verification) is not type(currentness.verification)
+                    or verification.sha256 != currentness.verification.sha256):
+                raise ModelError('currentness_verification_mismatch')
+            verification = currentness.verification
+        self._currentness = currentness
         data = query.data
         ordering = []
         for index, item in enumerate(data['sort']):
@@ -60,6 +71,15 @@ class QueryWork:
         return self._evaluation_input
 
     @property
+    def currentness_input(self):
+        """Complete inert input, independent of query filters or delivered page."""
+        return None if self._currentness is None else self._currentness.work_input
+
+    @property
+    def currentness_observation(self):
+        return None if self._currentness is None else self._currentness.observation
+
+    @property
     def state(self):
         return {'format': 'query-work-cursor-v1',
                 'phase': 'complete' if self._result is not None else 'failed' if self._failed else
@@ -67,6 +87,7 @@ class QueryWork:
                 'query_sha256': self._selection.query_sha256,
                 'inputs_sha256': self._selection.inputs_sha256,
                 'evaluation_binding': self._selection.evaluation_binding,
+                **({} if self._currentness is None else {'currentness_sha256': self._currentness.sha256}),
                 'units_completed': self._units, 'visited_records': self._visited,
                 'retained_items': len(self._items), 'complete': self._result is not None,
                 'durable_checkpoint': False, 'sort': self._sort.state,

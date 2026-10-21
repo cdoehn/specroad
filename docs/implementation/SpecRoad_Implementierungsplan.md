@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 544
-last_completed_plan_commit: 12.t.W
-next_plan_commit: 12.t.R
-last_completed_numbered_bundle: 370
+implementation_plan_commits_completed: 545
+last_completed_plan_commit: 12.t.R
+next_plan_commit: 12.t.C
+last_completed_numbered_bundle: 371
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15355,12 +15355,50 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.t.R – Make it Right
 
-- [ ] **12.t.R** · Position **545/900** · Voraussetzung: `12.t.W`.
+- [x] **12.t.R** · Position **545/900** · Voraussetzung: `12.t.W`.
 **Exakte Commit-Message:** `12.t.R feat(verification): Nachweis-/Codeintegration und Workparität vervollständigen`
 
 **Vervollständigung:** Noch fehlende Readiness bleibt M13 vorbehalten; geteilte Arbeit erhält vollständige Evaluation und Nachweismenge.
 
 **Verhaltensabnahme:** Einzellauf und Fortsetzung liefern dieselben Coverage-/Code-/Verifikationsdaten ohne Subjectwrites. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Stand, Bundle 371:** `CurrentnessReadInput.work_input`
+enthält versionierte kanonische JSON-Bytes mit vollständiger Evaluation,
+Bewertungszeit, Scope-/Konfigurationsbindung, sämtlichen Artefaktbindungen und
+allen nativen Codebeobachtungen. Auch supersedierte, historische und nicht
+ausgewählte Evidence bleibt erhalten. `resume_currentness_read_input`
+verlangt den unabhängig gebundenen Eingang, ursprüngliche Modell-/Produktbytes,
+native Scopebindungen und erneut ermittelte Codezustände. Es berechnet dieselben
+Verification-/Coverage-/Aktualitätsdaten neu. Geänderte Beobachtungen erzeugen
+einen Bindungskonflikt; fehlende oder untypisierte Eingaben keinen Ersatz-Erfolg.
+Waiver-Vertrauen wird separat erneut geprüft und niemals als gespeicherte
+Approval-Fähigkeit übernommen. Die Funktionen schreiben keine Subjects.
+
+Modellgebundene Coverage-, Verification- und Traceability-Ansichten können einen
+expliziten Verification-Scope verwenden und behalten dabei die vollständige
+Eingangsmenge einschließlich aller Codeverweise. Adapter für ganze Inventare
+weisen solche partiellen Eingänge weiterhin ab. `QueryWork` bewahrt über echte
+Sortier-/Ausgabeeinheiten die vollständige Evaluation und Aktualitätsbeobachtung,
+auch bei Filtern oder leeren Seiten. Sein Cursor bleibt prozesslokal.
+Der native Work-Host erhält zusätzlich sämtliche erforderlichen Quellenbytes;
+die semantischen Work-Eingänge allein sind kein Projekt-/Codeexport. Frische
+Core- und Standardbibliothek-PYZ-Prozesse rekonstruieren identische Ergebnisse
+aus einem vertrauenswürdig gebundenen CheckpointStore-Snapshot an einem neuen
+nativen Speicherort, ohne den ursprünglichen Quellenlocator zu verwenden.
+Kopierte Verzeichnissperren gelten nicht als Fortsetzungsberechtigung.
+Readiness bleibt M13 vorbehalten; SR-TC-0284 und SR-TC-0537 bleiben partiell.
+
+Der abschließende gezielte Dev-Lauf hat **2.071 Tests** aus 41 neuen und
+betroffenen Testdateien mit vier Workern in **107,41 Sekunden** bestanden,
+einschließlich aller bisherigen W-Nachweise und der Work-/Scope-/Paging-
+Regressionen. Die vollständige Katalogprüfung bestätigt **16.155 Identitäten**
+bei null Testkörpern. 75 neue Identitäten wurden hinter die unveränderten
+16.080 Nummern angehängt; alle 466 bisherigen Testdateien bleiben bytegleich.
+Geprüfter Source-SHA-256:
+`0f7ca1cec38cfc154fc2e3d59c56fbcff2ae02b17d4d145abcc9a72cd3195cd1`.
+Der Entrypoint verlangt vor dem R-Commit Gruppe 1, Commitsequenz 79,
+mit 5.385 parallelen Tests. Erst danach wird 545/900 markiert.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis. 12.t.C folgt separat.
 
 #### 12.t.C – Make it Clean
 
