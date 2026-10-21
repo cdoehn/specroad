@@ -7,19 +7,23 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-DOMAIN-DRAFT-v1"
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-PLANNING-RELATIONS-v1"
   ],
   "preconditions": [
-    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation."
+    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation.",
+    "Owned native TargetModel with real artifact bytes and explicit stored planning edges; native authoring writer uses an owned temporary project and explicit host authority."
   ],
   "steps": [
     "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes.",
-    "Check stored non-draft field gates and malformed statuses without inferring approval or evidence outcomes."
+    "Check stored non-draft field gates and malformed statuses without inferring approval or evidence outcomes.",
+    "Resolve stored Release/Milestone/Task fields and directed relationships through common domain and graph validators; retain identities and exact source bindings.",
+    "Publish valid scheduling or Milestone creation through the common writer; compare original targets, source revisions and read-only planning observations."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Milestone-Artefakt MUSS über `part_of` genau einem Release zugeordnet sein.",
-    "scope": "Common envelope and the implemented thirteen type-field contracts only. No complete graph/profile/evidence/approval validation."
+    "scope": "Stored planning fields, exactly one resolved Release per Milestone, original Task owners/criteria and explicit incoming implementation links; native scheduling of Capability/Requirement/Task to Release/Milestone. No Done evidence, complete lifecycle, roadmap or release-readiness proof."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -37,9 +41,14 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
     "test_domain_schemas.DomainWorkTests.test_milestone_has_exactly_one_release_relation",
-    "test_domain_schemas.DomainRightTests.test_local_milestone_cardinality_has_precise_error_location"
+    "test_domain_schemas.DomainRightTests.test_local_milestone_cardinality_has_precise_error_location",
+    "tests/test_planning_relations.py::test_common_creation_preserves_one_milestone_owner_and_release_link",
+    "tests/test_planning_relations.py::test_milestone_never_selects_an_arbitrary_release[0]",
+    "tests/test_planning_relations.py::test_milestone_never_selects_an_arbitrary_release[2]",
+    "tests/test_planning_relations.py::test_planning_reuses_exact_existing_identities_and_stored_edge_orientation",
+    "tests/test_planning_relations.py::test_release_milestone_owner_criteria_and_task_subjects_are_original_facts"
   ],
   "open_items": [
-    "Remaining graph, profile, specialized lifecycle, semantic, evidence and end-to-end checks at their assigned plan steps; no full requirement or release approval claimed."
+    "Complete adversarial graph/schema and authoring-boundary integration in 13.a.R; Done evidence in 13.b, roadmap and readiness in subsequent M13 steps. No full SR-VER-0009 or release approval claimed."
   ]
 }

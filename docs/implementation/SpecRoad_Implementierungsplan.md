@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 546
-last_completed_plan_commit: 12.t.C
-next_plan_commit: 13.a.W
-last_completed_numbered_bundle: 372
+implementation_plan_commits_completed: 547
+last_completed_plan_commit: 13.a.W
+next_plan_commit: 13.a.R
+last_completed_numbered_bundle: 373
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15464,12 +15464,53 @@ SR-TC-0537 bleiben partiell. 13.a.W wird in diesem Bundle nicht begonnen.
 
 #### 13.a.W – Let it Work
 
-- [ ] **13.a.W** · Position **547/900** · Voraussetzung: `12.t.C`.
+- [x] **13.a.W** · Position **547/900** · Voraussetzung: `12.t.C`.
 **Exakte Commit-Message:** `13.a.W feat(roadmap): Release-, Milestone- und Taskbeziehungen aufbauen`
 
 **Umsetzung:** part_of und scheduled_for mit Pflichtowner, Done-Kriterien und genau einem Release je Milestone integrieren.
 
 **Verhaltensabnahme:** Gültige Planung verknüpft bestehende Fachidentitäten ohne Kopien.
+
+**Vorbereiteter W-Stand, Bundle 373:** Der native Planungsprovider liest
+Release-, Milestone- und Taskfelder aus einem gebundenen `TargetModel`.
+Die gemeinsamen Domain-, Relations- und Hierarchieprüfungen bleiben maßgeblich;
+Owner, Done-Kriterien und die eindeutige Release-Zuordnung eines Milestones
+werden aus den gespeicherten Artefakten übernommen. `part_of`, `scheduled_for`
+und eingehende `implemented_by`-Beziehungen behalten ihre ursprünglichen
+Artefakt-/Relationsidentitäten und ihre gespeicherte Richtung. Jede Beobachtung
+bindet Originalpfad, Revision, Quellbytes, Datensatz und Relationsinhalt sowie
+die Modellwurzel; ihre abgelösten Daten erlauben keine Mutation des Eingangs.
+
+Tasks ohne gespeicherte Requirement-/Decision-Umsetzungsbeziehung werden
+ausdrücklich als unvollständig aufgeführt; bei `approved` wird die fehlende
+Beziehung zurückgewiesen. Gespeicherte Statuswerte, Done-Kriterien und
+Readiness-Policy bleiben Fakten: Der Provider erteilt weder Schreib- oder
+Freigaberechte noch eine Done-, Applicability- oder Readiness-Bewertung.
+Er öffnet keine Live-Projektdateien und erzeugt keine Reportdateien.
+Der gemeinsame Writer ordnet Capability, Requirement und Task jeweils einem
+Release oder Milestone zu; die gemeinsame Artefakterzeugung erstellt einen
+Milestone mit Owner und genau einer Release-Beziehung. Die Verhaltenstests
+prüfen diese tatsächlichen Schreibwege einschließlich unveränderter fremder
+Artefakte, Quellrevision und anschließender gebundener Planungsbeobachtung.
+
+Das maßgebliche Result `specroad-apply_Result_131708_1021_10fa39.zip`
+bestätigt 12.t.C auf Commit
+`568dc60e4fa8894045bd14637ca71306d08136c2` mit 5.385 bestandenen
+Apply-Tests der Gruppe 2. Der gezielte W-Dev-Lauf hat **606 Tests** aus
+18 Testdateien mit vier Workern in **502,58 Sekunden** bestanden:
+neue Planungs-/Core-/PYZ-Verträge und betroffene Domain-, Relations-,
+Hierarchie-, Modellvalidierungs-, Artefakterzeugungs- und Authoring-Regressionen.
+Die vollständige Katalogprüfung bestätigt **16.182 Identitäten** bei null
+Testkörpern. 27 neue Identitäten werden hinten angefügt; sämtliche bisherigen
+16.155 Testnummern und alle 467 bisherigen Testdateien bleiben unverändert.
+Geprüfter Source-SHA-256:
+`57e3a82bd13094f31e776292632fd193dfb40d6fd15e2bd4e6155504eab23c0f`.
+Der Entrypoint verlangt vor dem W-Commit Gruppe 0, Commitsequenz 81,
+mit 5.394 parallelen Tests. Erst danach wird 547/900 markiert.
+Dies ist ein Teiltestnachweis, kein Vollsuite-, Meilensteinfreigabe- oder
+Release-Erfolgsnachweis. SR-TC-0119 bis SR-TC-0121 bleiben partiell.
+13.a.R folgt separat; Done-Nachweise, Roadmap und Readiness verbleiben
+bei den nachfolgenden M13-Schritten.
 
 #### 13.a.R – Make it Right
 
