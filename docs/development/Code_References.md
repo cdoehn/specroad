@@ -62,3 +62,37 @@ kapseln die unveränderten M2-/M8-Leseoperationen und Git-Bindungsprüfungen.
 `code_references.py` behält die öffentliche Datensatz-/Quellenprüfung und
 die unveränderliche Ergebnisprojektion. Die Quellenadapter werden erst nach
 der vorhandenen Zulassungsprüfung aufgerufen und fangen keine Fehler ab.
+
+## Gespeicherte Zeilenauswahl nach H.2
+
+`specroad.verification.select_code_lines(source)` wertet die gespeicherte
+`line_range` eines vorhandenen `CodeReferenceSource` aus. Die Funktion arbeitet
+auf dessen eigenen Originalbytes; sie öffnet keine Datei erneut und bestätigt
+keine zwischenzeitlich geänderte Quelle. Andere Referenzarten werden mit
+`code_reference_line_range_required` abgewiesen.
+
+Die vollständigen Bytes werden strikt im gespeicherten Encoding dekodiert.
+CRLF und CR werden zu LF normalisiert. Nur LF trennt danach Zeilen; andere
+Unicode-Trennzeichen, ein BOM gemäß dem gewählten Encoding, kombinierende
+Zeichen und vorhandene abschließende Zeilenumbrüche bleiben erhalten.
+Start und Ende sind 1-basiert und inklusiv. Ein abschließendes LF erzeugt
+keine zusätzliche leere Zeile; eine leere Datei hat keine auswählbare Zeile.
+Die UTF-8-Bytes der ausgewählten Zeilen einschließlich ihrer vorhandenen
+LF-Enden bestimmen den Auswahl-SHA-256. Änderungen außerhalb dieser Auswahl
+heben einen passenden Auswahlhash auch bei verändertem Rohdateihash nicht auf.
+
+Der unveränderliche `CodeLineSelection` hält diese Bytes in `selection_bytes`.
+Seine abgetrennte `.data`-Projektion (`code-line-selection-v1`) bindet den
+vollständigen Quellenbericht samt `.sha256`, Encoding, Position, vorhandene
+und ausgewählte Zeilenanzahl, erwarteten und beobachteten Auswahlhash sowie
+`selection_hash_matches`. `.sha256` bindet die kanonische Projektion.
+`selection_evaluated` ist wahr. `relocation_evaluated`,
+`reference_state_evaluated`, `symbol_resolved`, `source_code_executed` und
+`write_authorized` bleiben falsch; der Wert ist kein boolescher Erfolgsnachweis.
+
+Unbekannte oder nicht textbasierte Encodings liefern
+`code_reference_encoding_unavailable`, ungültige Eingabebytes
+`code_reference_decode_failed`. Ein nicht vollständig vorhandener Bereich
+liefert `code_reference_selection_missing`; es gibt keine gekürzte Auswahl,
+Encoding-Vermutung oder Ersetzung ungültiger Zeichen. Die Relokationssuche
+und Anker-Auswertung folgen in 12.r.R, die H.3-Zustandsentscheidung in 12.s.

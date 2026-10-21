@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 537
-last_completed_plan_commit: 12.q.C
-next_plan_commit: 12.r.W
-last_completed_numbered_bundle: 363
+implementation_plan_commits_completed: 538
+last_completed_plan_commit: 12.r.W
+next_plan_commit: 12.r.R
+last_completed_numbered_bundle: 364
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15015,12 +15015,43 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.r.W – Let it Work
 
-- [ ] **12.r.W** · Position **538/900** · Voraussetzung: `12.q.C`.
+- [x] **12.r.W** · Position **538/900** · Voraussetzung: `12.q.C`.
 **Exakte Commit-Message:** `12.r.W feat(verification): Zeilenauswahl und exakte Relokation aufbauen`
 
 **Umsetzung:** Encoding, inklusive Zeilenbereiche und normalisierten Auswahlhash nach H.2 umsetzen.
 
 **Verhaltensabnahme:** Änderung außerhalb unveränderter Auswahl erhält deren Aktualität.
+
+**W-Vorbereitung (Bundle 364):** Die öffentliche rein lesende API
+`select_code_lines` wertet eine gespeicherte `line_range` auf einem bereits
+gebundenen `CodeReferenceSource` aus. Sie dekodiert dessen ursprüngliche
+Datei-/Gitbytes strikt im gespeicherten Encoding, normalisiert ausschließlich
+CRLF und CR zu LF und wählt den 1-basierten inklusiven Bereich samt vorhandenen
+LF-Enden aus. Andere Unicode-Zeichen bleiben Inhalt. Der unveränderliche
+`CodeLineSelection` bindet UTF-8-Auswahlbytes, Quellenbericht, Encoding,
+Position, Zeilenanzahl sowie erwarteten und beobachteten Auswahlhash.
+Ein veränderter Rohdateihash außerhalb passender Auswahlbytes hebt den
+Auswahlvergleich nicht auf. Es gibt keine erneute Quelldateiöffnung,
+Encoding-Vermutung, gekürzte Auswahl, Zeichenersetzung oder Schreibfreigabe.
+Nicht verfügbare Bereiche und Dekodierungsfehler erzeugen keinen Auswahlhash.
+
+603 gezielte Verhaltenstests in 17 Dateien bestanden mit vier parallelen
+Workern in 10,67 Sekunden. Die 61 neuen Fälle prüfen explizite Zeilenvektoren,
+Encodings einschließlich UTF-16/32, nicht als Zeilentrenner behandelte
+Unicode-Zeichen, unveränderte Auswahl bei äußeren Änderungen, getrennte
+Rohdatei-/Auswahlhashes, Fehler, Datei-/historische Git-Parität und frische
+Core-/PYZ-Prozesse ohne Fremdmodule oder ausgeführten Quellcode. Die
+vollständige Katalog-Collection bestätigt 15.694 Identitäten bei null
+Testkörpern. Alle 461 bisherigen Testdateien und die ersten 15.633 festen
+Testnummern bleiben erhalten; 61 neue Nummern sind angehängt.
+Geprüfter Source-SHA-256:
+`12c671604e72d98c232fc8cc176aece433caadd0d495f2107970b71d9909a7a1`.
+Der Entrypoint verlangt vor dem W-Commit Gruppe 0, Commitsequenz 72,
+mit 5.232 parallelen Tests. Erst danach wird 538/900 markiert.
+Relokationssuche und Anker-Auswertung bleiben 12.r.R vorbehalten; H.3-Zustände
+und Consumer-Integration folgen in 12.s/12.t. Die SR-TC-0536-Bindung bleibt
+ausdrücklich partiell, SR-TC-0346 weiterhin offen.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.r.R – Make it Right
 

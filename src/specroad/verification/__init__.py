@@ -31,6 +31,7 @@ from .read_input import (VerificationReadInput, prepare_verification_read_input,
                          VerificationReadBindingConflict, resume_verification_read_input)
 from .coverage import VerificationCoverage, assess_verification_coverage
 from .code_references import CodeReferenceSource, read_code_reference
+from .code_selection import CodeLineSelection, select_code_lines
 
 from .waiver_content import waiver_content_projection, waiver_content_sha256
 from .waiver_values import (VerificationWaiver, WaiverContext, HumanWaiverReview,
@@ -65,4 +66,5 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "VerificationReadInput", "prepare_verification_read_input",
            "VerificationCoverage", "assess_verification_coverage",
            "VerificationReadBindingConflict", "resume_verification_read_input",
-           "CodeReferenceSource", "read_code_reference")
+           "CodeReferenceSource", "read_code_reference",
+           "CodeLineSelection", "select_code_lines")
