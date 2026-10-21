@@ -98,6 +98,7 @@
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
+    "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
@@ -710,6 +711,10 @@
     "SR-FIX-RELEASE-SCOPE-v1": {
       "provider": "tests/test_release_scope.py:release_values",
       "kind": "Owned native multi-Release/Milestone model with incoming schedules and Task memberships, internal and external stored depends_on edges, component chains and cycles. Exact byte-bound inventory and explicit synthetic resource-use/current-review observations, configuration admission, immutable reports, no filesystem writes and isolated Core/PYZ parity. Seed membership remains distinct from the closed native closure; no live completeness, authenticated providers, normative ScopeHash, readiness or approval claim."
+    },
+    "SR-FIX-RELEASE-SCOPE-RIGHT-v1": {
+      "provider": "tests/test_release_scope_right.py:rich_project",
+      "kind": "Owned byte-bound Release graph with indirect Evidence subjects, verification slots, all strong relation types, closed weak dependencies, explicit current reviews and profile/rule/mapping/attachment resources. Native schema failures, exact variant conflicts and unresolved applicability; no authenticated providers, verification or readiness proof."
     }
   }
 }

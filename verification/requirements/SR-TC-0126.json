@@ -7,20 +7,23 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RELEASE-SCOPE-v1"
+    "SR-FIX-RELEASE-SCOPE-v1",
+    "SR-FIX-RELEASE-SCOPE-RIGHT-v1"
   ],
   "preconditions": [
-    "Native owned TargetModel plus explicit ClosureBindings for precisely the same complete supplied source and resource bytes."
+    "Native owned TargetModel plus explicit ClosureBindings for precisely the same complete supplied source and resource bytes.",
+    "For 13.e.R, supplied native member schemas and explicit effective configuration chains; unselected conditional applicability remains unresolved."
   ],
   "steps": [
     "Resolve Release seeds with native incoming planning membership and expand the existing closed core closure.",
     "Compare stored direct depends_on edges from every closure artifact and classify targets outside Release seed membership as external.",
-    "Check exact source/target hashes, edge direction and pointers, configuration exclusions, changed or missing provider inputs and isolated Core/PYZ parity."
+    "Check exact source/target hashes, edge direction and pointers, configuration exclusions, changed or missing provider inputs and isolated Core/PYZ parity.",
+    "Resolve complete indirect obligations and reject exact strong, field, current-review and closed-weak configuration conflicts. Validate every reached artifact with its native schema; retain explicit applicability status, reason and source/configuration binding."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Readiness-Prüfung MUSS direkte `depends_on`-Abhängigkeiten des Release-Scopes einbeziehen und außerhalb des Releases liegende Pflichtabhängigkeiten melden.",
-    "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority."
+    "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority. 13.e.R additionally covers the complete indirect graph, all 15 strong edge types, resource and review paths, exact SRV141 variant diagnostics, native schemas of reached non-planning members and unresolved unconfigured applicability. Isolated Core/PYZ and no-write boundaries remain enforced."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -29,7 +32,10 @@
     "/scope_resolution",
     "/required_dependencies",
     "/external_required_dependencies",
-    "/scope_resolution_sha256"
+    "/scope_resolution_sha256",
+    "/applicability",
+    "/unresolved_applicability",
+    "/scope_applicability_complete"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -69,9 +75,67 @@
     "tests/test_release_scope.py::test_shared_release_assignment_is_internal_without_changing_stored_edges",
     "tests/test_release_scope.py::test_unbound_models_are_rejected[None]",
     "tests/test_release_scope.py::test_unbound_models_are_rejected[unbound1]",
-    "tests/test_release_scope.py::test_unbound_models_are_rejected[unbound2]"
+    "tests/test_release_scope.py::test_unbound_models_are_rejected[unbound2]",
+    "tests/test_release_scope_right.py::test_applicability_report_is_sorted_owned_and_rebound_to_changed_member_bytes",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-addresses]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-allocated_to]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-constrains]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-contains]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-depends_on]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-derived_from]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-implemented_by]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-mitigates]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-part_of]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-produces]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-references]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-refines]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-scheduled_for]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-supersedes]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[included-verified_by]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-addresses]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-allocated_to]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-constrains]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-contains]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-depends_on]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-derived_from]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-implemented_by]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-mitigates]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-part_of]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-produces]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-references]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-refines]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-scheduled_for]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-supersedes]",
+    "tests/test_release_scope_right.py::test_every_strong_edge_is_mandatory_beyond_release_seeds[variant-conflict-verified_by]",
+    "tests/test_release_scope_right.py::test_incomplete_indirect_resource_observations_are_not_successful_shorter_scopes[attachment]",
+    "tests/test_release_scope_right.py::test_incomplete_indirect_resource_observations_are_not_successful_shorter_scopes[resource-use]",
+    "tests/test_release_scope_right.py::test_inherited_configuration_binds_parent_bytes_and_filters_before_closure",
+    "tests/test_release_scope_right.py::test_invalid_applicability_is_rejected_even_without_configuration[False]",
+    "tests/test_release_scope_right.py::test_invalid_applicability_is_rejected_even_without_configuration[True]",
+    "tests/test_release_scope_right.py::test_reached_non_planning_members_are_validated_by_their_native_schemas[component-responsibility]",
+    "tests/test_release_scope_right.py::test_reached_non_planning_members_are_validated_by_their_native_schemas[document-purpose]",
+    "tests/test_release_scope_right.py::test_reached_non_planning_members_are_validated_by_their_native_schemas[risk-probability]",
+    "tests/test_release_scope_right.py::test_reached_non_planning_members_are_validated_by_their_native_schemas[source-source_kind]",
+    "tests/test_release_scope_right.py::test_reached_non_planning_members_are_validated_by_their_native_schemas[test-oracle]",
+    "tests/test_release_scope_right.py::test_release_closure_includes_indirect_subjects_slots_reviews_and_resource_chains",
+    "tests/test_release_scope_right.py::test_unreached_non_planning_member_does_not_turn_scope_validation_into_full_validation",
+    "tests/test_release_scope_right.py::test_unresolved_and_invalid_members_have_identical_isolated_runtime_contracts[core]",
+    "tests/test_release_scope_right.py::test_unresolved_and_invalid_members_have_identical_isolated_runtime_contracts[pyz]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[configuration-dependent-component]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[configuration-dependent-release]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[configuration-dependent-requirement]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[constant-false-component]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[constant-false-release]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[constant-false-requirement]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[constant-true-component]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[constant-true-release]",
+    "tests/test_release_scope_right.py::test_unselected_configuration_never_turns_conditional_members_into_unconditional_ones[constant-true-requirement]",
+    "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[closed-weak]",
+    "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[current-review]",
+    "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[slot]",
+    "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[subject]"
   ],
   "open_items": [
-    "13.e.R/C completes robustness and structure of this supplied-model provider. Release readiness gates and authenticated currentness belong to 13.f; no positive readiness, live inventory, normative ScopeHash or full-suite evidence is claimed."
+    "13.e.C structure and regression preservation remain next. Release readiness gates and authenticated currentness remain 13.f; View/Work integration remains 13.h. Supplied-input tests do not certify live inventory completeness, normative ScopeHash or full-suite success."
   ]
 }

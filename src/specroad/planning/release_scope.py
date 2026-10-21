@@ -8,11 +8,15 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from ..changes import TargetModel
+from ..configurations import evaluate_applicability, resolve_configuration
 from ..graph.relations import SourceRelations
 from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model.domain_schemas import DOMAIN_TYPES
 from ..model.errors import ModelError
+from ..storage.domain_artifact import DomainArtifact
 from ..storage.json_syntax import parse_json_object
+from ..storage.record_artifact import RecordArtifact
 from ..verification._required_scope import resolve_required_scope
 from .relations import assess_planning_relations
 
@@ -45,6 +49,9 @@ def resolve_release_scope(model, release_id, *, scope_bindings, configuration_id
     provider authentication and live inventory completeness remain unevaluated.
     Configuration admission, missing dependencies and closure traversal use the
     existing scope providers. No scheduling or dependency walk is duplicated.
+    Every reached artifact uses its native schema and applicability classifier.
+    Without a selected configuration, conditional members remain in the closure
+    and are explicitly unresolved; they do not become unconditional obligations.
     """
     if type(model) is not TargetModel:
         raise ModelError('release_scope_target_model_required')
@@ -59,9 +66,17 @@ def resolve_release_scope(model, release_id, *, scope_bindings, configuration_id
     if release_id not in seeds:
         raise ModelError('release_scope_release_excluded', pointer='/selector/release_id')
 
+    configuration = (None if configuration_id is None else
+                     resolve_configuration(records, configuration_id))
+    included = set(closure.artifact_ids)
+    applicability = []
     values, bindings = {}, {}
     for record in records:
-        value = parse_json_object(record.source_bytes)
+        if record.identity.id not in included:
+            continue
+        artifact = DomainArtifact if record.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
+        value = artifact(record.source_bytes, path=record.path).data
+        applicability.append(evaluate_applicability(record, configuration).data)
         key = value['id']
         values[key] = value
         bindings[key] = {'artifact_id': key, 'artifact_type': value['artifact_type'],
@@ -84,6 +99,8 @@ def resolve_release_scope(model, release_id, *, scope_bindings, configuration_id
                 'external': target not in seeds})
     required.sort(key=lambda row: (row['source_id'], row['target_id'], row['relation_id']))
     external = [row for row in required if row['external']]
+    applicability.sort(key=lambda row: row['artifact_id'].encode('utf-8'))
+    unresolved = [row['artifact_id'] for row in applicability if row['status'] == 'potentially_applicable']
     plan = planning.data
     data = {'format_version': 'release-scope-v1', 'generated': True, 'normative': False,
         'project_id': plan['project_id'], 'release_id': release_id,
@@ -92,6 +109,8 @@ def resolve_release_scope(model, release_id, *, scope_bindings, configuration_id
         'planning_sha256': planning.sha256, 'scope_descriptor': descriptor.data,
         'scope_descriptor_sha256': descriptor.sha256,
         'configuration_hash': closure.seeds.configuration_sha256,
+        'applicability': applicability, 'unresolved_applicability': unresolved,
+        'scope_applicability_complete': not unresolved,
         'seed_artifact_ids': list(closure.seeds.artifact_ids),
         'artifact_ids': list(closure.artifact_ids), 'resource_ids': list(closure.resource_ids),
         'artifacts': [bindings[key] for key in closure.artifact_ids],

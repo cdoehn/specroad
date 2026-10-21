@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 559
-last_completed_plan_commit: 13.e.W
-next_plan_commit: 13.e.R
-last_completed_numbered_bundle: 385
+implementation_plan_commits_completed: 560
+last_completed_plan_commit: 13.e.R
+next_plan_commit: 13.e.C
+last_completed_numbered_bundle: 386
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15998,12 +15998,57 @@ Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 13.e.R – Make it Right
 
-- [ ] **13.e.R** · Position **560/900** · Voraussetzung: `13.e.W`.
+- [x] **13.e.R** · Position **560/900** · Voraussetzung: `13.e.W`.
 **Exakte Commit-Message:** `13.e.R feat(roadmap): Release-Scope und externe Pflichtabhängigkeiten vervollständigen`
 
 **Vervollständigung:** Scope nicht auf direkt geplante IDs verkürzen; Variantenkonflikte verhindern gültige Freigabe.
 
 **Verhaltensabnahme:** Graphfixture weist vollständige Releaseclosure einschließlich externer Blocker nach. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zustand (Bundle 386):** Derselbe native Releaseprovider
+validiert jedes erreichte Artefakt mit seinem Domain- beziehungsweise
+Recordschema. Auch indirekt erreichte, nicht direkt geplante Pflichtmitglieder
+werden geprüft. Nicht erreichte Nichtplanungsartefakte werden dadurch nicht
+zu einem Vollvalidierungsnachweis des Projekts.
+
+Jedes Closuremitglied erhält die native Anwendbarkeitsklassifikation mit
+Artefakt-ID, Grund, Quellbyteshash und gegebenenfalls effektivem
+Konfigurationshash. Ohne ausdrücklich gewählte Konfiguration bleiben
+bedingte Mitglieder `potentially_applicable`, auch bei konstanten Bedingungen.
+`unresolved_applicability` benennt sie deterministisch;
+`scope_applicability_complete` ist dann falsch. Das ist weder eine
+Readinessentscheidung noch eine Freigabe. Ungültige Bedingungen werden
+nicht durch die fehlende Konfigurationsauswahl verborgen.
+
+Die Abnahme erweitert die vorhandenen W-Nachweise um ein vollständig
+vorgegebenes indirektes Graphfixture: Evidence-Subjects, Verifikationsslots,
+alle 15 starken Relationstypen, geschlossene schwache Abhängigkeiten,
+explizite aktuelle Reviews und Profil-/Regel-/Mapping-/Attachmentressourcen.
+Konfigurationskonflikte auf starken, feldbasierten, Review- und geschlossenen
+schwachen Pflichtpfaden bleiben konkrete Fehler `SRV141` mit Quell-/Ziel-ID,
+Relations-ID und Pointer. Elternkonfigurationen binden Auswahl und Inhalt;
+fehlende Ressourcenbeobachtungen ergeben keinen verkürzten Erfolgsscope.
+Die Auflösung verwendet weiter die gemeinsame native Closure ohne eigenen
+Traversierungsalgorithmus. Readiness, Live-Vollständigkeit,
+Provider-Authentisierung und normative ScopeHash-Ausstellung bleiben außerhalb
+dieses Ausschnitts. `SR-TC-0126` und `SR-TC-0408` bleiben `partial`.
+
+**Gezielter R-Nachweis:** 809 Verhaltenstests bestanden parallel auf vier
+Workern in 106,01 Sekunden: 58 neue Release-Scope-R-Fälle, alle bisherigen
+W-Fälle sowie betroffene Planungs-/Roadmap-, Seed-/Closure-,
+Verifikationsscope-, Anwendbarkeits- und Konfigurationsvererbungstests. Die
+vollständige Collection bestätigt 16.558 Identitäten bei null ausgeführten
+Testkörpern. Alle 476 bisherigen Testdateien und 16.500 bestehenden
+Testnummern bleiben unverändert; die 58 neuen Identitäten werden hinten
+angehängt. Zwei vorherige Läufe scheiterten an Fehlern der neuen Fixtures
+(Relationsmatrix, Konfigurationsfelder/-namen und Review-Eingabetyp); sie
+sind keine Erfolgsbelege. Die fachlichen Orakel und bestehenden Tests wurden
+nicht abgeschwächt; nach Korrektur bestand die gesamte gezielte Auswahl.
+
+Apply prüft vor diesem R-Commit ausschließlich Gruppe 1 mit 5.519 Tests
+parallel (Commitfolge 94). Erst danach folgt der Fortschrittsmarker 560/900
+mit `13.e.C` als nächstem Schritt. Dies ist ein Teiltestnachweis und kein
+Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 13.e.C – Make it Clean
 
