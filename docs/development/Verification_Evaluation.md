@@ -163,3 +163,45 @@ bleiben Fehler, auch wenn gleichzeitig andere fehlen. Reine Fehlmengen bleiben
 `incomplete`/SRV176 und haben eine leere Liste `unexpected_keys`. Der Vergleich
 berücksichtigt alle vier Schlüsselfelder; eine gleichnamige Prüfung eines
 anderen Subjects oder Contracts ersetzt keine Pflichtprüfung.
+
+## Beobachtete und erwartete Laufkandidaten (12.m.W)
+
+`select_verification_runs(model, evaluation, configuration_id=..., ...)` bildet
+zuerst die unabhängige Pflichtmenge. Optional gelten dieselben ausdrücklich
+übergebenen `scope_descriptor`-/`scope_bindings`-Eingänge wie bei der
+Pflichtmengenauflösung. Ein Descriptor kann die Scope-Keys nicht verändern.
+Fehlende oder unvollständige Abdeckung bleibt `selection_status="incomplete"`;
+fremde Schlüssel behalten den vorhandenen SRV175-Vertrag.
+
+Für jeden Pflichtschlüssel vereinigt der Aufruf sämtliche erwarteten Lauf-IDs
+mit allen passenden beobachteten Läufen aus dem vollständigen übergebenen
+Modellbestand. Auch Evidence außerhalb der Subject-Closure kann deren Keys
+bezeugen; die Evidence erweitert dadurch weder Seeds noch Pflichtmenge.
+Produktbezeichner, Produktstandhash, Check und Test müssen exakt passen. Subject,
+Contract und gegebenenfalls Test müssen ausdrücklich in den Evidence-Subjects
+stehen. Eine fehlende Erwartung bleibt als Lauf mit leerer Evidence-Liste sichtbar.
+Jeder Lauf enthält alle passenden Nachweise samt unverändertem Ergebnis,
+Subject-Bindungen, Run-Kontext, Vollhash und Quellbytehash. Weder spätere
+Erzeugungszeit noch Importreihenfolge oder Evidence-ID ersetzt einen Fehlschlag.
+
+`bound` verlangt denselben Konfigurationshash. `independent` verlangt eine
+explizite Policy des aktuellen Verification Contracts; bei fremdem
+Konfigurationshash muss auch dessen aufgezeichneter Kontexthash aktuell sein.
+Ein direkt gebundener Test erhält keine erfundene Unabhängigkeitspolicy.
+Fehlende Konfigurationsangaben werden nicht ergänzt. Widersprüchliche
+Produktbindungen derselben Lauf-ID werden mit dem bestehenden nativen
+`evidence_run_identity_conflict` abgewiesen. Beobachtete Lauf-IDs müssen bereits
+namensraumqualifiziert sein; ein Producer wird nicht aus anderen Feldern geraten.
+
+Das Ergebnis ist ein eigener `VerificationRunSelection`-Wert mit abgetrennter
+`data`-Kopie und Hash; boolesche Verwendung ist unzulässig. Die gesamte gelieferte
+Evidence-Inventur bleibt gebunden, nicht ausgewählte IDs werden separat erhalten.
+Die detaillierte Disposition `historical_other_state`, `unbound`, `missing` und
+`stale` gehört zu 12.m.R. Der W-Stand erhält auch kontextveraltete Beobachtungen des
+passenden Stands, bewertet deren Subject-Aktualität aber noch nicht abschließend.
+
+`selection_status="selected"` bedeutet ausschließlich erfolgte Kandidatenauswahl.
+Der Aufruf prüft keine realen Produktdateien, authentifiziert keinen Producer,
+führt keinen Testcode aus und liefert kein abschließendes `verification_result`.
+Prüfeingangs-/Rollengate, vollständige Freshness, Laufablösung, priorisierte
+Aggregation und Readiness bleiben getrennt. Bestehende Evidence wird nie verändert.

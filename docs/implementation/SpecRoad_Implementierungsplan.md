@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 522
-last_completed_plan_commit: 12.l.C
-next_plan_commit: 12.m.W
-last_completed_numbered_bundle: 348
+implementation_plan_commits_completed: 523
+last_completed_plan_commit: 12.m.W
+next_plan_commit: 12.m.R
+last_completed_numbered_bundle: 349
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14414,12 +14414,37 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.m.W – Let it Work
 
-- [ ] **12.m.W** · Position **523/900** · Voraussetzung: `12.l.C`.
+- [x] **12.m.W** · Position **523/900** · Voraussetzung: `12.l.C`.
 **Exakte Commit-Message:** `12.m.W feat(verification): Vollständige Lauf- und Nachweisauswahl aufbauen`
 
 **Umsetzung:** Alle passenden beobachteten und erwarteten Läufe desselben Produktstands auswerten.
 
 **Verhaltensabnahme:** Zusätzlicher gleichzeitiger Fehlschlag bleibt sichtbar, auch nach einem später importierten Erfolg.
+
+**Vorbereiteter W-Zwischenstand (Bundle 349):** Reine Core-API
+`select_verification_runs` mit unabhängig gebildeter Pflichtmenge und exakter
+Descriptorbindung. Sie vereinigt je Pflichtschlüssel alle erwarteten Lauf-IDs
+und sämtliche passenden beobachteten Läufe des übergebenen Modellbestands.
+Alle Evidence-Ergebnisse bleiben sichtbar, einschließlich eines gleichzeitigen
+Fehlschlags neben einem späteren Erfolg. Mehrere Subjects, Slots und Nachweise
+bleiben getrennt gebunden. Produkt-, Konfigurations- und native Laufkonflikte
+werden berücksichtigt; fehlende Angaben werden nicht geraten. Der W-Stand ist
+eine Kandidatenauswahl, kein aggregierter Verifikationserfolg. Die detaillierten
+Dispositionen und Robustheitsfälle gehören zu R, Ablösung und Ergebnisaggregation
+zu den nachfolgenden Planstellen. Fortschrittsmarker erst nach erfolgreichem
+Apply-Testlauf dieses W-Zustands.
+
+**Gezielter Dev-Nachweis:** 697/697 Verhaltenstests aus 11 Dateien mit
+4 Workern parallel in 72,18 s bestanden. Darunter sämtliche 43 neuen Fälle der
+Laufauswahl einschließlich isoliertem Core/PYZ sowie die betroffenen bisherigen
+Pflichtmengen-, Descriptor-, Contract-, Kontext- und Evidence-Erfassungsfälle.
+Geprüfte Source-SHA-256:
+`35e17532ab17cd8ec47feb0a19a6b1910cef80da982aa6e84df8a0e6a29016c4`.
+Die vollständige Katalog-Collection bestätigt 15.016 Tests ohne Testbodies.
+Alle 14.973 bisherigen Testnummern bleiben unverändert, die 43 neuen folgen
+am Ende. Der Entrypoint verlangt ausschließlich Gruppe 0, Commitsequenz 57,
+mit 5.006 parallelen Tests vor W-Commit und Fortschrittsmarker 523/900.
+Kein Vollsuite- oder Release-Erfolgsnachweis; 12.m.R wird noch nicht begonnen.
 
 #### 12.m.R – Make it Right
 
