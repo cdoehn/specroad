@@ -4,19 +4,36 @@
   "requirement_id": "SR-REQ-0344",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CODE-REFERENCE-SOURCES-v1"
+  ],
+  "preconditions": [
+    "12.q.W: Owned validated code_ref RecordArtifact and an explicit native ProjectBoundary or GitObjectSource; original file/blob bytes and Git commit identities are supplied by the fixture, not inferred from source code."
+  ],
+  "steps": [
+    "12.q.W: Read the selected file or bound historical Git tree for each code reference kind; compare exact original bytes, size, SHA-256 and optional Git identities. Check immutable owned snapshots and unchanged worktree/index. Keep selectors and symbol hints passive. Reject mismatched bindings, missing paths and unsafe source boundaries. Resolve implemented_by targets through the native relation validator. Exercise the public read API in fresh Core/PYZ processes without third-party modules."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS Code-Referenzpfade und optionale Git-Objekte lesen, ohne den Arbeitsbaum auszuchecken oder Quellcode auszuführen, und dabei dieselben Projektroot- und Symlink-Grenzen wie für Anhänge anwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.q.W: The explicitly selected safe source yields owned raw bytes and exact file/Git binding without checkout, source execution, symbol resolution or language-specific tools. Raw file hash comparison is separate from H2/H3 currency evaluation. Existing records and selectors stay unchanged; failed reads produce no hash result. Native implemented_by accepts capability/requirement/decision to code_ref."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "json_pointers": [],
+  "json_pointers": [
+    "/file_hash_matches",
+    "/file_sha256",
+    "/git_blob",
+    "/git_commit",
+    "/path",
+    "/reference",
+    "/reference_sha256",
+    "/reference_state_evaluated",
+    "/selection_evaluated",
+    "/symbol_resolved"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +45,49 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[file-file]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[file-generated_artifact]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[file-line_range]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[file-symbol_hint]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[file-text_anchor]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[git-file]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[git-generated_artifact]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[git-line_range]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[git-symbol_hint]",
+    "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[git-text_anchor]",
+    "tests/test_code_reference_sources.py::test_arbitrary_source_callbacks_are_not_a_read_capability",
+    "tests/test_code_reference_sources.py::test_external_symlinks_cannot_supply_code_bytes[file]",
+    "tests/test_code_reference_sources.py::test_external_symlinks_cannot_supply_code_bytes[parent]",
+    "tests/test_code_reference_sources.py::test_git_executable_remains_raw_data_and_only_git_reads_are_started",
+    "tests/test_code_reference_sources.py::test_historical_commit_stays_bound_after_branch_moves",
+    "tests/test_code_reference_sources.py::test_mismatched_git_binding_never_falls_back_to_disk[git_blob]",
+    "tests/test_code_reference_sources.py::test_mismatched_git_binding_never_falls_back_to_disk[git_commit]",
+    "tests/test_code_reference_sources.py::test_nested_project_cannot_supply_code_bytes",
+    "tests/test_code_reference_sources.py::test_optional_git_identifiers_bind_the_path_blob_not_the_working_file[blob]",
+    "tests/test_code_reference_sources.py::test_optional_git_identifiers_bind_the_path_blob_not_the_working_file[both]",
+    "tests/test_code_reference_sources.py::test_optional_git_identifiers_bind_the_path_blob_not_the_working_file[commit]",
+    "tests/test_code_reference_sources.py::test_optional_git_identifiers_bind_the_path_blob_not_the_working_file[none]",
+    "tests/test_code_reference_sources.py::test_other_record_types_are_rejected_before_read",
+    "tests/test_code_reference_sources.py::test_raw_file_hash_does_not_decode_normalize_or_drop_final_newline[\\n]",
+    "tests/test_code_reference_sources.py::test_raw_file_hash_does_not_decode_normalize_or_drop_final_newline[\\xff\\x00]",
+    "tests/test_code_reference_sources.py::test_raw_file_hash_does_not_decode_normalize_or_drop_final_newline[]",
+    "tests/test_code_reference_sources.py::test_raw_file_hash_does_not_decode_normalize_or_drop_final_newline[a\\r\\nb\\r]",
+    "tests/test_code_reference_sources.py::test_raw_file_hash_does_not_decode_normalize_or_drop_final_newline[e\\xcc\\x81\\xe6\\x9d\\xb1\\xe4\\xba\\xac]",
+    "tests/test_code_reference_sources.py::test_stored_git_binding_requires_explicit_git_source_before_file_read[git_blob]",
+    "tests/test_code_reference_sources.py::test_stored_git_binding_requires_explicit_git_source_before_file_read[git_commit]",
+    "tests/test_code_reference_sources.py::test_unavailable_file_yields_no_hash",
+    "tests/test_code_reference_sources.py::test_unavailable_git_path_does_not_use_existing_working_file",
+    "tests/test_code_reference_sources.py::test_unsafe_stored_paths_are_rejected_before_source_access[../outside]",
+    "tests/test_code_reference_sources.py::test_unsafe_stored_paths_are_rejected_before_source_access[.git/config]",
+    "tests/test_code_reference_sources.py::test_unsafe_stored_paths_are_rejected_before_source_access[/outside]",
+    "tests/test_code_reference_sources.py::test_unsafe_stored_paths_are_rejected_before_source_access[C:\\\\outside]",
+    "tests/test_code_reference_sources.py::test_unsafe_stored_paths_are_rejected_before_source_access[a//b]",
+    "tests/test_code_reference_sources.py::test_untyped_records_are_rejected_before_read[None]",
+    "tests/test_code_reference_sources.py::test_untyped_records_are_rejected_before_read[value1]",
+    "tests/test_code_reference_sources.py::test_untyped_records_are_rejected_before_read[{}]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "12.q.W supplies the safe source-byte binding only. 12.q.R expands hostile-source and hint boundaries; 12.q.C cleans the same behavior. Selection normalization/relocation (12.r), H3 states (12.s) and validation/diff/trace/view integration (12.t) remain future steps. No full-suite, external execution or release success is claimed."
   ]
 }

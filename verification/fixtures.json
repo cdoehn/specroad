@@ -132,7 +132,8 @@
     "SR-FIX-VERIFICATION-AGGREGATION-v1",
     "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1",
     "SR-FIX-VERIFICATION-COVERAGE-v1",
-    "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1"
+    "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1",
+    "SR-FIX-CODE-REFERENCE-SOURCES-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -642,6 +643,10 @@
     "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1": {
       "provider": "tests/test_verification_coverage_right.py:coverage,release_case,resumed",
       "kind": "Synthetic native independent missing contract/test/selection/evidence/stale observations and supplied Release closure. Stored/explicit descriptor precedence, exact scoped coverage, inert full Work input and native CheckpointStore process restart in Core/PYZ. Real supplied source/input/time hashes are recomputed; no live inventory, external execution, release or durable query cursor claim."
+    },
+    "SR-FIX-CODE-REFERENCE-SOURCES-v1": {
+      "provider": "tests/test_code_reference_sources.py:reference,repository",
+      "kind": "Owned code_ref records for all five kinds, raw binary/newline bytes in native ProjectBoundary and data-built local GitFixture commits. Native GitObjectSource reads historical blobs without checkout; typed implemented_by graph edges resolve to the same code_ref ID. Executable source and hints remain inert; missing, external, linked and nested sources yield no binding. Fresh standard-library-only Core/PYZ processes exercise the public reader. No H2 selection, H3 status, full-suite or release claim."
     }
   }
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 534
-last_completed_plan_commit: 12.p.C
-next_plan_commit: 12.q.W
-last_completed_numbered_bundle: 360
+implementation_plan_commits_completed: 535
+last_completed_plan_commit: 12.q.W
+next_plan_commit: 12.q.R
+last_completed_numbered_bundle: 361
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14899,12 +14899,39 @@ Release-Erfolgsnachweis.
 
 #### 12.q.W – Let it Work
 
-- [ ] **12.q.W** · Position **535/900** · Voraussetzung: `12.p.C`.
+- [x] **12.q.W** · Position **535/900** · Voraussetzung: `12.p.C`.
 **Exakte Commit-Message:** `12.q.W feat(verification): Code-Referenzarten und sichere Quellen aufbauen`
 
 **Umsetzung:** File, line_range, text_anchor, symbol_hint und generated_artifact als sprachneutrale Referenzen implementieren.
 
 **Verhaltensabnahme:** Datei-/Gitbytes werden ohne Checkout oder Quellcodeausführung gebunden.
+
+**W-Vorbereitung (Bundle 361):** Die öffentliche rein lesende API
+`read_code_reference` bindet einen validierten `code_ref` an unveränderte
+Datei- oder Gitbytes. Alle fünf Referenzarten behalten ihre gespeicherten
+Felder. Der unveränderliche `CodeReferenceSource` liefert Rohbytes,
+Rohdateihash, Byteanzahl, Referenzbytehash und bei Git die tatsächliche
+Commit-/Blobbindung. Gespeicherte Git-Identitäten müssen exakt zur expliziten
+Git-Quelle passen; es gibt keinen Fallback auf HEAD oder Arbeitsdatei.
+Native M2-/M8-Leser erhalten die Root-, Symlink- und Nested-Project-Grenzen.
+Fehlende und unzulässige Quellen liefern keinen Hash. Symbolhinweise bleiben
+informativ; Auswahl-, Relokations- und H.3-Zustandsberechnung folgen in
+12.r/12.s, Consumer-Integration in 12.t. Die vorhandene native
+`implemented_by`-Relation wird mit tatsächlichen `code_ref`-Zielen geprüft.
+
+405 gezielte Verhaltenstests in 13 Dateien bestanden mit vier parallelen
+Workern in 5,02 Sekunden, darunter 48 neue Tests für alle Referenzarten,
+Originalbytes und unveränderte gespeicherte Daten, historische Gitbindung,
+fehlende Quellen, sichere Pfade, inert bleibenden ausführbaren Quelltext,
+Relationsauflösung und frische Core-/PYZ-Prozesse ohne Fremdmodule. Die
+vollständige Katalog-Collection bestätigt 15.571 Testidentitäten bei null
+Testkörpern. Alle 459 bisherigen Testdateien und die ersten 15.523 festen
+Testnummern bleiben erhalten; neue Nummern werden ausschließlich angehängt.
+Geprüfter Source-SHA-256:
+`e574bb0a03f8be1a6819f052407f84c0c1fe813ac102fd142703457fddb92e66`.
+Der Entrypoint verlangt vor dem W-Commit Gruppe 0, Commitsequenz 69,
+mit 5.191 parallelen Tests. Erst danach wird 535/900 markiert.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.q.R – Make it Right
 
