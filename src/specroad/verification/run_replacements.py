@@ -84,25 +84,37 @@ No files, clocks, product code or external commands are accessed.
             actual_hash = canonical_json_sha256(items) if items else None
             bound[old] = actual_hash == row['replaced_evidence_set_sha256'] and bool(items)
             observations[old] = {'decision': row, 'evidence_set': items,
-                'actual_evidence_set_sha256': actual_hash, 'evidence_set_matches': bound[old]}
-        terminals, issues = {}, {}
+                'actual_evidence_set_sha256': actual_hash, 'evidence_set_matches': bound[old],
+                'old_run_observed': bool(runs.get(old, {}).get('evidence'))}
+        terminals, issues, terminal_checks = {}, {}, {}
         for run_id in _replacement_order(graph):
             if run_id not in graph:
                 terminals[run_id] = {run_id}
                 observed = runs.get(run_id, {}).get('evidence', [])
-                detail = None
+                reasons = []
                 if not observed:
-                    detail = 'replacement_run_missing'
-                elif any(e['freshness'] != 'current' for e in observed):
-                    detail = 'replacement_run_not_current'
-                elif any(e['result'] not in ('passed', 'failed') for e in observed):
-                    detail = 'replacement_run_incomplete'
-                issues[run_id] = set() if detail is None else {(run_id, detail)}
+                    reasons.append('replacement_run_missing')
+                else:
+                    if any(e['freshness'] != 'current' for e in observed):
+                        reasons.append('replacement_run_not_current')
+                    if any(e['result'] not in ('passed', 'failed') for e in observed):
+                        reasons.append('replacement_run_incomplete')
+                issues[run_id] = {(run_id, reason) for reason in reasons}
+                terminal_checks[run_id] = {'run_id': run_id,
+                    'presence': 'present' if observed else 'missing',
+                    'current_complete': not reasons, 'reasons': reasons,
+                    'evidence': [{field: item[field] for field in
+                        ('evidence_id', 'artifact_sha256', 'source_sha256', 'freshness', 'result')}
+                        for item in observed]}
             else:
                 terminals[run_id] = set().union(*(terminals[child] for child in graph[run_id]))
                 issues[run_id] = set().union(*(issues[child] for child in graph[run_id]))
                 if not bound[run_id]:
                     issues[run_id].add((run_id, 'replaced_evidence_set_changed'))
+                # A hash of excluded records cannot satisfy an absent required
+                # candidate (including an intermediate run in a replacement chain).
+                if not observations[run_id]['old_run_observed']:
+                    issues[run_id].add((run_id, 'replaced_run_missing'))
         effective = {old for old in rows if not issues[old]}
         replacements = []
         for old in rows:
@@ -110,6 +122,8 @@ No files, clocks, product code or external commands are accessed.
                        sorted(issues[old], key=lambda pair: tuple(s.encode('utf-8') for s in pair))]
             replacements.append({**observations[old], 'effective': old in effective,
                 'terminal_run_ids': sorted(terminals[old], key=lambda s: s.encode('utf-8')),
+                'terminal_runs': [terminal_checks[run_id]
+                    for run_id in sorted(terminals[old], key=lambda s: s.encode('utf-8'))],
                 'binding_issues': details})
             if details:
                 diagnostics.append({'code': 'SRV176', 'severity': 'warning',

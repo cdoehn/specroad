@@ -127,7 +127,8 @@
     "SR-FIX-VERIFICATION-REQUIRED-CHECKS-RIGHT-v1",
     "SR-FIX-VERIFICATION-RUN-SELECTION-v1",
     "SR-FIX-VERIFICATION-RUN-SELECTION-RIGHT-v1",
-    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1"
+    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1",
+    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -617,6 +618,10 @@
     "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1": {
       "provider": "tests/test_verification_run_replacements.py:retest,decision",
       "kind": "Synthetic owned models, declared human retests, exact full-artifact Evidence sets, per-key acyclic replacement graphs and current complete terminal runs. Includes binding refusal, authority/structure errors, immutable historical bytes and isolated Core/PYZ parity. No authentic human identity, external execution or aggregate verification pass is claimed."
+    },
+    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1": {
+      "provider": "tests/test_verification_run_replacements.py:retest,decision",
+      "kind": "Synthetic human/AI declarations and immutable owned Evidence bytes with broken intermediate bindings, changed old sets, excluded configurations, shared subjects and diamond graphs, missing/stale/incomplete/failed terminals, explicit native scope and isolated Core/PYZ parity. No genuine authorization, external execution or aggregate pass is asserted."
     }
   }
 }

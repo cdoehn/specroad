@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 526
-last_completed_plan_commit: 12.n.W
-next_plan_commit: 12.n.R
-last_completed_numbered_bundle: 352
+implementation_plan_commits_completed: 527
+last_completed_plan_commit: 12.n.R
+next_plan_commit: 12.n.C
+last_completed_numbered_bundle: 353
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14564,12 +14564,40 @@ oder Release-Erfolgsnachweis.
 
 #### 12.n.R – Make it Right
 
-- [ ] **12.n.R** · Position **527/900** · Voraussetzung: `12.n.W`.
+- [x] **12.n.R** · Position **527/900** · Voraussetzung: `12.n.W`.
 **Exakte Commit-Message:** `12.n.R feat(verification): Menschlich gebundene Laufablösung vervollständigen`
 
 **Vervollständigung:** AI-Entscheidung, neue alte Evidence, Zyklus und fehlender/staler Ersatz machen Ablösung ungültig.
 
 **Verhaltensabnahme:** Ein fehlgeschlagener gültiger Ersatz bleibt failed; alte Evidencebytes werden nie geändert. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zwischenstand (Bundle 353):** Ein passender
+Evidence-Set-Hash allein ersetzt keinen fehlenden zulässigen alten Lauf.
+Dies gilt auch für Zwischenknoten einer Ablösungskette: ausschließlich
+konfigurationsfremde oder unzulässig unabhängige Nachweise lassen die
+Erwartung weiterhin offen. Der Bericht weist für jeden erreichbaren Endlauf
+Präsenz, vollständige Aktualität, originale Ergebniswerte und Hashbindungen
+sowie sämtliche Bindungsprobleme aus. Fehler eines Zwischenknotens oder
+Endlaufs entwerten alle davon abhängigen Entscheidungen; unabhängig gültige
+Entscheidungen bleiben sichtbar. Ein ausdrücklich wirksam abgelöster staler
+Zwischenlauf verhindert dagegen keinen vollständig gebundenen aktuellen
+Endlauf. Neue Nachweise und Änderungen an vollständigen alten Artefakten
+verlangen eine neue gebundene Auswahl. Native Scope-, Kontext-, Konflikt- und
+Akteursgrenzen gelten unverändert; Evidencebytes werden nie umgeschrieben.
+Die priorisierte Gesamtaggregation bleibt 12.o vorbehalten. SR-TC-0446 bleibt
+partiell. Fortschrittsmarker erst nach erfolgreichem Apply-Testlauf;
+12.n.C wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis (Bundle 353):** 860 Verhaltenstests aus 14
+betroffenen Testdateien bestanden mit vier parallelen Workern in 77,33 s;
+darunter 64 neue R-Fälle und 796 bisherige Verhaltenstests. Die vollständige
+Collection-/Katalogprüfung ist für 15.179 Tests gültig, ohne Volltestlauf.
+Source-SHA-256: `a9b1337cf2496282281e98d27a88a425c627f1bb43064ab5793291e715d907ec`.
+Alle 454 bisherigen Testdateien und alle 15.115 bisherigen Testnummern
+bleiben erhalten; 64 neue Identitäten wurden hinten angefügt. Der Entrypoint
+verlangt ausschließlich Gruppe 1, Commitsequenz 61, mit 5.060 parallelen Tests
+vor R-Commit und Fortschrittsmarker 527/900. Teiltestnachweis, kein Vollsuite-
+oder Release-Erfolgsnachweis.
 
 #### 12.n.C – Make it Clean
 

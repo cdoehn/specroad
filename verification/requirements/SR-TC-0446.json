@@ -13,13 +13,15 @@
     "SR-FIX-VERIFICATION-REQUIRED-CHECKS-RIGHT-v1",
     "SR-FIX-VERIFICATION-RUN-SELECTION-v1",
     "SR-FIX-VERIFICATION-RUN-SELECTION-RIGHT-v1",
-    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1"
+    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1",
+    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1"
   ],
   "preconditions": [
     "Explicit owned descriptor or None, available input bytes or None, and independently supplied logical-path roles or None. No host discovery or inferred file roles.",
     "12.m.W: Owned TargetModel plus explicit evaluation and configuration, with optional independent native scope bindings. Only supplied Evidence is observed; input bytes and roles are assessed separately.",
     "12.m.R: Same independently selected model and original descriptor bytes; existing native context types only. Synthetic audit changes and missing/foreign bindings remain explicit input observations.",
-    "12.n.W: Explicit complete declared human decisions in an owned descriptor, independently selected model/key/configuration and immutable Evidence bytes; no inferred authorization or current product."
+    "12.n.W: Explicit complete declared human decisions in an owned descriptor, independently selected model/key/configuration and immutable Evidence bytes; no inferred authorization or current product.",
+    "12.n.R: Original model/descriptor bytes, independent native scope/key/configuration and explicit human-decision data. Old hashes do not imply admissible observed runs; supplied complete inventory remains a caller assertion."
   ],
   "steps": [
     "Retain W manifest/hash and isolated runtime checks. Check exact role/byte binding, reject Evidence/output/descriptor/selection inputs without filtering, preserve missing binding observations as incomplete/SRV176, verify ownership and isolated Core/PYZ.",
@@ -27,12 +29,13 @@
     "Rebuild native seeds, query pages and closure from a separately supplied ScopeDescriptor and explicit ClosureBindings matched to the whole model inventory. Verify that descriptor selections cannot replace subjects, drop strong dependencies or enlarge scope; report all missing and foreign keys separately.",
     "12.m.W: Build independent obligations first, then retain the union of declared expected runs and all matching supplied observations; require exact product/key/configuration binding and preserve each Evidence result, including simultaneous failure after a later success. Check multiple slots and subjects, missing declarations, native run conflicts, ownership and isolated Core/PYZ contracts.",
     "12.m.R: Classify every Evidence as historical_other_state, unbound, candidate, unselected or not_evaluated. Assess all required supported subject/contract/test contexts; preserve stale/current observations together, report missing expected runs with exact SRV176 binding and per-key exclusion reasons. Exercise audit/workflow invariance, input/ID ordering, source ownership, unresolved projections and isolated Core/PYZ.",
-    "12.n.W: Validate and normalize every replacement field, per-key uniqueness and acyclic run graph; bind every old-run Evidence artifact by ID/full hash; replace only with current complete reachable terminal runs, substitute expected IDs, preserve unrelated candidates and the full native assessment. Reject invalid authority/structure and report changed or missing bindings as incomplete/SRV176. Preserve legacy empty descriptors and exercise isolated Core/PYZ parity."
+    "12.n.W: Validate and normalize every replacement field, per-key uniqueness and acyclic run graph; bind every old-run Evidence artifact by ID/full hash; replace only with current complete reachable terminal runs, substitute expected IDs, preserve unrelated candidates and the full native assessment. Reject invalid authority/structure and report changed or missing bindings as incomplete/SRV176. Preserve legacy empty descriptors and exercise isolated Core/PYZ parity.",
+    "12.n.R: Require an admissible old-run observation even when its full Evidence-set hash matches; propagate broken intermediate/terminal bindings to ancestors. Report every reachable terminal with presence, completeness, all reasons and unmodified result/hash bindings. Exercise nonhuman authority, long cycles/chains, immutable old-set changes, excluded/foreign observations, mixed terminals, diamond graphs, independent decisions and actual byte preservation in isolated Core/PYZ."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS `verification_result` durch die vollständige Bewertungs-, Pflichtprüfungs- und Nachweisauswahl samt anschließender priorisierter Ergebnisaggregation aus Kapitel 10.5 berechnen.",
-    "scope": "12.k.W/R: Actual bytes bind product and descriptor hashes. Explicit checker/importer role inventory excludes Evidence, check outputs, evaluation and selection metadata from inputs; unlisted declared inputs cannot disappear. Missing evaluation or unavailable binding is incomplete/SRV176; forbidden manifest roles are SRV175/code 3. Ready means input binding only, never passed or external execution/approval. Roles are declared, not authenticated. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory. 12.l.R binds independent native scopes and complete provider inventory; native closure includes required dependencies before comparison. Query pages are recomputed without a verification evaluation. Missing-only keys stay incomplete; foreign keys produce SRV175 with both missing_checks and unexpected_keys and the independently bound required_set_sha256. 12.m.W selects all supplied same-product observed and expected run candidates per independent key, preserving every raw result and original Evidence binding. Bound configuration must match; cross-configuration independence requires an explicit current contract. Selection is not freshness, replacement, final aggregation or a passed verification result. 12.m.R adds a separate pure disposition assessment over the unchanged candidate API. Historical/unbound records never witness expected runs. Empty expectations are missing, existing stale observations remain present, supported context comparisons use Appendix L, unsupported subject projections stay incomplete. No time/ID order chooses a winner; old W behavior remains intact. No replacements or final verification result are evaluated. 12.n.W adds assess_run_replacements as a separate owned selection stage. Only a complete human decision with exact old Evidence-set hash and all current complete reachable end runs supersedes the named per-key candidate. Additional old Evidence changes the set even when excluded by configuration; no historical bytes are rewritten. Failed end runs retain their result; no aggregate pass is claimed. SRV175/code 3 rejects structural violations, code 7 nonhuman authority; ineffective binding is incomplete/SRV176 replacement_binding_changed. Existing candidate/context APIs keep their prior contracts."
+    "scope": "12.k.W/R: Actual bytes bind product and descriptor hashes. Explicit checker/importer role inventory excludes Evidence, check outputs, evaluation and selection metadata from inputs; unlisted declared inputs cannot disappear. Missing evaluation or unavailable binding is incomplete/SRV176; forbidden manifest roles are SRV175/code 3. Ready means input binding only, never passed or external execution/approval. Roles are declared, not authenticated. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory. 12.l.R binds independent native scopes and complete provider inventory; native closure includes required dependencies before comparison. Query pages are recomputed without a verification evaluation. Missing-only keys stay incomplete; foreign keys produce SRV175 with both missing_checks and unexpected_keys and the independently bound required_set_sha256. 12.m.W selects all supplied same-product observed and expected run candidates per independent key, preserving every raw result and original Evidence binding. Bound configuration must match; cross-configuration independence requires an explicit current contract. Selection is not freshness, replacement, final aggregation or a passed verification result. 12.m.R adds a separate pure disposition assessment over the unchanged candidate API. Historical/unbound records never witness expected runs. Empty expectations are missing, existing stale observations remain present, supported context comparisons use Appendix L, unsupported subject projections stay incomplete. No time/ID order chooses a winner; old W behavior remains intact. No replacements or final verification result are evaluated. 12.n.W adds assess_run_replacements as a separate owned selection stage. Only a complete human decision with exact old Evidence-set hash and all current complete reachable end runs supersedes the named per-key candidate. Additional old Evidence changes the set even when excluded by configuration; no historical bytes are rewritten. Failed end runs retain their result; no aggregate pass is claimed. SRV175/code 3 rejects structural violations, code 7 nonhuman authority; ineffective binding is incomplete/SRV176 replacement_binding_changed. Existing candidate/context APIs keep their prior contracts. 12.n.R closes the missing-old-candidate case: a matching hash of excluded records cannot satisfy an old expectation or intermediate chain binding. All reachable end-run reasons and raw failed results remain visible in terminal_runs; invalid intermediate decisions prevent dependent replacements but not independent valid decisions. Stale intermediates may themselves be validly replaced. Native context, scope and product conflict errors are preserved. New old-run observations or changed full artifacts invalidate the old human set; no original Evidence bytes or unchanged W test oracles are rewritten."
   },
   "expected_diagnostics": [
     "SRV175",
@@ -330,6 +333,70 @@
     "tests/test_verification_run_replacements.py::test_unbound_or_incomplete_replacement_retains_old_candidate_and_reports_incomplete[stale_new]",
     "tests/test_verification_run_replacements.py::test_unbound_or_incomplete_replacement_retains_old_candidate_and_reports_incomplete[unfinished_new]",
     "tests/test_verification_run_replacements.py::test_without_explicit_replacement_later_success_never_removes_failure",
+    "tests/test_verification_run_replacements_right.py::test_ai_may_record_an_explicit_human_decision_without_authenticating_it",
+    "tests/test_verification_run_replacements_right.py::test_broken_intermediate_binding_invalidates_all_ancestors_not_only_direct_decision[excluded_configuration]",
+    "tests/test_verification_run_replacements_right.py::test_broken_intermediate_binding_invalidates_all_ancestors_not_only_direct_decision[extra_evidence]",
+    "tests/test_verification_run_replacements_right.py::test_complete_failure_and_invalid_chain_bindings_match_in_isolated_core_and_pyz[core]",
+    "tests/test_verification_run_replacements_right.py::test_complete_failure_and_invalid_chain_bindings_match_in_isolated_core_and_pyz[pyz]",
+    "tests/test_verification_run_replacements_right.py::test_conflicting_product_identity_of_one_run_is_not_downgraded_to_missing_replacement",
+    "tests/test_verification_run_replacements_right.py::test_cycle_in_a_branch_is_rejected_even_beside_a_current_success[False]",
+    "tests/test_verification_run_replacements_right.py::test_cycle_in_a_branch_is_rejected_even_beside_a_current_success[True]",
+    "tests/test_verification_run_replacements_right.py::test_diamond_graph_deduplicates_shared_terminal_and_preserves_missing_unrelated_expectation",
+    "tests/test_verification_run_replacements_right.py::test_explicit_native_scope_does_not_gain_obligations_from_replacement_metadata",
+    "tests/test_verification_run_replacements_right.py::test_foreign_replacement_evidence_cannot_witness_a_terminal_of_this_key_and_product[configuration]",
+    "tests/test_verification_run_replacements_right.py::test_foreign_replacement_evidence_cannot_witness_a_terminal_of_this_key_and_product[product]",
+    "tests/test_verification_run_replacements_right.py::test_foreign_replacement_evidence_cannot_witness_a_terminal_of_this_key_and_product[slot]",
+    "tests/test_verification_run_replacements_right.py::test_foreign_replacement_evidence_cannot_witness_a_terminal_of_this_key_and_product[state]",
+    "tests/test_verification_run_replacements_right.py::test_foreign_replacement_evidence_cannot_witness_a_terminal_of_this_key_and_product[subject]",
+    "tests/test_verification_run_replacements_right.py::test_foreign_replacement_evidence_cannot_witness_a_terminal_of_this_key_and_product[test]",
+    "tests/test_verification_run_replacements_right.py::test_full_artifact_change_invalidates_old_set_even_if_run_and_context_hashes_match[environment-value4]",
+    "tests/test_verification_run_replacements_right.py::test_full_artifact_change_invalidates_old_set_even_if_run_and_context_hashes_match[producer-value3]",
+    "tests/test_verification_run_replacements_right.py::test_full_artifact_change_invalidates_old_set_even_if_run_and_context_hashes_match[result-passed]",
+    "tests/test_verification_run_replacements_right.py::test_full_artifact_change_invalidates_old_set_even_if_run_and_context_hashes_match[revision-2]",
+    "tests/test_verification_run_replacements_right.py::test_full_artifact_change_invalidates_old_set_even_if_run_and_context_hashes_match[tags-value5]",
+    "tests/test_verification_run_replacements_right.py::test_full_artifact_change_invalidates_old_set_even_if_run_and_context_hashes_match[updated_at-2026-10-21T01:00:00Z]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[authorized_at-2026-02-30T12:00:00Z]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[authorized_at-2026-10-21T12:00:00+01:00]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[authorized_at-whenever done]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[authorized_by-value3]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[authorized_by-value4]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[reason-\\x00]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[replaced_evidence_set_sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "tests/test_verification_run_replacements_right.py::test_invalid_authority_metadata_and_binding_values_remain_structured_input_errors[replacement_run_ids-None]",
+    "tests/test_verification_run_replacements_right.py::test_long_flat_replacement_graph_does_not_depend_on_python_recursion_depth[False]",
+    "tests/test_verification_run_replacements_right.py::test_long_flat_replacement_graph_does_not_depend_on_python_recursion_depth[True]",
+    "tests/test_verification_run_replacements_right.py::test_matching_set_hash_does_not_substitute_an_old_run_without_admissible_configuration[configuration]",
+    "tests/test_verification_run_replacements_right.py::test_matching_set_hash_does_not_substitute_an_old_run_without_admissible_configuration[missing_policy]",
+    "tests/test_verification_run_replacements_right.py::test_matching_set_hash_does_not_substitute_an_old_run_without_admissible_configuration[policy]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[ :local-replaced_run_id]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[ :local-replacement_run_ids]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[:local-replaced_run_id]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[:local-replacement_run_ids]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[producer: -replaced_run_id]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[producer: -replacement_run_ids]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[producer:-replaced_run_id]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[producer:-replacement_run_ids]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[producer:local -replaced_run_id]",
+    "tests/test_verification_run_replacements_right.py::test_neither_old_nor_replacement_run_can_gain_an_inferred_namespace[producer:local -replacement_run_ids]",
+    "tests/test_verification_run_replacements_right.py::test_new_old_evidence_requires_a_new_explicit_complete_decision_and_keeps_originals",
+    "tests/test_verification_run_replacements_right.py::test_nonhuman_authority_is_refused_even_with_human_creator_and_current_failed_retest[ai]",
+    "tests/test_verification_run_replacements_right.py::test_nonhuman_authority_is_refused_even_with_human_creator_and_current_failed_retest[ci]",
+    "tests/test_verification_run_replacements_right.py::test_nonhuman_authority_is_refused_even_with_human_creator_and_current_failed_retest[tool]",
+    "tests/test_verification_run_replacements_right.py::test_one_bad_branch_prevents_parent_replacement_without_undoing_independent_valid_decision",
+    "tests/test_verification_run_replacements_right.py::test_one_complete_failed_observation_does_not_hide_an_incomplete_observation_of_its_terminal",
+    "tests/test_verification_run_replacements_right.py::test_original_evidence_encoding_is_preserved_and_full_artifact_hash_is_canonical",
+    "tests/test_verification_run_replacements_right.py::test_shared_old_run_is_replaced_only_for_the_explicitly_authorized_subject",
+    "tests/test_verification_run_replacements_right.py::test_stale_intermediate_can_be_replaced_when_its_own_binding_and_terminal_are_valid",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_owns_nested_results_and_is_invariant_under_input_order",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[failed-current-True-reasons0]",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[failed-stale-False-reasons4]",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[not_measured-current-False-reasons3]",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[passed-current-True-reasons1]",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[passed-stale-False-reasons5]",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[running-current-False-reasons2]",
+    "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[running-stale-False-reasons6]",
+    "tests/test_verification_run_replacements_right.py::test_unsupported_terminal_context_never_becomes_current_from_matching_audit_hash[capability]",
+    "tests/test_verification_run_replacements_right.py::test_unsupported_terminal_context_never_becomes_current_from_matching_audit_hash[task]",
     "tests/test_verification_run_selection.py::test_complete_key_requires_each_recorded_artifact_binding[contract]",
     "tests/test_verification_run_selection.py::test_complete_key_requires_each_recorded_artifact_binding[subject]",
     "tests/test_verification_run_selection.py::test_complete_key_requires_each_recorded_artifact_binding[test]",
@@ -431,6 +498,6 @@
     "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[untyped1]"
   ],
   "open_items": [
-    "12.n.R/C will extend replacement robustness and separate its internal graph structure. Project evaluation-identity conflicts, prioritized aggregation and command/readiness integration remain follow-up work. Input bytes/roles, actual live inventory and provider provenance are separate gates. Appendix L does not define Capability/Task context projections: their freshness remains unresolved. Declared humans and producer metadata are not authenticated, and no external execution or release pass is inferred."
+    "12.n.C will separate the internal replacement graph from adapters while preserving behavior. Project evaluation-identity conflicts, prioritized aggregation and command/readiness integration remain follow-up work. Product-input roles/bytes, live inventory and provider provenance are separate gates. Unsupported Capability/Task context projections remain unresolved. Declared human identity and producer metadata are not authenticated; no external execution or release pass is inferred."
   ]
 }

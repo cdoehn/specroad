@@ -286,5 +286,25 @@ Das ist eine Auswahlstufe, kein aggregiertes Verification-Ergebnis und keine
 Readiness-Freigabe. Eingangsbytes/-rollen, vollständiger realer Modellbestand,
 projektweite Bewertungs-ID-Historie und tatsächliche menschliche Identität
 werden dadurch nicht bestätigt. Frühere Auswahl-/Kontext-APIs bleiben getrennt
-und wenden Ablösungen nicht stillschweigend an. Die folgenden R-/C-Schritte
-vertiefen Robustheit und interne Struktur.
+und wenden Ablösungen nicht stillschweigend an.
+
+## Vollständige Bindungsdiagnose (12.n.R)
+
+`old_run_observed` zeigt an, ob der alte Lauf tatsächlich zulässige Nachweise
+in der unabhängig gebildeten Kandidatenauswahl besitzt. Ein korrekter Hash
+eines ausschließlich konfigurationsfremden Evidence-Satzes genügt nicht:
+`replaced_run_missing` lässt diese Erwartung offen. Das gilt auch für
+Zwischenknoten. `evidence_set_matches` beschreibt weiterhin ausschließlich
+die Gleichheit des vollständigen Mengenhashs.
+
+Jede Entscheidung enthält `terminal_runs` mit allen erreichbaren Endläufen,
+Präsenz, `current_complete`, allen Bindungsgründen und unveränderten
+Ergebniswerten samt Evidence-ID, vollem Artefakthash und Originalbytehash.
+Fehlende, stale und nicht aufgelöste Endläufe werden getrennt erklärt;
+gleichzeitige Mängel bleiben sichtbar. Gemeinsam erreichte Endläufe werden
+je Entscheidung nur einmal aufgeführt. Eine defekte Zwischenbindung
+entwertet sämtliche davon abhängigen Ablösungen, ohne unabhängige gültige
+Entscheidungen zu verwerfen. Ein staler Zwischenlauf kann selbst wirksam
+abgelöst werden; maßgeblich bleiben die vollständigen Bindungen und
+aktuellen Endläufe. Ihre fehlgeschlagenen Ergebnisse bleiben `failed`.
+Die priorisierte Gesamtaggregation ist weiterhin ein eigener Planschritt.
