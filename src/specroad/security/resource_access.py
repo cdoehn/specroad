@@ -14,7 +14,13 @@ from .errors import SafetyViolation
 
 
 @contextmanager
-def opened_resource(boundary, path, *, directory=False):
+def opened_resource(boundary, path, *, directory=False, missing_ok=False):
+    """Open a guarded resource, optionally observing a missing path component.
+
+    An absent component yields (None, None), with existing parents and absence
+    rechecked on exit. A disappearance after a successful stat/open/read remains
+    an error; arbitrary FileNotFoundError exceptions are never converted.
+    """
     if not isinstance(boundary, guards.ProjectBoundary):
         raise TypeError("A ProjectBoundary is required")
     parts = guards._parts(path)
@@ -23,6 +29,7 @@ def opened_resource(boundary, path, *, directory=False):
     boundary._check_root()
     descriptors = []
     entries = []
+    missing = None
     try:
         directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
         parent = os.open(boundary.root, directory_flags)
@@ -30,7 +37,13 @@ def opened_resource(boundary, path, *, directory=False):
         if guards._identity(os.fstat(parent)) != boundary._root_identity:
             raise SafetyViolation("Project root changed while opening")
         for index, name in enumerate(parts):
-            before = os.stat(name, dir_fd=parent, follow_symlinks=False)
+            try:
+                before = os.stat(name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                if not missing_ok:
+                    raise
+                missing = parent, name
+                break
             is_directory = (index < len(parts) - 1 or
                             (stat.S_ISDIR(before.st_mode) if directory is None else directory))
             guards._regular(before, directory=is_directory)
@@ -50,10 +63,20 @@ def opened_resource(boundary, path, *, directory=False):
                 else:
                     raise SafetyViolation("Nested project roots cannot be combined")
                 parent = descriptor
-        initial = os.fstat(descriptors[-1])
-        yield descriptors[-1], initial
-        if guards._signature(os.fstat(descriptors[-1])) != guards._signature(initial):
-            raise SafetyViolation("Resource changed during inspection")
+        if missing is None:
+            initial = os.fstat(descriptors[-1])
+            yield descriptors[-1], initial
+            if guards._signature(os.fstat(descriptors[-1])) != guards._signature(initial):
+                raise SafetyViolation("Resource changed during inspection")
+        else:
+            yield None, None
+            parent, name = missing
+            try:
+                os.stat(name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                pass
+            else:
+                raise SafetyViolation("A missing resource appeared during inspection")
         for parent, name, identity, is_directory, descriptor in entries:
             current = os.stat(name, dir_fd=parent, follow_symlinks=False)
             guards._regular(current, directory=is_directory)

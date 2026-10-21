@@ -136,7 +136,8 @@
     "SR-FIX-CODE-REFERENCE-SOURCES-v1",
     "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1",
     "SR-FIX-CODE-LINE-SELECTION-v1",
-    "SR-FIX-CODE-RELOCATION-v1"
+    "SR-FIX-CODE-RELOCATION-v1",
+    "SR-FIX-CODE-REFERENCE-STATE-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -662,6 +663,10 @@
     "SR-FIX-CODE-RELOCATION-v1": {
       "provider": "tests/test_code_relocation.py:located_file",
       "kind": "Owned real file and historical Git sources with explicit H.2 whole-line or versioned raw-byte anchor windows; exact stored, unique, missing and overlapping/ambiguous positions; preserved reference bytes and fresh Core/PYZ audit guards."
+    },
+    "SR-FIX-CODE-REFERENCE-STATE-v1": {
+      "provider": "tests/test_code_reference_state.py:assessed_file",
+      "kind": "Owned native file and historical Git sources with explicit H.3 state expectations. Stored-position precedence despite outside changes, exact relocation, distinct absent/ambiguous selections, guarded missing paths and original root/store identities. Real descriptor mutations preserve the resulting state; fresh standard-library-only Core/PYZ audit guards forbid writes/processes/network. Initial W scope only: unavailable Git-object classification and full edge matrix remain for R; no consumer, full-suite or release claim."
     }
   }
 }

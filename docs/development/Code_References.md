@@ -174,3 +174,49 @@ zuerst das vollständige Bereichsende und kodiert erst danach den ausgewählten
 Text. Die öffentliche API behält Zulassungsprüfungen, Ankerprofil, Fehlergründe,
 Vorrangregeln und Ergebnisprojektionen. Es entsteht keine weitere I/O- oder
 Statusentscheidung.
+
+## Disjunkter Codezustand nach H.3
+
+`specroad.verification.assess_code_reference(source, reference)` bewertet einen
+validierten `code_ref` an einer expliziten nativen Dateiquelle oder einem bereits
+gebundenen Git-Commitbaum. Der erste zutreffende H.3-Fall entscheidet: Ein fehlender
+Pfad ergibt `missing` mit `target_missing`; bei `file` entscheidet der Rohdateihash
+zwischen `current` und `stale` mit `file_changed`. Bei Zeilen-/Ankerreferenzen wird
+die vorhandene exakte H.2-Auswertung verwendet. Ein Treffer an der gespeicherten
+Position ist immer `current`, auch bei weiteren Vorkommen oder Änderungen außerhalb
+der Auswahl. Bei geändertem Rohdateihash wird dann zusätzlich
+`file_changed_outside_selection` berichtet. Genau ein anderer Treffer ist
+`relocated`; kein Treffer ist `stale` mit `selection_missing`, mehrere Treffer
+sind `stale` mit `selection_ambiguous`.
+
+Der unveränderliche `CodeReferenceState` liefert eine abgetrennte `.data`-Projektion
+(`code-reference-state-v1`, Scope `code_reference_state_only`). Sie bindet den
+ursprünglichen Datensatz und seinen Bytehash sowie vorhandene Quellen- und
+Auswahlberichte samt deren Hashes. `state` enthält genau einen Zustand, `reason`
+den fachlichen Grund oder `null`; `new_position` ist nur bei `relocated` gesetzt.
+Fehlende Pfade haben `target_present: false` und keine Quellen-/Auswahlhashes.
+`.sha256` bindet die kanonische Projektion. `reference_state_evaluated` ist wahr;
+`selection_evaluated` gilt nur bei tatsächlich ausgewerteter Auswahl. Symbolauflösung,
+Quellcodeausführung und Schreibfreigabe bleiben falsch. Weder die Position noch
+andere Daten der gespeicherten Referenz werden automatisch geändert. Der Wert
+ist kein boolescher Freigabenachweis.
+
+Fehlende Dateipfade werden mit einem ausdrücklich optionalen Deskriptor-Probezugriff
+beobachtet. Dieser prüft die vorhandenen Eltern, die Projektroot und die Abwesenheit
+erneut. Ein nachträglich verschwundener oder erschienener Eintrag, Symlinks,
+verschachtelte Projekte und Lese-/Berechtigungsfehler liefern keinen Zustandsbericht.
+Vorhandene Dateien werden anschließend durch den unveränderten nativen Byte-Leser
+gebunden. Der bisherige `read_code_reference`-Fehlervertrag bleibt erhalten.
+Ein fehlender Pfad im unveränderlichen Gitbaum wird nur bei weiterhin gültiger
+ursprünglicher Root-/Objektspeicherbindung und lesbarem gebundenem Commit berichtet;
+es gibt keinen Ersatz durch HEAD oder Arbeitsdateien.
+
+Der W-Ausschnitt entscheidet vorhandene `file`, `line_range` und die ausdrücklichen
+Text-/Byteanker aus `code-anchor-v1`. Freie Bestandsanker und fehlerhafte Encodings
+bleiben Fehler. Vorhandene `symbol_hint`-/`generated_artifact`-Referenzen liefern
+`code_reference_state_kind_unsupported`; ein Hinweis oder Rohdateihash allein
+begründet keine Aktualität. Fehlende Pfade haben nach H.3 auch bei diesen Arten
+Vorrang. Nicht verfügbare oder beschädigte Git-Objekte bleiben im W-Ausschnitt
+Fehler der nativen Quelle. Ihre genaue Abgrenzung sowie die vollständige H.3-
+Randfallmatrix werden in 12.s.R vervollständigt; die Consumer-Integration folgt
+in 12.t. Dies ist keine neue Freigabe-, Release- oder vollständige Validierungsprüfung.

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 540
-last_completed_plan_commit: 12.r.C
-next_plan_commit: 12.s.W
-last_completed_numbered_bundle: 366
+implementation_plan_commits_completed: 541
+last_completed_plan_commit: 12.s.W
+next_plan_commit: 12.s.R
+last_completed_numbered_bundle: 367
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15160,12 +15160,56 @@ Die vollständige H.3-Zustandsentscheidung und Consumer-Integration bleiben
 
 #### 12.s.W – Let it Work
 
-- [ ] **12.s.W** · Position **541/900** · Voraussetzung: `12.r.C`.
+- [x] **12.s.W** · Position **541/900** · Voraussetzung: `12.r.C`.
 **Exakte Commit-Message:** `12.s.W feat(verification): Disjunkter Codezustand aufbauen`
 
 **Umsetzung:** Erste zutreffende Regel aus H.3 für missing/current/relocated/stale anwenden.
 
 **Verhaltensabnahme:** Treffer an gespeicherter Position bleibt current auch bei anderem Dateiinhalt außerhalb der Auswahl.
+
+**W-Vorbereitung (Bundle 367):** `assess_code_reference(source, reference)`
+berechnet den ersten zutreffenden H.3-Zustand für sichere native Dateiquellen
+und bereits gebundene Git-Commitbäume. Fehlende Pfade ergeben `missing` mit
+`target_missing`. Bei `file` entscheidet ausschließlich der Rohdateihash.
+Zeilen-/Text-/Byteauswahlen verwenden die vorhandene exakte H.2-Auswertung:
+Gespeicherte Treffer bleiben trotz Änderungen außerhalb der Auswahl und
+weiterer Vorkommen `current`; eindeutige andere Treffer sind `relocated`.
+Kein Treffer und mehrere Treffer behalten die unterschiedlichen stale-Gründe
+`selection_missing` und `selection_ambiguous`. Neue Positionen werden nur
+berichtet; gespeicherte Referenzdaten bleiben unverändert.
+
+Der unveränderliche `CodeReferenceState` bindet Datensatz, vorhandene Quellen-
+und Auswahlberichte samt Hashes. Seine abgetrennte Projektion enthält genau
+einen Zustand und verleiht keine Freigabe oder Schreibberechtigung.
+Die optionale Abwesenheitsbeobachtung im nativen Deskriptorzugriff prüft
+vorhandene Eltern, Root und fehlenden Pfad erneut. Auftauchende Einträge,
+Symlinks, neue verschachtelte Projekte, verschwundene Lesequellen und
+Berechtigungsfehler erzeugen keinen Zustandsbericht. Der vorhandene Byte-Leser
+behält seinen Fehlervertrag. Git-Pfadabwesenheit bleibt an die ursprüngliche
+Root-/Objektspeicheridentität und den lesbaren gebundenen Commit gebunden;
+HEAD und Arbeitsdateien werden nicht als Ersatz verwendet.
+
+780 gezielte Verhaltenstests in 19 Dateien bestanden mit vier parallelen
+Workern in 11,21 Sekunden, darunter 64 neue H.3-Tests. Sie prüfen alle vier
+Zustände, Vorrang gespeicherter Treffer, äußere Datei-/Zeilenumbruchänderungen,
+fehlende und mehrdeutige Auswahlen, historische Git-Bindung, sichere
+Abwesenheitsbeobachtung, Fehlerweitergabe und unveränderte Daten. Frische
+Core-/PYZ-Prozesse prüfen die API mit ausschließlich Standardbibliothek und
+Audit-Sperren gegen Quellcodeausführung, Prozess-/Netzwerkstarts und Writes.
+Die vollständige Katalog-Collection bestätigt 15.871 Identitäten bei null
+Testkörpern. Alle 463 bisherigen Testdateien und 15.807 festen Testnummern
+bleiben erhalten; 64 neue Nummern sind angehängt. Geprüfter Source-SHA-256:
+`3fceaa14bc38a794023753efda3eeddbecc6721319e39e5d8a57ad83ee70acb5`.
+
+Der Entrypoint verlangt vor dem W-Commit Gruppe 0, Commitsequenz 75,
+mit 5.291 parallelen Tests. Erst danach wird 541/900 markiert.
+Vorhandene passive Symbol-/Generated-Arten, freie Bestandsanker und ungültige
+Encodings werden nicht in erfundene Aktualität umgedeutet. Nicht verfügbare
+oder beschädigte Git-Objekte bleiben in diesem W-Ausschnitt native Fehler;
+ihre genaue Abgrenzung und die vollständige H.3-Randfallmatrix gehören zu
+12.s.R. SR-TC-0345 und SR-TC-0495 bleiben ausdrücklich partiell. Die
+Consumer-Integration bleibt 12.t vorbehalten. Dies ist kein Vollsuite- oder
+Release-Erfolgsnachweis.
 
 #### 12.s.R – Make it Right
 
