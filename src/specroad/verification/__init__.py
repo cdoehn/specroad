@@ -23,6 +23,7 @@ from .evaluation import (VerificationEvaluation, VerificationEvaluationError,
 from .required_checks import (RequiredChecksResolution, RequiredCheckAssessment, RequiredCheckCoverageError,
     resolve_required_checks, assess_required_check_coverage)
 from .run_selection import VerificationRunSelection, select_verification_runs
+from .run_assessment import VerificationRunAssessment, assess_verification_runs
 
 from .waiver_content import waiver_content_projection, waiver_content_sha256
 from .waiver_values import (VerificationWaiver, WaiverContext, HumanWaiverReview,
@@ -50,4 +51,5 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "verification_evaluation_schema", "prepare_verification_evaluation",
            "assess_evaluation_inputs", "EvaluationBindingAssessment", "assess_evaluation_binding",
            "RequiredChecksResolution", "RequiredCheckAssessment", "RequiredCheckCoverageError", "resolve_required_checks",
-           "assess_required_check_coverage", "VerificationRunSelection", "select_verification_runs")
+           "assess_required_check_coverage", "VerificationRunSelection", "select_verification_runs",
+           "VerificationRunAssessment", "assess_verification_runs")

@@ -9,20 +9,23 @@
   "fixture_ids": [
     "SR-FIX-VERIFICATION-EVALUATION-ROLES-v1",
     "SR-FIX-VERIFICATION-EVALUATION-v1",
-    "SR-FIX-VERIFICATION-RUN-SELECTION-v1"
+    "SR-FIX-VERIFICATION-RUN-SELECTION-v1",
+    "SR-FIX-VERIFICATION-RUN-SELECTION-RIGHT-v1"
   ],
   "preconditions": [
     "Explicit owned descriptor or None, available input bytes or None, and independently supplied logical-path roles or None. No host discovery or inferred file roles.",
-    "12.m.W: Owned TargetModel plus explicit evaluation and configuration, with optional independent native scope bindings. Only supplied Evidence is observed; input bytes and roles are assessed separately."
+    "12.m.W: Owned TargetModel plus explicit evaluation and configuration, with optional independent native scope bindings. Only supplied Evidence is observed; input bytes and roles are assessed separately.",
+    "12.m.R: Same independently selected model and original descriptor bytes; existing native context types only. Synthetic audit changes and missing/foreign bindings remain explicit input observations."
   ],
   "steps": [
     "Retain W manifest/hash and isolated runtime checks. Check exact role/byte binding, reject Evidence/output/descriptor/selection inputs without filtering, preserve missing binding observations as incomplete/SRV176, verify ownership and isolated Core/PYZ.",
-    "12.m.W: Build independent obligations first, then retain the union of declared expected runs and all matching supplied observations; require exact product/key/configuration binding and preserve each Evidence result, including simultaneous failure after a later success. Check multiple slots and subjects, missing declarations, native run conflicts, ownership and isolated Core/PYZ contracts."
+    "12.m.W: Build independent obligations first, then retain the union of declared expected runs and all matching supplied observations; require exact product/key/configuration binding and preserve each Evidence result, including simultaneous failure after a later success. Check multiple slots and subjects, missing declarations, native run conflicts, ownership and isolated Core/PYZ contracts.",
+    "12.m.R: Classify every Evidence as historical_other_state, unbound, candidate, unselected or not_evaluated. Assess all required supported subject/contract/test contexts; preserve stale/current observations together, report missing expected runs with exact SRV176 binding and per-key exclusion reasons. Exercise audit/workflow invariance, input/ID ordering, source ownership, unresolved projections and isolated Core/PYZ."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Requirement DARF das berechnete `verification_result=passed` nur nach vollständiger Bewertungs- und Nachweisauswahl sowie erfolgreicher Aggregation nach Kapitel 10.5 besitzen.",
-    "scope": "12.k.W/R: Actual bytes bind product and descriptor hashes. Explicit checker/importer role inventory excludes Evidence, check outputs, evaluation and selection metadata from inputs; unlisted declared inputs cannot disappear. Missing evaluation or unavailable binding is incomplete/SRV176; forbidden manifest roles are SRV175/code 3. Ready means input binding only, never passed or external execution/approval. Roles are declared, not authenticated. 12.m.W selects all supplied same-product observed and expected run candidates per independent key, preserving every raw result and original Evidence binding. Bound configuration must match; cross-configuration independence requires an explicit current contract. Selection is not freshness, replacement, final aggregation or a passed verification result."
+    "scope": "12.k.W/R: Actual bytes bind product and descriptor hashes. Explicit checker/importer role inventory excludes Evidence, check outputs, evaluation and selection metadata from inputs; unlisted declared inputs cannot disappear. Missing evaluation or unavailable binding is incomplete/SRV176; forbidden manifest roles are SRV175/code 3. Ready means input binding only, never passed or external execution/approval. Roles are declared, not authenticated. 12.m.W selects all supplied same-product observed and expected run candidates per independent key, preserving every raw result and original Evidence binding. Bound configuration must match; cross-configuration independence requires an explicit current contract. Selection is not freshness, replacement, final aggregation or a passed verification result. 12.m.R adds a separate pure disposition assessment over the unchanged candidate API. Historical/unbound records never witness expected runs. Empty expectations are missing, existing stale observations remain present, supported context comparisons use Appendix L, unsupported subject projections stay incomplete. No time/ID order chooses a winner; old W behavior remains intact. No replacements or final verification result are evaluated."
   },
   "expected_diagnostics": [
     "SRV175",
@@ -227,9 +230,65 @@
     "tests/test_verification_run_selection.py::test_unqualified_observed_run_id_is_not_assigned_an_invented_producer[ producer:local]",
     "tests/test_verification_run_selection.py::test_unqualified_observed_run_id_is_not_assigned_an_invented_producer[:local]",
     "tests/test_verification_run_selection.py::test_unqualified_observed_run_id_is_not_assigned_an_invented_producer[bare]",
-    "tests/test_verification_run_selection.py::test_unqualified_observed_run_id_is_not_assigned_an_invented_producer[producer:]"
+    "tests/test_verification_run_selection.py::test_unqualified_observed_run_id_is_not_assigned_an_invented_producer[producer:]",
+    "tests/test_verification_run_selection_right.py::test_a_shared_evidence_is_assessed_separately_for_each_recorded_subject",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[maturity-proposed-0]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[maturity-proposed-1]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[maturity-proposed-2]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[revision-7-0]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[revision-7-1]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[revision-7-2]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[tags-value2-0]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[tags-value2-1]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[tags-value2-2]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[updated_at-2026-10-21T01:00:00Z-0]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[updated_at-2026-10-21T01:00:00Z-1]",
+    "tests/test_verification_run_selection_right.py::test_audit_and_workflow_changes_do_not_stale_a_matching_observation[updated_at-2026-10-21T01:00:00Z-2]",
+    "tests/test_verification_run_selection_right.py::test_cached_descriptor_mutation_cannot_hide_failure_or_expected_missing_run",
+    "tests/test_verification_run_selection_right.py::test_cross_configuration_reuse_checks_actual_current_contract[False]",
+    "tests/test_verification_run_selection_right.py::test_cross_configuration_reuse_checks_actual_current_contract[True]",
+    "tests/test_verification_run_selection_right.py::test_current_and_stale_evidence_of_one_run_both_remain_visible",
+    "tests/test_verification_run_selection_right.py::test_direct_test_contract_is_assessed_once_per_unique_subject_binding",
+    "tests/test_verification_run_selection_right.py::test_dispositions_and_context_bindings_are_identical_in_isolated_core_and_pyz[core]",
+    "tests/test_verification_run_selection_right.py::test_dispositions_and_context_bindings_are_identical_in_isolated_core_and_pyz[pyz]",
+    "tests/test_verification_run_selection_right.py::test_every_required_subject_contract_and_test_context_is_checked[0-owner-different-owner]",
+    "tests/test_verification_run_selection_right.py::test_every_required_subject_contract_and_test_context_is_checked[0-statement-A changed requirement]",
+    "tests/test_verification_run_selection_right.py::test_every_required_subject_contract_and_test_context_is_checked[1-oracle-A changed oracle]",
+    "tests/test_verification_run_selection_right.py::test_every_required_subject_contract_and_test_context_is_checked[1-procedure-value3]",
+    "tests/test_verification_run_selection_right.py::test_every_required_subject_contract_and_test_context_is_checked[2-oracle-A changed test oracle]",
+    "tests/test_verification_run_selection_right.py::test_every_required_subject_contract_and_test_context_is_checked[2-test_type-performance]",
+    "tests/test_verification_run_selection_right.py::test_explicit_scope_is_independent_of_evidence_and_dispositions_do_not_expand_it",
+    "tests/test_verification_run_selection_right.py::test_historical_unbound_stale_and_missing_are_separate_without_any_success_claim",
+    "tests/test_verification_run_selection_right.py::test_incomplete_coverage_prevents_context_and_missing_run_claims[configuration]",
+    "tests/test_verification_run_selection_right.py::test_incomplete_coverage_prevents_context_and_missing_run_claims[contractless_subject]",
+    "tests/test_verification_run_selection_right.py::test_incomplete_coverage_prevents_context_and_missing_run_claims[none]",
+    "tests/test_verification_run_selection_right.py::test_ineligible_evidence_explains_exact_key_or_configuration_exclusion[check-check_id_mismatch]",
+    "tests/test_verification_run_selection_right.py::test_ineligible_evidence_explains_exact_key_or_configuration_exclusion[configuration-configuration_mismatch]",
+    "tests/test_verification_run_selection_right.py::test_ineligible_evidence_explains_exact_key_or_configuration_exclusion[hash-configuration_binding_missing]",
+    "tests/test_verification_run_selection_right.py::test_ineligible_evidence_explains_exact_key_or_configuration_exclusion[independence-independent_contract_required]",
+    "tests/test_verification_run_selection_right.py::test_ineligible_evidence_explains_exact_key_or_configuration_exclusion[policy-configuration_binding_missing]",
+    "tests/test_verification_run_selection_right.py::test_ineligible_evidence_explains_exact_key_or_configuration_exclusion[subject-subject_binding_missing]",
+    "tests/test_verification_run_selection_right.py::test_ineligible_evidence_explains_exact_key_or_configuration_exclusion[test-test_id_mismatch]",
+    "tests/test_verification_run_selection_right.py::test_no_evidence_means_all_expected_runs_missing_without_stale_or_current_observations",
+    "tests/test_verification_run_selection_right.py::test_one_run_keeps_multiple_slots_and_their_missing_expectations_separate",
+    "tests/test_verification_run_selection_right.py::test_other_product_binding_is_historical_even_when_expected_run_id_matches[subject_id-another-product]",
+    "tests/test_verification_run_selection_right.py::test_other_product_binding_is_historical_even_when_expected_run_id_matches[subject_state_sha256-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee]",
+    "tests/test_verification_run_selection_right.py::test_raw_result_never_controls_context_freshness_or_creates_success[failed]",
+    "tests/test_verification_run_selection_right.py::test_raw_result_never_controls_context_freshness_or_creates_success[not_measured]",
+    "tests/test_verification_run_selection_right.py::test_raw_result_never_controls_context_freshness_or_creates_success[passed]",
+    "tests/test_verification_run_selection_right.py::test_raw_result_never_controls_context_freshness_or_creates_success[running]",
+    "tests/test_verification_run_selection_right.py::test_record_order_evidence_id_order_and_import_time_do_not_select_a_winner",
+    "tests/test_verification_run_selection_right.py::test_report_owns_nested_bindings_and_preserves_original_source_bytes",
+    "tests/test_verification_run_selection_right.py::test_run_identity_conflict_is_not_downgraded_to_historical_classification",
+    "tests/test_verification_run_selection_right.py::test_unconfigured_explicit_independence_retains_null_and_freshness",
+    "tests/test_verification_run_selection_right.py::test_unqualified_run_identity_is_rejected_instead_of_reported_as_unbound",
+    "tests/test_verification_run_selection_right.py::test_unsupported_context_projection_never_becomes_invented_current_evidence[capability]",
+    "tests/test_verification_run_selection_right.py::test_unsupported_context_projection_never_becomes_invented_current_evidence[task]",
+    "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[None]",
+    "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[current-model]",
+    "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[untyped1]"
   ],
   "open_items": [
-    "12.m.R detailed historical_other_state/unbound/missing/stale dispositions and robustness remain open. Replacements, project evaluation-identity conflicts, prioritized aggregation and command/readiness integration remain follow-up work. Input bytes/roles, actual live inventory and provider provenance are separate gates; candidate selection authenticates neither producer nor external execution."
+    "Replacements, project evaluation-identity conflicts, prioritized aggregation and command/readiness integration remain follow-up work. Input bytes/roles, actual live inventory and provider provenance are separate gates. Appendix L does not define Capability/Task context projections: their candidates retain unresolved freshness, never an inferred current/pass. Neither candidate selection nor context dispositions authenticate a producer or external execution."
   ]
 }

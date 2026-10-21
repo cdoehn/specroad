@@ -205,3 +205,40 @@ Der Aufruf prüft keine realen Produktdateien, authentifiziert keinen Producer,
 führt keinen Testcode aus und liefert kein abschließendes `verification_result`.
 Prüfeingangs-/Rollengate, vollständige Freshness, Laufablösung, priorisierte
 Aggregation und Readiness bleiben getrennt. Bestehende Evidence wird nie verändert.
+
+
+## Laufdispositionen und Kontextaktualität (12.m.R)
+
+`assess_verification_runs` ergänzt die bestehende Kandidatenauswahl um einen
+reinen, schreibfreien Bericht `verification-run-assessment-v1`. Die API nimmt
+denselben `TargetModel`, Descriptor, explizite Konfiguration und optional
+unabhängige Scope-Bindungen wie `select_verification_runs` entgegen. Sie baut
+beide aus ihren Originalbytes auf; die unveränderte Auswahl und deren Hash
+bleiben im Bericht enthalten.
+
+Alle Evidence-IDs werden mit Quell-/Artefakthash und Disposition aufgeführt:
+`historical_other_state` für fremde Produkt-/Standbindung, `unbound` bei
+fehlendem Laufkontext, `candidate` für mindestens einen passenden
+Pflichtschlüssel, ansonsten `unselected` mit Ausschlussgründen je Prüfung.
+Ohne vollständige Pflichtmengen-/Descriptorbindung werden keine Läufe oder
+fehlenden Erwartungen beurteilt; sonstige Records bleiben `not_evaluated`.
+Historische Fehlschläge werden dadurch nicht zu Fehlschlägen des neuen Stands.
+
+Je Kandidat werden die vorhandenen Appendix-L-Kontextvergleiche für Subject,
+Contract und gegebenenfalls Test ausgeführt. Alle Ergebnisse bleiben erhalten:
+`current`, `stale` oder bei nicht definiertem Kontextvertrag `incomplete`.
+Capability/Task erhalten keine erfundene Hashprojektion; ihre direkten
+Testkandidaten bleiben mit `subject_context_unsupported` sichtbar. Reine
+Audit-/Workflowänderungen entwerten keinen definierten Kontext. Eine
+Konfigurationsausnahme verlangt weiterhin den expliziten aktuellen Contract.
+
+Erwartete Läufe ohne passenden Kandidaten haben `presence=missing` und eine
+SRV176-Diagnose mit `reason=required_run_missing` samt vollständigem Schlüssel
+und Lauf-ID. Ein vorhandener stale Kandidat ist dagegen `present`; aktuelle,
+stale und ungeklärte IDs bleiben getrennt aufgelistet. Importzeit und
+lexikografische Evidence-ID wählen keinen Gewinner. Native Laufkonflikte und
+ungültige Bindungen bleiben Fehler. Alte Evidencebytes werden nie geändert.
+
+Der Bericht aggregiert keine Rohresultate, wendet keine Laufablösung an und
+liefert kein `verification_result`. Er verifiziert weder Produktinputs noch
+den Bestand auf dem Dateisystem und gewährt weder Readiness noch Schreibrechte.

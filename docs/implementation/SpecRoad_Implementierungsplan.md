@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 523
-last_completed_plan_commit: 12.m.W
-next_plan_commit: 12.m.R
-last_completed_numbered_bundle: 349
+implementation_plan_commits_completed: 524
+last_completed_plan_commit: 12.m.R
+next_plan_commit: 12.m.C
+last_completed_numbered_bundle: 350
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14448,12 +14448,40 @@ Kein Vollsuite- oder Release-Erfolgsnachweis; 12.m.R wird noch nicht begonnen.
 
 #### 12.m.R – Make it Right
 
-- [ ] **12.m.R** · Position **524/900** · Voraussetzung: `12.m.W`.
+- [x] **12.m.R** · Position **524/900** · Voraussetzung: `12.m.W`.
 **Exakte Commit-Message:** `12.m.R feat(verification): Vollständige Lauf- und Nachweisauswahl vervollständigen`
 
 **Vervollständigung:** historical_other_state, unbound, missing und stale getrennt führen.
 
 **Verhaltensabnahme:** Importreihenfolge und Evidence-ID-Sortierung verändern keine Bewertung. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zwischenstand (Bundle 350):** Die reine Core-API
+`assess_verification_runs` ergänzt die unveränderte W-Kandidatenauswahl um
+historische und ungebundene Evidence, Ausschlussgründe je Pflichtprüfung,
+fehlende erwartete Läufe und native Kontextbewertungen für alle erforderlichen
+Requirement-/Contract-/Testbindungen. Ein stale Nachweis bleibt vorhanden,
+eine unbelegte Erwartung ist missing mit SRV176/required_run_missing.
+Gemischte Beobachtungen bleiben vollständig; Importzeit und ID-Reihenfolge
+entscheiden keine Auswahl. Nicht definierte Subject-Kontextprojektionen bleiben
+ungeklärt statt eine Aktualität zu erfinden. Laufablösung und priorisierte
+Ergebnisaggregation werden noch nicht begonnen. Der Fortschrittsmarker wird
+erst nach erfolgreichem Apply-Testlauf dieses R-Zustands gesetzt.
+
+**Gezielter Dev-Nachweis:** 753/753 Verhaltenstests aus 12 Dateien mit
+4 Workern parallel in 73,19 s bestanden. Enthalten sind alle 43 W-Fälle,
+56 neue R-Fälle einschließlich isoliertem Core/PYZ und die betroffenen
+Pflichtmengen-, Descriptor-, Contract-, Kontext- und Evidence-Regressionsfälle.
+Der erste Versuch hatte einen ungültigen neuen Testdatensatz (gebundene
+Konfiguration ohne Pflicht-Hash); nach dessen Korrektur ist die gesamte
+gezielte Auswahl grün. Der fehlgeschlagene Versuch ist kein Erfolgsnachweis.
+Geprüfte Source-SHA-256:
+`2d3db05e8c792e8a7c17f0d21c092128b55de8a6a59519b81f7cfc3c2bf82988`.
+Die vollständige Katalog-Collection bestätigt 15.072 Tests ohne Testbodies.
+Alle 15.016 bisherigen Testnummern bleiben unverändert, 56 neue folgen am Ende.
+Alle 452 bisherigen Testdateien bleiben bytegleich. Der Entrypoint verlangt
+ausschließlich Gruppe 1, Commitsequenz 58, mit 5.024 parallelen Tests vor dem
+R-Commit und Fortschrittsmarker 524/900. Kein Vollsuite- oder
+Release-Erfolgsnachweis; 12.m.C wird nicht begonnen.
 
 #### 12.m.C – Make it Clean
 
