@@ -4,15 +4,22 @@
   "requirement_id": "SR-REQ-0123",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ROADMAP-PROJECTION-v1"
+  ],
+  "preconditions": [
+    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures."
+  ],
+  "steps": [
+    "Invoke the native roadmap provider on the supplied model and source variants.",
+    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT eine separat gepflegte normative Roadmap-Datei neben dem Artefaktgraphen verlangen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native projection requires only the existing TargetModel, preserves real project inventory, remains usable without a live root and needs no separately maintained roadmap file."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +35,15 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_roadmap_projection.py::test_empty_supplied_project_has_no_generated_schedule_or_required_roadmap_file",
+    "tests/test_roadmap_projection.py::test_roadmap_does_not_write_or_reopen_the_live_project",
+    "tests/test_roadmap_projection.py::test_roadmap_facts_bind_every_original_record_and_relation",
+    "tests/test_roadmap_projection.py::test_roadmap_projection_has_identical_native_core_and_pyz_contracts[core]",
+    "tests/test_roadmap_projection.py::test_roadmap_projection_has_identical_native_core_and_pyz_contracts[pyz]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "13.c.R/C complete the boundary matrix and structural separation; this W proof is limited to the native supplied-model provider.",
+    "Roadmap View/Work integration remains assigned to 13.h; no full-suite or Release acceptance is claimed."
   ]
 }

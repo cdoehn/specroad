@@ -101,6 +101,7 @@
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
+    "SR-FIX-ROADMAP-PROJECTION-v1",
     "SR-FIX-SARIF-IMPORT-RIGHT-v1",
     "SR-FIX-SARIF-IMPORT-v1",
     "SR-FIX-SCHEMA-CATALOG-v1",
@@ -685,6 +686,10 @@
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1": {
       "provider": "tests/test_currentness_read_integration_right.py:resumed",
       "kind": "Owned complete native model/product/code sources and inert versioned currentness Work inputs. All code/evidence states, superseded and concurrent Evidence, exact Evaluation/time/scope/configuration, native Waiver trust and tamper rejection. Scoped model views retain full input inventories; whole-inventory adapters refuse partial scopes. Real CheckpointStore snapshots are rehydrated into a new native location and consumed in fresh Core/stdlib-only PYZ processes without the original source locator. Incremental QueryWork preserves all inputs beyond filtered/empty pages. No Subject writes, release readiness, executable checkpoint, durable query-cursor or full-suite claim."
+    },
+    "SR-FIX-ROADMAP-PROJECTION-v1": {
+      "provider": "tests/test_roadmap_projection.py:roadmap_values",
+      "kind": "Owned native multi-Release/Milestone/Task model with explicit priorities, stored target date, risks and direct planning/dependency/mitigation edges. Exact source hashes, stable identities, sparse assignments, no inheritance or ratings, unchanged real project bytes/modes and isolated Core/PYZ parity. Supplied-project provider only; no live completeness, configured applicability, explain path, Release closure/readiness or View/Work integration claim."
     }
   }
 }

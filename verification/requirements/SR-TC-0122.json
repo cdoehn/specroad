@@ -4,15 +4,22 @@
   "requirement_id": "SR-REQ-0122",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ROADMAP-PROJECTION-v1"
+  ],
+  "preconditions": [
+    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures."
+  ],
+  "steps": [
+    "Invoke the native roadmap provider on the supplied model and source variants.",
+    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Roadmap-Ansicht MUSS ausschließlich aus Artefakten, Beziehungen, Prioritäten, Risiken und Terminen des kanonischen Modells abgeleitet werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native roadmap projection derives explicit planning, priority, risk, date and dependency facts solely from supplied artifact bytes and original edges; binds exact origins and model root."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +35,37 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[capability-priority-low]",
+    "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[release-target_date-2028-01-02]",
+    "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[requirement-priority-medium]",
+    "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[risk-impact-2.5]",
+    "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[risk-probability-0.8]",
+    "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[risk-risk_status-accepted]",
+    "tests/test_roadmap_projection.py::test_direct_dependencies_keep_orientation_and_bind_non_planning_endpoints",
+    "tests/test_roadmap_projection.py::test_disconnected_risks_still_appear_without_invented_mitigation",
+    "tests/test_roadmap_projection.py::test_empty_supplied_project_has_no_generated_schedule_or_required_roadmap_file",
+    "tests/test_roadmap_projection.py::test_missing_schedule_target_never_becomes_an_unbound_roadmap_item",
+    "tests/test_roadmap_projection.py::test_multiple_schedule_targets_and_parallel_edges_keep_all_stored_identities",
+    "tests/test_roadmap_projection.py::test_parent_and_subject_links_do_not_hide_unscheduled_work",
+    "tests/test_roadmap_projection.py::test_priorities_and_dates_remain_explicit_fields_without_inheritance",
+    "tests/test_roadmap_projection.py::test_projection_is_owned_order_independent_and_cannot_be_used_as_authority",
+    "tests/test_roadmap_projection.py::test_reassigning_the_stored_schedule_replaces_only_the_projected_assignment",
+    "tests/test_roadmap_projection.py::test_risk_fields_and_mitigation_edges_are_observations_not_ratings_or_approvals[0-0-accepted]",
+    "tests/test_roadmap_projection.py::test_risk_fields_and_mitigation_edges_are_observations_not_ratings_or_approvals[1-8.5-open]",
+    "tests/test_roadmap_projection.py::test_risk_fields_and_mitigation_edges_are_observations_not_ratings_or_approvals[rare-catastrophic-awaiting-owner]",
+    "tests/test_roadmap_projection.py::test_risk_schema_is_checked_before_publishing_any_projection",
+    "tests/test_roadmap_projection.py::test_roadmap_does_not_write_or_reopen_the_live_project",
+    "tests/test_roadmap_projection.py::test_roadmap_facts_bind_every_original_record_and_relation",
+    "tests/test_roadmap_projection.py::test_roadmap_projection_has_identical_native_core_and_pyz_contracts[core]",
+    "tests/test_roadmap_projection.py::test_roadmap_projection_has_identical_native_core_and_pyz_contracts[pyz]",
+    "tests/test_roadmap_projection.py::test_roadmap_rejects_unbound_dictionaries[None]",
+    "tests/test_roadmap_projection.py::test_roadmap_rejects_unbound_dictionaries[supplied1]",
+    "tests/test_roadmap_projection.py::test_roadmap_rejects_unbound_dictionaries[supplied2]",
+    "tests/test_roadmap_projection.py::test_schedule_groups_are_direct_stored_assignments_not_release_closures"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "13.c.R/C complete the boundary matrix and structural separation; this W proof is limited to the native supplied-model provider.",
+    "Roadmap View/Work integration remains assigned to 13.h; no full-suite or Release acceptance is claimed."
   ]
 }

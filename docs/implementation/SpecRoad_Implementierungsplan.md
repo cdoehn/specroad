@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 552
-last_completed_plan_commit: 13.b.C
-next_plan_commit: 13.c.W
-last_completed_numbered_bundle: 378
+implementation_plan_commits_completed: 553
+last_completed_plan_commit: 13.c.W
+next_plan_commit: 13.c.R
+last_completed_numbered_bundle: 379
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15673,12 +15673,44 @@ Releasefreigabe; 13.c.W wird in diesem Bundle nicht begonnen.
 
 #### 13.c.W – Let it Work
 
-- [ ] **13.c.W** · Position **553/900** · Voraussetzung: `13.b.C`.
+- [x] **13.c.W** · Position **553/900** · Voraussetzung: `13.b.C`.
 **Exakte Commit-Message:** `13.c.W feat(roadmap): Roadmap aus dem einen Fachmodell aufbauen`
 
 **Umsetzung:** Roadmapdaten ausschließlich aus Artefakten, Beziehungen, Priorität, Risiken und Terminen berechnen.
 
 **Verhaltensabnahme:** Keine zweite normative Roadmapdatei ist erforderlich.
+
+**W-Ausschnitt (Bundle 379):** Der native Provider
+`planning.project_roadmap(TargetModel)` berechnet eine unveränderliche,
+ausdrücklich nicht normative Projektion aus dem gelieferten Modell. Er verwendet
+die gemeinsamen Planungs-/Relationsprüfungen und das bestehende Risikoschema.
+Release-, Milestone-, Task-, Capability-, Requirement- und Decision-Fakten behalten
+ihre IDs und gespeicherten Felder. Direkte `scheduled_for`-, Planungs-`part_of`-,
+Task-`implemented_by`-, `depends_on`- und `mitigates`-Beziehungen bleiben an
+Originalrichtung, Relations-ID, Quelldatei und JSON-Pointer gebunden. Artefakt-,
+Quellbytes-, Eingabe- und Modellwurzelhashes machen die Herkunft nachvollziehbar.
+
+Direkte Planungsgruppen ersetzen keine Release-Closure. Fehlende explizite
+Terminzuordnungen bleiben sichtbar; Eltern- und Umsetzungsbeziehungen erfinden
+keine Zuordnung. Prioritäten, Risikowerte und vorhandene Release-Zieldaten werden
+unverändert übernommen, ohne Vererbung, Schätzung, Risikobewertung oder
+Readinessentscheidung. Die Projektion benötigt keine weitere Projektdatei und
+liest den Live-Projektpfad nicht erneut. Fachtests prüfen Quellenänderungen,
+mehrere Zuordnungen, ungeplante Arbeit, getrennte Risiken, native Fehler,
+Unveränderlichkeit, Dateierhaltung und isolierte Core-/PYZ-Parität.
+
+`SR-TC-0122`, `SR-TC-0123` und `SR-TC-0128` dokumentieren diesen begrenzten
+Provider-Nachweis als `partial`. 13.c.R/C folgen separat; Erklärungspfade,
+Release-Closure und Readiness sowie die View-/Workintegration bleiben ihren
+nachfolgenden Planschritten vorbehalten. Gezielte parallele Dev-Teiltests und
+die fällige parallele Apply-Testgruppe sind keine Vollsuite-/Releasefreigabe.
+
+**Gezielter W-Nachweis:** 322 Verhaltenstests aus Roadmapprojektion,
+Planungsrelationen, Task-/Done-Umsetzung und bestehenden Built-in-View-Grenzen
+bestanden parallel auf vier Workern. Der vollständige Katalog umfasst 16.344
+Testidentitäten bei null ausgeführten Testkörpern in der Collection; die 27
+neuen Identitäten werden ausschließlich am Ende der stabilen Nummerierung
+ergänzt. Apply prüft vor dem W-Commit die fällige Gruppe 0 mit 5.448 Tests.
 
 #### 13.c.R – Make it Right
 
