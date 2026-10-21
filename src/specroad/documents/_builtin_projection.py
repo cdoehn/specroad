@@ -15,11 +15,15 @@ from ..storage.domain_artifact import DomainArtifact
 from ..storage.record_artifact import RecordArtifact
 
 
-def _computed_reports():
-    """Explicit absence, never a result derived from stored success strings."""
-    return {name: {'status': 'unavailable', 'reason': 'provider_required',
+def _computed_reports(*, verification=None):
+    """Project checked coverage or explicit absence; stored statuses do not count."""
+    reports = {name: {'status': 'unavailable', 'reason': 'provider_required',
                    'required_milestone': milestone, 'result': None}
             for name, milestone in (('verification', 'M12'), ('roadmap', 'M13'))}
+    if verification is not None:
+        reports['verification'] = {'status': 'computed', 'reason': None,
+                                   'required_milestone': 'M12', 'result': verification}
+    return reports
 
 
 def _bound_record(document, value):

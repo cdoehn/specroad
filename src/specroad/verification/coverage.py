@@ -28,6 +28,13 @@ class VerificationCoverage:
         raise TypeError('Coverage is not readiness or approval')
 
 
+def _result(report):
+    """Seal either checked coverage path with the same owned value contract."""
+    result = object.__new__(VerificationCoverage)
+    object.__setattr__(result, '_encoded', canonical_json_bytes(report))
+    return result
+
+
 def _counts(values):
     counts = {}
     for value in values:
@@ -103,9 +110,7 @@ def assess_verification_coverage(model, verification=None, *, currentness=None):
         from .currentness_input import checked_currentness_model
         _, observed = checked_currentness_model(model, currentness, verification=verification)
         report = {**observed['observation']['coverage'], 'currentness': observed}
-        result = object.__new__(VerificationCoverage)
-        object.__setattr__(result, '_encoded', canonical_json_bytes(report))
-        return result
+        return _result(report)
     model, bound = checked_model_input(model, verification)
     documents = {parse_json_object(d.content)['id']: parse_json_object(d.content)
                  for d in model.documents}
@@ -165,6 +170,4 @@ def assess_verification_coverage(model, verification=None, *, currentness=None):
         'full_verification_evaluated': False, 'external_run_verified': False,
         'release_readiness_evaluated': False, 'test_code_executed': False,
         'write_authorized': False, 'approval_granted': False}
-    result = object.__new__(VerificationCoverage)
-    object.__setattr__(result, '_encoded', canonical_json_bytes(report))
-    return result
+    return _result(report)

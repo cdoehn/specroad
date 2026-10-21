@@ -57,14 +57,21 @@ def computed_results(data):
             for row in data['aggregation']['subjects']}
 
 
+def matching_currentness_verification(expected, supplied):
+    """Reuse the bound native provider after the caller's model/record checks."""
+    if supplied is not None and (type(supplied) is not type(expected)
+                                 or supplied.sha256 != expected.sha256):
+        raise ModelError('currentness_verification_mismatch')
+    return expected
+
+
 def selected_artifacts(records, artifact_ids, verification):
     """Build sort inputs only after select_query has checked the read binding."""
     ids = set(artifact_ids)
     artifacts = {record.identity.id: record.data for record in records if record.identity.id in ids}
     if verification is not None:
-        for subject in verification.data['aggregation']['subjects']:
-            identifier = subject['subject_artifact_id']
+        for identifier, result in computed_results(verification.data).items():
             if identifier in artifacts:
                 artifacts[identifier] = {**artifacts[identifier],
-                    'verification_result': subject['verification_result']}
+                    'verification_result': result}
     return artifacts

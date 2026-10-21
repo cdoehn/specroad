@@ -164,14 +164,13 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
     if view_name == 'verification':
         from ..verification.coverage import assess_verification_coverage
         coverage = assess_verification_coverage(model, verification, currentness=currentness)
+        coverage_data = coverage.data
         data.update(mode='evaluated_requirement_coverage',
             selection_scope_descriptor=verification.data['scope_descriptor'],
-            summary=verification.summary, coverage=coverage.data, coverage_sha256=coverage.sha256,
-            rows=coverage.data['requirements'], row_count=coverage.data['totals']['requirements'],
-            verification_evaluated=True, computed_reports={**_computed_reports(),
-                'verification': {'status': 'computed', 'reason': None,
-                    'required_milestone': 'M12', 'result': coverage.data}},
-            validation_scope=coverage.data['validation_scope'])
+            summary=verification.summary, coverage=coverage_data, coverage_sha256=coverage.sha256,
+            rows=coverage_data['requirements'], row_count=coverage_data['totals']['requirements'],
+            verification_evaluated=True, computed_reports=_computed_reports(verification=coverage_data),
+            validation_scope=coverage_data['validation_scope'])
     elif view_name == 'specification':
         roles = assess_document_roles(model)
         primary = roles.require_primary_document()
@@ -189,14 +188,13 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
             rows=rows, row_count=len(rows),
             validation_scope='supplied_record_fields_and_stored_traceability')
         if observed is not None:
-            subjects = {s['subject_artifact_id']: s['verification_result']
-                        for s in observed['observation']['coverage']['aggregation']['subjects']}
+            from ..verification._read_evaluation import computed_results
+            coverage_data = observed['observation']['coverage']
+            subjects = computed_results(coverage_data)
             for row in rows:
                 row['verification_result'] = subjects.get(row['requirement_id'])
             data.update(mode='evaluated_traceability', verification_evaluated=True,
-                computed_reports={**_computed_reports(), 'verification': {
-                    'status': 'computed', 'reason': None, 'required_milestone': 'M12',
-                    'result': observed['observation']['coverage']}})
+                computed_reports=_computed_reports(verification=coverage_data))
     if observed is not None:
         data['currentness'] = observed
     return _result(data, model.source_files)

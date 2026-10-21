@@ -36,12 +36,10 @@ class QueryWork:
         if currentness is not None:
             from ..model.configuration import ProjectConfiguration
             from ..verification.currentness_input import checked_currentness_records
+            from ..verification._read_evaluation import matching_currentness_verification
             checked_currentness_records(currentness, records,
                 ProjectConfiguration(project), configuration_id)
-            if verification is not None and (type(verification) is not type(currentness.verification)
-                    or verification.sha256 != currentness.verification.sha256):
-                raise ModelError('currentness_verification_mismatch')
-            verification = currentness.verification
+            verification = matching_currentness_verification(currentness.verification, verification)
         self._currentness = currentness
         data = query.data
         ordering = []

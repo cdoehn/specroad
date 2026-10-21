@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 545
-last_completed_plan_commit: 12.t.R
-next_plan_commit: 12.t.C
-last_completed_numbered_bundle: 371
+implementation_plan_commits_completed: 546
+last_completed_plan_commit: 12.t.C
+next_plan_commit: 13.a.W
+last_completed_numbered_bundle: 372
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15402,7 +15402,7 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis. 12.t.C folgt separat.
 
 #### 12.t.C – Make it Clean
 
-- [ ] **12.t.C** · Position **546/900** · Voraussetzung: `12.t.R`.
+- [x] **12.t.C** · Position **546/900** · Voraussetzung: `12.t.R`.
 **Exakte Commit-Message:** `12.t.C refactor(verification): Nachweis-/Codeintegration und Workparität bereinigen`
 
 **Bereinigung:** Gemeinsame berechnete Datenprovider statt voneinander abweichender Reportlogik verwenden.
@@ -15410,6 +15410,39 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis. 12.t.C folgt separat.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Stand, Bundle 372:** Query-Selektion, Paging/QueryWork und
+Traceability verwenden dieselbe Projektion der bereits geprüften nativen
+Verification-Aggregation. Verification- und Traceability-Ansichten teilen die
+Projektion ihrer berechneten Reports; fehlende Provider bleiben ausdrücklich
+unverfügbar. Die Coverage-Ansicht liest ihre abgelösten Daten einmal aus.
+Beide Coverage-Pfade erzeugen denselben unveränderlichen Wert über eine
+gemeinsame private Konstruktion. Der Abgleich eines zusätzlich übergebenen
+Verification-Eingangs ist gemeinsam gekapselt; native Modell-/Inventarprüfungen
+und ihre Reihenfolge bleiben an den bisherigen Eintrittsgrenzen erhalten.
+
+Ergebnisbytes, Bindungen, Fehlerverträge, vollständige Work-Eingänge und
+zulässige Seiteneffekte bleiben erhalten. Insbesondere behalten Traceability
+und Verification ihren jeweiligen bisherigen Coverage-Umfang; kein Report
+erfindet Aktualität, Subjectwrites oder Freigaberechte. Alle 467 vorhandenen
+Testdateien und sämtliche Verifikationsdaten bleiben bytegleich. Weder neue
+Testnummern noch Änderungen an bisherigen Erwartungswerten sind enthalten.
+
+Das maßgebliche Result `specroad-apply_Result_124717_1021_60c5cd.zip`
+bestätigt 12.t.R auf Commit
+`d3e561f919d1ddceeb6f9b31cde2a3b9cd9fafce` mit 5.385 bestandenen
+Apply-Tests der Gruppe 1. Der gezielte C-Dev-Lauf hat **2.136 Tests** aus
+43 betroffenen Testdateien mit vier Workern in **109,00 Sekunden** bestanden,
+einschließlich sämtlicher W-/R-Nachweise dieses Schritts und der nativen
+Work-/Scope-/Paging-/Coverage-Regressionen. Die vollständige Katalogprüfung
+bestätigt **16.155 unveränderte Identitäten** bei null Testkörpern.
+Geprüfter Source-SHA-256:
+`7cd4fd37d26f5c1985189b0885d989169f39b20586109962a708b0627b9cc649`.
+Der Entrypoint verlangt vor dem C-Commit Gruppe 2, Commitsequenz 80,
+mit 5.385 parallelen Tests. Erst danach wird 546/900 markiert.
+Dies ist ein Teiltestnachweis, kein Vollsuite-, Meilensteinfreigabe- oder
+Release-Erfolgsnachweis. Readiness bleibt M13 vorbehalten; SR-TC-0284 und
+SR-TC-0537 bleiben partiell. 13.a.W wird in diesem Bundle nicht begonnen.
 
 **Meilenstein 12 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 

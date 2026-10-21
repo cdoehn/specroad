@@ -17,7 +17,7 @@ from .code_reference_state import CodeReferenceState
 from .coverage import assess_verification_coverage
 from .read_input import (checked_model_input, resume_verification_read_input,
                          VerificationReadBindingConflict)
-from ._read_evaluation import record_bindings
+from ._read_evaluation import matching_currentness_verification, record_bindings
 
 
 @dataclass(frozen=True, init=False)
@@ -121,9 +121,7 @@ def checked_currentness_model(model, value, *, verification=None):
     if type(value) is not CurrentnessReadInput:
         raise ModelError('typed_currentness_read_input_required')
     model, _ = checked_model_input(model, value._verification)
-    if verification is not None and (type(verification) is not type(value._verification)
-                                    or verification.sha256 != value._verification.sha256):
-        raise ModelError('currentness_verification_mismatch')
+    matching_currentness_verification(value._verification, verification)
     return model, value.observation
 
 
