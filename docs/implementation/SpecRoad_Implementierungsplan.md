@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 524
-last_completed_plan_commit: 12.m.R
-next_plan_commit: 12.m.C
-last_completed_numbered_bundle: 350
+implementation_plan_commits_completed: 525
+last_completed_plan_commit: 12.m.C
+next_plan_commit: 12.n.W
+last_completed_numbered_bundle: 351
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14485,7 +14485,7 @@ Release-Erfolgsnachweis; 12.m.C wird nicht begonnen.
 
 #### 12.m.C – Make it Clean
 
-- [ ] **12.m.C** · Position **525/900** · Voraussetzung: `12.m.R`.
+- [x] **12.m.C** · Position **525/900** · Voraussetzung: `12.m.R`.
 **Exakte Commit-Message:** `12.m.C refactor(verification): Vollständige Lauf- und Nachweisauswahl bereinigen`
 
 **Bereinigung:** Auswahlregeln als reine Funktion über eingefrorene Eingangsdaten implementieren.
@@ -14493,6 +14493,29 @@ Release-Erfolgsnachweis; 12.m.C wird nicht begonnen.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zwischenstand (Bundle 351):** Kandidatenregeln und
+Dispositionsbewertung sind von den öffentlichen Eingabe-/Scope-Adaptern
+getrennt. Die Kandidatenfunktion verarbeitet einen privaten kanonischen
+Bytesnapshot pro Pflichtschlüssel; die Dispositionsfunktion verwendet die
+gebundene Auswahl und unveränderbare Dokumentpfad-/Bytepaare. Native
+Validierungsreihenfolge, Berichtsformate, Fehlerverträge, Hashbindungen,
+Sortierung und zulässige Seiteneffekte bleiben erhalten. Kein neues
+Fachverhalten und keine neuen oder geänderten Tests beziehungsweise Testnummern.
+Der Fortschrittsmarker folgt erst nach erfolgreichem parallelem Apply-Gate;
+12.n.W wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis:** 753/753 bestehende Verhaltenstests aus 12 Dateien
+mit 4 Workern parallel in 75,28 s bestanden. Darunter sämtliche 99 W-/R-Fälle
+der Laufauswahl einschließlich isoliertem Core/PYZ sowie die betroffenen
+Pflichtmengen-, Descriptor-, Contract-, Kontext- und Evidence-Regressionsfälle.
+Geprüfte Source-SHA-256:
+`7a294ede3aa17ae9b73be1b23850d31760051572dcb6a827a3f508bc5dba2659`.
+Die vollständige Katalog-Collection bestätigt unverändert 15.072 Tests ohne
+Testbodies. Alle 453 bisherigen Testdateien, der Verifikationskatalog und die
+festen Testnummern bleiben bytegleich. Der Entrypoint verlangt ausschließlich
+Gruppe 2, Commitsequenz 59, mit 5.024 parallelen Tests vor C-Commit und
+Fortschrittsmarker 525/900. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-n"></a>
 ### 12.n – Menschlich gebundene Laufablösung

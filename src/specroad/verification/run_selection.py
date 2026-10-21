@@ -14,7 +14,7 @@ from ..storage.record_artifact import RecordArtifact
 from .evaluation import VerificationEvaluation, VerificationEvaluationError
 from .required_checks import assess_required_check_coverage
 from .targets import resolve_verification_target
-from ._subject_binding import subject_context_sha256
+from ._run_candidates import candidate_check
 
 
 @dataclass(frozen=True, init=False)
@@ -88,44 +88,15 @@ def select_verification_runs(model, evaluation, *, configuration_id,
             pair = identity[:2]
             if pair not in contracts:
                 contracts[pair] = resolve_verification_target(model, *pair).data['contract']['record']
-            contract = contracts[pair]
-            runs = {run_id: [] for run_id in expected[identity]}
-            for (record, value), binding in zip(evidence, inventory):
-                run = value['run_context']
-                if run is None or run['subject_id'] != selected['evaluated_subject']['subject_id']:
-                    continue
-                if run['subject_state_sha256'] != selected['evaluated_subject']['state_sha256']:
-                    continue
-                if run['check_id'] != key['check_id'] or run['test_id'] != key['test_id']:
-                    continue
-                subjects = {item['artifact_id']: item for item in value['subjects']}
-                ids = {key['subject_artifact_id'], key['contract_id']}
-                if key['test_id'] is not None:
-                    ids.add(key['test_id'])
-                if not ids <= subjects.keys() or 'configuration_hash' not in value:
-                    continue
-                policy = value.get('configuration_policy')
-                same_configuration = value['configuration_hash'] == selected['configuration_hash']
-                if policy == 'bound':
-                    if not same_configuration:
-                        continue
-                elif policy == 'independent' and contract.get('configuration_policy') == 'independent':
-                    # Cross-configuration reuse requires the actual current
-                    # declaration, never an Evidence label or an old policy.
-                    if (not same_configuration and subjects[key['contract_id']]['verification_context_sha256']
-                            != subject_context_sha256(contract)):
-                        continue
-                else:
-                    continue
-                observation = {**binding, 'result': value['result'], 'subjects': value['subjects'],
-                    'run_context': run, 'configuration_hash': value['configuration_hash'],
-                    'configuration_policy': policy}
-                runs.setdefault(run['run_id'], []).append(observation)
-                used.add(value['id'])
-            checks.append({**key, 'expected_run_ids': expected[identity],
-                'runs': [{'run_id': run_id, 'expected': run_id in expected[identity],
-                          'evidence': runs[run_id]}
-                         for run_id in sorted(runs, key=lambda item: item.encode('utf-8'))]})
+            snapshot = canonical_json_bytes({'key': key, 'expected_run_ids': expected[identity],
+                'contract': contracts[pair],
+                'evaluation_binding': {field: selected[field] for field in
+                                       ('evaluated_subject', 'configuration_hash')},
+                'evidence': [{'record': value, 'binding': binding}
+                             for (_, value), binding in zip(evidence, inventory)]})
+            check, selected_ids = candidate_check(snapshot)
+            checks.append(check)
+            used.update(selected_ids)
     report = {'format_version': 'verification-run-selection-v1',
         'validation_scope': 'supplied_model_run_candidates',
         'project_id': model.binding.project_id, 'input_sha256': model._sources_sha256,

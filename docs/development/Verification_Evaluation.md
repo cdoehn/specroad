@@ -242,3 +242,16 @@ ungültige Bindungen bleiben Fehler. Alte Evidencebytes werden nie geändert.
 Der Bericht aggregiert keine Rohresultate, wendet keine Laufablösung an und
 liefert kein `verification_result`. Er verifiziert weder Produktinputs noch
 den Bestand auf dem Dateisystem und gewährt weder Readiness noch Schreibrechte.
+
+
+## Interne Auswahlstruktur (12.m.C)
+
+Die öffentlichen Funktionen behalten ihre nativen Eingabe-, Scope-, Fehler-
+und Berichtverträge. Die Kandidatenregeln liegen in `_run_candidates` und
+arbeiten pro Pflichtschlüssel ausschließlich auf einem privaten kanonischen
+JSON-Bytesnapshot. Contractauflösung und Fehlerreihenfolge bleiben beim
+öffentlichen Adapter. `_run_dispositions` erhält die eingefrorene Auswahl
+sowie ein Tupel der ursprünglichen Dokumentpfade und Bytes. Beide Funktionen
+liefern eigene Ergebniswerte; sie entdecken keine Dateien und starten weder
+Prüfprozesse noch Laufablösungen. Die bisherigen W-/R-Verhaltenstests werden
+unverändert für die Strukturänderung verwendet.
