@@ -322,3 +322,45 @@ Der öffentliche Adapter behält Modell-/Descriptorprüfung, Evidence-Set-Hash,
 wirksame Erwartungen, aktive beziehungsweise abgelöste Kandidaten und den
 kanonischen Bericht. Berichtfelder, Reihenfolge, Hashes, Fehlerverträge und
 Schreibfreiheit bleiben gleich; bestehende W-/R-Verhaltenstests bleiben unverändert.
+
+## Priorisierte Ergebnisse je Subject (12.o.W)
+
+`aggregate_verification_results(model, evaluation, configuration_id=...,
+inputs=..., input_roles=..., evaluated_at=...)` berechnet einen eigenen
+`VerificationResultAggregation`-Wert über den gelieferten Modellbestand.
+Die API verbindet die nativen Eingangs-, Pflichtmengen-, Lauf-, Freshness-
+und Ablösungsprüfungen. Optionale `scope_descriptor`/`scope_bindings` bleiben
+unabhängig von der Bewertungsauswahl. `evaluated_at` ist eine ausdrücklich
+gelieferte maschinenlesbare UTC-Zeit; die API liest keine Uhr oder Dateien.
+
+Die Subject-Ergebnisse folgen der Priorität aus §10.5: Konfigurationsausschluss,
+wirksamer Waiver, nicht geplante Verifikation, unvollständige Eingangs-/
+Auswahlbindung, maßgeblicher aktueller Fehlschlag, laufender Plan, fehlende
+Pflichtnachweise, ausschließlich stale Evidence einer Pflichtprüfung und
+schließlich vollständig aktuelle bestandene Läufe. Übrige Fälle bleiben
+`incomplete`. Ein weiterer bestandener Lauf oder ein anderer fehlender Lauf
+verdeckt keinen aktuellen Fehlschlag. Innerhalb desselben Laufs bleiben alle
+Beobachtungen erhalten; gemischte aktuelle und stale Nachweise sind ohne
+wirksame Ablösung unvollständig. Stale Evidence wird nicht als fehlend behandelt.
+
+`waiver_reviews` ordnet Subject-IDs native `HumanWaiverReview`-Werte zu.
+Nur ein ausdrücklich übergebener vertrauenswürdiger `waiver_verifier` kann
+deren menschliche Herkunft bestätigen. Der bestehende Waiver-Vertrag prüft
+Inhalt, exakten Scope, Konfiguration und Ablauf zum Bewertungszeitpunkt.
+Abgelaufene, veränderte, unbestätigte und historische Freitext-Waiver begründen
+keine Ausnahme. Ein wirksamer Waiver ergibt `waived`, niemals `passed`.
+
+Der Bericht `verification-result-aggregation-v1` erhält die unveränderten
+nativen Eingangs- und Ablösungsberichte mit ihren Hashes, sämtliche aktiven
+Laufbeobachtungen sowie Ergebnis und Gründe je Subject. Unvollständige
+Ergebnisse führen SRV176-Diagnosen; strukturelle Eingabefehler und nicht
+menschliche Ablösungen behalten SRV175 mit Code 3 beziehungsweise 7.
+`data` liefert eine abgetrennte Kopie, `sha256` bindet den kanonischen Bericht.
+Boolesche Verwendung ist unzulässig. Subject- und Evidencebytes bleiben gleich.
+
+Die Aggregation bestätigt keinen vollständigen realen Dateibestand,
+keine projektweite Bewertungs-ID-Historie und keine externe Testausführung.
+Diese Grenzen sind als falsche Berichtflags sichtbar. Es gibt weder einen
+Gesamt-Pass noch Readiness, Schreibrechte oder eine Freigabe. Die vollständige
+gemischte Entscheidungsmatrix und Robustheit folgen in 12.o.R; CLI-/Query-
+und Releaseintegration bleiben eigene Planschritte.

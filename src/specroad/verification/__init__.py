@@ -26,6 +26,7 @@ from .run_selection import VerificationRunSelection, select_verification_runs
 from .run_assessment import VerificationRunAssessment, assess_verification_runs
 from .evaluation import VerificationReplacementAuthorityError
 from .run_replacements import VerificationReplacementAssessment, assess_run_replacements
+from .aggregation import VerificationResultAggregation, aggregate_verification_results
 
 from .waiver_content import waiver_content_projection, waiver_content_sha256
 from .waiver_values import (VerificationWaiver, WaiverContext, HumanWaiverReview,
@@ -55,4 +56,5 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "RequiredChecksResolution", "RequiredCheckAssessment", "RequiredCheckCoverageError", "resolve_required_checks",
            "assess_required_check_coverage", "VerificationRunSelection", "select_verification_runs",
            "VerificationRunAssessment", "assess_verification_runs",
-           "VerificationReplacementAuthorityError", "VerificationReplacementAssessment", "assess_run_replacements")
+           "VerificationReplacementAuthorityError", "VerificationReplacementAssessment", "assess_run_replacements",
+           "VerificationResultAggregation", "aggregate_verification_results")

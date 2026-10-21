@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 528
-last_completed_plan_commit: 12.n.C
-next_plan_commit: 12.o.W
-last_completed_numbered_bundle: 354
+implementation_plan_commits_completed: 529
+last_completed_plan_commit: 12.o.W
+next_plan_commit: 12.o.R
+last_completed_numbered_bundle: 355
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14641,12 +14641,47 @@ Commitsequenz 62, mit 5.059 parallelen Tests vor C-Commit und Fortschrittsmarker
 
 #### 12.o.W – Let it Work
 
-- [ ] **12.o.W** · Position **529/900** · Voraussetzung: `12.n.C`.
+- [x] **12.o.W** · Position **529/900** · Voraussetzung: `12.n.C`.
 **Exakte Commit-Message:** `12.o.W feat(verification): Priorisierte Ergebnisaggregation aufbauen`
 
 **Umsetzung:** not_applicable/waived/not_evaluated/incomplete/failed/running/stale/passed nach §10.5 ordnen.
 
 **Verhaltensabnahme:** Maßgeblicher aktueller Fehlschlag hat Vorrang vor running oder fehlenden anderen Nachweisen.
+
+**Vorbereiteter W-Zwischenstand (Bundle 355):** Die schreibfreie API
+`aggregate_verification_results` verbindet tatsächliche Eingangsbytes und
+explizite Rollen mit der unabhängigen Pflichtmenge, nativer Kandidatenauswahl,
+Kontextaktualität und menschlich erklärter Laufablösung. Pro Subject wird die
+Priorität aus §10.5 ausgewertet; alle Beobachtungen maßgeblicher Läufe bleiben
+sichtbar. Ein aktueller Fehlschlag überwiegt laufenden Planstatus, späteren
+Erfolg und andere fehlende erwartete Läufe. Ohne vollständige Eingangsbindung
+oder wirksame Ablösung bleibt die Bewertung unvollständig. Gemischte aktuelle
+und stale Nachweise ergeben keinen Erfolg. Konfigurationsausschluss und ein
+exakt gebundener, zum expliziten UTC-Bewertungszeitpunkt wirksamer Waiver behalten
+ihren Vorrang. Der Waiver verlangt den bestehenden vertrauenswürdigen
+Host-Prüfer; Freitext allein genügt nicht. Originale Subject-/Evidencebytes,
+gespeicherter Planstatus und alle bestehenden Testoracles bleiben unverändert.
+Der Bericht behauptet weder realen Gesamtbestand noch projektweite
+Bewertungs-ID-Historie, externe Ausführung oder Release-Freigabe.
+Der Fortschrittsmarker folgt erst nach erfolgreichem parallelem Apply-Gate.
+12.o.R wird in diesem Bundle nicht begonnen; die betroffenen Anforderungen
+bleiben ausdrücklich nur teilweise nachgewiesen.
+
+**Gezielter Dev-Nachweis (Bundle 355):** 1.087/1.087 Verhaltenstests aus
+17 Dateien mit vier parallelen Workern in 105,00 s bestanden: 44 neue
+Aggregationsfälle und 1.043 betroffene Descriptor-, Pflichtmengen-, Lauf-,
+Contract-, Kontext-, Evidence- und Waiver-Regressionsfälle. Core und PYZ
+liefern dieselben fachlichen Ergebnisse. Source-SHA-256:
+`916a6139c5eaf839ab80dbf9e16cab719c39f3a349b95c956acb3fb3708d57fd`.
+Die vollständige Katalog-Collection bestätigt 15.223 Tests ohne Testbodies.
+Alle 455 bisherigen Testdateien und die ersten 15.179 festen Testnummern
+bleiben unverändert; 44 neue Identitäten werden angehängt. Ein erster Lauf
+mit vier ungültigen neuen Testfixtures blieb als fehlgeschlagener Nachweis
+erhalten; korrigiert wurden ausschließlich SRX-Eingabeform und Relations-ID,
+nicht die erwarteten Fachresultate. Der erfolgreiche Wiederholungslauf bindet
+den nun ausgelieferten Zustand. Der Entrypoint verlangt ausschließlich
+Gruppe 0, Commitsequenz 63, mit 5.075 parallelen Tests vor W-Commit und
+Fortschrittsmarker 529/900. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.o.R – Make it Right
 
