@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 527
-last_completed_plan_commit: 12.n.R
-next_plan_commit: 12.n.C
-last_completed_numbered_bundle: 353
+implementation_plan_commits_completed: 528
+last_completed_plan_commit: 12.n.C
+next_plan_commit: 12.o.W
+last_completed_numbered_bundle: 354
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14601,7 +14601,7 @@ oder Release-Erfolgsnachweis.
 
 #### 12.n.C – Make it Clean
 
-- [ ] **12.n.C** · Position **528/900** · Voraussetzung: `12.n.R`.
+- [x] **12.n.C** · Position **528/900** · Voraussetzung: `12.n.R`.
 **Exakte Commit-Message:** `12.n.C refactor(verification): Menschlich gebundene Laufablösung bereinigen`
 
 **Bereinigung:** Ablösungsgraph von Ergebnisaggregation getrennt berechnen.
@@ -14609,6 +14609,29 @@ oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zwischenstand (Bundle 354):** Die reine Graphauflösung liegt
+in `_run_replacement_graph`: erreichbare Endläufe, transitive Bindungsprobleme
+und unveränderte Endergebnisse werden getrennt vom öffentlichen Bericht
+berechnet. Die vollständigen Mengenbindungen werden einmal im Adapter gebildet;
+eine zusätzliche parallele Kopie ihrer Wahrheitswerte entfällt. Native
+Zyklusprüfung, Eingabereihenfolge, Fehlerverträge, fachliche Ergebnisse und
+sämtliche Berichtfelder bleiben erhalten. Alle bestehenden Testbytes,
+Verifikationsverträge und dauerhaften Testnummern bleiben unverändert.
+Der Fortschrittsmarker folgt erst nach erfolgreichem parallelem Apply-Gate;
+12.o.W wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis (Bundle 354):** 860/860 bestehende Verhaltenstests
+aus 14 Dateien mit vier parallelen Workern in 75,12 s bestanden. Darunter sind
+sämtliche 107 W-/R-Fälle der Laufablösung einschließlich isoliertem Core/PYZ
+sowie die betroffenen Auswahl-, Pflichtmengen-, Descriptor-, Contract-,
+Kontext- und Evidence-Regressionsfälle. Geprüfte Source-SHA-256:
+`e6f8d8f4232977ce4a3964ff6dacfcf11bd6372e6eb330c1b6ba6156a17fcad2`.
+Die vollständige Katalog-Collection bestätigt 15.179 Tests ohne Testbodies.
+Alle 455 bisherigen Testdateien, der Verifikationskatalog und sämtliche festen
+Testnummern bleiben bytegleich. Der Entrypoint verlangt ausschließlich Gruppe 2,
+Commitsequenz 62, mit 5.059 parallelen Tests vor C-Commit und Fortschrittsmarker
+528/900. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-o"></a>
 ### 12.o – Priorisierte Ergebnisaggregation

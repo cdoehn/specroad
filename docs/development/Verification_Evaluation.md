@@ -308,3 +308,17 @@ Entscheidungen zu verwerfen. Ein staler Zwischenlauf kann selbst wirksam
 abgelöst werden; maßgeblich bleiben die vollständigen Bindungen und
 aktuellen Endläufe. Ihre fehlgeschlagenen Ergebnisse bleiben `failed`.
 Die priorisierte Gesamtaggregation ist weiterhin ein eigener Planschritt.
+
+## Interne Ablösungsstruktur (12.n.C)
+
+`_run_replacement_graph` berechnet ausschließlich erreichbare Endläufe,
+transitive Bindungsprobleme und deren unveränderte Ergebnisbeobachtungen.
+Es arbeitet auf der bereits validierten Topologie, den nativen Laufkandidaten
+und den vollständigen alten Mengenbindungen. Es verändert keine Eingaben und
+erzeugt kein aggregiertes Verification-Ergebnis. Die iterative native
+Zyklusprüfung bleibt gemeinsam mit der Descriptornormalisierung erhalten.
+
+Der öffentliche Adapter behält Modell-/Descriptorprüfung, Evidence-Set-Hash,
+wirksame Erwartungen, aktive beziehungsweise abgelöste Kandidaten und den
+kanonischen Bericht. Berichtfelder, Reihenfolge, Hashes, Fehlerverträge und
+Schreibfreiheit bleiben gleich; bestehende W-/R-Verhaltenstests bleiben unverändert.

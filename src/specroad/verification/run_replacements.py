@@ -9,9 +9,10 @@ from hashlib import sha256
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
-from .evaluation import VerificationEvaluation, _replacement_order
+from .evaluation import VerificationEvaluation
 from .run_assessment import assess_verification_runs
 from ._required_keys import _key
+from ._run_replacement_graph import resolve_replacement_graph
 
 
 @dataclass(frozen=True, init=False)
@@ -78,43 +79,15 @@ No files, clocks, product code or external commands are accessed.
                     and required_subjects <= {s['artifact_id'] for s in item['subjects']}):
                 sets.setdefault(run['run_id'], []).append(
                     {'id': item['id'], 'sha256': canonical_json_sha256(item)})
-        bound, observations = {}, {}
+        observations = {}
         for old, row in rows.items():
             items = sorted(sets.get(old, []), key=lambda item: item['id'].encode('utf-8'))
             actual_hash = canonical_json_sha256(items) if items else None
-            bound[old] = actual_hash == row['replaced_evidence_set_sha256'] and bool(items)
+            matches = actual_hash == row['replaced_evidence_set_sha256'] and bool(items)
             observations[old] = {'decision': row, 'evidence_set': items,
-                'actual_evidence_set_sha256': actual_hash, 'evidence_set_matches': bound[old],
+                'actual_evidence_set_sha256': actual_hash, 'evidence_set_matches': matches,
                 'old_run_observed': bool(runs.get(old, {}).get('evidence'))}
-        terminals, issues, terminal_checks = {}, {}, {}
-        for run_id in _replacement_order(graph):
-            if run_id not in graph:
-                terminals[run_id] = {run_id}
-                observed = runs.get(run_id, {}).get('evidence', [])
-                reasons = []
-                if not observed:
-                    reasons.append('replacement_run_missing')
-                else:
-                    if any(e['freshness'] != 'current' for e in observed):
-                        reasons.append('replacement_run_not_current')
-                    if any(e['result'] not in ('passed', 'failed') for e in observed):
-                        reasons.append('replacement_run_incomplete')
-                issues[run_id] = {(run_id, reason) for reason in reasons}
-                terminal_checks[run_id] = {'run_id': run_id,
-                    'presence': 'present' if observed else 'missing',
-                    'current_complete': not reasons, 'reasons': reasons,
-                    'evidence': [{field: item[field] for field in
-                        ('evidence_id', 'artifact_sha256', 'source_sha256', 'freshness', 'result')}
-                        for item in observed]}
-            else:
-                terminals[run_id] = set().union(*(terminals[child] for child in graph[run_id]))
-                issues[run_id] = set().union(*(issues[child] for child in graph[run_id]))
-                if not bound[run_id]:
-                    issues[run_id].add((run_id, 'replaced_evidence_set_changed'))
-                # A hash of excluded records cannot satisfy an absent required
-                # candidate (including an intermediate run in a replacement chain).
-                if not observations[run_id]['old_run_observed']:
-                    issues[run_id].add((run_id, 'replaced_run_missing'))
+        terminals, issues, terminal_checks = resolve_replacement_graph(graph, runs, observations)
         effective = {old for old in rows if not issues[old]}
         replacements = []
         for old in rows:
