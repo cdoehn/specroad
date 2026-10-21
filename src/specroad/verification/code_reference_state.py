@@ -8,6 +8,7 @@ from ..security import ProjectBoundary
 from ..security.resource_access import opened_resource
 from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact
+from ._code_reference_decision import decide_code_state
 from .code_references import read_code_reference
 from .code_relocation import locate_code_selection
 
@@ -62,28 +63,15 @@ def assess_code_reference(source, reference):
             bound = read_code_reference(source, record)
 
     location = None
-    diagnostics = []
-    new_position = None
-    if bound is None:
-        state, reason = 'missing', 'target_missing'
-    elif value['reference_kind'] == 'file':
-        state, reason = (('current', None) if bound.data['file_hash_matches']
-                         else ('stale', 'file_changed'))
-    elif value['reference_kind'] in ('line_range', 'text_anchor'):
+    if bound is not None and value['reference_kind'] in ('line_range', 'text_anchor'):
         location = locate_code_selection(bound)
-        selected = location.data
-        outcome = selected['selection_result']
-        if outcome == 'stored_position':
-            state, reason = 'current', None
-            if not bound.data['file_hash_matches']:
-                diagnostics.append('file_changed_outside_selection')
-        elif outcome == 'relocated':
-            state, reason = 'relocated', None
-            new_position = selected['new_position']
-        else:
-            state, reason = 'stale', outcome
-    else:
-        raise ModelError('code_reference_state_kind_unsupported', pointer='/reference_kind')
+    observed = None if bound is None else bound.data
+    selected = None if location is None else location.data
+    state, reason, diagnostics = decide_code_state(
+        value['reference_kind'], target_present=bound is not None,
+        file_hash_matches=None if observed is None else observed['file_hash_matches'],
+        selection_result=None if selected is None else selected['selection_result'])
+    new_position = selected['new_position'] if state == 'relocated' else None
 
     report = {'format_version': 'code-reference-state-v1',
         'validation_scope': 'code_reference_state_only',
@@ -92,9 +80,9 @@ def assess_code_reference(source, reference):
         'path': value['path'],
         'git_commit': source.commit_id if type(source) is GitObjectSource else None,
         'target_present': bound is not None,
-        'source': None if bound is None else bound.data,
+        'source': observed,
         'source_sha256': None if bound is None else bound.sha256,
-        'selection_location': None if location is None else location.data,
+        'selection_location': selected,
         'selection_location_sha256': None if location is None else location.sha256,
         'state': state, 'reason': reason, 'diagnostics': diagnostics,
         'new_position': new_position, 'selection_evaluated': location is not None,

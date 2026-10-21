@@ -241,3 +241,13 @@ behalten ihre bisherigen strikten Verträge; die optionale Beobachtung erzeugt
 keine Git-Leseberechtigung aus einer fehlgeschlagenen Quellenkonstruktion. Der
 Bericht belegt die beobachtete gebundene Quelle, keine atomare Git-/Dateisystem-
 Transaktion und keine automatische Wiederholung eines fehlgeschlagenen Lesens.
+
+Die private Entscheidung in `_code_reference_decision.py` erhält ausschließlich
+die bereits geprüften Fakten zu Referenzart, Anwesenheit, Rohdateihash und
+Auswahlergebnis. Sie wählt die erste H.3-Regel ohne Quellenzugriff, Suchalgorithmus
+oder Berichtsformat. `code_reference_state.py` behält die native Zulassung und
+Quellenbeobachtung, ruft bei vorhandenen Bereichs-/Ankerreferenzen den unveränderten
+H.2-Locator auf und bindet dessen Ergebnis an die öffentliche Projektion.
+Fehlende Ziele haben weiterhin Vorrang vor der Referenzart; Dateireferenzen
+starten keine Auswahlprüfung. Positionen werden nur bei `relocated` berichtet.
+Ergebnisbytes, Fehlerverträge und zulässige Seiteneffekte bleiben unverändert.

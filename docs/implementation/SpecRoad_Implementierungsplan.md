@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 542
-last_completed_plan_commit: 12.s.R
-next_plan_commit: 12.s.C
-last_completed_numbered_bundle: 368
+implementation_plan_commits_completed: 543
+last_completed_plan_commit: 12.s.C
+next_plan_commit: 12.t.W
+last_completed_numbered_bundle: 369
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15274,7 +15274,7 @@ in 12.t. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.s.C – Make it Clean
 
-- [ ] **12.s.C** · Position **543/900** · Voraussetzung: `12.s.R`.
+- [x] **12.s.C** · Position **543/900** · Voraussetzung: `12.s.R`.
 **Exakte Commit-Message:** `12.s.C refactor(verification): Disjunkter Codezustand bereinigen`
 
 **Bereinigung:** Statusentscheidung unabhängig von Suchalgorithmus und Präsentation halten.
@@ -15282,6 +15282,33 @@ in 12.t. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Vorbereitung (Bundle 369):** Die reine H.3-Entscheidung liegt in
+`_code_reference_decision.py`. Sie erhält ausschließlich geprüfte Fakten
+zu Referenzart, Anwesenheit, Rohdateihash und Auswahlergebnis. Sie führt
+keinen Quellenzugriff und keine Suche aus und kennt kein Berichtsformat.
+`code_reference_state.py` behält Zulassung, native Quellenbeobachtung,
+bedingten Aufruf des unveränderten H.2-Locators und die öffentliche Projektion.
+Die bereits abgetrennten Quellen-/Auswahldaten werden für Entscheidung und
+Bericht wiederverwendet. Resultatklasse, Schema, Hashbindungen und Fehler-
+verträge bleiben erhalten. Fehlende Ziele haben Vorrang; Dateireferenzen
+starten keine Auswahlprüfung. Gespeicherte Treffer, Außenänderungsdiagnose,
+Relokationsposition und unterschiedliche stale-Gründe bleiben unverändert.
+
+946 vorhandene gezielte Verhaltenstests in 20 Dateien bestanden mit vier
+parallelen Workern in 13,02 Sekunden. Darunter sind sämtliche W-/R-Nachweise
+des Codezustands, die H.2-Auswahl-/Quellenregressionen, native Datei-/Git-
+Sicherheitsgrenzen sowie frische Core-/PYZ-Prozesse. Die vollständige
+Katalog-Collection bestätigt 16.037 Identitäten bei null Testkörpern.
+Alle 465 bisherigen Testdateien, sämtliche Verifikationsdaten und alle
+16.037 festen Testnummern bleiben bytegleich; es gibt keine neuen Tests.
+Geprüfter Source-SHA-256:
+`d61dac8cb360c796013a1dea41aa13d3cbe56d0f561cac064e61fbf91a301699`.
+Der Entrypoint verlangt vor dem C-Commit Gruppe 2, Commitsequenz 77,
+mit 5.345 parallelen Tests. Erst danach wird 543/900 markiert.
+SR-TC-0345 und SR-TC-0495 bleiben bis zur Consumer-Integration ausdrücklich
+partiell. Diese Integration folgt in 12.t. Dies ist kein Vollsuite- oder
+Release-Erfolgsnachweis.
 
 <a id="step-12-t"></a>
 ### 12.t – Nachweis-/Codeintegration und Workparität
