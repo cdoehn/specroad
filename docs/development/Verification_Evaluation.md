@@ -18,9 +18,9 @@ Identität, Uhrzeit, Konfiguration oder Git-Zustand werden nicht ermittelt.
 Der Descriptor hat die Schemaidentität `verification-evaluation-v1`,
 `format_version="1.0.0"` und genau die acht Felder aus Spezifikation 10.5.1.
 `evaluation_id` verwendet `EVAL-` mit einem vollständigen `random128-v1`-Token.
-Die erste Implementierung unterstützt ausschließlich `replacements=[]`;
-nichtleere Ablösungsentscheidungen werden zurückgewiesen. Die fachliche
-Laufablösung ist der späteren Planstelle `12.n` zugeordnet.
+Bis `12.m` unterstützt der Descriptor ausschließlich `replacements=[]`.
+Seit `12.n.W` akzeptiert er die vollständigen menschlichen Entscheidungen
+aus dem Abschnitt „Menschlich erklärte Laufablösung“ weiter unten.
 
 Das Eingangsmanifest enthält je Datei `logical_path`, `size` und SHA-256 der
 tatsächlichen Bytes, sortiert nach UTF-8-Bytes des logischen Pfads.
@@ -255,3 +255,36 @@ sowie ein Tupel der ursprünglichen Dokumentpfade und Bytes. Beide Funktionen
 liefern eigene Ergebniswerte; sie entdecken keine Dateien und starten weder
 Prüfprozesse noch Laufablösungen. Die bisherigen W-/R-Verhaltenstests werden
 unverändert für die Strukturänderung verwendet.
+# Menschlich erklärte Laufablösung (12.n.W)
+
+`prepare_verification_evaluation(..., replacements=...)` und der native
+Descriptor akzeptieren vollständige Entscheidungen aus §10.5.3. Ohne diese
+optionale Angabe bleibt die bisherige leere Auswahl erhalten. Jede Entscheidung
+bindet Pflichtschlüssel, alten Lauf, Evidence-Set-Hash, Ersatzläufe, Grund,
+UTC-Zeitpunkt und ausdrücklich deklarierten menschlichen Akteur. Der Parser
+normalisiert die Reihenfolge und weist doppelte Entscheidungen, Zyklen oder
+unzulässige Akteure mit SRV175 zurück (Code 3 beziehungsweise 7).
+
+`assess_run_replacements(model, evaluation, configuration_id=...)` baut auf der
+unabhängigen Pflichtmenge und dem vollständigen nativen Laufbericht auf. Der
+Evidence-Set-Hash umfasst die nach ID geordnete Liste `{id, sha256}` aller
+vorhandenen Nachweise des alten Laufs für denselben Pflichtschlüssel und
+Produktstand; `sha256` ist jeweils der volle kanonische Artefakthash. Ein
+zusätzlicher Nachweis wird auch bei ausgeschlossener Konfiguration nicht aus
+dieser Mengenbindung entfernt. Er verlangt eine erneute menschliche Auswahl.
+
+Nur vollständig gebundene Entscheidungen mit vorhandenen, aktuellen und
+vollständigen erreichbaren Endläufen werden wirksam. `passed` und `failed`
+sind vollständige Endergebnisse; ein Fehlschlag wird nicht zum Erfolg umgedeutet.
+Der Bericht trennt `active_run_ids`, `superseded_run_ids` und
+`effective_expected_run_ids`, enthält die Originalentscheidung, tatsächliche
+Evidence-Menge und Bindungsprobleme sowie den unveränderten Ausgangsbericht.
+Unwirksame Bindungen liefern `incomplete` und SRV176 mit
+`replacement_binding_changed`. Die API schreibt und startet nichts.
+
+Das ist eine Auswahlstufe, kein aggregiertes Verification-Ergebnis und keine
+Readiness-Freigabe. Eingangsbytes/-rollen, vollständiger realer Modellbestand,
+projektweite Bewertungs-ID-Historie und tatsächliche menschliche Identität
+werden dadurch nicht bestätigt. Frühere Auswahl-/Kontext-APIs bleiben getrennt
+und wenden Ablösungen nicht stillschweigend an. Die folgenden R-/C-Schritte
+vertiefen Robustheit und interne Struktur.

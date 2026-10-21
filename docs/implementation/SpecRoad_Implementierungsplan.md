@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 525
-last_completed_plan_commit: 12.m.C
-next_plan_commit: 12.n.W
-last_completed_numbered_bundle: 351
+implementation_plan_commits_completed: 526
+last_completed_plan_commit: 12.n.W
+next_plan_commit: 12.n.R
+last_completed_numbered_bundle: 352
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14525,12 +14525,42 @@ Fortschrittsmarker 525/900. Dies ist kein Vollsuite- oder Release-Erfolgsnachwei
 
 #### 12.n.W – Let it Work
 
-- [ ] **12.n.W** · Position **526/900** · Voraussetzung: `12.m.C`.
+- [x] **12.n.W** · Position **526/900** · Voraussetzung: `12.m.C`.
 **Exakte Commit-Message:** `12.n.W feat(verification): Menschlich gebundene Laufablösung aufbauen`
 
 **Umsetzung:** Vollständige Replacement-Entscheidung mit Evidence-Set-Hash und azyklischen Ersatzläufen umsetzen.
 
 **Verhaltensabnahme:** Gültiger Retest desselben Stands löst exakt den bezeichneten alten Lauf ab.
+
+**Vorbereiteter W-Zwischenstand (Bundle 352):** Der Descriptor akzeptiert
+vollständige, normalisierte menschliche Ablösungsentscheidungen. Die schreibfreie
+Core-API `assess_run_replacements` bindet sämtliche vorhandenen Evidence-Artefakte
+des alten Laufs für denselben Pflichtschlüssel und Produktstand über ID und vollen
+Artefakthash. Konfigurationsfremde Zusatznachweise desselben alten Laufs bleiben
+Teil dieser Mengenbindung. Azyklische Ketten und Verzweigungen wirken nur bei
+passenden Bindungen und aktuellen, vollständigen Endläufen. Die Erwartungen
+werden auf die Endläufe umgestellt; andere Kandidaten sowie Originalbytes und
+der vollständige native Ausgangsbericht bleiben erhalten. Fehlgeschlagene
+Endläufe behalten ihr Ergebnis. Struktur- und Akteursverletzungen werden
+abgewiesen, unwirksame Bindungen als `incomplete` mit SRV176 berichtet.
+Die menschliche Deklaration ist keine Authentifizierung. Projektweite
+Bewertungs-ID-Historie, echte Input-/Inventarbindung und Ergebnisaggregation
+bleiben getrennte Gates; SR-TC-0446 bleibt partiell. Der Fortschritt wird erst
+nach dem erfolgreichen Apply-Testlauf gesetzt. 12.n.R wird nicht begonnen.
+
+**Gezielter Dev-Nachweis:** 796/796 Verhaltenstests aus 13 Dateien mit
+4 Workern parallel in 74,64 s bestanden. Darunter sind 43 neue Fälle für
+vollständige Entscheidungen, Evidence-Set-Bindung, Retests, Ketten und
+Verzweigungen, unveränderte Nachweise, strukturierte Verweigerungen und
+isolierten Core/PYZ sowie 753 bestehende Regressionen. Die vollständige
+Collection bestätigt 15.115 Tests ohne Ausführung ihrer Testbodies.
+Geprüfte Source-SHA-256:
+`4994e08b113e1482e91c1d91586a3aff96fd9161a6ea2ba2600c9472e06b6e56`.
+Alle 453 bisherigen Testdateien und die Nummern der bisherigen 15.072 Tests
+bleiben erhalten; 43 neue Identitäten wurden hinten angefügt. Der Entrypoint
+verlangt ausschließlich Gruppe 0, Commitsequenz 60, mit 5.039 parallelen Tests
+vor W-Commit und Fortschrittsmarker 526/900. Teiltestnachweis, kein Vollsuite-
+oder Release-Erfolgsnachweis.
 
 #### 12.n.R – Make it Right
 

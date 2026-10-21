@@ -1,6 +1,6 @@
 """Owned verification-evaluation-v1 descriptors and explicit input-byte binding.
 
-This initial profile has no run replacements. It does not discover files, infer
+Descriptors include declared human run replacements. They do not discover files, infer
 a current build, resolve the required-check scope or aggregate Evidence results.
 Input roles and completeness of the caller's chosen test inputs are not attested.
 """
@@ -28,8 +28,13 @@ class VerificationEvaluationError(ModelError):
         return {**super().diagnostic(), 'code': self.code, 'exit_code': self.exit_code}
 
 
+class VerificationReplacementAuthorityError(VerificationEvaluationError):
+    """Only a declared human decision can authorize a run replacement."""
+    exit_code = 7
+
+
 def verification_evaluation_schema():
-    """Closed initial descriptor profile; replacements are explicitly unsupported."""
+    """Closed descriptor and complete replacement-decision field contracts."""
     ref = lambda name: {'$ref': '#/$defs/' + name}
     key = {'subject_artifact_id': ref('artifact_ref'),
         'contract_id': {'anyOf': [reference_schema(p) for p in ('VER', 'TEST')]},
@@ -45,7 +50,10 @@ def verification_evaluation_schema():
         'configuration_hash': {'anyOf': [{'type': 'null'}, ref('hash')]},
         'required_runs': _array(_object({**key, 'run_ids': _array(ref('text'), nonempty=True)}),
                                 nonempty=True),
-        'replacements': {'const': []},
+        'replacements': _array(_object({**key, 'replaced_run_id': ref('text'),
+            'replaced_evidence_set_sha256': ref('hash'),
+            'replacement_run_ids': _array(ref('text'), nonempty=True),
+            'reason': ref('text'), 'authorized_at': ref('utc'), 'authorized_by': ref('actor')})),
         'created_at': ref('utc'), 'created_by': ref('actor')}
     return {**_object(fields), '$id': 'verification-evaluation-v1',
             '$defs': record_schema('evidence')['$defs']}
@@ -57,6 +65,59 @@ def _path(value, pointer):
             raise ModelError('noncanonical_evaluation_input_path')
     except ModelError as error:
         raise VerificationEvaluationError(error.reason, pointer=pointer) from error
+
+
+def _replacement_order(graph):
+    """Children before parents, rejecting cycles without recursive traversal."""
+    state, order = {}, []
+    for start in sorted(graph, key=lambda item: item.encode('utf-8')):
+        if start in state:
+            continue
+        state[start] = 1
+        stack = [(start, iter(graph[start]))]
+        while stack:
+            node, children = stack[-1]
+            child = next(children, None)
+            if child is None:
+                state[node] = 2
+                order.append(node)
+                stack.pop()
+            elif state.get(child) == 1:
+                raise VerificationEvaluationError('cyclic_run_replacement', pointer='/replacements')
+            elif child not in state:
+                state[child] = 1
+                stack.append((child, iter(graph.get(child, ()))))
+    return order
+
+
+def _normalize_replacements(value, required_keys):
+    graphs = {}
+    for index, row in enumerate(value['replacements']):
+        pointer = f'/replacements/{index}'
+        key = _key(row)
+        if key not in required_keys:
+            raise VerificationEvaluationError('unexpected_evaluation_replacement_key', pointer=pointer)
+        if row['authorized_by']['actor_type'] != 'human':
+            raise VerificationReplacementAuthorityError('human_run_replacement_required',
+                                                        pointer=pointer + '/authorized_by')
+        targets = row['replacement_run_ids']
+        if len(set(targets)) != len(targets):
+            raise VerificationEvaluationError('duplicate_replacement_run_id', pointer=pointer)
+        for run_id in [row['replaced_run_id'], *targets]:
+            namespace, separator, local = run_id.partition(':')
+            if (not separator or not namespace.strip() or not local.strip()
+                    or run_id != run_id.strip()):
+                raise VerificationEvaluationError('namespaced_replacement_run_id_required', pointer=pointer)
+        if row['replaced_run_id'] in targets:
+            raise VerificationEvaluationError('self_run_replacement', pointer=pointer)
+        graph = graphs.setdefault(key, {})
+        if row['replaced_run_id'] in graph:
+            raise VerificationEvaluationError('duplicate_run_replacement', pointer=pointer)
+        targets.sort(key=lambda run: run.encode('utf-8'))
+        graph[row['replaced_run_id']] = targets
+    for graph in graphs.values():
+        _replacement_order(graph)
+    value['replacements'].sort(key=lambda row: (*_key(row), row['replaced_run_id'].encode('utf-8')))
 
 
 def _read(raw):
@@ -93,6 +154,7 @@ def _read(raw):
                                                       pointer=pointer + '/run_ids')
             row['run_ids'].sort(key=lambda run: run.encode('utf-8'))
         value['required_runs'].sort(key=_key)
+        _normalize_replacements(value, keys)
         return value
     except VerificationEvaluationError:
         raise
@@ -145,7 +207,7 @@ def _inputs(inputs):
 
 
 def prepare_verification_evaluation(*, evaluation_id, subject_id, inputs,
-        configuration, required_runs, created_at, created_by):
+        configuration, required_runs, created_at, created_by, replacements=None):
     """Build a descriptor from supplied input bytes, explicit identity and audit.
 
     No filesystem paths are opened and no identity, clock, configuration or Git
@@ -161,7 +223,7 @@ def prepare_verification_evaluation(*, evaluation_id, subject_id, inputs,
         value = {'format_version': '1.0.0', 'evaluation_id': evaluation_id,
             'evaluated_subject': {**subject, 'state_sha256': product_state_sha256(subject)},
             'configuration_hash': None if configuration is None else configuration.sha256,
-            'required_runs': required_runs, 'replacements': [],
+            'required_runs': required_runs, 'replacements': [] if replacements is None else replacements,
             'created_at': created_at, 'created_by': created_by}
         return VerificationEvaluation(canonical_json_bytes(value))
     except VerificationEvaluationError:
