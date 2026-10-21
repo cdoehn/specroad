@@ -37,6 +37,11 @@ class RelationObligations:
         rules = _profile_rules(profile_rules)
         checks = []
         for source in sorted(sources, key=lambda item: item.identity.id):
+            if source.identity.artifact_type == "task" and source.data["maturity"] == "approved":
+                # The stored link lives at the Requirement/Decision. A Task's
+                # own scheduling/containment or a Capability alone is not it.
+                checks.append(_check(index, source, "core:task-implementation", 1,
+                    "error", "incoming", ("implemented_by",), ("requirement", "decision")))
             if source.identity.artifact_type != "requirement" or source.data["maturity"] != "approved":
                 continue
             for rule_id, types, target_types in CORE_REQUIREMENT_MINIMA:

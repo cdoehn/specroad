@@ -10,6 +10,7 @@ from ..changes.target_model import TargetModel, _default_scope
 from ..graph.hierarchies import validate_hierarchies
 from ..graph.references import RelationReferences
 from ..graph.relations import SourceRelations
+from ..graph.symmetry import require_canonical_relations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.domain_artifact import DomainArtifact
@@ -62,6 +63,7 @@ The supplied inventory is not proof of completeness on disk or applicability.
             'source_sha256': sha256(document.content).hexdigest(),
             'record_sha256': canonical_json_sha256(value)}
     references = RelationReferences(records)
+    require_canonical_relations(references)
     validate_hierarchies(references)
     links = []
     for edge in references.relations:

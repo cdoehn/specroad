@@ -31,5 +31,5 @@ CORE_MINIMUM_SEVERITIES = MappingProxyType({key: "error" for key in (
     "SRV146", "SRV147", "SRV148", "SRV149", "SRV150", "SRV151", "SRV152", "SRV153",
     "SRV154", "SRV155", "SRV157", "SRV158", "SRV168", "SRV170", "SRV172", "SRV173",
     "SRV174", "SRV175", "SRV183", "SRV185", "SRV192", "SRV193", "SRV194", "SRV195",
-    "core:requirement-origin", "core:requirement-verification",
+    "core:requirement-origin", "core:requirement-verification", "core:task-implementation",
 )})

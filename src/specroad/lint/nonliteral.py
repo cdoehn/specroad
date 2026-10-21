@@ -50,7 +50,8 @@ def _minimum_findings(checks, index, selected, profile):
         if check.artifact_id not in selected or check.satisfied:
             continue
         code = {"core:requirement-origin": "SRV031",
-                "core:requirement-verification": "SRV032"}.get(check.rule_id, "SRV023")
+                "core:requirement-verification": "SRV032",
+                "core:task-implementation": "SRV030"}.get(check.rule_id, "SRV023")
         severity = check.severity
         if profile is not None and not check.rule_id.startswith("core:"):
             severity = profile.severity_for(check.rule_id, severity)

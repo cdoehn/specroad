@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 547
-last_completed_plan_commit: 13.a.W
-next_plan_commit: 13.a.R
-last_completed_numbered_bundle: 373
+implementation_plan_commits_completed: 548
+last_completed_plan_commit: 13.a.R
+next_plan_commit: 13.a.C
+last_completed_numbered_bundle: 374
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15514,12 +15514,53 @@ bei den nachfolgenden M13-Schritten.
 
 #### 13.a.R – Make it Right
 
-- [ ] **13.a.R** · Position **548/900** · Voraussetzung: `13.a.W`.
+- [x] **13.a.R** · Position **548/900** · Voraussetzung: `13.a.W`.
 **Exakte Commit-Message:** `13.a.R feat(roadmap): Release-, Milestone- und Taskbeziehungen vervollständigen`
 
 **Vervollständigung:** Mehrfachrelease, fehlende Zuordnung und unzulässige Relationstypen blockieren.
 
 **Verhaltensabnahme:** Graph-/Schemafälle prüfen exakt die erlaubten Planungsbeziehungen. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zustand, Bundle 374:**
+Die gemeinsame Mindestrelationsprüfung verlangt für Tasks mit `maturity=approved`
+mindestens eine eingehende, tatsächlich gespeicherte `implemented_by`-Beziehung
+von einem Requirement oder einer Decision. Die Speicherrichtung bleibt erhalten;
+Capabilities allein, Scheduling und Containment ersetzen diese Pflicht nicht.
+Die Regel ist ein harter Core-Fehler (`core:task-implementation`, `SRV030`):
+Profile können sie weder abschwächen noch durch eine optionale Profilregel ersetzen.
+Modellvalidierung, Core-Lint und der vorhandene Writer verwenden dieselbe Prüfung.
+Das Entfernen der letzten Pflichtbeziehung scheitert vor Autorisierung und
+Dateiänderungen; eine verbleibende gültige Requirement-/Decision-Beziehung erlaubt
+weiterhin die normale Mutation. Entwurfs-Tasks bleiben speicherbar und in der
+Planung ausdrücklich als unvollständig erkennbar.
+
+Die Planungsbeobachtung verlangt zusätzlich die gemeinsame kanonische Speicherung
+symmetrischer Beziehungen. Graph-/Schemafälle prüfen erlaubte und verbotene
+Planungspaare, fehlende Endpunkte, doppelte oder mehrere Release-Zuordnungen,
+falsche Milestone-Eltern und Zykluszeugen mit ihren ursprünglichen Identitäten.
+Die Ein-Release-Kardinalität des Milestones wird nicht auf mehrere ausdrücklich
+gespeicherte Task-Zeitzuordnungen übertragen. Die realen Authoring-Grenzen erhalten
+bei abgelehnten Änderungen den ursprünglichen Projektbestand. Der isolierte Core
+und das PYZ liefern denselben maschinenlesbaren Fehlervertrag.
+
+Das maßgebliche Result `specroad-apply_Result_140746_1021_cac186.zip`
+bestätigt 13.a.W auf Commit
+`7d3f6abcfc8c998b1bc1be4e855268b0a94e252c` mit 5.394 bestandenen
+Apply-Tests der Gruppe 0. Der gezielte R-Dev-Lauf hat **1.073 Tests** aus
+33 Testdateien mit vier Workern in **714,85 Sekunden** bestanden:
+alle bisherigen W-Planungsnachweise sowie betroffene Domain-, Graph-,
+Authoring-, Modellvalidierungs-, Mindestrelations-, Lint-, Profil- und
+Diagnostik-Regressionen. Die vollständige Katalogprüfung bestätigt
+**16.243 Identitäten** bei null Testkörpern. 61 neue Identitäten werden hinten
+angefügt; sämtliche bisherigen 16.182 Testnummern und alle 468 bisherigen
+Testdateien bleiben unverändert. Geprüfter Source-SHA-256:
+`1541e5bf6f4d75d7409cc0b9dd2cb3b9a06861dffa01198dbdb7630dc2b86f14`.
+Der Entrypoint verlangt vor dem R-Commit Gruppe 1, Commitsequenz 82,
+mit 5.414 parallelen Tests. Erst danach wird 548/900 markiert.
+Dies ist ein Teiltestnachweis, kein Vollsuite-, Meilensteinfreigabe- oder
+Release-Erfolgsnachweis. SR-TC-0119 bis SR-TC-0121 bleiben partiell.
+13.a.C folgt separat; Done-Nachweise, Roadmap und Readiness verbleiben
+bei den nachfolgenden M13-Schritten.
 
 #### 13.a.C – Make it Clean
 
