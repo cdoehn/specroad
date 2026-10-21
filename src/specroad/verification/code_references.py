@@ -1,10 +1,12 @@
 """Language-neutral code bytes from an explicit safe local or Git source."""
 from dataclasses import dataclass, field
 from hashlib import new as new_hash, sha256
+import os
 
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..security import ProjectBoundary
+from ..security import ProjectBoundary, SafetyViolation
+from ..security.resource_access import opened_resource
 from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact
 
@@ -61,7 +63,14 @@ def read_code_reference(source, reference):
     else:
         if 'git_commit' in value or 'git_blob' in value:
             raise ModelError('code_reference_git_source_required')
-        raw = source.read_bytes(value['path'])
+        # Use the attachment boundary for the entire read, including its final
+        # nested-root and descriptor checks. A new specroad.json in a parent
+        # directory during the read must invalidate the observation too.
+        with opened_resource(source, value['path']) as (descriptor, initial):
+            with os.fdopen(descriptor, 'rb', closefd=False) as stream:
+                raw = stream.read()
+            if len(raw) != initial.st_size:
+                raise SafetyViolation('Code source changed during the read')
     file_sha256 = sha256(raw).hexdigest()
     report = {'format_version': 'code-reference-source-v1',
         'validation_scope': 'code_reference_source_bytes_only',

@@ -8,20 +8,23 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1",
-    "SR-FIX-CODE-REFERENCE-SOURCES-v1"
+    "SR-FIX-CODE-REFERENCE-SOURCES-v1",
+    "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1"
   ],
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
-    "12.q.W: Owned validated code_ref RecordArtifact and an explicit native ProjectBoundary or GitObjectSource; original file/blob bytes and Git commit identities are supplied by the fixture, not inferred from source code."
+    "12.q.W: Owned validated code_ref RecordArtifact and an explicit native ProjectBoundary or GitObjectSource; original file/blob bytes and Git commit identities are supplied by the fixture, not inferred from source code.",
+    "12.q.R: Owned raw code_ref bytes, a native explicit source, actual before/after descriptor mutations and real local Git objects. Resource faults and audit traps are injected only inside owned fixtures; no external source or runtime is contacted."
   ],
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
-    "12.q.W: Read the selected file or bound historical Git tree for each code reference kind; compare exact original bytes, size, SHA-256 and optional Git identities. Check immutable owned snapshots and unchanged worktree/index. Keep selectors and symbol hints passive. Reject mismatched bindings, missing paths and unsafe source boundaries. Resolve implemented_by targets through the native relation validator. Exercise the public read API in fresh Core/PYZ processes without third-party modules."
+    "12.q.W: Read the selected file or bound historical Git tree for each code reference kind; compare exact original bytes, size, SHA-256 and optional Git identities. Check immutable owned snapshots and unchanged worktree/index. Keep selectors and symbol hints passive. Reject mismatched bindings, missing paths and unsafe source boundaries. Resolve implemented_by targets through the native relation validator. Exercise the public read API in fresh Core/PYZ processes without third-party modules.",
+    "12.q.R: Create a nested project marker after the actual read; swap leaf/parent/root paths or grow the file; check fail-closed results and preservation of the changed state. Check static links and special files, denied descriptor safety, post-read I/O/memory/interrupt errors and closure of every owned descriptor. Revalidate unsafe stored paths. Exercise gitlink/symlink/nested/changed storage and missing/corrupt objects without fallback or fetch; compare exact SHA-256 Git identities. Keep hints/selectors passive and audit fresh Core/PYZ reads of all five kinds for process/network/write attempts."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `code_ref`-Artefakt MUSS mindestens projektrelativen Repository-Pfad, Referenzart und Rohdateihash sowie optionalen Git-Commit- und Blobhash enthalten.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. 12.q.W: The explicitly selected safe source yields owned raw bytes and exact file/Git binding without checkout, source execution, symbol resolution or language-specific tools. Raw file hash comparison is separate from H2/H3 currency evaluation. Existing records and selectors stay unchanged; failed reads produce no hash result. Native implemented_by accepts capability/requirement/decision to code_ref."
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. 12.q.W: The explicitly selected safe source yields owned raw bytes and exact file/Git binding without checkout, source execution, symbol resolution or language-specific tools. Raw file hash comparison is separate from H2/H3 currency evaluation. Existing records and selectors stay unchanged; failed reads produce no hash result. Native implemented_by accepts capability/requirement/decision to code_ref. 12.q.R adds the same full-lifetime attachment descriptor guard to file reads, including nested-root detection after reading. All safety/resource failures propagate without a binding or retry; actual modified files remain. Native Git source guards retain no-fetch/no-checkout behavior and distinct exact SHA-1/SHA-256 object bindings. Matching raw hashes never promote passive hints or selectors to currency; audited fresh runtimes perform no process/network/write operation."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -80,9 +83,34 @@
     "tests/test_code_reference_sources.py::test_raw_file_hash_does_not_decode_normalize_or_drop_final_newline[a\\r\\nb\\r]",
     "tests/test_code_reference_sources.py::test_raw_file_hash_does_not_decode_normalize_or_drop_final_newline[e\\xcc\\x81\\xe6\\x9d\\xb1\\xe4\\xba\\xac]",
     "tests/test_code_reference_sources.py::test_stored_git_binding_requires_explicit_git_source_before_file_read[git_blob]",
-    "tests/test_code_reference_sources.py::test_stored_git_binding_requires_explicit_git_source_before_file_read[git_commit]"
+    "tests/test_code_reference_sources.py::test_stored_git_binding_requires_explicit_git_source_before_file_read[git_commit]",
+    "tests/test_code_reference_sources_right.py::test_failure_after_real_read_closes_descriptors_without_retry_or_partial_success[interrupt]",
+    "tests/test_code_reference_sources_right.py::test_failure_after_real_read_closes_descriptors_without_retry_or_partial_success[io]",
+    "tests/test_code_reference_sources_right.py::test_failure_after_real_read_closes_descriptors_without_retry_or_partial_success[memory]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[../secret]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[/secret]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[C:/secret]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[\\\\\\\\server\\\\share]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src/../../secret]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src/.PATCHHARBOR/config.json]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src/.git/config]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src/CON]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src/file:stream]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src/x\\ud800y]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src/x\\x00y]",
+    "tests/test_code_reference_sources_right.py::test_revalidated_record_rejects_unsafe_paths_before_any_open[src\\\\secret]",
+    "tests/test_code_reference_sources_right.py::test_sha256_git_commit_and_blob_ids_are_exact_and_distinct_from_raw_file_hash[blob]",
+    "tests/test_code_reference_sources_right.py::test_sha256_git_commit_and_blob_ids_are_exact_and_distinct_from_raw_file_hash[both]",
+    "tests/test_code_reference_sources_right.py::test_sha256_git_commit_and_blob_ids_are_exact_and_distinct_from_raw_file_hash[commit]",
+    "tests/test_code_reference_sources_right.py::test_sha256_git_does_not_accept_sha1_identifiers[git_blob]",
+    "tests/test_code_reference_sources_right.py::test_sha256_git_does_not_accept_sha1_identifiers[git_commit]",
+    "tests/test_code_reference_sources_right.py::test_source_changes_during_read_yield_no_hash_and_preserve_actual_state[grow]",
+    "tests/test_code_reference_sources_right.py::test_source_changes_during_read_yield_no_hash_and_preserve_actual_state[link_leaf]",
+    "tests/test_code_reference_sources_right.py::test_source_changes_during_read_yield_no_hash_and_preserve_actual_state[link_parent]",
+    "tests/test_code_reference_sources_right.py::test_source_changes_during_read_yield_no_hash_and_preserve_actual_state[replace_leaf]",
+    "tests/test_code_reference_sources_right.py::test_source_changes_during_read_yield_no_hash_and_preserve_actual_state[replace_root]"
   ],
   "open_items": [
-    "12.q.W supplies the safe source-byte binding only. 12.q.R expands hostile-source and hint boundaries; 12.q.C cleans the same behavior. Selection normalization/relocation (12.r), H3 states (12.s) and validation/diff/trace/view integration (12.t) remain future steps. No full-suite, external execution or release success is claimed."
+    "12.q.R completes source and hint boundary hardening. Structural cleanup is reserved for 12.q.C. H2 normalization/relocation (12.r), H3 status decisions (12.s) and consumer integration (12.t) remain separate planned steps. No full-suite, release or external execution success is claimed."
   ]
 }

@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 535
-last_completed_plan_commit: 12.q.W
-next_plan_commit: 12.q.R
-last_completed_numbered_bundle: 361
+implementation_plan_commits_completed: 536
+last_completed_plan_commit: 12.q.R
+next_plan_commit: 12.q.C
+last_completed_numbered_bundle: 362
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14935,12 +14935,44 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.q.R – Make it Right
 
-- [ ] **12.q.R** · Position **536/900** · Voraussetzung: `12.q.W`.
+- [x] **12.q.R** · Position **536/900** · Voraussetzung: `12.q.W`.
 **Exakte Commit-Message:** `12.q.R feat(verification): Code-Referenzarten und sichere Quellen vervollständigen`
 
 **Vervollständigung:** Externe Pfade und fremde Symlinks verhindern Zugriff; symbol_hint beweist allein keine Aktualität.
 
 **Verhaltensabnahme:** Sicherheitsfixtures starten keine Compiler, Parser oder Language Server. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Vorbereitung (Bundle 362):** Die Code-Dateiquelle verwendet den nativen
+`opened_resource`-Schutz der Anhänge über den gesamten Lesevorgang. Auch eine
+erst während des Lesens neu auftauchende verschachtelte Projektgrenze führt
+jetzt zur Ablehnung. Deskriptor-, Inhalts- und Pfadänderungen werden vor der
+Rückgabe geprüft; Fehler und Unterbrechungen erzeugen weder eine Teilbindung
+noch einen automatischen Wiederholungsversuch. Tatsächliche fremde Änderungen
+bleiben erhalten. Öffentliche Werte, ursprüngliche Referenzdaten, explizite
+Gitbindung und passive Symbol-/Auswahlsemantik bleiben unverändert.
+
+542 gezielte Verhaltenstests in 16 Dateien bestanden mit vier parallelen
+Workern in 10,23 Sekunden, einschließlich aller W-Tests und 62 neuer R-Tests.
+Die neuen Fälle prüfen Pfadwechsel während des Lesens, neu entstehende
+Projektgrenzen, interne/dangling/zyklische Links, Sonderdateien,
+Ressourcenfehler und geschlossene Deskriptoren. Git-Fälle prüfen reale
+SHA-256-Objekte, Kennungsverwechslungen, Symlinks/Submodule, verschachtelte
+Projekte, ausgetauschte Stores und fehlende/beschädigte Blobs ohne Fetch oder
+Arbeitsdatei-Fallback. Audit-Hooks in frischen Core-/PYZ-Prozessen sichern
+alle fünf Arten gegen Prozess-, Netzwerk- und Schreiboperationen ab.
+Verzeichnisse und FIFOs sind echte Einträge; der Socket-Dateityp wird in
+klar gekennzeichneten Stat-Metadaten injiziert, weil die Entwicklungsumgebung
+das Socket-Binden verweigert. Dies behauptet keinen echten Socket-Lauf.
+
+Die vollständige Katalog-Collection bestätigt 15.633 Identitäten bei null
+Testkörpern. Alle 460 bisherigen Testdateien und die ersten 15.571 festen
+Testnummern bleiben erhalten; 62 neue Nummern sind angehängt.
+Geprüfter Source-SHA-256:
+`437a5a3ab88708b5639938a20babb42152a0df9ba95e022858da94a58df85fb8`.
+Der Entrypoint verlangt vor dem R-Commit Gruppe 1, Commitsequenz 70,
+mit 5.211 parallelen Tests. Erst danach folgt 536/900. H.2/H.3 und
+Consumer-Integration bleiben den späteren Schritten vorbehalten.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.q.C – Make it Clean
 

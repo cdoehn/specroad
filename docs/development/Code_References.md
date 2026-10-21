@@ -37,3 +37,22 @@ und beweist keine Aktualität. `selection_evaluated`,
 H.2 und Zustände nach H.3 folgen in 12.r/12.s; die Consumer-Integration folgt
 in 12.t. Die bestehende native Relation `implemented_by` kann bereits von
 Capability, Requirement und Decision auf die gebundene `code_ref` zeigen.
+
+Die Dateiquelle bleibt während des gesamten Lesevorgangs unter dem nativen
+`opened_resource`-Schutz der Anhänge. Vor Rückgabe werden der geöffnete
+Dateideskriptor, die Pfadkomponenten und die Projektgrenze erneut geprüft.
+Auch eine erst während des Lesens auftauchende `specroad.json` in einem
+Elternverzeichnis macht die Beobachtung ungültig. Geänderte Quellen,
+Symlinks, Sonderdateien und nicht verfügbare sichere Deskriptoroperationen
+führen zu einem Fehler ohne Hashresultat oder automatischen Wiederholungsversuch.
+Bereits beobachtete fremde Änderungen bleiben erhalten. Die Datei wird weiter
+als vollständiger unveränderlicher Bytewert gehalten; dies ist keine neue
+Streaming- oder Ressourcenbudget-Zusage.
+
+Git-Symlinks, Submodule, verschachtelte Projekte, indirekte oder ausgetauschte
+Objektspeicher sowie fehlende und beschädigte Blobs bleiben den nativen
+M8-Prüfungen unterworfen. SHA-1- und SHA-256-Git-Objektkennungen werden exakt
+gebunden; der Git-Blobhash über Header und Inhalt ist vom Rohdatei-SHA-256
+getrennt. Arbeitsdateien werden nicht als Ersatz gelesen und fehlende Objekte
+nicht nachgeladen. Die Symbol-, Auswahl- und Statusflags bleiben auch bei
+passendem Rohdateihash ausdrücklich falsch.

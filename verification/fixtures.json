@@ -133,7 +133,8 @@
     "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1",
     "SR-FIX-VERIFICATION-COVERAGE-v1",
     "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1",
-    "SR-FIX-CODE-REFERENCE-SOURCES-v1"
+    "SR-FIX-CODE-REFERENCE-SOURCES-v1",
+    "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -647,6 +648,10 @@
     "SR-FIX-CODE-REFERENCE-SOURCES-v1": {
       "provider": "tests/test_code_reference_sources.py:reference,repository",
       "kind": "Owned code_ref records for all five kinds, raw binary/newline bytes in native ProjectBoundary and data-built local GitFixture commits. Native GitObjectSource reads historical blobs without checkout; typed implemented_by graph edges resolve to the same code_ref ID. Executable source and hints remain inert; missing, external, linked and nested sources yield no binding. Fresh standard-library-only Core/PYZ processes exercise the public reader. No H2 selection, H3 status, full-suite or release claim."
+    },
+    "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1": {
+      "provider": "tests/test_code_reference_sources_right.py:after_read,Sha256GitFixture",
+      "kind": "Owned descriptor-bound file mutations and symlink/special-file boundaries, newly appearing nested roots, injected post-read resource failures, actual SHA-1/SHA-256 local Git objects and corrupted/missing blobs with inert promisor helper traps. Fresh Core/PYZ audit hooks prohibit processes, network and writes for all five kinds. Existing W fixtures remain active; no language resolver, H2/H3 result or full-suite/release claim. Directory and FIFO cases are real filesystem entries; socket type uses explicitly labelled stat metadata injection before leaf open, without claiming a real bound socket."
     }
   }
 }
