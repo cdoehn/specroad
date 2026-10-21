@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 551
-last_completed_plan_commit: 13.b.R
-next_plan_commit: 13.b.C
-last_completed_numbered_bundle: 377
+implementation_plan_commits_completed: 552
+last_completed_plan_commit: 13.b.C
+next_plan_commit: 13.c.W
+last_completed_numbered_bundle: 378
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15639,7 +15639,7 @@ Release-Erfolgsnachweis. SR-TC-0119 bis SR-TC-0121 bleiben partiell.
 
 #### 13.b.C – Make it Clean
 
-- [ ] **13.b.C** · Position **552/900** · Voraussetzung: `13.b.R`.
+- [x] **13.b.C** · Position **552/900** · Voraussetzung: `13.b.R`.
 **Exakte Commit-Message:** `13.b.C refactor(roadmap): Task-Umsetzung und Done-Nachweis bereinigen`
 
 **Bereinigung:** Done-Gate und allgemeine Statusmutation getrennt halten.
@@ -15647,6 +15647,23 @@ Release-Erfolgsnachweis. SR-TC-0119 bis SR-TC-0121 bleiben partiell.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Abnahmeumfang (Bundle 378):** Das private Modul `_task_done_gate.py` bündelt
+die unveränderte Neubindung des menschlichen Reviews, die vorbereitete Operation
+und das reservierte Done-Gate. `implement_task` behält Eingangs- und
+Override-Prüfung, Modellsnapshot und den gewöhnlichen Writer-Aufruf. Die
+ausgelagerten Anweisungen, einschließlich erneuter Reviewprüfung und vollständigem
+Zielvergleich, bleiben strukturell identisch. Öffentliche Werttypen, Hashverträge,
+Fehlergründe, Prüfreihenfolge, Autorität, No-op und historischer Retry bleiben
+erhalten. Alle bestehenden Testdateien und festen Testnummern bleiben bytegleich.
+Die Abnahme umfasst alle 74 W-/R-Fälle dieses Schritts und die betroffenen
+Create-/Update-, gespeicherten Plan-, Ziel- und Modellprüfungen: 479 gezielte
+parallele Verhaltenstests. Der vollständige Katalog wird ohne Testkörper geprüft.
+Vor dem C-Commit ist in Apply Gruppe 2 der Commitsequenz 86 mit 5.439 Tests
+parallel fällig. Erst nach deren Erfolg setzt der Entrypoint den Fortschritt
+auf 552/900. Dies ist ein Teiltestnachweis; die bisherige Task-Evidence-Grenze
+und der partielle Anforderungsnachweis bleiben bestehen. Keine Vollsuite- oder
+Releasefreigabe; 13.c.W wird in diesem Bundle nicht begonnen.
 
 <a id="step-13-c"></a>
 ### 13.c – Roadmap aus dem einen Fachmodell

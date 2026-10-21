@@ -11,8 +11,7 @@ review service certifies only its own subject, not other labelled Tasks.
 from dataclasses import dataclass
 import re
 
-from ..changes import ChangeOperation, TargetModel, prepare_change_lifecycle
-from ..changes._metadata_policy import bind_policy
+from ..changes import ChangeOperation, TargetModel
 from ..changes.update_inputs import normalize_artifact_update_input
 from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.audit import actor as read_actor
@@ -186,6 +185,7 @@ def implement_task(model, prepared, *, actor, planned_at, change_plan_id,
     Retain the original preparation/model for a durable historical retry.
     """
     from ..authoring.update import update_artifact
+    from ._task_done_gate import prepare_done_update
     if type(model) is not TargetModel or type(prepared) is not TaskImplementation:
         raise ModelError('typed_task_implementation_required')
     if type(gates) not in (tuple, list) or any(type(gate) is not ModelGate for gate in gates):
@@ -193,39 +193,7 @@ def implement_task(model, prepared, *, actor, planned_at, change_plan_id,
     if any(gate.gate_id in (_GATE, 'extension:task-done') for gate in gates):
         raise ModelError('task_done_gate_override')
     model = model.snapshot()
-    context = TaskDoneContext(model, prepared.data['task_id'],
-        scope_descriptor=ScopeDescriptor(prepared.data['scope_descriptor']))
-    current = prepare_task_implementation(context, review=prepared._review, verifier=prepared._verifier)
-    if current.data != prepared.data:
-        raise ModelError('task_implementation_preparation_changed')
-    operation = current.operation
-    metadata = bind_policy('change-metadata-v1', actor, planned_at)
-    resources = canonical_json_sha256({'preparation_sha256': current.sha256, 'metadata': metadata})
-
-    def dependencies(context):
-        return context.dependency_result({key: list(context.all_ids) for key in context.subjects})
-
-    def check(target):
-        # One review certifies only its own Task, never an unreviewed neighbour
-        # already labelled implemented in the supplied project. The reserved
-        # hook is required by Core on every implemented Task, including drafts.
-        missing = [key for key in target.subjects if key != context.data['task_id']]
-        if missing:
-            return target.result([{'reason': 'task_done_review_missing',
-                'artifact_id': key, 'severity': 'error'} for key in missing])
-        if target.configuration_data is not None:
-            return target.result([{'reason': 'task_done_unconfigured_project_scope_required',
-                                   'severity': 'error'}])
-        _confirmed(context, prepared._review, prepared._verifier)
-        folded = prepare_change_lifecycle(model.artifacts, [operation.data],
-            **metadata, source_files=model.source_files, **model.reservations)
-        expected = {row['id']: row for row in folded.artifacts}
-        actual = {key: target.artifact(key) for key in target.all_ids}
-        if canonical_json_sha256(expected) != canonical_json_sha256(actual):
-            return target.result([{'reason': 'task_done_target_changed', 'severity': 'error'}])
-        return target.result()
-
-    gate = ModelGate(_GATE, 'bound-task-done-v2', dependencies, check, resources)
+    operation, gate = prepare_done_update(model, prepared, actor=actor, planned_at=planned_at)
     return update_artifact(model, operation, actor=actor, planned_at=planned_at,
         change_plan_id=change_plan_id, transaction_id=transaction_id, authority=authority,
         request_id=request_id, gates=(*gates, gate), strict=strict, package_files=package_files)
