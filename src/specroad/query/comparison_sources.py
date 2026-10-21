@@ -210,7 +210,8 @@ class ComparisonSourceSnapshot:
 
 
 def compare_sources(before, after, *, timing_bounds=None,
-                    before_configuration_id=None, after_configuration_id=None):
+                    before_configuration_id=None, after_configuration_id=None,
+                    before_currentness=None, after_currentness=None):
     """Compare captured data with exactly the existing semantic-diff contract."""
     if type(before) is not ComparisonSourceSnapshot or type(after) is not ComparisonSourceSnapshot:
         raise ModelError('comparison_source_snapshot_required')
@@ -224,4 +225,5 @@ def compare_sources(before, after, *, timing_bounds=None,
     return compare_semantic(before.inputs, after.inputs,
         before_configuration=before.configuration, after_configuration=after.configuration,
         timing_bounds=timing_bounds, before_configuration_id=before_configuration_id,
-        after_configuration_id=after_configuration_id)
+        after_configuration_id=after_configuration_id,
+        before_currentness=before_currentness, after_currentness=after_currentness)

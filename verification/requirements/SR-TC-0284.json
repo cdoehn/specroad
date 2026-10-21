@@ -7,22 +7,25 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-RELATIONS-v1"
   ],
   "preconditions": [
-    "Owned complete current project artifacts and review records; Core review diagnostics, no effective profile or authentication claim."
+    "Owned complete current project artifacts and review records; Core review diagnostics, no effective profile or authentication claim.",
+    "Native complete model, independently evaluated verification input and exactly one bound native code-state observation per code_ref."
   ],
   "steps": [
     "Query all direct incoming/outgoing neighbours and Appendix J review observations; compare independent groups/reasons/identities and guard currentness and all read-only boundaries.",
-    "Compare literal domain facts and explicit absence, preserve affected/review sets across order and cache changes, and reject stale or invalid source data without writes or inferred verification."
+    "Compare literal domain facts and explicit absence, preserve affected/review sets across order and cache changes, and reject stale or invalid source data without writes or inferred verification.",
+    "Compare one immutable computed observation across validation, impact, trace, diff, coverage and built-in verification/traceability views; refuse foreign, incomplete or untyped inputs without subject writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`impact`, `diff`, `traceability`, `coverage` und `release readiness` MÜSSEN unreviewed, suspect und invalid Relations getrennt ausweisen und deren betroffene Artefakte erklären.",
-    "scope": "8.g.W implements actual read-only impact through Python, CLI, structured requests and the portable zipapp. A complete current artifact inventory includes all relation-review history. Every directly stored incoming/outgoing relation is grouped by original type, retaining relation identity, both endpoints, physical direction and neighbour existence. Appendix J observations provide separate unreviewed/current/suspect/invalid groups with affected IDs, exact reasons and selected/matching/historical review IDs. Structural invalid bindings and current rejections remain visible; direct invalid yields exit 1 with a complete result and SRV027/error. Unreviewed/suspect use Core warning defaults; effective profile policy is explicitly not claimed. Malformed inventory/review fields abort rather than publish partial results. Unrelated structural invalidity is outside the direct assessment, but all bytes/membership/configuration remain bound and are rechecked before completion. No normative write, cache, lock, inferred priority, invented verification, authenticated-review claim, full semantic approval or atomic snapshot is added. The W baseline materializes inventory and output. R adds artifact_observations for exactly the start and all direct endpoints. Stored priority and verification_plan_status remain literal values; absent fields and absent artifacts are explicitly missing and unavailable, respectively. Missing targets have no inferred artifact type. Every row declares verification_assessment=not_performed; workflow, text, extensions, waivers and current relation reviews never become a computed verification result. The existing result family and catalog metadata use minor version 1.1.0. Independent oracles cover every allowed priority/workflow value, invalid fields, ordering, passive malformed/stale/symlink caches, corrupt normative sources, concurrent projection changes, ownership, CLI parity and schema closure. All old test files and 9197 old IDs remain unchanged. Remaining report consumers, durable Work, external delivery, effective profiles, alternate bases and platform/performance acceptance remain open; materialized input/output and existing read-only/currentness boundaries remain explicit. C moves the pure review and domain-fact projection into the graph layer and shares the identical deterministic connection grouping between the existing planner direct-impact calculation and the current-project CLI. Planner resolved-input validation and current-project invalid-binding reporting retain their distinct contracts. Public APIs, output versions, selected review identities, absence states, owned results, currentness and allowed side effects remain unchanged. Structural extraction checks bind both old grouping blocks and the unchanged remaining code to the verified Result. All 277 old test files and all 9227 test IDs remain unchanged; selected regression also covers affected target-model, saved-plan, execution, normalization and review-policy behavior."
+    "scope": "8.g.W implements actual read-only impact through Python, CLI, structured requests and the portable zipapp. A complete current artifact inventory includes all relation-review history. Every directly stored incoming/outgoing relation is grouped by original type, retaining relation identity, both endpoints, physical direction and neighbour existence. Appendix J observations provide separate unreviewed/current/suspect/invalid groups with affected IDs, exact reasons and selected/matching/historical review IDs. Structural invalid bindings and current rejections remain visible; direct invalid yields exit 1 with a complete result and SRV027/error. Unreviewed/suspect use Core warning defaults; effective profile policy is explicitly not claimed. Malformed inventory/review fields abort rather than publish partial results. Unrelated structural invalidity is outside the direct assessment, but all bytes/membership/configuration remain bound and are rechecked before completion. No normative write, cache, lock, inferred priority, invented verification, authenticated-review claim, full semantic approval or atomic snapshot is added. The W baseline materializes inventory and output. R adds artifact_observations for exactly the start and all direct endpoints. Stored priority and verification_plan_status remain literal values; absent fields and absent artifacts are explicitly missing and unavailable, respectively. Missing targets have no inferred artifact type. Every row declares verification_assessment=not_performed; workflow, text, extensions, waivers and current relation reviews never become a computed verification result. The existing result family and catalog metadata use minor version 1.1.0. Independent oracles cover every allowed priority/workflow value, invalid fields, ordering, passive malformed/stale/symlink caches, corrupt normative sources, concurrent projection changes, ownership, CLI parity and schema closure. All old test files and 9197 old IDs remain unchanged. Remaining report consumers, durable Work, external delivery, effective profiles, alternate bases and platform/performance acceptance remain open; materialized input/output and existing read-only/currentness boundaries remain explicit. C moves the pure review and domain-fact projection into the graph layer and shares the identical deterministic connection grouping between the existing planner direct-impact calculation and the current-project CLI. Planner resolved-input validation and current-project invalid-binding reporting retain their distinct contracts. Public APIs, output versions, selected review identities, absence states, owned results, currentness and allowed side effects remain unchanged. Structural extraction checks bind both old grouping blocks and the unchanged remaining code to the verified Result. All 277 old test files and all 9227 test IDs remain unchanged; selected regression also covers affected target-model, saved-plan, execution, normalization and review-policy behavior. 12.t.W adds opt-in typed whole-project read integration. All consumers expose the exact same source-bound currentness observation, including separate current/stale/missing/relocated code, evidence coverage and unreviewed/suspect/invalid/current relation groups with affected endpoints. Diff compares independently bound sides, including code-only changes; absent evaluation remains incomplete. Validation registers the observation without satisfying unavailable validation services. Results are owned supplied observations, not live file revalidation, external execution, Work continuation or Release Readiness. Existing calls without the provider remain unchanged."
   },
   "expected_diagnostics": [
     "SRV025",
@@ -40,6 +43,10 @@
   "json_pointers": [
     "/artifact_observations",
     "/coverage",
+    "/currentness",
+    "/currentness/observation/code_states",
+    "/currentness/observation/coverage",
+    "/currentness/observation/review_groups",
     "/format_version",
     "/groups",
     "/review_groups"
@@ -56,6 +63,49 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-stale]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[callback]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[dict]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[duplicate]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[extra]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[omitted]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[other_bytes]",
+    "tests/test_currentness_read_integration.py::test_code_only_change_is_a_diff_even_with_identical_model_bytes",
+    "tests/test_currentness_read_integration.py::test_conflicting_verification_input_cannot_override_bound_currentness",
+    "tests/test_currentness_read_integration.py::test_diff_requires_both_independently_bound_sides",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[coverage]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[diff]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[impact]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[trace]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[traceability]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[validation]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[verification]",
+    "tests/test_currentness_read_integration.py::test_missing_and_stale_code_remain_distinct_in_diff",
+    "tests/test_currentness_read_integration.py::test_opaque_currentness_dict_is_not_a_native_provider[diff]",
+    "tests/test_currentness_read_integration.py::test_opaque_currentness_dict_is_not_a_native_provider[impact]",
+    "tests/test_currentness_read_integration.py::test_opaque_currentness_dict_is_not_a_native_provider[trace]",
+    "tests/test_currentness_read_integration.py::test_review_groups_keep_all_four_states_and_affected_endpoints",
+    "tests/test_currentness_read_integration.py::test_selected_configuration_cannot_be_silently_ignored",
+    "tests/test_currentness_read_integration.py::test_snapshot_is_owned_deterministic_and_not_a_live_or_release_claim",
     "tests/test_query_impact.py::test_active_writer_and_unresolved_journal_block_before_impact",
     "tests/test_query_impact.py::test_all_direct_incoming_outgoing_neighbours_are_grouped_by_stored_type",
     "tests/test_query_impact.py::test_changes_after_calculation_prevent_stale_success[configuration]",
@@ -115,7 +165,7 @@
     "tests/test_query_impact_right.py::test_text_and_extensions_cannot_fill_missing_domain_fields[title]"
   ],
   "open_items": [
-    "Integrate separate review states into the remaining diff, traceability, coverage and release-readiness consumers.",
-    "Current Impact materializes inventory/output; Work continuation, external delivery and effective profile severity policy remain open."
+    "Durable Work continuation and broader partial-scope/currentness admission remain for 12.t.R; current integration uses explicit native whole-project observations.",
+    "Release Readiness remains M13. No external-execution, full-suite or release qualification is claimed."
   ]
 }

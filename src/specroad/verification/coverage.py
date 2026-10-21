@@ -92,13 +92,20 @@ def _gaps(rows):
     return {**result, 'counts': {name: len(items) for name, items in result.items()}}
 
 
-def assess_verification_coverage(model, verification):
+def assess_verification_coverage(model, verification=None, *, currentness=None):
     """Use exactly one computed selection for all independent coverage axes.
 
     Dimensions are the declared slot values, never guessed from test names.
     Evidence counts are per required-key observation, not unique executions.
     A check's evidence result never replaces its Subject's higher priorities.
     """
+    if currentness is not None:
+        from .currentness_input import checked_currentness_model
+        _, observed = checked_currentness_model(model, currentness, verification=verification)
+        report = {**observed['observation']['coverage'], 'currentness': observed}
+        result = object.__new__(VerificationCoverage)
+        object.__setattr__(result, '_encoded', canonical_json_bytes(report))
+        return result
     model, bound = checked_model_input(model, verification)
     documents = {parse_json_object(d.content)['id']: parse_json_object(d.content)
                  for d in model.documents}

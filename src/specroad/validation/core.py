@@ -31,7 +31,7 @@ from .production import production_gates, formal_findings, profile_applies
 
 
 def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None,
-                   configuration_id=None, document_role_scope=None):
+                   configuration_id=None, document_role_scope=None, currentness=None):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -88,7 +88,14 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
             raise ModelError("validation_builtin_gate_override")
         gates += builtins
         gate_index.update((g.gate_id, g) for g in builtins)
+    observed = None
+    if currentness is not None:
+        from ..verification.currentness_input import checked_currentness_records
+        observed = checked_currentness_records(currentness,
+            tuple(SourceRelations(d.content, path=d.path) for d in documents),
+            None if resources is None else resources.configuration, configuration_id)
     basis = canonical_json_sha256({"version": VALIDATION_VERSION,
+        **({'currentness_sha256': observed['sha256']} if observed is not None else {}),
         **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
         **({"resources_sha256": resources.sha256} if resources is not None else {}),
         **({'selected_configuration': configuration.binding} if configuration is not None else {}),
@@ -114,6 +121,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         failed = any(s["status"] == "failed" for s in stages)
         complete = all(s["status"] in ("passed", "failed", "not_applicable") for s in stages)
         return ValidationReport._create({"format_version": VALIDATION_VERSION,
+            **({'currentness': observed} if observed is not None else {}),
             **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
             **({'selected_configuration': configuration.binding} if configuration is not None else {}),
             "input_sha256": basis, "validation_scope": "loaded_model" if selected is None else "dependency_expanded_loaded_scope",

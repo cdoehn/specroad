@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 543
-last_completed_plan_commit: 12.s.C
-next_plan_commit: 12.t.W
-last_completed_numbered_bundle: 369
+implementation_plan_commits_completed: 544
+last_completed_plan_commit: 12.t.W
+next_plan_commit: 12.t.R
+last_completed_numbered_bundle: 370
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -15318,12 +15318,40 @@ Release-Erfolgsnachweis.
 
 #### 12.t.W – Let it Work
 
-- [ ] **12.t.W** · Position **544/900** · Voraussetzung: `12.s.C`.
+- [x] **12.t.W** · Position **544/900** · Voraussetzung: `12.s.C`.
 **Exakte Commit-Message:** `12.t.W feat(verification): Nachweis-/Codeintegration und Workparität aufbauen`
 
 **Umsetzung:** Evidence- und Codezustände in Validation, Diff, Traceability und Verification-Ansichten registrieren.
 
 **Verhaltensabnahme:** Alle vorhandenen Fachfunktionen verwenden dieselbe berechnete Aktualität.
+
+**Vorbereiteter W-Stand, Bundle 370:** Ein nativer, unveränderlicher
+`CurrentnessReadInput` verbindet exakt gebundene Verification-/Coverage-Daten
+mit genau einer nativen H.3-Beobachtung je Codeverweis und den berechneten
+Relationsreviews. Validation, Impact, Trace, Diff und die Verification-/
+Traceability-Ansichten übernehmen dieselbe Beobachtung. Bestehende Query-Filter,
+Sortierung und Paging erhalten denselben nativen Verification-Eingang.
+Fehlende, stale, aktuelle und verschobene Codeverweise bleiben unterscheidbar;
+Relationsreview-Gruppen behalten ihre betroffenen Endpunkte. Diff erkennt auch
+Codeänderungen bei identischen Modellbytes. Fehlende Evaluation erzeugt keinen
+Erfolg; Validation ersetzt durch die Beobachtung keine fehlenden Gate-Dienste.
+Die Schnittstellen ohne den optionalen Eingang behalten ihre bisherigen Verträge.
+Beobachtungen behaupten keine erneute Prüfung gegen das aktuelle Dateisystem,
+keine externe Testausführung und keine Releasefreigabe. Geteilte Arbeit folgt in
+12.t.R, Release Readiness in M13. Die technische Benutzung steht in
+`docs/development/Currentness_Read_Integration.md`.
+
+Der abschließende gezielte Dev-Lauf besteht aus **1.594 bestandenen Tests**
+aus 30 neuen und betroffenen Testdateien mit vier Workern in **63,64 Sekunden**.
+Der vollständige Katalog wurde mit **16.080 Identitäten** und ohne Testausführung
+geprüft; 43 neue Identitäten wurden hinter die 16.037 bestehenden Nummern angehängt.
+Alle 465 bisherigen Testdateien bleiben bytegleich. SR-TC-0284 und SR-TC-0537
+bleiben mit den genannten Restarbeiten ausdrücklich partiell.
+Geprüfter Source-SHA-256:
+`646abb9a6db2264b44ff035877de97c890b4c95965193d875537ca990abe5deb`.
+Der Entrypoint verlangt vor dem W-Commit Gruppe 0, Commitsequenz 78,
+mit 5.360 parallelen Tests. Erst danach wird 544/900 markiert.
+Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.t.R – Make it Right
 

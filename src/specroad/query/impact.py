@@ -11,7 +11,7 @@ from ..storage.project import ProjectSource
 from .show import _preflight, _verify_current
 
 
-def _impact_steps(root, artifact_id):
+def _impact_steps(root, artifact_id, *, currentness=None, configuration_id=None):
     """Report both physical directions, retaining invalid direct bindings.
 
     This reports the existing Appendix J observation with Core diagnostic
@@ -39,6 +39,10 @@ def _impact_steps(root, artifact_id):
                        'observation_sha256': snapshot.binding.sha256,
                        'validation_scope': 'artifact_fields_and_relation_review_status_only',
                        'atomic_snapshot': False}}
+        if currentness is not None:
+            from ..verification.currentness_input import checked_currentness_records
+            payload['currentness'] = checked_currentness_records(
+                currentness, snapshot.records, source.configuration, configuration_id)
         yield 'evaluated'
         _preflight(source)
         _verify_current(source, snapshot.binding)
@@ -66,9 +70,10 @@ def _impact_steps(root, artifact_id):
                                     diagnostics=(diagnostic,), details=details)
 
 
-def impact_artifact(root, artifact_id):
+def impact_artifact(root, artifact_id, *, currentness=None, configuration_id=None):
     """Complete the same read phases synchronously, without a durable checkpoint."""
-    return complete_read_steps(_impact_steps(root, artifact_id))
+    return complete_read_steps(_impact_steps(root, artifact_id,
+        currentness=currentness, configuration_id=configuration_id))
 
 
 def impact_command(invocation):

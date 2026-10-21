@@ -11,7 +11,8 @@ from .comparison_sources import ComparisonSourceSnapshot, compare_sources
 from .read_work import complete_read_command, complete_read_steps
 
 
-def _diff_steps(root, against, *, against_kind='git', configuration_id=None):
+def _diff_steps(root, against, *, against_kind='git', configuration_id=None,
+                before_currentness=None, after_currentness=None):
     project = None
     details = read_details()
     try:
@@ -25,7 +26,8 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None):
         project = {'project_root': after.source_root, 'project_id': after.configuration.project_id}
         yield 'loaded'
         compared = compare_sources(before, after, before_configuration_id=configuration_id,
-                                   after_configuration_id=configuration_id)
+            after_configuration_id=configuration_id,
+            before_currentness=before_currentness, after_currentness=after_currentness)
         payload = compared.data
         details.update(before_source_sha256=before.sha256, after_source_sha256=after.sha256,
             base_commit=before.commit_id, comparison_sha256=compared.sha256,
@@ -56,10 +58,12 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None):
         return read_failure('diff', error, project, details)
 
 
-def diff_project(root, against, *, against_kind='git', configuration_id=None):
+def diff_project(root, against, *, against_kind='git', configuration_id=None,
+                 before_currentness=None, after_currentness=None):
     """Compare exact captured sources, rejecting unsupported resource semantics."""
     return complete_read_steps(_diff_steps(root, against, against_kind=against_kind,
-                                          configuration_id=configuration_id))
+        configuration_id=configuration_id, before_currentness=before_currentness,
+        after_currentness=after_currentness))
 
 
 def diff_command(invocation):

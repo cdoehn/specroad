@@ -4,19 +4,34 @@
   "requirement_id": "SR-REQ-0537",
   "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
   "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1"
+  ],
+  "preconditions": [
+    "Native complete model, independently evaluated verification input and exactly one bound native code-state observation per code_ref."
+  ],
+  "steps": [
+    "Compare one immutable computed observation across validation, impact, trace, diff, coverage and built-in verification/traceability views; refuse foreign, incomplete or untyped inputs without subject writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Impact, Traceability, Diff und Release Readiness MÜSSEN fehlende oder stale Code-Referenzen getrennt ausweisen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "12.t.W adds opt-in typed whole-project read integration. All consumers expose the exact same source-bound currentness observation, including separate current/stale/missing/relocated code, evidence coverage and unreviewed/suspect/invalid/current relation groups with affected endpoints. Diff compares independently bound sides, including code-only changes; absent evaluation remains incomplete. Validation registers the observation without satisfying unavailable validation services. Results are owned supplied observations, not live file revalidation, external execution, Work continuation or Release Readiness. Existing calls without the provider remain unchanged."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    1,
+    3
+  ],
+  "json_pointers": [
+    "/currentness",
+    "/currentness/observation/code_states",
+    "/currentness/observation/coverage",
+    "/currentness/observation/review_groups"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +43,53 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[failed-failed-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[missing-incomplete-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[no_evaluation-incomplete-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[passed-passed-stale]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-current]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-missing]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-relocated]",
+    "tests/test_currentness_read_integration.py::test_all_consumers_share_exact_states_without_subject_writes[stale-stale-stale]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[callback]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[dict]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[duplicate]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[extra]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[omitted]",
+    "tests/test_currentness_read_integration.py::test_code_inventory_must_be_complete_native_and_exactly_bound[other_bytes]",
+    "tests/test_currentness_read_integration.py::test_code_only_change_is_a_diff_even_with_identical_model_bytes",
+    "tests/test_currentness_read_integration.py::test_conflicting_verification_input_cannot_override_bound_currentness",
+    "tests/test_currentness_read_integration.py::test_diff_requires_both_independently_bound_sides",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[coverage]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[diff]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[impact]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[trace]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[traceability]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[validation]",
+    "tests/test_currentness_read_integration.py::test_foreign_record_bytes_are_rejected_without_partial_observation[verification]",
+    "tests/test_currentness_read_integration.py::test_missing_and_stale_code_remain_distinct_in_diff",
+    "tests/test_currentness_read_integration.py::test_opaque_currentness_dict_is_not_a_native_provider[diff]",
+    "tests/test_currentness_read_integration.py::test_opaque_currentness_dict_is_not_a_native_provider[impact]",
+    "tests/test_currentness_read_integration.py::test_opaque_currentness_dict_is_not_a_native_provider[trace]",
+    "tests/test_currentness_read_integration.py::test_review_groups_keep_all_four_states_and_affected_endpoints",
+    "tests/test_currentness_read_integration.py::test_selected_configuration_cannot_be_silently_ignored",
+    "tests/test_currentness_read_integration.py::test_snapshot_is_owned_deterministic_and_not_a_live_or_release_claim"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Durable Work continuation and broader partial-scope/currentness admission remain for 12.t.R; current integration uses explicit native whole-project observations.",
+    "Release Readiness remains M13. No external-execution, full-suite or release qualification is claimed."
   ]
 }

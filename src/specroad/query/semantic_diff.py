@@ -18,7 +18,8 @@ from ._semantic_classes import (
 
 def compare_semantic(before, after, *, before_configuration=None,
                      after_configuration=None, timing_bounds=None,
-                     before_configuration_id=None, after_configuration_id=None):
+                     before_configuration_id=None, after_configuration_id=None,
+                     before_currentness=None, after_currentness=None):
     """Classify supplied sets; explicit policies never grant approval or writes.
 
     Configuration comparison requires both typed declarations. Timing bounds
@@ -68,16 +69,35 @@ def compare_semantic(before, after, *, before_configuration=None,
             categories.add('configuration_scope_changed')
     inputs = {'before_artifacts_sha256': before.fingerprint, 'after_artifacts_sha256': after.fingerprint,
               'configuration_inputs': configuration_inputs, 'timing_bounds': policy}
+    currentness = None
+    evidence_currency = {'state': 'not_evaluated'}
+    if before_currentness is not None or after_currentness is not None:
+        from ..verification.currentness_input import checked_currentness_records
+        previous = checked_currentness_records(before_currentness, before.records,
+            before_configuration, before_configuration_id)
+        following = checked_currentness_records(after_currentness, after.records,
+            after_configuration, after_configuration_id)
+        currentness = {'before': previous, 'after': following,
+                      'changed': previous['sha256'] != following['sha256']}
+        inputs['currentness_inputs'] = {'before_sha256': previous['sha256'],
+                                       'after_sha256': following['sha256']}
+        evidence_currency = {'state': 'compared',
+            'before_sha256': previous['observation']['coverage_sha256'],
+            'after_sha256': following['observation']['coverage_sha256']}
+        if currentness['changed']:
+            categories.add('currentness_changed')
     return ComparisonResult({'comparison_version': 'semantic-diff-v1',
         'project_id': before.project_id, 'input_sha256': canonical_json_sha256({**inputs,
             **({'configuration_scope': variant} if variant['state'] == 'evaluated' else {})}),
         **inputs, 'changed': base['changed'] or bool(configuration['changed'])
-            or variant.get('configuration_changed', False) or variant.get('membership_changed', False),
+            or variant.get('configuration_changed', False) or variant.get('membership_changed', False)
+            or (currentness is not None and currentness['changed']),
         'categories': sorted(categories), 'changes': changes,
         'project_configuration': configuration, 'timing': timing,
         'inventory_delta': {'scope': 'supplied_artifact_sets',
             'added_ids': sorted(right.keys() - left.keys()), 'removed_ids': sorted(left.keys() - right.keys())},
         'configuration_scope': variant,
-        'evidence_currency': {'state': 'not_evaluated'},
+        'evidence_currency': evidence_currency,
+        **({'currentness': currentness} if currentness is not None else {}),
         'validation_scope': 'supplied_artifact_fields_and_declared_semantics_only',
         'full_semantic_validation': False, 'approval_granted': False, 'write_authorized': False})

@@ -130,7 +130,7 @@ def _traceability(records, references):
     return rows, {key: edges[key] for key in sorted(edges)}
 
 
-def resolve_builtin_view(model, view_name, *, verification=None):
+def resolve_builtin_view(model, view_name, *, verification=None, currentness=None):
     """Resolve specification, stored traceability or explicitly bound coverage.
 
     A full project's specification always requires its unique active primary.
@@ -143,10 +143,18 @@ def resolve_builtin_view(model, view_name, *, verification=None):
         raise ModelError('document_target_model_required')
     if type(view_name) is not str or view_name not in ('specification', 'traceability', 'verification', 'roadmap'):
         raise BuiltinViewError('builtin_view_not_supported', pointer='/view_name', exit_code=2)
-    if view_name == 'roadmap' or (view_name == 'verification' and verification is None):
+    if view_name == 'roadmap' or (view_name == 'verification' and verification is None and currentness is None):
         raise BuiltinViewProviderError(view_name)
     if verification is not None and view_name != 'verification':
         raise BuiltinViewError('builtin_verification_input_not_applicable', pointer='/view_name')
+    observed = None
+    if currentness is not None:
+        from ..verification.currentness_input import checked_currentness_model
+        if view_name not in ('traceability', 'verification'):
+            raise BuiltinViewError('builtin_currentness_input_not_applicable', pointer='/view_name')
+        model, observed = checked_currentness_model(model, currentness, verification=verification)
+        if view_name == 'verification':
+            verification = currentness.verification
     model = model.snapshot()
     data = {'view_name': view_name, 'source_kind': 'supplied_project',
         'schema_version': MODEL_SCHEMA_VERSION, 'profiles': list(model.profile.profile_chain),
@@ -155,7 +163,7 @@ def resolve_builtin_view(model, view_name, *, verification=None):
         'input_sha256': model._sources_sha256, 'fallback': False}
     if view_name == 'verification':
         from ..verification.coverage import assess_verification_coverage
-        coverage = assess_verification_coverage(model, verification)
+        coverage = assess_verification_coverage(model, verification, currentness=currentness)
         data.update(mode='evaluated_requirement_coverage',
             selection_scope_descriptor=verification.data['scope_descriptor'],
             summary=verification.summary, coverage=coverage.data, coverage_sha256=coverage.sha256,
@@ -180,6 +188,17 @@ def resolve_builtin_view(model, view_name, *, verification=None):
         data.update(mode='stored_traceability', records=records, relations=relations,
             rows=rows, row_count=len(rows),
             validation_scope='supplied_record_fields_and_stored_traceability')
+        if observed is not None:
+            subjects = {s['subject_artifact_id']: s['verification_result']
+                        for s in observed['observation']['coverage']['aggregation']['subjects']}
+            for row in rows:
+                row['verification_result'] = subjects.get(row['requirement_id'])
+            data.update(mode='evaluated_traceability', verification_evaluated=True,
+                computed_reports={**_computed_reports(), 'verification': {
+                    'status': 'computed', 'reason': None, 'required_milestone': 'M12',
+                    'result': observed['observation']['coverage']}})
+    if observed is not None:
+        data['currentness'] = observed
     return _result(data, model.source_files)
 
 

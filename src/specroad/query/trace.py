@@ -27,7 +27,7 @@ def _trace_rows(index, artifact_id, direction, depth):
     return result['nodes'], result['edges']
 
 
-def _trace_steps(root, artifact_id, *, direction, depth):
+def _trace_steps(root, artifact_id, *, direction, depth, currentness=None, configuration_id=None):
     """Return visited identities and the views traversed below the chosen depth.
 
     Depth zero contains just the existing start. Nodes are ordered by minimum
@@ -55,6 +55,10 @@ def _trace_steps(root, artifact_id, *, direction, depth):
                        'observation_sha256': observed.binding.sha256,
                        'validation_scope': 'relation_references_and_canonical_storage_only',
                        'atomic_snapshot': False}}
+        if currentness is not None:
+            from ..verification.currentness_input import checked_currentness_records
+            payload['currentness'] = checked_currentness_records(currentness,
+                observed._snapshot.records, source.configuration, configuration_id)
         yield 'evaluated'
         _preflight(source)
         _verify_current(source, observed.binding)
@@ -79,9 +83,10 @@ def _trace_steps(root, artifact_id, *, direction, depth):
                                     diagnostics=(diagnostic,), details=details)
 
 
-def trace_artifact(root, artifact_id, *, direction, depth):
+def trace_artifact(root, artifact_id, *, direction, depth, currentness=None, configuration_id=None):
     """Complete the same read phases synchronously, without a durable checkpoint."""
-    return complete_read_steps(_trace_steps(root, artifact_id, direction=direction, depth=depth))
+    return complete_read_steps(_trace_steps(root, artifact_id, direction=direction, depth=depth,
+        currentness=currentness, configuration_id=configuration_id))
 
 
 def trace_command(invocation):

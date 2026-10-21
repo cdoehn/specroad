@@ -23,6 +23,34 @@ def _nullable(schema):
     return {"anyOf": [{"type": "null"}, schema]}
 
 
+def _with_currentness(schema, *, comparison=False):
+    """Optional native read observation; legacy payloads keep their contract."""
+    text = {'type': 'string'}
+    sha = {'type': 'string', 'pattern': r'^[0-9a-f]{64}(?![\s\S])'}
+    observation = _object({
+        'format_version': {'const': 'currentness-read-input-v1'},
+        'validation_scope': {'const': 'supplied_model_and_native_observations'},
+        'project_id': text, 'input_sha256': sha, 'project_configuration_sha256': sha,
+        'record_bindings': _array(_object({'id': text, 'sha256': sha})),
+        'verification_summary': {'type': 'object'}, 'coverage': {'type': 'object'},
+        'coverage_sha256': sha, 'code_states': _array({'type': 'object'}),
+        'relation_reviews': {'type': 'object'},
+        'review_groups': _object({state: _object({'relation_ids': _array(text), 'affected_ids': _array(text)})
+                                 for state in ('current', 'unreviewed', 'suspect', 'invalid')}),
+        **{name: {'const': False} for name in ('project_files_verified', 'atomic_snapshot',
+            'external_run_verified', 'release_readiness_evaluated', 'source_code_executed',
+            'write_authorized', 'approval_granted')}})
+    bound = _object({'sha256': sha, 'observation': observation})
+    schema['properties']['currentness'] = (_object({'before': bound, 'after': bound,
+        'changed': {'type': 'boolean'}}) if comparison else bound)
+    if comparison:
+        schema['properties']['currentness_inputs'] = _object({'before_sha256': sha, 'after_sha256': sha})
+        schema['properties']['evidence_currency'] = {'anyOf': [
+            _object({'state': {'const': 'not_evaluated'}}),
+            _object({'state': {'const': 'compared'}, 'before_sha256': sha, 'after_sha256': sha})]}
+    return schema
+
+
 def _fields(schema_id):
     text = {"type": "string"}; nonempty = {"type": "string", "minLength": 1}
     obj = {"type": "object"}; boolean = {"type": "boolean"}
@@ -110,13 +138,13 @@ def _fields(schema_id):
             'target': nonempty, 'inverse': boolean, 'stored_source': nonempty,
             'stored_relation': _object({'relation_id': nonempty, 'type': nonempty,
                                        'target': nonempty}, extra=True)})
-        return _object({'format_version': {'const': '1.0.0'}, 'start': nonempty,
+        return _with_currentness(_object({'format_version': {'const': '1.0.0'}, 'start': nonempty,
             'direction': {'enum': ['in', 'out', 'both']}, 'depth': count,
             'nodes': _array(_object({'id': nonempty, 'artifact_type': nonempty, 'distance': count})),
             'edges': _array(edge), 'coverage': _object({'scope': {'const': 'current_project_artifacts'},
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
                 'validation_scope': {'const': 'relation_references_and_canonical_storage_only'},
-                'atomic_snapshot': {'const': False}})})
+                'atomic_snapshot': {'const': False}})}))
     if schema_id == 'artifact-why-v1':
         identity = _object({'id': nonempty, 'id_scheme': nonempty, 'artifact_type': nonempty, 'id_prefix': nonempty})
         path = _object({'artifacts': _array(identity),
@@ -161,7 +189,7 @@ def _fields(schema_id):
             'related_present': boolean, 'review_status': {'enum': ['unreviewed', 'current', 'suspect', 'invalid']},
             'review_reason': _nullable(nonempty), 'selected_review_id': _nullable(nonempty),
             'matching_review_ids': strings, 'historical_review_ids': strings})
-        return _object({'format_version': {'const': '1.1.0'}, 'artifact_id': nonempty,
+        return _with_currentness(_object({'format_version': {'const': '1.1.0'}, 'artifact_id': nonempty,
             'depth': {'const': 1}, 'transitive': {'const': False},
             'artifact_observations': _array(observation),
             'groups': _array(_object({'relation_type': nonempty, 'artifact_ids': strings,
@@ -172,13 +200,13 @@ def _fields(schema_id):
                 'source_count': count, 'relation_count': count, 'review_record_count': count,
                 'observation_sha256': sha,
                 'validation_scope': {'const': 'artifact_fields_and_relation_review_status_only'},
-                'atomic_snapshot': {'const': False}})})
+                'atomic_snapshot': {'const': False}})}))
     if schema_id == 'artifact-query-v1':
         return _object({'items': _array(_object({'id': nonempty, 'artifact_type': nonempty}, extra=True)),
             'total': count, 'offset': count, 'limit': count, 'returned': count, 'truncated': boolean})
     if schema_id == 'artifact-diff-v1':
         pair = _object({'before_sha256': sha, 'after_sha256': sha})
-        return _object({'comparison_version': {'const': 'semantic-diff-v1'},
+        return _with_currentness(_object({'comparison_version': {'const': 'semantic-diff-v1'},
             'project_id': nonempty, 'input_sha256': sha,
             'before_artifacts_sha256': sha, 'after_artifacts_sha256': sha,
             'configuration_inputs': pair, 'timing_bounds': obj,
@@ -198,7 +226,7 @@ def _fields(schema_id):
             'evidence_currency': _object({'state': {'const': 'not_evaluated'}}),
             'validation_scope': {'const': 'supplied_artifact_fields_and_declared_semantics_only'},
             'full_semantic_validation': {'const': False}, 'approval_granted': {'const': False},
-            'write_authorized': {'const': False}})
+            'write_authorized': {'const': False}}), comparison=True)
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,

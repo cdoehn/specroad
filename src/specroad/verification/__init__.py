@@ -34,6 +34,7 @@ from .code_references import CodeReferenceSource, read_code_reference
 from .code_selection import CodeLineSelection, select_code_lines
 from .code_relocation import CodeSelectionLocation, locate_code_selection
 from .code_reference_state import CodeReferenceState, assess_code_reference
+from .currentness_input import CurrentnessReadInput, prepare_currentness_read_input
 
 from .waiver_content import waiver_content_projection, waiver_content_sha256
 from .waiver_values import (VerificationWaiver, WaiverContext, HumanWaiverReview,
@@ -71,4 +72,5 @@ __all__ = ("VerificationContract", "VerificationContractResolution", "Verificati
            "CodeReferenceSource", "read_code_reference",
            "CodeLineSelection", "select_code_lines",
            "CodeSelectionLocation", "locate_code_selection",
-           "CodeReferenceState", "assess_code_reference")
+           "CodeReferenceState", "assess_code_reference",
+           "CurrentnessReadInput", "prepare_currentness_read_input")
