@@ -19,10 +19,10 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ```yaml
 plan_revision: 4
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 530
-last_completed_plan_commit: 12.o.R
-next_plan_commit: 12.o.C
-last_completed_numbered_bundle: 356
+implementation_plan_commits_completed: 531
+last_completed_plan_commit: 12.o.C
+next_plan_commit: 12.p.W
+last_completed_numbered_bundle: 357
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -14726,7 +14726,7 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 #### 12.o.C – Make it Clean
 
-- [ ] **12.o.C** · Position **531/900** · Voraussetzung: `12.o.R`.
+- [x] **12.o.C** · Position **531/900** · Voraussetzung: `12.o.R`.
 **Exakte Commit-Message:** `12.o.C refactor(verification): Priorisierte Ergebnisaggregation bereinigen`
 
 **Bereinigung:** Aggregation ohne Format-/CLIabhängigkeit halten.
@@ -14734,6 +14734,32 @@ Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zwischenstand (Bundle 357):** Die reinen Aggregationsfunktionen
+für aktive Läufe, Pflichtprüfungen und Subject-Prioritäten liegen in einem
+privaten Modul ohne Format-/CLI-, Datei- oder Uhrzugriff. Der öffentliche
+Adapter behält alle nativen Eingangs-, Scope-, Konfigurations- und
+Waiverprüfungen sowie die Erzeugung des kanonischen Ergebniswerts.
+Entscheidungsreihenfolge, vollständige blockierende Beobachtungen, Gründe,
+Fehlerklassen, Berichtbytes und Hashes bleiben unverändert. Sämtliche
+vorhandenen W-/R-Testbytes, festen Testnummern und Verifikationsverträge
+bleiben erhalten. Der Fortschrittsmarker folgt erst nach erfolgreichem
+parallelem Apply-Gate; 12.p.W wird in diesem Bundle nicht begonnen.
+
+**Gezielter Dev-Nachweis (Bundle 357):** 1.288/1.288 unveränderte
+Verhaltenstests aus 18 Dateien mit vier parallelen Workern in 109,07 s
+bestanden. Enthalten sind alle 44 W- und 201 R-Aggregationsfälle sowie
+1.043 betroffene Descriptor-, Pflichtmengen-, Lauf-, Contract-, Kontext-,
+Evidence- und Waiver-Regressionsfälle einschließlich isolierter Core-/PYZ-
+Ergebnisse. Source-SHA-256:
+`2f76b58b5f46bc6f44cc05a92a03ef0db40deff6126a6c5accc18c658f0359f3`.
+Die vollständige Katalog-Collection bestätigt 15.424 Tests ohne Testbodies.
+Alle 457 vorhandenen Dateien unter `tests/`, sämtliche Verifikationsbytes
+und alle 15.424 festen Testnummern bleiben unverändert. Die strukturelle
+Prüfung bestätigt die unveränderten Entscheidungsblöcke und den auf ihre
+Auslagerung begrenzten Adapter. Der Entrypoint verlangt ausschließlich
+Gruppe 2, Commitsequenz 65, mit 5.141 parallelen Tests vor C-Commit und
+Fortschrittsmarker 531/900. Dies ist kein Vollsuite- oder Release-Erfolgsnachweis.
 
 <a id="step-12-p"></a>
 ### 12.p – Coverage und Evaluation-Eingaben

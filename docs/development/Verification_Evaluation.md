@@ -397,3 +397,18 @@ Ablösungs- und Waiverprüfungen bleiben vorgelagert beziehungsweise entsprechen
 der fachlichen Priorität wirksam. Originale Evidence, alte W-Testoracles und
 sämtliche Grenzen zu Livebestand, Identitätshistorie und Readiness bleiben
 erhalten. Die nächste C-Phase bereinigt ausschließlich die interne Struktur.
+
+## Reine Aggregationsentscheidungen (12.o.C)
+
+`_aggregation_results` trennt die Auswertung aktiver Läufe und Pflichtprüfungen
+sowie die Subject-Prioritäten vom öffentlichen Adapter. Die reinen Funktionen
+arbeiten ausschließlich auf bereits validierten Beobachtungen. Sie erhalten
+die Reihenfolge, alle blockierenden Beobachtungen und die bisherigen Gründe;
+sie normalisieren keine Eingaben und führen keine Format-, CLI-, Datei- oder
+Uhrzugriffe aus.
+
+Der Adapter behält Modell-/Descriptorprüfung, Scope- und Konfigurationsbindung,
+den ausdrücklich übergebenen Bewertungszeitpunkt und die native menschliche
+Waiverprüfung. Nur er erzeugt den unveränderten kanonischen Bericht mit
+seinen Hashes und SRV176-Diagnosen. Ergebnisse, Fehlerverträge, Schreibfreiheit
+und sämtliche bestehenden W-/R-Testoracles bleiben erhalten.
