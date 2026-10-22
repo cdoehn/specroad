@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 565
-last_completed_plan_commit: 13.g.W
-next_plan_commit: 13.g.R
-last_completed_numbered_bundle: 394
+implementation_plan_commits_completed: 566
+last_completed_plan_commit: 13.g.R
+next_plan_commit: 13.g.C
+last_completed_numbered_bundle: 395
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16596,12 +16596,65 @@ Danach endet dieser Auftrag ohne einen weiteren Planschritt.
 
 #### 13.g.R – Make it Right
 
-- [ ] **13.g.R** · Position **566/900** · Voraussetzung: `13.g.W`.
+- [x] **13.g.R** · Position **566/900** · Voraussetzung: `13.g.W`.
 **Exakte Commit-Message:** `13.g.R feat(roadmap): Gespeicherte Bewertung und Release-Baseline vervollständigen`
 
 **Vervollständigung:** Abweichender CLI-Descriptor bleibt Code 6, auch bei einer unversionierten Alt-Policy. Externe ungespeicherte Auswahl ist nur vorläufig read-only, nie Releasebaseline. Eine leere/Legacy-Policy, ein einzelnes unerfülltes Gate oder ein ungebundener Abschlussnachweis darf die Baselinesperre nicht umgehen.
 
 **Verhaltensabnahme:** End-to-End erzeugt eine echte versiegelte Releasebaseline nur nach allen Gates. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Vorbereiteter R-Zustand, Bundle 395:** Die M10-Auswahlbindung verwendet für
+gültige Descriptoren dieselbe vollständige native Normalisierung wie
+Readiness/Verification gemäß 10.5.1/10.5.4. Unterschiedliche zulässige
+Listenreihenfolgen sind keine alternative Auswahl. Tatsächlich abweichende
+oder unvollständige externe Descriptoren behalten Code 6, auch bei
+unversionierten Policies und vor jedem Readiness-/Writeraufruf. Historische
+unvalidierte Wertobjekte bleiben nur bei exakter Wertgleichheit identisch;
+sie werden beim Lesen weder migriert noch freigegeben.
+
+Die ursprüngliche gespeicherte Auswahl bleibt unverändert im Release und im
+Baseline-Archiv. Ihr vollständiger kanonischer Speicherhash bleibt getrennt
+vom normalisierten `evaluation_sha256`. Die angeforderte Baselinekonfiguration
+wird bereits vor der Snapshotvorbereitung exakt mit der erfolgreich geprüften
+Readiness verglichen; eine Abweichung liefert den bestehenden Bindungsfehler
+statt später einen allgemeinen Providerfehler. Der vorhandene native Writer erzeugt
+die versiegelte Baseline nur nach aktueller vollständiger Readiness.
+Die R-Abnahme verbindet jeden der acht Gate-Blocker, Legacy-/leere Policies,
+rein vorläufige externe Auswahl, fehlende oder ungebundene Abschlussreviews,
+Konfigurationsabweichung und Replay eines alten Abschlussnachweises mit der
+realen Baselinesperre. Selbst neu berechnete Objekt-Hashes können falsche
+Auswahl-/Scope-/Releasebindungen nicht legitimieren. Positive native
+Publikationen mit bestätigtem Risikoabschluss beziehungsweise bestätigter
+Issue-Erledigung und der Erhalt nicht vorsortierter Speicherwerte sind
+beobachtet. Menschliche Reviewdienste sind ausdrücklich synthetische
+Testfixtures, keine reale Risikoakzeptanz oder Produktionsfreigabe.
+
+**Beobachtete Entwicklungsprüfung:** **1099** gezielte Verhaltenstests aus
+**31** Dateien bestanden mit **4** parallelen Workern in **1603,05 s**.
+Die **41** neuen R-Fälle und die vorhandenen W-/betroffenen Baseline-,
+Writer-, Readiness- und Descriptor-Regressionsfälle sind enthalten.
+Die vollständige Collection-/Katalogprüfung bestätigt **16.848** Tests
+bei **0** Testbodies; neue stabile Testnummern sind ausschließlich angehängt.
+Quellzustand `3697c3f5728b9ed3555b1854ec32f9f392cbdd36f9b7d84504bb8c84a27cbf08`, Auswahlbeleg `b910184d6dce39e98e91a7c6670f1f73110687893d0571daeb5e9506ab7d1996`.
+Der erste Entwicklungs-Smokelauf endete mit 36 bestandenen und 5 fehlgeschlagenen Fällen. Die Fehleranalyse (2 bestanden/3 fehlgeschlagen, danach 10 bestanden/1 fehlgeschlagen) deckte gemeinsam genutzte veränderliche Testdaten, nicht erneuerte synthetische Relationsreviews und einen fehlenden nativen Konfigurationsprüfer auf. Nach deren Korrektur belegte ein weiterer negativer Lauf den zu späten allgemeinen Providerfehler bei abweichender Baselinekonfiguration; die frühe exakte Bindungsprüfung ist Bestandteil dieses R-Zustands. Diese vier fehlgeschlagenen Vorläufe sind keine erfolgreichen Nachweise. Ausschließlich der abschließende erfolgreiche Lauf oben trägt die Übergabe.
+Teiltests ergeben keinen Vollsuite-, Release- oder Produktionsfreigabenachweis.
+**13.g.C** und **13.h.W** bleiben offen. Vorhandene native Providergrenzen,
+insbesondere die unkonfigurierte Task-Done-Bindung, werden nicht umgangen;
+CLI-Registrierung und weitere Snapshot-Scopes werden nicht behauptet.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_131744_1022_861cf2.zip`, SHA-256
+`164c09137fac34b83d025471be6715777a811bddcb3b03771be9e87a2dc7bdc4`,
+bestätigt den sauberen Commit
+`35e1eb802b43160bf465737a6acf75f2a6d2ee07` nach Bundle **394** und
+**5.603** bestandene Tests der Gruppe **0**, Sequenz **102**, in **1.432,24 s**.
+Bundle **395** enthält ausschließlich **13.g.R**. Vor dessen Commit ist
+Sequenz **103**, Gruppe **1**, mit **5.616** Tests parallel fällig.
+Erst nach erfolgreichem Apply-Gate werden **566/900**, zuletzt **13.g.R**,
+nächstens **13.g.C** und Bundle **395** gesetzt und mit diesem Zustand
+committed. Bis dahin bleiben die bestätigten Marker **565/900** und
+**13.g.W** erhalten. Danach endet dieser Auftrag ohne weiteren Planschritt.
 
 #### 13.g.C – Make it Clean
 

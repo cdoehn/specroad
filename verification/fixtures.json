@@ -100,6 +100,7 @@
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
+    "SR-FIX-RELEASE-BASELINE-RIGHT-v1",
     "SR-FIX-RELEASE-BASELINE-v1",
     "SR-FIX-RELEASE-READINESS-RIGHT-v1",
     "SR-FIX-RELEASE-READINESS-v1",
@@ -740,6 +741,10 @@
     "SR-FIX-RELEASE-BASELINE-v1": {
       "provider": "tests/test_release_baseline.py:release_project",
       "kind": "Native complete Release/Capability/Requirement/Task and stored verification selection in an owned temporary project. Explicit synthetic approval history and current human reviews, real M13 gates, full-project Baseline snapshot and native locked publication. No production approval or external run is asserted."
+    },
+    "SR-FIX-RELEASE-BASELINE-RIGHT-v1": {
+      "provider": "tests/test_release_baseline_right.py:release_project",
+      "kind": "Owned native Release models with stored/external/legacy descriptors and every required gate. Explicit synthetic human risk/issue completion and replay/refusal observations. Real locked whole-project Baseline publication and independent archive selection binding verification. No production approval or external run is asserted."
     }
   }
 }

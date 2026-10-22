@@ -30,7 +30,11 @@ Release scope/selection. Supplied gates cannot substitute for native M13.
         checked = assess_release_baseline_readiness(model, release_id=release_id,
             evaluation=evaluation, readiness_context=readiness_context, gates=gates,
             blocker_reviews=blocker_reviews, blocker_verifier=blocker_verifier)
-        checked.require_ready()
+        fresh = checked.require_ready()
+        if fresh.data['binding']['scope_descriptor']['configuration_id'] != configuration_id:
+            # Readiness for one exact configuration cannot admit a differently
+            # configured snapshot, even before target providers are assembled.
+            raise ModelError('release_baseline_readiness_binding_mismatch')
         operation = prepare_baseline_operation(model, baseline_id=baseline_id, name=name,
             actor=actor, planned_at=planned_at, configuration_id=configuration_id, release_id=release_id)
         from ._release_gate import release_baseline_gates

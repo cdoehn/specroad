@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-RELEASE-BASELINE-RIGHT-v1",
     "SR-FIX-RELEASE-BASELINE-v1",
     "SR-FIX-RELEASE-READINESS-RIGHT-v1",
     "SR-FIX-RELEASE-READINESS-v1"
@@ -18,12 +19,13 @@
     "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
     "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes.",
     "For 13.f.R: Keep stored native selection and Verification priority, including waived/running/not-evaluated outcomes and independently declared mandatory checks. Replay and stale evidence do not grant readiness.",
-    "13.g.W: accept identical repeated stored selection; prepare and publish a sealed Release Baseline only after all current native gates. Recheck revocable human review at publication, reject absent providers, failed evidence, replayed flags or same-named success callbacks; retain original source and archive bytes and native transaction replay."
+    "13.g.W: accept identical repeated stored selection; prepare and publish a sealed Release Baseline only after all current native gates. Recheck revocable human review at publication, reject absent providers, failed evidence, replayed flags or same-named success callbacks; retain original source and archive bytes and native transaction replay.",
+    "13.g.R: use native descriptor normalization for identical repeated stored choices while preserving their complete original stored bytes/hash. Reject different or incomplete alternatives with Code 6, including legacy policies. Provisional external selection, each of eight failed native gates, unbound human completion, changed time/configuration, and forged archive selection metadata cannot publish a Release Baseline. Confirm actual sealed publication with current bound synthetic risk/issue completion and verify its archive."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Release Readiness MUSS das berechnete Verification Result des Release-Scope Descriptors mit der nach Kapitel 10.5.4 gebundenen Bewertungsauswahl verwenden.",
-    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result. 13.f.R: Keep stored native selection and Verification priority, including waived/running/not-evaluated outcomes and independently declared mandatory checks. Replay and stale evidence do not grant readiness. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
+    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result. 13.f.R: Keep stored native selection and Verification priority, including waived/running/not-evaluated outcomes and independently declared mandatory checks. Replay and stale evidence do not grant readiness. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success. 13.g.R additionally verifies normalized equality without migration, closed legacy/provisional admission, eight independent gate failures, exact current completion proofs, configuration isolation and tamper-evident archived original selection. Human confirmations remain synthetic test fixtures."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -65,6 +67,47 @@
     "tests/test_release_baseline.py::test_saved_release_plan_requires_the_native_gate_before_generic_publication[True]",
     "tests/test_release_baseline.py::test_stored_complete_selection_and_all_eight_gates_prepare_the_same_native_plan[False]",
     "tests/test_release_baseline.py::test_stored_complete_selection_and_all_eight_gates_prepare_the_same_native_plan[True]",
+    "tests/test_release_baseline_right.py::test_a_different_baseline_configuration_cannot_borrow_unconfigured_readiness",
+    "tests/test_release_baseline_right.py::test_archive_rejects_self_consistently_rehashed_but_false_selection_metadata[normalized_hash]",
+    "tests/test_release_baseline_right.py::test_archive_rejects_self_consistently_rehashed_but_false_selection_metadata[release]",
+    "tests/test_release_baseline_right.py::test_archive_rejects_self_consistently_rehashed_but_false_selection_metadata[scope]",
+    "tests/test_release_baseline_right.py::test_archive_rejects_self_consistently_rehashed_but_false_selection_metadata[selection]",
+    "tests/test_release_baseline_right.py::test_archive_rejects_self_consistently_rehashed_but_false_selection_metadata[stored_hash]",
+    "tests/test_release_baseline_right.py::test_confirmed_blocker_completion_allows_real_sealed_publication[issue-resolved]",
+    "tests/test_release_baseline_right.py::test_confirmed_blocker_completion_allows_real_sealed_publication[risk-accepted]",
+    "tests/test_release_baseline_right.py::test_confirmed_blocker_completion_allows_real_sealed_publication[risk-closed]",
+    "tests/test_release_baseline_right.py::test_different_selection_stays_code_six_before_any_admission[identity-False]",
+    "tests/test_release_baseline_right.py::test_different_selection_stays_code_six_before_any_admission[identity-True]",
+    "tests/test_release_baseline_right.py::test_different_selection_stays_code_six_before_any_admission[incomplete-False]",
+    "tests/test_release_baseline_right.py::test_different_selection_stays_code_six_before_any_admission[incomplete-True]",
+    "tests/test_release_baseline_right.py::test_different_selection_stays_code_six_before_any_admission[run-False]",
+    "tests/test_release_baseline_right.py::test_different_selection_stays_code_six_before_any_admission[run-True]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[approval]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[coverage]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[implementation]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[issues]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[relations]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[risks]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[scope]",
+    "tests/test_release_baseline_right.py::test_every_native_gate_can_block_baseline_preparation[verification]",
+    "tests/test_release_baseline_right.py::test_external_selection_is_only_provisional_and_never_a_baseline[policy0]",
+    "tests/test_release_baseline_right.py::test_external_selection_is_only_provisional_and_never_a_baseline[policy1]",
+    "tests/test_release_baseline_right.py::test_external_selection_is_only_provisional_and_never_a_baseline[policy2]",
+    "tests/test_release_baseline_right.py::test_normalized_identical_selection_keeps_original_stored_bytes[False-False]",
+    "tests/test_release_baseline_right.py::test_normalized_identical_selection_keeps_original_stored_bytes[False-True]",
+    "tests/test_release_baseline_right.py::test_normalized_identical_selection_keeps_original_stored_bytes[True-False]",
+    "tests/test_release_baseline_right.py::test_normalized_identical_selection_keeps_original_stored_bytes[True-True]",
+    "tests/test_release_baseline_right.py::test_old_completion_observation_cannot_authorize_a_saved_plan_at_a_new_time",
+    "tests/test_release_baseline_right.py::test_publication_retains_original_stored_order_beside_normalized_selection_hash",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[error]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[future]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[missing]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[revoked]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[unauthenticated]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[unavailable]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[unbound]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[untyped]",
+    "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[wrong_subject]",
     "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[issue-in_progress-failed]",
     "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[issue-legacy_done-incomplete]",
     "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[issue-open-failed]",
@@ -119,6 +162,6 @@
     "tests/test_release_readiness_right.py::test_verification_plan_status_does_not_disappear_behind_passing_evidence[running]"
   ],
   "open_items": [
-    "13.g.R boundary/legacy/configuration hardening and 13.g.C structural cleanup remain open. The current native facade uses the existing whole-project Baseline backend; CLI command registration and other snapshot scopes are not claimed. Targeted checks are neither a full-suite pass nor a production approval."
+    "13.g.C structural cleanup remains open. The current native facade uses the existing whole-project Baseline backend; CLI command registration and other snapshot scopes are not claimed. Existing native configured Task-Done limits are not bypassed. Targeted checks are neither a full-suite pass nor a production approval."
   ]
 }

@@ -27,7 +27,20 @@ def bind_stored_release_selection(model, *, release_id, evaluation):
             raise ModelError('release_evaluation_object_required', pointer='/evaluation')
         if stored is None:
             raise ModelError('stored_release_evaluation_required', path=path, pointer=pointer)
-        if canonical_json_bytes(evaluation) != canonical_json_bytes(stored):
+        same = canonical_json_bytes(evaluation) == canonical_json_bytes(stored)
+        if not same:
+            # Compare valid descriptors by the established native normalization,
+            # as release readiness does. Keep the original stored value/hash for
+            # the archive; reading must not migrate or reorder legacy policy data.
+            from ..verification.evaluation import VerificationEvaluation
+            try:
+                same = (VerificationEvaluation(canonical_json_bytes(evaluation)).canonical_bytes
+                        == VerificationEvaluation(canonical_json_bytes(stored)).canonical_bytes)
+            except ModelError:
+                # Unsupported historical objects retain exact-value comparison;
+                # a malformed alternative cannot silently replace stored data.
+                same = False
+        if not same:
             from .readiness import ReleaseBaselineSelectionConflict
             raise ReleaseBaselineSelectionConflict('release_baseline_evaluation_conflict',
                 path=path, pointer=pointer)
