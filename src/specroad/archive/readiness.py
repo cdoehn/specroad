@@ -1,4 +1,4 @@
-"""Read-only Release-Baseline admission while the M13 provider is unavailable.
+"""Read-only Release-Baseline admission through the native M13 provider.
 
 Stored policy bytes are observations, not evaluated Evidence or release approval.
 No caller callback, success label or prepared snapshot opens publication here.
@@ -17,7 +17,7 @@ class ReleaseBaselineSelectionConflict(ModelError):
 
 @dataclass(frozen=True, init=False)
 class ReleaseBaselineReadiness:
-    """Owned unavailable-provider observation; never a publication permit."""
+    """Owned observation; admission rechecks native services, never its flags."""
     _encoded: bytes
 
     def __init__(self, *args, **kwargs):
@@ -32,20 +32,40 @@ class ReleaseBaselineReadiness:
         return canonical_json_sha256(self.data)
 
     def require_ready(self):
-        # This remains closed even if someone modifies a detached report.
-        raise ModelError('release_baseline_readiness_required')
+        # Detached/forged report bytes cannot replace the actual native inputs.
+        if getattr(self, '_context', None) is None:
+            raise ModelError('release_baseline_readiness_required')
+        fresh = _native_readiness(self._context._model, self.data['release_id'],
+            self._context, self._gates, self._reviews, self._verifier)
+        if not fresh.data['ready'] or fresh.data['provisional']:
+            raise ModelError('release_baseline_readiness_required')
+        return fresh
 
     def __bool__(self):
         raise TypeError('Readiness observations are not release authority')
 
 
-def assess_release_baseline_readiness(model, *, release_id, evaluation=None):
-    """Bind actual stored release/policy bytes without evaluating readiness.
+def _native_readiness(model, release_id, context, gates, reviews, verifier):
+    from ..planning.readiness import ReleaseReadinessContext, assess_release_readiness
+    if type(context) is not ReleaseReadinessContext:
+        raise ModelError('typed_release_readiness_context_required')
+    owned = model.snapshot()
+    current = context._model.snapshot()
+    binding = context.data['binding']
+    if (owned._sources_sha256 != current._sources_sha256 or owned.binding != current.binding
+            or binding['release_id'] != release_id):
+        raise ModelError('release_baseline_readiness_binding_mismatch')
+    return assess_release_readiness(context, gates=gates,
+        blocker_reviews=reviews, blocker_verifier=verifier)
 
-The descriptor's presence/hash does not claim that its schema, selected model
-state, required runs or Evidence have been checked. M13 must implement that
-complete service before any release creation can proceed.
-"""
+
+def assess_release_baseline_readiness(model, *, release_id, evaluation=None,
+        readiness_context=None, gates=(), blocker_reviews=(), blocker_verifier=None):
+    """Use actual stored selection and all eight gates on one owned input.
+
+    Without explicit native context/services the established unavailable result
+    stays closed. No report, callback or success flag substitutes for M13.
+    """
     from ._release_selection import bind_stored_release_selection
     selection = bind_stored_release_selection(model, release_id=release_id, evaluation=evaluation)
     value = {'format_version': 'release-baseline-readiness-v1', 'baseline_kind': 'release',
@@ -56,6 +76,28 @@ complete service before any release creation can proceed.
                     + ['release_readiness_provider_unavailable'],
         'validation_scope': 'stored_release_fields_and_unevaluated_policy_binding',
         'full_validation_passed': False, 'write_authorized': False, 'release_authorized': False}
+    if readiness_context is not None:
+        # Own caller collections; the native services own their input values.
+        from ..planning.release_blockers import blocker_review_inputs
+        if type(gates) not in (tuple, list):
+            raise ModelError('release_readiness_native_gates_required')
+        gates = tuple(gates)
+        indexed, _ = blocker_review_inputs(blocker_reviews, blocker_verifier)
+        reviews = tuple(indexed[key] for key in sorted(indexed))
+        native = _native_readiness(model, release_id, readiness_context,
+                                   gates, reviews, blocker_verifier)
+        data = native.data
+        eligible = selection['stored_evaluation_present'] and data['ready'] and not data['provisional']
+        value.update(readiness_provider_available=True, readiness_evaluated=True,
+            stored_evaluation_validated=selection['stored_evaluation_present'], ready=eligible,
+            provisional=data['provisional'], readiness=data,
+            blockers=[] if eligible else ['release_baseline_readiness_required'],
+            validation_scope='native_release_readiness_and_stored_selection')
     result = object.__new__(ReleaseBaselineReadiness)
     object.__setattr__(result, '_encoded', canonical_json_bytes(value))
+    object.__setattr__(result, '_context', readiness_context)
+    if readiness_context is not None:
+        object.__setattr__(result, '_gates', tuple(gates))
+        object.__setattr__(result, '_reviews', tuple(reviews))
+        object.__setattr__(result, '_verifier', blocker_verifier)
     return result

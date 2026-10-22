@@ -44,9 +44,15 @@ def object_documents(operation):
     return tuple(result)
 
 
-def prepare_baseline_operation(model, *, baseline_id, name, actor, planned_at, configuration_id=None):
-    snapshot = build_project_baseline_manifest(model, baseline_id=baseline_id,
-                                              configuration_id=configuration_id)
+def prepare_baseline_operation(model, *, baseline_id, name, actor, planned_at,
+                               configuration_id=None, release_id=None):
+    if release_id is None:
+        snapshot = build_project_baseline_manifest(model, baseline_id=baseline_id,
+                                                  configuration_id=configuration_id)
+    else:
+        from ..archive._release_snapshot import release_snapshot
+        snapshot = release_snapshot(model, baseline_id=baseline_id,
+            release_id=release_id, configuration_id=configuration_id)
     data = snapshot.data
     record = {'schema_version': SCHEMA_VERSION, 'id': baseline_id, 'id_scheme': 'random128-v1',
         'artifact_type': 'baseline', 'title': name, 'maturity': 'approved', 'baseline_state': 'sealed',
@@ -54,6 +60,8 @@ def prepare_baseline_operation(model, *, baseline_id, name, actor, planned_at, c
         'relations': [], 'extensions': {}, **{k: data[k] for k in (
             'baseline_kind', 'scope_descriptor', 'manifest', 'model_root_sha256',
             'configuration_hash', 'profiles', 'tool_version')}}
+    if release_id is not None:
+        record['verification_evaluation'] = data['verification_evaluation']
     _artifact(record, '/record', 'baseline')
     return {'op': 'baseline_create', 'record': record,
         'objects': [{'path': o.reference.path, 'bytes_base64': b64encode(o.content).decode('ascii')}
@@ -87,9 +95,14 @@ def prepare_baseline_candidates(model, operations, *, metadata_policy_version,
     identity = artifact_identity(record)
     if identity.id in set(base.previously_approved_ids):
         raise TargetError('baseline_identity_already_present')
+    release_id = None
+    if record['baseline_kind'] == 'release':
+        from ..archive._release_snapshot import release_selection
+        selection = release_selection(record, {d.path: d.content for d in object_documents(operations[0])})
+        release_id = selection['release_id']
     expected = prepare_baseline_operation(model, baseline_id=identity.id, name=record['title'],
         actor=metadata['actor'], planned_at=planned_at,
-        configuration_id=record['scope_descriptor'].get('configuration_id'))
+        configuration_id=record['scope_descriptor'].get('configuration_id'), release_id=release_id)
     if canonical_json_bytes(expected) != canonical_json_bytes(operations[0]):
         raise TargetError('baseline_snapshot_binding_mismatch')
     candidate = MetadataArtifact(identity.id, _snapshot(record), None,

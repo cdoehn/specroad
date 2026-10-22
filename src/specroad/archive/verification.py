@@ -24,7 +24,7 @@ from .project_snapshot import build_project_baseline_manifest
 
 _ROLES = frozenset(('artifact', 'profile', 'rule', 'mapping', 'attachment',
                    'archive', 'language_registry', 'semantic_configuration',
-                   'effective_profile', 'model_manifest', 'effective_configuration'))
+                   'effective_profile', 'model_manifest', 'effective_configuration', 'release_selection'))
 from ._snapshot_values import SNAPSHOT_VALUES as _VALUES
 _BINARY = frozenset(('attachment', 'archive', 'language_registry'))
 
@@ -133,6 +133,9 @@ def _verify_baseline(baseline_record, read_object, source_root, root_identity):
         if role not in _VALUES:
             project_path(row.get('source_path'))
     expected_values = _VALUES if configured else _VALUES - {'effective_configuration'}
+    release_bound = record['baseline_kind'] == 'release' and 'verification_evaluation' in record
+    if not release_bound:
+        expected_values = expected_values - {'release_selection'}
     if set(values) != expected_values:
         raise ModelError('baseline_snapshot_value_missing')
     configuration = _configuration(values['semantic_configuration'])
@@ -171,8 +174,14 @@ def _verify_baseline(baseline_record, read_object, source_root, root_identity):
     binding = ProjectReadBinding(configuration.project_id, source_root, root_identity)
     model = TargetModel(canonical_json_bytes(configuration.data), binding, documents,
         profile=profile, resource_files=files, attachments=attachments)
-    rebuilt = build_project_baseline_manifest(model, baseline_id=record['id'],
-                                              configuration_id=configuration_id).data
+    if release_bound:
+        from ._release_snapshot import release_selection, release_snapshot
+        selection = release_selection(record, objects)
+        rebuilt = release_snapshot(model, baseline_id=record['id'],
+            release_id=selection['release_id'], configuration_id=configuration_id).data
+    else:
+        rebuilt = build_project_baseline_manifest(model, baseline_id=record['id'],
+                                                  configuration_id=configuration_id).data
     if rebuilt['model_root_sha256'] != record['model_root_sha256']:
         raise ModelError('baseline_model_root_mismatch')
     if canonical_json_bytes(rebuilt['model_manifest']) != canonical_json_bytes(values['model_manifest']):

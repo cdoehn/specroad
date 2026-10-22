@@ -100,6 +100,7 @@
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
+    "SR-FIX-RELEASE-BASELINE-v1",
     "SR-FIX-RELEASE-READINESS-RIGHT-v1",
     "SR-FIX-RELEASE-READINESS-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
@@ -735,6 +736,10 @@
     "SR-FIX-READINESS-MIGRATION-v1": {
       "provider": "tests/test_readiness_updates.py:stored",
       "kind": "Owned temporary project with legacy Release/Risk/Issue and the real guarded Change Plan update writer; explicit selection, original revision/hash, lifecycle and publication barriers, preserved modes/audit and no implicit review or approval."
+    },
+    "SR-FIX-RELEASE-BASELINE-v1": {
+      "provider": "tests/test_release_baseline.py:release_project",
+      "kind": "Native complete Release/Capability/Requirement/Task and stored verification selection in an owned temporary project. Explicit synthetic approval history and current human reviews, real M13 gates, full-project Baseline snapshot and native locked publication. No production approval or external run is asserted."
     }
   }
 }

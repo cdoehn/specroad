@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 564
-last_completed_plan_commit: 13.f.C
-next_plan_commit: 13.g.W
-last_completed_numbered_bundle: 393
+implementation_plan_commits_completed: 565
+last_completed_plan_commit: 13.g.W
+next_plan_commit: 13.g.R
+last_completed_numbered_bundle: 394
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16530,12 +16530,69 @@ committed. Bis dahin bleiben die bestätigten Marker **563/900** und
 
 #### 13.g.W – Let it Work
 
-- [ ] **13.g.W** · Position **565/900** · Voraussetzung: `13.f.C`.
+- [x] **13.g.W** · Position **565/900** · Voraussetzung: `13.f.C`.
 **Exakte Commit-Message:** `13.g.W feat(roadmap): Gespeicherte Bewertung und Release-Baseline aufbauen`
 
 **Umsetzung:** Den vollständigen Readiness-Kern aus 13.f gemäß 10.5.4/10.5.6 mit der gespeicherten `readiness_policy.verification_evaluation` und der Release-Baseline verbinden. Gespeicherte Auswahl priorisieren; ausschließlich `ready=true` mit `provisional=false` und allen aktuellen Pflichtgates darf die echte Releasebaseline mit vollständigen Auswahlbytes/Hash freischalten.
 
 **Verhaltensabnahme:** Identisch wiederholte CLI-Auswahl ist zulässig; gespeicherte gültige Auswahl trägt die Baseline nur zusammen mit allen Readinessgates. Die neue Policyversion verändert weder Descriptor-Priorität noch die bestehende vollständige Nachweisauswahl.
+
+
+**Vorbereiteter W-Zustand, Bundle 394:** Das M10-Gate verwendet den vollständigen
+nativen Readinessdienst aus 13.f. Nur eine gespeicherte gültige Auswahl mit
+`ready=true`, `provisional=false` und allen aktuellen Pflichtgates eröffnet
+den nativen Release-Baselinepfad. Identische explizite Auswahl ist zulässig;
+fehlender Kontext behält die bisherige geschlossene Grenze. Ein Berichtsflag
+oder ein gleichnamiger Erfolgs-Callback ersetzt den nativen Dienst nicht.
+
+Der vorhandene vollständige project-Snapshot bleibt der Archivierungsumfang.
+Ein zusätzliches content-addressiertes `release_selection`-Objekt bindet den
+separaten genehmigten Release-Scope, die vollständige gespeicherte Bewertung,
+deren unveränderten kanonischen Speicherhash und den normalisierten
+`evaluation_sha256`. Das Baseline-Artefakt enthält die Auswahl ebenfalls.
+Der vorhandene Archivverifier rekonstruiert diese Bindung aus den tatsächlichen
+Snapshotbytes; er behauptet damit keine historische menschliche Freigabe.
+Ältere Baselines behalten ihren bestehenden Prüfpfad und ihre Originalbytes.
+
+Der normale Change-Plan-/Writerpfad bleibt für gesamte Zielvalidation,
+Schreibautorität, aktuelle Datei-/Inventurbindung, Lock, Journal, Objektpublikation
+und Receipt zuständig. Die unveränderten Bestandsartefakte werden mit ihren
+nativen Diensten geprüft; die neue Baseline und das gesamte Ziel werden exakt
+rekonstruiert. An jeder Publikationsprüfung läuft die native Readiness erneut.
+Fehlende Pflichtprovider, negative Evidence, widerrufener Task-Review und
+abweichende Livebytes bleiben blockierend. Ein bestätigter identischer Request
+liefert weiterhin das ursprüngliche dauerhafte Receipt, ohne einen zweiten
+Snapshot oder eine neue Freigabe zu erzeugen. Keine CLI-Registrierung und
+keine zusätzliche Scope-/Hashimplementierung werden behauptet.
+
+**Beobachtete Entwicklungsprüfung:** **922** gezielte Verhaltenstests aus
+**28** Dateien bestanden mit **4** parallelen Workern in **681,67 s**.
+Enthalten sind die **14** neuen Baselinefälle und die betroffenen Working-/
+Configured-/Release-Boundary-, Archivverifikations-/Materialisierungs-/Vergleichs-,
+Change-Plan-/Target-, Authoring-, Publication- und Readiness-W-/R-Regressionen.
+Bestehende isolierte Core-/PYZ-Fälle sind enthalten. Die vollständige
+Collection-/Katalogprüfung bestätigt **16.807** Tests bei **0** Testbodies;
+neue Testnummern sind ausschließlich hinten angefügt.
+Quellzustand `3debe134b702fe5be1c60dedd92539df43fe59304ac0eb65af6393353138b54b`, Auswahlbeleg `8c91b58a5b95d8efc18477378d399fd0ba415200712594719e47614b88f2ba62`.
+Der vorherige Entwicklungs-Smokelauf hatte **11** bestandene und **2** wegen
+eines Tupel-/Dictionary-Fehlers in der neuen Inventar-Testhilfe fehlgeschlagene
+Fälle; dieser Lauf zählt nicht als Erfolgsbeleg. Nach Korrektur sowie Ergänzung
+der Publikations-/Replayprüfung ist ausschließlich der obige abschließende
+Lauf der Übergabenachweis. Teiltests sind kein Vollsuite-, Release- oder
+Produktionsfreigabenachweis. **13.g.R**, **13.g.C** und **13.h.W** bleiben offen.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_121811_1022_47776b.zip`, SHA-256
+`ff92e52454b64b2e96b8a6cc11dd0299d823870ace7af81a43b27c5f8e31ae2e`,
+bestätigt den sauberen Commit
+`a273441ae7afdb7d99987952ffafefbb7e8e12f2` nach Bundle **393** und
+**5.597** bestandene Tests der Gruppe **2**, Sequenz **101**, in **1.404,13 s**.
+Bundle **394** enthält ausschließlich **13.g.W**. Vor dessen Commit ist
+Sequenz **102**, Gruppe **0**, mit **5.603** Tests parallel fällig. Erst nach
+erfolgreichem Apply-Gate werden **565/900**, zuletzt **13.g.W**, nächstens
+**13.g.R** und Bundle **394** gesetzt und mit diesem Zustand committed.
+Bis dahin bleiben die bestätigten Marker **564/900** und **13.f.C** erhalten.
+Danach endet dieser Auftrag ohne einen weiteren Planschritt.
 
 #### 13.g.R – Make it Right
 

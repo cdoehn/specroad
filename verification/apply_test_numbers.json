@@ -16794,7 +16794,21 @@
     "tests/test_release_readiness_right.py::test_verification_plan_status_does_not_disappear_behind_passing_evidence[not_planned]",
     "tests/test_release_readiness_right.py::test_verification_plan_status_does_not_disappear_behind_passing_evidence[running]",
     "tests/test_release_readiness_right.py::test_warning_level_minimum_relation_still_blocks_release[info]",
-    "tests/test_release_readiness_right.py::test_warning_level_minimum_relation_still_blocks_release[warning]"
+    "tests/test_release_readiness_right.py::test_warning_level_minimum_relation_still_blocks_release[warning]",
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[evidence_currentness]",
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[lifecycle]",
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[review_currentness]",
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[task_done]",
+    "tests/test_release_baseline.py::test_current_live_source_change_blocks_real_release_publication",
+    "tests/test_release_baseline.py::test_failed_current_evidence_blocks_a_stored_success_selection",
+    "tests/test_release_baseline.py::test_native_readiness_is_rechecked_during_publication_after_host_revocation",
+    "tests/test_release_baseline.py::test_native_release_publication_binds_selection_scope_and_objects_without_changing_sources",
+    "tests/test_release_baseline.py::test_readiness_context_from_a_different_model_cannot_open_the_baseline",
+    "tests/test_release_baseline.py::test_revoked_human_done_review_cannot_reuse_a_successful_preview",
+    "tests/test_release_baseline.py::test_saved_release_plan_requires_the_native_gate_before_generic_publication[False]",
+    "tests/test_release_baseline.py::test_saved_release_plan_requires_the_native_gate_before_generic_publication[True]",
+    "tests/test_release_baseline.py::test_stored_complete_selection_and_all_eight_gates_prepare_the_same_native_plan[False]",
+    "tests/test_release_baseline.py::test_stored_complete_selection_and_all_eight_gates_prepare_the_same_native_plan[True]"
   ],
   "partition_count": 3,
   "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc"

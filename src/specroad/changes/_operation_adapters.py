@@ -55,10 +55,13 @@ def validate_baseline_create(value, pointer):
     identity = _artifact(value['record'], pointer + '/record', 'baseline')
     if identity.id_scheme != 'random128-v1':
         raise ChangePlanError('new_identity_requires_random128', pointer=pointer + '/record/id_scheme')
-    if value['record']['baseline_kind'] != 'working':
+    if value['record']['baseline_kind'] == 'release' and 'verification_evaluation' not in value['record']:
         raise ChangePlanError('release_baseline_readiness_required', pointer=pointer + '/record/baseline_kind')
     from .baselines import object_documents
-    _at(pointer, object_documents, value)
+    documents = _at(pointer, object_documents, value)
+    if value['record']['baseline_kind'] == 'release':
+        from ..archive._release_snapshot import release_selection
+        _at(pointer, release_selection, value['record'], {d.path: d.content for d in documents})
 
 def validate_attachment_add(value, pointer):
     _at(pointer + '/attachment', AttachmentDescriptor.from_data, value['attachment'])

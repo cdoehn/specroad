@@ -7,10 +7,11 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1"
+    "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
+    "SR-FIX-RELEASE-BASELINE-v1"
   ],
   "preconditions": [
-    "Actual supplied TargetModel bytes with a structurally valid Release record and explicit identity; the M13 readiness/Evidence-evaluation provider is not implemented."
+    "Actual owned TargetModel, stored valid Release evaluation, native scope and input bytes/roles, explicit UTC evaluation time and trusted current semantic/review services. Missing native context retains the historical closed boundary."
   ],
   "steps": [
     "Observe and bind the actual stored Release revision, record and optional evaluation hash without claiming descriptor validity or readiness.",
@@ -19,15 +20,18 @@
     "Verify identity selection, detached-value ownership, no current-tree/Git fallback, rejected working-operation relabeling and isolated Core/PYZ behavior.",
     "Reject non-object stored/external selections and bind the complete actual stored value without claiming semantic validity.",
     "Allow only canonical repetition of stored selection; reject a conflicting external value with Code 6 and missing stored selection without substitution.",
-    "Refuse forged readiness reports, host success stubs and saved release-relabelled plans before host authority or native writes."
+    "Refuse forged readiness reports, host success stubs and saved release-relabelled plans before host authority or native writes.",
+    "13.g.W: accept identical repeated stored selection; prepare and publish a sealed Release Baseline only after all current native gates. Recheck revocable human review at publication, reject absent providers, failed evidence, replayed flags or same-named success callbacks; retain original source and archive bytes and native transaction replay."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Release-Baseline DARF nur erzeugt werden, wenn die Readiness-Policy einschließlich einer im Release gespeicherten, gültigen Bewertungsauswahl nach Kapitel 10.5.4 erfüllt ist.",
-    "scope": "Closed release-admission boundary only: the native creation dispatcher preserves working behavior and cannot produce a release plan while the real readiness provider is unavailable. The read-only observation binds actual stored data but explicitly does not validate or approve an evaluation descriptor, required runs, Evidence, project or release."
+    "scope": "13.g.W: a real sealed whole-project Release Baseline requires the complete native eight-gate readiness result with ready=true and provisional=false. Archive objects retain full stored selection bytes, normalized evaluation hash and the separately bound Release scope. Normal authority, live byte/inventory checks and native durable replay remain mandatory. Older unavailable-provider tests remain negative contracts; no production approval or full-suite result is claimed."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
+    0,
+    3,
     6
   ],
   "json_pointers": [
@@ -47,6 +51,20 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[evidence_currentness]",
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[lifecycle]",
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[review_currentness]",
+    "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[task_done]",
+    "tests/test_release_baseline.py::test_current_live_source_change_blocks_real_release_publication",
+    "tests/test_release_baseline.py::test_failed_current_evidence_blocks_a_stored_success_selection",
+    "tests/test_release_baseline.py::test_native_readiness_is_rechecked_during_publication_after_host_revocation",
+    "tests/test_release_baseline.py::test_native_release_publication_binds_selection_scope_and_objects_without_changing_sources",
+    "tests/test_release_baseline.py::test_readiness_context_from_a_different_model_cannot_open_the_baseline",
+    "tests/test_release_baseline.py::test_revoked_human_done_review_cannot_reuse_a_successful_preview",
+    "tests/test_release_baseline.py::test_saved_release_plan_requires_the_native_gate_before_generic_publication[False]",
+    "tests/test_release_baseline.py::test_saved_release_plan_requires_the_native_gate_before_generic_publication[True]",
+    "tests/test_release_baseline.py::test_stored_complete_selection_and_all_eight_gates_prepare_the_same_native_plan[False]",
+    "tests/test_release_baseline.py::test_stored_complete_selection_and_all_eight_gates_prepare_the_same_native_plan[True]",
     "tests/test_release_baseline_boundary.py::test_detached_readiness_mutation_cannot_open_release_admission",
     "tests/test_release_baseline_boundary.py::test_explicit_working_kind_preserves_the_existing_plan_and_native_publication[False]",
     "tests/test_release_baseline_boundary.py::test_explicit_working_kind_preserves_the_existing_plan_and_native_publication[True]",
@@ -99,7 +117,6 @@
     "tests/test_release_baseline_boundary_right.py::test_working_creation_cannot_silently_discard_an_external_release_selection"
   ],
   "open_items": [
-    "M13 must implement the complete stored evaluation selection, approved scope, actual bound Evidence/readiness policy and release publication before this boundary can open.",
-    "CLI integration, release snapshot descriptor/value binding and successful release publication remain unimplemented."
+    "13.g.R boundary/legacy/configuration hardening and 13.g.C structural cleanup remain open. The current native facade uses the existing whole-project Baseline backend; CLI command registration and other snapshot scopes are not claimed. Targeted checks are neither a full-suite pass nor a production approval."
   ]
 }
