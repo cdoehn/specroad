@@ -15,12 +15,13 @@
   ],
   "steps": [
     "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output.",
-    "13.h.R: retain full native Built-in and Readiness semantic Work input, recompute with the original snapshot and fresh native services, and compare direct coverage/query, view and resumed projection. Persist complete source inputs in native Work storage; restore in isolated Core/PYZ while preserving pending work. Reject changed model, evaluation, time, product binding and absent required review authentication."
+    "13.h.R: retain full native Built-in and Readiness semantic Work input, recompute with the original snapshot and fresh native services, and compare direct coverage/query, view and resumed projection. Persist complete source inputs in native Work storage; restore in isolated Core/PYZ while preserving pending work. Reject changed model, evaluation, time, product binding and absent required review authentication.",
+    "13.h.C: rerun unchanged W/R and affected regression behavior after extracting common native calculated providers and shared view/readiness admission. Preserve public errors, validation order, snapshots, exact data/hashes, eight gates, pending Work and allowed effects. Renderer output is not an oracle."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad render` MUSS die eingebauten Ansichten `specification`, `traceability`, `roadmap` und `verification` als Markdown erzeugen können; weitere deklarative Ansichten werden über `specroad view render` ausgeführt.",
-    "scope": "13.h.W verifies only computed provider input/data contracts and forbidden side effects at built-in render adapters. No Markdown, HTML, GUI, wording or layout is tested. Native supplied-model APIs do not claim public CLI completion. 13.h.R additionally checks semantic Work-input resumption, exact data parity, no inherited gate pass, and unchanged pending native Work manifests. It does not claim a completed scheduler, public CLI or granular within-provider execution."
+    "scope": "13.h.W verifies only computed provider input/data contracts and forbidden side effects at built-in render adapters. No Markdown, HTML, GUI, wording or layout is tested. Native supplied-model APIs do not claim public CLI completion. 13.h.R additionally checks semantic Work-input resumption, exact data parity, no inherited gate pass, and unchanged pending native Work manifests. It does not claim a completed scheduler, public CLI or granular within-provider execution. 13.h.C only consolidates the existing native provider and input-binding implementation; no new semantic result, approval, completed Work unit or CLI contract."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -123,7 +124,7 @@
     "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[release-verification]"
   ],
   "open_items": [
-    "13.h.C structural cleanup remains open. Native projections remain atomic; public CLI registration and granular within-provider Work execution are not claimed complete.",
+    "Native projections remain atomic; public CLI registration and granular within-provider Work execution are not claimed complete. The C refactoring does not close these functional or release observations.",
     "Additional declarative column/block provider integration is not claimed complete. Presentation is excluded from automated tests by TD-001.",
     "Targeted development and rotating Apply groups are partial observations, not full-suite or production Release approval."
   ]

@@ -14,6 +14,8 @@ from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from ._builtin_projection import _bound_record, _computed_reports, _project, _typed_records
+from ._builtin_providers import (require_view_name, roadmap_fields,
+                                verification_fields, traceability_verification_fields)
 from .includes import compose_document
 from .roles import assess_document_roles
 
@@ -144,8 +146,7 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
     from ..changes.target_model import TargetModel, _default_scope
     if type(model) is not TargetModel:
         raise ModelError('document_target_model_required')
-    if type(view_name) is not str or view_name not in ('specification', 'traceability', 'verification', 'roadmap'):
-        raise BuiltinViewError('builtin_view_not_supported', pointer='/view_name', exit_code=2)
+    require_view_name(view_name)
     if view_name == 'verification' and verification is None and currentness is None:
         raise BuiltinViewProviderError(view_name)
     if verification is not None and view_name not in ('verification', 'traceability'):
@@ -171,34 +172,10 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
         'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
         'input_sha256': model._sources_sha256, 'fallback': False}
     if view_name == 'roadmap':
-        from ..planning import project_roadmap, ReleaseReadinessContext, assess_release_readiness
-        roadmap = project_roadmap(model)
-        report = None
-        if readiness is not None:
-            if type(readiness) is not ReleaseReadinessContext:
-                raise BuiltinViewError('typed_release_readiness_context_required', pointer='/readiness')
-            owned = readiness._model.snapshot()
-            if (owned._sources_sha256 != model._sources_sha256 or owned.binding != model.binding):
-                raise BuiltinViewError('builtin_readiness_binding_mismatch', pointer='/readiness', exit_code=6)
-            report = assess_release_readiness(readiness, gates=readiness_gates,
-                blocker_reviews=blocker_reviews, blocker_verifier=blocker_verifier)
-        data.update(mode='evaluated_roadmap', roadmap=roadmap.data, roadmap_sha256=roadmap.sha256,
-            rows=roadmap.data['items'], row_count=len(roadmap.data['items']),
-            computed_reports=_computed_reports(roadmap=roadmap.data),
-            readiness=None if report is None else report.data,
-            readiness_sha256=None if report is None else report.sha256,
-            release_readiness_evaluated=report is not None,
-            validation_scope=roadmap.data['validation_scope'])
+        data.update(roadmap_fields(model, readiness, readiness_gates,
+                                   blocker_reviews, blocker_verifier))
     elif view_name == 'verification':
-        from ..verification.coverage import assess_verification_coverage
-        coverage = assess_verification_coverage(model, verification, currentness=currentness)
-        coverage_data = coverage.data
-        data.update(mode='evaluated_requirement_coverage',
-            selection_scope_descriptor=verification.data['scope_descriptor'],
-            summary=verification.summary, coverage=coverage_data, coverage_sha256=coverage.sha256,
-            rows=coverage_data['requirements'], row_count=coverage_data['totals']['requirements'],
-            verification_evaluated=True, computed_reports=_computed_reports(verification=coverage_data),
-            validation_scope=coverage_data['validation_scope'])
+        data.update(verification_fields(model, verification, currentness))
     elif view_name == 'specification':
         roles = assess_document_roles(model)
         primary = roles.require_primary_document()
@@ -216,18 +193,7 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
             rows=rows, row_count=len(rows),
             validation_scope='supplied_record_fields_and_stored_traceability')
         if observed is not None or verification is not None:
-            from ..verification.coverage import assess_verification_coverage
-            from ..verification._read_evaluation import computed_results
-            coverage_data = (observed['observation']['coverage'] if observed is not None else
-                             assess_verification_coverage(model, verification).data)
-            subjects = computed_results(coverage_data)
-            for row in rows:
-                row['verification_result'] = subjects.get(row['requirement_id'])
-            data.update(mode='evaluated_traceability', verification_evaluated=True,
-                computed_reports=_computed_reports(verification=coverage_data))
-            if verification is not None:
-                data.update(summary=verification.summary,
-                    selection_scope_descriptor=verification.data['scope_descriptor'])
+            data.update(traceability_verification_fields(model, verification, observed, rows))
     if observed is not None:
         data['currentness'] = observed
     return _result(data, model.source_files)

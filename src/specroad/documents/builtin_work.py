@@ -11,7 +11,6 @@ from hashlib import sha256
 from ..changes.target_model import TargetModel, _default_scope
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..planning.readiness import ReleaseReadinessContext
 from ..planning.readiness_work import resume_release_readiness_context
 from ..storage.json_syntax import parse_json_object
 from ..verification.currentness_input import (
@@ -21,6 +20,7 @@ from ..verification.read_input import (
     checked_model_input, resume_verification_read_input, VerificationReadBindingConflict,
 )
 from .builtin_views import BuiltinViewError, BuiltinViewProviderError, resolve_builtin_view
+from ._builtin_providers import require_view_name, readiness_model, require_readiness_binding
 
 
 @dataclass(frozen=True, init=False)
@@ -67,9 +67,7 @@ def prepare_builtin_view_work_input(model, view_name, *, verification=None,
     """Capture full semantic selection without rendering, gates or file I/O."""
     if type(model) is not TargetModel:
         raise ModelError('document_target_model_required')
-    if type(view_name) is not str or view_name not in (
-            'specification', 'traceability', 'verification', 'roadmap'):
-        raise BuiltinViewError('builtin_view_not_supported', pointer='/view_name', exit_code=2)
+    require_view_name(view_name)
     if verification is not None:
         if view_name not in ('verification', 'traceability'):
             raise BuiltinViewError('builtin_verification_input_not_applicable', pointer='/view_name')
@@ -83,11 +81,7 @@ def prepare_builtin_view_work_input(model, view_name, *, verification=None,
     if readiness is not None:
         if view_name != 'roadmap':
             raise BuiltinViewError('builtin_readiness_input_not_applicable', pointer='/view_name')
-        if type(readiness) is not ReleaseReadinessContext:
-            raise BuiltinViewError('typed_release_readiness_context_required', pointer='/readiness')
-        if (readiness._model._sources_sha256 != model._sources_sha256
-                or readiness._model.binding != model.binding):
-            raise BuiltinViewError('builtin_readiness_binding_mismatch', pointer='/readiness', exit_code=6)
+        require_readiness_binding(model, readiness_model(readiness))
     model = model.snapshot()
     data = {'format_version': 'builtin-view-work-input-v1', 'view_name': view_name,
         'project_id': model.binding.project_id, 'input_sha256': model._sources_sha256,

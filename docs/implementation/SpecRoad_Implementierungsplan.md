@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 569
-last_completed_plan_commit: 13.h.R
-next_plan_commit: 13.h.C
-last_completed_numbered_bundle: 398
+implementation_plan_commits_completed: 570
+last_completed_plan_commit: 13.h.C
+next_plan_commit: 14.a.W
+last_completed_numbered_bundle: 399
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16881,7 +16881,7 @@ Nach der Übergabe endet der Auftrag; keine eigene Fortsetzung und keine
 
 #### 13.h.C – Make it Clean
 
-- [ ] **13.h.C** · Position **570/900** · Voraussetzung: `13.h.R`.
+- [x] **13.h.C** · Position **570/900** · Voraussetzung: `13.h.R`.
 **Exakte Commit-Message:** `13.h.C refactor(roadmap): Roadmap-/Verification-Views und Workintegration bereinigen`
 
 **Bereinigung:** Renderer benutzen ausschließlich gemeinsame geprüfte Datenprovider.
@@ -16889,6 +16889,58 @@ Nach der Übergabe endet der Auftrag; keine eigene Fortsetzung und keine
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand, Bundle 399:** Die nativen Roadmap-/Readiness-,
+Verification- und Traceability-Berechnungen der Built-in-Ansichten stehen in
+einem gemeinsamen privaten Providermodul. Die öffentliche Projektionsfunktion
+behält ihre Eingabeprüfung, Snapshotbildung und Ergebnisbindung; Renderer und
+Work-Resume verwenden weiterhin ausschließlich diese Fachprojektion.
+Viewnamenprüfung sowie native Readiness-Typ- und Modellbindung werden von
+Projektions- und Work-Eingabepfad gemeinsam genutzt. Ihre bisherige Reihenfolge
+und die bisherigen Snapshotgrenzen bleiben erhalten.
+
+Öffentliche Fehler- und Ergebnisklassen, kanonische Daten und Hashes,
+Auswahl-/Scope-/Zeitbindung, alle acht Readiness-Gates und fehlende/negative/
+vorläufige Beobachtungen bleiben unverändert. Insbesondere entstehen weder
+gespeicherte Gatepässe noch erledigte Work-Einheiten durch die Bereinigung.
+Es werden keine Tests oder Erwartungswerte für das Refactoring umgeschrieben
+und keine neuen Testnummern vergeben. Die vorhandenen W-/R-Verhaltenstests und
+betroffenen Regressionen werden gezielt parallel ausgeführt; Darstellung und
+Dokumentation bleiben außerhalb der Testorakel.
+
+Dies ist die strukturelle C-Phase des bereits übernommenen Ausschnitts, keine
+normative Klärung und keine Erweiterung der öffentlichen CLI oder der bislang
+offenen deklarativen Provider und granularen Work-Ausführung. Die Spezifikation
+bleibt bytegleich. Ein Abschluss dieser Planposition behauptet keinen
+Vollsuite-, Plattform-, Meilenstein-Release- oder menschlichen Freigabenachweis.
+14.a.W beginnt nicht in diesem Bundle. Die bestätigten Fortschrittsmarker bleiben
+bis zum erfolgreichen Apply-Gate bei **569/900**, zuletzt **13.h.R**.
+
+**Beobachtete C-Prüfung:** **702** unveränderte gezielte Verhaltenstests aus
+**15** Dateien bestanden mit **4** parallelen Workern in
+**444,28 s**. Enthalten sind alle W-/R-Fälle von 13.h,
+betroffene Built-in-/Roadmap-/Readiness-/Coverage-/Currentness-Verträge,
+Renderer-Eingabe-/Seiteneffektgrenzen und native Work-Manifest-/Checkpoint-
+Regressionen einschließlich isolierter Core-/PYZ-Prozesse. Kein Test prüft
+Darstellung oder Dokumentation. Testdateien, Testnummern, Fixtures und Runner
+bleiben bytegleich; **0** neue Tests. Die vollständige Collection-/Katalogprüfung
+erfasst **16.928** Tests bei **0** Testbodies und ist gültig.
+Quellzustand `e0df146b6e7787b338404d776336103290c836fa157984ce92cfd3d93d77fe21`;
+Auswahlbeleg `bcec043e89fb1bf0c50de116104d0b5e3796153c2a5d25cdbd52304930dc2098`. Diese Teiltestnachweise
+behaupten keinen Vollsuite-, Meilenstein-Release- oder Plattformgesamterfolg.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_173613_1022_ad7b85.zip`, SHA-256
+`5e88b4e3b7fe89e515a8d1c0d7670f8c848239a24e1645f8b26266ab77b920de`,
+bestätigt den sauberen Commit `b561418e90577657d56d03ce36d31c99d7b784f5`
+nach Bundle **398** und **5.643** bestandene Tests der Gruppe **1**, Sequenz
+**106**, in **1.724,96 s**. Bundle **399** enthält ausschließlich **13.h.C**.
+Vor seinem Commit ist Sequenz **107**, Gruppe **2**, mit **5.642** Tests
+parallel fällig. Erst nach bestandenem Apply-Gate setzt der Entrypoint die
+fünf Marker auf **570/900**, zuletzt **13.h.C**, nächstens **14.a.W** und
+Bundle **399**. Der offene nächste Planschritt wird nicht in diesem Auftrag
+begonnen. Control, Watcher und CI bleiben unberührt; nach Übergabe endet der
+einmalige Durchlauf.
 
 **Meilenstein 13 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 
