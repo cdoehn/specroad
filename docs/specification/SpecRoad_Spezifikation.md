@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.11
+## Version 0.2.12
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.11` |
+| Dokumentversion | `0.2.12` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 22. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.11 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.11 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.12 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.12 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.10 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag zur begrenzten delegierten Spezifikationsklärung nach SPECROAD-DECISION-1, passend zu Control-Bundle 014. Die Waiver-, Readiness- und PatchHarbor-Verträge bleiben erhalten. |
-| Änderungsart | Verbindliche Entwicklungsbefugnis und dokumentierte Grenzen; keine neuen Requirement-IDs oder Produktfunktionen. Keine automatische menschliche Freigabe, Migration, Dienstaktivierung oder Baseline-Abnahme. |
+| Vorgängerversion | Repository-Spezifikation v0.2.11 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung READINESS-SUBJECT-CONTEXT, delegiert gemäß SPECROAD-DECISION-1: fehlende Verification-Kontextprojektion für die bereits verpflichtenden Capability-/Task-Subjects. Entscheidungsbeleg und Abnahmen stehen bei 13.f im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung von Anhang L im bestehenden Readiness-Umfang; keine neue Requirement-ID oder Produktfunktion. Bestehende Hashes, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.11 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.12 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.11 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.12 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -3944,6 +3944,18 @@ Der Produktstand bleibt 561/900 mit offenem 13.f.W. Eine erfolgreiche
 Dokumentübergabe ist weder Produktimplementierung noch End-to-End-Nachweis
 eines künftig auftretenden Klärungsfalls.
 
+### 20.11 Capability-/Task-Kontextpräzisierung v0.2.12
+
+`READINESS-SUBJECT-CONTEXT`, delegiert gemäß `SPECROAD-DECISION-1`, ergänzt
+in Anhang L die bisher fehlende genaue Inhaltsprojektion für Capabilities
+und Tasks. Beide sind bereits Pflichtsubjects der Verification und der
+Readiness nach 10.5.6; ihr Hash erhält keinen Ersatz durch Statuslabels oder
+den vollständigen Audit-Hash. Die bestehende v1-Projektion der drei bisher
+unterstützten Subjecttypen bleibt bytegleich. Gespeicherte Evidence wird
+nicht umgeschrieben oder pauschal als aktuell erklärt. Umsetzung und
+Verhaltensnachweise folgen im offenen 13.f.W/R/C; diese Dokumentübergabe
+erhöht den Produktstand 561/900 nicht und verändert keinen Control-Zustand.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -3986,6 +3998,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.12 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | READINESS-SUBJECT-CONTEXT: exakte additive v1-Projektion für Capability-/Task-Subjects, unveränderte bestehende Hashes und gebundene Bewertung von Bestands-Evidence; Umsetzung bleibt in 13.f offen. |
 | 0.2.11 | 2026-10-22 | Nutzerbeauftragte Entwicklungsdelegation | SPECROAD-DECISION-1: begrenzte eigenständige Detailklärung, dokumentierte Alternativen und normative Abnahmen; Control-Vertrag 2 mit höchstens einem Klärungsbundle in Folge. Produktfreigaben, Tests, Runtimezustand und Requirement-IDs bleiben unverändert. |
 | 0.2.9 | 2026-10-19 | Nutzerbeauftragte Waiver-Präzisierung | Exakte versionierte Inhaltsprojektion, Scope-/Konfigurationsbindung, explizite UTC-Frist und Bewertungszeit, gebundener menschlicher Review und lesbarer unwirksamer Legacy-Bestand; bestehende Requirements bleiben erhalten. |
 | 0.2.10 | 2026-10-22 | Nutzerbeauftragte OFF-PLAN-Readiness-Präzisierung | Geschlossene v1-Policy, feste typbezogene Pflichtgates, strikte Risiko-/Issue-Regeln mit gebundenem menschlichem Abschlussnachweis, explizite Ergebniszustände und lesbarer Legacy-Bestand; Umsetzung folgt in 13.f/13.g. |
@@ -4406,12 +4419,16 @@ Der vollständige Artefakthash dient Audit, Baselines und Diffs. Für Evidence-A
 
 ## L.2 Projektion
 
-Für Requirements, Verification Contracts und Tests wird eine kanonische Projektion gebildet. Ausgeschlossen sind:
+Für Capabilities, Requirements, Tasks, Verification Contracts und Tests wird
+eine kanonische Projektion gebildet. Die additive Zulassung von Capabilities
+und Tasks ändert weder Algorithmuskennung noch Projektionsbytes der bisher
+unterstützten Requirements, Verification Contracts und Tests. Ausgeschlossen sind:
 
 - `revision`;
 - `created_at`, `created_by`, `updated_at`, `updated_by`;
 - `maturity`;
 - `implementation_status`, `verification_plan_status`;
+- `verification_waiver` als getrennt gebundene Ausnahmeentscheidung;
 - `relations`;
 - `tags`;
 - reine Lauf- und Ergebnisfelder, die nicht den Prüfgegenstand oder das Oracle definieren.
@@ -4419,6 +4436,7 @@ Für Requirements, Verification Contracts und Tests wird eine kanonische Projekt
 Enthalten bleiben insbesondere:
 
 - ID und Artefakttyp;
+- bei Capabilities Beschreibung, Outcome und Priorität; bei Tasks Beschreibung und sämtliche Done-Kriterien;
 - Requirement-Aussage, strukturierte Semantik, Grenzen, Ausnahmen, Applicability und fachliche Extensions;
 - beim Verification Contract Vorbedingungen, Verfahren, Oracle, Pass-Kriterium, Evidence-Arten, `evidence_slots` und Konfigurationspolicy;
 - beim Test Testidentität, Testtyp, Eingaben, erwartetes Oracle und gemappte Prüfdimensionen;
@@ -4426,9 +4444,86 @@ Enthalten bleiben insbesondere:
 
 Die Projektion wird nach RFC 8785 kanonisiert und mit SHA-256 gehasht.
 
+### L.2.1 Exakte Capability-/Task-Projektion
+
+**Entscheidung `READINESS-SUBJECT-CONTEXT`, delegiert gemäß
+`SPECROAD-DECISION-1`:** Für die nativen, vollständig schemavalidierten
+Artefakte `capability` und `task` der Schemaversion `0.2.0` gilt folgende
+abschließende Feldliste. Ein untypisiertes Objekt oder ein anderer Artefakttyp
+wird nicht in einen dieser Typen umgedeutet.
+
+| Subject | Auf oberster Ebene enthaltene Felder |
+|---|---|
+| Beide Typen | `schema_version`, `id`, `id_scheme`, `artifact_type`, `title`, `language`, `text_direction`, `owner`, `applicability`, `extensions`, `provenance`, `external_identities`, `display_id` |
+| Zusätzlich `capability` | `description`, `outcome`, `priority` |
+| Zusätzlich `task` | `description`, `done_criteria` |
+
+Aufgenommen werden ausschließlich tatsächlich vorhandene Felder dieser
+Liste mit ihren vollständigen Werten. Optionale fehlende Felder werden
+nicht durch `null`, leere Werte oder Defaults ersetzt. Verlangte Felder,
+gültige Werte und unbekannte Felder prüft zuvor das native geschlossene
+Artefaktschema; eine Hashprojektion repariert keine ungültigen Daten.
+Objekte werden nur nach RFC 8785 kanonisiert; Arrays behalten ihre Reihenfolge.
+
+Die vollständig ausgeschlossenen obersten Felder sind `revision`,
+`created_at`, `created_by`, `updated_at`, `updated_by`, `maturity`,
+`implementation_status`, `verification_plan_status`, `verification_waiver`,
+`relations` und `tags`. Ein `verification_result` oder sonstiges berechnetes
+Ergebnis ist weiterhin kein zulässiges gespeichertes Subjectfeld.
+
+Innerhalb jedes nativen `provenance`-Eintrags entfällt ausschließlich das
+reine Auditfeld `captured_at`. Vorhandene `source_id`, `locator`, `excerpt`,
+`content_sha256` und `extensions` bleiben vollständig enthalten. Alle
+anderen verschachtelten Inhalte bleiben unverändert, insbesondere
+gleichnamige Schlüssel wie `revision`, `maturity` oder `captured_at` in
+fachlichen Extensions. Es gibt keine rekursive Namensfilterung.
+
+Gehasht wird das so projizierte Objekt selbst, ohne zusätzlichen Wrapper
+oder Domainpräfix, mit RFC-8785-Kanonisierung und SHA-256. Die Kennung bleibt
+`verification_context_hash-v1`. Dieselbe native Projektion gilt für die
+Herstellung einer Subjectbindung und die spätere Aktualitätsbewertung;
+Readiness führt keinen eigenen Hash- oder Verification-Algorithmus ein.
+Nicht genannte Subjecttypen erhalten durch diese Erweiterung keine
+Unterstützungs- oder Freigabeerklärung.
+
+Die vorhandene Requirement-/Contract-/Test-Projektion einschließlich der
+bereits verwendeten Waiver- und Provenienz-Audit-Ausnahmen bleibt bytegleich.
+Die Capability-/Task-Erweiterung ergänzt deren bisherigen Definitionsbereich,
+sie verlangt keine Migration und keine Umbenennung bestehender v1-Hashes.
+Änderungen von Beschreibung, Outcome, Priorität, Done-Kriterien, Applicability
+oder anderen eingeschlossenen Feldern ändern den jeweiligen Kontext;
+Änderungen allein an ausgeschlossenen Workflow-/Auditwerten tun dies nicht.
+Relations-, Freigabe-, Task-Done- und Scopeprüfungen bleiben eigenständige
+Pflichten; ein unveränderter Kontexthash bestätigt sie nicht automatisch.
+
 ## L.3 Aktualität
 
 Evidence ist bezüglich eines Subjects fachlich aktuell, wenn ID und `verification_context_hash-v1` übereinstimmen; ihre Maßgeblichkeit für ein Verification Result verlangt zusätzlich die Stand-, Pflichtprüfungs-, Konfigurations- und Laufauswahl nach Kapitel 10.5. Vollrevision und Vollhash bleiben als historischer Auditbezug gespeichert, entscheiden aber nicht allein über Aktualität. Eine Änderung der ausgeschlossenen Workflow- oder Auditfelder darf Evidence nicht stale machen. Eine Änderung des Prüfgegenstands, Oracles, Verfahrens, Applicability oder einer gebundenen Konfiguration muss Evidence stale machen.
+
+### L.3.1 Bestandsdaten und Pflichtbewertung
+
+Vorhandene Capability-/Task-Subjects und ihre Evidence bleiben bytegetreu
+lesbar, soweit sie die bestehenden Eingabeschemata erfüllen. Die Erweiterung
+schreibt keine historischen Subjectbindungen, Vollhashes, Revisionen,
+Kontexthashes, Run-Identitäten oder Reviews um. Ein vorheriges
+`subject_context_unsupported` ist ein historischer Auswertungsbefund, kein
+dauerhaft im Subject gespeicherter Verifikationsstatus.
+
+Eine neue explizite Bewertung berechnet den aktuellen Kontext nach L.2.1
+aus den wirklichen Subjectbytes. Vorhandene, exakt passende v1-Bindungen
+dürfen unter den unveränderten Regeln aus 10.5 berücksichtigt werden;
+abweichende Hashes bleiben stale. Fehlende oder ungültige Pflichtbindungen
+erhalten weder einen erfundenen Kontexthash noch einen erfolgreichen Ersatz
+durch Revision oder Vollhash. Schemaverletzungen bleiben Eingabefehler;
+fehlende verwertbare Nachweise bleiben in der Aggregation unvollständig.
+
+Auch ein übereinstimmender Kontexthash ist allein kein `passed`: vollständige
+Pflichtprüfungen, Slots, Dimensionen, maßgebliche Runs, genaue Konfiguration
+beziehungsweise ausdrückliche Unabhängigkeit und die Ergebnisprioritäten
+aus 10.5 gelten für Capabilities und Tasks ebenso wie für Requirements.
+Ein vorhandener `failed`-Nachweis wird nicht wegen der neuen Typunterstützung
+zu `passed`; ein Waiver bleibt eine Ausnahme und erfüllt das Readiness-Gate
+`verification` nicht. Alle acht Gates aus 10.5.6 bleiben verbindlich.
 
 ---
 
@@ -5527,4 +5622,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.11.**
+**Ende der SpecRoad-Produktspezifikation v0.2.12.**

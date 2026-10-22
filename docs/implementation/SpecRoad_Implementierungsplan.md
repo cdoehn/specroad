@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 6 · **Stand:** 22. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.11
+**Planrevision:** 7 · **Stand:** 22. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.12
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `4fea1cb8a1b8fa15e60aa472f58582a5ff81c39016405970f6b719a20b59c6e8`.
+Gebundene Spezifikations-SHA-256: `ffd9bd939999a246ec3c20fc2834212695674569cd06f75c5fbf3defaa09cbfb`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 6
+plan_revision: 7
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 561
 last_completed_plan_commit: 13.e.C
 next_plan_commit: 13.f.W
-last_completed_numbered_bundle: 389
+last_completed_numbered_bundle: 390
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,35 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Verification-Kontext für Readiness-Subjects (Bundle 390)
+
+Revision 7 dokumentiert die begrenzte Entscheidung
+**READINESS-SUBJECT-CONTEXT**, **delegiert gemäß SPECROAD-DECISION-1**.
+Spezifikation **0.2.12, Anhang L.2.1/L.3.1**, ergänzt die bisher fehlende
+Capability-/Task-Kontextprojektion im bereits bestätigten Umfang von 13.f.
+Der vollständige Entscheidungsbeleg und die offenen Verhaltensabnahmen
+stehen unmittelbar bei 13.f. Eine persönliche Einzelzustimmung des Nutzers,
+ein Human-Review oder ein beobachteter Produktnachweis wird nicht behauptet.
+
+- [x] **READINESS-SUBJECT-CONTEXT:** Additive Verification-Kontextprojektion und Bestandsbewertung verbindlich klären. Commit: `docs(spec): Verification-Kontext für Readiness-Subjects präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation, Plan
+und notwendigen aktiven Katalog-Hashbindungen. Produktcode, Verhaltenstests,
+Testnummern und Runner bleiben bytegleich; historische Evidence bleibt an
+ihre damaligen Bytes gebunden. Produktstand **561/900**, letzter regulärer
+Commit **13.e.C** und nächster Schritt **13.f.W** bleiben erhalten. Erst
+nach erfolgreichem parallelem Apply-Gate setzt der Entrypoint den obigen
+Offplan-Marker und die Bundlenummer. Dies markiert die Dokumentübergabe,
+nicht die noch ausstehende Produktimplementierung oder deren Abnahme.
+Keine Änderung an Control, Watcher, CI, Dienst- oder Pausenzustand.
+
+**Prüfgrenze:** Keine erfundenen Dokumentations-/Verhaltenstests. Die
+vollständige Collection-/Katalogprüfung und native Paketprüfung bleiben
+erforderlich. Vor dem tatsächlichen Commit läuft in Apply ausschließlich
+die fällige feste Testgruppe parallel nach der bestehenden N=3-Rotation;
+dies ist ein Teiltestnachweis. Die Übergabe wird als `spec_clarification`
+gemeldet; 13.f.W beginnt erst mit einem neuen gebundenen Auftrag nach Apply.
 
 ## OFF-PLAN – Delegierte Spezifikationsklärung (Bundle 389)
 
@@ -16208,12 +16237,114 @@ ist ein gezielter Teiltestnachweis, kein Vollsuite- oder Release-Erfolgsnachweis
 **Anforderungsbezug:** `SR-REQ-0125`, `SR-REQ-0450`, `SR-REQ-0516`.
 **Verifikationsbezug:** `SR-VER-0009`, `SR-VER-0021`, `SR-VER-0030`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+#### Entscheidungsbeleg READINESS-SUBJECT-CONTEXT
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+der aktuelle Control-Vertrag 2 erlaubt genau diese gesonderte Klärung.
+Betroffen ist der offene **13.f.W**, einschließlich seiner späteren
+Robustheits- und Strukturschritte 13.f.R/C; keine neue Produktposition.
+
+**Lücke und geprüfte Quellen:** Das maßgebliche Result nach Bundle 389
+enthält Spezifikation 0.2.11 und Planrevision 6. Kapitel 10.5.6 verlangt
+`passed` für Capabilities, Requirements und Tasks; der positive 13.f.W-Fall
+verlangt echte Task-Done-Beobachtungen. Anhang L beschreibt dagegen nur
+Requirements, Verification Contracts und Tests. Die nativen Dienste
+`verification/_context_subject.py` und `verification/_run_dispositions.py`
+lassen Capability-/Task-Kontexte deshalb nicht zu. Die bestehenden Fälle
+in `tests/test_verification_context.py` und
+`tests/test_verification_aggregation_right.py` bilden diese Grenze ab;
+sie wurden für diese Diagnose gelesen, nicht als neue Verhaltenstests
+ausgeführt. `verification/_subject_binding.py`, die geschlossenen nativen
+Artefakt-/Metadatenschemata und `planning/task_implementation.py` wurden
+ebenfalls geprüft. Maßgebliche Bezüge sind 10.5, 10.5.6, Anhang L sowie
+`SR-REQ-0125`, `SR-REQ-0444`–`SR-REQ-0452` und `SR-REQ-0516`.
+
+**Alternativen und Auswahl:**
+
+1. Capabilities/Tasks überspringen, `not_applicable` erklären oder nur
+   Statuslabels prüfen: verletzt Pflichtgates und Nachweisanforderungen.
+2. Dauerhaft `incomplete` melden: verhindert den zugesagten positiven
+   Readiness-Fall; keine vollständige Umsetzung des bestehenden Features.
+3. Vollhash als Kontext oder ein neuer separater Readiness-Hash:
+   Vollhash macht Workflow-/Auditänderungen zirkulär stale und verletzt
+   SR-REQ-0452; ein zweiter Hash vervielfacht Bindungsregeln unnötig.
+4. Neue v2-Kennung für alle Subjects: verursacht unnötige Migration und
+   Nachweisumbindung, obwohl die bisherigen drei Projektionen unverändert
+   bleiben können.
+5. **Gewählt:** den vorhandenen `verification_context_hash-v1` um die
+   beiden bisher undefinierten nativen Subjecttypen ergänzen, mit exakter
+   Feldliste und denselben selbstreferenzfreien Ausschlüssen. Bestehende
+   v1-Projektionen und ihre Hashes bleiben bytegleich. Die gemeinsame
+   native Verification bleibt einzige Aktualitäts-/Aggregationsinstanz.
+
+**Normative Regel:** Anhang L.2.1 definiert die vollständige Feldmenge,
+optionale Feldpräsenz, RFC-8785-Kanonisierung, Arrayreihenfolge und die
+einzige verschachtelte Audit-Ausnahme `provenance[*].captured_at`.
+L.3.1 erhält historische Bytes und verlangt eine neue explizite Bewertung
+der tatsächlich gespeicherten Bindungen. Exakte Konfigurationsbindung,
+Pflichtchecks, Slots, Run-Auswahl und Ergebnisprioritäten bleiben wirksam.
+Ein passender Kontext allein ersetzt weder Evidence noch Freigabe, Done,
+Coverage oder Relationsreview. Der Waiver-Vertrag 10.5.5 bleibt unverändert.
+
+**Grenzabgleich nach 2.4.1:** (1) Die Typen und Pflichtgates gehören bereits
+zum bestätigten Readiness-Umfang; weder Feature noch Planschritt wird
+hinzugefügt. (2) Die additive Projektion erfüllt die bestehenden Requirements
+gemeinsam; kein gleichrangiger Vertrag wird gestrichen. (3) Geschlossene
+Schemas, Scope-/Konfigurationsbindung, Human-Review, Risiko-/Issue-Abschluss
+und alle acht Gates bleiben erhalten. Bisherige Formate und gültige Hashes
+bleiben kompatibel, Bestandsdaten unverändert. (4) Die dokumentversionierte
+Regel ist durch eine spätere ausdrückliche Spezifikationsfortschreibung
+rücknehmbar, ohne Daten-/Evidence-Löschung oder Git-Reset zu autorisieren;
+bei Rücknahme neu eingeführter Typunterstützung wären deren Ergebnisse
+erneut explizit zu bewerten. (5) Die Entscheidung benötigt keine unbekannte
+externe Tatsache oder echte menschliche Fachfreigabe; solche Nachweise im
+Produktmodell werden weiterhin tatsächlich verlangt, niemals fingiert.
+
+**Verbindliche Abnahmen für die anschließende Umsetzung:**
+
+- Native Capability-/Task-Kontexte liefern mit vollständig belegten
+  Pflichtchecks, aktueller Evidence und identischer Konfiguration `passed`.
+  Ein Release mit solchen Subjects einschließlich realem Task-Done und
+  allen übrigen Gates kann `ready=true` liefern; kein Mock-Pass ersetzt
+  den nativen Verification-Pfad. Die Baseline bleibt bis 13.g gesperrt.
+- Änderungen jedes eingeschlossenen Fachfelds, insbesondere Outcome,
+  Priorität, Done-Kriterien, Applicability und verschachtelter Extensions,
+  entwerten alte Kontextbindungen. Reine ausgeschlossene Workflow- oder
+  Auditänderungen tun dies nicht; Relation-/Freigabegates werden trotzdem
+  eigenständig neu geprüft. Optionale Abwesenheit wird nicht normalisiert.
+- Geänderte Pflichtkonfiguration, fehlende Slots/Subjects, falsche Hashes,
+  ungültige Eingaben, fremde Typen, `failed` und fehlende Nachweise werden
+  weiterhin korrekt abgewiesen oder als stale/unvollständig ausgewiesen.
+  Native untypisierte Eingaben bleiben unzulässig; Waiver ersetzt kein
+  `passed` im Releasegate.
+- Alle bisherigen Requirement-/Contract-/Test-Projektionsbytes und Hashes
+  bleiben identisch. Bestands-Evidence wird nicht geschrieben oder neu
+  gestempelt; nur wirklich passende Bindungen sind bei neuer Bewertung
+  verwendbar. Alte Unsupported-Befunde sind keine aktuelle Pass-Evidence.
+- Die bisherigen Capability-/Task-Unsupported-Erwartungen werden bei der
+  echten Umsetzung durch positive Typabnahme und negative Fremdtyp-/
+  Bindungsfälle ersetzt. Vorhandene Testidentitäten behalten ihre Nummern;
+  zusätzliche Fälle erhalten neue Nummern nach bestehender Policy.
+
+**Offener Stand:** Dieses OFF-PLAN-Bundle klärt nur den Vertrag. Native
+Typzulassung, Aktualitäts-/Aggregationsintegration, Readiness und alle
+neuen Verhaltensnachweise bleiben offen. Sie werden als echte W/R/C-Zustände
+mit den bestehenden gezielten parallelen Dev- und rotierenden parallelen
+Apply-Gates umgesetzt, ohne erneutes Klärungsbundle aus demselben Result.
+
 #### 13.f.W – Let it Work
 
 - [ ] **13.f.W** · Position **562/900** · Voraussetzung: `13.e.C`.
 **Exakte Commit-Message:** `13.f.W feat(roadmap): Readinessgates und aktuelle Beziehungen aufbauen`
 
 **Umsetzung:** Den Readiness-Kern nach Spezifikation 10.5.6 auf dem vollständigen nativen Release-Scope aus 13.e aufbauen: geschlossene `release-readiness-policy-v1`, exakt gebundene Eingabe und alle acht Pflichtgates mit klarer Geltung je Artefakttyp. Vorhandene Freigabe-, Task-Done-, Verification-, Coverage- und Relationsdienste verwenden. Die bestehende Verification-Priorität nicht nachbilden oder ändern. Offene Risiken/Issues blockieren; fehlende Abschlussprüfer und unklassifizierte Altdaten bleiben sicher unvollständig. Keine impliziten Defaults beim Lesen, keine Lifecycle- oder Dateischreibwirkung.
+
+**Geklärte Voraussetzung:** Capability-/Task-Typzulassung und Kontextbindung
+nach Anhang L.2.1/L.3.1 zuerst in den gemeinsamen nativen Verification-Pfad
+integrieren. Die feste Projektion, Bestandsbewertung und Hashkompatibilität
+aus READINESS-SUBJECT-CONTEXT gehören zur W-Abnahme; kein Readiness-Sonderhash
+und kein Überspringen dieser Subjects. Zusätzliche Fehlerkombinationen
+werden in R vervollständigt; C verändert den Fachvertrag nicht.
 
 **Verhaltensabnahme:** Ein vollständig belegter Release mit aktueller Scope-/Konfigurationsbindung liefert `ready=true`; eine leere anwendbare Risiko-/Issue-Menge wird nur bei vollständig belegter Scopeauflösung als `not_applicable` ausgewiesen. Der positive Fall erfordert echte gebundene Providerbeobachtungen einschließlich Freigabe und Done, keine selbstbestätigenden Labels. Offener Risk, offener Issue, fehlendes Pflichtartefakt, fehlender Provider oder ungeklärte Anwendbarkeit verhindern Readiness und bleiben im maschinenlesbaren Result erhalten. Produktstatus und Dateien bleiben unverändert. Das Baseline-Gate bleibt bis 13.g geschlossen.
 
