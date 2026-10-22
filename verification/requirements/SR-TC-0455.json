@@ -4,19 +4,38 @@
   "requirement_id": "SR-REQ-0455",
   "specification_sha256": "58bd7eb7928b3dd3e5c1cefc0f8d2afcad904dae4c7b2bf40cc01a8ebabced1e",
   "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-EXCHANGE-MAPPINGS-v1"
+  ],
+  "preconditions": [
+    "Explicit original UTF-8 resource bytes, exact identity/version and expected canonical SHA-256; no discovery or external service."
+  ],
+  "steps": [
+    "Select exact supplied rule and registry resources; reject duplicate keys, wrong hashes and unsupported grammar.",
+    "Evaluate literal field/value mappings and declared relation/hierarchy directions without input or filesystem mutation.",
+    "Preserve external registry identities and unmapped source data; compare real model-root effects and isolated Core/PYZ results."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Mapping MUSS externe Typ-, Hierarchie- und Relationsidentitäten ohne eigenes SpecRoad-Artefakt in einem Registry erhalten können.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "14.a.W: exact passive exchange-mapping-v1 selection and pure typed projection, with separate external-identity-registry-v1 resources bound to actual mapping bytes. All four table families, null/empty distinction, canonical typed keys, structured rest data, duplicate rejection and source/hash ownership are executable. Registry entries remain non-artifacts in distinct class/system/document namespaces; revisions do not disambiguate identity. No parser, complete format roundtrip, import history, native artifact approval or completed import is claimed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV090"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/types",
+    "/fields",
+    "/relations",
+    "/hierarchies",
+    "/mapping",
+    "/entries"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +47,30 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_external_identity_registry.py::test_all_four_classes_are_distinct_namespaces_and_preserve_entries",
+    "tests/test_external_identity_registry.py::test_generic_legacy_mapping_is_preserved_but_not_selected_as_v1",
+    "tests/test_external_identity_registry.py::test_joint_registry_collection_rejects_collisions_before_any_lookup",
+    "tests/test_external_identity_registry.py::test_mapping_and_registry_are_available_in_isolated_read_only_runtimes[core]",
+    "tests/test_external_identity_registry.py::test_mapping_and_registry_are_available_in_isolated_read_only_runtimes[pyz]",
+    "tests/test_external_identity_registry.py::test_registry_change_changes_model_root_but_not_mapping_rules",
+    "tests/test_external_identity_registry.py::test_registry_own_expected_hash_is_also_required",
+    "tests/test_external_identity_registry.py::test_registry_rejects_bad_entries_and_executable_controls[class]",
+    "tests/test_external_identity_registry.py::test_registry_rejects_bad_entries_and_executable_controls[empty_revision]",
+    "tests/test_external_identity_registry.py::test_registry_rejects_bad_entries_and_executable_controls[extension]",
+    "tests/test_external_identity_registry.py::test_registry_rejects_bad_entries_and_executable_controls[loader]",
+    "tests/test_external_identity_registry.py::test_registry_rejects_bad_entries_and_executable_controls[missing_revision]",
+    "tests/test_external_identity_registry.py::test_registry_rejects_bad_entries_and_executable_controls[nonobject_data]",
+    "tests/test_external_identity_registry.py::test_registry_requires_actual_rules_with_exact_identity_and_hash[missing]",
+    "tests/test_external_identity_registry.py::test_registry_requires_actual_rules_with_exact_identity_and_hash[self_reference]",
+    "tests/test_external_identity_registry.py::test_registry_requires_actual_rules_with_exact_identity_and_hash[wrong_hash]",
+    "tests/test_external_identity_registry.py::test_registry_requires_actual_rules_with_exact_identity_and_hash[wrong_version]",
+    "tests/test_external_identity_registry.py::test_revision_is_data_and_cannot_disambiguate_duplicate_identity",
+    "tests/test_external_identity_registry.py::test_source_document_and_system_namespaces_are_exact_and_missing_lookup_creates_nothing",
+    "tests/test_external_identity_registry.py::test_two_nonoverlapping_registries_keep_their_own_hash_bindings"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.a.R extends the error/boundary and existing-resource compatibility matrix; 14.a.C cleans the same implementation.",
+    "Format parsers, explicit import/export profiles, history, loss decisions, native target validation and guarded project publication remain in their separate plan steps."
   ]
 }

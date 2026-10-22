@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 8
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 570
-last_completed_plan_commit: 13.h.C
-next_plan_commit: 14.a.W
-last_completed_numbered_bundle: 400
+implementation_plan_commits_completed: 571
+last_completed_plan_commit: 14.a.W
+next_plan_commit: 14.a.R
+last_completed_numbered_bundle: 401
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17095,12 +17095,58 @@ CLI, Importhistorie und Formatroundtrips bleiben in ihren folgenden Schritten.
 
 #### 14.a.W – Let it Work
 
-- [ ] **14.a.W** · Position **571/900** · Voraussetzung: `13.h.C`.
+- [x] **14.a.W** · Position **571/900** · Voraussetzung: `13.h.C`.
 **Exakte Commit-Message:** `14.a.W feat(exchange): Mappingressourcen und externe Registries aufbauen`
 
 **Umsetzung:** Versionierte Typ-/Feld-/Relations-/Hierarchiemappings und Registry für externe Nichtartefaktidentitäten nach Spezifikation 10.12.1 implementieren. Die reine Auswertung verwendet ausdrücklich gelieferte Ressourcen und Werte; sie erzeugt keine Projektwrites oder abgeschlossenen Importe.
 
 **Verhaltensabnahme:** Ein gültiges Mapping ordnet externe Werte reproduzierbar zu; alle vier Tabellenfamilien, explizite Wertetabellen, Restdaten und Registry-Namensräume erfüllen die oben festgelegten positiven Abnahmen. Grundlegende Versions-/Hash-/Eindeutigkeits- und Ausführungssicherheit gelten bereits für diesen nutzbaren W-Zustand.
+
+**Vorbereiteter W-Zustand (Bundle 401):** `specroad.mappings` stellt
+`ExchangeMapping` und `ExternalIdentityRegistry` aus tatsächlich gelieferten
+strikten JSON-Bytes bereit. `select_mapping` verlangt exakten Schlüssel und
+erwarteten vollständigen kanonischen Hash; der ausgewählte Dienst projiziert
+Artefaktfelder samt unverändertem Rest sowie Relations-/Hierarchieendpunkte.
+`select_registries` prüft eigene erwartete Hashbindungen, die tatsächlich
+vorliegenden Regelressourcen und gemeinsame Identitätskollisionen. Lookup
+liefert getrennte Klassen-/System-/Dokumentnamensräume mit Revisionsdaten oder
+ausdrücklich fehlend. Originalbytehash und kanonischer Ressourcenhash bleiben
+getrennt; Rückgaben besitzen ihre Daten. Beide Ressourcen wirken über den
+bestehenden Ressourcenvertrag auf die Modellwurzel. Kein Parser, Writer,
+Importhistorienlauf, Schema-/CLI-Katalogeintrag oder Freigabenachweis wird
+vorgezogen. SR-TC-0316 und SR-TC-0455 sind Teilimplementierungen;
+SR-TC-0313 bleibt für vollständige Import-/Exportformate offen.
+
+**Beobachtete W-Prüfung:** **324** gezielte Verhaltenstests aus **8** Dateien
+bestanden mit **4** parallelen Workern in **3,45 s**. Davon sind **62** neue
+Mapping-/Registrytests, einschließlich exakter Richtungen, typisierter
+Wertetabellen, Restdaten, Namespace-/Revisionsidentität, Ablehnung falscher
+Hashbindungen und Steuerfelder, generischer Bestandsmappings, Modellwurzel
+und isolierter Standardbibliothek-Core-/PYZ-Ausführung mit I/O-Sperren.
+Die betroffenen bestehenden Tests betreffen JSON-Leser, Kanonisierung,
+Modellwurzel, Profile und JUnit-Mappings. Ein vorheriger Lauf mit ungültigen
+Extension-Namensräumen in neuen Fixtures schlug fehl und ist kein Passbeleg;
+die Fixtures wurden an den bestehenden Punkt-Namensraumvertrag angepasst,
+die Produktvalidierung wurde dafür nicht abgeschwächt. Die stabile
+Nummerierung wurde ausschließlich um die neuen Identitäten erweitert.
+Die vollständige Collection-/Katalogprüfung ist mit **16.990** Tests bei
+**0** Testkörpern gültig. Quellzustand
+`9eb4f0d623264f14150ac4c5ddcf87b0dbf14b0f5668ad3f0805638bd2099fae`;
+Auswahlbeleg `5086e32e45a20423d2b8897524a318a2852583bc8502a4856245b68f8129950b`.
+Dies sind ausdrücklich Teiltests, kein Vollsuite-, Release- oder
+plattformübergreifender Erfolgsnachweis.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_190630_1022_b3df4e.zip`, SHA-256
+`118b1e80fbaee00c7db8518b24522dbd85aa6b86d857834b2d129167ec4fc19e`,
+bestätigt den sauberen Commit `3db50bbcd51321227888fff884e6312ad1ac3228`
+nach Bundle **400** und **5.643** bestandene Tests der Gruppe **0**, Sequenz
+**108**, in **1.712,92 s**. Bundle **401** enthält ausschließlich **14.a.W**.
+Vor seinem Commit ist Sequenz **109**, Gruppe **1**, mit **5.663** Tests
+parallel fällig. Erst nach erfolgreichem Apply-Gate setzt der Entrypoint
+fünf Marker auf **571/900**, zuletzt **14.a.W**, nächstens **14.a.R** und
+Bundle **401**. R und C bleiben eigenständige offene Zustände. Control,
+Watcher und CI bleiben unverändert; nach Übergabe endet dieser Durchlauf.
 
 #### 14.a.R – Make it Right
 

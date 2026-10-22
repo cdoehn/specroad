@@ -66,6 +66,7 @@
     "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1",
     "SR-FIX-EVIDENCE-RECORDING-RIGHT-v1",
     "SR-FIX-EVIDENCE-RECORDING-v1",
+    "SR-FIX-EXCHANGE-MAPPINGS-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-JCS-RFC8785-v1",
@@ -755,6 +756,10 @@
     "SR-FIX-PLANNING-BUILTIN-WORK-v1": {
       "provider": "tests/test_planning_builtin_work.py:release_case",
       "kind": "Owned native view/Readiness semantic inputs, exact evaluation/scope/time/model binding, fresh native gate and review services, corrupt/missing product inputs, real Work input storage and isolated Core/PYZ processes. Synthetic host observations are explicit fixtures, never production approval; no rendered output oracle."
+    },
+    "SR-FIX-EXCHANGE-MAPPINGS-v1": {
+      "provider": "tests/support/exchange_mappings.py:mapping_value,fields_value,entry_value,registry_value",
+      "kind": "Owned v1 passive mapping rules and separate byte/hash-bound external registries. Explicit typed value tables, four mapping families, exact resource selection, namespace/revision identity, unmodified rest data and source bytes. Real model-root integration and isolated standard-library-only Core/PYZ execution with forbidden-I/O guards; no format parser, import publication, loss acceptance or approval claim."
     }
   }
 }
