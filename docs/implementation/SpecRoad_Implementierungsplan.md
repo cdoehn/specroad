@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 8
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 572
-last_completed_plan_commit: 14.a.R
-next_plan_commit: 14.a.C
-last_completed_numbered_bundle: 402
+implementation_plan_commits_completed: 573
+last_completed_plan_commit: 14.a.C
+next_plan_commit: 14.b.W
+last_completed_numbered_bundle: 403
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17206,7 +17206,7 @@ unverändert.
 
 #### 14.a.C – Make it Clean
 
-- [ ] **14.a.C** · Position **573/900** · Voraussetzung: `14.a.R`.
+- [x] **14.a.C** · Position **573/900** · Voraussetzung: `14.a.R`.
 **Exakte Commit-Message:** `14.a.C refactor(exchange): Mappingressourcen und externe Registries bereinigen`
 
 **Bereinigung:** Mappingauswertung von Formatparsern und Writer trennen.
@@ -17214,6 +17214,52 @@ unverändert.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand (Bundle 403):** Die geschlossene Ressourcengrammatik,
+strikte JSON-Prüfung und Mappingdiagnostik liegen in `mappings/_contract.py`.
+`mappings/_resources.py` kapselt ursprüngliche Ressourcenbytes, kanonische
+Hashes und die exakte Auswahl ausdrücklich gelieferter Sammlungen.
+`mappings/exchange.py` enthält die reine Feld-/Relations-/Hierarchieprojektion
+und Registryauswertung. Die bisherigen öffentlichen Importe über
+`specroad.mappings` und `specroad.mappings.exchange` bleiben verfügbar.
+Formatparser, Importpolicy und Projektwriter bleiben außerhalb dieser Schicht;
+14.b und spätere Format-/Writer-/CLI-Schritte werden nicht vorgezogen.
+
+Die Auslagerung erhält alle **21** vorhandenen Klassen-/Funktionsdeklarationen
+samt ihren Methoden und alle **6** Konstantendeklarationen strukturell
+unverändert. Der statische AST-Vergleich bestätigt identische Körper,
+Signaturen und Dekoratoren; neue Module bestehen ausschließlich aus den
+verschobenen Deklarationen und benötigten Importen. Werte, Fehlergründe,
+Diagnosepositionen, Hashprojektionen, Rückgabeeigentum und I/O-Grenzen bleiben
+erhalten. Die Spezifikation, alle **490** bisherigen Dateien unter `tests/`,
+alle **745** Verifikationsdateien und **17.133** festen Testnummern sind
+bytegleich zum maßgeblichen Result. Es entstehen keine neuen Tests oder
+fachlichen Regeln.
+
+**Beobachtete C-Prüfung:** **562** unveränderte Verhaltenstests aus **11**
+betroffenen Dateien bestanden mit **4** parallelen Workern in **5,11 s**.
+Die Auswahl umfasst sämtliche **62** W- und **143** R-Fälle sowie **357**
+betroffene JSON-, Kanonisierungs-, Modellwurzel-, Profil- und JUnit-
+Regressionen einschließlich isolierter Core-/PYZ-Prozesse und schreibfreier
+Erfolgs-/Fehlerpfade. Die vollständige Collection-/Katalogprüfung bestätigt
+**17.133** Testidentitäten bei **0** Testkörpern. Quellzustand
+`9d862ac389c75984f3faf65d5f0716a75a1919b53920ddaf4e862d882619cfc2`;
+Auswahlbeleg `5f86dd710fb8448db64cd7380004c8359b0094fcd3a0dc864e03dce6ed997d43`.
+Dies ist ein Teiltestnachweis, kein Vollsuite-, Release- oder
+plattformübergreifender Erfolgsnachweis. Die bestehenden Teilimplementierungs-
+grenzen für Austauschformate und Importveröffentlichung bleiben bestehen.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_203551_1022_50e676.zip`, SHA-256
+`d1c87ddfb45d07c666a5ad2019fed8ea024c15379fa0cfdc380a7fda06512280`,
+bestätigt den sauberen Commit `83b2ab115415d8d1ce8e5a11f8728ac70b868fb3`
+nach Bundle **402** und **5.711** bestandene Tests der Gruppe **2**, Sequenz
+**110**, in **1.958,12 s**. Bundle **403** enthält ausschließlich **14.a.C**.
+Vor seinem Commit ist Sequenz **111**, Gruppe **0**, mit **5.711** Tests
+parallel fällig. Erst nach erfolgreichem Apply-Gate setzt der Entrypoint
+fünf Marker auf **573/900**, zuletzt **14.a.C**, nächstens **14.b.W** und
+Bundle **403**. 14.b.W bleibt offen. Nach atomarer Übergabe endet dieser
+Auftrag; Control, Watcher und CI bleiben unverändert.
 
 <a id="step-14-b"></a>
 ### 14.b – External Identity und Importhistorie
