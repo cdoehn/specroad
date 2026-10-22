@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 568
-last_completed_plan_commit: 13.h.W
-next_plan_commit: 13.h.R
-last_completed_numbered_bundle: 397
+implementation_plan_commits_completed: 569
+last_completed_plan_commit: 13.h.R
+next_plan_commit: 13.h.C
+last_completed_numbered_bundle: 398
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16795,12 +16795,89 @@ mit der Übergabe; R/C, weitere Planschritte und Control bleiben unberührt.
 
 #### 13.h.R – Make it Right
 
-- [ ] **13.h.R** · Position **569/900** · Voraussetzung: `13.h.W`.
+- [x] **13.h.R** · Position **569/900** · Voraussetzung: `13.h.W`.
 **Exakte Commit-Message:** `13.h.R feat(roadmap): Roadmap-/Verification-Views und Workintegration vervollständigen`
 
 **Vervollständigung:** Darstellung nicht als Testorakel verwenden und noch offene Arbeit nicht als fertige Readiness werten.
 
 **Verhaltensabnahme:** Datenparität über direkte Abfrage, Viewprojektion und Fortsetzung bleibt erhalten. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zustand, Bundle 398:** Die Built-in-Ansichten besitzen einen
+nativen, unveränderlichen semantischen Work-Eingabetyp. Er bindet den Namen,
+die vollständigen ursprünglichen Modellbytes und die kanonischen Verification-,
+Currentness- und optionalen Readiness-Eingaben. Der Inhalt umfasst den ganzen
+Bewertungsdescriptor mit Hash, Scope, Konfiguration und expliziter Bewertungszeit;
+er enthält keine ausführbaren Provider, gespeicherten Gatepässe oder erfundene
+Freigaben. Die vorhandene Verification-/Currentness-Fortsetzung wird wiederverwendet.
+Readiness erhält denselben Eingabe-/Resume-Vertrag und behält auch bei fehlender
+Scopeauflösung ihre ursprüngliche Bewertungswahl.
+
+Ein vertrauenswürdiger Work-Host speichert diese Eingabe samt unabhängigem Hash
+und den tatsächlich benötigten Modell-/Produktbytes im bestehenden Work-v1-Store.
+Bei Fortsetzung liefert er das geprüfte gespeicherte Modell, Produktinputs und
+native Scope-/Code-/Reviewdienste; absolute alte Pfade bestimmen keine semantische
+Identität. Änderungen von Modellbytes, Auswahl, Scope, Konfiguration, Zeitpunkt
+oder erforderlichen Beobachtungen sind Konflikte, kein stilles Rebase.
+Die Eingabe ist weder ein Ergebnis noch ein abgeschlossener Work-Auftrag.
+Der ausdrückliche Projektionsaufruf führt die bestehenden vollständigen nativen
+Provider aus; Readiness benötigt ihre acht Gates und frische Hostdienste.
+Fehlende Dienste bleiben unvollständig, negative und vorläufige Resultate bleiben
+sichtbar. Kein View-Resume setzt offene Work-Einheiten oder deren globale
+Ergebnislieferung auf erledigt. Bereits gespeicherte Fachresultate werden durch
+Eingabewiederherstellung nicht in Freigabecapabilities umgewandelt.
+
+**R-Abnahme:** Direkte Coverage/Query, synchrone View und wiederhergestellte
+View liefern bei identischen gebundenen Eingaben dieselben Fachwerte. Positive,
+negative, fehlende und vorläufige Releasefälle behalten alle acht Gatewerte;
+fehlende oder geänderte Originalinputs und entfallene Waiverauthentifizierung
+werden abgewiesen. Native Work-Ablage, frischer Prozess und Core/PYZ prüfen
+identische Fachprojektionen aus vollständig gespeicherten Eingangsbytes, ohne
+das weiterhin offene Work-Manifest zu verändern oder die Quelle zu beschreiben.
+Darstellung, Markup und Dokumentation sind keine Testorakel.
+
+**Umfangsgrenze:** Dies vervollständigt die semantische Eingabeintegration in die
+bestehenden Work-Mechanismen, wie bei M12. Die vorhandenen nativen Projektionen
+bleiben atomare Auswertungseinheiten; zusätzliche öffentliche CLI-Registrierung,
+deklarative Spalten-/Blockprovider und granularer Fortschritt innerhalb großer
+Provider werden hier nicht als fertige Laufzeit-/Releaseabnahme behauptet.
+Kein neuer Scheduler, kein neuer Work-Persistenzvertrag und keine normative
+Spezifikationsänderung. 13.h.C bleibt für die gemeinsame Struktur offen.
+
+
+**Beobachtete Entwicklungsprüfung:** **702** gezielte Verhaltenstests
+ aus **15** Dateien bestanden mit **4** parallelen Workern in
+**447,02 s**. Enthalten sind **52** neue
+Work-Eingabe-, Resume-, Gate- und Bindungsfälle sowie sämtliche W-Fälle von
+13.h, relevante Roadmap-/Coverage-/Readiness-/Currentness-Regressionsfälle und
+bestehende Work-Manifest-/Checkpoint-Verträge. Core/PYZ-Fälle verwenden echte
+isolierte Prozesse. Die vollständige Collection-/Katalogprüfung erfasst
+**16,928** Tests bei **0** Testbodies. Testnummern bleiben stabil;
+**52** neue Nummern werden hinten angefügt. Darstellung und
+Dokumentation sind keine Testorakel. Quellzustand `7765f7a5d4a802d9accc1f62eefa26a443bdb9b0eb461fc71638bbe3b4f4fabc`;
+Auswahlbeleg `116d6f3e6b20e46973693064dfc06a6d1e2f5f4456a0649c2c34bc79d23fe571`. Dies sind Teiltestnachweise, kein Vollsuite-
+oder Release-Erfolgsnachweis.
+**Vorheriger fehlgeschlagener Entwicklungsversuch:** 700 bestanden, 2 fehlgeschlagen
+in 437,04 s. Beide neuen Roadmap-Prozesstests scheiterten vor dem Kindprozessstart
+mit `OSError: [Errno 7] Argument list too long`. Der unabhängige initiale
+Test-Snapshot wird deshalb explizit als Fixture-Datei statt als Kommandozeileninhalt
+übergeben. Die Rekonstruktion trennt außerdem die deklarierte Sprachregistrierung
+von Profilressourcen. Der fehlgeschlagene Lauf gilt nicht als Erfolgsnachweis;
+Die gezielte Nachprüfung aller sechs betroffenen Prozessfälle bestand parallel
+in 23,32 s. Maßgeblich ist der anschließend erfolgreich ausgeführte
+korrigierte Gesamtstand der ausgewählten 702 Verhaltenstests.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_163055_1022_6ff373.zip`, SHA-256
+`31d86f0420df38ce118903520a6cd176c0d9fbc1b74b1bcb06e9fe88913b6641`,
+bestätigt Commit `055002679188912779f2ed92468391a28eff3b89` nach Bundle
+**397** und **5.626** bestandene Tests der Gruppe **0**, Sequenz **105**, in
+**1.694,38 s**. Bundle **398** enthält ausschließlich **13.h.R**. Vor seinem
+Commit ist Sequenz **106**, Gruppe **1**, mit **5643** Tests
+parallel fällig. Erst nach erfolgreichem Apply-Gate setzt der Entrypoint
+**569/900**, zuletzt **13.h.R**, nächstens **13.h.C** und Bundle **398**.
+Bis dahin bleiben die bestätigten Marker **568/900** und **13.h.W** erhalten.
+Nach der Übergabe endet der Auftrag; keine eigene Fortsetzung und keine
+Änderung an Control, CI oder Watcher.
 
 #### 13.h.C – Make it Clean
 

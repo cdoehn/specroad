@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1"
+    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1",
+    "SR-FIX-PLANNING-BUILTIN-WORK-v1"
   ],
   "preconditions": [
     "Explicit native model, owned semantic verification selection and optional exact ReleaseReadiness context; trusted synthetic gate services are fixtures, not external approvals."
   ],
   "steps": [
-    "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output."
+    "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output.",
+    "13.h.R: retain full native Built-in and Readiness semantic Work input, recompute with the original snapshot and fresh native services, and compare direct coverage/query, view and resumed projection. Persist complete source inputs in native Work storage; restore in isolated Core/PYZ while preserving pending work. Reject changed model, evaluation, time, product binding and absent required review authentication."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad render` MUSS die eingebauten Ansichten `specification`, `traceability`, `roadmap` und `verification` als Markdown erzeugen können; weitere deklarative Ansichten werden über `specroad view render` ausgeführt.",
-    "scope": "13.h.W verifies only computed provider input/data contracts and forbidden side effects at built-in render adapters. No Markdown, HTML, GUI, wording or layout is tested. Native supplied-model APIs do not claim public CLI completion."
+    "scope": "13.h.W verifies only computed provider input/data contracts and forbidden side effects at built-in render adapters. No Markdown, HTML, GUI, wording or layout is tested. Native supplied-model APIs do not claim public CLI completion. 13.h.R additionally checks semantic Work-input resumption, exact data parity, no inherited gate pass, and unchanged pending native Work manifests. It does not claim a completed scheduler, public CLI or granular within-provider execution."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -66,11 +68,63 @@
     "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-traceability]",
     "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-verification]",
     "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-traceability]",
-    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-verification]"
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-verification]",
+    "tests/test_planning_builtin_work.py::test_capture_does_not_run_a_projection_or_create_readiness_and_owns_its_input",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[False-current-traceability]",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[False-current-verification]",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[False-missing-traceability]",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[False-missing-verification]",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[True-current-traceability]",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[True-current-verification]",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[True-missing-traceability]",
+    "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[True-missing-verification]",
+    "tests/test_planning_builtin_work.py::test_durable_work_input_and_fresh_process_keep_full_snapshot_parity[roadmap-core]",
+    "tests/test_planning_builtin_work.py::test_durable_work_input_and_fresh_process_keep_full_snapshot_parity[roadmap-pyz]",
+    "tests/test_planning_builtin_work.py::test_durable_work_input_and_fresh_process_keep_full_snapshot_parity[traceability-core]",
+    "tests/test_planning_builtin_work.py::test_durable_work_input_and_fresh_process_keep_full_snapshot_parity[traceability-pyz]",
+    "tests/test_planning_builtin_work.py::test_durable_work_input_and_fresh_process_keep_full_snapshot_parity[verification-core]",
+    "tests/test_planning_builtin_work.py::test_durable_work_input_and_fresh_process_keep_full_snapshot_parity[verification-pyz]",
+    "tests/test_planning_builtin_work.py::test_invalid_work_input_does_not_reinterpret_a_result_as_a_provider[hash]",
+    "tests/test_planning_builtin_work.py::test_invalid_work_input_does_not_reinterpret_a_result_as_a_provider[model_hash]",
+    "tests/test_planning_builtin_work.py::test_invalid_work_input_does_not_reinterpret_a_result_as_a_provider[unknown]",
+    "tests/test_planning_builtin_work.py::test_invalid_work_input_does_not_reinterpret_a_result_as_a_provider[verification]",
+    "tests/test_planning_builtin_work.py::test_invalid_work_input_does_not_reinterpret_a_result_as_a_provider[version]",
+    "tests/test_planning_builtin_work.py::test_invalid_work_input_does_not_reinterpret_a_result_as_a_provider[view]",
+    "tests/test_planning_builtin_work.py::test_missing_fresh_host_services_cannot_reuse_a_previously_ready_result",
+    "tests/test_planning_builtin_work.py::test_plain_view_roundtrip_is_snapshot_bound_and_has_no_implicit_evaluation[roadmap]",
+    "tests/test_planning_builtin_work.py::test_plain_view_roundtrip_is_snapshot_bound_and_has_no_implicit_evaluation[specification]",
+    "tests/test_planning_builtin_work.py::test_plain_view_roundtrip_is_snapshot_bound_and_has_no_implicit_evaluation[traceability]",
+    "tests/test_planning_builtin_work.py::test_readiness_resumption_preserves_eight_native_gates_and_never_saves_a_pass[blocked]",
+    "tests/test_planning_builtin_work.py::test_readiness_resumption_preserves_eight_native_gates_and_never_saves_a_pass[missing-service]",
+    "tests/test_planning_builtin_work.py::test_readiness_resumption_preserves_eight_native_gates_and_never_saves_a_pass[provisional]",
+    "tests/test_planning_builtin_work.py::test_readiness_resumption_preserves_eight_native_gates_and_never_saves_a_pass[ready]",
+    "tests/test_planning_builtin_work.py::test_readiness_work_input_cannot_change_selection_time_or_bound_context[context_hash]",
+    "tests/test_planning_builtin_work.py::test_readiness_work_input_cannot_change_selection_time_or_bound_context[descriptor]",
+    "tests/test_planning_builtin_work.py::test_readiness_work_input_cannot_change_selection_time_or_bound_context[descriptor_hash]",
+    "tests/test_planning_builtin_work.py::test_readiness_work_input_cannot_change_selection_time_or_bound_context[time]",
+    "tests/test_planning_builtin_work.py::test_readiness_work_input_cannot_change_selection_time_or_bound_context[unknown]",
+    "tests/test_planning_builtin_work.py::test_relocated_snapshot_uses_explicit_new_root_without_changing_semantic_hashes",
+    "tests/test_planning_builtin_work.py::test_resume_rechecks_required_waiver_authentication_instead_of_saving_an_exception[traceability]",
+    "tests/test_planning_builtin_work.py::test_resume_rechecks_required_waiver_authentication_instead_of_saving_an_exception[verification]",
+    "tests/test_planning_builtin_work.py::test_saved_view_rejects_other_model_bytes_before_recomputation[bytes]",
+    "tests/test_planning_builtin_work.py::test_saved_view_rejects_other_model_bytes_before_recomputation[project]",
+    "tests/test_planning_builtin_work.py::test_saved_view_rejects_other_model_bytes_before_recomputation[record]",
+    "tests/test_planning_builtin_work.py::test_saved_view_rejects_other_model_bytes_before_recomputation[resource]",
+    "tests/test_planning_builtin_work.py::test_view_resume_requires_original_product_inputs[bytes]",
+    "tests/test_planning_builtin_work.py::test_view_resume_requires_original_product_inputs[missing]",
+    "tests/test_planning_builtin_work.py::test_view_resume_requires_original_product_inputs[roles]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[absent-traceability]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[absent-verification]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[configured-traceability]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[configured-verification]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[explicit-traceability]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[explicit-verification]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[release-traceability]",
+    "tests/test_planning_builtin_work.py::test_view_resume_retains_direct_coverage_query_and_selection_values[release-verification]"
   ],
   "open_items": [
-    "13.h.R durable view/Work continuation and full parity remain open; 13.h.C structural cleanup remains open.",
-    "Public CLI registration and additional declarative column/block provider integration are not claimed complete. Presentation is excluded from automated tests by TD-001.",
+    "13.h.C structural cleanup remains open. Native projections remain atomic; public CLI registration and granular within-provider Work execution are not claimed complete.",
+    "Additional declarative column/block provider integration is not claimed complete. Presentation is excluded from automated tests by TD-001.",
     "Targeted development and rotating Apply groups are partial observations, not full-suite or production Release approval."
   ]
 }

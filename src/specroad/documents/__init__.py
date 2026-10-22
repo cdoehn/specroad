@@ -16,6 +16,8 @@ from .table_presentation import (TablePresentation, resolve_table_presentation,
                                  resolve_view_presentation)
 from .builtin_views import (BuiltinViewData, BuiltinViewError, BuiltinViewProviderError,
                             resolve_builtin_view, render_builtin_view)
+from .builtin_work import (BuiltinViewWorkInput, prepare_builtin_view_work_input,
+                           resume_builtin_view_work_input)
 from .type_fallback import resolve_type_fallback, render_type_fallback
 
 from .includes import (DocumentComposition, DocumentIncludeError, DocumentIncludeCycleError,
@@ -35,5 +37,6 @@ __all__ = ['DocumentRoleAssessment', 'DocumentRoleError', 'assess_document_roles
            'TablePresentation', 'resolve_table_presentation', 'resolve_view_presentation',
            'BuiltinViewData', 'BuiltinViewError', 'BuiltinViewProviderError',
            'resolve_builtin_view', 'render_builtin_view',
+           'BuiltinViewWorkInput', 'prepare_builtin_view_work_input', 'resume_builtin_view_work_input',
            'resolve_type_fallback', 'render_type_fallback',
            'DocumentComposition', 'DocumentIncludeError', 'DocumentIncludeCycleError', 'compose_document']

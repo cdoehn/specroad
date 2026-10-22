@@ -86,6 +86,7 @@
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PLANNING-BOUNDARIES-v1",
     "SR-FIX-PLANNING-BUILTIN-VIEWS-v1",
+    "SR-FIX-PLANNING-BUILTIN-WORK-v1",
     "SR-FIX-PLANNING-RELATIONS-v1",
     "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1",
     "SR-FIX-PRODUCTION-VALIDATION-v1",
@@ -750,6 +751,10 @@
     "SR-FIX-PLANNING-BUILTIN-VIEWS-v1": {
       "provider": "tests/test_planning_builtin_views.py:roadmap_values",
       "kind": "Native owned Roadmap, Verification coverage and ReleaseReadiness contexts with actual stored/external selections, explicit synthetic host proofs and failed/missing gates. Read-only view adapters, exact source/model mismatch and forbidden-I/O observations. No rendered text or production human approval is an oracle."
+    },
+    "SR-FIX-PLANNING-BUILTIN-WORK-v1": {
+      "provider": "tests/test_planning_builtin_work.py:release_case",
+      "kind": "Owned native view/Readiness semantic inputs, exact evaluation/scope/time/model binding, fresh native gate and review services, corrupt/missing product inputs, real Work input storage and isolated Core/PYZ processes. Synthetic host observations are explicit fixtures, never production approval; no rendered output oracle."
     }
   }
 }

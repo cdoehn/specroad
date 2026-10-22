@@ -30,6 +30,7 @@ from ._readiness_projection import readiness_report
 class ReleaseReadinessContext:
     """An owned model and evaluation, not an attestation of live disk currency."""
     _encoded: bytes
+    _work_encoded: bytes
     _model: TargetModel
     _verification: object
 
@@ -75,6 +76,12 @@ class ReleaseReadinessContext:
             'scope_error': scope_error, 'selection': selection,
             'input_sha256': canonical_json_sha256(binding)}
         object.__setattr__(self, '_encoded', canonical_json_bytes(data))
+        object.__setattr__(self, '_work_encoded', canonical_json_bytes({
+            'format_version': 'release-readiness-work-input-v1',
+            'release_id': release_id, 'configuration_id': configuration_id,
+            'evaluation': None if evaluation is None else evaluation.data,
+            'evaluation_sha256': None if evaluation is None else evaluation.sha256,
+            'evaluated_at': evaluated_at, 'input_sha256': data['input_sha256']}))
         object.__setattr__(self, '_model', model)
         object.__setattr__(self, '_verification', verification)
 
@@ -85,6 +92,16 @@ class ReleaseReadinessContext:
     @property
     def input_sha256(self):
         return self.data['input_sha256']
+
+    @property
+    def work_input(self):
+        """Semantic input only; no saved gates, approval or executable provider.
+
+        The Work host retains the model/product bytes separately. Restoring a
+        context requires fresh native scope and review services, just as the
+        synchronous call does. A context is still not a readiness result.
+        """
+        return self._work_encoded
 
     def __bool__(self):
         raise TypeError('A readiness context is not a release decision')
