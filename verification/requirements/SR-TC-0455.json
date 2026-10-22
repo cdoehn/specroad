@@ -15,12 +15,13 @@
   "steps": [
     "Select exact supplied rule and registry resources; reject duplicate keys, wrong hashes and unsupported grammar.",
     "Evaluate literal field/value mappings and declared relation/hierarchy directions without input or filesystem mutation.",
-    "Preserve external registry identities and unmapped source data; compare real model-root effects and isolated Core/PYZ results."
+    "Preserve external registry identities and unmapped source data; compare real model-root effects and isolated Core/PYZ results.",
+    "Exercise invalid and changed inputs, verify detached selection observations, preserve project bytes/modes and compare isolated Core/PYZ failure contracts."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Mapping MUSS externe Typ-, Hierarchie- und Relationsidentitäten ohne eigenes SpecRoad-Artefakt in einem Registry erhalten können.",
-    "scope": "14.a.W: exact passive exchange-mapping-v1 selection and pure typed projection, with separate external-identity-registry-v1 resources bound to actual mapping bytes. All four table families, null/empty distinction, canonical typed keys, structured rest data, duplicate rejection and source/hash ownership are executable. Registry entries remain non-artifacts in distinct class/system/document namespaces; revisions do not disambiguate identity. No parser, complete format roundtrip, import history, native artifact approval or completed import is claimed."
+    "scope": "14.a.W: exact passive exchange-mapping-v1 selection and pure typed projection, with separate external-identity-registry-v1 resources bound to actual mapping bytes. All four table families, null/empty distinction, canonical typed keys, structured rest data, duplicate rejection and source/hash ownership are executable. Registry entries remain non-artifacts in distinct class/system/document namespaces; revisions do not disambiguate identity. No parser, complete format roundtrip, import history, native artifact approval or completed import is claimed. 14.a.R additionally covers closed declarations, strict JSON/Unicode/numeric boundaries, exact content-version selection, typed structured value keys, joint registry collisions, detached selection observations, legacy resource preservation and isolated failure paths. Selection keeps its original binding even when returned resource observations are reinitialized."
   },
   "expected_diagnostics": [
     "SRV090"
@@ -67,10 +68,63 @@
     "tests/test_external_identity_registry.py::test_registry_requires_actual_rules_with_exact_identity_and_hash[wrong_version]",
     "tests/test_external_identity_registry.py::test_revision_is_data_and_cannot_disambiguate_duplicate_identity",
     "tests/test_external_identity_registry.py::test_source_document_and_system_namespaces_are_exact_and_missing_lookup_creates_nothing",
-    "tests/test_external_identity_registry.py::test_two_nonoverlapping_registries_keep_their_own_hash_bindings"
+    "tests/test_external_identity_registry.py::test_two_nonoverlapping_registries_keep_their_own_hash_bindings",
+    "tests/test_external_identity_registry_right.py::test_duplicate_registry_collections_or_selections_are_rejected_even_when_identical[bindings]",
+    "tests/test_external_identity_registry_right.py::test_duplicate_registry_collections_or_selections_are_rejected_even_when_identical[mappings]",
+    "tests/test_external_identity_registry_right.py::test_duplicate_registry_collections_or_selections_are_rejected_even_when_identical[resources]",
+    "tests/test_external_identity_registry_right.py::test_empty_selection_and_unselected_registries_do_not_discover_or_import_entries",
+    "tests/test_external_identity_registry_right.py::test_generic_legacy_resources_keep_original_bytes_and_root_without_becoming_v1[mapping_version]",
+    "tests/test_external_identity_registry_right.py::test_generic_legacy_resources_keep_original_bytes_and_root_without_becoming_v1[version]",
+    "tests/test_external_identity_registry_right.py::test_isolated_runtimes_keep_selection_binding_and_fail_closed_without_side_effects[core]",
+    "tests/test_external_identity_registry_right.py::test_isolated_runtimes_keep_selection_binding_and_fail_closed_without_side_effects[pyz]",
+    "tests/test_external_identity_registry_right.py::test_literal_registry_identity_does_not_trim_casefold_or_normalize_unicode[external_id]",
+    "tests/test_external_identity_registry_right.py::test_literal_registry_identity_does_not_trim_casefold_or_normalize_unicode[source_document]",
+    "tests/test_external_identity_registry_right.py::test_literal_registry_identity_does_not_trim_casefold_or_normalize_unicode[source_system]",
+    "tests/test_external_identity_registry_right.py::test_noncolliding_registries_with_different_rules_preserve_each_actual_binding",
+    "tests/test_external_identity_registry_right.py::test_passive_registry_changes_alter_model_root_and_own_hash_but_leave_rules_untouched[data-change1]",
+    "tests/test_external_identity_registry_right.py::test_passive_registry_changes_alter_model_root_and_own_hash_but_leave_rules_untouched[extensions-change2]",
+    "tests/test_external_identity_registry_right.py::test_passive_registry_changes_alter_model_root_and_own_hash_but_leave_rules_untouched[external_revision-next]",
+    "tests/test_external_identity_registry_right.py::test_registry_and_rule_resources_cannot_share_a_collection_key",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[control-binding-mapping_version]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[control-binding-sha256]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[control-entry-data]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[control-entry-external_id]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[control-root-entries]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[control-root-mapping]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[missing-binding-mapping_version]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[missing-binding-sha256]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[missing-entry-data]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[missing-entry-external_id]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[missing-root-entries]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[missing-root-mapping]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[nonobject-binding-mapping_version]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[nonobject-binding-sha256]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[nonobject-entry-data]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[nonobject-entry-external_id]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[nonobject-root-entries]",
+    "tests/test_external_identity_registry_right.py::test_registry_control_objects_are_closed_and_required[nonobject-root-mapping]",
+    "tests/test_external_identity_registry_right.py::test_registry_entries_do_not_default_or_coerce_identity_and_passive_data[data-None]",
+    "tests/test_external_identity_registry_right.py::test_registry_entries_do_not_default_or_coerce_identity_and_passive_data[extensions-bad5]",
+    "tests/test_external_identity_registry_right.py::test_registry_entries_do_not_default_or_coerce_identity_and_passive_data[external_id-1]",
+    "tests/test_external_identity_registry_right.py::test_registry_entries_do_not_default_or_coerce_identity_and_passive_data[external_revision-False]",
+    "tests/test_external_identity_registry_right.py::test_registry_entries_do_not_default_or_coerce_identity_and_passive_data[source_document-None]",
+    "tests/test_external_identity_registry_right.py::test_registry_entries_do_not_default_or_coerce_identity_and_passive_data[source_system-]",
+    "tests/test_external_identity_registry_right.py::test_registry_entry_arrays_and_exact_own_versions_do_not_have_fallbacks",
+    "tests/test_external_identity_registry_right.py::test_registry_success_missing_lookup_and_failed_selection_leave_project_untouched",
+    "tests/test_external_identity_registry_right.py::test_registry_uses_canonical_content_hash_and_revalidates_source_bytes",
+    "tests/test_external_identity_registry_right.py::test_selected_registry_bytes_are_not_replaceable_through_returned_observations",
+    "tests/test_external_identity_registry_right.py::test_selected_registry_collisions_ignore_revision_and_rule_identity[None]",
+    "tests/test_external_identity_registry_right.py::test_selected_registry_collisions_ignore_revision_and_rule_identity[next]",
+    "tests/test_external_identity_registry_right.py::test_selection_binding_errors_remain_machine_readable_for_direct_python_inputs[None]",
+    "tests/test_external_identity_registry_right.py::test_selection_binding_errors_remain_machine_readable_for_direct_python_inputs[bad1]",
+    "tests/test_external_identity_registry_right.py::test_selection_binding_errors_remain_machine_readable_for_direct_python_inputs[bad2]",
+    "tests/test_external_identity_registry_right.py::test_selection_binding_errors_remain_machine_readable_for_direct_python_inputs[bad3]",
+    "tests/test_external_identity_registry_right.py::test_selection_binding_errors_remain_machine_readable_for_direct_python_inputs[bad4]",
+    "tests/test_external_identity_registry_right.py::test_selection_binding_errors_remain_machine_readable_for_direct_python_inputs[bad5]",
+    "tests/test_external_identity_registry_right.py::test_selection_binding_rejects_a_bad_unicode_extra_key_without_echoing_it"
   ],
   "open_items": [
-    "14.a.R extends the error/boundary and existing-resource compatibility matrix; 14.a.C cleans the same implementation.",
+    "14.a.C cleans this completed W/R resource and pure projection slice without changing behavior.",
     "Format parsers, explicit import/export profiles, history, loss decisions, native target validation and guarded project publication remain in their separate plan steps."
   ]
 }

@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 8
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 571
-last_completed_plan_commit: 14.a.W
-next_plan_commit: 14.a.R
-last_completed_numbered_bundle: 401
+implementation_plan_commits_completed: 572
+last_completed_plan_commit: 14.a.R
+next_plan_commit: 14.a.C
+last_completed_numbered_bundle: 402
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17150,12 +17150,59 @@ Watcher und CI bleiben unverändert; nach Übergabe endet dieser Durchlauf.
 
 #### 14.a.R – Make it Right
 
-- [ ] **14.a.R** · Position **572/900** · Voraussetzung: `14.a.W`.
+- [x] **14.a.R** · Position **572/900** · Voraussetzung: `14.a.W`.
 **Exakte Commit-Message:** `14.a.R feat(exchange): Mappingressourcen und externe Registries vervollständigen`
 
 **Vervollständigung:** Versions-/Hashabweichungen, Duplikate, fehlende und typverschiedene Werte, Sammlungskollisionen, unbekannte Steuerfelder und Bestandsgrenzen nach 10.12.1 umfassend absichern. Unbekannte Mappinggrammatik beziehungsweise nicht gelieferte exakte Inhaltsversion und ausführbarer Konverter werden abgewiesen; gültige tatsächlich gelieferte Inhaltsversionen bleiben zulässig.
 
 **Verhaltensabnahme:** Gleiche Eingabe mit demselben Mapping erzeugt dieselbe Importprojektion. Die W-Nachweise bleiben zusätzlich grün.
+
+**Vorbereiteter R-Zustand (Bundle 402):** Die bestätigte Vorgabe aus
+Spezifikation 10.12.1 wird ohne weitere normative Änderung vervollständigt.
+Ausgewählte Mapping- und Registrydienste halten ihre ursprünglichen Bytes
+getrennt von zurückgegebenen Ressourcenbeobachtungen. Auch eine erneute
+Initialisierung solcher Beobachtungen kann die geprüfte Bindung oder Projektion
+nicht austauschen. Direkt übergebene Python-Bindungen mit ungültigen
+Unicode-Schlüsseln liefern einen wohldefinierten SRV090-Fehler ohne ungültigen
+Diagnosepointer. Die Fehler-/Bestandsmatrix deckt exakte Versionen und Hashes,
+fehlende und fremde Steuerfelder, strikt typisierte beziehungsweise strukturierte
+Wertetabellen, JSON-Grenzen, gemeinsame Registrykollisionen, ungewählte Ressourcen
+und generische Bestandsmappings ab. Passive Revisions-/Daten-/Extensionänderungen
+wirken auf Registryhash und Modellwurzel, ohne die Regeln umzuschreiben.
+Erfolgs- und Fehlerpfade bleiben schreibfrei; isolierte Core-/PYZ-Prozesse prüfen
+die Bindung und den Fehlervertrag. Bestehende JUnit-Mappingverträge bleiben grün.
+SR-TC-0316 und SR-TC-0455 bleiben ehrlich als Teilimplementierungen geführt;
+Parser, Importhistorie, native Zielvalidierung und Veröffentlichung werden
+weiterhin erst in ihren jeweiligen Planschritten implementiert.
+
+**Beobachtete R-Prüfung:** **562** gezielte Verhaltenstests aus **11** Dateien
+bestanden mit **4** parallelen Workern in **5,19 s**. Die Auswahl umfasst alle
+**143** neuen R-Fälle, alle **62** W-Fälle und **357** betroffene bestehende
+Regressionen für JSON, Kanonisierung, Modellwurzel, Profile und JUnit-Mappings.
+Die vorhandenen Testdateien und die ersten **16.990** Testnummern sind unverändert;
+neue Identitäten wurden ausschließlich angehängt. Ein anfänglicher Collection-
+Versuch scheiterte am falschen ModelDocument-Import einer neuen Testdatei;
+nach Korrektur auf den bestehenden öffentlichen Importpfad ist der vollständige
+Katalog mit **17.133** Testidentitäten bei **0** Testkörpern gültig. Der
+fehlgeschlagene Collectionversuch ist kein Test-Erfolgsnachweis. Quellzustand
+`bc50855637062f1ac28ca8c6abd0dc96500a4e19fa81e18ad9fa64201982b8c9`;
+Auswahlbeleg `07e8c7d44efe0f119c0645e8415cd4cdf208ebce1819b0504db6f5859cecbecd`.
+Dies sind Teiltests, kein Vollsuite-, Release- oder plattformübergreifender
+Erfolgsnachweis. Die Spezifikation und die bisherigen fachlichen Abnahmen
+bleiben unverändert.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_195115_1022_3e0591.zip`, SHA-256
+`b992b18749f56e1082b51025f199f6c80d3aa20baa826b7bef0a9abd28b94907`,
+bestätigt den sauberen Commit `52fe25e7a8cc140318bf3ff8f95bb5d551af9cd2`
+nach Bundle **401** und **5.663** bestandene Tests der Gruppe **1**, Sequenz
+**109**, in **1.681,76 s**. Bundle **402** enthält ausschließlich **14.a.R**.
+Vor seinem Commit ist Sequenz **110**, Gruppe **2**, mit **5.711** Tests
+parallel fällig. Erst nach erfolgreichem Apply-Gate setzt der Entrypoint
+fünf Marker auf **572/900**, zuletzt **14.a.R**, nächstens **14.a.C** und
+Bundle **402**. 14.a.C und spätere Planschritte bleiben offen. Nach der
+atomaren Übergabe endet dieser Durchlauf; Control, Watcher und CI bleiben
+unverändert.
 
 #### 14.a.C – Make it Clean
 

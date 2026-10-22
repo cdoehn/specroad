@@ -42,6 +42,13 @@ def _shape(value, fields, at):
         _fail("mapping_object_required", at)
     if any(type(key) is not str for key in value):
         _fail("mapping_string_key_required", at)
+    # Bindings can arrive as Python values, without the strict byte reader.
+    # Never echo a non-scalar Unicode key into a machine-readable pointer.
+    for key in value:
+        try:
+            key.encode("utf-8")
+        except UnicodeError:
+            _fail("mapping_invalid_unicode", at)
     missing = fields - value.keys()
     extra = value.keys() - fields
     if missing:
@@ -245,9 +252,18 @@ def _select(indexed, key, expected_sha256):
     return resource
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class _SelectedMapping:
-    resource: ExchangeMapping
+    _source_bytes: bytes
+
+    def __init__(self, resource):
+        object.__setattr__(self, "_source_bytes", resource.source_bytes)
+
+    @property
+    def resource(self):
+        # Exposed resource objects are observations, not the selection's state.
+        # Reinitializing a returned object cannot replace the chosen binding.
+        return ExchangeMapping(self._source_bytes)
 
     def artifact(self, external_type, fields):
         row = self._row("types", external_type)
@@ -306,9 +322,16 @@ def select_mapping(resources, *, key, expected_sha256):
     return _SelectedMapping(_select(_index(resources, ExchangeMapping), key, expected_sha256))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class _SelectedRegistries:
-    resources: tuple
+    _source_bytes: tuple
+
+    def __init__(self, resources):
+        object.__setattr__(self, "_source_bytes", tuple(r.source_bytes for r in resources))
+
+    @property
+    def resources(self):
+        return tuple(ExternalIdentityRegistry(raw) for raw in self._source_bytes)
 
     def lookup(self, object_class, source_system, source_document, external_id):
         key = (object_class, source_system, source_document, external_id)

@@ -759,7 +759,7 @@
     },
     "SR-FIX-EXCHANGE-MAPPINGS-v1": {
       "provider": "tests/support/exchange_mappings.py:mapping_value,fields_value,entry_value,registry_value",
-      "kind": "Owned v1 passive mapping rules and separate byte/hash-bound external registries. Explicit typed value tables, four mapping families, exact resource selection, namespace/revision identity, unmodified rest data and source bytes. Real model-root integration and isolated standard-library-only Core/PYZ execution with forbidden-I/O guards; no format parser, import publication, loss acceptance or approval claim."
+      "kind": "Owned v1 passive mapping rules and separate byte/hash-bound external registries. Explicit typed value tables, four mapping families, exact resource selection, namespace/revision identity, unmodified rest data and source bytes. Real model-root integration and isolated standard-library-only Core/PYZ execution with forbidden-I/O guards; no format parser, import publication, loss acceptance or approval claim. R variants add exact versions and canonical hashes, closed and illtyped inputs, typed nested values, strict JSON boundaries, unselected/overlapping collections, detached observations, passive model-root changes and legacy resource preservation. Test-local mutations preserve the original W fixtures."
     }
   }
 }
