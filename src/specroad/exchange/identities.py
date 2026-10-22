@@ -13,6 +13,7 @@ from ..graph._relation_validation import EXTERNAL_KEY, _external_identities
 from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
+from ..model.paths import project_path
 from ..storage.json_syntax import parse_json_object
 
 
@@ -21,7 +22,9 @@ class ImportIdentityError(ModelError):
 
     @property
     def code(self):
-        return "SRV147" if self.reason.startswith("duplicate_") else "SRV090"
+        collisions = ("duplicate_artifact_id", "duplicate_relation_id", "duplicate_external_identity",
+                      "duplicate_external_artifact_identity", "duplicate_external_relation_identity")
+        return "SRV147" if self.reason in collisions else "SRV090"
 
     def diagnostic(self):
         return {**super().diagnostic(), "code": self.code, "exit_code": self.exit_code}
@@ -31,8 +34,30 @@ def _error(error, *, path=None, prefix="", strip=""):
     pointer = error.pointer
     if strip and pointer.startswith(strip):
         pointer = pointer[len(strip):]
+    # A malformed JSON member name must not make the diagnostic itself invalid
+    # UTF-8. Keep the safe caller location, without echoing the invalid member.
+    try:
+        pointer.encode("utf-8")
+    except UnicodeError:
+        pointer = ""
     return ImportIdentityError(error.reason, path=path if path is not None else error.path,
-                               pointer=prefix + pointer)
+        pointer=prefix + pointer, position=error.position, line=error.line,
+        column=error.column, highest_supported=error.highest_supported)
+
+
+def _source_path(value):
+    if value is None:
+        return None
+    if type(value) is not str:
+        raise ImportIdentityError("identity_source_path_required")
+    try:
+        value.encode("utf-8")
+    except UnicodeError as error:
+        raise ImportIdentityError("identity_source_path_required") from error
+    try:
+        return project_path(value)
+    except ModelError as error:
+        raise _error(error) from error
 
 
 @dataclass(frozen=True, init=False)
@@ -111,9 +136,12 @@ class NativeIdentityIndex:
         for supplied in sources:
             if type(supplied) is not SourceRelations:
                 raise ImportIdentityError("identity_source_required")
+            path = _source_path(supplied.path)
+            if type(supplied.source_bytes) is not bytes:
+                raise ImportIdentityError("bytes_required", path=path)
             # Reconstruct from actual bytes instead of trusting cached projections.
             try:
-                source = SourceRelations(supplied.source_bytes, path=supplied.path)
+                source = SourceRelations(supplied.source_bytes, path=path)
             except ModelError as error:
                 raise _error(error) from error
             native = source.identity
@@ -145,7 +173,10 @@ class NativeIdentityIndex:
         except ModelError as error:
             raise _error(error, path=path, prefix=prefix) from error
         for i, value in enumerate(values):
-            identity = ExternalIdentity(value)
+            try:
+                identity = ExternalIdentity(value)
+            except ModelError as error:
+                raise _error(error, path=path, prefix=prefix + "/external_identities/" + str(i)) from error
             key = (kind,) + identity.key
             if key in entries:
                 raise ImportIdentityError("duplicate_external_" + kind + "_identity", path=path,

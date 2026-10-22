@@ -15,12 +15,13 @@
   ],
   "steps": [
     "Load complete relation fields and inspect exact preserved data, identity and read-only effects.",
-    "14.b.W reads explicit import history on native relation candidates and resolves the exact source-bound relation owner without a writer."
+    "14.b.W reads explicit import history on native relation candidates and resolves the exact source-bound relation owner without a writer.",
+    "14.b.R roundtrips relation external identities and unknown nested extensions and keeps exact document namespaces separate."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Relation MUSS External Identities und namespaced Extensions verlustfrei speichern können.",
-    "scope": "Relation fields and original source-byte preservation; no complete model approval or file publication. 14.b.W adds history/hash preservation through native model inputs and exact relation-class lookup alongside artifact identities."
+    "scope": "Relation fields and original source-byte preservation; no complete model approval or file publication. 14.b.W adds history/hash preservation through native model inputs and exact relation-class lookup alongside artifact identities. 14.b.R covers bound/unbound full native data roundtrips, unknown extensions at every level and exact relation keys without collapsing external revision or import history."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -42,8 +43,18 @@
     "test_relations.RelationWorkTests.test_relation_owns_input_and_returned_data",
     "tests/test_import_identity_history.py::test_actual_mapping_output_can_be_recorded_on_artifact_and_relation_candidates",
     "tests/test_import_identity_history.py::test_native_model_roundtrip_keeps_history_and_includes_it_in_model_root",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[-True]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[007-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[007-True]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[None-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[None-True]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[e\\u0301/\\u6771\\u4eac-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[e\\u0301/\\u6771\\u4eac-True]",
     "tests/test_native_identity_index.py::test_artifact_and_relation_with_same_external_key_have_distinct_owners",
-    "tests/test_native_identity_index.py::test_duplicate_external_identity_across_objects_rejects_ambiguous_inventory[relation]"
+    "tests/test_native_identity_index.py::test_duplicate_external_identity_across_objects_rejects_ambiguous_inventory[relation]",
+    "tests/test_native_identity_index_right.py::test_changed_mapping_revision_or_history_cannot_hide_a_duplicate_external_key[relation]",
+    "tests/test_native_identity_index_right.py::test_reordered_sources_and_equal_ids_in_distinct_documents_keep_separate_history[relation]"
   ],
   "open_items": [
     "Integrate with complete graph, authoring/import and transaction gates; computed inverses and full project-level constraints follow later."

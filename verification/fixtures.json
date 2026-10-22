@@ -764,7 +764,7 @@
     },
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1": {
       "provider": "tests/support/import_identities.py:history; tests/support/relations.py:artifact,edge,external",
-      "kind": "Synthetic native artifact/relation identities with explicit mapping projections, exact payload bytes and supplied UTC timestamps. Legacy unbound identities, original source bytes, aliases, distinct namespaces, duplicate and invalid input rejection, detached lookup observations, real model-root bindings and isolated Core/PYZ imports. No external source authenticity, complete format import, policy decision or publication is claimed."
+      "kind": "Synthetic native artifact/relation identities with explicit mapping projections, exact payload bytes and supplied UTC timestamps. Legacy unbound identities, original source bytes, aliases, distinct namespaces, duplicate and invalid input rejection, detached lookup observations, real model-root bindings and isolated Core/PYZ imports. No external source authenticity, complete format import, policy decision or publication is claimed. R cases add full native data roundtrips with nested unknown extensions, distinct document/case/Unicode/whitespace names, malformed native paths and bytes, exact explicit projections and UTC values, non-executed foreign hooks, and unchanged project bytes/modes after success or rejection."
     }
   }
 }

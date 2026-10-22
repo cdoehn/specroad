@@ -15,12 +15,13 @@
   "steps": [
     "Record canonical projection hashes and original payload hash while retaining external identity and extension values.",
     "Read artifact/relation candidates and resolve repeated external identities to existing native owners; reject ambiguous or malformed inventories.",
-    "Verify native model-root changes, detached observations and availability in isolated Core/PYZ runtimes."
+    "Verify native model-root changes, detached observations and availability in isolated Core/PYZ runtimes.",
+    "14.b.R roundtrips bound and legacy identities with unknown extensions; exercises exact namespaces, explicit projection history, malformed data and isolated Core/PYZ behavior."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine importgebundene External Identity MUSS Mapping-ID, letzte Importprojektion, letzte Quellprojektion, letzten Quellpayload-Hash und Importzeitpunkt speichern.",
-    "scope": "14.b.W: owned native identities preserve the existing relation field contract for artifacts and relations. Explicit imported/source mapping projections receive separate canonical SHA-256 values; original payload bytes and supplied UTC time are retained distinctly. A passive index resolves the exact class/system/document/id key to an existing native artifact or relation independent of external revision. Original source bytes, legacy unbound data and namespaced extensions remain intact; construction or history generation grants no write, conflict or completeness authority."
+    "scope": "14.b.W: owned native identities preserve the existing relation field contract for artifacts and relations. Explicit imported/source mapping projections receive separate canonical SHA-256 values; original payload bytes and supplied UTC time are retained distinctly. A passive index resolves the exact class/system/document/id key to an existing native artifact or relation independent of external revision. Original source bytes, legacy unbound data and namespaced extensions remain intact; construction or history generation grants no write, conflict or completeness authority. 14.b.R additionally retains unknown extensions at identity, artifact and relation level through complete data roundtrips. Literal source namespaces remain distinct across case, whitespace, Unicode spelling and document order. Native paths and byte values are checked before use; reader positions and serializable diagnostics survive rejected input, and failed construction leaves previous observations intact. History hashes depend only on each explicitly supplied projection or original payload; external revision, extensions and the supplied time do not silently alter those projections."
   },
   "expected_diagnostics": [
     "SRV090"
@@ -88,10 +89,42 @@
     "tests/test_import_identity_history.py::test_native_model_roundtrip_keeps_history_and_includes_it_in_model_root",
     "tests/test_import_identity_history.py::test_owned_identity_ignores_mutations_of_inputs_and_observations",
     "tests/test_import_identity_history.py::test_projection_member_order_is_irrelevant_but_payload_bytes_remain_distinct",
-    "tests/test_import_identity_history.py::test_refreshing_history_preserves_external_key_revision_extensions_and_prior_value"
+    "tests/test_import_identity_history.py::test_refreshing_history_preserves_external_key_revision_extensions_and_prior_value",
+    "tests/test_import_identity_history_right.py::test_changed_projection_changes_only_its_own_history_hash[imported_projection]",
+    "tests/test_import_identity_history_right.py::test_changed_projection_changes_only_its_own_history_hash[source_projection]",
+    "tests/test_import_identity_history_right.py::test_cycles_and_foreign_json_values_never_run_conversion_hooks",
+    "tests/test_import_identity_history_right.py::test_explicit_utc_spelling_is_preserved_using_the_existing_native_time_contract[2024-02-29T00:00:00Z]",
+    "tests/test_import_identity_history_right.py::test_explicit_utc_spelling_is_preserved_using_the_existing_native_time_contract[2026-09-01T18:00:00.000123Z]",
+    "tests/test_import_identity_history_right.py::test_explicit_utc_spelling_is_preserved_using_the_existing_native_time_contract[2026-09-01t18:00:00Z]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[-True]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[007-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[007-True]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[None-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[None-True]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[e\\u0301/\\u6771\\u4eac-False]",
+    "tests/test_import_identity_history_right.py::test_full_native_roundtrip_preserves_identity_and_unknown_extensions_at_each_level[e\\u0301/\\u6771\\u4eac-True]",
+    "tests/test_import_identity_history_right.py::test_history_uses_only_explicit_projection_values_not_revision_extensions_or_time",
+    "tests/test_import_identity_history_right.py::test_invalid_explicit_time_is_not_replaced_by_a_clock[2026-02-29T00:00:00Z]",
+    "tests/test_import_identity_history_right.py::test_invalid_explicit_time_is_not_replaced_by_a_clock[2026-09-01T18:00:00Z\\n]",
+    "tests/test_import_identity_history_right.py::test_invalid_explicit_time_is_not_replaced_by_a_clock[2026-09-01T18:00:00]",
+    "tests/test_import_identity_history_right.py::test_invalid_explicit_time_is_not_replaced_by_a_clock[2026-09-01T18:00:60Z]",
+    "tests/test_import_identity_history_right.py::test_invalid_explicit_time_is_not_replaced_by_a_clock[2026-09-01T24:00:00Z]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad0-imported_projection]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad0-source_projection]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad1-imported_projection]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad1-source_projection]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad2-imported_projection]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad2-source_projection]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad3-imported_projection]",
+    "tests/test_import_identity_history_right.py::test_invalid_projected_data_has_a_safe_location_and_no_partial_history[bad3-source_projection]",
+    "tests/test_import_identity_history_right.py::test_isolated_runtime_keeps_document_namespaces_extensions_and_failure_contract[core]",
+    "tests/test_import_identity_history_right.py::test_isolated_runtime_keeps_document_namespaces_extensions_and_failure_contract[pyz]",
+    "tests/test_import_identity_history_right.py::test_legacy_identity_unknown_extensions_are_not_promoted_to_active_history",
+    "tests/test_import_identity_history_right.py::test_payload_hash_uses_arbitrary_original_bytes_without_decoding_or_format_inference"
   ],
   "open_items": [
-    "14.b.R extends identity/history edge cases and lossless roundtrips; 14.b.C cleans the same slice.",
+    "14.b.C cleans this identity/history slice without changing behavior. End-to-end format import remains outside this partial contract.",
     "Format-specific parsers, conflict policies, import plans and guarded project publication remain in later steps; no completed import or full model approval is asserted."
   ]
 }

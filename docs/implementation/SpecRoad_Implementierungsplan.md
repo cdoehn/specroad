@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 8
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 574
-last_completed_plan_commit: 14.b.W
-next_plan_commit: 14.b.R
-last_completed_numbered_bundle: 404
+implementation_plan_commits_completed: 575
+last_completed_plan_commit: 14.b.R
+next_plan_commit: 14.b.C
+last_completed_numbered_bundle: 405
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17349,12 +17349,88 @@ ein Apply-Erfolg für Bundle 404 wird hier noch nicht behauptet.
 
 #### 14.b.R – Make it Right
 
-- [ ] **14.b.R** · Position **575/900** · Voraussetzung: `14.b.W`.
+- [x] **14.b.R** · Position **575/900** · Voraussetzung: `14.b.W`.
 **Exakte Commit-Message:** `14.b.R feat(exchange): External Identity und Importhistorie vervollständigen`
 
 **Vervollständigung:** Gleichnamige IDs verschiedener Quelldokumente nicht vermischen.
 
 **Verhaltensabnahme:** Datenroundtrip erhält externe Identitäten und unknown Extensions vollständig. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Implementierungsstand R / Bundle 405:** Das maßgebliche Result
+`specroad-apply_Result_215804_1022_5540a0.zip` mit SHA-256
+`0fad030d9eb6eee9569b5890b711010d1252487dc3bd22623df1c78dd0839266`
+bestätigt Bundle 404 / 14.b.W auf
+`74a0e699eb283df7992736abec957bd00a2180a9`: sauberer Apply-Arbeitsbaum,
+17.204 vollständig gesammelte Tests und **5.735 erfolgreiche Teiltests**
+der Gruppe 1, Commitfolge 112, vier Worker. Snapshot, Bindung, Auswahlbeleg
+und tatsächlicher Commit wurden abgeglichen. Dieser reguläre R-Zustand
+vervollständigt denselben nativen Identitäts-/Historienausschnitt nach
+Spezifikation 10.12; Spezifikation 0.2.13 bleibt unverändert.
+
+Die Zuordnung verwendet die wörtliche Kombination aus Objektklasse,
+Quellsystem, Quelldokument und External-ID. Gleichnamige IDs verschiedener
+Dokumente bleiben auch bei umgekehrter Quellreihenfolge getrennt; weder
+Revision noch Mappingname oder Historienwerte verdecken einen doppelten
+Schlüssel. Groß-/Kleinschreibung, Leerzeichen und unterschiedliche
+Unicode-Schreibweisen werden nicht still angeglichen. Ein Datenroundtrip
+über native Artefakte und Relationen erhält die externe Identität,
+optionale Revision und unbekannte namespaced Extensions auf Identitäts-,
+Artefakt- und Relationsebene vollständig. Bestandsidentitäten ohne
+Historie bleiben ungebunden; opaque Extensions werden nicht als
+aktive Importhistorie interpretiert.
+
+Der Index prüft ausdrücklich übergebene native Quellpfade und verlangt
+echte Bytewerte vor der Rekonstruktion. Fremde Vergleichs-, Konversions-
+oder Dekodierhooks werden dadurch nicht ausgeführt. Cached Projektionen
+können die tatsächlichen Quellbytes und Besitzer nicht umleiten. Lesefehler
+behalten Byteposition, Zeile und Spalte, soweit der Parser sie liefert.
+Ein ungültiger Unicode-Membername wird nicht in den Diagnosepointer
+übernommen; die sichere Aufruferposition bleibt erhalten. Nur echte
+Identitätskollisionen liefern SRV147; doppelte JSON-Member bleiben
+Strukturfehler mit SRV090, jeweils Exitcode 3. Abgelehnte Konstruktion
+veröffentlicht keine teilweise Zuordnung und lässt einen vorherigen
+vollständigen Index erhalten. Erfolg und Ablehnung ändern keine
+Projektbytes oder Dateimodi.
+
+Die drei Historienhashes bleiben getrennt an die ausdrücklich gelieferten
+Import-/Quellprojektionen und unveränderten Payloadbytes gebunden. Revision,
+Extensions und Zeitpunkt ergänzen diese Projektionen nicht implizit.
+Ungültige Projektionen oder UTC-Werte werden abgewiesen; es wird keine
+Uhrzeit erfunden. Vorhandene gültige UTC-Schreibweisen und ältere
+Mappinglabels bleiben lesbar. Die Dienste liefern weiterhin passive
+Werte, keine Konfliktentscheidung, Importfreigabe oder Veröffentlichung.
+
+**Gezielter R-Nachweis:** **614/614 Verhaltenstests**, vier parallele Worker,
+**4,30 s**, Prozesscode 0, Python 3.14.4. Davon sind **76 neue Tests** in
+`test_import_identity_history_right.py` (32) und
+`test_native_identity_index_right.py` (44). Zusätzlich bleiben die 538
+W-/Regressionsnachweise aus Bundle 404 grün: Relationsfelder/-referenzen,
+Artefaktgrundfelder, JSON/JCS, Modellwurzel sowie Austauschmapping und
+Registry. Isolierte Standardbibliotheks-Core-/PYZ-Ausführung erhält die
+Dokumentzuordnung, unbekannte Extensions und den Fehlervertrag.
+Die vollständige Collection-/Katalogprüfung ist gültig mit **17.280 Tests**
+und **0 ausgeführten Testkörpern**; `full_suite_passed` bleibt null.
+Quellstand-SHA-256:
+`955db526e099cb54eed23200bdbeb06529943cd6f26033363d76d6f9dbc9016d`.
+Katalog-SHA-256:
+`df10fd8bf21522401942b4ab96cd63a7587afa303119f71fc29601c58f959829`.
+SR-TC-0317/0453/0454 behalten ihre bisherigen Nachweise und ergänzen die
+R-Abnahme mit tatsächlichen Test-IDs und der bestehenden synthetischen
+Fixture `SR-FIX-NATIVE-IMPORT-IDENTITIES-v1`. Die 76 neuen Testnummern
+werden unverändert hinten angefügt; bestehende Nummern bleiben erhalten.
+Die Python-3.10-Syntaxprüfung ist statisch und kein behaupteter
+Lauf auf allen unterstützten Python-Versionen.
+
+**Umfangsgrenze und Übergabe:** C, Dreifachvergleich/Konfliktstrategien,
+Formatparser, Importplan und geschütztes Anwenden bleiben offen. Der
+Entrypoint stellt ausschließlich diesen gezielt geprüften R-Zustand her
+und prüft anschließend die fällige **Gruppe 2/3**, Commitfolge **113**, mit
+**5.760 Tests** parallel in Apply. Erst nach Erfolg aktualisiert er die
+fünf Planmarker auf **575/900**, zuletzt **14.b.R**, nächstens **14.b.C**
+und Bundle **405**, und erzeugt den vorgesehenen Commit. Dieser
+Einzelauftrag endet nach atomarer Übergabe; ein Apply-Erfolg für Bundle
+405 wird hier noch nicht behauptet.
 
 #### 14.b.C – Make it Clean
 
