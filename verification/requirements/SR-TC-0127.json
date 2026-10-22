@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1",
     "SR-FIX-TASK-DONE-REVIEW-v1"
   ],
   "preconditions": [
@@ -23,12 +24,13 @@
     "Require the reserved task_done service for every implemented Task in loaded/dependency-expanded models and complete write targets, regardless of maturity.",
     "Reject plain status changes, implemented creates, saved plans, unrelated updates and no-ops without proof; passive AI prose and unrelated gates confer no authority.",
     "Reject unbound, incomplete or failed service results and refuse to extend one native review to another implemented Task.",
-    "Preserve all files on rejected writes or stale content/configuration; allow retraction of an unproven status and a freshly reviewed no-op; check isolated Core/PYZ parity."
+    "Preserve all files on rejected writes or stale content/configuration; allow retraction of an unproven status and a freshly reviewed no-op; check isolated Core/PYZ parity.",
+    "For 13.f.R: Retain native Task Done criteria as mandatory even when their rejection is a provider warning; a valid Task Verification Waiver does not grant Release readiness."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erf\u00fcllt und durch Review oder Evidence nachgewiesen sind.",
-    "scope": "13.b.W/R: explicit human-reviewed Task implementation plus mandatory task_done semantic service for every implemented Task. Full original Task/model/ordered-criteria/unconfigured-project bindings and trusted current human verification remain required. Shared validation blocks generic create/update/saved-plan/no-op routes with unproven target status, including unrelated implemented Tasks. Native single-Task review cannot certify a neighbour. Explicit trusted host service registration is not supplied by JSON or AI prose. Existing proof and native publication/replay contracts remain; no Task Evidence projection is invented."
+    "requirement_contract": "Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erfüllt und durch Review oder Evidence nachgewiesen sind.",
+    "scope": "13.b.W/R: explicit human-reviewed Task implementation plus mandatory task_done semantic service for every implemented Task. Full original Task/model/ordered-criteria/unconfigured-project bindings and trusted current human verification remain required. Shared validation blocks generic create/update/saved-plan/no-op routes with unproven target status, including unrelated implemented Tasks. Native single-Task review cannot certify a neighbour. Explicit trusted host service registration is not supplied by JSON or AI prose. Existing proof and native publication/replay contracts remain; no Task Evidence projection is invented. 13.f.R: Retain native Task Done criteria as mandatory even when their rejection is a provider warning; a valid Task Verification Waiver does not grant Release readiness. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -45,6 +47,8 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_release_readiness_right.py::test_a_valid_native_human_waiver_never_counts_as_release_verification[task]",
+    "tests/test_release_readiness_right.py::test_required_negative_review_is_failed_even_as_a_provider_warning[task_done-task_done_criteria_unconfirmed]",
     "tests/test_task_implementation.py::test_changed_live_task_blocks_native_publication",
     "tests/test_task_implementation.py::test_complete_human_review_prepares_only_the_guarded_status_update[blocked]",
     "tests/test_task_implementation.py::test_complete_human_review_prepares_only_the_guarded_status_update[in_progress]",
@@ -121,7 +125,6 @@
     "tests/test_task_implementation_right.py::test_unrelated_services_and_ai_prose_do_not_supply_task_done_proof[review_currentness]"
   ],
   "open_items": [
-    "Evidence-backed Task Done assessment remains unsupported: normative Appendix L currently defines verification-context projections for Requirements, Verification Contracts and Tests, not Tasks. Do not invent a Task projection or promote unresolved Evidence to success.",
-    "No full SR-REQ-0127, SR-VER-0009, full-suite or release-readiness completion is claimed."
+    "Task Done remains the existing explicit human-review route; the now defined Capability/Task Verification context does not itself prove Done criteria. No Evidence-only Done service, full SR-REQ-0127 or Release baseline completion is claimed."
   ]
 }

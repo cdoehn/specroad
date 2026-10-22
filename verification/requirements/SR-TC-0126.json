@@ -7,8 +7,9 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RELEASE-SCOPE-v1",
-    "SR-FIX-RELEASE-SCOPE-RIGHT-v1"
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1",
+    "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
+    "SR-FIX-RELEASE-SCOPE-v1"
   ],
   "preconditions": [
     "Native owned TargetModel plus explicit ClosureBindings for precisely the same complete supplied source and resource bytes.",
@@ -19,12 +20,13 @@
     "Compare stored direct depends_on edges from every closure artifact and classify targets outside Release seed membership as external.",
     "Check exact source/target hashes, edge direction and pointers, configuration exclusions, changed or missing provider inputs and isolated Core/PYZ parity.",
     "Resolve complete indirect obligations and reject exact strong, field, current-review and closed-weak configuration conflicts. Validate every reached artifact with its native schema; retain explicit applicability status, reason and source/configuration binding.",
-    "For 13.e.C, rerun unchanged Release W/R behavior and affected shared-scope, query, configuration and verification contracts after moving the bound-model provider to graph and isolating member/dependency projection."
+    "For 13.e.C, rerun unchanged Release W/R behavior and affected shared-scope, query, configuration and verification contracts after moving the bound-model provider to graph and isolating member/dependency projection.",
+    "For 13.f.R: Keep independently resolved Release scope fixed; foreign decisions cannot add subjects, wrong scopes or effective parent manifests invalidate old acceptance."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Readiness-Prüfung MUSS direkte `depends_on`-Abhängigkeiten des Release-Scopes einbeziehen und außerhalb des Releases liegende Pflichtabhängigkeiten melden.",
-    "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority. 13.e.R additionally covers the complete indirect graph, all 15 strong edge types, resource and review paths, exact SRV141 variant diagnostics, native schemas of reached non-planning members and unresolved unconfigured applicability. Isolated Core/PYZ and no-write boundaries remain enforced. 13.e.C preserves these outputs, hashes, diagnostics and side-effect limits through the shared bound-model scope provider; no new release behavior is introduced."
+    "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority. 13.e.R additionally covers the complete indirect graph, all 15 strong edge types, resource and review paths, exact SRV141 variant diagnostics, native schemas of reached non-planning members and unresolved unconfigured applicability. Isolated Core/PYZ and no-write boundaries remain enforced. 13.e.C preserves these outputs, hashes, diagnostics and side-effect limits through the shared bound-model scope provider; no new release behavior is introduced. 13.f.R: Keep independently resolved Release scope fixed; foreign decisions cannot add subjects, wrong scopes or effective parent manifests invalidate old acceptance. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -50,6 +52,14 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_release_readiness_right.py::test_changed_effective_configuration_cannot_inherit_an_old_acceptance[child]",
+    "tests/test_release_readiness_right.py::test_changed_effective_configuration_cannot_inherit_an_old_acceptance[null]",
+    "tests/test_release_readiness_right.py::test_changed_effective_configuration_cannot_inherit_an_old_acceptance[parent]",
+    "tests/test_release_readiness_right.py::test_decision_bindings_are_exact_not_wildcards[configuration_sha256-1111111111111111111111111111111111111111111111111111111111111111-blocker_decision_configuration_mismatch]",
+    "tests/test_release_readiness_right.py::test_decision_bindings_are_exact_not_wildcards[decision-risk_eliminated-blocker_decision_status_mismatch]",
+    "tests/test_release_readiness_right.py::test_decision_bindings_are_exact_not_wildcards[scope_descriptor-value1-blocker_decision_scope_mismatch]",
+    "tests/test_release_readiness_right.py::test_decision_bindings_are_exact_not_wildcards[subject_sha256-0000000000000000000000000000000000000000000000000000000000000000-blocker_decision_subject_changed]",
+    "tests/test_release_readiness_right.py::test_foreign_decision_subject_cannot_extend_the_native_release_scope",
     "tests/test_release_scope.py::test_changed_external_source_rebinds_observation_without_authorizing_it",
     "tests/test_release_scope.py::test_configuration_filters_optional_seeds_and_is_bound_to_the_observation",
     "tests/test_release_scope.py::test_cycles_parallel_edges_and_transitive_dependencies_are_not_rewritten",
@@ -137,6 +147,6 @@
     "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[subject]"
   ],
   "open_items": [
-    "Release readiness gates and authenticated currentness remain 13.f; View/Work integration remains 13.h. Supplied-input tests do not certify live inventory completeness, normative ScopeHash or full-suite success."
+    "13.f.W/R evaluates bound native readiness and currentness over supplied scope; 13.f.C cleanup, 13.g baseline and 13.h View/Work integration remain open. No live inventory completeness, normative ScopeHash or full-suite pass is certified."
   ]
 }

@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1",
     "SR-FIX-RELEASE-READINESS-v1"
   ],
   "preconditions": [
@@ -14,12 +15,13 @@
   ],
   "steps": [
     "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
-    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes."
+    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes.",
+    "For 13.f.R: Keep stored native selection and Verification priority, including waived/running/not-evaluated outcomes and independently declared mandatory checks. Replay and stale evidence do not grant readiness."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Release Readiness MUSS das berechnete Verification Result des Release-Scope Descriptors mit der nach Kapitel 10.5.4 gebundenen Bewertungsauswahl verwenden.",
-    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result."
+    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result. 13.f.R: Keep stored native selection and Verification priority, including waived/running/not-evaluated outcomes and independently declared mandatory checks. Replay and stale evidence do not grant readiness. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -84,9 +86,23 @@
     "tests/test_release_readiness.py::test_scope_bindings_are_mandatory_and_no_empty_gate_is_waived_without_them",
     "tests/test_release_readiness.py::test_stored_approved_labels_do_not_replace_bound_history_observations",
     "tests/test_release_readiness.py::test_stored_selection_conflict_keeps_native_code_six_and_provisional_is_explicit",
-    "tests/test_release_readiness.py::test_unknown_applicability_never_becomes_an_empty_success"
+    "tests/test_release_readiness.py::test_unknown_applicability_never_becomes_an_empty_success",
+    "tests/test_release_readiness_right.py::test_a_valid_native_human_waiver_never_counts_as_release_verification[capability]",
+    "tests/test_release_readiness_right.py::test_a_valid_native_human_waiver_never_counts_as_release_verification[requirement]",
+    "tests/test_release_readiness_right.py::test_a_valid_native_human_waiver_never_counts_as_release_verification[task]",
+    "tests/test_release_readiness_right.py::test_coverage_distinguishes_missing_evidence_and_stale_evidence[missing]",
+    "tests/test_release_readiness_right.py::test_coverage_distinguishes_missing_evidence_and_stale_evidence[stale]",
+    "tests/test_release_readiness_right.py::test_every_read_rechecks_current_effect_and_replay_of_old_proof_fails",
+    "tests/test_release_readiness_right.py::test_overall_evidence_cannot_discharge_an_additional_declared_dimension[failed]",
+    "tests/test_release_readiness_right.py::test_overall_evidence_cannot_discharge_an_additional_declared_dimension[missing]",
+    "tests/test_release_readiness_right.py::test_overall_evidence_cannot_discharge_an_additional_declared_dimension[passed]",
+    "tests/test_release_readiness_right.py::test_overall_evidence_cannot_discharge_an_additional_declared_dimension[unselected]",
+    "tests/test_release_readiness_right.py::test_stale_evidence_is_incomplete_and_never_an_active_failure[failed]",
+    "tests/test_release_readiness_right.py::test_stale_evidence_is_incomplete_and_never_an_active_failure[passed]",
+    "tests/test_release_readiness_right.py::test_verification_plan_status_does_not_disappear_behind_passing_evidence[not_planned]",
+    "tests/test_release_readiness_right.py::test_verification_plan_status_does_not_disappear_behind_passing_evidence[running]"
   ],
   "open_items": [
-    "13.f.R/C: full human blocker-decision completion, additional error combinations and structural cleanup. 13.g: guarded Release baseline; subsequent public read/View/Work integration remains open."
+    "13.f.C structural cleanup and 13.g guarded Release baseline/public command integration remain open; no full-suite or production approval is asserted."
   ]
 }

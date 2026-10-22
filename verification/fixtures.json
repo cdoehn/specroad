@@ -86,6 +86,7 @@
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PLANNING-BOUNDARIES-v1",
     "SR-FIX-PLANNING-RELATIONS-v1",
+    "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1",
     "SR-FIX-PRODUCTION-VALIDATION-v1",
     "SR-FIX-PROFILE-COMPOSITION-v1",
     "SR-FIX-PROFILES-v1",
@@ -93,11 +94,14 @@
     "SR-FIX-PUBLICATION-RECHECK-v1",
     "SR-FIX-READ-COMMANDS-v1",
     "SR-FIX-READ-ONLY-PROJECT-v1",
+    "SR-FIX-READINESS-MIGRATION-v1",
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-REFERENCE-FINDINGS-v1",
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1",
+    "SR-FIX-RELEASE-READINESS-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
@@ -149,9 +153,7 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects",
-    "SR-FIX-RELEASE-READINESS-v1",
-    "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1"
+    "verification-context-subjects"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -725,6 +727,14 @@
     "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1": {
       "provider": "tests/test_verification_planning_context.py:value",
       "kind": "Native Capability/Task schema 0.2.0 values, exact Appendix L field projection, metadata/workflow exclusions, configured independent contracts and legacy Evidence hashes. Native freshness/selection/aggregation, no rewriting or audit-hash substitute."
+    },
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1": {
+      "provider": "tests/test_release_readiness_right.py:blocker_case",
+      "kind": "Native eight-gate Release with exact Risk/Issue decisions, explicit synthetic current human review verification, native Scope/configuration parents, verification slots and Waivers. Revocation, mismatched bindings, provider failure, warning severity and stale evidence remain blocking; no real approval or execution claimed."
+    },
+    "SR-FIX-READINESS-MIGRATION-v1": {
+      "provider": "tests/test_readiness_updates.py:stored",
+      "kind": "Owned temporary project with legacy Release/Risk/Issue and the real guarded Change Plan update writer; explicit selection, original revision/hash, lifecycle and publication barriers, preserved modes/audit and no implicit review or approval."
     }
   }
 }

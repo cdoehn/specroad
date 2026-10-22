@@ -3,8 +3,8 @@
 Trusted hosts supply the existing ModelGate services (including lifecycle,
 Requirement review and Task Done). Their results are rebound to this complete
 readiness input. Project data cannot install a provider or supply a pass flag.
-Blocker completion reviews remain unavailable in W; a terminal label is not
-proof. This read service does not open the separate Release baseline gate.
+Blocker completion requires an exact, currently authenticated human review;
+a terminal label is not proof. This does not open the Release baseline gate.
 """
 from dataclasses import dataclass
 
@@ -23,6 +23,7 @@ from ..verification._read_evaluation import resolve_read_evaluation
 from ..verification.read_input import VerificationReadBindingConflict
 from .release_scope import resolve_release_scope
 from ._readiness_policy import readiness_policy
+from .release_blockers import blocker_review_inputs, assess_blocker
 
 GATES = ('scope', 'approval', 'implementation', 'verification', 'coverage',
          'risks', 'issues', 'relations')
@@ -38,7 +39,8 @@ class ReleaseReadinessContext:
     _verification: object
 
     def __init__(self, model, release_id, *, scope_bindings, evaluated_at,
-                 configuration_id=None, evaluation=None, inputs=None, input_roles=None):
+                 configuration_id=None, evaluation=None, inputs=None, input_roles=None,
+                 waiver_reviews=None, waiver_verifier=None):
         if type(model) is not TargetModel:
             raise ModelError('release_readiness_target_model_required')
         model = model.snapshot()
@@ -62,11 +64,14 @@ class ReleaseReadinessContext:
         if scope is not None:
             verification = prepare_verification_read_input(model, evaluation,
                 configuration_id=configuration_id, inputs=inputs, input_roles=input_roles,
-                evaluated_at=evaluated_at, scope_descriptor=descriptor, scope_bindings=scope_bindings)
+                evaluated_at=evaluated_at, scope_descriptor=descriptor, scope_bindings=scope_bindings,
+                waiver_reviews=waiver_reviews, waiver_verifier=waiver_verifier)
         binding = {'release_id': release_id, 'model_sources_sha256': model._sources_sha256,
             'model_resources_sha256': model.resources_sha256,
             'scope_descriptor': descriptor.data, 'release_scope': scope,
-            'configuration_sha256': None if scope is None else scope['configuration_hash'],
+            # Blocker decisions bind the effective parent manifest, as native
+            # Verification does; the Scope hash also includes project config.
+            'configuration_sha256': None if verification is None else verification.data['configuration_hash'],
             'policy_sha256': canonical_json_sha256(policy),
             'evaluation_sha256': None if evaluation is None else evaluation.sha256,
             'verification_input_sha256': None if verification is None else verification.sha256,
@@ -113,7 +118,7 @@ class ReleaseReadiness:
         raise TypeError('Readiness is not a lifecycle or publication permit')
 
 
-def assess_release_readiness(context, *, gates=()):
+def assess_release_readiness(context, *, gates=(), blocker_reviews=(), blocker_verifier=None):
     """Compute all gates, keeping unavailable providers and every blocker.
 
     ModelGate callbacks are explicitly trusted host code, as in the ordinary
@@ -128,9 +133,11 @@ def assess_release_readiness(context, *, gates=()):
         raise ModelError('release_readiness_native_gates_required')
     data = context.data
     model = context._model
+    reviews, review_binding = blocker_review_inputs(blocker_reviews, blocker_verifier)
     binding = {**data['binding'], 'providers': sorted([
         {'gate_id': g.gate_id, 'version': g.version, 'resources_sha256': g.resources_sha256}
         for g in gates], key=lambda g: g['gate_id'].encode('utf-8'))}
+    binding['blocker_review_inputs'] = review_binding
     input_sha256 = canonical_json_sha256(binding)
     scope = binding['release_scope']
     records = {v['id']: v for v in model.artifacts}
@@ -162,6 +169,7 @@ def assess_release_readiness(context, *, gates=()):
     if stored_scope != binding['scope_descriptor']:
         finding('scope', None, 'approved_release_scope_descriptor_missing_or_changed', status='failed')
     if scope is None:
+        rows['scope']['evidence_bindings'].append({'scope_resolution_error': data['scope_error']})
         reason = data['scope_error']['reason']
         missing_provider = any(word in reason for word in ('bindings_required', 'observation_missing'))
         finding('scope', None, reason, status='incomplete' if missing_provider else 'failed')
@@ -203,21 +211,37 @@ def assess_release_readiness(context, *, gates=()):
                 unavailable = (reason in ('validation_gate_result_unbound_or_incomplete',
                     'validation_gate_check_failed', 'task_done_review_missing',
                     'task_done_review_verification_failed', 'task_done_target_changed',
-                    'task_done_unconfigured_project_scope_required') or
+                    'task_done_unconfigured_project_scope_required',
+                    'task_done_review_binding_mismatch', 'task_done_review_verifier_required',
+                    'task_done_review_verifier_unbound', 'task_done_review_not_authenticated_or_current',
+                    'evidence_context_not_current', 'approval_human_review_missing') or
                     reason.startswith('approval_review_') or reason.endswith('_unavailable'))
                 finding(target, item.get('artifact_id'), reason,
                         status='incomplete' if unavailable else status)
+        elif name == 'minimum_relations':
+            # An unsatisfied native minimum is still a required relationship
+            # when its diagnostic is informational or a warning.
+            for item in stage['diagnostics']:
+                finding('relations', item.get('artifact_id'), item['reason'], status='failed')
         elif name in ('lifecycle', 'review_currentness', 'task_done', 'evidence_currentness'):
             for item in stage['diagnostics']:
-                finding(target, item.get('artifact_id'), item['reason'])
+                negative = item['reason'] in ('approval_human_review_rejected',
+                    'approval_human_criteria_unconfirmed', 'approval_nonhuman_review',
+                    'approval_human_confirmed_compound', 'task_done_criteria_unconfirmed',
+                    'task_done_human_review_required')
+                finding(target, item.get('artifact_id'), item['reason'],
+                        status='failed' if negative else 'incomplete')
 
     verification = context._verification
     if verification is not None:
         observed = verification.data
         subjects = {v['subject_artifact_id']: v for v in observed['aggregation']['subjects']}
+        required = observed['aggregation']['replacement_assessment']['assessment']['selection']['coverage']['required_set']
         coverage = assess_verification_coverage(model, verification)
         rows['coverage']['evidence_bindings'].append({'sha256': coverage.sha256,
             'observation': coverage.data})
+        rows['coverage']['evidence_bindings'].append({'required_checks_sha256': required['required_checks_sha256'],
+            'required_checks': required['required_checks']})
         for identifier in expected['verification']:
             subject = subjects.get(identifier)
             if subject is None:
@@ -230,8 +254,16 @@ def assess_release_readiness(context, *, gates=()):
             if result != 'passed':
                 finding('verification', identifier, 'verification_' + result,
                         status='failed' if result in ('failed', 'waived') else 'incomplete')
-            if not subject['checks']:
+            required_keys = [key for key in required['required_checks'] if key['subject_artifact_id'] == identifier]
+            if not required_keys:
                 finding('coverage', identifier, 'verification_contract_missing')
+            from ..verification._required_keys import _key
+            checked_keys = {_key(check) for check in subject['checks']}
+            for key in required_keys:
+                if _key(key) not in checked_keys:
+                    finding('coverage', identifier, 'required_check_unselected')
+                if key['test_id'] is not None and key['test_id'] not in ids:
+                    finding('coverage', identifier, 'required_test_reference_missing', evidence_ids=[key['test_id']])
             for check in subject['checks']:
                 if check['evidence_result'] != 'passed':
                     finding('coverage', identifier, 'required_check_' + check['evidence_result'],
@@ -251,20 +283,24 @@ def assess_release_readiness(context, *, gates=()):
                                     evidence_ids=[evidence_id])
                         if evidence['result'] != 'passed':
                             finding('coverage', identifier, 'evidence_result_' + evidence['result'],
-                                status='failed' if evidence['result'] == 'failed' else 'incomplete',
+                                status='failed' if (evidence['result'] == 'failed' and
+                                    evidence['freshness'] == 'current') else 'incomplete',
                                 evidence_ids=[evidence_id])
 
-    for gate, field, terminals in [('risks', 'risk_status', ('mitigated', 'closed', 'accepted')),
-                                    ('issues', 'issue_status', ('resolved', 'closed'))]:
+    decisions = ({} if data['policy_reason'] is not None else
+                 {item['subject_id']: item for item in data['policy']['blocker_decisions']})
+    for identifier in sorted(decisions):
+        if identifier not in expected['risks'] + expected['issues']:
+            finding('scope', identifier, 'blocker_decision_subject_outside_scope', status='failed')
+    for gate in ('risks', 'issues'):
         for identifier in expected[gate]:
-            status = records[identifier][field]
-            rows[gate]['evidence_bindings'].append({'subject_id': identifier,
-                'subject_sha256': canonical_json_sha256(records[identifier]), 'stored_status': status})
-            if status in ('open', 'in_progress'):
-                finding(gate, identifier, field + '_open', status='failed')
-            else:
-                finding(gate, identifier, 'blocker_review_provider_unavailable'
-                        if status in terminals else 'unclassified_status')
+            observation = assess_blocker(binding, records[identifier], decisions.get(identifier),
+                                         reviews, blocker_verifier)
+            rows[gate]['evidence_bindings'].append(observation)
+            for reason in observation['reasons']:
+                finding(gate, identifier, reason, status=observation['status'],
+                    evidence_ids=(() if observation['review_sha256'] is None else
+                                  (observation['review']['review_id'],)))
 
     sources = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
     reviews = RelationReviewStatuses(sources)

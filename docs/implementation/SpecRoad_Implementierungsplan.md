@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 562
-last_completed_plan_commit: 13.f.W
-next_plan_commit: 13.f.R
-last_completed_numbered_bundle: 391
+implementation_plan_commits_completed: 563
+last_completed_plan_commit: 13.f.R
+next_plan_commit: 13.f.C
+last_completed_numbered_bundle: 392
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16395,12 +16395,76 @@ offen. Spezifikation 0.2.12 und ihre bereits bestätigte Klärung bleiben erhalt
 
 #### 13.f.R – Make it Right
 
-- [ ] **13.f.R** · Position **563/900** · Voraussetzung: `13.f.W`.
+- [x] **13.f.R** · Position **563/900** · Voraussetzung: `13.f.W`.
 **Exakte Commit-Message:** `13.f.R feat(roadmap): Readinessgates und aktuelle Beziehungen vervollständigen`
 
 **Vervollständigung:** Alle Randfälle des Vertrags 10.5.6 schließen: `risk_eliminated`, `risk_accepted` und `issue_resolved` mit exakten Subject-/Scope-/Konfigurationsbindungen und bestätigtem Human-Review; alle Issue-Kriterien, Widerruf, falsche/zukünftige Reviews, Prüferfehler und geänderte Bindungen. Legacy-Policies und freie Statuswerte lesbar erhalten; explizite Policy-/Statusmigration durch den vorhandenen Change-Plan-Writer absichern. `failed/incomplete/stale`, fehlende Pflichtslots und nicht aktuelle Pflichtrelationen bleiben unabhängig von Warnungsschwellwert blockierend. Ein Waiver oder KI-Review gewährt keine Releasefreigabe.
 
 **Verhaltensabnahme:** Jeder einzelne Gate-Blocker verhindert positive Readiness; mehrere Befunde bleiben gemeinsam sichtbar. Vollständige Risikobeseitigung, ausdrückliche menschliche Restrisikoakzeptanz und vollständig bestätigte Issue-Erledigung bestehen ausschließlich mit aktueller Bindung. Änderung von Subject, Status, Scope oder Konfiguration entwertet alte Entscheidungen; ein Terminalwort, geringer Impact oder Dauerstatusgrund genügt nicht. Leere/unversionierte Policies und unbekannte Altstatus ergeben `incomplete`; unbekannte neue Policyversion oder zusätzliche v1-Felder ergeben Code 3. Ein fremdes Entscheidungs-Subject erweitert den Scope nicht. Fehlende Evidence und fehlende Testbezüge werden von stale Evidence und zulässigem `test_id=null` getrennt. Die deterministischen Gate-/Gesamtzustände und Negativcodes entsprechen 10.5.6. Alle W-Nachweise bleiben zusätzlich grün.
+
+
+**Vorbereiteter R-Zustand, Bundle 392:** Die bestehende Acht-Gate-Auswertung
+wertet jetzt `risk_eliminated`, `risk_accepted` und `issue_resolved` mit dem
+vollständigen Subjecthash, exakt gleichem Release-Scope und dem nativen
+effektiven Konfigurationsmanifest einschließlich Elternkette aus. Dieser
+Manifesthash bleibt vom zusätzlich gebundenen Scope-Konfigurationshash
+unterschieden. Passive menschliche Abschlussreviews werden bei jeder
+Bewertung durch den ausdrücklich gelieferten Host-Prüfer gegen Reviewhash
+und vollständige Readinesseingabe geprüft. Unbekannte Statuswerte, fehlende
+oder widerrufene Reviews, geänderte Bindungen, zukünftige Zeitpunkte,
+Prüferfehler und unbestätigte beziehungsweise zusätzliche Kriterien entfernen
+keinen Blocker. Fremde Entscheidungs-Subjects erweitern den Scope nicht.
+
+Die Coverage vergleicht ihre Auswahl mit der unabhängig ermittelten nativen
+Pflichtmenge: zusätzliche Dimensionen bleiben erforderlich, zulässiges
+`test_id=null` erfindet keinen Test und eine fehlende Auswahl wird nicht als
+fehlender Contract ausgegeben. Native Scope-Fehler bleiben mit ihren Details
+sichtbar. Stale Evidence einschließlich alter Fehlschläge ist `incomplete`;
+aktuelle fehlgeschlagene Pflichtprüfungen und negative Reviews bleiben
+`failed`, auch bei Provider-Warnungen. Ein wirksamer nativer Waiver bleibt
+`waived` und besteht das Release-Verification-Gate nicht.
+
+Explizite Policy-/Statusmigrationen bereiten ausschließlich normalisierte,
+revisions- und hashgebundene Updates für den vorhandenen Change-Plan-Writer
+vor. Der Writer behält physische Basisprüfung, Lifecycle-/Publikationssperren,
+Transaktion, Dateimodus und Audit bei. Beim Lesen werden weder Bestandsdaten
+migriert noch Reviews, Freigaben oder Schreibautorität erzeugt. Die bestehenden
+W-Nachweise einschließlich isolierter Core-/PYZ-Ausführung bleiben Teil der
+gezielten Regression. **13.f.C** und sämtliche **13.g**-Schritte bleiben offen;
+Spezifikation 0.2.12 wird in diesem regulären R-Bundle nicht geändert.
+
+**Beobachtete Entwicklungsprüfung:** **163** neue und betroffene
+Verhaltenstests aus **3** Dateien auf dem finalen R-Zustand bestanden mit **4** parallelen Workern.
+Die finale Auswahl umfasst alle Release-Readiness-W-/R- und Migrationstests.
+Zuvor bestanden **1.165** gezielte Tests aus **21** Dateien auf dem vorherigen
+R-Zustand (`f35e98906fa005462614e18792abea42abd07d137be7644943dfbbc24584e600`),
+einschließlich allgemeinem Update-Writer, Release-Scope, Modelvalidation,
+Requirement-Review, Task Done, Verification-Aggregation, Coverage, Pflichtchecks
+und Waiver W/R. Ein danach zusätzlich reproduzierter Fehler bei
+Info-/Warnungsdiagnosen unerfüllter Profil-Mindestbeziehungen wurde behoben;
+die **163** finalen Tests einschließlich beider neuer Regressionsfälle prüfen
+den geänderten Readinesspfad erneut. Der frühere Lauf ist ausdrücklich kein
+Beleg für den später geänderten Quellzustand.
+Alle **125** neuen Testidentitäten sind hinten an die bestehende Nummerierung
+angefügt; die bisherigen **16.668** Nummern bleiben unverändert.
+Die vollständige Collection-/Katalogprüfung ist für **16.793** Tests gültig
+und führt **0** Testbodies aus. Der gezielte Erfolgsbeleg bindet Quellzustand
+`fe2c3b0636904f9cbb1821510edcb586114e9b20308a8c39fa6a8eac0d60d6fd` sowie Auswahlbeleg `217f3348369513beba46e8debb0a62987d2b69a8a9cec3a286e2646474b56add`.
+Fehlgeschlagene Entwicklungsversuche zählen nicht als Erfolgsbeleg. Dies
+sind Teiltests, kein Vollsuite-, Produktionsreview- oder Release-Nachweis.
+
+**Gebundene Übergabe:** Das Result
+`specroad-apply_Result_103019_1022_3d5c0d.zip`, SHA-256
+`bccd5319b2436ec0a6fa1968951feabb21baf463c309b4505e10e32abcf66f9d`,
+bestätigt den sauberen Apply-Commit
+`b784c76cedb4506da43888c264bcaed4adb7a1d9` nach Bundle 391 und
+**5.556** bestandenen Tests der Gruppe **0**, Sequenz **99**, in **1.277,40 s**.
+Bundle 392 enthält genau diesen R-Zustand. Vor seinem eigenen Commit ist
+Sequenz **100**, Gruppe **1**, mit **5.598** Tests parallel fällig. Erst nach
+diesem erfolgreichen Apply-Testlauf werden die Fortschrittsmarker auf
+**563/900**, zuletzt **13.f.R**, nächstens **13.f.C**, Bundle **392** gesetzt
+und gemeinsam mit dem geprüften Zustand committed. Bis dahin bleiben die
+bestätigten Marker **562/900** und **13.f.W** erhalten.
 
 #### 13.f.C – Make it Clean
 

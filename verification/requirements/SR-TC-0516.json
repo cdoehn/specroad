@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1",
     "SR-FIX-RELEASE-READINESS-v1"
   ],
   "preconditions": [
@@ -14,12 +15,14 @@
   ],
   "steps": [
     "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
-    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes."
+    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes.",
+    "For 13.f.R: Map native unreviewed, suspect and invalid relation observations to blocking failures without converting them to current.",
+    "Keep a missing native profile minimum blocking even with info/warning diagnostics; preserve the original provider severity."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Release-Readiness-Beziehung DARF nur bei Reviewstatus `current` als erfüllt zählen.",
-    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result."
+    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result. 13.f.R: Map native unreviewed, suspect and invalid relation observations to blocking failures without converting them to current. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -54,9 +57,14 @@
     "tests/test_release_readiness.py::test_native_relation_review_must_stay_exactly_current[rejected]",
     "tests/test_release_readiness.py::test_readiness_and_new_context_types_are_available_in_isolated_runtime[core]",
     "tests/test_release_readiness.py::test_readiness_and_new_context_types_are_available_in_isolated_runtime[pyz]",
-    "tests/test_release_readiness.py::test_required_external_component_and_its_review_remain_release_obligations"
+    "tests/test_release_readiness.py::test_required_external_component_and_its_review_remain_release_obligations",
+    "tests/test_release_readiness_right.py::test_noncurrent_required_relations_remain_failed[rejected]",
+    "tests/test_release_readiness_right.py::test_noncurrent_required_relations_remain_failed[stale]",
+    "tests/test_release_readiness_right.py::test_noncurrent_required_relations_remain_failed[unreviewed]",
+    "tests/test_release_readiness_right.py::test_warning_level_minimum_relation_still_blocks_release[info]",
+    "tests/test_release_readiness_right.py::test_warning_level_minimum_relation_still_blocks_release[warning]"
   ],
   "open_items": [
-    "13.f.R/C: full human blocker-decision completion, additional error combinations and structural cleanup. 13.g: guarded Release baseline; subsequent public read/View/Work integration remains open."
+    "13.f.C structural cleanup and 13.g guarded Release baseline/public command integration remain open; no full-suite or production approval is asserted."
   ]
 }
