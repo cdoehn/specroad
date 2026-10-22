@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
+from ._release_admission import _ReleaseAdmission
 
 
 class ReleaseBaselineSelectionConflict(ModelError):
@@ -35,28 +36,11 @@ class ReleaseBaselineReadiness:
         # Detached/forged report bytes cannot replace the actual native inputs.
         if getattr(self, '_context', None) is None:
             raise ModelError('release_baseline_readiness_required')
-        fresh = _native_readiness(self._context._model, self.data['release_id'],
-            self._context, self._gates, self._reviews, self._verifier)
-        if not fresh.data['ready'] or fresh.data['provisional']:
-            raise ModelError('release_baseline_readiness_required')
-        return fresh
+        return _ReleaseAdmission(self._context._model, self.data['release_id'],
+            self._context, self._gates, self._reviews, self._verifier).require_ready()
 
     def __bool__(self):
         raise TypeError('Readiness observations are not release authority')
-
-
-def _native_readiness(model, release_id, context, gates, reviews, verifier):
-    from ..planning.readiness import ReleaseReadinessContext, assess_release_readiness
-    if type(context) is not ReleaseReadinessContext:
-        raise ModelError('typed_release_readiness_context_required')
-    owned = model.snapshot()
-    current = context._model.snapshot()
-    binding = context.data['binding']
-    if (owned._sources_sha256 != current._sources_sha256 or owned.binding != current.binding
-            or binding['release_id'] != release_id):
-        raise ModelError('release_baseline_readiness_binding_mismatch')
-    return assess_release_readiness(context, gates=gates,
-        blocker_reviews=reviews, blocker_verifier=verifier)
 
 
 def assess_release_baseline_readiness(model, *, release_id, evaluation=None,
@@ -84,8 +68,8 @@ def assess_release_baseline_readiness(model, *, release_id, evaluation=None,
         gates = tuple(gates)
         indexed, _ = blocker_review_inputs(blocker_reviews, blocker_verifier)
         reviews = tuple(indexed[key] for key in sorted(indexed))
-        native = _native_readiness(model, release_id, readiness_context,
-                                   gates, reviews, blocker_verifier)
+        native = _ReleaseAdmission(model, release_id, readiness_context,
+                                   gates, reviews, blocker_verifier).assess()
         data = native.data
         eligible = selection['stored_evaluation_present'] and data['ready'] and not data['provisional']
         value.update(readiness_provider_available=True, readiness_evaluated=True,

@@ -14,36 +14,17 @@ from ..model.errors import ModelError
 from ..model.paths import artifact_path
 from ..storage.json_syntax import parse_json_object
 from ..validation import ModelGate, validate_model
+from ._release_admission import _ReleaseAdmission
 from ._release_snapshot import release_selection
-from .readiness import _native_readiness
 
 RELEASE_GATE = 'extension:release-baseline'
-
-
-@dataclass(frozen=True)
-class _ReleaseAdmission:
-    model: object
-    release_id: str
-    context: object
-    _gates: tuple
-    reviews: tuple
-    verifier: object
-
-    def require_ready(self):
-        if self.context is None:
-            raise ModelError('release_baseline_readiness_required')
-        fresh = _native_readiness(self.model, self.release_id, self.context,
-                                 self._gates, self.reviews, self.verifier)
-        if not fresh.data['ready'] or fresh.data['provisional']:
-            raise ModelError('release_baseline_readiness_required')
-        return fresh
 
 
 @dataclass(frozen=True)
 class _ReleaseBaselineCheck:
     model: object
     operation_bytes: bytes
-    readiness: object
+    readiness: _ReleaseAdmission
     gate_id: str
 
     def __call__(self, target):

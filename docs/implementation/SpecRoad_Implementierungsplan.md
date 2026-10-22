@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 566
-last_completed_plan_commit: 13.g.R
-next_plan_commit: 13.g.C
-last_completed_numbered_bundle: 395
+implementation_plan_commits_completed: 567
+last_completed_plan_commit: 13.g.C
+next_plan_commit: 13.h.W
+last_completed_numbered_bundle: 396
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16658,7 +16658,7 @@ committed. Bis dahin bleiben die bestätigten Marker **565/900** und
 
 #### 13.g.C – Make it Clean
 
-- [ ] **13.g.C** · Position **567/900** · Voraussetzung: `13.g.R`.
+- [x] **13.g.C** · Position **567/900** · Voraussetzung: `13.g.R`.
 **Exakte Commit-Message:** `13.g.C refactor(roadmap): Gespeicherte Bewertung und Release-Baseline bereinigen`
 
 **Bereinigung:** M10-Gateinterface durch tatsächlichen Readinessdienst erfüllen, keine parallele Sonderfreigabe.
@@ -16666,6 +16666,56 @@ committed. Bis dahin bleiben die bestätigten Marker **565/900** und
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Vorbereiteter C-Zustand, Bundle 396:** Ein gemeinsamer privater
+Readinessadapter verbindet die M10-Beobachtung und das native
+Publikationsgate mit demselben vollständigen M13-Dienst. Der Adapter prüft
+die vorhandene Modell-/Ressourcen-/Projekt-/Releasebindung und führt bei
+jeder Abnahme alle nativen Readinessgates erneut aus. Die Freigabeprüfung
+`ready=true` und `provisional=false` ist nur einmal implementiert; es gibt
+keine parallele Sonderfreigabe und keinen gecachten Erfolg.
+
+Die Konstruktion bleibt inert: Das bestehende dauerhafte Receipt kann
+weiterhin vor einer erneuten heutigen Readinessprüfung wiedergegeben werden.
+Die vorhandenen Prüfungen für Eingabetypen, Provider, gespeicherte Auswahl,
+Zielrekonstruktion und aktuelle Publikation behalten ihre Reihenfolge.
+Öffentliche Ergebnisse, Hashes, Fehlerverträge, die frühe exakte
+Konfigurationsprüfung und die normalen Writer-/Lock-/Journalgrenzen bleiben
+unverändert. Ein Berichtsflag oder Callback gewährt keine Schreibautorität.
+
+Diese Bereinigung ändert ausschließlich den internen Zuschnitt. Spezifikation,
+Testorakel, Katalog und dauerhaft gebundene Testnummern bleiben bytegleich.
+Die W-/R-Regressionen werden unverändert ausgeführt; **13.h.W** beginnt
+nicht in diesem Bundle. Die Fortschrittsmarker bleiben bis zum erfolgreichen
+Apply-Gate auf dem bestätigten Stand **566/900**, zuletzt **13.g.R**.
+
+**Beobachtete Entwicklungsprüfung:** **1.099** vorhandene gezielte
+Verhaltenstests aus **31** Dateien bestanden mit **4** parallelen Workern
+in **1328,16 s**. Enthalten sind sämtliche 13.g-W-/R-Fälle,
+die bestehenden geschlossenen M10-Releasegrenzen sowie betroffene Readiness-,
+Descriptor-, Snapshot-, Archivverifikations-, konfigurierte Baseline-,
+Change-Plan- und Writer-/Publikationsregressionen. Die bestehenden isolierten
+Core-/PYZ-Fälle sind eingeschlossen. Keine Erwartung wurde an die Bereinigung
+angepasst; es wurden keine Testidentitäten ergänzt oder umnummeriert.
+Die vollständige Collection-/Katalogprüfung bestätigt **16.848** Tests
+bei **0** Testbodies. Quellzustand
+`723a90dee0dfdd723d96b0cef78d27341e6a657bcfbf2bed934df4db6d0aa0b2`, Auswahlbeleg
+`5e5357f765ead326f153b4e51bfd99216ca14f8cf079aec30a0750970c845c40`.
+Dies sind Teiltestnachweise, kein Vollsuite-, menschlicher Freigabe- oder
+Release-Erfolgsnachweis.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_143935_1022_6dc2c8.zip`, SHA-256
+`9442718cde18328f0bbbf01f3f556c4e544566c4b2f58342079b23dee8fe0238`,
+bestätigt den sauberen Commit
+`b4196eb597c7c426f647dcf59294e5fadd5d3533` nach Bundle **395** und
+**5.616** bestandene Tests der Gruppe **1**, Sequenz **103**, in **1.630,36 s**.
+Bundle **396** enthält ausschließlich **13.g.C**. Vor dessen Commit ist
+Sequenz **104**, Gruppe **2**, mit **5.616** Tests parallel fällig.
+Erst nach erfolgreichem Apply-Gate werden **567/900**, zuletzt **13.g.C**,
+nächstens **13.h.W** und Bundle **396** gesetzt und mit diesem Zustand
+committed. Bis dahin bleiben die bestätigten Marker **566/900** und
+**13.g.R** erhalten. Danach endet dieser Auftrag ohne weiteren Planschritt.
 
 <a id="step-13-h"></a>
 ### 13.h – Roadmap-/Verification-Views und Workintegration
