@@ -158,7 +158,8 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -760,6 +761,10 @@
     "SR-FIX-EXCHANGE-MAPPINGS-v1": {
       "provider": "tests/support/exchange_mappings.py:mapping_value,fields_value,entry_value,registry_value",
       "kind": "Owned v1 passive mapping rules and separate byte/hash-bound external registries. Explicit typed value tables, four mapping families, exact resource selection, namespace/revision identity, unmodified rest data and source bytes. Real model-root integration and isolated standard-library-only Core/PYZ execution with forbidden-I/O guards; no format parser, import publication, loss acceptance or approval claim. R variants add exact versions and canonical hashes, closed and illtyped inputs, typed nested values, strict JSON boundaries, unselected/overlapping collections, detached observations, passive model-root changes and legacy resource preservation. Test-local mutations preserve the original W fixtures."
+    },
+    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1": {
+      "provider": "tests/support/import_identities.py:history; tests/support/relations.py:artifact,edge,external",
+      "kind": "Synthetic native artifact/relation identities with explicit mapping projections, exact payload bytes and supplied UTC timestamps. Legacy unbound identities, original source bytes, aliases, distinct namespaces, duplicate and invalid input rejection, detached lookup observations, real model-root bindings and isolated Core/PYZ imports. No external source authenticity, complete format import, policy decision or publication is claimed."
     }
   }
 }
