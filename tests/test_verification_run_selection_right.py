@@ -201,12 +201,15 @@ def test_direct_test_contract_is_assessed_once_per_unique_subject_binding():
 def test_unsupported_context_projection_never_becomes_invented_current_evidence(subject_kind):
     records, evaluation, cfg, key = case(direct=True, subject_kind=subject_kind)
     item = observation(records, evaluation, key)
+    # Historical placeholder hashes are not rewritten when a type is admitted.
+    next(s for s in item['subjects'] if s['artifact_id'] == key['subject_artifact_id'])[
+        'verification_context_sha256'] = 'a' * 64
     data = assess(records + [item], evaluation, cfg).data; candidate = observed(data)
-    assert candidate['freshness'] == 'incomplete'
-    assert candidate['unsupported_subject_ids'] == [key['subject_artifact_id']]
-    assert candidate['reasons'] == ['subject_context_unsupported']
-    assert runs(data)['ci:observed']['unresolved_evidence_ids'] == [item['id']]
-    assert not data['context_freshness_evaluated']
+    assert candidate['freshness'] == 'stale'
+    assert candidate['unsupported_subject_ids'] == []
+    assert candidate['reasons'] == []
+    assert runs(data)['ci:observed']['stale_evidence_ids'] == [item['id']]
+    assert data['context_freshness_evaluated']
 
 
 def test_a_shared_evidence_is_assessed_separately_for_each_recorded_subject():

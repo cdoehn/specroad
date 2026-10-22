@@ -149,7 +149,9 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "SR-FIX-RELEASE-READINESS-v1",
+    "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -715,6 +717,14 @@
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1": {
       "provider": "tests/test_release_scope_right.py:rich_project",
       "kind": "Owned byte-bound Release graph with indirect Evidence subjects, verification slots, all strong relation types, closed weak dependencies, explicit current reviews and profile/rule/mapping/attachment resources. Native schema failures, exact variant conflicts and unresolved applicability; no authenticated providers, verification or readiness proof."
+    },
+    "SR-FIX-RELEASE-READINESS-v1": {
+      "provider": "tests/test_release_readiness.py:release_case",
+      "kind": "Owned Release with Capability, Requirement, Task, explicit contracts and native current Evidence, stored evaluation, complete closure/current relation reviews, native human Requirement/Task Done checking and explicit synthetic trusted approval-history observations. No real human authenticity or external execution is claimed; missing, changed and revoked observations block. Isolated Core/PYZ and read-only boundaries."
+    },
+    "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1": {
+      "provider": "tests/test_verification_planning_context.py:value",
+      "kind": "Native Capability/Task schema 0.2.0 values, exact Appendix L field projection, metadata/workflow exclusions, configured independent contracts and legacy Evidence hashes. Native freshness/selection/aggregation, no rewriting or audit-hash substitute."
     }
   }
 }

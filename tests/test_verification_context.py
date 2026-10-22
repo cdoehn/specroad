@@ -246,7 +246,7 @@ def test_configuration_selection_must_be_explicit_even_when_unconfigured():
 
 
 def test_other_artifact_types_are_not_guessed_as_verification_subjects():
-    with pytest.raises(ModelError): verification_context_projection(DomainArtifact(artifact_bytes(domain_value('task'))))
+    with pytest.raises(ModelError): verification_context_projection(DomainArtifact(artifact_bytes(domain_value('component'))))
     with pytest.raises(ModelError): verification_context_projection(RecordArtifact(artifact_bytes(record_value('test'))))
 
 

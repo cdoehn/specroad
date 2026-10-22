@@ -4,19 +4,37 @@
   "requirement_id": "SR-REQ-0516",
   "specification_sha256": "ffd9bd939999a246ec3c20fc2834212695674569cd06f75c5fbf3defaa09cbfb",
   "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELEASE-READINESS-v1"
+  ],
+  "preconditions": [
+    "Owned complete TargetModel, exact native ClosureBindings, explicit UTC evaluation time, stored/explicit native VerificationEvaluation and independent input bytes/roles. Trusted host supplies bound ModelGates and current human-review verification."
+  ],
+  "steps": [
+    "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
+    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine Release-Readiness-Beziehung DARF nur bei Reviewstatus `current` als erfüllt zählen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
+  "json_pointers": [
+    "/input_sha256",
+    "/binding",
+    "/gates",
+    "/ready",
+    "/status",
+    "/provisional"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +46,17 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_release_readiness.py::test_complete_release_with_native_capability_task_done_and_evidence_is_ready",
+    "tests/test_release_readiness.py::test_missing_required_artifact_cannot_make_empty_gates_not_applicable",
+    "tests/test_release_readiness.py::test_native_relation_review_must_stay_exactly_current[context_changed]",
+    "tests/test_release_readiness.py::test_native_relation_review_must_stay_exactly_current[delete]",
+    "tests/test_release_readiness.py::test_native_relation_review_must_stay_exactly_current[rejected]",
+    "tests/test_release_readiness.py::test_readiness_and_new_context_types_are_available_in_isolated_runtime[core]",
+    "tests/test_release_readiness.py::test_readiness_and_new_context_types_are_available_in_isolated_runtime[pyz]",
+    "tests/test_release_readiness.py::test_required_external_component_and_its_review_remain_release_obligations"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "13.f.R/C: full human blocker-decision completion, additional error combinations and structural cleanup. 13.g: guarded Release baseline; subsequent public read/View/Work integration remains open."
   ]
 }

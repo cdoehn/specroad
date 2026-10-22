@@ -113,12 +113,13 @@ def test_unsupported_subject_context_remains_incomplete_beside_a_stale_test(kind
         next(s for s in item['subjects'] if s['artifact_id'] == key['test_id'])[
             'verification_context_sha256'] = 'f' * 64
     data = subject(aggregate(records + [item], evaluation, cfg))
-    assert data['verification_result'] == 'incomplete'
+    # Retain this permanent test identity; Appendix L now defines both types.
+    expected = 'stale' if stale_contract else result
+    assert data['verification_result'] == expected
     run = data['checks'][0]['active_runs'][0]
-    assert run['run_result'] == 'incomplete'
-    assert run['evidence'][0]['freshness'] == ('stale' if stale_contract else 'incomplete')
-    assert run['evidence'][0]['unsupported_subject_ids'] == [key['subject_artifact_id']]
-    assert 'subject_context_unsupported' in run['blocking_observations'][0]['reasons']
+    assert run['run_result'] == expected
+    assert run['evidence'][0]['freshness'] == ('stale' if stale_contract else 'current')
+    assert run['evidence'][0]['unsupported_subject_ids'] == []
 
 
 def test_failure_retains_all_other_blocking_observations_of_the_same_run():

@@ -300,10 +300,14 @@ def test_unsupported_terminal_context_never_becomes_current_from_matching_audit_
     records, evaluation, cfg, key = case(direct=True, subject_kind=kind, expected=('ci:old',))
     old = observation(records, evaluation, key, run='ci:old')
     new = observation(records, evaluation, key, token='2', run='ci:new', result='passed')
+    # The formerly unsupported subject's stored placeholder is still stale;
+    # matching audit hashes do not replace the now-defined Appendix L binding.
+    next(s for s in new['subjects'] if s['artifact_id'] == key['subject_artifact_id'])[
+        'verification_context_sha256'] = 'a' * 64
     data = assess(records + [old, new], selection(evaluation, [decision(key, 'ci:old', [old])]), cfg).data
     item = replacement(data)
     assert not item['effective'] and item['terminal_runs'][0]['reasons'] == ['replacement_run_not_current']
-    assert item['terminal_runs'][0]['evidence'][0]['freshness'] == 'incomplete'
+    assert item['terminal_runs'][0]['evidence'][0]['freshness'] == 'stale'
     assert data['verification_result'] == 'incomplete'
 
 

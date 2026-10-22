@@ -1,8 +1,8 @@
 """Explicit human Done review and native Task implementation publication.
 
 This path binds a human decision to the complete original Task, supplied
-model and unconfigured project scope. It does not invent a Task verification
-context hash: Appendix L currently defines that projection for other types.
+model and unconfigured project scope. Its full Task review binding remains separate from the native
+verification content projection specified by Appendix L.
 Review labels are passive input; only the explicitly supplied trusted host
 verifier can confirm human origin and current validity. No JSON imports code.
 Core requires the reserved Done service on every implemented Task; the native
@@ -173,6 +173,64 @@ def prepare_task_implementation(context, *, review, verifier):
                        ('_review', review), ('_verifier', verifier)):
         object.__setattr__(result, name, item)
     return result
+
+
+def task_done_read_gate(model, preparations):
+    """Adapt existing exact Task Done reviews to read-only model validation.
+
+    The host supplies actual checked preparations, never JSON success labels.
+    Recheck every review on use, against this complete original model. Reading
+    does not apply its status-update intention or change revision/audit fields.
+    The existing unconfigured-project review boundary remains unchanged.
+    """
+    if type(model) is not TargetModel:
+        raise ModelError('typed_task_done_context_required')
+    if type(preparations) not in (tuple, list) or any(
+            type(value) is not TaskImplementation for value in preparations):
+        raise ModelError('typed_task_implementation_required')
+    owned = model.snapshot()
+    prepared = {value.data['task_id']: value for value in preparations}
+    if len(prepared) != len(preparations):
+        raise ModelError('task_done_duplicate_preparation')
+    contexts = {}
+    for key, value in prepared.items():
+        context = TaskDoneContext(owned, key,
+            scope_descriptor=ScopeDescriptor(value.data['scope_descriptor']))
+        current = prepare_task_implementation(context, review=value._review, verifier=value._verifier)
+        if current.data != value.data:
+            raise ModelError('task_implementation_preparation_changed')
+        contexts[key] = context
+    resources = canonical_json_sha256({'model_sources_sha256': owned._sources_sha256,
+        'preparations': [prepared[key].data for key in sorted(prepared)]})
+
+    def dependencies(context):
+        return context.dependency_result({key: list(context.all_ids) for key in context.subjects})
+
+    def check(target):
+        if target.configuration_data is not None:
+            return target.result([{'reason': 'task_done_unconfigured_project_scope_required',
+                                   'severity': 'error'}])
+        expected = {row['id']: row for row in owned.artifacts}
+        actual = {key: target.artifact(key) for key in target.all_ids}
+        if (canonical_json_sha256(expected) != canonical_json_sha256(actual) or
+                target.profile_data != owned.profile.data or
+                {d.path: d.content for d in target.documents} !=
+                {d.path: d.content for d in owned.documents}):
+            return target.result([{'reason': 'task_done_target_changed', 'severity': 'error'}])
+        issues = []
+        for key in target.subjects:
+            if key not in prepared:
+                issues.append({'reason': 'task_done_review_missing', 'artifact_id': key,
+                               'severity': 'error'})
+                continue
+            value = prepared[key]
+            try:
+                _confirmed(contexts[key], value._review, value._verifier)
+            except ModelError as error:
+                issues.append({'reason': error.reason, 'artifact_id': key, 'severity': 'error'})
+        return target.result(issues)
+
+    return ModelGate('task_done', 'bound-task-done-read-v1', dependencies, check, resources)
 
 
 def implement_task(model, prepared, *, actor, planned_at, change_plan_id,

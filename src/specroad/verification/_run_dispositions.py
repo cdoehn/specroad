@@ -65,7 +65,8 @@ def selected_run_dispositions(selection_bytes, document_inputs, configuration_id
                 for subject_id in sorted(ids, key=lambda item: item.encode('utf-8')):
                     if subject_id not in context_cache:
                         document = documents[subject_id]
-                        cls = {'requirement': DomainArtifact, 'verification': VerificationContract,
+                        cls = {'capability': DomainArtifact, 'task': DomainArtifact,
+                               'requirement': DomainArtifact, 'verification': VerificationContract,
                                'test': VerificationTest}.get(records[subject_id]['artifact_type'])
                         context_cache[subject_id] = (None if cls is None else VerificationContext(
                             cls(document[1], path=document[0]), configuration=configuration))

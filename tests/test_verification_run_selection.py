@@ -54,14 +54,10 @@ def observation(records, evaluation, key, *, token='1', run='ci:observed', resul
         if value['id'] not in ids:
             continue
         kind = value['artifact_type']
-        if kind in ('requirement', 'verification', 'test'):
-            cls = {'requirement': DomainArtifact, 'verification': VerificationContract,
-                   'test': VerificationTest}[kind]
-            subjects.append(VerificationContext(cls(artifact_bytes(value)), configuration=None).subject_binding)
-        else:
-            # Selection does not invent a context projection for other subjects.
-            subjects.append({'artifact_id': value['id'], 'revision': value['revision'],
-                'artifact_sha256': canonical_json_sha256(value), 'verification_context_sha256': 'a' * 64})
+        cls = {'capability': DomainArtifact, 'requirement': DomainArtifact,
+               'task': DomainArtifact, 'verification': VerificationContract,
+               'test': VerificationTest}[kind]
+        subjects.append(VerificationContext(cls(artifact_bytes(value)), configuration=None).subject_binding)
     return record_value('evidence', id=ref('EVD', token), result=result, subjects=subjects,
         configuration_hash=evaluation.data['configuration_hash'], configuration_policy='bound',
         run_context={'subject_id': evaluation.data['evaluated_subject']['subject_id'],

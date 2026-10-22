@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 561
-last_completed_plan_commit: 13.e.C
-next_plan_commit: 13.f.W
-last_completed_numbered_bundle: 390
+implementation_plan_commits_completed: 562
+last_completed_plan_commit: 13.f.W
+next_plan_commit: 13.f.R
+last_completed_numbered_bundle: 391
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16334,7 +16334,7 @@ Apply-Gates umgesetzt, ohne erneutes Klärungsbundle aus demselben Result.
 
 #### 13.f.W – Let it Work
 
-- [ ] **13.f.W** · Position **562/900** · Voraussetzung: `13.e.C`.
+- [x] **13.f.W** · Position **562/900** · Voraussetzung: `13.e.C`.
 **Exakte Commit-Message:** `13.f.W feat(roadmap): Readinessgates und aktuelle Beziehungen aufbauen`
 
 **Umsetzung:** Den Readiness-Kern nach Spezifikation 10.5.6 auf dem vollständigen nativen Release-Scope aus 13.e aufbauen: geschlossene `release-readiness-policy-v1`, exakt gebundene Eingabe und alle acht Pflichtgates mit klarer Geltung je Artefakttyp. Vorhandene Freigabe-, Task-Done-, Verification-, Coverage- und Relationsdienste verwenden. Die bestehende Verification-Priorität nicht nachbilden oder ändern. Offene Risiken/Issues blockieren; fehlende Abschlussprüfer und unklassifizierte Altdaten bleiben sicher unvollständig. Keine impliziten Defaults beim Lesen, keine Lifecycle- oder Dateischreibwirkung.
@@ -16347,6 +16347,51 @@ und kein Überspringen dieser Subjects. Zusätzliche Fehlerkombinationen
 werden in R vervollständigt; C verändert den Fachvertrag nicht.
 
 **Verhaltensabnahme:** Ein vollständig belegter Release mit aktueller Scope-/Konfigurationsbindung liefert `ready=true`; eine leere anwendbare Risiko-/Issue-Menge wird nur bei vollständig belegter Scopeauflösung als `not_applicable` ausgewiesen. Der positive Fall erfordert echte gebundene Providerbeobachtungen einschließlich Freigabe und Done, keine selbstbestätigenden Labels. Offener Risk, offener Issue, fehlendes Pflichtartefakt, fehlender Provider oder ungeklärte Anwendbarkeit verhindern Readiness und bleiben im maschinenlesbaren Result erhalten. Produktstatus und Dateien bleiben unverändert. Das Baseline-Gate bleibt bis 13.g geschlossen.
+
+**Vorbereiteter W-Zustand, Bundle 391:** `ReleaseReadinessContext` und
+`assess_release_readiness` verbinden den nativen Release-Scope mit allen acht
+Pflichtgates. Policy, Auswahl, Bewertungszeitpunkt, Modellressourcen und
+Providerbindungen gehören zur exakten Eingabe. Die gemeinsame Verification
+unterstützt nun Capability-/Task-Kontexte nach Anhang L; bisherige
+Requirement-/Contract-/Test-Projektionen und gespeicherte Evidence bleiben
+unverändert. Der neue lesende Task-Done-Adapter prüft vorhandene typisierte
+Vorbereitungen und ihre menschliche Bestätigung erneut, ohne die vorbereitete
+Statusänderung auszuführen. Die bisherige Grenze des nativen Task-Done-Dienstes
+auf den unkonfigurierten Projektscope bleibt erhalten.
+
+Der positive Verhaltensfall enthält Capability, Requirement und Task mit
+nativen Pflichtchecks, aktueller Evidence, Requirement-Review, Task-Done und
+aktuellen Relationsreviews. Testseitige externe Prüfer und Freigabehistorien
+sind ausdrücklich synthetische Fixtures; sie bescheinigen keine tatsächliche
+Produktfreigabe. Fehlende, widerrufene oder anders gebundene Beobachtungen,
+offene Blocker und unvollständiger Scope verhindern Readiness. Terminale
+Risiko-/Issue-Labels allein bleiben unvollständig. Abschlussreviews und
+explizite Migrationen folgen in **13.f.R**, strukturelle Bereinigung in
+**13.f.C**; CLI-/Baseline-Anbindung bleibt **13.g** vorbehalten.
+
+**Entwicklungsnachweis:** **1.454** gezielte Verhaltenstests bestanden mit
+**4 Workern** in **335,21 s**. Die 26 ausgewählten Module umfassen die neuen
+Readiness-/Kontextfälle sowie betroffene Scope-, Task-Done-, Requirement-Review-,
+Modellvalidierungs-, Evidence-, Aggregations-, Coverage-, Pflichtcheck- und
+Run-Auswahl-/Ersetzungsregressionen. Core-/PYZ-Verhalten ist enthalten.
+Die vollständige Collection-/Katalogprüfung bestätigt **16.668** Tests bei
+**0** ausgeführten Testbodies; **110** neue Identitäten wurden ausschließlich
+hinten angefügt, die bisherigen **16.558** Nummern bleiben unverändert.
+Der gezielte Erfolgsbeleg bindet Quellzustand
+`ee9286306b3f17f83017e26b873a070e51e244b56078facc9170959014a98f0d`.
+Dies sind Teiltestnachweise, kein Vollsuite- oder Release-Erfolgsnachweis.
+
+**Gebundene Übergabe:** Das Result
+`specroad-apply_Result_092812_1022_007004.zip`, SHA-256
+`89b997265dd4c300b7aa267a2f03764a4630b02a0bd956ce43fd0f95146fa1c4`,
+bestätigt den sauberen Apply-Commit
+`aff2c1520cc8d281c53c4a958d71541e985dd3cb` nach Bundle 390 mit **5.519**
+bestandenen Tests der Gruppe **2**, Sequenz **98**, in **1.311,69 s**.
+Bundle 391 enthält ausschließlich diesen W-Zustand. Vor seinem Commit ist
+Sequenz **99**, Gruppe **0**, mit **5.556** Tests parallel fällig. Erst dessen
+Erfolg und tatsächlicher Commit bestätigen **562/900**, **13.f.W** als letzten
+und **13.f.R** als nächsten Planschritt; die weiteren W/R/C-Positionen bleiben
+offen. Spezifikation 0.2.12 und ihre bereits bestätigte Klärung bleiben erhalten.
 
 #### 13.f.R – Make it Right
 

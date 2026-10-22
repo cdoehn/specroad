@@ -4,19 +4,37 @@
   "requirement_id": "SR-REQ-0450",
   "specification_sha256": "ffd9bd939999a246ec3c20fc2834212695674569cd06f75c5fbf3defaa09cbfb",
   "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RELEASE-READINESS-v1"
+  ],
+  "preconditions": [
+    "Owned complete TargetModel, exact native ClosureBindings, explicit UTC evaluation time, stored/explicit native VerificationEvaluation and independent input bytes/roles. Trusted host supplies bound ModelGates and current human-review verification."
+  ],
+  "steps": [
+    "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
+    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Release Readiness MUSS das berechnete Verification Result des Release-Scope Descriptors mit der nach Kapitel 10.5.4 gebundenen Bewertungsauswahl verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
+  "json_pointers": [
+    "/input_sha256",
+    "/binding",
+    "/gates",
+    "/ready",
+    "/status",
+    "/provisional"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +46,47 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[issue-in_progress-failed]",
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[issue-legacy_done-incomplete]",
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[issue-open-failed]",
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[issue-resolved-incomplete]",
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[risk-accepted-incomplete]",
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[risk-in_progress-failed]",
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[risk-legacy_done-incomplete]",
+    "tests/test_release_readiness.py::test_blockers_never_disappear_through_labels_or_terminal_words[risk-open-failed]",
+    "tests/test_release_readiness.py::test_changed_task_cannot_reuse_previous_native_done_gate",
+    "tests/test_release_readiness.py::test_closed_policy_rejects_extensions_unknown_versions_and_null_selection[policy0]",
+    "tests/test_release_readiness.py::test_closed_policy_rejects_extensions_unknown_versions_and_null_selection[policy1]",
+    "tests/test_release_readiness.py::test_closed_policy_rejects_extensions_unknown_versions_and_null_selection[policy2]",
+    "tests/test_release_readiness.py::test_complete_release_with_native_capability_task_done_and_evidence_is_ready",
+    "tests/test_release_readiness.py::test_done_review_is_rechecked_on_read_after_host_revocation",
+    "tests/test_release_readiness.py::test_legacy_policy_is_read_only_incomplete[policy0]",
+    "tests/test_release_readiness.py::test_legacy_policy_is_read_only_incomplete[policy1]",
+    "tests/test_release_readiness.py::test_missing_provider_blocks_even_with_all_success_labels[evidence_currentness]",
+    "tests/test_release_readiness.py::test_missing_provider_blocks_even_with_all_success_labels[lifecycle]",
+    "tests/test_release_readiness.py::test_missing_provider_blocks_even_with_all_success_labels[review_currentness]",
+    "tests/test_release_readiness.py::test_missing_provider_blocks_even_with_all_success_labels[task_done]",
+    "tests/test_release_readiness.py::test_missing_required_artifact_cannot_make_empty_gates_not_applicable",
+    "tests/test_release_readiness.py::test_native_evidence_failures_block_verification_and_coverage[failure]",
+    "tests/test_release_readiness.py::test_native_evidence_failures_block_verification_and_coverage[missing_configuration]",
+    "tests/test_release_readiness.py::test_native_evidence_failures_block_verification_and_coverage[missing_run]",
+    "tests/test_release_readiness.py::test_native_evidence_failures_block_verification_and_coverage[missing_subject]",
+    "tests/test_release_readiness.py::test_native_evidence_failures_block_verification_and_coverage[stale]",
+    "tests/test_release_readiness.py::test_native_relation_review_must_stay_exactly_current[context_changed]",
+    "tests/test_release_readiness.py::test_native_relation_review_must_stay_exactly_current[delete]",
+    "tests/test_release_readiness.py::test_native_relation_review_must_stay_exactly_current[rejected]",
+    "tests/test_release_readiness.py::test_native_requirement_review_revocation_blocks_an_approved_release",
+    "tests/test_release_readiness.py::test_readiness_and_new_context_types_are_available_in_isolated_runtime[core]",
+    "tests/test_release_readiness.py::test_readiness_and_new_context_types_are_available_in_isolated_runtime[pyz]",
+    "tests/test_release_readiness.py::test_replaying_a_provider_observation_under_a_new_evaluation_time_is_incomplete",
+    "tests/test_release_readiness.py::test_required_external_component_and_its_review_remain_release_obligations",
+    "tests/test_release_readiness.py::test_scope_bindings_are_mandatory_and_no_empty_gate_is_waived_without_them",
+    "tests/test_release_readiness.py::test_stored_approved_labels_do_not_replace_bound_history_observations",
+    "tests/test_release_readiness.py::test_stored_selection_conflict_keeps_native_code_six_and_provisional_is_explicit",
+    "tests/test_release_readiness.py::test_unknown_applicability_never_becomes_an_empty_success"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "13.f.R/C: full human blocker-decision completion, additional error combinations and structural cleanup. 13.g: guarded Release baseline; subsequent public read/View/Work integration remains open."
   ]
 }

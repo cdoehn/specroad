@@ -21,7 +21,7 @@ def verification_context_projection(subject):
     """Return the detached, locally validated subject projection of Appendix L.
 
     Calculated results and run fields are not valid stored fields of these
-    three subject types. They are rejected by their native schemas, not silently
+    supported subject types. They are rejected by their native schemas, not silently
     stripped from an otherwise invalid record. A waiver is a workflow decision,
     not part of the check subject. Provenance retains source data and extensions;
     its capture timestamp is purely audit metadata.

@@ -21,7 +21,7 @@ def contract_check(data, record, contract):
     subject_id = subject['id']
     kind = subject['artifact_type']
     digest = subject_context_sha256(value)
-    if kind == 'requirement':
+    if kind in ('capability', 'requirement', 'task'):
         matches = subject_id in value['subjects']
     elif kind == 'test':
         matches = any(slot['test_id'] == subject_id for slot in value['evidence_slots'])
