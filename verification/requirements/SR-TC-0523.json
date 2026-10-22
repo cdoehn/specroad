@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0523",
   "requirement_id": "SR-REQ-0523",
-  "specification_sha256": "204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c",
+  "specification_sha256": "1ecbb94c6f65278b81509282c562de37beb808967366043b3412075cf04b6a60",
   "primary_verification_id": "SR-VER-0022",
   "implementation_status": "partial",
   "method": "automated_behavior",

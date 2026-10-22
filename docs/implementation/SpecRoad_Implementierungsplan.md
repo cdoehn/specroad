@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 4 · **Stand:** 19. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.9
+**Planrevision:** 5 · **Stand:** 22. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.10
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `204a6382e03c16eefa914ad21f211f4f614e37f39d1edd199bf5d0bee50ba25c`.
+Gebundene Spezifikations-SHA-256: `1ecbb94c6f65278b81509282c562de37beb808967366043b3412075cf04b6a60`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -17,12 +17,12 @@ Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 202
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 4
+plan_revision: 5
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 561
 last_completed_plan_commit: 13.e.C
 next_plan_commit: 13.f.W
-last_completed_numbered_bundle: 387
+last_completed_numbered_bundle: 388
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -50,6 +50,36 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Readiness-Vertrag präzisieren (Bundle 388)
+
+Revision 5 schließt auf ausdrücklichen Nutzerauftrag die Vertragslücke vor
+**13.f.W**. Spezifikation **0.2.10, Kapitel 10.5.6** definiert die geschlossene
+Readiness-Policy, feste Pflichtgates, Risiko-/Issue-Status und gebundene
+menschliche Abschlussentscheidungen einschließlich lesbarem Legacy-Bestand.
+Die Verifikationsprioritäten aus 10.5 und der vollständige Release-Scope aus
+13.e bleiben maßgeblich. Die aktive Katalogbindung folgt dem neuen Dokumenthash;
+historische Evidence wird nicht umgebunden oder als neue Abnahme ausgegeben.
+
+- [x] **READINESS-CONTRACT:** Spezifikation und Abnahmekriterien konsistent präzisieren. Commit: `docs(spec): Release-Readiness-Vertrag und Blockerregeln präzisieren`.
+
+**Umfang:** Genau ein OFF-PLAN-Commit mit Spezifikation, Implementierungsplan
+und notwendigen maschinellen Katalogbindungen. Keine Produktimplementierung,
+keine Änderung an ausführbaren Tests, Testnummern, Runnern oder der Testpolicy.
+Der abgeschlossene Produktstand bleibt **561/900**, letzter regulärer Commit
+**13.e.C**, nächster regulärer Commit **13.f.W**. Die W/R/C-Positionen 562–567
+bleiben offen. Der Übergabe-Entrypoint setzt diesen Offplan-Marker und die
+abgeschlossene Bundlenummer erst nach dem erfolgreichen parallelen Apply-Gate.
+Das erzeugte ZIP allein belegt keinen entstandenen Commit.
+
+**Vertragsprüfung:** Policyfelder und Gate-Geltung sind abschließend; offene
+Risiken und Issues blockieren. Terminalstatus benötigt den passenden aktuellen
+Abschlussreview, Risikoakzeptanz eine ausdrückliche menschliche Entscheidung.
+Fehlende, stale oder unklassifizierte Daten bleiben unvollständig. Warnungsfilter
+und Waiver heben diese Pflichten nicht auf. Gespeicherte Bewertung, identische
+CLI-Wiederholung, Konfliktcode 6 und ausschließlich vorläufige externe Auswahl
+bleiben nach 10.5.4 erhalten. Migration schreibt nur über einen ausdrücklich
+beauftragten normalen Change Plan; Lesen verändert keine Bestandsdaten.
 
 ## OFF-PLAN – Apply-Testrotation in drei Gruppen (Bundle 295)
 
@@ -16104,25 +16134,25 @@ ist ein gezielter Teiltestnachweis, kein Vollsuite- oder Release-Erfolgsnachweis
 - [ ] **13.f.W** · Position **562/900** · Voraussetzung: `13.e.C`.
 **Exakte Commit-Message:** `13.f.W feat(roadmap): Readinessgates und aktuelle Beziehungen aufbauen`
 
-**Umsetzung:** Freigabe, Umsetzung, Verifikation, Coverage, Risiken, Issues und nur current Pflichtrelationen prüfen.
+**Umsetzung:** Den Readiness-Kern nach Spezifikation 10.5.6 auf dem vollständigen nativen Release-Scope aus 13.e aufbauen: geschlossene `release-readiness-policy-v1`, exakt gebundene Eingabe und alle acht Pflichtgates mit klarer Geltung je Artefakttyp. Vorhandene Freigabe-, Task-Done-, Verification-, Coverage- und Relationsdienste verwenden. Die bestehende Verification-Priorität nicht nachbilden oder ändern. Offene Risiken/Issues blockieren; fehlende Abschlussprüfer und unklassifizierte Altdaten bleiben sicher unvollständig. Keine impliziten Defaults beim Lesen, keine Lifecycle- oder Dateischreibwirkung.
 
-**Verhaltensabnahme:** Vollständig belegter Release kann eine positive Readinessentscheidung liefern.
+**Verhaltensabnahme:** Ein vollständig belegter Release mit aktueller Scope-/Konfigurationsbindung liefert `ready=true`; eine leere anwendbare Risiko-/Issue-Menge wird nur bei vollständig belegter Scopeauflösung als `not_applicable` ausgewiesen. Der positive Fall erfordert echte gebundene Providerbeobachtungen einschließlich Freigabe und Done, keine selbstbestätigenden Labels. Offener Risk, offener Issue, fehlendes Pflichtartefakt, fehlender Provider oder ungeklärte Anwendbarkeit verhindern Readiness und bleiben im maschinenlesbaren Result erhalten. Produktstatus und Dateien bleiben unverändert. Das Baseline-Gate bleibt bis 13.g geschlossen.
 
 #### 13.f.R – Make it Right
 
 - [ ] **13.f.R** · Position **563/900** · Voraussetzung: `13.f.W`.
 **Exakte Commit-Message:** `13.f.R feat(roadmap): Readinessgates und aktuelle Beziehungen vervollständigen`
 
-**Vervollständigung:** failed/incomplete/stale bleibt blockierend unabhängig von Warnungsschwellwert; KI-Review ersetzt keinen Human-Nachweis.
+**Vervollständigung:** Alle Randfälle des Vertrags 10.5.6 schließen: `risk_eliminated`, `risk_accepted` und `issue_resolved` mit exakten Subject-/Scope-/Konfigurationsbindungen und bestätigtem Human-Review; alle Issue-Kriterien, Widerruf, falsche/zukünftige Reviews, Prüferfehler und geänderte Bindungen. Legacy-Policies und freie Statuswerte lesbar erhalten; explizite Policy-/Statusmigration durch den vorhandenen Change-Plan-Writer absichern. `failed/incomplete/stale`, fehlende Pflichtslots und nicht aktuelle Pflichtrelationen bleiben unabhängig von Warnungsschwellwert blockierend. Ein Waiver oder KI-Review gewährt keine Releasefreigabe.
 
-**Verhaltensabnahme:** Jeder einzelne Blockertyp verhindert positive Readiness und bleibt im Datenresultat erhalten. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Jeder einzelne Gate-Blocker verhindert positive Readiness; mehrere Befunde bleiben gemeinsam sichtbar. Vollständige Risikobeseitigung, ausdrückliche menschliche Restrisikoakzeptanz und vollständig bestätigte Issue-Erledigung bestehen ausschließlich mit aktueller Bindung. Änderung von Subject, Status, Scope oder Konfiguration entwertet alte Entscheidungen; ein Terminalwort, geringer Impact oder Dauerstatusgrund genügt nicht. Leere/unversionierte Policies und unbekannte Altstatus ergeben `incomplete`; unbekannte neue Policyversion oder zusätzliche v1-Felder ergeben Code 3. Ein fremdes Entscheidungs-Subject erweitert den Scope nicht. Fehlende Evidence und fehlende Testbezüge werden von stale Evidence und zulässigem `test_id=null` getrennt. Die deterministischen Gate-/Gesamtzustände und Negativcodes entsprechen 10.5.6. Alle W-Nachweise bleiben zusätzlich grün.
 
 #### 13.f.C – Make it Clean
 
 - [ ] **13.f.C** · Position **564/900** · Voraussetzung: `13.f.R`.
 **Exakte Commit-Message:** `13.f.C refactor(roadmap): Readinessgates und aktuelle Beziehungen bereinigen`
 
-**Bereinigung:** Gateresultate als typisierte Teilentscheidungen aggregieren.
+**Bereinigung:** Gateresultate und Blockerentscheidungen als typisierte Teilentscheidungen mit gemeinsamer Eingabebindung aggregieren; Policy-/Legacy-Auflösung, Human-Review-Prüfung und Ergebnisprojektion klar trennen. Keine zweite Scope-, Verification- oder Currentness-Implementierung und keine Änderung der Freigabegrenzen.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
@@ -16139,16 +16169,16 @@ ist ein gezielter Teiltestnachweis, kein Vollsuite- oder Release-Erfolgsnachweis
 - [ ] **13.g.W** · Position **565/900** · Voraussetzung: `13.f.C`.
 **Exakte Commit-Message:** `13.g.W feat(roadmap): Gespeicherte Bewertung und Release-Baseline aufbauen`
 
-**Umsetzung:** Gespeicherte verification_evaluation priorisieren und echte Releasebaseline mit vollständigen Auswahlbytes/Hash freischalten.
+**Umsetzung:** Den vollständigen Readiness-Kern aus 13.f gemäß 10.5.4/10.5.6 mit der gespeicherten `readiness_policy.verification_evaluation` und der Release-Baseline verbinden. Gespeicherte Auswahl priorisieren; ausschließlich `ready=true` mit `provisional=false` und allen aktuellen Pflichtgates darf die echte Releasebaseline mit vollständigen Auswahlbytes/Hash freischalten.
 
-**Verhaltensabnahme:** Identisch wiederholte CLI-Auswahl ist zulässig; gespeicherte gültige Auswahl trägt die Baseline.
+**Verhaltensabnahme:** Identisch wiederholte CLI-Auswahl ist zulässig; gespeicherte gültige Auswahl trägt die Baseline nur zusammen mit allen Readinessgates. Die neue Policyversion verändert weder Descriptor-Priorität noch die bestehende vollständige Nachweisauswahl.
 
 #### 13.g.R – Make it Right
 
 - [ ] **13.g.R** · Position **566/900** · Voraussetzung: `13.g.W`.
 **Exakte Commit-Message:** `13.g.R feat(roadmap): Gespeicherte Bewertung und Release-Baseline vervollständigen`
 
-**Vervollständigung:** Abweichender CLI-Descriptor ist Code 6; externe ungespeicherte Auswahl nur vorläufig read-only, nie Releasebaseline.
+**Vervollständigung:** Abweichender CLI-Descriptor bleibt Code 6, auch bei einer unversionierten Alt-Policy. Externe ungespeicherte Auswahl ist nur vorläufig read-only, nie Releasebaseline. Eine leere/Legacy-Policy, ein einzelnes unerfülltes Gate oder ein ungebundener Abschlussnachweis darf die Baselinesperre nicht umgehen.
 
 **Verhaltensabnahme:** End-to-End erzeugt eine echte versiegelte Releasebaseline nur nach allen Gates. Die W-Nachweise bleiben zusätzlich grün.
 

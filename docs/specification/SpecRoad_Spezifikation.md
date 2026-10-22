@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.9
+## Version 0.2.10
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.9` |
+| Dokumentversion | `0.2.10` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 19. Oktober 2026 |
+| Stand | 22. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.9 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.9 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.10 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.10 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.8 vom 14. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Nutzerentscheidung vom 19. Oktober 2026 zu 12.b.W: versionierter Waiver-Inhaltshash, exakte Scope-/Konfigurationsbindung, explizite UTC-Frist und Bewertungszeit. Der PatchHarbor-Rundweg aus v0.2.8 bleibt unverändert. |
-| Änderungsart | Präzisierung bestehender Anforderungen SR-REQ-0138/0447; keine neuen Requirement-IDs. Legacy-Waiver bleiben lesbar, ihre Ausnahme wird nicht automatisch erneuert. Kein Produkt- oder Baseline-Erfolgsnachweis. |
+| Vorgängerversion | Repository-Spezifikation v0.2.9 vom 19. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Nutzerbeauftragte OFF-PLAN-Präzisierung vor 13.f.W: geschlossene versionierte Readiness-Policy, feste Pflichtgates, eindeutige Risiko-/Issue-Entscheidungen und Bestandsdatenvertrag. Waiver-Vertrag und PatchHarbor-Rundweg bleiben erhalten. |
+| Änderungsart | Präzisierung der bestehenden Release-Readiness-Anforderungen, insbesondere SR-REQ-0125/0450/0516; keine neuen Requirement-IDs. Keine Produktimplementierung, automatische Migration oder Baseline-Freigabe. |
 
-> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.9 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.10 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.9 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.10 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -730,7 +730,7 @@ Die Tabelle 9.3 gilt für reguläre 0.2-Artefakte. Unveränderbare Legacy-Ressou
 | `verification` | Methode, Subjects, Vorbedingungen, Verfahren, Oracle, Evidence-Arten | für `approved`: vollständig prüfbarer Vertrag einschließlich `evidence_slots` nach 10.5.2 |
 | `test` | Testidentität, Typ, Oracle | für `approved`: stabile externe oder interne Referenz |
 | `evidence` | Ergebnis, Producer, Environment, Subjects, Origin, `run_context` nach 10.5.2, `evidence_state=recorded` | entsteht atomar mit `maturity=approved` und ist danach unveränderbar |
-| `release` | Name, Ziel, Readiness-Policy | für `approved`: genehmigter Scope Descriptor; eine Release-Baseline verlangt zusätzlich die gespeicherte `readiness_policy.verification_evaluation` nach 10.5.4 |
+| `release` | Name, Ziel, Readiness-Policy nach 10.5.6 einschließlich dessen Legacy-Vertrag | für `approved`: genehmigter Scope Descriptor; eine Release-Baseline verlangt zusätzlich die gespeicherte `readiness_policy.verification_evaluation` nach 10.5.4 |
 | `milestone` | Ziel, Owner, Release-Zuordnung | für `approved`: Done-Kriterien |
 | `task` | Beschreibung, Owner, `implementation_status`, `verification_plan_status`, Done-Kriterien | für `approved`: Umsetzungsbeziehungen |
 | `term` | Begriff, Definition, Sprache, Synonyme | für `approved`: Owner und freigegebene Terminologie |
@@ -1173,6 +1173,179 @@ Teilbericht und seine Prüferbeobachtung werden nicht im Subject gespeichert.
 Ein vorbereiteter Workflowupdate enthält nur Status und gegebenenfalls Waiver,
 bindet erwartete Revision/Vollhash und geht durch den vorhandenen gemeinsamen
 Writer. Vorbereitung ist weder Schreibautorisierung noch vollständige Validation.
+
+#### 10.5.6 Release-Readiness-Vertrag v1
+
+Dieser Vertrag konkretisiert SR-REQ-0125/0126/0127/0141/0450/0516. Eine
+Readinessentscheidung MUSS alle folgenden Pflichtgates auf derselben gebundenen
+Eingabe auswerten. Warnungsschwellwerte, leere Listen, fehlende Provider und
+unbekannte Statuswerte DÜRFEN keine Pflicht stillschweigend entfernen.
+
+**Geschlossene Policy.** `release.readiness_policy` verwendet die Schemaidentität
+`release-readiness-policy-v1`. Das Objekt enthält genau folgende Felder;
+unbekannte Felder sind unzulässig:
+
+| Feld | Vertrag |
+|---|---|
+| `format_version` | Pflicht, exakt `1.0.0` |
+| `verification_evaluation` | optional; falls vorhanden vollständiger Descriptor nach 10.5.1, nicht `null`; Auswahlpriorität unverändert nach 10.5.4 |
+| `blocker_decisions` | Pflicht; Array der unten definierten Entscheidungen, darf leer sein; höchstens ein Eintrag pro `subject_id`, normalisiert nach ID in UTF-8-Byteordnung |
+
+Die Version legt alle Gates verbindlich fest. Es gibt in v1 keine
+Abschaltflags, konfigurierbaren Risiko-Schwellen, Statusaliasse oder frei
+ausführbaren Regeln in dieser Policy. Die kleinste neue Policy ist
+`{"format_version":"1.0.0","blocker_decisions":[]}`. Sie gewährt ohne vollständige
+Prüfeingaben keine positive Readiness. `policy_sha256` ist SHA-256 der
+RFC-8785-Kanonisierung der normalisierten vollständigen Policy. Defaults dürfen
+nur bei ausdrücklich beauftragtem Authoring materialisiert werden.
+
+**Umfang und Pflichtgates.** Der gespeicherte Release-Scope wird mit dem
+gemeinsamen Scope-/Konfigurationsdienst vollständig aufgelöst. Sämtliche
+erreichten Pflichtabhängigkeiten außerhalb der Release-Seeds bleiben enthalten;
+der Bericht kennzeichnet sie als extern. Auswahl und Closure folgen 10.8 und
+werden weder aus vorhandenen Nachweisen noch aus `blocker_decisions` abgeleitet.
+Nicht auflösbare Pflichtziele, unbekannte Anwendbarkeit und konfigurativ
+ausgeschlossene Pflichtabhängigkeiten blockieren. Ein erforderlicher Rand darf
+nicht zu einer optionalen Boundary Reference abgeschwächt werden.
+
+| Gate-ID | Geltung und notwendiges Passkriterium |
+|---|---|
+| `scope` | Eine gültige v1-Policy sowie ein vollständiger, gültiger, geschlossener Release-Scope mit genehmigtem Descriptor und exakt aufgelöster Konfiguration; keine ungeklärten Pflichtgrenzen. Policybefunde gehören zu diesem Gate. |
+| `approval` | Jedes anwendbare Scope-Artefakt erfüllt sein typspezifisches Gate nach 9.4/9.6 und hat `maturity=approved`. Das umfasst den Release selbst, externe Pflichtartefakte sowie die für Pflichtnachweise verwendeten Records; technische Profil-/Konfigurationsdateien sind keine zusätzlichen Artefakte. Bei Requirement-Freigaben bleibt der aktuelle menschliche Review nach 12.2 erforderlich. Ein gespeichertes Label allein ersetzt keine Gateprüfung; `retired` erfüllt eine aktuelle Pflicht nicht. |
+| `implementation` | Jede anwendbare Capability, jedes Requirement, jede Component, jedes Interface und jeder Task besitzt `implementation_status=implemented`. Für Tasks sind zusätzlich sämtliche Done-Kriterien aktuell durch den bestehenden Done-Dienst belegt. `not_started`, `in_progress`, `blocked` und ein bloß gespeichertes `not_applicable` bestehen dieses Gate nicht. Andere Artefakttypen erhalten keine erfundene Umsetzungspflicht. |
+| `verification` | Für alle anwendbaren Capabilities, Requirements und Tasks ist das berechnete Ergebnis nach 10.5 einschließlich aller Pflichtslots und maßgeblichen Läufe `passed`. Die bestehende Prioritätsfolge wird unverändert benutzt. `waived`, `not_evaluated`, `running`, `failed`, `incomplete` und `stale` bestehen das Gate nicht. Eine wirksame Verification-Ausnahme ist in dieser Release-Policy keine Freigabe. |
+| `coverage` | Die unabhängig ermittelte Pflichtmenge aus dem vorigen Gate ist vollständig mit Contracts beziehungsweise zulässigen impliziten Testcontracts, erklärten Testbezügen und aktuellen bestandenen Nachweisen belegt. Fehlender Contract, fehlender erforderlicher Testbezug, fehlende Evidence und stale Evidence werden getrennt berichtet. Ein expliziter Slot mit zulässigem `test_id=null` verlangt keinen erfundenen ausführbaren Test. Weitere deklarierte Pflichtdimensionen dürfen nicht durch einen Overall-Slot ersetzt werden. |
+| `risks` | Jeder anwendbare Risk im Scope erfüllt die unten definierte strikte Risikopolicy. Wahrscheinlichkeit, Impact, Owner, Freitextbegründung oder vorhandene Mitigationsrelation allein entfernen keinen Blocker. |
+| `issues` | Jeder anwendbare Issue im Scope erfüllt den unten definierten Abschlussvertrag. Ein begründeter Dauerstatus erlaubt die Freigabe des Issue-Artefakts nach 9.4, aber keine Releasefreigabe bei offenem Issue. |
+| `relations` | Jede für Scopezugehörigkeit, externe Pflichtabhängigkeit oder eines dieser Gates verwendete verpflichtende Relation hat nach dem bestehenden Relationsreview-Dienst exakt `current`. `unreviewed`, `stale`, `rejected`, fehlender Review und unbekannte Ergebnisse zählen nicht als erfüllt. Fehlende erforderliche Relationen bleiben fehlende Pflichten. |
+
+Ein Gate ohne anwendbare Subjects wird ausdrücklich als `not_applicable` mit
+leerer erwarteter Subjectmenge ausgewiesen; das ist nur nach vollständig
+erfolgreicher Scope-/Anwendbarkeitsauflösung zulässig. Ein leeres oder teilweise
+aufgelöstes Modell ist kein solcher Nachweis. Der Release selbst unterliegt
+immer `scope` und `approval`. Bei korrekt konfigurationsbedingt ausgeschlossenen
+optionalen Artefakten werden Ausschlussgrund und Konfigurationsbindung genannt;
+das Verbot, ausgeschlossene Pflichtabhängigkeiten zu übergehen, bleibt bestehen.
+
+**Risiko- und Issue-Status.** Die folgende Klassifikation ist abschließend und
+exakt, ohne Groß-/Kleinschreibungs-, Sprach- oder Synonymnormalisierung:
+
+| Feld und Wert | Readinesswirkung |
+|---|---|
+| `risk_status=open` oder `in_progress` | blockierend; auch bei niedriger Wahrscheinlichkeit oder geringer Auswirkung |
+| `risk_status=mitigated` oder `closed` | nur mit gültiger Entscheidung `risk_eliminated` erfüllbar; diese bestätigt die vollständige Beseitigung. Bloße Reduktion mit Restrisiko verlangt stattdessen `accepted`. |
+| `risk_status=accepted` | nur mit gültiger explizit menschlicher Entscheidung `risk_accepted` erfüllbar |
+| `issue_status=open` oder `in_progress` | blockierend, auch mit `permanent_status_reason` |
+| `issue_status=resolved` oder `closed` | nur mit gültiger Entscheidung `issue_resolved` erfüllbar, die sämtliche nichtleeren `resolution_criteria` bestätigt |
+| jeder andere gespeicherte Status | `incomplete` mit `unclassified_status`; niemals implizit erledigt, akzeptiert oder nicht anwendbar |
+
+Diese Klassifikation ändert weder die allgemeine Maturity noch beim Lesen den
+gespeicherten Status. Ein Terminalwort allein ist kein Abschlussnachweis. Eine
+gültige Risikoakzeptanz beseitigt nur diesen Risikoblocker; andere Gates,
+insbesondere Verification und offene Issues, bleiben vollständig wirksam.
+
+**Gebundene Blockerentscheidungen.** Eine Entscheidung ist ein passives
+Wertobjekt innerhalb der Release-Policy, kein neuer Artefakttyp. Sie enthält
+genau diese Pflichtfelder:
+
+| Feld | Exakter Vertrag |
+|---|---|
+| `subject_id` | ID eines Risk oder Issue des unabhängig aufgelösten Release-Scopes |
+| `subject_sha256` | vollständiger kanonischer Artefakthash des aktuell bewerteten Subjects, einschließlich Status, Revision und fachlichen Feldern; 64 kleine Hexzeichen |
+| `decision` | exakt `risk_eliminated`, `risk_accepted` oder `issue_resolved`, passend zu Typ und Status aus der Tabelle |
+| `reason` | nichtleere fachliche Begründung; keine automatische semantische Auswertung des Texts |
+| `scope_descriptor` | vollständiger Descriptor, kanonisch exakt gleich dem bewerteten gespeicherten Release-Scope |
+| `configuration_sha256` | bestehender effektiver Konfigurationsmanifesthash einschließlich Elternkette, beziehungsweise ausdrücklich `null` bei unkonfiguriertem Scope; kein Wildcard |
+| `human_review_id` | nichtleere Kennung der ausdrücklichen menschlichen Entscheidung |
+
+`decision_sha256` ist SHA-256 der RFC-8785-Kanonisierung von
+`{format_version:"release-blocker-decision-v1", release_id:<ID>, decision:<Objekt>}`.
+Die Entscheidung liegt im Release, nicht im gebundenen Risk/Issue; ihr Hash und
+der Review werden nicht in das Subject geschrieben. Damit entsteht keine
+Selbstreferenz. Jede Änderung des gebundenen Subjects, der Scopebeschreibung
+oder der effektiven Konfiguration entwertet die bisherige Entscheidung. Alte
+Nachweise werden nicht umgebunden; die neue Entscheidung braucht einen neuen
+Review. Eine Entscheidung mit fremder Subject-ID erweitert den Scope nicht.
+
+Der passive Review enthält exakt `review_id`, `subject_id`, `decision_sha256`,
+`reviewer`, `reviewed_at`, `decision` und `criteria`. Die ersten drei Felder
+müssen der aktuellen Entscheidung entsprechen; `reviewer` ist ein Actor mit
+`actor_type=human`, `decision` ist `confirmed` oder `rejected`. `reviewed_at`
+und der ausdrücklich übergebene Bewertungszeitpunkt `evaluated_at` folgen dem
+UTC-Vertrag aus 10.5.5; zukünftige Reviews sind unwirksam. Für `risk_eliminated`
+enthält `criteria` genau `{risk_eliminated:true}`, für `risk_accepted` genau
+`{residual_risk_accepted:true}`. Für `issue_resolved` ist es genau
+`{resolution_criteria:[true,...]}` mit einer Bestätigung pro gespeichertes
+Kriterium in dessen Reihenfolge; ein einzelner Kriterienstring ergibt genau
+einen Eintrag. Falsche, fehlende und zusätzliche Kriterien bestehen nicht.
+
+Wie bei Requirement-, Task-Done- und Waiver-Reviews prüft ein ausdrücklich vom
+vertrauenswürdigen Host übergebener Reviewprüfer die menschliche Herkunft und
+die aktuelle Wirksamkeit. Seine Beobachtung bindet den Reviewhash sowie die
+vollständige aktuelle Readinesseingabe. Projekt-JSON kann diesen Prüfer weder
+benennen noch importieren. Ohne bestätigten Review, bei Widerruf, fehlendem
+Prüfer, Prüferfehler oder falscher Bindung bleibt das Gate unerfüllt. Ein
+KI-Label oder der Text einer Begründung erzeugt keine menschliche Autorität.
+Der aktuelle menschliche Review ist in v1 der Abschlussnachweis für
+Risikobeseitigung und Issue-Erledigung; beigefügte Testergebnisse können ihn
+stützen, ersetzen aber weder diese Entscheidung noch eigene Pflichtprüfungen.
+Ein reines `passed` ohne gebundenes Abschlusskriterium hebt keinen Blocker auf.
+
+**Ergebnis und Bindung.** Die Readinesseingabe bindet `release_id`, den
+vollständigen geladenen Modell-/Ressourcenstand, den aufgelösten Scope samt
+externen Pflichtabhängigkeiten, effektive Konfiguration, `policy_sha256`,
+`evaluation_sha256` beziehungsweise `null` und `evaluated_at`. Native
+Provider-/Reviewbeobachtungen müssen zu genau dieser Eingabe passen; ein
+ungebundenes `passed` oder ein boolesches Freigabeflag ist kein Nachweis.
+Die Schemakennung der Ergebnisprojektion ist `release-readiness-v1`. Sie nennt
+`ready` als Boolean, `status` als `ready|blocked|incomplete`, `provisional` als
+Boolean, die Eingabebindung und alle acht Gates in obiger Reihenfolge. Jeder
+Gateeintrag enthält `gate_id`, `status` aus
+`passed|failed|incomplete|not_applicable`, erwartete `subject_ids`, verwendete
+Nachweisbindungen und `findings`. Jedes Finding nennt `gate_id`, `subject_id`
+oder `null` bei Scope-/Policybefunden, `reason`, `blocking=true` und die
+betroffenen Nachweis-/Relations-IDs. Listen werden deterministisch nach
+Gate-Reihenfolge, Subject-ID und Grund sortiert; IDs in UTF-8-Byteordnung.
+
+`ready=true` gilt genau dann, wenn alle Gates `passed` oder nachgewiesen
+`not_applicable` sind. Bei mindestens einem `failed` ist der Gesamtstatus
+`blocked`, sonst bei mindestens einem `incomplete` ist er `incomplete`;
+beides bedeutet `ready=false`. Alle weiteren Befunde bleiben erhalten.
+Bekannte offene Blocker, negative Reviews, nicht aktuelle Pflichtrelationen
+und fehlgeschlagene Pflichtprüfungen ergeben `failed`; fehlende oder stale
+Nachweise, unklassifizierte Daten und nicht verfügbare Provider ergeben
+`incomplete`. Eine bekannte unerfüllte Freigabe oder Umsetzung ergibt `failed`.
+Im Verification-Gate ergibt `waived` den Status `failed`; `running` und
+`not_evaluated` ergeben `incomplete`. Ein unerwartetes `not_applicable` für ein
+nachgewiesen anwendbares Subject ist ebenfalls `incomplete`. Die Originalwerte
+der Provider bleiben jeweils im Bericht erhalten.
+Warnungsfilter beeinflussen diese Fachentscheidung nicht. Ein vollständig
+berechnetes fachliches Negativergebnis von `release readiness` ergibt Code 3,
+auch wenn alle zugrunde liegenden Diagnosen nur Warnungen sind. Vorrangige
+Eingabe-/Konflikt-/Berechtigungsfehler behalten ihren bestehenden Code.
+
+Gespeicherte `verification_evaluation` hat weiterhin Vorrang nach 10.5.4.
+Eine identische CLI-Auswahl ist zulässig, eine abweichende Auswahl ist Code 6.
+Ohne gespeicherte Auswahl ist eine explizite externe Bewertung höchstens
+vorläufig (`provisional=true`), selbst wenn alle Gates bestanden sind. Nur
+`ready=true` und `provisional=false` mit gespeicherter Auswahl erlauben später
+das Release-Baselinegate. Readiness wird nicht in Artefakte zurückgeschrieben
+und stellt selbst weder eine Lifecycle-Freigabe noch Schreibautorität dar.
+
+**Bestandsdaten und Migration.** Bereits gespeicherte leere oder unversionierte
+Policies sowie freie Risk-/Issue-Statuswerte bleiben unverändert lesbar.
+Eine fehlende Policyversion ergibt `legacy_readiness_policy_unsupported` und
+keine Readiness; ein vorhandener unbekannter Versionswert beziehungsweise
+unzulässige Felder in einer v1-Policy sind ein Schemafehler (Code 3). Auch bei
+Legacy-Daten bleibt die bestehende `verification_evaluation`-Auswahlpriorität
+einschließlich Konfliktprüfung erhalten; sie allein gewährt keine Freigabe.
+Es gibt kein automatisches Übersetzen von Statuswörtern, kein Auffüllen von
+Reviews und keine Änderung vorhandener Evidence. Migration erfolgt nur
+ausdrücklich über den normalen Change Plan mit geprüfter erwarteter Basis,
+expliziter Policy-/Statusauswahl und gegebenenfalls neuen menschlichen Reviews.
+Bis dahin bleiben die fachlichen Lücken maschinenlesbar `incomplete` und
+`ready=false`. Bereits versiegelte Baselines und historische Resultate bleiben
+an ihre damaligen unveränderten Bytes gebunden.
 
 ### 10.6 Transaktionszustände
 
@@ -1987,7 +2160,7 @@ Planung bleibt mit Anforderungen verbunden; Roadmap und Readiness sind berechnet
 | SR-REQ-0122 | Die Roadmap-Ansicht MUSS ausschließlich aus Artefakten, Beziehungen, Prioritäten, Risiken und Terminen des kanonischen Modells abgeleitet werden. | SR-NEED-0010, SR-NEED-0009 | SR-VER-0009 | SR-TC-0122 |
 | SR-REQ-0123 | SpecRoad DARF NICHT eine separat gepflegte normative Roadmap-Datei neben dem Artefaktgraphen verlangen. | SR-NEED-0010, SR-NEED-0001 | SR-VER-0009 | SR-TC-0123 |
 | SR-REQ-0124 | `specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abhängigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erklären. | SR-NEED-0010, SR-NEED-0003 | SR-VER-0009 | SR-TC-0124 |
-| SR-REQ-0125 | `specroad release readiness <RELEASE-ID>` MUSS Freigabe, Umsetzung, Verifikation, Coverage, Blocker-Risiken, offene Issues und fehlende Evidenz des Release-Scopes prüfen. | SR-NEED-0006, SR-NEED-0010 | SR-VER-0009 | SR-TC-0125 |
+| SR-REQ-0125 | `specroad release readiness <RELEASE-ID>` MUSS Freigabe, Umsetzung, Verifikation, Coverage, Blocker-Risiken, offene Issues und fehlende Evidenz des Release-Scopes nach dem versionierten Pflichtgate-, Entscheidungs- und Bestandsdatenvertrag in Kapitel 10.5.6 prüfen. | SR-NEED-0006, SR-NEED-0010 | SR-VER-0009 | SR-TC-0125 |
 | SR-REQ-0126 | Die Readiness-Prüfung MUSS direkte `depends_on`-Abhängigkeiten des Release-Scopes einbeziehen und außerhalb des Releases liegende Pflichtabhängigkeiten melden. | SR-NEED-0006, SR-NEED-0003 | SR-VER-0009 | SR-TC-0126 |
 | SR-REQ-0127 | Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erfüllt und durch Review oder Evidence nachgewiesen sind. | SR-NEED-0004, SR-NEED-0005 | SR-VER-0009 | SR-TC-0127 |
 | SR-REQ-0128 | SpecRoad DARF NICHT in Version 0.2 automatisch berechnete Termine, Aufwandsschätzungen oder einen kritischen Pfad als normative Daten in das Projektmodell schreiben. | SR-NEED-0010, SR-NEED-0011 | SR-VER-0009 | SR-TC-0128 |
@@ -3593,6 +3766,18 @@ Konfigurationsbindung, UTC-Frist und expliziter Bewertungszeitpunkt. Historische
 Waiver bleiben lesbar, ohne automatische Ausnahmegewährung. Diese Präzisierung
 ändert weder Requirement-IDs noch den Umfang des portablen PatchHarbor-Rundwegs.
 
+### 20.9 Readiness-Präzisierung v0.2.10
+
+Der nutzerbeauftragte OFF-PLAN-Schritt vor 13.f.W schließt die bisher offene
+Bedeutung von Readiness-Policy, Risiko-Blockern und Issue-Erledigung durch
+10.5.6. Pflichtgates sind fest, menschliche Entscheidungen explizit gebunden
+und Altwerte ohne automatische Freigabe lesbar. Die Verifikationsprioritäten,
+der Waiver-Vertrag und der Release-Scope bleiben erhalten. Die Umsetzung
+erfolgt anschließend in 13.f.W/R/C und die gespeicherte Bewertungs-/Baseline-
+Integration in 13.g.W/R/C. Diese Dokumentänderung implementiert kein Gate und
+erhöht keinen abgeschlossenen Produktzähler. Aktuelle Katalog-Hashbindungen
+sind keine neue Test-Evidence; historische Nachweise bleiben historisch.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -3636,6 +3821,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
 | 0.2.9 | 2026-10-19 | Nutzerbeauftragte Waiver-Präzisierung | Exakte versionierte Inhaltsprojektion, Scope-/Konfigurationsbindung, explizite UTC-Frist und Bewertungszeit, gebundener menschlicher Review und lesbarer unwirksamer Legacy-Bestand; bestehende Requirements bleiben erhalten. |
+| 0.2.10 | 2026-10-22 | Nutzerbeauftragte OFF-PLAN-Readiness-Präzisierung | Geschlossene v1-Policy, feste typbezogene Pflichtgates, strikte Risiko-/Issue-Regeln mit gebundenem menschlichem Abschlussnachweis, explizite Ergebniszustände und lesbarer Legacy-Bestand; Umsetzung folgt in 13.f/13.g. |
 | 0.2.8 | 2026-10-14 | Nutzerbeauftragte Featureplanung | PatchHarbor-Python-API als Basis für portablen Projekt-/PYZ-Hinweg, gebundenen Proposal-Rückweg und kontrollierte lokale Übernahme; zwölf neue Requirements und explizite öffentliche API-Abhängigkeit, keine Implementierungs-/Freigabebehauptung. |
 | 0.2.7 | 2026-09-14 | Fachliche Korrekturfassung | B01/A02 aus der Prüfung v0.2.6: automatische externe Analyzer-Checkpoints auch ohne --work-dir; explizite Analysekennung mit eigener Vergabe, Paarbindung und Resume-Erhaltung statt Schreib-Idempotenz; 730 Requirement-IDs unverändert; zwölf gekoppelte Sollfälle ergänzt. |
 | 0.2.6 | 2026-09-14 | Fachlich erweiterte Spezifikation | Explizite Requirement-Sprache und Verbindlichkeit, Mehrsprachenpolicies, getrennte Sprachpakete, allgemeines Analyzer-Protokoll samt realem py3langid-Lieferumfang, sichere optionale Worker-Ausführung, vollständige Analysefortsetzung und SRX-Zahlenpolicy; neue fachliche Quelle bei unverändertem ersten Zielrelease. |
@@ -5174,4 +5360,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.9.**
+**Ende der SpecRoad-Produktspezifikation v0.2.10.**
