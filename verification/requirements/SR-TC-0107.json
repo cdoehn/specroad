@@ -7,28 +7,35 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-BUILTIN-TRACEABILITY-v1"
+    "SR-FIX-BUILTIN-TRACEABILITY-v1",
+    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1"
   ],
   "preconditions": [
-    "Actual owned source bytes from the declared supplied model or partial/legacy input; no origin authentication, full-project validation, write authority or approval is implied."
+    "Actual owned source bytes from the declared supplied model or partial/legacy input; no origin authentication, full-project validation, write authority or approval is implied.",
+    "Explicit native model, owned semantic verification selection and optional exact ReleaseReadiness context; trusted synthetic gate services are fixtures, not external approvals."
   ],
   "steps": [
     "Resolve native owned model records and actual stored relation identities into per-requirement origin, implementation, verification, evidence and release categories; preserve empty categories and terminate cyclic origin paths.",
     "Bind each trace edge to its actual source array pointer, raw file hash and canonical record hash; preserve evidence subjects as original fields instead of fabricated relations.",
-    "Reject unavailable verification/roadmap calculation providers with a structured unavailable diagnostic and null result. Preserve stored evidence result fields without promoting them to a computed verification/readiness result.",
+    "Reject missing Verification inputs with a structured unavailable diagnostic; Roadmap now uses its native supplied-model provider. Preserve stored evidence result fields without promoting them to a computed verification/readiness result.",
     "Observe immutable projections and original source bytes, actual no-read/no-write effects, passive rendering metadata and isolated Core/PYZ machine-contract parity.",
-    "11.q.C: rerun the unchanged W/R behavior tests and affected native regressions after extracting common source binding and passive projection construction. Public result/error classes, validation order, original bytes, hashes and effects remain unchanged."
+    "11.q.C: rerun the unchanged W/R behavior tests and affected native regressions after extracting common source binding and passive projection construction. Public result/error classes, validation order, original bytes, hashes and effects remain unchanged.",
+    "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Traceability-Ansicht MUSS für jedes Requirement mindestens Herkunft, Umsetzung, Verifikation, Evidence und Release-Zuordnung darstellen.",
-    "scope": "11.q.W/R/C: source-bound traceability from supplied native records only. All five categories refer to actual identities, relations or explicitly bound evidence subject fields. Missing M12/M13 calculations remain unavailable/null even for empty input or stored success strings. No approval, full-suite claim, full-project discovery or calculated verification/release readiness. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced."
+    "scope": "11.q.W/R/C: source-bound traceability from supplied native records only. All five categories refer to actual identities, relations or explicitly bound evidence subject fields. Missing M12/M13 calculations remain unavailable/null even for empty input or stored success strings. No approval, full-suite claim, full-project discovery or calculated verification/release readiness. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced. 13.h.W now integrates the available native Roadmap provider and optional bound native Readiness, plus Verification/Traceability selection parity. Unavailable calculations are not fabricated; rendering is never a pass oracle."
   },
   "expected_diagnostics": [
     "builtin_view_provider_required",
     "document_target_model_required"
   ],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "json_pointers": [
     "/view_name",
     "/relations/0",
@@ -83,11 +90,39 @@
     "tests/test_builtin_document_views_right.py::test_stored_evidence_results_never_become_computed_verification_or_readiness[passed]",
     "tests/test_builtin_document_views_right.py::test_stored_evidence_results_never_become_computed_verification_or_readiness[unknown]",
     "tests/test_builtin_document_views_right.py::test_trace_edges_bind_the_actual_source_pointer_bytes_and_record[False]",
-    "tests/test_builtin_document_views_right.py::test_trace_edges_bind_the_actual_source_pointer_bytes_and_record[True]"
+    "tests/test_builtin_document_views_right.py::test_trace_edges_bind_the_actual_source_pointer_bytes_and_record[True]",
+    "tests/test_planning_builtin_views.py::test_changed_verification_model_is_refused_before_projection_or_rendering[render]",
+    "tests/test_planning_builtin_views.py::test_changed_verification_model_is_refused_before_projection_or_rendering[resolve]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[bytes]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[physical-binding]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[record]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[True]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[fake1]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[fake2]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[specification]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[traceability]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[verification]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-roadmap]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-traceability]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-verification]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-roadmap]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-traceability]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-verification]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[blocked]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[missing-service]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[provisional]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[ready]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_retains_native_facts_without_inventing_a_release_decision[False]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_retains_native_facts_without_inventing_a_release_decision[True]",
+    "tests/test_planning_builtin_views.py::test_services_without_a_native_readiness_context_are_refused",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-traceability]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-verification]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-traceability]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-verification]"
   ],
   "open_items": [
-    "M12/M13 calculation services and their integration into verification/roadmap reports remain pending; unavailable providers are not successful results.",
-    "Complete end-user CLI/report integration and discovered-project validation are separate plan steps. This API covers only the actual supplied model.",
-    "Targeted development and rotating Apply partitions are partial observations on their actual source states."
+    "13.h.R durable view/Work continuation and full parity remain open; 13.h.C structural cleanup remains open.",
+    "Public CLI registration and additional declarative column/block provider integration are not claimed complete. Presentation is excluded from automated tests by TD-001.",
+    "Targeted development and rotating Apply groups are partial observations, not full-suite or production Release approval."
   ]
 }

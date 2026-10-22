@@ -4,18 +4,28 @@
   "requirement_id": "SR-REQ-0101",
   "specification_sha256": "ffd9bd939999a246ec3c20fc2834212695674569cd06f75c5fbf3defaa09cbfb",
   "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1"
+  ],
+  "preconditions": [
+    "Explicit native model, owned semantic verification selection and optional exact ReleaseReadiness context; trusted synthetic gate services are fixtures, not external approvals."
+  ],
+  "steps": [
+    "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad render` MUSS die eingebauten Ansichten `specification`, `traceability`, `roadmap` und `verification` als Markdown erzeugen können; weitere deklarative Ansichten werden über `specroad view render` ausgeführt.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "13.h.W verifies only computed provider input/data contracts and forbidden side effects at built-in render adapters. No Markdown, HTML, GUI, wording or layout is tested. Native supplied-model APIs do not claim public CLI completion."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +38,39 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_planning_builtin_views.py::test_changed_verification_model_is_refused_before_projection_or_rendering[render]",
+    "tests/test_planning_builtin_views.py::test_changed_verification_model_is_refused_before_projection_or_rendering[resolve]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[bytes]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[physical-binding]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[record]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[True]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[fake1]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[fake2]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[specification]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[traceability]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[verification]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-roadmap]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-traceability]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-verification]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-roadmap]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-traceability]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-verification]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[blocked]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[missing-service]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[provisional]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[ready]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_retains_native_facts_without_inventing_a_release_decision[False]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_retains_native_facts_without_inventing_a_release_decision[True]",
+    "tests/test_planning_builtin_views.py::test_services_without_a_native_readiness_context_are_refused",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-traceability]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-verification]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-traceability]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-verification]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "13.h.R durable view/Work continuation and full parity remain open; 13.h.C structural cleanup remains open.",
+    "Public CLI registration and additional declarative column/block provider integration are not claimed complete. Presentation is excluded from automated tests by TD-001.",
+    "Targeted development and rotating Apply groups are partial observations, not full-suite or production Release approval."
   ]
 }

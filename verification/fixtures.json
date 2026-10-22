@@ -85,6 +85,7 @@
     "SR-FIX-ORDERED-FOLD-v1",
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PLANNING-BOUNDARIES-v1",
+    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1",
     "SR-FIX-PLANNING-RELATIONS-v1",
     "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1",
     "SR-FIX-PRODUCTION-VALIDATION-v1",
@@ -745,6 +746,10 @@
     "SR-FIX-RELEASE-BASELINE-RIGHT-v1": {
       "provider": "tests/test_release_baseline_right.py:release_project",
       "kind": "Owned native Release models with stored/external/legacy descriptors and every required gate. Explicit synthetic human risk/issue completion and replay/refusal observations. Real locked whole-project Baseline publication and independent archive selection binding verification. No production approval or external run is asserted."
+    },
+    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1": {
+      "provider": "tests/test_planning_builtin_views.py:roadmap_values",
+      "kind": "Native owned Roadmap, Verification coverage and ReleaseReadiness contexts with actual stored/external selections, explicit synthetic host proofs and failed/missing gates. Read-only view adapters, exact source/model mismatch and forbidden-I/O observations. No rendered text or production human approval is an oracle."
     }
   }
 }

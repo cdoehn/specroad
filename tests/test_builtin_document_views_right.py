@@ -55,6 +55,15 @@ def unavailable():
 @pytest.mark.parametrize('empty', [False, True])
 def test_missing_computation_providers_refuse_with_owned_structured_unavailability(monkeypatch, name, milestone, entrypoint, empty):
     supplied = model([] if empty else trace_project()); before = supplied.source_files
+    if name == 'roadmap':
+        from specroad.planning import project_roadmap
+        with no_write_attempts():
+            result = resolve_builtin_view(supplied, name)
+            if entrypoint == 'render': render_builtin_view(supplied, name)
+        assert result.data['roadmap'] == project_roadmap(supplied).data
+        assert result.data['readiness'] is None and not result.data['release_readiness_evaluated']
+        assert supplied.source_files == before
+        return
     def no_output(*args): raise AssertionError('Unavailable report reached presentation')
     monkeypatch.setattr(Emitter, 'output', no_output)
     operation = resolve_builtin_view if entrypoint == 'resolve' else render_builtin_view

@@ -7,25 +7,32 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",
     "SR-FIX-ROADMAP-PROJECTION-v1"
   ],
   "preconditions": [
     "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures.",
-    "R fixtures include real read-only project modes, noncanonical input bytes, unrelated live roadmap/metadata files, passive estimates and deliberately changed bound inputs."
+    "R fixtures include real read-only project modes, noncanonical input bytes, unrelated live roadmap/metadata files, passive estimates and deliberately changed bound inputs.",
+    "Explicit native model, owned semantic verification selection and optional exact ReleaseReadiness context; trusted synthetic gate services are fixtures, not external approvals."
   ],
   "steps": [
     "Invoke the native roadmap provider on the supplied model and source variants.",
     "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations.",
-    "Exercise date/error boundaries and explicit dependency cycles without recomputation, mutation or live-source substitution; enforce process/network/write traps in isolated Core/PYZ."
+    "Exercise date/error boundaries and explicit dependency cycles without recomputation, mutation or live-source substitution; enforce process/network/write traps in isolated Core/PYZ.",
+    "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Roadmap-Ansicht MUSS ausschließlich aus Artefakten, Beziehungen, Prioritäten, Risiken und Terminen des kanonischen Modells abgeleitet werden.",
-    "scope": "Native roadmap projection derives explicit planning, priority, risk, date and dependency facts solely from supplied artifact bytes and original edges; binds exact origins and model root. R: calendar and schema errors preserve exact sources and file modes; dependency cycles and passive extension estimates never retime, estimate or publish data. Bound-input changes refuse output; foreign live changes remain intact and unverified. All existing W facts remain required."
+    "scope": "Native roadmap projection derives explicit planning, priority, risk, date and dependency facts solely from supplied artifact bytes and original edges; binds exact origins and model root. R: calendar and schema errors preserve exact sources and file modes; dependency cycles and passive extension estimates never retime, estimate or publish data. Bound-input changes refuse output; foreign live changes remain intact and unverified. All existing W facts remain required. 13.h.W now integrates the available native Roadmap provider and optional bound native Readiness, plus Verification/Traceability selection parity. Unavailable calculations are not fabricated; rendering is never a pass oracle."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -39,6 +46,34 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_planning_builtin_views.py::test_changed_verification_model_is_refused_before_projection_or_rendering[render]",
+    "tests/test_planning_builtin_views.py::test_changed_verification_model_is_refused_before_projection_or_rendering[resolve]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[bytes]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[physical-binding]",
+    "tests/test_planning_builtin_views.py::test_readiness_cannot_be_attached_to_a_different_view_model[record]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[True]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[fake1]",
+    "tests/test_planning_builtin_views.py::test_readiness_labels_or_report_dictionaries_are_not_native_contexts[fake2]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[specification]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[traceability]",
+    "tests/test_planning_builtin_views.py::test_readiness_options_cannot_be_silently_ignored_by_other_views[verification]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-roadmap]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-traceability]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[html-verification]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-roadmap]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-traceability]",
+    "tests/test_planning_builtin_views.py::test_render_adapter_consumes_native_inputs_without_file_access_or_writes[markdown-verification]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[blocked]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[missing-service]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[provisional]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_preserves_all_native_release_gate_values_and_selection[ready]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_retains_native_facts_without_inventing_a_release_decision[False]",
+    "tests/test_planning_builtin_views.py::test_roadmap_builtin_retains_native_facts_without_inventing_a_release_decision[True]",
+    "tests/test_planning_builtin_views.py::test_services_without_a_native_readiness_context_are_refused",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-traceability]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[False-verification]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-traceability]",
+    "tests/test_planning_builtin_views.py::test_verification_and_traceability_keep_the_exact_release_selection[True-verification]",
     "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[capability-priority-low]",
     "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[release-target_date-2028-01-02]",
     "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[requirement-priority-medium]",
@@ -107,7 +142,8 @@
     "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[task-target_date-2027-02-01]"
   ],
   "open_items": [
-    "13.c.C still owns structural cleanup. This evidence covers the native supplied-model provider and its R boundary matrix only.",
-    "Roadmap View/Work integration remains assigned to 13.h; no full-suite or Release acceptance is claimed."
+    "13.h.R durable view/Work continuation and full parity remain open; 13.h.C structural cleanup remains open.",
+    "Public CLI registration and additional declarative column/block provider integration are not claimed complete. Presentation is excluded from automated tests by TD-001.",
+    "Targeted development and rotating Apply groups are partial observations, not full-suite or production Release approval."
   ]
 }

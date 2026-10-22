@@ -192,6 +192,11 @@ def test_trace_projection_preserves_native_rejection_of_invalid_data(broken):
 
 @pytest.mark.parametrize('name', ['verification', 'roadmap'])
 def test_unavailable_computed_view_is_an_error_not_an_empty_or_successful_report(name):
+    if name == 'roadmap':
+        from specroad.planning import project_roadmap
+        supplied = model(trace_project())
+        assert resolve_builtin_view(supplied, name).data['roadmap'] == project_roadmap(supplied).data
+        return
     with no_write_attempts(), pytest.raises(BuiltinViewError) as caught:
         resolve_builtin_view(model(trace_project()), name)
     assert caught.value.reason == 'builtin_view_provider_required' and caught.value.exit_code == 3

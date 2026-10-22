@@ -130,23 +130,32 @@ def _traceability(records, references):
     return rows, {key: edges[key] for key in sorted(edges)}
 
 
-def resolve_builtin_view(model, view_name, *, verification=None, currentness=None):
+def resolve_builtin_view(model, view_name, *, verification=None, currentness=None,
+                         readiness=None, readiness_gates=(), blocker_reviews=(),
+                         blocker_verifier=None):
     """Resolve specification, stored traceability or explicitly bound coverage.
 
     A full project's specification always requires its unique active primary.
     Missing/invalid primary data never implicitly opts into the fallback API.
     Verification requires a computed input for the exact supplied snapshot.
-    Roadmap remains unavailable; stored statuses cannot stand in for results.
+    Roadmap uses the native planning projection. Optional Release readiness
+    is recomputed from an exact native context, never from a supplied report.
     """
     from ..changes.target_model import TargetModel, _default_scope
     if type(model) is not TargetModel:
         raise ModelError('document_target_model_required')
     if type(view_name) is not str or view_name not in ('specification', 'traceability', 'verification', 'roadmap'):
         raise BuiltinViewError('builtin_view_not_supported', pointer='/view_name', exit_code=2)
-    if view_name == 'roadmap' or (view_name == 'verification' and verification is None and currentness is None):
+    if view_name == 'verification' and verification is None and currentness is None:
         raise BuiltinViewProviderError(view_name)
-    if verification is not None and view_name != 'verification':
+    if verification is not None and view_name not in ('verification', 'traceability'):
         raise BuiltinViewError('builtin_verification_input_not_applicable', pointer='/view_name')
+    readiness_supplied = (readiness is not None or readiness_gates != ()
+                          or blocker_reviews != () or blocker_verifier is not None)
+    if readiness_supplied and view_name != 'roadmap':
+        raise BuiltinViewError('builtin_readiness_input_not_applicable', pointer='/view_name')
+    if readiness_supplied and readiness is None:
+        raise BuiltinViewError('builtin_readiness_context_required', pointer='/readiness')
     observed = None
     if currentness is not None:
         from ..verification.currentness_input import checked_currentness_model
@@ -161,7 +170,26 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
         'project_id': model.binding.project_id, 'scope_descriptor': _default_scope(),
         'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
         'input_sha256': model._sources_sha256, 'fallback': False}
-    if view_name == 'verification':
+    if view_name == 'roadmap':
+        from ..planning import project_roadmap, ReleaseReadinessContext, assess_release_readiness
+        roadmap = project_roadmap(model)
+        report = None
+        if readiness is not None:
+            if type(readiness) is not ReleaseReadinessContext:
+                raise BuiltinViewError('typed_release_readiness_context_required', pointer='/readiness')
+            owned = readiness._model.snapshot()
+            if (owned._sources_sha256 != model._sources_sha256 or owned.binding != model.binding):
+                raise BuiltinViewError('builtin_readiness_binding_mismatch', pointer='/readiness', exit_code=6)
+            report = assess_release_readiness(readiness, gates=readiness_gates,
+                blocker_reviews=blocker_reviews, blocker_verifier=blocker_verifier)
+        data.update(mode='evaluated_roadmap', roadmap=roadmap.data, roadmap_sha256=roadmap.sha256,
+            rows=roadmap.data['items'], row_count=len(roadmap.data['items']),
+            computed_reports=_computed_reports(roadmap=roadmap.data),
+            readiness=None if report is None else report.data,
+            readiness_sha256=None if report is None else report.sha256,
+            release_readiness_evaluated=report is not None,
+            validation_scope=roadmap.data['validation_scope'])
+    elif view_name == 'verification':
         from ..verification.coverage import assess_verification_coverage
         coverage = assess_verification_coverage(model, verification, currentness=currentness)
         coverage_data = coverage.data
@@ -187,30 +215,63 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
         data.update(mode='stored_traceability', records=records, relations=relations,
             rows=rows, row_count=len(rows),
             validation_scope='supplied_record_fields_and_stored_traceability')
-        if observed is not None:
+        if observed is not None or verification is not None:
+            from ..verification.coverage import assess_verification_coverage
             from ..verification._read_evaluation import computed_results
-            coverage_data = observed['observation']['coverage']
+            coverage_data = (observed['observation']['coverage'] if observed is not None else
+                             assess_verification_coverage(model, verification).data)
             subjects = computed_results(coverage_data)
             for row in rows:
                 row['verification_result'] = subjects.get(row['requirement_id'])
             data.update(mode='evaluated_traceability', verification_evaluated=True,
                 computed_reports=_computed_reports(verification=coverage_data))
+            if verification is not None:
+                data.update(summary=verification.summary,
+                    selection_scope_descriptor=verification.data['scope_descriptor'])
     if observed is not None:
         data['currentness'] = observed
     return _result(data, model.source_files)
 
 
-def render_builtin_view(model, view_name, *, output_format='markdown'):
+def render_builtin_view(model, view_name, *, output_format='markdown', verification=None,
+                        currentness=None, readiness=None, readiness_gates=(),
+                        blocker_reviews=(), blocker_verifier=None):
     """Return bytes through the existing safe document/table renderers."""
     from .rendering import _snapshot, render_document
     from ._render_formats import Emitter
     from .requirement_presentation import resolve_requirement_presentation
     from ..model.content_language import ContentLanguage
     model = _snapshot(model, output_format)
-    resolved = resolve_builtin_view(model, view_name)
+    resolved = resolve_builtin_view(model, view_name, verification=verification,
+        currentness=currentness, readiness=readiness, readiness_gates=readiness_gates,
+        blocker_reviews=blocker_reviews, blocker_verifier=blocker_verifier)
     data = resolved.data
     if view_name == 'specification':
         return render_document(model, data['primary_document']['artifact_id'], output_format=output_format)
+    if view_name in ('roadmap', 'verification'):
+        def table(identifier, rows, fields):
+            return {'type': 'table', 'id': identifier, 'data': {
+                'columns': [{'heading': field} for field in fields],
+                'rows': [{'cells': [{'type': 'object', 'value': row[field]} for field in fields]}
+                         for row in rows]}}
+        if view_name == 'verification':
+            nodes = [table('verification', data['rows'],
+                ('requirement_id', 'verification_plan_status', 'verification_result', 'checks', 'reasons'))]
+        else:
+            nodes = [table('roadmap', data['rows'],
+                ('artifact_id', 'artifact_type', 'stored', 'scheduled_for_ids', 'parent_ids', 'dependency_ids')),
+                table('risks', data['roadmap']['risks'], ('artifact_id', 'stored', 'mitigated_by_ids')),
+                table('schedule', data['roadmap']['schedule_groups'],
+                    ('planning_id', 'scheduled_artifact_ids', 'milestone_ids'))]
+            if data['readiness'] is not None:
+                nodes.append(table('readiness', data['readiness']['gates'],
+                    ('gate_id', 'status', 'subject_ids', 'findings')))
+        metadata = {key: data[key] for key in ('tool_version', 'schema_version', 'profiles',
+            'project_id', 'model_root_sha256', 'input_sha256', 'verification_evaluated',
+            'release_readiness_evaluated', 'computed_reports')}
+        metadata['projection_sha256'] = resolved.sha256
+        metadata.update({key: data[key] for key in ('summary', 'readiness', 'readiness_sha256') if key in data})
+        return Emitter(output_format).output(metadata, view_name, nodes)
     categories = ('origin', 'implementation', 'verification', 'evidence', 'release')
     nodes = []
     for row in data['rows']:

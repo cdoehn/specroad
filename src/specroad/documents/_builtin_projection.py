@@ -15,7 +15,7 @@ from ..storage.domain_artifact import DomainArtifact
 from ..storage.record_artifact import RecordArtifact
 
 
-def _computed_reports(*, verification=None):
+def _computed_reports(*, verification=None, roadmap=None):
     """Project checked coverage or explicit absence; stored statuses do not count."""
     reports = {name: {'status': 'unavailable', 'reason': 'provider_required',
                    'required_milestone': milestone, 'result': None}
@@ -23,6 +23,9 @@ def _computed_reports(*, verification=None):
     if verification is not None:
         reports['verification'] = {'status': 'computed', 'reason': None,
                                    'required_milestone': 'M12', 'result': verification}
+    if roadmap is not None:
+        reports['roadmap'] = {'status': 'computed', 'reason': None,
+                             'required_milestone': 'M13', 'result': roadmap}
     return reports
 
 

@@ -303,8 +303,9 @@ def test_builtin_view_uses_the_same_bound_coverage_without_rendering_or_release_
     assert not data['release_readiness_evaluated'] and not data['rendering_performed']
     assert result.source_files == supplied.source_files
     with pytest.raises(BuiltinViewProviderError): resolve_builtin_view(supplied, 'verification')
-    with pytest.raises(BuiltinViewProviderError): resolve_builtin_view(supplied, 'roadmap', verification=value)
-    with pytest.raises(ModelError): resolve_builtin_view(supplied, 'traceability', verification=value)
+    with pytest.raises(ModelError): resolve_builtin_view(supplied, 'roadmap', verification=value)
+    trace = resolve_builtin_view(supplied, 'traceability', verification=value).data
+    assert trace['computed_reports']['verification']['result'] == data['coverage']
 
 
 @pytest.mark.parametrize('bad', [b'{}', {}, 'evaluation.json'])

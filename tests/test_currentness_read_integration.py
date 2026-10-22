@@ -240,8 +240,9 @@ def test_snapshot_is_owned_deterministic_and_not_a_live_or_release_claim(tmp_pat
     with pytest.raises(FrozenInstanceError): value._encoded = b'{}'
     put(tmp_path / 'project', 'src/owned.data', b'changed after observation')
     assert value.observation == original and value.data['project_files_verified'] is False
-    with pytest.raises(BuiltinViewProviderError):
+    with pytest.raises(ModelError) as caught:
         resolve_builtin_view(supplied, 'roadmap', currentness=value)
+    assert caught.value.reason == 'builtin_currentness_input_not_applicable'
 
 
 def test_conflicting_verification_input_cannot_override_bound_currentness(tmp_path):

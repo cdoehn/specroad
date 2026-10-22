@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 567
-last_completed_plan_commit: 13.g.C
-next_plan_commit: 13.h.W
-last_completed_numbered_bundle: 396
+implementation_plan_commits_completed: 568
+last_completed_plan_commit: 13.h.W
+next_plan_commit: 13.h.R
+last_completed_numbered_bundle: 397
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16725,12 +16725,73 @@ committed. Bis dahin bleiben die bestätigten Marker **566/900** und
 
 #### 13.h.W – Let it Work
 
-- [ ] **13.h.W** · Position **568/900** · Voraussetzung: `13.g.C`.
+- [x] **13.h.W** · Position **568/900** · Voraussetzung: `13.g.C`.
 **Exakte Commit-Message:** `13.h.W feat(roadmap): Roadmap-/Verification-Views und Workintegration aufbauen`
 
 **Umsetzung:** Berechnete Planungs- und Verifikationsprovider in die bestehenden Ansichten integrieren.
 
 **Verhaltensabnahme:** Fachprojektionen enthalten dieselbe Auswahl und dieselben Gatewerte wie direkte Befehle.
+
+**Vorbereiteter W-Zustand, Bundle 397:** Die bestehenden Built-in-Ansichten
+verwenden die nativen M12-/M13-Provider. `roadmap` projiziert die unveränderten
+Planungsdaten des übergebenen vollständigen Snapshots; eine optional explizite
+`ReleaseReadinessContext` wird nur für exakt dasselbe Modell angenommen und mit
+den tatsächlich übergebenen nativen Diensten neu bewertet. Alle acht Gates,
+Auswahlbindung, Vorläufigkeit und negativen/unvollständigen Ergebnisse bleiben
+unverändert. Ohne Readinesseingabe wird keine Freigabe abgeleitet. Verification
+und Traceability übernehmen dieselbe gebundene Coverage-/Run-Auswahl; die
+bestehenden Renderer erhalten diese Providerdaten und Eingaben.
+
+Die APIs bleiben lesend, entdecken keine Dateien und nehmen weder eine
+Schreibautorisierung noch einen externen Test- oder Human-Review-Nachweis an.
+Die Renderer werden nicht anhand von Text, Layout oder Markup getestet.
+Die bisherigen Roadmap-Providerplatzhalter werden durch echte native Daten
+ersetzt; fehlende Verificationeingaben bleiben ausdrücklich unbewertet.
+Dauerhafte View-/Workfortsetzung und ihre vollständige Datenparität werden in
+13.h.R vervollständigt. CLI-Registrierung, zusätzliche deklarative Spalten-
+und Blockprovider sowie Freigaben werden durch diese API-Integration nicht
+als fertig behauptet. Keine neue normative Regel oder Spezifikationsänderung.
+
+**W-Abnahme:** Direkter Roadmap-/Coverage-/Readinessaufruf und Built-in-Projektion
+liefern identische Fachwerte und Hashbindungen. Fehlende Dienste, offene Gates,
+vorläufige Auswahl, fremde Modellbytes und untypisierte Readinessdaten dürfen
+keine positive Freigabe erzeugen. Die Quellen bleiben bytegleich. Gezielte
+parallele Tests und vollständige Collection-/Katalogprüfung werden vor der
+Übergabe belegt; der Fortschrittsmarker bleibt bis zum erfolgreichen Apply-Gate
+auf 567/900.
+
+**Beobachtete Entwicklungsprüfung:** **590** gezielte Verhaltenstests aus
+**12** Dateien bestanden mit **4** parallelen Workern in **366,05 s**.
+Enthalten sind **28** neue Provider-/Gate-/Auswahl- und Eingabebindungsfälle
+sowie bestehende Built-in-, Roadmap-, Coverage-, Readiness-, Currentness- und
+Renderer-Verhaltensregressionen einschließlich ihrer vorhandenen Core-/PYZ-Fälle.
+Bestehende Testidentitäten bleiben erhalten; **28** neue Nummern werden hinten
+angefügt. Die bisherigen Roadmap-Platzhaltertests prüfen jetzt den verfügbaren
+nativen Provider; fehlende Verificationeingaben bleiben Fehler. Renderingtext,
+Markup und Dokumentation sind keine Testorakel. Die vollständige Collection- und
+Katalogprüfung erfasst **16.876** Tests bei **0** Testbodies.
+Quellzustand `0bbf1d9d34ce44c22a6e1915cb42c1c9e16d254eda9ecf6182270815aa56662c`;
+Auswahlbeleg `ebcaf2b27a3f95978efdfaf4fac285fd51f155d6ae290fa85a71a4e926d7b47b`.
+Dies sind Teiltestnachweise, keine Vollsuite- oder Releasefreigabe.
+Der erste gezielte Lauf ergab **589 passed / 1 failed**: Die neue vorläufige
+Release-Fixture hatte nach einer Policyänderung alte synthetische
+Relationsreviews behalten. Die native Ablehnung war korrekt. Ausschließlich
+diese Testfixture erhielt über den bestehenden Testhelfer passend neu gebundene
+synthetische Reviews; Produktcode und erwartete Gatewerte blieben unverändert.
+Der fehlgeschlagene Lauf ist kein Erfolgsbeleg; maßgeblich ist der anschließend
+vollständig erfolgreiche gezielte Lauf am oben gebundenen Endzustand.
+
+**Gebundene Übergabe:** Result
+`specroad-apply_Result_153918_1022_c2b13e.zip`, SHA-256
+`d27c309d41c39df9eed916586dec17474680dcfe8d26bbf06beb0f423c46c520`,
+bestätigt den sauberen Commit `8225321cb20a1dc1aa676622f00482e719d413ed`
+nach Bundle **396** und **5.616** bestandene Tests der Gruppe **2**, Sequenz
+**104**, in **1.635,21 s**. Bundle **397** enthält ausschließlich **13.h.W**.
+Vor dessen Commit ist Sequenz **105**, Gruppe **0**, mit **5.626** Tests parallel
+fällig. Erst nach erfolgreichem Apply-Gate werden **568/900**, zuletzt
+**13.h.W**, nächstens **13.h.R** und Bundle **397** gesetzt. Bis dahin bleiben
+die bestätigten Marker **567/900** und **13.g.C** erhalten. Der Auftrag endet
+mit der Übergabe; R/C, weitere Planschritte und Control bleiben unberührt.
 
 #### 13.h.R – Make it Right
 
