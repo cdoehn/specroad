@@ -139,6 +139,16 @@ def assess_blocker(binding, subject, decision, reviews, verifier):
     review = reviews.get(decision['human_review_id'])
     if review is None:
         return fail('blocker_review_missing')
+    return _assess_review(binding, subject, decision, review, verifier, expected, report)
+
+
+def _assess_review(binding, subject, decision, review, verifier, expected, report):
+    """Authenticate the exact passive review, then require its human criteria."""
+    def fail(reason, state='incomplete'):
+        report['status'] = state
+        report['reasons'].append(reason)
+        return report
+
     data = review.data
     report['review_sha256'] = review.sha256
     report['review'] = data

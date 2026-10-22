@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 7
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 563
-last_completed_plan_commit: 13.f.R
-next_plan_commit: 13.f.C
-last_completed_numbered_bundle: 392
+implementation_plan_commits_completed: 564
+last_completed_plan_commit: 13.f.C
+next_plan_commit: 13.g.W
+last_completed_numbered_bundle: 393
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -16468,7 +16468,7 @@ bestätigten Marker **562/900** und **13.f.W** erhalten.
 
 #### 13.f.C – Make it Clean
 
-- [ ] **13.f.C** · Position **564/900** · Voraussetzung: `13.f.R`.
+- [x] **13.f.C** · Position **564/900** · Voraussetzung: `13.f.R`.
 **Exakte Commit-Message:** `13.f.C refactor(roadmap): Readinessgates und aktuelle Beziehungen bereinigen`
 
 **Bereinigung:** Gateresultate und Blockerentscheidungen als typisierte Teilentscheidungen mit gemeinsamer Eingabebindung aggregieren; Policy-/Legacy-Auflösung, Human-Review-Prüfung und Ergebnisprojektion klar trennen. Keine zweite Scope-, Verification- oder Currentness-Implementierung und keine Änderung der Freigabegrenzen.
@@ -16476,6 +16476,51 @@ bestätigten Marker **562/900** und **13.f.W** erhalten.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Vorbereiteter C-Zustand, Bundle 393:** Die acht Gate-Beiträge und passiven
+Blockerentscheidungen besitzen typisierte interne Werte mit derselben
+unveränderbaren Readinesseingabebindung. Getrennte Adapter übergeben
+Scope-, Modellvalidierungs-, Verification-/Coverage-, Blocker- und
+Relationsbeobachtungen an diese Beiträge. Die Ergebnisprojektion bündelt
+Statuspriorität, deterministische Findings und die bestehende öffentliche
+Berichtsform. Policy-/Legacy-Auflösung bleibt im eigenen unveränderten
+Modul; die Prüfung menschlicher Blockerreviews ist von Subject-/Status- und
+Entscheidungsbindung getrennt. Vorhandene native Dienste bleiben die einzige
+Instanz für Scope, Verification und Relationscurrentness.
+
+Öffentliche Typen, Ergebnisfelder, Hashbindungen, Fehlergründe und Codes,
+Gatereihenfolge, Pflichtmengen und zulässige Seiteneffekte bleiben erhalten.
+Die Bereinigung erzeugt weder neue fachliche Kriterien noch Schreib- oder
+Freigabeautorität. Tests, Katalog, feste Testnummern und Spezifikation 0.2.12
+bleiben bytegleich. **13.g.W** und seine Baseline-Anbindung bleiben offen.
+
+**Beobachtete Entwicklungsprüfung:** **1.998** vorhandene gezielte
+Verhaltenstests aus **36** Dateien bestanden mit **4** parallelen Workern
+in **706,85 s**. Die Auswahl umfasst sämtliche Readiness-W-/R- und
+Migrationsfälle sowie die betroffenen nativen Scope-, Modelvalidation-,
+Requirement-/Task-Done-, Relationsreview-/Mindestrelations-, Verification-,
+Evidence-, Coverage-, Waiver- und Update-Writer-Regressionen. Isolierte
+Core-/PYZ-Fälle sind enthalten. Keine Erwartung wurde für die Bereinigung
+geändert; keine neuen Testidentitäten wurden vergeben.
+Die vollständige Collection-/Katalogprüfung bestätigt **16.793** Tests
+bei **0** ausgeführten Testbodies. Quellzustand
+`ae3f6fe535e22d5f955fa4e9778648879ca7c018c8a0ca1e89c6b2cfe8a7fb8b`, Auswahlbeleg `fd95e16c7153f7e2c8417ad0136719b2bb3d163749d6933b043e1c23c25f8290`.
+Dies sind Teiltestnachweise, kein Vollsuite-, menschlicher Freigabe- oder
+Release-Erfolgsnachweis.
+
+**Gebundene Übergabe:** Das Result
+`specroad-apply_Result_113357_1022_708dea.zip`, SHA-256
+`1376ac0dbb34a2a95780a7c9c7da04c8bd06818d50787c899467f7eb27e2c200`,
+bestätigt den sauberen Commit
+`08b48d16039649d2039542ca55ab3ac5ce75f440` nach Bundle 392 und **5.598**
+bestandene Tests der Gruppe **1**, Sequenz **100**, in **1.348,78 s**.
+Bundle 393 enthält ausschließlich den C-Zustand. Vor seinem Commit ist
+Sequenz **101**, Gruppe **2**, mit **5.597** Tests parallel fällig.
+Erst nach erfolgreichem Apply-Gate werden **564/900**, zuletzt **13.f.C**,
+nächstens **13.g.W** und Bundle **393** gesetzt und mit diesem Zustand
+committed. Bis dahin bleiben die bestätigten Marker **563/900** und
+**13.f.R** erhalten. Danach endet dieser Auftrag.
 
 <a id="step-13-g"></a>
 ### 13.g – Gespeicherte Bewertung und Release-Baseline
