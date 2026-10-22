@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.10
+## Version 0.2.11
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.10` |
+| Dokumentversion | `0.2.11` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 22. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.10 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.10 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.11 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.11 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.9 vom 19. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Nutzerbeauftragte OFF-PLAN-Präzisierung vor 13.f.W: geschlossene versionierte Readiness-Policy, feste Pflichtgates, eindeutige Risiko-/Issue-Entscheidungen und Bestandsdatenvertrag. Waiver-Vertrag und PatchHarbor-Rundweg bleiben erhalten. |
-| Änderungsart | Präzisierung der bestehenden Release-Readiness-Anforderungen, insbesondere SR-REQ-0125/0450/0516; keine neuen Requirement-IDs. Keine Produktimplementierung, automatische Migration oder Baseline-Freigabe. |
+| Vorgängerversion | Repository-Spezifikation v0.2.10 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag zur begrenzten delegierten Spezifikationsklärung nach SPECROAD-DECISION-1, passend zu Control-Bundle 014. Die Waiver-, Readiness- und PatchHarbor-Verträge bleiben erhalten. |
+| Änderungsart | Verbindliche Entwicklungsbefugnis und dokumentierte Grenzen; keine neuen Requirement-IDs oder Produktfunktionen. Keine automatische menschliche Freigabe, Migration, Dienstaktivierung oder Baseline-Abnahme. |
 
-> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.10 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Der Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.11 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.10 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.11 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -183,6 +183,159 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 | CommonMark | Kernsubset für Prosa-Inhaltsblöcke | informativ; das unterstützte Subset wird durch SpecRoad definiert |
 | JUnit XML | Evidence-Import | kein einheitlicher externer Standard; normativ ist ausschließlich das dokumentierte SpecRoad-JUnit-Kernprofil |
 | Mermaid und Graphviz DOT | Erzeugte Diagrammquellen | informativ; normativ ist die von SpecRoad dokumentierte Ausgabesyntax |
+
+### 2.4 Delegierte Spezifikationsklärung — SPECROAD-DECISION-1
+
+**Autorität und Geltung:** Mit dem ausdrücklichen Nutzerauftrag vom
+22. Oktober 2026 wird `SPECROAD-DECISION-1` als verbindliche Projektvorgabe
+für die externe Entwicklung von SpecRoad erteilt. Der beauftragte Dev-Agent
+MUSS eine nach den folgenden Grenzen zulässige fehlende fachliche Detailregel
+selbst entscheiden, dokumentieren und anschließend umsetzen,
+ohne für jede solche Entscheidung erneut eine Zustimmung einzuholen.
+Dies ist eine vorab delegierte Entwicklungsentscheidung, keine vom Agenten
+erfundene Einzelzustimmung des Nutzers. Nur der Nutzer darf diese Befugnis
+erweitern oder widerrufen; ein normaler Entwicklungsauftrag ermächtigt den
+Agenten nicht dazu, seine eigenen Grenzen umzuschreiben.
+
+Diese Regel betrifft die Weiterentwicklung der Repository-Spezifikation und
+des bestätigten Implementierungsplans. Sie verleiht dem SpecRoad-Produkt
+oder seinen KI-Akteuren keine eigene Freigabekompetenz. Insbesondere bleiben
+1.3, die Widerspruchsregel 2.1, die Human-Review-/Proposal-Verträge, Risiko-
+und Waiverentscheidungen, Releasegates und formale Baseline-Abnahmen wirksam.
+Ein Entwicklungsmandat ist kein `actor_type=human`-Nachweis und kein Ersatz
+für eine konkrete menschliche Entscheidung im verwalteten Produktmodell.
+
+#### 2.4.1 Zulässige Entscheidung und Auswahl
+
+Vor einer Entscheidung MUSS der Agent das maßgebliche Result, die aktuelle
+Spezifikation, den offenen Planschritt und vorhandene Nutzerentscheidungen
+prüfen. Eine bereits ausdrücklich geklärte Frage DARF NICHT neu entschieden
+werden, nur weil eine andere Lösung leichter zu implementieren wäre.
+
+Eine Lücke DARF selbstständig geschlossen werden, wenn alle Bedingungen gelten:
+
+1. Sie liegt im bereits bestätigten Funktionsumfang des offenen Schritts und
+   ist eine fehlende Detailfestlegung, kein neues Feature, vorgezogener
+   Planschritt oder Wechsel der zugesagten Architektur/Vertrauensgrenze.
+2. Es gibt mindestens eine konkrete, überprüfbare Lösung, die alle geltenden
+   Anforderungen und ausdrücklichen Nutzerentscheidungen gleichzeitig erfüllt.
+   Niederrangiger erläuternder Text darf nach 2.1 an den eindeutigen Vertrag
+   angeglichen werden; widersprüchliche gleichrangige Requirements dürfen nicht
+   nach Bequemlichkeit ausgewählt oder still gestrichen werden.
+3. Die Lösung erhält Scope, Sicherheitsniveau, Datenintegrität, Nachweis- und
+   Reviewpflichten sowie zugesagte CLI-, Format- und Bestandskompatibilität.
+   Ein gesondert freizugebender Datenverlust, inkompatibler Umbau oder eine
+   Veränderung realer fremder Daten ist keine konservative Präzisierung.
+4. Die Entscheidung ist nachvollziehbar rücknehmbar: versionierte Regel,
+   klar begrenzte Auswirkungen und erhaltene Bestandsdaten/Nachweise.
+   Reversibilität bedeutet nicht, dass spätere Git-Resets oder das Löschen
+   von Daten, Jobs oder Evidence automatisch erlaubt wären.
+5. Ihre Richtigkeit hängt nicht von unverfügbaren zwingenden externen Fakten,
+   privaten Zugangsdaten oder einer noch ausstehenden realen menschlichen
+   Fachentscheidung ab. Eine erfundene Annahme ersetzt keine solche Eingabe.
+
+Der Agent MUSS die realistisch geeigneten Alternativen und ihre Auswirkungen
+untersuchen. Er wählt die kleinste konsistente Lösung mit dem geringsten
+zusätzlichen Risiko und Änderungsumfang. Bei mehreren gleichermaßen passenden
+Möglichkeiten haben bestehende lokale Verträge und wiederverwendbare native
+Mechanismen Vorrang. Die bloße Existenz mehrerer vertretbarer Optionen ist
+kein Grund für `blocked`. Eine unabhängige unnötige Architekturvariante oder
+ein neuer Fallback wird nicht allein für diese Auswahl eingeführt.
+
+Typische zulässige Präzisierungen sind bisher fehlende Feldmengen,
+deterministische Fehler-/Statusregeln oder eine selbstreferenzfreie
+Hashprojektion, sofern sie die genannten Bedingungen erfüllen. Ein neuer
+Default muss ausdrücklich spezifiziert werden und darf fehlende Evidence
+oder Pflichtfreigaben niemals in einen positiven Status umdeuten. Ein
+sicherer Fehlerfall darf nicht als Vorwand dienen, das zugesagte Feature
+dauerhaft unbenutzbar zu lassen. Bereits festgelegte Regeln, insbesondere
+10.5.5 und 10.5.6, bleiben Ausgangspunkt der Umsetzung.
+
+#### 2.4.2 Entscheidungsbeleg und normative Fortschreibung
+
+Vor der davon abhängigen Produktänderung MUSS ein nachvollziehbarer
+Entscheidungsbeleg im betroffenen Abschnitt des Implementierungsplans stehen:
+
+- eindeutige Entscheidungskennung, betroffener Planschritt und genaue Lücke;
+- maßgebliche Spec-/Requirement-Bezüge und tatsächlich geprüfte Quellen;
+- betrachtete Alternativen, gewählte Lösung und konkrete Begründung;
+- Abgleich mit jeder Grenze aus 2.4.1 sowie Auswirkungen auf Kompatibilität,
+  Daten, Sicherheit, Tests und mögliche Rücknahme;
+- normative Zielregel und zugehörige beobachtbare positive, negative und
+  relevante Grenzfall-Abnahmekriterien;
+- Autorität `delegiert gemäß SPECROAD-DECISION-1`, ohne behauptete persönliche
+  Einzelbestätigung des Nutzers oder fingierte Reviews;
+- noch offene Umsetzung und Nachweise. Fachliche Klärung, Implementierung
+  und beobachteter Apply-Erfolg bleiben unterscheidbar.
+
+Die Entscheidung MUSS zuerst in dieser normativen Spezifikation und den
+betroffenen Planabnahmen konsistent fortgeschrieben werden. Eine neue
+normative Fassung erhält nach 2.1 eine neue Patch-Dokumentversion und passende
+aktive Katalogbindungen; historische Resultate, Reviews und Evidence bleiben
+unverändert an ihre ursprünglichen Bytes gebunden. Ein Entscheidungsbeleg
+allein ersetzt weder die normative Regel noch ausführbare Verhaltensabnahme.
+Keine zusätzliche Requirement-ID oder Produktposition entsteht allein für
+das Dokumentieren dieser Arbeitsbefugnis.
+
+#### 2.4.3 Übergabe an Control und Begrenzung der Klärung
+
+Im automatisierten Betrieb gelten zusätzlich der tatsächlich gespeicherte
+`CONTROL_DECISION_CONTRACT` und das Antwortschema des aktuellen Auftrags.
+Diese Projektregel aktualisiert keinen laufenden oder historischen Auftrag.
+Nur ein neuer Vertrag `version=2` mit `clarification_allowed=true` erlaubt
+die automatische gesonderte Klärungsübergabe. Fehlende, alte oder unbekannte
+Verträge werden nicht als Zustimmung ausgelegt. Ein ausdrücklicher manueller
+Nutzerauftrag kann einen eigenen Offplan-Schritt beauftragen; daraus entsteht
+keine automatische Erweiterung des bestehenden Control-Auftrags.
+
+Ist zur Auflösung eine eigene normative Entscheidung nötig, liefert der
+Agent genau ein state-gebundenes OFF-PLAN-Spezifikationsbundle und meldet
+`status=spec_clarification`, die SHA-256 des tatsächlichen Quell-Results,
+die SHA-256 der fertig geprüften ZIP und eine kurze Entscheidungserklärung.
+Die vier Antwortfelder bleiben `source_result_sha256`, `status`,
+`patch_sha256` und `message`. Es folgt kein zweites Bundle aus derselben
+Quelle, kein selbst gestartetes Apply und keine eigene Warte-/Modellschleife.
+Der bestehende Watcher übernimmt Apply, Tests und Result-Erzeugung.
+Der reguläre Planschritt bleibt bis zu seiner echten Umsetzung offen.
+
+Nach dem zugeordneten Apply-Result darf der laufende, zum Fortsetzen
+autorisierte Control-Worker den offenen Planschritt erneut beauftragen.
+Höchstens ein Klärungsbundle in Folge ist erlaubt. Bei
+`clarification_allowed=false` MUSS der Agent die bereits geklärte Vorgabe
+implementieren oder bei einer verbleibenden unlösbaren Grenze `blocked`
+melden; ein weiteres Klärungsbundle ist nicht zulässig. Insbesondere darf
+eine Spezifikationsklärung nicht als `patch_ready`, kosmetischer Produkt-
+oder Alibi-Commit verborgen werden. `patch_ready` bezeichnet reguläre
+Umsetzung oder eine echte technische Korrektur. Nur deren erfolgreiches,
+sauberes Apply mit passendem Abschlusscommit kann das Control-Budget wieder
+öffnen. Fehlgeschlagene Applys und unklassifiziert übernommene Bundles tun
+dies nicht. Control prüft Bindung und Klassifikation, nicht die fachliche
+Qualität oder tatsächlichen Planfortschritt; die Reviewpflicht bleibt.
+
+Ein reiner Spezifikationsschritt ist ein echter OFF-PLAN-Dokumentcommit,
+keine künstliche W/R/C-Produktfolge. Bei Produktimplementierung bleiben
+echte W/R/C-Zwischenstände und ihre jeweiligen Tests/Commits Pflicht.
+TD-001 und die lokale Testpolicy bleiben maßgeblich: keine erfundenen
+Dokumentationstests, kein zusätzlicher Volltest, unveränderte parallele
+Apply-Testrotation mit N=3 pro tatsächlichem Commit. Collection-, Katalog-,
+Paket- und Result-Prüfungen bleiben bestehen. Ein Dokumentcommit erhöht
+keinen regulären Produktzähler und erklärt keine Produktabnahme.
+
+#### 2.4.4 Echte Blocker und Erhaltung des Betriebszustands
+
+Ist keine Lösung innerhalb der Befugnis nachweisbar, MUSS der Agent stoppen
+und `blocked` mit der konkreten offenen Frage, seinem Lösungsvorschlag,
+den betroffenen Regeln und dem Grund melden, weshalb die delegierte
+Entscheidung nicht ausreicht. Unverzichtbare unbekannte externe Tatsachen,
+eine geforderte echte menschliche Freigabe, unauflösbare Anforderungskonflikte
+und eine bereits verbrauchte Klärungsbefugnis dürfen nicht umgangen werden.
+Ein Blocker ist kein `no_work` und kein abgeschlossener Planschritt.
+
+Diese Delegation ist keine Start-, Resume-, Recovery- oder Retry-Anweisung.
+Vorhandene Pausen, `dev_blocked`, unklare Claims, alte Antworten und
+Overload-Belege bleiben erhalten. Kein Neu-Seed, kein Reset und keine
+nachträgliche Umdeutung alter Aufträge. Ihre Übernahme erfolgt ausschließlich
+nach dem bestehenden ausdrücklich beauftragten Control-Verfahren.
 
 ---
 
@@ -3778,6 +3931,19 @@ Integration in 13.g.W/R/C. Diese Dokumentänderung implementiert kein Gate und
 erhöht keinen abgeschlossenen Produktzähler. Aktuelle Katalog-Hashbindungen
 sind keine neue Test-Evidence; historische Nachweise bleiben historisch.
 
+### 20.10 Delegierte Spezifikationsklärung v0.2.11
+
+Der ausdrückliche Nutzerauftrag vom 22. Oktober 2026 erteilt die begrenzte
+Entwicklungsbefugnis `SPECROAD-DECISION-1` nach 2.4. Geeignete Detaillücken
+werden begründet, normativ dokumentiert und innerhalb des bestehenden
+Umfangs weiterbearbeitet. Echte Human-Reviews, fachliche Risikoakzeptanzen,
+Sicherheits- und Kompatibilitätszusagen bleiben außerhalb dieser Befugnis.
+Control-Bundle 014 liefert den gesonderten versionierten Übergabevertrag;
+dieses Dokument ändert keine laufenden Jobs oder alten Antwortbelege.
+Der Produktstand bleibt 561/900 mit offenem 13.f.W. Eine erfolgreiche
+Dokumentübergabe ist weder Produktimplementierung noch End-to-End-Nachweis
+eines künftig auftretenden Klärungsfalls.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -3820,6 +3986,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.11 | 2026-10-22 | Nutzerbeauftragte Entwicklungsdelegation | SPECROAD-DECISION-1: begrenzte eigenständige Detailklärung, dokumentierte Alternativen und normative Abnahmen; Control-Vertrag 2 mit höchstens einem Klärungsbundle in Folge. Produktfreigaben, Tests, Runtimezustand und Requirement-IDs bleiben unverändert. |
 | 0.2.9 | 2026-10-19 | Nutzerbeauftragte Waiver-Präzisierung | Exakte versionierte Inhaltsprojektion, Scope-/Konfigurationsbindung, explizite UTC-Frist und Bewertungszeit, gebundener menschlicher Review und lesbarer unwirksamer Legacy-Bestand; bestehende Requirements bleiben erhalten. |
 | 0.2.10 | 2026-10-22 | Nutzerbeauftragte OFF-PLAN-Readiness-Präzisierung | Geschlossene v1-Policy, feste typbezogene Pflichtgates, strikte Risiko-/Issue-Regeln mit gebundenem menschlichem Abschlussnachweis, explizite Ergebniszustände und lesbarer Legacy-Bestand; Umsetzung folgt in 13.f/13.g. |
 | 0.2.8 | 2026-10-14 | Nutzerbeauftragte Featureplanung | PatchHarbor-Python-API als Basis für portablen Projekt-/PYZ-Hinweg, gebundenen Proposal-Rückweg und kontrollierte lokale Übernahme; zwölf neue Requirements und explizite öffentliche API-Abhängigkeit, keine Implementierungs-/Freigabebehauptung. |
@@ -5360,4 +5527,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.10.**
+**Ende der SpecRoad-Produktspezifikation v0.2.11.**

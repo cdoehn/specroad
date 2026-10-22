@@ -1,6 +1,6 @@
 {
   "catalog_format_version": 1,
-  "specification_sha256": "1ecbb94c6f65278b81509282c562de37beb808967366043b3412075cf04b6a60",
+  "specification_sha256": "4fea1cb8a1b8fa15e60aa472f58582a5ff81c39016405970f6b719a20b59c6e8",
   "complete": true,
   "test_case_ids": [
     "SR-TC-0001",
