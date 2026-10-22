@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.12
+## Version 0.2.13
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.12` |
+| Dokumentversion | `0.2.13` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 22. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.12 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.12 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.13 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.13 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.11 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung READINESS-SUBJECT-CONTEXT, delegiert gemäß SPECROAD-DECISION-1: fehlende Verification-Kontextprojektion für die bereits verpflichtenden Capability-/Task-Subjects. Entscheidungsbeleg und Abnahmen stehen bei 13.f im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung von Anhang L im bestehenden Readiness-Umfang; keine neue Requirement-ID oder Produktfunktion. Bestehende Hashes, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.12 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung EXCHANGE-MAPPING-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: fehlende Ressourcen- und Auswertungsverträge für die bereits geplanten Austauschmappings und externen Registries. Entscheidungsbeleg und Abnahmen stehen bei 14.a im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung von 10.12 im bestehenden Import-/Exportumfang; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.12 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.13 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.12 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.13 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -1654,6 +1654,177 @@ Für `update_if_unchanged` werden die aktuelle lokale Mappingprojektion, `last_i
 | verändert | unverändert | lokale Änderung behalten; als lokal geändert melden |
 | verändert | verändert und beide kanonischen Zielprojektionen gleich | Zielwert übernehmen und Importbaseline aktualisieren |
 | verändert | verändert und Zielprojektionen verschieden | Importkonflikt; keine stille Auflösung |
+
+#### 10.12.1 Deklarative Austauschmappings und externe Registries
+
+**Entscheidung EXCHANGE-MAPPING-CONTRACT, delegiert gemäß
+SPECROAD-DECISION-1:** Der folgende additive v1-Vertrag konkretisiert
+SR-REQ-0316/0455 für Planschritt 14.a. Er legt passive Ressourcen und deren
+reine Auswertung fest. Formatparser, Importhistorie, Verlustentscheidung,
+Change Plans und Veröffentlichung behalten ihre gesonderten Verträge.
+
+**Ressourcenhülle und Bindung.** Austauschmappings sind normative JSON-Dateien
+unter `mappings/`. Ihre vollständige Pflichtfeldmenge lautet:
+
+| Feld | Exakter Vertrag |
+|---|---|
+| `schema_version` | exakt `0.2.0` |
+| `mapping_format_version` | exakt `exchange-mapping-v1` |
+| `mapping_id` | Ressourcenkennung nach dem vorhandenen Profilkennungsprofil: `[A-Za-z][A-Za-z0-9._:-]{0,127}` |
+| `mapping_version` | explizite SemVer-Version ohne führendes `v`, Bereiche oder Alias; dieselbe Syntax wie bei Profilversionen |
+| `source_format` | exakt `reqif`, `reqifz`, `csv` oder `ndjson`; ReqIF bedeutet das Profil 1.2 nach Anhang D |
+| `types` | Array von Typzeilen nach untenstehender Tabelle |
+| `fields` | Array von Feldzeilen nach untenstehender Tabelle |
+| `relations` | Array von Relationszeilen nach untenstehender Tabelle |
+| `hierarchies` | Array von Hierarchiezeilen nach untenstehender Tabelle |
+| `extensions` | Objekt mit namespaced Schlüsseln nach dem bestehenden Extensionsvertrag; ausschließlich passive Daten |
+
+Alle Felder sind erforderlich; unbekannte Felder außerhalb von `extensions`
+sind unzulässig. Leere Tabellen sind zulässig und bedeuten ausdrücklich
+keine Abbildung in dieser Familie. Fehlende Tabellen sind kein Default.
+Die Auswahl verwendet die exakte Kennung `mapping_id@mapping_version` und
+bindet zusätzlich den RFC-8785-/SHA-256-Hash der **gesamten** Ressource.
+Originalbytes werden daneben mit ihrem eigenen Bytehash erhalten. Ein Hash
+beweist weder Urheberschaft noch Freigabe. Derselbe Schlüssel mit anderen
+Inhalten ist kein stiller Ersatz; die erwartete Hashbindung muss passen.
+Mehrere gelieferte Ressourcen desselben Schlüssels sind mehrdeutig, auch
+bei identischen Bytes. Es gibt keine Auswahl nach Dateiname, Reihenfolge,
+höchster Version oder Netzwerkauflösung. Ein eingebautes Profil muss dieselbe
+eindeutig benannte, vollständig versionierte und gehashte Definition liefern.
+
+`mapping_version` bezeichnet die vom Autor vergebene Inhaltsversion;
+`mapping_format_version` bezeichnet die unterstützte Auswertungsgrammatik.
+Eine neue gültige Inhaltsversion ist nicht allein wegen ihrer Nummer
+unbekannt. Eine nicht bereitgestellte exakte Inhaltsversion, eine unbekannte
+Grammatik oder abweichende erwartete Hashbindung werden abgewiesen.
+
+**Tabellen.** Jede Zeile ist ein geschlossenes Objekt mit genau den genannten
+Feldern. Externe Bezeichner sind nichtleere Unicode-Strings und werden exakt,
+ohne Trimmen, Case-Folding, Normalisierung oder Interpretation als Pfad,
+Ausdruck oder Muster verglichen. Die üblichen JSON-/Ressourcengrenzen gelten.
+
+| Tabelle | Exakte Zeilenfelder | Bedeutung und Eindeutigkeit |
+|---|---|---|
+| `types` | `external_type`, `artifact_type` | Ein externer Typ auf genau einen bekannten nativen Artefakttyp; `external_type` ist innerhalb dieser Tabelle eindeutig. |
+| `fields` | `external_type`, `external_field`, `target_field`, `value_map` | `external_type` muss in `types` vorkommen. `external_field` bezeichnet einen direkten Member des bereits geparsten externen Feldobjekts; `target_field` einen direkten Member der nativen Artefaktprojektion. Pro Typ sind sowohl Quellfeld als auch Zielfeld eindeutig. |
+| `relations` | `external_type`, `relation_type`, `direction` | Ein externer Relationstyp auf einen bekannten gespeicherten Core-Relationstyp; `external_type` ist innerhalb der Tabelle eindeutig. `direction` ist exakt `forward` oder `reverse`. |
+| `hierarchies` | `external_type`, `relation_type`, `direction` | Ein externer Hierarchietyp auf einen bekannten gespeicherten Core-Relationstyp; `external_type` ist innerhalb der Tabelle eindeutig. `direction` ist exakt `parent_to_child` oder `child_to_parent`. |
+
+`target_field` ist ein nichtleerer literaler JSON-Membername, kein JSON-Pointer
+oder Schreibbefehl. Die Projektion darf strukturierte Feldwerte einschließlich
+eines vollständigen `extensions`-Objekts transportieren. Ein zusammengesetzter
+Name wird nicht in verschachtelte Pfade zerlegt. `artifact_type` wird allein
+von `types` bestimmt und ist deshalb kein zulässiges `target_field`.
+Die native Artefakt-/Profilvalidierung entscheidet anschließend, ob die
+vollständige Zielprojektion zulässig ist; ein Mapping erweitert kein Schema.
+
+`value_map` ist entweder explizit `null` für unverändertes Kopieren des
+vorhandenen JSON-Werts oder ein nichtleeres Array geschlossener Zeilen mit
+genau `external_value` und `target_value`. Beide Werte sind gültige JSON-Werte
+nach dem vorhandenen kanonischen Zahlen-/Stringvertrag. Die externen Werte
+sind nach ihren RFC-8785-Bytes eindeutig. Damit sind `true`, `1` und `"1"`
+verschiedene Schlüssel; numerisch äquivalente JSON-Schreibweisen sind kein
+zweiter Schlüssel. Nicht gelistete Werte sind bei einer Tabelle ungemappt,
+nicht durchgereicht. Status-, Enum- und Einheitenkennungen werden auf diese
+Weise ausdrücklich abgebildet; es gibt keine automatische Statusaufwertung,
+Textanalyse, Einheitenrechnung oder Typkonvertierung. Formatbezogene
+CSV-Konvertierungen und Listenregeln bleiben Teil des expliziten CSV-Profils
+nach SR-REQ-0326/D.2, nicht ausführbarer Code in dieser Tabelle.
+
+**Reine Auswertung.** Eingaben sind die ausdrücklich gewählte Ressource und
+bereits geparste Werte. Eine Artefaktabbildung erhält einen externen Typ und
+ein Feldobjekt; sie liefert den gebundenen nativen Typ und die abgebildeten
+Felder. Eine Relationsabbildung erhält Typ und zwei ausdrücklich übergebene
+Endpunkte: `forward` erhält, `reverse` vertauscht die Reihenfolge. Für eine
+Hierarchie sind die Eingabeendpunkte ausdrücklich Parent und Child; die
+Richtung legt ihre Zielreihenfolge fest. Endpunkte werden nicht erzeugt,
+erraten oder anhand von Text aufgelöst. Die spätere native Relationprüfung
+prüft Typen, Identitäten, Zyklen und weitere Zielinvarianten unverändert.
+
+Ein gewählter externer Typ muss genau eine Zeile seiner Familie treffen;
+jede konfigurierte Feldzeile verlangt das tatsächliche Vorhandensein ihres
+Quellmembers. Fehlend, leere Zeichenfolge und vorhandenes JSON-Null bleiben
+verschieden. Ein unbekannter Typ, fehlendes Quellfeld, ungemappter Tabellenwert,
+doppelte Zeile oder konkurrierendes Zielfeld erzeugt einen strukturierten
+Mappingfehler (`SRV090`, Code 3), niemals First-/Last-Match oder Teilerfolg.
+Alle nicht verwendeten Eingabefelder werden als unverändertes Restobjekt
+zurückgegeben. Ein nichtleeres Restobjekt beweist keine Verlustfreiheit:
+Der spätere Importplan muss diese Daten nach SR-REQ-0322 erhalten oder einzeln
+als Verlust ausweisen. Der Mapper entscheidet keine Verlustakzeptanz.
+Fehler nennen maschinenlesbaren Grund und betroffene Ressource/Feldposition,
+ohne unkontrolliert Quellinhalte in Diagnosen zu kopieren.
+
+Gleiche Eingaben mit derselben exakt gebundenen Ressource ergeben dieselben
+fachlichen Projektionen. Auswertung verändert weder Eingabewerte noch
+Projektdateien. Tabellenreihenfolge ist keine Priorität; doppelte Schlüssel
+bleiben Fehler. Der vollständige Ressourcenhash folgt unverändert RFC 8785,
+einschließlich Arrayreihenfolgen; semantisch gleich wirkende, anders geordnete
+Tabellen erhalten nicht eigenmächtig denselben Ressourcenhash.
+
+**Registry für Nichtartefaktidentitäten.** Ein Mapping kann ausdrücklich
+gelieferte Begleitressourcen unter `mappings/` binden. Ihre Trennung verhindert,
+dass jeder neue externe Registereintrag die Abbildungsregeln oder deren Hash
+verändert. Ein Registry ist ebenfalls eine normative Mappingressource,
+kein neues Artefakt und kein Cache. Seine exakte Pflichtfeldmenge lautet:
+
+| Feld | Exakter Vertrag |
+|---|---|
+| `schema_version` | exakt `0.2.0` |
+| `mapping_format_version` | exakt `external-identity-registry-v1` |
+| `mapping_id`, `mapping_version` | eigene Ressourcenidentität nach obigem Kennungs-/Versionsprofil; nicht identisch mit dem Schlüssel der gebundenen Abbildungsressource |
+| `mapping` | geschlossenes Objekt mit genau `mapping_id`, `mapping_version`, `sha256`; bindet den vollständigen kanonischen Hash einer tatsächlich gelieferten `exchange-mapping-v1`-Ressource |
+| `entries` | Array der nachfolgend definierten Einträge, auch leer zulässig |
+| `extensions` | passives Objekt mit namespaced Schlüsseln |
+
+Unbekannte Felder und nicht passende Bindungen sind Fehler. Der eigene
+Ressourcenhash umfasst das gesamte Registry einschließlich Einträge und
+Mappingbindung; die Regelressource verweist nicht zurück auf den Registryhash.
+Die allgemeine Modellwurzel umfasst beide ausgewählten Ressourcen nach 10.9;
+ein neuer Registryeintrag verändert daher weiterhin den normativen Modellstand.
+Die Einbindung verwendet tatsächliche Bytes und erwartete Identität/Hash,
+keine automatisch gesuchte oder nachgeladene Datei.
+
+Jeder Eintrag hat genau `object_class`, `source_system`, `source_document`,
+`external_id`, `external_revision`, `data` und `extensions`.
+`object_class` ist exakt `type`, `hierarchy`, `relation` oder `metadata`.
+`source_system`, `source_document` und `external_id` sind nichtleere,
+unverändert erhaltene Strings. `external_revision` ist ein nichtleerer String
+oder ausdrücklich `null`; ein neuer Revisionswert erzeugt keine neue Identität.
+`data` ist ein passives JSON-Objekt zur Erhaltung externer Eigenschaften;
+`extensions` verwendet den bestehenden Namespaced-Vertrag. JSON-Null und
+verschachtelte Werte innerhalb dieser Objekte bleiben erhalten. Quell-URLs,
+Dateinamen und Textfragmente sind Daten, keine I/O-Anweisungen.
+
+Der eindeutige Schlüssel lautet
+`(object_class, source_system, source_document, external_id)`. Klassen und
+Quelldokumente sind getrennte Namensräume. Doppelte Schlüssel innerhalb
+eines Registry oder der gemeinsam ausgewerteten Registries sind Fehler,
+auch bei gleichen Daten; keine stille Verschmelzung. Ein ausdrücklich
+gesuchter, nicht vorhandener Schlüssel wird als fehlend zurückgegeben und
+nicht angelegt. Änderungen und Importhistorie unterliegen weiterhin 10.12,
+Planschritt 14.b und dem gemeinsamen Change-Plan-Vertrag; diese passive Registrierung
+erzeugt weder SpecRoad-Artefakte noch Relationsreviews oder Human-Freigaben.
+
+**Sicherheits- und Bestandsgrenze.** Beide v1-Formate werden mit dem vorhandenen
+strikten JSON-Leser geprüft. Interpreter, Plugins, Skripte, Templates,
+Konverter, Netzwerkzugriffe und Pfadauflösung aus Mapping-/Registrydaten sind
+verboten. Zusätzliche ausführungsbezogene Steuerfelder werden durch die
+geschlossene Grammatik abgewiesen. Beliebiger Text in passiven Daten wird
+nicht ausgeführt und nicht anhand von Schlüsselwörtern umgeschrieben.
+Ein abgebildeter Lifecyclewert oder ein Hash ist keine Schreib-/Freigabeautorität;
+native Authoring-, Review-, Scope-, Transaktions- und Recovery-Gates bleiben
+erforderlich. Ein passives Teilergebnis darf kein erfolgreiches Import-Apply
+oder verlustfreies Gesamtformat behaupten.
+
+Bestehende allgemeine Mappingressourcen, `legacy-manifest.json`, JUnit- und
+andere Evidence-Mappings behalten ihre eigenen Verträge, Bytes und Hashes.
+Ein historischer Ressourcenumschlag ohne obige Formatkennung bleibt für seine
+bisherigen generischen Modell-/Archivfunktionen erhalten, wird aber nicht
+stillschweigend als ausführbares Austauschmapping ausgewählt. Für seine Nutzung
+als Austauschmapping ist eine neue explizite v1-Definition nötig, keine
+automatische Migration oder Überschreibung. Die neue Form wird erst mit ihrer
+tatsächlichen Implementierung als verfügbar beschrieben. Weitere Formatparser,
+CLI, Roundtrips und Freigaben werden durch diese Präzisierung nicht vorgezogen.
 
 ### 10.13 Evidence-Origin
 
@@ -3956,6 +4127,18 @@ nicht umgeschrieben oder pauschal als aktuell erklärt. Umsetzung und
 Verhaltensnachweise folgen im offenen 13.f.W/R/C; diese Dokumentübergabe
 erhöht den Produktstand 561/900 nicht und verändert keinen Control-Zustand.
 
+### 20.12 Austauschmapping-Präzisierung v0.2.13
+
+`EXCHANGE-MAPPING-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, legt
+die zuvor fehlenden Mapping-/Registrydetails in 10.12.1 fest. Beide sind
+versionierte passive Ressourcen; ihre gebundene reine Auswertung ist von
+Formatparsern und Projektwrites getrennt. Bestandsmappings, historische
+Evidence und native Sicherheits-/Freigabegates bleiben erhalten. Umsetzung
+und Verhaltensnachweise folgen im offenen 14.a.W/R/C; der Produktstand
+570/900 bleibt bei dieser Dokumentübergabe unverändert. Die neue aktive
+Katalogbindung bestätigt keine ausgeführten Produkttests. Control- und
+Laufzeitkonfigurationen werden nicht verändert.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -3998,6 +4181,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.13 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | EXCHANGE-MAPPING-CONTRACT: geschlossene passive v1-Mappingtabellen, getrennte hashgebundene Registry und deterministische Auswertung nach 10.12.1; Bestandsdaten bleiben erhalten, Umsetzung bleibt in 14.a offen. |
 | 0.2.12 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | READINESS-SUBJECT-CONTEXT: exakte additive v1-Projektion für Capability-/Task-Subjects, unveränderte bestehende Hashes und gebundene Bewertung von Bestands-Evidence; Umsetzung bleibt in 13.f offen. |
 | 0.2.11 | 2026-10-22 | Nutzerbeauftragte Entwicklungsdelegation | SPECROAD-DECISION-1: begrenzte eigenständige Detailklärung, dokumentierte Alternativen und normative Abnahmen; Control-Vertrag 2 mit höchstens einem Klärungsbundle in Folge. Produktfreigaben, Tests, Runtimezustand und Requirement-IDs bleiben unverändert. |
 | 0.2.9 | 2026-10-19 | Nutzerbeauftragte Waiver-Präzisierung | Exakte versionierte Inhaltsprojektion, Scope-/Konfigurationsbindung, explizite UTC-Frist und Bewertungszeit, gebundener menschlicher Review und lesbarer unwirksamer Legacy-Bestand; bestehende Requirements bleiben erhalten. |
@@ -5622,4 +5806,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.12.**
+**Ende der SpecRoad-Produktspezifikation v0.2.13.**

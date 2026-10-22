@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 7 · **Stand:** 22. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.12
+**Planrevision:** 8 · **Stand:** 22. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.13
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `ffd9bd939999a246ec3c20fc2834212695674569cd06f75c5fbf3defaa09cbfb`.
+Gebundene Spezifikations-SHA-256: `58bd7eb7928b3dd3e5c1cefc0f8d2afcad904dae4c7b2bf40cc01a8ebabced1e`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 7
+plan_revision: 8
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 570
 last_completed_plan_commit: 13.h.C
 next_plan_commit: 14.a.W
-last_completed_numbered_bundle: 399
+last_completed_numbered_bundle: 400
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,35 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Austauschmapping- und Registryvertrag (Bundle 400)
+
+Revision 8 dokumentiert **EXCHANGE-MAPPING-CONTRACT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.13, Kapitel 10.12.1**, ergänzt
+die bisher nicht festgelegten Feldmengen und Auswertungsregeln der bereits
+geplanten Mappingressourcen und externen Registries. Der Entscheidungsbeleg
+mit Alternativen und verbindlichen Verhaltensabnahmen steht unmittelbar
+bei 14.a. Eine persönliche Einzelzustimmung oder ein externer Review wird
+nicht behauptet.
+
+- [x] **EXCHANGE-MAPPING-CONTRACT:** Passive Mappingtabellen, Ressourcenbindung und Registry-Namensräume verbindlich klären. Commit: `docs(spec): Austauschmappings und externe Registries präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und den notwendigen aktiven Katalog-Hashbindungen. Produktcode,
+Verhaltenstests, stabile Testnummern, Runner und historische Evidence bleiben
+unverändert. Der bestätigte Produktstand bleibt **570/900**, zuletzt
+**13.h.C**, nächstens **14.a.W**. Erst nach erfolgreichem parallelem Apply-Gate
+setzt der Entrypoint den obigen Offplan-Marker und die Bundlenummer auf 400.
+Das bestätigt ausschließlich die Dokumentübergabe, keine Umsetzung von 14.a
+und keine vollständige Meilenstein-/Release- oder Plattformabnahme.
+
+**Prüfgrenze:** Keine Dokumentationstests oder fingierten Verhaltenstests.
+Die vollständige Collection-/Katalogprüfung mit null Testkörpern und die
+native Paketprüfung bleiben erhalten. Apply führt vor seinem Commit genau
+die nächste feste Testgruppe parallel nach N=3 aus. Diese Übergabe endet
+mit `spec_clarification`; 14.a.W bleibt offen für den nächsten gebundenen
+Auftrag nach erfolgreichem Apply. Keine Änderung an Control, Watcher, CI,
+Diensten oder deren Zustand; keine automatische Folgearbeit.
 
 ## OFF-PLAN – Verification-Kontext für Readiness-Subjects (Bundle 390)
 
@@ -16960,21 +16989,125 @@ einmalige Durchlauf.
 **Anforderungsbezug:** `SR-REQ-0313`, `SR-REQ-0316`, `SR-REQ-0455`.
 **Verifikationsbezug:** `SR-VER-0024`, `SR-VER-0031`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+#### Entscheidungsbeleg EXCHANGE-MAPPING-CONTRACT
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+der zugehörige Control-Vertrag 2 erlaubt ein gesondertes Klärungsbundle.
+Betroffen ist der offene **14.a.W** mit seinen anschließenden R-/C-Zuständen.
+Der Umfang von 14.b und den späteren Parser-, Plan-, Writer- und CLI-Schritten
+wird weder vorgezogen noch gestrichen.
+
+**Lücke und geprüfte Quellen:** Das maßgebliche erfolgreiche Result nach
+Bundle 399 bestätigt 13.h.C und 570/900. Spezifikation 0.2.12, 10.12,
+SR-REQ-0316/0455 und Anhang D verlangen versionierte Mappings und die
+Erhaltung externer Nichtartefaktidentitäten. Sie legen jedoch weder die
+Ressourcenfeldmengen noch Tabellenzuordnung, Registerschlüssel oder deren
+Hashbindung fest. `model/manifest_resources.py` kennt nur den allgemeinen
+Ressourcenumschlag; die Schemakatalogtests beschreiben fehlende
+Austauschmappings ausdrücklich als nicht verfügbar. Geprüft wurden ferner
+`profiles/_contract.py`, `profiles/values.py`, `model/canonical.py`,
+`storage/json_syntax.py`, `model/artifact_types.py`,
+`graph/relation_types.py`, `verification/junit_mapping.py` und die
+Bestandsfälle zu Ressourceninventur/Modellwurzel. JUnit-Mappings sind
+spezialisierte Evidence-Verträge und keine bestehende normative Definition
+des allgemeinen Import-/Exportmappings. 10.9, 12.24, 12.34, Anhänge D/E/S
+sowie SR-REQ-0322/0326/0532 bleiben maßgebliche Grenzen. Diese Quellenprüfung
+ist kein ausgeführter Verhaltenstest.
+
+**Alternativen und Auswahl:**
+
+1. Namen, Felder und Typen aus Eingaben erraten oder First-/Last-Match wählen:
+   verletzt explizite Abbildung, Eindeutigkeit und Verlusttransparenz.
+2. Skripte, Plugins oder ausführbare Konverter als Mapping zulassen:
+   verletzt die bestehende Offline-/Sicherheitsgrenze SR-REQ-0532.
+3. Regelwerk und alle importierten Registerdaten in dieselbe Hashprojektion
+   einbetten: jeder neue Registereintrag verändert auch die Auswahlbindung
+   der unveränderten Abbildungsregeln; unnötige Kopplung an Importhistorie.
+4. **Gewählt:** geschlossene passive v1-Tabellen mit exakter Auswahl und
+   dem bestehenden vollständigen JCS-Ressourcenhash; separate normative
+   Registryressourcen binden genau dieses Regelwerk. Der bestehende
+   Ressourcenumschlag bleibt nutzbar. Explizites Kopieren oder endliche
+   Wertetabellen decken den kleinen sicheren W-Ausschnitt ab. Kein neuer
+   Evaluator für Ausdrücke, Dateisuche, Netzwerk oder Einheitenrechnung.
+
+**Normative Regel:** 10.12.1 definiert `exchange-mapping-v1` und
+`external-identity-registry-v1`, Inhaltsversion gegenüber Grammatikversion,
+exakte Zeilenfelder, getrennte Registryidentität, Zuordnungsrichtungen,
+typisierte JSON-Werte, Restdaten, Fehler und Bestandsgrenze. Die Wahl des
+Formats oder ein erfolgreiches passives Mapping ist kein erfolgreicher
+Import, keine Verlustakzeptanz und keine Schreib-/Freigabeautorität.
+
+**Grenzabgleich nach 2.4.1:** (1) Nur die bereits beauftragten Mappings und
+Registries werden konkretisiert; keine neue Funktion oder Produktposition.
+(2) Die Variante erfüllt die bestehenden Requirements gemeinsam, statt
+einen Widerspruch durch Abschwächung zu lösen. (3) Native Modell-, Sprach-,
+Relations-, Review-, Scope- und Transaktionsregeln bleiben verpflichtend;
+Bestandsressourcen und historische Hashbindungen bleiben bytegleich, kein
+neues Auto-Apply oder Verlustdefault. (4) Neue Formatkennungen und eine neue
+Dokumentversion begrenzen die Änderung; spätere Revisionen können explizit
+neue Regeln einführen, ohne Daten, Evidence oder Git-Zustände zurückzusetzen.
+(5) Benötigt werden ausschließlich vorhandene lokale Verträge, keine
+unbekannte externe Tatsache oder fingierte menschliche Risikoakzeptanz.
+
+**Verbindliche Abnahmen für die anschließende Umsetzung:**
+
+1. Eine explizite Typzeile `external_type=Requirement` →
+   `artifact_type=requirement` und passende Feldzeilen ordnen Text,
+   `language` und `normative_force` reproduzierbar zu. Eine Wertetabelle
+   `external_value=Mandatory` → `target_value=shall` wird exakt angewandt;
+   bei `value_map=null` bleiben strukturierte Werte einschließlich Null
+   erhalten. Nicht verwendete Quellmember erscheinen unverändert als Rest,
+   nicht als still verworfene oder bereits akzeptierte Verluste.
+2. Relations- und Hierarchiezuordnung erhalten oder vertauschen die expliziten
+   Endpunkte ausschließlich nach ihrer deklarierten Richtung. Der Mapper
+   erzeugt keine IDs und ersetzt keine native Endpunkt-/Zyklusprüfung.
+3. Alle vier Registryklassen erhalten externe Identitäten, Revisionswerte,
+   Daten und Extensions. Gleiche External-ID in verschiedenen Quelldokumenten
+   oder Klassen bleibt verschieden; eine neue Revision desselben Schlüssels
+   ist keine neue Identität. Ein nicht vorhandener Lookup erzeugt nichts.
+4. Doppelte Ressourcen-/Tabellen-/Registerschlüssel, konkurrierende Zielfelder,
+   fehlende Quellmember und nicht gelistete Werte liefern SRV090/Code 3 ohne
+   First-/Last-Match. Leere Zeichenfolge, fehlend, JSON-Null, `true`, `1`
+   und `"1"` werden nach dem definierten Vertrag unterschieden. Registries
+   werden auch in einer gemeinsam gelieferten Sammlung auf Kollision geprüft.
+5. Unbekannte Grammatik, nicht gelieferte exakte Inhaltsversion, Hashabweichung,
+   falsche Registrybindung und ausführungsbezogene Steuerfelder werden
+   abgewiesen. Eine tatsächlich gelieferte neue gültige SemVer-Inhaltsversion
+   bleibt zulässig. Quelltext oder URLs in passiven Daten werden unverändert
+   erhalten und niemals ausgeführt, importiert oder nachgeladen.
+6. Originalbytehash und vollständiger kanonischer Ressourcenhash sind getrennt
+   nachweisbar. Gleiche gebundene Inputs liefern dieselbe Projektion; keine
+   Mutationen durch veränderbare Rückgabewerte. Eine Registryänderung verändert
+   ihren Hash und die Modellwurzel, nicht den Hash der unveränderten Regeln.
+7. Vorhandene generische Mappingumschläge, Legacy-Manifeste und Evidence-
+   Mappings behalten ihre bisherigen Lese-/Hashfunktionen. Fehlende v1-Kennung
+   wird bei gezielter Austauschmapping-Auswahl abgewiesen, nicht automatisch
+   ergänzt. Keine Migration, kein Überschreiben und kein vorgetäuschter
+   Schema-/CLI-/Roundtrip-Nachweis allein durch diese Dokumentänderung.
+
+**Offen:** Die Entscheidung ist eine fachliche Präzisierung, keine Umsetzung
+und kein Pass. 14.a.W implementiert den kleinen nutzbaren reinen Auswerter
+einschließlich der nötigen Grundsicherheit und Registry; 14.a.R vertieft
+Grenz-/Fehlerfälle und Bestandsregressionen; 14.a.C bereinigt dieselben Dienste
+bei unverändertem Verhalten. Jeder Zustand erhält seine eigenen tatsächlichen
+parallelen Verhaltensnachweise und seinen Apply-Commit. Vollständige Parser,
+CLI, Importhistorie und Formatroundtrips bleiben in ihren folgenden Schritten.
+
 #### 14.a.W – Let it Work
 
 - [ ] **14.a.W** · Position **571/900** · Voraussetzung: `13.h.C`.
 **Exakte Commit-Message:** `14.a.W feat(exchange): Mappingressourcen und externe Registries aufbauen`
 
-**Umsetzung:** Versionierte Typ-/Feld-/Relations-/Hierarchiemappings und Registry für externe Nichtartefaktidentitäten implementieren.
+**Umsetzung:** Versionierte Typ-/Feld-/Relations-/Hierarchiemappings und Registry für externe Nichtartefaktidentitäten nach Spezifikation 10.12.1 implementieren. Die reine Auswertung verwendet ausdrücklich gelieferte Ressourcen und Werte; sie erzeugt keine Projektwrites oder abgeschlossenen Importe.
 
-**Verhaltensabnahme:** Ein gültiges Mapping ordnet externe Werte reproduzierbar zu.
+**Verhaltensabnahme:** Ein gültiges Mapping ordnet externe Werte reproduzierbar zu; alle vier Tabellenfamilien, explizite Wertetabellen, Restdaten und Registry-Namensräume erfüllen die oben festgelegten positiven Abnahmen. Grundlegende Versions-/Hash-/Eindeutigkeits- und Ausführungssicherheit gelten bereits für diesen nutzbaren W-Zustand.
 
 #### 14.a.R – Make it Right
 
 - [ ] **14.a.R** · Position **572/900** · Voraussetzung: `14.a.W`.
 **Exakte Commit-Message:** `14.a.R feat(exchange): Mappingressourcen und externe Registries vervollständigen`
 
-**Vervollständigung:** Unbekannte Mappingversion und ausführbarer Konverter werden abgewiesen.
+**Vervollständigung:** Versions-/Hashabweichungen, Duplikate, fehlende und typverschiedene Werte, Sammlungskollisionen, unbekannte Steuerfelder und Bestandsgrenzen nach 10.12.1 umfassend absichern. Unbekannte Mappinggrammatik beziehungsweise nicht gelieferte exakte Inhaltsversion und ausführbarer Konverter werden abgewiesen; gültige tatsächlich gelieferte Inhaltsversionen bleiben zulässig.
 
 **Verhaltensabnahme:** Gleiche Eingabe mit demselben Mapping erzeugt dieselbe Importprojektion. Die W-Nachweise bleiben zusätzlich grün.
 
