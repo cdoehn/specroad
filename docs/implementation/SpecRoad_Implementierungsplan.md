@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 8
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 575
-last_completed_plan_commit: 14.b.R
-next_plan_commit: 14.b.C
-last_completed_numbered_bundle: 405
+implementation_plan_commits_completed: 576
+last_completed_plan_commit: 14.b.C
+next_plan_commit: 14.c.W
+last_completed_numbered_bundle: 406
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17434,7 +17434,7 @@ Einzelauftrag endet nach atomarer Übergabe; ein Apply-Erfolg für Bundle
 
 #### 14.b.C – Make it Clean
 
-- [ ] **14.b.C** · Position **576/900** · Voraussetzung: `14.b.R`.
+- [x] **14.b.C** · Position **576/900** · Voraussetzung: `14.b.R`.
 **Exakte Commit-Message:** `14.b.C refactor(exchange): External Identity und Importhistorie bereinigen`
 
 **Bereinigung:** Identitätsregistry und Importvergleich getrennt verwalten.
@@ -17442,6 +17442,61 @@ Einzelauftrag endet nach atomarer Übergabe; ein Apply-Erfolg für Bundle
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Implementierungsstand C / Bundle 406:** Das maßgebliche Result
+`specroad-apply_Result_224148_1022_8f0c4e.zip` mit SHA-256
+`7a7fa992cbbaba52e5783d72ee5fcd418acd07e5632bd69dc5117557102aa6c4`
+bestätigt Bundle 405 / 14.b.R auf
+`aa85eac87810c5e35862e2bf13bce9175aa13b70`: sauberer Apply-Arbeitsbaum,
+17.280 vollständig gesammelte Tests und **5.760 erfolgreiche Teiltests**
+der Gruppe 2, Commitfolge 113, vier Worker. Der vollständige Snapshot,
+die Vierfachbindung, die tatsächliche nummerierte Testauswahl und der
+Abschlusscommit wurden abgeglichen. Dies ist der reguläre C-Zustand
+desselben Ausschnitts; Spezifikation 0.2.13 bleibt unverändert.
+
+Die öffentliche Fassade `exchange.identities` erhält
+`ExternalIdentity`, `ImportIdentityError` und `NativeIdentityIndex` sowie
+ihre bisherigen Paketimporte. `_import_identity` kapselt die eigenen
+Identitätswerte und die ausdrücklich gebundene Importhistorie mit den drei
+getrennten Hashwerten. `_native_identity_index` verwaltet ausschließlich
+die Rekonstruktion und eindeutige Zuordnung nativer Besitzer einschließlich
+Quellpfadprüfung; es berechnet keine Historie oder Konfliktstrategie.
+`_identity_errors` hält die gemeinsame Fehlerübersetzung mit unveränderten
+Codes, Pointern und Positionsangaben. Die drei Klassen und beide Hilfsfunktionen
+wurden mit identischen Syntaxbäumen verlagert. Die geprüften Datenwerte,
+Fehlerverträge, Bestands-/Extensionerhaltung und erlaubten Seiteneffekte
+bleiben erhalten. Der eigentliche Dreifachvergleich folgt weiterhin in 14.c.
+
+**Gezielter C-Nachweis:** **614/614 Verhaltenstests**, vier parallele Worker,
+**4,20 s**, Prozesscode 0, Python 3.14.4. Die Auswahl erhält sämtliche
+147 W-/R-Tests der nativen Identitäten und Historie und die 467 betroffenen
+Regressionstests für Relationsfelder/-referenzen, Artefaktgrundfelder,
+JSON/JCS, Modellwurzel, Austauschmappings und externe Registries.
+Die vorhandenen Core-/PYZ-Fälle prüfen auch die Verfügbarkeit der getrennten
+Module in isolierter Ausführung. Testfälle, erwartete Fachwerte, Fixtures
+und feste Testnummern wurden nicht verändert; es entstehen keine neuen
+Testnummern und keine Architektur- oder Dokumentationstests.
+Die vollständige Collection-/Katalogprüfung ist gültig mit **17.280 Tests**
+und **0 ausgeführten Testkörpern**; `full_suite_passed` bleibt null.
+Quellstand-SHA-256:
+`5d1479b137263831b92875dba1c54b6bb582bd47d7ff3544c30a2e738369fbac`.
+Katalog-SHA-256:
+`df10fd8bf21522401942b4ab96cd63a7587afa303119f71fc29601c58f959829`.
+Die vier geänderten/neuen Python-Dateien wurden statisch mit der
+Python-3.10-Grammatik geprüft; dies behauptet keinen Testlauf auf allen
+unterstützten Python-Versionen. SR-TC-0317/0453/0454 und die synthetische
+Fixture behalten ihre bestehenden fachlichen Teilabnahmen.
+
+**Umfangsgrenze und Übergabe:** Das Refactoring ergänzt keine neue
+Importentscheidung, keinen Formatparser, Writer oder CLI-Aufruf.
+14.c und die nachfolgenden Planschritte bleiben offen. Der Entrypoint
+stellt genau diesen gezielt geprüften C-Zustand her und prüft danach
+in Apply die fällige **Gruppe 0/3**, Commitfolge **114**, mit **5.760 Tests**
+parallel. Erst nach Erfolg aktualisiert er die fünf Planmarker auf
+**576/900**, zuletzt **14.b.C**, nächstens **14.c.W** und Bundle **406**,
+und erzeugt den vorgesehenen Commit. Nach atomarer Übergabe endet dieser
+Einzelauftrag; ein Apply-Erfolg für Bundle 406 wird noch nicht behauptet.
 
 <a id="step-14-c"></a>
 ### 14.c – Dreifachvergleich und Konfliktstrategien
