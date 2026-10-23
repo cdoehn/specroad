@@ -90,6 +90,7 @@
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",
     "SR-FIX-NDJSON-NATIVE-CODEC-v1",
+    "SR-FIX-NDJSON-STREAM-RESUME-v1",
     "SR-FIX-NORMALIZATION-SCOPE-v1",
     "SR-FIX-NORMALIZATION-TRANSACTION-v1",
     "SR-FIX-ORDERED-FOLD-v1",
@@ -805,6 +806,10 @@
     "SR-FIX-NDJSON-NATIVE-CODEC-v1": {
       "provider": "tests/support/ndjson_codec.py:envelope,plan_value;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_ndjson_codec.py:wire",
       "kind": "Synthetic complete native domain/record objects and prehashed regular Change Plans in explicit three-field NDJSON v1 envelopes. Literal wire/byte oracles, ordered mixed streams, duplicate revisions, detached original-byte observations and malformed envelopes/payloads verify passive processing. I/O/generation/execution traps and isolated Core/PYZ runs do not imply real actor approval or a whole import/export success."
+    },
+    "SR-FIX-NDJSON-STREAM-RESUME-v1": {
+      "provider": "tests/test_ndjson_codec_right.py:rows,wire,blocks,restored,BAD_LINES;tests/support/ndjson_codec.py:envelope,plan_value",
+      "kind": "Synthetic mixed native envelopes with Unicode, escapes, numeric tokens, duplicates and prehashed regular plans. Malformed physical lines, split transfer blocks, explicit EOF, large lines, retained source/cursor bytes and independent cursor hashes exercise passive source-bound resume. Temporary host persistence and isolated Core/PYZ probes are not portable Work integration, real approvals or full import/export success."
     }
   }
 }

@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 11
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 589
-last_completed_plan_commit: 14.g.W
-next_plan_commit: 14.g.R
-last_completed_numbered_bundle: 422
+implementation_plan_commits_completed: 590
+last_completed_plan_commit: 14.g.R
+next_plan_commit: 14.g.C
+last_completed_numbered_bundle: 423
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -19200,12 +19200,97 @@ Einzelauftrag ab; kein Warten auf Result, kein weiterer Planschritt.
 
 #### 14.g.R – Make it Right
 
-- [ ] **14.g.R** · Position **590/900** · Voraussetzung: `14.g.W`.
+- [x] **14.g.R** · Position **590/900** · Voraussetzung: `14.g.W`.
 **Exakte Commit-Message:** `14.g.R feat(exchange): NDJSON-Objektstrom vervollständigen`
 
 **Vervollständigung:** Framing, physische Fehlerorte und Stromabschluss nach D.3.1 vervollständigen: byteleere Zeilen ignorieren, Kommentare und kaputte letzte Objekte ablehnen; Transferblockgrenzen, große Zeilen, gültiges EOF ohne LF und gebundene Fortsetzung ohne Präfixerfolg gemäß den R-Abnahmen prüfen.
 
 **Verhaltensabnahme:** Kleine Transferblöcke und Fortsetzung erhalten den vollständigen Objektstrom. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung und Übergabe (Bundle 423):** Das vollständig gebundene Result
+`specroad-apply_Result_123207_1023_c155f4.zip`, SHA-256
+`00fd700c77b0fdb21663d67f42198c79df5edc508c86a23ca88c92ce481db1ba`,
+bestätigt Bundle **422** / **14.g.W** auf
+`d7650dcd28c06f03433936bf7dc282fe8ac48a9d`: sauberer Apply-Stand,
+**6.019/6.019** Tests der Gruppe **1/3**, Commitfolge **130**, vier Worker,
+**1.782,36 s**. Alle **2.156** Snapshotdateien, aktuelle Historie, Run-/
+Ausführungslog und nummerierte Testbeobachtungen wurden abgeglichen.
+In Dev wurden nur die fünf dadurch bestätigten Fortschrittsmarker
+nachgeführt. SPECROAD-DECISION-1 ist ausdrücklich vorhanden; die bestehende
+Spezifikation **0.2.16, D.3.1** genügt unverändert. Dieses Bundle enthält
+reguläre Umsetzung und keine weitere normative Klärung.
+
+`NDJSONDecoder.feed` nimmt beliebig geteilte Byteblöcke entgegen und
+entscheidet erst an LF über eine Objektzeile. Leere Blöcke sind Pausen;
+`finish` bezeichnet ausdrücklich tatsächliches EOF. Geteilte UTF-8-
+Zeichen, Escapes und Zahlen bleiben unverändert bis zum Zeilenabschluss
+gepuffert. Ein vollständiges letztes Objekt ohne LF wird akzeptiert;
+offene letzte Werte, Kommentare, CR/BOM außerhalb von Strings, Dubletten,
+ungültige Zahlen und sonstige JSON-/native Feldfehler bleiben Code 3 mit
+physischer Zeile und gegebenenfalls hüllenrelativem Pointer. Eine
+fehlgeschlagene Instanz kann keine weitere Zeile überspringen oder
+Vollständigkeit melden. Ressourcen-/Host-Ausnahmen behalten ihre Klasse.
+Der Iterable-Helfer `iter_decode_ndjson_chunks` verwendet ausschließlich
+die ausdrücklich vollständige Producer-Erschöpfung als EOF; Producerfehler
+werden nicht als Abschluss behandelt. Die bestehenden W-APIs bleiben erhalten.
+
+Ein rein datenförmiger Codec-Checkpoint bindet Originalquellhash und
+-größe, empfangene Byteposition, nächste physische Zeile, bestätigte
+Objektzahl und die unfertigen Zeilenbytes. Der Aufrufer sichert Quellbytes,
+Cursor und dessen unabhängig behaltenen Hash zusammen mit den bestätigten
+Ausgaben; der Codec öffnet keine Dateien und behauptet keinen gespeicherten
+Work-Beleg. `resume_ndjson` prüft die unveränderte vollständige Quelle und
+den gesicherten Cursorhash. Das verbrauchte Präfix wird in begrenzten
+Blöcken erneut validiert, aber nicht erneut ausgegeben; seine unfertige
+letzte Zeile wird nicht als EOF interpretiert. Falsche Cursor-Geometrie
+oder ein versteckter ungültiger Präfix werden abgewiesen. Veränderte
+Quell-/Cursorbindung beziehungsweise vorzeitig beendete gebundene Eingabe
+behalten die Konfliktklasse **Code 6**. Auch nach Fortsetzung sind
+Zwischenergebnisse partiell und erteilen keine Schreibberechtigung.
+
+Zwischen Feed-Aufrufen wird keine Historie dekodierter Objekte gesammelt;
+der Speicherbedarf folgt dem gelieferten Block und der unfertigen Zeile.
+Es gibt keinen neuen Gesamtbyte-/Objektzahl-Cutoff. Für gespeicherte
+Fortsetzung stellt der Host weiterhin den vollständigen Originalsnapshot
+bereit; die Wiederprüfung des Präfixes ist zusätzliche Validierungsarbeit,
+kein Duplikat der ausgelieferten Daten. Dauerhafte Work-/CLI-Einbindung,
+atomare erfolgreiche Dateiveröffentlichung, Import-/Exportpläne,
+Manifest/Verlustbericht, globale Modellgates und tatsächliche Freigaben
+bleiben ihren Fachschritten zugeordnet. Der reine Codec nimmt diese
+höheren Erfolgsaussagen nicht vorweg. **14.g.C bleibt offen.**
+
+**Tatsächlich gezielt geprüft in Dev:** **713/713** Verhaltenstests mit
+**vier parallelen Workern**, Prozesscode **0**, keine Beobachtungsfehler,
+`full_suite_passed=null`; Testkörperlauf **11,28 s**. Enthalten sind **140
+neue R-Fälle**, alle **152 unveränderten W-Fälle** sowie die betroffenen
+Artefakt-, Change-Plan-, JSON-, Kanonisierungs- und Schemakatalogregressionen.
+Die Abnahmen umfassen große Zeilen, viele gleiche Objekte, alle relevanten
+Pausen-/EOF-/Fehlergrenzen, gespeicherte und mehrfach fortgesetzte Cursor,
+Quell-/Cursoränderungen und gefälschte Präfixe. Passive I/O-/Executor-Sperren
+sowie isolierter Core und PYZ sind erfolgreich. Die vollständige
+Collection-/Katalogprüfung erfasste **18.198 Identitäten**, **0 Testkörper**,
+ohne Katalogfehler. SR-TC-0327 bleibt wegen der ausgewiesenen höheren
+Integrationen ehrlich `partial`; kein Vollsuite-/Release-Beleg wird behauptet.
+
+Gebundener Quellstand:
+`07fdbaddd57f2d2438dd8849310ec85613d455b71ac6658d5e99f5d955966a8d`;
+Katalog: `00447c1222132cdb2aa8b87ebb4268ad67feab050b9e7446966862b21e28116c`;
+Auswahlbeleg: `8b8c89a0d709e51209f18e8b645dc204e6ae778086b3a357092f83e8ddc8d149`;
+Beobachtungsbeleg: `adbfc6b9d16c4af32f14942051a15a8774e9e8b58ff9c5eb2c17fbf87c01c4d9`.
+Alle vorhandenen Testnummern und Testoracles bleiben erhalten; die neuen
+Identitäten werden nur als Nummern **18058–18197** hinten angefügt.
+
+**Vorgesehene Apply-Grenze:** Genau ein regulärer R-Commit, Position
+**590/900**, ohne vorweggenommenen C-Zustand. Der Entrypoint installiert
+den gezielt geprüften Zustand mit offenen Fortschrittsmarkern und prüft
+ausschließlich **Gruppe 2/3**, Commitfolge **131**, mit **6.066 Tests** und
+vier parallelen Workern. Erst nach erfolgreichem gebundenem Apply-Gate
+setzt er die fünf Marker auf **590/900**, zuletzt **14.g.R**, nächstens
+**14.g.C**, Bundle **423**, R-Checkbox abgeschlossen, und committet mit
+der festgelegten R-Message. Fehler erhalten die tatsächlichen Dateien,
+den Index und etwaige erfolgreiche Commits. Apply-Erfolg wird hier nicht
+vorweggenommen. Native Paketprüfung und atomare Exchange-Übergabe beenden
+diesen Einzelauftrag ohne weiteren Planschritt oder Warten auf Result.
 
 #### 14.g.C – Make it Clean
 
