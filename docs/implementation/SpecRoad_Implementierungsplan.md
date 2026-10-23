@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 11
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 588
-last_completed_plan_commit: 14.f.C
-next_plan_commit: 14.g.W
-last_completed_numbered_bundle: 421
+implementation_plan_commits_completed: 589
+last_completed_plan_commit: 14.g.W
+next_plan_commit: 14.g.R
+last_completed_numbered_bundle: 422
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -19119,12 +19119,84 @@ Positionen **589–591**, bleiben nach diesem OFF-PLAN-Bundle offen.
 
 #### 14.g.W – Let it Work
 
-- [ ] **14.g.W** · Position **589/900** · Voraussetzung: `14.f.C`.
+- [x] **14.g.W** · Position **589/900** · Voraussetzung: `14.f.C`.
 **Exakte Commit-Message:** `14.g.W feat(exchange): NDJSON-Objektstrom aufbauen`
 
 **Umsetzung:** Den kleinsten nutzbaren passiven NDJSON-Objektcodec nach D.3.1 aufbauen: genau eine versionierte Dreifeldhülle pro Zeile, native Artefakte oder reguläre Change Plans vollständig prüfen und in Reihenfolge streamen. Keine native Schemaänderung, Inferenz oder Ausführung; die W-Abnahmen des Entscheidungsbelegs gelten.
 
 **Verhaltensabnahme:** Mehrere gültige native Objekte beider Arten werden vollständig in Reihenfolge verarbeitet und semantisch unverändert zurückgelesen, einschließlich innerer Versionen und Planhashes. Nicht zulässige Hüllen oder Payloads werden ohne Reparatur abgewiesen. Keine Schreib-/Freigabewirkung; kein vollständiger CLI-Import wird behauptet.
+
+**W-Umsetzung und Übergabe (Bundle 422):** Das gebundene Result
+`specroad-apply_Result_114630_1023_7d0ebd.zip`, SHA-256
+`2c59929b63cf67eeddcd29eb01b2ecce9c6e4859f628ffabdf5bc2832b9a2cbc`,
+bestätigt Bundle 421 auf `77492e7590bbaea5d098c1fbd978fad311860f88`:
+sauberer Apply-Stand, **5.969/5.969** Tests der Gruppe **0/3**, Commitfolge
+**129**, vier Worker. Alle **2.153** Snapshotdateien, aktuelle Historie,
+Run-/Ausführungslog und nummerierte Testbeobachtungen wurden abgeglichen.
+In Dev wurden ausschließlich die beiden dadurch belegten Planmarker
+nachgeführt. SPECROAD-DECISION-1 und Spezifikation 0.2.16 bleiben bytegleich;
+Control erlaubt keine weitere Klärung, und die vorhandene D.3.1 genügt.
+
+Der neue reine Codec `exchange/ndjson.py` verarbeitet ausdrücklich
+behüllte native Objekte. Bestehende Common-/Domain-/Record-Validatoren
+prüfen alle 28 Artefakttypen; der passive Change-Plan-Validator prüft
+reguläre Pläne einschließlich Operationen, lokalen Bindungen, Ergebnis-
+und Selbsthashes. Weder Defaults noch Versionskonvertierung, ID-/Zeitwerte
+oder erneuerte Planhashes werden ergänzt. Die Ausgabe ist kanonisches
+Hüllen-JSON plus LF; Reihenfolge und Mehrfachvorkommen bleiben erhalten.
+Vollständige Beobachtungen behalten Originalbytes und Bytehash getrennt
+von den unabhängig lesbaren Objekten. Transport ist keine Freigabe.
+
+`iter_decode_ndjson` verarbeitet vollständige vom Aufrufer bereitgestellte
+Bytes datensatzweise, `iter_encode_ndjson` verarbeitet ausdrücklich
+bereitgestellte Hülleniterables. Beide Iteratoren liefern bis zur
+Erschöpfung nur Präfixe. Die vollständigen Helfer `decode_ndjson` und
+`encode_ndjson` liefern bei einem späten Fehler keinen Gesamterfolg.
+Feldfehler sind Code 3 mit physischer Zeile und hüllenrelativem Pointer;
+der Codec selbst öffnet keine Datei und veröffentlicht nichts.
+Transferblöcke, gebundene persistente Fortsetzung und die vollständige
+R-Grenzmatrix bleiben **14.g.R**; strukturelle Bereinigung bleibt **14.g.C**.
+CLI-/Import-/Exportpläne, Manifest/Verlustbericht, globale Modellgates
+und tatsächliche Transaktionen bleiben ihren Fachschritten zugeordnet.
+Der Schemakatalog behauptet weiterhin keinen vollständigen NDJSON-Adapter.
+
+**Tatsächlich gezielt geprüft in Dev:** **573/573** Verhaltenstests,
+**vier parallele Worker**, Prozesscode **0**, keine Beobachtungsfehler,
+`full_suite_passed=null`; Testkörperlauf **10,07 s**. Darin sind **152 neue**
+NDJSON-Verhaltensfälle sowie relevante Regressionen der nativen Artefakt-
+und Planverträge, des strikten JSON-Readers, der Kanonisierung und des
+Schemakatalogs. Isolierter Core und PYZ verarbeiten dieselben Objekte ohne
+optionale Pakete. Dateizugriffs-, Netzwerk-, Prozess-, Generierungs- und
+Executor-Sperren prüfen passive Verarbeitung; echte Fachfreigaben werden
+nicht behauptet. Die vollständige Collection-/Katalogprüfung erfasste
+**18.058 Identitäten**, mit **0 Testkörpern** und ohne Katalogfehler.
+SR-TC-0327 ist ehrlich `partial`; seine weiteren Abnahmen bleiben offen.
+
+Der erste gezielte Lauf war mit **572 bestanden / 1 fehlgeschlagen** kein
+Erfolgsbeleg: Die neue I/O-Testsperre hinterließ durch eine falsche
+Context-Aufräumreihenfolge einen Wrapper im Worker und störte einen
+bestehenden Record-Test. Nur diese neue Testhilfe wurde korrigiert; danach
+bestand dieselbe vollständige gezielte Auswahl. Die bestehenden Tests und
+ihre Oracles blieben unverändert. Kein erfolgloser Lauf wird umgedeutet.
+
+Gebundener Quellstand:
+`cbcacace9be9dbbbc236c77a156d418a585a56e92163cec80ca37718f8548e17`;
+Katalog: `cba9e153d83a2f800cfb495cf87742e5396c3fe43edfd4264b2480a15ee45e9f`;
+Auswahlbeleg: `e0aa8b2de130ebe5126b6863eb1b3201e2c42786ee5b1c59a8609aab963d2f0a`;
+Beobachtungsbeleg: `3baa6d3bc1133b939dc5f2e91fc19951b12d61cba88c573f5e1d220e0bec5bc6`.
+Alle bisherigen Testnummern bleiben unverändert; die neuen Identitäten
+werden ausschließlich als Nummern **17906–18057** hinten angefügt.
+
+**Vorgesehene Apply-Grenze:** Genau ein regulärer W-Commit, keine R-/C-
+Vorwegnahme. Der Entrypoint installiert den gezielt geprüften Zustand mit
+unveränderten offenen Fortschrittsmarkern, prüft ausschließlich **Gruppe
+1/3**, Commitfolge **130**, mit **6.019 Tests** und vier parallelen Workern.
+Erst nach diesem erfolgreichen gebundenen Teiltest werden W-Checkbox,
+Produktstand **589/900**, nächster Schritt **14.g.R** und Bundle **422**
+gesetzt und derselbe Zustand committed. Bei Fehler bleiben tatsächliche
+Dateien und Index erhalten. Apply-Erfolg wird hier nicht vorweggenommen.
+Native Paketprüfung und atomare Exchange-Übergabe schließen diesen
+Einzelauftrag ab; kein Warten auf Result, kein weiterer Planschritt.
 
 #### 14.g.R – Make it Right
 

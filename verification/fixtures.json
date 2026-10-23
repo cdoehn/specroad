@@ -89,6 +89,7 @@
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",
+    "SR-FIX-NDJSON-NATIVE-CODEC-v1",
     "SR-FIX-NORMALIZATION-SCOPE-v1",
     "SR-FIX-NORMALIZATION-TRANSACTION-v1",
     "SR-FIX-ORDERED-FOLD-v1",
@@ -800,6 +801,10 @@
     "SR-FIX-CSV-EXPORT-COMPATIBILITY-v1": {
       "provider": "tests/test_document_exports.py:scalar_project;tests/test_document_view_variants_right.py:field_column;tests/support/csv_codec.py:column,record,selected",
       "kind": "Existing native View source models and explicit bound CSV profiles with synthetic C0/DEL string values. Literal machine-byte oracles for legacy scalar/typed View data rows, recovered native values and generated metadata are checked alongside the distinct strict CSV-profile rejection contract, before and after shared serialization. No presentation, documentation, external approval or full format-integration claim."
+    },
+    "SR-FIX-NDJSON-NATIVE-CODEC-v1": {
+      "provider": "tests/support/ndjson_codec.py:envelope,plan_value;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_ndjson_codec.py:wire",
+      "kind": "Synthetic complete native domain/record objects and prehashed regular Change Plans in explicit three-field NDJSON v1 envelopes. Literal wire/byte oracles, ordered mixed streams, duplicate revisions, detached original-byte observations and malformed envelopes/payloads verify passive processing. I/O/generation/execution traps and isolated Core/PYZ runs do not imply real actor approval or a whole import/export success."
     }
   }
 }
