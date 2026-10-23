@@ -3,15 +3,27 @@
 The caller supplies the existing bounded XML reader. No mapping, filesystem
 access or external resolver is introduced by this transport layer.
 """
-from ._reqif_values import REQIF_NAMESPACE, ReqIFError, ReqIFLimits, _Node, _SEP, _XML
+from ._reqif_values import REQIF_NAMESPACE, XHTML_NAMESPACE, ReqIFError, ReqIFLimits, _Node, _SEP, _XML
 
 
-def read_tree(raw, limits, *, reader):
+def read_tree(raw, limits, *, reader, structure=False):
     if type(limits) is not ReqIFLimits:
         raise ReqIFError("typed_xml_limits_required", exit_code=2)
     stack, roots = [], []
 
     def start(name, attributes, reject):
+        if structure:
+            # Inspect every event, including deferred extensions and originals.
+            from ._reqif_xhtml import relative_reference
+            local = name.rsplit(_SEP, 1)[-1].lower()
+            if local in ('script', 'iframe', 'embed', 'applet', 'include'):
+                reject('reqif_xhtml_active_content')
+            for key, value in attributes.items():
+                attr = key.rsplit(_SEP, 1)[-1].lower()
+                if attr.startswith('on'):
+                    reject('reqif_xhtml_event_attribute')
+                if attr in ('href', 'src', 'data', 'action', 'formaction', 'codebase', 'archive', 'poster'):
+                    relative_reference(value)
         pointer = (stack[-1][3] if stack else "") + "/" + name.rsplit(_SEP, 1)[-1]
         if stack:
             pointer += "[" + str(stack[-1][4]) + "]"
@@ -48,16 +60,27 @@ def _serialize(root):
             return local
         if namespace == _XML:
             return "xml:" + local
+        if namespace == XHTML_NAMESPACE:
+            return "xhtml:" + local
         raise ReqIFError("reqif_uninterpreted_namespace")
 
-    def emit(node, *, first=False):
+    pending, xhtml = [root], False
+    while pending:
+        node = pending.pop()
+        xhtml = xhtml or node.name.startswith(XHTML_NAMESPACE + _SEP)
+        pending.extend(node.children)
+
+    def emit(node, *, first=False, mixed=False):
         attrs = [('xmlns', REQIF_NAMESPACE)] if first else []
+        if first and xhtml:
+            attrs.append(('xmlns:xhtml', XHTML_NAMESPACE))
         attrs += [(name(k), v) for k, v in node.attributes]
         opening = "<" + name(node.name) + "".join(' ' + k + '="' + _escape(v, attribute=True) + '"' for k, v in sorted(attrs)) + ">"
         # Preserve scalar text and mixed content; discard only structural
         # indentation between elements so already canonical output is stable.
         content = node.content
-        if node.children and all(type(x) is _Node or not x.strip() for x in content):
+        mixed = mixed or node.name.startswith(XHTML_NAMESPACE + _SEP)
+        if not mixed and node.children and all(type(x) is _Node or not x.strip() for x in content):
             content = node.children
-        return opening + "".join(emit(x) if type(x) is _Node else _escape(x) for x in content) + "</" + name(node.name) + ">"
+        return opening + "".join(emit(x, mixed=mixed) if type(x) is _Node else _escape(x) for x in content) + "</" + name(node.name) + ">"
     return ('<?xml version="1.0" encoding="UTF-8"?>\n' + emit(root, first=True) + "\n").encode("utf-8")

@@ -119,6 +119,7 @@
     "SR-FIX-RELEASE-READINESS-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
+    "SR-FIX-REQIF-STRUCTURE-XHTML-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-R-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
@@ -820,6 +821,10 @@
     "SR-FIX-REQIF-TYPE-OBJECTS-R-v1": {
       "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/test_reqif_objects_right.py:raw_with_bounds,resource",
       "kind": "Synthetic six-family ReqIF boundary corpus, exact and non-native number lexemes including huge exponents/integers, Gregorian dates, all defaults, duplicate IDs across deferred sections, uninterpreted content and XML safety inputs. Explicit bound inverse mappings test successful typed changes, unchanged provenance, ambiguity, invalid native candidates, isolated Core/PYZ and resource failures. No external XSD execution, foreign-tool roundtrip or whole-project success is claimed."
+    },
+    "SR-FIX-REQIF-STRUCTURE-XHTML-v1": {
+      "provider": "tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,xvalue,attachment;tests/test_reqif_structure.py:mapped_fixture;tests/support/targets.py:model",
+      "kind": "Owned ReqIF structure/XHTML bytes, explicit source/type/occurrence/relation identities and actual native model bytes. Independent prose node oracles, explicit byte/hash/path-bound attachment fixtures and negative reference/safety/binding cases. No external tool, renderer, resolver, project write, full-suite or release claim."
     }
   }
 }

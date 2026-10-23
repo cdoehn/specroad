@@ -87,8 +87,8 @@ def _native_value(definition, native, object_id):
     return node("ATTRIBUTE-VALUE-" + family, attrs, content)
 
 
-def project_object(document, identifier, *, number_parser):
-    obj = next((o for o in document.objects if o.identifier == identifier), None)
+def project_object(document, identifier, *, number_parser, records=None, xhtml=False, attachments=()):
+    obj = next((o for o in (document.objects if records is None else records) if o.identifier == identifier), None)
     if obj is None:
         raise ReqIFError("reqif_object_missing", object_id=identifier)
     definitions = next(t.definitions for t in document.types if t.identifier == obj.type_id)
@@ -99,7 +99,16 @@ def project_object(document, identifier, *, number_parser):
         value = declared.get(key, definition.default)
         origins[key] = "explicit" if key in declared else "default" if value is not None else "absent"
         if value is not None:
-            projected, reason = _project_value(value, number_parser=number_parser)
+            if xhtml and value.family == 'XHTML':
+                from ._reqif_xhtml import project_xhtml
+                try:
+                    projected, reason = project_xhtml(value.lexical, attachments=attachments)['markdown'], None
+                except ReqIFError as error:
+                    if error.exit_code != 3:
+                        raise
+                    projected, reason = None, error.reason
+            else:
+                projected, reason = _project_value(value, number_parser=number_parser)
             if reason:
                 losses.append({"object_id": identifier, "definition_id": key, "reason": reason})
             else:

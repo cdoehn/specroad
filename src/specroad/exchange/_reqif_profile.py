@@ -8,6 +8,7 @@ from dataclasses import replace
 from ._reqif_scalars import _boolean, _compare_numbers, _date, _identifier, _number
 from ._reqif_values import (
     ReqIFDatatype, ReqIFDefinition, ReqIFError, ReqIFObject, ReqIFType, ReqIFValue,
+    ReqIFSpecification, ReqIFRelation, ReqIFHierarchy,
     _SEP, _XML, _error,
 )
 
@@ -54,7 +55,7 @@ def _reference(node, wrapper, tag):
     return value
 
 
-def _validate(root):
+def _validate(root, *, structure=False):
     ids, unsupported = {}, []
 
     # IDs of deferred ReqIF objects share the document's namespace too. Do not
@@ -122,6 +123,8 @@ def _validate(root):
     for node in (top["THE-HEADER"], top["CORE-CONTENT"], core):
         attributes(node, set())
     for tag in ("SPEC-RELATIONS", "SPECIFICATIONS", "SPEC-RELATION-GROUPS"):
+        if structure and tag != "SPEC-RELATION-GROUPS":
+            continue
         if tag in cp and (cp[tag].children or cp[tag].attrs
                           or any(type(x) is str and x.strip() for x in cp[tag].content)):
             unsupported.append((cp[tag].pointer, "later_reqif_integration"))
@@ -156,7 +159,7 @@ def _validate(root):
             key = "MAX-LENGTH" if family == "STRING" else "ACCURACY"
             if _compare_numbers(_number(node.attrs[key], "INTEGER", node), "0") < 0:
                 raise _error("reqif_invalid_type_bound", node)
-        if family == "XHTML":
+        if family == "XHTML" and not structure:
             unsupported.append((node.pointer, "xhtml_not_projected"))
         datatypes[identifier] = ReqIFDatatype(identifier, family, node, tuple(enum_ids))
 
@@ -184,10 +187,14 @@ def _validate(root):
             lexical = chosen
         elif family == "XHTML":
             attributes(node, {"IS-SIMPLIFIED"})
-            if "IS-SIMPLIFIED" in node.attrs:
-                _boolean(node.attrs["IS-SIMPLIFIED"], node)
-            unsupported.append((node.pointer, "xhtml_not_projected"))
-            lexical = None
+            simplified = _boolean(node.attrs["IS-SIMPLIFIED"], node) if "IS-SIMPLIFIED" in node.attrs else False
+            if structure:
+                from ._reqif_xhtml import validate_xhtml
+                lexical = validate_xhtml(parts, simplified)
+                unsupported.extend(lexical.unsupported)
+            else:
+                unsupported.append((node.pointer, "xhtml_not_projected"))
+                lexical = None
         else:
             attributes(node, {"THE-VALUE"}, {"THE-VALUE"})
             lexical = node.attrs["THE-VALUE"]
@@ -211,7 +218,7 @@ def _validate(root):
     types = {}
     stags = {"SPEC-OBJECT-TYPE", "SPEC-RELATION-TYPE", "SPECIFICATION-TYPE", "RELATION-GROUP-TYPE"}
     for node in _items(cp.get("SPEC-TYPES"), stags):
-        if node.tag != "SPEC-OBJECT-TYPE":
+        if node.tag != "SPEC-OBJECT-TYPE" and (not structure or node.tag == "RELATION-GROUP-TYPE"):
             unsupported.append((node.pointer, "later_reqif_integration"))
             continue
         identifier = identity(node)
@@ -245,14 +252,13 @@ def _validate(root):
                     raise
             definitions.append(definition)
         types[identifier] = ReqIFType(identifier, tuple(definitions), node)
-    objects = []
-    for node in _items(cp.get("SPEC-OBJECTS"), {"SPEC-OBJECT"}):
+    def record(node, tag, extra=()):
         oid = identity(node)
         attributes(node, _COMMON)
-        parts = _layout(node, {"ALTERNATIVE-ID", "TYPE", "VALUES"}, {"TYPE"})
+        parts = _layout(node, {"ALTERNATIVE-ID", "TYPE", "VALUES"} | set(extra), {"TYPE"})
         alternative(parts.get("ALTERNATIVE-ID"))
-        tid = _reference(parts["TYPE"], "TYPE", "SPEC-OBJECT-TYPE-REF")
-        if tid not in types:
+        tid = _reference(parts["TYPE"], "TYPE", tag + "-TYPE-REF")
+        if tid not in types or types[tid].element.tag != tag + "-TYPE":
             raise _error("reqif_object_type_reference", node, object_id=oid)
         defs = {d.identifier: d for d in types[tid].definitions}
         values = {}
@@ -268,5 +274,48 @@ def _validate(root):
                 error.object_id = oid
                 error.definition_id = aid
                 raise
-        objects.append(ReqIFObject(oid, tid, tuple(values.values()), node))
-    return tuple(datatypes.values()), tuple(types.values()), tuple(objects), tuple(unsupported)
+        return ReqIFObject(oid, tid, tuple(values.values()), node), parts
+
+    objects = tuple(record(node, "SPEC-OBJECT")[0]
+                    for node in _items(cp.get("SPEC-OBJECTS"), {"SPEC-OBJECT"}))
+    if not structure:
+        return tuple(datatypes.values()), tuple(types.values()), objects, tuple(unsupported)
+
+    object_ids = {o.identifier for o in objects}
+    specifications, relations, hierarchies = [], [], []
+
+    def hierarchy(node, owner_id):
+        hid = identity(node)
+        attributes(node, _COMMON | {"IS-EDITABLE", "IS-TABLE-INTERNAL"})
+        for flag in ("IS-EDITABLE", "IS-TABLE-INTERNAL"):
+            if flag in node.attrs:
+                _boolean(node.attrs[flag], node)
+        parts = _layout(node, {"ALTERNATIVE-ID", "OBJECT", "CHILDREN", "EDITABLE-ATTS"}, {"OBJECT"})
+        alternative(parts.get("ALTERNATIVE-ID"))
+        oid = _reference(parts["OBJECT"], "OBJECT", "SPEC-OBJECT-REF")
+        if oid not in object_ids:
+            raise _error("reqif_hierarchy_object_reference", node, object_id=hid)
+        if "EDITABLE-ATTS" in parts:
+            # Preserve metadata outside the current native structural adapter.
+            unsupported.append((parts["EDITABLE-ATTS"].pointer, "reqif_editable_attributes_not_projected"))
+        children = _items(parts.get("CHILDREN"), {"SPEC-HIERARCHY"})
+        hierarchies.append(ReqIFHierarchy(hid, oid, owner_id,
+                                         tuple(c.attrs["IDENTIFIER"] for c in children), node))
+        for child in children:
+            hierarchy(child, hid)
+        return hid
+
+    for node in _items(cp.get("SPECIFICATIONS"), {"SPECIFICATION"}):
+        obj, parts = record(node, "SPECIFICATION", ("CHILDREN",))
+        children = tuple(hierarchy(c, obj.identifier) for c in _items(parts.get("CHILDREN"), {"SPEC-HIERARCHY"}))
+        specifications.append(ReqIFSpecification(obj.identifier, obj.type_id, obj.values, node, children))
+    for node in _items(cp.get("SPEC-RELATIONS"), {"SPEC-RELATION"}):
+        obj, parts = record(node, "SPEC-RELATION", ("SOURCE", "TARGET"))
+        if not {"SOURCE", "TARGET"} <= parts.keys():
+            raise _error("reqif_relation_endpoints_required", node)
+        endpoints = tuple(_reference(parts[k], k, "SPEC-OBJECT-REF") for k in ("SOURCE", "TARGET"))
+        if not set(endpoints) <= object_ids:
+            raise _error("reqif_relation_object_reference", node, object_id=obj.identifier)
+        relations.append(ReqIFRelation(obj.identifier, obj.type_id, obj.values, node, *endpoints))
+    return (tuple(datatypes.values()), tuple(types.values()), objects, tuple(unsupported),
+            tuple(specifications), tuple(relations), tuple(hierarchies))

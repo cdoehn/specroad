@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 13
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 594
-last_completed_plan_commit: 14.h.C
-next_plan_commit: 14.i.W
-last_completed_numbered_bundle: 429
+implementation_plan_commits_completed: 595
+last_completed_plan_commit: 14.i.W
+next_plan_commit: 14.i.R
+last_completed_numbered_bundle: 430
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -20050,12 +20050,109 @@ Bundle ändert ausschließlich normative Dokumente und aktive Hashbindungen.
 
 #### 14.i.W – Let it Work
 
-- [ ] **14.i.W** · Position **595/900** · Voraussetzung: `14.h.C`.
+- [x] **14.i.W** · Position **595/900** · Voraussetzung: `14.h.C`.
 **Exakte Commit-Message:** `14.i.W feat(exchange): ReqIF-Hierarchien, Relationen und XHTML aufbauen`
 
 **Umsetzung:** Specification/Spec-Hierarchy, Spec-Relation und erlaubte XHTML-Kerninhalte nach D.1.2 in Codec und reine Adapter integrieren. Geordnete Vorkommensidentität, explizite Mapping-/Anhangbindungen und sichere CommonMark-Schnittmenge erhalten; bestehende XML-, Objekt- und M11-Dokumentbausteine nutzen. Die W-Abnahmen des Entscheidungsbelegs gelten.
 
 **Verhaltensabnahme:** Dokumenthierarchie, Vorkommens-/Relationsidentität, Reihenfolge und Richtung bleiben semantisch erhalten. XHTML-Kernwerte erhalten ihre Knotenbedeutung über die geprüfte native Prose-Projektion; nicht darstellbare Stellen bleiben konkret sichtbar und als Quelle erhalten. Keine impliziten Projektwrites, Freigaben oder Gesamtimportbehauptungen.
+
+**W-Umsetzung und Übergabe (Bundle 430):** Das vollständig gebundene Result
+`specroad-apply_Result_182314_1023_bdcac5.zip`, SHA-256
+`0cda301e208c589254c844f13f178634c3e1627354fee25dcf6f2042da0c2638`,
+bestätigt die OFF-PLAN-Klärung **REQIF-STRUCTURE-XHTML**, Bundle **429**, auf
+`0ed09e0b1e5126c4b029a1eb629a983c3a906e62`: sauberer Apply-Stand,
+**6.161/6.161** bestandene Tests der Gruppe **2/3**, Commitfolge **137**,
+vier Worker, **1.939,77 s**. Native Result-/Patchbindung, alle **2.168**
+Snapshotdateien, tatsächlicher Commit samt Elternstand und vollständig
+gebundene Ausführungs-/Testbelege wurden abgeglichen. In Dev wurden nur
+die zwei durch diesen Erfolg belegten Planmarker nachgeführt; danach
+entsprach der Produktbestand dem Snapshot. Produktstand bleibt vor dem
+neuen Apply **594/900**, zuletzt **14.h.C**, nächstens **14.i.W**.
+SPECROAD-DECISION-1 ist vorhanden. Diese normale Umsetzung führt keine
+weitere normative Klärung ein; Spezifikation **0.2.18 / D.1.2** bleibt
+bytegleich. Das gesetzte Klärungsbudget wird nicht erneut beansprucht.
+
+`decode_reqif_structure` erweitert den vorhandenen begrenzten ReqIF-Reader
+explizit um das passive Profil `reqif-structure-xhtml-v1`. Der bisherige
+Objektdecoder und seine Oracles bleiben erhalten. Spezifikationen und
+Relationen verwenden dieselben typisierten Definitionen, Werte und Defaults
+wie Objekte. Hierarchievorkommen tragen eigene Kennung, Objektverweis,
+Besitzer und geordnete Kinder. Globale Kennungen und typgerechte Referenzen
+werden aufgelöst; wiederholte Objektvorkommen und gerichtete Relationszyklen
+werden nicht pauschal verworfen. Unterstützte Quelle wird deterministisch
+serialisiert, inklusive Metadaten, Reihenfolge und XHTML-Mischtext.
+Originalbytes und Quellhash bleiben daneben erhalten.
+
+Die reinen Feldadapter arbeiten mit Definition-/Typkennungen. XHTML ist
+nur ausdrücklich projizierbar; der allgemeine gebundene Mapper verwendet
+weiterhin seine Feldzeilen und `value_map`. Alle Kernfamilien werden in
+native Prose-Knoten übertragen und durch den vorhandenen Parser erneut
+geprüft. Unicode, XML-/Markdown-Sonderzeichen, weiche/harte Umbrüche,
+Code, Listen, Quotes und Anhangziele müssen semantisch übereinstimmen.
+Der inverse Feldadapter bindet den Quellhash, prüft neue Kandidaten erneut
+und erhält bei unveränderten Werten die Originalbytes einschließlich
+Default-Abwesenheit, Originalwert und Vereinfachungsmetadaten. Nicht
+repräsentierbare oder bereits vereinfachte Werte erhalten konkrete
+Diagnosen; es gibt keinen Plaintext-Ersatz oder automatischen Original-Fallback.
+
+Anhänge stammen ausschließlich aus ausdrücklich gelieferten Bytes mit
+Deskriptor, Hash, Länge, relativem ReqIF-Verweis und validiertem nativen
+`attachments/`-Ziel. Die PNG-Signatur wird geprüft; `media_decoded=false`
+behauptet keine Decoder-/Medienfreigabe. Kein Anhang wird nachgeladen.
+Der XML-Reader prüft auch aktive/externe Referenzen in Original- und
+unbekannten Erweiterungsteilbäumen. Bestehende DTD-/Entity-/Schema- und
+Ressourcengrenzen bleiben wirksam; reale Laufzeit-/I/O-Fehler werden nicht
+als erfolgreicher Ersatzpfad behandelt.
+
+`map_structure` verlangt explizite native Objekt-, Vorkommens- und
+Relationsbindungen sowie ein tatsächlich geliefertes natives Modell.
+Selektoren und Richtung stammen aus der gebundenen Mappingressource.
+Der Adapter prüft die vorgeschlagenen Kanten gegen gespeicherte native
+Relationen und die bestehende M11-Strukturprüfung. Fachliches Objekt und
+Darstellungsvorkommen bleiben getrennt: zwei `artifact_ref`-ContentBlocks
+können dasselbe unveränderte Requirement referenzieren. Es werden keine
+nativen Pflichtmetadaten, Registryeinträge, Identitäten oder Projektdateien
+erfunden beziehungsweise geschrieben. Die Beobachtung prüft ausdrücklich
+nur Strukturbindungen, keinen vollständigen nativen Import oder Export.
+
+**Gezielter Dev-Verhaltensnachweis:** Der erste parallele Lauf hatte
+**954 bestandene und zwei fehlgeschlagene Tests**; er ist kein Erfolgsbeleg.
+Die neuen Fixtures verwendeten eine unzulässige Section-`references`-
+Beziehung. Sie wurden anhand der vorhandenen Core-Typmatrix korrigiert:
+Objektbeziehungen verwenden passende Component-`depends_on`-Kanten,
+Darstellungsverweise echte ContentBlocks. Bestehende Oracles wurden nicht
+abgeschwächt. Der abschließende Lauf besteht aus **956/956 Tests**, vier
+parallelen Workern, Prozess-/Gate-Exit **0**, **9,14 s**, ohne Beobachtungs-
+oder Katalogfehler, `selected_passed=true`, `full_suite_passed=null`.
+Enthalten sind **86 neue W-Fälle**, alle bisherigen **287 ReqIF-W/R-Fälle**
+und betroffene Prose-, Dokumentstruktur-, Mapping-, sichere XML- und
+Python-3.10-Regressionsfälle. Die alten Tests und Fixtures bleiben bytegleich.
+
+Vollständige Collection-/Katalogprüfung: **18.571 Identitäten**, **0
+Testkörper**, keine Fehler. Neue Testnummern **18.485–18.570** werden
+append-only ergänzt; alte Nummern und Rotationsanker bleiben gleich.
+SR-TC-0320/0321 erhalten die neuen Verhaltenstestbindungen und bleiben
+`partial`: vollständige native Projektintegration, Verlust-/Erweiterungs-
+manifest, ReqIFZ, CLI und Transaktionen bleiben offen. Keine Vollsuite,
+Dokumentations-/Darstellungstests oder CI wurden gestartet.
+Quellstand `3b74f2d4a31aa8f0d76175fc2cfe040a72bcbc11034d6342ca4aa4be3b1f6460`;
+Katalog `90199f8667bed7d90fd2bda210ea7f7062ff8fb001a4305359512746e0496b02`;
+Auswahlbeleg `fa1904ef9b8ce83347bc3d3b20dfcad25ee9516c74cb0f04225b56c6643ad3da`;
+Beobachtungsbeleg `fc19aea445f721ba9ddb52e57c9a26664badd497e5e907a7e91e8c8483376dea`.
+
+**Vorgesehene Apply-Grenze:** Ein regulärer Commit **14.i.W**, Position
+**595/900**, Bundle **430**. Der Entrypoint installiert genau diesen
+gezielt geprüften W-Zustand und führt ausschließlich **Gruppe 0/3**,
+Commitfolge **138**, mit **6.191 Tests** und vier parallelen Workern aus.
+Erst nach erfolgreichem gebundenem Gate setzt er die fünf Fortschrittsmarker
+auf **595/900**, zuletzt **14.i.W**, nächstens **14.i.R**, Bundle **430**,
+W-Checkbox abgeschlossen, und erzeugt die oben festgelegte Commit-Message.
+Fehler erhalten Dateien, Index und bereits erfolgreiche Commits.
+**14.i.R/C und alle späteren Schritte bleiben offen.** Dieses W-Bundle
+behauptet weder ReqIF-XSD-/Fremdtool-Konformität noch Vollsuite-, Release-
+oder Apply-Erfolg. Nach nativer Paketprüfung und atomarer Übergabe endet
+der Einzelauftrag ohne eigene Result-/Test-Warteschleife.
 
 #### 14.i.R – Make it Right
 

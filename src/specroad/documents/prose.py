@@ -42,27 +42,10 @@ def parse_prose(block):
     block = ContentBlock(block.source_bytes, path=block.path)
     if block.block_kind not in ('prose', 'admonition'):
         raise ProseError('prose_block_kind_required', path=block.path, pointer='/block_kind')
-    value = block.payload['markdown'].replace('\r\n', '\n').replace('\r', '\n')
-    parser = _Parser(block.path, ProseError)
-    try:
-        encoded = value.encode('utf-8')
-    except UnicodeError:
-        parser.fail('prose_utf8_required')
-    if len(encoded) > 1_048_576: parser.fail('prose_size_limit')
-    if any(ord(char) < 32 and char not in '\n\t' or ord(char) == 127 for char in value):
-        parser.fail('prose_control_character_forbidden')
-    parts = value.split('\n')
-    lines = [part + '\n' for part in parts[:-1]] + ([parts[-1]] if parts[-1] else [])
-    children = parser.blocks(lines)
-    node = {'type': 'document', 'children': children}
+    encoded, node = _parse_markdown(block.payload['markdown'], path=block.path)
     if block.block_kind == 'admonition':
-        node = {'type': 'admonition', 'level': block.payload['level'], 'children': children}
+        node = {**node, 'type': 'admonition', 'level': block.payload['level']}
         if 'title' in block.payload: node['title'] = block.payload['title']
-    pending = [(node, 0)]
-    while pending:
-        current, depth = pending.pop()
-        parser.depth(depth)
-        pending.extend((child, depth + 1) for child in current.get('children', []))
     report = {'format_version': 1, 'kind': 'safe-prose-v1', 'block': block.binding,
         'normalized_markdown_sha256': sha256(encoded).hexdigest(),
         'nodes_sha256': canonical_json_sha256(node), 'content': node,
@@ -74,3 +57,28 @@ def parse_prose(block):
     object.__setattr__(result, 'source_bytes', block.source_bytes)
     object.__setattr__(result, '_encoded', canonical_json_bytes(report))
     return result
+
+
+def _parse_markdown(value, *, path=None):
+    """Shared inert text parser; no fabricated ContentBlock or approval report."""
+    parser = _Parser(path, ProseError)
+    if type(value) is not str:
+        parser.fail('prose_string_required')
+    value = value.replace('\r\n', '\n').replace('\r', '\n')
+    try:
+        encoded = value.encode('utf-8')
+    except UnicodeError:
+        parser.fail('prose_utf8_required')
+    if len(encoded) > 1_048_576: parser.fail('prose_size_limit')
+    if any(ord(char) < 32 and char not in '\n\t' or ord(char) == 127 for char in value):
+        parser.fail('prose_control_character_forbidden')
+    parts = value.split('\n')
+    lines = [part + '\n' for part in parts[:-1]] + ([parts[-1]] if parts[-1] else [])
+    children = parser.blocks(lines)
+    node = {'type': 'document', 'children': children}
+    pending = [(node, 0)]
+    while pending:
+        current, depth = pending.pop()
+        parser.depth(depth)
+        pending.extend((child, depth + 1) for child in current.get('children', []))
+    return encoded, node

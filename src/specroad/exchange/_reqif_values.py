@@ -4,6 +4,7 @@ from dataclasses import dataclass, fields, replace
 from ..model.errors import ModelError
 
 REQIF_NAMESPACE = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
+XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml"
 _XML = "http://www.w3.org/XML/1998/namespace"
 _SEP = "\x1f"
 
@@ -106,6 +107,34 @@ class ReqIFObject:
     type_id: str
     values: tuple
     element: _Node
+
+
+@dataclass(frozen=True)
+class ReqIFSpecification(ReqIFObject):
+    children: tuple
+
+
+@dataclass(frozen=True)
+class ReqIFRelation(ReqIFObject):
+    source: str
+    target: str
+
+
+@dataclass(frozen=True)
+class ReqIFHierarchy:
+    identifier: str
+    object_id: str
+    owner_id: str
+    children: tuple
+    element: _Node
+
+
+@dataclass(frozen=True)
+class ReqIFXHTML:
+    value: _Node
+    original: object
+    simplified: bool
+    unsupported: tuple
 
 
 def _replace_node(root, before, after):
