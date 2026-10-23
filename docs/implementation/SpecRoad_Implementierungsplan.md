@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 582
-last_completed_plan_commit: 14.d.C
-next_plan_commit: 14.e.W
-last_completed_numbered_bundle: 413
+implementation_plan_commits_completed: 583
+last_completed_plan_commit: 14.e.W
+next_plan_commit: 14.e.R
+last_completed_numbered_bundle: 414
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -18160,12 +18160,130 @@ Einzelauftrag ohne weitere Result-Abfrage, Wartephase oder Hintergrundarbeit.
 
 #### 14.e.W – Let it Work
 
-- [ ] **14.e.W** · Position **583/900** · Voraussetzung: `14.d.C`.
+- [x] **14.e.W** · Position **583/900** · Voraussetzung: `14.d.C`.
 **Exakte Commit-Message:** `14.e.W feat(exchange): Import anwenden und Verlustzustimmung aufbauen`
 
 **Umsetzung:** Gültigen gespeicherten oder neu berechneten Plan über normalen Writer anwenden.
 
 **Verhaltensabnahme:** Akzeptierte Objekte und Anhänge werden als eine Transaktion veröffentlicht.
+
+**W-Stand Bundle 414:** Das maßgebliche Result
+`specroad-apply_Result_042724_1023_50a676.zip`, SHA-256
+`f53dd4709d3eebb90216d8582e9b92269ff557a6475fdafd0850186aa1bbc916`,
+bestätigt Bundle 413 / 14.d.C auf
+`9d42bf0fd3b94afc1587b05fa14c9a39619cf08a` mit sauberem Apply-Arbeitsbaum.
+Seine tatsächlichen **5.859 Tests**, Gruppe **1/3**, Commitfolge **121**,
+bestanden mit vier parallelen Workern in **1.604,40 s**. Vollständiger
+Snapshot, Abschlusscommit, nummerierte Auswahl und Einzelbeobachtungen sind
+abgeglichen. Nur die fünf bestätigten Fortschrittsmarker wurden übernommen;
+die übrige erhaltene Arbeit war bytegleich. Spezifikation 0.2.14 einschließlich
+SPECROAD-DECISION-1 bleibt unverändert; keine neue normative Klärung ist nötig.
+
+`apply_import_plan` veröffentlicht den kleinsten nutzbaren Ausschnitt:
+explizit bereits geparste Artefaktkandidaten mit verlust- und konfliktfreiem,
+vollständig gültigem Ziel. Der Aufrufer liefert aktuelle Eingabebytes,
+Mappingressourcen, vollständiges natives Modell, Actor/Request/Zeit,
+TargetPolicy/Gates und gesonderte PublicationAuthority. Bei gespeicherten
+Planbytes prüft `assess_import_plan` alle Eingänge und Beobachtungen erneut;
+ohne Planbytes erstellt derselbe Planer den aktuellen Plan in diesem Aufruf.
+Ungültige Pläne eröffnen keinen Writer und keine Autorisierung aus Plandaten.
+
+Der vorhandene native Ausführungspfad ist als private gemeinsame Funktion
+wiederverwendet. Die bisherigen Authoring-Schnittstellen und ihre eigenen
+Command-Gates bleiben erhalten. Für geprüfte Importpläne bindet der Adapter
+die ausdrücklich übergebene Policy und dieselben Gates. Der Kern prüft weiterhin
+alle Pflicht-Gates, insbesondere `extension:target-resources` für vorhandene
+Mapping-/Regelressourcen. Es gibt keinen direkten Import-Dateiwriter und keine
+Abschwächung von Actor-, Request-, Ziel-, Live- oder Publikationsprüfungen.
+
+Der Ablauf verwendet echte Lock-, Live-Basis-, Journal-, Staging-, Publikations-,
+Receipt- und Cleanup-Schritte des normalen Writers. Erstellung und Aktualisierung
+mehrerer akzeptierter Artefakte teilen dieselbe Transaktion. Bereits vorhandene
+Anhänge samt importierten Source-Referenzen bleiben bytegenau in Basis und
+Gesamtziel gebunden. Neue Anhangbytes werden in diesem W-Profil noch nicht
+publiziert. No-op/Skip/Local-only benötigen Autorisierung, erzeugen aber weder
+Revision, Journal noch Receipt. Native Fehler behalten ihren tatsächlichen
+Recovery-Zustand; es gibt keine automatische Wiederholung oder Rücksetzung.
+
+Das Ergebnis trennt den passiven `submitted_import_plan` dieses Aufrufs vom
+wirklichen `execution`-Ergebnis des Writers. Gleiche Request-ID und Operationen
+geben bei bestätigtem Replay ursprünglichen Audit, Plan und Receipt zurück,
+auch bei einer anderen neuen Plan-ID. Dabei wird kein erneut geprüftes aktuelles
+Ziel behauptet. Andere Operationen unter derselben Request-ID scheitern ohne
+Änderung des ursprünglichen Belegs. `input_parsed` und `approval_granted` bleiben
+false; weder ein Formatparser noch eine menschliche Zustimmung wird erfunden.
+
+**Gezielter W-Nachweis:** **322/322 Verhaltenstests**, darunter **59 neue**
+Importfälle und **263 betroffene Regressionstests**, vier parallele Worker,
+**198,54 s**, Prozesscode 0, Python 3.14.4. Erfasst sind beide Planeinstiege,
+alle vier Formatkennungen als explizite Host-Eingabe, beide Übernahmestrategien,
+native Mehrartefaktpublikation, gebundene bestehende Anhänge, Revision/Historie,
+Replay, No-op, Verlust-/Konflikt-/Gate-Sperren, stale Eingabe und Live-Basis,
+Actor-/Request-Grenzen, erhaltenes Staging sowie isolierte Core-/PYZ-Ausführung.
+Vorhandene fachliche Erwartungen der Regressionen wurden nicht verändert.
+
+Der erste breite Lauf endete mit **38 Fehlern und 1.831 bestandenen Fällen**
+in **2.057,53 s** und ist kein Erfolgsnachweis. Unter anderem hatte der neue
+Testhost für seine vorhandene Mappingdatei den verpflichtenden Ressourcen-Gate
+nicht registriert; auch die unten beschriebenen Actor-Fixtures waren noch
+inkonsistent. Sein untergeordneter Testprozess lief nach Abbruch des
+übergeordneten Befehls noch zu Ende; sein tatsächlicher Abschlusscode ist 1.
+Log und Einzelbeobachtungen bleiben als Fehlversuch erhalten.
+Der korrigierte synthetische Host prüft seine eine explizite Mappingressource;
+ein zusätzlicher Fall belegt die weiterhin wirksame Sperre ohne diesen Gate.
+Die Fixture stellt den vorhandenen operativen Lockordner explizit bereit.
+Der zweite Lauf endete mit **3 Fehlern und 1.406 bestandenen Fällen** in
+**1.416,94 s**, ebenfalls Abschlusscode 1 und kein erfolgreicher Testlauf.
+Seine drei Actor-/Request-Fälle wechselten den Planungsakteur, ließen aber
+die Erstellermetadaten ihres neuen Testartefakts auf dem menschlichen Akteur.
+Der native Planvertrag sperrte diese inkonsistente Fixture vor der beabsichtigten
+Rechteprüfung. Die Korrektur bindet die Erstellermetadaten an denselben Akteur,
+prüft zuerst die Plangültigkeit und fordert weiterhin die ursprünglichen
+Exitcodes sowie nun zusätzlich die exakten Actor-/Request-Ablehnungsgründe.
+Produktcode und bestehende Tests wurden für diese Korrektur nicht verändert.
+Die drei reparierten Fälle bestanden zunächst parallel in **1,38 s**.
+
+Ein Zwischenlauf mit allen **59 neuen Importfällen**, **47 W-/R-Fällen des
+direkt wiederverwendeten Authoring-Writers** und **133 W-/R-Fällen des Importplaners**
+bestand **239/239 Tests** in **202,70 s**. Die anschließende native Paketvorprüfung
+sperrte jedoch noch die Reihenfolge im unveröffentlichten Testnummern-Anhang:
+der während der Korrektur hinzugekommene 59. Test war einzeln statt zusammen
+mit den übrigen neuen Identitäten sortiert worden. Ausschließlich diese neue,
+noch nie übergebene Nummernmenge wurde gemäß dem bestehenden Runnervertrag
+sortiert. Alle **17.577 bereits bestätigten Nummern** und beide Anker bleiben
+bytegleich. Es war noch keine Patch-ZIP erzeugt oder veröffentlicht worden.
+
+Der abschließende erfolgreiche W-Nachweis wiederholt die **239 Fälle** am
+endgültigen Stand und ergänzt **83 bestehende Nummerierungs-/Rotationstests**:
+insgesamt **322/322**, ohne Produkt- oder Runneränderung. Er prüft die korrigierten
+Fixtures und ihre unmittelbaren Verträge vollständig. Die breiteren Fehlversuche bleiben mit
+ihren tatsächlichen Einzelresultaten erhalten und werden nicht als erfolgreiche
+W-Läufe umgedeutet. Zusätzliche unveränderte native Recovery-Kerntests und
+weitere Authoring-Adapter werden nach dieser reinen Fixturekorrektur nicht
+nochmals ausgeführt. Kein Entwicklungs-Volltest wird daraus abgeleitet.
+
+Die vollständige Collection-/Katalogprüfung ist gültig: **17.636 Tests**,
+**0 ausgeführte Testkörper**. Die neuen Identitäten wurden ausschließlich an
+die bestehenden stabilen Nummern angehängt (**17577–17635**); Anker und alte
+Nummern bleiben erhalten; die neue Menge ist für ihre erste Veröffentlichung
+sortiert. SR-TC-0315 und SR-TC-0331 bleiben **Teilnachweise**.
+Quellstand-SHA-256: `cca2e5164b51650afac32ed9687bae493bcecd4fbec61242ab1793cd4a3bfb38`.
+Katalog-SHA-256: `83dc0b8d0c143090c037543ed68716fa38b573d7c50166aae4eaa17470ac4d87`.
+`full_suite_passed` bleibt null. Die Python-Dateien sind zusätzlich mit der
+Python-3.10-Grammatik syntaktisch geprüft; dies ist kein Laufzeitnachweis für
+andere Python-Versionen.
+
+**Grenzen und Übergabe:** Genau **14.e.W**, Position **583/900**. CLI-/
+Formatparser, Relation-/Registrykandidaten, neue Anhangbytes, ausdrückliche
+Verlustzustimmung und die vollständige importspezifische Fehler-/Recoverymatrix
+bleiben in der zugeordneten Importarbeit offen; kein vollständiger Requirement-,
+Importabschluss- oder Release-Nachweis. **14.e.R/C** werden nicht vorweggenommen.
+Der Entrypoint stellt diesen geprüften W-Zustand her und führt vor seinem Commit
+nur **Gruppe 2/3**, Commitfolge **122**, mit **5.878 Tests** parallel aus.
+Erst nach Erfolg setzt er die fünf Marker auf **583/900**, zuletzt **14.e.W**,
+nächstens **14.e.R** und Bundle **414** und erzeugt den vorgesehenen Commit.
+Ein Apply-Erfolg dieses Bundles wird nicht vorweg behauptet. Danach endet der
+Einzelauftrag ohne weitere Result-Abfrage, Wartephase oder Hintergrundarbeit.
 
 #### 14.e.R – Make it Right
 

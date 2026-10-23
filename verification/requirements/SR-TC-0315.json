@@ -4,19 +4,46 @@
   "requirement_id": "SR-REQ-0315",
   "specification_sha256": "843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc",
   "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1"
+  ],
+  "preconditions": [
+    "Synthetic native project, exact parsed candidates/input/mapping bytes, complete supplied TargetModel, explicit actor/request/time/policy and separate trusted host publication authority. Existing attachment bytes are already part of the bound base."
+  ],
+  "steps": [
+    "Publish a fresh or explicitly reassessed saved loss-free import plan through the ordinary native writer; compare actual files, revisions, identity history, whole-target root and durable transaction receipt.",
+    "Repeat the same request, including a changed plan envelope with identical operations: verify original receipt/audit and no new lock or publication. Conflicting operations under that request fail without modifying its receipt.",
+    "Check no-op authorization, invalid/lossy/conflicting targets, forged or stale saved inputs, changed live base/resource/attachment bytes, missing gates, actor/request refusals and interrupted staging. Verify preserved bytes and real native recovery state.",
+    "Exercise an existing bound attachment with an imported source reference and another artifact in one complete target; run real native execution and replay in isolated Core and PYZ runtimes."
+  ],
   "oracle": {
-    "kind": "pending",
-    "requirement_contract": "`specroad import apply <FORMAT> <INPUT> [--plan <FILE>]` MUSS einen zuvor ausgegebenen oder im selben Aufruf erzeugten gültigen Importplan über den gemeinsamen Change-Plan-, Transaktions- und Recovery-Vertrag anwenden und ein übergebenes Planfile exakt an Eingabe und aktuelle Basis binden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "kind": "behavior",
+    "requirement_contract": "`specroad import apply <FORMAT> <INPUT> [--plan <FILE>]` MUSS einen zuvor ausgegebenen oder im selben Aufruf erzeugten g\u00fcltigen Importplan \u00fcber den gemeinsamen Change-Plan-, Transaktions- und Recovery-Vertrag anwenden und ein \u00fcbergebenes Planfile exakt an Eingabe und aktuelle Basis binden.",
+    "scope": "14.e.W adds apply_import_plan for explicit already-parsed artifact candidates. Fresh and saved plans undergo the same mapping/conflict/loss/complete-target assessment before the shared native writer performs live checks, locking, authorization, journaling, publication, receipt and cleanup. A saved envelope never supplies authority. Native exceptions and recovery states propagate without automatic retry or rollback. submitted_import_plan is passive and belongs to this call; execution separately reports actual native publication or historical replay. Replays retain original actor/time/plan/created IDs/receipt and do not claim a newly verified current target. No-ops require authorization but create no receipt or revision. Existing attachment bytes remain bound and unchanged. CLI/source parsing, incoming attachment creation, relation/registry imports, loss-acceptance workflow and the full import-specific crash/recovery matrix remain open; this is not full requirement or release completion."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV090",
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    4,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/submitted_import_plan",
+    "/submitted_import_plan_sha256",
+    "/execution",
+    "/execution/audit",
+    "/execution/completion",
+    "/execution/write_state",
+    "/execution/replayed"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +55,69 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_import_execution.py::test_bound_attachment_and_source_reference_share_the_complete_native_target[fresh]",
+    "tests/test_import_execution.py::test_bound_attachment_and_source_reference_share_the_complete_native_target[saved]",
+    "tests/test_import_execution.py::test_failure_after_staging_retains_native_recovery_and_never_fakes_completion",
+    "tests/test_import_execution.py::test_import_cannot_bypass_actor_and_request_policy[ai-None-2]",
+    "tests/test_import_execution.py::test_import_cannot_bypass_actor_and_request_policy[ai-ai-request-7]",
+    "tests/test_import_execution.py::test_import_cannot_bypass_actor_and_request_policy[ci-None-2]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[diverged-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[diverged-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[error-strategy-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[error-strategy-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[invalid-target-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[invalid-target-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[loss-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[loss-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[missing-gate-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[missing-gate-saved]",
+    "tests/test_import_execution.py::test_isolated_runtime_imports_and_replays_real_native_transaction[core]",
+    "tests/test_import_execution.py::test_isolated_runtime_imports_and_replays_real_native_transaction[pyz]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[attachments/supplier.bin]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[mappings/supplier.json]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[profiles/core.json]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[specroad.json]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[untouched-artifact]",
+    "tests/test_import_execution.py::test_mapping_resource_requires_explicit_trusted_resource_gate",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[empty-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[empty-saved]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[local-only-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[local-only-saved]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[skip-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[skip-saved]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[unchanged-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[unchanged-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-csv-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-csv-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-ndjson-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-ndjson-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqif-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqif-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqifz-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqifz-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-csv-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-csv-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-ndjson-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-ndjson-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqif-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqif-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqifz-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqifz-saved]",
+    "tests/test_import_execution.py::test_publication_authority_denial_leaves_all_bytes_unchanged",
+    "tests/test_import_execution.py::test_retry_replays_original_receipt_without_lock_write_or_new_target_claim[fresh]",
+    "tests/test_import_execution.py::test_retry_replays_original_receipt_without_lock_write_or_new_target_claim[saved]",
+    "tests/test_import_execution.py::test_reused_request_with_other_operations_preserves_the_original_receipt",
+    "tests/test_import_execution.py::test_same_operations_with_new_plan_envelope_report_historical_audit_separately",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[candidates]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[input_bytes]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[mapping_resources]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[plan_valid]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[write_authorized]",
+    "tests/test_import_execution.py::test_trusted_gate_is_rechecked_on_the_complete_target_before_publication"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.e.R/C retain and extend the W behavior: full import-specific error/recovery robustness and structural cleanup remain open.",
+    "CLI format parsing, relation/registry candidates, incoming attachment byte publication, explicit loss acceptance and a complete format-level import-completion report remain in assigned import work."
   ]
 }

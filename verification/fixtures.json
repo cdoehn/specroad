@@ -2,6 +2,7 @@
   "fixture_format_version": 1,
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
+    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1",
     "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
     "SR-FIX-ARTIFACT-IMPORT-PLAN-v1",
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
@@ -780,6 +781,10 @@
     "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1": {
       "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model;tests/test_import_planning_right.py:arguments,copied",
       "kind": "Synthetic saved import observations with explicit current source/candidate/mapping inputs and whole supplied TargetModel. Changed raw/semantic bases, resources, reservations, current gates, malformed or forged reports, retained invalid results and detached read-only inventories. No external format parser, human approval or live transaction evidence."
+    },
+    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1": {
+      "provider": "tests/support/import_execution.py:project,inputs,candidates,resource_gate;tests/test_import_execution.py:assert_native_files",
+      "kind": "Owned synthetic native project with explicit parsed artifact candidates, supplied mapping and input bytes, existing bound attachment, local and incoming identities, a complete TargetModel and trusted test-host authority/gates. Real journal, receipt and idempotent replay observations; no source parser, human approval, new-attachment byte publication or loss acceptance is fabricated. The initialized operational lock directory is explicit; a trusted fixture gate validates the one supplied mapping resource, and a negative case verifies mandatory refusal without that gate."
     }
   }
 }

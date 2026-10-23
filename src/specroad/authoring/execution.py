@@ -3,7 +3,7 @@
 No allocation or implicit replanning. Supplied gates are trusted host services;
 the stored command and plan cannot register executable code or grant authority.
 """
-from ..changes import (ChangePlan, TargetModel, PublicationAuthority,
+from ..changes import (ChangePlan, TargetModel, TargetPolicy, PublicationAuthority,
     prepare_authoring_request, assess_change_target, prepare_publication_check,
     recheck_publication, project_lock, begin_building_journal, stage_building_journal,
     publish_prepared_journal, read_committing_journal, finalize_committing_journal,
@@ -61,9 +61,24 @@ def apply_authoring_plan(plan, model, *, command_id, transaction_id, authority,
     still requires fresh native authorization but creates no receipt or journal.
     Failures retain the existing protocol's real recovery state and exceptions.
     """
+    return _apply_saved_plan(plan, model, command_id=command_id,
+        transaction_id=transaction_id, authority=authority, gates=gates,
+        strict=strict, package_files=package_files)
+
+
+def _apply_saved_plan(plan, model, *, command_id, transaction_id, authority,
+        gates=(), strict=False, package_files=(), bound_policy=None):
+    """One native publication path for authoring and checked import adapters.
+
+    A bound policy is supplied by trusted adapter code, never by the plan.
+    The ordinary authoring path still selects its own command-specific gates
+    after receipt resolution. Both paths retain the same transaction protocol.
+    """
     if (type(plan) is not ChangePlan or type(model) is not TargetModel
             or type(authority) is not PublicationAuthority):
         raise AuthoringError('typed_authoring_execution_inputs_required')
+    if bound_policy is not None and type(bound_policy) is not TargetPolicy:
+        raise AuthoringError('typed_authoring_policy_required')
     if type(strict) is not bool or type(gates) not in (list, tuple):
         raise AuthoringError('explicit_authoring_execution_options_required')
     # Own the host's gate selection before any external source/receipt read.
@@ -71,7 +86,8 @@ def apply_authoring_plan(plan, model, *, command_id, transaction_id, authority,
     gates = tuple(gates)
     plan = ChangePlan(plan.source_bytes)
     value = plan.data
-    operations = _operations(command_id, value['operations'])
+    operations = (_operations(command_id, value['operations'])
+                  if bound_policy is None else value['operations'])
     request = prepare_authoring_request(command_id=command_id.replace('.', ' '),
         operations=operations, actor=value['actor'], request_id=value['request_id'])
     _transaction(transaction_id)
@@ -82,8 +98,11 @@ def apply_authoring_plan(plan, model, *, command_id, transaction_id, authority,
     if replay is not None:
         return replay
     model = model.snapshot()
-    _, policy, gates = _execution_inputs(model, command_id, operations,
-        value['actor'], value['planned_at'], gates)
+    if bound_policy is None:
+        _, policy, gates = _execution_inputs(model, command_id, operations,
+            value['actor'], value['planned_at'], gates)
+    else:
+        policy = bound_policy
     with project_lock(source.boundary.root, kind='writer', command='change apply',
             project_id=model.configuration.project_id, request_id=value['request_id'],
             transaction_id=transaction_id) as held:

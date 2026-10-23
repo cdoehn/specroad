@@ -7,6 +7,7 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1",
     "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
     "SR-FIX-ARTIFACT-IMPORT-PLAN-v1"
   ],
@@ -18,19 +19,20 @@
     "Inspect exact byte/canonical bindings, operations, native IDs, regular metadata/history, preserved local fields, attachment references, skipped objects, unresolved conflicts and individual losses.",
     "Verify normal saved-plan target equivalence, blocking target gates, passive detached reports and isolated Core/PYZ availability without filesystem writes.",
     "Reassess saved canonical import envelopes against independently supplied current source bytes, format, parsed candidates, mapping, basis and explicit request metadata/policy; rerun all current target gates.",
-    "Reject stale raw/semantic inputs and forged operations, results, losses, success or authority claims; preserve invalid reports, original input ownership and project/operational inventory. Verify Core/PYZ availability."
+    "Reject stale raw/semantic inputs and forged operations, results, losses, success or authority claims; preserve invalid reports, original input ownership and project/operational inventory. Verify Core/PYZ availability.",
+    "Distinguish the submitted passive import report from actual native execution/receipt, including no-op and historical idempotent replay; never relabel a current proposal as a new historical publication."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Importabschlussbericht MUSS Eingabehash, Mappinghash, Change-Plan-ID, erzeugte und aktualisierte IDs, übersprungene Objekte, Konflikte, Verluste, Anhänge, Diagnosen und Zielmodellwurzel enthalten.",
-    "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed. 14.d.R adds assess_import_plan: strict JSON bytes are passive saved data. Full re-preparation from explicit current inputs must reproduce every bound field and observation; no expected input, actor/time, policy or gate is taken from the saved report. All source/resource bytes, candidates, untouched base members, reservations, metadata and current target checks remain bound. A changed gate result or input requires a new preparation; matching invalid reports remain non-executable. JSON envelope layout may differ, not the bound source bytes. No live inventory, source parsing, authority, transaction or import completion is claimed."
+    "requirement_contract": "Ein Importabschlussbericht MUSS Eingabehash, Mappinghash, Change-Plan-ID, erzeugte und aktualisierte IDs, \u00fcbersprungene Objekte, Konflikte, Verluste, Anh\u00e4nge, Diagnosen und Zielmodellwurzel enthalten.",
+    "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed. 14.d.R adds assess_import_plan: strict JSON bytes are passive saved data. Full re-preparation from explicit current inputs must reproduce every bound field and observation; no expected input, actor/time, policy or gate is taken from the saved report. All source/resource bytes, candidates, untouched base members, reservations, metadata and current target checks remain bound. A changed gate result or input requires a new preparation; matching invalid reports remain non-executable. JSON envelope layout may differ, not the bound source bytes. No live inventory, source parsing, authority, transaction or import completion is claimed. 14.e.W separately exposes submitted_import_plan and native execution. Only the native execution/receipt attests actual publication; a replay reports original audit facts and explicitly does not verify the current target. The submitted report stays passive, even on successful publication. Existing attachment bytes are verified and bound. This additive service does not implement a final CLI/format-level import-completion report or claim full SR-REQ-0331 completion."
   },
   "expected_diagnostics": [
-    "SRV090",
-    "SRV147",
-    "SRV148",
     "SRV070",
-    "SRV146"
+    "SRV090",
+    "SRV146",
+    "SRV147",
+    "SRV148"
   ],
   "expected_exit_codes": [
     0,
@@ -47,7 +49,10 @@
     "/losses",
     "/attachments",
     "/diagnostics",
-    "/target_model_root_sha256"
+    "/target_model_root_sha256",
+    "/submitted_import_plan",
+    "/execution/audit",
+    "/execution/completion"
   ],
   "required_environment": {
     "implementation": "cpython",
@@ -61,6 +66,65 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_import_execution.py::test_bound_attachment_and_source_reference_share_the_complete_native_target[fresh]",
+    "tests/test_import_execution.py::test_bound_attachment_and_source_reference_share_the_complete_native_target[saved]",
+    "tests/test_import_execution.py::test_failure_after_staging_retains_native_recovery_and_never_fakes_completion",
+    "tests/test_import_execution.py::test_import_cannot_bypass_actor_and_request_policy[ai-None-2]",
+    "tests/test_import_execution.py::test_import_cannot_bypass_actor_and_request_policy[ai-ai-request-7]",
+    "tests/test_import_execution.py::test_import_cannot_bypass_actor_and_request_policy[ci-None-2]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[diverged-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[diverged-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[error-strategy-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[error-strategy-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[invalid-target-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[invalid-target-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[loss-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[loss-saved]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[missing-gate-fresh]",
+    "tests/test_import_execution.py::test_invalid_complete_plan_never_enters_writer[missing-gate-saved]",
+    "tests/test_import_execution.py::test_isolated_runtime_imports_and_replays_real_native_transaction[core]",
+    "tests/test_import_execution.py::test_isolated_runtime_imports_and_replays_real_native_transaction[pyz]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[attachments/supplier.bin]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[mappings/supplier.json]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[profiles/core.json]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[specroad.json]",
+    "tests/test_import_execution.py::test_live_changed_bound_bytes_block_publication_without_erasing_external_change[untouched-artifact]",
+    "tests/test_import_execution.py::test_mapping_resource_requires_explicit_trusted_resource_gate",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[empty-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[empty-saved]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[local-only-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[local-only-saved]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[skip-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[skip-saved]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[unchanged-fresh]",
+    "tests/test_import_execution.py::test_noop_requires_authority_without_revision_journal_or_receipt[unchanged-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-csv-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-csv-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-ndjson-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-ndjson-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqif-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqif-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqifz-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[create_new_revision-reqifz-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-csv-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-csv-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-ndjson-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-ndjson-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqif-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqif-saved]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqifz-fresh]",
+    "tests/test_import_execution.py::test_one_native_transaction_publishes_existing_and_new_artifacts[update_if_unchanged-reqifz-saved]",
+    "tests/test_import_execution.py::test_publication_authority_denial_leaves_all_bytes_unchanged",
+    "tests/test_import_execution.py::test_retry_replays_original_receipt_without_lock_write_or_new_target_claim[fresh]",
+    "tests/test_import_execution.py::test_retry_replays_original_receipt_without_lock_write_or_new_target_claim[saved]",
+    "tests/test_import_execution.py::test_reused_request_with_other_operations_preserves_the_original_receipt",
+    "tests/test_import_execution.py::test_same_operations_with_new_plan_envelope_report_historical_audit_separately",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[candidates]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[input_bytes]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[mapping_resources]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[plan_valid]",
+    "tests/test_import_execution.py::test_saved_report_cannot_authorize_changed_inputs_or_forged_success[write_authorized]",
+    "tests/test_import_execution.py::test_trusted_gate_is_rechecked_on_the_complete_target_before_publication",
     "tests/test_import_planning.py::test_adoption_preserves_nonmapped_content_relations_and_other_identities",
     "tests/test_import_planning.py::test_attachment_report_uses_verified_existing_bytes_and_reference_in_target",
     "tests/test_import_planning.py::test_duplicate_candidate_key_and_two_keys_for_one_owner_are_rejected",
@@ -196,6 +260,6 @@
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[version]"
   ],
   "open_items": [
-    "CLI format parsing, relation/registry candidates, incoming attachment byte publication, guarded transactional import/loss acceptance and a real import-completion receipt remain in subsequent assigned import steps. This is a planning report, not completed-import or release evidence."
+    "CLI/source format parsing, relation/registry candidates, incoming attachment byte publication, explicit loss acceptance and a full format-level import-completion receipt remain in assigned import work; 14.e.R/C remain open."
   ]
 }
