@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 14
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 597
-last_completed_plan_commit: 14.i.C
-next_plan_commit: 14.j.W
-last_completed_numbered_bundle: 433
+implementation_plan_commits_completed: 598
+last_completed_plan_commit: 14.j.W
+next_plan_commit: 14.j.R
+last_completed_numbered_bundle: 434
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -20519,12 +20519,93 @@ keine zweite Phase, eigenes Apply oder Warte-/Modellschleife in diesem Auftrag.
 
 #### 14.j.W – Let it Work
 
-- [ ] **14.j.W** · Position **598/900** · Voraussetzung: `14.i.C`.
+- [x] **14.j.W** · Position **598/900** · Voraussetzung: `14.i.C`.
 **Exakte Commit-Message:** `14.j.W feat(exchange): Informationsverluste und Erweiterungserhalt aufbauen`
 
 **Umsetzung:** Nicht unterstützte Inhalte nach D.1.3 entweder im passiven, quell- und zielgebundenen namespaced Träger erhalten oder einzeln als Verlust identifizieren. Einen nutzbaren Originalbyte-Rückweg und konkrete Einzelbewertung bereitstellen; die W-Abnahmen des Entscheidungsbelegs gelten. Keine implizite native Vollprojektion oder Writefreigabe.
 
 **Verhaltensabnahme:** Zulässige unbekannte Zusatzdaten bleiben über den gebundenen Träger und den geprüften Originalquell-Rückweg unverändert erhalten. Fremde Extensions und frühere Quellen bleiben erhalten; Kollisionen oder geänderte Bindungen erzeugen keinen Erfolg. Originalquelle, tatsächlich erhaltener Zielnutzinhalt und native Abbildung bleiben unterscheidbar.
+
+**W-Umsetzung und Übergabe (Bundle 434):** Das vollständig gebundene Result
+`specroad-apply_Result_214021_1023_2fe1ad.zip`, SHA-256
+`a8bd0b03961c6507202a7e2990dbdb6f23db28bad1e72346a76cf771e703cc89`,
+bestätigt den OFF-PLAN-Klärungscommit von Bundle **433** auf
+`328e009e38a347006eaf2e233c0e8fd09cfcf13b`: sauberer Apply-Stand,
+**6.260/6.260** bestandene Tests, Gruppe **0/3**, Commitfolge **141**,
+vier Worker, **1.948,65 s**. Native Resultbindung, vollständiges Inventar
+aller **2.176 Snapshotdateien**, Commit samt Elternstand und die gebundenen
+Testbelege wurden abgeglichen. In Dev wurden nur die beiden belegten
+Offplan-Fortschrittsmarker nachgeführt; danach entsprach der Bestand dem
+Snapshot. Der Produktstand bleibt vor Apply **597/900**, zuletzt **14.i.C**,
+nächstens **14.j.W**. SPECROAD-DECISION-1 ist vorhanden; die bereits geklärte
+Spezifikation **0.2.19 / D.1.3** bleibt bytegleich. Dies ist reguläre Umsetzung,
+kein weiteres Spezifikationsbundle.
+
+`merge_reqif_source` liefert den geschlossenen passiven Quellträger und
+bindet Quellbytes, ausdrücklich gelieferten Quellkontext sowie den
+kanonischen Hash der vorhandenen Extensions. Verschiedene Quellen,
+Revisionen und Bytefassungen bleiben erhalten, identische Einträge werden
+nicht dupliziert. Fremde Extensions werden unverändert in unabhängige
+Ausgabedaten übernommen. Inkompatibler Bestand führt zum Konflikt.
+`restore_reqif_source` liest den gewünschten Quellstand aus tatsächlich
+gebundenen JSON-Zielbytes am expliziten Extensions-Pointer. Beide Wege
+verwenden das bestehende sichere ReqIF-Strukturprofil. Geschlossene
+Feldmengen, kanonische Base64-Daten, Länge, SHA-256 und sichere XML-Inhalte
+werden geprüft; vor Base64-Allokation gelten die gelieferten Bytegrenzen.
+Der Rückweg liefert ausschließlich Originalbytes, keine Ausgabe nativer
+Änderungen und keine Besitzer-/Metadateninferenz.
+
+`assess_reqif_preservation` inventarisiert aus den sicher geparsten
+Quellbytes die tatsächlich vom Strukturcodec gemeldeten uninterpretierten
+XML-Stellen. Unabhängige Attribute erhalten eigene Positionen; opake
+Teilbäume bleiben Einheiten. IDs binden Richtung, vollständige Quelle,
+Kontext, tatsächliche Stelle und stabilen Grund. Erst tatsächlich passende
+JSON-Trägereinträge oder bytegleiche XML-Zielbytes erzeugen einen geprüften
+Erhaltungsbeleg. Ohne Zielbytes oder bei anderer Quelle beziehungsweise
+anderem Kontext bleiben die Positionen Verluste. Bericht und Diagnosen
+enthalten keine Base64- oder Volltextkopien.
+
+Die W-Bewertung ist ausdrücklich auf `reqif_structure_profile_uninterpreted_xml`
+begrenzt. Vollständige Mapping-/Native-Projektion und Anhangtransport sind
+als ungeprüft sichtbar; `assessment_complete`, `loss_free` und
+`native_projection_complete` bleiben falsch, auch bei leerer Verlustmenge.
+Es entsteht weder eine Import-/Exportplanfreigabe noch ein Write.
+Die vollständige Verlustabdeckung, `fail-on-loss` und restliche R-Grenzfälle
+bleiben **14.j.R**; reine Strukturpflege bleibt **14.j.C**. CLI-/Projekt-
+integration, Change Plans und ReqIFZ behalten ihre späteren Planstellen.
+Allgemeine native Extensionsvalidierung und bisherige Importgates sind
+unverändert; pure Funktionen führen weder Datei-/Registrywrites noch
+Netzwerkauflösung oder fremden Code aus.
+
+**Gezielter Dev-Verhaltensnachweis:** **800/800 Tests**, vier parallele
+Worker, **5,35 s**, Prozess-/Gate-Exit **0**, keine Beobachtungsfehler;
+`selected_passed=true`, `full_suite_passed=null`. Enthalten sind alle
+**84 neuen Erhaltungsfälle**, alle **581 ReqIF-W/R-Fälle** aus 14.h/14.i
+sowie betroffene native Metadata-, JSON-/JCS- und Python-3.10-Regressionen.
+Bestehende Oracles bleiben bytegleich. Vollständige Collection-/Katalog-
+prüfung: **18.863 Identitäten**, **0 Testkörper**, keine Katalogfehler.
+Eine frühere reine Collection wurde wegen einer währenddessen erkannten
+Quelländerung korrekt abgewiesen; die anschließende stabile Collection
+und das gezielte Gate sind erfolgreich abgeschlossen. Keine Vollsuite,
+seriellen Läufe, Dokumentationstests oder CI wurden gestartet.
+Die neuen dauerhaften Nummern **18.779–18.862** sind ausschließlich angehängt;
+SR-TC-0322 erhält echte Fixture-/Testbindungen und bleibt **partial**.
+Quellstand `13c6bc6611d92c7188259ce19db3e01631a56da098f2b6de1623e795e2420a4d`;
+Katalog `a8b76fe2af92084f577d9ff6fb1f03a9b87c5f422bc242ae304b3d241703d091`;
+Auswahlbeleg `391188eec4cdf23f7b96b3798327490f0202937cf19f23cafabafe339a676310`;
+Beobachtungsbeleg `10fcfe0cc778c8f0e06407398fa1a80f917fffcddf9efebce98133292981ae2e`.
+
+**Vorgesehene Apply-Grenze:** Ein regulärer Commit **14.j.W**, Position
+**598/900**, Bundle **434**, mit der oben festgelegten Commit-Message.
+Der Entrypoint installiert genau diesen gezielt geprüften W-Zustand und
+prüft ausschließlich **Gruppe 1/3**, Commitfolge **142**, mit **6.288 Tests**
+und vier parallelen Workern. Erst nach erfolgreichem gebundenem Gate
+werden die fünf Fortschrittsmarker auf **598/900**, zuletzt **14.j.W**,
+nächstens **14.j.R**, Bundle **434** und die W-Checkbox gesetzt und
+committet. Bei Fehlern bleiben tatsächliche Dateien, Index und erfolgreiche
+Commits erhalten. R/C bleiben offen. Kein Vollsuite-, Fremdtool-, Release-
+oder Apply-Erfolg wird vorweggenommen. Nach nativer Paketprüfung und
+atomarer Übergabe endet dieser Einzelauftrag ohne Warte-/Resultschleife.
 
 #### 14.j.R – Make it Right
 

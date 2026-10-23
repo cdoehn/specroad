@@ -119,6 +119,7 @@
     "SR-FIX-RELEASE-READINESS-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
+    "SR-FIX-REQIF-PRESERVATION-v1",
     "SR-FIX-REQIF-STRUCTURE-XHTML-R-v1",
     "SR-FIX-REQIF-STRUCTURE-XHTML-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-R-v1",
@@ -830,6 +831,10 @@
     "SR-FIX-REQIF-STRUCTURE-XHTML-R-v1": {
       "provider": "tests/test_reqif_structure_right.py:bound_graph;tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,attachment;tests/support/targets.py:model",
       "kind": "Owned source and actual native model bytes with explicit identity/edge bindings. Reimport and sibling order, allowed/forbidden native cycles, attachment alias/integrity boundaries, exact Unicode/code/whitespace node oracles, original/default provenance, unsupported fallback retention, actual parser budgets and host-failure propagation. No renderer, resolver, file writes or complete import claim."
+    },
+    "SR-FIX-REQIF-PRESERVATION-v1": {
+      "provider": "tests/support/reqif_preservation.py:opaque_source,source_entry,source_key,target_bytes;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:xdocument;tests/support/domain.py:domain_value",
+      "kind": "Owned complete XML including foreign namespace/QName attributes, mixed text and Unicode, with actual native JSON target bytes and explicit source contexts. Independent source hash/Base64, original-byte and item-identity oracles; no write, resolver or full-project success claim."
     }
   }
 }
