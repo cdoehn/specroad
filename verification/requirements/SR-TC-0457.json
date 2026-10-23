@@ -14,12 +14,13 @@
   ],
   "steps": [
     "Create divergent local/source projections with valid separate historical hashes under all four explicit strategies.",
-    "Observe SRV148, no adopted target or refreshed history, and unchanged original inputs; exercise canonical type/Unicode distinctions and rejected invalid projections."
+    "Observe SRV148, no adopted target or refreshed history, and unchanged original inputs; exercise canonical type/Unicode distinctions and rejected invalid projections.",
+    "14.c.R preserves unresolved conflicts and original file bytes/modes under every strategy, including isolated Core/PYZ error and skip evaluation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Divergente lokale und externe \u00c4nderungen an derselben Mappingprojektion M\u00dcSSEN als Importkonflikt ohne stille Aufl\u00f6sung enden.",
-    "scope": "14.c.W exposes divergent local/source changes as an unresolved SRV148/code-3 conflict under every strategy, including error and skip. No target or import-baseline update is allowed. Canonical comparison does not conflate boolean/number or distinct Unicode values. Detached observations and rejected invalid projections preserve the original inputs. These are pure decision-kernel checks, not a completed import plan or writer approval."
+    "scope": "14.c.W exposes divergent local/source changes as an unresolved SRV148/code-3 conflict under every strategy, including error and skip. No target or import-baseline update is allowed. Canonical comparison does not conflate boolean/number or distinct Unicode values. Detached observations and rejected invalid projections preserve the original inputs. These are pure decision-kernel checks, not a completed import plan or writer approval. 14.c.R adds asymmetric divergent baselines, mutated returned diagnostics and original file byte/mode preservation. All four strategies remain unresolved SRV148/code-3 conflicts in isolated Core/PYZ evaluation; passive source strings do not execute or grant publication authority."
   },
   "expected_diagnostics": [
     "SRV090",
@@ -54,10 +55,19 @@
     "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[local_projection-bad2]",
     "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[local_projection-bad4]",
     "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[source_projection-None]",
-    "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[source_projection-bad3]"
+    "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[source_projection-bad3]",
+    "tests/test_import_comparison_right.py::test_asymmetric_history_does_not_confuse_current_equality_with_change_ownership[diverged-create_new_revision]",
+    "tests/test_import_comparison_right.py::test_asymmetric_history_does_not_confuse_current_equality_with_change_ownership[diverged-update_if_unchanged]",
+    "tests/test_import_comparison_right.py::test_isolated_rejections_keep_conflicts_visible_and_passive_data_unexecuted[core]",
+    "tests/test_import_comparison_right.py::test_isolated_rejections_keep_conflicts_visible_and_passive_data_unexecuted[pyz]",
+    "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[create_new_revision]",
+    "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[error]",
+    "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[skip]",
+    "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[update_if_unchanged]",
+    "tests/test_import_comparison_right.py::test_shared_nested_inputs_and_mutated_diagnostics_cannot_change_later_observations"
   ],
   "open_items": [
-    "14.c.R expands binding, JSON, failure and isolation boundaries; 14.c.C cleans the same comparison kernel with unchanged behavior.",
+    "14.c.C cleans this W/R comparison kernel with unchanged behavior and diagnostics.",
     "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed."
   ]
 }

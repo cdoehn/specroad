@@ -769,7 +769,7 @@
     },
     "SR-FIX-IMPORT-COMPARISON-v1": {
       "provider": "tests/support/import_comparison.py:compare,imported; tests/support/relations.py:artifact,edge,external",
-      "kind": "Synthetic explicit local/source JSON object projections and native import histories for all five comparison cases and four declared strategies. Separate historical hashes, unchanged raw-payload/revision provenance, legacy history, malformed input, real mapping selection with native artifact/relation lookup, detached observations and isolated Core/PYZ evaluation. Only passive decisions and target candidates; no format import, revision, identity allocation, clock, write or human approval is claimed."
+      "kind": "Synthetic explicit local/source JSON object projections and native import histories for all five comparison cases and four declared strategies. Separate historical hashes, unchanged raw-payload/revision provenance, legacy history, malformed input, real mapping selection with native artifact/relation lookup, detached observations and isolated Core/PYZ evaluation. Only passive decisions and target candidates; no format import, revision, identity allocation, clock, write or human approval is claimed. R adds asymmetric historical baselines, exact prerelease/build/case binding, every incomplete history field, malformed values, safe JSON pointers, numeric equivalence, cycles and shared inputs, foreign hook rejection, prior-observation preservation, actual file bytes/modes and isolated rejection contracts. Existing JSON reader limits remain unchanged."
     }
   }
 }

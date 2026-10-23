@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 577
-last_completed_plan_commit: 14.c.W
-next_plan_commit: 14.c.R
-last_completed_numbered_bundle: 408
+implementation_plan_commits_completed: 578
+last_completed_plan_commit: 14.c.R
+next_plan_commit: 14.c.C
+last_completed_numbered_bundle: 409
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17716,12 +17716,85 @@ dieser Einzelauftrag ohne weitere Result-Abfrage oder Wartephase.
 
 #### 14.c.R – Make it Right
 
-- [ ] **14.c.R** · Position **578/900** · Voraussetzung: `14.c.W`.
+- [x] **14.c.R** · Position **578/900** · Voraussetzung: `14.c.W`.
 **Exakte Commit-Message:** `14.c.R feat(exchange): Dreifachvergleich und Konfliktstrategien vervollständigen`
 
 **Vervollständigung:** Divergenz bleibt bei jeder Strategiewahl sichtbar. Fehlende/falsche Historienbindung, kanonische JSON-Randfälle und Mutationsisolation robust nach 10.12.2 behandeln; lokale Werte und Historie bei Ablehnung erhalten.
 
 **Verhaltensabnahme:** Alle Strategien prüfen beobachtbare Zielwerte und unveränderten Ausgang bei Ablehnung. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**R-Stand Bundle 409:** Grundlage ist das vollständig geprüfte Result
+`specroad-apply_Result_004718_1023_f951f2.zip`, SHA-256
+`701d91114165dacb5d3b1f72be27becbc139d558713d52d50d6b19b5822382e2`,
+mit sauberem Apply-Commit
+`4a5cddbc186634517947e7fe531a4309a0792d2a`.
+Bundle 408 bestätigt 14.c.W und **577/900**; seine **5.782 Tests** der
+Gruppe **2/3**, Commitfolge **116**, bestanden mit vier parallelen Workern
+in **1.982,97 s**. Der vollständige Snapshot und die tatsächlichen
+Testbeobachtungen stimmen mit der gebundenen Auswahl überein. Die bestehende
+Regel `import-conflict-policy-v1` aus Spezifikation 0.2.14 genügt für R;
+es wird keine weitere normative Klärung eingeführt.
+
+Der Vergleich prüft jetzt auch das vollständige kanonisch kodierte Ergebnis
+mit dem vorhandenen strikten JSON-Leser, bevor er seinen gespeicherten
+Zustand ersetzt. Das Ergebnis umfasst zusätzlich zu den Eingaben den
+Beobachtungsumschlag; dessen Lesbarkeit wird vor der Installation geprüft.
+Leserfehler bei Herstellung oder Beobachtung bleiben im vorhandenen
+Importfehlervertrag SRV090/Code 3. Eine abgewiesene Reinitialisierung erhält
+den vorherigen vollständigen Wert und dessen Hash. Die bestehenden
+JSON-/Zahlengrenzen werden wiederverwendet; R definiert keine neue
+Nestinggrenze, Normalisierung oder Verlustausnahme.
+
+Die ergänzten Abnahmen unterscheiden aktuelle Zielgleichheit von den
+Änderungen gegenüber den beiden unabhängigen historischen Seiten:
+ungleiche unveränderte Ziele, gleiche Ziele bei nur einer geänderten Seite,
+Konvergenz und Divergenz. Mappingname, Versionsvorstufe, Build-Metadaten,
+Groß-/Kleinschreibung und gespeicherte Leerzeichen bleiben exakt gebunden.
+Historienähnliche Extensiondaten werden nicht zu aktiver Importhistorie.
+Alle fünf unvollständigen Historienfelder sind gemeinsam mit W abgedeckt;
+fehlende beziehungsweise ungültige Historie wird auch durch Error/Skip nicht
+positiv umgedeutet. Native Mehrdeutigkeit bleibt SRV147 vor einer möglichen
+Übernahme, divergente Änderung unter allen vier Strategien SRV148.
+
+Weitere Fälle prüfen JSON-Pointer-Escaping, ungültige Unicodewerte/-schlüssel,
+Zahlenverlust, nicht endliche Zahlen, kanonisch gleichwertige Zahlenschreibweisen,
+Zyklen, gemeinsam verwendete Unterobjekte und fremde Konvertierungshooks.
+Eigene Beobachtungen und Diagnosen bleiben unabhängig von späteren Mutationen.
+Reale temporäre Quelldateien behalten Bytes und Modi bei allen vier
+Strategien; Quellpfade, URLs und Befehlsfragmente bleiben passive Daten.
+Isolierte Core-/PYZ-Negativfälle erhalten Konflikt und Historie ohne
+Write, ID, Uhrzeit, Revision oder Veröffentlichungserlaubnis.
+
+**Gezielter R-Nachweis:** **778/778 Verhaltenstests**, vier parallele Worker,
+**5,17 s**, Prozesscode 0, Python 3.14.4. Enthalten sind **96 neue R-Fälle**,
+alle **68 W-Fälle** und die **614 betroffenen Regressionstests** für native
+Identität/Historie, Relationsfelder/-referenzen, Artefaktgrundfelder,
+JSON/JCS, Modellwurzel, Austauschmappings und externe Registries.
+Die vollständige Collection-/Katalogprüfung ist gültig mit **17.444 Tests**
+und **0 ausgeführten Testkörpern**; `full_suite_passed` bleibt null.
+Die gezielte Auswahl ist kein Vollsuite- oder Releasebeleg.
+Quellstand-SHA-256:
+`5ee7734c63640294188778661ec8a671d37e859bcc8d79433f92597c5911de9a`.
+Katalog-SHA-256:
+`edbc8f369f85a0da97fa72b5a13cf21928f9bee0cea97fcff2ed083a871f2ec7`.
+Die 96 neuen Testidentitäten erhalten die Nummern **17.348–17.443** am Ende
+des unveränderten bestehenden Registers; Rotationsanker bleiben erhalten.
+SR-TC-0318/0456/0457 und die vorhandene synthetische Vergleichsfixture
+führen den R-Teilnachweis fort. Beide geänderten/neuen Python-Dateien sind
+statisch mit der Python-3.10-Grammatik geprüft; dies ist kein Testlauf
+auf allen unterstützten Python-Versionen.
+
+**Umfangsgrenze und Übergabe:** Übergeben wird genau der gezielt geprüfte
+R-Zustand. 14.c.C und die anschließende Plan-/Writerintegration bleiben offen;
+passive Entscheidungen ersetzen weder vollständige native Zielvalidierung
+noch Review, Verlustzustimmung oder Revisionserzeugung. Der Entrypoint
+prüft vor dem R-Commit ausschließlich die fällige **Gruppe 0/3**,
+Commitfolge **117**, mit **5.815 Tests** parallel. Erst nach Erfolg setzt
+er die fünf Planmarker auf **578/900**, zuletzt **14.c.R**, nächstens
+**14.c.C** und Bundle **409**, und erzeugt den vorgesehenen Commit.
+Ein Apply-Erfolg für Bundle 409 wird noch nicht behauptet. Nach der atomaren
+Übergabe endet der Einzelauftrag ohne weitere Result-Abfrage oder Wartephase.
 
 #### 14.c.C – Make it Clean
 

@@ -119,11 +119,22 @@ class ImportComparison:
             "diagnostics": diagnostics, "exit_code": 3 if diagnostics else 0,
             "publication_authorized": False,
         }
-        object.__setattr__(self, "_encoded", canonical_json_bytes(result))
+        # Validate the complete observation with the shared reader before
+        # installing it. Its envelope also consumes reader nesting capacity;
+        # a rejected reinitialization must retain the previous complete value.
+        try:
+            encoded = canonical_json_bytes(result)
+            parse_json_object(encoded)
+        except ModelError as error:
+            raise _error(error) from error
+        object.__setattr__(self, "_encoded", encoded)
 
     @property
     def data(self):
-        return parse_json_object(self._encoded)
+        try:
+            return parse_json_object(self._encoded)
+        except ModelError as error:
+            raise _error(error) from error
 
     @property
     def sha256(self):
