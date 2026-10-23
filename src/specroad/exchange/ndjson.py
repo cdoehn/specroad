@@ -8,12 +8,11 @@ codec data; the caller owns durable storage, input snapshots and output staging.
 from dataclasses import dataclass
 from hashlib import sha256
 
-from ..changes.values import ChangePlan
 from ..model.canonical import canonical_json_bytes
-from ..model.domain_schemas import DOMAIN_TYPES, validate_domain_fields
-from ..model.record_schemas import RECORD_TYPES, validate_record_fields
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
+from ._ndjson_framing import LineFramer, check_line, iter_lines
+from ._ndjson_objects import validate_envelope as _validate_envelope
 
 
 class NDJSONError(ModelError):
@@ -29,35 +28,9 @@ class NDJSONResumeConflict(NDJSONError):
     exit_code = 6
 
 
-def _validate_envelope(value):
-    if set(value) != {"format_version", "object_kind", "object"}:
-        raise ModelError("ndjson_envelope_fields")
-    if value["format_version"] != "1.0.0":
-        raise ModelError("ndjson_unsupported_version", pointer="/format_version")
-    if value["object_kind"] not in ("artifact", "change_plan"):
-        raise ModelError("ndjson_object_kind", pointer="/object_kind")
-    payload = value["object"]
-    if type(payload) is not dict:
-        raise ModelError("ndjson_payload_object_required", pointer="/object")
-    try:
-        if value["object_kind"] == "change_plan":
-            # Verify the existing inner hash; never prepare or repair a plan.
-            ChangePlan(canonical_json_bytes(payload))
-        elif payload.get("artifact_type") in DOMAIN_TYPES:
-            validate_domain_fields(payload)
-        elif payload.get("artifact_type") in RECORD_TYPES:
-            validate_record_fields(payload)
-        else:
-            raise ModelError("unsupported_artifact_type", pointer="/artifact_type")
-    except ModelError as error:
-        raise ModelError(error.reason, pointer="/object" + error.pointer,
-                         highest_supported=error.highest_supported) from None
-
-
 def _decode_record(record, line):
     try:
-        if b"\r" in record:
-            raise ModelError("ndjson_raw_cr")
+        check_line(record)
         value = parse_json_object(record)
         _validate_envelope(value)
     except ModelError as error:
@@ -75,15 +48,9 @@ def iter_decode_ndjson(raw):
     """
     if type(raw) is not bytes:
         raise NDJSONError("bytes_required")
-    start, line = 0, 1
-    while start < len(raw):
-        end = raw.find(b"\n", start)
-        if end < 0:
-            end = len(raw)  # The supplied complete byte source is at actual EOF.
-        record = raw[start:end]
+    for record, line in iter_lines(raw):
         if record:
             yield _decode_record(record, line)
-        start, line = end + 1, line + 1
 
 
 class NDJSONDecoder:
@@ -97,17 +64,16 @@ class NDJSONDecoder:
     """
 
     def __init__(self):
-        self._pending = bytearray()
+        self._frames = LineFramer()
         self._digest = sha256()
         self._offset = 0
-        self._line = 1
         self._count = 0
         self._state = "running"
         self._bound_source = None
 
     def _running(self):
         if self._state != "running":
-            raise NDJSONError("ndjson_reader_not_running", line=self._line)
+            raise NDJSONError("ndjson_reader_not_running", line=self._frames.line)
 
     def feed(self, block):
         """Consume bytes, including empty blocks, without inferring EOF.
@@ -118,25 +84,17 @@ class NDJSONDecoder:
         self._running()
         try:
             if type(block) is not bytes:
-                raise NDJSONError("bytes_required", line=self._line)
+                raise NDJSONError("bytes_required", line=self._frames.line)
             if (self._bound_source is not None
                     and block != self._bound_source[self._offset:self._offset + len(block)]):
-                raise NDJSONResumeConflict("ndjson_source_changed", line=self._line)
+                raise NDJSONResumeConflict("ndjson_source_changed", line=self._frames.line)
             self._digest.update(block)
             self._offset += len(block)
-            records, start = [], 0
-            while start < len(block):
-                end = block.find(b"\n", start)
-                if end < 0:
-                    self._pending.extend(block[start:])
-                    break
-                self._pending.extend(block[start:end])
-                if self._pending:
-                    records.append(_decode_record(bytes(self._pending), self._line))
+            records = []
+            for record, line in self._frames.feed(block):
+                if record:
+                    records.append(_decode_record(record, line))
                     self._count += 1
-                self._pending.clear()
-                self._line += 1
-                start = end + 1
             return tuple(records)
         except BaseException:
             # Resource/security/host failures retain their original classes.
@@ -149,12 +107,12 @@ class NDJSONDecoder:
         self._running()
         try:
             if self._bound_source is not None and self._offset != len(self._bound_source):
-                raise NDJSONResumeConflict("ndjson_source_incomplete", line=self._line)
+                raise NDJSONResumeConflict("ndjson_source_incomplete", line=self._frames.line)
             records = ()
-            if self._pending:
-                records = (_decode_record(bytes(self._pending), self._line),)
+            if self._frames.pending:
+                records = (_decode_record(bytes(self._frames.pending), self._frames.line),)
                 self._count += 1
-                self._pending.clear()
+                self._frames.pending.clear()
             self._state = "complete"
             return records
         except BaseException:
@@ -165,7 +123,7 @@ class NDJSONDecoder:
         complete = self._state == "complete"
         return {"format_version": "1.0.0", "complete": complete,
                 "failed": self._state == "failed", "bytes_received": self._offset,
-                "object_count": self._count, "next_line": self._line,
+                "object_count": self._count, "next_line": self._frames.line,
                 "consumed_sha256": self._digest.hexdigest(),
                 "source_sha256": self._digest.hexdigest() if complete else None,
                 "validation_scope": "ndjson_native_fields_only",
@@ -181,16 +139,16 @@ class NDJSONDecoder:
         """
         self._running()
         if type(source) is not bytes:
-            raise NDJSONError("bytes_required", line=self._line)
+            raise NDJSONError("bytes_required", line=self._frames.line)
         if (self._offset > len(source)
                 or sha256(memoryview(source)[:self._offset]).digest() != self._digest.digest()
                 or (self._bound_source is not None and source != self._bound_source)):
-            raise NDJSONResumeConflict("ndjson_source_changed", line=self._line)
+            raise NDJSONResumeConflict("ndjson_source_changed", line=self._frames.line)
         raw = canonical_json_bytes({
             "format_version": "ndjson-cursor-v1", "source_sha256": sha256(source).hexdigest(),
             "source_size": len(source), "byte_offset": self._offset,
-            "next_line": self._line, "object_count": self._count,
-            "pending_hex": self._pending.hex()})
+            "next_line": self._frames.line, "object_count": self._count,
+            "pending_hex": self._frames.pending.hex()})
         self._bound_source = source
         return raw
 
@@ -229,9 +187,9 @@ def resume_ndjson(source, checkpoint, *, checkpoint_sha256):
     reader = NDJSONDecoder()
     for start in range(0, value["byte_offset"], 65536):
         reader.feed(source[start:min(start + 65536, value["byte_offset"])])
-    if (reader._line != value["next_line"] or reader._count != value["object_count"]
-            or reader._pending.hex() != value["pending_hex"]):
-        raise NDJSONError("ndjson_invalid_checkpoint", line=reader._line)
+    if (reader._frames.line != value["next_line"] or reader._count != value["object_count"]
+            or reader._frames.pending.hex() != value["pending_hex"]):
+        raise NDJSONError("ndjson_invalid_checkpoint", line=reader._frames.line)
     reader._bound_source = source
     return reader
 

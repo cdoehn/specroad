@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 11
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 590
-last_completed_plan_commit: 14.g.R
-next_plan_commit: 14.g.C
-last_completed_numbered_bundle: 423
+implementation_plan_commits_completed: 591
+last_completed_plan_commit: 14.g.C
+next_plan_commit: 14.h.W
+last_completed_numbered_bundle: 424
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -19294,7 +19294,7 @@ diesen Einzelauftrag ohne weiteren Planschritt oder Warten auf Result.
 
 #### 14.g.C – Make it Clean
 
-- [ ] **14.g.C** · Position **591/900** · Voraussetzung: `14.g.R`.
+- [x] **14.g.C** · Position **591/900** · Voraussetzung: `14.g.R`.
 **Exakte Commit-Message:** `14.g.C refactor(exchange): NDJSON-Objektstrom bereinigen`
 
 **Bereinigung:** Zeilenframing von JSON-Validierung und Fachmapping trennen.
@@ -19302,6 +19302,80 @@ diesen Einzelauftrag ohne weiteren Planschritt oder Warten auf Result.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Bereinigung und Übergabe (Bundle 424):** Das vollständig gebundene Result
+`specroad-apply_Result_132108_1023_4e2d03.zip`, SHA-256
+`98a3adfaffae86d2a2fae762ce9acb3199a199c7a4e1fab756f2d36fba5d0672`,
+bestätigt Bundle **423** / **14.g.R** auf
+`ea5f4d547a1dd29eaadab0dd4332fea45e9c368a`: sauberer Apply-Stand,
+**6.066/6.066** Tests der Gruppe **2/3**, Commitfolge **131**, vier Worker,
+**1.936,00 s**. Alle **2.157** Snapshotdateien, reale Commitfolge,
+Run-/Ausführungslog und nummerierte Testbeobachtungen wurden abgeglichen.
+In Dev wurden ausschließlich die fünf dadurch bestätigten Fortschrittsmarker
+nachgeführt. Spezifikation **0.2.16, D.3.1** bleibt bytegleich.
+SPECROAD-DECISION-1 ist ausdrücklich vorhanden; für diese reine Bereinigung
+ist keine eigene normative Entscheidung erforderlich.
+
+`exchange/_ndjson_framing.py` enthält nun ausschließlich LF-Spannen,
+physische Zeilen und den Puffer einer unfertigen Zeile sowie die bisherige
+Raw-CR-Grenze. Vollständige Bytequellen und Transferblöcke verwenden
+dieselbe Spannenzerlegung. Der inkrementelle Framer bleibt an der aktuellen
+Zeile stehen, bis ihre Verarbeitung akzeptiert ist; dadurch bleiben auch
+Fehlerposition und partieller Zustand bei abgewiesenen Datensätzen erhalten.
+Er interpretiert weder JSON noch native Felder und entscheidet keine
+Fachzuordnung oder Schreibfreigabe.
+
+`exchange/_ndjson_objects.py` übernimmt unverändert die geschlossene
+Hüllenprüfung und die vorhandenen projektfreien Domain-/Record-/Plan-
+Validatoren. Die verschobene Validatorfunktion ist bis auf ihren internen
+Namen AST-gleich zur gebundenen Basis. `exchange/ndjson.py` koordiniert
+weiterhin strikte JSON-Dekodierung, Hüllenprüfung, physische Fehlerorte,
+Zustand und Quell-/Cursorbindung. Die bestehenden öffentlichen Funktionen,
+Klassen und Exporte bleiben erhalten; Ausgabe-/Beobachtungshelfer und
+Fehlerklassen sind strukturell unverändert. `_validate_envelope` bleibt als
+interner Prüfpunkt erreichbar, damit die bestehenden Host-Fehlerproben
+unverändert dieselbe Grenze prüfen.
+
+Unverändert bleiben insbesondere Originalbytes und Bytehash, geordnete
+Mehrfachvorkommen, native Werte/Versionen/Selbsthashes, kanonisches JSON
+plus LF, explizites EOF, Fehlerklassen 3/6, Ressourcen-Ausnahmen und
+unvollständige/fehlgeschlagene Zustände. Gespeicherte Cursor behalten ihre
+Felder, Version, kanonischen Bytes und Quellbindung; es gibt keine Migration,
+neue fachliche Regel, Ein-/Ausgabe-Nebenwirkung oder neue Freigabe. Die
+höheren CLI-, Work-, Import-/Export-, Manifest-/Verlust-, Modell- und
+Transaktionsgates bleiben außerhalb dieses Codec-Schnitts verbindlich.
+
+**Tatsächlich gezielt geprüft in Dev:** **713/713** Verhaltenstests,
+**vier parallele Worker**, Prozesscode **0**, keine Beobachtungsfehler,
+`full_suite_passed=null`; Testkörperlauf **11,76 s**. Darin sind sämtliche
+**152 W- und 140 R-Fälle** und die betroffenen Artefakt-, Change-Plan-,
+JSON-, Kanonisierungs- und Schemakatalogregressionen. Alle Testdateien,
+Oracles, Testnummern und Fixtures blieben bytegleich zur Basis. Die
+vorhandenen isolierten Core-/PYZ-, I/O-/Executor- und Ressourcenfehlerproben
+sind erfolgreich. Es wurden keine Struktur- oder Dokumentationstests
+erfunden und keine vollständige Dev-Suite ausgeführt.
+
+Die vollständige Collection-/Katalogprüfung erfasste unverändert
+**18.198 Identitäten**, **0 Testkörper**, ohne Katalogfehler. SR-TC-0327
+bleibt wegen der offen ausgewiesenen höheren Integration `partial`; nur
+die erledigte C-Strukturarbeit wird aus seinen offenen Punkten entfernt.
+Gebundener Quellstand:
+`870e19ae0bd1e4d64a612803badd8e6fc26c8b4c2401d06050192a8627116ed4`;
+Katalog: `934a91ed311ae06c0298cd9403290506bc8fbda1116f41961030a5ba224c4ba1`;
+Auswahlbeleg: `d5dabd32a661094e1c1565ca80a5da5048184b5be8175dc44ac6ed80d892fa45`;
+Beobachtungsbeleg: `3c4b038eda6b3104d04e4d7c90b3dba096b72964042826d6bf00b0130d3a547e`.
+
+**Vorgesehene Apply-Grenze:** Genau **14.g.C**, Position **591/900**, ein
+regulärer Commit in Bundle **424**. Der Entrypoint installiert diesen
+gezielt geprüften C-Zustand und führt ausschließlich **Gruppe 0/3**,
+Commitfolge **132**, mit **6.066 Tests** und vier parallelen Workern aus.
+Erst nach erfolgreichem gebundenem Gate setzt er die fünf Planmarker auf
+**591/900**, zuletzt **14.g.C**, nächstens **14.h.W**, Bundle **424**,
+C-Checkbox abgeschlossen, und erzeugt die oben festgelegte Commit-Message.
+Bei Fehler bleiben tatsächliche Dateien, Index und erfolgreiche Commits
+erhalten. **14.h.W und alle weiteren Schritte bleiben offen.** Kein
+Apply-, Vollsuite- oder Release-Erfolg dieser Übergabe wird vorweggenommen;
+nach nativer Paketprüfung und atomarer Veröffentlichung endet der Auftrag.
 
 <a id="step-14-h"></a>
 ### 14.h – ReqIF-Typen und Attribute

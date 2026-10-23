@@ -20,12 +20,13 @@
     "Assert detached complete observations and no permission grant; trap file/network/process/write/generation/plan-execution calls and verify the same passive API in isolated Core and PYZ.",
     "Exercise arbitrary byte blocks, physical blank-line counting, strict JSON/UTF-8, valid EOF with/without LF and rejection of incomplete final records. Pauses and empty blocks remain incomplete.",
     "Persist source and cursor as inert caller-owned data, resume within UTF-8/escapes/numbers/records and at blank-line boundaries, and compare exactly ordered outputs without duplicates/skips. Reject changed source bytes, changed cursors, forged prefix skips and inconsistent cursor geometry before completion.",
-    "Process a large line and repeated records without total-count/byte cutoffs; retain original resource/host exception classes and reject reuse after failure. Verify passive resume and the same API in isolated Core/PYZ while preserving all W oracles."
+    "Process a large line and repeated records without total-count/byte cutoffs; retain original resource/host exception classes and reject reuse after failure. Verify passive resume and the same API in isolated Core/PYZ while preserving all W oracles.",
+    "Re-run the unchanged W/R behavior corpus and affected native JSON/plan/schema regressions after separating LF framing from strict JSON and native envelope validation; preserve physical diagnostics, cursor bytes, EOF/failure state, output order and passive boundaries."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "NDJSON-Import und -Export MÜSSEN pro Zeile genau ein versioniertes SpecRoad-Artefakt oder Change-Plan-Objekt verarbeiten, leere Zeilen ignorieren und Kommentare ablehnen.",
-    "scope": "14.g.W/R passive native NDJSON v1 codec: all 28 native artifact kinds and regular plans retain values, versions, self-hashes, order, duplicates and original-byte provenance. Incremental feeds recognize only LF or explicit EOF, retain split UTF-8/escape/number bytes, report physical lines and hull-relative pointers, and never infer completion from pauses. Source-bound inert cursors revalidate consumed prefixes without re-emission; changed input/checkpoint bindings are conflict Code 6, malformed records/cursors Code 3, and resource/security exceptions retain their classes. No aggregate count/byte cutoff, write permission, file publication or implicit execution. C structural cleanup, durable Work/CLI integration and higher import/export/model/manifest/authorization gates remain outside this codec proof."
+    "scope": "14.g.W/R/C passive native NDJSON v1 codec: all 28 native artifact kinds and regular plans retain values, versions, self-hashes, order, duplicates and original-byte provenance. Incremental feeds recognize only LF or explicit EOF, retain split UTF-8/escape/number bytes, report physical lines and hull-relative pointers, and never infer completion from pauses. Source-bound inert cursors revalidate consumed prefixes without re-emission; changed input/checkpoint bindings are conflict Code 6, malformed records/cursors Code 3, and resource/security exceptions retain their classes. No aggregate count/byte cutoff, write permission, file publication or implicit execution. Durable Work/CLI integration and higher import/export/model/manifest/authorization gates remain outside this codec proof."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -344,7 +345,6 @@
     "tests/test_ndjson_codec_right.py::test_saved_checkpoint_must_match_independently_retained_hash[other-cursor]"
   ],
   "open_items": [
-    "14.g.C: separate framing/JSON/native validation structure while preserving the W/R contracts.",
     "Higher-layer CLI, native import/export planning, manifest/loss reporting, global model gates and actual authorized transactions remain required. A complete codec observation is not a successful import, approval, full-suite or release proof."
   ]
 }
