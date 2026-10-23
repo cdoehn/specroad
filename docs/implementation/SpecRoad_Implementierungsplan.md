@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 581
-last_completed_plan_commit: 14.d.R
-next_plan_commit: 14.d.C
-last_completed_numbered_bundle: 412
+implementation_plan_commits_completed: 582
+last_completed_plan_commit: 14.d.C
+next_plan_commit: 14.e.W
+last_completed_numbered_bundle: 413
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -18085,7 +18085,7 @@ weiteren Planschritt, Result-Abfrage, Wartephase oder Hintergrundfortsetzung.
 
 #### 14.d.C – Make it Clean
 
-- [ ] **14.d.C** · Position **582/900** · Voraussetzung: `14.d.R`.
+- [x] **14.d.C** · Position **582/900** · Voraussetzung: `14.d.R`.
 **Exakte Commit-Message:** `14.d.C refactor(exchange): Importplan und Eingangsbindung bereinigen`
 
 **Bereinigung:** Formatparser liefern Kandidaten an denselben Change-Plan-Adapter.
@@ -18093,6 +18093,64 @@ weiteren Planschritt, Result-Abfrage, Wartephase oder Hintergrundfortsetzung.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Stand Bundle 413:** Das maßgebliche Result
+`specroad-apply_Result_034858_1023_9a253e.zip`, SHA-256
+`5edfe7bf8775e0361b722854c7942f1a2e38f44288149401efb1657cb83c576b`,
+bestätigt Bundle 412 / 14.d.R auf
+`c2fe11eacb98d231677bc85eafacac433103eb6d` mit sauberem Apply-Arbeitsbaum.
+Die tatsächlichen **5.859 Tests** der Gruppe **0/3**, Commitfolge **120**,
+bestanden mit vier parallelen Workern in **1.674,83 s**. Vollständiger
+Snapshot, Abschlusscommit, nummerierte Auswahl und einzelne Testbeobachtungen
+sind abgeglichen. Nur die fünf bestätigten Fortschrittsmarker wurden aus
+diesem Result übernommen; die übrige erhaltene Arbeit war bytegleich.
+Spezifikation 0.2.14 einschließlich SPECROAD-DECISION-1 bleibt unverändert.
+Eine normative Klärung ist für diese Strukturänderung nicht erforderlich.
+
+Der gemeinsame Planer trennt die Verarbeitung bereits geparster Kandidaten
+(`_planning_candidates`) vom Aufbau des gebundenen Berichts
+(`_planning_report`). `prepare_import_plan` behält die Eingangsprüfung und
+deren Reihenfolge, die Auswahl der tatsächlichen Mappingressource und den
+Modellsnapshot. Der gemeinsame Kandidatenadapter liefert reguläre Change-
+Plan-Operationen samt Verlusten, Konflikten und Diagnosen; anschließend prüft
+der vorhandene Change-Target-Dienst das vollständige Ziel. Der Berichtsaufbau
+bindet dieselben Eingabebytes, Kandidaten, Ressourcen, Basis- und Zielwerte.
+
+`ImportPlan` und `assess_import_plan` behalten ihre Schnittstellen und ihre
+Implementierung. Auch die Wiederbewertung gespeicherter Pläne verwendet
+denselben gemeinsamen Pfad. Kandidatenreihenfolge, Fehlerklassen und Pointer,
+Übernahmeentscheidungen, unveränderte Historien bei Skip/No-op, Verlust- und
+Konfliktsperren, ganze Zielprüfung und alle negativen Autoritätsflags bleiben
+erhalten. Es gibt keinen zusätzlichen Parser-, Writer- oder Freigabepfad.
+Die getrennten privaten Hilfen sind keine neue öffentliche Schnittstelle.
+
+**Gezielter C-Nachweis:** **981/981 Verhaltenstests**, vier parallele Worker,
+**13,12 s**, Prozesscode 0, Python 3.14.4. Alle **133 W-/R-Fälle** des
+Importplaners und **848 betroffenen bisherigen Regressionstests** liefen mit
+unveränderten Tests und unveränderten fachlichen Erwartungen. Eingangsprüfung,
+Kandidatenauswertung und Berichtsberechnung wurden zusätzlich statisch mit
+dem Ausgangsstand abgeglichen; die drei geänderten/neuen Python-Dateien sind
+mit der Python-3.10-Grammatik syntaktisch gültig. Dies ist kein Laufzeitnachweis
+für andere Python-Versionen.
+
+Die vollständige Collection-/Katalogprüfung ist gültig mit **17.577 Tests**
+und **0 ausgeführten Testkörpern**. Es gibt keine neuen Testidentitäten;
+Nummerierungsregister, Rotationsanker und Fixtures bleiben bytegleich.
+SR-TC-0314 und SR-TC-0331 bleiben **Teilnachweise**; nur ihr erledigter
+C-Strukturpunkt entfällt aus den offenen Punkten. `full_suite_passed` bleibt
+null; kein Vollsuite-, Release- oder Importabschluss wird behauptet.
+Quellstand-SHA-256: `00317df23b3f902f40701bbbe6044af8d9be44ce9a21fdfb47b36d46f322d77f`.
+Katalog-SHA-256: `e5189ebc6c4cd1a8673faa25e14bef3bdeca8332271734027e424f9b631c3ae4`.
+
+**Umfang und Übergabe:** Genau **14.d.C**, Position **582/900**. Der
+Entrypoint stellt diesen gezielt geprüften C-Zustand her und führt vor seinem
+Commit ausschließlich die fällige **Gruppe 1/3**, Commitfolge **121**, mit
+**5.859 Tests** parallel aus. Erst nach erfolgreichem Apply-Testlauf werden
+die fünf Fortschrittsmarker auf **582/900**, zuletzt **14.d.C**, nächstens
+**14.e.W** und Bundle **413** gesetzt und der vorgesehene Commit erzeugt.
+Ein Apply-Erfolg von Bundle 413 wird hier nicht behauptet. **14.e.W** und
+die weiteren Schritte bleiben offen. Nach atomarer Übergabe endet dieser
+Einzelauftrag ohne weitere Result-Abfrage, Wartephase oder Hintergrundarbeit.
 
 <a id="step-14-e"></a>
 ### 14.e – Import anwenden und Verlustzustimmung

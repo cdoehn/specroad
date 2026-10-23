@@ -22,7 +22,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad import plan <FORMAT> <INPUT>` MUSS Eingabeformat, Mapping, neue und aktualisierte Artefakte, Konflikte, Informationsverluste, Anh\u00e4nge, Diagnosen, einen ausf\u00fchrbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne den Projektstand zu ver\u00e4ndern.",
+    "requirement_contract": "`specroad import plan <FORMAT> <INPUT>` MUSS Eingabeformat, Mapping, neue und aktualisierte Artefakte, Konflikte, Informationsverluste, Anhänge, Diagnosen, einen ausführbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne den Projektstand zu verändern.",
     "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed. 14.d.R adds assess_import_plan: strict JSON bytes are passive saved data. Full re-preparation from explicit current inputs must reproduce every bound field and observation; no expected input, actor/time, policy or gate is taken from the saved report. All source/resource bytes, candidates, untouched base members, reservations, metadata and current target checks remain bound. A changed gate result or input requires a new preparation; matching invalid reports remain non-executable. JSON envelope layout may differ, not the bound source bytes. No live inventory, source parsing, authority, transaction or import completion is claimed."
   },
   "expected_diagnostics": [
@@ -196,7 +196,6 @@
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[version]"
   ],
   "open_items": [
-    "14.d.C cleans the common planner with unchanged W/R behavior.",
     "CLI format parsing, relation/registry candidates, incoming attachment byte publication, guarded transactional import/loss acceptance and a real import-completion receipt remain in subsequent assigned import steps. This is a planning report, not completed-import or release evidence."
   ]
 }
