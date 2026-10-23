@@ -336,7 +336,6 @@
     "tests/test_reqif_objects_right.py::test_very_large_integer_lexemes_and_type_limits_have_no_python_digit_conversion[]"
   ],
   "open_items": [
-    "14.h.C: separate object model, XML events and native mapping structure while retaining W/R behavior.",
     "14.i–14.k and higher integration: specification hierarchy, relations, XHTML, attachments, loss/export manifest, ReqIFZ, complete native export/import mapping, CLI, model validation and authorized project transactions. This partial codec evidence is not an XSD/tool-conformance, full-suite or release pass."
   ]
 }

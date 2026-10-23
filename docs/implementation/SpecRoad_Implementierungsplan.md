@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 12
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 593
-last_completed_plan_commit: 14.h.R
-next_plan_commit: 14.h.C
-last_completed_numbered_bundle: 427
+implementation_plan_commits_completed: 594
+last_completed_plan_commit: 14.h.C
+next_plan_commit: 14.i.W
+last_completed_numbered_bundle: 428
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -19776,7 +19776,7 @@ atomarer Veröffentlichung endet dieser Auftrag.
 
 #### 14.h.C – Make it Clean
 
-- [ ] **14.h.C** · Position **594/900** · Voraussetzung: `14.h.R`.
+- [x] **14.h.C** · Position **594/900** · Voraussetzung: `14.h.R`.
 **Exakte Commit-Message:** `14.h.C refactor(exchange): ReqIF-Typen und Attribute bereinigen`
 
 **Bereinigung:** ReqIF-Objektmodell von XMLlesen und Spezifikationsartefakten trennen.
@@ -19784,6 +19784,88 @@ atomarer Veröffentlichung endet dieser Auftrag.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Bereinigung und Übergabe (Bundle 428):** Das vollständig gebundene
+Result `specroad-apply_Result_165601_1023_49bfec.zip`, SHA-256
+`12c46760acb4f18ca93f61e9505048f9348d3e02e381491411374ac177d9722d`,
+bestätigt Bundle **427** / **14.h.R** auf
+`4973d461a0e5fb56652dd2deb215fbb04c284504`: sauberer Apply-Stand,
+**6.162/6.162** Tests der Gruppe **0/3**, Commitfolge **135**, vier Worker,
+**1.817,89 s**. Native Result-/Patchbindung, alle **2.163** Snapshotdateien,
+tatsächliche Commitfolge, Run-/Ausführungslog und die vollständig gebundenen
+nummerierten Testbeobachtungen wurden abgeglichen. In Dev wurden nur die
+fünf durch diesen Erfolg belegten Fortschrittsmarker nachgeführt; danach
+entsprach der Produktbestand dem Snapshot. Belegter Fortschritt ist
+**593/900**, zuletzt **14.h.R**, nächster Schritt **14.h.C**.
+SPECROAD-DECISION-1 ist ausdrücklich vorhanden; für diese strukturelle
+Bereinigung ist keine eigene normative Entscheidung nötig. Spezifikation
+**0.2.17, D.1.1** bleibt bytegleich.
+
+Die bisher zusammengefasste ReqIF-Implementierung ist nun nach bestehenden
+Verantwortungen getrennt. `_reqif_values.py` enthält unveränderbare
+Quellwerte, Diagnosen, explizite Limits und die passive Baumdarstellung.
+`_reqif_scalars.py` kapselt die unveränderten lexikalischen Datums-,
+Kennungs-, Boolean- und exakten Zahlenprüfungen. `_reqif_xml.py` übernimmt
+XML-Ereignisabbildung und deterministische Serialisierung; der vorhandene
+begrenzte XML-Reader bleibt die Sicherheitsgrenze. `_reqif_profile.py`
+prüft die vollständige unterstützte Typ-/Objektstruktur und löst ihre
+Referenzen auf, bevor eine Projektion möglich ist.
+
+`_reqif_mapping.py` enthält die bisherige JSON-Wertprojektion, explizite
+Quellidentität, stabile Erstexportkennung und den gebundenen inversen
+Objektrückweg. Die schmale öffentliche Fassade `exchange/reqif.py` behält
+`ReqIFDocument`, die vorhandenen Typnamen, Funktions-/Methodensignaturen
+und die kontrollierten Reader-/Zahlen-/Serializer-Grenzen. Decoder,
+Serializer und Profilprüfung bleiben auch beim inversen Kandidaten aktiv.
+Es entstehen weder ein zweiter XML-Parser noch ein Projektwriter oder
+weitere Konfigurations-, Schema- oder Mappingformate.
+
+Diese Trennung ändert keine Fachwerte, Default-/Abwesenheitsherkunft,
+Enum-Reihenfolge, Quellbytes/-hashes, Metadaten, XML-Ausgabebytes oder
+Verlustbezüge. Syntax-, Referenz-, Kontext-, Konflikt- und Sicherheitsfehler
+behalten ihre bisherigen Klassen, Gründe, Codes und Orte; reale
+Ressourcenfehler bleiben ungefangen. Unverstandene Inhalte verhindern
+weiterhin eine vollständige Serialisierung. Import-/Exportvollständigkeit,
+Schreibfreigabe und Ausführungsbereitschaft werden nicht hinzugefügt.
+Die statische Durchsicht bestätigt unveränderte ausgelagerte Prüfkörper
+und öffentliche Aufrufsignaturen; sie ersetzt keinen Verhaltenstest.
+
+**Gezielter Dev-Verhaltensnachweis:** **813/813** ausgewählte Tests mit
+**vier parallelen Workern**, Prozess-/Gate-Exit **0**, keine Beobachtungs-
+oder Katalogfehler, `selected_passed=true`, `full_suite_passed=null`;
+Testkörperlauf **5,55 s**. Enthalten sind alle **81 W- und 206 R-Fälle**
+sowie betroffene Mapping-, externe/native Identitäts-, sichere XML-,
+Kanonisierungs- und Python-3.10-Regressionsfälle. Die unveränderten Oracles
+prüfen insbesondere deterministische Bytes, typisierte Lexeme/Defaults,
+Nichtrepräsentierbarkeit, inverse Mehrdeutigkeit, Quellkontext, unbekannte
+Teilbäume, Ressourcenfehler und isolierte Core-/PYZ-Verarbeitung.
+Alle bisherigen Tests einschließlich Support-Fixtures bleiben bytegleich.
+
+Vollständige Collection-/Katalogprüfung: **18.485 Identitäten**, **0
+Testkörper**, keine Fehler. Keine neue Testnummer; Nummerierung,
+Rotationsanker, Fixturedefinitionen und bestehende Anforderungsoracles
+bleiben unverändert. Bei SR-TC-0320/0321 entfällt ausschließlich der
+umgesetzte C-Strukturpunkt aus `open_items`; beide Verträge bleiben
+`partial`, mit unveränderten Testbindungen und offenen höheren
+ReqIF-/Projektintegrationspflichten. Kein zusätzlicher Volltest und keine
+Dokumentations-/Darstellungstests wurden ausgeführt.
+Gebundener Quellstand: `0a069f642c1c2aa1bdf19f0dc13c1c6556cb928ee75c90e2a86714ba358b9203`;
+Katalog: `8243b1902d695537a8a52402656f884c2c287ea5deda7eb217320a5a5623fa14`;
+Auswahlbeleg: `ae4ecb46a36a5a469b5a86ffea502cb5aecdf01cb1a98c53f34ace1627838878`;
+Beobachtungsbeleg: `573d6ff2ed18be38c7319c2f91c88557839967a3d3017ce8973e70894cf4134b`.
+
+**Vorgesehene Apply-Grenze:** Genau **14.h.C**, Position **594/900**, ein
+regulärer Commit in Bundle **428**. Der Entrypoint installiert diesen
+gezielt geprüften C-Zustand und führt ausschließlich **Gruppe 1/3**,
+Commitfolge **136**, mit **6.162 Tests** und vier parallelen Workern aus.
+Erst nach erfolgreichem gebundenem Gate setzt er die fünf Planmarker auf
+**594/900**, zuletzt **14.h.C**, nächstens **14.i.W**, Bundle **428**,
+C-Checkbox abgeschlossen, und erzeugt die oben festgelegte Commit-Message.
+Fehler erhalten tatsächliche Dateien, Index und bereits erfolgreiche
+Commits. **14.i und alle weiteren Schritte bleiben offen.** Diese
+Teiltests sind kein Vollsuite-, ReqIF-Konformitäts- oder Release-Nachweis;
+ein Apply-Erfolg dieses Bundles wird nicht vorweggenommen. Nach nativer
+Paketprüfung und atomarer Veröffentlichung endet dieser Einzelauftrag.
 
 <a id="step-14-i"></a>
 ### 14.i – ReqIF-Hierarchien, Relationen und XHTML
