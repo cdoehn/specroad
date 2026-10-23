@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0693",
   "requirement_id": "SR-REQ-0693",
-  "specification_sha256": "58bd7eb7928b3dd3e5c1cefc0f8d2afcad904dae4c7b2bf40cc01a8ebabced1e",
+  "specification_sha256": "843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc",
   "primary_verification_id": "SR-VER-0046",
   "implementation_status": "open",
   "method": "pending",

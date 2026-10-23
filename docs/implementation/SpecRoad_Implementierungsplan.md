@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `58bd7eb7928b3dd3e5c1cefc0f8d2afcad904dae4c7b2bf40cc01a8ebabced1e`.
+Gebundene Spezifikations-SHA-256: `843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 8
+plan_revision: 9
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 576
 last_completed_plan_commit: 14.b.C
 next_plan_commit: 14.c.W
-last_completed_numbered_bundle: 406
+last_completed_numbered_bundle: 407
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,32 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Importstrategien und Revisionsgrenze (Bundle 407)
+
+Revision 9 dokumentiert **IMPORT-CONFLICT-POLICY**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.14, Kapitel 10.12.2**, präzisiert
+die vier bereits geplanten Importstrategien mit derselben nativen Identität,
+der bestehenden Fünf-Fälle-Tabelle und regulären Revisionen nach K.2.
+Entscheidungsbeleg, Alternativen und offene Verhaltensabnahmen stehen bei
+14.c. Es wird keine persönliche Einzelzustimmung oder ein Review behauptet.
+
+- [x] **IMPORT-CONFLICT-POLICY:** Importstrategien, Divergenz und Revisionsgrenze verbindlich klären. Commit: `docs(spec): Importstrategien und Revisionsgrenze präzisieren`.
+
+**Übergabegrenze:** Ein OFF-PLAN-Dokumentcommit mit Spezifikation, Plan und
+notwendigen aktiven Katalog-Hashbindungen. Produktcode, Verhaltenstests,
+stabile Testnummern, Runner und historische Evidence bleiben unverändert.
+Produktstand **576/900**, zuletzt **14.b.C**, nächstens **14.c.W**, bleibt
+erhalten. Erst nach erfolgreichem parallelem Apply-Gate setzt der Entrypoint
+den Offplan-Marker und die Bundlenummer auf 407. Das bestätigt ausschließlich
+die Dokumentübergabe, keine Umsetzung oder Abnahme von 14.c.
+
+**Prüfgrenze:** Kein verändertes Produktverhalten und keine erfundenen
+Dokumentationstests. Vollständige Collection-/Katalogprüfung mit null
+Testkörpern und native Paketprüfung bleiben erhalten. Apply prüft vor dem
+Commit genau die fällige Gruppe 1/3, Commitfolge 115, parallel. Danach endet
+diese Übergabe mit `spec_clarification`; der nächste gebundene Auftrag kann
+14.c.W umsetzen. Kein Start oder Eingriff in Control, Watcher, CI oder Dienste.
 
 ## OFF-PLAN – Austauschmapping- und Registryvertrag (Bundle 400)
 
@@ -17504,21 +17530,122 @@ Einzelauftrag; ein Apply-Erfolg für Bundle 406 wird noch nicht behauptet.
 **Anforderungsbezug:** `SR-REQ-0318`, `SR-REQ-0456`–`SR-REQ-0457`.
 **Verifikationsbezug:** `SR-VER-0024`, `SR-VER-0031`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+#### Entscheidungsbeleg IMPORT-CONFLICT-POLICY
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+der aktuelle Control-Vertrag 2 erlaubt genau ein Klärungsbundle. Betroffen
+ist der offene 14.c.W und sein anschließender R-/C-Ausschnitt.
+
+**Lücke und geprüfte Quellen:** Das maßgebliche erfolgreiche Result nach
+Bundle 406 bestätigt 14.b.C und 576/900; der parallele Apply-Lauf bestand
+mit 5.760 Tests der Gruppe 0/3. Spezifikation 0.2.13 nennt
+`create_new_revision` nur als Strategie in SR-REQ-0318. Die Fünf-Fälle-Tabelle
+10.12 legt ausdrücklich `update_if_unchanged` fest, aber nicht, ob eine
+neue Revision lokale Änderungen übersteuern oder eine neue Identität bilden
+darf. Geprüft wurden 10.12/10.12.1, 9.6.3, Anhang K.1/K.2, 10.11,
+SR-REQ-0314/0315/0318/0456/0457, die Diagnosen SRV090/147/148 und die
+Plangrenzen 14.b bis 14.e. Im tatsächlichen Snapshot wurden ferner
+`exchange/_import_identity.py`, `exchange/_native_identity_index.py`,
+`graph/_relation_validation.py`, `changes/target.py` und
+`verification/_import_policy.py` berücksichtigt: die vorhandene
+Evidence-Importpolicy hat andere Strategien und definiert diese Frage nicht.
+Der bisherige Identitäts-/Historienkern führt noch keinen Dreifachvergleich
+aus. Diese Quellenprüfung ist kein neuer Verhaltenstest.
+
+**Alternativen und Auswahl:**
+
+1. Neue native ID oder neuer Archivzweig für denselben externen Schlüssel:
+   widerspricht der Eindeutigkeit beziehungsweise führt zusätzliche
+   Historienarchitektur ein. 10.11 sichert Baselineobjekte, nicht jede beliebige
+   vorherige Revision. Eine solche Erhaltung darf nicht behauptet werden.
+2. Quellenwerte durch Strategiewahl erzwungen übernehmen, auch gegen lokale
+   oder divergente Änderungen: unvereinbar mit der Schutzgrenze gegen stille
+   Überschreibung und mit SR-REQ-0457; eine neue Revisionsnummer ist weder
+   Konfliktlösung noch Verlustzustimmung.
+3. `create_new_revision` grundsätzlich als ununterstützt abweisen: macht eine
+   vorgeschriebene Strategie unbenutzbar und erfüllt 2.4.1 nicht.
+4. **Gewählt:** derselbe native Identitätsschlüssel, dieselbe sichere
+   Übernahmeentscheidung aus 10.12 und die ohnehin verpflichtende neue
+   Revision nach K.2 bei tatsächlicher semantischer Änderung. Die Auswahl
+   bleibt ausdrücklich sichtbar. Die beiden übernehmenden Strategien haben
+   in v1 bewusst dieselben Übernahmegrenzen; es wird keine unbestellte
+   Force- oder Archivfunktion erfunden. Sichere einseitige Quellenänderungen
+   und konvergente Ziele bleiben mit beiden Strategien nutzbar.
+
+**Normative Regel:** 10.12.2 definiert `import-conflict-policy-v1`, explizite
+Strategiewahl, tatsächliche kanonische Projektionsvergleiche, verwendbare
+Historie, die getrennte Sichtbarkeit von Konflikt und Strategieentscheidung,
+Bestandsfälle ohne Historie sowie die unveränderte Writer-/Freigabegrenze.
+Die ursprüngliche Fünf-Fälle-Tabelle und Requirementtexte bleiben erhalten.
+
+**Grenzabgleich nach 2.4.1:** (1) Nur die bereits geplante Policyauswertung
+wird konkretisiert; kein Parser, CLI-Write, zusätzlicher Planschritt oder
+neuer Archivdienst. (2) Alle vier Strategien bleiben nutzbar, K.2 und die
+Konfliktpflicht gelten gemeinsam; keine gleichrangige Anforderung entfällt.
+(3) Native Daten, bestehende Schemaformen, Identitätseindeutigkeit,
+Review-/Loss-/Scope-/Transaktionsgates und historische Nachweise bleiben
+erhalten; es gibt keinen neuen Auto-Apply- oder Freigabedefault.
+(4) Dokumentversion 0.2.14 und benannte v1-Regel begrenzen die Entscheidung;
+eine spätere ausdrückliche Regeländerung kann sie ersetzen, ohne Bestandsdaten
+oder Evidence zu löschen. (5) Die Festlegung benötigt nur vorhandene lokale
+Verträge, keine externe Tatsache oder erfundene menschliche Entscheidung.
+
+**Verbindliche Abnahmen der anschließenden Umsetzung:**
+
+1. Alle vier Strategien erhalten eigene beobachtbare Entscheidungen bei
+   bekannter Identität: `error` weist zurück, `skip` erhält lokal samt
+   Historie; beide übernehmenden Strategien übernehmen eine zulässige
+   einseitige Quellenänderung als passiven Zielkandidaten derselben Identität.
+2. Beide übernehmenden Strategien erfüllen alle fünf Zeilen aus 10.12.
+   Lokale Alleinänderung bleibt erhalten; divergente beidseitige Änderung
+   ergibt SRV148 und keinen übernommenen Zielwert. Konvergente Ziele können
+   ihre Importbaseline aktualisieren. Die Strategiewahl bleibt erkennbar.
+3. Auch unter `error` und `skip` bleibt eine tatsächlich ermittelte Divergenz
+   ungelöster SRV148-Konflikt. Skip bedeutet keine stille Konfliktauflösung.
+4. Originalpayload-/externe Revisionsänderung allein macht keine fachliche
+   Quellenänderung. Historische Import- und Quellhashes bleiben getrennt.
+   Canonical JSON trennt Null, Boolean, Zahl und String und ignoriert reine
+   Objektmemberreihenfolge. Unveränderte Gesamtwerte erzwingen keine Revision.
+5. Gültige historische Identitäten ohne Historie bleiben lesbar und explizit
+   überspringbar; beide übernehmenden Strategien liefern `history_unavailable`.
+   Andere Mappingkennung liefert `mapping_mismatch`; unvollständige Historie,
+   ungültige Struktur oder Identitätskollision bleiben Fehler. Keine
+   fingierte Erstimportbaseline aus heutigen lokalen Werten.
+6. Keine Eingabe-/Ergebnismutation ändert eine andere Beobachtung. Vergleich
+   schreibt keine Dateien oder Betriebsdaten und erzeugt keine Revision,
+   ID, Uhrzeit oder Freigabe. Lokale Alleinänderungen, Skip, Fehler und
+   Konflikte aktualisieren keine Importhistorie. Eine unbekannte ID wird nicht als
+   bekannte Kollision behandelt oder von der Vergleichsfunktion angelegt.
+7. In den bereits vorgesehenen Folgeabnahmen 14.d/14.e muss eine wirklich
+   geändertes Artefakt genau eine reguläre Revision nach K.2 erhalten, bei
+   Relationsänderungen das enthaltende Artefakt unter Erhaltung der relation_id;
+   neue Historie bei gleicher Mappingprojektion bleibt eine echte Änderung
+   des vollständigen Objekts. Vollständiger No-op bleibt bytegleich.
+   9.6.3, unveränderbare Nachweise, Verlustzustimmung und übrige Gates bleiben
+   zwingend. Diese Dokumentübergabe liefert noch keinen dieser Produktbelege.
+
+**Offen und W/R/C-Zuschnitt:** 14.c.W implementiert die kleine nutzbare reine
+Policyauswertung für alle vier Strategien samt fünf Fällen und erforderlichen
+Grundgrenzen. 14.c.R vertieft Fehler-, Bindungs-, JSON- und Isolationsfälle;
+14.c.C bereinigt denselben Vergleichskern bei unveränderten Resultaten.
+Plan-/Writerintegration folgt in 14.d/14.e. Keine Phase wird durch die
+Klärung als erledigt markiert und es wird kein Implementierungstest erfunden.
+
 #### 14.c.W – Let it Work
 
 - [ ] **14.c.W** · Position **577/900** · Voraussetzung: `14.b.C`.
 **Exakte Commit-Message:** `14.c.W feat(exchange): Dreifachvergleich und Konfliktstrategien aufbauen`
 
-**Umsetzung:** error, skip, update_if_unchanged und create_new_revision anhand lokal/importiert/extern auswerten.
+**Umsetzung:** error, skip, update_if_unchanged und create_new_revision anhand lokal/importiert/extern nach dem geklärten import-conflict-policy-v1-Vertrag (10.12.2) rein auswerten; dieselbe native Identität und die bestehende Fünf-Fälle-Tabelle erhalten.
 
-**Verhaltensabnahme:** Einseitige zulässige Quellenänderung kann ohne lokale Verlustüberschreibung übernommen werden.
+**Verhaltensabnahme:** Einseitige zulässige Quellenänderung kann mit beiden übernehmenden Strategien ohne lokale Verlustüberschreibung als Zielkandidat geliefert werden. Alle vier Strategien, fünf Vergleichsfälle und Bestandsgrenzen aus dem Entscheidungsbeleg sind beobachtbar; kein Write und keine vorgetäuschte Revision.
 
 #### 14.c.R – Make it Right
 
 - [ ] **14.c.R** · Position **578/900** · Voraussetzung: `14.c.W`.
 **Exakte Commit-Message:** `14.c.R feat(exchange): Dreifachvergleich und Konfliktstrategien vervollständigen`
 
-**Vervollständigung:** Divergente lokale und externe Mappingprojektion erzeugt Konflikt.
+**Vervollständigung:** Divergenz bleibt bei jeder Strategiewahl sichtbar. Fehlende/falsche Historienbindung, kanonische JSON-Randfälle und Mutationsisolation robust nach 10.12.2 behandeln; lokale Werte und Historie bei Ablehnung erhalten.
 
 **Verhaltensabnahme:** Alle Strategien prüfen beobachtbare Zielwerte und unveränderten Ausgang bei Ablehnung. Die W-Nachweise bleiben zusätzlich grün.
 

@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.13
+## Version 0.2.14
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.13` |
+| Dokumentversion | `0.2.14` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 22. Oktober 2026 |
+| Stand | 23. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.13 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.13 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.14 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.14 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.12 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung EXCHANGE-MAPPING-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: fehlende Ressourcen- und Auswertungsverträge für die bereits geplanten Austauschmappings und externen Registries. Entscheidungsbeleg und Abnahmen stehen bei 14.a im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung von 10.12 im bestehenden Import-/Exportumfang; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.13 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung IMPORT-CONFLICT-POLICY, delegiert gemäß SPECROAD-DECISION-1: genaue Bedeutung der vier geplanten Importstrategien, insbesondere neue Revision gegenüber erzwungener Überschreibung. Entscheidungsbeleg und Abnahmen stehen bei 14.c im Implementierungsplan. |
+| Änderungsart | Präzisierung der Importstrategien in 10.12.2 im bestehenden Importumfang; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.13 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.14 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -1825,6 +1825,110 @@ als Austauschmapping ist eine neue explizite v1-Definition nötig, keine
 automatische Migration oder Überschreibung. Die neue Form wird erst mit ihrer
 tatsächlichen Implementierung als verfügbar beschrieben. Weitere Formatparser,
 CLI, Roundtrips und Freigaben werden durch diese Präzisierung nicht vorgezogen.
+
+#### 10.12.2 Importstrategien für bekannte native Identitäten
+
+**Entscheidung IMPORT-CONFLICT-POLICY, delegiert gemäß
+SPECROAD-DECISION-1:** `import-conflict-policy-v1` präzisiert
+SR-REQ-0318/0456/0457 für 14.c. Die vier Strategien sind ausdrücklich
+auszuwählen. Es gibt keinen impliziten Force-Modus und keinen aus der
+Schreibweise eines externen Revisionswerts abgeleiteten Vorrang.
+
+**Vergleich und Eingangsbindung.** Der reine Auswerter erhält die eindeutig
+zugeordnete native External Identity, die exakte gewählte Mappingkennung
+einschließlich Inhaltsversion und die aktuelle lokale sowie neue externe
+fachliche Zielprojektion im selben Mappingraum. Beide Projektionen sind
+explizit übergebene gültige JSON-Objekte; der Vergleich erfindet keine
+fehlenden Felder, historischen Werte oder Mappingressourcen. Die Auflösung
+und Hashbindung der verwendeten Mappingressource folgt weiterhin 10.12.1.
+Die Hashes der beiden Projektionen werden aus ihren tatsächlichen RFC-8785-
+Bytes berechnet. Ein vom Aufrufer behaupteter Änderungsstatus ersetzt diese
+Berechnung nicht. Fehlend, Null, `true`, `1` und `"1"` bleiben nach dem
+kanonischen JSON-Vertrag verschieden; Objektmemberreihenfolge ist irrelevant.
+
+Für eine verwendbare Importhistorie müssen die fünf Historienfelder aus
+10.12 vollständig und gültig vorliegen; `mapping_id` muss exakt zur gewählten
+Mappingkennung passen. Verglichen werden `H(lokal)` mit
+`last_imported_projection_sha256` und `H(neue Quelle)` mit
+`last_source_projection_sha256`. Die Gleichheit der beiden aktuellen
+Zielprojektionen wird ebenfalls kanonisch geprüft. Änderungen allein am
+Originalpayload oder `external_revision` beweisen keine fachliche Änderung;
+`last_source_payload_sha256` bleibt ein eigener Provenienzhash. Die fünf
+Fälle aus 10.12 gelten unverändert, auch wenn die beiden historischen
+Projektionshashes voneinander abweichen. Die External Identity und ihre
+Historien-/Auditfelder werden nicht vom Auswerter in die übergebenen
+fachlichen Projektionen hineinkopiert.
+
+**Strategie und Ergebnis.** Für eine bekannte, eindeutig zugeordnete native
+Identität gelten folgende Regeln:
+
+| Strategie | Fachliches Ergebnis |
+|---|---|
+| `error` | Bekannte Identität zurückweisen; keine Zielübernahme und keine Historienänderung. Der maschinenlesbare Grund ist `known_identity`. |
+| `skip` | Objekt ausdrücklich als übersprungen melden; lokale Projektion und Importhistorie unverändert erhalten. Das ist keine Übernahme oder neue Importbaseline. |
+| `update_if_unchanged` | Genau die fünf Fälle aus 10.12 auswerten: unverändert, sichere Quellenübernahme, lokale Änderung behalten, konvergentes Ziel oder divergenter Konflikt. |
+| `create_new_revision` | Dieselben fünf Fälle und Übernahmegrenzen anwenden; eine zulässige semantische Änderung als neue reguläre Revision derselben nativen Identität nach K.2 planen. Die ausgewählte Strategie bleibt im Ergebnis erkennbar. |
+
+`create_new_revision` bezeichnet ausdrücklich keine neue native ID, kein
+dupliziertes Objekt mit derselben External Identity und keinen eigenständigen
+Historien-/Archivzweig. Die Strategie erlaubt insbesondere nicht, eine nur
+lokal geänderte Projektion mit der unveränderten Quelle zurückzuschreiben.
+In diesem Fall bleibt der lokale Wert erhalten, genau wie bei
+`update_if_unchanged`. Für beide Strategien gilt bei sicherer Quellenübernahme
+dieselbe native Revisionsregel; `update_if_unchanged` ändert ebenfalls niemals
+Fachinhalt unter Beibehaltung der alten Revision. Diese bewusst gemeinsame
+Übernahmegrenze ist Teil des v1-Vertrags, keine fehlende Implementierung
+einer Force-Variante. Ein vollständig wertgleicher No-op erzeugt keine
+künstliche Revision. Eine tatsächlich geänderte Importhistorie ist dagegen
+Teil des vollständigen nativen Zielobjekts und unterliegt dessen regulären
+Metadatenregeln, auch bei gleicher fachlicher Mappingprojektion. Bei einer
+Relationsänderung bleibt die `relation_id` erhalten; K.2 erhöht gegebenenfalls
+die Revision des enthaltenden Artefakts, keine zusätzliche Relationsrevision.
+
+Die Vergleichsklassifikation und die gewählte Strategie bleiben getrennt
+nachweisbar. Liegt eine verwendbare Historie vor, wird ein divergenter
+beidseitiger Änderungsfall unabhängig von der Strategiewahl als
+`SRV148`/Code 3 ausgewiesen. Auch `skip` oder `error` dürfen den vorhandenen
+Konflikt nicht als gelöst oder die Quelle als übernommen markieren.
+Das übersprungene beziehungsweise zurückgewiesene Objekt bleibt unverändert;
+ein Importplan mit ungelöstem Konflikt erhält keine Apply-Freigabe.
+Ein bekannter Identitätstreffer ohne Divergenz unter `error` wird mit
+`SRV090`/Code 3 und obigem Grund zurückgewiesen. Ungültige Identitäten oder
+Kollisionen werden vor jeder positiven Strategieentscheidung nach den
+bestehenden Struktur-/`SRV147`-Regeln abgewiesen.
+
+**Bestandsfälle und Baseline.** Eine gültige bestehende External Identity
+ohne Importhistorie bleibt lesbar und kann ausdrücklich übersprungen oder
+wegen `error` zurückgewiesen werden. `update_if_unchanged` und
+`create_new_revision` dürfen daraus keine unveränderte Basis ableiten:
+fehlende Historie ergibt `SRV090`/Code 3 mit `history_unavailable`, eine
+abweichende historische Mappingkennung `mapping_mismatch`. Es gibt keine
+automatische Migration, historische Hashnachbildung aus dem heutigen Stand
+oder pauschale Freigabe. Eine unvollständige beziehungsweise ungültige
+Historie bleibt ein Strukturfehler, kein solcher gültiger Bestandsfall.
+Ein nicht bekannter Schlüssel ist kein bekannter Identitätskonflikt; die
+Planung neuer Objekte bleibt dem normalen Importplan vorbehalten.
+
+Nur tatsächlich übernommene beziehungsweise konvergente Ziele dürfen die
+Importbaseline mit ihren gebundenen Projektionen fortschreiben. Im
+unveränderten Fall gilt weiterhin die ausdrückliche Erlaubnis aus 10.12;
+sie ist keine Verpflichtung zu einem unnötigen Write. Bei nur lokal veränderter
+Projektion und unveränderter Quelle sowie bei Skip, Ablehnung oder Konflikt
+bleibt die alte Historie erhalten. Insbesondere
+darf ein lokal geänderter Wert nicht nachträglich als erfolgreich importierter
+Stand gestempelt werden, um einen späteren Vergleich zu umgehen.
+
+**Write- und Nachweisgrenze.** Der Vergleich liefert nur passive Ergebnisse
+und zulässige Zielkandidaten. Er verändert keine Eingaben, Projektdateien,
+Historie oder Betriebsdaten und erzeugt keine ID, Revision, Uhrzeit oder
+Freigabe. Erst die nachfolgenden Schritte 14.d/14.e binden den vollständigen
+Change Plan und wenden ihn über den gemeinsamen Writer an. Dabei gelten
+K.2, 9.6.3, unveränderbare Nachweistypen, Scope-, Review-, Verlustzustimmungs-,
+Transaktions- und Recovery-Gates unverändert. Eine Strategieauswahl oder
+ein Kandidat ersetzt weder die erforderliche menschliche Entscheidung noch
+eine Verlustakzeptanz; die Klärung verspricht keine zusätzliche Archivierung
+jeder historischen Revision. Bestandsdaten und historische Evidence werden
+durch diese Regel nicht umgeschrieben.
 
 ### 10.13 Evidence-Origin
 
@@ -4139,6 +4243,17 @@ und Verhaltensnachweise folgen im offenen 14.a.W/R/C; der Produktstand
 Katalogbindung bestätigt keine ausgeführten Produkttests. Control- und
 Laufzeitkonfigurationen werden nicht verändert.
 
+### 20.13 Importstrategie-Präzisierung v0.2.14
+
+`IMPORT-CONFLICT-POLICY`, delegiert gemäß `SPECROAD-DECISION-1`, schließt
+in 10.12.2 die Detailfrage der Strategie `create_new_revision` und ihrer
+Grenzen gegenüber lokalem Verlust und divergentem Importkonflikt. Die
+kleinste konsistente Regel verwendet dieselbe native Identität, die bestehende
+Fünf-Fälle-Tabelle und K.2. Keine Force-Variante, zusätzliche Archivierung
+oder automatische Historienmigration wird eingeführt. Umsetzung und
+Verhaltensnachweise bleiben in 14.c.W/R/C offen; Produktstand 576/900 und
+Control-Zustände werden durch die Dokumentübergabe nicht verändert.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4181,6 +4296,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.14 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | IMPORT-CONFLICT-POLICY: vier explizite Importstrategien, gemeinsame verlusterhaltende Übernahmegrenzen, reguläre Revision derselben Identität, sichtbare Divergenz und unveränderte Legacy-Historien; Umsetzung bleibt in 14.c offen. |
 | 0.2.13 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | EXCHANGE-MAPPING-CONTRACT: geschlossene passive v1-Mappingtabellen, getrennte hashgebundene Registry und deterministische Auswertung nach 10.12.1; Bestandsdaten bleiben erhalten, Umsetzung bleibt in 14.a offen. |
 | 0.2.12 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | READINESS-SUBJECT-CONTEXT: exakte additive v1-Projektion für Capability-/Task-Subjects, unveränderte bestehende Hashes und gebundene Bewertung von Bestands-Evidence; Umsetzung bleibt in 13.f offen. |
 | 0.2.11 | 2026-10-22 | Nutzerbeauftragte Entwicklungsdelegation | SPECROAD-DECISION-1: begrenzte eigenständige Detailklärung, dokumentierte Alternativen und normative Abnahmen; Control-Vertrag 2 mit höchstens einem Klärungsbundle in Folge. Produktfreigaben, Tests, Runtimezustand und Requirement-IDs bleiben unverändert. |
