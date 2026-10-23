@@ -2,6 +2,7 @@
   "fixture_format_version": 1,
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
     "SR-FIX-ARTIFACT-IMPORT-PLAN-v1",
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
     "SR-FIX-BASELINE-COMPARISON-RIGHT-v1",
@@ -775,6 +776,10 @@
     "SR-FIX-ARTIFACT-IMPORT-PLAN-v1": {
       "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model",
       "kind": "Explicit synthetic parsed artifact candidates, byte-bound mapping/profile/input resources and complete supplied native projects. Known history, fresh IDs/envelopes, conflicts, unaccepted losses, existing attachments and ordinary target gates. No real format parsing, writer, completed import or human approval."
+    },
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1": {
+      "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model;tests/test_import_planning_right.py:arguments,copied",
+      "kind": "Synthetic saved import observations with explicit current source/candidate/mapping inputs and whole supplied TargetModel. Changed raw/semantic bases, resources, reservations, current gates, malformed or forged reports, retained invalid results and detached read-only inventories. No external format parser, human approval or live transaction evidence."
     }
   }
 }

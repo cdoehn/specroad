@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 580
-last_completed_plan_commit: 14.d.W
-next_plan_commit: 14.d.R
-last_completed_numbered_bundle: 411
+implementation_plan_commits_completed: 581
+last_completed_plan_commit: 14.d.R
+next_plan_commit: 14.d.C
+last_completed_numbered_bundle: 412
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17984,12 +17984,104 @@ weitere Result-Abfrage, Wartephase oder Hintergrundfortsetzung.
 
 #### 14.d.R – Make it Right
 
-- [ ] **14.d.R** · Position **581/900** · Voraussetzung: `14.d.W`.
+- [x] **14.d.R** · Position **581/900** · Voraussetzung: `14.d.W`.
 **Exakte Commit-Message:** `14.d.R feat(exchange): Importplan und Eingangsbindung vervollständigen`
 
 **Vervollständigung:** Plan nicht mit anderen Eingangsbytes oder anderer Basis wiederverwenden.
 
 **Verhaltensabnahme:** Planer schreibt keine Projekt- oder Betriebsdateien. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Stand Bundle 412:** Das maßgebliche Result
+`specroad-apply_Result_030458_1023_58aac5.zip`, SHA-256
+`7f130f603302de56c1bc6ece226031a7a3870a6b71261a115d4a25c9858ca0fc`,
+bestätigt Bundle 411 / 14.d.W auf
+`eda882b71f4b9c46603d4f8b333de2a9b98cbd19` mit sauberem Apply-Arbeitsbaum.
+Die tatsächlichen **5.829 Tests** der Gruppe **2/3**, Commitfolge **119**,
+bestanden mit vier parallelen Workern in **1.737,23 s**. Vollständiger
+Snapshot, Abschlusscommit, nummerierte Auswahl und einzelne Testbeobachtungen
+sind abgeglichen. Nur die fünf bestätigten Fortschrittsmarker wurden aus
+diesem Result übernommen; die übrige erhaltene Arbeit war bytegleich.
+Spezifikation 0.2.14 einschließlich SPECROAD-DECISION-1 bleibt unverändert.
+Die geplante Wiederverwendungsgrenze benötigt keine neue normative Klärung.
+
+`ImportPlan.canonical_bytes` liefert den vorhandenen Planumschlag als passive
+kanonische JSON-Bytes. `assess_import_plan` nimmt ausdrücklich diese Bytes
+und **unabhängig übergebene aktuelle Eingänge** entgegen: Format, tatsächliche
+Eingabebytes, geparste Kandidaten, tatsächliche ausgewählte Mappingressource
+mit Schlüssel und Hash, vollständiges geliefertes Basismodell sowie Strategie,
+Plan-/Request-ID, Actor, Zeitpunkt, Scope, Metadatenregel und vertrauenswürdig
+registrierte Policy/Prüfer. Keine dieser erwarteten Angaben wird aus dem
+gespeicherten Bericht übernommen oder aus Uhrzeit, Umgebung oder Dateipfaden
+erraten. Ein Dateiname oder fremdes Byte-/Objektverhalten ist kein Leseauftrag.
+
+Der strikte JSON-Leser verwirft doppelte Member, ungültige Zahlen/Unicode,
+falsche Top-Level-Typen und nicht unterstützte Planversionen. Anschließend
+läuft derselbe reguläre `prepare_import_plan`-Pfad erneut über die tatsächlichen
+Ressourcen und die vollständige Zielprüfung. Nur wenn **alle Bindungen und
+Beobachtungen** kanonisch übereinstimmen, wird das neu berechnete Ergebnis
+zurückgegeben. Unbekannte oder fehlende Umschlagfelder, veränderte Operationen,
+Ergebnisse, Diagnosen, Verlustzustimmungen und positive Autoritätsbehauptungen
+werden abgewiesen. Auch eine andere, in sich gültige und neu gehashte Change-
+Plan-Struktur kann nicht anstelle der aus den aktuellen Kandidaten abgeleiteten
+Operationen eingeschleust werden. JSON-Bool und Zahl bleiben verschieden.
+
+Die Bindung erfasst die exakten Eingabebytes auch bei einem No-op oder
+wertgleichen Kandidaten, kanonischen und ursprünglichen Mappinghash,
+Kandidaten einschließlich Identitäten/Anlageumschlägen, alle Basisartefakte
+einschließlich unberührter Objekte, Konfiguration, Profile, Anhangs- und
+Begleitressourcen, tatsächliche Quelldateibytes, Reservierungen und Historie.
+Eine bloße Umformatierung der **Plan-JSON-Datei** ist erlaubt; eine Änderung
+der gebundenen **Eingabe-/Basis-/Ressourcenbytes** ersetzt keinen alten Plan.
+Der vorhandene portable Modellvertrag bleibt bestehen: Ein anderer Hostpfad
+bei identischen bereitgestellten Projektinhalten behauptet weder einen
+aktuellen Dateisystemsnapshot noch eine Schreibberechtigung.
+
+Gespeicherte Prüfresultate ersetzen keine aktuelle Ausführung. Die registrierten
+Prüfer bewerten erneut das vollständige Ziel, auch unveränderte Artefakte.
+Fehlende oder geänderte Prüfer, eine andere Policy oder ein inzwischen anderes
+Prüfergebnis sperren die Wiederverwendung. Dann ist eine neue Planerzeugung
+nötig. Ein unverändert ungültiger Bericht bleibt zur Diagnose lesbar, gibt aber
+keinen gültigen Change Plan frei. Die W-Verträge zu Skip, Konflikt, Verlust,
+No-op, lokalen Änderungen, regulären Revisionen und Importhistorien bleiben
+erhalten. Kein Writer, Formatparser, Freigabe- oder Transaktionspfad wurde
+vorgezogen; die vier negativen Fähigkeits-/Autoritätsflags bleiben false.
+
+**Gezielter R-Nachweis:** **981/981 Verhaltenstests**, vier parallele Worker,
+**12,67 s**, Prozesscode 0, Python 3.14.4. Die **90 neuen Fälle** prüfen
+Saved-Plan-Roundtrips aller vier Formatkennungen, gültige und ungültige
+Übernahmeentscheidungen, exakte Quell-/Kandidaten-/Mapping-/Basisbindungen,
+unberührte Objekte und Ressourcen, aktuelle Prüfer, manipulierte Berichte,
+erneut gehashte andere Pläne, striktes JSON, portable und isolierte Core-/PYZ-
+Laufzeiten sowie unveränderte Projekt- und Betriebsdateien. Gemeinsame mutable
+Ergebnisse entstehen auch bei parallelen Aufrufen nicht. Die **891 bisherigen
+W-/Regressionstests** laufen unverändert mit und bleiben grün.
+
+Die vollständige Collection-/Katalogprüfung ist gültig mit **17.577 Tests**
+und **0 ausgeführten Testkörpern**. Die neuen Identitäten erhalten ausschließlich
+die hinten angehängten Nummern **17487–17576**; vorhandene Nummern und beide
+Rotationsanker bleiben erhalten. SR-TC-0314 und SR-TC-0331 bleiben ausdrücklich
+**Teilnachweise** und binden die zusätzliche synthetische Wiederverwendungs-
+Fixture. Kein Vollsuite-, Release- oder vollständiger Importabschluss wird
+behauptet; `full_suite_passed` bleibt null. Quellstand-SHA-256:
+`a9d10f28cba8b0b9e8cf0bb8c5954911c01e9bfd824607234f5946f1a9404bc1`.
+Katalog-SHA-256:
+`1561464f0206f387f5c2383122fb8c6c4b3fb580b66ac13e6e2b17c4dad7587d`.
+Die drei geänderten/neuen Python-Dateien wurden zusätzlich statisch mit der
+Python-3.10-Grammatik geprüft; dies ersetzt keinen Lauf auf anderen Runtimes.
+
+**Umfangsgrenze und Übergabe:** Genau **14.d.R**, kein Beginn von 14.d.C oder
+14.e. Die gespeicherte Beobachtung beweist keine Rohdatenanalyse, physische
+Projektvollständigkeit, Autorisierung, Transaktionsvorbereitung oder erfolgte
+Veröffentlichung. Die zugeordneten späteren Schritte behalten Formatparser,
+Relations-/Registry-Kandidaten, neue Anhangsbytes, Verlustzustimmung und den
+geschützten Importwriter. Der Entrypoint stellt ausschließlich diesen
+gezielt geprüften R-Zustand her und führt vor dem eigenen Commit nur die
+fällige **Gruppe 0/3**, Commitfolge **120**, mit **5.859 Tests** parallel aus.
+Erst nach erfolgreichem Apply-Testlauf setzt er die fünf Fortschrittsmarker
+auf **581/900**, zuletzt **14.d.R**, nächstens **14.d.C** und Bundle **412**
+und erzeugt den vorgesehenen Commit. Ein Apply-Erfolg von Bundle 412 wird
+hier nicht behauptet. Nach atomarer Übergabe endet der Einzelauftrag ohne
+weiteren Planschritt, Result-Abfrage, Wartephase oder Hintergrundfortsetzung.
 
 #### 14.d.C – Make it Clean
 

@@ -30,8 +30,9 @@ class ImportPlan:
     """Owned plan/report, not a transaction or an import-completion receipt.
 
 Only a conflict-free, loss-free, completely validated target exposes a regular
-ChangePlan. The future writer must recheck the envelope's input/mapping/base
-binding, live inventory, authorization and transaction gates before writing.
+ChangePlan. Reload canonical_bytes through assess_import_plan with explicit
+current inputs before reuse. The future writer must still check live inventory,
+authorization and transaction gates before writing.
 """
     _encoded: bytes
 
@@ -49,6 +50,11 @@ binding, live inventory, authorization and transaction gates before writing.
     @property
     def data(self):
         return parse_json_object(self._encoded)
+
+    @property
+    def canonical_bytes(self):
+        """Passive serialization; loading these bytes alone grants no validity."""
+        return self._encoded
 
     @property
     def sha256(self):
@@ -74,6 +80,49 @@ binding, live inventory, authorization and transaction gates before writing.
 
     def __bool__(self):
         raise TypeError("Use plan_valid explicitly; an import report is not success")
+
+
+def assess_import_plan(raw, model, candidates, *, input_format, input_bytes,
+        mapping_resources, mapping_key, mapping_sha256, strategy,
+        change_plan_id, request_id, actor, planned_at, scope_descriptor,
+        metadata_policy_version, policy, gates=(), strict=False):
+    """Recompute a saved envelope from explicitly supplied current inputs.
+
+    The saved JSON never supplies its own expected input, basis, authoring
+    metadata, policy or gates. Mapping/candidate/whole-target checks run again,
+    including the actual source-file and resource byte bindings. All declared
+    operations, results, diagnostics and negative authority flags must match
+    the new observation. A changed gate result requires a newly prepared plan;
+    an unchanged invalid report remains inspectable, never executable.
+
+    JSON member order/whitespace in the envelope is immaterial. Exact source
+    bytes remain bound separately. This does not parse the source payload or
+    prove a live filesystem snapshot, authorization or successful import.
+    """
+    if type(raw) is not bytes:
+        raise ImportIdentityError("import_plan_bytes_required")
+    try:
+        saved = parse_json_object(raw)
+        canonical_json_bytes(saved)
+    except ModelError as error:
+        raise _error(error) from error
+    if saved.get("format_version") != "artifact-import-plan-v1":
+        raise ImportIdentityError("import_plan_format_unsupported", pointer="/format_version")
+    current = prepare_import_plan(model, candidates, input_format=input_format,
+        input_bytes=input_bytes, mapping_resources=mapping_resources,
+        mapping_key=mapping_key, mapping_sha256=mapping_sha256, strategy=strategy,
+        change_plan_id=change_plan_id, request_id=request_id, actor=actor,
+        planned_at=planned_at, scope_descriptor=scope_descriptor,
+        metadata_policy_version=metadata_policy_version, policy=policy, gates=gates, strict=strict)
+    observed = current.data
+    if set(saved) != set(observed):
+        raise ImportIdentityError("import_plan_fields_mismatch")
+    if canonical_json_bytes(saved["binding"]) != canonical_json_bytes(observed["binding"]):
+        raise ImportIdentityError("import_plan_binding_mismatch", pointer="/binding")
+    for name in sorted(observed):
+        if canonical_json_bytes(saved[name]) != canonical_json_bytes(observed[name]):
+            raise ImportIdentityError("import_plan_observation_mismatch", pointer=_pointer(name))
+    return current
 
 
 def prepare_import_plan(model, candidates, *, input_format, input_bytes,
