@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 583
-last_completed_plan_commit: 14.e.W
-next_plan_commit: 14.e.R
-last_completed_numbered_bundle: 414
+implementation_plan_commits_completed: 584
+last_completed_plan_commit: 14.e.R
+next_plan_commit: 14.e.C
+last_completed_numbered_bundle: 415
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -18287,12 +18287,115 @@ Einzelauftrag ohne weitere Result-Abfrage, Wartephase oder Hintergrundarbeit.
 
 #### 14.e.R – Make it Right
 
-- [ ] **14.e.R** · Position **584/900** · Voraussetzung: `14.e.W`.
+- [x] **14.e.R** · Position **584/900** · Voraussetzung: `14.e.W`.
 **Exakte Commit-Message:** `14.e.R feat(exchange): Import anwenden und Verlustzustimmung vervollständigen`
 
 **Vervollständigung:** Nicht akzeptierte Verluste, stale Quelle und ungültiges Gesamtziel vor Veröffentlichung sperren.
 
 **Verhaltensabnahme:** Fehler-/Crashfälle ergeben Basis oder Vollziel, nie eine halbe Importmenge. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Stand Bundle 415:** Das maßgebliche Result
+`specroad-apply_Result_060744_1023_5cb22c.zip`, SHA-256
+`7c8f9a3ed9fac0bc5de7175b2d87a6266fd1b548deb5c3971896d453b81cda0c`,
+bestätigt Bundle 414 / 14.e.W auf
+`e0b26cdfa62b648533edcdabeef858cce802910d` mit sauberem Apply-Arbeitsbaum.
+Seine tatsächlichen **5.878 Tests**, Gruppe **2/3**, Commitfolge **122**,
+bestanden mit vier parallelen Workern in **1.875,79 s**. Vollständiger
+Snapshot, Abschlusscommit, nummerierte Auswahl und Einzelbeobachtungen sind
+abgeglichen. Nur die fünf belegten Fortschrittsmarker wurden übernommen;
+der übrige erhaltene Arbeitsstand war bytegleich. Spezifikation 0.2.14 samt
+SPECROAD-DECISION-1 bleibt unverändert; eine weitere normative Klärung ist
+für diesen bestehenden Artefaktkandidaten-Ausschnitt nicht erforderlich.
+
+`execute_import_plan` ergänzt einen maschinenlesbaren Fehleradapter über
+**denselben** Planer und nativen Writer. Die bisherige werfende Schnittstelle
+`apply_import_plan` und ihre Erfolgsergebnisse bleiben erhalten. Der Adapter
+übernimmt einen `submitted_import_plan` erst nach frischer Prüfung aller
+expliziten Eingaben; gespeicherte Planbytes müssen diese Prüfung ebenfalls
+bestehen. Ein aktueller ungültiger Plan bleibt mitsamt Verlusten, Ablehnungen,
+Konflikten und Zieldiagnosen sichtbar, eröffnet aber keinen Writer. Stale oder
+gefälschte gespeicherte Beobachtungen werden nicht als geprüfter Plan ausgegeben.
+
+Erwartete Modell-, Sicherheits- und I/O-Fehler liefern Status, unveränderten
+nativen Exitcode und Diagnose, Fehlerphase, Schreibzustand und Recovery-Bedarf.
+Vor Eintritt in den Writer ist `not_committed` belegt. Im Writer gilt allein
+sein nachgewiesener Zustand; fehlt dieser, bleibt er **unknown** und Recovery
+ist erforderlich. Auch eine spätere TargetError-Diagnose ohne Schreibnachweis
+wird nicht in eine behauptete Unverändertheit umgedeutet. Ein fehlgeschlagener
+Aufruf hat kein `execution`-Erfolgsergebnis und behauptet kein aktuell geprüftes
+Ziel. OS-/Sicherheits-Ausnahmetexte werden nicht als Pfade oder eingereichte
+Inhalte weitergereicht. Unerwartete Programmierfehler bleiben Ausnahmen.
+Automatische Wiederholung, Rollback und erteilte Zustimmung bleiben false.
+
+Erfolg, No-op und historisches Replay behalten die normalen nativen Belege.
+Ein Replay mit neuem Planumschlag liefert weiterhin ursprüngliche Auditwerte,
+Plan-ID und Receipts; es ist kein neu geprüfter aktueller Import. Andere
+Operationen mit derselben Request-ID und manipulierte Receipts werden gesperrt,
+ohne vorhandene Belege zu überschreiben. Die aktuellen kompletten Target-Gates
+und die Live-Bindung unveränderter Artefakte, Konfiguration, Profile, Mapping
+und vorhandener Anhänge bleiben vor Veröffentlichung verpflichtend.
+
+**Fehler- und Recovery-Abnahme:** Die neuen Tests unterbrechen jede der beiden
+wirklichen Artefakt-Ersetzungen vor und nach `os.replace`, jeweils für frische
+und gespeicherte Pläne. Ein noch nicht bestätigter Teilstand wird mit seinem
+nativen Journal erhalten und ist für normale Modellleser sowie weitere Writer
+gesperrt. Erst eine **separate, ausdrücklich autorisierte native Recovery**
+stellt die exakte Basis wieder her oder bestätigt das vollständig publizierte
+Ziel. Zwischenzeitliche Dateisystembytes werden nicht als atomarer Erfolg
+behauptet. Ein Vollziel darf nicht zurückgerollt werden; seine Recovery erzeugt
+die normalen gebundenen Belege ohne erneute normative Publikation und ist
+anschließend historisch replaybar. Ein Basis-Rollback erhält stattdessen einen
+hashgebundenen Recovery-Receipt mit `outcome=rolled_back` und eigenem Audit;
+er erzeugt keinen erfolgreichen Request-Receipt. Vorhandene Anhänge und fremde
+Dateien bleiben erhalten. Fehler nach Staging, vor Finalisierung und vor Cleanup
+bewahren den wirklichen prepared-/committing-/committed-Zustand samt bereits
+vorhandenen Receipts. Kein Adapter startet Recovery selbständig.
+
+**Gezielter R-Nachweis:** **312/312 Verhaltenstests**, davon **62 neue** und
+**250 betroffene Regressionen**, vier parallele Worker, **246,74 s**,
+Prozesscode 0, Python 3.14.4. Alle 59 W-Importtests bleiben grün, dazu 133 W-/R-
+Importplanertests, 47 W-/R-Authoring-Writertests und 11 native Recoverytests.
+Isolierte Core-/PYZ-Aufrufe prüfen weiterhin wirkliche Importpublikation/Replay
+sowie zusätzlich die Verfügbarkeit und sichere Ablehnung des Fehleradapters.
+Keine bestehenden Testidentitäten oder fachlichen Regressionserwartungen
+wurden geändert.
+
+Der erste gezielte Lauf endete mit **10 Fehlern und 302 bestandenen Tests**
+in **247,07 s**, Abschlusscode 1; er ist ausdrücklich **kein Erfolgsnachweis**.
+Die neuen Tests hatten vier vorhandene Verträge falsch angenommen: `error`
+meldet `known_identity`/`reject`, nicht zwingend einen Divergenzkonflikt;
+ein nativer TargetError ohne Schreibnachweis bleibt unknown; ein geänderter
+Receipt-Link ergibt Exitcode 6; ein erfolgreicher Rollback schreibt einen
+eigenen Recovery-Receipt. Ausschließlich diese neuen Testannahmen wurden nach
+Prüfung der bestehenden Policy-, Fehler-, Receipt- und Recovery-Verträge
+korrigiert und um genaue Diagnose-/Hash-/Auditprüfungen ergänzt. Produktcode,
+bestehende Tests und ihre erwarteten Ergebnisse blieben dabei unverändert.
+Der abschließende Lauf prüft denselben R-Produktstand mit korrigierten neuen
+Orakeln und allen genannten Regressionen erfolgreich; die Fehlbelege bleiben
+erhalten.
+
+Vollständige Collection und Katalogprüfung: **17.698 Tests**, **0 ausgeführte
+Testkörper**, gültiger Katalog. Die 62 neuen Identitäten sind als sortierter
+Anhang nummeriert (**17636–17697**); alle 17.636 bestätigten Nummern und beide
+Anker bleiben erhalten. Die native Registry-/Rotationsprüfung bestätigt
+Commitfolge 123 und Gruppe 0. SR-TC-0315 und SR-TC-0331 bleiben **Teilnachweise**.
+Quellstand-SHA-256: `5758cc319b4eee1974126b21625c9b686ab17fb57ccbb0754176cef7fe314992`.
+Katalog-SHA-256: `f04fbcbad83b561f946ecbdc63c152cfdcc21a562957db2f3fc78ccde65375a5`.
+`full_suite_passed` bleibt null. Python-3.10-Grammatikprüfung der geänderten
+Python-Dateien ist ein Syntax-, kein zusätzlicher Laufzeitnachweis.
+
+**Grenzen und Übergabe:** Genau **14.e.R**, Position **584/900**, für den
+vorhandenen expliziten Artefaktkandidaten-Ausschnitt. CLI-/Formatparser,
+Relation-/Registrykandidaten, neue Anhangbytes, ausdrückliche Verlustzustimmung
+und ein vollständiger Format-Importabschluss bleiben in der zugeordneten
+Importarbeit offen. Nicht akzeptierte Verluste bleiben gesperrt; weder eine
+Zustimmung noch vollständige Requirement- oder Release-Erfüllung wird erfunden.
+**14.e.C** bleibt offen. Der Entrypoint stellt genau den geprüften R-Zustand
+her und führt vor dessen Commit ausschließlich **Gruppe 0/3**, Commitfolge
+**123**, mit **5.900 Tests** parallel aus. Erst nach Erfolg setzt er die fünf
+Marker auf **584/900**, zuletzt **14.e.R**, nächstens **14.e.C** und Bundle
+**415** und erzeugt den vorgesehenen Commit. Ein Apply-Erfolg dieses Bundles
+wird nicht vorweg behauptet. Nach Übergabe endet der Einzelauftrag sofort.
 
 #### 14.e.C – Make it Clean
 
