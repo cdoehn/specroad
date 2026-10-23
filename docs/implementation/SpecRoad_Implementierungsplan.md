@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 579
-last_completed_plan_commit: 14.c.C
-next_plan_commit: 14.d.W
-last_completed_numbered_bundle: 410
+implementation_plan_commits_completed: 580
+last_completed_plan_commit: 14.d.W
+next_plan_commit: 14.d.R
+last_completed_numbered_bundle: 411
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17871,12 +17871,116 @@ endet dieser Einzelauftrag ohne weitere Result-Abfrage oder Wartephase.
 
 #### 14.d.W – Let it Work
 
-- [ ] **14.d.W** · Position **580/900** · Voraussetzung: `14.c.C`.
+- [x] **14.d.W** · Position **580/900** · Voraussetzung: `14.c.C`.
 **Exakte Commit-Message:** `14.d.W feat(exchange): Importplan und Eingangsbindung aufbauen`
 
 **Umsetzung:** Read-only-Importplan mit Eingabe-/Mappinghash, Operationen, IDs, Anhängen, Konflikten, Verlusten und Zielwurzel erzeugen.
 
 **Verhaltensabnahme:** Vollständig gültige Eingabe ergibt einen ausführbaren gebundenen Plan.
+
+
+**W-Stand Bundle 411:** Das maßgebliche Result
+`specroad-apply_Result_021225_1023_333538.zip`, SHA-256
+`1ffab948323ef4ce983af3d2aacef41975d1372ba0592c7639ad9c9128affa8d`,
+bestätigt Bundle 410 / 14.c.C auf
+`6929dee74d37d6219c27215632209d1ea2fa29a1` mit sauberem Apply-Arbeitsbaum.
+Die tatsächlichen **5.815 Tests** der Gruppe **1/3**, Commitfolge **118**,
+bestanden mit vier parallelen Workern in **1.773,60 s**. Der vollständige
+Snapshot, Abschlusscommit sowie die nummerierte Auswahl und ihre
+Testbeobachtungen sind abgeglichen. Nur die fünf bestätigten
+Fortschrittsmarker wurden in Dev übernommen; bestehende Arbeit bleibt
+bestehen. Spezifikation 0.2.14 einschließlich SPECROAD-DECISION-1 und der
+geklärten Mapping-/Importstrategie-Verträge bleibt unverändert. Für diesen
+regulären Umsetzungsschritt ist keine weitere normative Klärung erforderlich.
+
+`prepare_import_plan` erzeugt aus ausdrücklich gelieferten **geparsten
+Artefaktkandidaten** einen eigenen, rein lesenden `ImportPlan`. Jeder Kandidat
+liefert External Identity, externen Typ und Feldwerte sowie bei einem neuen
+Schlüssel einen vollständigen expliziten nativen Anlageumschlag. Für bekannte
+Schlüssel ist dieser Umschlag ausgeschlossen. Es werden keine IDs, Uhrzeiten,
+Benutzer oder historischen Werte entdeckt oder erfunden. Der Planer wählt die
+exakte Mappingversion anhand der tatsächlichen Ressource und ihres Hashes,
+wertet Typ-/Feldtabellen aus und ermittelt vorhandene Eigentümer über den
+nativen Identitätsindex. Doppelte Schlüssel oder mehrdeutige native
+Zielkandidaten werden abgewiesen. Gemappte Steuer-/Historienfelder können die
+normalen Operationsgrenzen nicht umgehen.
+
+Für vorhandene Artefakte werden die lokalen Werte im selben Mappingraum aus
+dem wirklichen Basisobjekt gelesen und mit `ImportComparison` ausgewertet.
+Sichere Quellenübernahme und Konvergenz erzeugen reguläre Updates derselben
+ID mit echtem Basisobjekthash. Nicht gemappte Felder, Relationen und andere
+External Identities bleiben bestehen. Neue Objekte erhalten Create-Operationen
+mit der ausdrücklich vorgegebenen ID. Übernommene Ziele bekommen aus ihren
+wirklichen Projektionen und Originalpayloadbytes berechnete Importhistorie.
+Revisionen und Auditmetadaten folgen ausschließlich dem normalen Change-Plan-
+Dienst. No-op behält seine vorhandene Baseline; lokale Änderung, Skip,
+Ablehnung und Konflikt verändern die Historie nicht. Auch `skip` kann eine
+Divergenz nicht verstecken oder den Plan gültig machen.
+
+Der gemeinsame `prepare_change_target`-Dienst faltet die Operationen und
+prüft **das vollständige gelieferte Zielmodell**. Ein unverändertes fehlerhaftes
+Artefakt oder ein fehlender Pflichtprüfer sperrt den Importplan. Der gültige
+reguläre `ChangePlan` lässt sich über denselben Saved-Plan-Zielpfad nachprüfen.
+Die Beobachtung bindet Format, exakte Eingabebytes samt Größe, kanonischen
+Mappinghash und Mapping-Bytehash, geparste Kandidaten, Basiswurzel, sämtliche
+Zielprüfungs-/Ressourcenbindungen und Change-Plan-Hash. Sie enthält die
+geplanten erzeugten/aktualisierten IDs, Operationen, übersprungene Objekte,
+ungelöste Konflikte, Diagnosen und Zielwurzel. Nicht gemappte Quellfelder
+erscheinen einzeln mit Pointer und Wert als **nicht akzeptierte Verluste**;
+solche Pläne geben keinen gültigen ausführbaren Plan frei.
+
+Der Anhangsbericht beschreibt mit ausdrücklichem Scope die tatsächlich
+bytegeprüften, bereits gelieferten Anhänge des vollständigen Zielmanifests.
+Ein Source-Kandidat mit einem Locator auf solche Bytes benötigt zusätzlich
+den regulären Ressourcenprüfer. Die bloße Existenz eines Deskriptors ersetzt
+diese Prüfung nicht. Es werden keine neuen Anhangsdateien veröffentlicht.
+Das Ergebnis bleibt eine Planbeobachtung: `input_parsed`, `import_completed`,
+`execution_ready` und `write_authorized` sind false. Ein Formatname allein
+beweist keine erfolgreiche Rohdatenanalyse. Physische Projektvollständigkeit,
+Review, Verlustzustimmung, Freigabe und Transaktionsvorbereitung werden nicht
+behauptet oder abgeschwächt.
+
+**Gezielter W-Nachweis:** **891/891 Verhaltenstests**, vier parallele Worker,
+**8,96 s**, Prozesscode 0, Python 3.14.4. Darunter sind **43 neue Fälle** zur
+Planbildung, den vier Strategien, allen fünf Vergleichsfällen, regulären
+Revisionen/History, exakten Eingangsbindungen, Verlust-/Konfliktsperren,
+Anhangs-/Zielprüfung, unveränderten Projektdateien und isolierten Core-/PYZ-
+Laufzeiten. Die **848 betroffenen Regressionstests** prüfen native
+Identität/Historie, Mappings/Registries, Relationen, JSON/JCS, Modellwurzel,
+Artefaktgrundfelder und die vollständige Change-Plan-Zielprüfung.
+Die beiden vorherigen Läufe mit jeweils 890 bestandenen und einem
+fehlgeschlagenen neuen Anhangsfall bleiben **Fehlversuche**, keine Nachweise:
+Zunächst war ein unzulässiges Anhangsfeld am Goal gewählt; danach fehlte der
+für Source erforderliche Ressourcenprüfer. Die korrigierte Fixture prüft
+sowohl die fehlende Pflichtprüfung als auch echte bereitgestellte Bytes.
+Es wurde keine Produktprüfung abgeschaltet.
+
+Die vollständige Collection-/Katalogprüfung ist gültig mit **17.487 Tests**
+und **0 ausgeführten Testkörpern**. Die neuen Identitäten erhalten nur die
+hinten angehängten Nummern **17444–17486**; bestehende Nummern und
+Rotationsanker bleiben unverändert. SR-TC-0314 und SR-TC-0331 erhalten
+explizite **Teilnachweise** samt eigener synthetischer Fixture. Dies ist kein
+CLI-/Formatimportabschluss, Vollsuite- oder Releasebeleg; `full_suite_passed`
+bleibt null. Quellstand-SHA-256:
+`444108a1b6bb92a6cf74452f7486c9db5eb04177a12d6a807b84f35a5a3efad1`.
+Katalog-SHA-256:
+`7ea04c7c44faee9c3dfad47882e1e0835927383f648f87cc9314f85c956df304`.
+Die vier geänderten/neuen Python-Dateien wurden zusätzlich statisch mit der
+Python-3.10-Grammatik geprüft; das ist kein Testlauf auf allen unterstützten
+Python-Versionen.
+
+**Umfangsgrenze und Übergabe:** Das Bundle enthält genau diesen W-Zustand.
+14.d.R vervollständigt die Wiederverwendungs-/Freshness-Grenzen gespeicherter
+Planumschläge; 14.d.C und 14.e werden hier nicht begonnen. Formatparser,
+Relations-/Registry-Kandidaten, eingehende Anhangsbytes und der transaktionale
+Import einschließlich Verlustzustimmung bleiben den zugeordneten späteren
+Importarbeiten vorbehalten. Der Entrypoint führt vor dem eigenen Commit
+nur die fällige **Gruppe 2/3**, Commitfolge **119**, mit **5.829 Tests** parallel
+aus. Erst nach erfolgreichem Apply-Testlauf setzt er die fünf Marker auf
+**580/900**, zuletzt **14.d.W**, nächstens **14.d.R** und Bundle **411** und
+erzeugt den vorgesehenen Commit. Ein Apply-Erfolg für Bundle 411 wird noch
+nicht behauptet. Nach atomarer Übergabe endet dieser Einzelauftrag ohne
+weitere Result-Abfrage, Wartephase oder Hintergrundfortsetzung.
 
 #### 14.d.R – Make it Right
 

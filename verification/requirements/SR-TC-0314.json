@@ -4,19 +4,48 @@
   "requirement_id": "SR-REQ-0314",
   "specification_sha256": "843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc",
   "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1"
+  ],
+  "preconditions": [
+    "Explicit parsed artifact candidates, actual source bytes, exact selected mapping, complete supplied TargetModel and explicit native creation envelopes/actor/time. Trusted target policy/gates are caller registrations, not source data."
+  ],
+  "steps": [
+    "Plan new and matched artifacts through real mapping selection, native lookup, conflict evaluation and the ordinary complete-target Change Plan service.",
+    "Inspect exact byte/canonical bindings, operations, native IDs, regular metadata/history, preserved local fields, attachment references, skipped objects, unresolved conflicts and individual losses.",
+    "Verify normal saved-plan target equivalence, blocking target gates, passive detached reports and isolated Core/PYZ availability without filesystem writes."
+  ],
   "oracle": {
-    "kind": "pending",
-    "requirement_contract": "`specroad import plan <FORMAT> <INPUT>` MUSS Eingabeformat, Mapping, neue und aktualisierte Artefakte, Konflikte, Informationsverluste, Anhänge, Diagnosen, einen ausführbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne den Projektstand zu verändern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "kind": "behavior",
+    "requirement_contract": "`specroad import plan <FORMAT> <INPUT>` MUSS Eingabeformat, Mapping, neue und aktualisierte Artefakte, Konflikte, Informationsverluste, Anh\u00e4nge, Diagnosen, einen ausf\u00fchrbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne den Projektstand zu ver\u00e4ndern.",
+    "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV090",
+    "SRV147",
+    "SRV148",
+    "SRV070",
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    0,
+    3,
+    4
+  ],
+  "json_pointers": [
+    "/binding",
+    "/operations",
+    "/created_ids",
+    "/updated_ids",
+    "/skipped",
+    "/conflicts",
+    "/losses",
+    "/attachments",
+    "/diagnostics",
+    "/target_model_root_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +57,53 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_import_planning.py::test_adoption_preserves_nonmapped_content_relations_and_other_identities",
+    "tests/test_import_planning.py::test_attachment_report_uses_verified_existing_bytes_and_reference_in_target",
+    "tests/test_import_planning.py::test_duplicate_candidate_key_and_two_keys_for_one_owner_are_rejected",
+    "tests/test_import_planning.py::test_duplicate_native_external_identity_is_not_masked_by_skip",
+    "tests/test_import_planning.py::test_import_plan_is_available_in_isolated_runtimes[core]",
+    "tests/test_import_planning.py::test_import_plan_is_available_in_isolated_runtimes[pyz]",
+    "tests/test_import_planning.py::test_input_byte_mapping_representation_and_base_bindings_are_independent",
+    "tests/test_import_planning.py::test_inputs_and_reports_are_detached_and_planning_does_not_touch_owned_files",
+    "tests/test_import_planning.py::test_legacy_identity_has_no_invented_history_or_unsafe_update[create_new_revision-False]",
+    "tests/test_import_planning.py::test_legacy_identity_has_no_invented_history_or_unsafe_update[error-False]",
+    "tests/test_import_planning.py::test_legacy_identity_has_no_invented_history_or_unsafe_update[skip-True]",
+    "tests/test_import_planning.py::test_legacy_identity_has_no_invented_history_or_unsafe_update[update_if_unchanged-False]",
+    "tests/test_import_planning.py::test_malformed_candidates_do_not_become_implicit_creates_or_authorities[known-template]",
+    "tests/test_import_planning.py::test_malformed_candidates_do_not_become_implicit_creates_or_authorities[missing-template]",
+    "tests/test_import_planning.py::test_malformed_candidates_do_not_become_implicit_creates_or_authorities[source-history]",
+    "tests/test_import_planning.py::test_malformed_candidates_do_not_become_implicit_creates_or_authorities[unknown-member]",
+    "tests/test_import_planning.py::test_malformed_candidates_do_not_become_implicit_creates_or_authorities[wrong-type]",
+    "tests/test_import_planning.py::test_mapping_cannot_bypass_controlled_fields_or_forge_import_history[external_identities]",
+    "tests/test_import_planning.py::test_mapping_cannot_bypass_controlled_fields_or_forge_import_history[maturity]",
+    "tests/test_import_planning.py::test_mapping_cannot_bypass_controlled_fields_or_forge_import_history[relations]",
+    "tests/test_import_planning.py::test_mapping_cannot_bypass_controlled_fields_or_forge_import_history[revision]",
+    "tests/test_import_planning.py::test_mapping_hash_and_format_are_verified_from_supplied_resource_bytes",
+    "tests/test_import_planning.py::test_missing_trusted_gate_cannot_be_replaced_by_a_valid_mapping",
+    "tests/test_import_planning.py::test_new_artifact_plan_binds_real_input_mapping_ids_operations_and_whole_target[csv]",
+    "tests/test_import_planning.py::test_new_artifact_plan_binds_real_input_mapping_ids_operations_and_whole_target[ndjson]",
+    "tests/test_import_planning.py::test_new_artifact_plan_binds_real_input_mapping_ids_operations_and_whole_target[reqif]",
+    "tests/test_import_planning.py::test_new_artifact_plan_binds_real_input_mapping_ids_operations_and_whole_target[reqifz]",
+    "tests/test_import_planning.py::test_no_strategy_can_turn_a_divergent_object_into_an_executable_plan[create_new_revision]",
+    "tests/test_import_planning.py::test_no_strategy_can_turn_a_divergent_object_into_an_executable_plan[error]",
+    "tests/test_import_planning.py::test_no_strategy_can_turn_a_divergent_object_into_an_executable_plan[skip]",
+    "tests/test_import_planning.py::test_no_strategy_can_turn_a_divergent_object_into_an_executable_plan[update_if_unchanged]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[converged-create_new_revision]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[converged-update_if_unchanged]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[diverged-create_new_revision]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[diverged-update_if_unchanged]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[local-only-create_new_revision]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[local-only-update_if_unchanged]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[source-only-create_new_revision]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[source-only-update_if_unchanged]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[unchanged-create_new_revision]",
+    "tests/test_import_planning.py::test_same_native_identity_follows_comparison_and_regular_revision_rules[unchanged-update_if_unchanged]",
+    "tests/test_import_planning.py::test_unmapped_values_are_individually_preserved_in_loss_report_and_block_plan",
+    "tests/test_import_planning.py::test_unmodified_artifact_is_checked_and_can_block_import_target"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.d.R adds defensive saved-envelope reuse/freshness checks; 14.d.C cleans the common planner with unchanged behavior.",
+    "CLI format parsing, relation/registry candidates, incoming attachment byte publication, guarded transactional import/loss acceptance and a real import-completion receipt remain in subsequent assigned import steps. This is a planning report, not completed-import or release evidence."
   ]
 }

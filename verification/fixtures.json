@@ -2,6 +2,7 @@
   "fixture_format_version": 1,
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1",
     "SR-FIX-AUTOMATIC-RECOVERY-v1",
     "SR-FIX-BASELINE-COMPARISON-RIGHT-v1",
     "SR-FIX-BASELINE-COMPARISON-v1",
@@ -770,6 +771,10 @@
     "SR-FIX-IMPORT-COMPARISON-v1": {
       "provider": "tests/support/import_comparison.py:compare,imported; tests/support/relations.py:artifact,edge,external",
       "kind": "Synthetic explicit local/source JSON object projections and native import histories for all five comparison cases and four declared strategies. Separate historical hashes, unchanged raw-payload/revision provenance, legacy history, malformed input, real mapping selection with native artifact/relation lookup, detached observations and isolated Core/PYZ evaluation. Only passive decisions and target candidates; no format import, revision, identity allocation, clock, write or human approval is claimed. R adds asymmetric historical baselines, exact prerelease/build/case binding, every incomplete history field, malformed values, safe JSON pointers, numeric equivalence, cycles and shared inputs, foreign hook rejection, prior-observation preservation, actual file bytes/modes and isolated rejection contracts. Existing JSON reader limits remain unchanged."
+    },
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1": {
+      "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model",
+      "kind": "Explicit synthetic parsed artifact candidates, byte-bound mapping/profile/input resources and complete supplied native projects. Known history, fresh IDs/envelopes, conflicts, unaccepted losses, existing attachments and ordinary target gates. No real format parsing, writer, completed import or human approval."
     }
   }
 }
