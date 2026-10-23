@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 10
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 585
-last_completed_plan_commit: 14.e.C
-next_plan_commit: 14.f.W
-last_completed_numbered_bundle: 417
+implementation_plan_commits_completed: 586
+last_completed_plan_commit: 14.f.W
+next_plan_commit: 14.f.R
+last_completed_numbered_bundle: 418
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -18653,12 +18653,95 @@ Apply-Erfolg dieser Übergabe oder eine CSV-Produktabnahme wird nicht behauptet.
 
 #### 14.f.W – Let it Work
 
-- [ ] **14.f.W** · Position **586/900** · Voraussetzung: `14.e.C`.
+- [x] **14.f.W** · Position **586/900** · Voraussetzung: `14.e.C`.
 **Exakte Commit-Message:** `14.f.W feat(exchange): CSV-Datentypen und RFC-4180 aufbauen`
 
 **Umsetzung:** Den kleinsten nutzbaren reinen CSV-Datensatzcodec nach D.2.1 aufbauen: exakte Profil-/Mappingbindung, explizite Zellkonvertierung, UTF-8, RFC-Quotes/CRLF, JSON-Listenregel und eingebettete Zeilenumbrüche. Keine Typinferenz oder Projektwrites; die W-Abnahmen des Entscheidungsbelegs gelten.
 
 **Verhaltensabnahme:** Ein im ausdrücklich gewählten Profil repräsentierbarer Datensatz überlebt den semantischen Export-/Importzyklus einschließlich Typen, Feldpräsenz, Identität und Reihenfolge. Nicht repräsentierbare Werte oder ungültige Bindungen werden ohne stillen Datenverlust abgewiesen; die Umsetzung behauptet keinen vollständigen CLI-Import.
+
+**W-Implementierungsstand (Bundle 418, 14.f.W)**
+
+**Geprüfte technische Basis:** Das vollständig gebundene Result
+`specroad-apply_Result_082650_1023_01377f.zip`, SHA-256
+`00aeae948b1ca359bdb69823160013f675e5f1a4b8f537b10928e4dd879b092e`,
+bestätigt den sauberen Apply-Commit
+`18cbf1cd53ee217b74b0c5723acda4e3fb48d199` und Bundle **417**.
+Snapshot, native Result-Prüfung, Run-/Ausführungslog und nummerierter
+Auswahlbeleg passen zusammen: **5.899 Tests bestanden**, vier Worker,
+Commitfolge **125**, Gruppe **2/3**. Dies ist ein Teiltestnachweis. Die
+beiden bestätigten OFF-PLAN-Marker wurden aus dem Result übernommen.
+Spezifikation **0.2.15**, ihre Hashbindung und die verbindliche Entscheidung
+CSV-PROFILE-CONTRACT bleiben unverändert; es wird keine weitere normative
+Klärung eingeführt.
+
+**Tatsächlicher Ausschnitt:** `CSVProfile` liest eine eigene geschlossene,
+passive `csv-profile-v1`-Ressource. `select_csv_profile` wählt ausschließlich
+explizit gelieferte Ressourcen nach exaktem Schlüssel und erwartetem Hash.
+Doppelte Profil-, Mapping- oder Registry-Schlüssel, falscher CSV-/Typbezug,
+abweichende Quellfeldmenge sowie undeutliche Codec-/Policydeklarationen
+werden abgewiesen. Die bisherige Austauschmapping- und Registrygrammatik
+bleibt unverändert. Beide kanonischen Ressourcenbindungen und Bytehashes
+sowie der unveränderte CSV-Eingabebytehash stehen in der Beobachtung.
+
+Der ausgewählte Codec liest und schreibt ausschließlich Bytes im Speicher.
+Er erhält native/externe Identitäten, Zeilenreihenfolge, Unicode, exakte
+Leerzeichen, Komma/Quote und eingebettete CR/LF/CRLF. String, Boolean,
+Integer/Zahl, deklarierte JSON-Arrays und die explizite Typhülle werden
+getrennt konvertiert. Fehlend, null, leerer String, Text `null`, leere Listen
+und verschachtelte Werte bleiben unterscheidbar. Eine mitbenutzte
+Identitätsspalte wird nicht doppelt ausgegeben. Die vorhandene Feldzuordnung
+und `value_map` werden erst nach der CSV-Konvertierung durch den bestehenden
+Mapper angewandt. Keine Typinferenz, stillen Defaults, neuen Identitäten,
+Datei-/Projektwrites oder Importautorisierung entstehen.
+
+**Verlustgrenze:** Unrepräsentierbare Felder, Werte, Identitäts-/Typbindungen
+und ungültige Datensätze ergeben `SRV090`/Code 3, keine erfolgreiche
+Teilmenge oder bereits veröffentlichte Ausgabe. Der W-Schnitt hält dabei
+die vorgeschriebene kanonische JSON-Ausgabe und rohe CSV-Textgrammatik
+getrennt ein: DEL als JSON-Escape wird gelesen, ein beim kanonischen Export
+entstehendes rohes DEL wird zurückgewiesen. Es wird weder ein abweichendes
+Escapeformat eingeführt noch ein Zeichen entfernt. Die Rundreise gilt für
+den tatsächlich repräsentierbaren Schnitt, nicht für sämtliche Modellwerte.
+
+**Gezielte parallele Verhaltensprüfung:** **295/295 bestanden**, vier Worker,
+Prozesscode **0**, Python **3.14.4**. Geprüft wurden die **76** neuen
+CSV-Verhaltenstests sowie betroffene Mapping-W/R-, strikte JSON-Reader-
+und kanonische Serializer-Regressionen. Enthalten sind isolierte Core-/PYZ-
+Rundreisen ohne optionale Pakete sowie No-Write-Prüfungen. Vollständige
+Collection-/Katalogprüfung: **17.774 erfasst, 0 Testkörper ausgeführt**.
+`full_suite_passed` bleibt in beiden Nachweisen `null`.
+Quellstand `f53231d66265d3a415791793f81f4dd2d769ed8f656dec2b5ffb18d12f35b63c`,
+Katalog `8bd594535a31d44a0501d00759e4ba7edd31c876af26edfc67b1626765559611`,
+Auswahlbeleg `c2607aa84320c0ba95f540d829ebd9c7b6a4a665a030157e831a0c275c775f4d`,
+Beobachtungen `8a4e610d3437dc3e3e564befa149111eb31ace31051e57e62555d7a2efb2d372`.
+
+Der erste parallele Versuch war mit **291 bestanden / 3 fehlgeschlagen**
+kein Erfolgsnachweis. Eine zu lange synthetische Random-ID und der im
+Test falsch verwendete Build-Rückgabewert wurden korrigiert. Die zu breite
+DEL-Rundreiseannahme wurde durch den oben ausdrücklich beschriebenen
+Lese-/Zurückweisungsnachweis ersetzt. Die danach erforderliche Zuordnung
+der korrigierten parametrisierten Testidentität wurde aktualisiert; die
+abschließende Collection und der obige Lauf prüfen den finalen Stand.
+Alle **17.698** bereits im Result nummerierten Testidentitäten behalten
+Nummer und Reihenfolge; die **76** finalen neuen Identitäten werden hinten
+angefügt. SR-TC-0325/0326 erhalten partielle W-Nachweise und die echte
+Fixture SR-FIX-CSV-CODEC-v1, keine Vollabnahme.
+
+**Grenzen und Übergabe:** Genau **14.f.W**, Position **586/900**, ein regulärer
+Commit in Bundle **418**. 14.f.R/C bleiben offen: vollständige BOM-/Header-/
+Breiten-/Konvertierungsdiagnostik, Ressourcen-/Ownership-/Isolationsabnahmen
+und anschließende gemeinsame View-Codec-Struktur. Native Modellprojektion,
+eindeutig invertierbarer Wertexport und CLI-/Planintegration behalten ihre
+zugeordneten Verpflichtungen. Kein alter Importplan wird erweitert oder
+als CSV-Autorisierung interpretiert. Der Entrypoint stellt diesen W-Stand
+her, führt ausschließlich **Gruppe 0/3**, Commitfolge **126**, mit **5.925**
+Tests parallel aus und prüft den exakten nummerierten Beleg. Erst nach
+erfolgreichem Apply-Gate setzt er die fünf Fortschrittsmarker auf **586/900**,
+zuletzt **14.f.W**, nächstens **14.f.R** und Bundle **418** und erzeugt die
+oben festgelegte Commit-Message. Ein Apply-Erfolg dieser Übergabe wird
+nicht vorweggenommen; kein Vollsuite-/Release-Erfolg und keine Fortsetzung
+zu einem weiteren Planschritt werden behauptet.
 
 #### 14.f.R – Make it Right
 

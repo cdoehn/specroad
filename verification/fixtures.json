@@ -40,6 +40,7 @@
     "SR-FIX-CONTENT-BLOCKS-RIGHT-v1",
     "SR-FIX-CONTENT-BLOCKS-v1",
     "SR-FIX-CORE-LINT-v1",
+    "SR-FIX-CSV-CODEC-v1",
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1",
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1",
     "SR-FIX-DIAGNOSTICS-v1",
@@ -785,6 +786,10 @@
     "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1": {
       "provider": "tests/support/import_execution.py:project,inputs,candidates,resource_gate;tests/test_import_execution.py:assert_native_files;tests/test_import_execution_right.py:execute,failed",
       "kind": "Owned synthetic native project with explicit parsed artifact candidates, supplied mapping and input bytes, existing bound attachment, local and incoming identities, a complete TargetModel and trusted test-host authority/gates. Real journal, receipt and idempotent replay observations; no source parser, human approval, new-attachment byte publication or loss acceptance is fabricated. The initialized operational lock directory is explicit; a trusted fixture gate validates the one supplied mapping resource, and a negative case verifies mandatory refusal without that gate. R cases inject actual replacement interruptions before and after each of two artifact replacements, observe native read quarantine and explicitly authorize recovery with a separate synthetic RecoveryAuthority. They retain journal/receipt evidence through late failures; no real human consent is asserted."
+    },
+    "SR-FIX-CSV-CODEC-v1": {
+      "provider": "tests/support/csv_codec.py:column,resources,selected,record",
+      "kind": "Explicit synthetic csv-profile-v1 declarations, bound CSV exchange mappings, passive external/native identities, typed records and literal RFC-4180 byte samples. Exercises exact selection, semantic roundtrips, rejected loss and isolated Core/PYZ behavior. No external source, native import plan, writer, human approval or full format-integration result is simulated."
     }
   }
 }
