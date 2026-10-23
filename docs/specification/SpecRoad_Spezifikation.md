@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.17
+## Version 0.2.18
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.17` |
+| Dokumentversion | `0.2.18` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 23. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.17 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.17 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.18 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.18 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.16 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung REQIF-OBJECT-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: typisierte ReqIF-Objekterhaltung und eindeutige Identitäts-, Default- und JSON-Mappinggrenze. Entscheidungsbeleg und Abnahmen stehen bei 14.h im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung des bestehenden ReqIF-Objektprofils in D.1.1; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.17 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung REQIF-STRUCTURE-XHTML, delegiert gemäß SPECROAD-DECISION-1: geordnete Vorkommensidentität, explizite Relationsabbildung und sichere XHTML-/Anhangschnittmenge. Entscheidungsbeleg und Abnahmen stehen bei 14.i im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung von ReqIF-Struktur und XHTML-Schnittmenge in D.1.2; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.17 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.18 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.17 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.18 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4291,6 +4291,18 @@ Interoperabilitätsnachweis. Umsetzung und Verhaltensevidence bleiben in
 14.h.W/R/C offen; Produktstand 591/900 und Control-/Laufzeitzustände ändern
 sich durch diese normative Übergabe nicht.
 
+### 20.17 ReqIF-Struktur-/XHTML-Präzisierung v0.2.18
+
+`REQIF-STRUCTURE-XHTML`, delegiert gemäß `SPECROAD-DECISION-1`, konkretisiert
+in D.1.2 die bisher unbestimmte XHTML-Kernmenge und deren sichere native
+Projektion. Geordnete Hierarchievorkommen bleiben von fachlichen Objekten
+getrennt; Relationsrichtung, Identitäten und explizite Anhangbindungen
+bleiben erhalten. Es entstehen weder ein neues natives Schema noch eine
+Schreib-/Verlustfreigabe oder ein Fremdtool-Konformitätsnachweis. Umsetzung
+und Verhaltensevidence bleiben in 14.i.W/R/C offen; Produktstand 594/900
+und Control-/Laufzeitzustände ändern sich durch diese normative Übergabe
+nicht. Die vollständigen weiteren Austauschpflichten bleiben verbindlich.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4333,6 +4345,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.18 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-STRUCTURE-XHTML: geordnete Vorkommensidentität, explizite Relationsabbildung und sichere XHTML-/Anhangschnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.i offen. |
 | 0.2.17 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-OBJECT-CONTRACT: typisierte Objekterhaltung, identitätsbasierte Selektoren, Default-Herkunft und verlustbewusste JSON-Schnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.h offen. |
 | 0.2.16 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | NDJSON-OBJECT-CONTRACT: geschlossene versionierte Transporthülle, native Payload-/Hash-Erhaltung und eindeutiges Framing/EOF; passive Grenzen bleiben erhalten, Umsetzung bleibt in 14.g offen. |
 | 0.2.15 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | CSV-PROFILE-CONTRACT: separates gebundenes CSV-Profil mit expliziten Zellcodecs, JSON-Listenregel, Null-/Abwesenheits- und Reject-Vertrag; bestehende Formate bleiben erhalten, Umsetzung bleibt in 14.f offen. |
@@ -4671,6 +4684,207 @@ Mappingdiagnosen aus 10.12.1 behalten ihre Fehlerklasse und ihren Code.
 Ressourcenfehler werden nicht in normale
 Formatfehler oder partielle Erfolge umgedeutet. Dieser Vertrag führt keine
 zusätzliche harte Gesamtauftragsgrenze, Freigabe oder Writer-Ausnahme ein.
+
+
+### D.1.2 ReqIF-Struktur und XHTML-Schnittmenge v1
+
+**Entscheidung REQIF-STRUCTURE-XHTML, delegiert gemäß SPECROAD-DECISION-1:**
+`reqif-structure-xhtml-v1` präzisiert für 14.i die bisher unbestimmte
+XHTML-Schnittmenge und deren Verbindung mit Hierarchien, Relationen und
+Dokumentdaten. Es ist eine SpecRoad-Profilkennung, kein neues ReqIF-,
+Mapping- oder Artefaktformat. D.1.1, 10.12.1, 10.14 und sämtliche späteren
+Import-, Verlust-, ReqIFZ- und Freigabepflichten bleiben wirksam.
+
+**Externe Grundlage und eigene Profilentscheidung.** [OMG ReqIF 1.2,
+formal/2016-07-01](https://www.omg.org/spec/ReqIF/1.2/PDF), 10.4,
+10.6.3 und 10.8.20, beschreibt Hierarchieeinträge, gerichtete
+Objektbeziehungen und XHTML einschließlich externer Objekte und
+Vereinfachungskennzeichnung. Die folgende sichere native Schnittmenge
+ist eine eigene SpecRoad-Regel. Sie behauptet weder Unterstützung aller
+XHTML-Module noch einen nachgewiesenen Roundtrip mit einem Fremdwerkzeug.
+
+**Strukturerhaltung vor nativer Abbildung.** Der passive Codec MUSS
+`SPECIFICATION`, `SPECIFICATION-TYPE`, `SPEC-HIERARCHY`, `SPEC-RELATION`
+und `SPEC-RELATION-TYPE` zusätzlich zum Objektprofil erfassen. Er erhält
+Kennungen, Typ-/Objekt-/Quell-/Zielreferenzen, geordnete Hierarchiekinder,
+zugehörige Attributdefinitionen und Werte sowie vorhandene Metadaten.
+Typisierte Belegungen und Defaults folgen D.1.1 auch bei Spezifikationen
+und Relationen. XML-/Referenzprüfung und die bestehende globale
+Identifier-Eindeutigkeit gelten für den gesamten erfassten Bestand.
+
+Ein Hierarchieeintrag ist ein eigenes **Vorkommen** mit eigener Kennung,
+genau einem Besitzer (Spezifikation oder übergeordnetes Vorkommen) und
+der referenzierten Objektkennung. Zwei Einträge desselben Objekts bleiben
+zwei Vorkommen, auch unter verschiedenen Dokumenten oder Vorfahren.
+Die Kinderreihenfolge ist fachlich; sie DARF NICHT nach Objekt-ID, Titel
+oder Typ umsortiert werden. Wiederholte Objektverweise allein sind kein
+Hierarchiezyklus. Ein tatsächlicher Besitzzyklus, ein mehrdeutiger
+Besitzer, doppelte Kennungen oder fehlende/falschartige Referenzziele
+sind Fehler. Eine leere Spezifikation bleibt zulässig.
+
+Eine Relation erhält ihre eigene Kennung und die Unterscheidung von
+Quelle und Ziel. Gleiche Endpunkte ersetzen keine Relationsidentität;
+entgegengesetzte Kanten werden nicht verschmolzen. Ein Zyklus in einer
+beliebigen ReqIF-Relationsmenge ist nicht automatisch ungültig: Nach der
+nativen Abbildung gilt die vorhandene Zyklusregel des gewählten
+Core-Relationstyps. Fremde Editierbarkeits- oder Hierarchiemetadaten sind
+passive Quelldaten, keine Schreibberechtigung oder menschliche Freigabe.
+
+**Ausdrückliche native Bindung.** Für Spezifikationsfelder ist
+`external_type` die referenzierte `SPECIFICATION-TYPE`-Kennung; die
+Feldschlüssel bleiben Attributdefinitionskennungen. Für Relationen ist
+der Selektor der `relations`-Tabelle die referenzierte
+`SPEC-RELATION-TYPE`-Kennung. Da ein Hierarchieeintrag keinen eigenen
+SpecType besitzt, ist der Selektor der `hierarchies`-Tabelle die
+`SPEC-OBJECT-TYPE`-Kennung seines referenzierten Objekts. Der Aufrufer
+liefert die nativen Bindungen für Besitzer und Kindvorkommen ausdrücklich;
+`parent_to_child`/`child_to_parent` wirken auf diese Endpunkte. Bei
+Relationen wirken `forward`/`reverse` auf die gebundenen Quell- und
+Zielobjekte. Weder ein Name noch eine Position ersetzt eine Bindung.
+
+Die Dokumentabbildung verwendet vorhandene `document`-, `section`- und
+`content_block`-Daten samt `contains`/`references` und den M11-Prüfungen.
+Ein referenziertes fachliches Objekt wird nicht allein wegen seines
+Hierarchieplatzes in eine Section umgetypt oder kopiert. Vorkommen,
+Objekt und native Darstellungsartefakte bleiben unterscheidbar; benötigte
+native IDs, Pflichtmetadaten und Typzuordnungen müssen ausdrücklich
+vorliegen. Eine passive Strukturbeobachtung ist bereits nutzbar, ersetzt
+aber weder eine vollständige native Projektion noch einen Import-Apply.
+
+Der Rückweg MUSS Spezifikations-, Vorkommens- und Relationsidentitäten
+samt Reihenfolge und Richtung erhalten. Nichtartefaktidentitäten gehören
+weiterhin in die ausdrücklich gebundene externe Registry nach 10.12.1;
+Hierarchievorkommen verwenden `object_class=hierarchy`, Relationen
+`object_class=relation`. Vorhandene Kennungen haben Vorrang; fehlende
+Exportkennungen solcher Nichtartefakte müssen ausdrücklich geliefert
+werden. Eine Reihenfolge, ein Objektname oder ein Endpunktpaar DARF
+NICHT als Ersatzkennung dienen. D.1.1 bleibt für native Artefaktkennungen
+unverändert. Ein Parser/Mapper schreibt keine Registry oder Projektdatei.
+
+**Zwei Ebenen für XHTML.** Die Quelle bleibt ein namespaceaufgelöster,
+geordneter Baum mit Text, Attributen und Originalbytes/SHA-256. `THE-VALUE`,
+ein vorhandenes `THE-ORIGINAL-VALUE` und die Anwesenheit/Werte von
+`IS-SIMPLIFIED` bleiben getrennt erhalten und unterliegen derselben
+Sicherheitsprüfung. Eine fehlende Vereinfachungskennzeichnung ist kein
+Beweis für Verlustfreiheit. Ein bereits vereinfachter Quellwert darf
+nicht still als vollständig originalgetreu bezeichnet oder sein Flag
+gelöscht werden; der Originalwert wird nicht ungeprüft als Ersatz gewählt.
+
+Die **nativ darstellbare Kernmenge** verwendet ausschließlich den
+Namespace `http://www.w3.org/1999/xhtml` und folgende Elemente:
+
+| Elemente | Semantische Abbildung nach 10.14 |
+|---|---|
+| `div`, `p` | Inhaltsgruppe beziehungsweise Absatz. Gruppen erhalten die Reihenfolge ihrer Blöcke; sie erzeugen keine Section. |
+| `span`, `em`, `i`, `strong`, `b` | Inline-Gruppe, Emphasis beziehungsweise Strong. Die Quellschreibweise bleibt zusätzlich im Quellbaum erhalten. |
+| `br`, `hr` | Harter Zeilenumbruch beziehungsweise thematische Trennlinie; beide sind inhaltsleer. |
+| `code`, `pre` | Inline-Code beziehungsweise Codeblock. `pre` enthält Text oder genau ein `code` mit Text; keine aktive Sprache/Interpreter-Auswahl. |
+| `blockquote`, `ul`, `ol`, `li` | Blockquote, ungeordnete/geordnete Liste und Listeneintrag. Listen enthalten `li`; deren Reihenfolge bleibt erhalten. |
+| `a` | Link auf einen ausdrücklich gebundenen projektinternen Anhang; der Linkinhalt bleibt Inline-Inhalt. |
+| `object` | Passive Anhangreferenz; die verlustfreie Prose-Schnittmenge ist ein gebundenes PNG-Bild mit alternativem reinem Text. Andere Objektarten und Fallbackstrukturen bleiben im Quellmodell erhalten und als nicht vollständig nativ darstellbar ausgewiesen. |
+
+Es gilt die ReqIF/XHTML-Struktur, keine HTML-Fehlerkorrektur. Das Profil
+verlangt genau einen äußeren `div` oder `p` je XHTML-Wert. Blockelemente
+stehen nicht in einem Absatz oder Inline-Element; verschachtelte Links
+und texttragende `br`/`hr` sind unzulässig. Listen enthalten mindestens
+ein `li`. Inline-Gruppen dürfen nicht
+in Code oder in das reine alternative Textfeld eingeschleust werden.
+Eine `div`-Gruppe mit direkt enthaltenem Inline-Inhalt wird als Absatz
+geführt; gemischte Folgen werden in ihrer Reihenfolge in Absatz- und
+Blockanteile zerlegt. Leere Gruppen bleiben im Quellmodell erkennbar.
+
+Die Attributmenge der nativen Schnittmenge ist geschlossen:
+`href` und optional `title` bei `a`, `data` und `type` bei `object`;
+sonst keine fachlichen Attribute. `href`/`data` und `type` sind bei ihrem
+jeweiligen Element erforderlich. Geordnete Listen der Schnittmenge
+beginnen bei 1. Ein anderer nativer Startwert ist hier nicht darstellbar;
+es wird weder ein `start`-/`value`-Attribut aus einem anderen XHTML-Modul
+ergänzt noch eine abweichende Nummerierung still auf 1 zurückgesetzt.
+`object` ist in der Prose-Schnittmenge exakt `type="image/png"` und
+besitzt keine weiteren Attribute oder Kindelemente. Namespacebindungen
+sind XML-Syntax, keine fachlichen Attribute; bloß gleiche Localnames
+aus anderen Namespaces erfüllen dieses Profil nicht.
+
+Weitere zulässige ReqIF-/XHTML-Inhalte wie Tabellen, Überschriften,
+Sprache/Richtung, IDs, Abmessungen oder Formatattribute werden nicht
+gelöscht, als Prose behauptet oder durch vermeintlich gleichwertigen
+Plaintext ersetzt. Sie bleiben typisierte/passive Quelle und führen
+zu konkreter Nichtrepräsentierbarkeit, soweit keine andere ausdrücklich
+gebundene native Abbildung sie erhält. Insbesondere bleibt die native
+Überschriftenquelle `section` unverändert. Das eingeschränkte Proseprofil
+ändert weder das native Table-Block-Schema noch die ReqIF-Quellerhaltung.
+
+**CommonMark-Projektion und Rückweg.** Ein ausdrücklich angeforderter
+XHTML-Feldadapter liefert für einen vollständig darstellbaren Wert einen
+CommonMark-String nach 10.14; dies ergänzt die Wertfamilien aus D.1.1.
+Der allgemeine Mapper verwendet weiterhin die gebundene Feldzeile und
+`value_map`; er entscheidet nicht selbst, ob ein Feld XHTML oder String
+ist. Der strukturierte Quellbaum und alle Herkunftsangaben bleiben neben
+der Projektion erhalten. Es gibt keinen automatischen Plaintext-Fallback.
+
+Text wird nach der XML-Dekodierung behandelt, nicht erneut als Markup
+oder Entity ausgewertet. XML-Zeilenendennormalisierung bleibt maßgeblich;
+Unicode und Text innerhalb von Code/Pre bleiben erhalten. Außerhalb von
+Code sind XML-Leerraumzeichen zwischen reinen Blockkindern Strukturraum,
+in Inline-Inhalten bleiben sie Text beziehungsweise weiche Umbrüche.
+Das Zusammenfassen benachbarter Textknoten darf deren Text nicht ändern.
+Ein harter Umbruch bleibt von einem weichen Umbruch verschieden.
+Der Serializer MUSS Markdown-Sonderzeichen und Delimiter so behandeln,
+dass das erneute native Prose-Parsing dieselbe Knotenbedeutung, Texte,
+Listennummerierung und Anhangbindung liefert. Kann ein konkreter Wert
+diese Schnittmenge nicht verlustfrei treffen, ist er nicht repräsentierbar;
+eine unbemerkte Textkürzung oder Strukturänderung ist unzulässig.
+
+Der inverse Adapter verwendet das native Prosemodell sowie ausdrücklich
+gebundene ReqIF-Definitionen und Anhangzuordnungen. Unveränderte importierte
+Werte erhalten ihren Quellbaum einschließlich Default-Herkunft und
+Vereinfachungsmetadaten. Für neu gebildete Werte ist die obige Kernmenge
+deterministisch zu serialisieren; Präfix-/Escape-Schreibweisen sind keine
+Identität. Fehlende oder mehrdeutige Rückbindungen sind konkrete Konflikte.
+Identische Eingaben und Bindungen erzeugen identische Ausgabebytes.
+
+**Anhänge, Grenzen und Nichtrepräsentierbarkeit.** `href` und `data`
+lösen niemals selbst I/O aus. Zulässige relative Referenzen werden mit
+ihrem nach XML-Dekodierung unveränderten Wert gegen eine ausdrücklich
+gelieferte eindeutige Zuordnung auf tatsächliche Anhangbytes, SHA-256
+und einen validierten nativen `attachments/`-Pfad geprüft. Fehlende
+Bytes, abweichender Hash, konkurrierende Zuordnungen oder unaufgelöste
+Referenzen verhindern eine erfolgreiche vollständige Projektion.
+Ein behaupteter MIME-Typ beweist weder Byteformat noch Sicherheit.
+Das vorhandene Anhangprofil bleibt maßgeblich; kein Decoder, Renderer
+oder externes Programm wird zur Prüfung gestartet.
+
+Unzulässig für die Auflösung sind absolute/Netzwerk-/Datei-/Daten-URLs,
+Schemes, Laufwerks-/UNC-Pfade, Backslashes, Query/Fragment und leere,
+`.`- oder `..`-Segmente. Prozentkodierungen dürfen solche Grenzen nicht
+umgehen: höchstens eine strikte UTF-8-Dekodierung, danach keine übrigen
+Prozentzeichen und erneute Pfadprüfung. Ein relativer ReqIF-Pfad muss
+nicht bereits mit `attachments/` beginnen; erst sein ausdrücklich
+gebundenes natives Ziel hat diese Wurzel. Es gibt keine Auflösung gegen
+Arbeitsverzeichnis, Dateinamenraten, Netzwerk oder automatisches Nachladen.
+ReqIFZ liefert dieselben Bindungen erst über den eigenen sicheren
+Archivvertrag in 14.k; hier entsteht kein zweiter Entpacker.
+
+Die sichere XML-Verarbeitung und Ressourcenfehler aus D.1.1/Anhang O
+gelten für alle Teilbäume, auch Originalwerte, unbekannte Elemente und
+Fallbacks. Skripte, Ereignisattribute, aktive URLs, externe Includes,
+Style-Ausführung und DTD-/Entity-/Schemaauflösung sind keine zulässige
+Projektion oder Ausweichlösung. Passive Erhaltung unbekannter Daten
+erlaubt niemals deren Ausführung oder unkontrollierte HTML-Ausgabe.
+Unsichere oder externe Inhalte und unaufgelöste Anhangreferenzen müssen
+vor einem Import-Apply erkannt werden; eine Loss-Akzeptanz hebt keine
+Sicherheitsgrenze auf.
+
+Jede nicht vollständig darstellbare Struktur/Attributstelle MUSS einen
+maschinenlesbaren Grund und den verfügbaren Element-/Definitionsbezug
+oder XML-Pfad liefern, ohne komplette Nutztexte in Diagnosen zu kopieren.
+Der Quellstand bleibt erhalten. Reine Projektionen dürfen keinen
+uneingeschränkten Import-, Freigabe- oder Verlustfreiheitserfolg melden.
+Fehlerklassen und Codes bleiben die aus D.1.1/10.12.1; nicht unterstützte
+Darstellung wird nicht mit einer tatsächlich verletzten Sicherheitsgrenze
+verwechselt. Der vollständige Verlustbericht, Erweiterungserhalt und
+`fail-on-loss` bleiben gesonderte Abnahmen von 14.j, keine implizite
+Datenverlustfreigabe dieses Profils.
 
 
 ## D.2 CSV

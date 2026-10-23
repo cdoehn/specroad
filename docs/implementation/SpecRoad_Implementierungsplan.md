@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 12 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.17
+**Planrevision:** 13 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.18
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `0177ac4c2ae509dacb4b7dcf852566764b0f11ac9aa558bc764c9664a5e01bc3`.
+Gebundene Spezifikations-SHA-256: `a2a19dd0b6f719ece9465ec1cf476f7d3b754e2eba54ae3de05bcbb11802fab7`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 12
+plan_revision: 13
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 594
 last_completed_plan_commit: 14.h.C
 next_plan_commit: 14.i.W
-last_completed_numbered_bundle: 428
+last_completed_numbered_bundle: 429
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,44 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – ReqIF-Struktur und XHTML-Schnittmenge (Bundle 429)
+
+Revision 13 dokumentiert **REQIF-STRUCTURE-XHTML**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.18, D.1.2**, legt geordnete
+Vorkommensidentität, Relationsabbildung und sichere XHTML-/Anhangschnittmenge
+für 14.i fest. Alternativen, Quellen, Grenzprüfung und offene Abnahmen
+stehen unmittelbar bei 14.i; keine persönliche Einzelzustimmung oder
+erfundene Review-/Interoperabilitätsbehauptung.
+
+- [x] **REQIF-STRUCTURE-XHTML:** ReqIF-Struktur und XHTML-Schnittmenge verbindlich klären. Commit: `docs(spec): ReqIF-Struktur und XHTML-Schnittmenge präzisieren`.
+
+**Übergabegrenze:** Ein OFF-PLAN-Dokumentcommit mit Spezifikation, Plan
+und ausschließlich notwendigen aktiven Katalog-Hashbindungen. Produktcode,
+Tests, Testnummern, Fixtures, Runner, Workflow und historische Evidence
+bleiben unverändert. Produktstand **594/900**, zuletzt **14.h.C**, nächstens
+**14.i.W**, bleibt offen bei diesem nächsten Schritt. Erst nach dem
+erfolgreichen parallelen Apply-Gate setzt der Entrypoint den Offplan-
+Marker und die Bundlenummer auf 429; keine Produktposition wird erhöht.
+
+**Prüfgrenze:** Keine Produktverhaltensänderung und keine erfundenen
+Dokumentationstests. Vollständige Collection-/Katalogprüfung mit null
+ausgeführten Testkörpern und native Paketprüfung bleiben erhalten. Apply
+führt vor diesem Commit genau **Gruppe 2/3**, Commitfolge **137**, mit
+**6.161 Tests** und vier parallelen Workern aus. Kein Vollsuite-/Release-
+Nachweis; die Ergebnisse dieser künftigen Gruppe werden nicht vorweggenommen.
+Übergabe als `spec_clarification`, danach Ende des Einzelauftrags.
+Control-/Watcher-/CI-Zustände werden nicht verändert. Der nächste
+Produktauftrag setzt den geklärten Schritt um; keine zweite Phase hier.
+
+**Beobachtete Dev-Katalogprüfung:** Vollständige Collection mit
+**18.485 eindeutigen Testidentitäten**, Exit **0**, keine Katalogfehler,
+**0 ausgeführte Testkörper**, `full_suite_passed=null`. Bestehende Tests,
+Oracles und stabile Testnummern bleiben bytegleich. Aktive Spezifikations-
+Hashbindungen wurden konsistent fortgeschrieben; historische Evidence
+bleibt unverändert. Dies ist kein neuer Produktverhaltensnachweis.
+Gebundener Quellstand: `a4bf328a50a767f34c8148676a473ccefa75e38a2cf413aacb43e70badd62530`;
+Katalog: `f8958d01b65eac0a470e5e61118f67253f9d6b4243eb8b472dd8fbbd6d25abc3`.
 
 ## OFF-PLAN – ReqIF-Objekte und Mappinggrenze (Bundle 425)
 
@@ -19873,21 +19911,158 @@ Paketprüfung und atomarer Veröffentlichung endet dieser Einzelauftrag.
 **Anforderungsbezug:** `SR-REQ-0320`–`SR-REQ-0321`.
 **Verifikationsbezug:** `SR-VER-0024`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Das vollständig gebundene Result
+`specroad-apply_Result_173421_1023_97772a.zip`, SHA-256
+`e271c32c1b602f7466c58b32bf29a140ebe82d63250d571ad4ffcbf532cb3dbc`,
+bestätigt Bundle **428** / **14.h.C** auf
+`77beb450be406020afee0281d4093a72d6c27b93`: sauberer Apply-Arbeitsbaum,
+**6.162/6.162** Tests der Gruppe **1/3**, Commitfolge **136**, vier Worker,
+**1.765,84 s**. Native Result-/Patchbindung, alle **2.168** Snapshotdateien,
+tatsächlicher Commit, Run-/Ausführungslogs und vollständige nummerierte
+Testbeobachtungen wurden abgeglichen. In Dev wurden ausschließlich die
+fünf dadurch bestätigten Fortschrittsmarker nachgeführt; danach entsprach
+der Produktbestand dem Snapshot. Diese Belege betreffen den vorherigen
+Objektcodecstand, keine bereits implementierte Hierarchie-/XHTML-Funktion.
+
+**Entscheidungsbeleg REQIF-STRUCTURE-XHTML (Bundle 429)**
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+Control-Vertrag 2 mit `clarification_allowed=true`. Keine behauptete
+persönliche Einzelbestätigung und kein erfundener Review oder Risikoentscheid.
+
+**Lücke und geprüfte Quellen:** 14.i und D.1/SR-REQ-0320–0321 verlangen
+Hierarchien, Relationen und erlaubte XHTML-Kerninhalte. D.1.1 erhält XHTML
+bisher ausdrücklich nur als noch nicht integrierten strukturierten Inhalt.
+Es fehlen die erlaubte Element-/Attributmenge, deren native Wertprojektion
+und eine Anhangauflösungsgrenze. 10.12.1 verlangt zudem einen expliziten
+Hierarchietyp, während ein ReqIF-Vorkommen selbst keinen SpecType trägt.
+Ohne Präzisierung müsste die Umsetzung beobachtbare Format-, Mapping- und
+Sicherheitsentscheidungen erfinden. Der bestätigte 14.h.C-Stand bietet
+einen passiven Objektcodec, keine bereits zugesagte XHTML-Konvertierung.
+
+Geprüft wurden D.1/D.1.1, 9.7, 10.12.1, 10.14, SR-REQ-0319–0324/0330,
+SR-VER-0024 sowie 14.h–14.k. Technische Grundlage sind der bestehende
+ReqIF-Codec und seine Mapping-/XML-/Wertehelfer, `documents/structure.py`,
+`documents/_structure_graph.py`, `documents/prose.py`, der native
+Proseparser und die bestehenden Austauschmapping-/Registryverträge.
+CommonMark verbietet Raw HTML und externe Anhangauflösung; Dokumente
+verwenden explizite Contains-/References-Kanten und getrennte Artefakt-IDs.
+
+Am 23. Oktober 2026 wurden im offiziellen [OMG-ReqIF-1.2-PDF,
+formal/2016-07-01](https://www.omg.org/spec/ReqIF/1.2/PDF) die Abschnitte
+10.4, 10.6.3 und 10.8.20 geprüft. Sie unterscheiden Struktur, Beziehungen
+und XHTML samt externen Objekten/Vereinfachungen. Die in D.1.2 gewählte
+native Schnittmenge folgt den vorhandenen SpecRoad-Grenzen; sie ist
+keine behauptete OMG-Komplettunterstützung. Zusätzlich wurde das
+[W3C XHTML Modularization 1.1 List Module](https://www.w3.org/TR/xhtml-modularization/abstract_modules.html#s_listmodule)
+geprüft: zusätzliche Legacy-Attribute für Listennummerierungen gehören
+nicht zur gewählten Kernmenge. Andere native Startwerte werden deshalb
+sichtbar als nicht repräsentierbar behandelt, nicht umnummeriert.
+Es wurden weder ein fremder
+Tool-Roundtrip noch eine XSD-Ausführung oder visuelle Abnahme durchgeführt.
+
+**Alternativen und Entscheidung:**
+
+1. Beliebiges XHTML als Raw HTML durchreichen oder Browser-/Stylesheet-
+   Verarbeitung verwenden: verletzt 10.14 und die passive Importgrenze;
+   weitere aktive Datenpfade wären nötig. Nicht gewählt.
+2. XHTML nach Plaintext abflachen und Hierarchien aus Objekt-ID/Titeln
+   rekonstruieren: verliert Formatstruktur, Vorkommensidentität und
+   Wiederverwendung. Versteckte Datenverluste widersprechen D.1.1/0330.
+   Nicht gewählt.
+3. Gewählt ist **typisierte Quellerhaltung plus geschlossene native
+   Schnittmenge**: geordnete Vorkommen und gerichtete Relationen erhalten,
+   vorhandene Mappings/Registry und Dokumentdaten nutzen, zulässiges XHTML
+   nur semantisch geprüft nach CommonMark projizieren. Nicht darstellbare
+   Stellen bleiben konkret sichtbar und erhalten. Anhänge werden nur über
+   explizite geprüfte Bindungen zu tatsächlichen Bytes aufgelöst.
+   Ein neues natives Rich-Text-Schema oder ein weiteres Mappingdateiformat
+   wäre größer und würde bestehende Verträge unnötig ändern.
+
+**Grenzprüfung nach 2.4.1:** (1) Die Regel betrifft den bestätigten
+Struktur-/XHTML-Ausschnitt 14.i; vollständige Verlust-/ReqIFZ-/CLI- und
+Transaktionsintegration bleiben bei ihren Schritten. (2) Alle bestehenden
+Requirement-Texte und Austauschpflichten bleiben unverändert; der Kern
+ist für Absätze, Formatierung, Listen, Code und gebundene PNG-Anhänge
+nutzbar, nicht nur ein pauschaler Reject. Weitere Inhalte bleiben erhalten
+und transparent begrenzt. (3) Kein Artefakt-/Mapping-/Registry-Schema,
+keine Sicherheits-, Review- oder Schreibgrenze wird erweitert. Kein
+realer Bestand wird durch diese Dokumentübergabe verändert. (4) Die
+versionierte Profilregel ist durch eine spätere normative Fassung
+revidierbar; Originaldaten und historische Nachweise bleiben erhalten.
+(5) Anhangbytes, Mapping, native IDs und Metadaten sind später explizite
+Eingaben, keine erfundenen externen Tatsachen oder menschlichen Freigaben.
+
+**Normative Zielregel:** Spezifikation **0.2.18, D.1.2**. Aktive
+Katalogeinträge erhalten ausschließlich die neue Spezifikations-SHA-256;
+Testidentitäten, Oracles, Testnummern und Nachweisstände ändern sich nicht.
+Insbesondere bleiben SR-TC-0320/0321 `partial` mit ihren bisherigen
+Objektcodecbelegen; diese Klärung ist keine Struktur-/XHTML-Verhaltensabnahme.
+
+**Verbindliche positive, negative und Grenzfall-Abnahmen:**
+
+- W: Leere und verschachtelte Spezifikationen samt Typen, Hierarchien und
+  Relationen passiv lesen/serialisieren; Attribute und Defaults folgen
+  D.1.1. Eigene Vorkommens- und Relationskennungen, Besitzer, Kinderfolge,
+  Quelle/Ziel und Metadaten bleiben erhalten. Dasselbe Objekt in mehreren
+  Vorkommen darf weder kopiert noch verschmolzen werden. Vorwärtsreferenzen
+  müssen nach vollständigem Lesen aufgelöst sein; doppelte/falschartige
+  oder fehlende Referenzen verhindern einen erfolgreichen Strukturpass.
+- W: Explizite Mappingselektoren und Endpunktbindungen nach D.1.2 prüfen.
+  Richtungswechsel wirkt nur nach gebundener Mappingzeile. Kein Titel,
+  Listenindex oder Endpunktpaar ersetzt Identität. Nativer Dokumentbaum
+  und fachliches Objekt bleiben getrennt; vorhandene M11-Prüfungen nutzen.
+- W: Alle Kernfamilien einschließlich Emphasis/Strong, Inline-/Pre-Code,
+  harter/weicher Umbrüche, Listen und eines gebundenen PNG-Objekts
+  semantisch prüfen. Die Markdown-Projektion muss beim erneuten Prose-
+  Parsing Texte, Struktur und Anhangziele erhalten. XML-/Markdown-
+  Sonderzeichen, Unicode und leere Inhalte dürfen keinen aktiven Inhalt
+  oder versteckte Plaintext-Konvertierung erzeugen. Gleiche Eingaben
+  erzeugen gleiche Bytes, ohne Uhr, Zufall, Netzwerk oder Projektwrite.
+- W: Ein nicht unterstütztes Element/Attribut beziehungsweise ein bereits
+  vereinfachter Inhalt bleibt mit Quelle und konkretem Befund erhalten.
+  Kein stilles Entfernen von Metadaten/Originalwert und kein Gesamtpass
+  auf Grundlage einer bloßen Teilprojektion. Sicherheitsprüfung der
+  vollständigen Eingabe, auch unbekannter Teilbäume, bleibt erforderlich.
+- R zusätzlich: Reale Besitz-/native Hierarchiezyklen von zulässigen
+  wiederholten Objektvorkommen und Relationszyklen unterscheiden;
+  mehrdeutige Besitzer und inverse Identitäts-/Anhangbindungen prüfen.
+  Wiederimport und Umordnung erhalten gebundene Vorkommens-/Relations-IDs.
+  Unaufgelöste Referenzen verhindern den vollständigen Import vor Apply.
+- R zusätzlich: XHTML-Namespaceverwechslung, ungültige Verschachtelung,
+  Listengrenzen, Text-/Code-Leerraum, Delimiter, Original-/Simplified-
+  Varianten, zusätzliche Attribute und unbekannte Unterbäume abdecken.
+  Verbotene externe/aktive Inhalte, DTD/Entities, Pfadtraversal,
+  Prozent-/Doppeldekodierung, fehlende oder hashfalsche Anhangbytes,
+  Ressourcenlimits und reale I/O-Fehler dürfen keinen Ersatzpass erhalten.
+  Tests prüfen Daten und Fehlerverträge, keine HTML-/Markdown-Darstellung.
+- C: Gemeinsamen sicheren XML-Kern, Struktur-/Dokument- und Prosebausteine
+  strukturell nutzen; Fachwerte, Fehlerklassen und Seiteneffekte unverändert
+  lassen. Vorhandene W-/R-Oracles und betroffene Regressionen bleiben grün.
+
+**Offene Umsetzung:** 14.i.W/R/C, Positionen **595–597**, bleiben offen.
+Der nützliche W-Schnitt erweitert Codec und reine Adapter; er behauptet
+keinen vollständigen Projektimport oder freigegebene Veröffentlichung.
+Verlust-/Erweiterungsmanifest und ReqIFZ behalten 14.j/14.k, spätere native
+Gesamtintegration und Roundtrips ihre verbindlichen Abnahmen. Dieses
+Bundle ändert ausschließlich normative Dokumente und aktive Hashbindungen.
+
+
 #### 14.i.W – Let it Work
 
 - [ ] **14.i.W** · Position **595/900** · Voraussetzung: `14.h.C`.
 **Exakte Commit-Message:** `14.i.W feat(exchange): ReqIF-Hierarchien, Relationen und XHTML aufbauen`
 
-**Umsetzung:** Specification/Spec-Hierarchy, Spec-Relation und erlaubte XHTML-Kerninhalte integrieren.
+**Umsetzung:** Specification/Spec-Hierarchy, Spec-Relation und erlaubte XHTML-Kerninhalte nach D.1.2 in Codec und reine Adapter integrieren. Geordnete Vorkommensidentität, explizite Mapping-/Anhangbindungen und sichere CommonMark-Schnittmenge erhalten; bestehende XML-, Objekt- und M11-Dokumentbausteine nutzen. Die W-Abnahmen des Entscheidungsbelegs gelten.
 
-**Verhaltensabnahme:** Dokumenthierarchie und Beziehungen bleiben semantisch erhalten.
+**Verhaltensabnahme:** Dokumenthierarchie, Vorkommens-/Relationsidentität, Reihenfolge und Richtung bleiben semantisch erhalten. XHTML-Kernwerte erhalten ihre Knotenbedeutung über die geprüfte native Prose-Projektion; nicht darstellbare Stellen bleiben konkret sichtbar und als Quelle erhalten. Keine impliziten Projektwrites, Freigaben oder Gesamtimportbehauptungen.
 
 #### 14.i.R – Make it Right
 
 - [ ] **14.i.R** · Position **596/900** · Voraussetzung: `14.i.W`.
 **Exakte Commit-Message:** `14.i.R feat(exchange): ReqIF-Hierarchien, Relationen und XHTML vervollständigen`
 
-**Vervollständigung:** Zyklen, externe Inhalte und unaufgelöste referenzierte Anhänge vor Apply erkennen.
+**Vervollständigung:** Die R-Abnahmen aus D.1.2 und dem Entscheidungsbeleg vervollständigen: echte Besitz-/native Hierarchiezyklen von wiederholten Vorkommen unterscheiden, Referenz-/Rückbindungsfehler sowie XHTML-/Pfad-/Anhanggrenzen vollständig prüfen. Zyklen, unzulässige externe Inhalte und unaufgelöste referenzierte Anhänge vor Apply erkennen.
 
 **Verhaltensabnahme:** Wiederimport erhält Hierarchie- und Relationsidentität innerhalb des Schnittmengenprofils. Die W-Nachweise bleiben zusätzlich grün.
 
