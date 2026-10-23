@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.16
+## Version 0.2.17
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.16` |
+| Dokumentversion | `0.2.17` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 23. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.16 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.16 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.17 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.17 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.15 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung NDJSON-OBJECT-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: getrennte Transporthülle und native Versionen, passive Objektprüfung sowie vollständiges Zeilenframing. Entscheidungsbeleg und Abnahmen stehen bei 14.g im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung des bestehenden NDJSON-Objektstroms in D.3.1; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.16 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung REQIF-OBJECT-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: typisierte ReqIF-Objekterhaltung und eindeutige Identitäts-, Default- und JSON-Mappinggrenze. Entscheidungsbeleg und Abnahmen stehen bei 14.h im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung des bestehenden ReqIF-Objektprofils in D.1.1; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.16 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.17 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.16 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.17 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4278,6 +4278,19 @@ benannt, ohne Änderung der Rangfolge. Umsetzung und Verhaltensnachweise
 bleiben in 14.g.W/R/C offen; Produktstand 588/900 und Control-/Laufzeitzustände
 ändern sich durch diese normative Übergabe nicht.
 
+### 20.16 ReqIF-Objektpräzisierung v0.2.17
+
+`REQIF-OBJECT-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, konkretisiert
+in D.1.1 die bisher offene Grenze zwischen ReqIF-Typ-/Objektmodell und
+den vorhandenen JSON-Mappingtabellen. Kennungsbasierte Selektoren,
+unterscheidbare Default-Herkunft und verlustbewusste Wertprojektionen
+vermeiden Namensinferenz, implizite Typkonvertierung und stilles Runden.
+Die vollständigen weiteren Austauschpflichten bleiben erhalten. Es
+entstehen weder ein neues natives Schema noch eine Freigabe oder ein
+Interoperabilitätsnachweis. Umsetzung und Verhaltensevidence bleiben in
+14.h.W/R/C offen; Produktstand 591/900 und Control-/Laufzeitzustände ändern
+sich durch diese normative Übergabe nicht.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4320,6 +4333,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.17 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-OBJECT-CONTRACT: typisierte Objekterhaltung, identitätsbasierte Selektoren, Default-Herkunft und verlustbewusste JSON-Schnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.h offen. |
 | 0.2.16 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | NDJSON-OBJECT-CONTRACT: geschlossene versionierte Transporthülle, native Payload-/Hash-Erhaltung und eindeutiges Framing/EOF; passive Grenzen bleiben erhalten, Umsetzung bleibt in 14.g offen. |
 | 0.2.15 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | CSV-PROFILE-CONTRACT: separates gebundenes CSV-Profil mit expliziten Zellcodecs, JSON-Listenregel, Null-/Abwesenheits- und Reject-Vertrag; bestehende Formate bleiben erhalten, Umsetzung bleibt in 14.f offen. |
 | 0.2.14 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | IMPORT-CONFLICT-POLICY: vier explizite Importstrategien, gemeinsame verlusterhaltende Übernahmegrenzen, reguläre Revision derselben Identität, sichtbare Divergenz und unveränderte Legacy-Historien; Umsetzung bleibt in 14.c offen. |
@@ -4490,6 +4504,174 @@ Das unterstützte Profil umfasst:
 - `CREATION-TIME` als Maximum der enthaltenen normativen `updated_at`-Zeitstempel oder `1970-01-01T00:00:00Z` bei leerem Scope.
 
 ReqIF-Tool-Extensions werden nicht ausgeführt. Nicht verstandene Extensions werden als Payload erhalten oder als Verlust gemeldet.
+
+### D.1.1 ReqIF-Objekte und Mappinggrenze v1
+
+**Entscheidung REQIF-OBJECT-CONTRACT, delegiert gemäß SPECROAD-DECISION-1:**
+`reqif-object-profile-v1` präzisiert für 14.h die Grenze zwischen ReqIF-
+Objektmodell und den unveränderten Austauschmappings nach 10.12.1.
+Dies ist eine SpecRoad-Profilkennung, keine neue ReqIF-Version, Mapping-
+Ressource oder native Artefaktversion. Der vollständige Umfang von D.1
+und SR-REQ-0320–0324/0330 bleibt verpflichtend; Hierarchien, Relationen,
+XHTML und ReqIFZ behalten ihre zugeordneten weiteren Umsetzungsschritte.
+
+**Externe Grundlage:** Maßgeblich bleibt [OMG ReqIF 1.2,
+formal/2016-07-01](https://www.omg.org/spec/ReqIF/1.2/PDF), insbesondere
+9.2.3, 10.2, 10.5 und 10.8. ReqIF unterscheidet Kennungen, Typdefinitionen,
+Attributdefinitionen und Werte; Definitionen können Standardwerte tragen.
+Die Standardfassung 1.2 ist nicht mit dem Headerwert gleichzusetzen:
+`REQ-IF-VERSION` lautet dort `1.0`. Die folgenden Abbildungsregeln sind
+ausdrückliche SpecRoad-Entscheidungen, keine behaupteten zusätzlichen OMG-
+Vorgaben oder Interoperabilitätsnachweise.
+
+**Zwei getrennte Ergebnisse.** Ein passiver ReqIF-Objektcodec MUSS
+Datentypen, Spec-Object-Typen, Attributdefinitionen und Spec-Objects samt
+Kennungen, Typ-/Definitionsreferenzen, Werten und vorhandenen Metadaten
+erhalten. Er MUSS die unveränderten Eingangsbytes und deren SHA-256 für
+die spätere gebundene Verarbeitung verfügbar halten. Rohwerterhaltung
+allein ist keine erfolgreiche native Abbildung. Ein nachgeschalteter
+reiner Mappingadapter MUSS die ausdrückliche Ressource aus 10.12.1
+verwenden; Parser oder Serializer DÜRFEN weder ein Mapping erraten noch
+einen Change Plan ausführen oder Projektdateien veröffentlichen.
+
+Das Objektmodell MUSS deklarierte Werte von Abwesenheit unterscheiden,
+Definitions-Standardwerte getrennt erhalten und Datentypgrenzen sowie
+Enum-Definitionen unverändert transportieren. Numerische XML-Lexeme
+MÜSSEN neben ihrer Typzuordnung verlustfrei verfügbar bleiben, auch wenn
+keine native JSON-Zahl daraus gebildet werden kann. Diese typisierte
+Transporterhaltung ist kein String-Fallback für ein numerisches
+SpecRoad-Feld. Auch Zeit-/Namens-/Beschreibungs- und Editierbarkeitsdaten
+DÜRFEN NICHT still verschwinden oder als Produktfreigabe interpretiert
+werden. Die konkrete interne Klassen-/Containerstruktur ist eine
+Implementierungswahl; daraus entsteht kein weiteres öffentliches JSON-
+Dateiformat mit impliziten Pflichtfeldern.
+
+**Eindeutige Identitäts- und Feldzuordnung.** Für die Artefaktabbildung
+ist `external_type` exakt die Kennung des referenzierten
+`SPEC-OBJECT-TYPE`; jeder `external_field` ist exakt die Kennung der
+zugehörigen Attributdefinition. `LONG-NAME`, Beschreibungen, Positionen
+und AlternativeIDs sind keine Ersatzschlüssel. Zwei gleich benannte
+Definitionen mit verschiedenen Kennungen bleiben verschieden; Änderungen
+des Namens ändern die Zuordnung nicht. Kennungen werden nach der XML-
+Dekodierung ohne eigene Normalisierung, Trimmen oder Case-Folding
+verglichen. Fehlende, doppelte oder syntaktisch ungültige Kennungen,
+unaufgelöste oder typfremde Referenzen und eine Attributdefinition, die
+nicht zum Objekttyp gehört, MÜSSEN vor einer erfolgreichen Objektprojektion
+abgewiesen werden. Wo die ReqIF-Struktur Vorwärtsreferenzen erlaubt,
+entscheidet die vollständige Eingabe über ihre Auflösbarkeit; die
+vorgeschriebene XML-Struktur wird dadurch nicht gelockert.
+
+Die externe Objektidentität MUSS die unveränderte `SPEC-OBJECT`-Kennung
+als `external_id` verwenden. `source_system`, `source_document` und eine
+gegebenenfalls verwendete `external_revision` werden ausdrücklich vom
+Aufrufer gebunden. Ein Dateipfad, Toolname, Header-Identifier oder
+`LAST-CHANGE` DARF NICHT unbemerkt einen dieser Kontextwerte ersetzen.
+Die bestehende externe Identitätsregistry und Importhistorie bleiben
+maßgeblich; ein ReqIF-Identifier wird nicht zur nativen SpecRoad-ID.
+
+Beim erstmaligen Export eines nativen Artefakts ohne externe Kennung im
+ausdrücklich gewählten Zielkontext MUSS die neue ReqIF-Objektkennung
+deterministisch als `_sr_` plus kleingeschriebene SHA-256 der RFC-8785-
+Bytes des Objekts `{"project_id": P, "artifact_type": T, "id": I}` gebildet
+werden. P, T und I sind die vorhandenen validierten nativen Werte;
+Revision, Name, Scope-Reihenfolge und Ausführungszeit gehören nicht in
+diese Projektion. Eine vorhandene eindeutige externe Kennung im Zielkontext
+hat Vorrang. Mehrere passende externe Kennungen, eine unzulässige Kennung
+oder eine Kollision im Ausgabedokument sind Konflikte, keine Erlaubnis zum
+Umbenennen. Die Kennungsableitung schreibt keine Registry ins Projekt.
+Typ- und Attributdefinitionen kommen weiterhin aus der ausdrücklich
+gebundenen Definition/Mappingsicht; Feldnamen werden nicht zu Typen erraten.
+
+**Wirksamer Wert und Herkunft.** Eine explizite Attributbelegung hat
+Vorrang vor dem Definitions-Standardwert, auch bei `false`, numerischer
+Null, leerem String oder leerer Enum-Auswahl. Fehlt die Belegung, wird
+ein tatsächlich deklarierter und gültiger Standardwert für die
+Mappingprojektion verwendet; ohne solchen Standard fehlt das Quellfeld.
+Ein ungültiger expliziter Wert DARF NICHT durch den Standard ersetzt
+werden. Der Adapter MUSS die Herkunft pro Definition unterscheidbar
+ausweisen: `explicit`, `default` oder `absent`. Er DARF beim Export einer
+unveränderten Objektprojektion keine zuvor fehlende Belegung allein wegen
+ihres wirksamen Standards materialisieren. JSON-Null ist kein erfundener
+ReqIF-Nullwert. Native Nullwerte außerhalb einer explizit darstellbaren
+Abbildung sind nicht repräsentierbar.
+
+**Wertprojektion für 10.12.1.** Erst nach der jeweiligen ReqIF-Typprüfung
+MUSS die folgende Schnittstelle verwendet werden. Ein `value_map` arbeitet
+auf diesem Wert; es ersetzt keine Typ-, Referenz- oder Sicherheitsprüfung.
+
+| ReqIF-Wertfamilie | SpecRoad-Quellwert des Mappingadapters |
+|---|---|
+| Boolean | JSON-Boolean; kein Integer und kein Wahrheitswert aus beliebigem Text. |
+| Integer | JSON-Zahl mit unverändertem ganzzahligem Wert, nur wenn der bestehende Zahlen-/JCS-Roundtripvertrag ihn akzeptiert. |
+| Real | JSON-Zahl nur innerhalb der bestehenden endlichen Zahlen-/JCS-Schnittmenge; keine zusätzliche Rundung auf Datentypgenauigkeit oder Prozess-Decimal-Kontext. |
+| String | Der durch XML bestimmte Stringwert unverändert, einschließlich Leerstring, Leerraum und Unicode; kein Splitten, Trimmen oder Enum-Raten. |
+| Date/DateTime | Der geprüfte XML-dateTime-Wert als String mit erhaltener Zeitzonenangabe beziehungsweise erhaltener Zeitzonenabwesenheit und Bruchteilspräzision; keine lokale Zeitzone oder Epochensekunden ergänzen. |
+| Enumeration | Immer ein JSON-Array der ausgewählten EnumValue-Kennungen, auch bei einfacher Auswahl. Für diese Projektion nach UTF-8-Bytes sortieren; keine Labels oder numerischen EmbeddedValue-Schlüssel verwenden. |
+
+Für Enumeration MÜSSEN ausgewählte Kennungen zur referenzierten Definition
+gehören; doppelte Auswahlkennungen werden als mehrdeutige Eingabe abgewiesen.
+Die Einzel-/Mehrfachauswahl wird nach der Definition geprüft. Das Objektmodell
+erhält die ursprüngliche Reihenfolge unabhängig von der sortierten
+Mappingprojektion. Eine leere Auswahl ist von einem fehlenden Attribut
+unterscheidbar. Es gibt keinen automatischen Wechsel zwischen String und
+Array. Eine gewünschte native Status- oder Enum-Abbildung MUSS ausdrücklich
+im vorhandenen `value_map` stehen.
+
+Für Zahlen bleiben 9.5 und Anhang U unverändert. Ein gültiger ReqIF-Wert,
+der diese native Schnittmenge nicht trifft, MUSS als nicht repräsentierbar
+mit Objekt- und Definitionskennung ausgewiesen und im typisierten
+Quellmodell erhalten werden. Das gilt insbesondere für nicht endliche
+Werte, verworfene Präzision und eine im konkreten Roundtrip nicht erhaltene
+numerische Eigenschaft wie das Vorzeichen einer negativen Null. Verboten
+sind stilles Runden, Unterlauf auf Null, Stringifikation, Defaults oder das
+Auslassen der betroffenen Belegung mit anschließendem uneingeschränktem
+Erfolgsstatus. Ein ungemapptes Feld und ein nicht darstellbarer Wert bleiben
+unterscheidbar. Die native Zielvalidierung entscheidet weiterhin über den
+vollständigen Zieltyp, auch bei gemappten Datums- oder Statusstrings.
+
+**Rückweg und Erhalt.** Ein unverändert gelesener unterstützter
+Objektausschnitt MUSS seine Identitäten, Referenzen, Typdefinitionen,
+expliziten Werte, Standardwerte und deren Herkunft semantisch erhalten.
+Der Encoder DARF unterstützte Quelldaten nicht aus nativen Feldern neu
+erraten. Bei nativer Abbildung MUSS der Rückweg deshalb die ausdrücklich
+gebundene Typ-/Definitionsinformation und externe Identität verwenden.
+Ein `value_map` darf nur bei eindeutigem inversen Treffer rückwärts benutzt
+werden; keine Auswahl des ersten Treffers bei Mehrdeutigkeit. Ohne
+eindeutige Darstellung MUSS der Export einen konkreten Verlust/Konflikt
+ausweisen, statt eine Ersatzkennung oder einen Typ aus dem Feldnamen zu
+erfinden. Diese Regel erweitert das vorhandene Mappingformat nicht.
+
+Für identische Objektdaten und ausdrücklich gelieferte Metadaten MUSS die
+Ausgabe byte-identisch sein. XML-Escapes, Namespace-Präfixe und Quote-Stil
+sind keine fachliche Identität; der Encoder MUSS sie deterministisch und
+sicher ausgeben. Der Projekt-Export verwendet weiterhin den in D.1
+festgelegten `CREATION-TIME` und das Manifest nach SR-REQ-0319. Weder
+Wanduhrzeit noch Zufall ersetzen fehlende notwendige Angaben.
+
+**Sicherheit, Unvollständigkeit und Fehler.** Die vorhandene sichere
+XML-Ereignisverarbeitung ist wiederzuverwenden. SR-REQ-0324 und Anhang O
+gelten unverändert für die ganze Eingabe, auch für nicht gemappte oder
+unbekannte Inhalte; keine DTD-, Entity-, Schema-, XInclude-, Netzwerk-
+oder Codeauflösung. Eine Teilprojektion darf keine vollständige
+ReqIF-/Importabnahme behaupten. XHTML bleibt strukturierter Inhalt nach
+14.i, keine automatische Plaintext-Konvertierung. Andere nicht verstandene
+Inhalte werden gemäß SR-REQ-0322 erhalten oder einzeln als Verlust benannt;
+sie werden nicht still übersprungen. Das vollständige Verlust-/Manifest-
+und ReqIFZ-Verhalten bleibt in 14.j/14.k und den Integrationsschritten
+verpflichtend. Bis es ausgeführt werden kann, bleibt die entsprechende
+Integration offen, statt einen uneingeschränkten Importerfolg zu melden.
+
+Fehler MÜSSEN maschinenlesbar mindestens Grund und verfügbaren Objekt-/
+Definitionsbezug oder XML-Position tragen, ohne komplette Nutztexte zu
+kopieren. Syntax-, Typ- und Referenzfehler innerhalb der ReqIF-Eingabe
+haben Code 3. Ein Konflikt mit einem gebundenen Quellstand oder eine
+mehrdeutige inverse Exportzuordnung hat Code 6; reale Sicherheitsgrenzen
+behalten Code 7, ungültige Aufrufkonfiguration Code 2. Bestehende
+Mappingdiagnosen aus 10.12.1 behalten ihre Fehlerklasse und ihren Code.
+Ressourcenfehler werden nicht in normale
+Formatfehler oder partielle Erfolge umgedeutet. Dieser Vertrag führt keine
+zusätzliche harte Gesamtauftragsgrenze, Freigabe oder Writer-Ausnahme ein.
+
 
 ## D.2 CSV
 

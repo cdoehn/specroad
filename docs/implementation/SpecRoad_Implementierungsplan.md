@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 11 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.16
+**Planrevision:** 12 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.17
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `cad61bee632c33f6ccc1310f83f8c02aa222f1b20b1e6b03e5c23f318cccf3bb`.
+Gebundene Spezifikations-SHA-256: `0177ac4c2ae509dacb4b7dcf852566764b0f11ac9aa558bc764c9664a5e01bc3`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 11
+plan_revision: 12
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 591
 last_completed_plan_commit: 14.g.C
 next_plan_commit: 14.h.W
-last_completed_numbered_bundle: 424
+last_completed_numbered_bundle: 425
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,35 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – ReqIF-Objekte und Mappinggrenze (Bundle 425)
+
+Revision 12 dokumentiert **REQIF-OBJECT-CONTRACT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.17, D.1.1**, legt die typisierte
+Objekterhaltung sowie Identitäts-, Default- und Wertprojektion für 14.h
+fest. Alternativen, Quellen, Grenzprüfung und offene Abnahmen stehen
+unmittelbar bei 14.h; keine persönliche Einzelzustimmung oder erfundene
+Review-/Interoperabilitätsbehauptung.
+
+- [x] **REQIF-OBJECT-CONTRACT:** ReqIF-Objekte und Mappinggrenze verbindlich klären. Commit: `docs(spec): ReqIF-Objekte und Mappinggrenze präzisieren`.
+
+**Übergabegrenze:** Ein OFF-PLAN-Dokumentcommit mit Spezifikation, Plan
+und ausschließlich notwendigen aktiven Katalog-Hashbindungen. Produktcode,
+Tests, Testnummern, Fixtures, Runner, Workflow und historische Evidence
+bleiben unverändert. Produktstand **591/900**, zuletzt **14.g.C**, nächstens
+**14.h.W**, bleibt offen bei diesem nächsten Schritt. Erst nach dem
+erfolgreichen parallelen Apply-Gate setzt der Entrypoint den Offplan-
+Marker und die Bundlenummer auf 425; keine Produktposition wird erhöht.
+
+**Prüfgrenze:** Keine Produktverhaltensänderung und keine erfundenen
+Dokumentationstests. Vollständige Collection-/Katalogprüfung mit null
+ausgeführten Testkörpern und native Paketprüfung bleiben erhalten. Apply
+führt vor diesem Commit genau **Gruppe 1/3**, Commitfolge **133**, mit
+**6.066 Tests** und vier parallelen Workern aus. Kein Vollsuite-/Release-
+Nachweis; die Ergebnisse dieser künftigen Gruppe werden nicht vorweggenommen.
+Übergabe als `spec_clarification`, danach Ende des Einzelauftrags.
+Control-/Watcher-/CI-Zustände werden nicht verändert. Der nächste
+Produktauftrag setzt den geklärten Schritt um; keine zweite Phase hier.
 
 ## OFF-PLAN – Explizite NDJSON-Objekthülle (Bundle 421)
 
@@ -19383,21 +19412,159 @@ nach nativer Paketprüfung und atomarer Veröffentlichung endet der Auftrag.
 **Anforderungsbezug:** `SR-REQ-0320`–`SR-REQ-0321`.
 **Verifikationsbezug:** `SR-VER-0024`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Das vollständig gebundene Result
+`specroad-apply_Result_140805_1023_929f86.zip`, SHA-256
+`e3f40044dfd2cb6113ac456bc4b2b38714c91057cf2d95a0e005bae1cffe9605`,
+bestätigt Bundle **424** / **14.g.C** auf
+`adedeaaf1394688522f50b2f650c46fa5dca79dc`: sauberer Apply-Arbeitsbaum,
+**6.066/6.066** Tests der Gruppe **0/3**, Commitfolge **132**, vier Worker,
+**2.025,39 s**. Native Result-/Patchbindung, alle **2.159** Snapshotdateien,
+tatsächlicher Commit, Run-/Ausführungslogs und vollständige nummerierte
+Testbeobachtungen wurden abgeglichen. In Dev wurden ausschließlich die
+fünf dadurch bestätigten Fortschrittsmarker nachgeführt; danach entsprach
+der Produktbestand dem Snapshot. Diese Belege betreffen den vorherigen
+Produktstand, keine bereits implementierte ReqIF-Funktion.
+
+**Entscheidungsbeleg REQIF-OBJECT-CONTRACT (Bundle 425)**
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+Control-Vertrag 2 mit `clarification_allowed=true`. Keine behauptete
+persönliche Einzelbestätigung, kein erfundener Review oder Risikoentscheid.
+
+**Lücke und geprüfte Quellen:** D.1 und SR-REQ-0320/0321 verlangen die
+ReqIF-Typ-/Objektabbildung. 10.12.1 erwartet bereits geparste JSON-Felder,
+legt aber nicht fest, ob ReqIF-Definitionskennungen oder veränderliche
+Namen die Schlüssel bilden, welche Form Enum-Werte erhalten und wie
+Default-Herkunft oder außerhalb JCS liegende Zahlen erhalten werden.
+Das sind beobachtbare Format-/Mappingentscheidungen, keine bloßen
+Funktionsnamen. Im vollständigen gebundenen Snapshot fehlt ein ReqIF-
+Objektcodec; `source_format=reqif` in vorhandenen Mapping-/Importplan-
+Tests belegt nur deren passive Eingabegrenze. SR-TC-0320/0321 sind offen.
+
+Geprüft wurden D.1, 10.12/10.12.1, 9.5, Anhang U/O, SR-REQ-0313–0332,
+SR-VER-0024 und 14.h–14.k; technisch `mappings/exchange.py`,
+`mappings/_contract.py`, `model/numbers.py`, `storage/json_syntax.py`,
+`storage/_xml_reader.py`, `verification/junit.py` sowie vorhandene
+Mapping-/Identitäts-/Importplanungstests. Der feste XML-Kern kann
+namespaceaufgelöste Ereignisse ohne Resolver liefern; ein neuer
+allgemeiner XML-Parser oder eine Runtimeabhängigkeit ist nicht nötig.
+
+Am 23. Oktober 2026 wurde die offizielle [OMG-Übersichtsseite zu
+ReqIF 1.2](https://www.omg.org/spec/ReqIF/1.2) samt dem dort verlinkten
+[normativen PDF formal/2016-07-01](https://www.omg.org/spec/ReqIF/1.2/PDF)
+geprüft: 9.2.3, 10.2, 10.5, 10.8.6/14/15/25/26/28/32. Diese Quellen
+liefern den externen Standard; die JSON-Projektion ist die eigene unten
+begründete SpecRoad-Regel. Der Browserzugriff auf die ebenfalls verlinkte
+XSD wurde wegen nicht unterstütztem Content-Type nicht ausgewertet.
+Es wird weder eine XSD-Ausführung noch ein fremder Tool-Roundtrip oder
+ein OMG-Konformitätsnachweis behauptet. Die obigen Standardabschnitte
+reichen für diese Abbildungsentscheidung; die Implementierung muss ihren
+ausführbaren Parser-/Wertekorpus gesondert nachweisen.
+
+**Alternativen und Entscheidung:**
+
+1. `LONG-NAME`/Labels und Python-Typinferenz verwenden: veränderliche oder
+   gleiche Namen werden zu Schlüsselkonflikten, numerische Präzision und
+   Enum-Identität können verloren gehen. Widerspricht dem zugesagten
+   verlustbewussten Roundtrip und ist nicht gewählt.
+2. Alles als untypisierte Strings kopieren, fehlende Werte durch Null oder
+   erfundene Defaults ersetzen: umgeht die native Typgrenze und verbirgt
+   Herkunft. Es wäre keine ReqIF-Fachabbildung und ist nicht gewählt.
+3. Gewählt ist die **getrennte typisierte Objekt- und Mappinggrenze v1**:
+   Originalbytes/Definitionen/Werte erhalten, ausschließlich Kennungen als
+   Schlüssel, explizite Default-Herkunft, definierte JSON-Schnittmenge und
+   sichtbare Nichtrepräsentierbarkeit. Bestehende Mappings, externe
+   Registries, Zahlengrenzen und sichere XML-Verarbeitung werden benutzt.
+   Ein zweites Mapping-/Registryformat oder eine neue native Zahlensorte
+   wäre umfangreicher und würde bestehende Verträge verändern.
+
+**Grenzprüfung nach 2.4.1:** (1) Die Entscheidung präzisiert nur den
+bestätigten Typ-/Objektausschnitt 14.h; sie zieht 14.i–14.k oder die CLI-
+Integration nicht vor. (2) Sie erhält alle Requirement-Texte, die sieben
+Wertfamilien von D.1 und den vollständigen späteren Roundtrip; unterstützte
+Werte bleiben nutzbar, nicht darstellbare Werte sichtbar erhalten.
+(3) Kein bestehendes Mappingformat, kein JSON-/Artefaktschema, keine
+Registry, Freigabe, Sicherheits- oder Writergrenze wird geändert.
+(4) Die versionierte Profilentscheidung ist nachvollziehbar durch eine
+neue normative Fassung revidierbar; keine Migration, kein Reset und kein
+Umschreiben historischer Evidence ist Bestandteil dieser Übergabe.
+(5) Die Auswahl benötigt keine unbekannte menschliche Fachentscheidung.
+Quellkontext, Mapping und Metadaten werden später explizite Eingaben,
+keine jetzt erfundenen Tatsachen über reale Fremddaten.
+
+**Normative Zielregel:** Spezifikation **0.2.17, D.1.1**. Aktive
+Katalogeinträge erhalten ausschließlich die neue Spezifikations-SHA-256;
+ihre Testidentitäten, Oracles und Nachweisstände bleiben unverändert.
+Insbesondere bleiben SR-TC-0320/0321 `open`/`pending`. Eine Dokumentklärung
+ist keine Produktumsetzung oder bestandene ReqIF-Verhaltensabnahme.
+
+**Verbindliche positive, negative und Grenzfall-Abnahmen:**
+
+- W: Einen passiven ReqIF-Typ-/Spec-Object-Codec und reinen Mappingadapter
+  nach D.1.1 bereitstellen. Boolean, Integer, Real, String, DateTime und
+  Enumeration samt Definitionen, referenzierten IDs und Metadaten
+  roundtrippen; ein minimaler gültiger Header und leere Objektmengen
+  bleiben verarbeitbar. Zwei gleich benannte Attributdefinitionen mit
+  verschiedenen IDs dürfen nicht verschmelzen. Identische Eingaben
+  erzeugen identische Ausgaben ohne Uhr, Zufallskennung oder Projektwrite.
+  Erstexport-Kennungen folgen der exakten D.1.1-Hashprojektion und bleiben
+  über Revisionen/Namenswechsel stabil; eine vorhandene externe Kennung
+  im gewählten Zielkontext hat Vorrang, Kollisionen werden nicht umbenannt.
+- W: Explizite Belegung vor Default, tatsächlicher Default vor Abwesenheit
+  prüfen; `false`, Nullzahl, Leerstring und leere Enum-Auswahl dürfen
+  keinen Default auslösen. Effektiver Wert und Herkunft bleiben
+  unterscheidbar; Export fügt keine zuvor fehlende Belegung ein.
+  Enum-Projektionen enthalten sortierte IDs als Array; ein explizites
+  `value_map` wird ohne Label-/Statusinferenz angewandt.
+- W: Doppelte IDs, falsche Typ-/Definitionsreferenzen, doppelte
+  Objektbelegungen und unpassende Attributdefinitionen ablehnen. Auch
+  bei Vorwärtsreferenzen erst nach vollständiger Auflösung Erfolg melden.
+  Nicht darstellbare Zahlen nicht runden, stringifizieren oder durch
+  Standards ersetzen. Typisierte Quellen bleiben erhalten; kein
+  vollständiger Import-/Export- oder Freigabeerfolg wird behauptet.
+- R zusätzlich: Sämtliche Typgrenzen, Default-Typen, leere/mehrfache
+  Auswahl, falsche Enum-Referenzen, Unicode und XML-Escapes sowie
+  Zeitzonen-/Bruchteilsangaben prüfen. Zahlenkorpus mit JCS-exakten und
+  nicht exakten großen Ganzzahlen, Präzisionsverlust, Unter-/Überlauf,
+  Nichtendlichkeit und negativer Null. Gleichnamige Elemente, abweichender
+  expliziter Quellkontext und fehlende notwendige Mappingfelder dürfen
+  keinen erfundenen Ersatz erhalten. Mehrdeutige inverse Wertabbildungen
+  erzeugen einen sichtbaren Konflikt.
+- R zusätzlich: Vollständige Quelle mit unbekannten Zusatzdaten sowie
+  noch nicht integrierten XHTML-/Hierarchieinhalten prüfen: keine stille
+  Entfernung oder Teilprojektion als Gesamtpass. Unsicheres XML auch in
+  unbekannten Teilbäumen, DTD/Entities, Schema-/Netzwerkreferenzen,
+  strukturelle Limits und reale Ressourcenfehler prüfen. Rohbytes,
+  maschinenlesbare Fehlerorte und Verlustbezüge bleiben nachvollziehbar;
+  die W-Oracles bleiben unverändert zusätzlich grün.
+- C: Objektmodell, XML-Ereignisabbildung und native Mappingprojektion
+  strukturell trennen. Keine neuen Werte, Ersatzregeln, Schemas oder
+  Freigabe-/Seiteneffekte; vorhandene W-/R-Oracles unverändert erneut
+  gezielt parallel prüfen.
+
+**Offene Umsetzung:** 14.h.W/R/C, Positionen **592–594**, bleiben offen.
+Der W-Schnitt ist ein nützlicher passiver Objektcodec; die vollständige
+Projektabbildung, Hierarchien, Relationen, XHTML, Verlust-/Exportmanifest,
+ReqIFZ, CLI und tatsächliche Transaktion behalten ihre zugeordneten
+verbindlichen Abnahmen. Kein Projektartefakt oder externer Bestand wird
+durch diese Spezifikationsübergabe verändert.
+
+
 #### 14.h.W – Let it Work
 
 - [ ] **14.h.W** · Position **592/900** · Voraussetzung: `14.g.C`.
 **Exakte Commit-Message:** `14.h.W feat(exchange): ReqIF-Typen und Attribute aufbauen`
 
-**Umsetzung:** ReqIF-1.2-Datentypen, Spec-Objects, unterstützte Attribute und Identitäten abbilden.
+**Umsetzung:** Den kleinsten nutzbaren passiven ReqIF-Typ-/Spec-Object-Codec und reinen Mappingadapter nach D.1.1 aufbauen. Unterstützte skalare Werte und Enumeration, Definitionen, Identitäten und Default-Herkunft erhalten; vorhandene XML-, Mapping- und Zahlengrenzen nutzen. Die W-Abnahmen des Entscheidungsbelegs gelten.
 
-**Verhaltensabnahme:** Unterstützte Werte erhalten Bedeutung und externe Identität im Roundtrip.
+**Verhaltensabnahme:** Unterstützte Werte, Definitions-/Objektidentitäten, explizite Belegungen und Default-Herkunft bleiben im Roundtrip erhalten; die native Projektion verwendet ausschließlich gebundene Kennungen und die deklarierte JSON-Schnittmenge. Fehler erzeugen keine Ersatzwerte, Projektwrites oder Freigaben; die vollständige spätere ReqIF-Integration bleibt offen.
 
 #### 14.h.R – Make it Right
 
 - [ ] **14.h.R** · Position **593/900** · Voraussetzung: `14.h.W`.
 **Exakte Commit-Message:** `14.h.R feat(exchange): ReqIF-Typen und Attribute vervollständigen`
 
-**Vervollständigung:** Nicht repräsentierbare Werte nicht still in Strings oder Defaults umwandeln.
+**Vervollständigung:** Den Typ-/Wertekorpus gemäß D.1.1 und den R-Abnahmen vervollständigen: Referenz-/Wertebereiche, fehlende/standardisierte Werte, Zeit-/Enum-/Zahlengrenzen, mehrdeutige Rückabbildung und sichere Verarbeitung aller Teilbäume. Nicht repräsentierbare Werte sichtbar erhalten und ausweisen, niemals still in Strings oder Defaults umwandeln.
 
 **Verhaltensabnahme:** Datentyp-/Wertekorpus prüft exakte erhaltene Fachwerte und ausgewiesene Verluste. Die W-Nachweise bleiben zusätzlich grün.
 
