@@ -1,20 +1,16 @@
-"""Explicit, inert XHTML/prose intersection; no filesystem, renderer or resolver."""
-from dataclasses import dataclass
-from hashlib import sha256
+"""Exact XHTML/native-prose projection and inverse; no IO or media decoder.
+
+Shape validation and caller-owned attachment binding have separate boundaries.
+The native M11 prose parser remains the semantic oracle for both directions.
+"""
 import re
 import string
-from urllib.parse import quote, unquote
+from urllib.parse import quote
 
 from ..documents.prose import ProseError, _parse_markdown
-from ..model.attachments import AttachmentDescriptor
-from ..model.errors import ModelError
-from ..model.paths import project_path
+from ._reqif_attachments import ReqIFAttachment, _attachments
 from ._reqif_values import XHTML_NAMESPACE, ReqIFError, ReqIFXHTML, _Node, _SEP, _error
-
-_BLOCK = {'div', 'p', 'pre', 'blockquote', 'ul', 'ol', 'hr'}
-_INLINE = {'span', 'em', 'i', 'strong', 'b', 'br', 'code', 'a', 'object'}
-_ATTRS = {'a': {'href', 'title'}, 'object': {'data', 'type'}}
-_XML_SPACE = ' \t\r\n'
+from ._reqif_xhtml_profile import _BLOCK, _INLINE, _XML_SPACE, _tag
 
 
 def parse_markdown(markdown, *, pointer=''):
@@ -25,128 +21,6 @@ def parse_markdown(markdown, *, pointer=''):
         limited = error.reason in {'prose_size_limit', 'prose_nesting_limit', 'prose_complexity_limit'}
         raise ReqIFError('reqif_' + error.reason if limited else 'reqif_xhtml_prose_not_representable',
                          exit_code=7 if limited else 3, pointer=pointer) from error
-
-
-def _tag(node):
-    namespace, _, local = node.name.rpartition(_SEP)
-    return local if namespace == XHTML_NAMESPACE else None
-
-
-def relative_reference(value):
-    """Check one URI decoding, keeping the original reference as the lookup key."""
-    if type(value) is not str or not value or re.search(r'%(?![0-9a-fA-F]{2})', value):
-        raise ReqIFError('reqif_attachment_reference_unsafe', exit_code=7)
-    try:
-        decoded = unquote(value, encoding='utf-8', errors='strict')
-        if (any(c in decoded for c in '\\%?#:') or decoded.startswith('/')
-                or any(ord(c) < 32 or ord(c) == 127 for c in decoded)
-                or any(v in ('', '.', '..') for v in decoded.split('/'))):
-            raise ReqIFError('reqif_attachment_reference_unsafe', exit_code=7)
-        project_path(decoded)
-    except (ModelError, UnicodeError) as error:
-        raise ReqIFError('reqif_attachment_reference_unsafe', exit_code=7) from error
-    return decoded
-
-
-@dataclass(frozen=True)
-class ReqIFAttachment:
-    """Caller-owned bytes bound to a relative ReqIF reference and native path."""
-    reference: str
-    descriptor: AttachmentDescriptor
-    content: bytes
-
-    def __post_init__(self):
-        relative_reference(self.reference)
-        if type(self.descriptor) is not AttachmentDescriptor or type(self.content) is not bytes:
-            raise ReqIFError('reqif_attachment_binding_required', exit_code=2)
-        try:
-            AttachmentDescriptor.from_data(self.descriptor.data)
-        except ModelError as error:
-            raise ReqIFError(error.reason, exit_code=2) from error
-        if not self.descriptor.path.startswith('attachments/'):
-            raise ReqIFError('reqif_attachment_target_required', exit_code=7)
-        if len(self.content) != self.descriptor.size or sha256(self.content).hexdigest() != self.descriptor.sha256:
-            raise ReqIFError('reqif_attachment_bytes_changed', exit_code=6)
-
-
-def _attachments(values):
-    if type(values) not in (tuple, list):
-        raise ReqIFError('reqif_attachment_bindings_required', exit_code=2)
-    result, paths = {}, {}
-    for value in values:
-        if type(value) is not ReqIFAttachment:
-            raise ReqIFError('reqif_attachment_binding_required', exit_code=2)
-        value = ReqIFAttachment(value.reference, value.descriptor, value.content)
-        if value.reference in result:
-            raise ReqIFError('reqif_attachment_binding_ambiguous', exit_code=6)
-        previous = paths.get(value.descriptor.path)
-        if previous is not None and previous.descriptor != value.descriptor:
-            raise ReqIFError('reqif_attachment_target_conflict', exit_code=6)
-        result[value.reference] = value
-        paths[value.descriptor.path] = value
-    return result
-
-
-def validate_xhtml(parts, simplified):
-    """Validate all value/original subtrees; keep unsupported passive source."""
-    if 'THE-VALUE' not in parts:
-        raise ReqIFError('reqif_xhtml_value_required')
-    unsupported = []
-
-    def visit(node, *, parent=None, in_link=False):
-        tag = _tag(node)
-        local = node.name.rsplit(_SEP, 1)[-1].lower()
-        if local in ('script', 'style', 'iframe', 'embed', 'applet', 'include'):
-            raise _error('reqif_xhtml_active_content', node, exit_code=7)
-        for key, val in node.attributes:
-            name = key.rsplit(_SEP, 1)[-1].lower()
-            if name.startswith('on'):
-                raise _error('reqif_xhtml_event_attribute', node, exit_code=7)
-            if name in ('href', 'data', 'src'):
-                try:
-                    relative_reference(val)
-                except ReqIFError as error:
-                    raise _error(error.reason, node, exit_code=error.exit_code) from error
-            if key not in _ATTRS.get(tag, set()):
-                unsupported.append((node.pointer, 'reqif_xhtml_attribute_not_representable'))
-        if tag not in _BLOCK | _INLINE | {'li'}:
-            unsupported.append((node.pointer, 'reqif_xhtml_element_not_representable'))
-        if tag in ('a', 'object') and not ({'href'} if tag == 'a' else {'data', 'type'}) <= node.attrs.keys():
-            raise _error('reqif_xhtml_reference_attribute_required', node)
-        if tag == 'a' and in_link:
-            raise _error('reqif_xhtml_nested_link', node)
-        # An object's passive fallback may contain blocks. It remains explicitly
-        # unsupported, and every descendant still undergoes safety validation.
-        if tag in _BLOCK and parent in (_INLINE - {'object'}) | {'p'} or tag == 'li' and parent not in ('ul', 'ol'):
-            raise _error('reqif_xhtml_element_placement', node)
-        if tag in ('br', 'hr') and node.content:
-            raise _error('reqif_xhtml_empty_element_required', node)
-        if tag == 'code' and node.children:
-            raise _error('reqif_xhtml_code_text_required', node)
-        if tag == 'pre' and node.children:
-            if len(node.content) != 1 or _tag(node.children[0]) != 'code':
-                raise _error('reqif_xhtml_pre_text_required', node)
-        if tag in ('ul', 'ol') and (not node.children or any(_tag(c) != 'li' for c in node.children)
-                or any(type(c) is str and c.strip(_XML_SPACE) for c in node.content)):
-            raise _error('reqif_xhtml_list_items_required', node)
-        if tag == 'object' and (node.attrs.get('type') != 'image/png' or node.children):
-            unsupported.append((node.pointer, 'reqif_xhtml_object_not_representable'))
-        for child in node.children:
-            visit(child, parent=tag, in_link=in_link or tag == 'a')
-
-    roots = {}
-    for name in ('THE-VALUE', 'THE-ORIGINAL-VALUE'):
-        if name not in parts:
-            continue
-        wrapper = parts[name]
-        if wrapper.attrs or len(wrapper.children) != 1 or any(type(c) is str and c.strip(_XML_SPACE) for c in wrapper.content):
-            raise _error('reqif_xhtml_root_required', wrapper)
-        root = wrapper.children[0]
-        if _tag(root) not in ('div', 'p'):
-            unsupported.append((root.pointer, 'reqif_xhtml_root_not_representable'))
-        visit(root)
-        roots[name] = root
-    return ReqIFXHTML(roots['THE-VALUE'], roots.get('THE-ORIGINAL-VALUE'), simplified, tuple(unsupported))
 
 
 def _text(nodes, text):

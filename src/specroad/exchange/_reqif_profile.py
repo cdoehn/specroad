@@ -189,7 +189,7 @@ def _validate(root, *, structure=False):
             attributes(node, {"IS-SIMPLIFIED"})
             simplified = _boolean(node.attrs["IS-SIMPLIFIED"], node) if "IS-SIMPLIFIED" in node.attrs else False
             if structure:
-                from ._reqif_xhtml import validate_xhtml
+                from ._reqif_xhtml_profile import validate_xhtml
                 lexical = validate_xhtml(parts, simplified)
                 unsupported.extend(lexical.unsupported)
             else:

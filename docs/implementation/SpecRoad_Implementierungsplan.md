@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 13
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 596
-last_completed_plan_commit: 14.i.R
-next_plan_commit: 14.i.C
-last_completed_numbered_bundle: 431
+implementation_plan_commits_completed: 597
+last_completed_plan_commit: 14.i.C
+next_plan_commit: 14.j.W
+last_completed_numbered_bundle: 432
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -20261,7 +20261,7 @@ ohne eigene Result-/Test-Warteschleife.
 
 #### 14.i.C – Make it Clean
 
-- [ ] **14.i.C** · Position **597/900** · Voraussetzung: `14.i.R`.
+- [x] **14.i.C** · Position **597/900** · Voraussetzung: `14.i.R`.
 **Exakte Commit-Message:** `14.i.C refactor(exchange): ReqIF-Hierarchien, Relationen und XHTML bereinigen`
 
 **Bereinigung:** Den sicheren XML-Kern aus M12 und Dokumentdaten aus M11 verwenden.
@@ -20269,6 +20269,79 @@ ohne eigene Result-/Test-Warteschleife.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Umsetzung und Übergabe (Bundle 432):** Das vollständig gebundene Result
+`specroad-apply_Result_201251_1023_f79141.zip`, SHA-256
+`98b0aa72689554495a3c6d31bd5bdd2ac2ac54aed922a4298f224d72b2178623`,
+bestätigt **14.i.R**, Bundle **431**, auf
+`f4c24cd638f60ad0d199abf6c16973682aa4626d`: sauberer Apply-Stand,
+**6.260/6.260** bestandene Tests der Gruppe **1/3**, Commitfolge **139**,
+vier Worker, **1.790,14 s**. Native Result-/Patchbindung, alle **2.173**
+Snapshotdateien, tatsächlicher Commit samt Elternstand und gebundene
+Ausführungs-/Testbelege wurden abgeglichen. In Dev wurden ausschließlich
+die fünf belegten R-Fortschrittsmarker nachgeführt; danach war der
+Produktbestand bytegleich zum Snapshot. Vor dem neuen Apply bleiben
+**596/900**, zuletzt **14.i.R**, nächstens **14.i.C**, maßgeblich.
+SPECROAD-DECISION-1 ist ausdrücklich vorhanden. Die bestehenden Vorgaben
+**0.2.18 / D.1.2** reichen für diese Bereinigung aus; die Spezifikation
+bleibt bytegleich. Dieses reguläre C-Bundle enthält keine normative Klärung.
+
+Die vorhandenen Verantwortlichkeiten sind jetzt getrennt:
+`_reqif_attachments` prüft relative Referenzen und tatsächliche, vom Aufrufer
+bereitgestellte Anhangbytes; `_reqif_xhtml_profile` prüft das geschlossene
+passive XHTML-Profil einschließlich Originalsubtrees und Quellzeigern.
+`_reqif_xhtml` enthält die exakte Proseprojektion und deren inverse Abbildung.
+Der XML-Adapter verwendet die Referenzprüfung direkt und behält den vorhandenen
+begrenzten M12-XML-Reader samt Fehlerpositions- und Ressourcenvertrag.
+Der ReqIF-Profilvalidator verwendet die XHTML-Formprüfung direkt, ohne die
+Prosekonvertierung als Validierungsschicht dazwischenzuschalten.
+
+`_reqif_fields` bündelt Quellfeldauflösung, Mappingbindung und reine inverse
+XHTML-Änderungen. Die Fassade liefert weiterhin denselben begrenzten Decoder
+und deterministischen Serializer; unveränderte Werte behalten Originalbytes,
+Default-Abwesenheit und Metadaten. `_reqif_structure` konzentriert sich auf
+ausdrückliche Vorkommens-/Relationsbindungen gegen tatsächliche native
+M11-Dokumentdaten. Die bestehende M11-Strukturprüfung und der native
+Proseparser bleiben die fachlichen Prüfinstanzen. Es entstehen keine
+zusätzlichen Parser, Resolver, Medien-Decoder, Registry- oder Projektwrites.
+
+Die **19** verschobenen Funktions-/Klassendefinitionen stimmen im AST mit
+dem R-Ausgangsstand überein. Geändert wurden ihre Modulzuständigkeit und
+Importverbindungen, nicht die Fachalgorithmen, Fehlerpriorität oder Abnahmen.
+Öffentliche Fassade und vorhandene Fehler-Injektionspunkte bleiben erhalten.
+Alle Tests und Fixtures, die Testnummernregistrierung und Rotationsanker
+bleiben bytegleich. SR-TC-0320/0321 behalten dieselben Test-/Fixturebindungen,
+Anforderungstexte und `partial`; ihre Umfangsnotiz dokumentiert die Bereinigung.
+Vollständige native Projektintegration, Verlust-/Erweiterungsmanifest, ReqIFZ,
+CLI und autorisierte Transaktionen bleiben offen.
+
+**Gezielter Dev-Verhaltensnachweis:** **1.164/1.164 Tests** bestanden im
+parallelen Lauf mit vier Workern, Prozess-/Gate-Exit **0**, **9,65 s**,
+ohne Beobachtungs-/Katalogfehler; `selected_passed=true`,
+`full_suite_passed=null`. Die Auswahl enthält sämtliche **581 ReqIF-W/R-
+Fälle** aus 14.h/14.i sowie betroffene Prose-, Dokumentstruktur-, Mapping-,
+sichere XML- und Python-3.10-Regressionsfälle. Bestehende fachliche Oracles
+wurden nicht umgeschrieben. Es sind gezielte Teiltests, keine Vollsuite.
+Vollständige Collection-/Katalogprüfung: **18.779 Identitäten**, **0 Testkörper**,
+keine Fehler, keine neuen oder neu nummerierten Tests. Keine Dokumentations-/
+Darstellungstests, Vollsuite oder CI wurden gestartet.
+Quellstand `1348e201c60ffa471aeb6b7a1dbcb70a731e0081a897b99cf4e9afa860bec0c5`;
+Katalog `1effbc6718240e40c2e4ab2c54ab32f51cb89044d359dea6879ad2d1ca946363`;
+Auswahlbeleg `68dd9c37419a9fe8e2893cd3ab0e43d6bba68e6dff28789114c98491baebf7bb`;
+Beobachtungsbeleg `de74dc38b5a3afb1b7584968239fdc35409d7475a63dd89e5903c63e449388fa`.
+
+**Vorgesehene Apply-Grenze:** Genau ein regulärer Commit **14.i.C**,
+Position **597/900**, Bundle **432**. Der Entrypoint installiert ausschließlich
+diesen gezielt geprüften C-Zustand und prüft **Gruppe 2/3**, Commitfolge **140**,
+mit **6.259 Tests** und vier parallelen Workern. Erst nach erfolgreichem,
+gebundenem Apply-Gate setzt er die fünf Fortschrittsmarker auf **597/900**,
+zuletzt **14.i.C**, nächstens **14.j.W**, Bundle **432**, C-Checkbox
+abgeschlossen, und erzeugt die oben festgelegte Commit-Message.
+Fehler erhalten Dateien, Index und bereits erfolgreiche Commits.
+**14.j.W und alle späteren Schritte bleiben offen.** Dieses Bundle behauptet
+weder ReqIF-XSD-/Fremdtool-Konformität noch Vollsuite-, Release- oder Apply-Erfolg.
+Nach nativer Paketprüfung und atomarer Übergabe endet dieser Einzelauftrag
+ohne eigene Result-/Test-Warteschleife.
 
 <a id="step-14-j"></a>
 ### 14.j – Informationsverluste und Erweiterungserhalt

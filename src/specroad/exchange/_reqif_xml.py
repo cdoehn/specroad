@@ -14,7 +14,7 @@ def read_tree(raw, limits, *, reader, structure=False):
     def start(name, attributes, reject):
         if structure:
             # Inspect every event, including deferred extensions and originals.
-            from ._reqif_xhtml import relative_reference
+            from ._reqif_attachments import relative_reference
             local = name.rsplit(_SEP, 1)[-1].lower()
             if local in ('script', 'style', 'iframe', 'embed', 'applet', 'include'):
                 reject('reqif_xhtml_active_content')

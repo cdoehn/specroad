@@ -10,6 +10,7 @@ from hashlib import sha256
 
 from ..model.numbers import number_from_token
 from ..storage._xml_reader import read_bounded_xml
+from . import _reqif_fields as _fields
 from . import _reqif_mapping as _mapping
 from . import _reqif_structure as _structure
 from ._reqif_mapping import reqif_object_identifier
@@ -18,9 +19,9 @@ from ._reqif_values import (
     REQIF_NAMESPACE, ReqIFDatatype, ReqIFDefinition, ReqIFError, ReqIFLimits,
     ReqIFObject, ReqIFType, ReqIFValue, _Node,
 )
-from ._reqif_xhtml import ReqIFAttachment, project_xhtml as _project_xhtml
+from ._reqif_attachments import ReqIFAttachment
+from ._reqif_xhtml import project_xhtml as _project_xhtml
 from ._reqif_xml import _serialize, read_tree
-
 
 
 def _read(raw, limits, *, structure=False):
@@ -80,12 +81,12 @@ class ReqIFDocument:
 
     def project_record(self, identifier, *, xhtml=False, attachments=()):
         """Project a typed object/specification/relation; XHTML is explicit."""
-        _structure.require_structure(self)
+        _fields.require_structure(self)
         return _mapping.project_object(self, identifier, number_parser=number_from_token,
-                                       records=_structure.records(self), xhtml=xhtml, attachments=attachments)
+                                       records=_fields.records(self), xhtml=xhtml, attachments=attachments)
 
     def project_xhtml(self, identifier, definition_id, *, attachments=()):
-        obj, definition, value = _structure.field(self, identifier, definition_id)
+        obj, definition, value = _fields.field(self, identifier, definition_id)
         if value is None:
             raise ReqIFError('reqif_xhtml_value_absent', object_id=identifier, definition_id=definition_id)
         try:
@@ -100,13 +101,13 @@ class ReqIFDocument:
                 'origin': 'explicit' if value in obj.values else 'default'}
 
     def export_xhtml(self, identifier, definition_id, markdown, *, expected_source_sha256, attachments=()):
-        return _structure.export_xhtml(self, identifier, definition_id, markdown,
+        return _fields.export_xhtml(self, identifier, definition_id, markdown,
             expected_source_sha256=expected_source_sha256, attachments=attachments,
             decode=decode_reqif_structure, serialize=_serialize)
 
     def map_record(self, identifier, *, source_system, source_document, external_revision=None,
                    xhtml=False, attachments=(), **mapping_binding):
-        mapping = _structure.bound_mapping(self, **mapping_binding)
+        mapping = _fields.bound_mapping(self, **mapping_binding)
         identity = _mapping._source_identity(identifier, source_system, source_document, external_revision)
         projected = self.project_record(identifier, xhtml=xhtml, attachments=attachments)
         result = {'mapping': mapping.resource.binding(), 'artifact': None, 'unmapped': {}}
