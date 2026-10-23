@@ -4,19 +4,34 @@
   "requirement_id": "SR-REQ-0457",
   "specification_sha256": "843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc",
   "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-IMPORT-COMPARISON-v1"
+  ],
+  "preconditions": [
+    "Explicit validated native identity (or an unmatched lookup), exact selected mapping key and caller-supplied local/source projections in the same mapping space. No external source or inferred history."
+  ],
+  "steps": [
+    "Create divergent local/source projections with valid separate historical hashes under all four explicit strategies.",
+    "Observe SRV148, no adopted target or refreshed history, and unchanged original inputs; exercise canonical type/Unicode distinctions and rejected invalid projections."
+  ],
   "oracle": {
-    "kind": "pending",
-    "requirement_contract": "Divergente lokale und externe Änderungen an derselben Mappingprojektion MÜSSEN als Importkonflikt ohne stille Auflösung enden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "kind": "behavior",
+    "requirement_contract": "Divergente lokale und externe \u00c4nderungen an derselben Mappingprojektion M\u00dcSSEN als Importkonflikt ohne stille Aufl\u00f6sung enden.",
+    "scope": "14.c.W exposes divergent local/source changes as an unresolved SRV148/code-3 conflict under every strategy, including error and skip. No target or import-baseline update is allowed. Canonical comparison does not conflate boolean/number or distinct Unicode values. Detached observations and rejected invalid projections preserve the original inputs. These are pure decision-kernel checks, not a completed import plan or writer approval."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV090",
+    "SRV148"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/local_projection",
+    "/source_projection"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +43,21 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[diverged-create_new_revision]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[diverged-update_if_unchanged]",
+    "tests/test_import_comparison.py::test_canonical_object_order_and_equivalent_numbers_are_equal_without_python_boolean_equality",
+    "tests/test_import_comparison.py::test_error_and_skip_never_adopt_or_hide_a_divergent_conflict[diverged-error-reject]",
+    "tests/test_import_comparison.py::test_error_and_skip_never_adopt_or_hide_a_divergent_conflict[diverged-skip-skip]",
+    "tests/test_import_comparison.py::test_inputs_and_nested_observations_do_not_change_other_observations_or_hashes",
+    "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[local_projection-bad0]",
+    "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[local_projection-bad2]",
+    "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[local_projection-bad4]",
+    "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[source_projection-None]",
+    "tests/test_import_comparison.py::test_invalid_projection_fails_without_mutating_identity[source_projection-bad3]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.c.R expands binding, JSON, failure and isolation boundaries; 14.c.C cleans the same comparison kernel with unchanged behavior.",
+    "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed."
   ]
 }

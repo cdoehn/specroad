@@ -4,19 +4,36 @@
   "requirement_id": "SR-REQ-0456",
   "specification_sha256": "843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc",
   "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-IMPORT-COMPARISON-v1"
+  ],
+  "preconditions": [
+    "Explicit validated native identity (or an unmatched lookup), exact selected mapping key and caller-supplied local/source projections in the same mapping space. No external source or inferred history."
+  ],
+  "steps": [
+    "Evaluate the five specified historical/local/source cases under explicit strategies and observe classification, target candidate, retained identity and diagnostics.",
+    "Reject malformed input and unsafe adoption while preserving legacy values, independent historical hashes and detached observations.",
+    "Exercise native artifact/relation lookup with actual mapping selection and compare isolated Core/PYZ decisions without publication authority."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`update_if_unchanged` MUSS den Dreifachvergleich aus Kapitel 10.12 verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "14.c.W computes actual RFC-8785 projection hashes against each separate historical side and compares current targets canonically. Unchanged, source-only, local-only, converged and divergent cases follow the normative table for both adopting strategies. Original payload, external revision and audit-only changes do not masquerade as projected source changes. Missing/mismatched history prevents adoption and never rebinds itself. Returned candidates retain the matched identity and do not authorize a revision or publication."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV090",
+    "SRV148"
+  ],
+  "expected_exit_codes": [
+    3
+  ],
+  "json_pointers": [
+    "/identity/mapping_id",
+    "/local_projection",
+    "/source_projection"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +45,43 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[converged-create_new_revision]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[converged-update_if_unchanged]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[diverged-create_new_revision]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[diverged-update_if_unchanged]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[local-only-create_new_revision]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[local-only-update_if_unchanged]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[source-only-create_new_revision]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[source-only-update_if_unchanged]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[unchanged-create_new_revision]",
+    "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[unchanged-update_if_unchanged]",
+    "tests/test_import_comparison.py::test_canonical_object_order_and_equivalent_numbers_are_equal_without_python_boolean_equality",
+    "tests/test_import_comparison.py::test_comparison_is_available_in_isolated_runtimes_with_no_false_write_authority[core]",
+    "tests/test_import_comparison.py::test_comparison_is_available_in_isolated_runtimes_with_no_false_write_authority[pyz]",
+    "tests/test_import_comparison.py::test_different_historical_projection_hashes_are_compared_to_their_own_side[create_new_revision]",
+    "tests/test_import_comparison.py::test_different_historical_projection_hashes_are_compared_to_their_own_side[update_if_unchanged]",
+    "tests/test_import_comparison.py::test_inputs_and_nested_observations_do_not_change_other_observations_or_hashes",
+    "tests/test_import_comparison.py::test_json_value_types_are_not_conflated_with_missing_fields[1_0]",
+    "tests/test_import_comparison.py::test_json_value_types_are_not_conflated_with_missing_fields[1_1]",
+    "tests/test_import_comparison.py::test_json_value_types_are_not_conflated_with_missing_fields[None]",
+    "tests/test_import_comparison.py::test_json_value_types_are_not_conflated_with_missing_fields[True]",
+    "tests/test_import_comparison.py::test_json_value_types_are_not_conflated_with_missing_fields[value4]",
+    "tests/test_import_comparison.py::test_json_value_types_are_not_conflated_with_missing_fields[value5]",
+    "tests/test_import_comparison.py::test_missing_legacy_history_remains_missing_and_cannot_become_an_import_baseline[create_new_revision]",
+    "tests/test_import_comparison.py::test_missing_legacy_history_remains_missing_and_cannot_become_an_import_baseline[error]",
+    "tests/test_import_comparison.py::test_missing_legacy_history_remains_missing_and_cannot_become_an_import_baseline[skip]",
+    "tests/test_import_comparison.py::test_missing_legacy_history_remains_missing_and_cannot_become_an_import_baseline[update_if_unchanged]",
+    "tests/test_import_comparison.py::test_payload_external_revision_and_audit_changes_do_not_change_projected_comparison",
+    "tests/test_import_comparison.py::test_real_mapping_and_native_lookup_keep_owner_identity_and_original_revision[artifact]",
+    "tests/test_import_comparison.py::test_real_mapping_and_native_lookup_keep_owner_identity_and_original_revision[relation]",
+    "tests/test_import_comparison.py::test_wrong_mapping_is_not_compared_as_unchanged_or_silently_rebound[create_new_revision]",
+    "tests/test_import_comparison.py::test_wrong_mapping_is_not_compared_as_unchanged_or_silently_rebound[error]",
+    "tests/test_import_comparison.py::test_wrong_mapping_is_not_compared_as_unchanged_or_silently_rebound[skip]",
+    "tests/test_import_comparison.py::test_wrong_mapping_is_not_compared_as_unchanged_or_silently_rebound[update_if_unchanged]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.c.R expands binding, JSON, failure and isolation boundaries; 14.c.C cleans the same comparison kernel with unchanged behavior.",
+    "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed."
   ]
 }

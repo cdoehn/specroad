@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 576
-last_completed_plan_commit: 14.b.C
-next_plan_commit: 14.c.W
-last_completed_numbered_bundle: 407
+implementation_plan_commits_completed: 577
+last_completed_plan_commit: 14.c.W
+next_plan_commit: 14.c.R
+last_completed_numbered_bundle: 408
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17633,12 +17633,86 @@ Klärung als erledigt markiert und es wird kein Implementierungstest erfunden.
 
 #### 14.c.W – Let it Work
 
-- [ ] **14.c.W** · Position **577/900** · Voraussetzung: `14.b.C`.
+- [x] **14.c.W** · Position **577/900** · Voraussetzung: `14.b.C`.
 **Exakte Commit-Message:** `14.c.W feat(exchange): Dreifachvergleich und Konfliktstrategien aufbauen`
 
 **Umsetzung:** error, skip, update_if_unchanged und create_new_revision anhand lokal/importiert/extern nach dem geklärten import-conflict-policy-v1-Vertrag (10.12.2) rein auswerten; dieselbe native Identität und die bestehende Fünf-Fälle-Tabelle erhalten.
 
 **Verhaltensabnahme:** Einseitige zulässige Quellenänderung kann mit beiden übernehmenden Strategien ohne lokale Verlustüberschreibung als Zielkandidat geliefert werden. Alle vier Strategien, fünf Vergleichsfälle und Bestandsgrenzen aus dem Entscheidungsbeleg sind beobachtbar; kein Write und keine vorgetäuschte Revision.
+
+
+**W-Stand Bundle 408:** Grundlage ist das vollständig geprüfte Result
+`specroad-apply_Result_000148_1023_65468c.zip`, SHA-256
+`e2e244a91982d9103d59b86ef0fb98405f234b9a638537f60d520d2faee2bfed`,
+mit sauberem Apply-Commit
+`cc670d1db2e4e8638a2b8c264fda1f29cec402e5`.
+Bundle 407 hat die bereits delegierte Regel übernommen; seine tatsächlichen
+5.760 Tests der Gruppe 1/3, Commitfolge 115, bestanden mit vier parallelen
+Workern. Der bestätigte Produktstand bleibt vor diesem W-Commit 576/900.
+Diese Umsetzung benötigt keine weitere normative Klärung; Spezifikation
+0.2.14 und die Abnahmen aus 10.12.2 bleiben unverändert.
+
+`exchange.ImportComparison` wertet eine ausdrücklich übergebene native
+Identität beziehungsweise einen fehlenden Lookup, die exakte ausgewählte
+Mappingkennung und zwei JSON-Objektprojektionen rein aus. Tatsächliche
+kanonische Projektionsbytes bestimmen die beiden unabhängigen Hashvergleiche
+und die Gleichheit der Zielwerte. Das Ergebnis hält Strategiewahl,
+Vergleichsklassifikation, Aktion, lokale/Quellwerte, unveränderte Identität,
+zulässigen Zielkandidaten und maschinenlesbare Diagnosen getrennt fest.
+`update_if_unchanged` und `create_new_revision` erfüllen dieselben fünf
+Übernahmegrenzen: unverändert, sichere Quellenübernahme, lokale Änderung
+behalten, Konvergenz oder ungelöste Divergenz. `error` weist bekannte Treffer
+zurück; `skip` erhält sie. SRV148 bleibt bei allen vier Strategien sichtbar.
+
+Fehlende gültige Legacy-Historie und abweichende Mappingkennung ergeben
+bei übernehmenden Strategien `history_unavailable` beziehungsweise
+`mapping_mismatch`; sie erfinden keine neue Baseline. Strukturell
+unvollständige Historie bleibt auch bei Skip ein Fehler. Originalpayload,
+externe Revision und reine Auditwerte fließen nicht heimlich in die
+fachlichen Projektionen ein. Ein unbekannter Schlüssel wird als fehlend
+gemeldet. Alle Beobachtungen sind eigene JSON-Werte; weder Eingabe- noch
+Ausgabemutation ändert andere Beobachtungen. Das Ergebnis erteilt keine
+Veröffentlichungsfreigabe und erstellt keine Revision, ID, Uhrzeit,
+Importhistorie oder Datei. Die Mappingressource bleibt durch die bestehende
+explizite Auswahl aus 10.12.1 gebunden. Ein passiver Kandidat ersetzt keine
+spätere Prüfung des vollständigen nativen Zielobjekts.
+
+**Gezielter W-Nachweis:** **682/682 Verhaltenstests**, vier parallele Worker,
+**5,03 s**, Prozesscode 0, Python 3.14.4. Die Auswahl umfasst **68 neue**
+Vergleichstests und **614 betroffene Regressionstests** für native Identität
+und Historie, Relationsfelder/-referenzen, Artefaktgrundfelder, JSON/JCS,
+Modellwurzel, Austauschmappings und externe Registries. Neue Fälle prüfen
+alle fünf Tabellenzeilen unter den beiden übernehmenden Strategien,
+Error/Skip mit sichtbarer Divergenz, getrennte historische Hashes,
+Legacy-/Mappinggrenzen, JSON-Typunterscheidung und eigene Beobachtungen.
+Tatsächliche Mappingauswertung und nativer Artefakt-/Relationslookup erhalten
+die bestehende Eigentümeridentität und Revision; isolierte Core-/PYZ-Fälle
+prüfen den verfügbaren Vergleich ohne Schreibautorität.
+
+Die vollständige Collection-/Katalogprüfung ist gültig mit **17.348 Tests**
+und **0 ausgeführten Testkörpern**. `full_suite_passed` bleibt null;
+die 682 Tests sind ein gezielter Teilnachweis, kein Vollsuite-/Releasebeleg.
+Quellstand-SHA-256:
+`0b2df1f7e022b76d45ef13ae307b40b97b0d6de9d7e23c8a95349076edb269a9`.
+Katalog-SHA-256:
+`9f8038dab45ac4e3c1d900d3356b58a0fc58c84e5523f564ab89626d0aefd4ce`.
+Die 68 neuen eindeutigen Testidentitäten erhalten ausschließlich die neuen
+Nummern **17.280–17.347**; bestehende Nummern und Rotationsanker bleiben
+unverändert. SR-TC-0318/0456/0457 dokumentieren mit der synthetischen Fixture
+`SR-FIX-IMPORT-COMPARISON-v1` fachliche Teilabnahmen. Die vier geänderten/neuen
+Python-Dateien sind statisch mit der Python-3.10-Grammatik geprüft; das ist
+kein Lauf auf allen unterstützten Python-Versionen.
+
+**Umfangsgrenze und Übergabe:** Genau dieser W-Zustand wird übergeben.
+14.c.R/C sowie Importplan, vollständige Zielvalidierung, Revisionserzeugung,
+Writer, Review-/Verlustzustimmung und Formatimporte bleiben in ihren offenen
+Schritten. Der Entrypoint stellt den gezielt geprüften Zwischenstand her,
+führt ausschließlich die fällige **Gruppe 2/3**, Commitfolge **116**, mit
+**5.782 Tests** parallel aus und committet erst nach Erfolg. Erst danach
+gehören der W-Haken und die fünf Fortschrittsmarker zu **577/900**, zuletzt
+**14.c.W**, nächstens **14.c.R** und Bundle **408**. Ein Apply-Erfolg für
+Bundle 408 wird hier noch nicht behauptet. Nach atomarer Übergabe endet
+dieser Einzelauftrag ohne weitere Result-Abfrage oder Wartephase.
 
 #### 14.c.R – Make it Right
 

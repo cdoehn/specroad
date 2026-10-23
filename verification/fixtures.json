@@ -68,6 +68,7 @@
     "SR-FIX-EVIDENCE-RECORDING-v1",
     "SR-FIX-EXCHANGE-MAPPINGS-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
+    "SR-FIX-IMPORT-COMPARISON-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-JCS-RFC8785-v1",
     "SR-FIX-JSON-PATCH-v1",
@@ -81,6 +82,7 @@
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
+    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",
     "SR-FIX-NORMALIZATION-SCOPE-v1",
     "SR-FIX-NORMALIZATION-TRANSACTION-v1",
     "SR-FIX-ORDERED-FOLD-v1",
@@ -158,8 +160,7 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects",
-    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1"
+    "verification-context-subjects"
   ],
   "definitions": {
     "SR-FIX-ARTIFACT-COMMON-v1": {
@@ -765,6 +766,10 @@
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1": {
       "provider": "tests/support/import_identities.py:history; tests/support/relations.py:artifact,edge,external",
       "kind": "Synthetic native artifact/relation identities with explicit mapping projections, exact payload bytes and supplied UTC timestamps. Legacy unbound identities, original source bytes, aliases, distinct namespaces, duplicate and invalid input rejection, detached lookup observations, real model-root bindings and isolated Core/PYZ imports. No external source authenticity, complete format import, policy decision or publication is claimed. R cases add full native data roundtrips with nested unknown extensions, distinct document/case/Unicode/whitespace names, malformed native paths and bytes, exact explicit projections and UTC values, non-executed foreign hooks, and unchanged project bytes/modes after success or rejection."
+    },
+    "SR-FIX-IMPORT-COMPARISON-v1": {
+      "provider": "tests/support/import_comparison.py:compare,imported; tests/support/relations.py:artifact,edge,external",
+      "kind": "Synthetic explicit local/source JSON object projections and native import histories for all five comparison cases and four declared strategies. Separate historical hashes, unchanged raw-payload/revision provenance, legacy history, malformed input, real mapping selection with native artifact/relation lookup, detached observations and isolated Core/PYZ evaluation. Only passive decisions and target candidates; no format import, revision, identity allocation, clock, write or human approval is claimed."
     }
   }
 }
