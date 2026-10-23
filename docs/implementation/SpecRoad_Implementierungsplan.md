@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 584
-last_completed_plan_commit: 14.e.R
-next_plan_commit: 14.e.C
-last_completed_numbered_bundle: 415
+implementation_plan_commits_completed: 585
+last_completed_plan_commit: 14.e.C
+next_plan_commit: 14.f.W
+last_completed_numbered_bundle: 416
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -18399,7 +18399,7 @@ wird nicht vorweg behauptet. Nach Übergabe endet der Einzelauftrag sofort.
 
 #### 14.e.C – Make it Clean
 
-- [ ] **14.e.C** · Position **585/900** · Voraussetzung: `14.e.R`.
+- [x] **14.e.C** · Position **585/900** · Voraussetzung: `14.e.R`.
 **Exakte Commit-Message:** `14.e.C refactor(exchange): Import anwenden und Verlustzustimmung bereinigen`
 
 **Bereinigung:** Keine Formatfamilie darf einen eigenen unsicheren Direktwriter besitzen.
@@ -18407,6 +18407,76 @@ wird nicht vorweg behauptet. Nach Übergabe endet der Einzelauftrag sofort.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Stand Bundle 416:** Das maßgebliche Result
+`specroad-apply_Result_070112_1023_f35a47.zip`, SHA-256
+`cc19c47e1348270edf70fb5126e2a152eb70ecb9a5f80c0b0c2b6d2e8e11d9a7`,
+bestätigt Bundle 415 / 14.e.R auf
+`ba1803fec9dc279876540f75ef7f623c4328c4c8` mit sauberem Apply-Arbeitsbaum.
+Seine **5.900 Tests**, Gruppe **0/3**, Commitfolge **123**, bestanden mit vier
+parallelen Workern in **1.665,54 s**. Der vollständige Snapshot, der erfolgreiche
+Commit sowie die exakt nummerierte Testauswahl und Einzelbeobachtungen wurden
+abgeglichen. Im erhaltenen Dev-Stand waren ausschließlich die fünf bestätigten
+Fortschrittsmarker nachzuführen. Die übrigen Dateien waren bytegleich.
+Spezifikation 0.2.14 einschließlich SPECROAD-DECISION-1 bleibt unverändert;
+diese Strukturarbeit benötigt keine eigene normative Detailentscheidung.
+
+Die passive Ergebnisprojektion liegt jetzt gemeinsam in
+`exchange/_execution_reports.py`: derselbe geprüfte Plananteil wird für Erfolg
+und erwartete Fehler projiziert. Dieser private Baustein führt weder I/O noch
+Autorisierung, Publikation oder Recovery aus. Der Ausführungsadapter behält die
+frische Planung beziehungsweise erneute Planprüfung, die unveränderte Grenze
+vor dem Writer und die unveränderte Auswahl der aufgefangenen Ausnahmen.
+Beide öffentlichen Einstiegspunkte verwenden ausschließlich `_publish` und
+den bestehenden nativen `_apply_saved_plan`-Writer. Policy, Transaction-ID,
+Autorität, Gates und Strict-Option werden dort explizit per Keyword übergeben.
+Keine Formatfamilie erhält einen eigenen Dateiwriter oder einen anderen
+Publikationspfad.
+
+Öffentliche Signaturen, Ausgabeformate und Felder, Plandaten-/Hashbindung,
+Exitcodes, konservativer unbekannter Schreibzustand, Fehlerphase,
+Recovery-Bedarf, Replay-Belege und zulässige Seiteneffekte bleiben erhalten.
+Unerwartete Programmierfehler werden weiterhin nicht in normale Ergebnisse
+umgewandelt. Verlust-/Konfliktsperren, aktuelle Gesamtziel-Gates, Actor-/Request-
+Grenzen, Datenbesitz, bestehende Anhangbytes und native Wiederherstellung
+werden nicht geändert. Es gibt weder neue Zustimmung noch automatischen Retry
+oder Rollback. Die native Writer-Implementierung und alle Tests/Fixtures
+bleiben bytegleich zum Result.
+
+**Gezielter C-Nachweis:** **312/312 vorhandene Verhaltenstests**, vier
+parallele Worker, **246,06 s**, Prozesscode 0, Python 3.14.4.
+Enthalten sind sämtliche **121 W-/R-Importausführungstests** (59 W, 62 R),
+**133 W-/R-Importplanertests**, **47 W-/R-Authoring-Writertests** und **11 native
+Recoverytests**. Die unveränderten Orakel prüfen unter anderem wirkliche
+Mehrartefaktpublikation, No-op, historisches Replay, Verlust-/Konflikt-/Gate-
+Ablehnungen, stale gespeicherte und Live-Eingaben, Daten- und Receipt-Erhaltung,
+vor/nach beiden Dateiersetzungen unterbrochene Importe und ausdrücklich
+angeforderte Recovery zur exakten Basis oder zum Vollziel. Auch isolierte
+Core-/PYZ-Ausführung bleibt Teil dieser gezielten Auswahl. Keine neuen Tests,
+keine geänderten Testidentitäten oder an das Refactoring angepassten Sollwerte.
+
+Vollständige Collection-/Katalogprüfung: **17.698 Tests**, **0 ausgeführte
+Testkörper**, gültiger Katalog. Nummerierungsdatei und beide Anker bleiben
+bytegleich; die native Registry-/Rotationsprüfung bestätigt als nächsten
+Apply-Lauf Commitfolge **124**, Gruppe **1** mit **5.899 Tests**.
+SR-TC-0315 und SR-TC-0331 behalten den Status **partial**; nur die erledigte
+Strukturbereinigung und die verbleibenden fachlichen Grenzen sind nachgeführt.
+Quellstand-SHA-256: `989f9c54e31ad47ec5f48a4e121b73a133464827d94f60cb8f8b362096bbdfa5`.
+Katalog-SHA-256: `87e4a6b89dc12eb5b7bc480f90d39019ccd7c0c2bbd701872950ff1bfcf2e7c7`.
+`full_suite_passed` bleibt null. Die Python-3.10-Grammatikprüfung ist nur ein
+Syntaxnachweis, kein zusätzlicher Laufzeitnachweis für andere Python-Versionen.
+
+**Grenzen und Übergabe:** Genau **14.e.C**, Position **585/900**. Der vorhandene
+explizite Artefaktkandidaten-Ausschnitt bleibt bestehen; CLI-/Formatparser,
+Relation-/Registrykandidaten, neue Anhangbytes, ausdrückliche Verlustzustimmung
+und ein vollständiger Format-Importabschluss bleiben in ihrer zugeordneten
+Importarbeit offen. Es entsteht kein vollständiger Requirement- oder
+Release-Nachweis. **14.f.W** wird nicht begonnen. Der Entrypoint stellt nur den
+geprüften C-Zustand her, prüft ausschließlich die fällige Gruppe 1 parallel
+und setzt erst nach Erfolg die fünf Marker auf **585/900**, zuletzt **14.e.C**,
+nächstens **14.f.W** und Bundle **416**. Erst dann erzeugt er den vorgesehenen
+Commit. Ein Apply-Erfolg dieses Bundles wird nicht vorweg behauptet. Nach der
+atomaren Übergabe endet dieser Einzelauftrag ohne weitere Result-Abfrage.
 
 <a id="step-14-f"></a>
 ### 14.f – CSV-Datentypen und RFC-4180

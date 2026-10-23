@@ -8,6 +8,7 @@ from ..authoring.execution import _apply_saved_plan
 from ..changes import PublicationAuthority, TargetModel, TargetPolicy
 from ..model.errors import ModelError
 from ..security import SafetyViolation
+from ._execution_reports import execution_result, failed_execution
 from .identities import ImportIdentityError
 from .planning import assess_import_plan, prepare_import_plan
 
@@ -37,7 +38,8 @@ def apply_import_plan(model, candidates, *, input_format, input_bytes,
         scope_descriptor=scope_descriptor, metadata_policy_version=metadata_policy_version,
         policy=policy, authority=authority, plan_bytes=plan_bytes, gates=gates, strict=strict)
     model, gates, report = _prepare_execution(model, candidates, **fields)
-    return _publish(report, model, policy, transaction_id, authority, gates, strict)
+    return _publish(report, model, policy=policy, transaction_id=transaction_id,
+        authority=authority, gates=gates, strict=strict)
 
 
 def _prepare_execution(model, candidates, *, policy, authority, plan_bytes,
@@ -58,14 +60,13 @@ def _prepare_execution(model, candidates, *, policy, authority, plan_bytes,
     return model, gates, report
 
 
-def _publish(report, model, policy, transaction_id, authority, gates, strict):
+def _publish(report, model, *, policy, transaction_id, authority, gates, strict):
+    """The sole import publication route, independent of the source format."""
     plan = report.require_valid().plan
     execution = _apply_saved_plan(plan, model, command_id='import.apply',
         transaction_id=transaction_id, authority=authority, gates=gates,
         strict=strict, bound_policy=policy)
-    return {'format_version': 'artifact-import-execution-v1',
-        'submitted_import_plan': report.data, 'submitted_import_plan_sha256': report.sha256,
-        'execution': execution, 'input_parsed': False, 'approval_granted': False}
+    return execution_result(report, execution)
 
 
 def execute_import_plan(model, candidates, *, policy, transaction_id, authority,
@@ -87,30 +88,8 @@ def execute_import_plan(model, candidates, *, policy, transaction_id, authority,
             **planning_fields)
         report.require_valid()
         entered_writer = True
-        result = _publish(report, model, policy, transaction_id, authority, gates, strict)
+        result = _publish(report, model, policy=policy, transaction_id=transaction_id,
+            authority=authority, gates=gates, strict=strict)
         return {**result, 'status': 'success', 'exit_code': result['execution']['exit_code']}
     except (ModelError, SafetyViolation, OSError) as error:
-        if isinstance(error, ModelError):
-            diagnostic = error.diagnostic()
-            exit_code = getattr(error, 'exit_code', 3)
-        elif isinstance(error, SafetyViolation):
-            diagnostic = {'reason': 'unsafe_import_execution'}
-            exit_code = 7
-        else:
-            # OS messages may contain submitted paths or source contents.
-            diagnostic = {'reason': 'import_execution_io_failure'}
-            exit_code = 5
-        state = diagnostic.get('write_state', 'unknown') if entered_writer else 'not_committed'
-        if state not in ('not_committed', 'committed', 'unknown'):
-            state = 'unknown'
-        return {'format_version': 'artifact-import-execution-v1',
-            'status': 'failed', 'exit_code': exit_code,
-            'submitted_import_plan': None if report is None else report.data,
-            'submitted_import_plan_sha256': None if report is None else report.sha256,
-            'execution': None, 'failure_phase': 'native_execution' if entered_writer else 'import_planning',
-            'write_state': state, 'diagnostics': [diagnostic],
-            'current_target_verified': False,
-            'recovery_required': (diagnostic.get('recovery_required', state == 'unknown')
-                                  if entered_writer else False),
-            'retry_safe': False, 'automatic_retry': False, 'automatic_rollback': False,
-            'input_parsed': False, 'approval_granted': False}
+        return failed_execution(report, error, entered_writer=entered_writer)
