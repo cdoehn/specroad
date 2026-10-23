@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 14
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 598
-last_completed_plan_commit: 14.j.W
-next_plan_commit: 14.j.R
-last_completed_numbered_bundle: 434
+implementation_plan_commits_completed: 599
+last_completed_plan_commit: 14.j.R
+next_plan_commit: 14.j.C
+last_completed_numbered_bundle: 435
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -20609,12 +20609,111 @@ atomarer Übergabe endet dieser Einzelauftrag ohne Warte-/Resultschleife.
 
 #### 14.j.R – Make it Right
 
-- [ ] **14.j.R** · Position **599/900** · Voraussetzung: `14.j.W`.
+- [x] **14.j.R** · Position **599/900** · Voraussetzung: `14.j.W`.
 **Exakte Commit-Message:** `14.j.R feat(exchange): Informationsverluste und Erweiterungserhalt vervollständigen`
 
 **Vervollständigung:** Kein pauschales success bei verschwiegenen Verlusten; die vollständigen R-Abnahmen aus D.1.3 und dem Entscheidungsbeleg gelten. Alle nicht repräsentierten Fachwerte im gebundenen Umfang einzeln bewerten; fail-on-loss sperrt Verlust oder unvollständige Bewertung vor Exportveröffentlichung. Bestehende Import-, Konflikt-, Sicherheits- und Writergrenzen bleiben wirksam.
 
 **Verhaltensabnahme:** Verlustliste und Erhaltungsbelege decken sämtliche nicht repräsentierten Fachwerte des ausdrücklich gebundenen Umfangs ohne pauschale oder doppelte Zählung ab. Geänderte native Werte, fehlende Anhänge und außerhalb des Zielkandidaten verbliebene Kopien werden nicht als verlustfreie Ausgabe ausgegeben. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung und Übergabe (Bundle 435):** Das vollständig gebundene Result
+`specroad-apply_Result_222514_1023_17f093.zip`, SHA-256
+`16f71afbe8f4c7318ab51f6ad73f56e7f78fa40f4c51f1030f0cf87cb7b97a0b`,
+bestätigt **14.j.W / Bundle 434** auf
+`945bf1a0a7a96dc3f915ba103210959f3edf498b`: sauberer Apply-Stand,
+**6.288/6.288** bestandene Tests, Gruppe **1/3**, Commitfolge **142**,
+vier Worker, **1.755,31 s**. Native Resultbindung, alle **2.179 Snapshotdateien**,
+Commit samt Elternstand und die tatsächlichen gebundenen Testbelege wurden
+abgeglichen. In Dev wurden zunächst ausschließlich die fünf belegten
+W-Fortschrittsmarker nachgeführt; danach entsprach der Bestand dem Snapshot.
+Vor Apply bleibt der Produktstand **598/900**, zuletzt **14.j.W**, nächstens
+**14.j.R**, Bundle **434**. SPECROAD-DECISION-1 ist vorhanden; Spezifikation
+**0.2.19 / D.1.3** bleibt bytegleich. Dies ist reguläre R-Umsetzung.
+
+`assess_reqif_transfer` ergänzt die bestehende partielle W-Bewertung um
+getrennte, vollständig gebundene Umfänge: Transport einer ganzen originalen
+ReqIF-Quelle, Vergleich aller ReqIF-Datensätze mit ausdrücklich bezeichneten
+JSON-Zielstellen einschließlich sämtlicher Restdaten sowie Export eines
+ganzen gelieferten nativen JSON-Datensatzkandidaten gegen einen ausdrücklich
+bezeichneten Datensatz in tatsächlichen XML-Zielbytes. Die letzte Aussage
+bestätigt keine vollständige native Artefaktschema- oder Projektgraphprüfung.
+Für Fachwerte werden die bestehenden gebundenen Mappingressourcen und
+ReqIF-/M11-Projektionen ausgeführt; keine Feld-, Identitäts- oder
+Metadateninferenz. Ohne vollständige Datensatzbindung, bei Teilprojektionen
+oder fehlenden Quellpflichtfeldern bleibt die Bewertung unvollständig,
+auch bei leerer Verlustliste oder vollständig erhaltener Quellkapsel.
+
+Die Inventarisierung folgt der gesamten tatsächlichen Quelle: unabhängige
+Attribute und Metadaten, Mappingreste und nicht darstellbare Werte,
+Hierarchien/Relationen, opake Teilbäume, XHTML-Originale und native Restfelder,
+Extensions sowie Relationspositionen. Gemeinsame Defaultwerte werden für
+alle ihre verwendenden Datensätze geprüft. Ein bewiesener Feldvergleich
+verbraucht keine fremden Attribute oder Original-XHTML-Daten. Opake
+Teilbäume bleiben Einheiten; gleiche Stelle/gleicher Grund wird dedupliziert.
+Quellgebundene RFC-6901- beziehungsweise XML-Positionen und deterministische
+JCS-Identitäten bleiben erhalten. Nur tatsächlich passende vollständige
+XML-Quellbytes oder der konkrete validierte JSON-Trägereintrag liefern
+Erhaltungsbelege; ähnliche geänderte XML-Fragmente werden nicht geraten.
+Eine alte Quellkapsel überdeckt niemals zwischenzeitliche native Änderungen.
+
+Anhangreferenzen werden auch in Originalen und opaken Teilbäumen anhand der
+bestehenden Sicherheits- und Bytebindungen geprüft, einschließlich
+Namespace-/Großschreibungsvarianten der URI-Attribute. Fehlende Auflösung,
+Medientyp-/Bytekonflikte und unsichere Referenzen bleiben echte Fehler.
+Native Prose-Verweise benötigen die entsprechenden gebundenen Quellanhänge.
+Der Bericht unterscheidet XML-Erhalt von tatsächlich vorgesehenen
+Dateinutzinhalten; nur gleiche validierte Referenz-/Deskriptordaten und
+Bytes belegen deren Mitnahme. Unveröffentlichte Dateikandidaten werden
+nicht als ausgeführte Writes oder ReqIFZ-Erfolg ausgegeben.
+
+`prepare_reqif_export` berechnet die Bewertung selbst aus den konkreten
+Eingaben. Bei `fail_on_loss=true` sperren Verluste oder unvollständige
+Bewertung die Rückgabe des Exportnutzinhalts mit **Code 3**; der unabhängig
+gehaltene maschinenlesbare Bericht bleibt über `ReqIFLossError.report`
+verfügbar. Fehlende Bewertungsgrundlagen liefern auch ohne dieses Flag
+keinen Exportkandidaten. Vollständig ausgewiesene Verluste können bei
+`false` zugelassen werden; der Bericht bleibt dann ausdrücklich nicht
+verlustfrei. Sicher erhaltene unbekannte Inhalte allein blockieren den
+Originalquelltransport nicht. Zurückgegeben werden ausschließlich die
+gebundenen XML-/Anhangkandidaten; keine Veröffentlichung oder Freigabe.
+Die W-API, stärkere Importgates, native Extensions und bestehende Mapping-
+Fehlerverträge bleiben erhalten. Auch leere Träger verlangen typisierte
+Readergrenzen. Sicherheits-, Konflikt- und Hostfehler werden nicht in
+gewöhnliche Verluste oder Erfolgsberichte umgewandelt.
+
+**Gezielter Dev-Verhaltensnachweis:** **1.334/1.334 Tests**, vier parallele
+Worker, **11,86 s**, Prozess-/Gate-Exit **0**, keine Beobachtungsfehler;
+`selected_passed=true`, `full_suite_passed=null`. Enthalten sind **109 neue
+R-Fälle**, alle bisherigen ReqIF-W/R-Fälle sowie betroffene Mapping-,
+M11-Prose-, Importplan-, Metadata-, JSON-/JCS- und Python-3.10-Regressionen.
+Bestehende Tests bleiben bytegleich. Die vollständige Collection-/Katalog-
+prüfung bestätigt **18.972 Identitäten** bei **0 Testkörpern** und ohne
+Katalogfehler. Neue Nummern **18.863–18.971** werden als ein sortierter
+Nachtrag an den bestätigten Registrybestand angehängt; keine historische
+Nummer oder Rotationsbindung wird verändert. SR-TC-0322 bleibt **partial**
+mit zusätzlichen echten Fixture-/Testbindungen für diese reinen APIs.
+Vorläufe meldeten falsche neue Fixture-/Fehlercodeannahmen; diese wurden
+an den unveränderten bestehenden Format- und Sicherheitsverträgen korrigiert.
+Ein Zwischenversuch wurde wegen veralteter erwarteter Testanzahl ohne
+Testkörper abgewiesen. Erst der abschließende gebundene Lauf gilt als
+Erfolgsnachweis. Keine Vollsuite, seriellen Tests, Dokumentationstests oder CI.
+Quellstand `5d20954a1a6b6d6de4dd5284a007e7660c10a02922f97090ce26b476a08cc867`;
+Katalog `fd03f8832392e4e3f6e8d42932316b1ede1a682ff2590efd82242129ef9a3f15`;
+Auswahlbeleg `6e065c16c165c7403147193b9e0b1782fb9ce396d0947843476939720fb34a65`;
+Beobachtungsbeleg `a11dba8b98fa2f7e3c9f12165a24a78bcf539325f0e41b79daa1a8ba7e1fc2af`.
+
+**Vorgesehene Apply-Grenze:** Ein regulärer Commit **14.j.R**, Position
+**599/900**, Bundle **435**, mit der oben festgelegten Commit-Message.
+Der Entrypoint installiert genau den gezielt geprüften R-Zustand und prüft
+nur **Gruppe 2/3**, Commitfolge **143**, mit **6.324 Tests** und vier parallelen
+Workern. Erst nach erfolgreichem gebundenem Gate werden die fünf
+Fortschrittsmarker auf **599/900**, zuletzt **14.j.R**, nächstens **14.j.C**,
+Bundle **435** und die R-Checkbox gesetzt und committet. Bei Fehlern bleiben
+tatsächliche Dateien, Index und erfolgreiche Commits erhalten. **14.j.C**
+bleibt offen; vollständige CLI-/Projektintegration, autorisierte Change Plans
+und ReqIFZ behalten ihre späteren Planstellen. Kein Vollsuite-, Fremdtool-,
+Release- oder Apply-Erfolg wird vorweggenommen. Nach nativer ZIP-Prüfung und
+atomarer Übergabe endet dieser Einzelauftrag ohne Warte-/Resultschleife.
 
 #### 14.j.C – Make it Clean
 

@@ -10,6 +10,7 @@ from .ndjson import (NDJSONError, NDJSONResumeConflict, NDJSONObservation, NDJSO
 from .reqif import (ReqIFDocument, ReqIFError, ReqIFLimits, decode_reqif, encode_reqif,
                     reqif_object_identifier, decode_reqif_structure, ReqIFAttachment)
 from .reqif_preservation import merge_reqif_source, restore_reqif_source, assess_reqif_preservation
+from .reqif_loss import ReqIFLossError, assess_reqif_transfer, prepare_reqif_export
 
 __all__ = ["ExternalIdentity", "ImportIdentityError", "NativeIdentityIndex", "ImportComparison",
            "ImportPlan", "prepare_import_plan", "assess_import_plan", "apply_import_plan",
@@ -19,4 +20,5 @@ __all__ = ["ExternalIdentity", "ImportIdentityError", "NativeIdentityIndex", "Im
            "iter_decode_ndjson_chunks", "resume_ndjson", "ReqIFDocument", "ReqIFError",
            "ReqIFLimits", "decode_reqif", "encode_reqif", "reqif_object_identifier",
            "decode_reqif_structure", "ReqIFAttachment", "merge_reqif_source",
-           "restore_reqif_source", "assess_reqif_preservation"]
+           "restore_reqif_source", "assess_reqif_preservation", "ReqIFLossError",
+           "assess_reqif_transfer", "prepare_reqif_export"]

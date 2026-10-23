@@ -91,6 +91,8 @@ def _entry_bytes(entry, limits):
 
 
 def _carrier(value, limits):
+    if type(limits) is not ReqIFLimits:
+        raise ReqIFError('typed_xml_limits_required', exit_code=2)
     if (type(value) is not dict or set(value) != {'format_version', 'sources'}
             or value['format_version'] != _VERSION or type(value['sources']) is not list):
         raise ReqIFError('reqif_preservation_carrier_invalid')
