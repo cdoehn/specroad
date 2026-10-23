@@ -23,7 +23,7 @@ def _text(node):
 
 
 def _layout(node, allowed, required=()):
-    if any(type(x) is str and x.strip() for x in node.content):
+    if any(type(x) is str and x.strip(' \t\r\n') for x in node.content):
         raise _error("reqif_unexpected_text", node)
     result = {}
     for child in node.children:
@@ -38,7 +38,7 @@ def _layout(node, allowed, required=()):
 def _items(node, allowed):
     if node is None:
         return ()
-    if node.attributes or any(type(x) is str and x.strip() for x in node.content):
+    if node.attributes or any(type(x) is str and x.strip(' \t\r\n') for x in node.content):
         raise _error("reqif_invalid_container", node)
     if any(child.tag not in allowed for child in node.children):
         raise _error("reqif_element_placement", node)

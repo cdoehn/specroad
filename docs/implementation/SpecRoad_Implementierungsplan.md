@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 13
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 595
-last_completed_plan_commit: 14.i.W
-next_plan_commit: 14.i.R
-last_completed_numbered_bundle: 430
+implementation_plan_commits_completed: 596
+last_completed_plan_commit: 14.i.R
+next_plan_commit: 14.i.C
+last_completed_numbered_bundle: 431
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -20156,12 +20156,108 @@ der Einzelauftrag ohne eigene Result-/Test-Warteschleife.
 
 #### 14.i.R – Make it Right
 
-- [ ] **14.i.R** · Position **596/900** · Voraussetzung: `14.i.W`.
+- [x] **14.i.R** · Position **596/900** · Voraussetzung: `14.i.W`.
 **Exakte Commit-Message:** `14.i.R feat(exchange): ReqIF-Hierarchien, Relationen und XHTML vervollständigen`
 
 **Vervollständigung:** Die R-Abnahmen aus D.1.2 und dem Entscheidungsbeleg vervollständigen: echte Besitz-/native Hierarchiezyklen von wiederholten Vorkommen unterscheiden, Referenz-/Rückbindungsfehler sowie XHTML-/Pfad-/Anhanggrenzen vollständig prüfen. Zyklen, unzulässige externe Inhalte und unaufgelöste referenzierte Anhänge vor Apply erkennen.
 
 **Verhaltensabnahme:** Wiederimport erhält Hierarchie- und Relationsidentität innerhalb des Schnittmengenprofils. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Umsetzung und Übergabe (Bundle 431):** Das vollständig gebundene Result
+`specroad-apply_Result_192155_1023_d7abd0.zip`, SHA-256
+`db737a313c34a019d29ca6baa20faeda3f90d55e11648477785aa14d31537ff3`,
+bestätigt **14.i.W**, Bundle **430**, auf
+`75d650ec9debb5dcfc18a492b0bf02e23e608886`: sauberer Apply-Stand,
+**6.191/6.191** bestandene Tests der Gruppe **0/3**, Commitfolge **138**,
+vier Worker, **1.863,47 s**. Native Result-/Patchbindung, alle **2.172**
+Snapshotdateien, tatsächlicher Commit samt Elternstand und vollständig
+gebundene Ausführungs-/Testbelege wurden abgeglichen. In Dev wurden nur
+die fünf durch diesen Erfolg belegten Planmarker nachgeführt; danach
+entsprach der Produktbestand dem Snapshot. Vor dem neuen Apply bleiben
+**595/900**, zuletzt **14.i.W**, nächstens **14.i.R**, maßgeblich.
+SPECROAD-DECISION-1 ist ausdrücklich vorhanden. Die bestehenden Abnahmen
+aus **0.2.18 / D.1.2** genügen; die Spezifikation bleibt bytegleich und
+dieses reguläre R-Bundle enthält keine zusätzliche normative Klärung.
+
+Der Strukturadapter verhindert konkurrierende Bindungen verschiedener
+Quellobjekte oder Spezifikationen auf dieselbe native Identität. Eigene
+Relationsbindungen bleiben eindeutig; wiederholte Vorkommen desselben
+Objekts behalten eigene Kanten und dürfen getrennte Darstellungsblöcke
+verwenden. Wiederimport und geänderte Geschwisterfolge werden mit denselben
+Vorkommens-/Relationskennungen sowie unveränderten fachlichen Objekten
+geprüft. Die bestehende M11-Prüfung verwirft echte `contains`-/`part_of`-
+Zyklen und mehrdeutige Section-Besitzer; ein `depends_on`-Zyklus wird nicht
+pauschal zum ReqIF-Besitzfehler umgedeutet. Fehlende Bindungen, falschartige
+Referenzen und doppelte Quellkennungen ergeben keinen Strukturpass.
+
+Die XHTML-Projektion unterscheidet jetzt ausdrücklich XML-Strukturleerraum
+von Unicode-Text. Nichtbrechende und weitere Unicode-Leerzeichen zwischen
+Blöcken bleiben eigene Textinhalte; in elementreinen Containern werden
+sie nicht still entfernt. Reine Leerzeichen in Inline-Code erhalten keinen
+zusätzlichen Paddingtext. Code-/Pre-Text, Delimiter, weiche/harte Umbrüche,
+Listengrenzen und Namespaceidentität werden gegen native semantische Knoten
+geprüft. Konkret nicht verlustfrei darstellbare Werte bleiben mit Diagnose
+und Originalbytes erhalten; ein angepasster Plaintext ist kein Ersatzpass.
+Passive Objekt-Fallbacks mit Blockinhalt können erhalten und ausdrücklich
+als nicht nativ darstellbar ausgewiesen werden. Zusätzliche Attribute,
+fremde Namespaces, Originalwerte und Simplified-Varianten bleiben getrennt.
+
+Auch Anhangreferenzen im Originalwert benötigen vor erfolgreicher
+Feldprojektion die ausdrücklichen tatsächlichen Bytes und Pfadbindungen.
+Konkurrierende Byte-/Medienbindungen auf dasselbe native Ziel sind ein
+Konflikt. Gleichwertige Referenzaliasse erhalten einen unveränderten
+importierten Quellwert; bei neuen inversen Werten wird die mehrdeutige
+Rückreferenz nicht geraten. Hash/Länge werden bei jeder Projektion erneut
+geprüft, PNG-Signatur und MIME-Typ gemeinsam abgeglichen, ohne Decoder-
+oder Medienfreigabe zu behaupten. URI-Prüfung bleibt einmalig und strikt;
+verbotene Referenzen erhalten die tatsächliche XML-Fehlerposition.
+
+Aktive Style-Elemente sind neben den bisherigen aktiven Inhalten auch
+in Originalen, Erweiterungen und Objekt-Fallbacks gesperrt. DTD/Entity,
+Processing Instructions, externe Schemas/Includes und die sieben expliziten
+XML-Grenzen bleiben unverändert wirksam. Tatsächliche Größen-, Tiefen- und
+Arbeitsbudgets des nativen Proseparsers ergeben **Code 7** und werden nicht
+als gewöhnliche Darstellungsverluste oder inverse Konflikte abgefangen.
+Echte `MemoryError`, `RecursionError` und `OSError` propagieren unverändert.
+Direkte Feldfehler enthalten den verfügbaren Objekt-/Definitions-/XML-Bezug.
+Parser und Adapter bleiben ohne Resolver, Renderer, Registry- oder Projektwrite.
+
+**Gezielter Dev-Verhaltensnachweis:** Der erste parallele Lauf hatte
+**1.163 bestandene und einen fehlgeschlagenen Test**. Der neue Test für
+die tatsächliche Prose-Tiefengrenze verwendete 40 statt mehr als 64 Ebenen;
+seine Eingabe wurde auf 70 Ebenen korrigiert. Der Fehler war kein grüner
+Nachweis. Bestehende Tests und Fixtures bleiben bytegleich; kein Oracle
+wurde abgeschwächt. Der abschließende Lauf besteht aus **1.164/1.164 Tests**,
+vier parallelen Workern, Prozess-/Gate-Exit **0**, **9,82 s**, ohne
+Beobachtungs-/Katalogfehler, `selected_passed=true`, `full_suite_passed=null`.
+Enthalten sind **208 neue R-Fälle**, sämtliche bisherigen **373 ReqIF-W/R-
+Fälle** sowie betroffene Prose-, Dokumentstruktur-, Mapping-, sichere XML-
+und Python-3.10-Regressionsfälle. Es sind gezielte Teiltests, keine Vollsuite.
+
+Vollständige Collection-/Katalogprüfung: **18.779 Identitäten**, **0
+Testkörper**, keine Fehler. Neue Testnummern **18.571–18.778** werden
+append-only ergänzt; alte Nummern und Rotationsanker bleiben gleich.
+SR-TC-0320/0321 erhalten die zusätzlichen Verhaltenstestbindungen und bleiben
+`partial`: strukturelle Bereinigung, vollständige native Projektintegration,
+Verlust-/Erweiterungsmanifest, ReqIFZ, CLI und Transaktionen bleiben offen.
+Keine Dokumentations-/Darstellungstests, Vollsuite oder CI wurden gestartet.
+Quellstand `306b8f5bc3f1fc8b6e172575439f525990aa9421b82a2e011078f4fe8f73e28a`;
+Katalog `9bfda049e442a524ce4ac308af9b836b4e834925125af2d63ea37b0e1f812f6e`;
+Auswahlbeleg `29ee94dd499e704538995ca2d141bc9fdd334761b0f1b4ebf0cde5de9b70f91d`;
+Beobachtungsbeleg `4f905f4459de5e9792ab4b94497a1174f719959ed23e3d0470e455e199c1face`.
+
+**Vorgesehene Apply-Grenze:** Genau ein regulärer Commit **14.i.R**,
+Position **596/900**, Bundle **431**. Der Entrypoint installiert genau
+diesen gezielt geprüften R-Zustand und führt ausschließlich **Gruppe 1/3**,
+Commitfolge **139**, mit **6.260 Tests** und vier parallelen Workern aus.
+Erst nach erfolgreichem gebundenem Gate setzt er die fünf Fortschrittsmarker
+auf **596/900**, zuletzt **14.i.R**, nächstens **14.i.C**, Bundle **431**,
+R-Checkbox abgeschlossen, und erzeugt die oben festgelegte Commit-Message.
+Fehler erhalten Dateien, Index und bereits erfolgreiche Commits.
+**14.i.C und alle späteren Schritte bleiben offen.** Dieses Bundle behauptet
+weder ReqIF-XSD-/Fremdtool-Konformität noch Vollsuite-, Release- oder Apply-
+Erfolg. Nach nativer Paketprüfung und atomarer Übergabe endet der Einzelauftrag
+ohne eigene Result-/Test-Warteschleife.
 
 #### 14.i.C – Make it Clean
 

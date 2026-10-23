@@ -119,6 +119,7 @@
     "SR-FIX-RELEASE-READINESS-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
+    "SR-FIX-REQIF-STRUCTURE-XHTML-R-v1",
     "SR-FIX-REQIF-STRUCTURE-XHTML-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-R-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-v1",
@@ -825,6 +826,10 @@
     "SR-FIX-REQIF-STRUCTURE-XHTML-v1": {
       "provider": "tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,xvalue,attachment;tests/test_reqif_structure.py:mapped_fixture;tests/support/targets.py:model",
       "kind": "Owned ReqIF structure/XHTML bytes, explicit source/type/occurrence/relation identities and actual native model bytes. Independent prose node oracles, explicit byte/hash/path-bound attachment fixtures and negative reference/safety/binding cases. No external tool, renderer, resolver, project write, full-suite or release claim."
+    },
+    "SR-FIX-REQIF-STRUCTURE-XHTML-R-v1": {
+      "provider": "tests/test_reqif_structure_right.py:bound_graph;tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,attachment;tests/support/targets.py:model",
+      "kind": "Owned source and actual native model bytes with explicit identity/edge bindings. Reimport and sibling order, allowed/forbidden native cycles, attachment alias/integrity boundaries, exact Unicode/code/whitespace node oracles, original/default provenance, unsupported fallback retention, actual parser budgets and host-failure propagation. No renderer, resolver, file writes or complete import claim."
     }
   }
 }

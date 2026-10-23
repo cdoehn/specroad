@@ -88,7 +88,13 @@ class ReqIFDocument:
         obj, definition, value = _structure.field(self, identifier, definition_id)
         if value is None:
             raise ReqIFError('reqif_xhtml_value_absent', object_id=identifier, definition_id=definition_id)
-        projected = _project_xhtml(value.lexical, attachments=attachments)
+        try:
+            projected = _project_xhtml(value.lexical, attachments=attachments)
+        except ReqIFError as error:
+            error.object_id, error.definition_id = identifier, definition_id
+            if not error.pointer:
+                error.pointer = value.element.pointer
+            raise
         return {**projected, 'source_sha256': self.source_sha256, 'external_id': identifier,
                 'definition_id': definition_id,
                 'origin': 'explicit' if value in obj.values else 'default'}

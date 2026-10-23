@@ -16,14 +16,17 @@ def read_tree(raw, limits, *, reader, structure=False):
             # Inspect every event, including deferred extensions and originals.
             from ._reqif_xhtml import relative_reference
             local = name.rsplit(_SEP, 1)[-1].lower()
-            if local in ('script', 'iframe', 'embed', 'applet', 'include'):
+            if local in ('script', 'style', 'iframe', 'embed', 'applet', 'include'):
                 reject('reqif_xhtml_active_content')
             for key, value in attributes.items():
                 attr = key.rsplit(_SEP, 1)[-1].lower()
                 if attr.startswith('on'):
                     reject('reqif_xhtml_event_attribute')
                 if attr in ('href', 'src', 'data', 'action', 'formaction', 'codebase', 'archive', 'poster'):
-                    relative_reference(value)
+                    try:
+                        relative_reference(value)
+                    except ReqIFError as error:
+                        reject(error.reason, exit_code=error.exit_code)
         pointer = (stack[-1][3] if stack else "") + "/" + name.rsplit(_SEP, 1)[-1]
         if stack:
             pointer += "[" + str(stack[-1][4]) + "]"
@@ -80,7 +83,7 @@ def _serialize(root):
         # indentation between elements so already canonical output is stable.
         content = node.content
         mixed = mixed or node.name.startswith(XHTML_NAMESPACE + _SEP)
-        if not mixed and node.children and all(type(x) is _Node or not x.strip() for x in content):
+        if not mixed and node.children and all(type(x) is _Node or not x.strip(' \t\r\n') for x in content):
             content = node.children
         return opening + "".join(emit(x, mixed=mixed) if type(x) is _Node else _escape(x) for x in content) + "</" + name(node.name) + ">"
     return ('<?xml version="1.0" encoding="UTF-8"?>\n' + emit(root, first=True) + "\n").encode("utf-8")

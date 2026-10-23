@@ -14,6 +14,17 @@ from ._reqif_values import XHTML_NAMESPACE, ReqIFError, ReqIFXHTML, _Node, _SEP,
 _BLOCK = {'div', 'p', 'pre', 'blockquote', 'ul', 'ol', 'hr'}
 _INLINE = {'span', 'em', 'i', 'strong', 'b', 'br', 'code', 'a', 'object'}
 _ATTRS = {'a': {'href', 'title'}, 'object': {'data', 'type'}}
+_XML_SPACE = ' \t\r\n'
+
+
+def parse_markdown(markdown, *, pointer=''):
+    """Keep parser budgets separate from unsupported semantic representations."""
+    try:
+        return _parse_markdown(markdown)
+    except ProseError as error:
+        limited = error.reason in {'prose_size_limit', 'prose_nesting_limit', 'prose_complexity_limit'}
+        raise ReqIFError('reqif_' + error.reason if limited else 'reqif_xhtml_prose_not_representable',
+                         exit_code=7 if limited else 3, pointer=pointer) from error
 
 
 def _tag(node):
@@ -61,14 +72,18 @@ class ReqIFAttachment:
 def _attachments(values):
     if type(values) not in (tuple, list):
         raise ReqIFError('reqif_attachment_bindings_required', exit_code=2)
-    result = {}
+    result, paths = {}, {}
     for value in values:
         if type(value) is not ReqIFAttachment:
             raise ReqIFError('reqif_attachment_binding_required', exit_code=2)
         value = ReqIFAttachment(value.reference, value.descriptor, value.content)
         if value.reference in result:
             raise ReqIFError('reqif_attachment_binding_ambiguous', exit_code=6)
+        previous = paths.get(value.descriptor.path)
+        if previous is not None and previous.descriptor != value.descriptor:
+            raise ReqIFError('reqif_attachment_target_conflict', exit_code=6)
         result[value.reference] = value
+        paths[value.descriptor.path] = value
     return result
 
 
@@ -81,7 +96,7 @@ def validate_xhtml(parts, simplified):
     def visit(node, *, parent=None, in_link=False):
         tag = _tag(node)
         local = node.name.rsplit(_SEP, 1)[-1].lower()
-        if local in ('script', 'iframe', 'embed', 'applet', 'include'):
+        if local in ('script', 'style', 'iframe', 'embed', 'applet', 'include'):
             raise _error('reqif_xhtml_active_content', node, exit_code=7)
         for key, val in node.attributes:
             name = key.rsplit(_SEP, 1)[-1].lower()
@@ -100,7 +115,9 @@ def validate_xhtml(parts, simplified):
             raise _error('reqif_xhtml_reference_attribute_required', node)
         if tag == 'a' and in_link:
             raise _error('reqif_xhtml_nested_link', node)
-        if tag in _BLOCK and parent in _INLINE | {'p'} or tag == 'li' and parent not in ('ul', 'ol'):
+        # An object's passive fallback may contain blocks. It remains explicitly
+        # unsupported, and every descendant still undergoes safety validation.
+        if tag in _BLOCK and parent in (_INLINE - {'object'}) | {'p'} or tag == 'li' and parent not in ('ul', 'ol'):
             raise _error('reqif_xhtml_element_placement', node)
         if tag in ('br', 'hr') and node.content:
             raise _error('reqif_xhtml_empty_element_required', node)
@@ -110,7 +127,7 @@ def validate_xhtml(parts, simplified):
             if len(node.content) != 1 or _tag(node.children[0]) != 'code':
                 raise _error('reqif_xhtml_pre_text_required', node)
         if tag in ('ul', 'ol') and (not node.children or any(_tag(c) != 'li' for c in node.children)
-                or any(type(c) is str and c.strip() for c in node.content)):
+                or any(type(c) is str and c.strip(_XML_SPACE) for c in node.content)):
             raise _error('reqif_xhtml_list_items_required', node)
         if tag == 'object' and (node.attrs.get('type') != 'image/png' or node.children):
             unsupported.append((node.pointer, 'reqif_xhtml_object_not_representable'))
@@ -122,7 +139,7 @@ def validate_xhtml(parts, simplified):
         if name not in parts:
             continue
         wrapper = parts[name]
-        if wrapper.attrs or len(wrapper.children) != 1 or any(type(c) is str and c.strip() for c in wrapper.content):
+        if wrapper.attrs or len(wrapper.children) != 1 or any(type(c) is str and c.strip(_XML_SPACE) for c in wrapper.content):
             raise _error('reqif_xhtml_root_required', wrapper)
         root = wrapper.children[0]
         if _tag(root) not in ('div', 'p'):
@@ -138,6 +155,18 @@ def _text(nodes, text):
             nodes[-1]['text'] += text
         else:
             nodes.append({'type': 'text', 'text': text})
+
+
+def _binding(item, bindings):
+    tag = _tag(item)
+    reference = item.attrs['href' if tag == 'a' else 'data']
+    binding = bindings.get(reference)
+    if binding is None:
+        raise _error('reqif_attachment_unresolved', item)
+    if tag == 'object' and (binding.descriptor.media_type != 'image/png'
+            or not binding.content.startswith(b'\x89PNG\r\n\x1a\n')):
+        raise _error('reqif_attachment_image_type_mismatch', item)
+    return binding
 
 
 def _nodes(root, bindings):
@@ -157,13 +186,7 @@ def _nodes(root, bindings):
             elif tag == 'br': nodes.append({'type': 'line_break'})
             elif tag == 'code': nodes.append({'type': 'code_span', 'text': ''.join(item.content)})
             elif tag in ('a', 'object'):
-                reference = item.attrs['href' if tag == 'a' else 'data']
-                binding = bindings.get(reference)
-                if binding is None:
-                    raise _error('reqif_attachment_unresolved', item)
-                if tag == 'object' and (binding.descriptor.media_type != 'image/png'
-                        or not binding.content.startswith(b'\x89PNG\r\n\x1a\n')):
-                    raise _error('reqif_attachment_image_type_mismatch', item)
+                binding = _binding(item, bindings)
                 children = inline(item.content) if tag == 'a' else []
                 if tag == 'object': _text(children, ''.join(item.content))
                 node = {'type': 'link' if tag == 'a' else 'image',
@@ -177,7 +200,7 @@ def _nodes(root, bindings):
     def flow(content):
         result, pending = [], []
         structural = any(type(c) is _Node and _tag(c) in _BLOCK for c in content) and all(
-            type(c) is _Node and _tag(c) in _BLOCK or type(c) is str and not c.strip() for c in content)
+            type(c) is _Node and _tag(c) in _BLOCK or type(c) is str and not c.strip(_XML_SPACE) for c in content)
 
         def flush():
             children = inline(pending)
@@ -225,7 +248,7 @@ def _markdown(node):
         return mark + ''.join(_markdown(c) for c in children) + mark
     if kind == 'code_span':
         text = node['text']; mark = '`' * (max((len(v) for v in re.findall(r'`+', text)), default=0) + 1)
-        pad = ' ' if text.startswith(('`', ' ')) or text.endswith(('`', ' ')) else ''
+        pad = ' ' if text.strip(' ') and (text.startswith(('`', ' ')) or text.endswith(('`', ' '))) else ''
         return mark + pad + text + pad + mark
     if kind in ('link', 'image'):
         title = ' "' + _escape(node['title']) + '"' if 'title' in node else ''
@@ -257,12 +280,18 @@ def project_xhtml(value, *, attachments=()):
         raise ReqIFError(value.unsupported[0][1], pointer=value.unsupported[0][0])
     if value.simplified:
         raise _error('reqif_xhtml_source_simplified', value.value)
+    # The original is retained, not substituted, but its references must be
+    # bound too before a field can be called fully representable.
+    if value.original is not None:
+        pending = [value.original]
+        while pending:
+            item = pending.pop()
+            if _tag(item) in ('a', 'object'):
+                _binding(item, bindings)
+            pending.extend(reversed(item.children))
     expected = _nodes(value.value, bindings)
     markdown = _markdown(expected)
-    try:
-        _, actual = _parse_markdown(markdown)
-    except ProseError as error:
-        raise _error('reqif_xhtml_prose_not_representable', value.value) from error
+    _, actual = parse_markdown(markdown, pointer=value.value.pointer)
     if actual != expected:
         raise _error('reqif_xhtml_prose_roundtrip_loss', value.value)
     return {'markdown': markdown, 'content': actual,
@@ -273,7 +302,7 @@ def project_xhtml(value, *, attachments=()):
 def from_markdown(markdown, *, attachments=()):
     """Inverse over the actual native parser, not markdown text substitution."""
     bindings = _attachments(attachments)
-    _, document = _parse_markdown(markdown)
+    _, document = parse_markdown(markdown)
 
     def element(tag, content=(), attrs=()):
         return _Node(XHTML_NAMESPACE + _SEP + tag, tuple(attrs), tuple(content))

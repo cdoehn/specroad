@@ -2,13 +2,12 @@
 from dataclasses import replace
 
 from ..documents import assess_document_structure
-from ..documents.prose import ProseError, _parse_markdown
 from ..mappings import select_mapping
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from ._reqif_mapping import _source_identity
 from ._reqif_values import REQIF_NAMESPACE, ReqIFError, _Node, _SEP, _replace_node
-from ._reqif_xhtml import from_markdown, project_xhtml
+from ._reqif_xhtml import from_markdown, parse_markdown, project_xhtml
 
 
 def require_structure(document):
@@ -40,7 +39,7 @@ def export_xhtml(document, identifier, definition_id, markdown, *, expected_sour
     if document.unsupported:
         raise ReqIFError('reqif_uninterpreted_export', pointer=document.unsupported[0][0])
     try:
-        _, native = _parse_markdown(markdown)
+        _, native = parse_markdown(markdown, pointer=definition.element.pointer)
         # Preserve the complete imported tree, absence/default origin and flags.
         if old is not None and project_xhtml(old.lexical, attachments=attachments)['content'] == native:
             raw = document.source_bytes
@@ -66,11 +65,9 @@ def export_xhtml(document, identifier, definition_id, markdown, *, expected_sour
         actual = checked.project_xhtml(identifier, definition_id, attachments=attachments)
         if actual['content'] != native:
             raise ReqIFError('reqif_xhtml_inverse_roundtrip_loss', exit_code=6)
-    except (ReqIFError, ProseError) as error:
-        if isinstance(error, ReqIFError):
-            if error.exit_code == 3: error.exit_code = 6
-            raise
-        raise ReqIFError('reqif_xhtml_inverse_not_representable', exit_code=6) from error
+    except ReqIFError as error:
+        if error.exit_code == 3: error.exit_code = 6
+        raise
     return {'xml_bytes': raw, 'source_sha256': document.source_sha256,
             'external_id': identifier, 'definition_id': definition_id,
             'export_complete': False, 'write_authorized': False, 'execution_ready': False}
@@ -100,6 +97,14 @@ def map_structure(document, *, object_bindings, occurrence_bindings, relation_bi
             raise ReqIFError('reqif_native_bindings_required', exit_code=2)
     if len(set(relation_bindings.values())) != len(relation_bindings):
         raise ReqIFError('reqif_relation_binding_ambiguous', exit_code=6)
+    # Distinct source objects/documents may not collapse onto one native
+    # identity. Repeated hierarchy occurrences of the *same* object are valid;
+    # their separate edge identities remain checked below.
+    for identifiers, bindings in (([o.identifier for o in document.objects], object_bindings),
+                                  ([s.identifier for s in document.specifications], occurrence_bindings)):
+        targets = [bindings[i] for i in identifiers if i in bindings]
+        if len(set(targets)) != len(targets):
+            raise ReqIFError('reqif_native_identity_binding_ambiguous', exit_code=6)
     assessment = assess_document_structure(native_model)
     if not assessment.structure_valid:
         raise ReqIFError('reqif_native_structure_invalid', pointer=assessment.data['diagnostics'][0].get('pointer', ''))
