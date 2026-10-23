@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0098",
   "requirement_id": "SR-REQ-0098",
-  "specification_sha256": "0d00f902456c606ac1d44cb957027f6e471ac65aec796156cc876d218536491f",
+  "specification_sha256": "cad61bee632c33f6ccc1310f83f8c02aa222f1b20b1e6b03e5c23f318cccf3bb",
   "primary_verification_id": "SR-VER-0007",
   "implementation_status": "partial",
   "method": "automated_behavior",

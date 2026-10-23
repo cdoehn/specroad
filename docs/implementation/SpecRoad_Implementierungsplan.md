@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 10 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.15
+**Planrevision:** 11 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.16
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `0d00f902456c606ac1d44cb957027f6e471ac65aec796156cc876d218536491f`.
+Gebundene Spezifikations-SHA-256: `cad61bee632c33f6ccc1310f83f8c02aa222f1b20b1e6b03e5c23f318cccf3bb`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 10
+plan_revision: 11
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 588
 last_completed_plan_commit: 14.f.C
 next_plan_commit: 14.g.W
-last_completed_numbered_bundle: 420
+last_completed_numbered_bundle: 421
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,49 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Explizite NDJSON-Objekthülle (Bundle 421)
+
+Revision 11 dokumentiert **NDJSON-OBJECT-CONTRACT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.16, D.3.1**, klärt Hülle,
+Versions-/Kindzuordnung, native Payload-/Hash-Erhaltung und Stromabschluss.
+Der Entscheidungsbeleg samt Alternativen, Grenzprüfung und noch offenen
+Verhaltensabnahmen steht unmittelbar bei 14.g. Historische Angaben bleiben
+erhalten; keine persönliche Einzelzustimmung oder Reviewbehauptung.
+
+- [x] **NDJSON-OBJECT-CONTRACT:** NDJSON-Objekthülle und vollständige Stromgrenzen verbindlich klären. Commit: `docs(spec): NDJSON-Objekthülle und Stromgrenzen präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und notwendigen aktiven Katalog-Hashbindungen. Kein Produktcode,
+Verhaltenstest, Testnummernregister, Runner oder Workflow wird verändert.
+Historische Evidence wird nicht umgebunden. Produktstand **588/900**,
+zuletzt **14.f.C**, nächstens **14.g.W**, bleibt unverändert. Erst nach dem
+erfolgreichen parallelen Apply-Gate setzt der Entrypoint ausschließlich
+den obigen Offplan-Marker und die Bundlenummer auf 421. Das markiert keine
+Implementierung von 14.g.
+
+**Prüfgrenze:** Reine normative Klärung ohne Produktverhaltensänderung;
+keine erfundenen Dokumentationstests. Vollständige Collection-/Katalogprüfung
+mit null ausgeführten Testkörpern und native Paketprüfung bleiben erhalten.
+Apply prüft vor dem eigenen Commit ausschließlich **Gruppe 0/3**,
+Commitfolge **129**, mit **5.969 Tests** und vier parallelen Workern.
+Teiltests sind kein Vollsuite- oder Release-Nachweis. Übergabe als
+`spec_clarification`, danach Ende des Einzelauftrags; kein Eingriff in
+Control, Watcher, CI oder Dienste. Der nächste Produktauftrag implementiert
+den geklärten offenen Schritt; dieses Bundle enthält keine zweite Phase.
+
+**Tatsächlich geprüft in Dev:** Vollständige Collection-/Katalogprüfung mit
+**17.906 erfassten Identitäten**, **0 Testkörpern**, Prozesscode **0**,
+keinen Katalogfehlern und `full_suite_passed=null`. Sämtliche Testdateien,
+Nummern, Fixtures, Runner und Produktquellen blieben bytegleich zur
+bestätigten Basis; an 743 aktiven Katalogdokumenten änderte sich allein
+die Spezifikations-Hashbindung. Keine bestehende Testabdeckung wird dadurch
+als Nachweis der neuen NDJSON-Regel umgedeutet.
+Quellstand `ed4a9b1a9c0e0212d2afcc35f4a70b81bfce83d5f63f27f008e8cb2a1d8f6d69`,
+Katalog `d7f33a717756a61d82de320f1e6938e991cd112afbf22e3cb1abb009217c9f38`,
+Spezifikation `cad61bee632c33f6ccc1310f83f8c02aa222f1b20b1e6b03e5c23f318cccf3bb`.
+Die hier genannten künftigen NDJSON-Verhaltensabnahmen bleiben unausgeführt;
+der spätere parallele Apply-Teiltest wird nicht vorweggenommen.
 
 ## OFF-PLAN – Expliziter CSV-Profilvertrag (Bundle 417)
 
@@ -18944,21 +18987,151 @@ Apply-, Vollsuite- oder Release-Erfolg dieser Übergabe wird vorweggenommen.
 **Anforderungsbezug:** `SR-REQ-0327`.
 **Verifikationsbezug:** `SR-VER-0024`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Das vollständig gebundene Result
+`specroad-apply_Result_110127_1023_cb7474.zip`, SHA-256
+`9987a17a23644469ceeeab1185aa4d6e1f2b7bb81ea657580ef832144d0eaa39`,
+bestätigt Bundle **420** / **14.f.C** auf
+`c021ab5ca4ecb579e8d5b89efa3e97d5f044cb01`: sauberer Apply-Arbeitsbaum,
+**5.968 bestandene Tests**, Gruppe **2/3**, Commitfolge **128**, vier Worker,
+**1.807,24 s**. Native Result-/Paketbindung, alle **2.153** Snapshotdateien,
+tatsächlicher Commit, Run-/Ausführungslog und vollständige nummerierte
+Testbeobachtungen wurden abgeglichen. Der erhaltene Dev-Stand wich nur in
+fünf nun bestätigten Fortschrittsmarkern ab; nach deren Abgleich war er
+bytegleich. Die Belege betreffen ausschließlich den alten Produktstand,
+nicht diese neue Spezifikation oder eine bereits implementierte NDJSON-Funktion.
+
+**Entscheidungsbeleg NDJSON-OBJECT-CONTRACT (Bundle 421)**
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+aktueller Control-Vertrag 2 mit `clarification_allowed=true`. Keine
+persönliche Einzelbestätigung, kein erfundener Review oder Risikoentscheid.
+
+**Lücke und geprüfte Quellen:** SR-REQ-0327 und D.3 verlangen ein versioniertes
+Artefakt oder Change-Plan-Objekt je Zeile und die Felder `format_version`
+und `object_kind`. Sie bestimmen bisher weder Discriminatorwerte noch den
+Ort des nativen Objekts und das Verhältnis der Versionen. Native Artefakte
+verwenden `schema_version`; der geschlossene reguläre Change Plan besitzt
+bereits `format_version=1.2.0` und einen Selbsthash. Ein direktes Hinzufügen
+von Transportfeldern wäre daher keine bloße Implementierungswahl.
+Geprüft wurden D.3, 9.3–9.5, 10.1/10.2, 10.12.1, 11.7/11.8, Anhang O/P/S.7,
+SR-REQ-0013/0214/0316/0319/0327–0332/0723 und 14.g.W/R/C sowie die vorhandenen
+JSON-, Artefakt-, Change-Plan-, Mapping- und Schemakatalogverträge.
+
+Konkrete technische Belege sind `storage/json_syntax.py`,
+`model/artifact_schemas.py`, `model/domain_schemas.py`,
+`model/record_schemas.py`, `model/schema_identity.py`, `changes/schema.py`,
+`changes/plan_contract.py`, `changes/_common.py` und
+`tests/test_change_plans.py`. Im vollständigen gebundenen Produktsnapshot
+ist kein NDJSON-Zeilenschema oder -Codec vorhanden; der Schemakatalogtest
+weist `ndjson-v1` ausdrücklich als nicht verfügbar aus. Bestehende
+`source_format=ndjson`-Mapping-/Planfälle sind keine implementierte
+Bytegrammatik. Daraus folgt keine Aussage über fremde Datenbestände.
+
+**Alternativen und Entscheidung:**
+
+1. Native Objekte direkt um `object_kind` und Transportversion erweitern:
+   vermischt Artefakt-/Transportversion, kollidiert mit dem geschlossenen
+   Change Plan und gefährdet dessen vorhandene Selbsthashprojektion.
+2. Art aus Feldern oder IDs ableiten und die äußere Version weglassen:
+   widerspricht den ausdrücklich verlangten Transportfeldern und eröffnet
+   mehrdeutige Interpretation; keine zulässige konservative Umsetzung.
+3. Gewählt ist die geschlossene **Dreifeldhülle v1** aus `format_version`,
+   `object_kind` und `object`. Die native Payload bleibt vollständig und
+   unverändert, vorhandene Validatoren und Hashverträge werden wiederverwendet.
+   Getrennte artifact-/plan-Payloadfelder, zusätzliche Inhaltskopien oder
+   eine weitere Hash-/Schema-Registry würden ohne fachlichen Nutzen mehr
+   Varianten und Konsistenzbedingungen schaffen.
+
+Die äußere Version ist eigenständig `1.0.0`, die Kindwerte sind genau
+`artifact` und `change_plan`. LF-Framing folgt dem bestehenden Profil;
+CRLF/BOM werden nicht still als weiterer Dialekt zugelassen. Nur byteleere
+Zeilen werden ignoriert; Whitespace ohne Objekt ist weiterhin kein gültiger
+nichtleerer Datensatz. Ein vollständiges letztes Objekt darf bei tatsächlichem
+EOF ohne LF enden; ein unvollständiger Rest oder eine vorübergehende Pause
+ist kein Abschluss. Gemischte Arten und wiederholte Objekte bleiben geordnet
+erhalten. Erst die spätere Fachstufe entscheidet über Modellkonflikte.
+
+**Grenzprüfung nach 2.4.1:** (1) Ausschließlich Detailfestlegung des bereits
+bestätigten NDJSON-Transports, keine neue Requirement-ID, CLI-Option oder
+Produktposition. (2) Versionierte Objekte, strikte JSON-Syntax, explizite Art,
+Leerzeilen-/Kommentarregeln und deterministische Ausgabe sind gleichzeitig
+erfüllt. Bestehende Requirement-Verträge werden nicht abgeändert.
+(3) Native Schema-/Hashbindung, Scope, Security, Bestandskompatibilität,
+Verlust-/Mapping-, Human-Review- und Writergrenzen bleiben erhalten; ein
+transportierter Plan wird nicht ausgeführt. (4) Eine eigene Transportversion
+ist nachvollziehbar revidierbar. Keine Bestandsdatei, historische Evidence
+oder Freigabe wird migriert; eine spätere Änderung benötigt eine neue
+normative Fassung, keinen Reset oder Datenverlust. (5) Die Grammatik hängt
+von keiner unverfügbaren externen Tatsache oder fachlichen Einzelentscheidung
+ab. Native Daten, Mapping, Basis und tatsächliche Freigaben bleiben von den
+jeweils zuständigen Aufrufern ausdrücklich bereitzustellen.
+
+**Normative Zielregel:** Spezifikation **0.2.16, D.3.1** definiert die exakte
+Hülle, getrennte Versionen, passive lokale Validierung, native Erhaltung,
+kanonische Ausgabebytes, Framing/EOF, Fehlerorte und vollständige Verarbeitung.
+Die Kopfversion und der veraltete Versionsverweis in 2.1 werden konsistent
+auf die aktive Dokumentfassung geführt; die Rangfolge selbst bleibt gleich.
+SR-TC-0327 bleibt `open`/`pending`; alle aktiven Kataloge bekommen nur die neue
+Spezifikations-Hashbindung. Historische Belege behalten ihre ursprünglichen
+Spec-/Source-Hashes. Diese Dokumentprüfung ist kein bestandener NDJSON-Test.
+
+**Verbindliche positive, negative und Grenzfall-Abnahmen:**
+
+- W: Ein gemischter Strom aus mehreren nativen Artefakten und regulären
+  Change Plans wird vollständig und in Reihenfolge gelesen und geschrieben.
+  Alle unterstützten nativen Artefakttypen, mehrere Revisionen/wiederholte
+  Objekte und leere Ströme bleiben darstellbar; die reinen vorhandenen
+  Fachvalidatoren werden genutzt. Semantische Roundtrips erhalten
+  Extensions, Sprach-/Verbindlichkeitsfelder, externe Identitäten, Listen,
+  Abwesenheit/null, Operationen, native Versionen und Selbsthashes. Gleiche
+  Eingaben ergeben RFC-8785-Hüllen plus LF ohne BOM.
+- W: Fehlende/zusätzliche Hüllenfelder, falsche Version/Art, unbehüllte
+  Objekte, falsche Payloadart, ungültige native Felder und veränderte
+  Change-Plan-Selbsthashes werden ohne Reparatur abgewiesen. Kein
+  Netzwerk-/Schema-Loader, Projektwrite, ID-/Zeitgenerator, Receipt oder
+  Planexecutor wird durch Codierung/Decodierung aufgerufen. Gültige
+  transportierte Daten gelten ausdrücklich nicht als fachliche Freigabe.
+- R zusätzlich: Byteleere Zeilen, reine Whitespacezeilen, Kommentare,
+  nachgestellte Kommata, Dubletten in verschachteltem JSON, zwei Objekte
+  auf einer Zeile, Arrays/Skalare, BOM/CRLF und ungültiges UTF-8 prüfen.
+  Escape-/Unicode- und kommentarähnliche Stringdaten bleiben erhalten.
+  Für Feldfehler gelten Pointer relativ zur Hülle, physische Zeilennummern
+  zählen ignorierte Leerzeilen mit; Diagnosen enthalten keine Payloadwerte.
+- R zusätzlich: Gültiges letztes Objekt mit/ohne LF, abgebrochene letzte
+  Strings/Objekte/UTF-8-Zeichen, Fehler nach einem gültigen Präfix,
+  vollständig verarbeitete große Zeilen und kleine Transferblöcke prüfen.
+  Pausen sind kein EOF. Fortsetzung am unveränderten gebundenen Eingang
+  liefert keinen Datensatz doppelt oder gar nicht; bei geänderten
+  Eingangsbytes wird die bestehende Konfliktgrenze wirksam. Kein
+  Präfixerfolg, stilles Überspringen oder neuer harter Gesamtmengencutoff.
+  Alle W-Nachweise bleiben zusätzlich grün.
+- C: Zeilenframing von JSON-/nativer Objektvalidierung und Fachmapping
+  trennen, ohne neue Datentypen, Transportdialekte, Hashprojektionen oder
+  Fehler-/Seiteneffektverträge. W-/R-Oracles unverändert erhalten und die
+  betroffenen Verhaltensregressionen erneut gezielt parallel prüfen.
+
+**Offene Umsetzung:** Der erste W-Schnitt ist ein passiver nativer
+NDJSON-Objektcodec. CLI-Anbindung, vollständiger Import-/Exportplan,
+Manifest-/Verlustbericht, globale Validierung und tatsächliche
+Transaktion bleiben in ihren zugeordneten Schritten verbindlich. Die
+Existenz eines Codecs darf deren Erfüllung nicht vortäuschen. 14.g.W/R/C,
+Positionen **589–591**, bleiben nach diesem OFF-PLAN-Bundle offen.
+
 #### 14.g.W – Let it Work
 
 - [ ] **14.g.W** · Position **589/900** · Voraussetzung: `14.f.C`.
 **Exakte Commit-Message:** `14.g.W feat(exchange): NDJSON-Objektstrom aufbauen`
 
-**Umsetzung:** Pro Zeile genau ein versioniertes Artefakt oder Change-Plan-Objekt streamen.
+**Umsetzung:** Den kleinsten nutzbaren passiven NDJSON-Objektcodec nach D.3.1 aufbauen: genau eine versionierte Dreifeldhülle pro Zeile, native Artefakte oder reguläre Change Plans vollständig prüfen und in Reihenfolge streamen. Keine native Schemaänderung, Inferenz oder Ausführung; die W-Abnahmen des Entscheidungsbelegs gelten.
 
-**Verhaltensabnahme:** Mehrere gültige Objekte werden vollständig in Reihenfolge verarbeitet.
+**Verhaltensabnahme:** Mehrere gültige native Objekte beider Arten werden vollständig in Reihenfolge verarbeitet und semantisch unverändert zurückgelesen, einschließlich innerer Versionen und Planhashes. Nicht zulässige Hüllen oder Payloads werden ohne Reparatur abgewiesen. Keine Schreib-/Freigabewirkung; kein vollständiger CLI-Import wird behauptet.
 
 #### 14.g.R – Make it Right
 
 - [ ] **14.g.R** · Position **590/900** · Voraussetzung: `14.g.W`.
 **Exakte Commit-Message:** `14.g.R feat(exchange): NDJSON-Objektstrom vervollständigen`
 
-**Vervollständigung:** Leere Zeilen ignorieren, Kommentare und kaputte letzte Objekte ablehnen.
+**Vervollständigung:** Framing, physische Fehlerorte und Stromabschluss nach D.3.1 vervollständigen: byteleere Zeilen ignorieren, Kommentare und kaputte letzte Objekte ablehnen; Transferblockgrenzen, große Zeilen, gültiges EOF ohne LF und gebundene Fortsetzung ohne Präfixerfolg gemäß den R-Abnahmen prüfen.
 
 **Verhaltensabnahme:** Kleine Transferblöcke und Fortsetzung erhalten den vollständigen Objektstrom. Die W-Nachweise bleiben zusätzlich grün.
 

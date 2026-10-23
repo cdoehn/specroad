@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.15
+## Version 0.2.16
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.15` |
+| Dokumentversion | `0.2.16` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 23. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.15 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.15 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.16 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.16 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.14 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung CSV-PROFILE-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: expliziter CSV-Profilvertrag für Typkonvertierung, Listen, Null, Abwesenheit und Fehlerpolicy. Entscheidungsbeleg und Abnahmen stehen bei 14.f im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung des bestehenden CSV-Austauschprofils in D.2.1; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.15 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung NDJSON-OBJECT-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: getrennte Transporthülle und native Versionen, passive Objektprüfung sowie vollständiges Zeilenframing. Entscheidungsbeleg und Abnahmen stehen bei 14.g im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung des bestehenden NDJSON-Objektstroms in D.3.1; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.15 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.16 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.13 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.16 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4265,6 +4265,19 @@ Rohbytes und historische Evidence bleiben erhalten. Umsetzung und
 Verhaltensnachweise bleiben in 14.f.W/R/C offen. Produktstand 585/900 und
 Control-/Laufzeitzustände ändern sich durch die Dokumentübergabe nicht.
 
+### 20.15 NDJSON-Objektpräzisierung v0.2.16
+
+`NDJSON-OBJECT-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, konkretisiert
+in D.3.1 die bislang offene Zeilenhülle und das Verhältnis ihrer Version zu
+nativen Artefakten und regulären Change Plans. Die Dreifeldhülle erhält
+native Payloads und deren Hashverträge. Framing, tatsächlicher Stromabschluss,
+passive Validierung und Fehlersignale sind explizit; kein Präfix ist ein
+Gesamterfolg. Bestehende Daten, Evidence, Mapping-/Freigabe-/Writergrenzen
+bleiben erhalten. Die aktive Dokumentfassung wird auch in 2.1 konsistent
+benannt, ohne Änderung der Rangfolge. Umsetzung und Verhaltensnachweise
+bleiben in 14.g.W/R/C offen; Produktstand 588/900 und Control-/Laufzeitzustände
+ändern sich durch diese normative Übergabe nicht.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4307,6 +4320,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.16 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | NDJSON-OBJECT-CONTRACT: geschlossene versionierte Transporthülle, native Payload-/Hash-Erhaltung und eindeutiges Framing/EOF; passive Grenzen bleiben erhalten, Umsetzung bleibt in 14.g offen. |
 | 0.2.15 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | CSV-PROFILE-CONTRACT: separates gebundenes CSV-Profil mit expliziten Zellcodecs, JSON-Listenregel, Null-/Abwesenheits- und Reject-Vertrag; bestehende Formate bleiben erhalten, Umsetzung bleibt in 14.f offen. |
 | 0.2.14 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | IMPORT-CONFLICT-POLICY: vier explizite Importstrategien, gemeinsame verlusterhaltende Übernahmegrenzen, reguläre Revision derselben Identität, sichtbare Divergenz und unveränderte Legacy-Historien; Umsetzung bleibt in 14.c offen. |
 | 0.2.13 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | EXCHANGE-MAPPING-CONTRACT: geschlossene passive v1-Mappingtabellen, getrennte hashgebundene Registry und deterministische Auswertung nach 10.12.1; Bestandsdaten bleiben erhalten, Umsetzung bleibt in 14.a offen. |
@@ -4666,6 +4680,142 @@ CSV-Typinferenz. Es findet keine automatische Datenmigration statt.
 - genau ein JSON-Objekt pro nichtleerer Zeile;
 - jede Zeile besitzt `format_version` und `object_kind`;
 - Kommentare, trailing commas und mehrzeilige JSON-Objekte sind unzulässig.
+
+### D.3.1 Versionierte Objekthülle und Stromabschluss v1
+
+**Entscheidung NDJSON-OBJECT-CONTRACT, delegiert gemäß SPECROAD-DECISION-1:**
+Der folgende additive Vertrag konkretisiert SR-REQ-0327 und D.3 für den
+passiven Transport nativer Artefakte und regulärer Change Plans. Er erweitert
+weder deren native Schemata noch die Berechtigung zu Import oder Ausführung.
+
+**Geschlossene Zeilenhülle.** Jede nichtleere Zeile MUSS genau ein
+JSON-Objekt mit exakt den folgenden drei Pflichtfeldern enthalten:
+
+| Feld | Vertrag |
+|---|---|
+| `format_version` | String, exakt `1.0.0`; eigenständige Version der NDJSON-Hülle, keine Produkt-, Artefakt- oder Change-Plan-Version |
+| `object_kind` | String, exakt `artifact` oder `change_plan` |
+| `object` | Genau ein vollständiges natives JSON-Objekt der ausdrücklich gewählten Art |
+
+Weitere Hüllenfelder, fehlende Felder, andere Versionen, andere
+Discriminatorwerte, Arrays oder Skalare anstelle der Hülle oder von `object`
+sind Fehler. Ein direktes natives Objekt ohne Hülle ist kein v1-Datensatz.
+Weder Feldähnlichkeit noch Dateiname, Reihenfolge, ID oder Mapping erlauben
+es, `object_kind` zu erraten. Eine Payload erhält keine Kopie der äußeren
+Transportfelder; die Hülle wird beim Entpacken vollständig entfernt.
+
+Für `artifact` MUSS `object` ein natives Artefakt einschließlich
+`schema_version`, `artifact_type` und aller gemäß dessen bestehendem
+Common-/Domain-/Record-Vertrag erforderlichen Felder sein. Der Decoder
+MUSS die vorhandene projektfreie, typspezifische Feld- und lokale
+Konsistenzvalidierung anwenden; allein die Common-Field-Prüfung reicht
+nicht aus. Alle im Core unterstützten Artefakttypen bleiben darstellbar;
+nicht unterstützte Typen oder Schemaversionen werden nicht migriert.
+
+Für `change_plan` MUSS `object` ein vollständiger regulärer Change Plan
+nach 10.1/10.2 und K.2 einschließlich seiner eigenen `format_version`,
+`metadata_policy_version` und `change_plan_sha256` sein. Der vorhandene
+passive Change-Plan-Validator MUSS Feldverträge, lokale Bindungen,
+Operationen, Ergebnishashes und Selbsthash prüfen. Die äußere Version
+`1.0.0` ersetzt insbesondere nicht die innere Planversion `1.2.0`.
+Ein Planentwurf ohne Selbsthash, ein Import-/Merge-/Restore-/Work-Plan
+oder ein Proposal anstelle des regulären Plans wird nicht durch
+Transport in einen ausführbaren Change Plan umgewandelt. Ein natives
+Proposal darf weiterhin als `artifact` transportiert werden.
+
+**Erhaltung und Determinismus.** Der Codec MUSS sämtliche nativen Werte
+und ihre Feldpräsenz erhalten, einschließlich verschachtelter Extensions,
+Sprach-/Verbindlichkeitsangaben, geordneter Beziehungen und Operationen,
+externer Identitäten, IDs, Revisionen, Akteure und normativer Zeitstempel.
+Er ergänzt keine Defaults, keine neue Identität, keine Revisions-/Zeitwerte,
+keine Provenienz und keinen erneuerten Selbsthash. Abwesenheit und `null`
+bleiben verschieden. Strings werden nicht Unicode-normalisiert und nicht
+als Ausdruck, Loader oder Befehl interpretiert. Es gelten die bestehenden
+JSON-/Zahlen- und RFC-8785-Verträge; keine tolerante Ersatzkonvertierung.
+
+Ein Export MUSS je Objekt die RFC-8785-Bytes der vollständigen Hülle plus
+genau ein LF ausgeben, ohne BOM, Header-, Manifest- oder Kommentarzeile.
+Er MUSS die ausdrücklich gelieferte Objektreihenfolge und Mehrfachvorkommen
+erhalten; insbesondere wird nicht nach ID sortiert, dedupliziert oder
+zusammengeführt. Ein leerer Objektstrom erzeugt null Bytes. Dieselben
+zulässigen Objekte in derselben Reihenfolge ergeben dieselben Ausgabebytes.
+Der semantische Roundtrip erhält die nativen Objekte; er verspricht nicht,
+eine nichtkanonische Eingabe mit ihrer ursprünglichen Einrückung zu exportieren.
+Originale Eingabebytes und ihr Bytehash bleiben für Provenienz und spätere
+Planbindung separat erhalten. Der native Change-Plan-Selbsthash wird
+weiterhin ausschließlich über den inneren Plan nach 10.1 geprüft; die
+Transporthülle gehört weder zu diesem Hash noch zur nativen Modellwurzel.
+
+**Framing und Ende.** Eingabe ist strikt UTF-8 ohne BOM. Nur das Byte LF
+trennt Zeilen; CR beziehungsweise CRLF als physische Zeilenenden sind in
+diesem LF-Profil nicht zulässig. Escaped CR/LF innerhalb von JSON-Strings
+und andere zulässige Unicode-Zeichen innerhalb von Strings bleiben Daten.
+Ein U+FEFF innerhalb eines JSON-Strings ist kein Transport-BOM. Eine leere
+Zeile enthält vor ihrem LF null Bytes und MUSS ignoriert werden; eine nur
+aus Leerzeichen oder Tabs bestehende Zeile enthält kein JSON-Objekt und
+ist ein Fehler. Führende/nachgestellte Leerzeichen (U+0020) oder Tabs (U+0009)
+einer ansonsten gültigen Objektzeile sind zulässig; rohe CR-Bytes bleiben
+ausgeschlossen. Kommentare, nachgestellte Kommata,
+doppelte Schlüssel in beliebiger Tiefe, mehr als ein Objekt auf einer
+Zeile, rohe Zeilenumbrüche innerhalb eines Objekts und ungültige JSON-Werte
+MÜSSEN abgewiesen werden. Kommentarähnlicher Inhalt in Strings bleibt Text.
+
+Der letzte Datensatz DARF beim tatsächlichen Ende der Eingabe ohne LF
+enden, sofern er ein vollständiges gültiges Hüllenobjekt ist. Ein offener
+String, ein unvollständiges UTF-8-Zeichen oder sonstiges unvollständiges
+letztes Objekt ist ein Fehler, kein still ignorierter Rest. Ein leerer
+Transportblock, eine vorübergehende Pause oder eine Blockgrenze ist kein
+Eingabeende. Kleine Transferblöcke dürfen UTF-8-Zeichen, Escape-Sequenzen,
+Zahlen und Zeilen beliebig teilen; erst eine vollständige Zeile oder das
+explizite tatsächliche Ende entscheidet über den Datensatz. Zeilennummern
+zählen physische Zeilen ab eins, einschließlich ignorierter Leerzeilen.
+
+**Passive Verarbeitung und Vollständigkeit.** Ein Stream DARF Artefakte
+und Change Plans mischen. Ein bereits gelesenes gültiges Präfix ist nur
+eine partielle Beobachtung und DARF NICHT als erfolgreicher Gesamtimport,
+vollständige Ausgabe, gültiger Gesamtplan oder Schreibberechtigung gelten.
+Ein Fehler in einer späteren Zeile bleibt ein Fehler des Gesamtstroms;
+es gibt keine Skip-/Reparaturpolicy für fehlerhafte Objekte. Der Decoder
+MUSS einen maschinenlesbaren Grund und die physische Fehlerzeile ausweisen,
+für Feldfehler zusätzlich einen JSON-Pointer relativ zur gesamten Hülle
+(innere Felder beginnen mit `/object`). Er kopiert keine Payloadwerte in
+Diagnosen. Format-/Schema-/lokale Bindungsfehler sind Code 3;
+Sicherheits-, Ressourcen- und aktuelle Modellkonflikte behalten ihre
+bestehenden gesonderten Klassen nach 11.8.
+
+Die Transportprüfung löst keine Referenzen aus dem Projekt oder Netz auf,
+lädt keine Schemas über Nutzdaten-URLs und führt keine Operation aus.
+Sie schreibt keine normativen Dateien, Journale oder Receipts und erzeugt
+keine Freigabe. Globale Graph-/Scope-, Basis-, Lifecycle-, Actor-,
+Review-, Verlust-, Importmapping- und Transaktionsprüfungen bleiben vor
+einem tatsächlichen Import beziehungsweise Apply unverändert erforderlich.
+Gleichlautende IDs mehrerer Datensätze dürfen vom Codec nicht versteckt
+werden; ein etwaiger Konflikt wird in der nachgelagerten Fachstufe erkannt.
+SR-REQ-0316/0319/0328–0332 und 0723 bleiben verbindlich. Insbesondere
+bleibt ein vollständiges Exportmanifest Pflicht; seine separate Lieferung
+berechtigt nicht zu einer zusätzlichen Manifestzeile im Objektstrom.
+Diese Präzisierung führt weder ein neues Manifestformat noch eine
+CLI-Option oder eine implizite Mappingauswahl ein.
+
+Gesamtobjektzahl und Gesamtbytes sind keine neuen harten Grenzen. Große
+Zeilen und Ströme sind gemäß Anhang O/P vollständig und sparsam zu
+verarbeiten; vorhandene Sicherheits-/Parsergrenzen bleiben wirksam.
+Gesicherte Fortsetzung MUSS den unveränderten Eingabestand, die nächste
+physische Zeile und noch unvollständige Zeilenbytes binden. Bestätigte
+Objekte dürfen weder doppelt geliefert noch übersprungen werden. Eine
+Fortsetzung oder ein benötigtes gesichertes Präfix ersetzt keinen
+Stromabschluss; eine Datei wird erst nach vollständiger Prüfung atomar
+als erfolgreiche generierte Ausgabe veröffentlicht. Eine Umsetzung darf
+bestehende Work-/Streamingmechanismen verwenden, aber keinen ungebundenen
+Cursor oder eine neue Nebenwirkung im reinen Codec einführen.
+
+**Bestand und Umsetzung.** Native Artefakte, reguläre Pläne und bestehende
+Austauschmappingressourcen bleiben byte- und semantikgebunden nach ihren
+bisherigen Verträgen. Es gibt keine automatische Migration oder neue
+Interpretation historischer Daten. Das neue Zeilenformat wird ausdrücklich
+als v1 verwendet. Diese normative Festlegung behauptet noch keinen
+verfügbaren NDJSON-Codec, Schemaeintrag, CLI-Befehl oder Produktnachweis;
+die Implementierung und ihre W/R/C-Abnahmen bleiben in 14.g offen.
 
 ## D.4 JUnit-Kernprofil
 
