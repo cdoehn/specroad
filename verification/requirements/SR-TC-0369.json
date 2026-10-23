@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0369",
   "requirement_id": "SR-REQ-0369",
-  "specification_sha256": "843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc",
+  "specification_sha256": "0d00f902456c606ac1d44cb957027f6e471ac65aec796156cc876d218536491f",
   "primary_verification_id": "SR-VER-0026",
   "implementation_status": "open",
   "method": "pending",

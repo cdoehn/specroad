@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 8 · **Stand:** 22. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.13
+**Planrevision:** 10 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.15
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `843159f0e96cf97c2e8e67e4eba92b76197f13b281fe870fdd0589236c7cccfc`.
+Gebundene Spezifikations-SHA-256: `0d00f902456c606ac1d44cb957027f6e471ac65aec796156cc876d218536491f`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 9
+plan_revision: 10
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 585
 last_completed_plan_commit: 14.e.C
 next_plan_commit: 14.f.W
-last_completed_numbered_bundle: 416
+last_completed_numbered_bundle: 417
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,34 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Expliziter CSV-Profilvertrag (Bundle 417)
+
+Revision 10 dokumentiert **CSV-PROFILE-CONTRACT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.15, D.2.1**, schließt die
+Typ-/Listen-/Null-/Abwesenheits- und Fehlergrammatik für 14.f. Der genaue
+Entscheidungsbeleg einschließlich Alternativen, Grenzprüfung und noch
+offenen Abnahmen steht unmittelbar bei 14.f. Der Kopf wird mit der aktiven
+Planrevision und Dokumentversion konsistent geführt; historische Angaben
+bleiben erhalten. Keine persönliche Einzelzustimmung oder Reviewbehauptung.
+
+- [x] **CSV-PROFILE-CONTRACT:** Explizite CSV-Profile, Zellcodecs und Verlustgrenzen verbindlich klären. Commit: `docs(spec): CSV-Profil und Zellkonvertierung präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und notwendigen aktiven Katalog-Hashbindungen. Kein Produktcode,
+Verhaltenstest, Testnummernregister oder Runner wird verändert. Historische
+Evidence wird nicht umgebunden. Produktstand **585/900**, zuletzt **14.e.C**,
+nächstens **14.f.W**, bleibt unverändert. Nach dem erfolgreichen parallelen
+Apply-Gate setzt der Entrypoint nur den obigen Offplan-Marker und die
+Bundlenummer auf 417. Das markiert keine Implementierung von 14.f.
+
+**Prüfgrenze:** Reine normative Klärung ohne Produktverhaltensänderung;
+keine erfundenen Dokumentationstests. Vollständige Collection-/Katalogprüfung
+mit null ausgeführten Testkörpern sowie native Paketprüfung bleiben
+erforderlich. Apply prüft vor dem eigenen Commit ausschließlich Gruppe 2/3,
+Commitfolge 125, mit vier parallelen Workern. Teiltests sind kein Vollsuite-
+oder Release-Nachweis. Übergabe als `spec_clarification`, anschließend Ende
+des Einzelauftrags; kein Eingriff in Control, Watcher, CI oder Dienste.
 
 ## OFF-PLAN – Importstrategien und Revisionsgrenze (Bundle 407)
 
@@ -18484,21 +18512,160 @@ atomaren Übergabe endet dieser Einzelauftrag ohne weitere Result-Abfrage.
 **Anforderungsbezug:** `SR-REQ-0325`–`SR-REQ-0326`.
 **Verifikationsbezug:** `SR-VER-0024`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Result
+`specroad-apply_Result_074008_1023_47506c.zip`, SHA-256
+`9d33c806aafe7e14bf1cf38dd6901b7456c5d056c0e76d30b064d521fd73fe57`,
+bestätigt Bundle 416 / 14.e.C auf
+`9e7a9419a67b8c13324c93a5090d393d4068338d`: sauberer Apply-Arbeitsbaum,
+**5.899 bestandene Tests**, Gruppe **1/3**, Commitfolge **124**, vier Worker,
+**1.539,44 s**. Vollständiger Snapshot, tatsächlicher Commit, Einzelbeobachtungen
+und exakt nummerierte Auswahl wurden abgeglichen. Der erhaltene Dev-Stand
+wich ausschließlich in fünf nun bestätigten Fortschrittsmarkern ab; sonst
+war er bytegleich. Diese Bestätigung bezieht sich nur auf den alten Stand,
+nicht auf die neue CSV-Spezifikation oder eine CSV-Implementierung.
+
+**Entscheidungsbeleg CSV-PROFILE-CONTRACT (Bundle 417)**
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+aktueller Control-Vertrag 2 mit `clarification_allowed=true`. Keine
+persönliche Einzelbestätigung, externe Review- oder Risikoakzeptanzbehauptung.
+
+**Lücke und geprüfte Quellen:** SR-REQ-0325/0326 und D.2 verlangen explizite
+Datentypen, Listen- und Fehlerregeln sowie unterscheidbare leere Zellen,
+fehlende Spalten und JSON-Null. 10.12.1 schließt seine Mappingfelder bewusst
+und verweist CSV-Konvertierungen an ein gesondertes Profil; dessen konkrete
+Grammatik fehlt bislang. Geprüft wurden diese Normstellen, 14.f.W/R/C,
+die Implementierungen `mappings/_contract.py`, `_resources.py`, `exchange.py`,
+`documents/_export_data.py`, die vorhandenen Mapping-/View-Nachweise und
+[RFC 4180 Abschnitt 2](https://www.rfc-editor.org/rfc/rfc4180#section-2).
+Der vollständige gebundene Snapshot enthält keine gespeicherte JSON-Ressource
+`exchange-mapping-v1` oder ein CSV-Profil; vorhandene Testhilfen konstruieren
+Mappings einschließlich `source_format=csv`, ohne CSV-Typgrammatik.
+Aus dieser Prüfung wird nichts über fremde Projekte oder unzugängliche
+Datenbestände abgeleitet.
+
+**Alternativen und Entscheidung:**
+
+1. Typ-/Separator-/Nullinferenz aus Zellen oder Headern wäre klein im Code,
+   verletzt aber die ausdrücklich deklarative Grenze und verliert die
+   Unterscheidung von `""`, `null`, `"null"` und Abwesenheit.
+2. Neue Pflichtfelder im bestehenden `exchange-mapping-v1` oder automatische
+   Interpretation bisher passiver Extensions veränderten Bestandsverträge.
+   Ein einzelnes unversioniertes Parseroptionsobjekt wäre zudem nicht an
+   gespeicherte Importpläne und Ressourcenhashes gebunden.
+3. Gewählt ist die eigene passive Ressource **`csv-profile-v1`** mit exakter
+   Bindung an unveränderte Austauschmappings. Bestehende Typ-/Feldtabellen
+   werden wiederverwendet; keine parallele native Mappingsemantik entsteht.
+   String-/Boolean-/Zahlcodecs decken einfache externe Tabellen ab. Eine
+   deklarierte JSON-Array-Trennregel und die schon verwendete
+   **`typed-json-v1`**-Zellhülle erhalten Listen, Null und fehlende Werte.
+   Frei parametrierte Separator-/Escape-Dialekte oder konfigurierbare
+   Typinferenz wären zusätzliche Varianten ohne Bedarf für den sicheren
+   ersten Schnitt. `reject` ist die einzige zunächst unterstützte, ausdrücklich
+   deklarierte Fehlerpolicy; keine Forderung verlangt automatische Reparatur
+   oder die Annahme fehlerhafter Teilimporte.
+
+**Grenzprüfung nach 2.4.1:** (1) Das Profil konkretisiert ausschließlich
+den bestätigten CSV-Schritt, ohne neue Requirement-ID oder Produktposition.
+(2) Pflichtheader, UTF-8, RFC-Quote-/Zeilenregeln, explizite ID-/Typ-/Feld-
+Zuordnung, Typkonvertierung, Listen- und Fehlerpolicy sind gleichzeitig
+erfüllt; der RFC bestimmt keine Typinferenz. (3) Alte Mapping-/Registry-
+und Viewverträge, Freigaben, Verlustnachweise, Scope und Security bleiben
+erhalten. Codec-Daten sind keine Schreibberechtigung. (4) Die zusätzliche
+versionierte Ressource wird nur ausdrücklich gewählt; keine Bestandsbytes,
+Reviews oder Evidence werden migriert. Eine spätere Rücknahme erfolgt
+als neue dokumentierte Fassung, nicht durch Reset oder Datenlöschung.
+(5) Die Wahl benötigt keine unbekannten fachlichen Werte oder ausstehenden
+menschlichen Freigaben. Profilautoren müssen die konkreten Tabellen,
+Identitäten, Bindungen und die Auswahl weiterhin selbst liefern.
+
+**Normative Zielregel:** Spezifikation **0.2.15, D.2.1** legt das geschlossene
+Format, genaue Auswahl/Hashbindung, skalare Codecs, JSON-Array- und
+Typhüllenregeln, Header-/BOM-/Breitenbehandlung, Fehlerpolicy, reversible
+Repräsentierbarkeit und passive Seiteneffektgrenze verbindlich fest.
+Das ist keine bereits implementierte CSV-Schnittstelle. SR-TC-0325 und
+SR-TC-0326 bleiben `open`; die Kataloge bekommen nur die neue aktive
+Spezifikationsbindung. Bereits beobachtete Nachweise bleiben an ihre
+ursprünglichen Spezifikations- und Quellbytes gebunden.
+
+**Verbindliche positive, negative und Grenzfall-Abnahmen:**
+
+- W: Repräsentierbare explizite Datensätze überleben `decode(encode(...))`
+  mit gleicher Identität, Typen, Reihenfolge, Werten und Feldpräsenz.
+  Die Auswahl beider Ressourcen bindet echte Versionen und Hashes;
+  `value_map` bleibt nachgelagerte native Mappingsemantik. Unicode,
+  Komma, Quote, eingebettete CR/LF/CRLF, führende/nachgestellte Leerzeichen,
+  Boolean, Integer/Zahl, leere/verschachtelte Listen und Objekte sowie
+  `missing`, null, leerer String und der Text `null` sind zu unterscheiden.
+  Ein deklarierter JSON-Array-Codec erhält Trennzeichen in Listenelementen;
+  gewöhnlicher Text wird niemals automatisch als Liste interpretiert.
+- W: Fehlende Profile, nicht unterstützte/mehrdeutige Versionen, Hashwechsel,
+  falscher Quellformat-/Typbezug, doppelte Spalten-/Feldzuordnungen und
+  unzulässige Codecs/Policies müssen vor einem positiven Ergebnis scheitern.
+  Nicht repräsentierbare Werte werden beim Export zurückgewiesen; insbesondere
+  wird weder `false` zu `0`, fehlend zu null noch ein leerer String zur
+  Nullzelle. Keine Eingabemutation, Datei-/Projektwrites oder Autorisierung.
+- R zusätzlich: Optionales BOM nur am Anfang der Eingabe akzeptieren,
+  unveränderten Eingabebytehash erhalten, niemals BOM exportieren. Echte
+  U+FEFF-Zeichen in Zellen und am Anfang des ersten Headerfelds müssen als
+  Daten erhalten bleiben; der Export quotet dieses erste Headerfeld. Spalten
+  anhand exakter Namen zuordnen; Umordnung, Header allein, fehlende Spalten
+  nach beiden Policies, zusätzliche/duplizierte/leere Header, zu kurze und
+  zu lange Datensätze sowie doppelte IDs gezielt prüfen. Eine fehlende
+  Pflichtspalte der nativen Mappingstufe bleibt dort ein Fehler.
+- R zusätzlich: Ungültiges UTF-8, Quotes, Zeilenende außerhalb von Quotes,
+  JSON, nichtendliche/ungültige Zahlen, unzulässige Typhüllen und
+  nichtinvertierbare Wertabbildungen liefern den dokumentierten Fehlervertrag,
+  keinen Erfolg für nur die guten Zeilen. Diagnosen enthalten Orte und
+  Gründe, keine kopierten sensiblen Zellinhalte. Softbudgets/Sicherheitsgrenzen
+  bleiben wirksam; bestehende W-Verhaltenstests bleiben grün.
+- C: Einen gemeinsamen reinen RFC-CSV-Bytecodec mit den Viewexporten nutzen,
+  ohne bestehende Viewhülle, Zellwerte, Generated-Metadaten, Fehler-/Ausgabe-
+  verträge oder zulässige Seiteneffekte zu ändern. Alle betroffenen
+  W-/R-Verhaltenstests unverändert erneut prüfen; keine Darstellungstests.
+
+**Umsetzung bleibt offen:** Der erste nutzbare W-Schnitt ist ein reiner
+gebundener CSV-Datensatzcodec, kein neuer Dateiwriter, fertiger CLI-Import
+oder Verlustfreigabe-Workflow. Er muss seine tatsächliche Reichweite
+ausweisen. Die höher liegende Modellprojektion, CLI-/Planintegration und
+der vollständige Austauschabschluss bleiben gemäß ihren zugeordneten
+Import-/Exportschritten verpflichtend, nicht aus dem Zielrelease gestrichen.
+14.f.W/R/C, Positionen 586–588, bleiben nach diesem OFF-PLAN-Bundle offen.
+
+
+**Tatsächliche Prüfung dieser Klärung:** Vollständige Collection und
+Katalogprüfung erfolgreich: **17.698 Tests erfasst, 0 Testkörper ausgeführt**,
+Prozesscode 0, `full_suite_passed: null`. Der Abschlussbeleg bindet
+Quellstand `973e081efcd65f4c344b5c8621561d827c22b2402d1d7e129f3ab7bb9880f2ad`,
+Katalog `c1e896c7905cad89d366e90a94dd6c39ac5aa758c88b6a2ababbd6b29bed7d1e` und
+Spezifikation `0d00f902456c606ac1d44cb957027f6e471ac65aec796156cc876d218536491f`.
+Die abschließende BOM-/Datenpräzisierung erforderte eine neue aktive
+Hashbindung; der erste erfolgreiche Kataloglauf ist deshalb kein Nachweis
+für die finale Fassung. Der hier genannte zweite Lauf prüft exakt diese.
+Keine Produkt- oder Dokumentationstests wurden dafür erfunden. Alle
+Produktdateien, vorhandenen Verhaltenstests, Fixtures und stabilen Nummern
+sind zum Result bytegleich. Die **743** aktiven maschinellen Katalogdateien
+ändern ausschließlich `specification_sha256`; Requirementtexte, Status,
+Testzuordnungen und historische Nachweise bleiben erhalten. Die native
+Registry-/Rotationsprüfung bestätigt **Commitfolge 125**, **Gruppe 2/3**,
+**5.899 Tests** für den noch ausstehenden parallelen Apply-Lauf. Ein
+Apply-Erfolg dieser Übergabe oder eine CSV-Produktabnahme wird nicht behauptet.
+
 #### 14.f.W – Let it Work
 
 - [ ] **14.f.W** · Position **586/900** · Voraussetzung: `14.e.C`.
 **Exakte Commit-Message:** `14.f.W feat(exchange): CSV-Datentypen und RFC-4180 aufbauen`
 
-**Umsetzung:** CSV mit explizitem Mapping, UTF-8, Quotes, Listenregeln und eingebetteten Zeilenumbrüchen lesen/schreiben.
+**Umsetzung:** Den kleinsten nutzbaren reinen CSV-Datensatzcodec nach D.2.1 aufbauen: exakte Profil-/Mappingbindung, explizite Zellkonvertierung, UTF-8, RFC-Quotes/CRLF, JSON-Listenregel und eingebettete Zeilenumbrüche. Keine Typinferenz oder Projektwrites; die W-Abnahmen des Entscheidungsbelegs gelten.
 
-**Verhaltensabnahme:** Ein repräsentierbarer Datensatz überlebt den semantischen Export-/Importzyklus.
+**Verhaltensabnahme:** Ein im ausdrücklich gewählten Profil repräsentierbarer Datensatz überlebt den semantischen Export-/Importzyklus einschließlich Typen, Feldpräsenz, Identität und Reihenfolge. Nicht repräsentierbare Werte oder ungültige Bindungen werden ohne stillen Datenverlust abgewiesen; die Umsetzung behauptet keinen vollständigen CLI-Import.
 
 #### 14.f.R – Make it Right
 
 - [ ] **14.f.R** · Position **587/900** · Voraussetzung: `14.f.W`.
 **Exakte Commit-Message:** `14.f.R feat(exchange): CSV-Datentypen und RFC-4180 vervollständigen`
 
-**Vervollständigung:** BOM nur beim Import, ungültige Typkonversion und Spaltenfehler nach Policy behandeln.
+**Vervollständigung:** BOM nur beim Import, ungültige Typkonversion, exakte Header-/Breitenregeln, Null-/Abwesenheitsgrenzen und Fehlerdiagnosen nach D.2.1/reject behandeln. Relevante Ressourcen-, Ownership- und Isolationsfälle sowie die R-Abnahmen des Entscheidungsbelegs vervollständigen.
 
 **Verhaltensabnahme:** Parserroundtrips prüfen Feldwerte und Schema, keine menschenlesbare Tabellenoptik. Die W-Nachweise bleiben zusätzlich grün.
 

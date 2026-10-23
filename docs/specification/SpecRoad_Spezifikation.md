@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.14
+## Version 0.2.15
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.14` |
+| Dokumentversion | `0.2.15` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 23. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.14 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.14 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.15 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.15 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.13 vom 22. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung IMPORT-CONFLICT-POLICY, delegiert gemäß SPECROAD-DECISION-1: genaue Bedeutung der vier geplanten Importstrategien, insbesondere neue Revision gegenüber erzwungener Überschreibung. Entscheidungsbeleg und Abnahmen stehen bei 14.c im Implementierungsplan. |
-| Änderungsart | Präzisierung der Importstrategien in 10.12.2 im bestehenden Importumfang; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.14 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung CSV-PROFILE-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: expliziter CSV-Profilvertrag für Typkonvertierung, Listen, Null, Abwesenheit und Fehlerpolicy. Entscheidungsbeleg und Abnahmen stehen bei 14.f im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung des bestehenden CSV-Austauschprofils in D.2.1; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.14 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.15 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -4254,6 +4254,17 @@ oder automatische Historienmigration wird eingeführt. Umsetzung und
 Verhaltensnachweise bleiben in 14.c.W/R/C offen; Produktstand 576/900 und
 Control-Zustände werden durch die Dokumentübergabe nicht verändert.
 
+### 20.14 CSV-Profilpräzisierung v0.2.15
+
+`CSV-PROFILE-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, konkretisiert
+in D.2.1 die bislang offene CSV-Typ-/Listen-/Null-/Fehlergrammatik. Ein
+eigenes, exakt gebundenes passives Profil verwendet die bestehenden
+Austauschmappingtabellen und die vorhandene typisierte JSON-Zellhülle.
+Bestehende Mapping-/Registry- und Viewverträge werden nicht umgedeutet;
+Rohbytes und historische Evidence bleiben erhalten. Umsetzung und
+Verhaltensnachweise bleiben in 14.f.W/R/C offen. Produktstand 585/900 und
+Control-/Laufzeitzustände ändern sich durch die Dokumentübergabe nicht.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4296,6 +4307,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.15 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | CSV-PROFILE-CONTRACT: separates gebundenes CSV-Profil mit expliziten Zellcodecs, JSON-Listenregel, Null-/Abwesenheits- und Reject-Vertrag; bestehende Formate bleiben erhalten, Umsetzung bleibt in 14.f offen. |
 | 0.2.14 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | IMPORT-CONFLICT-POLICY: vier explizite Importstrategien, gemeinsame verlusterhaltende Übernahmegrenzen, reguläre Revision derselben Identität, sichtbare Divergenz und unveränderte Legacy-Historien; Umsetzung bleibt in 14.c offen. |
 | 0.2.13 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | EXCHANGE-MAPPING-CONTRACT: geschlossene passive v1-Mappingtabellen, getrennte hashgebundene Registry und deterministische Auswertung nach 10.12.1; Bestandsdaten bleiben erhalten, Umsetzung bleibt in 14.a offen. |
 | 0.2.12 | 2026-10-22 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | READINESS-SUBJECT-CONTEXT: exakte additive v1-Projektion für Capability-/Task-Subjects, unveränderte bestehende Hashes und gebundene Bewertung von Bestands-Evidence; Umsetzung bleibt in 13.f offen. |
@@ -4473,6 +4485,180 @@ ReqIF-Tool-Extensions werden nicht ausgeführt. Nicht verstandene Extensions wer
 - Headerzeile verpflichtend;
 - Mappingdatei bestimmt Typen und Listen;
 - leere Zelle, fehlende Spalte und JSON-Null sind unterscheidbar zu konfigurieren.
+
+### D.2.1 Explizites CSV-Profil v1
+
+**Entscheidung CSV-PROFILE-CONTRACT, delegiert gemäß SPECROAD-DECISION-1:**
+Dieser additive Vertrag konkretisiert SR-REQ-0325/0326 für 14.f. Die
+Feld-/Quote-/Datensatzsyntax folgt [RFC 4180, Abschnitt 2](https://www.rfc-editor.org/rfc/rfc4180#section-2),
+ergänzt um das bereits vorgeschriebene UTF-8-Profil und den verpflichtenden
+Header. Konvertierung, Null-/Abwesenheitsregeln und Ressourcenbindung unten
+sind SpecRoad-Regeln, keine behaupteten Vorgaben des RFC.
+
+**Ressource und Auswahl.** `csv-profile-v1` ist eine eigene passive
+JSON-Mappingressource unter `mappings/`, kein neues Feld und keine
+Interpretation beliebiger Extensions in `exchange-mapping-v1`.
+Ihr geschlossenes Objekt enthält genau folgende Pflichtfelder:
+
+| Feld | Exakter Vertrag |
+|---|---|
+| `schema_version` | exakt `0.2.0` |
+| `mapping_format_version` | exakt `csv-profile-v1` |
+| `mapping_id`, `mapping_version` | dieselbe Kennungs-/SemVer-Syntax wie 10.12.1 |
+| `mapping` | geschlossenes Objekt mit genau `mapping_id`, `mapping_version`, `sha256`; bindet eine tatsächlich gelieferte `exchange-mapping-v1`-Ressource mit `source_format: "csv"` nach 10.12.1 |
+| `external_type` | exakt eine vorhandene externe Typkennung dieser Mappingressource; deren `artifact_type` ist der native Artefakttyp |
+| `identity` | geschlossenes Objekt mit genau `column` und `kind`; `column` ist ein nichtleerer literaler Headername, `kind` exakt `native_id` oder `external_id` |
+| `columns` | geordnetes Array der unten definierten Spaltenzeilen |
+| `error_policy` | für v1 ausschließlich der ausdrücklich angegebene Wert `reject`; keine implizite Fehlerpolicy |
+| `extensions` | namespaced, ausschließlich passive Daten nach dem bestehenden Extensionsvertrag |
+
+Die Profilkennung `mapping_id@mapping_version` und der erwartete
+RFC-8785-/SHA-256-Hash des gesamten Profils werden ausdrücklich ausgewählt;
+Originalbytes erhalten zusätzlich ihren eigenen Bytehash. Auswahl und
+Duplikatprüfung folgen 10.12.1: kein höchstes Profil, Dateinamenraten,
+Netzwerkzugriff oder Default. Profil und gebundene Mappingressource haben
+verschiedene exakte Schlüssel; sie dürfen vorhandene Ressourcen oder
+Registry-Schlüssel nicht verdrängen. Beide tatsächlich geprüften
+Ressourcenbindungen und Bytehashes sowie der Hash der unveränderten
+CSV-Eingabebytes gehören zur Codec-Beobachtung. Eine Änderung des Profils
+ist eine andere gebundene Eingabe, auch bei gleicher Inhaltsversionsnummer.
+Ein späterer gespeicherter CSV-Importplan muss diese zusätzlichen Eingaben
+ausdrücklich mitbinden; ein alter Plan ohne diese Bindung autorisiert keinen
+neuen CSV-Import. Es gibt keine stillschweigende Änderung alter Planformate.
+
+Jede Spaltenzeile hat exakt `column`, `external_field`, `codec`,
+`empty_cell`, `missing_column`. Die ersten beiden sind nichtleere literale
+Unicode-Strings. `column` und `external_field` sind jeweils eindeutig;
+die Menge der `external_field` entspricht exakt den Quellfeldern der
+ausgewählten Typzeile in `mapping.fields`. Reihenfolge wird allein durch
+`columns` festgelegt. Feldnamen sind keine Pfade, Ausdrücke oder Muster.
+Die bestehende Feldzuordnung und `value_map` bleiben ausschließlich in
+der gebundenen Austauschmappingressource. CSV-Konvertierung erfolgt vorher,
+nicht als neuer ausführbarer Mapping-Ausdruck.
+
+`identity.column` darf zusätzlich als Feldspalte vorkommen, dann nur mit
+dem String-Codec und `empty_cell: "value"`; ihr Wert bleibt trotzdem eine
+nichtleere Identität. Sonst ist sie eine eigene Header-/Datenspalte. Native
+IDs müssen das vorhandene ID-Profil erfüllen und bleiben unverändert;
+externe IDs sind nichtleere exakte Strings. Es werden keine Identitäten
+erzeugt oder aus Zeilennummern, Text oder Dateinamen geraten. Bei externen
+Identitäten liefert die spätere Importplanung `source_system` und
+`source_document` ausdrücklich nach 10.12; der Codec erfindet sie nicht.
+
+**Zellcodecs.** `codec` ist genau eines der folgenden geschlossenen Objekte:
+
+| Objekt | Konvertierung und Export |
+|---|---|
+| `{"kind":"string"}` | Exakte Zeichenfolge ohne Trimmen oder Unicode-Normalisierung; keine Auswertung von Formeln oder Pfaden. |
+| `{"kind":"boolean"}` | Ausschließlich die Textwerte `true` und `false`; Export derselben Schreibweise. `1`, `0` oder lokalisierte Wörter sind keine Booleschen Werte. |
+| `{"kind":"integer"}` | JSON-Ganzzahltext gemäß `-?(0\|[1-9][0-9]*)`, ohne zusätzliche Leerzeichen; Wert muss dem bestehenden kanonischen Zahlenvertrag genügen. Boolesche Werte sind keine Ganzzahlen. |
+| `{"kind":"number"}` | Genau ein JSON-Zahlentoken ohne zusätzliche Leerzeichen; endliche Werte nach dem bestehenden JSON-/RFC-8785-Zahlenvertrag, keine lokalisierte Dezimalnotation, NaN oder Infinity. Export mit dem vorhandenen kanonischen Serializer. |
+| `{"kind":"list","list_rule":"json-array-v1"}` | Genau ein striktes JSON-Array nach dem bestehenden JSON-/Zahlenvertrag. Die deklarierte Trennregel ist die JSON-Array-Grammatik mit Komma und JSON-Stringescaping. Kein heuristisches Splitten an Semikolon, Pipe oder Leerzeichen. Reihenfolge, Duplikate, leere Liste, leere Elemente und verschachtelte gültige JSON-Werte bleiben erhalten. Export als RFC-8785-Arraytext innerhalb einer regulären CSV-Zelle. |
+| `{"kind":"typed-json-v1"}` | Die bereits für View-Zellen verwendete explizite Typhülle, siehe unten; Export ihrer RFC-8785-Bytes als Zelltext. |
+
+`typed-json-v1` hat exakt `{"type":"missing"}` für ein fehlendes Feld,
+sonst exakt `type` und `value`. `type` ist `null`, `boolean`, `number`,
+`string`, `array` oder `object`, und `value` hat genau diesen JSON-Typ;
+`null` verlangt `value: null`. Die bestehende kanonische Zahlen-/String-
+und strikte JSON-Policy gilt auch rekursiv. Es gibt keine zusätzlichen
+Member, doppelten JSON-Schlüssel, NaN oder Typkoerzision. Arrays in einer
+Typhülle verwenden ebenfalls die JSON-Array-Trennregel; ein nackter
+String `null` ist keine solche Hülle. `missing` wird als wirklich fehlender
+Member in der dekodierten Feldmenge dargestellt, niemals als JSON-Null.
+Diese Wiederverwendung verändert weder `view-csv-v1` noch vorhandene
+View-Exportbytes oder deren gesonderte Metadaten-/Generated-Kennzeichnung.
+
+`empty_cell` ist ausdrücklich `value`, `null` oder `error`. Nach dem
+CSV-Unquoting gelten unquoted leer und `""` als dieselbe leere Zelle.
+`null` liefert JSON-Null ohne anschließende Codec-Konvertierung; `error`
+weist sie zurück. `value` führt den ausgewählten Codec aus: beim String
+entsteht `""`, bei Boolean/Zahl/Liste ist leer kein gültiger Wert. Für
+`typed-json-v1` ist ausschließlich `error` zulässig; Null, fehlend und der
+leere String benötigen dort ihre exakten unterschiedlichen Typhüllen.
+Es gibt keinen impliziten Nulltext und keine Nullbehandlung aufgrund der
+CSV-Quoteform. `missing_column` ist ausdrücklich `error` oder `absent`;
+`absent` lässt den zugehörigen externen Feldmember vollständig weg. Dies
+betrifft eine im Header fehlende Feldspalte, keine zu kurze Datenzeile.
+Die Identitätsspalte muss unabhängig davon immer vorhanden sein.
+
+**Datei, Header und Zeilen.** Der Codec akzeptiert nur gültige UTF-8-Bytes;
+ein einzelnes UTF-8-BOM ist ausschließlich ganz am Eingabeanfang erlaubt
+und bleibt Teil des Eingabebytehashs. Export erzeugt niemals ein BOM.
+Eine weitere oder innere U+FEFF-Zeichenfolge wird nicht als Signatur
+entfernt, sondern wie gewöhnlicher Feld-/Headerinhalt behandelt. Kein
+Encoding-, Separator- oder Header-Sniffing. Das Trennzeichen ist Komma,
+das Quotezeichen `"`; Quotes innerhalb gequoteter Felder werden verdoppelt.
+Datensatztrenner außerhalb von Quotes sind CRLF; der letzte Eingabedatensatz
+darf ohne abschließendes CRLF enden. Export endet auch den letzten Satz
+mit CRLF. Beginnt das erste Headerfeld mit U+FEFF, wird dieses Feld
+beim Export zusätzlich gequotet; das echte Zeichen darf beim Rückimport
+nicht mit einer BOM-Signatur kollidieren. Eingebettete CR, LF und CRLF in gequoteten Feldern bleiben exakt
+erhalten, ohne Universal-Newline-Übersetzung. Die Textgrammatik folgt RFC
+4180 mit UTF-8 statt Beschränkung auf druckbares ASCII; weitere C0-
+Steuerzeichen und DEL sind keine rohen Textzeichen dieses Profils. Solche
+Stringwerte sind über JSON-Escapes in expliziten JSON-Zellcodecs darstellbar.
+
+Der erste Datensatz ist immer ein Header mit nichtleeren, exakt eindeutigen
+Namen; leere Eingabe ist ungültig. Headernamen werden nicht getrimmt oder
+normalisiert. Zusätzliche nicht im Profil genannte Spalten werden abgewiesen,
+nicht still verworfen. Die Eingabe darf Profilspalten umordnen. Ein fehlender
+Headername wird nur nach der zugehörigen `missing_column`-Regel behandelt.
+Jeder weitere Datensatz hat exakt die Breite des tatsächlich vorhandenen
+Headers. Auch eine leere Zeile wird nicht als Kommentar übersprungen.
+Ein ausschließlich vorhandener Header repräsentiert null Datensätze.
+Doppelte Identitätswerte in einer Datei sind Fehler; Zeilenreihenfolge
+bleibt erhalten. Export schreibt die Identitätsspalte zuerst, danach die
+Profilspalten in deklarierter Reihenfolge, ohne eine mitbenutzte Identitäts-
+spalte zu verdoppeln. Er verwendet minimales RFC-Quoting für Komma, Quote,
+CR und LF; ein einzelnes leeres Feld als vollständiger Satz wird gequotet.
+
+**Semantik und Fehlergrenze.** Lesen liefert ausschließlich eigene passive
+Datensätze mit expliziter Identitätsart/-wert, festem externem Typ und
+typisierten externen Feldern. Schreiben erhält genau solche Datensätze
+und dieselbe gebundene Profilauswahl; weder unbekannte Felder noch fehlende
+Identitäten dürfen verschwinden. Ein Wert ist nur repräsentierbar, wenn
+die gewählte Kodierung ihn beim Dekodieren mit gleichem Typ und gleicher
+Feldpräsenz reproduziert. Insbesondere darf ein fehlender Member nicht als
+leere Zelle exportiert werden; per Zeile fehlende Werte benötigen den
+`missing`-Tag. Null ist nur über `empty_cell: "null"` oder den Null-Tag
+darstellbar. Bei `empty_cell: "null"` ist ein leerer String im String-Codec
+nicht repräsentierbar und muss abgewiesen werden. Exportfehler erzeugen
+keine teilweise veröffentlichten Ausgaben. Es wird keine Rundreise aller
+SpecRoad-Inhalte behauptet, sondern nur des expliziten Schnittmengenprofils.
+
+Die native Projektion verwendet anschließend unverändert 10.12.1. Ein vom
+Codec korrekt als fehlend erkanntes, im Austauschmapping erforderliches
+Quellfeld bleibt dessen Fehler; es wird nicht mit null ergänzt. Ein nativer
+Export in diesen externen Mappingraum darf eine `value_map` nur invertieren,
+wenn der konkrete Zielwert genau einen kanonisch passenden externen Wert
+hat. Kein Treffer oder mehrere Treffer sind nicht repräsentierbar; auch
+hier kein Raten und keine stille Auswahl der ersten Tabellenzeile.
+Verluste außerhalb des deklarierten Schnittmengenprofils bleiben Gegenstand
+des bestehenden Verlustberichts und gewähren keine Verlustzustimmung.
+
+Ungültiges Profil, falsche Bindung, UTF-8-/CSV-/Header-/Breitenfehler,
+ungültige Typkonvertierung, Identitätskollision und nicht repräsentierbarer
+Export werden unter `reject` als `SRV090`/Code 3 diagnostiziert. Der Bericht
+benennt einen maschinenlesbaren Grund sowie die betroffene Ressourcenbindung
+und, soweit ermittelbar, logische Datensatznummer (Header 1) und
+Spaltennummer (erste Spalte 1);
+rohe Zellen, sensible Werte oder vollständige Eingaben werden nicht als
+Fehlermeldung gespiegelt. Es gibt keinen erfolgreichen Teilerfolg, Skip,
+Defaultwert, Reparaturversuch, implizite Verlustannahme oder automatischen
+Retry. Bereits gebundene Rohbytes bleiben erhalten. Sicherheit, adaptive
+Ressourcenbudgets und notwendige vollständige Verarbeitung nach Anhang O/P gelten
+unverändert; eine technische Grenze darf nicht als vollständiger Import
+ausgegeben werden. Unerwartete Programmierfehler werden nicht maskiert.
+
+Der Codec liest keine aus Daten abgeleiteten Pfade und führt keine
+Formeln, Hooks oder Fremdprogramme aus. Er erzeugt keinen Change Plan,
+keine IDs, Revisionen, Autorisierung, Projektwrites oder Recoveryaktionen.
+Die spätere CSV-Anbindung an Import/Export behält alle bisherigen aktuellen
+Ziel-/Gate-/Actor-/Request-/Verlust- und Transaktionsgrenzen. Bestehende
+Mapping- und Registrybytes bleiben gültig für ihren bisherigen Vertrag;
+ohne ausdrücklich bereitgestelltes CSV-Profil sind sie keine Erlaubnis zu
+CSV-Typinferenz. Es findet keine automatische Datenmigration statt.
+
 
 ## D.3 NDJSON
 
