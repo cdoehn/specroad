@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 9
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 578
-last_completed_plan_commit: 14.c.R
-next_plan_commit: 14.c.C
-last_completed_numbered_bundle: 409
+implementation_plan_commits_completed: 579
+last_completed_plan_commit: 14.c.C
+next_plan_commit: 14.d.W
+last_completed_numbered_bundle: 410
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -17798,7 +17798,7 @@ Ein Apply-Erfolg für Bundle 409 wird noch nicht behauptet. Nach der atomaren
 
 #### 14.c.C – Make it Clean
 
-- [ ] **14.c.C** · Position **579/900** · Voraussetzung: `14.c.R`.
+- [x] **14.c.C** · Position **579/900** · Voraussetzung: `14.c.R`.
 **Exakte Commit-Message:** `14.c.C refactor(exchange): Dreifachvergleich und Konfliktstrategien bereinigen`
 
 **Bereinigung:** Vergleichskern für verschiedene Austauschformate gemeinsam führen.
@@ -17806,6 +17806,62 @@ Ein Apply-Erfolg für Bundle 409 wird noch nicht behauptet. Nach der atomaren
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**C-Stand Bundle 410:** Das maßgebliche Result
+`specroad-apply_Result_013159_1023_d28c90.zip`, SHA-256
+`190563a8d602f7fd1fa8c07ee030914fc9f0bf9cb90c7098f8b7962e737a38ed`,
+bestätigt Bundle 409 / 14.c.R auf
+`a63bcf1d3190d4456baeadfae1ff02060f357961` mit sauberem Apply-Arbeitsbaum.
+Die tatsächlichen **5.815 Tests** der Gruppe **0/3**, Commitfolge **117**,
+bestanden mit vier parallelen Workern in **1.820,21 s**. Vollständiger
+Snapshot, Abschlusscommit und nummerierte Auswahl samt Testbeobachtungen
+sind abgeglichen. Die fünf bestätigten R-Fortschrittsmarker wurden in Dev
+übernommen; bestehende Arbeit bleibt erhalten. Spezifikation 0.2.14 und
+der geklärte Vertrag `import-conflict-policy-v1` bleiben unverändert.
+
+Der formatunabhängige Kern `_comparison_policy` führt die bestehenden
+Hashvergleiche, Klassifikationen, Strategieentscheidungen und passiven
+Ergebnisfelder gemeinsam. Er erhält ausschließlich die zuvor geprüften,
+eigenen Projektionen und deren kanonische Bytes; er ergänzt keinen Parser,
+keine Historie und keinen Write. `ImportComparison` behält seine öffentliche
+Klasse und Paketimporte, die Eingangsprüfung in derselben Reihenfolge sowie
+Kodierung, vollständige Leserprüfung und Installation des Ergebniswerts.
+Auch die abgewiesene Reinitialisierung erhält den vorherigen Wert.
+Der verlagerte Entscheidungsteil hat denselben Syntaxbaum; nur die letzte
+Ergebniszuweisung wird zur Rückgabe an den unveränderten Wertumschlag.
+Eingangsprüfungen, Leserfehlerübersetzung und beide Beobachtungszugriffe
+behalten ihre Syntaxbäume. Fehlerklassen, Codes, Pointer, Hashes, fachliche
+Werte und zulässige Seiteneffekte bleiben erhalten.
+
+**Gezielter C-Nachweis:** **778/778 Verhaltenstests**, vier parallele Worker,
+**5,15 s**, Prozesscode 0, Python 3.14.4. Die Auswahl enthält alle **164
+W-/R-Fälle** desselben Vergleichs und die **614 betroffenen Regressionstests**
+für native Identität/Historie, Relationsfelder/-referenzen, Artefaktgrundfelder,
+JSON/JCS, Modellwurzel, Austauschmappings und externe Registries. Die
+vorhandenen isolierten Core-/PYZ-Fälle decken die neue Modulaufteilung mit ab.
+Tests, erwartete Fachwerte, Fixtures, SR-TC-Teilnachweise und feste Nummern
+bleiben bytegleich; neue Testnummern entstehen nicht. Die vollständige
+Collection-/Katalogprüfung ist gültig mit **17.444 Tests** und **0 ausgeführten
+Testkörpern**; `full_suite_passed` bleibt null. Diese Teiltests sind kein
+Vollsuite- oder Releasebeleg.
+Quellstand-SHA-256:
+`88e54bf3139096b100cd44773cf5e1359f1840426122c9fe44873c223bf3d7d1`.
+Katalog-SHA-256:
+`edbc8f369f85a0da97fa72b5a13cf21928f9bee0cea97fcff2ed083a871f2ec7`.
+Beide geänderten/neuen Python-Dateien sind statisch mit der Python-3.10-
+Grammatik geprüft; ein Testlauf auf allen unterstützten Python-Versionen
+wird damit nicht behauptet.
+
+**Umfangsgrenze und Übergabe:** Übergeben wird genau dieser gezielt geprüfte
+C-Zustand. Der Entrypoint prüft vor dem eigenen Commit ausschließlich
+die fällige **Gruppe 1/3**, Commitfolge **118**, mit **5.815 Tests** parallel.
+Erst nach Erfolg setzt er die fünf Planmarker auf **579/900**, zuletzt
+**14.c.C**, nächstens **14.d.W** und Bundle **410**, und erzeugt den
+vorgesehenen Commit. Importplan, vollständige Zielvalidierung und Writer-
+Integration bleiben den nachfolgenden Schritten vorbehalten. Ein Apply-
+Erfolg für Bundle 410 wird noch nicht behauptet. Nach atomarer Übergabe
+endet dieser Einzelauftrag ohne weitere Result-Abfrage oder Wartephase.
 
 <a id="step-14-d"></a>
 ### 14.d – Importplan und Eingangsbindung
