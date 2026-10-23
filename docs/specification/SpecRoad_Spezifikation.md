@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.18
+## Version 0.2.19
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.18` |
+| Dokumentversion | `0.2.19` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 23. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.18 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.18 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.19 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.19 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.17 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung REQIF-STRUCTURE-XHTML, delegiert gemäß SPECROAD-DECISION-1: geordnete Vorkommensidentität, explizite Relationsabbildung und sichere XHTML-/Anhangschnittmenge. Entscheidungsbeleg und Abnahmen stehen bei 14.i im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung von ReqIF-Struktur und XHTML-Schnittmenge in D.1.2; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.18 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung REQIF-PRESERVATION-LOSS, delegiert gemäß SPECROAD-DECISION-1: passiver Quellträger, überprüfter Zielerhalt und einzeln gebundene Verlustbewertung. Entscheidungsbeleg und Abnahmen stehen bei 14.j im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung von ReqIF-Erweiterungserhalt und Verlustbewertung in D.1.3; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.18 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.19 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.18 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.19 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4303,6 +4303,18 @@ und Verhaltensevidence bleiben in 14.i.W/R/C offen; Produktstand 594/900
 und Control-/Laufzeitzustände ändern sich durch diese normative Übergabe
 nicht. Die vollständigen weiteren Austauschpflichten bleiben verbindlich.
 
+### 20.18 ReqIF-Erhaltungs-/Verlustpräzisierung v0.2.19
+
+`REQIF-PRESERVATION-LOSS`, delegiert gemäß `SPECROAD-DECISION-1`, präzisiert
+in D.1.3 den bisher fehlenden persistenten Quellträger und die Abgrenzung
+zwischen Rohkopie, nativer Projektion und tatsächlich gebundenem Zielerhalt.
+Ein versionierter passiver Erweiterungswert erhält originale XML-Bytes;
+einzeln identifizierte Verluste und getrennte Vollständigkeitsangaben
+verhindern pauschale Erfolge. Sicherheits-, Mapping-, Import- und Writegates
+bleiben erhalten. Umsetzung und Verhaltensevidence folgen in 14.j.W/R/C;
+Produktstand 597/900 und Control-/Laufzeitzustände bleiben bei dieser
+Dokumentübergabe unverändert. Die neue Katalogbindung ist kein Produkttest.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4345,6 +4357,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.19 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-PRESERVATION-LOSS: passiver Originalquellträger, überprüfter Zielerhalt, konkrete Verlustidentitäten und fail-on-loss-Grenze; bestehende Sicherheits-/Importverträge bleiben erhalten, Umsetzung bleibt in 14.j offen. |
 | 0.2.18 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-STRUCTURE-XHTML: geordnete Vorkommensidentität, explizite Relationsabbildung und sichere XHTML-/Anhangschnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.i offen. |
 | 0.2.17 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-OBJECT-CONTRACT: typisierte Objekterhaltung, identitätsbasierte Selektoren, Default-Herkunft und verlustbewusste JSON-Schnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.h offen. |
 | 0.2.16 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | NDJSON-OBJECT-CONTRACT: geschlossene versionierte Transporthülle, native Payload-/Hash-Erhaltung und eindeutiges Framing/EOF; passive Grenzen bleiben erhalten, Umsetzung bleibt in 14.g offen. |
@@ -4886,6 +4899,212 @@ verwechselt. Der vollständige Verlustbericht, Erweiterungserhalt und
 `fail-on-loss` bleiben gesonderte Abnahmen von 14.j, keine implizite
 Datenverlustfreigabe dieses Profils.
 
+
+### D.1.3 ReqIF-Erweiterungserhalt und Verlustbewertung v1
+
+**Entscheidung REQIF-PRESERVATION-LOSS, delegiert gemäß SPECROAD-DECISION-1:**
+Diese Regel präzisiert für 14.j den persistenten Erhalt aus SR-REQ-0322
+und die dazugehörige Verlustbewertung. Sie ergänzt D.1.1/D.1.2 und 10.12.1;
+SR-REQ-0018/0019, 0314, 0319, 0324 und 0332 bleiben wirksam. Es entsteht
+kein neues natives Artefaktformat, kein neuer Mappingtabellentyp und keine
+Loss-Akzeptanz oder Schreibfreigabe. Die folgenden Träger- und Berichtsregeln
+sind SpecRoad-Entscheidungen, keine behauptete OMG-Erweiterung oder bereits
+nachgewiesene Fremdtool-Kompatibilität.
+
+**Drei getrennte Aussagen.** Unveränderte Bytes im Speicher des Decoders
+sind zunächst nur Quellerhaltung. Persistenter Erweiterungserhalt erfordert
+einen tatsächlich mitgeführten, validierten namespaced Nutzinhalt; native
+Abbildung erfordert zusätzlich die fachliche Projektion. Eine Rohkopie DARF
+NICHT als Beweis für ausgeführtes Mapping, gelöste Referenzen, vollständigen
+Import oder erfolgreichen Apply gelten. Ein ausschließlich als Erweiterung
+erhaltener Wert MUSS weiterhin als nicht nativ abgebildet erkennbar bleiben.
+
+**Passiver Quellträger.** Für originale ReqIF-XML-Bytes wird der Schlüssel
+`extensions["specroad.reqif"]` mit genau folgendem geschlossenen Wert
+verwendet: `{"format_version":"reqif-preservation-v1","sources":[...]}`.
+`sources` ist ein Array der folgenden geschlossenen Einträge. Andere
+namespaced Extensions bleiben unverändert; ihre Werte werden weder als
+ReqIF ausgelegt noch in diesen Schlüssel umbenannt.
+
+| Feld | Vertrag |
+|---|---|
+| `source_system`, `source_document` | Ausdrücklich gelieferte nichtleere Strings des externen Quellkontexts, unverändert nach 10.12.1. Keine Ableitung aus Dateipfad, Header oder Arbeitsverzeichnis. |
+| `external_revision` | Nichtleerer String oder ausdrücklich `null`; keine erfundene Revision und keine Änderung der externen Identitätsregel. |
+| `source_sha256` | Vollständige kleingeschriebene SHA-256 der tatsächlichen originalen XML-Bytes. |
+| `source_size` | Exakte Byteanzahl als nichtnegativer Integer, kein Boolean. |
+| `source_base64` | Kanonische Standard-Base64-Kodierung dieser Bytes mit erforderlichem Padding, ohne Leerraum oder zusätzliche Daten. Strikte Dekodierung und erneute Kodierung müssen denselben String ergeben. |
+
+Die Eintragskennung für Speicherung und Referenzierung ist das Tupel
+`(source_system, source_document, external_revision, source_sha256)`.
+Ein Träger enthält höchstens einen Eintrag je Tupel; doppelte eingehende
+Einträge sind Fehler. Neue Ausgaben sortieren die Einträge nach den
+RFC-8785-Bytes des Arrays dieser vier Tupelwerte. Bei einem ausdrücklich
+angeforderten Zusammenführen mit vorhandenen Extensions ist ein bereits
+vorhandener identischer Eintrag ein No-op; alle anderen bisherigen Einträge
+und fremden Schlüssel bleiben erhalten. Unterschiedliche Quellstände,
+auch bei gleicher oder fehlender externer Revision, werden nicht gegenseitig
+überschrieben. Die Quellstandsliste ist eine passive Erhaltung, keine zweite
+Identitätsregistry oder neue Importstrategie.
+
+Ein vorhandener inkompatibler Wert unter `specroad.reqif`, konkurrierende
+Eintragsdaten oder eine geänderte erwartete Zielbindung sind Konflikte.
+Es gibt weder automatische Migration noch First-/Last-Wins oder Ausweichen
+auf einen neu erfundenen Schlüssel. Die allgemeine native Extensions-
+Validierung bleibt passiv: Ein solcher unbekannter Wert wird beim normalen
+Lesen/Schreiben nicht allein wegen seines Namens ausgeführt oder umgeformt.
+Die spezielle Prüfung erfolgt nur beim ausdrücklich angeforderten Gebrauch
+des Trägervertrags.
+
+Der Träger enthält das vollständige ursprüngliche XML-Dokument. Dadurch
+bleiben auch unbekannte Namespacebindungen, Präfixe in fremden Werten,
+Mischtext, Reihenfolge und Metadaten erhalten, ohne ihre Bedeutung zu raten.
+Es gibt keine Fragment-Neuserialisierung unter geratenen Namespacebindungen.
+Länge, Hash und ursprüngliche Bytes MÜSSEN vor erfolgreicher Erzeugung oder
+Nutzung übereinstimmen. Für die XML-Prüfung ist derselbe sichere, begrenzte
+Reader und das explizite Strukturprofil aus D.1.1/D.1.2 wiederzuverwenden;
+der Aufrufer liefert die bestehenden Grenzen. Ein Träger umgeht keine
+XML-, Typ-, Referenz-, Anhang- oder Sicherheitsprüfung. Die erwartete
+Dekodiergröße ist vor einer unnötigen großen Base64-Allokation zu prüfen.
+Reale Ressourcenfehler bleiben Fehler; es entsteht keine neue harte
+Gesamtauftragsgrenze und kein Erfolg durch abgeschnittene Daten.
+
+Der reine v1-Erhaltungsweg deckt diese beiden nachprüfbaren Formen ab:
+einen vollständigen Quellträger in JSON-Zielbytes und die bytegleiche
+Wiedergabe der ganzen XML-Quelle. Er behauptet keine allgemeine Prüfung
+fremder XML-Fragmente in beliebig geänderten Ausgaben. Weitere fachliche
+Abbildungen brauchen ihre bestehenden eigenen Vergleichsnachweise; fehlt
+dieser Nachweis, wird Erhalt nicht geraten.
+
+Die reine Trägerfunktion liefert Nutzdaten oder validierte Originalbytes;
+sie schreibt weder Projektdateien noch Registries. Die spätere Einbindung
+in ein vorhandenes `extensions`-Objekt verlangt einen ausdrücklich gebundenen
+Besitzer und den gewöhnlichen Change Plan samt Zielvalidierung. Besitzer,
+ID und Metadaten werden nicht aus einem ReqIF-Namen erraten. Bestehende
+Extensions, Native-Payload-Hashes und historische Evidence werden durch die
+Einführung des Formats nicht automatisch geändert.
+
+**Rückweg und tatsächlicher Erhalt.** Ein unveränderter Quellstand kann
+nach erneuter Bindungs- und Sicherheitsprüfung bytegleich wieder ausgegeben
+werden. Das beweist einen originalen Quellroundtrip, keine Übertragung
+zwischenzeitlicher nativer Änderungen. Geänderte native Felder dürfen nicht
+stillschweigend durch den alten XML-Stand ersetzt werden. Für einen neuen
+Export muss geprüft werden, welche Inhalte der konkrete Zielkandidat wirklich
+transportiert. Eine nur in Dev, einem Cache, dem Auditbericht oder der alten
+Quelldatei verbliebene Kopie zählt dabei nicht als Zielerhalt. Ist eine
+verstandene und sicher gebundene Rückintegration in geänderte XML-Ausgabe
+nicht möglich, bleiben die Ursprungsdaten erhalten und der betroffene
+Zielverlust wird konkret ausgewiesen; keine automatische rohe XML-Injektion.
+
+Referenzierte Anhangbytes sind nicht in XML-Base64 enthalten. Ihr Erhalt
+verlangt die tatsächlichen, nach D.1.2 gebundenen Bytes und das vorgesehene
+Zieltransportmittel. Ein erhaltener Pfad oder Hash allein ist kein erhaltener
+Anhang. Fehlende oder unsichere Auflösung wird nicht als akzeptierter Verlust
+übergangen. ReqIFZ verwendet weiterhin ausschließlich 14.k/Anhang O.
+
+**Einzelbewertung und Identität.** Der Verlustbericht MUSS für den ausdrücklich
+gebundenen Import- beziehungsweise Exportumfang jede nicht nativ abgebildete
+Fachinformation entweder als tatsächlich erhalten oder als Verlust ausweisen.
+Dazu gehören auch Mapping-Restfelder, nicht darstellbare Werte, fremde
+Attribute/Teilbäume, Metadaten, Struktur-/Relationsdaten, XHTML-Originale und
+nicht mitgeführte Anhänge. Eine Sammelmeldung „unbekannte Inhalte“ genügt nicht.
+Ein vollständig opaker, zusammenhängend behandelter Teilbaum ist eine Einheit
+mit allen seinen Attributen und Nachfahren. Bei teilweise abgebildeten
+Containern werden unabhängige ausgelassene Attribute, Felder und Kindteilbäume
+einzeln aufgeführt. Dieselbe Stelle wird für denselben Grund nicht doppelt
+gezählt; verschiedene Gründe dürfen nicht still zusammenfallen.
+
+Ein maschinenlesbarer Eintrag enthält mindestens `item_id`, `direction`
+(`import` oder `export`), `source_sha256`, `source_context`, `location`,
+`reason` und `disposition` (`preserved` oder `lost`). `source_context` ist
+genau das Objekt mit `source_system`, `source_document`, `external_revision`
+nach obigem Kontextvertrag. `source_sha256` bindet die vollständigen
+Quellbytes der betreffenden Eingabeeinheit, auch bei nativen Exportquellen.
+`reason` ist ein nichtleerer stabiler Maschinengrund, kein übersetzter Text.
+Vorhandene Parser-/Mappinggründe werden nicht anhand ihrer Meldung klassifiziert.
+
+`location` ist genau eine dieser geschlossenen Formen:
+
+- XML: `{"kind":"xml","path":[...],"attribute":null}` bezeichnet einen
+  Elementteilbaum. `path` enthält die nullbasierten Elementkind-Indizes vom
+  Dokumentelement aus; `[]` bezeichnet die Wurzel. Text, Kommentare und
+  Processing Instructions werden nicht als Elementkinder gezählt. Für ein
+  einzelnes Attribut ist `attribute` stattdessen genau
+  `{"namespace":"...","name":"..."}` mit expandiertem Namespace-URI
+  (leer bei keinem Namespace) und tatsächlichem Localname. Die Stelle muss
+  in den gebundenen, sicher geparsten Quellbytes vorhanden sein.
+- Native JSON-Quelle: `{"kind":"json","pointer":"..."}` mit einem
+  tatsächlichen RFC-6901-Pointer in der gebundenen Eingabeeinheit; `""`
+  bezeichnet deren Wurzel. Metadaten dürfen nicht aus einem anderen Objekt
+  oder Hash unter demselben Pointer übernommen werden.
+
+`item_id` ist `reqif-item-` plus kleingeschriebene SHA-256 der RFC-8785-Bytes
+des Objekts mit genau `direction`, `source_sha256`, `source_context`,
+`location` und `reason`. Im Verlustfall ist `loss_id` identisch zu `item_id`.
+Disposition, Berichtssortierung, Ausführungszeit und menschliche Texte sind
+nicht Teil dieser Identität. Gleiche Eingabe/Bindung/Stelle/Grund ergibt
+dieselbe Kennung; neue Quellbytes verlangen eine neue Bewertung und können
+neue Kennungen ergeben. Es wird keine globale revisionsübergreifende
+Loss-Identität behauptet. Einträge werden nach `item_id` sortiert.
+
+`preserved` verlangt einen überprüften `preservation_ref` mit genau
+`target_sha256`, `location` und `source_key`. Der Hash bindet die tatsächlichen
+vollständigen Zielbytes der betreffenden Ausgabeeinheit; `location` verwendet
+die obige XML-/JSON-Ortsform, jetzt bezogen auf diese Zielbytes. Bei einem
+Quellträger zeigt der JSON-Pointer auf den konkreten `sources`-Eintrag und
+`source_key` ist das Array seiner vier Tupelwerte; bei direkter unveränderter
+Quellwiedergabe ist die XML-Position die Dokumentwurzel und `source_key=null`.
+Der Prüfer MUSS die tatsächliche Byte-/Trägerübereinstimmung nachweisen;
+übereinstimmende Hashfelder oder vom Aufrufer behauptete Statuswerte allein
+genügen nicht. Bei einem noch nicht angewendeten Plan bezieht sich
+dies ausschließlich auf dessen exakt gebundenen Kandidaten, nicht auf einen
+behaupteten schon ausgeführten Write. Eine Quellkopie ohne diese Zielbindung
+darf keine `lost`-Position in `preserved` umwandeln. Einträge und Diagnosen
+enthalten keine kompletten Quelltexte oder Base64-Nutzinhalte; diese gehören
+nur in den vorgesehenen Träger. Verfügbare Objekt-/Definitionskennungen dürfen
+als Diagnosebezug ergänzt werden, ersetzen aber nicht die genaue Quellstelle.
+
+**Vollständigkeit und fail-on-loss.** Berichte trennen mindestens die
+maschinenlesbaren Aussagen `assessment_complete`, `loss_free` und
+`native_projection_complete`. `assessment_complete` darf nur wahr sein,
+wenn der gesamte ausdrücklich angegebene Umfang einschließlich seiner
+Restdaten geprüft ist. Die Inventarisierung stammt aus den tatsächlich
+gebundenen Quellen und der ausgeführten Abbildung, nicht ausschließlich aus
+einer ungeprüften vom Aufrufer gelieferten Liste angeblich verlorener oder
+erhaltener Stellen; eine Teilprojektion oder fehlende Voraussetzung
+ergibt keine vollständige Bewertung. `loss_free` ist nur bei vollständiger
+Bewertung und leerer Verlustmenge wahr. Ausschließlich im passiven Träger
+erhaltene Inhalte können einen Verlust vermeiden, machen aber die native
+Projektion nicht vollständig. Der Umfang und die Eingangs-/Mapping-/Zielbindung
+müssen im Bericht sichtbar sein; ein Quellroundtrip wird nicht auf einen
+Projektimport oder anders gebundenen Export verallgemeinert.
+
+Bei `fail-on-loss=true` MUSS eine nichtleere Verlustmenge oder unvollständige
+Bewertung mit Code 3 vor Veröffentlichung des Exportnutzinhalts abbrechen;
+der maschinenlesbare Bericht bleibt verfügbar. Tatsächlich und sicher im
+gebundenen Ziel erhaltene unbekannte Inhalte lösen allein keinen Verlustfehler
+aus. Ein nicht gesetztes `--fail-on-loss` darf einen Export mit vollständig
+ausgewiesenen Verlusten erlauben, aber keinen Verlust verschweigen oder
+`loss_free=true` melden. Es akzeptiert weder einen Importverlust noch einen
+Konflikt und autorisiert keinen Write. Die bisherigen strengeren Importplan-
+und Apply-Grenzen bleiben unverändert. Passive Funktionen liefern weiterhin
+keine `execution_ready`-/`write_authorized`-Freigabe.
+
+Syntax-/Träger- und nicht repräsentierbare Formatfehler haben Code 3,
+gebundene Quell-/Zielkonflikte Code 6, ungültige Aufrufkonfiguration Code 2
+und Sicherheitsverletzungen Code 7. Bestehende spezifische Mappingfehler
+behalten ihren Vertrag. Aktive Inhalte, DTD/Entities, externe Schemas,
+Includes, Netzwerk-/Pfadauflösung und Host-Ressourcenfehler werden nicht
+als gewöhnlicher Verlust umetikettiert. Keine Loss-Kennung, Rohkopie oder
+Flag-Einstellung hebt diese Grenzen auf.
+
+**Umsetzungsgrenze.** 14.j.W stellt zuerst einen nutzbaren passiven
+Erhaltungs-/Rückweg mit überprüfbarer Zielbindung und Einzelbewertung bereit;
+14.j.R vervollständigt Verlustabdeckung, Konflikt-/Sicherheitsränder und
+fail-on-loss. Alle Zustände bleiben durch Verhaltenstests abgesichert.
+14.j.C bereinigt nur die Struktur. Die vollständige CLI-/Projektintegration
+und ReqIFZ behalten ihre Planstellen und bleiben bis zu ihren tatsächlichen
+Nachweisen offen. Dieser Dokumentvertrag selbst ist keine Implementierung,
+Loss-Akzeptanz, Produktabnahme oder Fremdtool-Konformitätsbescheinigung.
 
 ## D.2 CSV
 

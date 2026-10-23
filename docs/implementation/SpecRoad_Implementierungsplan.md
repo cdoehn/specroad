@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 13 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.18
+**Planrevision:** 14 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.19
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `a2a19dd0b6f719ece9465ec1cf476f7d3b754e2eba54ae3de05bcbb11802fab7`.
+Gebundene Spezifikations-SHA-256: `91f1890b0e3cf4d2ae5782e9c641d50a119f10ba76a00295022dfe1661592219`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 13
+plan_revision: 14
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 597
 last_completed_plan_commit: 14.i.C
 next_plan_commit: 14.j.W
-last_completed_numbered_bundle: 432
+last_completed_numbered_bundle: 433
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,44 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – ReqIF-Erweiterungserhalt und Verlustbewertung (Bundle 433)
+
+Revision 14 dokumentiert **REQIF-PRESERVATION-LOSS**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.19, D.1.3**, legt einen passiven
+Originalquellträger, überprüften Zielerhalt und einzeln identifizierte Verluste
+für 14.j fest. Alternativen, Quellen, Grenzprüfung und offene W/R/C-Abnahmen
+stehen unmittelbar bei 14.j. Keine persönliche Einzelzustimmung, Loss-
+Akzeptanz, technische Produktfreigabe oder Fremdtool-Abnahme wird behauptet.
+
+- [x] **REQIF-PRESERVATION-LOSS:** ReqIF-Erweiterungserhalt und Verlustbewertung verbindlich klären. Commit: `docs(spec): ReqIF-Erweiterungserhalt und Verlustbewertung präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und ausschließlich notwendigen aktiven Katalog-Hashbindungen.
+Produktcode, Tests, Testnummern, Fixtures, Runner, Workflow und historische
+Evidence bleiben unverändert. Produktstand **597/900**, zuletzt **14.i.C**,
+nächstens **14.j.W**, bleibt unverändert; alle drei 14.j-Phasen bleiben offen.
+Erst nach dem erfolgreichen parallelen Apply-Gate setzt der Entrypoint den
+Offplan-Marker und die Bundlenummer auf 433. Keine Produktposition wird erhöht.
+
+**Prüfgrenze:** Keine Produktverhaltensänderung und keine erfundenen
+Dokumentationstests. Vollständige Collection-/Katalogprüfung mit null
+Testkörpern und native Paketprüfung bleiben erhalten. Apply führt vor
+diesem Commit ausschließlich **Gruppe 0/3**, Commitfolge **141**, mit
+**6.260 Tests** und vier parallelen Workern aus. Kein Vollsuite-/Release-
+Nachweis; Ergebnisse dieser künftigen Gruppe werden nicht vorweggenommen.
+Übergabe als `spec_clarification`, danach Ende des Einzelauftrags.
+Control-/Watcher-/CI-Zustände werden nicht verändert. Der nächste
+Produktauftrag setzt den geklärten Schritt um; keine zweite Phase hier.
+
+**Beobachtete Dev-Katalogprüfung:** Vollständige Collection mit
+**18.779 eindeutigen Testidentitäten**, Exit **0**, keine Katalogfehler,
+**0 ausgeführte Testkörper**, `full_suite_passed=null`. Bestehende Tests,
+Oracles, Fixtures und dauerhafte Testnummern bleiben bytegleich. Nur aktive
+Spezifikations-Hashbindungen wurden konsistent fortgeschrieben; historische
+Evidence bleibt unverändert. Dies ist kein neuer Produktverhaltensnachweis.
+Gebundener Quellstand: `0572f7a2eaee1d9fd2a2bd92a7af9a58a1f6dcc96bb85679274fec5350d82aed`;
+Katalog: `6cebeb37f3e7ba647eecf81fa34e8f2524f03fea87d9498f94366a60cc62c403`.
 
 ## OFF-PLAN – ReqIF-Struktur und XHTML-Schnittmenge (Bundle 429)
 
@@ -20349,23 +20387,153 @@ ohne eigene Result-/Test-Warteschleife.
 **Anforderungsbezug:** `SR-REQ-0322`.
 **Verifikationsbezug:** `SR-VER-0024`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Das vollständig gebundene Result
+`specroad-apply_Result_205158_1023_92715a.zip`, SHA-256
+`016fa51d8ca6c37fdba9b07a750a3108ad9e20c10eb5bcce7f667d6669604440`,
+bestätigt Bundle **432** / **14.i.C** auf
+`162b0cfef884728e0a946586190001871feed623`: sauberer Apply-Arbeitsbaum,
+**6.259/6.259** Tests der Gruppe **2/3**, Commitfolge **140**, vier Worker,
+**1.992,19 s**. Native Result-/Patchbindung, alle **2.176** Snapshotdateien,
+tatsächlicher Commit samt Elternstand, Run-/Ausführungslogs und vollständige
+nummerierte Testbeobachtungen wurden abgeglichen. In Dev wurden ausschließlich
+die fünf dadurch bestätigten Fortschrittsmarker nachgeführt; danach entsprach
+der Produktbestand dem Snapshot. Diese Belege bestätigen die Struktur-/XHTML-
+Bereinigung, keine bereits implementierte 14.j-Funktion.
+
+**Entscheidungsbeleg REQIF-PRESERVATION-LOSS (OFF-PLAN, Bundle 433)**
+
+**Autorität:** delegiert gemäß `SPECROAD-DECISION-1`, Spezifikation 2.4;
+aktueller Control-Vertrag Version 2 mit `clarification_allowed=true`.
+Es wird keine persönliche Einzelbestätigung, Reviewfreigabe oder Akzeptanz
+realen Datenverlusts behauptet. Der offene reguläre Schritt bleibt **14.j.W**.
+
+**Genaue Lücke:** SR-REQ-0322 und 14.j verlangen entweder persistenten
+namespaced Erhalt oder einzeln identifizierte Verluste. D.1.1/D.1.2 erhalten
+bereits Originalbytes, kennzeichnen nicht repräsentierbare Stellen und grenzen
+den vollständigen Verlustbericht ausdrücklich ab. Nicht festgelegt sind der
+persistente Quellträger, seine Konflikt-/Rückwegsemantik, eindeutige Verlust-
+Identitäten und die Trennung von Raw-Erhalt, nativer Projektion und tatsächlichem
+Zielerhalt. Ohne diese Regel könnte dieselbe Rohkopie fälschlich als erfolgreicher
+Import oder verlustfreier geänderter Export gelten.
+
+**Geprüfte Quellen:** maßgeblicher Result-Snapshot, Root-CHAT_INSTRUCTIONS,
+Kontext/Environment/Manifest und vollständige Apply-Testbelege; Spezifikation
+2.1/2.4, 10.12.1, D.1.1/D.1.2 sowie SR-REQ-0018/0019, 0314/0319, 0322/0324/0332;
+Plan 14.j.W/R/C und nachfolgende ReqIFZ-/Integrationsstellen. Technisch geprüft:
+ReqIF-Fassade/-Profil/-Mapping/-XML-Reader, bestehende native Extensions-
+Validierung und der Importplan mit seinen unverändert sperrenden Verlusten.
+Der aktuelle Codec verweigert Neuserialisierung bei uninterpretierten Inhalten;
+sein Rohbytebesitz ist noch kein persistenter namespaced Austauschvertrag.
+Diese Entscheidung benötigt keine zusätzliche externe Formatbehauptung.
+
+**Untersuchte Alternativen:**
+
+1. Nur vorhandene Pointer/Restfelder als Verluste melden. Das ist klein,
+   erfüllt aber allein die positive W-Abnahme des unveränderten Austauschs
+   unbekannter zulässiger Zusatzdaten nicht.
+2. Unbekannte XML-Fragmente in JSON-Bäume zerlegen und in neue XML-Ausgaben
+   einsetzen. Das verlangt zusätzliche Regeln für geerbte Namespacebindungen,
+   fremde QName-Werte und Mischtext; es drohen nicht erkannte Bedeutungsänderungen.
+3. Vollständige, validierte Originalbytes unter einer versionierten namespaced
+   Erweiterung erhalten, mit ausdrücklicher Quellen-/Zielbindung und getrennter
+   Einzelbewertung. Diese Lösung erhält fremde Syntax, ohne sie zu interpretieren.
+
+**Gewählt:** Alternative 3, normativ in **0.2.19 / D.1.3**. Der Schlüssel
+`specroad.reqif` enthält den passiven `reqif-preservation-v1`-Träger. Strikte
+Base64-/Hash-/Längenprüfung, Erhalt aller bisherigen Quellen und Konflikt statt
+Überschreibung machen den Rückweg überprüfbar. Bytegleicher Quellroundtrip und
+geänderte native Ausgabe bleiben getrennt. Ein gebundener Zielnachweis ist für
+`preserved` erforderlich; der lokale Besitz einer Kopie genügt nicht.
+Maschinenkennungen verwenden Quellhash, expliziten Kontext, Richtung, tatsächliche
+Stelle und stabilen Grund. Berichtsvollständigkeit, Verlustfreiheit und native
+Abbildung werden getrennt. Der Preis ist die zusätzliche Base64-Größe der
+Originalquelle; die bestehenden Ressourcen-/XML-Grenzen bleiben wirksam.
+
+**Grenzprüfung nach 2.4.1:**
+
+- Umfang: präzisiert ausschließlich Erhalt/Verlust im bestehenden 14.j;
+  keine neue Requirement-ID oder Produktposition, kein vorgezogener Entpacker.
+- Konsistenz: erfüllt den positiven Erhaltungsweg und den Verlustfall aus
+  SR-REQ-0322; unveränderte Quellen bleiben nutzbar. Keine Rangentscheidung
+  zwischen widersprüchlichen Requirements oder Aufweichung von TD-001/BD-001.
+- Sicherheit/Kompatibilität: bestehende native Extensions bleiben passive
+  Werte. Keine automatische Migration, Übernahme fremder Pflichtmetadaten,
+  neue Mappinggrammatik, Plugin-, I/O-, HTML- oder Writer-Ausnahme. Kollisionen
+  erhalten die bestehenden Daten. Importverluste bleiben ohne Freigabe gesperrt.
+- Rücknehmbarkeit: eigene Trägerversion, erhaltene Originalbytes und getrennte
+  Quelle/Projektion; spätere Weiterentwicklung verlangt eine neue explizite
+  Regel, kein Löschen historischer Daten, Tests oder Evidence.
+- Fakten/Freigaben: keine unverfügbaren Zugangsdaten, Fremdtoolbeweise oder
+  menschlichen Risikoentscheidungen vorausgesetzt oder erfunden. Die neue
+  Hashbindung ist keine Produkterfüllung und keine erneute Bewertung alter Tests.
+
+**Verbindliche W-Abnahmen:**
+
+- Vollständige sichere ReqIF-Quellen mit unbekannten Tool-Extensions,
+  Namespace-/Attributdaten, Mischtext und Unicode werden in gültigen nativen
+  `extensions` erhalten und aus demselben gebundenen Träger bytegleich wieder
+  gelesen. Quelle und fremde Extensions bleiben unverändert.
+- Wiederholtes Zusammenführen desselben Eintrags ist ein No-op; verschiedene
+  Quellen/Revisionen/Hashes bleiben getrennt. Gleiche gebundene Eingaben ergeben
+  dieselbe sortierte Ausgabe; keine Dateinamens- oder Metadateninferenz.
+- Vorhandene inkompatible Schlüssel, manipulierte Bytes/Größen/Hashes,
+  nichtkanonische Base64-Daten und geänderte Quellen-/Zielbindungen scheitern
+  mit den festgelegten Klassen, ohne bestehende Inhalte zu überschreiben.
+- Einzelbewertung unterscheidet tatsächlichen Zielerhalt von Verlust und
+  unvollständiger nativer Projektion. Gleiche Quelle/Stelle/Grund liefert
+  dieselbe ID; unabhängige Stellen bleiben unterscheidbar. Eine bloße
+  Decoderkopie oder ein Verweis ohne Zielbytes erzeugt keinen Erhaltungsbeweis.
+- Pure Erhaltungs-/Bewertungsfunktionen lösen keine Projektwrites, Registry-
+  Änderungen, Netzwerkauflösung oder Ausführung aus. Bestehende Sicherheits-
+  und Hostfehler bleiben erhalten; vorhandene 14.h/14.i-Abnahmen bleiben grün.
+
+**Verbindliche R-Abnahmen:**
+
+- Vollständige Verlustabdeckung für den konkret gebundenen Umfang:
+  Mappingreste, nicht darstellbare Typwerte, unabhängige Attribute/Felder,
+  opake Teilbäume, Metadaten, Hierarchien/Relationen, XHTML-Originale und
+  tatsächliche Anhangmitnahme. Keine doppelte Zählung oder pauschale Verlustliste.
+- Leere Verlustmenge allein ist kein Erfolg bei unvollständiger Bewertung.
+  `fail-on-loss=true` sperrt Verlust oder unvollständigen Umfang vor Export-
+  Veröffentlichung. Erhaltene unbekannte Daten können passieren; Native-
+  Projektion und tatsächlicher Apply bleiben trotzdem getrennte Aussagen.
+- Geänderte native Inhalte dürfen nicht durch alte Quellbytes überdeckt werden.
+  Eine außerhalb des Zielkandidaten liegende Kopie, veraltete Zielbindung,
+  fehlende Anhangbytes oder unzulässige Rückintegration erzeugen keinen
+  Verlustfreiheitsnachweis. Vorhandene strengere Importgates bleiben wirksam.
+- XML-/Anhanggrenzen gelten auch für Träger, Originale und fremde Subtrees.
+  Sicherheits-/Konflikt-/Ressourcenfehler werden nicht als akzeptierbarer
+  Datenverlust behandelt; keine zweite Dekodierung oder externe Auflösung.
+
+**C-Abnahme und offene Nachweise:** C trennt Träger, Bewertung und Darstellung,
+ohne Fachwerte, IDs, Fehler oder Seiteneffekte zu ändern. W/R/C bleiben echte
+getrennte Zustände. Dieses Bundle ändert nur Spezifikation, Plan und notwendige
+aktive Katalog-Hashbindungen. Es implementiert keinen Träger und keine neue
+Verlustbewertung. SR-TC-0322 bleibt offen; Produktcode, Tests, Oracles, Fixtures,
+Testnummern und historische Evidence bleiben bytegleich. Vollständige
+Collection/Katalogprüfung mit null Testkörpern sowie die native Paketprüfung
+prüfen diese Übergabe. Vor dem OFF-PLAN-Commit prüft Apply ausschließlich die
+fällige Gruppe parallel. Danach beauftragt Control den offenen Schritt erneut;
+keine zweite Phase, eigenes Apply oder Warte-/Modellschleife in diesem Auftrag.
+
+
 #### 14.j.W – Let it Work
 
 - [ ] **14.j.W** · Position **598/900** · Voraussetzung: `14.i.C`.
 **Exakte Commit-Message:** `14.j.W feat(exchange): Informationsverluste und Erweiterungserhalt aufbauen`
 
-**Umsetzung:** Nicht unterstützte Inhalte entweder namespaced erhalten oder einzeln als Verlust identifizieren.
+**Umsetzung:** Nicht unterstützte Inhalte nach D.1.3 entweder im passiven, quell- und zielgebundenen namespaced Träger erhalten oder einzeln als Verlust identifizieren. Einen nutzbaren Originalbyte-Rückweg und konkrete Einzelbewertung bereitstellen; die W-Abnahmen des Entscheidungsbelegs gelten. Keine implizite native Vollprojektion oder Writefreigabe.
 
-**Verhaltensabnahme:** Zulässige unbekannte Zusatzdaten bleiben unverändert über den Austausch erhalten.
+**Verhaltensabnahme:** Zulässige unbekannte Zusatzdaten bleiben über den gebundenen Träger und den geprüften Originalquell-Rückweg unverändert erhalten. Fremde Extensions und frühere Quellen bleiben erhalten; Kollisionen oder geänderte Bindungen erzeugen keinen Erfolg. Originalquelle, tatsächlich erhaltener Zielnutzinhalt und native Abbildung bleiben unterscheidbar.
 
 #### 14.j.R – Make it Right
 
 - [ ] **14.j.R** · Position **599/900** · Voraussetzung: `14.j.W`.
 **Exakte Commit-Message:** `14.j.R feat(exchange): Informationsverluste und Erweiterungserhalt vervollständigen`
 
-**Vervollständigung:** Kein pauschales success bei verschwiegenen Verlusten; fail-on-loss greift.
+**Vervollständigung:** Kein pauschales success bei verschwiegenen Verlusten; die vollständigen R-Abnahmen aus D.1.3 und dem Entscheidungsbeleg gelten. Alle nicht repräsentierten Fachwerte im gebundenen Umfang einzeln bewerten; fail-on-loss sperrt Verlust oder unvollständige Bewertung vor Exportveröffentlichung. Bestehende Import-, Konflikt-, Sicherheits- und Writergrenzen bleiben wirksam.
 
-**Verhaltensabnahme:** Verlustliste entspricht sämtlichen nicht repräsentierten Fachwerten. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Verlustliste und Erhaltungsbelege decken sämtliche nicht repräsentierten Fachwerte des ausdrücklich gebundenen Umfangs ohne pauschale oder doppelte Zählung ab. Geänderte native Werte, fehlende Anhänge und außerhalb des Zielkandidaten verbliebene Kopien werden nicht als verlustfreie Ausgabe ausgegeben. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 14.j.C – Make it Clean
 
