@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 12
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 592
-last_completed_plan_commit: 14.h.W
-next_plan_commit: 14.h.R
-last_completed_numbered_bundle: 426
+implementation_plan_commits_completed: 593
+last_completed_plan_commit: 14.h.R
+next_plan_commit: 14.h.C
+last_completed_numbered_bundle: 427
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -19659,12 +19659,120 @@ Veröffentlichung endet der Auftrag.
 
 #### 14.h.R – Make it Right
 
-- [ ] **14.h.R** · Position **593/900** · Voraussetzung: `14.h.W`.
+- [x] **14.h.R** · Position **593/900** · Voraussetzung: `14.h.W`.
 **Exakte Commit-Message:** `14.h.R feat(exchange): ReqIF-Typen und Attribute vervollständigen`
 
 **Vervollständigung:** Den Typ-/Wertekorpus gemäß D.1.1 und den R-Abnahmen vervollständigen: Referenz-/Wertebereiche, fehlende/standardisierte Werte, Zeit-/Enum-/Zahlengrenzen, mehrdeutige Rückabbildung und sichere Verarbeitung aller Teilbäume. Nicht repräsentierbare Werte sichtbar erhalten und ausweisen, niemals still in Strings oder Defaults umwandeln.
 
 **Verhaltensabnahme:** Datentyp-/Wertekorpus prüft exakte erhaltene Fachwerte und ausgewiesene Verluste. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Vervollständigung und Übergabe (Bundle 427):** Das vollständig gebundene
+Result `specroad-apply_Result_160142_1023_566c97.zip`, SHA-256
+`8be3bb1f7a02108aedfaccfcc150c6721f3c599b00cb11108c41fcc8c8db8a4b`,
+bestätigt Bundle **426** / **14.h.W** auf
+`5dc0941c2faa655a05a5bd4f1c048138efb8d796`: sauberer Apply-Stand,
+**6.093/6.093** Tests der Gruppe **2/3**, Commitfolge **134**, vier Worker,
+**1.935,37 s**. Native Result-/Patchbindung, alle **2.162** Snapshotdateien,
+tatsächlicher Commit, Run-/Ausführungslog und die vollständigen nummerierten
+Beobachtungen wurden abgeglichen. In Dev wurden nur die fünf dadurch
+bestätigten Fortschrittsmarker nachgeführt. Der belegte Produktstand ist
+**592/900**, nächster Planschritt **14.h.R**. SPECROAD-DECISION-1 ist
+ausdrücklich vorhanden; Spezifikation **0.2.17** bleibt bytegleich.
+Dieser reguläre R-Schritt setzt die bereits entschiedene Vorgabe D.1.1 um;
+eine weitere normative Klärung ist nicht nötig.
+
+`exchange/reqif.py` prüft numerische Datentypbereiche nun exakt an den
+XML-Lexemen. Dafür werden Vorzeichen, Dezimalziffern und Exponenten
+verglichen; weder binäre Rundung noch ein Prozess-Decimal-Kontext oder
+die Host-Grenze für Ganzzahl-Stringkonvertierung entscheidet über gültige
+Quelldaten. Große gültige Zahlen/Exponenten bleiben typisiert erhalten
+und werden bei fehlender nativer Darstellbarkeit mit Objekt-/Definitions-
+bezug ausgewiesen. NaN ist kein gültiger Bereichsrand; das Quelllexem
+eines numerischen Werts wird nicht gerundet oder durch String/Default
+ersetzt. ACCURACY-Metadaten bleiben unverändert; es gibt keine neue
+Genauigkeitsrundung. Gregorianische Schaltjahre werden unabhängig von der
+Host-Jahresreichweite geprüft. Für numerische, boolesche und Datumslexeme
+wird ausschließlich XML-Leerraum behandelt, kein beliebiger Unicode-
+Leerraum. Zeichenfolgen, Zeitzonen und Bruchteilspräzision bleiben erhalten.
+
+Dokumentweite ReqIF-Kennungen werden auch in den noch nicht integrierten
+ReqIF-Typen, Hierarchien und Relationen auf Kollisionen geprüft. Beliebige
+Kennungen in fremden Extension-/XHTML-Namensräumen sind keine erfundenen
+ReqIF-Identitäten. Unverstandene Attribute und Containerinhalte bleiben
+sichtbar und blockieren einen vollständigen Serializerfolg. Ihre Diagnose-
+reihenfolge ist deterministisch. Defaults werden unabhängig von vorhandenen
+Objektwerten validiert; Fehler behalten den verfügbaren Definitionsbezug.
+XML-Ereignisse zählen Geschwister direkt und halten Textstücke ohne
+fortgesetztes Kopieren; die ausdrücklich gelieferten Limits und der
+unveränderte sichere XML-Kern bleiben maßgeblich.
+
+`ReqIFDocument.export_object` ergänzt den reinen Rückweg für ein ausdrücklich
+gewähltes Objekt innerhalb einer gebundenen gelesenen Quelle. Quelle,
+Mapping-Schlüssel/-Hash und externer Kontext werden geprüft. Der native
+Artefakttyp muss zur ausgewählten Typzeile passen. Jede konfigurierte
+Feldabbildung benötigt ihr tatsächliches natives Quellfeld. Ein inverses
+`value_map` muss genau einen kanonischen Treffer liefern; kein Treffer oder
+Mehrdeutigkeit wird als Konflikt ausgewiesen. Die bestehende Typdefinition
+bestimmt die XML-Wertfamilie, keine Feldnamen- oder Labelinferenz.
+
+Unveränderte effektive Werte behalten ursprüngliche Lexeme, Enum-Reihenfolge,
+explizite Belegung oder Abwesenheit mit Default. Änderungen erzeugen nur
+die notwendigen typisierten Belegungen im gewählten Objekt; andere
+Objekte, Definitionen, Kennungen und Metadaten bleiben erhalten. Die gesamte
+Kandidatenstruktur und ihre tatsächlich serialisierten XML-Bytes werden
+erneut geprüft; geänderte Werte müssen exakt auf die verlangte JSON-
+Projektion zurückführen. Ungültige inverse Werte sind Konflikte, bestehende
+Mappingdiagnosen und Sicherheits-/Ressourcenfehler behalten ihren Vertrag.
+Die ursprünglichen Quellbytes werden nicht verändert. Die Rückgabe bindet
+Quellhash, Mapping und externe Identität und weist ungenutzte native Felder
+sowie verbliebene nicht repräsentierbare Quellwerte aus. Sie behauptet
+weder vollständigen Projektexport noch Schreib- oder Ausführungsfreigabe.
+
+Der externe Struktur-/Typbezug wurde erneut mit dem offiziellen
+[OMG-ReqIF-1.2-Dokument](https://www.omg.org/spec/ReqIF/1.2/PDF), Abschnitte
+10.8 und 11, abgeglichen. Der direkte Browserabruf der dort verlinkten XSD
+war wegen ihres Content-Types nicht auswertbar. Es wurden weder eine
+XSD-Ausführung noch ein Fremdtool-Roundtrip oder Konformitätszertifikat
+ersetzt oder behauptet. Die ausführbare Abnahme bleibt der ausgewiesene
+SpecRoad-Typ-/Objektausschnitt; die höheren Integrationsschritte bleiben
+verbindlich offen.
+
+**Tatsächlich gezielt geprüft in Dev:** **813/813** Verhaltenstests,
+**vier parallele Worker**, Prozesscode **0**, keine Beobachtungsfehler,
+`full_suite_passed=null`; Testkörperlauf **5,48 s**. Enthalten sind die
+**81 unveränderten W-Fälle**, **206 neue R-Fälle** und betroffene Mapping-,
+externe/native Identitäts-, XML-, Kanonisierungs- und Python-3.10-
+Kompatibilitätsregressionen. Der R-Korpus prüft u. a. exakte Zahlenbereiche,
+JCS-Grenzen, große Exponenten und Ganzzahlen, negative Null/Nichtendlichkeit,
+Unicode/Escapes, Datum-/Default-/Enum-Grenzen, unveränderten und geänderten
+Rückweg, inverse Mehrdeutigkeit, Quellkontext, sichere unbekannte Teilbäume,
+Ressourcenfehler und isolierte Core-/PYZ-Verarbeitung. Alle bisherigen
+Testdateien einschließlich ihrer W-Oracles sowie Fixturedefinitionen
+bleiben unverändert; die neue R-Fixture und ihre Tests kommen hinzu.
+Kein vollständiger Dev-Testkörperlauf
+und keine Dokumentations-/Darstellungstests wurden ausgeführt.
+
+Vollständige Collection-/Katalogprüfung: **18.485 Identitäten**, **0
+Testkörper**, keine Katalogfehler. Die **206** neuen Nummern wurden hinten
+angehängt; alle bisherigen Nummern und Rotationsanker bleiben unverändert.
+SR-TC-0320/0321 bleiben ausdrücklich `partial`; ihr neuer R-Beleg ist kein
+vollständiger ReqIF-, Import-/Export- oder Release-Erfolg.
+Gebundener Quellstand: `1e786ba145cc4d80c12a2732fad62b35861e4b7be678b5484b49e2b8d17de3bc`;
+Katalog: `955b838020aeb1cd8818b75f5ae2e1c0f9035fd37b4cabf6042b924c1a3dac8e`;
+Auswahlbeleg: `baf1b203098e1882ae7a8fd266ee69e213970a684653bb9c95d7e76699b62c40`;
+Beobachtungsbeleg: `9615dbae642c3065cbbf666b42d4c34e5936848649cdf324bf93e859ddb336f7`.
+
+**Vorgesehene Apply-Grenze:** Genau **14.h.R**, Position **593/900**, ein
+regulärer Commit in Bundle **427**. Der Entrypoint installiert diesen
+gezielt geprüften R-Zustand und führt ausschließlich **Gruppe 0/3**,
+Commitfolge **135**, mit **6.162 Tests** und vier parallelen Workern aus.
+Erst nach erfolgreichem gebundenem Gate setzt er die fünf Planmarker auf
+**593/900**, zuletzt **14.h.R**, nächstens **14.h.C**, Bundle **427**,
+R-Checkbox abgeschlossen, und erzeugt die oben festgelegte Commit-Message.
+Fehler erhalten die tatsächlichen Dateien, den Index und erfolgreiche
+Commits. **14.h.C und alle weiteren Schritte bleiben offen.** Der
+Apply-Erfolg wird nicht vorweggenommen; nach nativer Paketprüfung und
+atomarer Veröffentlichung endet dieser Auftrag.
 
 #### 14.h.C – Make it Clean
 

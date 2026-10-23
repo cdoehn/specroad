@@ -9,12 +9,13 @@ from decimal import Decimal
 from hashlib import sha256
 import re
 
-from ..mappings import select_mapping
+from ..mappings import MappingError, select_mapping
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..model.identity_values import artifact_identity
 from ..model.numbers import number_from_token
 from ..storage._xml_reader import read_bounded_xml
+from ..storage.json_syntax import parse_json_object
 from .identities import ExternalIdentity
 
 
@@ -96,14 +97,18 @@ def _identifier(value):
 
 
 def _date(value, node):
-    match = _DATE.fullmatch(value.strip())
+    match = _DATE.fullmatch(value.strip(" \t\r\n"))
     if match is None:
         raise _error("reqif_invalid_datetime", node)
-    year, month, day, hour, minute, second = (int(v) for v in match.groups()[:6])
+    # Gregorian leap years depend only on year modulo 400. No host integer
+    # digit limit or datetime year range may truncate a valid XML year.
+    year_text = match.group(1).lstrip("-")
+    year = int(year_text[-4:])
+    month, day, hour, minute, second = (int(v) for v in match.groups()[1:6])
     fraction, zone = match.groups()[6:]
     leap = year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
     days = (31, 29 if leap else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-    if (year == 0 or not 1 <= month <= 12 or not 1 <= day <= days[month - 1]
+    if (not year_text.strip("0") or not 1 <= month <= 12 or not 1 <= day <= days[month - 1]
             or hour > 24 or minute > 59 or second > 59
             or (hour == 24 and (minute or second or (fraction and set(fraction[1:]) != {"0"})))):
         raise _error("reqif_invalid_datetime", node)
@@ -115,16 +120,76 @@ def _date(value, node):
 
 
 def _boolean(value, node):
-    if value.strip() not in ("true", "false", "1", "0"):
+    token = value.strip(" \t\r\n")
+    if token not in ("true", "false", "1", "0"):
         raise _error("reqif_invalid_boolean", node)
-    return value.strip() in ("true", "1")
+    return token in ("true", "1")
 
 
 def _number(value, family, node):
-    token = value.strip()
+    token = value.strip(" \t\r\n")
     if not (_INTEGER if family == "INTEGER" else _REAL).fullmatch(token):
         raise _error("reqif_invalid_number", node)
-    return Decimal(token)
+    return token
+
+
+def _shift_exponent(text, offset):
+    """Add a small digit-count offset to an unbounded signed decimal exponent."""
+    negative = text.startswith("-")
+    digits = text.lstrip("+-").lstrip("0") or "0"
+    if len(digits) <= 18:
+        return str((-1 if negative else 1) * int(digits) + offset)
+    # With longer exponents the sign cannot be changed by an input-size offset.
+    carry = -offset if negative else offset
+    result = []
+    for digit in reversed(digits):
+        carry, remainder = divmod(int(digit) + carry, 10)
+        result.append(str(remainder))
+    while carry:
+        carry, remainder = divmod(carry, 10)
+        result.append(str(remainder))
+    return ("-" if negative else "") + ("".join(reversed(result)).lstrip("0") or "0")
+
+
+def _signed_integer_compare(left, right):
+    a, b = left.lstrip("-"), right.lstrip("-")
+    if left.startswith("-") != right.startswith("-"):
+        return -1 if left.startswith("-") else 1
+    comparison = ((len(a), a) > (len(b), b)) - ((len(a), a) < (len(b), b))
+    return -comparison if left.startswith("-") else comparison
+
+
+def _numeric_parts(token):
+    negative = token.startswith("-")
+    mantissa, _, exponent = token.lstrip("+-").lower().partition("e")
+    whole, _, fraction = mantissa.partition(".")
+    digits = (whole + fraction).lstrip("0")
+    if not digits:
+        return 0, "0", "0"
+    magnitude = _shift_exponent(exponent or "0", len(digits) - len(fraction))
+    return -1 if negative else 1, magnitude, digits.rstrip("0")
+
+
+def _compare_numbers(left, right):
+    """Exact lexical range comparison without binary64/Decimal context limits."""
+    if "NaN" in (left, right):
+        return None
+    if left == right:
+        return 0
+    if left == "-INF" or right == "INF":
+        return -1
+    if left == "INF" or right == "-INF":
+        return 1
+    ls, le, ld = _numeric_parts(left)
+    rs, re, rd = _numeric_parts(right)
+    if ls != rs:
+        return (ls > rs) - (ls < rs)
+    comparison = _signed_integer_compare(le, re)
+    if not comparison:
+        length = max(len(ld), len(rd))
+        a, b = ld.ljust(length, "0"), rd.ljust(length, "0")
+        comparison = (a > b) - (a < b)
+    return ls * comparison
 
 
 def _text(node):
@@ -214,21 +279,18 @@ def _read(raw, limits):
     def start(name, attributes, reject):
         pointer = (stack[-1][3] if stack else "") + "/" + name.rsplit(_SEP, 1)[-1]
         if stack:
-            pointer += "[" + str(sum(type(x) is _Node for x in stack[-1][2])) + "]"
-        stack.append([name, tuple(sorted(attributes.items())), [], pointer])
+            pointer += "[" + str(stack[-1][4]) + "]"
+            stack[-1][4] += 1
+        stack.append([name, tuple(sorted(attributes.items())), [], pointer, 0])
 
     def end(_):
-        name, attrs, content, pointer = stack.pop()
+        name, attrs, content, pointer, _ = stack.pop()
         node = _Node(name, attrs, tuple(content), pointer)
         (stack[-1][2] if stack else roots).append(node)
 
     def text(value):
         if stack:
-            content = stack[-1][2]
-            if content and type(content[-1]) is str:
-                content[-1] += value
-            else:
-                content.append(value)
+            stack[-1][2].append(value)
 
     read_bounded_xml(raw, limits=limits, limit_type=ReqIFLimits, error_type=ReqIFError,
                      on_start=start, on_end=end, on_text=text)
@@ -240,10 +302,29 @@ def _read(raw, limits):
 def _validate(root):
     ids, unsupported = {}, []
 
+    # IDs of deferred ReqIF objects share the document's namespace too. Do not
+    # interpret arbitrary extension/XHTML attributes as ReqIF global IDs.
+    global_ids, pending = set(), [root]
+    identified = {"REQ-IF-HEADER", "ENUM-VALUE", "SPEC-OBJECT", "SPEC-RELATION",
+                  "SPECIFICATION", "SPEC-HIERARCHY", "RELATION-GROUP"}
+    identified |= {"DATATYPE-DEFINITION-" + f for f in _FAMILIES}
+    identified |= {"ATTRIBUTE-DEFINITION-" + f for f in _FAMILIES}
+    identified |= {"SPEC-OBJECT-TYPE", "SPEC-RELATION-TYPE", "SPECIFICATION-TYPE", "RELATION-GROUP-TYPE"}
+    while pending:
+        node = pending.pop()
+        if node.tag is None or node.tag == "TOOL-EXTENSIONS":
+            continue
+        if node.tag in identified:
+            key = node.attrs.get("IDENTIFIER")
+            if not _identifier(key) or key in global_ids:
+                raise _error("reqif_invalid_or_duplicate_identifier", node)
+            global_ids.add(key)
+        pending.extend(reversed(node.children))
+
     def attributes(node, allowed, required=()):
         if not set(required) <= node.attrs.keys():
             raise _error("reqif_missing_attribute", node)
-        for key in node.attrs.keys() - set(allowed):
+        for key in sorted(node.attrs.keys() - set(allowed)):
             unsupported.append((node.pointer + "/@" + key, "uninterpreted_attribute"))
 
     def identity(node, *, header=False):
@@ -260,6 +341,7 @@ def _validate(root):
     def alternative(node):
         if node is None:
             return
+        attributes(node, set())
         part = _layout(node, {"ALTERNATIVE-ID"}, {"ALTERNATIVE-ID"})["ALTERNATIVE-ID"]
         attributes(part, {"IDENTIFIER"}, {"IDENTIFIER"})
         _layout(part, set())
@@ -285,7 +367,8 @@ def _validate(root):
     for node in (top["THE-HEADER"], top["CORE-CONTENT"], core):
         attributes(node, set())
     for tag in ("SPEC-RELATIONS", "SPECIFICATIONS", "SPEC-RELATION-GROUPS"):
-        if tag in cp and (cp[tag].children or cp[tag].attrs):
+        if tag in cp and (cp[tag].children or cp[tag].attrs
+                          or any(type(x) is str and x.strip() for x in cp[tag].content)):
             unsupported.append((cp[tag].pointer, "later_reqif_integration"))
     if "TOOL-EXTENSIONS" in top:
         unsupported.append((top["TOOL-EXTENSIONS"].pointer, "uninterpreted_extensions"))
@@ -304,17 +387,19 @@ def _validate(root):
             attributes(ev, _COMMON)
             ep = _layout(ev, {"ALTERNATIVE-ID", "PROPERTIES"}, {"PROPERTIES"})
             alternative(ep.get("ALTERNATIVE-ID"))
+            attributes(ep["PROPERTIES"], set())
             embedded = _layout(ep["PROPERTIES"], {"EMBEDDED-VALUE"}, {"EMBEDDED-VALUE"})["EMBEDDED-VALUE"]
             attributes(embedded, {"KEY", "OTHER-CONTENT"}, {"KEY", "OTHER-CONTENT"})
             _layout(embedded, set())
             _number(embedded.attrs["KEY"], "INTEGER", embedded)
         if family in ("INTEGER", "REAL"):
             minimum, maximum = (_number(node.attrs[k], family, node) for k in ("MIN", "MAX"))
-            if minimum.is_nan() or maximum.is_nan() or minimum > maximum:
+            comparison = _compare_numbers(minimum, maximum)
+            if comparison is None or comparison > 0:
                 raise _error("reqif_invalid_range", node)
         if family in ("STRING", "REAL"):
             key = "MAX-LENGTH" if family == "STRING" else "ACCURACY"
-            if _number(node.attrs[key], "INTEGER", node) < 0:
+            if _compare_numbers(_number(node.attrs[key], "INTEGER", node), "0") < 0:
                 raise _error("reqif_invalid_type_bound", node)
         if family == "XHTML":
             unsupported.append((node.pointer, "xhtml_not_projected"))
@@ -333,13 +418,19 @@ def _validate(root):
             raise _error("reqif_definition_reference", node, definition_id=definition.identifier)
         if family == "ENUMERATION":
             attributes(node, set())
-            chosen = tuple(_text(v) for v in _items(parts.get("VALUES"), {"ENUM-VALUE-REF"}))
+            references = _items(parts.get("VALUES"), {"ENUM-VALUE-REF"})
+            for reference in references:
+                attributes(reference, set())
+            chosen = tuple(_text(v) for v in references)
             datatype = datatypes[definition.datatype_id]
             if (len(set(chosen)) != len(chosen) or not set(chosen) <= set(datatype.enum_ids)
                     or (not _boolean(definition.element.attrs["MULTI-VALUED"], definition.element) and len(chosen) > 1)):
                 raise _error("reqif_invalid_enum_selection", node, definition_id=definition.identifier)
             lexical = chosen
         elif family == "XHTML":
+            attributes(node, {"IS-SIMPLIFIED"})
+            if "IS-SIMPLIFIED" in node.attrs:
+                _boolean(node.attrs["IS-SIMPLIFIED"], node)
             unsupported.append((node.pointer, "xhtml_not_projected"))
             lexical = None
         else:
@@ -352,11 +443,13 @@ def _validate(root):
             elif family == "DATE":
                 _date(lexical, node)
             elif family == "STRING":
-                if Decimal(len(lexical)) > Decimal(da["MAX-LENGTH"]):
+                if _compare_numbers(str(len(lexical)), da["MAX-LENGTH"].strip(" \t\r\n")) > 0:
                     raise _error("reqif_string_too_long", node, definition_id=definition.identifier)
             else:
                 number = _number(lexical, family, node)
-                if not number.is_nan() and not Decimal(da["MIN"]) <= number <= Decimal(da["MAX"]):
+                if number != "NaN" and (
+                        _compare_numbers(da["MIN"].strip(" \t\r\n"), number) > 0
+                        or _compare_numbers(number, da["MAX"].strip(" \t\r\n")) > 0):
                     raise _error("reqif_value_out_of_range", node, definition_id=definition.identifier)
         return ReqIFValue(family, definition.identifier, lexical, node)
 
@@ -390,7 +483,11 @@ def _validate(root):
                 children = _items(ap["DEFAULT-VALUE"], {"ATTRIBUTE-VALUE-" + family})
                 if len(children) != 1:
                     raise _error("reqif_default_value_required", ad, definition_id=aid)
-                definition = replace(definition, default=value(children[0], definition))
+                try:
+                    definition = replace(definition, default=value(children[0], definition))
+                except ReqIFError as error:
+                    error.definition_id = aid
+                    raise
             definitions.append(definition)
         types[identifier] = ReqIFType(identifier, tuple(definitions), node)
     objects = []
@@ -429,15 +526,14 @@ def _project_value(value):
         return _boolean(value.lexical, value.element), None
     if value.family in ("STRING", "DATE"):
         return value.lexical, None
-    token = value.lexical.strip()
-    decimal = Decimal(token)
-    if decimal.is_zero() and decimal.is_signed():
+    token = value.lexical.strip(" \t\r\n")
+    if token.startswith("-") and _compare_numbers(token, "0") == 0:
         return None, "negative_zero_not_representable"
     try:
         number = number_from_token(token)
         # ReqIF accepts +1, leading zeroes and .1; JCS supplies native syntax.
         encoded = canonical_json_bytes(number)
-        if Decimal(encoded.decode()) != decimal:
+        if _compare_numbers(encoded.decode(), token) != 0:
             return None, "number_roundtrip_loss"
         return number, None
     except ModelError as error:
@@ -473,6 +569,59 @@ def _serialize(root):
     return ('<?xml version="1.0" encoding="UTF-8"?>\n' + emit(root, first=True) + "\n").encode("utf-8")
 
 
+def _source_identity(identifier, source_system, source_document, external_revision):
+    data = {"source_system": source_system, "source_document": source_document, "external_id": identifier}
+    if external_revision is not None:
+        data["external_revision"] = external_revision
+    try:
+        return ExternalIdentity(data).data
+    except ModelError as error:
+        raise ReqIFError(error.reason, exit_code=2, pointer=error.pointer) from error
+
+
+def _native_value(definition, native, object_id):
+    """Build a typed candidate from a validated inverse JSON value, never infer."""
+    family = definition.family
+    at = definition.element.pointer
+
+    def node(tag, attrs=(), children=()):
+        return _Node(REQIF_NAMESPACE + _SEP + tag, tuple(attrs), tuple(children), at)
+
+    reference = node("DEFINITION", children=(node("ATTRIBUTE-DEFINITION-" + family + "-REF",
+                                                 children=(definition.identifier,)),))
+    attrs, content = (), (reference,)
+    if family == "BOOLEAN" and type(native) is bool:
+        literal = "true" if native else "false"
+    elif family in ("INTEGER", "REAL") and type(native) in (int, float):
+        literal = canonical_json_bytes(native).decode()
+        if literal.startswith("-") and _compare_numbers(literal, "0") == 0:
+            raise ReqIFError("reqif_inverse_not_representable", exit_code=6, object_id=object_id,
+                             definition_id=definition.identifier, pointer=at)
+        if family == "INTEGER":
+            number = Decimal(literal)
+            if number != number.to_integral_value():
+                raise ReqIFError("reqif_inverse_not_representable", exit_code=6, object_id=object_id,
+                                 definition_id=definition.identifier, pointer=at)
+            literal = format(number, "f").split(".")[0]
+    elif family in ("STRING", "DATE") and type(native) is str:
+        literal = native
+    elif family == "ENUMERATION" and type(native) is list and all(type(v) is str for v in native):
+        content += (node("VALUES", children=tuple(node("ENUM-VALUE-REF", children=(v,)) for v in native)),)
+        return node("ATTRIBUTE-VALUE-" + family, children=content)
+    else:
+        raise ReqIFError("reqif_inverse_not_representable", exit_code=6, object_id=object_id,
+                         definition_id=definition.identifier, pointer=at)
+    attrs = (("THE-VALUE", literal),)
+    return node("ATTRIBUTE-VALUE-" + family, attrs, content)
+
+
+def _replace_node(root, before, after):
+    if root is before:
+        return after
+    return replace(root, content=tuple(_replace_node(v, before, after) if type(v) is _Node else v
+                                       for v in root.content))
+
+
 @dataclass(frozen=True, init=False)
 class ReqIFDocument:
     source_bytes: bytes
@@ -484,6 +633,8 @@ class ReqIFDocument:
     _limits: ReqIFLimits
 
     def __init__(self, raw, *, limits):
+        if hasattr(self, "_root"):
+            raise AttributeError("ReqIFDocument is immutable")
         root = _read(raw, limits)
         datatypes, types, objects, unsupported = _validate(root)
         for name, value in (("source_bytes", raw), ("_root", root), ("_limits", limits),
@@ -527,10 +678,7 @@ class ReqIFDocument:
                    expected_source_sha256, source_system, source_document, external_revision=None):
         if expected_source_sha256 != self.source_sha256:
             raise ReqIFError("reqif_source_changed", exit_code=6, object_id=identifier)
-        identity = {"source_system": source_system, "source_document": source_document, "external_id": identifier}
-        if external_revision is not None:
-            identity["external_revision"] = external_revision
-        identity = ExternalIdentity(identity).data
+        identity = _source_identity(identifier, source_system, source_document, external_revision)
         mapping = select_mapping(mappings, key=key, expected_sha256=expected_mapping_sha256)
         if mapping.resource.data["source_format"] != "reqif":
             raise ReqIFError("reqif_mapping_format_required", exit_code=2)
@@ -541,6 +689,87 @@ class ReqIFDocument:
         return {**projected, **result, "external_identity": identity,
                 "source_sha256": self.source_sha256, "mapping_complete": projected["representable"],
                 "import_complete": False, "write_authorized": False, "execution_ready": False}
+
+    def export_object(self, identifier, native_fields, *, mappings, key, expected_mapping_sha256,
+                      expected_source_sha256, source_system, source_document, external_revision=None):
+        """Return bytes for one inverse-mapped object in the explicitly bound source.
+
+        The existing document owns definitions, IDs and metadata. Unchanged
+        effective fields retain lexical spelling, enum order and absence. This
+        is neither a whole native model exporter nor a writer/approval gate.
+        """
+        if expected_source_sha256 != self.source_sha256:
+            raise ReqIFError("reqif_source_changed", exit_code=6, object_id=identifier)
+        identity = _source_identity(identifier, source_system, source_document, external_revision)
+        mapping = select_mapping(mappings, key=key, expected_sha256=expected_mapping_sha256)
+        resource = mapping.resource
+        if resource.data["source_format"] != "reqif":
+            raise ReqIFError("reqif_mapping_format_required", exit_code=2)
+        if self.unsupported:
+            raise ReqIFError("reqif_uninterpreted_export", pointer=self.unsupported[0][0])
+        projected = self.project_object(identifier)
+        obj = next(o for o in self.objects if o.identifier == identifier)
+        definitions = {d.identifier: d for t in self.types if t.identifier == obj.type_id for d in t.definitions}
+        rows = resource.data
+        typ = next((r for r in rows["types"] if r["external_type"] == obj.type_id), None)
+        if typ is None:
+            raise MappingError("mapping_type_unmapped", path=resource.key, pointer="/types")
+        try:
+            native_fields = parse_json_object(canonical_json_bytes(native_fields))
+        except ModelError as error:
+            raise ReqIFError(error.reason, exit_code=6, pointer=error.pointer, object_id=identifier) from error
+        if native_fields.get("artifact_type") != typ["artifact_type"]:
+            raise ReqIFError("reqif_inverse_type_mismatch", exit_code=6, object_id=identifier)
+        replacements, expected, used = {}, {}, {"artifact_type"}
+        for index, row in enumerate(rows["fields"]):
+            if row["external_type"] != obj.type_id:
+                continue
+            aid, target = row["external_field"], row["target_field"]
+            at = "/fields/" + str(index)
+            if target not in native_fields:
+                raise MappingError("mapping_source_field_missing", path=resource.key, pointer=at)
+            if aid not in definitions:
+                raise ReqIFError("reqif_definition_reference", definition_id=aid, object_id=identifier)
+            external = native_fields[target]
+            if row["value_map"] is not None:
+                matches = [v["external_value"] for v in row["value_map"]
+                           if canonical_json_bytes(v["target_value"]) == canonical_json_bytes(external)]
+                if len(matches) != 1:
+                    reason = "reqif_inverse_mapping_ambiguous" if matches else "reqif_inverse_value_unmapped"
+                    raise ReqIFError(reason, exit_code=6, object_id=identifier, definition_id=aid, pointer=at)
+                external = matches[0]
+            expected[aid] = external
+            used.add(target)
+            if aid not in projected["fields"] or canonical_json_bytes(projected["fields"][aid]) != canonical_json_bytes(external):
+                replacements[aid] = _native_value(definitions[aid], external, identifier)
+        values = [replacements.pop(v.definition_id, v.element) for v in obj.values]
+        values.extend(replacements.values())
+        container = next((c for c in obj.element.children if c.tag == "VALUES"), None)
+        new_values = _Node(REQIF_NAMESPACE + _SEP + "VALUES", (), tuple(values), obj.element.pointer + "/VALUES")
+        if container is None:
+            updated = replace(obj.element, content=(new_values,) + obj.element.content) if values else obj.element
+        else:
+            updated = _replace_node(obj.element, container, new_values)
+        candidate = _replace_node(self._root, obj.element, updated)
+        # Recheck the full typed object set, its bounds and actual serialized XML.
+        try:
+            _validate(candidate)
+            raw = _serialize(candidate)
+            checked = decode_reqif(raw, limits=self._limits).project_object(identifier)
+        except ReqIFError as error:
+            # The source already passed. A newly invalid value came from the
+            # requested inverse projection; safety/resource failures stay real.
+            if error.exit_code == 3:
+                error.exit_code = 6
+            raise
+        for aid, external in expected.items():
+            if aid not in checked["fields"] or canonical_json_bytes(checked["fields"][aid]) != canonical_json_bytes(external):
+                raise ReqIFError("reqif_inverse_not_representable", exit_code=6, object_id=identifier, definition_id=aid)
+        return {"xml_bytes": raw, "mapping": resource.binding(), "external_identity": identity,
+                "source_sha256": self.source_sha256,
+                "unmapped": {k: v for k, v in native_fields.items() if k not in used},
+                "unrepresentable": checked["unrepresentable"], "export_complete": False,
+                "write_authorized": False, "execution_ready": False}
 
 
 def decode_reqif(raw, *, limits):

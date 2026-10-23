@@ -119,6 +119,7 @@
     "SR-FIX-RELEASE-READINESS-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
+    "SR-FIX-REQIF-TYPE-OBJECTS-R-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
@@ -815,6 +816,10 @@
     "SR-FIX-REQIF-TYPE-OBJECTS-v1": {
       "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/support/exchange_mappings.py:mapping_value;tests/support/domain.py:domain_value",
       "kind": "Synthetic ReqIF type/object documents with explicit metadata, six scalar/enumeration families, source definitions, lexical values, defaults and references. Explicit parser limits, malformed/security inputs, native identity/hash oracles and existing bound mapping resources exercise passive roundtrip/projection. Isolated Core/PYZ runs do not imply XSD validation, external-tool interoperability, project import/export or authorization."
+    },
+    "SR-FIX-REQIF-TYPE-OBJECTS-R-v1": {
+      "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/test_reqif_objects_right.py:raw_with_bounds,resource",
+      "kind": "Synthetic six-family ReqIF boundary corpus, exact and non-native number lexemes including huge exponents/integers, Gregorian dates, all defaults, duplicate IDs across deferred sections, uninterpreted content and XML safety inputs. Explicit bound inverse mappings test successful typed changes, unchanged provenance, ambiguity, invalid native candidates, isolated Core/PYZ and resource failures. No external XSD execution, foreign-tool roundtrip or whole-project success is claimed."
     }
   }
 }
