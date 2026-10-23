@@ -119,6 +119,7 @@
     "SR-FIX-RELEASE-READINESS-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
+    "SR-FIX-REQIF-TYPE-OBJECTS-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
@@ -810,6 +811,10 @@
     "SR-FIX-NDJSON-STREAM-RESUME-v1": {
       "provider": "tests/test_ndjson_codec_right.py:rows,wire,blocks,restored,BAD_LINES;tests/support/ndjson_codec.py:envelope,plan_value",
       "kind": "Synthetic mixed native envelopes with Unicode, escapes, numeric tokens, duplicates and prehashed regular plans. Malformed physical lines, split transfer blocks, explicit EOF, large lines, retained source/cursor bytes and independent cursor hashes exercise passive source-bound resume. Temporary host persistence and isolated Core/PYZ probes are not portable Work integration, real approvals or full import/export success."
+    },
+    "SR-FIX-REQIF-TYPE-OBJECTS-v1": {
+      "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/support/exchange_mappings.py:mapping_value;tests/support/domain.py:domain_value",
+      "kind": "Synthetic ReqIF type/object documents with explicit metadata, six scalar/enumeration families, source definitions, lexical values, defaults and references. Explicit parser limits, malformed/security inputs, native identity/hash oracles and existing bound mapping resources exercise passive roundtrip/projection. Isolated Core/PYZ runs do not imply XSD validation, external-tool interoperability, project import/export or authorization."
     }
   }
 }

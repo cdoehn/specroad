@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 12
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 591
-last_completed_plan_commit: 14.g.C
-next_plan_commit: 14.h.W
-last_completed_numbered_bundle: 425
+implementation_plan_commits_completed: 592
+last_completed_plan_commit: 14.h.W
+next_plan_commit: 14.h.R
+last_completed_numbered_bundle: 426
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -19552,12 +19552,110 @@ durch diese Spezifikationsübergabe verändert.
 
 #### 14.h.W – Let it Work
 
-- [ ] **14.h.W** · Position **592/900** · Voraussetzung: `14.g.C`.
+- [x] **14.h.W** · Position **592/900** · Voraussetzung: `14.g.C`.
 **Exakte Commit-Message:** `14.h.W feat(exchange): ReqIF-Typen und Attribute aufbauen`
 
 **Umsetzung:** Den kleinsten nutzbaren passiven ReqIF-Typ-/Spec-Object-Codec und reinen Mappingadapter nach D.1.1 aufbauen. Unterstützte skalare Werte und Enumeration, Definitionen, Identitäten und Default-Herkunft erhalten; vorhandene XML-, Mapping- und Zahlengrenzen nutzen. Die W-Abnahmen des Entscheidungsbelegs gelten.
 
 **Verhaltensabnahme:** Unterstützte Werte, Definitions-/Objektidentitäten, explizite Belegungen und Default-Herkunft bleiben im Roundtrip erhalten; die native Projektion verwendet ausschließlich gebundene Kennungen und die deklarierte JSON-Schnittmenge. Fehler erzeugen keine Ersatzwerte, Projektwrites oder Freigaben; die vollständige spätere ReqIF-Integration bleibt offen.
+
+**W-Umsetzung und Übergabe (Bundle 426):** Das vollständig gebundene Result
+`specroad-apply_Result_150336_1023_e3b18b.zip`, SHA-256
+`3c6ff32b3e25b52e326c6f1cc82ce38ab6cb8eb63f1c8b37a90d708deb38ef82`,
+bestätigt das OFF-PLAN-Bundle **425** / **REQIF-OBJECT-CONTRACT** auf
+`f2b05529b277a3bb29a188ffab424b512474b0c3`: sauberer Apply-Stand,
+**6.066/6.066** Tests der Gruppe **1/3**, Commitfolge **133**, vier Worker,
+**1.770,42 s**. Native Result-/Patchbindung, alle **2.159** Snapshotdateien,
+tatsächlicher Commit, Run-/Ausführungslog und nummerierte Beobachtungen
+wurden abgeglichen. In Dev wurden ausschließlich die zwei dadurch
+bestätigten Dokumentfortschrittsmarker nachgeführt. Produktstand bleibt
+zunächst **591/900**, nächster Planschritt **14.h.W**.
+SPECROAD-DECISION-1 ist ausdrücklich vorhanden. Spezifikation **0.2.17**
+bleibt bytegleich; die bereits geklärte Vorgabe D.1.1 wird umgesetzt.
+Eine weitere normative Klärung ist weder nötig noch Bestandteil dieser
+Übergabe (`clarification_allowed=false`).
+
+`exchange/reqif.py` stellt einen passiven Typ-/Spec-Object-Codec mit
+`decode_reqif`/`encode_reqif` und explizit gebundener Mappingprojektion
+bereit. Die sechs skalaren/Enum-Familien erhalten Definitionen, Grenzen,
+Kennungen, Referenzen, Originalreihenfolge, Lexeme und Metadaten. Der
+Serializer erzeugt deterministische UTF-8-XML-Bytes aus dem gelesenen
+Objektausschnitt; Quellbytes und Quell-SHA bleiben getrennt verfügbar.
+Er erfindet weder Metadaten noch native Typen aus Feldnamen. Ein minimaler
+Header, leere Objektmengen und fehlende Werte bleiben verarbeitbar.
+Der geprüfte Standardbezug ist das bei der Entscheidung genannte OMG-
+Dokument; eine XSD-Ausführung oder Fremdtool-Interoperabilität wird nicht
+behauptet.
+
+Die unveränderten XML-Sicherheitsereignisse werden wiederverwendet.
+Aufrufer müssen alle sieben positiven `ReqIFLimits` für das konkrete
+Dokument ausdrücklich liefern; es wird kein JUnit-Dateilimit oder neues
+globales Formatlimit übernommen. DTD/Entities, Processing Instructions,
+externe Schema-/XInclude-Verarbeitung und überschrittene strukturelle
+Grenzen werden vor einer erfolgreichen Beobachtung abgewiesen. Der Codec
+enthält keinen Resolver und keinen Datei-/Netzwerk-/Prozesszugriff.
+Ressourcenfehler bleiben reale Ausnahmen. Unverstandene Zusatzdaten
+bleiben in der Quelle sichtbar; ein kompletter Serializerfolg wird für
+diese noch nicht integrierten Inhalte verweigert.
+
+Typ- und Feldprojektionen verwenden ausschließlich Definitionskennungen,
+nicht `LONG-NAME` oder Labels. Der Adapter bindet den erwarteten Quellhash,
+Mapping-Schlüssel und -Hash sowie den expliziten externen Quellkontext.
+`explicit`, `default` und `absent` bleiben getrennt; `false`, Nullzahl,
+Leerstring und leere Enum-Auswahl ersetzen keinen expliziten Wert durch
+einen Default. Der unveränderte Export materialisiert keine fehlende
+Belegung. Enum-Projektionen enthalten nach UTF-8 sortierte IDs als Array;
+`value_map` wird erst auf der geprüften Projektion angewandt.
+
+Vor einer Objektprojektion werden doppelte Kennungen/Belegungen, falsche
+oder fremde Typ-/Definitionsreferenzen sowie ungültige explizite Werte
+abgewiesen. Zahlen außerhalb der vorhandenen JSON-/JCS-Schnittmenge und
+nicht erhaltene negative Null behalten ihre typisierten Lexeme und werden
+mit Objekt-/Definitionsbezug als nicht repräsentierbar ausgewiesen.
+Es gibt keine Rundung, Stringifikation, Default-Ersatz oder erfolgreiche
+native Teilabbildung für solche Objekte. Unmapped-Felder und Zahlenverluste
+bleiben unterscheidbar. `reqif_object_identifier` bildet den exakten
+D.1.1-Erstexporthash oder verwendet die eindeutige vorhandene Kennung im
+gewählten Zielkontext; Mehrdeutigkeit, unzulässige Kennung und Kollision
+bleiben Konflikte. Die reine Ableitung schreibt keine Registry und ersetzt
+nicht die vollständige native Modellvalidierung des höheren Exportlayers.
+
+**Tatsächlich gezielt geprüft in Dev:** **607/607** Verhaltenstests,
+**vier parallele Worker**, Prozesscode **0**, keine Beobachtungsfehler,
+`full_suite_passed=null`; Testkörperlauf **5,19 s**. Enthalten sind **81 neue
+ReqIF-Fälle** sowie betroffene Mapping-, externe/native Identitäts-,
+XML-Sicherheits-, Kanonisierungs- und Python-3.10-Kompatibilitätsregressionen.
+Die realen Codec-Roundtrips, ursprünglichen Lexeme/Herkünfte, Fehlerklassen
+und isolierten Core-/PYZ-Aufrufe wurden geprüft. Bestehende Tests und
+Oracles bleiben bytegleich; keine Dokumentations-/Darstellungstests und
+kein vollständiger Dev-Testkörperlauf wurden ausgeführt.
+
+Die vollständige Collection-/Katalogprüfung erfasste **18.279 Identitäten**,
+**0 Testkörper**, ohne Katalogfehler. Die **81** neuen Nummern werden an
+die bisherige Liste angehängt; bestehende Nummern und Rotationsanker
+bleiben unverändert. SR-TC-0320/0321 werden ausdrücklich `partial` mit
+diesem synthetischen W-Korpus. Umfassender R-Korpus, inverse Abbildung,
+C-Strukturtrennung sowie Hierarchien, Relationen, XHTML, Anhänge,
+Verlust-/Exportmanifest, ReqIFZ, CLI, vollständige Modell-/Projektabbildung
+und autorisierte Transaktionen bleiben offen und verbindlich.
+Gebundener Quellstand:
+`e5cef9921588a89c2dc47ec5f89c913821b8e88b235c048c73ad71ec1a293015`;
+Katalog: `a579ab033828796135b033b392f755f515e7c0dedcb46f5735cd3b034130b431`;
+Auswahlbeleg: `41639d1499632d9573aa18e055b9f98bb49edfd9681d2f4b328025897aebe4f4`;
+Beobachtungsbeleg: `975fe904d532e86e1275a469664efb48eba329b052b8e6a8b0bb811d68b6c50b`.
+
+**Vorgesehene Apply-Grenze:** Genau **14.h.W**, Position **592/900**, ein
+regulärer Commit in Bundle **426**. Der Entrypoint installiert den gezielt
+geprüften W-Zustand und führt ausschließlich **Gruppe 2/3**, Commitfolge
+**134**, mit **6.093 Tests** und vier parallelen Workern aus. Erst nach
+erfolgreichem gebundenem Gate setzt er die fünf Planmarker auf **592/900**,
+zuletzt **14.h.W**, nächstens **14.h.R**, Bundle **426**, W-Checkbox
+abgeschlossen, und erzeugt die oben festgelegte Commit-Message. Fehler
+erhalten die tatsächlichen Dateien, den Index und erfolgreiche Commits.
+**14.h.R/C und alle weiteren Schritte bleiben offen.** Ein Apply-,
+Vollsuite-, ReqIF-Konformitäts- oder Release-Erfolg dieser Übergabe wird
+nicht vorweggenommen. Nach nativer Paketprüfung und atomarer
+Veröffentlichung endet der Auftrag.
 
 #### 14.h.R – Make it Right
 
