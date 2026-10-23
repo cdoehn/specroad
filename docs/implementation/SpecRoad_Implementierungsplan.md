@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 10
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 586
-last_completed_plan_commit: 14.f.W
-next_plan_commit: 14.f.R
-last_completed_numbered_bundle: 418
+implementation_plan_commits_completed: 587
+last_completed_plan_commit: 14.f.R
+next_plan_commit: 14.f.C
+last_completed_numbered_bundle: 419
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -18745,12 +18745,111 @@ zu einem weiteren Planschritt werden behauptet.
 
 #### 14.f.R – Make it Right
 
-- [ ] **14.f.R** · Position **587/900** · Voraussetzung: `14.f.W`.
+- [x] **14.f.R** · Position **587/900** · Voraussetzung: `14.f.W`.
 **Exakte Commit-Message:** `14.f.R feat(exchange): CSV-Datentypen und RFC-4180 vervollständigen`
 
 **Vervollständigung:** BOM nur beim Import, ungültige Typkonversion, exakte Header-/Breitenregeln, Null-/Abwesenheitsgrenzen und Fehlerdiagnosen nach D.2.1/reject behandeln. Relevante Ressourcen-, Ownership- und Isolationsfälle sowie die R-Abnahmen des Entscheidungsbelegs vervollständigen.
 
 **Verhaltensabnahme:** Parserroundtrips prüfen Feldwerte und Schema, keine menschenlesbare Tabellenoptik. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Implementierungsstand (Bundle 419, 14.f.R)**
+
+**Geprüfte technische Basis:** Das vollständig gebundene Result
+`specroad-apply_Result_092735_1023_eab57c.zip`, SHA-256
+`4d236e5901b1efdd75aa16413491e4943edcea31a7326fce3601793780cb76cb`,
+bestätigt den sauberen Apply-Commit
+`0fdabc7fd005b922daa340fefd3ea7f33e99754a` und Bundle **418**.
+Snapshot, native Result-Prüfung, Run-/Ausführungslog, tatsächlicher Commit
+und nummerierter Auswahlbeleg stimmen überein: **5.925 Tests bestanden**,
+vier Worker, Commitfolge **126**, Gruppe **0/3**. Dies ist ein Teiltestnachweis.
+Die fünf bestätigten Fortschrittsmarker wurden aus dem Result übernommen.
+Spezifikation **0.2.15** einschließlich CSV-PROFILE-CONTRACT und
+SPECROAD-DECISION-1 bleibt bytegleich; eine weitere normative Klärung ist
+für diese bereits festgelegten R-Abnahmen nicht nötig.
+
+**Tatsächliche Vervollständigung:** Headerfehler benennen die erste leere,
+doppelte oder unbekannte Spalte. Breitenfehler benennen die erste fehlende
+oder überzählige Spalte. Nicht vorhandene Headerfelder erhalten keine
+erfundene Spaltennummer. Logische Datensatznummern zählen den Header als 1
+und eingebettete Zeilenumbrüche nicht als neue Datensätze. JSON-interne
+Positionen und untrusted Membernamen werden nicht als CSV-Orte oder
+Fehlertext übernommen. Die vollständige Beobachtung wird vor ihrer
+Rückgabe lesbar validiert; Export gibt erst nach vollständiger
+Rückleseprüfung Bytes zurück. Ein gültiger Präfix erzeugt keinen Teilerfolg.
+
+Exakte Objekt-/Schlüssel-/Typprüfungen erfolgen vor fremden Python-Vergleichs-
+oder Konvertierungshooks. Die zusätzliche reine Methode `external_fields`
+kehrt ausschließlich die ausdrücklich zugeordnete native **Feldprojektion**
+um. Sie verlangt genau deren Ziel-Feldmenge, ordnet nach Feldnamen statt
+Tabellenposition zu und akzeptiert bei `value_map` ausschließlich genau
+einen kanonisch passenden Treffer für den konkreten Wert. Unbenutzte
+mehrdeutige Zielwerte blockieren einen eindeutig passenden Wert nicht.
+Fehlender oder mehrfacher Treffer, unbekannte/fehlende Zielfelder sowie
+unrepräsentierbare Zellen werden zurückgewiesen. Direkte Kopierregeln und
+verschachtelte Rückgaben bleiben passive eigene Werte; Boolean/Zahl,
+Reihenfolgen und Feldpräsenz werden nicht durch Python-Gleichheit oder
+eine vorgeschaltete Zahlenkoerzision vermischt. Identität wird weiterhin
+separat an den Datensatzcodec übergeben und niemals erfunden.
+
+**Randfall- und Sicherheitsnachweise:** Ein einzelnes initiales BOM bleibt
+Teil des Rohbytehashs; weitere und innere U+FEFF-Zeichen bleiben Daten.
+Ein damit beginnendes erstes Headerfeld wird beim Export gequotet, kein
+BOM ausgegeben. Headerumordnung, Header allein, exakte Unicode-/Leerzeichen,
+beide Missing-Column-Policies, kurze/lange/leere Datensätze und doppelte IDs
+sind geprüft. Eine korrekt fehlende Quelle bleibt für die nachfolgende
+native Mappingstufe ein Pflichtfeldfehler. Gequotet und ungequotet leere
+Zellen folgen derselben expliziten Policy. Ungültige UTF-8-/Quote-/CRLF-
+Grenzen, rohe C0-/DEL-Zeichen, Boolean-/Zahl-/JSON-/Typhüllenfehler und
+nichtinvertierbare Werte liefern `SRV090`/Code 3 mit Ressourcenbindung und
+soweit bestimmbar logischem Ort, ohne sensible Zellen zu spiegeln.
+
+Eigene Ressourcen-/Ergebnisbeobachtungen bleiben von nachträglich geänderten
+Rückgaben getrennt; eine fehlgeschlagene Ressourceninitialisierung und
+geänderte tatsächliche Mappingbytes ersetzen keine bestehende Auswahl.
+Zyklen und echte JSON-Strukturgrenzen liefern keine positive Teilmenge.
+Große Felder und viele Zeilen werden vollständig verarbeitet, ohne die
+globale Standardbibliotheks-CSV-Grenze zu ändern oder eine neue pauschale
+Mengengrenze einzuführen. Unerwartete Implementierungs-/Hostfehler werden
+nicht als Konvertierungsdiagnose oder Erfolg maskiert. Reale Projektbytes
+und Modi bleiben auch unter Datei-/Prozess-/Netzwerkfallen unverändert.
+Isolierte Core-/PYZ-Läufe prüfen Rückzuordnung und Zurückweisungsgrenzen
+ohne optionale Pakete. Der vorhandene W-Vertrag für kanonischen DEL-Export
+bleibt unverändert; kein abweichendes Escapeformat wird eingeführt.
+
+**Gezielte parallele Verhaltensprüfung:** **419/419 bestanden**, vier Worker,
+Prozesscode **0**, Python **3.14.4**: **124** neue R-Fälle, sämtliche **76**
+unveränderten CSV-W-Fälle sowie betroffene Mapping-W/R-, strikte JSON-
+Reader- und kanonische Serializer-Regressionen. Vollständige Collection-
+und Katalogprüfung: **17.898 erfasst, 0 Testkörper ausgeführt**.
+`full_suite_passed` bleibt jeweils `null`.
+Quellstand `af011f6bc9d2838455366e8670bbc0b4e0c3f52e774c7f1a034751aea459d80f`,
+Katalog `e3f8a7dd519a6fe6bcf8b345c5956fbea5ba7dceab8130252feb20e920c29c27`,
+Auswahlbeleg `a251952a34d4c2d7eb72ac22b7a5b3b3f29ef23fdb6533bd668c55695352cb55`,
+Beobachtungen `24cb51b1a41c3f47acc786a40a6c393fa2bca598c929c918a1e564053d413f70`.
+Der erste Lauf mit **417 bestanden / 1 fehlgeschlagen** ist ausdrücklich
+kein Erfolgsnachweis. Der neue Projektfixture benötigte die Erstellung
+seines temporären Verzeichnisses vor dem vorhandenen Projekt-Helper.
+Dieser Testaufbau wurde korrigiert; zusätzlich wurde die Rückzuordnung
+mehrerer Felder mit einem Fehler im letzten Feld abgesichert. Der oben
+belegte abschließende Lauf prüft den finalen Stand. Alle **17.774** bereits
+nummerierten Identitäten behalten ihre Nummer; die **124** neuen werden
+sortiert hinten angefügt. SR-TC-0325/0326 erhalten partielle W/R-Nachweise
+und die ergänzende echte Fixture SR-FIX-CSV-CODEC-RIGHT-v1.
+
+**Grenzen und Übergabe:** Genau **14.f.R**, Position **587/900**, ein regulärer
+Commit in Bundle **419**. 14.f.C und alle weiteren Schritte bleiben offen;
+der gemeinsame View-Codec wird hier nicht vorgezogen. Die Feldprojektion
+ist kein vollständiger nativer Modell-Export, kein Verlustbericht/-konsens,
+keine neue Runtime-/Work-Integration, kein CLI-Import und kein Writer.
+Höher liegende Modell-/CLI-/Planintegration und vollständiger Austausch
+behalten ihre bestehenden Verpflichtungen. Alte Importpläne, lokale
+Konfigurationen und Control-Zustand werden nicht geändert. Der Entrypoint
+stellt genau diesen R-Stand her und führt ausschließlich **Gruppe 1/3**,
+Commitfolge **127**, mit **5.966** Tests parallel aus. Erst nach dem
+bestandenen exakten nummerierten Apply-Gate setzt er die fünf Marker auf
+**587/900**, zuletzt **14.f.R**, nächstens **14.f.C** und Bundle **419** und
+erzeugt die oben festgelegte Commit-Message. Ein Apply-Erfolg dieses Bundles,
+Vollsuite-/Release-Erfolg oder weiterer Planschritt wird nicht vorweggenommen.
 
 #### 14.f.C – Make it Clean
 

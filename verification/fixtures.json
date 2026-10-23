@@ -40,6 +40,7 @@
     "SR-FIX-CONTENT-BLOCKS-RIGHT-v1",
     "SR-FIX-CONTENT-BLOCKS-v1",
     "SR-FIX-CORE-LINT-v1",
+    "SR-FIX-CSV-CODEC-RIGHT-v1",
     "SR-FIX-CSV-CODEC-v1",
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1",
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1",
@@ -790,6 +791,10 @@
     "SR-FIX-CSV-CODEC-v1": {
       "provider": "tests/support/csv_codec.py:column,resources,selected,record",
       "kind": "Explicit synthetic csv-profile-v1 declarations, bound CSV exchange mappings, passive external/native identities, typed records and literal RFC-4180 byte samples. Exercises exact selection, semantic roundtrips, rejected loss and isolated Core/PYZ behavior. No external source, native import plan, writer, human approval or full format-integration result is simulated."
+    },
+    "SR-FIX-CSV-CODEC-RIGHT-v1": {
+      "provider": "tests/support/csv_codec.py:column,resources,selected,record;tests/test_csv_codec_right.py:inverse_codec",
+      "kind": "Synthetic exact CSV profiles, actual bound mappings, canonical inverse value tables and literal byte inputs. R cases retain BOM/data distinctions, logical diagnostics, absence/null/type boundaries, unique-or-rejected inverses, owned values, failed selection and unchanged project bytes/modes. Large complete inputs, forbidden hooks/I/O, real strict JSON nesting and isolated Core/PYZ are exercised. No external source, human approval, whole-model export or completed import is simulated."
     }
   }
 }

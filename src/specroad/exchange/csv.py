@@ -1,6 +1,7 @@
 """Bound, pure CSV dataset codec. No native projection or import authority."""
 from dataclasses import dataclass
 from hashlib import sha256
+import json
 
 from ..mappings.csv_profile import CSVError, CSVProfile
 from ..mappings._resources import ExchangeMapping, ExternalIdentityRegistry, _select
@@ -66,8 +67,12 @@ class _SelectedCSVProfile:
             header = next(rows)
             record = 1
             declared = {row["column"] for row in p["columns"]} | {p["identity"]["column"]}
-            if any(not name for name in header) or len(header) != len(set(header)) or set(header) - declared:
-                raise CSVError("csv_invalid_header")
+            seen = set()
+            for column, name in enumerate(header, 1):
+                if not name or name in seen or name not in declared:
+                    raise CSVError("csv_invalid_header")
+                seen.add(name)
+            column = None
             positions = {name: i for i, name in enumerate(header)}
             if p["identity"]["column"] not in positions:
                 raise CSVError("csv_identity_header_required")
@@ -78,7 +83,7 @@ class _SelectedCSVProfile:
             for record, cells in enumerate(rows, 2):
                 column = None
                 if len(cells) != len(header):
-                    raise CSVError("csv_row_width")
+                    raise CSVError("csv_row_width", column=min(len(cells), len(header)) + 1)
                 column = positions[p["identity"]["column"]] + 1
                 identity = cells[column - 1]
                 _identity(identity, p["identity"]["kind"], artifact_type, identities)
@@ -92,7 +97,12 @@ class _SelectedCSVProfile:
                         fields[rule["external_field"]] = value
                 records.append({"identity": {"kind": p["identity"]["kind"], "value": identity},
                                 "external_type": p["external_type"], "fields": fields})
-            return CSVObservation(raw, canonical_json_bytes({"records": records}), canonical_json_bytes(bindings))
+            # The complete observation must be readable before it escapes.
+            # Cell-level JSON validity alone does not validate its outer nesting.
+            record, column = None, None
+            encoded = canonical_json_bytes({"records": records})
+            parse_json_object(encoded)
+            return CSVObservation(raw, encoded, canonical_json_bytes(bindings))
         except ModelError as error:
             raise CSVError(error.reason, **bindings, source_sha256=source_hash,
                            record=getattr(error, "record", None) or record,
@@ -110,16 +120,17 @@ class _SelectedCSVProfile:
             allowed = {r["external_field"] for r in p["columns"]}
             for record, item in enumerate(records, 2):
                 column = None
-                if type(item) is not dict or set(item) != {"identity", "external_type", "fields"}:
+                if not _object(item) or set(item) != {"identity", "external_type", "fields"}:
                     raise CSVError("csv_record_required")
                 identity, fields = item["identity"], item["fields"]
-                if (type(identity) is not dict or set(identity) != {"kind", "value"}
+                if (not _object(identity) or set(identity) != {"kind", "value"}
+                        or type(identity["kind"]) is not str or type(item["external_type"]) is not str
                         or identity["kind"] != p["identity"]["kind"]
                         or item["external_type"] != p["external_type"]):
                     raise CSVError("csv_record_binding")
                 column = 1
                 _identity(identity["value"], identity["kind"], artifact_type, identities)
-                if type(fields) is not dict or any(type(k) is not str for k in fields) or set(fields) - allowed:
+                if not _object(fields) or set(fields) - allowed:
                     raise CSVError("csv_unknown_fields")
                 cells = {identity_column: identity["value"]}
                 positions = {name: i + 1 for i, name in enumerate(header)}
@@ -130,9 +141,58 @@ class _SelectedCSVProfile:
                         raise CSVError("csv_identity_field_mismatch")
                     cells[rule["column"]] = text
                 output.append(write_row([cells[name] for name in header]))
-            return b"".join(output)
+            raw = b"".join(output)
         except ModelError as error:
-            raise CSVError(error.reason, **bindings, record=record, column=error.column or column) from None
+            raise CSVError(error.reason, **bindings, record=record,
+                           column=(error.column or column) if isinstance(error, CSVError) else column) from None
+        self.decode(raw)
+        return raw
+
+    def external_fields(self, fields):
+        """Invert only the declared native field projection, without an identity.
+
+        This is not a whole-artifact export or a loss approval. Callers must
+        supply exactly the mapped target fields and separately provide identity
+        to encode. No source system, document, revision or ID is invented.
+        """
+        p, _, bindings = self._context()
+        column = None
+        try:
+            rules = [r for r in self.mapping.data["fields"] if r["external_type"] == p["external_type"]]
+            if not _object(fields) or set(fields) != {r["target_field"] for r in rules}:
+                raise CSVError("csv_native_field_set")
+            by_source = {r["external_field"]: r for r in rules}
+            header = [p["identity"]["column"]] + [r["column"] for r in p["columns"]
+                                                      if r["column"] != p["identity"]["column"]]
+            result = {}
+            for cell in p["columns"]:
+                column = header.index(cell["column"]) + 1
+                rule = by_source[cell["external_field"]]
+                value = fields[rule["target_field"]]
+                encoded = canonical_json_bytes(value)
+                if rule["value_map"] is not None:
+                    candidates = [entry["external_value"] for entry in rule["value_map"]
+                                  if canonical_json_bytes(entry["target_value"]) == encoded]
+                    if len(candidates) != 1:
+                        raise CSVError("csv_value_map_not_invertible")
+                    value = candidates[0]
+                text = encode_cell(value, cell)
+                write_row([text])  # Includes raw-character representability.
+                # Preserve Python number kinds until the cell contract has run;
+                # canonical roundtripping must not turn a float into an integer.
+                try:
+                    owned = json.loads(json.dumps(value, ensure_ascii=False, allow_nan=False))
+                except RecursionError:
+                    raise CSVError("unsupported_json_nesting") from None
+                result[cell["external_field"]] = owned
+            return result
+        except ModelError as error:
+            raise CSVError(error.reason, **bindings, column=column) from None
+
+
+def _object(value):
+    # Check exact key types before set/equality can execute foreign Python hooks.
+    return type(value) is dict and all(type(key) is str for key in value)
 
 
 def _identity(value, kind, artifact_type, seen):
