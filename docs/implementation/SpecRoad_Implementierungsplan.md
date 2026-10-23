@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 10
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 587
-last_completed_plan_commit: 14.f.R
-next_plan_commit: 14.f.C
-last_completed_numbered_bundle: 419
+implementation_plan_commits_completed: 588
+last_completed_plan_commit: 14.f.C
+next_plan_commit: 14.g.W
+last_completed_numbered_bundle: 420
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -18853,7 +18853,7 @@ Vollsuite-/Release-Erfolg oder weiterer Planschritt wird nicht vorweggenommen.
 
 #### 14.f.C – Make it Clean
 
-- [ ] **14.f.C** · Position **588/900** · Voraussetzung: `14.f.R`.
+- [x] **14.f.C** · Position **588/900** · Voraussetzung: `14.f.R`.
 **Exakte Commit-Message:** `14.f.C refactor(exchange): CSV-Datentypen und RFC-4180 bereinigen`
 
 **Bereinigung:** Gemeinsamen CSV-Codec mit Viewexporten verwenden.
@@ -18861,6 +18861,82 @@ Vollsuite-/Release-Erfolg oder weiterer Planschritt wird nicht vorweggenommen.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Implementierungsstand (Bundle 420, 14.f.C)**
+
+**Geprüfte technische Basis:** Das vollständig gebundene Result
+`specroad-apply_Result_101959_1023_578af6.zip`, SHA-256
+`576ef38669208a09c83156321f69075912c788a8b269b51a854237b4c0603353`,
+bestätigt Bundle **419** und den sauberen Apply-Commit
+`ffda2c73033d4dd8ea7622f1b7a1d5c271b3daf5` für **14.f.R**.
+Die native Result-Prüfung, der vollständige Snapshot, tatsächliche Git-Commit,
+Run-/Ausführungslog und unabhängig geprüfte nummerierte Auswahl stimmen
+überein: **5.966 Tests bestanden**, vier Worker, Commitfolge **127**,
+Gruppe **1/3**. Dies bleibt ein Teiltestnachweis. Nur die fünf bestätigten
+Fortschrittsmarker wurden im Dev-Plan mit dem Result abgeglichen; alle
+**2.151** Produktdateien stimmten danach bytegenau mit dem Snapshot überein.
+Spezifikation **0.2.15** einschließlich CSV-PROFILE-CONTRACT und
+SPECROAD-DECISION-1 bleibt unverändert; keine neue normative Klärung.
+
+**Reine Strukturbereinigung:** Der interne gemeinsame Bytecodec
+`storage._csv_syntax.row_bytes` übernimmt ausschließlich minimales RFC-
+Quoting, Quoteverdopplung, CRLF-Framing und UTF-8 für bereits zugelassene
+Textzellen. Der gebundene Austauschcodec und der Viewexport nutzen denselben
+Serializer. Der Viewadapter ersetzt seinen bisherigen StringIO-/csv.writer-
+Ausgabepfad durch den gemeinsamen Bytecodec mit einem speicherinternen
+BytesIO-Puffer. Weder ein Dateiwriter noch ein zweiter Query-/Mappinglauf
+oder eine neue Import-/Exportfreigabe entsteht.
+
+Die jeweiligen fachlichen Grenzen bleiben in ihren Adaptern: Das CSV-Profil
+prüft weiterhin rohe C0-/DEL-Zeichen und entscheidet über das zusätzliche
+Quoting eines ersten U+FEFF-Headerfelds. Die vorhandene View-Zellzulassung
+wird nicht still durch die strengere Profilzulassung ersetzt. Viewhülle,
+Metadaten-/Generated-Kennzeichnung, Row-Bindings, skalare/typisierte Zellen,
+Quotingbytes und Fehlerverträge bleiben erhalten. Parser, Typkonvertierung,
+Profil-/Mappingbindung, inverse Feldzuordnung und Veröffentlichungscode
+bleiben bytegleich. Es gibt keine neue Normalisierung, Inferenz, Migration,
+Seiteneffektgrenze oder zugelassene Datenmenge.
+
+**Verhaltensbelege:** Acht ergänzende Kompatibilitätsfälle sichern die
+bisherigen maschinenlesbaren View-Datenbytes für rohe beziehungsweise
+explizit typisierte C0-/DEL-Werte gegen die getrennte Profilzurückweisung.
+Vor der Produktänderung liefen sie mit vier Workern auf den nachweislich
+bytegleichen Produktdateien des Result-Snapshots: **8/8 bestanden**, Code 0.
+Baseline-Quellstand `633dc73c9044a719322134ef4c113fd26be6378d132d34d2708c4ba1154abbd9`,
+Auswahlbeleg `42218315491747080f69002d000a79dd992edd04d62f3ccd5d5c19e707d139af`,
+Beobachtungen `95b5d60babb8ca583163e6ae7dc843b1adc58416d117fc16e97e9d87aa82c07b`.
+Diese Fälle prüfen Daten-/Fehler-/Unverändertheitsverträge, keine Darstellung.
+
+Nach der Bereinigung: **562/562 bestanden**, vier Worker, Prozesscode **0**,
+Python **3.14.4**. Darin enthalten sind alle **200** unveränderten CSV-W/R-
+Fälle, **135** unveränderte Viewexport-W/R-Fälle, **219** bestehende
+Mapping-/JSON-Reader-/kanonische Regressionen und dieselben **8** zusätzlichen
+Kompatibilitätsfälle. Bestehende Testdateien und ihre Oracles sind bytegleich.
+Die Exportfälle umfassen native Zellwerte und Bindungen, isoliertes Core/PYZ,
+Fehlerfälle und reale geschützte Dateiausgabe; kein Layout-/Dokumentationstest.
+Vollständige Collection-/Katalogprüfung: **17.906 erfasst, 0 Testkörper
+ausgeführt**. `full_suite_passed` bleibt jeweils `null`.
+Quellstand `7c618f468a6cc7f1467d26c82ed63dab378ffee51ac8547f491fd116f9c2896c`,
+Katalog `b73d675e2506f4ba999f57a8c7e27164864a4f91483cebed4c821b0d910a290f`,
+Auswahlbeleg `4f050ff33c29013d1aac7be42b06a6368b8338ac41c4dd199f9e37e8ae197bca`,
+Beobachtungen `74a852e4fd76c56c76cf6fc81cec4490f556c3e2b47722766538fa6d27c56574`.
+Alle **17.898** bereits nummerierten Identitäten bleiben unverändert; die
+acht neuen werden sortiert hinten angefügt. SR-TC-0325/0326 erhalten den
+partiellen W/R/C-Bezug und die echte Fixture
+SR-FIX-CSV-EXPORT-COMPATIBILITY-v1. Ein vollständiger Formataustausch wird
+weiterhin nicht als umgesetzt oder verifiziert bezeichnet.
+
+**Grenzen und Übergabe:** Genau **14.f.C**, Position **588/900**, ein regulärer
+Commit in Bundle **420**. 14.g.W und alle weiteren Planschritte bleiben
+offen. Höher liegende native Gesamtmodellprojektion, CLI-/Planintegration,
+Verlustnachweise und sämtliche Freigaben behalten ihre bisherigen
+Verpflichtungen. Keine Änderung an Control, Watcher, CI oder lokaler
+Konfiguration. Der Entrypoint stellt genau diesen C-Zwischenstand her und
+führt ausschließlich **Gruppe 2/3**, Commitfolge **128**, mit **5.968** Tests
+parallel aus. Erst nach erfolgreichem nummeriertem Apply-Gate setzt er die
+fünf Planmarker auf **588/900**, zuletzt **14.f.C**, nächstens **14.g.W**,
+Bundle **420**, und erzeugt die oben festgelegte Commit-Message. Kein
+Apply-, Vollsuite- oder Release-Erfolg dieser Übergabe wird vorweggenommen.
 
 <a id="step-14-g"></a>
 ### 14.g – NDJSON-Objektstrom

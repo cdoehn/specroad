@@ -8,7 +8,8 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-CSV-CODEC-v1",
-    "SR-FIX-CSV-CODEC-RIGHT-v1"
+    "SR-FIX-CSV-CODEC-RIGHT-v1",
+    "SR-FIX-CSV-EXPORT-COMPATIBILITY-v1"
   ],
   "preconditions": [
     "Explicit csv-profile-v1 key and expected canonical hash; actual supplied profile and exchange-mapping-v1 bytes with source_format csv. No data-derived lookup or defaults."
@@ -17,12 +18,13 @@
     "Select exact resources, decode literal UTF-8 RFC-4180 datasets and roundtrip explicit records without changing identity, types, values, order or field presence.",
     "Reject ambiguous/unsupported declarations, wrong resource bindings and nonrepresentable values before returning a result; preserve passive inputs and no-write boundaries.",
     "Exercise the same bound dataset conversion in isolated Core and PYZ without optional packages.",
-    "Exercise R edge cases: BOM as input signature versus literal U+FEFF, exact/reordered/missing headers, every explicit empty policy, invalid syntax/typed values, logical error coordinates, one canonical inverse value-map match, owned observations and unchanged real project inputs."
+    "Exercise R edge cases: BOM as input signature versus literal U+FEFF, exact/reordered/missing headers, every explicit empty policy, invalid syntax/typed values, logical error coordinates, one canonical inverse value-map match, owned observations and unchanged real project inputs.",
+    "Run the unchanged W/R and affected View export behavior contracts with the common pure CSV record serializer; verify original View scalar/typed control bytes separately from csv-profile-v1 rejection, without new coercion, output authority or source mutation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der CSV-Import und -Export MUSS RFC-4180-konforme Felder, Anführungszeichen, eingebettete Zeilenumbrüche, CRLF-Dateizeilen und UTF-8 unterstützen sowie ein optionales BOM ausschließlich beim Import akzeptieren.",
-    "scope": "14.f.W/R pure bound dataset codec. W contracts and tests remain unchanged. R covers exact BOM/header/width and null/absence boundaries; strict types, finite JSON numbers, safe SRV090/3 bindings and logical record/column coordinates without raw cell leakage; complete-or-rejected observations and exports; foreign hooks, cycles, strict-reader nesting, large fields, unchanged global limits, owned resources/records, real read-only projects and isolated Core/PYZ. The additive external_fields operation inverses only the exact mapped native field projection, requiring one canonical target match and a representable external cell; it does not construct a whole-model export, identity, plan or publication authority. Canonical JSON export retains the W rejection of forbidden raw DEL. No complete CLI import/export, arbitrary model roundtrip, full runtime-budget integration, full-suite or release pass is claimed."
+    "scope": "14.f.W/R/C pure bound dataset codec. W contracts and tests remain unchanged. R covers exact BOM/header/width and null/absence boundaries; strict types, finite JSON numbers, safe SRV090/3 bindings and logical record/column coordinates without raw cell leakage; complete-or-rejected observations and exports; foreign hooks, cycles, strict-reader nesting, large fields, unchanged global limits, owned resources/records, real read-only projects and isolated Core/PYZ. The additive external_fields operation inverses only the exact mapped native field projection, requiring one canonical target match and a representable external cell; it does not construct a whole-model export, identity, plan or publication authority. Canonical JSON export retains the W rejection of forbidden raw DEL. No complete CLI import/export, arbitrary model roundtrip, full runtime-budget integration, full-suite or release pass is claimed. C shares only byte framing/quoting/UTF-8 serialization. The View envelope, typed cells, generated metadata, exact bytes and existing errors remain unchanged. Dataset character and first-header U+FEFF admission stays with the bound profile adapter."
   },
   "expected_diagnostics": [
     "SRV090"
@@ -242,10 +244,17 @@
     "tests/test_csv_codec_right.py::test_selected_resources_and_observations_stay_owned_after_returned_values_change",
     "tests/test_csv_codec_right.py::test_unexpected_failures_are_not_masked_as_a_success_or_conversion_diagnostic[error0]",
     "tests/test_csv_codec_right.py::test_unexpected_failures_are_not_masked_as_a_success_or_conversion_diagnostic[error1]",
-    "tests/test_csv_codec_right.py::test_unrelated_noninvertible_values_do_not_block_a_unique_concrete_inverse"
+    "tests/test_csv_codec_right.py::test_unrelated_noninvertible_values_do_not_block_a_unique_concrete_inverse",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\t-\\t]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\x00-\\u0000]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\x1f-\\u001f]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\x7f-\\x7f]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\t-\\t]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\x00-\\u0000]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\x1f-\\u001f]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\x7f-\\x7f]"
   ],
   "open_items": [
-    "14.f.C: share pure RFC CSV syntax with existing View export while preserving all View envelope, cell, metadata, diagnostic and side-effect contracts.",
     "Higher-layer native whole-model projection and CLI/plan integration remain required; no old import plan, writer, loss approval, registry source provenance or full format-integration evidence is added by this pure dataset/field codec."
   ]
 }

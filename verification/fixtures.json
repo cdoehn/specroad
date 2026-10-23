@@ -42,6 +42,7 @@
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-CSV-CODEC-RIGHT-v1",
     "SR-FIX-CSV-CODEC-v1",
+    "SR-FIX-CSV-EXPORT-COMPATIBILITY-v1",
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1",
     "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1",
     "SR-FIX-DIAGNOSTICS-v1",
@@ -795,6 +796,10 @@
     "SR-FIX-CSV-CODEC-RIGHT-v1": {
       "provider": "tests/support/csv_codec.py:column,resources,selected,record;tests/test_csv_codec_right.py:inverse_codec",
       "kind": "Synthetic exact CSV profiles, actual bound mappings, canonical inverse value tables and literal byte inputs. R cases retain BOM/data distinctions, logical diagnostics, absence/null/type boundaries, unique-or-rejected inverses, owned values, failed selection and unchanged project bytes/modes. Large complete inputs, forbidden hooks/I/O, real strict JSON nesting and isolated Core/PYZ are exercised. No external source, human approval, whole-model export or completed import is simulated."
+    },
+    "SR-FIX-CSV-EXPORT-COMPATIBILITY-v1": {
+      "provider": "tests/test_document_exports.py:scalar_project;tests/test_document_view_variants_right.py:field_column;tests/support/csv_codec.py:column,record,selected",
+      "kind": "Existing native View source models and explicit bound CSV profiles with synthetic C0/DEL string values. Literal machine-byte oracles for legacy scalar/typed View data rows, recovered native values and generated metadata are checked alongside the distinct strict CSV-profile rejection contract, before and after shared serialization. No presentation, documentation, external approval or full format-integration claim."
     }
   }
 }

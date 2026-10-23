@@ -17899,7 +17899,15 @@
     "tests/test_csv_codec_right.py::test_selected_resources_and_observations_stay_owned_after_returned_values_change",
     "tests/test_csv_codec_right.py::test_unexpected_failures_are_not_masked_as_a_success_or_conversion_diagnostic[error0]",
     "tests/test_csv_codec_right.py::test_unexpected_failures_are_not_masked_as_a_success_or_conversion_diagnostic[error1]",
-    "tests/test_csv_codec_right.py::test_unrelated_noninvertible_values_do_not_block_a_unique_concrete_inverse"
+    "tests/test_csv_codec_right.py::test_unrelated_noninvertible_values_do_not_block_a_unique_concrete_inverse",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\t-\\t]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\x00-\\u0000]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\x1f-\\u001f]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[False-\\x7f-\\x7f]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\t-\\t]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\x00-\\u0000]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\x1f-\\u001f]",
+    "tests/test_csv_export_compatibility.py::test_view_bytes_and_stricter_profile_character_gate_remain_distinct[True-\\x7f-\\x7f]"
   ],
   "partition_count": 3,
   "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc"

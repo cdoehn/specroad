@@ -3,11 +3,11 @@
 No provider selection, query evaluation or filesystem publication happens here.
 JSON and CSV share the exact same selected cells and source-bound metadata.
 """
-import csv
 import io
 
 from .._metadata import __version__, MODEL_SCHEMA_VERSION
 from ..model.canonical import canonical_json_bytes
+from ..storage._csv_syntax import row_bytes
 
 
 def view_export_schema():
@@ -77,15 +77,14 @@ def csv_view_bytes(exported, *, source_path, error_type):
     metadata.update(kind='view-csv-v1', cell_encoding=('csv-columns-v1'
         if any('serialization' in column for column in columns) else 'csv-scalars-v1'),
         row_bindings=[{key: value for key, value in row.items() if key != 'cells'} for row in rows])
-    stream = io.StringIO(newline='')
-    writer = csv.writer(stream, dialect='excel', lineterminator='\r\n')
-    writer.writerow(['record_type', 'metadata', *[column['heading'] for column in columns]])
-    writer.writerow(['metadata', canonical_json_bytes(metadata).decode('utf-8'),
-                     *['' for _ in columns]])
+    stream = io.BytesIO()
+    stream.write(row_bytes(['record_type', 'metadata', *[column['heading'] for column in columns]]))
+    stream.write(row_bytes(['metadata', canonical_json_bytes(metadata).decode('utf-8'),
+                           *['' for _ in columns]]))
     for row in rows:
         values = [canonical_json_bytes(cell).decode('utf-8') if 'serialization' in column
                   else cell['value'] if cell['type'] == 'string'
                   else canonical_json_bytes(cell['value']).decode('utf-8')
                   for column, cell in zip(columns, row['cells'])]
-        writer.writerow(['data', '', *values])
-    return stream.getvalue().encode('utf-8')
+        stream.write(row_bytes(['data', '', *values]))
+    return stream.getvalue()

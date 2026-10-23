@@ -1,5 +1,6 @@
 """RFC-4180 UTF-8 field syntax; no sniffing, conversion, or file access."""
 from ..mappings.csv_profile import CSVError
+from ..storage._csv_syntax import row_bytes
 
 
 def read_rows(raw):
@@ -57,12 +58,7 @@ def read_rows(raw):
 
 
 def write_row(cells, *, header=False):
-    quoted = []
     for index, cell in enumerate(cells):
         if any((ord(c) < 32 and c not in "\r\n") or c == "\x7f" for c in cell):
             raise CSVError("csv_unrepresentable_character", column=index + 1)
-        if (any(c in cell for c in ',"\r\n') or (len(cells) == 1 and not cell)
-                or (header and index == 0 and cell.startswith("\ufeff"))):
-            cell = '"' + cell.replace('"', '""') + '"'
-        quoted.append(cell)
-    return (",".join(quoted) + "\r\n").encode("utf-8")
+    return row_bytes(cells, quote_first=header and bool(cells) and cells[0].startswith("\ufeff"))
