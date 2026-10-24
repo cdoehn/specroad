@@ -4,19 +4,35 @@
   "requirement_id": "SR-REQ-0723",
   "specification_sha256": "74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28",
   "primary_verification_id": "SR-VER-0049",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-REQUIREMENT-EXCHANGE-v1"
+  ],
+  "preconditions": [
+    "Explicit exact core mapping and CSV-profile keys/hashes; actual native requirements with declared language, force and complete statement. ReqIF/ReqIFZ use bounded local codecs. No imported carrier is required for the exact ReqIF core definition."
+  ],
+  "steps": [
+    "Export de-DE/en-IN requirements with each of must, must_not, should and may through CSV, NDJSON, ReqIF and ReqIFZ. Decode and explicitly map the actual output bytes back to native fields.",
+    "Compare exact UTF-8 language, normative_force and complete statement, including CR/LF, quotes, XML metacharacters and distinct composed/decomposed Unicode; keep input bytes unchanged.",
+    "Inspect actual ReqIF string definitions and single-valued four-value force enumeration. Exercise all four formats through the live export CLI and compare normative source inventory.",
+    "Reject name-only core substitution and keep actual remaining native-field losses and fail-on-loss refusal."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der Austausch von Requirements MUSS language und normative_force über die expliziten CSV-/NDJSON-/ReqIF-Attribute aus Anhang S.7 erhalten oder einen vorhandenen Verlust ausweisen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "14.m.W provides explicit versioned content-tuple mappings and exact-bound ReqIF core definitions. Actual format bytes preserve author-declared language, all four forces and the original complete statement. Per-field loss reporting remains active outside this projection. The initial two-language W matrix and live CLI integration are partial behavior coverage; further language/mapping boundaries and constructor consolidation remain in R/C."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    3
+  ],
+  "json_pointers": [
+    "/language",
+    "/normative_force",
+    "/statement"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +44,49 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_requirement_exchange.py::test_requirement_core_definitions_are_not_selected_by_name_alone",
+    "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[csv]",
+    "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_core_projection_does_not_claim_full_native_preservation",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-de-DE-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-de-DE-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-de-DE-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-de-DE-reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-en-IN-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-en-IN-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-en-IN-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[may-en-IN-reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-de-DE-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-de-DE-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-de-DE-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-de-DE-reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-en-IN-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-en-IN-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-en-IN-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must-en-IN-reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-de-DE-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-de-DE-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-de-DE-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-de-DE-reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-en-IN-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-en-IN-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-en-IN-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[must_not-en-IN-reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-de-DE-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-de-DE-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-de-DE-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-de-DE-reqifz]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-en-IN-csv]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-en-IN-ndjson]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-en-IN-reqif]",
+    "tests/test_requirement_exchange.py::test_requirement_exchange_preserves_explicit_content[should-en-IN-reqifz]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.m.R: complete the nine-language/tag-variant roundtrip matrix and missing-field/mapping loss and no-inference boundaries.",
+    "14.m.C: consolidate language/force mapping with the existing M2 requirement constructor without altering preservation or failure contracts.",
+    "The core CSV/ReqIF mapping transports the language/force/statement projection only. Other native fields, including should deviation metadata, remain explicit losses; NDJSON retains the complete artifact. No full native CSV/ReqIF roundtrip, foreign-tool interoperability, product approval, migration completion or release success is asserted."
   ]
 }

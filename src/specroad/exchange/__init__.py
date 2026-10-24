@@ -13,6 +13,7 @@ from .reqif_preservation import merge_reqif_source, restore_reqif_source, assess
 from .reqif_loss import ReqIFLossError, assess_reqif_transfer, prepare_reqif_export
 from .reqifz import ReqIFZContainer, decode_reqifz, encode_reqifz
 from .exporting import ExportError, PreparedExport, prepare_export
+from .requirement_mapping import requirement_mapping, requirement_csv_profile
 
 __all__ = ["ExternalIdentity", "ImportIdentityError", "NativeIdentityIndex", "ImportComparison",
            "ImportPlan", "prepare_import_plan", "assess_import_plan", "apply_import_plan",
@@ -24,4 +25,5 @@ __all__ = ["ExternalIdentity", "ImportIdentityError", "NativeIdentityIndex", "Im
            "decode_reqif_structure", "ReqIFAttachment", "merge_reqif_source",
            "restore_reqif_source", "assess_reqif_preservation", "ReqIFLossError",
            "assess_reqif_transfer", "prepare_reqif_export", "ReqIFZContainer",
-           "decode_reqifz", "encode_reqifz", "ExportError", "PreparedExport", "prepare_export"]
+           "decode_reqifz", "encode_reqifz", "ExportError", "PreparedExport", "prepare_export",
+           "requirement_mapping", "requirement_csv_profile"]

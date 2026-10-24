@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 606
-last_completed_plan_commit: 14.l.C
-next_plan_commit: 14.m.W
-last_completed_numbered_bundle: 445
+implementation_plan_commits_completed: 607
+last_completed_plan_commit: 14.m.W
+next_plan_commit: 14.m.R
+last_completed_numbered_bundle: 446
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -21957,12 +21957,139 @@ keine vorweggenommene Apply-, Interoperabilitäts- oder Releasefreigabe.
 
 #### 14.m.W – Let it Work
 
-- [ ] **14.m.W** · Position **607/900** · Voraussetzung: `14.l.C`.
+- [x] **14.m.W** · Position **607/900** · Voraussetzung: `14.l.C`.
 **Exakte Commit-Message:** `14.m.W feat(exchange): Mehrsprachiger Requirement-Austausch aufbauen`
 
 **Umsetzung:** language und normative_force über explizite CSV-/NDJSON-/ReqIF-Felder erhalten.
 
 **Verhaltensabnahme:** Mehrsprachige Requirements behalten Force und vollständiges Originalstatement.
+
+**Umsetzungs- und Teiltestnachweis – Bundle 446, 24. Oktober 2026.**
+Das maßgebliche Result `specroad-apply_Result_065929_1024_66b302.zip`,
+SHA-256 `c7a574f5159e81707288e184b9603ff7141309a0882c20e017d7c7bf37f7557e`,
+bestätigt die erfolgreiche Wiederaufnahme von **14.l.C** durch Bundle **445**.
+Der vollständige Snapshot mit **2.195** Dateien, die unveränderten Bindungswerte,
+Run-/Manifestdaten und Ausführungsnachweise wurden nativ und gegen den wirklichen
+Apply-Arbeitsbaum geprüft. Commit
+`a524aa63df8b321b34307fe837d7a550dbe66306` hat den erwarteten Vorgänger
+`fc1fb689e043361d2a24d713d1440e40fdef9cd3`; der Arbeitsbaum ist sauber.
+Der gebundene parallele Apply-Lauf hat mit vier Workern **6.442/6.442** Tests
+in Gruppe **2**, Sequenz **152**, bestanden. Die vollständige Collection umfasste
+**19.326** Identitäten. Die tatsächlichen Testidentitäten, ihre Nummern und der
+Selektionsbeleg stimmen überein. Das ist ein Teilnachweis, kein Vollsuiteerfolg.
+Die fünf tatsächlich übernommenen Planmarker stehen damit auf **606/900**,
+zuletzt **14.l.C**, nächstens **14.m.W**, Bundle **445**.
+
+**Reguläre W-Umsetzung.** SPECROAD-DECISION-1 ist ausdrücklich vorhanden;
+für diese Umsetzung der bestehenden Vorgaben aus **S.2/S.7**, **D.1–D.3** und
+**10.12.1/10.12.3** ist keine eigene normative Klärung erforderlich.
+Spezifikation **0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Der kleinste nutzbare Ausschnitt transportiert ausdrücklich
+`language`, `normative_force` und das vollständige `statement`.
+
+Die passiven Ressourcenfabriken `requirement_mapping` und
+`requirement_csv_profile` liefern vollständig versionierte, gehashte
+Mapping-/Profilobjekte der bestehenden Grammatik. Für CSV werden die
+unveränderten gleichnamigen Felder und eine explizite native ID-Spalte verwendet;
+das separat ausgewählte CSV-Profil bindet die tatsächliche Mappingressource.
+NDJSON erhält weiterhin das vollständige native Objekt über seine vorhandene
+Hülle. Die Ressourcen werden ausdrücklich unter `mappings/` bereitgestellt und
+über exakte Kennung und erwarteten Hash ausgewählt; es gibt keine automatische
+Installation, Auswahl oder Änderung der Projektkonfiguration.
+
+Für das exakte `reqif-core@1.0.0`-Mapping stellt der Exporter jetzt eigene
+festgelegte Typdefinitionen bereit. Dadurch ist der erste Export eines nativen
+Requirements ohne erfundenen Originalquellträger möglich. `specroad.language`
+und `specroad.statement` sind Strings; `specroad.normative_force` ist eine
+einwertige Enumeration mit genau `must`, `must_not`, `should` und `may`.
+Die vorhandene Enum-Listenprojektion wird durch vier explizite Tabellenzeilen
+auf die nativen skalaren Forcewerte abgebildet. Originaltext einschließlich
+Zeilenumbrüchen, Quotes, XML-Sonderzeichen und unterschiedlicher Unicode-
+Schreibweisen wird erhalten, ohne Rendern, Übersetzen, Negieren oder
+Schlüsselwortinferenz. Der feste Zeitpunkt der Core-Typdefinitionen ist
+Ressourcenmetadatum; Objekt-/Headerzeiten stammen weiterhin aus dem nativen
+Snapshot. Die neue native Identität verwendet den expliziten Projektkontext
+und den vorhandenen stabilen ReqIF-Identifieralgorithmus.
+
+Die festen Definitionen gelten nur bei Gleichheit der vollständigen
+Core-Mappingbindung. Ein gleichnamiges geändertes Mapping aktiviert sie nicht.
+Andere Mappings behalten ihre bisherige Bindung an tatsächlich vorhandene
+Quelltypen. Vorhandene Originalquellträger werden weiterhin geprüft und in der
+Verlustbewertung berücksichtigt. ReqIFZ verwendet dieselbe ReqIF-Abbildung,
+denselben begrenzten Decoder und den bisherigen sicheren Containervertrag.
+Alle vier Formate sind durch den vorhandenen realen Exportbefehl erreichbar.
+
+**Ehrliche Grenzen.** Die CSV-/ReqIF-Kernabbildung dieser W-Phase ist die
+Dreifeldprojektion, kein vollständiger nativer Requirement-Import. Übrige
+native Felder, auch Abweichungsbedingungen und -autorität von `should`, bleiben
+im bestehenden Verlustbericht sichtbar. `--fail-on-loss` verweigert weiterhin
+einen Export mit diesen Verlusten. NDJSON erhält hingegen das gesamte native
+Artefakt. Weder ein gespeicherter neuer Import noch eine Fremdtool-
+Interoperabilität, fachliche Zustimmung, vollständige Migration oder
+Releasefreigabe wird behauptet. Der Neunsprachen-/Kennzeichnungs- und
+Fehlabbildungsumfang bleibt in **14.m.R**, die Konsolidierung mit dem M2-
+Requirementkonstruktor in **14.m.C** offen.
+
+**Gezielte parallele Abnahme.** **1.859/1.859** neue und betroffene
+Verhaltenstests bestanden mit **vier Workern**, Prozessabschluss **0**,
+alle Outcomes `passed`. Die **38 neuen** Tests prüfen die explizite Tupelerhaltung
+für **de-DE/en-IN** und alle vier Forcewerte durch tatsächliche CSV-/NDJSON-/
+ReqIF-/ReqIFZ-Bytes, den realen CLI-Pfad, unveränderte normative Quelldateien,
+die exakte Typbindung und die weiterhin blockierende Verlustpolicy.
+Die bestehenden Format-, Mapping-, Verlust-, Export- und Requirementtests
+bleiben grün. Es wurden ausschließlich Verhalten und maschinenlesbare
+Fachverträge geprüft; dieser Lauf ist ausdrücklich ein Teiltest,
+`full_suite_passed=null`.
+
+Geprüfte Testdateien:
+
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_exchange_mappings.py`
+- `tests/test_exchange_mappings_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_project_export.py`
+- `tests/test_project_export_right.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_preservation.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requirement.py`
+- `tests/test_requirement_exchange.py`
+- `tests/test_requirement_right.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **19.364** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Die neuen Identitäten
+wurden ausschließlich hinten an die feste Nummerierung angefügt:
+**19.326–19.363**. Keine bestehende Nummer wurde geändert oder wiederverwendet.
+`SR-TC-0723` bleibt `partial`, mit konkreten Testidentitäten und dem Fixture
+`SR-FIX-REQUIREMENT-EXCHANGE-v1`; die offenen R-/C- und Freigabegrenzen sind
+explizit dokumentiert.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `716e9c5f27d463a877ed22351344c6c3a0f9473ce93e6b6ddfc4a1e42d82c2a0`.
+- Selektionsdatei-SHA-256: `90eff03308abe53474a38909d06acf04d74efbadfa82b0cf8433ec46bedd3ddb`.
+- Beobachtungsdatei-SHA-256: `682df1fef05bbabcc5bad666aae68642728975f4f68b8503971acefea6580a20`.
+- Katalog-SHA-256: `7187167a218ea14a01ae898399cabfcb01b6f4bbf9e380c836b58c7c8c149571`.
+
+**Offene Apply-Abnahme.** Das Bundle liefert genau den gezielt geprüften
+W-Zwischenstand. Der Entrypoint verlangt den sauberen gebundenen Ausgangszustand;
+die frühere Dirty-Wiederaufnahme ist beendet. Apply prüft ausschließlich
+Gruppe **0**, Sequenz **153**, mit **6.455** Tests und vier Workern. Erst nach
+dem erfolgreichen gebundenen Lauf werden die fünf Fortschrittsmarker auf
+**607/900**, zuletzt **14.m.W**, nächstens **14.m.R**, Bundle **446** und die
+W-Checkbox gesetzt und die oben festgelegte exakte PLAN-Message committed.
+Es gibt keinen vorab behaupteten Apply-Erfolg, keinen zusätzlichen Voll- oder
+Serienlauf und keine Änderung der Spezifikation oder der allgemeinen Testregeln.
 
 #### 14.m.R – Make it Right
 

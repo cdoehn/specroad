@@ -69,6 +69,8 @@ def export_reqif(artifacts, mapping, model, losses, *, attachments, scope_attach
                 context = {k: entry[k] for k in ('source_system', 'source_document', 'external_revision')}
                 carriers[(canonical_json_bytes(context), entry['source_sha256'])] = (
                     context, decode_reqif_structure(raw, limits=limits))
+    from .requirement_mapping import _reqif_core_document
+    core = _reqif_core_document(mapping, limits=limits)
     definitions, datatypes, used = {}, {}, set()
     represented, objects, specifications, contexts, ids, native_types = [], [], [], {}, {}, {}
     for artifact in artifacts:
@@ -78,7 +80,13 @@ def export_reqif(artifacts, mapping, model, losses, *, attachments, scope_attach
             raise ReqIFError('reqif_inverse_type_ambiguous', exit_code=6)
         candidates = []
         expected_tag = 'SPECIFICATION-TYPE' if artifact['artifact_type'] == 'document' else 'SPEC-OBJECT-TYPE'
-        for context, document in carriers.values():
+        # Selecting the complete built-in mapping selects its fixed definitions.
+        # Imported originals remain checked above and inventoried as losses;
+        # they cannot replace these definitions through a matching display name.
+        sources = carriers.values() if core is None else ((
+            {'source_system': 'specroad', 'source_document': model.configuration.project_id,
+             'external_revision': None}, core),)
+        for context, document in sources:
             for typ in document.types:
                 if typ.identifier in types and typ.element.tag == expected_tag:
                     candidates.append((context, document, typ))
