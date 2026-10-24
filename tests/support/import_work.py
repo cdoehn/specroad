@@ -11,8 +11,6 @@ from specroad.cli.registry import CommandRegistry
 from specroad.exchange import (decode_ndjson, encode_ndjson, decode_reqif_structure,
     decode_reqifz, encode_reqifz, select_csv_profile)
 from specroad.exchange.import_work import prepare_import_work, advance_import_work
-from specroad.graph.relations import SourceRelations
-from specroad.graph.review_status import RelationReviewStatuses
 from specroad.mappings import CSVProfile
 from specroad.model.canonical import canonical_json_bytes
 from specroad.runtime.consumption import WorkConsumption
@@ -21,6 +19,7 @@ from specroad.work.checkpoints import CheckpointStore
 from specroad.work.root import WorkDirectory
 from specroad.validation import ModelGate
 from support.csv_codec import column
+from support.exchange_oracles import assert_review_status
 from support.folds import goal
 from support.import_execution import project, inputs
 from support.import_planning import candidate, identity, imported, mapping
@@ -113,10 +112,8 @@ def setup(tmp_path, fmt='ndjson', *, mutate=None, publish=True):
         actual = {i: context.artifact(i) for i in context.all_ids}
         assert set(context.subjects) == {retained['id']}
         assert canonical_json_bytes(actual[retained['id']]) == retained_bytes
-        statuses = RelationReviewStatuses(tuple(SourceRelations(canonical_json_bytes(a)) for a in actual.values()))
         expected = 'current' if actual[source['id']] == source else 'suspect'
-        assert statuses.for_relation(source['id'], source['relations'][0]['relation_id']).status == expected
-        assert statuses.approval_granted is False
+        assert_review_status(actual.values(), source['id'], source['relations'][0]['relation_id'], expected)
         return context.result()
     options['gates'] += [ModelGate(name, 'synthetic-retained-review-v1',
         lambda c: c.dependency_result({i: list(c.all_ids) for i in c.subjects}),

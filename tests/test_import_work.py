@@ -15,12 +15,12 @@ from specroad.exchange import apply_import_plan, prepare_import_plan, ImportIden
 from specroad.exchange import import_work
 from specroad.exchange.import_work import finalize_import_work
 from specroad.graph.relations import SourceRelations
-from specroad.graph.review_status import RelationReviewStatuses
 from specroad.model.canonical import canonical_json_bytes
 from specroad.model.paths import artifact_path
 from specroad.work.checkpoints import CheckpointStorageError
 from specroad.work.manifest import partition_work_manifest
 from specroad.work.resume import WorkResumeError
+from support.exchange_oracles import assert_import_plan_equal, assert_review_status
 from support.import_execution import ALLOW
 from support.import_work import FORMATS, setup, advance, registry, reopen
 from support.read_only import inventory, no_write_attempts
@@ -49,7 +49,7 @@ def test_every_candidate_plan_and_native_target_equal_direct_execution(recorded,
         assert inventory(Path(native.binding.source_root)) == before
     final = finalize_import_work(store, registry=registry())
     outcome = json.loads(final.outcome_bytes); report = outcome['result']['import_plan']
-    assert canonical_json_bytes(report) == expected.canonical_bytes
+    assert_import_plan_equal(report, expected.canonical_bytes)
     assert len(executed) == len(candidates) + 1 == len(initial.entries('tasks'))
     assert report['objects'][-1]['candidate_index'] == 3 and len(report['objects']) == 4
     assert report['input_parsed'] is False and report['candidate_origin'] == 'explicit_parsed_artifacts'
@@ -75,9 +75,7 @@ def test_every_candidate_plan_and_native_target_equal_direct_execution(recorded,
     statements = {a.data['statement'] for a in artifacts if a.data['artifact_type'] == 'goal'}
     assert {'Updated supplier goal.', 'Unicode é e\u0301 日本語', 'Third, "quoted" value', 'Final object'} <= statements
     source = native.artifacts[0] if native.artifacts[0]['relations'] else next(a for a in native.artifacts if a['relations'])
-    statuses = RelationReviewStatuses(artifacts)
-    assert statuses.for_relation(source['id'], source['relations'][0]['relation_id']).status == 'suspect'
-    assert statuses.approval_granted is False
+    assert_review_status([a.data for a in artifacts], source['id'], source['relations'][0]['relation_id'], 'suspect')
 
 
 @pytest.mark.parametrize('done', [0, 1, 4])
@@ -107,7 +105,7 @@ def test_original_sources_can_disappear_and_completed_mapping_is_never_repeated(
     monkeypatch.setattr(import_work, '_prepare_candidate_changes', observe)
     while store.read().entries('remaining'): advance(store, args)
     final = finalize_import_work(store, registry=registry())
-    assert canonical_json_bytes(json.loads(final.outcome_bytes)['result']['import_plan']) == expected
+    assert_import_plan_equal(json.loads(final.outcome_bytes)['result']['import_plan'], expected)
     assert seen == [2, 3] and len(first.executed_unit_ids) == 2
     assert inventory(Path(native.binding.source_root)) == project_before
 
@@ -138,7 +136,7 @@ def test_complete_invalid_plan_retains_all_findings_and_no_write_authority(recor
     while store.read().entries('remaining'): advance(store, args, size=size)
     final = finalize_import_work(store, registry=registry())
     result = json.loads(final.outcome_bytes)
-    assert canonical_json_bytes(result['result']['import_plan']) == expected.canonical_bytes
+    assert_import_plan_equal(result['result']['import_plan'], expected.canonical_bytes)
     assert final.command_exit_code == expected.data['exit_code'] and result['status'] == 'failed'
     assert result['summary']['complete'] is True and result['result']['import_completed'] is False
     with pytest.raises(ImportIdentityError):
@@ -261,5 +259,5 @@ def test_empty_candidate_inventory_still_requires_one_complete_target_unit(recor
     step, _ = advance(store, args)
     assert len(step.executed_unit_ids) == 1 and not step.manifest.entries('remaining')
     report = json.loads(finalize_import_work(store, registry=registry()).outcome_bytes)['result']['import_plan']
-    assert canonical_json_bytes(report) == prepare_import_plan(native, candidates, **args).canonical_bytes
+    assert_import_plan_equal(report, prepare_import_plan(native, candidates, **args).canonical_bytes)
     assert report['objects'] == report['operations'] == []

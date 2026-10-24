@@ -6,8 +6,8 @@ These fixtures do not authenticate a human or authorize a project import.
 """
 from hashlib import sha256
 
-from specroad.exchange import merge_reqif_source
-from specroad.mappings import CSVProfile, ExchangeMapping, ExternalIdentityRegistry
+from specroad.exchange import decode_ndjson, merge_reqif_source, select_csv_profile
+from specroad.mappings import CSVProfile, ExchangeMapping, ExternalIdentityRegistry, select_mapping
 from specroad.model.attachments import AttachmentDescriptor
 from specroad.model.canonical import canonical_json_bytes
 from specroad.validation import ModelDocument
@@ -143,3 +143,14 @@ def export_model(records, attachments, files, fmt, *, kind='requirement'):
     extra.append(ModelDocument('mappings/exchange.json', mapping.source_bytes))
     options.update(mapping_key=mapping.key, expected_mapping_sha256=mapping.sha256)
     return model(records, resource_files=[*files, *extra], attachments=attachments), mapping, profile, options
+
+
+def decode_native_records(exported, mapping, profile, fmt):
+    """Decode only actual transport bytes using the explicitly selected profile."""
+    if fmt == 'ndjson':
+        return [item['object'] for item in decode_ndjson(exported.output_bytes).objects]
+    assert fmt == 'csv'
+    codec = select_csv_profile([mapping, profile], key=profile.key, expected_sha256=profile.sha256)
+    selected = select_mapping([mapping], key=mapping.key, expected_sha256=mapping.sha256)
+    return [{**selected.artifact(row['external_type'], row['fields'])['artifact'],
+             'id': row['identity']['value']} for row in codec.decode(exported.output_bytes).records]

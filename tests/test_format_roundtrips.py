@@ -4,15 +4,14 @@ import json
 
 import pytest
 
-from specroad.exchange import (ExportError, ReqIFAttachment, decode_ndjson, decode_reqif_structure,
-                              decode_reqifz, prepare_export, select_csv_profile)
-from specroad.graph.relations import SourceRelations
-from specroad.graph.review_status import RelationReviewStatuses
+from specroad.exchange import (ExportError, ReqIFAttachment, decode_reqif_structure,
+                              decode_reqifz, prepare_export)
 from specroad.graph.scope_descriptors import ScopeDescriptor
 from specroad.mappings import select_mapping
-from specroad.model.canonical import canonical_json_bytes
 from specroad.validation import ModelDocument
-from support.format_roundtrips import (FORMATS, LANGUAGES, REQIF_FIELDS, corpus, export_model)
+from support.exchange_oracles import assert_attachment_transport, assert_records_equal, assert_review_status
+from support.format_roundtrips import (FORMATS, LANGUAGES, REQIF_FIELDS, corpus,
+                                      decode_native_records, export_model)
 from support.read_only import no_write_attempts
 from support.reqif_objects import LIMITS
 from support.targets import SCOPE, model
@@ -33,26 +32,18 @@ def test_native_intersection_preserves_full_corpus_and_current_review(fmt, langu
         original = native.source_files
         with no_write_attempts():
             exported = prepare_export(native, ScopeDescriptor(SCOPE), **options)
-            if fmt == 'ndjson':
-                recovered = [item['object'] for item in decode_ndjson(exported.output_bytes).objects]
-            else:
-                codec = select_csv_profile([mapping, profile], key=profile.key, expected_sha256=profile.sha256)
-                selected = select_mapping([mapping], key=mapping.key, expected_sha256=mapping.sha256)
-                recovered = [{**selected.artifact(row['external_type'], row['fields'])['artifact'],
-                              'id': row['identity']['value']} for row in codec.decode(exported.output_bytes).records]
+            recovered = decode_native_records(exported, mapping, profile, fmt)
             assert prepare_export(native, ScopeDescriptor(SCOPE), **options) == exported
         assert native.source_files == original
         ids = {v['id'] for v in records if fmt == 'ndjson' or v['artifact_type'] == kind}
         assert {v['id'] for v in recovered} == ids == set(exported.manifest['included_ids'])
         assert not any(row['resource_id'] in ids for row in exported.manifest['losses'])
+        assert_records_equal(recovered, [expected[i] for i in ids])
         for value in recovered:
-            assert value == expected[value['id']]
             assert value['id'] not in restored
             restored[value['id']] = value
         transported = dict(exported.attachment_files)
-        assert transported == {f.path: f.content for f in files}
-        assert exported.manifest['attachments'] == [{**a.data, 'included': True} for a in sorted(attachments, key=lambda a: a.path)]
-        assert exported.manifest['output_sha256'] == sha256(exported.output_bytes).hexdigest()
+        assert_attachment_transport(exported, transported, attachments, files)
         assert any(row['reason'] == 'native_resource_not_in_exchange_format' for row in exported.manifest['losses'])
     assert restored == expected
     # Rebuild only from decoded artifacts and actual transported attachment
@@ -61,10 +52,8 @@ def test_native_intersection_preserves_full_corpus_and_current_review(fmt, langu
                     resource_files=[ModelDocument(path, raw) for path, raw in transported.items()])
     before = model(records, attachments=attachments, resource_files=files)
     assert rebuilt.manifest(rebuilt.artifacts, SCOPE).sha256 == before.manifest(before.artifacts, SCOPE).sha256
-    statuses = RelationReviewStatuses(tuple(SourceRelations(canonical_json_bytes(v)) for v in restored.values()))
-    result = statuses.for_relation(records[0]['id'], records[0]['relations'][0]['relation_id'])
-    assert result.status == 'current' and result.selected_review_id == records[-1]['id']
-    assert statuses.approval_granted is False
+    assert_review_status(restored.values(), records[0]['id'], records[0]['relations'][0]['relation_id'],
+                         'current', selected_review_id=records[-1]['id'])
     assert restored[records[6]['id']]['selection'] == {'platform': 'linux'}
     assert ('parent' in restored[records[6]['id']]) is nullable
 
@@ -99,20 +88,18 @@ def test_reqif_intersection_keeps_values_relations_occurrences_and_attachment_by
     assert native.source_files == original
     expected = [v for v in records if v['artifact_type'] in REQIF_FIELDS]
     assert set(recovered) == {v['id'] for v in expected} == set(exported.manifest['included_ids'])
+    assert_records_equal([fields for _, fields in recovered.values()], [
+        {'artifact_type': value['artifact_type'],
+         **{f: value[f] for f in REQIF_FIELDS[value['artifact_type']]}} for value in expected])
     for value in expected:
-        external_id, fields = recovered[value['id']]
-        assert external_id == value['external_identities'][0]['external_id']
-        assert fields == {'artifact_type': value['artifact_type'],
-                          **{f: value[f] for f in REQIF_FIELDS[value['artifact_type']]}}
+        assert recovered[value['id']][0] == value['external_identities'][0]['external_id']
     assert [(h.identifier, h.object_id, h.owner_id, h.children) for h in decoded.hierarchies] == [
         ('section-use', 'record-3', 'record-2', ('first-block', 'second-block')),
         ('first-block', 'record-5', 'section-use', ()),
         ('second-block', 'record-4', 'section-use', ())]
     assert [(r.identifier, r.type_id, r.source, r.target) for r in decoded.relations] == [
         ('addresses-goal', 'addresses', 'record-0', 'record-1')]
-    assert transported == {f.path: f.content for f in files}
-    assert exported.manifest['attachments'] == [{**a.data, 'included': True} for a in sorted(attachments, key=lambda a: a.path)]
-    assert exported.manifest['output_sha256'] == sha256(exported.output_bytes).hexdigest()
+    assert_attachment_transport(exported, transported, attachments, files)
     # This declared ReqIF intersection has no native review/config/evidence
     # representation: the whole records must be explicit losses, not current
     # reviews reconstructed from source-only data or asserted by a manifest.

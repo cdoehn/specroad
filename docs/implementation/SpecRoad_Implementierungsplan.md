@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 614
-last_completed_plan_commit: 14.o.R
-next_plan_commit: 14.o.C
-last_completed_numbered_bundle: 453
+implementation_plan_commits_completed: 615
+last_completed_plan_commit: 14.o.C
+next_plan_commit: 15.a.W
+last_completed_numbered_bundle: 454
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -23127,7 +23127,7 @@ kein Volltest, kein serieller Test und kein CI-Start gehören zu diesem Bundle.
 
 #### 14.o.C – Make it Clean
 
-- [ ] **14.o.C** · Position **615/900** · Voraussetzung: `14.o.R`.
+- [x] **14.o.C** · Position **615/900** · Voraussetzung: `14.o.R`.
 **Exakte Commit-Message:** `14.o.C refactor(exchange): Format-Roundtrips und Importfortsetzung bereinigen`
 
 **Bereinigung:** Formatübergreifende Datenoracles nutzen statt Exportdarstellung zu testen.
@@ -23135,6 +23135,84 @@ kein Volltest, kein serieller Test und kein CI-Start gehören zu diesem Bundle.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungs- und Prüfnachweis 14.o.C, Bundle 454 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_142406_1024_c161e9.zip`, SHA-256
+`dd25a7ca5439fa9b3b4a34b594156106f522028aa707360edf22d46d20ac9f4a`,
+bestätigt den sauberen Commit `52bff3e458a096d0e41fcce442e49baeb54a644b`
+für **14.o.R**, Position **614/900**, Bundle **453**, mit Vorgänger
+`0796c9ca512e86bf595cfa55fa219dc6d97c56f9`. Alle **2.211** Snapshotdateien,
+Vierfachbindung, Manifest-/Rundaten, Ausführungslogs und read-only geprüfter
+Apply-Arbeitsbaum stimmen überein. Die gebundene Apply-Teilprüfung hat
+**6.703/6.703** Tests in Gruppe **1**, Sequenz **160**, mit vier Workern
+bestanden. Tatsächliche Outcomes, Quellhash und Identitäten wurden geprüft;
+die fünf bestätigten Planmarker sind entsprechend in Dev angeglichen.
+
+**Bereinigter C-Ausschnitt.** `tests/support/exchange_oracles.py` bündelt die
+vorhandenen fachlichen Vergleiche für vollständig dekodierte Datensätze,
+Anhangtransport, native Relationsreviews und vollständige kanonische
+Importpläne. CSV-/NDJSON-Rekonstruktion verwendet einen gemeinsamen Decoder
+mit ausdrücklich ausgewähltem Mapping und Profil. ReqIF-/ReqIFZ-Projektionen
+verwenden dasselbe Datensatzoracle für ihre deklarierte Schnittmenge; ihre
+konkreten externen Identitäten, geordneten Hierarchievorkommen, Relationen
+und Verluste bleiben gesondert geprüft. Die Oracles beziehen fehlende Felder
+nicht aus dem ursprünglichen Modell und vergleichen keine Exportdarstellung.
+
+Reviewzustände werden aus den tatsächlichen transportierten beziehungsweise
+publizierten nativen Datensätzen berechnet. Der ausgewählte aktuelle Review,
+`current`/`suspect`/`unreviewed`, unveränderte Reviewbytes und die negative
+Freigabe bleiben erhalten. Das gemeinsame Planoracle vergleicht weiterhin
+sämtliche kanonischen Planbytes einschließlich Befunden und Verlusten, auch
+nach realer Core-/PYZ-Fortsetzung. Die vier unabhängigen wörtlichen Fachwerte,
+tatsächlichen Zieldateibytes, Zielwurzeln, Auditoperationen, Fehlerverträge,
+Checkpointgenerationen und Wiederholungs-/Schreibgrenzen bleiben unverändert.
+
+Produktcode, Formatprofile, Spezifikation und maschinenlesbare
+Verifikationsverträge bleiben bytegleich zur Basis. Alle vorhandenen
+Testfunktionen, Parametrisierungen, Testidentitäten und dauerhaft vergebenen
+Nummern bleiben erhalten; kein neuer oder entfernter Test. Der gemeinsame
+Datensatzvergleich verwirft keine doppelt gelieferte Identität durch ein
+stilles Dictionary-Update. Dies ist eine Bereinigung der vorhandenen
+Verhaltensnachweise, keine neue Produktfunktion oder Spezifikationsklärung.
+**SPECROAD-DECISION-1** in § 2.4 wurde geprüft; eine neue normative
+Entscheidung ist für den bestätigten C-Auftrag nicht nötig.
+
+**Gezielte Entwicklungsprüfung.** Alle **99/99** vorhandenen W-/R-Fälle von
+14.o bestanden mit **vier parallelen Workern** unter Linux/Python 3.14.4.
+Dies umfasst die vollständigen vier direkt betroffenen Testmodule:
+
+- `tests/test_format_roundtrips.py`: **22** Fälle;
+- `tests/test_format_roundtrips_right.py`: **10** Fälle;
+- `tests/test_import_work.py`: **65** Fälle;
+- `tests/test_import_work_portable.py`: **2** Fälle.
+
+Die vollständige Collection-/Katalogprüfung ist gültig: **20.109** Fälle,
+**0** ausgeführte Testkörper und exakt dieselben Node-/Testidentitäten wie
+im bestätigten R-Zustand. Der Quellstand ist
+`5d25d7cd811e95b0aa7006ce67cf8cbffe58ccbe06564cb10219e1c36ffcbe3e`.
+SHA-256 der tatsächlichen Auswahlbeobachtung:
+`2a1c826bd1134b25aa687ec5754007068a8e339c250a80f3e8c5c6f391d016be`;
+SHA-256 der tatsächlichen Einzeloutcomes:
+`ba7c4821b1d8ba9970453a28803dddfb06d05dd1ae4c8ef8c895d878530a09ab`;
+SHA-256 des vollständigen Katalogbelegs:
+`30ac0d2604fa7b7b58d77b48b40dad89bfdc4705d32796b45cc437c70b34fab1`.
+
+Das ist eine gezielte Teilprüfung, kein Vollsuite-, Meilenstein- oder
+Release-Erfolgsnachweis. Die offenen Interoperabilitäts-, vollständigen
+Integrations- und Plattformnachweise bleiben offen. Insbesondere behauptet
+der letzte C-Planschritt allein keinen erfüllten Gesamtabschluss von M14.
+
+**Vorgesehene Übergabe.** Genau ein regulärer PLAN-Zustand **14.o.C**,
+Position **615/900**. Der Entrypoint stellt ausschließlich den gezielt
+geprüften C-Zustand her und verlangt die saubere gebundene Basis. Er prüft
+genau Gruppe **2**, Sequenz **161**, mit **6.703** Tests und vier Workern.
+Erst nach erfolgreicher gebundener Abnahme setzt er die fünf Fortschrittsmarker
+auf **615/900**, zuletzt **14.o.C**, nächstens **15.a.W**, Bundle **454** und
+die C-Checkbox und erzeugt die exakte PLAN-Commit-Message. Apply-Erfolg bleibt
+bis zum tatsächlichen Result offen. Keine weitere Phase, kein Volltest, kein
+serieller Test und kein CI-Start gehören zu diesem Bundle.
 
 **Meilenstein 14 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 

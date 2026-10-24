@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 
 from specroad.exchange import prepare_import_plan
-from specroad.model.canonical import canonical_json_bytes
 from support.command_parity import build_core, process_environment, run_python
+from support.exchange_oracles import assert_import_plan_equal
 from support.folds import goal
 from support.import_execution import project, inputs
 from support.import_planning import imported
@@ -111,6 +111,6 @@ def test_recorded_distribution_resumes_saved_import_in_new_processes(tmp_path, k
         assert len(step['executed']) == 1 and not set(step['executed']).intersection(executed)
         executed += step['executed']; assert step['generation'] == number+1
     final = invoke('finalize')
-    assert canonical_json_bytes(final['outcome']['result']['import_plan']) == expected.canonical_bytes
+    assert_import_plan_equal(final['outcome']['result']['import_plan'], expected.canonical_bytes)
     assert final['generation'] == 6 and final == invoke('finalize')
     assert invoke('advance')['executed'] == [] and inventory(root) == before
