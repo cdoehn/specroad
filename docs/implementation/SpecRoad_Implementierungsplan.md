@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 610
-last_completed_plan_commit: 14.n.W
-next_plan_commit: 14.n.R
-last_completed_numbered_bundle: 449
+implementation_plan_commits_completed: 611
+last_completed_plan_commit: 14.n.R
+next_plan_commit: 14.n.C
+last_completed_numbered_bundle: 450
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -22502,12 +22502,150 @@ vorgegriffenen Apply-Erfolg, keinen Voll- oder Serienlauf und keinen CI-Start.
 
 #### 14.n.R – Make it Right
 
-- [ ] **14.n.R** · Position **611/900** · Voraussetzung: `14.n.W`.
+- [x] **14.n.R** · Position **611/900** · Voraussetzung: `14.n.W`.
 **Exakte Commit-Message:** `14.n.R feat(exchange): Netzwerk-/Konverterfreiheit und Archivangriffe vervollständigen`
 
 **Vervollständigung:** Entity-Auflösung, Shellkonverter und bösartige Dateipfade vor Nutzung blockieren.
 
 **Verhaltensabnahme:** Angriffseingaben führen zu keinem externen Zugriff und zu keinem Teilwrite. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungs- und Prüfnachweis 14.n.R, Bundle 450 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_103043_1024_b493c0.zip`, SHA-256
+`6f22824289e3a4143383acb3d39d131844eb30a16209d729929cd1482d365a7d`,
+bestätigt den sauberen Commit `78b2c8adff43a05e0fb3ab58aa3a07444de99837`
+für **14.n.W**, Position **610/900**, Bundle **449**, mit Vorgänger
+`4b932be4e27b4af27a90265553147bf22e810c94`. Alle **2.201** Snapshotdateien,
+Vierfachbindung, Manifest-/Rundaten, Ausführungslogs und read-only geprüfter
+Apply-Arbeitsbaum stimmen überein. Der erfolgreiche Apply-Teiltest umfasste
+**6.604/6.604** Tests in Gruppe **0**, Sequenz **156**, mit vier Workern.
+Tatsächliche Outcomes, Selektionsbindung, Quellhash und permanente
+Testidentitäten sind geprüft. Die fünf bestätigten Fortschrittsmarker
+wurden in Dev an diesen tatsächlichen Stand angeglichen.
+
+**Vervollständigter Sicherheitskorpus.** Die vorhandenen lokalen Parser und
+festen deklarativen Grammatiken besitzen bereits die benötigten Sperren.
+Dieser R-Zwischenstand ergänzt **200 ausführbare Verhaltenstests**, keine
+neue Produkt-API oder normative Regel. Sämtlicher bisheriger Produktcode und
+alle vorhandenen Testdateien bleiben bytegleich. Der neue Korpus nutzt die
+vorhandene isolierte Core-/PYZ-Grenze und vollständige eigene Projektfixtures.
+
+- **72 XML-Angriffe:** öffentliche, Parameter-, rekursive und expandierende
+  DTDs, versteckte Schema-/XInclude-Verweise, kodierte Namespaces,
+  nachgestellte Processing Instructions und fremde Codecdeklarationen über
+  ReqIF-Objekte, ReqIF-Struktur, ausgewähltes ReqIFZ-XML und JUnit, je Core/PYZ.
+- **32 harte XML-Grenzen:** Byte-, Tiefen-, Element- und Textbudgets werden
+  mit den jeweiligen erlaubten Adapterlimits vor einer Nutzung eingehalten.
+- **40 ReqIF-Struktur-/ReqIFZ-Fälle:** Datei-/Netzwerk-/UNC-/Laufwerksverweise,
+  kodierte Traversierung, doppelte Dekodierung, Query-/Fragmentanteile sowie
+  aktive Inhalte und Eventattribute in originalen oder opaken XML-Teilen.
+- **28 Archivangriffe:** unbenutzte gefährliche Pfade, reservierte Metadaten,
+  Unicode-/Elternpfadkollisionen, Verzeichnis-/Executable-/FIFO-Modi und
+  NUL-Namen werden vor dem Lesen eines Mitglieds zurückgewiesen. Hinzu kommen
+  die aggregierte Bytegrenze, ein später CRC-Fehler und ein späteres bösartiges
+  ausgewähltes XML-Dokument. Es wird kein gültiger Präfix veröffentlicht.
+- **16 Konverterdeklarationen:** zusätzliche ausführbare Steuerfelder werden
+  an Mapping-, Typ-, Feld-, Wertetabellen-, CSV-Profil-/Spalten-/Codec- und
+  Registry-Eintragsgrenzen mit dem vorhandenen Fehlervertrag abgewiesen.
+- **12 positive Gegenfälle:** codeartig aussehende Mappingwerte und passive
+  Registrydaten, wörtliche XML-Lookalikes am exakten Bytebudget sowie lokale
+  dokumentrelative Archiveinträge mit kodiertem Dateinamen, passivem Zyklus
+  und unbenutzten XML-/ZIP-Bytes bleiben verwendbar und unverändert.
+
+Jede negative Probe läuft in einem frischen isolierten Prozess. Der
+bestehende Audithook verweigert und protokolliert Socket-/Resolver- und
+Prozess-/Shellzugriffe; im Byteparserabschnitt zusätzlich Dateiöffnungen,
+Verzeichnisauflistungen und Schreiboperationen. Ein eigener Codec-Lookup
+würde ebenfalls fehlschlagen. Erwartet werden der exakte maschinenlesbare
+Fehler, **null Zugriffsversuche** und das unveränderte Inventar des eigenen
+vollständigen nativen Projekts einschließlich Ressourcen, Anhängen,
+Lockverzeichnis und Canarydatei. Die Metadatenfälle sperren zusätzlich
+`ZipFile.read`, sodass ein erst nach Mitgliedsnutzung erkannter Fehler
+nicht genügt. Sicherheitsfehler behalten Code **7**, ungültige Deklarationen,
+Codecbezeichnungen und CRC-Containerfehler ihren jeweiligen Code **3**.
+
+Diese Umsetzung folgt **SR-REQ-0324/SR-REQ-0532**, **SR-VER-0024** und den
+bestehenden Regeln zu rein lokalen Datenadaptern, geschlossenen Grammatiken
+und sicheren Archiven. **SPECROAD-DECISION-1** ist in § 2.4 ausdrücklich
+vorhanden und wurde geprüft; eine eigene normative Klärung ist nicht nötig.
+Die Spezifikation **0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Passive Nutzdaten werden nicht als ausführbare
+Steuerfelder umgedeutet; Freigaben und Verlustgrenzen bleiben unverändert.
+
+**Gezielte parallele Abnahme.** Der endgültige R-Zwischenstand besteht
+**2.007/2.007** Verhaltenstests mit **vier Workern**, Prozessabschluss **0**,
+ausschließlich `passed`-Outcomes und `full_suite_passed=null`. Enthalten
+sind alle **200** neuen Fälle, alle **38 W-Fälle** sowie betroffene Core-,
+Parser-, Mapping- und native Importregressionen.
+
+Der erste Entwicklerlauf war fehlgeschlagen: Die neuen Fixtures verwendeten
+für JUnit zu große ReqIF-Limits und enthielten einen Escape-Fehler im
+synthetischen Kindprozess. Zusätzlich verhinderte eine erschöpfte temporäre
+Dateisystemquota weitere Fixture-Builds, auch für vier vorhandene W-Fälle.
+Die beiden Fixturefehler sind korrigiert; der abschließende Lauf verwendet
+einen ignorierten lokalen Build-Tempbereich. Nur die eigenen wegwerfbaren
+Fixtures des beendeten Fehlversuchs wurden entfernt; dessen Log und
+maschinenlesbare Outcomes bleiben erhalten. Bestehende Produkterwartungen
+wurden nicht geändert, fehlerhafte Versuche werden nicht als Erfolg gezählt.
+Lokale Tempkonfiguration und Ausführungskennungen sind kein Bundle-Payload.
+
+Geprüfte Testdateien:
+
+- `tests/test_core.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_exchange_mappings.py`
+- `tests/test_exchange_mappings_right.py`
+- `tests/test_import_execution.py`
+- `tests/test_import_execution_right.py`
+- `tests/test_import_security.py`
+- `tests/test_import_security_right.py`
+- `tests/test_junit_xml.py`
+- `tests/test_junit_xml_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_security.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **20.010** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Die bisherigen **19.810**
+Testnummern bleiben unverändert; **200** neue Identitäten sind sortiert an
+Position **19.810–20.009** angefügt. Keine Nummer wird wiederverwendet.
+`SR-FIX-IMPORT-SECURITY-RIGHT-v1` bindet den Korpus. `SR-TC-0532` behält
+seine 38 W-Identitäten und ergänzt alle 200 R-Fälle; `SR-TC-0324` behält
+seine 229 Identitäten und ergänzt **112** XML-Angriffs-, Grenz- und
+Positivfälle. Beide Nachweise bleiben ausdrücklich `partial`.
+
+Die Grenze ist weiterhin eine CPython-API-Prüfung, keine behauptete
+Kernel-Netzwerknamespace, vollständige Referenz-Sandbox oder alle Plattformen
+umfassende Prüfung. Der endliche Angriffskorpus beweist keine erschöpfende
+Sicherheit für beliebige Eingaben und Hostfehler. Vollständige Import-CLI,
+Format-Roundtrips, Fremdtool-Interop, externe Testausführung, Releases und
+menschliche Freigaben werden nicht als erledigt behauptet. Die strukturelle
+Bereinigung bleibt **14.n.C** offen.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `ee4334228151b1111da820a1e312c85e022b1714153a20e7feb7497526d11d21`.
+- Selektionsdatei-SHA-256: `59a893c92dfd9767137411e6a7d1a9d0219cded28179aa31be7e567fa23adc10`.
+- Beobachtungsdatei-SHA-256: `448f8fbeab2335fd6e574191956d6203f4301e33fb89982ef51675c2146da3cf`.
+- Katalog-SHA-256: `6a84434f5de928c26d522d0424ce2e4b352fb824c2e198ea8fe3a6d7d4a29be3`.
+
+**Offene Apply-Abnahme.** Übergeben wird ausschließlich der gezielt geprüfte
+R-Zwischenstand. Der Entrypoint verlangt die saubere gebundene Basis und
+prüft ausschließlich Gruppe **1**, Sequenz **157**, mit **6.670** Tests und
+vier Workern. Erst nach deren erfolgreicher gebundener Abnahme setzt er die
+fünf Fortschrittsmarker auf **611/900**, zuletzt **14.n.R**, nächstens
+**14.n.C**, Bundle **450** und die R-Checkbox und erzeugt die exakte
+PLAN-Commit-Message. C wird nicht vorab installiert. Apply-Erfolg bleibt
+bis zum tatsächlichen Result offen; kein Volltest, serieller Test oder CI-Start.
 
 #### 14.n.C – Make it Clean
 
