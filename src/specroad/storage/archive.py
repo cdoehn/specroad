@@ -14,6 +14,7 @@ from zipfile import BadZipFile, LargeZipFile, ZipFile, ZipInfo, ZIP_STORED
 
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
+from ..model.paths import project_path
 from ..storage.json_syntax import parse_json_object
 
 
@@ -64,6 +65,27 @@ def _paths(names):
         parts = name.split('/')
         if any('/'.join(parts[:end]) in names for end in range(1, len(parts))):
             raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
+
+
+def validate_portable_archive_paths(names):
+    """Check all file/directory targets, including unused members, pre-read."""
+    _paths(names)
+    if len(names) != len(set(names)):
+        raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
+    prefixes, files = {}, {name.casefold() for name in names}
+    for name in names:
+        try:
+            project_path(name)
+        except ModelError as error:
+            raise ArchiveError('unsafe_archive_path', exit_code=7) from error
+        parts = name.split('/')
+        for end in range(1, len(parts) + 1):
+            prefix = '/'.join(parts[:end])
+            key = prefix.casefold()
+            if ((key in prefixes and prefixes[key] != prefix)
+                    or (end < len(parts) and key in files)):
+                raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
+            prefixes[key] = prefix
 
 
 def _inventory(payloads):

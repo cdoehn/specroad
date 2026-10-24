@@ -11,36 +11,14 @@ import re
 from types import MappingProxyType
 
 from ..model.canonical import canonical_json_bytes
-from ..model.errors import ModelError
-from ..model.paths import project_path
-from ..storage.archive import ArchiveError, _paths, decode_zip, encode_zip
+from ..storage.archive import (ArchiveError, decode_zip, encode_zip,
+                               validate_portable_archive_paths as _portable_paths)
 from ._reqif_attachments import relative_reference
 from ._reqif_loss_inventory import _nodes
 from ._reqif_values import _SEP
 from ._reqif_xhtml_profile import _tag
 from .reqif import ReqIFError, ReqIFLimits, decode_reqif_structure
 from .reqif_loss import _URI_ATTRIBUTES
-
-
-def _portable_paths(names):
-    """Check all file/directory targets, including unused members, pre-read."""
-    _paths(names)
-    if len(names) != len(set(names)):
-        raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
-    prefixes, files = {}, {name.casefold() for name in names}
-    for name in names:
-        try:
-            project_path(name)
-        except ModelError as error:
-            raise ArchiveError('unsafe_archive_path', exit_code=7) from error
-        parts = name.split('/')
-        for end in range(1, len(parts) + 1):
-            prefix = '/'.join(parts[:end])
-            key = prefix.casefold()
-            if ((key in prefixes and prefixes[key] != prefix)
-                    or (end < len(parts) and key in files)):
-                raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
-            prefixes[key] = prefix
 
 
 def _options(document_paths, limits, maximum):

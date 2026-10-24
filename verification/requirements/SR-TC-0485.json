@@ -4,19 +4,42 @@
   "requirement_id": "SR-REQ-0485",
   "specification_sha256": "32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84",
   "primary_verification_id": "SR-VER-0033",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PRODUCT-BUNDLE-v1"
+  ],
+  "preconditions": [
+    "Explicit closed E.1.1 metadata, actual native scope/hash observations and actual byte payloads; no implicit source selection or live-project completeness claim."
+  ],
+  "steps": [
+    "Encode and independently inspect actual canonical ZIP members and exact nonrecursive manifest inventory.",
+    "Read the exact bytes with optional external SHA-256; check scope/type/version/identity, payload and exclusion bindings and reject unsafe paths before payload access.",
+    "Check byte preservation, immutable observations, no filesystem effects, explicit lack of project/write authority, and isolated Core/PYZ execution."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Projektbundles MÜSSEN alle Parameter des kanonischen ZIP-Profils aus Kapitel 10.16 bytegenau anwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "15.a.W exact container/manifest/payload byte contract only. Compare independent ZIP bytes and known native scope/hash values; preserve all payload bytes and assert no semantic-completeness/write authority."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV002",
+    "SRV003",
+    "SRV060",
+    "SRV083"
+  ],
+  "expected_exit_codes": [
+    0,
+    3,
+    5,
+    7
+  ],
+  "json_pointers": [
+    "/bundle_format_version",
+    "/scope_descriptor",
+    "/entries",
+    "/excluded_contents"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +51,28 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_product_bundle.py::test_bundle_codec_runs_without_external_dependencies_in_portable_distributions[core]",
+    "tests/test_product_bundle.py::test_bundle_codec_runs_without_external_dependencies_in_portable_distributions[pyz]",
+    "tests/test_product_bundle.py::test_exact_manifest_roundtrip_binds_native_scopes_and_actual_payloads[document]",
+    "tests/test_product_bundle.py::test_exact_manifest_roundtrip_binds_native_scopes_and_actual_payloads[project]",
+    "tests/test_product_bundle.py::test_exact_manifest_roundtrip_binds_native_scopes_and_actual_payloads[release]",
+    "tests/test_product_bundle.py::test_inventory_is_an_exact_bijection_to_actual_bytes[extra]",
+    "tests/test_product_bundle.py::test_inventory_is_an_exact_bijection_to_actual_bytes[hash]",
+    "tests/test_product_bundle.py::test_inventory_is_an_exact_bijection_to_actual_bytes[media_type]",
+    "tests/test_product_bundle.py::test_inventory_is_an_exact_bijection_to_actual_bytes[missing]",
+    "tests/test_product_bundle.py::test_inventory_is_an_exact_bijection_to_actual_bytes[order]",
+    "tests/test_product_bundle.py::test_inventory_is_an_exact_bijection_to_actual_bytes[self]",
+    "tests/test_product_bundle.py::test_inventory_is_an_exact_bijection_to_actual_bytes[size]",
+    "tests/test_product_bundle.py::test_optional_external_hash_distinguishes_self_consistency_from_prior_identity",
+    "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files0]",
+    "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files1]",
+    "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files2]",
+    "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files3]",
+    "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files4]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "15.a.R independent versioned adversarial ZIP vectors and additional boundary/error robustness remain open, followed by 15.a.C structural cleanup.",
+    "Full project closure/root verification, operational receipt validity/transfer, CLI create/verify/extract and whole-project completeness remain in subsequent M15 steps; a pure container is not a project verification result."
   ]
 }

@@ -1,4 +1,686 @@
 {
+  "definitions": {
+    "SR-FIX-ARTIFACT-COMMON-v1": {
+      "kind": "common-field envelope only, not a complete per-type or approved artifact",
+      "provider": "tests/support/artifacts.py:common_artifact"
+    },
+    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1": {
+      "kind": "Owned synthetic native project with explicit parsed artifact candidates, supplied mapping and input bytes, existing bound attachment, local and incoming identities, a complete TargetModel and trusted test-host authority/gates. Real journal, receipt and idempotent replay observations; no source parser, human approval, new-attachment byte publication or loss acceptance is fabricated. The initialized operational lock directory is explicit; a trusted fixture gate validates the one supplied mapping resource, and a negative case verifies mandatory refusal without that gate. R cases inject actual replacement interruptions before and after each of two artifact replacements, observe native read quarantine and explicitly authorize recovery with a separate synthetic RecoveryAuthority. They retain journal/receipt evidence through late failures; no real human consent is asserted.",
+      "provider": "tests/support/import_execution.py:project,inputs,candidates,resource_gate;tests/test_import_execution.py:assert_native_files;tests/test_import_execution_right.py:execute,failed"
+    },
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1": {
+      "kind": "Synthetic saved import observations with explicit current source/candidate/mapping inputs and whole supplied TargetModel. Changed raw/semantic bases, resources, reservations, current gates, malformed or forged reports, retained invalid results and detached read-only inventories. No external format parser, human approval or live transaction evidence.",
+      "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model;tests/test_import_planning_right.py:arguments,copied"
+    },
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1": {
+      "kind": "Explicit synthetic parsed artifact candidates, byte-bound mapping/profile/input resources and complete supplied native projects. Known history, fresh IDs/envelopes, conflicts, unaccepted losses, existing attachments and ordinary target gates. No real format parsing, writer, completed import or human approval.",
+      "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model"
+    },
+    "SR-FIX-AUTOMATIC-RECOVERY-v1": {
+      "kind": "Owned native Linux project with policy bound before plan/publication preparation; real building/prepared/partial/complete/committed transactions, independent expected bytes, native locks and durable receipts. Companion helpers capture an old publication observation, load current actual model bytes and launch separate interpreters. Real abrupt writers and selected archival interruptions preserve evidence. Host authorization is test-only; no public CLI or full crash-matrix claim.",
+      "provider": "tests/support/automatic_recovery.py:pending"
+    },
+    "SR-FIX-BASELINE-COMPARISON-v1": {
+      "kind": "Actual archived whole-project snapshots with valid stored domain fields, canonical Baseline IDs or explicit record bytes, binary and JSON resources, successive native Baselines with registry/archive history, independent materialization, missing/tampered bytes and isolated Core/PYZ comparison. Shared field-diff oracle; unsupported opaque resource deltas fail explicitly.",
+      "provider": "tests/test_baseline_comparison.py:stored_comparison"
+    },
+    "SR-FIX-BASELINE-CREATION-v1": {
+      "kind": "Owned complete temporary projects with small synthetic and actual bundled IANA registry bytes, actual profile composition, native target validation, writer lock, journal, no-replace object publication, durable receipts, discard proof and isolated Core/PYZ execution. Explicit host IDs/audit/authority; no CLI, general historical Baseline verifier or release readiness claim.",
+      "provider": "tests/test_baseline_creation.py:project"
+    },
+    "SR-FIX-BASELINE-MANIFEST-v1": {
+      "kind": "Owned complete synthetic scope/dependency observations, real canonical artifact/profile/rule/mapping bytes and exact binary attachments, recomposed profiles and real external object-store/PYZ execution. No live-project completeness, readiness or normative publication claim.",
+      "provider": "tests/test_baseline_manifest.py:baseline_inputs"
+    },
+    "SR-FIX-BASELINE-MATERIALIZATION-v1": {
+      "kind": "Actual archived Baseline records and object bytes; fresh read-only integrity views, new private isolated native output roots, exact semantic/binary preservation, missing-source and existing-target rejection, interrupted storage and isolated Core/PYZ execution. Explicit operational locale/output values; no current-tree or Git fallback, full validation or release authority. The Right cases inject late source loss/corruption, directory removal/replacement, foreign initial entries, concurrent empty directories, byte-identical inode replacement and durability failures. Independent restoration also preserves historical Baselines, their real archive objects and the original language-registry bytes.",
+      "provider": "tests/test_baseline_materialization.py:restore"
+    },
+    "SR-FIX-BASELINE-VERIFICATION-v1": {
+      "kind": "Actual content-addressed archived JSON/binary objects, full project manifests and native Baseline publication; archive-only/moved sources, tampered object/configuration/profile/root data and isolated Core/PYZ. Integrity evidence only, no full validation, original-project completeness or release authority. The Right cases also bind actual owned object bytes to common-pipeline subjects and diagnostics, recheck late native changes and include older archived Baselines; unrelated lifecycle authority stays unavailable.",
+      "provider": "tests/test_baseline_verification.py:stored_snapshot"
+    },
+    "SR-FIX-BASELINE-WORK-v1": {
+      "kind": "Actual supplied project bytes, bounded native input capture, direct/split baseline parity, existing durable Work checkpoint generations and native single publication/replay. Real older native Baseline with checked lifecycle/archived-byte providers, hash retention, stale/missing Work inputs, denied authority and five actual native process-loss boundaries with unchanged checkpoints, Recovery admission and original receipt replay.",
+      "provider": "tests/test_baseline_work.py:large_project"
+    },
+    "SR-FIX-BUILTIN-LEGACY-v1": {
+      "kind": "Original schema 0.1.0 legacy identity/title/revision envelopes including decomposed Unicode, CRLF field content, absent current-schema defaults and passive legacy relations. Stable type/ID fallback, path collision and invalid-envelope refusals, immutable read-only observations and isolated Core/PYZ execution; no legacy semantic validation or migration.",
+      "provider": "tests/test_builtin_document_views.py:legacy_documents"
+    },
+    "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1": {
+      "kind": "Native conflicts_with/duplicates edges to present or omitted targets with exact partial boundary declarations. Actual noncanonical and duplicate symmetric storage, valid parallel directed edges, tampered boundary value objects, caller mutation during projection and original-byte preservation. Shared R fixtures also observe unavailable calculations, no primary invention, no file/process/network effects and isolated Core/PYZ parity.",
+      "provider": "tests/test_builtin_document_views_right.py:weak_partial"
+    },
+    "SR-FIX-BUILTIN-PARTIAL-v1": {
+      "kind": "Actual supplied requirement/release records, explicit partial scope and exact weak omitted-target boundary declarations. Deterministic type/identity ordering, strong-target and source binding refusals, no synthetic primary, preserved original bytes and no full-project or origin-proof claim.",
+      "provider": "tests/test_builtin_document_views.py:partial_project"
+    },
+    "SR-FIX-BUILTIN-TRACEABILITY-v1": {
+      "kind": "Owned current-schema requirement, need, goal, task, verification, evidence, milestone and release bytes with actual relation identities and original evidence subject fields. Cyclic and missing traces, exact source/record hashes and relation-array pointers, absent calculation providers, read-only rendering metadata and isolated Core/PYZ contracts. Stored success values never become computed verification or release-readiness results.",
+      "provider": "tests/test_builtin_document_views.py:trace_project"
+    },
+    "SR-FIX-CATALOG-DATA-v1": {
+      "kind": "synthetic developer verification data",
+      "provider": "tests/test_verification.py:fixture_files"
+    },
+    "SR-FIX-CHANGE-AUTHORING-v1": {
+      "kind": "Explicit single-user actor/request declarations and test-only storage; no real authentication, durable receipts or CLI publication proof.",
+      "provider": "tests/test_change_authoring.py:case"
+    },
+    "SR-FIX-CHANGE-EXECUTION-v1": {
+      "kind": "Owned exact-byte supplied models and explicit test-only publisher, optionally real tempdir files; not production authorization, locking, durability or recovery.",
+      "provider": "tests/support/execution.py:Storage"
+    },
+    "SR-FIX-CHANGE-LIFECYCLE-v1": {
+      "kind": "owned synthetic standard-artifact lifecycle candidates; no actual approval, authentication, storage or historic inventory",
+      "provider": "tests/test_change_lifecycle.py:approved"
+    },
+    "SR-FIX-CHANGE-METADATA-v1": {
+      "kind": "explicit owned regular-change inputs; bound actor/time, no live write or authenticating side effect",
+      "provider": "tests/support/folds.py:goal"
+    },
+    "SR-FIX-CHANGE-PLAN-v1": {
+      "kind": "Synthetic versioned plan and typed operations; no live-state verification, authenticated review or write authority.",
+      "provider": "tests/support/change_plans.py:document"
+    },
+    "SR-FIX-CHANGE-TARGET-v1": {
+      "kind": "owned exact-byte project inventory, explicit effective profile and synthetic trusted gates; no live inventory, authorization or prepared transaction proof",
+      "provider": "tests/support/targets.py:model"
+    },
+    "SR-FIX-CHANGED-SOURCES-v1": {
+      "kind": "Owned raw Git-object base and current project snapshots with actual bound profile JSON. Native model dependency closure, Core lint and productive SRX profile rules provide independent exact-selection and diagnostic oracles; explicit trusted host gates cover declared dependencies. No whole-project, literal/full-lint, freshness or approval claim.",
+      "provider": "tests/test_query_changed_only.py:pair"
+    },
+    "SR-FIX-CODE-LINE-SELECTION-v1": {
+      "kind": "Owned validated line_range records and native code source snapshots; explicit LF/CRLF/CR and Unicode vectors, standard-library encodings, exact inclusive positions, changed outside bytes, historical Git objects, strict decoding/range failures and detached immutable reports. Fresh Core/PYZ processes exercise the public selection API with standard-library-only imports and process/network/write traps. No relocation search, H3 state, current-source revalidation, full-suite or release claim.",
+      "provider": "tests/test_code_line_selection.py:line_reference,bound_file"
+    },
+    "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1": {
+      "kind": "Owned descriptor-bound file mutations and symlink/special-file boundaries, newly appearing nested roots, injected post-read resource failures, actual SHA-1/SHA-256 local Git objects and corrupted/missing blobs with inert promisor helper traps. Fresh Core/PYZ audit hooks prohibit processes, network and writes for all five kinds. Existing W fixtures remain active; no language resolver, H2/H3 result or full-suite/release claim. Directory and FIFO cases are real filesystem entries; socket type uses explicitly labelled stat metadata injection before leaf open, without claiming a real bound socket.",
+      "provider": "tests/test_code_reference_sources_right.py:after_read,Sha256GitFixture"
+    },
+    "SR-FIX-CODE-REFERENCE-SOURCES-v1": {
+      "kind": "Owned code_ref records for all five kinds, raw binary/newline bytes in native ProjectBoundary and data-built local GitFixture commits. Native GitObjectSource reads historical blobs without checkout; typed implemented_by graph edges resolve to the same code_ref ID. Executable source and hints remain inert; missing, external, linked and nested sources yield no binding. Fresh standard-library-only Core/PYZ processes exercise the public reader. No H2 selection, H3 status, full-suite or release claim.",
+      "provider": "tests/test_code_reference_sources.py:reference,repository"
+    },
+    "SR-FIX-CODE-REFERENCE-STATE-RIGHT-v1": {
+      "kind": "Owned H.3 matrix on native working files and SHA-1/SHA-256 Git sources. Original hashes are crossed with stored/unique/absent/ambiguous line/text/byte selections. Actual commit/tree/blob removal, corrupt loose objects, unsafe parents and immutable source identities are distinguished from injected batch protocol/process failures. Fresh Core/PYZ runtimes permit only the guarded local Git reads; an owned promisor/helper trap proves no fallback/fetch. No new source capability, consumer, full-suite or release claim.",
+      "provider": "tests/test_code_reference_state_right.py:native_source,selection_record,path_objects"
+    },
+    "SR-FIX-CODE-REFERENCE-STATE-v1": {
+      "kind": "Owned native file and historical Git sources with explicit H.3 state expectations. Stored-position precedence despite outside changes, exact relocation, distinct absent/ambiguous selections, guarded missing paths and original root/store identities. Real descriptor mutations preserve the resulting state; fresh standard-library-only Core/PYZ audit guards forbid writes/processes/network. Initial W scope only: unavailable Git-object classification and full edge matrix remain for R; no consumer, full-suite or release claim.",
+      "provider": "tests/test_code_reference_state.py:assessed_file"
+    },
+    "SR-FIX-CODE-RELOCATION-v1": {
+      "kind": "Owned real file and historical Git sources with explicit H.2 whole-line or versioned raw-byte anchor windows; exact stored, unique, missing and overlapping/ambiguous positions; preserved reference bytes and fresh Core/PYZ audit guards.",
+      "provider": "tests/test_code_relocation.py:located_file"
+    },
+    "SR-FIX-COMPARISON-SOURCE-v1": {
+      "kind": "Owned configuration and domain-artifact bytes in temporary local projects or raw Git object fixtures; independent direct semantic-comparison, exact-byte, source-identity, no-mutation and explicit unsupported-resource oracles. No complete model or approval claim.",
+      "provider": "tests/test_query_comparison_sources.py:source_files"
+    },
+    "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1": {
+      "kind": "Actual temporary composition project with original noncanonical requirement, test or code_ref bytes and explicit stored draft/approved states. Native target assessment proves preservation; unavailable lifecycle/currentness/resource services block real publication. No approval or specialist success stub. Additional native writes, saved-plan refusals, operation binding and injected publication interruptions preserve exact content.",
+      "provider": "tests/test_document_composition_preservation_right.py:reference_project"
+    },
+    "SR-FIX-COMPOSITION-PRESERVATION-v1": {
+      "kind": "Real temporary project with primary/supporting documents, nested sections and two reference blocks sharing one revision-7 requirement. Canonical and deliberately noncanonical original artifact bytes, actual native section moves, inventories, publication receipts, replay and reference/composition readback. Stale reference bytes and hostile host gates never authorize publication.",
+      "provider": "tests/test_document_composition_preservation.py:composition_project"
+    },
+    "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1": {
+      "kind": "Actual native project, inherited configuration choices and conditional requirements; saved-plan publication, archive-only historic integrity, missing/rebound chain bytes, isolated materialization/comparison and Core/PYZ verification.",
+      "provider": "tests/test_configured_baseline_right.py:variant_project"
+    },
+    "SR-FIX-CONFIGURED-BASELINE-v1": {
+      "kind": "Actual configuration parent-chain records, deterministic applicability/closure, real canonical profile/rule/mapping/selection objects, exact shared scope/model hashes, private archive persistence without original files and isolated Core/PYZ preparation. Inert prepared data only; native configured publication and historical full-snapshot verification remain separate integrations.",
+      "provider": "tests/test_configured_baseline.py:variant_inputs"
+    },
+    "SR-FIX-CONTAINER-LANGUAGES-v1": {
+      "kind": "owned source-bound container models and explicit resolved selection observations; no renderer, detector, complete project inventory or approval",
+      "provider": "tests/support/containers.py:presentation"
+    },
+    "SR-FIX-CONTENT-BLOCKS-RIGHT-v1": {
+      "kind": "Owned content-block records with missing relation fields, invalid relation metadata, mixed payload branches and exact byte-bound errors; no target resolution or rendering.",
+      "provider": "tests/test_content_blocks_right.py:referenced_block"
+    },
+    "SR-FIX-CONTENT-BLOCKS-v1": {
+      "kind": "All seven stored ContentBlock kinds and declared alternative payload branches, original record bytes, standalone native payload schemas, local reference fields, owned source/record/payload/schema bindings and isolated Core/PYZ parity. No target resolution or payload execution.",
+      "provider": "tests/support/records.py:block_value"
+    },
+    "SR-FIX-CORE-LINT-v1": {
+      "kind": "Owned approved requirement, origin and verification sources with deliberate omissions; actual public lint and shipped profile minima, project write traps; no human approval or evidence authenticity.",
+      "provider": "tests/support/core_lint.py:requirement_graph"
+    },
+    "SR-FIX-CSV-CODEC-RIGHT-v1": {
+      "kind": "Synthetic exact CSV profiles, actual bound mappings, canonical inverse value tables and literal byte inputs. R cases retain BOM/data distinctions, logical diagnostics, absence/null/type boundaries, unique-or-rejected inverses, owned values, failed selection and unchanged project bytes/modes. Large complete inputs, forbidden hooks/I/O, real strict JSON nesting and isolated Core/PYZ are exercised. No external source, human approval, whole-model export or completed import is simulated.",
+      "provider": "tests/support/csv_codec.py:column,resources,selected,record;tests/test_csv_codec_right.py:inverse_codec"
+    },
+    "SR-FIX-CSV-CODEC-v1": {
+      "kind": "Explicit synthetic csv-profile-v1 declarations, bound CSV exchange mappings, passive external/native identities, typed records and literal RFC-4180 byte samples. Exercises exact selection, semantic roundtrips, rejected loss and isolated Core/PYZ behavior. No external source, native import plan, writer, human approval or full format-integration result is simulated.",
+      "provider": "tests/support/csv_codec.py:column,resources,selected,record"
+    },
+    "SR-FIX-CSV-EXPORT-COMPATIBILITY-v1": {
+      "kind": "Existing native View source models and explicit bound CSV profiles with synthetic C0/DEL string values. Literal machine-byte oracles for legacy scalar/typed View data rows, recovered native values and generated metadata are checked alongside the distinct strict CSV-profile rejection contract, before and after shared serialization. No presentation, documentation, external approval or full format-integration claim.",
+      "provider": "tests/test_document_exports.py:scalar_project;tests/test_document_view_variants_right.py:field_column;tests/support/csv_codec.py:column,record,selected"
+    },
+    "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1": {
+      "kind": "Owned complete native model/product/code sources and inert versioned currentness Work inputs. All code/evidence states, superseded and concurrent Evidence, exact Evaluation/time/scope/configuration, native Waiver trust and tamper rejection. Scoped model views retain full input inventories; whole-inventory adapters refuse partial scopes. Real CheckpointStore snapshots are rehydrated into a new native location and consumed in fresh Core/stdlib-only PYZ processes without the original source locator. Incremental QueryWork preserves all inputs beyond filtered/empty pages. No Subject writes, release readiness, executable checkpoint, durable query-cursor or full-suite claim.",
+      "provider": "tests/test_currentness_read_integration_right.py:resumed"
+    },
+    "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1": {
+      "kind": "Owned native whole-project snapshots, explicit VerificationEvaluation and product input bytes/time, complete H.3 code observations and relation review histories. Current/stale/missing/relocated code crosses current/failed/stale/missing/unselected evidence. Validation, coverage, built-in views, direct impact, trace and semantic/local diff retain one immutable observation without subject writes or invented live, release or approval claims.",
+      "provider": "tests/test_currentness_read_integration.py:case"
+    },
+    "SR-FIX-DIAGNOSTICS-v1": {
+      "kind": "Owned diagnostic values and bound loaded-model observations; no provenance authentication, automatic lint execution or full project approval.",
+      "provider": "tests/test_diagnostics.py:finding"
+    },
+    "SR-FIX-DISCARD-RESTART-v1": {
+      "kind": "Owned native Linux writer and recovery subprocesses for building/prepared, incomplete preparation, and repeated discard completion. Independent byte/root oracles, actual partial native staging writes and abrupt process exits, original audit/receipt preservation, native normative-write observation, fresh authority and dead-owner takeover. Persistent v1 selection and v2 exact staging bytes are versioned; no original Change Plan or preflight crosses processes.",
+      "provider": "tests/support/discard_restart.py:child"
+    },
+    "SR-FIX-DOCUMENT-AUTHORING-v1": {
+      "kind": "Real owned temporary project with a primary/supporting document, nested sections and exact contains identities. Native saved plans publish through actual locks, authority, journal, receipts and readback; file inventories preserve unrelated bytes. Prepared explicit IDs, actor, time and original relation hash are retained. Isolated Core/PYZ publication uses the same API. R adds invalid/unrelated document states, exact stale/hash/identity refusals, permissive hostile host gates, include cycles caused by movement, all-file inventories, structured failure audits and actual interrupted multi-owner publication with retained recovery evidence. C retains all W/R fixtures and exact behavior expectations unchanged after private operation/gate extraction.",
+      "provider": "tests/test_document_authoring.py:document_project"
+    },
+    "SR-FIX-DOCUMENT-INCLUDES-v1": {
+      "kind": "Owned document/section/includes with repeated content and section destinations, actual contains/reference relation identities, source-bound occurrences, deterministic cycle witnesses, deep chains and isolated Core/PYZ execution. R adds document meshes with mixed/global cycles, legal cross-section reuse, repeated/diamond/wide paths, original source/diagnostic rebinding and explicit read/process/network traps. C reuses all W/R fixtures and exact expectations unchanged after private graph/provenance extraction.",
+      "provider": "tests/test_document_includes.py:include_project"
+    },
+    "SR-FIX-DOCUMENT-MUTATIONS-v1": {
+      "kind": "Real owned document project with nested sections and an owned block; prepared native operations, exact source guards and fresh relation identities. Actual publication, byte inventories, receipts and replay for seven block kinds, update, retirement, cascade and child reparenting. Host denial and invalid strategies preserve all files. R adds internally/externally shared block ownership, independent stale guards, forged saved operations, changed real source/profile bytes, conflicting replay and injected before/after-rename publication failure with actual journal/readback inventories. C retains exact W/R fixtures and behavior expectations while common native-operation construction is shared.",
+      "provider": "tests/test_document_mutations.py:mutation_project"
+    },
+    "SR-FIX-DOCUMENT-PROSE-RIGHT-v1": {
+      "kind": "Native prose/admonition bytes with lazy/nested containers, tabs, entity and escape precedence, hostile internal/foreign destinations, inert include/code/title data, structured resource limits and isolated Core/PYZ parity.",
+      "provider": "tests/test_document_prose_right.py:CASES"
+    },
+    "SR-FIX-DOCUMENT-PROSE-v1": {
+      "kind": "Native prose/admonition source bytes, safe semantic node trees, LF/Unicode source bindings, internal attachment paths, forbidden active content and real isolated Core/PYZ execution. No rendered-output oracle.",
+      "provider": "tests/test_document_prose.py:prose"
+    },
+    "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1": {
+      "kind": "Owned duplicate/changed target inventories, forbidden payload target copies, independent source/semantic hashes, unchanged reference revisions, legacy identities, real preserved files and isolated Core/PYZ updated-target projections.",
+      "provider": "tests/test_document_references_right.py:rebuild"
+    },
+    "SR-FIX-DOCUMENT-REFERENCES-v1": {
+      "kind": "Two composed documents with separate artifact_ref blocks referring to the same owned requirement identity, source byte/hash bindings, exact relation pointers, missing/invalid target errors and actual isolated Core/PYZ parity. No rendering or write approval.",
+      "provider": "tests/test_document_references.py:referenced_documents"
+    },
+    "SR-FIX-DOCUMENT-ROLES-v1": {
+      "kind": "Actual stored current-schema Document bytes in owned TargetModel inventories, native field checks, primary cardinality, immutable selections, real read-only project inputs and isolated Core/PYZ parity. Explicit full-scope admission, malformed active/retired records, fresh model bindings, global full-project validation including empty/unconnected selections, preserved native identity diagnostics and unavailable composition providers.",
+      "provider": "tests/test_document_roles.py:document"
+    },
+    "SR-FIX-DOCUMENT-STRUCTURE-v1": {
+      "kind": "Actual owned Document/Section/ContentBlock source bytes and stored contains relations: nested traversal, source-bound ownership, position/target/relation order, invalid parents, native fields/references/cycles, immutable read-only observations and isolated Core/PYZ parity. Exact conflicting-parent source pointers/hashes, original decimal-spelled positions, explicit full-project scope admission, separate document roots, retired records, deep chains, immutable source/revision bindings and native refusals.",
+      "provider": "tests/test_document_structure.py:composed_records"
+    },
+    "SR-FIX-DOCUMENT-TABLES-v1": {
+      "kind": "Owned native query/table blocks, bound normalized queries and basic project views, SRX/configuration filters, typed literal rows, missing/null distinctions, exact pagination/source hashes, no source effects and isolated Core/PYZ parity. R adds adversarial source/view/column/scope/provider/query declarations, duplicate identities, byte-only rebinding, native collation and real-file inventories with read/process/network traps. C reuses the exact W/R fixtures and expected results unchanged across private declaration-adapter extraction.",
+      "provider": "tests/test_document_tables.py:table_project"
+    },
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1": {
+      "kind": "Owned snapshot view with explicit error/preserve missing policies and an acyclic graph of bounded records projections. Missing/null/false/zero separation, typed NFC grouping, independently bounded nested directions/depths, configured graph visibility, stable target identities, original-byte hashes, cyclic/foreign declaration rejection and unchanged sources. C preserves all W/R test bytes while extracting unchanged selection and row-projection services.",
+      "provider": "tests/test_document_view_variants_right.py:nested_project"
+    },
+    "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1": {
+      "kind": "Owned view with actual Linux/Windows configuration, optional parent chain, native applicability and cyclic relation graph. Declared/explicit selection, NFC-equal sort keys with ID ties, excluded vs merely row-filtered intermediates, original configuration bytes and read-only source bindings.",
+      "provider": "tests/test_document_view_variants.py:variant_project"
+    },
+    "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1": {
+      "kind": "Original native view fixture with adversarial closed declarations, static pointer/graph/scope boundaries, exact noncanonical bytes, boolean/null/missing type contracts, tiny soft graph budgets, real-file inventories and trapped file/process/network operations, and isolated Core/PYZ parity. No rendering or approval oracle. C reuses the exact W/R fixture/test bytes and outcomes across pure declaration-planning extraction.",
+      "provider": "tests/test_document_views_right.py:bound_view_model"
+    },
+    "SR-FIX-DOCUMENT-VIEWS-v1": {
+      "kind": "Owned closed-project view and four native requirements with cyclic dependency relations and a separate conflict edge. Exact snapshot/query bindings, typed field and bounded distinct-ID/count projections, direction/depth boundaries, NFC grouping, empty-filter rejection and no write or approval authority.",
+      "provider": "tests/test_document_views.py:view_project"
+    },
+    "SR-FIX-DOMAIN-DRAFT-v1": {
+      "kind": "owned per-type field fixtures; no graph, review, Evidence or release-approval proof",
+      "provider": "tests/support/domain.py:domain_value"
+    },
+    "SR-FIX-EVIDENCE-CONSTRUCTION-RIGHT-v1": {
+      "kind": "Explicit unknown product/run provenance with null context and owned reason; no inferred current product, test, check or configuration. Native Evidence source bytes retained through rejected generic update/format operations and stale identity reservations. AI producer/audit data remain passive across real authoring and human-review policy boundaries. Isolated Core/PYZ parity; no stored run proof or persistent publication/replay claim.",
+      "provider": "tests/test_evidence_construction_right.py:unknown_inputs"
+    },
+    "SR-FIX-EVIDENCE-CONSTRUCTION-v1": {
+      "kind": "Owned requirement/contract/test bytes, explicit configuration, reserved random128 identities and synthetic producer/run metadata. Immutable recorded/approved value construction, new-measurement identity collision handling, exact subject hashes and check bindings, no filesystem/clock/process/network access and isolated Core/PYZ parity. No persistent recording, authentic external run, human approval or request-replay claim.",
+      "provider": "tests/test_evidence_construction.py:inputs"
+    },
+    "SR-FIX-EVIDENCE-EXCHANGE-RIGHT-v1": {
+      "kind": "Owned Generic declarations, blank/opaque required values, hostile environment metadata, real native project byte/mode snapshots, source revalidation, bounded native target lists and embedded Exchange diagnostic coordinates. No project writes or external run authority.",
+      "provider": "tests/test_evidence_exchange_right.py:exchange_case"
+    },
+    "SR-FIX-EVIDENCE-EXCHANGE-v1": {
+      "kind": "Owned versioned producer/run/subject/result/environment/attachment declarations with supplied native REQ/VER/TEST snapshots. Exact local subject hashes, explicit outcomes and configurations, closed fields, immutable ownership, passive I/O boundaries and Core/PYZ parity. No external run authentication or publication.",
+      "provider": "tests/test_evidence_exchange.py:exchange_case"
+    },
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1": {
+      "kind": "Owned Generic/SARIF sources and mapping bytes, malformed required records, conflicting observations, ambiguous and incomplete selections, complete pointer accounting, provenance, immutable values, unchanged real projects and bounded isolated Core/PYZ preparation.",
+      "provider": "tests/test_evidence_import_policy_right.py:import_right_case"
+    },
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-v1": {
+      "kind": "Owned JUnit XML, strict or analysis mappings, explicit native targets and tool/version declarations; exact originals and optional sidecar, mixed valid/unmapped/ambiguous/contradictory observations, abort/skip accounting, host-independent project preservation, bounded output and isolated Core/PYZ parity. No persistent Evidence or external run authority.",
+      "provider": "tests/test_evidence_import_policy.py:import_case"
+    },
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-RIGHT-v1": {
+      "kind": "Owned native Generic import projects; historical input replay before allocation/model preparation, changed-input conflicts, duplicate observations, actual partial target replacements and isolated process exits with explicit native recovery and exact subject/source preservation.",
+      "provider": "tests/test_evidence_import_transaction.py:import_project"
+    },
+    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1": {
+      "kind": "Owned native temporary projects with two Generic observations, explicit Verification slots, bound configuration and original attachment bytes; saved full-set plans, real native writer/receipt replay, refusal without partial publication, exact subject/source preservation, and separate isolated Core/PYZ processes. W supports existing project attachments and Generic only; no raw-input preallocation retry or complete crash/duplicate matrix claim.",
+      "provider": "tests/test_evidence_import_transaction.py:import_project"
+    },
+    "SR-FIX-EVIDENCE-RECORDING-RIGHT-v1": {
+      "kind": "Owned temporary native projects and explicit incomplete source input. No-fallback input/operand guards, documented null provenance, preserved noncanonical Subject/Contract/Test bytes and revisions, durable request identity and replay after later Subject changes. Real storage and denial oracles plus isolated Core/PYZ input parity; no inference of product state, external execution, approval or full CLI integration.",
+      "provider": "tests/test_evidence_recording_right.py:unbound_input"
+    },
+    "SR-FIX-EVIDENCE-RECORDING-v1": {
+      "kind": "Owned temporary native projects, explicit prepared Evidence identities and synthetic run metadata. Actual saved-plan publication, writer-lock authorization, exact source/configuration/attachment bindings, durable replay and fail-closed mutation/identity boundaries. Isolated Core/PYZ publication and replay. No authentic external run, human approval, release readiness or complete CLI registration is claimed.",
+      "provider": "tests/test_evidence_recording.py:project"
+    },
+    "SR-FIX-EXCHANGE-EXPORT-v1": {
+      "kind": "Owned actual native project bytes, explicit mappings/CSV profiles and original ReqIF carrier definitions/registry identities, real PNG attachments and historical baseline objects. Exact format bytes, independent native manifest/hash and UTC oracles, all four scopes, CLI flags/publication, normative inventories and isolated Core/PYZ execution. W/R behavior evidence with explicit source mutations, missing bindings, native prose attachments, deterministic permutations/empty outputs, conflict and late-publication failures, project/profile hard limits and source-write traps; no foreign-tool, approval, full-suite or release claim.",
+      "provider": "tests/test_exchange_export.py:model,scope,prepared;tests/test_project_export.py:project,call;tests/support/reqif_objects.py:document;tests/support/reqif_structure.py:xdocument;tests/test_exchange_export_right.py:inputs,run;tests/test_project_export_right.py:attached_project,invoke"
+    },
+    "SR-FIX-EXCHANGE-MAPPINGS-v1": {
+      "kind": "Owned v1 passive mapping rules and separate byte/hash-bound external registries. Explicit typed value tables, four mapping families, exact resource selection, namespace/revision identity, unmodified rest data and source bytes. Real model-root integration and isolated standard-library-only Core/PYZ execution with forbidden-I/O guards; no format parser, import publication, loss acceptance or approval claim. R variants add exact versions and canonical hashes, closed and illtyped inputs, typed nested values, strict JSON boundaries, unselected/overlapping collections, detached observations, passive model-root changes and legacy resource preservation. Test-local mutations preserve the original W fixtures.",
+      "provider": "tests/support/exchange_mappings.py:mapping_value,fields_value,entry_value,registry_value"
+    },
+    "SR-FIX-GIT-OBJECT-SOURCE-v1": {
+      "kind": "Owned temporary local Git repositories built as raw fixture objects without Git write commands; real system Git reads pinned commits, trees and blobs. Independent exact-byte and no-mutation oracles cover HEAD/refs/index/working/foreign data, raw encodings, hooks/filters/pagers, inherited Git environment, missing/corrupt objects and resource boundaries. No complete model, release approval, network or source execution is claimed.",
+      "provider": "tests/support/git_objects.py:GitFixture"
+    },
+    "SR-FIX-IMPORT-COMPARISON-v1": {
+      "kind": "Synthetic explicit local/source JSON object projections and native import histories for all five comparison cases and four declared strategies. Separate historical hashes, unchanged raw-payload/revision provenance, legacy history, malformed input, real mapping selection with native artifact/relation lookup, detached observations and isolated Core/PYZ evaluation. Only passive decisions and target candidates; no format import, revision, identity allocation, clock, write or human approval is claimed. R adds asymmetric historical baselines, exact prerelease/build/case binding, every incomplete history field, malformed values, safe JSON pointers, numeric equivalence, cycles and shared inputs, foreign hook rejection, prior-observation preservation, actual file bytes/modes and isolated rejection contracts. Existing JSON reader limits remain unchanged.",
+      "provider": "tests/support/import_comparison.py:compare,imported; tests/support/relations.py:artifact,edge,external"
+    },
+    "SR-FIX-ISOLATED-CPYTHON-v1": {
+      "kind": "isolated CPython; closed stdin; no shell or timeout",
+      "provider": "tests/support/processes.py:run_core"
+    },
+    "SR-FIX-JCS-RFC8785-v1": {
+      "kind": "versioned normative binary64/canonical byte vectors, not presentation output",
+      "provider": "tests/data/jcs-rfc8785-v1.json"
+    },
+    "SR-FIX-JSON-PATCH-v1": {
+      "kind": "RFC 6902 value vectors and owned synthetic artifact update inputs; no live transaction or CLI proof",
+      "provider": "tests/data/json-patch-rfc6902-v1.json"
+    },
+    "SR-FIX-JUNIT-MAPPING-RIGHT-v1": {
+      "kind": "Synthetic core reports with same-name Class/File distinctions, missing/duplicate/conflicting outcomes, versioned mapping rules and exact-source-bound external-identifier sidecars. Complete grouped diagnostic accounting, original/canonical hash boundaries, hostile/invalid/large inputs, immutability and Core/PYZ behavior with I/O/process/network/clock/entropy traps; no external run authenticity or publication is asserted.",
+      "provider": "tests/test_junit_mapping_right.py:report"
+    },
+    "SR-FIX-JUNIT-MAPPING-v1": {
+      "kind": "Synthetic JUnit core reports and strict versioned exact-attribute mappings to native owned Test/Verification records. Explicit outcome oracles, identity/target ambiguity refusal, immutable input/output/hash binding, native Evidence-construction composition and Core/PYZ isolation with file/network/process/clock/entropy traps. No genuine external run, persistent Evidence or approval is asserted.",
+      "provider": "tests/test_junit_mapping.py:REPORT"
+    },
+    "SR-FIX-JUNIT-XML-RIGHT-v1": {
+      "kind": "Synthetic recursive/quadratic/exponential DTDs, external schema/include/PI requests, namespace/name-expansion boundaries and explicit encoding profiles. Real parser and I/O/process/network traps, literal-data counterexamples and isolated Core/PYZ behavior; no actual external test run or publication is claimed.",
+      "provider": "tests/test_junit_xml_right.py:DTD_ATTACKS"
+    },
+    "SR-FIX-JUNIT-XML-v1": {
+      "kind": "Synthetic bounded XML byte documents with the documented JUnit core elements and attributes, explicit encodings and opaque extension data. DTD/entity/schema/inclusion and resource-limit adversarial inputs with real I/O/process/network traps; native Core/PYZ parity. No external test run, Evidence publication or release approval is claimed.",
+      "provider": "tests/test_junit_xml.py:REPORT"
+    },
+    "SR-FIX-LANGUAGE-PACKAGES-v1": {
+      "kind": "owned passive package bytes and multilingual requirements; no translation or linguistic approval oracle",
+      "provider": "tests/test_language_packages.py:package_data"
+    },
+    "SR-FIX-LANGUAGE-POLICY-v1": {
+      "kind": "Owned language declarations, exact Basic Filtering cases and named literal-policy resources; no detection, automatic register update or project approval.",
+      "provider": "tests/test_language_policy.py:package"
+    },
+    "SR-FIX-LANGUAGE-REGISTRY-v1": {
+      "kind": "synthetic bound IANA-format byte fixtures; full distribution snapshot is separately frozen and hash bound, not a linguistic or release approval",
+      "provider": "tests/support/languages.py:registry_bytes"
+    },
+    "SR-FIX-LITERAL-LINT-v1": {
+      "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval.",
+      "provider": "tests/support/literal_lint.py:observe"
+    },
+    "SR-FIX-MODEL-MANIFEST-v1": {
+      "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission.",
+      "provider": "tests/test_model_root.py:fixture"
+    },
+    "SR-FIX-MODEL-VALIDATION-v1": {
+      "kind": "owned loaded-model bytes and explicitly registered test predicates; no authenticated lifecycle/evidence claims",
+      "provider": "tests/support/model_validation.py:artifact"
+    },
+    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1": {
+      "kind": "Synthetic native artifact/relation identities with explicit mapping projections, exact payload bytes and supplied UTC timestamps. Legacy unbound identities, original source bytes, aliases, distinct namespaces, duplicate and invalid input rejection, detached lookup observations, real model-root bindings and isolated Core/PYZ imports. No external source authenticity, complete format import, policy decision or publication is claimed. R cases add full native data roundtrips with nested unknown extensions, distinct document/case/Unicode/whitespace names, malformed native paths and bytes, exact explicit projections and UTC values, non-executed foreign hooks, and unchanged project bytes/modes after success or rejection.",
+      "provider": "tests/support/import_identities.py:history; tests/support/relations.py:artifact,edge,external"
+    },
+    "SR-FIX-NDJSON-NATIVE-CODEC-v1": {
+      "kind": "Synthetic complete native domain/record objects and prehashed regular Change Plans in explicit three-field NDJSON v1 envelopes. Literal wire/byte oracles, ordered mixed streams, duplicate revisions, detached original-byte observations and malformed envelopes/payloads verify passive processing. I/O/generation/execution traps and isolated Core/PYZ runs do not imply real actor approval or a whole import/export success.",
+      "provider": "tests/support/ndjson_codec.py:envelope,plan_value;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_ndjson_codec.py:wire"
+    },
+    "SR-FIX-NDJSON-STREAM-RESUME-v1": {
+      "kind": "Synthetic mixed native envelopes with Unicode, escapes, numeric tokens, duplicates and prehashed regular plans. Malformed physical lines, split transfer blocks, explicit EOF, large lines, retained source/cursor bytes and independent cursor hashes exercise passive source-bound resume. Temporary host persistence and isolated Core/PYZ probes are not portable Work integration, real approvals or full import/export success.",
+      "provider": "tests/test_ndjson_codec_right.py:rows,wire,blocks,restored,BAD_LINES;tests/support/ndjson_codec.py:envelope,plan_value"
+    },
+    "SR-FIX-NORMALIZATION-SCOPE-v1": {
+      "kind": "Complete owned native Linux JSON scope with explicit configuration/profile/rule/mapping/artifact sources, value-preserving normalization and explicit test-host resource gates. Companion crash fixture terminates a real writer process at building/prepared/partial/configuration-move/committed boundaries. No public CLI or production semantic-service approval.",
+      "provider": "tests/support/normalization_scope.py:prepared"
+    },
+    "SR-FIX-NORMALIZATION-TRANSACTION-v1": {
+      "kind": "Owned native Linux project with explicit pure artifact normalization plans, unchanged semantic model root, original and normalized byte hashes; existing target gates, native writer lock/journal/staging/publication/receipts and recovery. Test-only host authority, no CLI or full format-scope claim.",
+      "provider": "tests/support/normalization.py:prepared"
+    },
+    "SR-FIX-ORDERED-FOLD-v1": {
+      "kind": "owned artifact snapshots and ordered change operations; no live root, metadata, lifecycle, authentication or write proof",
+      "provider": "tests/support/folds.py:goal"
+    },
+    "SR-FIX-OWNED-TEMP-v1": {
+      "kind": "owned byte fixture; not a future-schema project",
+      "provider": "tests/support/files.py:temporary_project"
+    },
+    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1": {
+      "kind": "Native owned Roadmap, Verification coverage and ReleaseReadiness contexts with actual stored/external selections, explicit synthetic host proofs and failed/missing gates. Read-only view adapters, exact source/model mismatch and forbidden-I/O observations. No rendered text or production human approval is an oracle.",
+      "provider": "tests/test_planning_builtin_views.py:roadmap_values"
+    },
+    "SR-FIX-PLANNING-BUILTIN-WORK-v1": {
+      "kind": "Owned native view/Readiness semantic inputs, exact evaluation/scope/time/model binding, fresh native gate and review services, corrupt/missing product inputs, real Work input storage and isolated Core/PYZ processes. Synthetic host observations are explicit fixtures, never production approval; no rendered output oracle.",
+      "provider": "tests/test_planning_builtin_work.py:release_case"
+    },
+    "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1": {
+      "kind": "Native Capability/Task schema 0.2.0 values, exact Appendix L field projection, metadata/workflow exclusions, configured independent contracts and legacy Evidence hashes. Native freshness/selection/aggregation, no rewriting or audit-hash substitute.",
+      "provider": "tests/test_verification_planning_context.py:value"
+    },
+    "SR-FIX-PRODUCT-BUNDLE-v1": {
+      "kind": "Owned project/document/release scope observations and native model hashes with exact JSON/binary payloads, independent stdlib ZIP/inventory oracles, explicit receipt-byte fixtures and isolated Core/PYZ runs. No complete project validation, receipt authenticity, extraction, publication or release claim.",
+      "provider": "tests/support/bundles.py:bundle_inputs"
+    },
+    "SR-FIX-PRODUCTION-VALIDATION-v1": {
+      "kind": "Owned artifact/configuration bytes, actual shipped Core/software profiles and explicit language-registry resources for real language, profile SRX and formal-approval adapters. Companion helpers create observed projects and target models; no authenticated review/evidence service, atomic snapshot or write authority.",
+      "provider": "tests/support/production_validation.py:inputs"
+    },
+    "SR-FIX-PROFILE-COMPOSITION-v1": {
+      "kind": "Owned ordered profile inputs, positive merge and deliberate conflict cases; not project approval or authentic provenance",
+      "provider": "tests/support/profile_composition.py:composed"
+    },
+    "SR-FIX-PROFILES-v1": {
+      "kind": "owned versioned declarative profiles and scoped field observations; no profile composition, lifecycle approval or analyzer execution",
+      "provider": "tests/support/profiles.py:profile_data"
+    },
+    "SR-FIX-PROJECT-LOCK-v1": {
+      "kind": "owned native Linux project roots with explicit cross-process lock protocols",
+      "provider": "tests/support/project_locks.py"
+    },
+    "SR-FIX-PUBLICATION-RECHECK-v1": {
+      "kind": "Owned local Linux roots and real writer locks; explicit test-only authority/publication callbacks. No production journal/durability/authentication proof.",
+      "provider": "tests/support/publication.py:prepared"
+    },
+    "SR-FIX-READ-COMMANDS-v1": {
+      "kind": "Owned complete current/base projects with one literal goal-title delta, stored relation and low query limits; read-only file modes, native Git objects and independent tiny runtime windows. No benchmark or durable Work claim.",
+      "provider": "tests/test_query_read_integration.py:project_pair"
+    },
+    "SR-FIX-READ-ONLY-PROJECT-v1": {
+      "kind": "owned project bytes with readonly permissions and write-attempt traps; shallow operational observation, not journal completion or lock ownership proof",
+      "provider": "tests/support/read_only.py:make_project"
+    },
+    "SR-FIX-READINESS-MIGRATION-v1": {
+      "kind": "Owned temporary project with legacy Release/Risk/Issue and the real guarded Change Plan update writer; explicit selection, original revision/hash, lifecycle and publication barriers, preserved modes/audit and no implicit review or approval.",
+      "provider": "tests/test_readiness_updates.py:stored"
+    },
+    "SR-FIX-RECORD-FIELDS-v1": {
+      "kind": "owned passive document and evidence-field fixtures; no execution, authoring, real approvals or external hash verification",
+      "provider": "tests/support/records.py:record_value"
+    },
+    "SR-FIX-REFERENCE-FINDINGS-v1": {
+      "kind": "Owned source documents with independent expected missing-target, relation-matrix, field and review findings; the companion missing-reference cases use the same model helpers. Real model/read-only API comparisons preserve selection, deterministic findings and strict identity barriers; no invalid resolved graph or approval/write authority.",
+      "provider": "tests/test_validation_reference_sets.py:reference_case"
+    },
+    "SR-FIX-RELATION-OBLIGATIONS-v1": {
+      "kind": "Synthetic common envelopes and explicit relation inventories, no actual approval or authenticated reviews.",
+      "provider": "tests/test_relation_obligations.py:satisfied_fixture"
+    },
+    "SR-FIX-RELATIONS-v1": {
+      "kind": "Source-bound synthetic relation data; not a full model, graph approval or write authorization",
+      "provider": "tests/support/relations.py:artifact"
+    },
+    "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1": {
+      "kind": "Actual native project and stored Release policy; unavailable readiness observations, explicit working/release dispatch, unchanged working publication, no-write release refusal and isolated Core/PYZ checks. Stored object selection precedence, full value ownership, external conflict, hostile readiness reports/host gates and saved-plan publication rejection.",
+      "provider": "tests/test_release_baseline_boundary.py:release_project"
+    },
+    "SR-FIX-RELEASE-BASELINE-RIGHT-v1": {
+      "kind": "Owned native Release models with stored/external/legacy descriptors and every required gate. Explicit synthetic human risk/issue completion and replay/refusal observations. Real locked whole-project Baseline publication and independent archive selection binding verification. No production approval or external run is asserted.",
+      "provider": "tests/test_release_baseline_right.py:release_project"
+    },
+    "SR-FIX-RELEASE-BASELINE-v1": {
+      "kind": "Native complete Release/Capability/Requirement/Task and stored verification selection in an owned temporary project. Explicit synthetic approval history and current human reviews, real M13 gates, full-project Baseline snapshot and native locked publication. No production approval or external run is asserted.",
+      "provider": "tests/test_release_baseline.py:release_project"
+    },
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1": {
+      "kind": "Native eight-gate Release with exact Risk/Issue decisions, explicit synthetic current human review verification, native Scope/configuration parents, verification slots and Waivers. Revocation, mismatched bindings, provider failure, warning severity and stale evidence remain blocking; no real approval or execution claimed.",
+      "provider": "tests/test_release_readiness_right.py:blocker_case"
+    },
+    "SR-FIX-RELEASE-READINESS-v1": {
+      "kind": "Owned Release with Capability, Requirement, Task, explicit contracts and native current Evidence, stored evaluation, complete closure/current relation reviews, native human Requirement/Task Done checking and explicit synthetic trusted approval-history observations. No real human authenticity or external execution is claimed; missing, changed and revoked observations block. Isolated Core/PYZ and read-only boundaries.",
+      "provider": "tests/test_release_readiness.py:release_case"
+    },
+    "SR-FIX-RELEASE-SCOPE-RIGHT-v1": {
+      "kind": "Owned byte-bound Release graph with indirect Evidence subjects, verification slots, all strong relation types, closed weak dependencies, explicit current reviews and profile/rule/mapping/attachment resources. Native schema failures, exact variant conflicts and unresolved applicability; no authenticated providers, verification or readiness proof.",
+      "provider": "tests/test_release_scope_right.py:rich_project"
+    },
+    "SR-FIX-RELEASE-SCOPE-v1": {
+      "kind": "Owned native multi-Release/Milestone model with incoming schedules and Task memberships, internal and external stored depends_on edges, component chains and cycles. Exact byte-bound inventory and explicit synthetic resource-use/current-review observations, configuration admission, immutable reports, no filesystem writes and isolated Core/PYZ parity. Seed membership remains distinct from the closed native closure; no live completeness, authenticated providers, normative ScopeHash, readiness or approval claim.",
+      "provider": "tests/test_release_scope.py:release_values"
+    },
+    "SR-FIX-REQIF-LOSS-v1": {
+      "kind": "Owned complete XML/native JSON candidates with explicit mapping resources and record locations, independent XML location oracle, actual byte-bound attachment candidates and report-bearing export errors. No filesystem/network publication, whole-project validation, interoperability or write approval claimed.",
+      "provider": "tests/test_reqif_loss.py:binding,mapped,locations;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:structured,xdocument,attachment;tests/support/reqif_preservation.py:opaque_source,source_entry,target_bytes"
+    },
+    "SR-FIX-REQIF-PRESERVATION-v1": {
+      "kind": "Owned complete XML including foreign namespace/QName attributes, mixed text and Unicode, with actual native JSON target bytes and explicit source contexts. Independent source hash/Base64, original-byte and item-identity oracles; no write, resolver or full-project success claim.",
+      "provider": "tests/support/reqif_preservation.py:opaque_source,source_entry,source_key,target_bytes;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:xdocument;tests/support/domain.py:domain_value"
+    },
+    "SR-FIX-REQIF-STRUCTURE-XHTML-R-v1": {
+      "kind": "Owned source and actual native model bytes with explicit identity/edge bindings. Reimport and sibling order, allowed/forbidden native cycles, attachment alias/integrity boundaries, exact Unicode/code/whitespace node oracles, original/default provenance, unsupported fallback retention, actual parser budgets and host-failure propagation. No renderer, resolver, file writes or complete import claim.",
+      "provider": "tests/test_reqif_structure_right.py:bound_graph;tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,attachment;tests/support/targets.py:model"
+    },
+    "SR-FIX-REQIF-STRUCTURE-XHTML-v1": {
+      "kind": "Owned ReqIF structure/XHTML bytes, explicit source/type/occurrence/relation identities and actual native model bytes. Independent prose node oracles, explicit byte/hash/path-bound attachment fixtures and negative reference/safety/binding cases. No external tool, renderer, resolver, project write, full-suite or release claim.",
+      "provider": "tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,xvalue,attachment;tests/test_reqif_structure.py:mapped_fixture;tests/support/targets.py:model"
+    },
+    "SR-FIX-REQIF-TYPE-OBJECTS-R-v1": {
+      "kind": "Synthetic six-family ReqIF boundary corpus, exact and non-native number lexemes including huge exponents/integers, Gregorian dates, all defaults, duplicate IDs across deferred sections, uninterpreted content and XML safety inputs. Explicit bound inverse mappings test successful typed changes, unchanged provenance, ambiguity, invalid native candidates, isolated Core/PYZ and resource failures. No external XSD execution, foreign-tool roundtrip or whole-project success is claimed.",
+      "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/test_reqif_objects_right.py:raw_with_bounds,resource"
+    },
+    "SR-FIX-REQIF-TYPE-OBJECTS-v1": {
+      "kind": "Synthetic ReqIF type/object documents with explicit metadata, six scalar/enumeration families, source definitions, lexical values, defaults and references. Explicit parser limits, malformed/security inputs, native identity/hash oracles and existing bound mapping resources exercise passive roundtrip/projection. Isolated Core/PYZ runs do not imply XSD validation, external-tool interoperability, project import/export or authorization.",
+      "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/support/exchange_mappings.py:mapping_value;tests/support/domain.py:domain_value"
+    },
+    "SR-FIX-REQIFZ-CONTAINER-R-v1": {
+      "kind": "Actual independently generated stored ZIPs with local/central/end record and payload mutations; unused members, gap/overlap/size/CRC failures, unsafe original filenames, complete URI and XML-boundary vectors. Tests require rejection before payload reads for invalid metadata and exact owned manifest/byte oracles for valid transports. No project write, full-suite, foreign-tool or release claim.",
+      "provider": "tests/test_reqifz_right.py:source_files,offsets;tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:one,document;tests/support/reqif_structure.py:xdocument"
+    },
+    "SR-FIX-REQIFZ-CONTAINER-v1": {
+      "kind": "Owned XML and real independent stdlib ZIP bytes, nested/multiple explicitly selected documents, original byte attachments and unused members. Exact external archive/member hash and manifest oracles, native explicit attachment integration, safety/binding/limit failures, read-only guards and isolated Core/PYZ roundtrips. No project import/export, foreign-tool, full-suite or release claim.",
+      "provider": "tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:xdocument"
+    },
+    "SR-FIX-REQUIREMENT-APPROVAL-v1": {
+      "kind": "owned loaded requirements and explicitly synthetic trusted-service/human-review observations; no real identity authentication or write approval",
+      "provider": "tests/support/approval.py:context"
+    },
+    "SR-FIX-REQUIREMENT-INPUT-v1": {
+      "kind": "explicit new requirement drafts; pure in-memory preparation, no publication, ID reservation or approval",
+      "provider": "tests/test_requirement.py:fields"
+    },
+    "SR-FIX-RESOURCE-INVENTORY-v1": {
+      "kind": "owned binary payloads and normative JSON; actual byte checks, no external evidence authenticity or write authorization",
+      "provider": "tests/test_resource_inventory.py:descriptor"
+    },
+    "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
+      "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim.",
+      "provider": "tests/test_roadmap_explanation_right.py:project"
+    },
+    "SR-FIX-ROADMAP-EXPLANATION-v1": {
+      "kind": "Native bound multi-Release/Milestone model with Tasks, actual incoming implementation links, parallel edges, Requirements, Goals, Needs, Assumptions, Sources, direct dependencies and risks. Independently specified shortest explanation paths preserve stored IDs, inverse flags, source bytes and JSON pointers. Configured depth, exact refusals, unchanged project files and isolated Core/PYZ parity. Pure supplied-model provider; no public CLI, live completeness, Release closure/readiness or Work integration claim.",
+      "provider": "tests/test_roadmap_explanation.py:explanation_values"
+    },
+    "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1": {
+      "kind": "Owned native snapshots with calendar boundaries, absent/invalid dates, temporal conflicts and dependency cycles; passive text/extension estimates, invalid risks and unsupported normative fields, actual read-only files/directories and preserved foreign live data. Changed source bindings fail; formatting and detached results preserve facts. Fresh Core/PYZ audit hooks prohibit writes/processes/network on successful and failed projections. Existing W provider and test bytes remain unchanged; no scheduling engine, full inventory, readiness or View/Work acceptance claim.",
+      "provider": "tests/test_roadmap_projection_right.py:dated_values"
+    },
+    "SR-FIX-ROADMAP-PROJECTION-v1": {
+      "kind": "Owned native multi-Release/Milestone/Task model with explicit priorities, stored target date, risks and direct planning/dependency/mitigation edges. Exact source hashes, stable identities, sparse assignments, no inheritance or ratings, unchanged real project bytes/modes and isolated Core/PYZ parity. Supplied-project provider only; no live completeness, configured applicability, explain path, Release closure/readiness or View/Work integration claim.",
+      "provider": "tests/test_roadmap_projection.py:roadmap_values"
+    },
+    "SR-FIX-SARIF-IMPORT-RIGHT-v1": {
+      "kind": "SARIF inline references with omitted imports, ambiguous rules, conflicting invocation indices, failed linked calls, baseline-only and suppressed results, typed metadata and artifact references. Real project byte/mode preservation and isolated Core/PYZ error parity; no imported policy or full-schema claim.",
+      "provider": "tests/test_sarif_import_right.py:sarif_case"
+    },
+    "SR-FIX-SARIF-IMPORT-v1": {
+      "kind": "Synthetic SARIF 2.1.0 inline runs, source-hash-bound explicit result/rule/invocation/artifact mappings and a declared generic Exchange companion. Native identities, sparse selection, no severity-to-pass inference, safe diagnostics and Core/PYZ parity. No complete SARIF validation, import policy or persistent Evidence.",
+      "provider": "tests/test_sarif_import.py:sarif_case"
+    },
+    "SR-FIX-SCHEMA-CATALOG-v1": {
+      "kind": "Trusted local schema resources, synthetic artifact values and project-free command invocations; not a graph or release approval",
+      "provider": "tests/test_schema_catalog.py:SchemaCatalogWorkTests"
+    },
+    "SR-FIX-SCOPE-COMPARISON-v1": {
+      "kind": "Owned semantic scope fingerprints through resolved/fingerprint helpers and value comparisons through snapshot, with explicit bound dependency observations; no live inventory authenticity, atomic snapshot, permission or writes.",
+      "provider": "tests/test_scope_comparison.py"
+    },
+    "SR-FIX-SCOPE-CONTROL-v1": {
+      "kind": "Synthetic bound control dependencies and passive mentions; no live project completeness, proposal authorization or actual writes.",
+      "provider": "tests/test_scope_controls.py:referenced_control"
+    },
+    "SR-FIX-SCOPE-SEEDS-v1": {
+      "kind": "owned explicit current relation inventories, passive resources and bound query-page fixtures; no query engine, complete archive inventory or authorization",
+      "provider": "tests/support/scopes.py:inputs"
+    },
+    "SR-FIX-SNAPSHOT-OBJECTS-v1": {
+      "kind": "Owned private external Linux object store and explicitly protected real project; actual canonical/raw bytes, native locks, immutable publication and fresh-process reads. No Baseline creation, scope completeness, normative journal or release approval claim.",
+      "provider": "tests/test_snapshot_objects.py:setup_store"
+    },
+    "SR-FIX-SRX-COLLECTIONS-v1": {
+      "kind": "explicit JSON-only SRX context and sequence expression fixtures",
+      "provider": "tests/support/srx.py:run"
+    },
+    "SR-FIX-SRX-CONFORMANCE-v1": {
+      "kind": "versioned SRX 1.0 behavior vectors; actual public APIs, explicit value/missing/error expectations; no human-output snapshots",
+      "provider": "tests/support/srx_vectors.py:load_corpus"
+    },
+    "SR-FIX-SRX-CONTEXT-v1": {
+      "kind": "Owned explicit JSON context projections and literal expressions; no live profile/configuration resolution or full SRX approval.",
+      "provider": "tests/test_srx_context.py:context_data"
+    },
+    "SR-FIX-SRX-FIELDS-v1": {
+      "kind": "Owned JSON-only SRX input values and static field expressions; no project scan or file writes",
+      "provider": "tests/support/srx.py:roots"
+    },
+    "SR-FIX-SRX-GRAPH-v1": {
+      "kind": "owned full supplied SourceRelations model; directed, inverse, cyclic, disconnected and bounded graph behavior",
+      "provider": "tests/support/srx_graph.py:records"
+    },
+    "SR-FIX-SRX-LOGIC-v1": {
+      "kind": "Owned ordered Boolean/comparison AST and JSON operands with deliberate Missing cases",
+      "provider": "tests/support/srx.py:binary"
+    },
+    "SR-FIX-SRX-NUMERIC-v1": {
+      "kind": "Appendix U.3 numeric behavior vectors; fixed input data",
+      "provider": "tests/support/srx_numeric.py:vectors"
+    },
+    "SR-FIX-SRX-QUANTIFIERS-v1": {
+      "kind": "Explicit JSON-only quantifier AST, lexical item values and versioned positive/negative vectors; no live project loading or approval.",
+      "provider": "tests/support/srx.py:quantifier"
+    },
+    "SR-FIX-SRX-RESOURCES-v1": {
+      "kind": "owned explicit AST policies and soft work targets; in-process observations, not persisted checkpoints or host quota proof",
+      "provider": "tests/support/srx_resources.py:observed"
+    },
+    "SR-FIX-STRONG-CLOSURE-v1": {
+      "kind": "Synthetic explicit resource-use, attachment and current-review observations bound to source bytes; not authentic freshness decisions, live inventory or writes.",
+      "provider": "tests/support/closure.py:observe"
+    },
+    "SR-FIX-TRANSACTION-COMMITTING-v1": {
+      "kind": "Owned local Linux prepared transactions with native writer lock, real atomic target replacements, journal fsync acknowledgements and preserved before images. Host authority is explicit test-only; no receipts or automatic recovery.",
+      "provider": "tests/support/committing.py:staged"
+    },
+    "SR-FIX-TRANSACTION-JOURNAL-v1": {
+      "kind": "Owned bound project, explicit checked publication plan and real native lock; building journal writes only, no prepared payload or normative publication claim.",
+      "provider": "tests/test_transaction_journal.py:record"
+    },
+    "SR-FIX-TRANSACTION-RECEIPTS-v1": {
+      "kind": "Owned native Linux projects with a still-held writer lock, fully published targets and a committing journal. The companion finish helper performs real durable transaction/request receipt finalization under explicit test-only authority; no public CLI, authentic actor identity or complete crash-matrix proof.",
+      "provider": "tests/support/receipts.py:published"
+    },
+    "SR-FIX-TRANSACTION-RECOVERY-v1": {
+      "kind": "Owned native Linux pending building/prepared journal and complete independent preflight; explicit test-only authority, real recovery lock, immutable audit and unchanged normative files.",
+      "provider": "tests/support/recovery.py:pending"
+    },
+    "SR-FIX-TRANSACTION-STAGING-v1": {
+      "kind": "Owned temporary Linux project and still-held native writer lock; exact building journal, real exclusive images, fsync boundaries and prepared metadata. No normative publication or recovery claim.",
+      "provider": "tests/test_transaction_staging.py:begin"
+    },
+    "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1": {
+      "kind": "Literal mixed-run decision tables over synthetic native model/descriptor inputs. Current, failed, stale, unresolved, missing and mixed observations within/across keys; explicit plan status, scope, UTC waiver review, immutable human replacement bindings and native conflicts. Unknown subject contexts remain unresolved. Isolated Core/PYZ, source preservation and no live inventory, external execution or release approval claim.",
+      "provider": "tests/test_verification_aggregation_right.py:pair,evidence_for"
+    },
+    "SR-FIX-VERIFICATION-AGGREGATION-v1": {
+      "kind": "Synthetic independently bound model, product inputs and roles, native expected/observed runs and contexts, human replacement declarations, explicit UTC evaluation time and native waiver with a deliberately trusted test-host callback. Exercises computed subject priorities and isolated Core/PYZ without changing Evidence. No real human identity, live inventory, external execution or release approval is asserted.",
+      "provider": "tests/test_verification_aggregation.py:scenario,waiver_case"
+    },
+    "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1": {
+      "kind": "Direct verified_by test targets with bound implicit overall slots. Mixed explicit/direct contracts, shared test identities, malformed dimensions and identities, native relation and snapshot boundaries, no code/file access, and isolated Core/PYZ parity.",
+      "provider": "tests/test_verification_contracts_right.py:direct_test_records"
+    },
+    "SR-FIX-VERIFICATION-CONTRACTS-v1": {
+      "kind": "Supplied requirement, explicit verification contract and passive test record. Required-slot identities, native field constraints, source bindings, safe draft default and isolated Core/PYZ parity without test-code execution or Evidence evaluation.",
+      "provider": "tests/test_verification_contracts.py:referenced_test_records"
+    },
+    "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1": {
+      "kind": "Synthetic native independent missing contract/test/selection/evidence/stale observations and supplied Release closure. Stored/explicit descriptor precedence, exact scoped coverage, inert full Work input and native CheckpointStore process restart in Core/PYZ. Real supplied source/input/time hashes are recomputed; no live inventory, external execution, release or durable query cursor claim.",
+      "provider": "tests/test_verification_coverage_right.py:coverage,release_case,resumed"
+    },
+    "SR-FIX-VERIFICATION-COVERAGE-v1": {
+      "kind": "Synthetic native whole-project model and explicit descriptor/input/time bindings. Two requirement kinds, eight declared dimensions, exact independent expected counts, current/failed/stale/missing observations and valid waived failure. Immutable coverage, configured exclusion, bound computed query filtering/sorting/paging, source mismatch rejection, no IO and isolated Core/PYZ. No external execution, release or live inventory claim.",
+      "provider": "tests/test_verification_coverage.py:coverage_case,prepare"
+    },
+    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1": {
+      "kind": "Synthetic human/AI declarations and immutable owned Evidence bytes with broken intermediate bindings, changed old sets, excluded configurations, shared subjects and diamond graphs, missing/stale/incomplete/failed terminals, explicit native scope and isolated Core/PYZ parity. No genuine authorization, external execution or aggregate pass is asserted.",
+      "provider": "tests/test_verification_run_replacements.py:retest,decision"
+    },
+    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1": {
+      "kind": "Synthetic owned models, declared human retests, exact full-artifact Evidence sets, per-key acyclic replacement graphs and current complete terminal runs. Includes binding refusal, authority/structure errors, immutable historical bytes and isolated Core/PYZ parity. No authentic human identity, external execution or aggregate verification pass is claimed.",
+      "provider": "tests/test_verification_run_replacements.py:retest,decision"
+    },
+    "SR-FIX-VERIFICATION-RUN-SELECTION-RIGHT-v1": {
+      "kind": "Owned synthetic model/descriptor/Evidence bytes with historical and unbound provenance, missing expectations, native Appendix L context changes, current/stale mixed observations, explicit independence, per-key exclusions, ordering/audit invariance, unresolved subject types and isolated Core/PYZ parity. No live inventory, external execution, replacement or result aggregation claim.",
+      "provider": "tests/test_verification_run_selection.py:case,observation"
+    },
+    "SR-FIX-VERIFICATION-RUN-SELECTION-v1": {
+      "kind": "Synthetic owned models, native descriptors and Evidence bindings: observed/expected run union, multiple results, exact slots and subjects, explicit configurations, passive result preservation, independent scope, conflict rejection and isolated Core/PYZ observations. No real product run or approval is claimed.",
+      "provider": "tests/test_verification_run_selection.py:case,observation"
+    },
+    "SR-FIX-VERIFICATION-WAIVER-R-v1": {
+      "kind": "Owned waiver inputs, mutating and revoked trusted test callbacks, exact UTC boundaries and effective configuration chains; real local projects exercise the native guarded update writer. No authentication, aggregate verification or release success is implied.",
+      "provider": "tests/test_verification_waivers_right.py:stored_subject"
+    },
+    "SR-FIX-VERIFICATION-WAIVER-v1": {
+      "kind": "Owned capability/requirement/task records, explicit scopes and resolved product configuration, versioned and historical waivers, UTC nanosecond boundaries and trusted test review service. No project-code execution, implicit clock, full verification or release approval.",
+      "provider": "tests/test_verification_waivers.py:fixture"
+    },
+    "SR-FIX-WEAK-BOUNDARY-v1": {
+      "kind": "Owned source inventories and explicit policy selections; not authenticated bundle provenance or live project completeness.",
+      "provider": "tests/support/boundary.py:selection"
+    },
+    "SR-FIX-WRITER-BOUNDARIES-v1": {
+      "kind": "owned native single/multi-artifact writers, real syscall interruption without finalizers, receipt loss and repeated fresh-process recovery; independent complete byte/model-root oracles and explicit test authority only",
+      "provider": "tests/support/writer_boundaries.py:fixture"
+    },
+    "verification-context-independent": {
+      "kind": "Owned requirement, verification and test subjects, explicit typed contracts, recorded check/test identities and immutable Evidence bindings. Exact semantic projection vectors, current/stale/missing independent policies, audit-only changes, configuration provenance and isolated Core/PYZ parity. No independently resolved required-check set, authoritative run selection, code execution, full verification or release authority.",
+      "provider": "tests/test_verification_context_right.py:independent_case"
+    },
+    "verification-context-subjects": {
+      "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
+      "provider": "tests/test_verification_context.py:subject"
+    }
+  },
   "fixture_format_version": 1,
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
@@ -105,6 +787,7 @@
     "SR-FIX-PLANNING-BUILTIN-WORK-v1",
     "SR-FIX-PLANNING-RELATIONS-v1",
     "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1",
+    "SR-FIX-PRODUCT-BUNDLE-v1",
     "SR-FIX-PRODUCTION-VALIDATION-v1",
     "SR-FIX-PROFILE-COMPOSITION-v1",
     "SR-FIX-PROFILES-v1",
@@ -184,683 +867,5 @@
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
     "verification-context-subjects"
-  ],
-  "definitions": {
-    "SR-FIX-ARTIFACT-COMMON-v1": {
-      "provider": "tests/support/artifacts.py:common_artifact",
-      "kind": "common-field envelope only, not a complete per-type or approved artifact"
-    },
-    "SR-FIX-AUTOMATIC-RECOVERY-v1": {
-      "provider": "tests/support/automatic_recovery.py:pending",
-      "kind": "Owned native Linux project with policy bound before plan/publication preparation; real building/prepared/partial/complete/committed transactions, independent expected bytes, native locks and durable receipts. Companion helpers capture an old publication observation, load current actual model bytes and launch separate interpreters. Real abrupt writers and selected archival interruptions preserve evidence. Host authorization is test-only; no public CLI or full crash-matrix claim."
-    },
-    "SR-FIX-BASELINE-COMPARISON-v1": {
-      "provider": "tests/test_baseline_comparison.py:stored_comparison",
-      "kind": "Actual archived whole-project snapshots with valid stored domain fields, canonical Baseline IDs or explicit record bytes, binary and JSON resources, successive native Baselines with registry/archive history, independent materialization, missing/tampered bytes and isolated Core/PYZ comparison. Shared field-diff oracle; unsupported opaque resource deltas fail explicitly."
-    },
-    "SR-FIX-BASELINE-CREATION-v1": {
-      "provider": "tests/test_baseline_creation.py:project",
-      "kind": "Owned complete temporary projects with small synthetic and actual bundled IANA registry bytes, actual profile composition, native target validation, writer lock, journal, no-replace object publication, durable receipts, discard proof and isolated Core/PYZ execution. Explicit host IDs/audit/authority; no CLI, general historical Baseline verifier or release readiness claim."
-    },
-    "SR-FIX-BASELINE-MANIFEST-v1": {
-      "provider": "tests/test_baseline_manifest.py:baseline_inputs",
-      "kind": "Owned complete synthetic scope/dependency observations, real canonical artifact/profile/rule/mapping bytes and exact binary attachments, recomposed profiles and real external object-store/PYZ execution. No live-project completeness, readiness or normative publication claim."
-    },
-    "SR-FIX-BASELINE-MATERIALIZATION-v1": {
-      "provider": "tests/test_baseline_materialization.py:restore",
-      "kind": "Actual archived Baseline records and object bytes; fresh read-only integrity views, new private isolated native output roots, exact semantic/binary preservation, missing-source and existing-target rejection, interrupted storage and isolated Core/PYZ execution. Explicit operational locale/output values; no current-tree or Git fallback, full validation or release authority. The Right cases inject late source loss/corruption, directory removal/replacement, foreign initial entries, concurrent empty directories, byte-identical inode replacement and durability failures. Independent restoration also preserves historical Baselines, their real archive objects and the original language-registry bytes."
-    },
-    "SR-FIX-BASELINE-VERIFICATION-v1": {
-      "provider": "tests/test_baseline_verification.py:stored_snapshot",
-      "kind": "Actual content-addressed archived JSON/binary objects, full project manifests and native Baseline publication; archive-only/moved sources, tampered object/configuration/profile/root data and isolated Core/PYZ. Integrity evidence only, no full validation, original-project completeness or release authority. The Right cases also bind actual owned object bytes to common-pipeline subjects and diagnostics, recheck late native changes and include older archived Baselines; unrelated lifecycle authority stays unavailable."
-    },
-    "SR-FIX-BASELINE-WORK-v1": {
-      "provider": "tests/test_baseline_work.py:large_project",
-      "kind": "Actual supplied project bytes, bounded native input capture, direct/split baseline parity, existing durable Work checkpoint generations and native single publication/replay. Real older native Baseline with checked lifecycle/archived-byte providers, hash retention, stale/missing Work inputs, denied authority and five actual native process-loss boundaries with unchanged checkpoints, Recovery admission and original receipt replay."
-    },
-    "SR-FIX-BUILTIN-LEGACY-v1": {
-      "provider": "tests/test_builtin_document_views.py:legacy_documents",
-      "kind": "Original schema 0.1.0 legacy identity/title/revision envelopes including decomposed Unicode, CRLF field content, absent current-schema defaults and passive legacy relations. Stable type/ID fallback, path collision and invalid-envelope refusals, immutable read-only observations and isolated Core/PYZ execution; no legacy semantic validation or migration."
-    },
-    "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1": {
-      "provider": "tests/test_builtin_document_views_right.py:weak_partial",
-      "kind": "Native conflicts_with/duplicates edges to present or omitted targets with exact partial boundary declarations. Actual noncanonical and duplicate symmetric storage, valid parallel directed edges, tampered boundary value objects, caller mutation during projection and original-byte preservation. Shared R fixtures also observe unavailable calculations, no primary invention, no file/process/network effects and isolated Core/PYZ parity."
-    },
-    "SR-FIX-BUILTIN-PARTIAL-v1": {
-      "provider": "tests/test_builtin_document_views.py:partial_project",
-      "kind": "Actual supplied requirement/release records, explicit partial scope and exact weak omitted-target boundary declarations. Deterministic type/identity ordering, strong-target and source binding refusals, no synthetic primary, preserved original bytes and no full-project or origin-proof claim."
-    },
-    "SR-FIX-BUILTIN-TRACEABILITY-v1": {
-      "provider": "tests/test_builtin_document_views.py:trace_project",
-      "kind": "Owned current-schema requirement, need, goal, task, verification, evidence, milestone and release bytes with actual relation identities and original evidence subject fields. Cyclic and missing traces, exact source/record hashes and relation-array pointers, absent calculation providers, read-only rendering metadata and isolated Core/PYZ contracts. Stored success values never become computed verification or release-readiness results."
-    },
-    "SR-FIX-CATALOG-DATA-v1": {
-      "provider": "tests/test_verification.py:fixture_files",
-      "kind": "synthetic developer verification data"
-    },
-    "SR-FIX-CHANGE-AUTHORING-v1": {
-      "provider": "tests/test_change_authoring.py:case",
-      "kind": "Explicit single-user actor/request declarations and test-only storage; no real authentication, durable receipts or CLI publication proof."
-    },
-    "SR-FIX-CHANGE-EXECUTION-v1": {
-      "provider": "tests/support/execution.py:Storage",
-      "kind": "Owned exact-byte supplied models and explicit test-only publisher, optionally real tempdir files; not production authorization, locking, durability or recovery."
-    },
-    "SR-FIX-CHANGE-LIFECYCLE-v1": {
-      "provider": "tests/test_change_lifecycle.py:approved",
-      "kind": "owned synthetic standard-artifact lifecycle candidates; no actual approval, authentication, storage or historic inventory"
-    },
-    "SR-FIX-CHANGE-METADATA-v1": {
-      "provider": "tests/support/folds.py:goal",
-      "kind": "explicit owned regular-change inputs; bound actor/time, no live write or authenticating side effect"
-    },
-    "SR-FIX-CHANGE-PLAN-v1": {
-      "provider": "tests/support/change_plans.py:document",
-      "kind": "Synthetic versioned plan and typed operations; no live-state verification, authenticated review or write authority."
-    },
-    "SR-FIX-CHANGE-TARGET-v1": {
-      "provider": "tests/support/targets.py:model",
-      "kind": "owned exact-byte project inventory, explicit effective profile and synthetic trusted gates; no live inventory, authorization or prepared transaction proof"
-    },
-    "SR-FIX-CHANGED-SOURCES-v1": {
-      "provider": "tests/test_query_changed_only.py:pair",
-      "kind": "Owned raw Git-object base and current project snapshots with actual bound profile JSON. Native model dependency closure, Core lint and productive SRX profile rules provide independent exact-selection and diagnostic oracles; explicit trusted host gates cover declared dependencies. No whole-project, literal/full-lint, freshness or approval claim."
-    },
-    "SR-FIX-COMPARISON-SOURCE-v1": {
-      "provider": "tests/test_query_comparison_sources.py:source_files",
-      "kind": "Owned configuration and domain-artifact bytes in temporary local projects or raw Git object fixtures; independent direct semantic-comparison, exact-byte, source-identity, no-mutation and explicit unsupported-resource oracles. No complete model or approval claim."
-    },
-    "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1": {
-      "provider": "tests/test_document_composition_preservation_right.py:reference_project",
-      "kind": "Actual temporary composition project with original noncanonical requirement, test or code_ref bytes and explicit stored draft/approved states. Native target assessment proves preservation; unavailable lifecycle/currentness/resource services block real publication. No approval or specialist success stub. Additional native writes, saved-plan refusals, operation binding and injected publication interruptions preserve exact content."
-    },
-    "SR-FIX-COMPOSITION-PRESERVATION-v1": {
-      "provider": "tests/test_document_composition_preservation.py:composition_project",
-      "kind": "Real temporary project with primary/supporting documents, nested sections and two reference blocks sharing one revision-7 requirement. Canonical and deliberately noncanonical original artifact bytes, actual native section moves, inventories, publication receipts, replay and reference/composition readback. Stale reference bytes and hostile host gates never authorize publication."
-    },
-    "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1": {
-      "provider": "tests/test_configured_baseline_right.py:variant_project",
-      "kind": "Actual native project, inherited configuration choices and conditional requirements; saved-plan publication, archive-only historic integrity, missing/rebound chain bytes, isolated materialization/comparison and Core/PYZ verification."
-    },
-    "SR-FIX-CONFIGURED-BASELINE-v1": {
-      "provider": "tests/test_configured_baseline.py:variant_inputs",
-      "kind": "Actual configuration parent-chain records, deterministic applicability/closure, real canonical profile/rule/mapping/selection objects, exact shared scope/model hashes, private archive persistence without original files and isolated Core/PYZ preparation. Inert prepared data only; native configured publication and historical full-snapshot verification remain separate integrations."
-    },
-    "SR-FIX-CONTAINER-LANGUAGES-v1": {
-      "provider": "tests/support/containers.py:presentation",
-      "kind": "owned source-bound container models and explicit resolved selection observations; no renderer, detector, complete project inventory or approval"
-    },
-    "SR-FIX-CONTENT-BLOCKS-RIGHT-v1": {
-      "provider": "tests/test_content_blocks_right.py:referenced_block",
-      "kind": "Owned content-block records with missing relation fields, invalid relation metadata, mixed payload branches and exact byte-bound errors; no target resolution or rendering."
-    },
-    "SR-FIX-CONTENT-BLOCKS-v1": {
-      "provider": "tests/support/records.py:block_value",
-      "kind": "All seven stored ContentBlock kinds and declared alternative payload branches, original record bytes, standalone native payload schemas, local reference fields, owned source/record/payload/schema bindings and isolated Core/PYZ parity. No target resolution or payload execution."
-    },
-    "SR-FIX-CORE-LINT-v1": {
-      "provider": "tests/support/core_lint.py:requirement_graph",
-      "kind": "Owned approved requirement, origin and verification sources with deliberate omissions; actual public lint and shipped profile minima, project write traps; no human approval or evidence authenticity."
-    },
-    "SR-FIX-DIAGNOSTICS-v1": {
-      "provider": "tests/test_diagnostics.py:finding",
-      "kind": "Owned diagnostic values and bound loaded-model observations; no provenance authentication, automatic lint execution or full project approval."
-    },
-    "SR-FIX-DISCARD-RESTART-v1": {
-      "provider": "tests/support/discard_restart.py:child",
-      "kind": "Owned native Linux writer and recovery subprocesses for building/prepared, incomplete preparation, and repeated discard completion. Independent byte/root oracles, actual partial native staging writes and abrupt process exits, original audit/receipt preservation, native normative-write observation, fresh authority and dead-owner takeover. Persistent v1 selection and v2 exact staging bytes are versioned; no original Change Plan or preflight crosses processes."
-    },
-    "SR-FIX-DOCUMENT-AUTHORING-v1": {
-      "provider": "tests/test_document_authoring.py:document_project",
-      "kind": "Real owned temporary project with a primary/supporting document, nested sections and exact contains identities. Native saved plans publish through actual locks, authority, journal, receipts and readback; file inventories preserve unrelated bytes. Prepared explicit IDs, actor, time and original relation hash are retained. Isolated Core/PYZ publication uses the same API. R adds invalid/unrelated document states, exact stale/hash/identity refusals, permissive hostile host gates, include cycles caused by movement, all-file inventories, structured failure audits and actual interrupted multi-owner publication with retained recovery evidence. C retains all W/R fixtures and exact behavior expectations unchanged after private operation/gate extraction."
-    },
-    "SR-FIX-DOCUMENT-INCLUDES-v1": {
-      "provider": "tests/test_document_includes.py:include_project",
-      "kind": "Owned document/section/includes with repeated content and section destinations, actual contains/reference relation identities, source-bound occurrences, deterministic cycle witnesses, deep chains and isolated Core/PYZ execution. R adds document meshes with mixed/global cycles, legal cross-section reuse, repeated/diamond/wide paths, original source/diagnostic rebinding and explicit read/process/network traps. C reuses all W/R fixtures and exact expectations unchanged after private graph/provenance extraction."
-    },
-    "SR-FIX-DOCUMENT-MUTATIONS-v1": {
-      "provider": "tests/test_document_mutations.py:mutation_project",
-      "kind": "Real owned document project with nested sections and an owned block; prepared native operations, exact source guards and fresh relation identities. Actual publication, byte inventories, receipts and replay for seven block kinds, update, retirement, cascade and child reparenting. Host denial and invalid strategies preserve all files. R adds internally/externally shared block ownership, independent stale guards, forged saved operations, changed real source/profile bytes, conflicting replay and injected before/after-rename publication failure with actual journal/readback inventories. C retains exact W/R fixtures and behavior expectations while common native-operation construction is shared."
-    },
-    "SR-FIX-DOCUMENT-PROSE-RIGHT-v1": {
-      "provider": "tests/test_document_prose_right.py:CASES",
-      "kind": "Native prose/admonition bytes with lazy/nested containers, tabs, entity and escape precedence, hostile internal/foreign destinations, inert include/code/title data, structured resource limits and isolated Core/PYZ parity."
-    },
-    "SR-FIX-DOCUMENT-PROSE-v1": {
-      "provider": "tests/test_document_prose.py:prose",
-      "kind": "Native prose/admonition source bytes, safe semantic node trees, LF/Unicode source bindings, internal attachment paths, forbidden active content and real isolated Core/PYZ execution. No rendered-output oracle."
-    },
-    "SR-FIX-DOCUMENT-REFERENCES-RIGHT-v1": {
-      "provider": "tests/test_document_references_right.py:rebuild",
-      "kind": "Owned duplicate/changed target inventories, forbidden payload target copies, independent source/semantic hashes, unchanged reference revisions, legacy identities, real preserved files and isolated Core/PYZ updated-target projections."
-    },
-    "SR-FIX-DOCUMENT-REFERENCES-v1": {
-      "provider": "tests/test_document_references.py:referenced_documents",
-      "kind": "Two composed documents with separate artifact_ref blocks referring to the same owned requirement identity, source byte/hash bindings, exact relation pointers, missing/invalid target errors and actual isolated Core/PYZ parity. No rendering or write approval."
-    },
-    "SR-FIX-DOCUMENT-ROLES-v1": {
-      "provider": "tests/test_document_roles.py:document",
-      "kind": "Actual stored current-schema Document bytes in owned TargetModel inventories, native field checks, primary cardinality, immutable selections, real read-only project inputs and isolated Core/PYZ parity. Explicit full-scope admission, malformed active/retired records, fresh model bindings, global full-project validation including empty/unconnected selections, preserved native identity diagnostics and unavailable composition providers."
-    },
-    "SR-FIX-DOCUMENT-STRUCTURE-v1": {
-      "provider": "tests/test_document_structure.py:composed_records",
-      "kind": "Actual owned Document/Section/ContentBlock source bytes and stored contains relations: nested traversal, source-bound ownership, position/target/relation order, invalid parents, native fields/references/cycles, immutable read-only observations and isolated Core/PYZ parity. Exact conflicting-parent source pointers/hashes, original decimal-spelled positions, explicit full-project scope admission, separate document roots, retired records, deep chains, immutable source/revision bindings and native refusals."
-    },
-    "SR-FIX-DOCUMENT-TABLES-v1": {
-      "provider": "tests/test_document_tables.py:table_project",
-      "kind": "Owned native query/table blocks, bound normalized queries and basic project views, SRX/configuration filters, typed literal rows, missing/null distinctions, exact pagination/source hashes, no source effects and isolated Core/PYZ parity. R adds adversarial source/view/column/scope/provider/query declarations, duplicate identities, byte-only rebinding, native collation and real-file inventories with read/process/network traps. C reuses the exact W/R fixtures and expected results unchanged across private declaration-adapter extraction."
-    },
-    "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1": {
-      "provider": "tests/test_document_view_variants_right.py:nested_project",
-      "kind": "Owned snapshot view with explicit error/preserve missing policies and an acyclic graph of bounded records projections. Missing/null/false/zero separation, typed NFC grouping, independently bounded nested directions/depths, configured graph visibility, stable target identities, original-byte hashes, cyclic/foreign declaration rejection and unchanged sources. C preserves all W/R test bytes while extracting unchanged selection and row-projection services."
-    },
-    "SR-FIX-DOCUMENT-VIEW-VARIANTS-v1": {
-      "provider": "tests/test_document_view_variants.py:variant_project",
-      "kind": "Owned view with actual Linux/Windows configuration, optional parent chain, native applicability and cyclic relation graph. Declared/explicit selection, NFC-equal sort keys with ID ties, excluded vs merely row-filtered intermediates, original configuration bytes and read-only source bindings."
-    },
-    "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1": {
-      "provider": "tests/test_document_views_right.py:bound_view_model",
-      "kind": "Original native view fixture with adversarial closed declarations, static pointer/graph/scope boundaries, exact noncanonical bytes, boolean/null/missing type contracts, tiny soft graph budgets, real-file inventories and trapped file/process/network operations, and isolated Core/PYZ parity. No rendering or approval oracle. C reuses the exact W/R fixture/test bytes and outcomes across pure declaration-planning extraction."
-    },
-    "SR-FIX-DOCUMENT-VIEWS-v1": {
-      "provider": "tests/test_document_views.py:view_project",
-      "kind": "Owned closed-project view and four native requirements with cyclic dependency relations and a separate conflict edge. Exact snapshot/query bindings, typed field and bounded distinct-ID/count projections, direction/depth boundaries, NFC grouping, empty-filter rejection and no write or approval authority."
-    },
-    "SR-FIX-DOMAIN-DRAFT-v1": {
-      "provider": "tests/support/domain.py:domain_value",
-      "kind": "owned per-type field fixtures; no graph, review, Evidence or release-approval proof"
-    },
-    "SR-FIX-EVIDENCE-CONSTRUCTION-RIGHT-v1": {
-      "provider": "tests/test_evidence_construction_right.py:unknown_inputs",
-      "kind": "Explicit unknown product/run provenance with null context and owned reason; no inferred current product, test, check or configuration. Native Evidence source bytes retained through rejected generic update/format operations and stale identity reservations. AI producer/audit data remain passive across real authoring and human-review policy boundaries. Isolated Core/PYZ parity; no stored run proof or persistent publication/replay claim."
-    },
-    "SR-FIX-EVIDENCE-CONSTRUCTION-v1": {
-      "provider": "tests/test_evidence_construction.py:inputs",
-      "kind": "Owned requirement/contract/test bytes, explicit configuration, reserved random128 identities and synthetic producer/run metadata. Immutable recorded/approved value construction, new-measurement identity collision handling, exact subject hashes and check bindings, no filesystem/clock/process/network access and isolated Core/PYZ parity. No persistent recording, authentic external run, human approval or request-replay claim."
-    },
-    "SR-FIX-EVIDENCE-RECORDING-RIGHT-v1": {
-      "provider": "tests/test_evidence_recording_right.py:unbound_input",
-      "kind": "Owned temporary native projects and explicit incomplete source input. No-fallback input/operand guards, documented null provenance, preserved noncanonical Subject/Contract/Test bytes and revisions, durable request identity and replay after later Subject changes. Real storage and denial oracles plus isolated Core/PYZ input parity; no inference of product state, external execution, approval or full CLI integration."
-    },
-    "SR-FIX-EVIDENCE-RECORDING-v1": {
-      "provider": "tests/test_evidence_recording.py:project",
-      "kind": "Owned temporary native projects, explicit prepared Evidence identities and synthetic run metadata. Actual saved-plan publication, writer-lock authorization, exact source/configuration/attachment bindings, durable replay and fail-closed mutation/identity boundaries. Isolated Core/PYZ publication and replay. No authentic external run, human approval, release readiness or complete CLI registration is claimed."
-    },
-    "SR-FIX-GIT-OBJECT-SOURCE-v1": {
-      "provider": "tests/support/git_objects.py:GitFixture",
-      "kind": "Owned temporary local Git repositories built as raw fixture objects without Git write commands; real system Git reads pinned commits, trees and blobs. Independent exact-byte and no-mutation oracles cover HEAD/refs/index/working/foreign data, raw encodings, hooks/filters/pagers, inherited Git environment, missing/corrupt objects and resource boundaries. No complete model, release approval, network or source execution is claimed."
-    },
-    "SR-FIX-ISOLATED-CPYTHON-v1": {
-      "provider": "tests/support/processes.py:run_core",
-      "kind": "isolated CPython; closed stdin; no shell or timeout"
-    },
-    "SR-FIX-JCS-RFC8785-v1": {
-      "provider": "tests/data/jcs-rfc8785-v1.json",
-      "kind": "versioned normative binary64/canonical byte vectors, not presentation output"
-    },
-    "SR-FIX-JSON-PATCH-v1": {
-      "provider": "tests/data/json-patch-rfc6902-v1.json",
-      "kind": "RFC 6902 value vectors and owned synthetic artifact update inputs; no live transaction or CLI proof"
-    },
-    "SR-FIX-LANGUAGE-PACKAGES-v1": {
-      "provider": "tests/test_language_packages.py:package_data",
-      "kind": "owned passive package bytes and multilingual requirements; no translation or linguistic approval oracle"
-    },
-    "SR-FIX-LANGUAGE-POLICY-v1": {
-      "provider": "tests/test_language_policy.py:package",
-      "kind": "Owned language declarations, exact Basic Filtering cases and named literal-policy resources; no detection, automatic register update or project approval."
-    },
-    "SR-FIX-LANGUAGE-REGISTRY-v1": {
-      "provider": "tests/support/languages.py:registry_bytes",
-      "kind": "synthetic bound IANA-format byte fixtures; full distribution snapshot is separately frozen and hash bound, not a linguistic or release approval"
-    },
-    "SR-FIX-LITERAL-LINT-v1": {
-      "provider": "tests/support/literal_lint.py:observe",
-      "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval."
-    },
-    "SR-FIX-MODEL-MANIFEST-v1": {
-      "provider": "tests/test_model_root.py:fixture",
-      "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission."
-    },
-    "SR-FIX-MODEL-VALIDATION-v1": {
-      "provider": "tests/support/model_validation.py:artifact",
-      "kind": "owned loaded-model bytes and explicitly registered test predicates; no authenticated lifecycle/evidence claims"
-    },
-    "SR-FIX-NORMALIZATION-SCOPE-v1": {
-      "provider": "tests/support/normalization_scope.py:prepared",
-      "kind": "Complete owned native Linux JSON scope with explicit configuration/profile/rule/mapping/artifact sources, value-preserving normalization and explicit test-host resource gates. Companion crash fixture terminates a real writer process at building/prepared/partial/configuration-move/committed boundaries. No public CLI or production semantic-service approval."
-    },
-    "SR-FIX-NORMALIZATION-TRANSACTION-v1": {
-      "provider": "tests/support/normalization.py:prepared",
-      "kind": "Owned native Linux project with explicit pure artifact normalization plans, unchanged semantic model root, original and normalized byte hashes; existing target gates, native writer lock/journal/staging/publication/receipts and recovery. Test-only host authority, no CLI or full format-scope claim."
-    },
-    "SR-FIX-ORDERED-FOLD-v1": {
-      "provider": "tests/support/folds.py:goal",
-      "kind": "owned artifact snapshots and ordered change operations; no live root, metadata, lifecycle, authentication or write proof"
-    },
-    "SR-FIX-OWNED-TEMP-v1": {
-      "provider": "tests/support/files.py:temporary_project",
-      "kind": "owned byte fixture; not a future-schema project"
-    },
-    "SR-FIX-PRODUCTION-VALIDATION-v1": {
-      "provider": "tests/support/production_validation.py:inputs",
-      "kind": "Owned artifact/configuration bytes, actual shipped Core/software profiles and explicit language-registry resources for real language, profile SRX and formal-approval adapters. Companion helpers create observed projects and target models; no authenticated review/evidence service, atomic snapshot or write authority."
-    },
-    "SR-FIX-PROFILE-COMPOSITION-v1": {
-      "provider": "tests/support/profile_composition.py:composed",
-      "kind": "Owned ordered profile inputs, positive merge and deliberate conflict cases; not project approval or authentic provenance"
-    },
-    "SR-FIX-PROFILES-v1": {
-      "provider": "tests/support/profiles.py:profile_data",
-      "kind": "owned versioned declarative profiles and scoped field observations; no profile composition, lifecycle approval or analyzer execution"
-    },
-    "SR-FIX-PROJECT-LOCK-v1": {
-      "provider": "tests/support/project_locks.py",
-      "kind": "owned native Linux project roots with explicit cross-process lock protocols"
-    },
-    "SR-FIX-PUBLICATION-RECHECK-v1": {
-      "provider": "tests/support/publication.py:prepared",
-      "kind": "Owned local Linux roots and real writer locks; explicit test-only authority/publication callbacks. No production journal/durability/authentication proof."
-    },
-    "SR-FIX-READ-COMMANDS-v1": {
-      "provider": "tests/test_query_read_integration.py:project_pair",
-      "kind": "Owned complete current/base projects with one literal goal-title delta, stored relation and low query limits; read-only file modes, native Git objects and independent tiny runtime windows. No benchmark or durable Work claim."
-    },
-    "SR-FIX-READ-ONLY-PROJECT-v1": {
-      "provider": "tests/support/read_only.py:make_project",
-      "kind": "owned project bytes with readonly permissions and write-attempt traps; shallow operational observation, not journal completion or lock ownership proof"
-    },
-    "SR-FIX-RECORD-FIELDS-v1": {
-      "provider": "tests/support/records.py:record_value",
-      "kind": "owned passive document and evidence-field fixtures; no execution, authoring, real approvals or external hash verification"
-    },
-    "SR-FIX-REFERENCE-FINDINGS-v1": {
-      "provider": "tests/test_validation_reference_sets.py:reference_case",
-      "kind": "Owned source documents with independent expected missing-target, relation-matrix, field and review findings; the companion missing-reference cases use the same model helpers. Real model/read-only API comparisons preserve selection, deterministic findings and strict identity barriers; no invalid resolved graph or approval/write authority."
-    },
-    "SR-FIX-RELATION-OBLIGATIONS-v1": {
-      "provider": "tests/test_relation_obligations.py:satisfied_fixture",
-      "kind": "Synthetic common envelopes and explicit relation inventories, no actual approval or authenticated reviews."
-    },
-    "SR-FIX-RELATIONS-v1": {
-      "provider": "tests/support/relations.py:artifact",
-      "kind": "Source-bound synthetic relation data; not a full model, graph approval or write authorization"
-    },
-    "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1": {
-      "provider": "tests/test_release_baseline_boundary.py:release_project",
-      "kind": "Actual native project and stored Release policy; unavailable readiness observations, explicit working/release dispatch, unchanged working publication, no-write release refusal and isolated Core/PYZ checks. Stored object selection precedence, full value ownership, external conflict, hostile readiness reports/host gates and saved-plan publication rejection."
-    },
-    "SR-FIX-REQUIREMENT-APPROVAL-v1": {
-      "provider": "tests/support/approval.py:context",
-      "kind": "owned loaded requirements and explicitly synthetic trusted-service/human-review observations; no real identity authentication or write approval"
-    },
-    "SR-FIX-REQUIREMENT-INPUT-v1": {
-      "provider": "tests/test_requirement.py:fields",
-      "kind": "explicit new requirement drafts; pure in-memory preparation, no publication, ID reservation or approval"
-    },
-    "SR-FIX-RESOURCE-INVENTORY-v1": {
-      "provider": "tests/test_resource_inventory.py:descriptor",
-      "kind": "owned binary payloads and normative JSON; actual byte checks, no external evidence authenticity or write authorization"
-    },
-    "SR-FIX-SCHEMA-CATALOG-v1": {
-      "provider": "tests/test_schema_catalog.py:SchemaCatalogWorkTests",
-      "kind": "Trusted local schema resources, synthetic artifact values and project-free command invocations; not a graph or release approval"
-    },
-    "SR-FIX-SCOPE-COMPARISON-v1": {
-      "provider": "tests/test_scope_comparison.py",
-      "kind": "Owned semantic scope fingerprints through resolved/fingerprint helpers and value comparisons through snapshot, with explicit bound dependency observations; no live inventory authenticity, atomic snapshot, permission or writes."
-    },
-    "SR-FIX-SCOPE-CONTROL-v1": {
-      "provider": "tests/test_scope_controls.py:referenced_control",
-      "kind": "Synthetic bound control dependencies and passive mentions; no live project completeness, proposal authorization or actual writes."
-    },
-    "SR-FIX-SCOPE-SEEDS-v1": {
-      "provider": "tests/support/scopes.py:inputs",
-      "kind": "owned explicit current relation inventories, passive resources and bound query-page fixtures; no query engine, complete archive inventory or authorization"
-    },
-    "SR-FIX-SNAPSHOT-OBJECTS-v1": {
-      "provider": "tests/test_snapshot_objects.py:setup_store",
-      "kind": "Owned private external Linux object store and explicitly protected real project; actual canonical/raw bytes, native locks, immutable publication and fresh-process reads. No Baseline creation, scope completeness, normative journal or release approval claim."
-    },
-    "SR-FIX-SRX-COLLECTIONS-v1": {
-      "provider": "tests/support/srx.py:run",
-      "kind": "explicit JSON-only SRX context and sequence expression fixtures"
-    },
-    "SR-FIX-SRX-CONFORMANCE-v1": {
-      "provider": "tests/support/srx_vectors.py:load_corpus",
-      "kind": "versioned SRX 1.0 behavior vectors; actual public APIs, explicit value/missing/error expectations; no human-output snapshots"
-    },
-    "SR-FIX-SRX-CONTEXT-v1": {
-      "provider": "tests/test_srx_context.py:context_data",
-      "kind": "Owned explicit JSON context projections and literal expressions; no live profile/configuration resolution or full SRX approval."
-    },
-    "SR-FIX-SRX-FIELDS-v1": {
-      "provider": "tests/support/srx.py:roots",
-      "kind": "Owned JSON-only SRX input values and static field expressions; no project scan or file writes"
-    },
-    "SR-FIX-SRX-GRAPH-v1": {
-      "provider": "tests/support/srx_graph.py:records",
-      "kind": "owned full supplied SourceRelations model; directed, inverse, cyclic, disconnected and bounded graph behavior"
-    },
-    "SR-FIX-SRX-LOGIC-v1": {
-      "provider": "tests/support/srx.py:binary",
-      "kind": "Owned ordered Boolean/comparison AST and JSON operands with deliberate Missing cases"
-    },
-    "SR-FIX-SRX-NUMERIC-v1": {
-      "provider": "tests/support/srx_numeric.py:vectors",
-      "kind": "Appendix U.3 numeric behavior vectors; fixed input data"
-    },
-    "SR-FIX-SRX-QUANTIFIERS-v1": {
-      "provider": "tests/support/srx.py:quantifier",
-      "kind": "Explicit JSON-only quantifier AST, lexical item values and versioned positive/negative vectors; no live project loading or approval."
-    },
-    "SR-FIX-SRX-RESOURCES-v1": {
-      "provider": "tests/support/srx_resources.py:observed",
-      "kind": "owned explicit AST policies and soft work targets; in-process observations, not persisted checkpoints or host quota proof"
-    },
-    "SR-FIX-STRONG-CLOSURE-v1": {
-      "provider": "tests/support/closure.py:observe",
-      "kind": "Synthetic explicit resource-use, attachment and current-review observations bound to source bytes; not authentic freshness decisions, live inventory or writes."
-    },
-    "SR-FIX-TRANSACTION-COMMITTING-v1": {
-      "provider": "tests/support/committing.py:staged",
-      "kind": "Owned local Linux prepared transactions with native writer lock, real atomic target replacements, journal fsync acknowledgements and preserved before images. Host authority is explicit test-only; no receipts or automatic recovery."
-    },
-    "SR-FIX-TRANSACTION-JOURNAL-v1": {
-      "provider": "tests/test_transaction_journal.py:record",
-      "kind": "Owned bound project, explicit checked publication plan and real native lock; building journal writes only, no prepared payload or normative publication claim."
-    },
-    "SR-FIX-TRANSACTION-RECEIPTS-v1": {
-      "provider": "tests/support/receipts.py:published",
-      "kind": "Owned native Linux projects with a still-held writer lock, fully published targets and a committing journal. The companion finish helper performs real durable transaction/request receipt finalization under explicit test-only authority; no public CLI, authentic actor identity or complete crash-matrix proof."
-    },
-    "SR-FIX-TRANSACTION-RECOVERY-v1": {
-      "provider": "tests/support/recovery.py:pending",
-      "kind": "Owned native Linux pending building/prepared journal and complete independent preflight; explicit test-only authority, real recovery lock, immutable audit and unchanged normative files."
-    },
-    "SR-FIX-TRANSACTION-STAGING-v1": {
-      "provider": "tests/test_transaction_staging.py:begin",
-      "kind": "Owned temporary Linux project and still-held native writer lock; exact building journal, real exclusive images, fsync boundaries and prepared metadata. No normative publication or recovery claim."
-    },
-    "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1": {
-      "provider": "tests/test_verification_contracts_right.py:direct_test_records",
-      "kind": "Direct verified_by test targets with bound implicit overall slots. Mixed explicit/direct contracts, shared test identities, malformed dimensions and identities, native relation and snapshot boundaries, no code/file access, and isolated Core/PYZ parity."
-    },
-    "SR-FIX-VERIFICATION-CONTRACTS-v1": {
-      "provider": "tests/test_verification_contracts.py:referenced_test_records",
-      "kind": "Supplied requirement, explicit verification contract and passive test record. Required-slot identities, native field constraints, source bindings, safe draft default and isolated Core/PYZ parity without test-code execution or Evidence evaluation."
-    },
-    "SR-FIX-VERIFICATION-WAIVER-R-v1": {
-      "provider": "tests/test_verification_waivers_right.py:stored_subject",
-      "kind": "Owned waiver inputs, mutating and revoked trusted test callbacks, exact UTC boundaries and effective configuration chains; real local projects exercise the native guarded update writer. No authentication, aggregate verification or release success is implied."
-    },
-    "SR-FIX-VERIFICATION-WAIVER-v1": {
-      "provider": "tests/test_verification_waivers.py:fixture",
-      "kind": "Owned capability/requirement/task records, explicit scopes and resolved product configuration, versioned and historical waivers, UTC nanosecond boundaries and trusted test review service. No project-code execution, implicit clock, full verification or release approval."
-    },
-    "SR-FIX-WEAK-BOUNDARY-v1": {
-      "provider": "tests/support/boundary.py:selection",
-      "kind": "Owned source inventories and explicit policy selections; not authenticated bundle provenance or live project completeness."
-    },
-    "SR-FIX-WRITER-BOUNDARIES-v1": {
-      "provider": "tests/support/writer_boundaries.py:fixture",
-      "kind": "owned native single/multi-artifact writers, real syscall interruption without finalizers, receipt loss and repeated fresh-process recovery; independent complete byte/model-root oracles and explicit test authority only"
-    },
-    "verification-context-independent": {
-      "provider": "tests/test_verification_context_right.py:independent_case",
-      "kind": "Owned requirement, verification and test subjects, explicit typed contracts, recorded check/test identities and immutable Evidence bindings. Exact semantic projection vectors, current/stale/missing independent policies, audit-only changes, configuration provenance and isolated Core/PYZ parity. No independently resolved required-check set, authoritative run selection, code execution, full verification or release authority."
-    },
-    "verification-context-subjects": {
-      "provider": "tests/test_verification_context.py:subject",
-      "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success."
-    },
-    "SR-FIX-JUNIT-XML-v1": {
-      "provider": "tests/test_junit_xml.py:REPORT",
-      "kind": "Synthetic bounded XML byte documents with the documented JUnit core elements and attributes, explicit encodings and opaque extension data. DTD/entity/schema/inclusion and resource-limit adversarial inputs with real I/O/process/network traps; native Core/PYZ parity. No external test run, Evidence publication or release approval is claimed."
-    },
-    "SR-FIX-JUNIT-XML-RIGHT-v1": {
-      "provider": "tests/test_junit_xml_right.py:DTD_ATTACKS",
-      "kind": "Synthetic recursive/quadratic/exponential DTDs, external schema/include/PI requests, namespace/name-expansion boundaries and explicit encoding profiles. Real parser and I/O/process/network traps, literal-data counterexamples and isolated Core/PYZ behavior; no actual external test run or publication is claimed."
-    },
-    "SR-FIX-JUNIT-MAPPING-v1": {
-      "provider": "tests/test_junit_mapping.py:REPORT",
-      "kind": "Synthetic JUnit core reports and strict versioned exact-attribute mappings to native owned Test/Verification records. Explicit outcome oracles, identity/target ambiguity refusal, immutable input/output/hash binding, native Evidence-construction composition and Core/PYZ isolation with file/network/process/clock/entropy traps. No genuine external run, persistent Evidence or approval is asserted."
-    },
-    "SR-FIX-JUNIT-MAPPING-RIGHT-v1": {
-      "provider": "tests/test_junit_mapping_right.py:report",
-      "kind": "Synthetic core reports with same-name Class/File distinctions, missing/duplicate/conflicting outcomes, versioned mapping rules and exact-source-bound external-identifier sidecars. Complete grouped diagnostic accounting, original/canonical hash boundaries, hostile/invalid/large inputs, immutability and Core/PYZ behavior with I/O/process/network/clock/entropy traps; no external run authenticity or publication is asserted."
-    },
-    "SR-FIX-EVIDENCE-EXCHANGE-v1": {
-      "provider": "tests/test_evidence_exchange.py:exchange_case",
-      "kind": "Owned versioned producer/run/subject/result/environment/attachment declarations with supplied native REQ/VER/TEST snapshots. Exact local subject hashes, explicit outcomes and configurations, closed fields, immutable ownership, passive I/O boundaries and Core/PYZ parity. No external run authentication or publication."
-    },
-    "SR-FIX-SARIF-IMPORT-v1": {
-      "provider": "tests/test_sarif_import.py:sarif_case",
-      "kind": "Synthetic SARIF 2.1.0 inline runs, source-hash-bound explicit result/rule/invocation/artifact mappings and a declared generic Exchange companion. Native identities, sparse selection, no severity-to-pass inference, safe diagnostics and Core/PYZ parity. No complete SARIF validation, import policy or persistent Evidence."
-    },
-    "SR-FIX-EVIDENCE-EXCHANGE-RIGHT-v1": {
-      "provider": "tests/test_evidence_exchange_right.py:exchange_case",
-      "kind": "Owned Generic declarations, blank/opaque required values, hostile environment metadata, real native project byte/mode snapshots, source revalidation, bounded native target lists and embedded Exchange diagnostic coordinates. No project writes or external run authority."
-    },
-    "SR-FIX-SARIF-IMPORT-RIGHT-v1": {
-      "provider": "tests/test_sarif_import_right.py:sarif_case",
-      "kind": "SARIF inline references with omitted imports, ambiguous rules, conflicting invocation indices, failed linked calls, baseline-only and suppressed results, typed metadata and artifact references. Real project byte/mode preservation and isolated Core/PYZ error parity; no imported policy or full-schema claim."
-    },
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-v1": {
-      "provider": "tests/test_evidence_import_policy.py:import_case",
-      "kind": "Owned JUnit XML, strict or analysis mappings, explicit native targets and tool/version declarations; exact originals and optional sidecar, mixed valid/unmapped/ambiguous/contradictory observations, abort/skip accounting, host-independent project preservation, bounded output and isolated Core/PYZ parity. No persistent Evidence or external run authority."
-    },
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1": {
-      "provider": "tests/test_evidence_import_policy_right.py:import_right_case",
-      "kind": "Owned Generic/SARIF sources and mapping bytes, malformed required records, conflicting observations, ambiguous and incomplete selections, complete pointer accounting, provenance, immutable values, unchanged real projects and bounded isolated Core/PYZ preparation."
-    },
-    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1": {
-      "provider": "tests/test_evidence_import_transaction.py:import_project",
-      "kind": "Owned native temporary projects with two Generic observations, explicit Verification slots, bound configuration and original attachment bytes; saved full-set plans, real native writer/receipt replay, refusal without partial publication, exact subject/source preservation, and separate isolated Core/PYZ processes. W supports existing project attachments and Generic only; no raw-input preallocation retry or complete crash/duplicate matrix claim."
-    },
-    "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-RIGHT-v1": {
-      "provider": "tests/test_evidence_import_transaction.py:import_project",
-      "kind": "Owned native Generic import projects; historical input replay before allocation/model preparation, changed-input conflicts, duplicate observations, actual partial target replacements and isolated process exits with explicit native recovery and exact subject/source preservation."
-    },
-    "SR-FIX-VERIFICATION-RUN-SELECTION-v1": {
-      "provider": "tests/test_verification_run_selection.py:case,observation",
-      "kind": "Synthetic owned models, native descriptors and Evidence bindings: observed/expected run union, multiple results, exact slots and subjects, explicit configurations, passive result preservation, independent scope, conflict rejection and isolated Core/PYZ observations. No real product run or approval is claimed."
-    },
-    "SR-FIX-VERIFICATION-RUN-SELECTION-RIGHT-v1": {
-      "provider": "tests/test_verification_run_selection.py:case,observation",
-      "kind": "Owned synthetic model/descriptor/Evidence bytes with historical and unbound provenance, missing expectations, native Appendix L context changes, current/stale mixed observations, explicit independence, per-key exclusions, ordering/audit invariance, unresolved subject types and isolated Core/PYZ parity. No live inventory, external execution, replacement or result aggregation claim."
-    },
-    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-v1": {
-      "provider": "tests/test_verification_run_replacements.py:retest,decision",
-      "kind": "Synthetic owned models, declared human retests, exact full-artifact Evidence sets, per-key acyclic replacement graphs and current complete terminal runs. Includes binding refusal, authority/structure errors, immutable historical bytes and isolated Core/PYZ parity. No authentic human identity, external execution or aggregate verification pass is claimed."
-    },
-    "SR-FIX-VERIFICATION-RUN-REPLACEMENTS-RIGHT-v1": {
-      "provider": "tests/test_verification_run_replacements.py:retest,decision",
-      "kind": "Synthetic human/AI declarations and immutable owned Evidence bytes with broken intermediate bindings, changed old sets, excluded configurations, shared subjects and diamond graphs, missing/stale/incomplete/failed terminals, explicit native scope and isolated Core/PYZ parity. No genuine authorization, external execution or aggregate pass is asserted."
-    },
-    "SR-FIX-VERIFICATION-AGGREGATION-v1": {
-      "provider": "tests/test_verification_aggregation.py:scenario,waiver_case",
-      "kind": "Synthetic independently bound model, product inputs and roles, native expected/observed runs and contexts, human replacement declarations, explicit UTC evaluation time and native waiver with a deliberately trusted test-host callback. Exercises computed subject priorities and isolated Core/PYZ without changing Evidence. No real human identity, live inventory, external execution or release approval is asserted."
-    },
-    "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1": {
-      "provider": "tests/test_verification_aggregation_right.py:pair,evidence_for",
-      "kind": "Literal mixed-run decision tables over synthetic native model/descriptor inputs. Current, failed, stale, unresolved, missing and mixed observations within/across keys; explicit plan status, scope, UTC waiver review, immutable human replacement bindings and native conflicts. Unknown subject contexts remain unresolved. Isolated Core/PYZ, source preservation and no live inventory, external execution or release approval claim."
-    },
-    "SR-FIX-VERIFICATION-COVERAGE-v1": {
-      "provider": "tests/test_verification_coverage.py:coverage_case,prepare",
-      "kind": "Synthetic native whole-project model and explicit descriptor/input/time bindings. Two requirement kinds, eight declared dimensions, exact independent expected counts, current/failed/stale/missing observations and valid waived failure. Immutable coverage, configured exclusion, bound computed query filtering/sorting/paging, source mismatch rejection, no IO and isolated Core/PYZ. No external execution, release or live inventory claim."
-    },
-    "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1": {
-      "provider": "tests/test_verification_coverage_right.py:coverage,release_case,resumed",
-      "kind": "Synthetic native independent missing contract/test/selection/evidence/stale observations and supplied Release closure. Stored/explicit descriptor precedence, exact scoped coverage, inert full Work input and native CheckpointStore process restart in Core/PYZ. Real supplied source/input/time hashes are recomputed; no live inventory, external execution, release or durable query cursor claim."
-    },
-    "SR-FIX-CODE-REFERENCE-SOURCES-v1": {
-      "provider": "tests/test_code_reference_sources.py:reference,repository",
-      "kind": "Owned code_ref records for all five kinds, raw binary/newline bytes in native ProjectBoundary and data-built local GitFixture commits. Native GitObjectSource reads historical blobs without checkout; typed implemented_by graph edges resolve to the same code_ref ID. Executable source and hints remain inert; missing, external, linked and nested sources yield no binding. Fresh standard-library-only Core/PYZ processes exercise the public reader. No H2 selection, H3 status, full-suite or release claim."
-    },
-    "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1": {
-      "provider": "tests/test_code_reference_sources_right.py:after_read,Sha256GitFixture",
-      "kind": "Owned descriptor-bound file mutations and symlink/special-file boundaries, newly appearing nested roots, injected post-read resource failures, actual SHA-1/SHA-256 local Git objects and corrupted/missing blobs with inert promisor helper traps. Fresh Core/PYZ audit hooks prohibit processes, network and writes for all five kinds. Existing W fixtures remain active; no language resolver, H2/H3 result or full-suite/release claim. Directory and FIFO cases are real filesystem entries; socket type uses explicitly labelled stat metadata injection before leaf open, without claiming a real bound socket."
-    },
-    "SR-FIX-CODE-LINE-SELECTION-v1": {
-      "provider": "tests/test_code_line_selection.py:line_reference,bound_file",
-      "kind": "Owned validated line_range records and native code source snapshots; explicit LF/CRLF/CR and Unicode vectors, standard-library encodings, exact inclusive positions, changed outside bytes, historical Git objects, strict decoding/range failures and detached immutable reports. Fresh Core/PYZ processes exercise the public selection API with standard-library-only imports and process/network/write traps. No relocation search, H3 state, current-source revalidation, full-suite or release claim."
-    },
-    "SR-FIX-CODE-RELOCATION-v1": {
-      "provider": "tests/test_code_relocation.py:located_file",
-      "kind": "Owned real file and historical Git sources with explicit H.2 whole-line or versioned raw-byte anchor windows; exact stored, unique, missing and overlapping/ambiguous positions; preserved reference bytes and fresh Core/PYZ audit guards."
-    },
-    "SR-FIX-CODE-REFERENCE-STATE-v1": {
-      "provider": "tests/test_code_reference_state.py:assessed_file",
-      "kind": "Owned native file and historical Git sources with explicit H.3 state expectations. Stored-position precedence despite outside changes, exact relocation, distinct absent/ambiguous selections, guarded missing paths and original root/store identities. Real descriptor mutations preserve the resulting state; fresh standard-library-only Core/PYZ audit guards forbid writes/processes/network. Initial W scope only: unavailable Git-object classification and full edge matrix remain for R; no consumer, full-suite or release claim."
-    },
-    "SR-FIX-CODE-REFERENCE-STATE-RIGHT-v1": {
-      "provider": "tests/test_code_reference_state_right.py:native_source,selection_record,path_objects",
-      "kind": "Owned H.3 matrix on native working files and SHA-1/SHA-256 Git sources. Original hashes are crossed with stored/unique/absent/ambiguous line/text/byte selections. Actual commit/tree/blob removal, corrupt loose objects, unsafe parents and immutable source identities are distinguished from injected batch protocol/process failures. Fresh Core/PYZ runtimes permit only the guarded local Git reads; an owned promisor/helper trap proves no fallback/fetch. No new source capability, consumer, full-suite or release claim."
-    },
-    "SR-FIX-CURRENTNESS-READ-INTEGRATION-v1": {
-      "provider": "tests/test_currentness_read_integration.py:case",
-      "kind": "Owned native whole-project snapshots, explicit VerificationEvaluation and product input bytes/time, complete H.3 code observations and relation review histories. Current/stale/missing/relocated code crosses current/failed/stale/missing/unselected evidence. Validation, coverage, built-in views, direct impact, trace and semantic/local diff retain one immutable observation without subject writes or invented live, release or approval claims."
-    },
-    "SR-FIX-CURRENTNESS-READ-INTEGRATION-RIGHT-v1": {
-      "provider": "tests/test_currentness_read_integration_right.py:resumed",
-      "kind": "Owned complete native model/product/code sources and inert versioned currentness Work inputs. All code/evidence states, superseded and concurrent Evidence, exact Evaluation/time/scope/configuration, native Waiver trust and tamper rejection. Scoped model views retain full input inventories; whole-inventory adapters refuse partial scopes. Real CheckpointStore snapshots are rehydrated into a new native location and consumed in fresh Core/stdlib-only PYZ processes without the original source locator. Incremental QueryWork preserves all inputs beyond filtered/empty pages. No Subject writes, release readiness, executable checkpoint, durable query-cursor or full-suite claim."
-    },
-    "SR-FIX-ROADMAP-PROJECTION-v1": {
-      "provider": "tests/test_roadmap_projection.py:roadmap_values",
-      "kind": "Owned native multi-Release/Milestone/Task model with explicit priorities, stored target date, risks and direct planning/dependency/mitigation edges. Exact source hashes, stable identities, sparse assignments, no inheritance or ratings, unchanged real project bytes/modes and isolated Core/PYZ parity. Supplied-project provider only; no live completeness, configured applicability, explain path, Release closure/readiness or View/Work integration claim."
-    },
-    "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1": {
-      "provider": "tests/test_roadmap_projection_right.py:dated_values",
-      "kind": "Owned native snapshots with calendar boundaries, absent/invalid dates, temporal conflicts and dependency cycles; passive text/extension estimates, invalid risks and unsupported normative fields, actual read-only files/directories and preserved foreign live data. Changed source bindings fail; formatting and detached results preserve facts. Fresh Core/PYZ audit hooks prohibit writes/processes/network on successful and failed projections. Existing W provider and test bytes remain unchanged; no scheduling engine, full inventory, readiness or View/Work acceptance claim."
-    },
-    "SR-FIX-ROADMAP-EXPLANATION-v1": {
-      "provider": "tests/test_roadmap_explanation.py:explanation_values",
-      "kind": "Native bound multi-Release/Milestone model with Tasks, actual incoming implementation links, parallel edges, Requirements, Goals, Needs, Assumptions, Sources, direct dependencies and risks. Independently specified shortest explanation paths preserve stored IDs, inverse flags, source bytes and JSON pointers. Configured depth, exact refusals, unchanged project files and isolated Core/PYZ parity. Pure supplied-model provider; no public CLI, live completeness, Release closure/readiness or Work integration claim."
-    },
-    "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
-      "provider": "tests/test_roadmap_explanation_right.py:project",
-      "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim."
-    },
-    "SR-FIX-RELEASE-SCOPE-v1": {
-      "provider": "tests/test_release_scope.py:release_values",
-      "kind": "Owned native multi-Release/Milestone model with incoming schedules and Task memberships, internal and external stored depends_on edges, component chains and cycles. Exact byte-bound inventory and explicit synthetic resource-use/current-review observations, configuration admission, immutable reports, no filesystem writes and isolated Core/PYZ parity. Seed membership remains distinct from the closed native closure; no live completeness, authenticated providers, normative ScopeHash, readiness or approval claim."
-    },
-    "SR-FIX-RELEASE-SCOPE-RIGHT-v1": {
-      "provider": "tests/test_release_scope_right.py:rich_project",
-      "kind": "Owned byte-bound Release graph with indirect Evidence subjects, verification slots, all strong relation types, closed weak dependencies, explicit current reviews and profile/rule/mapping/attachment resources. Native schema failures, exact variant conflicts and unresolved applicability; no authenticated providers, verification or readiness proof."
-    },
-    "SR-FIX-RELEASE-READINESS-v1": {
-      "provider": "tests/test_release_readiness.py:release_case",
-      "kind": "Owned Release with Capability, Requirement, Task, explicit contracts and native current Evidence, stored evaluation, complete closure/current relation reviews, native human Requirement/Task Done checking and explicit synthetic trusted approval-history observations. No real human authenticity or external execution is claimed; missing, changed and revoked observations block. Isolated Core/PYZ and read-only boundaries."
-    },
-    "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1": {
-      "provider": "tests/test_verification_planning_context.py:value",
-      "kind": "Native Capability/Task schema 0.2.0 values, exact Appendix L field projection, metadata/workflow exclusions, configured independent contracts and legacy Evidence hashes. Native freshness/selection/aggregation, no rewriting or audit-hash substitute."
-    },
-    "SR-FIX-RELEASE-READINESS-RIGHT-v1": {
-      "provider": "tests/test_release_readiness_right.py:blocker_case",
-      "kind": "Native eight-gate Release with exact Risk/Issue decisions, explicit synthetic current human review verification, native Scope/configuration parents, verification slots and Waivers. Revocation, mismatched bindings, provider failure, warning severity and stale evidence remain blocking; no real approval or execution claimed."
-    },
-    "SR-FIX-READINESS-MIGRATION-v1": {
-      "provider": "tests/test_readiness_updates.py:stored",
-      "kind": "Owned temporary project with legacy Release/Risk/Issue and the real guarded Change Plan update writer; explicit selection, original revision/hash, lifecycle and publication barriers, preserved modes/audit and no implicit review or approval."
-    },
-    "SR-FIX-RELEASE-BASELINE-v1": {
-      "provider": "tests/test_release_baseline.py:release_project",
-      "kind": "Native complete Release/Capability/Requirement/Task and stored verification selection in an owned temporary project. Explicit synthetic approval history and current human reviews, real M13 gates, full-project Baseline snapshot and native locked publication. No production approval or external run is asserted."
-    },
-    "SR-FIX-RELEASE-BASELINE-RIGHT-v1": {
-      "provider": "tests/test_release_baseline_right.py:release_project",
-      "kind": "Owned native Release models with stored/external/legacy descriptors and every required gate. Explicit synthetic human risk/issue completion and replay/refusal observations. Real locked whole-project Baseline publication and independent archive selection binding verification. No production approval or external run is asserted."
-    },
-    "SR-FIX-PLANNING-BUILTIN-VIEWS-v1": {
-      "provider": "tests/test_planning_builtin_views.py:roadmap_values",
-      "kind": "Native owned Roadmap, Verification coverage and ReleaseReadiness contexts with actual stored/external selections, explicit synthetic host proofs and failed/missing gates. Read-only view adapters, exact source/model mismatch and forbidden-I/O observations. No rendered text or production human approval is an oracle."
-    },
-    "SR-FIX-PLANNING-BUILTIN-WORK-v1": {
-      "provider": "tests/test_planning_builtin_work.py:release_case",
-      "kind": "Owned native view/Readiness semantic inputs, exact evaluation/scope/time/model binding, fresh native gate and review services, corrupt/missing product inputs, real Work input storage and isolated Core/PYZ processes. Synthetic host observations are explicit fixtures, never production approval; no rendered output oracle."
-    },
-    "SR-FIX-EXCHANGE-MAPPINGS-v1": {
-      "provider": "tests/support/exchange_mappings.py:mapping_value,fields_value,entry_value,registry_value",
-      "kind": "Owned v1 passive mapping rules and separate byte/hash-bound external registries. Explicit typed value tables, four mapping families, exact resource selection, namespace/revision identity, unmodified rest data and source bytes. Real model-root integration and isolated standard-library-only Core/PYZ execution with forbidden-I/O guards; no format parser, import publication, loss acceptance or approval claim. R variants add exact versions and canonical hashes, closed and illtyped inputs, typed nested values, strict JSON boundaries, unselected/overlapping collections, detached observations, passive model-root changes and legacy resource preservation. Test-local mutations preserve the original W fixtures."
-    },
-    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1": {
-      "provider": "tests/support/import_identities.py:history; tests/support/relations.py:artifact,edge,external",
-      "kind": "Synthetic native artifact/relation identities with explicit mapping projections, exact payload bytes and supplied UTC timestamps. Legacy unbound identities, original source bytes, aliases, distinct namespaces, duplicate and invalid input rejection, detached lookup observations, real model-root bindings and isolated Core/PYZ imports. No external source authenticity, complete format import, policy decision or publication is claimed. R cases add full native data roundtrips with nested unknown extensions, distinct document/case/Unicode/whitespace names, malformed native paths and bytes, exact explicit projections and UTC values, non-executed foreign hooks, and unchanged project bytes/modes after success or rejection."
-    },
-    "SR-FIX-IMPORT-COMPARISON-v1": {
-      "provider": "tests/support/import_comparison.py:compare,imported; tests/support/relations.py:artifact,edge,external",
-      "kind": "Synthetic explicit local/source JSON object projections and native import histories for all five comparison cases and four declared strategies. Separate historical hashes, unchanged raw-payload/revision provenance, legacy history, malformed input, real mapping selection with native artifact/relation lookup, detached observations and isolated Core/PYZ evaluation. Only passive decisions and target candidates; no format import, revision, identity allocation, clock, write or human approval is claimed. R adds asymmetric historical baselines, exact prerelease/build/case binding, every incomplete history field, malformed values, safe JSON pointers, numeric equivalence, cycles and shared inputs, foreign hook rejection, prior-observation preservation, actual file bytes/modes and isolated rejection contracts. Existing JSON reader limits remain unchanged."
-    },
-    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1": {
-      "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model",
-      "kind": "Explicit synthetic parsed artifact candidates, byte-bound mapping/profile/input resources and complete supplied native projects. Known history, fresh IDs/envelopes, conflicts, unaccepted losses, existing attachments and ordinary target gates. No real format parsing, writer, completed import or human approval."
-    },
-    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1": {
-      "provider": "tests/support/import_planning.py:candidate,imported,mapping;tests/support/targets.py:model;tests/test_import_planning_right.py:arguments,copied",
-      "kind": "Synthetic saved import observations with explicit current source/candidate/mapping inputs and whole supplied TargetModel. Changed raw/semantic bases, resources, reservations, current gates, malformed or forged reports, retained invalid results and detached read-only inventories. No external format parser, human approval or live transaction evidence."
-    },
-    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1": {
-      "provider": "tests/support/import_execution.py:project,inputs,candidates,resource_gate;tests/test_import_execution.py:assert_native_files;tests/test_import_execution_right.py:execute,failed",
-      "kind": "Owned synthetic native project with explicit parsed artifact candidates, supplied mapping and input bytes, existing bound attachment, local and incoming identities, a complete TargetModel and trusted test-host authority/gates. Real journal, receipt and idempotent replay observations; no source parser, human approval, new-attachment byte publication or loss acceptance is fabricated. The initialized operational lock directory is explicit; a trusted fixture gate validates the one supplied mapping resource, and a negative case verifies mandatory refusal without that gate. R cases inject actual replacement interruptions before and after each of two artifact replacements, observe native read quarantine and explicitly authorize recovery with a separate synthetic RecoveryAuthority. They retain journal/receipt evidence through late failures; no real human consent is asserted."
-    },
-    "SR-FIX-CSV-CODEC-v1": {
-      "provider": "tests/support/csv_codec.py:column,resources,selected,record",
-      "kind": "Explicit synthetic csv-profile-v1 declarations, bound CSV exchange mappings, passive external/native identities, typed records and literal RFC-4180 byte samples. Exercises exact selection, semantic roundtrips, rejected loss and isolated Core/PYZ behavior. No external source, native import plan, writer, human approval or full format-integration result is simulated."
-    },
-    "SR-FIX-CSV-CODEC-RIGHT-v1": {
-      "provider": "tests/support/csv_codec.py:column,resources,selected,record;tests/test_csv_codec_right.py:inverse_codec",
-      "kind": "Synthetic exact CSV profiles, actual bound mappings, canonical inverse value tables and literal byte inputs. R cases retain BOM/data distinctions, logical diagnostics, absence/null/type boundaries, unique-or-rejected inverses, owned values, failed selection and unchanged project bytes/modes. Large complete inputs, forbidden hooks/I/O, real strict JSON nesting and isolated Core/PYZ are exercised. No external source, human approval, whole-model export or completed import is simulated."
-    },
-    "SR-FIX-CSV-EXPORT-COMPATIBILITY-v1": {
-      "provider": "tests/test_document_exports.py:scalar_project;tests/test_document_view_variants_right.py:field_column;tests/support/csv_codec.py:column,record,selected",
-      "kind": "Existing native View source models and explicit bound CSV profiles with synthetic C0/DEL string values. Literal machine-byte oracles for legacy scalar/typed View data rows, recovered native values and generated metadata are checked alongside the distinct strict CSV-profile rejection contract, before and after shared serialization. No presentation, documentation, external approval or full format-integration claim."
-    },
-    "SR-FIX-NDJSON-NATIVE-CODEC-v1": {
-      "provider": "tests/support/ndjson_codec.py:envelope,plan_value;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_ndjson_codec.py:wire",
-      "kind": "Synthetic complete native domain/record objects and prehashed regular Change Plans in explicit three-field NDJSON v1 envelopes. Literal wire/byte oracles, ordered mixed streams, duplicate revisions, detached original-byte observations and malformed envelopes/payloads verify passive processing. I/O/generation/execution traps and isolated Core/PYZ runs do not imply real actor approval or a whole import/export success."
-    },
-    "SR-FIX-NDJSON-STREAM-RESUME-v1": {
-      "provider": "tests/test_ndjson_codec_right.py:rows,wire,blocks,restored,BAD_LINES;tests/support/ndjson_codec.py:envelope,plan_value",
-      "kind": "Synthetic mixed native envelopes with Unicode, escapes, numeric tokens, duplicates and prehashed regular plans. Malformed physical lines, split transfer blocks, explicit EOF, large lines, retained source/cursor bytes and independent cursor hashes exercise passive source-bound resume. Temporary host persistence and isolated Core/PYZ probes are not portable Work integration, real approvals or full import/export success."
-    },
-    "SR-FIX-REQIF-TYPE-OBJECTS-v1": {
-      "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/support/exchange_mappings.py:mapping_value;tests/support/domain.py:domain_value",
-      "kind": "Synthetic ReqIF type/object documents with explicit metadata, six scalar/enumeration families, source definitions, lexical values, defaults and references. Explicit parser limits, malformed/security inputs, native identity/hash oracles and existing bound mapping resources exercise passive roundtrip/projection. Isolated Core/PYZ runs do not imply XSD validation, external-tool interoperability, project import/export or authorization."
-    },
-    "SR-FIX-REQIF-TYPE-OBJECTS-R-v1": {
-      "provider": "tests/support/reqif_objects.py:document,datatype,definition,spec_object,value,one;tests/test_reqif_objects_right.py:raw_with_bounds,resource",
-      "kind": "Synthetic six-family ReqIF boundary corpus, exact and non-native number lexemes including huge exponents/integers, Gregorian dates, all defaults, duplicate IDs across deferred sections, uninterpreted content and XML safety inputs. Explicit bound inverse mappings test successful typed changes, unchanged provenance, ambiguity, invalid native candidates, isolated Core/PYZ and resource failures. No external XSD execution, foreign-tool roundtrip or whole-project success is claimed."
-    },
-    "SR-FIX-REQIF-STRUCTURE-XHTML-v1": {
-      "provider": "tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,xvalue,attachment;tests/test_reqif_structure.py:mapped_fixture;tests/support/targets.py:model",
-      "kind": "Owned ReqIF structure/XHTML bytes, explicit source/type/occurrence/relation identities and actual native model bytes. Independent prose node oracles, explicit byte/hash/path-bound attachment fixtures and negative reference/safety/binding cases. No external tool, renderer, resolver, project write, full-suite or release claim."
-    },
-    "SR-FIX-REQIF-STRUCTURE-XHTML-R-v1": {
-      "provider": "tests/test_reqif_structure_right.py:bound_graph;tests/support/reqif_structure.py:structured,hierarchy,specification,relation,xdocument,attachment;tests/support/targets.py:model",
-      "kind": "Owned source and actual native model bytes with explicit identity/edge bindings. Reimport and sibling order, allowed/forbidden native cycles, attachment alias/integrity boundaries, exact Unicode/code/whitespace node oracles, original/default provenance, unsupported fallback retention, actual parser budgets and host-failure propagation. No renderer, resolver, file writes or complete import claim."
-    },
-    "SR-FIX-REQIF-PRESERVATION-v1": {
-      "provider": "tests/support/reqif_preservation.py:opaque_source,source_entry,source_key,target_bytes;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:xdocument;tests/support/domain.py:domain_value",
-      "kind": "Owned complete XML including foreign namespace/QName attributes, mixed text and Unicode, with actual native JSON target bytes and explicit source contexts. Independent source hash/Base64, original-byte and item-identity oracles; no write, resolver or full-project success claim."
-    },
-    "SR-FIX-REQIF-LOSS-v1": {
-      "provider": "tests/test_reqif_loss.py:binding,mapped,locations;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:structured,xdocument,attachment;tests/support/reqif_preservation.py:opaque_source,source_entry,target_bytes",
-      "kind": "Owned complete XML/native JSON candidates with explicit mapping resources and record locations, independent XML location oracle, actual byte-bound attachment candidates and report-bearing export errors. No filesystem/network publication, whole-project validation, interoperability or write approval claimed."
-    },
-    "SR-FIX-REQIFZ-CONTAINER-v1": {
-      "provider": "tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:xdocument",
-      "kind": "Owned XML and real independent stdlib ZIP bytes, nested/multiple explicitly selected documents, original byte attachments and unused members. Exact external archive/member hash and manifest oracles, native explicit attachment integration, safety/binding/limit failures, read-only guards and isolated Core/PYZ roundtrips. No project import/export, foreign-tool, full-suite or release claim."
-    },
-    "SR-FIX-REQIFZ-CONTAINER-R-v1": {
-      "provider": "tests/test_reqifz_right.py:source_files,offsets;tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:one,document;tests/support/reqif_structure.py:xdocument",
-      "kind": "Actual independently generated stored ZIPs with local/central/end record and payload mutations; unused members, gap/overlap/size/CRC failures, unsafe original filenames, complete URI and XML-boundary vectors. Tests require rejection before payload reads for invalid metadata and exact owned manifest/byte oracles for valid transports. No project write, full-suite, foreign-tool or release claim."
-    },
-    "SR-FIX-EXCHANGE-EXPORT-v1": {
-      "provider": "tests/test_exchange_export.py:model,scope,prepared;tests/test_project_export.py:project,call;tests/support/reqif_objects.py:document;tests/support/reqif_structure.py:xdocument;tests/test_exchange_export_right.py:inputs,run;tests/test_project_export_right.py:attached_project,invoke",
-      "kind": "Owned actual native project bytes, explicit mappings/CSV profiles and original ReqIF carrier definitions/registry identities, real PNG attachments and historical baseline objects. Exact format bytes, independent native manifest/hash and UTC oracles, all four scopes, CLI flags/publication, normative inventories and isolated Core/PYZ execution. W/R behavior evidence with explicit source mutations, missing bindings, native prose attachments, deterministic permutations/empty outputs, conflict and late-publication failures, project/profile hard limits and source-write traps; no foreign-tool, approval, full-suite or release claim."
-    }
-  }
+  ]
 }

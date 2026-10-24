@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 17
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 615
-last_completed_plan_commit: 14.o.C
-next_plan_commit: 15.a.W
-last_completed_numbered_bundle: 455
+implementation_plan_commits_completed: 616
+last_completed_plan_commit: 15.a.W
+next_plan_commit: 15.a.R
+last_completed_numbered_bundle: 456
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -23385,12 +23385,113 @@ bleiben erhalten. Keine Laufzeit-, Control-, Watcher- oder CI-Änderung.
 
 #### 15.a.W – Let it Work
 
-- [ ] **15.a.W** · Position **616/900** · Voraussetzung: `14.o.C`.
+- [x] **15.a.W** · Position **616/900** · Voraussetzung: `14.o.C`.
 **Exakte Commit-Message:** `15.a.W feat(bundle): Kanonisches ZIP und Manifestdomäne aufbauen`
 
 **Umsetzung:** Vollständiges E.2-ZIP-Profil und geschlossenes Manifest nach E.1.1 mit exakt allen tatsächlichen Payloads ohne eigene rekursive Aufnahme ausprägen. Vorhandene native Scope-/Modellbindungen und gemeinsamen Archivcodec verwenden; die W-Abnahmen des Entscheidungsbelegs bleiben geschuldet.
 
 **Verhaltensabnahme:** Derselbe Payloadsatz mit denselben gebundenen Metadaten erzeugt identische kanonische Manifest- und Containerbytes. Exakte Feldmenge, tatsächliche Längen/Hashes, leere Dateien, Unicodepfade, deterministische Medientypklassifikation und getrennte externe ZIP-Bindung nachweisen. Der Codec behauptet keine vollständige semantische Projektprüfung.
+
+**Umsetzungs- und Prüfnachweis 15.a.W, Bundle 456 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_155906_1024_e46f1a.zip`, SHA-256
+`906236922cf8d77ee474fa4d4d8d6bb967ae2685a6539c73549e6e00cbe76bfb`,
+bestätigt den sauberen OFF-PLAN-Commit
+`8830dcf41aefd4d4569728bc1f400dadd0de800e` aus Bundle **455** mit
+Vorgänger `947fb14f1a04928bb04c6d596b3db6f27df28ce9`. Vierfachbindung,
+Root-Anleitung, Kontext, Umgebung, Manifest, Rundaten, Ausführungslogs und
+alle **2.212** Snapshotdateien wurden mit dem tatsächlichen Apply-Stand
+lesend abgeglichen. Die vorherige Apply-Teilprüfung bestand **6.703/6.703**
+Tests in Gruppe **0**, Sequenz **162**, mit vier Workern. Tatsächliche
+Einzeloutcomes, Quellstand und feste Testidentitäten stimmen überein.
+Der bestätigte Produktfortschritt bleibt vor dieser Umsetzung **615/900**.
+
+**Regulärer W-Ausschnitt.** `specroad.bundles` stellt den reinen
+Produktbundle-Writer und -Reader bereit. Alle vierzehn Metadatenfelder
+werden ausdrücklich angeliefert; hinzu kommt genau die tatsächliche
+Payloadliste als fünfzehntes Manifestfeld. Native Scope Descriptors und
+Boundary References werden über ihre bestehenden Verträge geprüft.
+Projekt-/Teilbundle, Read-only- und Idempotenzkombinationen folgen E.3 und
+E.1.1. Der Writer bindet seine tatsächliche Toolversion; der Reader lehnt
+eine andere Erzeugerversion nicht allein deshalb ab. Die unveränderte
+Spezifikation **0.2.22** und die bereits angewandte Entscheidung
+BUNDLE-MANIFEST-CONTRACT sind maßgeblich. **SPECROAD-DECISION-1** wurde
+geprüft; diese Umsetzung enthält keine neue normative Klärung.
+
+Manifest und ZIP entstehen über den vorhandenen gemeinsamen Archivcodec.
+Der bisherige ReqIFZ-Pfadwächter ist unverändert als gemeinsamer portabler
+Archivwächter verfügbar; ReqIFZ verwendet dieselbe Prüfung weiter. Tatsächliche
+Bytelängen, SHA-256 und die festgelegte Transport-Medientypklassifikation
+binden jede Payload genau einmal. Das Manifest inventarisiert sich nicht
+selbst. Leere Dateien, NFC-UTF-8-Namen, opake Archiv-/Betriebsbytes und
+abweichende Eingabeaufzählung sind abgedeckt. Der Reader prüft eine gelieferte
+externe ZIP-Erwartung, kanonische Container-/Manifestbytes und die exakte
+Inventarbijektion. Er gibt eigene unveränderliche Beobachtungen zurück.
+
+Bewusste Ausschlüsse haben geschlossene, geordnete Einträge mit zulässigen
+Gründen und dürfen keine Payload verdecken. `specroad.json` bleibt erforderlich;
+ihre direkte Projekt-/Schemabindung wird geprüft. Gefährliche Pfade und
+Kollisionen werden vor Payloadzugriff abgewiesen. Format-/Typfehler,
+nicht unterstützte Versionen, Byteintegrität, Pfadsicherheit und echte
+Hostfehler behalten die getrennten Fehlerklassen. Ungültige UTF-8- oder
+JSON-Syntaxbytes des Manifests liefern SRV060.
+
+Der Codec besitzt keinen Entpacker und keine Live-Projektauswahl. Seine
+Prüfung ist ausdrücklich auf Container, Manifest und Payloadbytes begrenzt;
+sie bescheinigt weder rekonstruierte Modellwurzel/Closure noch Authentizität,
+Freigabe, portable Write-Idempotenz oder sichere Extraktion. Die Testdaten
+berechnen echte native Scope-/Modellhashes aus eigenen Beobachtungen,
+behaupten aber kein vollständig validiertes Projekt. Operative Receiptbytes
+sind Transportfixtures, keine erfundenen gültigen Receipts oder Freigaben.
+Vollständige Fachprüfungen, Auswahl und Transfer bleiben in 15.b–15.d und
+den weiteren M15-Schritten offen. **15.a.R und 15.a.C bleiben offen.**
+
+**Gezielte Entwicklungsprüfung.** Im endgültigen Zustand bestanden
+**311/311** Verhaltenstests mit **vier parallelen Workern** unter
+Linux/Python 3.14.4:
+
+- `tests/test_product_bundle.py`: **69 neue** Fälle, einschließlich nativer
+  Projekt-/Dokument-/Releasebindungen, unabhängiger ZIP-/Inventaroracles,
+  unveränderlicher Beobachtungen, negativer Bindungen und isolierter Core-/PYZ-Läufe;
+- `tests/test_reqifz.py` und `tests/test_reqifz_right.py`: **48 + 146** bestehende Fälle;
+- `tests/test_work_archive.py` und `tests/test_work_archive_right.py`: **27 + 21** bestehende Fälle.
+
+Der erste Versuch scheiterte bei den 69 neuen Fällen am unzulässigen
+Dokument-Relationsfixture; die 242 bestehenden Fälle bestanden. Nach
+Korrektur auf die native Dokument-/Section-/Content-Block-Hierarchie
+bestanden alle 311 Fälle. Der anschließende Vertragsabgleich korrigierte
+die Diagnose für ungültige Manifestbytes; der erneut ausgeführte endgültige
+Teiltest bestand ebenfalls vollständig. Frühere Fehlversuche sind kein
+Erfolgsnachweis. Es wurde kein serieller oder vollständiger Verhaltenstest
+in Dev gestartet.
+
+Die vollständige Collection-/Katalogprüfung ist gültig: **20.178** Fälle,
+**0** ausgeführte Testkörper. Alle **20.109** bestehenden Testidentitäten
+und Nummern bleiben erhalten; die **69** neuen Nummern **20.109–20.177**
+werden ausschließlich angehängt. SR-TC-0387/0388/0485 sind ausdrücklich
+partielle Verhaltensnachweise; ihre normativen Requirementverträge und
+Spezifikationsbindungen bleiben unverändert. Weitere R-/C- und M15-Abnahmen
+bleiben als offene Punkte dokumentiert.
+
+Geprüfter Quellstand:
+`17ba3965c1c13471bec4066a187a570d1ce18c07a356bf93c613459966b73355`.
+SHA-256 der tatsächlichen Auswahlbeobachtung:
+`c350e3e6ceb05961f4732e7e1ef5fddaade5acf26067cc3db946759f59fcdb0d`;
+SHA-256 der tatsächlichen Einzeloutcomes:
+`5e1160c780da8be96eeb37c16e44bcf4480ef0a8378c34c5b118415321ca64f4`;
+SHA-256 des vollständigen Katalogbelegs:
+`1f1c8cba07386134af45fff189f6808359fe52d66610625ecaeb172e079a25d9`.
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+
+**Vorgesehene Übergabe.** Genau ein regulärer PLAN-Zustand **15.a.W**,
+Position **616/900**. Der Entrypoint stellt den gezielt geprüften W-Zustand
+auf der sauberen gebundenen Basis her und führt ausschließlich Gruppe **1**,
+Sequenz **163**, mit **6.726** Tests und vier Workern aus. Erst nach
+bestandener gebundener Apply-Teilprüfung setzt er die fünf Fortschrittsmarker
+auf **616/900**, zuletzt **15.a.W**, nächstens **15.a.R**, Bundle **456**
+und die W-Checkbox und erzeugt die exakte PLAN-Commit-Message.
+Ein tatsächlicher Apply-Erfolg wird hier nicht vorweggenommen.
 
 #### 15.a.R – Make it Right
 
