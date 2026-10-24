@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 612
-last_completed_plan_commit: 14.n.C
-next_plan_commit: 14.o.W
-last_completed_numbered_bundle: 451
+implementation_plan_commits_completed: 613
+last_completed_plan_commit: 14.o.W
+next_plan_commit: 14.o.R
+last_completed_numbered_bundle: 452
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -22780,12 +22780,140 @@ kein Volltest, serieller Test, CI-Start oder weiterer Produktzustand.
 
 #### 14.o.W – Let it Work
 
-- [ ] **14.o.W** · Position **613/900** · Voraussetzung: `14.n.C`.
+- [x] **14.o.W** · Position **613/900** · Voraussetzung: `14.n.C`.
 **Exakte Commit-Message:** `14.o.W feat(exchange): Format-Roundtrips und Importfortsetzung aufbauen`
 
 **Umsetzung:** Vollständige Roundtripkorpora einschließlich Anhängen, Reviews und Konfigurationen je Format ausführen.
 
 **Verhaltensabnahme:** Schnittmengenprofil erhält Identitäten, Werte, Hierarchie und passende Reviewkontexte.
+
+**Umsetzungs- und Prüfnachweis 14.o.W, Bundle 452 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_120105_1024_1a6bd9.zip`, SHA-256
+`1d6d37e30a6a8e7063437a257c83db3472ac3dee4ab586f30f38129aaf27f473`,
+bestätigt den sauberen Commit `359f48a13e35b0a8c66695aa46a8f789792ba272`
+für **14.n.C**, Position **612/900**, Bundle **451**, mit Vorgänger
+`b1310b223e926782022f9a46f208a4c66f73e647`. Alle **2.203** Snapshotdateien,
+Vierfachbindung, Manifest-/Rundaten, Ausführungslogs und read-only geprüfter
+Apply-Arbeitsbaum stimmen überein. Die gebundene Apply-Teilprüfung hat
+**6.670/6.670** Tests in Gruppe **2**, Sequenz **158**, mit vier Workern
+bestanden. Tatsächliche Outcomes, Quellhash und Testidentitäten wurden geprüft;
+die fünf bestätigten Planmarker sind entsprechend in Dev angeglichen.
+
+**Implementierter W-Ausschnitt.** Der neue ausführbare Korpus in
+`tests/support/format_roundtrips.py` und `tests/test_format_roundtrips.py`
+enthält neun eigene native Artefakte: Requirement, Goal, Dokument, Abschnitt,
+zwei Inhaltsblöcke, Konfiguration, Evidence und einen synthetischen
+Relationsreview. Hinzu kommen zwei tatsächliche hashgebundene Anhänge,
+explizite externe Identitäten, absichtlich von der Inventarreihenfolge
+abweichende Abschnittspositionen, verschachtelte passive Werte und
+unterschiedliche Unicode-Schreibweisen. Drei Sprachwerte sowie getrennte
+Abwesenheits-/Nullfälle werden ohne Normalisierung geprüft.
+
+Die vorhandenen Produkt-APIs exportieren echte Bytes und lesen sie wieder:
+
+- **NDJSON:** Der gesamte native Artefaktbestand einschließlich Review,
+  Konfiguration, Relationsreihenfolgen und Extensions bleibt erhalten.
+- **CSV:** Je Artefakttyp wird ein ausdrücklich gebundenes Einzeltyp-Profil
+  mit `typed-json-v1` verwendet. Getrennte CSV-Dateien sind getrennte Ströme;
+  sie werden nicht als eine gemischte CSV-Datei ausgegeben. Native IDs sowie
+  sämtliche im Profil deklarierten Felder kommen aus den dekodierten Daten.
+  Kein fehlendes Fachfeld wird aus dem ursprünglichen Artefakt ergänzt.
+- **ReqIF/ReqIFZ:** Explizite mitgelieferte Typdefinitionen und Registry
+  binden native/externe IDs, skalare Felder, Sprach-/Verbindlichkeitswerte,
+  XHTML mit Bildanhang, drei geordnete Vorkommen und eine externe
+  Relationsidentität mit ihren Endpunkten. Rücklesen bestätigt genau diese
+  Schnittmenge. ReqIF liefert tatsächliche Beigabebytes, ReqIFZ die geprüften
+  Container-Mitglieder. Beide erhalten die beiden Anhangpayloads exakt.
+
+CSV und NDJSON werden ausschließlich aus dekodierten Artefakten und tatsächlich
+transportierten Anhangbytes wieder zu einem nativen Modell zusammengesetzt.
+Bei separat vorgegebener identischer Projektkonfiguration und identischem
+Profil müssen die semantischen Modellwurzeln übereinstimmen. Diese nativen
+Projektressourcen werden dadurch nicht zu behaupteten Exportinhalten.
+Der echte Relationsstatusdienst bestätigt den unveränderten synthetischen
+Review als `current`, aber ausdrücklich mit `approval_granted=false`.
+Eine echte menschliche Prüfung oder Produktfreigabe wird nicht behauptet.
+
+Das gewählte ReqIF-Profil bildet native Review-/Konfigurations-/Evidence-
+Records nicht ab. Ihre ganzen Identitäten müssen deshalb als konkrete
+Verluste und Ausschlüsse erscheinen. Die Tests ergänzen sie nicht aus
+Quellresten und behaupten für diesen verlustbehafteten Inhalt keine aktuelle
+native Reviewbindung. Native Projektressourcen bleiben auch bei CSV/NDJSON
+ausgewiesene Verluste. `fail_on_loss=true` verhindert für alle vier Formate
+einen erfolgreichen Export dieses Korpus. Alle Quellen bleiben unverändert;
+gleiche Eingaben ergeben identische Ausgabe- und Manifestbytes.
+
+Damit werden die vorhandenen Verträge **10.12.1/10.12.3, D.1/D.2.1/D.3.1
+und Anhang J** angewandt. **SPECROAD-DECISION-1** ist in § 2.4 ausdrücklich
+vorhanden und wurde geprüft. Eine neue normative Entscheidung ist für
+diesen W-Korpus nicht erforderlich. Spezifikation **0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Der Produktcode, alle vorhandenen Tests, Runner und
+Workflows bleiben ebenfalls bytegleich.
+
+**Gezielte parallele Abnahme.** **1.844/1.844** Verhaltenstests bestanden
+mit **vier Workern**, Prozessabschluss **0**, ausschließlich `passed` und
+`full_suite_passed=null`. Enthalten sind alle **22** neuen Korpusfälle und
+die betroffenen vorhandenen Codec-, Export-, Verlust-, Konfigurations- und
+Reviewstatus-Regressionen. Im ersten isolierten Korpuslauf bestanden
+16 Fälle; sechs ReqIF-Fälle stoppten an einem falschen Attributzugriff des
+neuen Testcodes. Die Verwendung der bestehenden `source`-/`target`-Felder
+wurde korrigiert; alle 22 Fälle sind im gebundenen Abschlusslauf bestanden.
+Es wurde kein produktiver Fehlervertrag oder fachlicher Erwartungswert
+zum Bestehen verändert.
+
+Geprüfte Testdateien:
+
+- `tests/test_configuration_scope.py`
+- `tests/test_configuration_scope_right.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_format_roundtrips.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_relation_review_status.py`
+- `tests/test_relation_review_status_right.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requirement_exchange.py`
+- `tests/test_requirement_exchange_right.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **20.032** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Alle **20.010** alten
+Knoten-/ID-Zuordnungen und permanenten Testnummern bleiben erhalten; die
+**22** neuen Identitäten erhalten ausschließlich Nummern **20010–20031**.
+`SR-FIX-FORMAT-ROUNDTRIPS-v1` ist neu registriert. `SR-TC-0285` bindet die
+**12** aktuellen nativen Review-Roundtrips; `SR-TC-0330` bindet alle **22**
+Fälle. Beide bleiben mit konkreten Restarbeiten `partial`.
+
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, Fremdtool-, Human-Review-
+oder Release-Erfolgsnachweis. Vollständige Import-CLI, echte Migration/Merge-
+Ausführung und mehrplattformige Interoperabilität werden nicht behauptet.
+Geänderte Reviewbindungen, vollständige geteilte Import-/Workfolgen und
+ihre Plan-/Zielgleichheit bleiben dem offenen **14.o.R** zugeordnet.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `3da2490dbd10c3b96a42f5dcea0bfeac7cc9ea8f26294a429e3864b377e5f05a`.
+- Selektionsdatei-SHA-256: `f49e3d4be006f3e276ee6ae098cdad4152b921485db6787c09b6651c4340f785`.
+- Beobachtungsdatei-SHA-256: `27ed8cd34af2753fa1038bfedebd321d79ed9fb4349a22288fee53712489533e`.
+- Katalog-SHA-256: `1fcad84c0bd9f9a6e161ff5baa47b27fd9be40ef8dc6cf9bd4d3238e1236a981`.
+
+**Offene Apply-Abnahme.** Der Entrypoint stellt ausschließlich diesen
+gezielt geprüften W-Zustand her und verlangt die saubere gebundene Basis.
+Er prüft genau Gruppe **0**, Sequenz **159**, mit **6.678** Tests und vier
+Workern. Erst nach erfolgreicher gebundener Abnahme setzt er die fünf
+Fortschrittsmarker auf **613/900**, zuletzt **14.o.W**, nächstens **14.o.R**,
+Bundle **452** und die W-Checkbox und erzeugt die exakte PLAN-Commit-Message.
+Apply-Erfolg bleibt bis zum tatsächlichen Result offen. Keine weitere Phase,
+kein Volltest, kein serieller Test und kein CI-Start gehören zu diesem Bundle.
 
 #### 14.o.R – Make it Right
 

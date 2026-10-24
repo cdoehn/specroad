@@ -4,18 +4,30 @@
   "requirement_id": "SR-REQ-0330",
   "specification_sha256": "74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28",
   "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-FORMAT-ROUNDTRIPS-v1"
+  ],
+  "preconditions": [
+    "Owned nine-artifact corpus with ordered document occurrences, external identities, two bound attachment payloads, a configuration artifact and synthetic hash-bound relation review; no real approval is claimed."
+  ],
+  "steps": [
+    "Export and decode the corpus with the existing NDJSON envelope and explicit per-type CSV profiles; reconstruct only decoded artifacts and transported attachment bytes and compare native semantic model roots.",
+    "Export and decode the declared ReqIF/ReqIFZ scalar/XHTML intersection; compare native/external identities, mapped values, ordered occurrence identities, the addresses relation and complete attachment bytes.",
+    "Assess the retained native review with the real relation-status service; require current only for the unchanged relation and both endpoint contexts, with approval_granted=false.",
+    "Require explicit whole-record losses for review/configuration/evidence outside the chosen ReqIF intersection and reject fail_on_loss for remaining native-resource or format losses."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Für jedes unterstützte Austauschformat MUSS SpecRoad einen Roundtrip-Test bereitstellen, der alle im Schnittmengenprofil repräsentierbaren Identitäten, Hierarchien, Werte, Beziehungen und Anhänge semantisch erhält.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "14.o.W: explicit nine-artifact corpus roundtrips in three languages. NDJSON and separate single-type typed-JSON CSV profiles preserve all artifact fields, review hashes, configuration values, ordered relations and transported attachments. Rebuilt model roots and actual relation-review statuses are compared. ReqIF/ReqIFZ preserve their explicitly mapped native/external identities, scalar/XHTML values, ordered hierarchy and relation identities plus attachment bytes; unsupported review/configuration/evidence records and native project resources remain explicit losses. No missing native data is filled from source-only records and no full import, review authentication, approval or release success is claimed."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +40,32 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-de-DE-csv]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-de-DE-ndjson]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-en-IN-csv]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-en-IN-ndjson]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-zh-Hant-TW-csv]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-zh-Hant-TW-ndjson]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-de-DE-csv]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-de-DE-ndjson]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-en-IN-csv]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-en-IN-ndjson]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-zh-Hant-TW-csv]",
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-zh-Hant-TW-ndjson]",
+    "tests/test_format_roundtrips.py::test_reqif_intersection_keeps_values_relations_occurrences_and_attachment_bytes[de-DE-reqif]",
+    "tests/test_format_roundtrips.py::test_reqif_intersection_keeps_values_relations_occurrences_and_attachment_bytes[de-DE-reqifz]",
+    "tests/test_format_roundtrips.py::test_reqif_intersection_keeps_values_relations_occurrences_and_attachment_bytes[en-IN-reqif]",
+    "tests/test_format_roundtrips.py::test_reqif_intersection_keeps_values_relations_occurrences_and_attachment_bytes[en-IN-reqifz]",
+    "tests/test_format_roundtrips.py::test_reqif_intersection_keeps_values_relations_occurrences_and_attachment_bytes[zh-Hant-TW-reqif]",
+    "tests/test_format_roundtrips.py::test_reqif_intersection_keeps_values_relations_occurrences_and_attachment_bytes[zh-Hant-TW-reqifz]",
+    "tests/test_format_roundtrips.py::test_roundtrip_corpus_cannot_hide_native_resource_or_format_losses[csv]",
+    "tests/test_format_roundtrips.py::test_roundtrip_corpus_cannot_hide_native_resource_or_format_losses[ndjson]",
+    "tests/test_format_roundtrips.py::test_roundtrip_corpus_cannot_hide_native_resource_or_format_losses[reqif]",
+    "tests/test_format_roundtrips.py::test_roundtrip_corpus_cannot_hide_native_resource_or_format_losses[reqifz]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.o.R: changed review bindings and complete split/resumed import equivalence remain open; W is a bounded semantic transport proof, not a complete import CLI or Work sequence.",
+    "Current-run synthetic Core fixtures do not authenticate a human, provide foreign-tool interoperability or certify a full native project bundle. Live import/migration/merge and cross-platform release evidence require their own bound executions."
   ]
 }
