@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 17
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 620
-last_completed_plan_commit: 15.b.R
-next_plan_commit: 15.b.C
-last_completed_numbered_bundle: 462
+implementation_plan_commits_completed: 621
+last_completed_plan_commit: 15.b.C
+next_plan_commit: 15.c.W
+last_completed_numbered_bundle: 463
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -24091,7 +24091,7 @@ vorweggenommen; Übergabe als `patch_ready`, danach Ende des Einzelauftrags.
 
 #### 15.b.C – Make it Clean
 
-- [ ] **15.b.C** · Position **621/900** · Voraussetzung: `15.b.R`.
+- [x] **15.b.C** · Position **621/900** · Voraussetzung: `15.b.R`.
 **Exakte Commit-Message:** `15.b.C refactor(bundle): Vollprojektbundle erzeugen bereinigen`
 
 **Bereinigung:** Bundlefachmodell auf vorhandenen Scope-/Snapshotdienst aufsetzen.
@@ -24099,6 +24099,86 @@ vorweggenommen; Übergabe als `patch_ready`, danach Ende des Einzelauftrags.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Bereinigung und Übergabenachweis – Bundle 463 (C).** Maßgeblich ist
+`specroad-apply_Result_212534_1024_a28506.zip`, SHA-256
+`35d71192bde8edf5f07aae899ec3cad39b8e79d016b66193a7fee9d711351e29`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Executionlogs
+und alle **2.224** Base-Dateien wurden gegen die tatsächliche Apply-Basis
+geprüft. Bundle **462** hat **15.b.R** mit Commit
+`938f5932967e4228c3d379f86d3602a393ffd1f2` und Parent
+`f59854432caa99b79d8d3f3fe895a39963bc1e1a` abgeschlossen. Das Result ist
+sauber und bestätigt **6.816/6.816** bestandene Tests in **2.191,35 s**,
+vier parallele Worker, **Sequenz 167 / Gruppe 2**, **20.449** gesammelte
+Identitäten. Nummerierte Auswahl und tatsächliche Einzeloutcomes wurden
+abgeglichen; SHA-256 des Auswahlberichts
+`569af0a3b60d18b2bc8f23ad205dd08bd41ba0fb7bb1afa6267b04334ac85144`, der Einzeloutcomes
+`f94661083247862e7890178a1821272b1d082c8cb8d271f88f25ff1db39eaba4`.
+Der bestätigte Ausgangsstand ist **620/900**, zuletzt **15.b.R**, nächstens
+**15.b.C**, Bundle **462**. Die Apply-Prüfung war eine Teilprüfung.
+
+**Reine Strukturverbesserung.** Der interne `ProjectBundleSnapshot`-Adapter
+bündelt die bestehende Quellbeobachtung auf `InspectionSnapshot` und
+`export_scope`. Er hält dieselben tatsächlichen Quellbytes, nativen
+Scope-/Modellwurzelbindungen, Archivinventare, Rootmanifest- und
+Receiptbeobachtungen zusammen. Die vorhandenen Dienste bleiben für
+Snapshot, native Auswahl, starke Closure und Manifestberechnung zuständig.
+Die Bundleprojektion und der vorhandene Containercodec erhalten die
+geprüften Werte aus diesem Adapter. Die gebundene Methode zum erneuten
+Lesen bewahrt die ursprüngliche Beobachtung bis zum letzten Prüfschritt
+der unveränderten Veröffentlichung; es wird kein neuer Snapshot als
+nachträgliche Rechtfertigung alter ZIP-Bytes aufgenommen.
+
+Die drei Inventarwächter, die nativen Auswahlanweisungen, der Ausdruck für
+die Manifestprojektion und die öffentliche Fehlerübersetzung wurden bei
+der Strukturprüfung unverändert abgeglichen. Die erneute Leseprüfung
+behält Reihenfolge und Fehlerverträge bei. Der Publisher, der gemeinsame
+Archivcodec, CLI, Ergebnisschema, alle bestehenden Tests einschließlich
+W-/R-Orakeln und Testnummerierung sowie die Verifikationsmatrix bleiben
+bytegleich. Es gibt keine neuen Testidentitäten und keine normative
+Klärung. **SPECROAD-DECISION-1** wurde in 2.4 geprüft; die bestehenden
+Abnahmen reichen aus. Spezifikation **0.2.22**, SHA-256
+`32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`,
+bleibt unverändert.
+
+**Gezielte Entwicklungsprüfung:** **661/661** Verhaltenstests bestanden in
+**88,79 s** unter Linux/Python 3.14.4 mit **vier parallelen Workern**:
+alle **92** Projektbundle-W-/R-Fälle, **248** Bundlecodec-Fälle,
+**53** Projekt-Exportfälle, **51** Scope-Closure-Fälle,
+**43** Initialisierungsfälle, **23** CLI-/Distributionsfälle,
+**85** Schemakatalogfälle, **32** Preflight-Fälle und
+**34** Projektinspektionsfälle. Die vorhandenen erwarteten Fachwerte wurden
+nicht zum Refactoring geändert. Die vollständige Collection-/Katalogprüfung
+erfasste **20.449** eindeutige Testidentitäten ohne Katalogfehler und mit
+**0** ausgeführten Testkörpern. Alle bestehenden Nummern und beide
+Rotationsanker bleiben erhalten. Kein Dev-Volltest und kein serieller Lauf.
+
+Geprüfter Quellstand:
+`0c035ae6db47c6a751e11cf7055cd3c538f7eca1df5cf0cb375f03a87c765e17`.
+SHA-256 der Auswahlbeobachtung:
+`459ba59a5d0ab128c0439dee283ac18ddbae7dfb9c3e284777b6b9f46704050a`;
+SHA-256 der Einzeloutcomes:
+`3806f1d540c5a31480c51db51d31566004231845d68ab19de7399bf98804f869`;
+SHA-256 des vollständigen Katalogbelegs:
+`a7c411fb1bf3796ef5065929c1de0b546675663229b9c93568b4b93e03c47f59`.
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+
+**Gebundene Übergabe:** Genau ein regulärer PLAN-Zustand **15.b.C**,
+Position **621/900**, als Bundle **463** mit exakt den vier Resultwerten
+einschließlich Fingerprint `7c9d2a24e397e0e5`. Der Entrypoint prüft die
+saubere Basis, stellt ausschließlich diesen gezielt geprüften C-Zustand
+her und führt **Gruppe 0/3 / Sequenz 168** mit **6.817** Tests und vier
+parallelen Workern aus. Erst nach erfolgreichem Gate und passenden
+Quell-/Katalog-/Nummerierungs-/Auswahlbindungen setzt er die fünf
+Fortschrittsmarker auf **621/900**, zuletzt **15.b.C**, nächstens **15.c.W**,
+Bundle **463** und die C-Checkbox. Danach folgt die exakte PLAN-Commit-Message.
+Der erfolgreiche R-Commit bleibt Vorgänger; 15.c wird nicht vorab
+installiert. Bei Fehler bleiben erfolgreiche Commits und tatsächliche
+Dateien, Index und Nachweise erhalten. Ein künftiger Apply-Erfolg wird
+nicht vorweggenommen. Teilbundles, nichtleere Receipthistorien, unabhängige
+Bundleprüfung und Extraktion bleiben in ihren nachfolgenden Planschritten
+offen. Übergabe als `patch_ready`, danach Ende des Einzelauftrags.
 
 <a id="step-15-c"></a>
 ### 15.c – Teilbundle und Boundarybindung
