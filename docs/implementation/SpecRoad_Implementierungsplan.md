@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 604
-last_completed_plan_commit: 14.l.W
-next_plan_commit: 14.l.R
-last_completed_numbered_bundle: 442
+implementation_plan_commits_completed: 605
+last_completed_plan_commit: 14.l.R
+next_plan_commit: 14.l.C
+last_completed_numbered_bundle: 443
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -21520,12 +21520,155 @@ Verlust-/Release-Freigabe, vollständiger Projektbundleexport oder Vollsuite.
 
 #### 14.l.R – Make it Right
 
-- [ ] **14.l.R** · Position **605/900** · Voraussetzung: `14.l.W`.
+- [x] **14.l.R** · Position **605/900** · Voraussetzung: `14.l.W`.
 **Exakte Commit-Message:** `14.l.R feat(exchange): Exportumfang und deterministisches Manifest vervollständigen`
 
 **Vervollständigung:** Die R-Abnahmen aus 10.12.3 und dem Entscheidungsbeleg erfüllen: veränderte oder unvollständige Quellen, Scope-/Mapping-/Profil-/Anhangfehler und widersprüchliche Verluste abweisen. Laufzeit und absolute Pfade nicht in den Fachcontainer mischen; Export bleibt ohne normative Writes, auch bei Fehlern. Kein Manifest-Selbstbezug oder zusätzliches Formatnutzobjekt.
 
 **Verhaltensabnahme:** Bytevergleich ausschließlich des maschinenlesbaren Austauschvertrags und Projektinventur: umgeordnete Inventare, leere Queryseiten, Boundary References, vollständig ausgelassene Artefakte, präzise Zeitgrenzen und tatsächliche Ausgabe-/Anhangbytes. Unbeteiligte Ursprungsressourcen ändern die Ausgabe nicht; Fehler erlauben keine normativen Writes oder abgeschwächten Sicherheits-/Freigabegates. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungs- und Teiltestnachweis – Bundle 443, 24. Oktober 2026.**
+Dieser normale R-Zwischenstand vervollständigt ausschließlich 14.l nach
+EXPORT-MANIFEST-CONTRACT. SPECROAD-DECISION-1 ist ausdrücklich vorhanden;
+eine weitere normative Klärung ist nicht erforderlich. Spezifikation
+**0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. 14.l.C bleibt offen.
+
+**Bestätigte technische Basis.** Das nativ geprüfte Result
+`specroad-apply_Result_044944_1024_f479c0.zip`, SHA-256
+`f116325ef444dfb77fdcd6d2fbe43b96a96056b71e046743c346f7ec381e376c`,
+bestätigt den erfolgreichen, sauberen W-Commit
+`052a83201cce700f477481afdde58b9f3006fb52` aus Bundle **442**.
+Sein tatsächlicher paralleler Apply-Lauf bestand **6.405/6.405** Tests
+mit vier Workern, Gruppe **0**, Sequenz **150**, bei **19.215** gesammelten
+Tests. Der Nachweis ist ein Drittellauf, keine Vollsuite. Root-Anleitung,
+Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle **2.193**
+Snapshotdateien wurden geprüft und mit dem tatsächlichen sauberen
+Apply-Stand abgeglichen. Der Fortschritt bleibt bis zum erfolgreichen
+R-Apply-Commit **604/900**, zuletzt **14.l.W**, nächstens **14.l.R**,
+Bundle **442**.
+
+**R-Umsetzung und beobachtbares Verhalten.** Native Prose-/Admonition-
+Inhaltsblöcke liefern ihre tatsächlichen Anhangreferenzen über den vorhandenen
+inerten Parser in die Ressourcenclosure. Query- und Dokumentumfang enthalten
+diese gebundenen Anhänge auch ohne eingehend aufgenommenes Evidence-Artefakt.
+Fehlende Deskriptoren bleiben Fehler bei beiden Transportoptionen; gewöhnliche
+Requirement-Freitexte werden nicht als Markdown oder Referenzquelle gedeutet.
+Die Transportoption ändert weder native Modellwurzel noch NDJSON-Fachbytes.
+
+Unpassende XML-/Archivoptionen werden mit Code **2** abgewiesen, statt eine
+scheinbar wirksame Sicherheitsgrenze still zu ignorieren. Tatsächliche
+Caller-, Projekt- und Profilgrenzen für XML-Tiefe/Archivgröße bleiben wirksam.
+Konkurrierende Verlustdetails für dieselbe Tupelidentität ergeben Konflikt
+**6**, ohne den ersten gebundenen Inhalt zu überschreiben. Verlustreihenfolge,
+Besitz der Detailwerte und separate Manifestbytes bleiben deterministisch.
+
+Vor Veröffentlichung werden auch Datei-/Elternpfad-Kollisionen einschließlich
+Casefold erkannt. Eine konkurrierende Zielerzeugung bleibt Konflikt **6**;
+vorhandene Bytes werden nicht überschrieben. Nach Prüfung der vollständigen
+publizierten Dateibilder erfolgt nochmals die Quellen-/Eingabeprüfung.
+Damit kann ein dabei beobachteter später Quellen- oder Querywechsel keinen
+Erfolg liefern. Andere Hostfehler behalten **5**, bestehende Pfadschutzfehler
+**7**. Bei abgebrochener Mehrdateiausgabe bleiben vollständige Bilder und
+gegebenenfalls private Reste erhalten; keine atomare Gesamttransaktion oder
+Rücksetzung wird behauptet. Normative Quellen werden nicht verändert.
+
+**Gezielte parallele Entwicklungsevidence.** **2.595/2.595** neue und
+betroffene Verhaltenstests bestanden mit **vier Workern**, beobachteter
+Prozessabschluss **0**, alle Outcomes `passed`. Darin enthalten sind
+**111** neue R-Abnahmen und alle **49** W-Tests. Vollständige Collection- und
+Katalogprüfung: **19.326** Tests, gültiger Katalog, dabei **0** ausgeführte
+Testkörper. Der Verhaltenslauf bleibt eine Teilmenge;
+`full_suite_passed=null`.
+
+Geprüfte Testdateien:
+
+- `tests/test_baseline_verification.py`
+- `tests/test_baseline_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_configuration_scope.py`
+- `tests/test_configuration_scope_right.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_csv_export_compatibility.py`
+- `tests/test_description.py`
+- `tests/test_document_prose.py`
+- `tests/test_document_prose_right.py`
+- `tests/test_document_structure.py`
+- `tests/test_document_structure_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_options.py`
+- `tests/test_profile_composition.py`
+- `tests/test_profile_composition_right.py`
+- `tests/test_project_export.py`
+- `tests/test_project_export_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_registry.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_preservation.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requests.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_scope_closure.py`
+- `tests/test_scope_closure_right.py`
+- `tests/test_scope_seeds.py`
+- `tests/test_scope_seeds_right.py`
+- `tests/test_verification.py`
+
+Die R-Abnahmen prüfen unter allen vier Formaten tatsächliche Permutationen,
+leere Queryseiten ohne zusätzliches Manifest-Nutzobjekt, lange exakte
+Zeitbruchteile, vollständige Artefaktauslassungen, schwache Grenzen,
+ausgeschlossene starke Konfigurationsabhängigkeiten, falsche Mapping-/Profil-
+und veränderte Modellbindungen sowie fehlende Ressourcen. Weitere Fälle
+decken Relokation ohne Hostdaten, reine Vorbereitung mit Schreib-/Prozess-
+und Netzwerksperren, tatsächliche Größen-/Tiefengrenzen, Quellenwechsel,
+entfernte oder geänderte Anhänge bei beiden Flags, manipulierte Ausgabebytes,
+späte Erzeugungskonflikte und I/O-Teilabbrüche ab. Symlinks, Hardlinks,
+bereits belegte Ziele und eingebettete Fremdprojekte werden durch die
+bestehenden sicheren Writer-/Pfadverträge geschützt. Die W-Prüfung der
+ReqIF-/ReqIFZ-Headerzeit verwendet den Archivparameter nun nur beim
+Archivformat; ihre bisherigen fachlichen Assertions und Testidentitäten
+bleiben erhalten.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `2fe65bc9234d055b126577efccf295399dcf43318205ba208befcae6c39f4ba6`.
+- Selektionsdatei-SHA-256: `97cfdb930bec9bba3aecc4250cb4d3aff7a62cb47bb6546ec4b6db28ecb8d7d5`.
+- Beobachtungsdatei-SHA-256: `cc09484e44e0588129e2c942eb660de945509a80e575ce7a99d2aea8a192e78f`.
+- Katalog-SHA-256: `77dedf89d14ffa27e6a627d71fc03ca077774cae3e7dfef85ffbba526f8aea2c`.
+
+Die **111** neuen Testidentitäten sind ausschließlich hinter den bestehenden
+**19.215** Nummern angehängt; keine alte Nummer wird verändert oder erneut
+verwendet. SR-TC-0319/0328/0329/0332 bleiben **partial** und verbinden die
+W/R-Abnahmen mit der bestehenden synthetischen Fixture. C bleibt offen;
+Fremdtool-Interoperabilität, persönliche Verlustfreigabe und Releaseerfolg
+werden nicht behauptet.
+
+**Ausstehende Apply-Abnahme.** Der Entrypoint stellt genau diesen gezielt
+geprüften R-Zustand her und führt ausschließlich die fällige stabile
+Testgruppe **1**, Sequenz **151**, mit **6.442** Tests und vier Workern aus.
+Kein zusätzlicher Voll- oder Serienlauf. Erst nach erfolgreicher gebundener
+Apply-Abnahme werden genau fünf Planmarker auf **605/900**, zuletzt
+**14.l.R**, nächstens **14.l.C**, Bundle **443** und die R-Checkbox gesetzt.
+Dann erzeugt ausschließlich Apply den exakten vorgesehenen R-Commit.
+Fehler erhalten bereits vorhandene Commits und den tatsächlichen Zustand.
+Dieses Dokument beschreibt die Übergabe; es bescheinigt keinen vorweggenommenen
+R-Apply-Erfolg.
 
 #### 14.l.C – Make it Clean
 

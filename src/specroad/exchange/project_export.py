@@ -34,7 +34,10 @@ def _publish(snapshot, prepared, path, output_root, input_bindings=()):
     manifest_path = path + '.manifest.json'
     files_to_write = [(prefix + p, raw) for p, raw in prepared.attachment_files]
     files_to_write.extend(((path, prepared.output_bytes), (manifest_path, prepared.manifest_bytes)))
-    if len({p.casefold() for p, _ in files_to_write}) != len(files_to_write):
+    folded = {p.casefold() for p, _ in files_to_write}
+    if len(folded) != len(files_to_write) or any(
+            '/'.join(parts[:index]) in folded
+            for p in folded for parts in (p.split('/'),) for index in range(1, len(parts))):
         raise ExportError('export_output_collision', exit_code=6)
     targets = [(p, _target_path(p, source, output_root)[1], raw) for p, raw in files_to_write]
 
@@ -86,14 +89,18 @@ def _publish(snapshot, prepared, path, output_root, input_bindings=()):
                 pending = '.exchange-export-' + secrets.token_hex(16) + '.tmp'
                 image_identity = _write_new(parent, pending, raw)
                 digest = sha256(raw).hexdigest()
-                replace_bound_image(parent, pending, parent, parts[-1], size=len(raw), digest=digest,
-                    identity=image_identity, create_only=True, before_replace=check_target,
-                    source_changed=lambda: ExportError('export_output_image_changed', exit_code=6))
+                try:
+                    replace_bound_image(parent, pending, parent, parts[-1], size=len(raw), digest=digest,
+                        identity=image_identity, create_only=True, before_replace=check_target,
+                        source_changed=lambda: ExportError('export_output_image_changed', exit_code=6))
+                except FileExistsError as error:
+                    raise ExportError('export_target_exists', path=p, exit_code=6) from error
                 publications.append({'path': p, 'size': len(raw), 'sha256': digest})
         check_location()
         for p, _, raw in targets:
             if boundary.read_bytes(p) != raw:
                 raise ExportError('export_published_bytes_changed', path=p, exit_code=6)
+        check_location()
     return {'format_version': 'exchange-export-publication-v1', 'manifest': prepared.manifest,
             'files': publications, 'manifest_path': manifest_path, 'generated': True, 'normative': False,
             'atomic_snapshot': False, 'source_bytes_rechecked': True, 'approval_granted': False}

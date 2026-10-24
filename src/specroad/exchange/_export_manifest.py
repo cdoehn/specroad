@@ -26,6 +26,10 @@ def snapshot_time(artifacts):
             + ('.' + fraction if fraction else '') + 'Z')
 
 
+class ExportLossConflict(ModelError):
+    exit_code = 6
+
+
 class ExportLosses:
     def __init__(self):
         self._items = {}
@@ -42,7 +46,7 @@ class ExportLosses:
         encoded = canonical_json_bytes(details)
         key = identity, pointer, reason
         if key in self._items and self._items[key] != encoded:
-            raise ModelError('export_loss_conflict')
+            raise ExportLossConflict('export_loss_conflict')
         self._items[key] = encoded
 
     @property

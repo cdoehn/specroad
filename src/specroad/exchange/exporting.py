@@ -99,6 +99,10 @@ def prepare_export(model, descriptor, *, output_format, mapping_key, expected_ma
             or descriptor.data['scope_kind'] not in ('project', 'document', 'query', 'release')
             or type(include_attachments) is not bool or type(fail_on_loss) is not bool):
         raise ExportError('export_options_invalid', exit_code=2)
+    if output_format not in ('reqif', 'reqifz') and reqif_limits is not None:
+        raise ExportError('export_xml_limits_not_applicable', exit_code=2)
+    if output_format != 'reqifz' and max_archive_bytes is not None:
+        raise ExportError('export_archive_limit_not_applicable', exit_code=2)
     model = model.snapshot()
     mappings, profiles = _mappings(model)
     mapping = select_mapping(mappings, key=mapping_key, expected_sha256=expected_mapping_sha256).resource

@@ -174,7 +174,8 @@ def test_export_reqif_uses_bound_definitions_and_same_header_timestamp(fmt):
     value = domain_value('requirement', statement='New native text', updated_at='2026-10-24t01:02:03.123456789000Z')
     value['extensions'] = merge_reqif_source(raw, source_context=context, expected_source_sha256=sha256(raw).hexdigest(),
         extensions={}, expected_extensions_sha256=sha256(b'{}').hexdigest(), limits=LIMITS)
-    _, prepared = export([value], fmt=fmt, rule=rule, reqif_limits=LIMITS, max_archive_bytes=20*1024*1024)
+    _, prepared = export([value], fmt=fmt, rule=rule, reqif_limits=LIMITS,
+                         **({'max_archive_bytes': 20*1024*1024} if fmt == 'reqifz' else {}))
     xml = prepared.output_bytes
     if fmt == 'reqifz':
         container = decode_reqifz(xml, expected_sha256=sha256(xml).hexdigest(), document_paths=('exchange.reqif',),

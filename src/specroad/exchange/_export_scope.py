@@ -77,6 +77,18 @@ def export_scope(model, descriptor):
             if path not in attachments:
                 raise ModelError('export_attachment_binding_missing')
             targets.add(resource_node(path))
+        if data['artifact_type'] == 'content_block' and data['block_kind'] in ('prose', 'admonition'):
+            from ..documents.blocks import ContentBlock
+            from ..documents.prose import parse_prose
+            pending = [parse_prose(ContentBlock(record.source_bytes)).data['content']]
+            while pending:
+                node = pending.pop()
+                path = node.get('attachment_path')
+                if path is not None:
+                    if path not in attachments:
+                        raise ModelError('export_attachment_binding_missing', path=record.path)
+                    targets.add(resource_node(path))
+                pending.extend(node.get('children', []))
         identities = list(data.get('external_identities', []))
         for relation in data['relations']:
             for identity in relation['external_identities']:
