@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.20
+## Version 0.2.21
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.20` |
+| Dokumentversion | `0.2.21` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 24. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.20 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.20 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.21 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.21 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.19 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung REQIFZ-CONTAINER-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: explizite Dokumentauswahl, dokumentrelative Anhangbindungen und abgeleitetes Transportmanifest. Entscheidungsbeleg und Abnahmen stehen bei 14.k im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung des ReqIFZ-Containers und seiner Anhangbindungen in D.1.4; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.20 vom 24. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung EXPORT-MANIFEST-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: gebundener Exportumfang, deterministische Zeitprojektion und separates verlustbewusstes Manifest. Entscheidungsbeleg und Abnahmen stehen bei 14.l im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung des Exportumfangs und des gemeinsamen deterministischen Manifests in 10.12.3; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.20 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.21 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.20 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.21 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -1929,6 +1929,154 @@ ein Kandidat ersetzt weder die erforderliche menschliche Entscheidung noch
 eine Verlustakzeptanz; die Klärung verspricht keine zusätzliche Archivierung
 jeder historischen Revision. Bestandsdaten und historische Evidence werden
 durch diese Regel nicht umgeschrieben.
+
+#### 10.12.3 Exportumfang und deterministisches Manifest v1
+
+**Entscheidung EXPORT-MANIFEST-CONTRACT, delegiert gemäß SPECROAD-DECISION-1:**
+Dieser additive Vertrag konkretisiert SR-REQ-0319/0328/0329/0332 für 14.l.
+Die bestehenden Scope-, Mapping-, Format-, Verlust- und Sicherheitsverträge
+bleiben wirksam. Ein Austauschmanifest ist weder ein Projektbundlemanifest
+nach E.1 noch das ReqIFZ-Transportmanifest nach D.1.4.
+Die nachfolgenden Auswahl-, Zeit-, Manifest-, Verlust- und Ausgabeverträge
+einschließlich der geschlossenen Feldtabelle MÜSSEN eingehalten werden.
+
+**Auswahl und Quellenbindung.** `project`, `document`, `query` und `release`
+verwenden unverändert die Seeds, Konfiguration, Closure und Boundary References
+nach 10.8. Der vollständige Descriptor einschließlich Grenzpolicy und aller
+Query-Defaults wird gebunden; Formatname oder Ausgabepfad ersetzen ihn nicht.
+Eine Query liefert ihre tatsächlich gebundene paginierte ID-Menge. Ihre
+Anzeigespalten sind keine Erlaubnis, normative Felder still wegzulassen.
+Vollständige native Ressourcen werden vor der Formatprojektion aufgelöst.
+Starke Abhängigkeiten, historische Baselineobjekte und fehlende Ressourcen
+dürfen nicht durch unvollständige Eingabesammlungen oder Formatverluste
+umgangen werden. Bestehende Scope-Fehler bleiben Fehler.
+
+Die Modellwurzel ist die nach 10.9 aus diesem aufgelösten nativen Umfang
+berechnete Wurzel vor Formatprojektion oder Anhangtransport-Auswahl. Sie ist
+nicht der Hash von CSV, XML, NDJSON, ZIP oder Exportmanifest. Mapping und
+gegebenenfalls CSV-Profil werden über die bestehenden exakten Kennungs-,
+Versions- und Hashbindungen ausgewählt. Mehrdeutige Auswahl, fehlende
+Pflichtbindung oder ein geänderter Quellstand ergeben keinen Exporterfolg.
+Ein Importmapping wird nicht durch Erraten einer inversen Zuordnung ersetzt;
+die vorhandenen ausdrücklichen Format-/Mappingbindungen bleiben erforderlich.
+
+Alle fachlichen Prüfungen und Ausgaben beziehen sich auf denselben vollständig
+gebundenen Quellstand. Ein bloßer früherer Hash oder eine Teilbeobachtung
+bescheinigt weder Vollständigkeit noch Aktualität. Vor erfolgreicher Ausgabe
+müssen die verwendeten Quellen unverändert sein; vorhandene sichere Lese-,
+Staging- und Fortsetzungsmechanismen bleiben zuständig. Normative Projektdateien
+werden nicht verändert, auch nicht zur Vorbereitung eines Exports.
+
+**Zeitprojektion.** Die vorhandene D.1-Regel wird für das gemeinsame
+Exportmanifest aller vier Formate verwendet: `snapshot_at` ist das Maximum
+der nativen `updated_at`-Werte der tatsächlich repräsentierten beziehungsweise
+verlustfrei erhaltenen Artefakte aus `included_ids`. Außerhalb dieses
+Exportinhalts liegende Artefakte liefern keinen Zeitwert. Ist diese Menge
+leer, gilt exakt `1970-01-01T00:00:00Z`. Ein fehlendes oder ungültiges
+Pflichtfeld in einem enthaltenen Artefakt wird nicht durch diesen Leerfall
+ersetzt. `created_at`, Dateimtime, Git-Zeit, Laufzeit und lokale Zeitzone sind
+keine Ersatzquellen. ReqIF-`CREATION-TIME` und `snapshot_at` stimmen überein.
+
+Es wird nach den UTC-Kalenderkomponenten und dem exakten Dezimalbruchteil
+verglichen, nicht nach Strings, Floatwerten oder gerundeten Mikrosekunden.
+Die vorhandene UTC-Gültigkeitsprüfung einschließlich ihres Sekunden-60-Profils
+bleibt erhalten; diese Regel behauptet keine neue externe Schaltsekundenprüfung.
+Die Ausgabe verwendet großes `T` und `Z`, entfernt nur nachgestellte Nullen
+des Sekundenbruchteils und lässt einen dadurch leeren Bruchteil samt Punkt weg.
+Alle übrigen gültigen Stellen bleiben erhalten. Gleichwertige Schreibweisen
+ergeben denselben abgeleiteten Zeitpunkt; native Quellwerte werden nicht geändert.
+
+**Geschlossenes Manifest.** Ein erfolgreicher Export liefert ein separates,
+nach RFC 8785 kanonisiertes JSON-Objekt mit genau diesen Pflichtfeldern:
+
+| Feld | Vertrag |
+|---|---|
+| `manifest_version` | Exakt `exchange-export-v1`. |
+| `format` | Exakt `reqif`, `reqifz`, `csv` oder `ndjson`. |
+| `format_version` | `1.2` für ReqIF, `reqifz-container-v1` für ReqIFZ einschließlich ReqIF 1.2, `csv-profile-v1` für das gebundene RFC-4180-Profil, `1.0.0` für die NDJSON-Objekthülle. Dies ändert keine bestehenden Wireversionen, insbesondere nicht ReqIF-`REQ-IF-VERSION`. |
+| `mapping` | Die bestehende Bindung mit genau `mapping_id`, `mapping_version`, `sha256`; der Hash bindet die gesamte kanonische Mappingressource. |
+| `format_profile` | Bei CSV die bestehende CSV-Profilbindung mit genau `mapping_id`, `mapping_version`, `sha256`; sonst `null`. |
+| `scope_descriptor` | Der vollständige gültige Descriptor der tatsächlichen Auswahl nach 10.8. |
+| `boundary_references` | Genau die nach 10.8/10.9 gebundenen Boundary References in ihrer dort festgelegten Reihenfolge und Feldform. |
+| `model_root_sha256` | Kleingeschriebene vollständige SHA-256 der gebundenen nativen Modellwurzel nach 10.9. |
+| `snapshot_at` | Der oben definierte abgeleitete UTC-Zeitpunkt. |
+| `tool_version` | Die tatsächliche vollständige SpecRoad-Toolversion; kein Lauf-, Host- oder Sitzungsidentifikator. |
+| `options` | Genau die materialisierten booleschen Werte `include_attachments` und `fail_on_loss`. Formatabhängige Abbildungsoptionen bleiben im gebundenen Mapping/Profil. Ein Ausgabepfad ist keine fachliche Option. |
+| `included_ids` | Duplikatfreie, nach ID-UTF-8-Bytes sortierte native Artefakt-IDs, deren Identität im tatsächlichen Austauschinhalt repräsentiert oder nach dem Formatprofil verlustfrei erhalten ist. Fehlende Felder solcher Artefakte bleiben einzeln als Verlust sichtbar. |
+| `excluded_contents` | Liste von Objekten mit genau `resource_id`, `pointer`, `reason`, wie unten festgelegt. |
+| `losses` | Liste von Objekten mit genau `resource_id`, `pointer`, `reason`, `format_details`, wie unten festgelegt. |
+| `attachments` | Liste sämtlicher zum nativen Umfang gehörender Anhangdeskriptoren mit genau `path`, `size`, `media_type`, `sha256`, `included`; die ersten vier Felder behalten ihren bestehenden Vertrag, `included` ist boolesch und bezeichnet tatsächlich mitgelieferte vollständige Bytes. Sortierung nach Pfad-UTF-8-Bytes. |
+| `output_sha256` | SHA-256 der tatsächlichen vollständigen primären Austauschbytes; bei ReqIFZ der gesamten ZIP-Datei. |
+
+`resource_id` ist die vorhandene eindeutige Identität im gebundenen
+Quellinventar, kein neu erratener Dateiname. `pointer` ist ein gültiger
+JSON Pointer innerhalb dieser Ressource; `""` bezeichnet die ganze Ressource.
+Bei Anhängen bezeichnet `resource_id` den validierten projektroot-relativen
+Pfad und `pointer` ist leer. `reason` ist ein nichtleerer maschinenlesbarer
+Grund nach `[a-z][a-z0-9_]*`, keine menschliche Meldung. Der Ausschluss
+einer Anhangpayload durch die Transportoption heißt `attachments_disabled`;
+Formatverluste behalten ihren konkreten maschinenlesbaren Grund.
+
+Die beiden Listen sind nach den UTF-8-Bytes des Tupels
+`(resource_id, pointer, reason)` sortiert und darin duplikatfrei.
+`format_details` ist ein kanonisches JSON-Objekt: vorhandene gebundene
+formatbezogene Verlustdaten einschließlich ihrer Identitäten werden darin
+unverändert erhalten; ohne zusätzliche Formatdaten ist es `{}`. Konkurrierende
+Bewertungen derselben Tupelidentität sind ein Konflikt, kein Last-write-wins.
+Payloadtexte, absolute Hostpfade und Laufzeitdaten werden nicht als Diagnosen
+hinzuerfunden. Formatbezogene Referenzen, etwa XML-Lokationen, bleiben in den
+vorhandenen gebundenen Formatdaten und werden nicht als JSON Pointer ausgegeben.
+
+**Vollständigkeit und Verluste.** Der Export bewertet den gesamten angeforderten
+Umfang. Die bewusste Scope-/Konfigurationsauswahl wird vollständig durch
+`scope_descriptor` und `boundary_references` erklärt; nicht angeforderte
+Inhalte sind allein deshalb kein Formatverlust. Das übrige Ursprungsinventar
+wird nicht als zusätzliche Ausschlussliste in den Export kopiert. Dadurch
+verändern unabhängige Änderungen außerhalb des gebundenen Modellumfangs
+nicht die Ausgabe. `excluded_contents` bezeichnet die konkreten Auslassungen
+innerhalb des angeforderten Umfangs durch Formatprojektion oder Transportoption.
+Im Umfang angeforderte, aber nicht repräsentierte oder nachweislich erhaltene
+Inhalte sind dagegen konkrete Verluste. Ein vollständig ausgelassenes Artefakt
+fehlt in `included_ids` und erscheint mit seinem Verlust auch in
+`excluded_contents`. Eine bloße Erweiterungsablage ohne erforderlichen
+Erhaltungsnachweis darf nicht als verlustfrei gelten. Bestehende ReqIF-
+Verlustidentitäten, Erhaltungsbeweise und Freigabegrenzen bleiben wirksam.
+
+`include_attachments=true` verlangt alle zum Umfang gehörenden tatsächlichen
+Anhangbytes samt validierter Byte-/Hash-/Pfadbindung. Fehlende, geänderte oder
+unsichere Bytes sind Fehler, keine akzeptierbaren Verluste. Bei `false` bleiben
+die Deskriptoren mit `included=false` sichtbar; jede ausgelassene Anhangpayload
+erzeugt einen Ausschluss und einen Verlust `attachments_disabled`. Die
+Modellwurzel wird deshalb nicht als anhangfreier nativer Umfang neu berechnet.
+`fail_on_loss=true` verhindert bei jedem verbleibenden Verlust erfolgreiche
+Exportveröffentlichung; ein Diagnosebericht ist kein erfolgreicher Export.
+`false` unterdrückt weder Verluste noch andere vorgeschriebene Freigaben und
+erlaubt keine Sicherheits-, Integritäts- oder Modellverletzung.
+Die CLI-Flags `--include-attachments` und `--fail-on-loss` materialisieren
+beim Setzen jeweils `true`, ohne das jeweilige Flag `false`. Insbesondere
+bleibt die bereits in D.1.3 festgelegte Bedeutung eines nicht gesetzten
+Verlustverbots erhalten. Formatwahl und Ausgabeziel ändern diese Werte nicht.
+
+Das Manifest wird aus tatsächlichen Quellen, Bewertungen und fertigen
+Ausgabebytes abgeleitet. Vom Aufrufer behauptete Inventare oder Hashes ohne
+diese Prüfungen reichen nicht. Es inventarisiert und hasht sich nicht selbst:
+keine zusätzliche NDJSON-Zeile, CSV-Datenzeile, ReqIF-Nutzinformation oder
+ReqIFZ-Pflichtdatei wird für dieses Manifest eingeführt. Es bleibt bei allen
+Formaten separat; sein Speicherziel wird über die bestehende generierte
+Ausgabeintegration gebunden, nicht in die fachlichen Bytes aufgenommen.
+Alle tatsächlichen beigefügten Anhangbytes sind über die Deskriptoren gebunden.
+Dies liefert keinen Ersatz für vollständige native Projektbundles nach E.
+
+Gleicher Fachumfang, Mapping-/Profilinhalt, materialisierte Optionen und
+Toolversion ergeben identische primäre Austauschbytes und Manifestbytes,
+unabhängig von Uhrzeit, CWD, Inventariteration und Ausgabeziel. Die wirkliche
+Ausführungszeit bleibt ausschließlich im nicht exportierten Auditbericht.
+Bestehende Nutzungs-, Modell-, Konflikt-, Sicherheits- und Hostfehlerklassen
+nach 11.8 bleiben erhalten; dieses Manifest führt keine Ausnahme davon ein.
+Harte Parser-/Sicherheitsgrenzen und vollständige sparsame Fortsetzung nach
+O/P bleiben wirksam. W/R/C, CLI-Integration und Verhaltensevidence folgen
+gesondert; dieses Dokument behauptet keine fertige Exportfunktion.
+
 
 ### 10.13 Evidence-Origin
 
@@ -4327,6 +4475,18 @@ folgen in 14.k.W/R/C; Produktstand 600/900 und Control-/Laufzeitzustände
 bleiben bei dieser Dokumentübergabe unverändert. Die neue Katalogbindung
 ist kein Produkttest oder Fremdtool-Nachweis.
 
+### 20.20 Exportmanifestpräzisierung v0.2.21
+
+`EXPORT-MANIFEST-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, präzisiert
+in 10.12.3 die gemeinsame Manifestfeldmenge, vorhandene native Scope-/Mapping-
+Bindungen, den aus enthaltenen Artefakten abgeleiteten Snapshotzeitpunkt,
+konkrete Verluste und tatsächliche Anhang-/Ausgabebytes. Das Manifest bleibt
+separat und selbstreferenzfrei; Query-/Closure-, Format-, Sicherheits- und
+Freigabeverträge bleiben erhalten. Umsetzung und Verhaltensevidence folgen
+in 14.l.W/R/C; Produktstand 603/900 und Control-/Laufzeitzustände bleiben bei
+dieser Dokumentübergabe unverändert. Die neue Katalogbindung ist kein
+Produkt-, Roundtrip-, Release- oder Fremdtool-Nachweis.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4369,6 +4529,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.21 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | EXPORT-MANIFEST-CONTRACT: gebundener Exportumfang, exakte deterministische Zeitprojektion, separate Manifestfelder und tatsächliche Verlust-/Anhang-/Ausgabehashbindung; bestehende Scope-, Format- und Freigabeverträge bleiben erhalten, Umsetzung bleibt in 14.l offen. |
 | 0.2.20 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIFZ-CONTAINER-CONTRACT: explizite Dokumentauswahl, dokumentrelative Anhangbindungen, abgeleitetes Transportmanifest und gemeinsame sichere ZIP-Grenze; bestehende Import-/Sicherheitsverträge bleiben erhalten, Umsetzung bleibt in 14.k offen. |
 | 0.2.19 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-PRESERVATION-LOSS: passiver Originalquellträger, überprüfter Zielerhalt, konkrete Verlustidentitäten und fail-on-loss-Grenze; bestehende Sicherheits-/Importverträge bleiben erhalten, Umsetzung bleibt in 14.j offen. |
 | 0.2.18 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-STRUCTURE-XHTML: geordnete Vorkommensidentität, explizite Relationsabbildung und sichere XHTML-/Anhangschnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.i offen. |

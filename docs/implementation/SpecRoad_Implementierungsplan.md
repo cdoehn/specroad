@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 15 · **Stand:** 24. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.20
+**Planrevision:** 16 · **Stand:** 24. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.21
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `0e9e5cfa9907853a384e66d973bd90fe26f7ca70b7ce05aa1abe49c30c1eb726`.
+Gebundene Spezifikations-SHA-256: `74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 15
+plan_revision: 16
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 603
 last_completed_plan_commit: 14.k.C
 next_plan_commit: 14.l.W
-last_completed_numbered_bundle: 440
+last_completed_numbered_bundle: 441
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,45 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Exportumfang und deterministisches Manifest (Bundle 441)
+
+Revision 16 dokumentiert **EXPORT-MANIFEST-CONTRACT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.21, 10.12.3**, legt die gebundene
+Scope-/Zeitprojektion, gemeinsame separate Manifestfelder sowie tatsächliche
+Verlust-, Anhang- und Ausgabehashbindungen für 14.l fest. Alternativen,
+geprüfte Quellen, Grenzprüfung und offene W/R/C-Abnahmen stehen bei 14.l.
+Keine persönliche Einzelzustimmung, technische Produktfreigabe oder
+Fremdtool-Abnahme wird behauptet.
+
+- [x] **EXPORT-MANIFEST-CONTRACT:** Exportumfang und deterministisches Manifest verbindlich klären. Commit: `docs(spec): Exportumfang und deterministisches Manifest präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und ausschließlich notwendigen aktiven Katalog-Hashbindungen.
+Produktcode, Tests, Testnummern, Fixtures, Runner, Workflow und historische
+Evidence bleiben unverändert. Produktstand **603/900**, zuletzt **14.k.C**,
+nächstens **14.l.W**, bleibt unverändert; alle drei 14.l-Phasen bleiben offen.
+Erst nach dem erfolgreichen parallelen Apply-Gate setzt der Entrypoint den
+Offplan-Marker und die Bundlenummer auf 441. Keine Produktposition wird erhöht.
+
+**Prüfgrenze:** Keine Produktverhaltensänderung und keine erfundenen
+Dokumentationstests. Vollständige Collection-/Katalogprüfung mit null
+Testkörpern und native Paketprüfung bleiben erhalten. Apply führt vor
+diesem Commit ausschließlich **Gruppe 2/3**, Commitfolge **149**, mit
+**6.388 Tests** und vier parallelen Workern aus. Kein Vollsuite-/Release-
+Nachweis; Ergebnisse dieser künftigen Gruppe werden nicht vorweggenommen.
+Übergabe als `spec_clarification`, danach Ende des Einzelauftrags.
+Control-/Watcher-/CI-Zustände werden nicht verändert. Der nächste
+Produktauftrag setzt den geklärten Schritt um; keine zweite Phase hier.
+
+**Beobachtete Dev-Katalogprüfung:** Vollständige Collection mit
+**19.166 eindeutigen Testidentitäten**, Exit **0**, keine Katalogfehler,
+**0 ausgeführte Testkörper**, `full_suite_passed=null`. Bestehende Tests,
+Oracles, Fixtures und dauerhafte Testnummern bleiben bytegleich. Nur aktive
+Spezifikations-Hashbindungen wurden konsistent fortgeschrieben; historische
+Evidence bleibt unverändert. Dies ist kein neuer Produktverhaltensnachweis.
+Gebundener Quellstand: `c545f59d19ce33d18f8b1490f78aa0fdc5b7ee4d9bd6337c0c2b2bba88bd50a0`;
+Katalog: `ac6c7fe64aae43b686887fe2d652a1b9b47b20d27b7a6a79e843de3b4139b9dc`.
 
 ## OFF-PLAN – ReqIFZ-Container und Anhangbindungen (Bundle 437)
 
@@ -21217,30 +21256,139 @@ endet dieser Einzelauftrag ohne Warte-/Resultschleife.
 **Anforderungsbezug:** `SR-REQ-0319`, `SR-REQ-0328`–`SR-REQ-0329`, `SR-REQ-0332`.
 **Verifikationsbezug:** `SR-VER-0024`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Das vollständig gebundene Result
+`specroad-apply_Result_025024_1024_ade39c.zip`, SHA-256
+`e00eec120f6ec97c943ef7522312f5cb671a0ca098b70f3b74cad423aee49904`,
+bestätigt Bundle **440** / **14.k.C** auf
+`4749f96b0b9247f86b52cd4580fd63c3ad28ace5`: sauberer Apply-Arbeitsbaum,
+**6.389/6.389** Tests der Gruppe **1/3**, Commitfolge **148**, vier Worker,
+**1.618,53 s**. Native Result-/Patchbindung, alle **2.186** Snapshotdateien,
+tatsächlicher Commit samt Elternstand, Run-/Ausführungslogs und vollständige
+nummerierte Testbeobachtungen wurden abgeglichen. In Dev wurden ausschließlich
+die fünf dadurch bestätigten Fortschrittsmarker nachgeführt; danach entsprach
+der Produktbestand dem Snapshot. Diese Belege bestätigen den ReqIFZ-Stand,
+keine bereits implementierte gemeinsame Exportmanifest-Funktion.
+
+**Entscheidungsbeleg EXPORT-MANIFEST-CONTRACT — delegiert gemäß
+SPECROAD-DECISION-1, 24. Oktober 2026.** Betroffen ist ausschließlich
+14.l.W/R/C mit SR-REQ-0319/0328/0329/0332 und SR-VER-0024. Normative
+Zielregel ist Spezifikation **0.2.21, 10.12.3**; 14.l.W bleibt offen.
+
+**Lücke und geprüfte Quellen.** SR-REQ-0319 fordert Exportmetadaten, legt
+aber bislang weder die gemeinsame Feldmenge noch ihre Bindung an tatsächliche
+Ausgabebytes, ausgeschlossene Inhalte und Anhangverluste fest. D.1 hat bereits
+die Maximalzeit-/Epochregel für ReqIF; sie wird nicht neu erfunden. 10.8/10.9
+definieren Scopes und native Modellwurzeln. E.1 betrifft dagegen Projektbundles,
+D.1.4 ein ReqIFZ-Transportmanifest; D.3.1 untersagt eine zusätzliche
+NDJSON-Manifestzeile. Keines dieser Formate darf still als allgemeines
+Exportmanifest umgedeutet werden. Die genaue formatübergreifende Projektion
+und der Umgang mit leeren beziehungsweise gleichwertigen Zeitwerten benötigen
+eine verbindliche Detaillösung vor Produktcode.
+
+Geprüft wurden das vollständige gebundene Result, Spezifikation 2.4,
+10.8/10.9/10.12.1, 11.6/11.8, 12.24, D.1–D.3, E.1 sowie dieser Plan.
+Im tatsächlichen Snapshot wurden Scope-Descriptor, Seeds, Closure, Scope-Hash,
+UTC-Werte, Mapping-/CSV-Profilbindungen, NDJSON-Objekthülle und ReqIF-
+Verlust-/ReqIFZ-Transportdaten abgeglichen. Die vier betroffenen Testfälle
+sind noch `open`; kein allgemeiner Exportmanifest-Codec ist vorhanden.
+Die Entscheidung verwendet vorhandene lokale Fachverträge und benötigt
+keine neue externe Tatsachenannahme, Fremdtool- oder menschliche Abnahme.
+
+**Alternativen und Auswahl.**
+
+1. Das Projektbundlemanifest oder das ReqIFZ-Inventar übernehmen. Das
+   verwechselt native Scopewurzel und Transportinventar, erfüllt die
+   formatübergreifenden Verlust-/Mappingpflichten nicht und könnte zusätzliche
+   verbotene Nutzdaten einführen. Nicht gewählt.
+2. Je Format ein eigenes Manifest mit Laufzeit oder Dateimtime bilden.
+   Das vervielfacht Verträge und widerspricht der Byte-Deterministik sowie
+   der bestehenden ReqIF-Zeitregel. Nicht gewählt.
+3. **Gewählt:** eine additive separate v1-Projektion mit vorhandenen
+   Scope-/Mappingbindungen, tatsächlichem Ausgabehash, konkreten Ausschlüssen
+   und Verlusten; die bestehende Maximalzeit-/Epochregel gilt gemeinsam.
+   Exakte Dezimalvergleiche und kanonische Zeitdarstellung vermeiden
+   Rundungsverlust und reihenfolgeabhängige Gleichstände. Anhangverzicht
+   bleibt sichtbar und unterliegt `fail_on_loss`; er ändert keine Modellwurzel.
+
+**Grenzprüfung nach 2.4.1.** (1) Nur die bestätigten Exportmetadaten und
+Scope-/Zeitprojektion aus 14.l werden präzisiert, keine zusätzliche
+Produktposition oder neue CLI-Familie. (2) Seeds, Closure, Modellwurzel,
+Query-Pagination, Formatprofile und ReqIF-Zeitregel bleiben Ausgangspunkt;
+keine gleichrangige Requirement wird aufgehoben. (3) Originalbytes,
+Mapping-/Hashbindungen, vollständige Verlustbewertung, Sicherheits- und
+Freigabegates bleiben erhalten. Eine fehlende Anhangbindung wird nicht zum
+normalen Verlust herabgestuft. (4) Das additive Manifest ist versioniert;
+frühere Formate, Spezifikationsfassungen und Evidence werden nicht migriert
+oder umgebunden. Eine spätere fachliche Revision kann diesen Vertrag ersetzen,
+ohne Datenlöschung oder Git-Rücksetzung zu erlauben. (5) Alle erforderlichen
+Grundlagen sind im geprüften lokalen Normsatz vorhanden. Keine persönliche
+Einzelzustimmung, unabhängiger Review oder Risikoakzeptanz wird behauptet.
+
+**Verbindliche beobachtbare Abnahmen.**
+
+- **W:** Alle vier Scopes verwenden die bestehende vollständige gebundene
+  Auswahl/Closure. Gleiche Quellen, Mappings/Profile und Optionen ergeben
+  gleiche Austausch- und separate Manifestbytes. Der native Scopehash bleibt
+  von Ausgabehash und Verlustprojektion getrennt; keine erfundene Modellwurzel.
+- **W:** Maximum aus enthaltenen `updated_at`-Werten, leere Menge mit Epoch,
+  gleichwertige Bruchteil-/T-Schreibweisen und exakte lange Dezimalbruchteile
+  ergeben den festgelegten Zeitpunkt. Ausgeschlossene Artefakte, CWD,
+  Ausgabeort und echte Laufzeit beeinflussen ihn nicht. Fehlende Pflichtzeit
+  ist kein Leerfall. ReqIF-Header und Manifest stimmen überein.
+- **W:** Tatsächlich repräsentierte IDs, Scopeausschlüsse, einzelne
+  Formatverluste und tatsächliche Anhangdeskriptoren sind vollständig
+  gebunden. Scopeausschlüsse folgen dem Descriptor und den Boundary References;
+  Änderungen an unbeteiligten Ursprungsressourcen ändern die Ausgabe nicht.
+  `include_attachments=false` plus `fail_on_loss=true` erzeugt bei
+  vorhandenen Anhängen keinen erfolgreichen Export. Ohne Verlustverbot
+  bleiben Ausschluss und Verlust explizit. Mit Anhangtransport werden echte
+  Bytes, Größe, Hash und sichere Pfade geprüft. Gesetzte und fehlende CLI-Flags
+  materialisieren die festgelegten booleschen Optionen ohne Format-Default.
+- **R:** Veränderte Quellen, falsche Root-/Mapping-/Profil-/Anhangbindungen,
+  unvollständige Closure, fehlende Ressourcen und widersprüchliche
+  Verlustbewertungen liefern keinen Erfolg. Vorhandene Sicherheits- und
+  Hostfehler bleiben erhalten; keine Ausnahme durch `fail_on_loss=false`.
+  Normative Projektinventur vor/nach Erfolg und Fehler ist bytegleich.
+- **R:** Umgeordnete Inventare, leere Queryseiten, Boundary References,
+  vollständige Artefaktverluste und präzise Zeitgrenzen werden geprüft.
+  Ausgabehash und mitgelieferte Anhangbytes stimmen mit dem Manifest überein;
+  keine Manifest-Selbstreferenz oder zusätzliche NDJSON-/CSV-/XML-/ZIP-Nutzdaten.
+- **C:** Gemeinsame Scope-, Zeit- und Manifestprojektion nutzt die vorhandenen
+  Parser und Hashdomänen; W-/R-Fachwerte, Fehlerklassen und Seiteneffekte
+  bleiben unverändert. Kein neuer Formatcodec nur zum Aufräumen.
+
+Dies sind offene Abnahmen, keine beobachteten Produktnachweise. Dieser
+OFF-PLAN-Schritt ändert ausschließlich Spezifikation, Plan und die notwendigen
+aktiven Spezifikationshashbindungen. Produktstand **603/900**, zuletzt
+**14.k.C**, nächstens **14.l.W**, und die drei offenen 14.l-Phasen bleiben
+erhalten. CLI-Optionen, vollständiger Formatumfang und Freigaben bleiben
+geschuldet; ein reiner Hilfscodec darf ihren Abschluss nicht behaupten.
+
+
 #### 14.l.W – Let it Work
 
 - [ ] **14.l.W** · Position **604/900** · Voraussetzung: `14.k.C`.
 **Exakte Commit-Message:** `14.l.W feat(exchange): Exportumfang und deterministisches Manifest aufbauen`
 
-**Umsetzung:** Project/document/query/release-Scopes, Mapping, Anhänge und deterministischen Snapshotzeitpunkt exportieren.
+**Umsetzung:** Project/document/query/release-Scopes, Mapping, Anhänge und deterministischen Snapshotzeitpunkt nach 10.12.3 exportieren. Die vorhandene vollständige native Auswahl/Closure und Modellwurzel an tatsächliche Formatbytes sowie ein separates geschlossenes Manifest binden; die W-Abnahmen des Entscheidungsbelegs und die zugesagten CLI-Optionen bleiben geschuldet.
 
-**Verhaltensabnahme:** Gleiche Fachinputs liefern gleiche Austauschbytes und dasselbe Exportmanifest.
+**Verhaltensabnahme:** Gleiche Fachinputs liefern gleiche Austauschbytes und dasselbe Exportmanifest. Scope-/Mapping-/Profilbindungen, tatsächlich repräsentierte IDs, Verlust-/Anhanginventar und Ausgabehash nachweisen. Maximum, Epoch-Leerfall und exakte UTC-Bruchteile stimmen mit dem ReqIF-Header überein; Anhangverzicht und fail-on-loss wirken wie in 10.12.3 festgelegt.
 
 #### 14.l.R – Make it Right
 
 - [ ] **14.l.R** · Position **605/900** · Voraussetzung: `14.l.W`.
 **Exakte Commit-Message:** `14.l.R feat(exchange): Exportumfang und deterministisches Manifest vervollständigen`
 
-**Vervollständigung:** Laufzeit und absolute Pfade nicht in den Fachcontainer mischen; Export bleibt ohne normative Writes.
+**Vervollständigung:** Die R-Abnahmen aus 10.12.3 und dem Entscheidungsbeleg erfüllen: veränderte oder unvollständige Quellen, Scope-/Mapping-/Profil-/Anhangfehler und widersprüchliche Verluste abweisen. Laufzeit und absolute Pfade nicht in den Fachcontainer mischen; Export bleibt ohne normative Writes, auch bei Fehlern. Kein Manifest-Selbstbezug oder zusätzliches Formatnutzobjekt.
 
-**Verhaltensabnahme:** Bytevergleich ausschließlich des maschinenlesbaren Austauschvertrags und Projektinventur. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Bytevergleich ausschließlich des maschinenlesbaren Austauschvertrags und Projektinventur: umgeordnete Inventare, leere Queryseiten, Boundary References, vollständig ausgelassene Artefakte, präzise Zeitgrenzen und tatsächliche Ausgabe-/Anhangbytes. Unbeteiligte Ursprungsressourcen ändern die Ausgabe nicht; Fehler erlauben keine normativen Writes oder abgeschwächten Sicherheits-/Freigabegates. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 14.l.C – Make it Clean
 
 - [ ] **14.l.C** · Position **606/900** · Voraussetzung: `14.l.R`.
 **Exakte Commit-Message:** `14.l.C refactor(exchange): Exportumfang und deterministisches Manifest bereinigen`
 
-**Bereinigung:** Scope-/Zeitprojektion zentral für alle Formate bereitstellen.
+**Bereinigung:** Die Scope-/Zeit-/Manifestprojektion nach 10.12.3 zentral für alle Formate mit vorhandenen Parsern und Hashdomänen bereitstellen. Keine zweite Formatimplementation, keine neuen Fachwerte und keine Änderung von Fehlern oder Seiteneffekten.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
