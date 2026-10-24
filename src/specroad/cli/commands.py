@@ -140,6 +140,11 @@ def _configuration_evaluate(invocation):
     return configuration_evaluate_command(invocation)
 
 
+def _export(invocation):
+    from ..exchange.project_export import export_command
+    return export_command(invocation)
+
+
 def _read_runtime_options():
     return (OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
             *(OptionSpec(flag, takes_value=True) for flag in ('--cpu-budget-ms', '--wall-budget-ms',
@@ -149,6 +154,30 @@ def _read_runtime_options():
 
 def builtin_registry() -> CommandRegistry:
     commands = (CommandSpec(
+        command_id='export', words=('export',), command_class=CommandClass.GENERATED_OUTPUT,
+        preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.EXTERNAL_OUTPUT,
+        handler=_export, requires_project=True, configuration_schema_required=True,
+        positionals=(PositionalSpec('exchange_format', choices=('reqif', 'reqifz', 'csv', 'ndjson')),),
+        options=(OptionSpec('--scope', takes_value=True, choices=('project', 'document', 'query', 'release')),
+            OptionSpec('--boundary-policy', takes_value=True, choices=('closed', 'partial')),
+            *(OptionSpec('--' + name, takes_value=True) for name in ('output', 'output-root', 'mapping',
+                'mapping-sha256', 'csv-profile', 'csv-profile-sha256', 'document', 'release', 'query',
+                'configuration', 'xml-limits', 'max-archive-bytes', 'project')),
+            OptionSpec('--profile', takes_value=True, repeatable=True),
+            OptionSpec('--include-attachments'), OptionSpec('--fail-on-loss'),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('exchange-export-v1', {'command_id': 'export',
+            'arguments': {'exchange_format': 'ndjson'}, 'options': {'--scope': 'project',
+                '--output': 'generated/exchange.ndjson', '--mapping': 'example:export@1.0.0',
+                '--mapping-sha256': '3dace6b5a437068945ec537d7d9c4035f17a61ff0400b21f39a3321c8d2ed84c',
+                '--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002', 'SRV090', 'SRV130'),
+            work=WorkContract('native_scope_export', ('project_configuration', 'current_project_inventory',
+                                                     'scope_and_exact_mapping_bindings'))),
+    ), CommandSpec(
         command_id='init', words=('init',), command_class=CommandClass.ROOT_CREATION,
         preflight_profile=PreflightProfile.ROOT_CREATION, effect_scope=EffectScope.NEW_ROOT,
         handler=_initialize, positionals=(PositionalSpec('path', required=False),),
@@ -372,7 +401,7 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
             work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
     ))
-    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain'}
+    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export'}
     return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
         budget_policy_version='runtime-budget-v2') if command.command_id in readers else command
         for command in commands))

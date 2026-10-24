@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 603
-last_completed_plan_commit: 14.k.C
-next_plan_commit: 14.l.W
-last_completed_numbered_bundle: 441
+implementation_plan_commits_completed: 604
+last_completed_plan_commit: 14.l.W
+next_plan_commit: 14.l.R
+last_completed_numbered_bundle: 442
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -21367,12 +21367,156 @@ geschuldet; ein reiner Hilfscodec darf ihren Abschluss nicht behaupten.
 
 #### 14.l.W – Let it Work
 
-- [ ] **14.l.W** · Position **604/900** · Voraussetzung: `14.k.C`.
+- [x] **14.l.W** · Position **604/900** · Voraussetzung: `14.k.C`.
 **Exakte Commit-Message:** `14.l.W feat(exchange): Exportumfang und deterministisches Manifest aufbauen`
 
 **Umsetzung:** Project/document/query/release-Scopes, Mapping, Anhänge und deterministischen Snapshotzeitpunkt nach 10.12.3 exportieren. Die vorhandene vollständige native Auswahl/Closure und Modellwurzel an tatsächliche Formatbytes sowie ein separates geschlossenes Manifest binden; die W-Abnahmen des Entscheidungsbelegs und die zugesagten CLI-Optionen bleiben geschuldet.
 
 **Verhaltensabnahme:** Gleiche Fachinputs liefern gleiche Austauschbytes und dasselbe Exportmanifest. Scope-/Mapping-/Profilbindungen, tatsächlich repräsentierte IDs, Verlust-/Anhanginventar und Ausgabehash nachweisen. Maximum, Epoch-Leerfall und exakte UTC-Bruchteile stimmen mit dem ReqIF-Header überein; Anhangverzicht und fail-on-loss wirken wie in 10.12.3 festgelegt.
+
+**Umsetzungs- und Teiltestnachweis – Bundle 442, 24. Oktober 2026.**
+Dieser normale W-Zwischenstand implementiert ausschließlich die bereits
+geklärte Vorgabe EXPORT-MANIFEST-CONTRACT. SPECROAD-DECISION-1 ist vorhanden;
+Control erlaubt hier keine weitere Klärung. Spezifikation **0.2.21** und ihre
+SHA-256 `74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`
+bleiben bytegleich. R/C bleiben offen; es wird keine neue normative Regel
+oder persönliche Freigabe eingeführt.
+
+**Bestätigte technische Basis.** Das nativ geprüfte Result
+`specroad-apply_Result_033322_1024_a219e1.zip`, SHA-256
+`39d5e71916fb1bfcfa1f42a577b41370d77d6961731562202efdccc094bdfaff`,
+bestätigt den erfolgreichen, sauberen OFF-PLAN-Commit
+`e1ed88a974662f00b1bf171acef60ca2e983bd37` aus Bundle **441**.
+Der tatsächliche parallele Apply-Lauf bestand **6.388/6.388** Tests mit
+vier Workern in Gruppe **2**, Sequenz **149**, bei **19.166** gesammelten
+Tests; der Nachweis ist ausdrücklich ein Drittellauf, keine Vollsuite.
+Root-Chat-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und
+alle **2.186** Snapshotdateien wurden gegen den tatsächlichen Apply-Stand
+geprüft. Planstand vor diesem W-Commit bleibt **603/900**, zuletzt
+**14.k.C**, nächstens **14.l.W**, Bundle **441**.
+
+**Tatsächliche Umsetzung.** Die reale CLI `specroad export` und die reine
+Vorbereitung unterstützen `ndjson`, `csv`, `reqif` und `reqifz` mit exakter
+Mappingbindung, allen vier Scopes und den zugesagten booleschen Flags.
+Native Scope-Seeds, Konfiguration, paginierte Queryauswahl, starke Closure,
+Boundary References, Ressourcen und historische Baselineobjekte bilden die
+Modellwurzel vor der Formatprojektion. Die vorhandenen Formatcodecs liefern
+die tatsächlichen primären Bytes; das separate geschlossene Manifest bindet
+ihren Hash, repräsentierte IDs, einzelne Verluste und alle Anhangdeskriptoren.
+Kein zusätzliches NDJSON-/CSV-/XML-/ZIP-Nutzobjekt dient als Manifest.
+
+Die Zeitprojektion vergleicht native UTC-Kalenderfelder und Dezimalstellen
+exakt, normalisiert nur äquivalente Schreibweisen und verwendet bei leerem
+repräsentiertem Inhalt die Epoch. ReqIF verwendet denselben abgeleiteten
+Zeitpunkt im Header und die vorhandenen XML-Grenzen. CSV verwendet ein
+explizites Profil und eine eindeutige inverse Feldabbildung. ReqIF bezieht
+Typ-/Datentypdefinitionen aus tatsächlichen geprüften Original-Carriern;
+Dokumentvorkommen und Relationen benötigen die bestehenden externen
+Identitäts-/Registerbindungen. Fehlende Repräsentation bleibt konkreter
+Verlust, eine mehrdeutige inverse Bindung bleibt Fehler. Der bestehende
+Whole-record-Verlustvergleich liefert seine Originalidentitäten in
+`format_details`. Für XHTML können tatsächlich gebundene Scope-Anhänge
+auch durch ein anderes Evidence-Artefakt beschrieben sein; Zielbytes allein
+erzeugen weiterhin keine Quellbindung.
+
+Mit Anhangtransport werden tatsächliche vollständige Bytes samt Größe und
+SHA-256 geprüft und ausgeliefert, bei ReqIFZ im bestehenden Container.
+Ohne Transport sind Ausschlüsse ausdrücklich sichtbar. Ein ReqIF-Artefakt,
+dessen verpflichtend gemappter XHTML-Inhalt sonst eine nicht mitgelieferte
+Anhangreferenz enthielte, wird vollständig als Verlust ausgewiesen; kein
+fehlendes Pflichtfeld und kein Ersatztext wird erzeugt. `fail_on_loss=true`
+verhindert bei verbleibenden Verlusten jede erfolgreiche Veröffentlichung.
+Die Ausgabeintegration verwendet generierte oder ausdrücklich externe Ziele,
+prüft unveränderte Quellen erneut und veröffentlicht vollständige Dateibilder
+mit Manifest zuletzt. Sie beansprucht keine atomare Mehrdatei-Transaktion
+und verändert keine normativen Projektdateien.
+
+**Gezielte parallele Entwicklungsevidence.** **2.237/2.237** neue und
+betroffene Verhaltenstests bestanden mit **vier Workern**; beobachteter
+Prozessabschluss **0**, alle registrierten Outcomes `passed`.
+Vollständige Collection-/Katalogprüfung: **19.215** Tests, gültiger Katalog,
+**0** dabei ausgeführte Tests. Der eigentliche Verhaltenstest bleibt eine
+Teilmenge; `full_suite_passed=null`.
+
+Geprüfte Dateien dieser Auswahl:
+
+- `tests/test_baseline_verification.py`
+- `tests/test_baseline_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_configuration_scope.py`
+- `tests/test_configuration_scope_right.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_csv_export_compatibility.py`
+- `tests/test_description.py`
+- `tests/test_document_structure.py`
+- `tests/test_document_structure_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_options.py`
+- `tests/test_project_export.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_registry.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_preservation.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requests.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_scope_closure.py`
+- `tests/test_scope_closure_right.py`
+- `tests/test_scope_seeds.py`
+- `tests/test_scope_seeds_right.py`
+- `tests/test_verification.py`
+
+Neue Abnahmen umfassen tatsächliche native Modellwurzeln und alle vier
+Scopes einschließlich Konfiguration, Query-Pagination und schwacher Grenzen;
+exakte UTC-Bruchteile, Epoch und fehlende Pflichtwerte; tatsächliche
+CSV-/NDJSON-/ReqIF-/ReqIFZ-Bytes, Dokumentordnung, Originaldefinitionen und
+XHTML-Anhänge; getrennte Manifeste und reale Ausgaben unter allen vier
+Formaten/Anhangoptionen; Normativinventur, Quellwechsel, unsichere Ziele,
+Relokation/CWD sowie isolierte Core-/PYZ-Ausführung. Bestehende öffentliche
+CLI-Vertragserwartungen wurden genau um den tatsächlich registrierten
+Exportbefehl und seine vier Formate ergänzt; Testidentitäten bleiben erhalten.
+
+Quellstand des bestandenen Teiltests:
+`85c278ae01f03b394bff8a14294b2f6fb63e99e21d69e6df670f7322775b36cb`.
+Katalog-SHA-256: `961222a6d8418de8bd52e9b567b6cc1e119a7599241514f0fe38bbdb0b434207`.
+Auswahlbeleg-SHA-256: `ba3d62f5cfad732236652a80a6bf3e3bbf685eeda3b8b68f0eed3235fa9a5bf5`.
+Beobachtungsbeleg-SHA-256: `2706c98ec9c2790b94297b8209f0fb6abe55ebcc2c1db059eab7b96df31fb24c`.
+Die **49** neuen Testidentitäten erhalten ausschließlich die fortlaufenden
+Nummern **19166–19214**. Alle vorhandenen Nummern und Rotationsanker bleiben
+erhalten. SR-TC-0319/0328/0329/0332 stehen mit echter Fixture/Testbindung auf
+`partial`; das ist kein vollständiger Requirement- oder Release-Erfolg.
+
+**Einzelne Apply-Grenze.** Der Entrypoint stellt genau diesen geprüften
+W-Zustand her und führt nur die fällige Gruppe **0**, Sequenz **150**, mit
+**6.405** stabil nummerierten Tests und vier Workern aus. Kein Volltest und
+kein serieller Testlauf wird zusätzlich gestartet. Erst nach bestandenem
+gebundenem Testlauf werden die fünf Planfortschrittsmarker auf **604/900**,
+zuletzt **14.l.W**, nächstens **14.l.R**, Bundle **442** und die W-Checkbox
+aktualisiert und der exakte W-Commit erzeugt. Das Ergebnis dieses künftigen
+Apply-Laufs ist hier nicht behauptet. Bei Fehlern bleiben der tatsächliche
+Zustand und bereits erfolgreiche Commits erhalten.
+
+**Verbleibende Grenzen.** R ergänzt die vollständigen adversarialen
+Bindungs-, Inventar-, Verlust- und Fehlergrenzen; C bereinigt danach dieselbe
+Integration ohne neue Fachwerte. ReqIF benötigt weiterhin explizite
+Original-Typdefinitionen und Identitätsbindungen; inverse Relationswerte
+ohne vorhandene eindeutige Projektion werden kontrolliert abgewiesen.
+Dieser W-Nachweis ist weder Fremdtool-Interoperabilitätsnachweis noch
+Verlust-/Release-Freigabe, vollständiger Projektbundleexport oder Vollsuite.
 
 #### 14.l.R – Make it Right
 

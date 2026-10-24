@@ -38,4 +38,11 @@ def command_example_project(root, command_id):
     if command_id == 'configuration.evaluate':
         from .records import record_value
         return inspection_project(root, artifacts=[record_value('configuration')])
+    if command_id == 'export':
+        model = inspection_project(root)
+        put(root, 'mappings/export.json', canonical_json_bytes({
+            'schema_version': '0.2.0', 'mapping_format_version': 'exchange-mapping-v1',
+            'mapping_id': 'example:export', 'mapping_version': '1.0.0', 'source_format': 'ndjson',
+            'types': [], 'fields': [], 'relations': [], 'hierarchies': [], 'extensions': {}}))
+        return model
     return inspection_project(root)

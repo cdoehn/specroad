@@ -20,7 +20,7 @@ class InspectionChanged(ModelError):
 
 class InspectionSnapshot:
     """An observation with a final reread, not an atomic snapshot or write grant."""
-    def __init__(self, root, profiles):
+    def __init__(self, root, profiles, *, include_archive_objects=False):
         self.source = source = ProjectSource(root)
         self.paths = current_json_paths(source)
         self.raw = {p: source.read_normative(p) for p in self.paths}
@@ -66,7 +66,18 @@ class InspectionSnapshot:
         keys = tuple(key for key in keys if key not in ('core', 'core@0.2.0'))
         profile = compose_profiles(profile_sources, core_key='core@0.2.0',
             cli_profiles=keys, language_registry=registry, language_packages=selected_packages)
-        self.payload_paths = tuple(sorted(attachments))
+        archives = set()
+        if include_archive_objects:
+            from ..archive.objects import ObjectReference
+            for document in documents:
+                value = parse_json_object(document.content)
+                if value.get('artifact_type') == 'baseline':
+                    for row in value.get('manifest', []):
+                        reference = ObjectReference(row.get('sha256'), row.get('size'))
+                        if row.get('object_path') != reference.path:
+                            raise ModelError('baseline_snapshot_object_path_mismatch')
+                        archives.add(reference.path)
+        self.payload_paths = tuple(sorted(set(attachments) | archives))
         for path in self.payload_paths:
             raw = source.read_normative(path, referenced_payloads=self.payload_paths)
             self.raw[path] = raw

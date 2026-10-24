@@ -215,7 +215,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
                                  'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
-                                 'configuration.evaluate', 'roadmap.explain') else None)
+                                 'configuration.evaluate', 'roadmap.explain', 'export') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
     def test_minimum_step_limits_are_explicitly_unmeasured(self):

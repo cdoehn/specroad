@@ -237,7 +237,7 @@ class SchemaCatalogRobustnessTests(unittest.TestCase):
 
     def test_future_formats_and_unsupported_sarif_commands_stay_unavailable(self):
         data=dispatch_result(['capabilities']).as_dict()['result']['semantic']
-        self.assertEqual(data['exchange_formats'],[])
+        self.assertEqual(data['exchange_formats'],['csv', 'ndjson', 'reqif', 'reqifz'])
         self.assertEqual(dispatch_result(['schema','list','--format=sarif']).exit_code,2)
         for name in ('reqif-v1','csv-mapping-v1','ndjson-v1'):
             with self.assertRaises(SchemaLookupError): self.catalog.get(name)

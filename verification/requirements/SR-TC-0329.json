@@ -4,18 +4,34 @@
   "requirement_id": "SR-REQ-0329",
   "specification_sha256": "74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28",
   "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-EXCHANGE-EXPORT-v1"
+  ],
+  "preconditions": [
+    "Actual TargetModel or live native project, complete existing scope selection/closure and explicit exact mapping/profile bindings; ReqIF uses original typed definitions and explicit XML limits, ReqIFZ additionally a hard expansion limit. Generated output is disjoint from normative project files."
+  ],
+  "steps": [
+    "Resolve project/document/query/release scopes with native configuration, paginated query seeds, strong closure, historical baseline objects and weak boundaries; compare actual native model roots before format projection.",
+    "Encode actual NDJSON/CSV/ReqIF/ReqIFZ bytes using existing codecs. Derive the separate closed manifest, exact maximum/epoch UTC timestamp, represented identities, individual losses and full attachment descriptors from actual sources and output.",
+    "Exercise all four formats through the real export CLI with explicit attachment and loss flags; bind actual attachment bytes or report their exclusion, forbid successful publication on remaining prohibited loss, and compare original normative inventory bytes.",
+    "Compare relocated/CWD-independent results, reject unsafe destinations and changed source bytes, and run real export through isolated Core and PYZ distributions."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Export DARF NICHT normative Projektdateien verändern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "14.l.W provides real project export for all four formats through the CLI and pure preparation API. Native scope/model-root and exact deterministic time are distinct from format bytes and their SHA-256. The separate exchange-export-v1 manifest reports actual representation and attachment/format losses; generated publication rechecks source bytes and never writes normative files. ReqIF uses existing closed typed/carrier/loss contracts. The requirement remains partial for R/C and broader adversarial evidence."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +44,60 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_exchange_export.py::test_export_applies_bound_configuration_before_query_selection",
+    "tests/test_exchange_export.py::test_export_attachment_inventory_and_unchanged_native_root[False]",
+    "tests/test_exchange_export.py::test_export_attachment_inventory_and_unchanged_native_root[True]",
+    "tests/test_exchange_export.py::test_export_csv_profile_identity_values_and_single_field_losses",
+    "tests/test_exchange_export.py::test_export_empty_page_uses_epoch_and_emits_no_ndjson_manifest_row",
+    "tests/test_exchange_export.py::test_export_exact_time[times0-1970-01-01T00:00:00Z]",
+    "tests/test_exchange_export.py::test_export_exact_time[times1-2026-10-01T00:00:00Z]",
+    "tests/test_exchange_export.py::test_export_exact_time[times2-2026-10-01T00:00:00.1Z]",
+    "tests/test_exchange_export.py::test_export_exact_time[times3-2026-10-01T00:00:00.123456789012345678901Z]",
+    "tests/test_exchange_export.py::test_export_exact_time[times4-2026-10-01T00:00:01Z]",
+    "tests/test_exchange_export.py::test_export_exact_time[times5-2026-06-30T23:59:60.1Z]",
+    "tests/test_exchange_export.py::test_export_missing_invalid_time_is_not_empty[2026-02-30T00:00:00Z]",
+    "tests/test_exchange_export.py::test_export_missing_invalid_time_is_not_empty[2026-10-01T00:00:00+00:00]",
+    "tests/test_exchange_export.py::test_export_missing_invalid_time_is_not_empty[None]",
+    "tests/test_exchange_export.py::test_export_missing_invalid_time_is_not_empty[]",
+    "tests/test_exchange_export.py::test_export_ndjson_full_native_payload_hash_and_closed_manifest",
+    "tests/test_exchange_export.py::test_export_query_keeps_actual_weak_boundary_policy[closed]",
+    "tests/test_exchange_export.py::test_export_query_keeps_actual_weak_boundary_policy[partial]",
+    "tests/test_exchange_export.py::test_export_query_page_preserves_native_fields_and_ignores_outside_changes",
+    "tests/test_exchange_export.py::test_export_reqif_document_uses_registered_occurrences_and_native_order",
+    "tests/test_exchange_export.py::test_export_reqif_uses_bound_definitions_and_same_header_timestamp[reqif]",
+    "tests/test_exchange_export.py::test_export_reqif_uses_bound_definitions_and_same_header_timestamp[reqifz]",
+    "tests/test_exchange_export.py::test_export_reqifz_xhtml_image_is_bound_or_explicitly_lost[False]",
+    "tests/test_exchange_export.py::test_export_reqifz_xhtml_image_is_bound_or_explicitly_lost[True]",
+    "tests/test_exchange_export.py::test_export_scopes_use_native_seeds_and_strong_closure[document]",
+    "tests/test_exchange_export.py::test_export_scopes_use_native_seeds_and_strong_closure[release]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[False-csv]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[False-ndjson]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[False-reqif]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[False-reqifz]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[True-csv]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[True-ndjson]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[True-reqif]",
+    "tests/test_project_export.py::test_export_cli_all_formats_and_actual_attachment_transport[True-reqifz]",
+    "tests/test_project_export.py::test_export_cli_flags_materialize_and_loss_prohibition_prevents_publication[flags0]",
+    "tests/test_project_export.py::test_export_cli_flags_materialize_and_loss_prohibition_prevents_publication[flags1]",
+    "tests/test_project_export.py::test_export_cli_flags_materialize_and_loss_prohibition_prevents_publication[flags2]",
+    "tests/test_project_export.py::test_export_cli_flags_materialize_and_loss_prohibition_prevents_publication[flags3]",
+    "tests/test_project_export.py::test_export_detects_source_change_before_any_publication",
+    "tests/test_project_export.py::test_export_forbids_normative_and_unsafe_destinations[../outside.ndjson]",
+    "tests/test_project_export.py::test_export_forbids_normative_and_unsafe_destinations[.specroad/receipt.json]",
+    "tests/test_project_export.py::test_export_forbids_normative_and_unsafe_destinations[spec/requirements/replaced.json]",
+    "tests/test_project_export.py::test_export_in_isolated_portable_distribution[core]",
+    "tests/test_project_export.py::test_export_in_isolated_portable_distribution[pyz]",
+    "tests/test_project_export.py::test_export_project_includes_real_historical_baseline_objects",
+    "tests/test_project_export.py::test_export_real_publication_and_normative_inventory[cli]",
+    "tests/test_project_export.py::test_export_real_publication_and_normative_inventory[direct]",
+    "tests/test_project_export.py::test_export_real_publication_and_normative_inventory[structured]",
+    "tests/test_project_export.py::test_export_relocation_cwd_output_and_unchanged_source_bytes"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.l.R: complete adversarial changed/missing scope, mapping, profile and attachment bindings, contradictory losses, inventory permutations and precision/error boundary matrices while preserving W behavior.",
+    "14.l.C: clean shared scope/time/manifest integration without changing results, error contracts or allowed side effects.",
+    "ReqIF projection requires actual unambiguous original typed carriers and explicit external occurrence/relation bindings. Unsupported inverse relation value bindings fail closed. This partial implementation does not establish foreign-tool interoperability, loss approval, atomic multi-file publication, full-suite or release success."
   ]
 }

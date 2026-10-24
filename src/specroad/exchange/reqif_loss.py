@@ -224,7 +224,7 @@ def _native_comparisons(value, document, mapping, identifier, attachments):
     return consumed, comparisons, missing
 
 
-def _native_prose_references(value, document, mapping, identifier, references):
+def _native_prose_references(value, document, mapping, identifier, references, source_files):
     if document is None or mapping is None:
         return
     record = next((r for r in records(document) if r.identifier == identifier), None)
@@ -243,8 +243,19 @@ def _native_prose_references(value, document, mapping, identifier, references):
         pending = [content]
         while pending:
             node = pending.pop()
-            if node.get('attachment_path') is not None and node['attachment_path'] not in paths:
-                raise ReqIFError('reqif_attachment_unresolved', pointer=_pointer('', name))
+            path = node.get('attachment_path')
+            if path is not None and path not in paths:
+                # A live project may bind a prose reference to an Evidence
+                # descriptor elsewhere in the actual scope. Require the same
+                # explicit typed descriptor/bytes, without injecting a field
+                # into the source record or accepting a target-only binding.
+                matches = [item for item in source_files.values() if item.descriptor.path == path]
+                if not matches:
+                    raise ReqIFError('reqif_attachment_unresolved', pointer=_pointer('', name))
+                if len(matches) != 1:
+                    raise ReqIFError('reqif_attachment_binding_ambiguous', exit_code=6, pointer=_pointer('', name))
+                references.append(({'kind': 'json', 'pointer': _pointer('', name)}, matches[0]))
+                paths.add(path)
             pending.extend(node.get('children', []))
 
 
@@ -313,7 +324,7 @@ def assess_reqif_transfer(source_bytes, *, source_kind, source_context, expected
             for _, original in _carrier(extensions[_KEY], limits):
                 _xml_references(decode_reqif_structure(original, limits=limits), source_files)
         references = _json_references(value, source_files)
-        _native_prose_references(value, target_document, mapping, record_identifier, references)
+        _native_prose_references(value, target_document, mapping, record_identifier, references, source_files)
         consumed, comparisons, missing = _native_comparisons(value, target_document, mapping, record_identifier, target_attachments)
         unassessed.update(missing)
         units = [(loc, reason, None) for loc, reason in _native_inventory(value, consumed)]

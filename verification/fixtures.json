@@ -72,6 +72,7 @@
     "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1",
     "SR-FIX-EVIDENCE-RECORDING-RIGHT-v1",
     "SR-FIX-EVIDENCE-RECORDING-v1",
+    "SR-FIX-EXCHANGE-EXPORT-v1",
     "SR-FIX-EXCHANGE-MAPPINGS-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-IMPORT-COMPARISON-v1",
@@ -850,6 +851,10 @@
     "SR-FIX-REQIFZ-CONTAINER-R-v1": {
       "provider": "tests/test_reqifz_right.py:source_files,offsets;tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:one,document;tests/support/reqif_structure.py:xdocument",
       "kind": "Actual independently generated stored ZIPs with local/central/end record and payload mutations; unused members, gap/overlap/size/CRC failures, unsafe original filenames, complete URI and XML-boundary vectors. Tests require rejection before payload reads for invalid metadata and exact owned manifest/byte oracles for valid transports. No project write, full-suite, foreign-tool or release claim."
+    },
+    "SR-FIX-EXCHANGE-EXPORT-v1": {
+      "provider": "tests/test_exchange_export.py:model,scope,prepared;tests/test_project_export.py:project,call;tests/support/reqif_objects.py:document;tests/support/reqif_structure.py:xdocument",
+      "kind": "Owned actual native project bytes, explicit mappings/CSV profiles and original ReqIF carrier definitions/registry identities, real PNG attachments and historical baseline objects. Exact format bytes, independent native manifest/hash and UTC oracles, all four scopes, CLI flags/publication, normative inventories and isolated Core/PYZ execution. Partial W evidence; no foreign-tool, approval, full-suite or release claim."
     }
   }
 }

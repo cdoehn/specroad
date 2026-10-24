@@ -91,6 +91,25 @@ def _fields(schema_id):
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),
             "exit_codes": {"type": "object", "additionalProperties": text}, "examples": strings, "scope": text})
+    if schema_id == 'exchange-export-v1':
+        mapping = _object({'mapping_id': nonempty, 'mapping_version': nonempty, 'sha256': sha})
+        loss_identity = {'resource_id': nonempty, 'pointer': text,
+                         'reason': {'type': 'string', 'pattern': r'^[a-z][a-z0-9_]*(?![\s\S])'}}
+        manifest = _object({'manifest_version': {'const': 'exchange-export-v1'},
+            'format': {'enum': ['reqif', 'reqifz', 'csv', 'ndjson']},
+            'format_version': {'enum': ['1.2', 'reqifz-container-v1', 'csv-profile-v1', '1.0.0']},
+            'mapping': mapping, 'format_profile': _nullable(mapping), 'scope_descriptor': obj,
+            'boundary_references': _array(obj), 'model_root_sha256': sha, 'snapshot_at': nonempty,
+            'tool_version': nonempty, 'options': _object({'include_attachments': boolean, 'fail_on_loss': boolean}),
+            'included_ids': strings, 'excluded_contents': _array(_object(loss_identity)),
+            'losses': _array(_object({**loss_identity, 'format_details': obj})),
+            'attachments': _array(_object({'path': nonempty, 'size': count, 'media_type': nonempty,
+                                          'sha256': sha, 'included': boolean})), 'output_sha256': sha})
+        return _object({'format_version': {'const': 'exchange-export-publication-v1'}, 'manifest': manifest,
+            'files': _array(_object({'path': nonempty, 'size': count, 'sha256': sha})),
+            'manifest_path': nonempty, 'generated': {'const': True}, 'normative': {'const': False},
+            'atomic_snapshot': {'const': False}, 'source_bytes_rechecked': {'const': True},
+            'approval_granted': {'const': False}})
     if schema_id == 'document-work-v1':
         return _object({'format_version': {'const': 'document-work-v1'},
             'input_manifest_sha256': sha, 'task_manifest_sha256': sha,

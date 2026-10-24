@@ -21,10 +21,15 @@ def capabilities(registry):
     identity = version_info()
     commands = []
     active_formats = set()
+    exchange_formats = set()
     for command in sorted(registry.commands, key=lambda item: item.command_id):
         command, protocol = published_contract(registry, command.command_id)
         formats = output_formats(command)
         active_formats.update(formats)
+        if command.command_id == 'export' and protocol.result_schema == 'exchange-export-v1':
+            for positional in command.positionals:
+                if positional.name == 'exchange_format':
+                    exchange_formats.update(positional.choices)
         commands.append({**command_surface(command),
             "output_formats": formats, "result_schema": protocol.result_schema,
             "continuation_supported": protocol.work.continuation_supported})
@@ -37,7 +42,7 @@ def capabilities(registry):
         "command_groups": sorted({cmd["command_id"].split(".")[0] for cmd in commands}),
         "command_classes": sorted({cmd["command_class"] for cmd in commands}),
         "output_formats": sorted(active_formats),
-        "exchange_formats": [],
+        "exchange_formats": sorted(exchange_formats),
         "supported_versions": {"schema": identity["supported_schema_versions"],
             "srx": list(SUPPORTED_SRX_VERSIONS), "proposal": [],
             "json_envelope": [FORMAT_VERSION], "command_description": [DESCRIPTION_VERSION],
