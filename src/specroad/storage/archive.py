@@ -234,6 +234,11 @@ def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_
                      else info.filename for info in infos]
             if validate_paths is not None:
                 validate_paths(names)
+                # Inspect the complete portable target set for unsafe types
+                # before a different member's format error can mask them.
+                # The legacy manifest-bound API keeps its original ordering.
+                if any(info.external_attr != _ZIP_EXTERNAL_ATTR for info in infos):
+                    raise ArchiveError('unsafe_archive_entry', exit_code=7)
             _require(len(names) == len(set(names))
                      and (manifest_name is None or names.count(manifest_name) == 1),
                      'archive_entry_set_invalid')

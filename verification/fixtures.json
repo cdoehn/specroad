@@ -388,6 +388,10 @@
       "kind": "Native Capability/Task schema 0.2.0 values, exact Appendix L field projection, metadata/workflow exclusions, configured independent contracts and legacy Evidence hashes. Native freshness/selection/aggregation, no rewriting or audit-hash substitute.",
       "provider": "tests/test_verification_planning_context.py:value"
     },
+    "SR-FIX-PRODUCT-BUNDLE-R-v1": {
+      "kind": "Versioned owned stdlib ZIP/JSON vectors with fixed hashes and explicit error classes, plus native metadata and portable-path boundary cases in tests/test_product_bundle_right.py. No product ZIP codec generated the vectors; no semantic project, receipt-authenticity, extraction or approval claim.",
+      "provider": "tests/fixtures/product_bundle_container_v1.json"
+    },
     "SR-FIX-PRODUCT-BUNDLE-v1": {
       "kind": "Owned project/document/release scope observations and native model hashes with exact JSON/binary payloads, independent stdlib ZIP/inventory oracles, explicit receipt-byte fixtures and isolated Core/PYZ runs. No complete project validation, receipt authenticity, extraction, publication or release claim.",
       "provider": "tests/support/bundles.py:bundle_inputs"
@@ -787,6 +791,7 @@
     "SR-FIX-PLANNING-BUILTIN-WORK-v1",
     "SR-FIX-PLANNING-RELATIONS-v1",
     "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1",
+    "SR-FIX-PRODUCT-BUNDLE-R-v1",
     "SR-FIX-PRODUCT-BUNDLE-v1",
     "SR-FIX-PRODUCTION-VALIDATION-v1",
     "SR-FIX-PROFILE-COMPOSITION-v1",

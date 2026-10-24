@@ -80,6 +80,7 @@ def metadata_bytes(value):
     paths = []
     for item in exclusions:
         require(type(item) is dict and set(item) == {'path', 'reason'}, 'bundle_exclusion_fields')
+        require(type(item['path']) is str, 'bundle_exclusion_path_type')
         require(type(item['reason']) is str and item['reason'] in _EXCLUSION_REASONS,
                 'bundle_exclusion_reason')
         validate_portable_archive_paths([item['path']])
@@ -99,6 +100,7 @@ def check_entries(entries):
     for item in entries:
         require(type(item) is dict and set(item) == {'path', 'size', 'media_type', 'sha256'},
                 'bundle_entry_fields')
+        require(type(item['path']) is str, 'bundle_entry_path_type')
         validate_portable_archive_paths([item['path']])
         require(type(item['size']) is int and item['size'] >= 0, 'bundle_entry_size')
         require(type(item['media_type']) is str, 'bundle_entry_media_type')

@@ -32,6 +32,8 @@ def encode_bundle(metadata, payloads):
         files = dict(payloads)
         require(MANIFEST_NAME not in files, 'recursive_bundle_manifest', code='SRV060')
         validate_portable_archive_paths([MANIFEST_NAME, *files])
+        require(all(len(name.encode('utf-8')) <= 0xffff for name in files),
+                'bundle_path_exceeds_zip_field', code='SRV060')
         value = owned_metadata(metadata)
         require(value['tool_version'] == __version__, 'bundle_writer_version')
         check_payload_binding(value, files)

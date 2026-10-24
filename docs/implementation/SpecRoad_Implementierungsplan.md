@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 17
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 616
-last_completed_plan_commit: 15.a.W
-next_plan_commit: 15.a.R
-last_completed_numbered_bundle: 456
+implementation_plan_commits_completed: 617
+last_completed_plan_commit: 15.a.R
+next_plan_commit: 15.a.C
+last_completed_numbered_bundle: 458
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -23495,12 +23495,193 @@ Ein tatsächlicher Apply-Erfolg wird hier nicht vorweggenommen.
 
 #### 15.a.R – Make it Right
 
-- [ ] **15.a.R** · Position **617/900** · Voraussetzung: `15.a.W`.
+- [x] **15.a.R** · Position **617/900** · Voraussetzung: `15.a.W`.
 **Exakte Commit-Message:** `15.a.R feat(bundle): Kanonisches ZIP und Manifestdomäne vervollständigen`
 
 **Vervollständigung:** Die R-Abnahmen aus E.1.1 und dem Entscheidungsbeleg erfüllen: Feld-/Typ-/Versions-/Bindungsfehler, Dubletten, Casefold-/Präfixkollisionen, Sondertypen und nichtkanonische Parameter mit den festgelegten Fehlerklassen abweisen. Bewusste Ausschlüsse sind eindeutig, geordnet und keine Heilung fehlender Pflichtpayload.
 
 **Verhaltensabnahme:** Versionierte unabhängige ZIP-Datenvektoren prüfen Bytes, Manifest-/Payloadbijektion, externe Erwartung und Pfadsicherheit als Austauschvertrag. Fehler erzeugen keine Extraktionsdateien; Code-7-Sicherheitsgrenzen bleiben erhalten. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungs- und Prüfnachweis 15.a.R, Bundle 457 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_165055_1024_732de2.zip`, SHA-256
+`b0bdf0fcf2ebb078dd3fff0b8b7a1a8526159bce7c81c8325a5a5a27ee669473`,
+bestätigt den sauberen PLAN-Commit
+`f837af6b6a4630637b526e38f3172334b29ace4d` für **15.a.W**, Bundle **456**,
+mit Vorgänger `8830dcf41aefd4d4569728bc1f400dadd0de800e`. Die vollständige
+Vierfachbindung, Root-Anleitung, Kontext, Umgebung, Manifest, Run-/
+Ausführungslogs und alle **2.218** Snapshotdateien stimmen mit dem lesend
+geprüften Apply-Stand überein. Die tatsächliche Apply-Teilprüfung bestand
+**6.726/6.726** Tests in Gruppe **1**, Sequenz **163**, mit vier Workern
+in **1.830,63 s**. Einzeloutcomes, Quellhash und nummerierte Auswahl wurden
+abgeglichen. Nur die fünf dadurch bestätigten Fortschrittsmarker wurden
+in Dev nachgeführt; danach entsprach der vollständige Bestand dem Snapshot.
+
+**Regulärer R-Ausschnitt.** Der vorhandene dünne Container-/Manifestcodec
+wird anhand der bereits verbindlichen Regeln **E.1.1–E.3** vervollständigt.
+Nicht-stringförmige Pfade in Inventar und Ausschlüssen werden als falscher
+Manifesttyp mit **3/SRV002** abgewiesen; gefährliche tatsächliche Pfadwerte
+bleiben **7/SRV083**. Der portable gemeinsame Archivpfad prüft jetzt die
+Sondertypen und unzulässigen Modi aller Einträge vor den übrigen
+Eintragsformaten. So verdeckt ein früherer nichtkanonischer Zeitstempel
+keinen späteren Symlink. Die bestehende manifestgebundene Work-API behält
+ihre bisherige Fehlerreihenfolge. ReqIFZ nutzt weiterhin denselben portablen
+Wächter; sein tatsächlicher kombinierter Fehlerfall ist mit abgesichert.
+
+Der Bundle-Writer prüft vor der ZIP-Ausgabe die physische **65.535-Byte-**
+Grenze des Namensfelds im bestehenden ZIP32-Profil. Gezählt werden UTF-8-Bytes,
+nicht Zeichen. Nicht darstellbare Namen liefern **3/SRV060** statt einer
+ungefangenen Header-Pack-Ausnahme. Dies ist keine neue konfigurierbare
+Ressourcengrenze und kein zusätzliches Archivformat. Writer und Reader
+verwenden unverändert den gemeinsamen ZIP-Codec; kein zweiter Entpacker
+oder Writer und keine Dateiextraktion werden eingeführt.
+
+**Unabhängige Datenvektoren und Grenzen.**
+`tests/fixtures/product_bundle_container_v1.json` enthält eine feste
+positive ZIP sowie **95** feste negative v1-Vektoren mit vollständigen
+Bytehashes und expliziten erwarteten Fehlerklassen. Die ZIP-/JSON-Bytes
+wurden mit Python-Standardbibliothek und wörtlichen Header-/Payloadänderungen
+erstellt, ohne den Produkt-ZIP-Encoder oder -Decoder als Erzeuger/Oracle.
+Die eigenen nativen Scope-Metadaten sind kein Vollprojektnachweis.
+SHA-256 des versionierten Korpus:
+`69deb16b53e7b13751c9acaef743b8495ecefadfeaf4ce59b5a4f231a70e7b0d`.
+
+Die Vektoren decken lokale/zentrale Header und Endrecords, Versions-/Flag-/
+Methoden-/Zeit-/CRC-/Größenabweichungen, reale Data Descriptors, Kommentare,
+Extra Fields, Fremdbytes, abgeschnittene Archive und Reihenfolgefehler ab.
+Traversal, NUL-/ungültige UTF-8-Namen, Casefold-/Präfixkollisionen, doppelte
+Payload-/Manifestnamen, reservierte Pfade, Sonderdateien und unzulässige
+Modi werden ohne Materialisierung abgewiesen. Nichtkanonische Manifestbytes,
+falsche Inventarlängen/Hashes/Medientypen, fehlende oder zusätzliche Payload,
+Dubletten und Manifest-Selbstbezug bleiben Integritätsfehler.
+
+Ergänzende Verhaltenstests prüfen die vollständigen nativen Descriptor-/
+Boundary-Pflichtbindungen, die E.3-Typmatrix, schwache und geordnete Boundary
+References, geschlossene Inventare/Ausschlüsse und externe Hashbindungen.
+Eine Ausschlusszeile heilt keine fehlende `specroad.json`; ausgeschlossene
+Pfade dürfen die portablen Payloadziele nicht aliasieren. Der unveränderte
+W-Scope bleibt erhalten: Der Codec bestätigt keine vollständige semantische
+Closure, Modellwurzelrekonstruktion, Authentizität, Freigabe, portable
+Write-Idempotenz oder sichere Extraktion. Diese Fachprüfungen bleiben in
+den folgenden M15-Schritten offen. **15.a.C bleibt offen.**
+
+**SPECROAD-DECISION-1** wurde in § 2.4 geprüft. Die bestehenden Abnahmen
+reichen aus; diese reguläre Umsetzung führt keine neue normative Entscheidung
+ein. Spezifikation **0.2.22** bleibt bytegleich. Die normativen
+Requirementverträge und Spezifikationsbindungen von SR-TC-0387/0388/0485
+bleiben erhalten; ihre partiellen W-/R-Nachweise erhalten den neuen Korpus
+und die tatsächlichen R-Testidentitäten, ohne spätere M15-Abnahmen zu schließen.
+
+Der gezielte Lauf bestand bereits vor der abschließenden Präzisierung des
+Legacy-Kompatibilitätstests; der endgültige Zustand wurde danach erneut
+mit denselben 490 Fällen parallel erfolgreich geprüft.
+
+**Gezielte Entwicklungsprüfung.** **490/490** Verhaltenstests bestanden
+mit **vier parallelen Workern** unter Linux/Python 3.14.4:
+
+- `tests/test_product_bundle.py`: **69** bestehende W-Fälle;
+- `tests/test_product_bundle_right.py`: **179 neue** R-Fälle;
+- `tests/test_reqifz.py` und `tests/test_reqifz_right.py`: **48 + 146** Fälle;
+- `tests/test_work_archive.py` und `tests/test_work_archive_right.py`: **27 + 21** Fälle.
+
+Die vollständige Collection-/Katalogprüfung ist gültig: **20.357** Fälle,
+**0** ausgeführte Testkörper. Alle **20.178** bestehenden Identitäten und
+Nummern bleiben erhalten. Die **179** neuen Nummern **20.178–20.356** werden
+angehängt, keine Nummer wird wiederverwendet. Der geprüfte Quellstand lautet
+`dc4ea78b7fd6431fc28c04c1e2ce8ec235e76edad846957f3d28c3683df16425`.
+SHA-256 der tatsächlichen Auswahlbeobachtung:
+`c09ab1e47716ba201a8c387dce70dcadacc8f9259c995a7781488d262ea8b206`;
+SHA-256 der tatsächlichen Einzeloutcomes:
+`42b44a9c121ebc57f92288d475acf0d7809ecb44a65a77df1ae9800443f66db4`;
+SHA-256 des vollständigen Katalogbelegs:
+`ddd4d62ca52a523dd774c800e00a760941b00aa5554d2f8db0a1fb700f71115e`.
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+
+**Vorgesehene Übergabe.** Genau ein regulärer PLAN-Zustand **15.a.R**,
+Position **617/900**. Der Entrypoint stellt den gezielt geprüften R-Zustand
+her und führt ausschließlich Gruppe **2**, Sequenz **164**, mit **6.785**
+Tests und vier Workern aus. Erst nach erfolgreicher gebundener Apply-Prüfung
+setzt er die fünf Fortschrittsmarker auf **617/900**, zuletzt **15.a.R**,
+nächstens **15.a.C**, Bundle **457** und die R-Checkbox und erzeugt die
+exakte PLAN-Commit-Message. Ein tatsächlicher Apply-Erfolg bleibt bis zum
+zugehörigen Result offen. Kein Volltest, serieller Lauf oder CI-Start.
+
+**Technische Fortsetzung von 15.a.R, Bundle 458 (2026-10-24).**
+
+**Tatsächlich zurückgegebener Stand.** Das maßgebliche Result
+`specroad-apply_Result_173531_1024_ba4ae5.zip`, SHA-256
+`73f948b55530c1093413d6d4e77cb3f5a861d4696ca84fc0734d59146875f0af`,
+meldet für Bundle **457** `execution_error`, keinen Abschlusscommit und
+unverändert HEAD `f837af6b6a4630637b526e38f3172334b29ace4d`.
+Sein Fingerprint ist **90579d4d29f95830**. Native Resultprüfung,
+Vierfachbindung, Root-Anleitung, Kontext, Umgebung, Manifest, Run- und
+Ausführungslog wurden geprüft. Alle **2.218** Base-Dateien, der leere
+Index-Diff, **9** unstaged Änderungen und **2** untracked R-Dateien wurden
+mit dem tatsächlichen Apply-Stand lesend abgeglichen. Die Dev-Dateien
+entsprachen vor diesem Nachtrag exakt diesem zurückgegebenen R-Stand.
+
+Der Apply-Lauf startete die vorgesehenen **6.785** Tests der Gruppe **2**
+mit vier Workern. Sein Log zeigt `Disk quota exceeded` bei temporären
+Fixture-/Work-Schreibvorgängen und beim Veröffentlichen der Testbeobachtung.
+Die Beobachtungsdatei ist leer und die Auswahl-Datei unvollständig;
+ein bestandener Apply-Teiltest ist damit ausdrücklich **nicht** belegt.
+Die bisherigen R-Dateien und der letzte erfolgreiche W-Commit bleiben
+vollständig erhalten. Der Produktstand bleibt **616/900**, nächstens
+**15.a.R**. Ohne neuen erfolgreichen Commit schaltet die Rotation nicht
+weiter: **Sequenz 164, Gruppe 2/3** bleibt fällig.
+
+**Technische Korrektur des Entrypoints.** Die bereits erlaubte ignorierte
+`build/`-Ablage nimmt ein neues privates Laufverzeichnis auf dem Dateisystem
+des Repositories auf. Berichte und temporäre Test-/Unterprozessdateien
+liegen gemeinsam dort; `TMPDIR`, `TMP`, `TEMP` und der pytest-Temproot
+werden ausschließlich für diesen Testprozess gebunden. Die tatsächlich
+verwendete temporäre Basis wurde in einem isolierten Unterprozess geprüft.
+Es werden weder alte Tempdateien gelöscht noch Quoten, lokale
+Konfigurationen, Control, Watcher oder CI verändert. Verlinkte oder
+getrackte Buildziele werden vor dem Gate abgewiesen.
+
+Die Fortsetzung prüft ausdrücklich die zurückgegebenen uncommitteten
+R-Bytes samt ursprünglichen HEAD-Preimages. Sie überschreibt nur diesen
+Plan-Nachtrag; Produktcode, Tests, Fixtures, Katalogverträge und die
+**20.357** vorhandenen dauerhaften Testnummern bleiben gegenüber dem
+Result bytegleich. Die ursprünglichen **179** R-Nummern werden nicht
+nochmals angehängt. Spezifikation **0.2.22** bleibt unverändert;
+**SPECROAD-DECISION-1** ist vorhanden, aber keine neue normative Klärung
+ist für diese technische Korrektur erforderlich.
+
+**Erneute gezielte Entwicklungsprüfung.** Auf derselben privaten
+Temporärablage bestanden **734/734** Verhaltenstests mit **vier parallelen
+Workern** unter Linux/Python 3.14.4. Enthalten sind die bisherigen **490**
+Bundle-/ReqIFZ-/Work-Archivfälle und **244** bestehende Regressionen aus
+den im Fehlerlog betroffenen Work-Publikations-, Receipt-, Result-,
+Resume-, Root- und Roadmap-Fixtures. Die vollständige Collection-/
+Katalogprüfung erfasste unverändert **20.357** eindeutige Identitäten,
+**0** Testkörper und keine Katalogfehler. Auswahl, Einzeloutcomes und
+Quellstand wurden abgeglichen; kein serieller oder vollständiger
+Verhaltenstest in Dev wurde gestartet.
+
+Geprüfter Quellstand:
+`dc4ea78b7fd6431fc28c04c1e2ce8ec235e76edad846957f3d28c3683df16425`.
+SHA-256 der tatsächlichen Auswahlbeobachtung:
+`5f04c2506ecece3cad4e10e3332122f8b6815b3cc388137ddc232040adc13c50`;
+SHA-256 der tatsächlichen Einzeloutcomes:
+`8ce9f91dc5b67d631cf0ae28513f0fb49b7202624763accb8be360e7b4b41d7d`;
+SHA-256 des vollständigen Katalogbelegs:
+`ddd4d62ca52a523dd774c800e00a760941b00aa5554d2f8db0a1fb700f71115e`.
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+
+**Vorgesehene Übergabe.** Bundle **458** setzt ausschließlich den offenen
+regulären PLAN-Zustand **15.a.R**, Position **617/900**, fort. Es erzeugt
+keinen zusätzlichen Produkt- oder vorgezogenen C-Commit. Der vorhandene
+Apply-Runner prüft weiterhin genau **Gruppe 2**, **Sequenz 164**, mit
+**6.785** Tests und vier Workern; echte nummerierte Auswahl, Quellhash,
+Einzeloutcomes und unveränderter HEAD bleiben die Erfolgsvoraussetzungen.
+Erst nach dem erfolgreichen Gate setzt der Entrypoint die fünf Marker
+auf **617/900**, zuletzt **15.a.R**, nächstens **15.a.C**, Bundle **458**
+und die R-Checkbox und erzeugt die unveränderte exakte PLAN-Commit-Message.
+Bei Fehler bleiben Arbeitsbaum, Index, frühere Commits und Nachweise erhalten.
+Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen; **15.a.C bleibt offen**.
 
 #### 15.a.C – Make it Clean
 
