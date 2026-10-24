@@ -7,7 +7,9 @@ three fields are a projection, not a claim to transport every native field.
 """
 from ..mappings import CSVProfile, ExchangeMapping
 from ..model.canonical import canonical_json_bytes
+from ..model.domain_fields import NORMATIVE_FORCES
 from ..model.errors import ModelError
+from ..model._requirement_inputs import REQUIREMENT_CONTENT_FIELDS
 
 
 def requirement_mapping(source_format):
@@ -24,9 +26,9 @@ def requirement_mapping(source_format):
                     'external_field': ('specroad.' if reqif else '') + field,
                     'target_field': field,
                     'value_map': ([{'external_value': [force], 'target_value': force}
-                                   for force in ('must', 'must_not', 'should', 'may')]
+                                   for force in NORMATIVE_FORCES]
                                   if reqif and field == 'normative_force' else None)}
-                   for field in ('language', 'normative_force', 'statement')],
+                   for field in REQUIREMENT_CONTENT_FIELDS],
         'relations': [], 'hierarchies': [], 'extensions': {}}))
 
 
@@ -39,7 +41,7 @@ def requirement_csv_profile():
         'identity': {'column': 'id', 'kind': 'native_id'},
         'columns': [{'column': field, 'external_field': field, 'codec': {'kind': 'string'},
                      'empty_cell': 'value', 'missing_column': 'error'}
-                    for field in ('language', 'normative_force', 'statement')],
+                    for field in REQUIREMENT_CONTENT_FIELDS],
         'error_policy': 'reject', 'extensions': {}}))
 
 
@@ -68,9 +70,9 @@ def _reqif_core_document(mapping, *, limits):
     force = identified('DATATYPE-DEFINITION-ENUMERATION', 'specroad.force', (
         node('SPECIFIED-VALUES', [identified('ENUM-VALUE', value, (
             node('PROPERTIES', (node('EMBEDDED-VALUE', KEY=str(i), **{'OTHER-CONTENT': value}),)),))
-            for i, value in enumerate(('must', 'must_not', 'should', 'may'))]),))
+            for i, value in enumerate(NORMATIVE_FORCES)]),))
     definitions = []
-    for field in ('language', 'normative_force', 'statement'):
+    for field in REQUIREMENT_CONTENT_FIELDS:
         family, datatype = ('ENUMERATION', 'specroad.force') if field == 'normative_force' else ('STRING', 'specroad.text')
         definitions.append(identified('ATTRIBUTE-DEFINITION-' + family, 'specroad.' + field, (
             node('TYPE', (node('DATATYPE-DEFINITION-' + family + '-REF', (datatype,)),)),),

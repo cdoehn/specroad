@@ -10,26 +10,11 @@ from .errors import ModelError
 from .language_tags import parse_language_tag
 from .identity_values import ArtifactIdentity, RANDOM_SCHEME
 from .requirement_values import RequirementDraft, _owned, _explicit_text
+from ._requirement_inputs import _MISSING, _prepare_requirement_inputs
 from .versions import SCHEMA_VERSION
 
-_MISSING = object()
 _RESERVED = frozenset({"schema_version", "artifact_type", "id", "id_scheme", "maturity",
                        "revision", "created_at", "updated_at", "created_by", "updated_by"})
-
-
-def _resolve(data, field, argument, default=_MISSING):
-    """Reject conflicting supplied values; absence, null and empty are distinct."""
-    if argument is not _MISSING:
-        if field in data and (type(data[field]) is not type(argument) or data[field] != argument):
-            raise ModelError("requirement_input_conflict", pointer="/" + field)
-        data[field] = argument
-        return "argument"
-    if field in data:
-        return "input"
-    if default is not _MISSING:
-        data[field] = default
-        return "project_default"
-    raise ModelError("missing_field", pointer="/" + field)
 
 
 def prepare_requirement(fields, *, identity, actor, planned_at, configuration=None,
@@ -56,8 +41,8 @@ def prepare_requirement(fields, *, identity, actor, planned_at, configuration=No
         if identity.id_prefix != configuration.id_prefix:
             raise ModelError("requirement_project_prefix_mismatch")
         default = configuration.data.get("language_policy", {}).get("default_language", _MISSING)
-    language_source = _resolve(data, "language", language, default)
-    force_source = _resolve(data, "normative_force", normative_force)
+    data, language_source, force_source = _prepare_requirement_inputs(data,
+        language=language, normative_force=normative_force, default_language=default)
     _explicit_text(data["language"], "language")
     data["language"] = parse_language_tag(data["language"]).canonical
     NormativeForce.from_value(data["normative_force"])

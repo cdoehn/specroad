@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 608
-last_completed_plan_commit: 14.m.R
-next_plan_commit: 14.m.C
-last_completed_numbered_bundle: 447
+implementation_plan_commits_completed: 609
+last_completed_plan_commit: 14.m.C
+next_plan_commit: 14.n.W
+last_completed_numbered_bundle: 448
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -22225,7 +22225,7 @@ Serienlauf und keine Änderung der Spezifikation oder der allgemeinen Testregeln
 
 #### 14.m.C – Make it Clean
 
-- [ ] **14.m.C** · Position **609/900** · Voraussetzung: `14.m.R`.
+- [x] **14.m.C** · Position **609/900** · Voraussetzung: `14.m.R`.
 **Exakte Commit-Message:** `14.m.C refactor(exchange): Mehrsprachiger Requirement-Austausch bereinigen`
 
 **Bereinigung:** Sprach-/Force-Mapping auf denselben Requirement-Konstruktor aus M2 setzen.
@@ -22233,6 +22233,127 @@ Serienlauf und keine Änderung der Spezifikation oder der allgemeinen Testregeln
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungs- und Prüfnachweis 14.m.C, Bundle 448 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_085016_1024_2ad80b.zip`, SHA-256
+`af47e6cab8c4f6eb593a3973801d1532cdd2208771bc8bfb47ffc5c5324ff61e`,
+bestätigt den sauberen Commit `8865ba98e918dfb9165dd7b8c9629564f15a01f8`
+für **14.m.R**, Position **608/900**, Bundle **447**. Der erwartete Vorgänger
+ist `6af1be4e4600770a7bb359f28be4d35ee6f45a21`. Alle **2.198** Snapshotdateien,
+Vierfachbindung, Run-/Manifestdaten, Ausführungslog und tatsächlicher
+Apply-Arbeitsbaum stimmen überein. Der gebundene parallele Apply-Lauf hat
+**6.591/6.591** Tests in Gruppe **1**, Sequenz **154**, mit vier Workern
+bestanden. Identitäten, dauerhafte Testnummern, Selektionsbindung, Quellhash
+und alle tatsächlichen Outcomes sind geprüft. Dies bleibt ein Teilnachweis.
+Die fünf nachweislich übernommenen Fortschrittsmarker wurden in Dev angeglichen.
+
+**Strukturelle Bereinigung.** Die vorhandene explizite Eingabeauflösung des
+M2-Requirementkonstruktors liegt jetzt gemeinsam in
+`model/_requirement_inputs.py`. Sowohl `prepare_requirement` als auch die
+vollständige Requirement-Importprojektion verwenden diese Konstruktion für
+`language` und `normative_force`. Fehlend, JSON-Null, leerer Wert, ausdrücklich
+gelieferter Wert und widersprüchliche Argumente behalten ihre bisherigen
+Verträge; die gemeinsame Konstruktion interpretiert oder normalisiert keine
+Werte. Der vollständige Originaltext bleibt unverändert.
+
+Die unterschiedlichen bestehenden Eintrittsbedingungen bleiben ausdrücklich
+erhalten: Nur die neue Draft-Konstruktion liefert den gebundenen Projektdefault
+und führt ihre bisherige Sprachschreibweisenkanonisierung, Identitäts-/Audit-
+Materialisierung und Draftvalidierung aus. Der Import prüft zuerst seine
+unveränderten Mappingfehler, fehlenden Inhaltsabbildungen und Konfliktregeln.
+Unvollständige Projektionen erzeugen weiterhin Verluste und keine Operation
+oder neue Historie. Vollständige übernommene Projektionen benutzen dieselbe
+Eingabekonstruktion ohne Default und ohne Draft-Neuerzeugung; die vollständige
+native Zielvalidierung bleibt am bisherigen Change-Plan-Gate. Vorhandene
+Identitäten, Revisionsregeln, gespeicherte Sprachschreibweisen und Importhashes
+werden dadurch nicht als neue Entwürfe umgedeutet.
+
+Die gemeinsame Dreifeldmenge steuert Kernmapping, CSV-Profil, ReqIF-
+Attributdefinitionen und Importverlustprüfung. Die vier Forcewerte stammen
+aus dem vorhandenen M2-Enumvertrag. Reihenfolge, Ressourcenhüllen, Versionen,
+Mappingbindungen und erzeugte Attribute bleiben gleich. Der allgemeine
+deklarative Mapper wird nicht verändert und erhält keine neue native
+Validierung oder Defaultregel.
+
+Dies ist die reguläre C-Umsetzung der vorhandenen Planaufgabe und
+**S.2/S.3/S.7 sowie 10.12.1**. SPECROAD-DECISION-1 ist ausdrücklich vorhanden;
+eine eigene normative Klärung ist nicht erforderlich. Die Spezifikation
+**0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Es gibt keine neue Produktfunktion, Sicherheitsausnahme,
+öffentliche API oder zusätzliche Testidentität.
+
+**Gezielte parallele Regressionsabnahme.** **2.948/2.948** Verhaltenstests
+bestanden mit **vier Workern**, Prozessabschluss **0**, alle Outcomes `passed`.
+Alle **446** vorhandenen W-/R-Tests dieses Schritts und die betroffenen
+Format-, Mapping-, Import-, Export-, M2-Requirement-, Authoring- und
+Sprachpakettests bleiben grün. Sämtliche Testdateien einschließlich ihrer
+Facherwartungen und Fixtures sind bytegleich zum Result. Es wurden keine
+Darstellungs- oder Dokumentationstests ergänzt. Der Lauf ist ausdrücklich
+ein Teiltest, `full_suite_passed=null`.
+
+Geprüfte Testdateien:
+
+- `tests/test_authoring_inputs.py`
+- `tests/test_authoring_inputs_right.py`
+- `tests/test_authoring_plan_execution.py`
+- `tests/test_authoring_plan_execution_right.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_exchange_mappings.py`
+- `tests/test_exchange_mappings_right.py`
+- `tests/test_import_execution.py`
+- `tests/test_import_execution_right.py`
+- `tests/test_import_planning.py`
+- `tests/test_import_planning_right.py`
+- `tests/test_language_packages.py`
+- `tests/test_language_packages_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_project_export.py`
+- `tests/test_project_export_right.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_preservation.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requirement.py`
+- `tests/test_requirement_exchange.py`
+- `tests/test_requirement_exchange_right.py`
+- `tests/test_requirement_right.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **19.772** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Die feste Nummerierung
+bleibt bytegleich; keine Nummer wird angefügt, geändert oder wiederverwendet.
+`SR-TC-0723` behält seine **446** Testidentitäten und beide W-/R-Fixtures.
+Sein Status bleibt `partial`: Die CSV-/ReqIF-Kernabbildung ist weiterhin eine
+Dreifeldprojektion mit sichtbaren Verlusten der übrigen nativen Felder,
+einschließlich der Abweichungsmetadaten von `should`; NDJSON erhält das ganze
+Artefakt. Vollständiger nativer CSV-/ReqIF-Roundtrip, Fremdtool-Interoperabilität,
+Migration, menschliche Zustimmung und Releasefreigabe werden nicht behauptet.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `65a286e09d9dad33c48b4c16529dc34ee85bbd4e8cd8d32adb88c982ca595e4e`.
+- Selektionsdatei-SHA-256: `8d002b190b24c059cdf44884612b1690fafff0748f14b9edeb0fa3a6d7c508bd`.
+- Beobachtungsdatei-SHA-256: `e9e6b3d5cd225449fb36d0fff65fd805cb6c5840c3c25bad67afc629bda8cf06`.
+- Katalog-SHA-256: `087cb5f237dea9987350c0ca9c097d76d1ea196d6d75612665980863ff51cce0`.
+
+**Offene Apply-Abnahme.** Das Bundle liefert ausschließlich diesen gezielt
+geprüften C-Zwischenstand. Der Entrypoint verlangt die saubere gebundene Basis
+und prüft ausschließlich Gruppe **2**, Sequenz **155**, mit **6.590** Tests
+und vier Workern. Erst nach erfolgreicher gebundener Apply-Abnahme werden die
+fünf Fortschrittsmarker auf **609/900**, zuletzt **14.m.C**, nächstens **14.n.W**,
+Bundle **448** und die C-Checkbox gesetzt und die exakte PLAN-Message committed.
+Es wird kein Apply-Erfolg vorweggenommen, kein Voll- oder Serienlauf gestartet
+und kein weiterer Planschritt vorab installiert.
 
 <a id="step-14-n"></a>
 ### 14.n – Netzwerk-/Konverterfreiheit und Archivangriffe

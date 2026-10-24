@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from ..changes._patch_policy import _mutable_pointer
 from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model._requirement_inputs import REQUIREMENT_CONTENT_FIELDS, _prepare_requirement_inputs
 from .comparison import ImportComparison
 from .identities import ExternalIdentity, ImportIdentityError, NativeIdentityIndex
 
@@ -85,7 +86,7 @@ def _prepare_candidate_changes(model, candidates, selected, *, strategy,
         # distinct from an explicitly mapped null/empty value (which is still
         # checked by the ordinary native validator). Configured source-member
         # and value-table errors have already failed in the strict mapper.
-        missing_content = [field for field in ("language", "normative_force", "statement")
+        missing_content = [field for field in REQUIREMENT_CONTENT_FIELDS
                            if projection["artifact_type"] == "requirement" and field not in projection]
         for field in missing_content:
             pointer = at + "/fields"
@@ -112,6 +113,11 @@ def _prepare_candidate_changes(model, candidates, selected, *, strategy,
         if old is not None and comparison["action"] != "adopt":
             # No-op may retain its baseline; skip/retain/reject MUST retain it.
             continue
+        if projection["artifact_type"] == "requirement":
+            # Use the M2 constructor's input resolution only after the loss
+            # gate. No authoring default or new-draft normalization applies
+            # to already mapped values, existing identities or import history.
+            projection, _, _ = _prepare_requirement_inputs(projection)
         source_identity = identity.data if old is None else {**owner["identity"], **identity.data}
         history = ExternalIdentity(source_identity).with_import_history(mapping_id=resource.key,
             imported_projection=projection, source_projection=projection,

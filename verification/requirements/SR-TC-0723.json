@@ -22,12 +22,13 @@
     "Map actual decoded output into a native creation plan; explicitly mapped values override unrelated creation defaults without changing the complete statement, force or language.",
     "For new and known native identities, omit each normative content mapping with its source member absent or present; require an unaccepted per-field loss and no candidate operations or history refresh. Reassessment must reject hidden losses or fabricated success.",
     "Keep configured missing-source errors and malformed explicit native content hard failures, keep target mapping omissions visible to export fail-on-loss, and exercise passive content mapping in the isolated dependency-free core.",
-    "Keep raw tab refusal in the existing RFC-4180 string profile and preserve its exact content via an explicitly selected typed-json-v1 cell; do not change or normalize the original text. Native import tests supply the real hash-bound offline registry for the mandatory language gate."
+    "Keep raw tab refusal in the existing RFC-4180 string profile and preserve its exact content via an explicitly selected typed-json-v1 cell; do not change or normalize the original text. Native import tests supply the real hash-bound offline registry for the mandatory language gate.",
+    "Rerun the unchanged W/R transport, import and error oracles together with M2 new-draft authoring and language-package behavior after constructor consolidation; do not alter expected content, source provenance, defaults, missing-value distinctions or error contracts."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Austausch von Requirements MUSS language und normative_force über die expliziten CSV-/NDJSON-/ReqIF-Attribute aus Anhang S.7 erhalten oder einen vorhandenen Verlust ausweisen.",
-    "scope": "14.m.W/R provide explicit versioned content-tuple mappings and exact-bound ReqIF core definitions. Actual bytes preserve every S.4 tag plus stored mixed-case spelling, all four forces and complete original text. Missing requirement content mappings block import plans with unaccepted losses, no default/detector/keyword inference, no candidate operations and no history refresh. Strict mapper/native errors and export loss gates remain intact. CSV/ReqIF transport is the three-field projection, not a full native roundtrip. Constructor consolidation remains in C; external interoperability and release approval are not asserted."
+    "scope": "14.m.W/R/C provide explicit versioned content-tuple mappings and exact-bound ReqIF core definitions. Actual bytes preserve every S.4 tag plus stored mixed-case spelling, all four forces and complete original text. Missing requirement content mappings block import plans with unaccepted losses, no default/detector/keyword inference, no candidate operations and no history refresh. Strict mapper/native errors and export loss gates remain intact. CSV/ReqIF transport is the three-field projection, not a full native roundtrip. M2 new-draft construction and complete import projections share explicit language/force input construction. Missing mapping losses stay ahead of construction; authoring defaults and language canonicalization remain confined to new drafts. External interoperability and release approval are not asserted."
   },
   "expected_diagnostics": [
     "SRV090"
@@ -501,7 +502,6 @@
     "tests/test_requirement_exchange_right.py::test_target_without_content_mapping_keeps_export_loss_and_fail_on_loss[normative_force-reqifz]"
   ],
   "open_items": [
-    "14.m.C: consolidate language/force mapping with the existing M2 requirement constructor without altering preservation or failure contracts.",
     "The core CSV/ReqIF mapping transports the language/force/statement projection only. Other native fields, including should deviation metadata, remain explicit losses; NDJSON retains the complete artifact. No full native CSV/ReqIF roundtrip, foreign-tool interoperability, product approval, migration completion or release success is asserted."
   ]
 }
