@@ -4,18 +4,32 @@
   "requirement_id": "SR-REQ-0532",
   "specification_sha256": "74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28",
   "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-IMPORT-SECURITY-v1"
+  ],
+  "preconditions": [
+    "Owned complete synthetic project, explicit hash-bound mapping resources and immutable supplier bytes; trusted test host separately grants publication authority.",
+    "Fresh CPython -I/-S/-B process, empty PATH and closed stdin. Audited socket/resolver/process/shell attempts are denied and retained even if caught. Core or built PYZ is the only added import root."
+  ],
+  "steps": [
+    "Decode actual CSV, NDJSON, ReqIF and ReqIFZ bytes without filesystem opens, network or executable converters; pass the explicit goal-statement projection to the ordinary native import transaction.",
+    "Require real committed output, verified target, incremented revision, exact original text and input hash; preserve unrelated project files and attachments.",
+    "Reject initial external-entity, unused hostile ZIP member and executable-converter declaration inputs under the same runtime traps, preserving owned input inventories.",
+    "Probe real socket creation, resolver, child-process and shell APIs to verify the guard denies and records attempts before the operations take place."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Import DARF NICHT eine externe Netzwerkverbindung initiieren oder einen ausführbaren Konverter starten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "14.n.W adds current isolated Core/PYZ behavior for local declarative import parsers and ordinary native publication, with network/process attempts denied and observed. Initial negative corpora cover file/network entities, unused ZIP traversal/absolute/symlink members and nondeclarative converter keys. Existing product parser and writer contracts are unchanged; executable integration tests are the implementation increment. No full-suite or general sandbox success is asserted."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +42,49 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[csv-core]",
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[csv-pyz]",
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[ndjson-core]",
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[ndjson-pyz]",
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[reqif-core]",
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[reqif-pyz]",
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[reqifz-core]",
+    "tests/test_import_security.py::test_allowed_bytes_reach_real_native_import_with_network_and_converters_disabled[reqifz-pyz]",
+    "tests/test_import_security.py::test_executable_converter_declarations_are_not_part_of_the_data_grammar[csv-profile-core]",
+    "tests/test_import_security.py::test_executable_converter_declarations_are_not_part_of_the_data_grammar[csv-profile-pyz]",
+    "tests/test_import_security.py::test_executable_converter_declarations_are_not_part_of_the_data_grammar[mapping-core]",
+    "tests/test_import_security.py::test_executable_converter_declarations_are_not_part_of_the_data_grammar[mapping-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-junit-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-junit-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-structure-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-structure-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqifz-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqifz-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-junit-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-junit-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-structure-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-structure-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqifz-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqifz-pyz]",
+    "tests/test_import_security.py::test_isolated_probe_really_denies_and_records_runtime_effects[process]",
+    "tests/test_import_security.py::test_isolated_probe_really_denies_and_records_runtime_effects[resolver]",
+    "tests/test_import_security.py::test_isolated_probe_really_denies_and_records_runtime_effects[shell]",
+    "tests/test_import_security.py::test_isolated_probe_really_denies_and_records_runtime_effects[socket]",
+    "tests/test_import_security.py::test_unselected_hostile_archive_members_are_refused_without_extraction[absolute-core]",
+    "tests/test_import_security.py::test_unselected_hostile_archive_members_are_refused_without_extraction[absolute-pyz]",
+    "tests/test_import_security.py::test_unselected_hostile_archive_members_are_refused_without_extraction[symlink-core]",
+    "tests/test_import_security.py::test_unselected_hostile_archive_members_are_refused_without_extraction[symlink-pyz]",
+    "tests/test_import_security.py::test_unselected_hostile_archive_members_are_refused_without_extraction[traversal-core]",
+    "tests/test_import_security.py::test_unselected_hostile_archive_members_are_refused_without_extraction[traversal-pyz]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.n.R/C retain the wider hostile-input and cross-adapter robustness work. The initial corpus does not establish exhaustive resistance to all XML/archive/host failures.",
+    "The goal-statement projection exercises real local parser-to-writer integration through explicit trusted test-host composition. It is not a complete import CLI, whole-format roundtrip, foreign-tool interoperability or approval/release claim.",
+    "The guard is a CPython audited API boundary, not a kernel network namespace or the complete reference-sandbox/multi-version verification. Evidence is limited to the actual platform and run."
   ]
 }

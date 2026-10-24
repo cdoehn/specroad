@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 609
-last_completed_plan_commit: 14.m.C
-next_plan_commit: 14.n.W
-last_completed_numbered_bundle: 448
+implementation_plan_commits_completed: 610
+last_completed_plan_commit: 14.n.W
+next_plan_commit: 14.n.R
+last_completed_numbered_bundle: 449
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -22363,12 +22363,142 @@ und kein weiterer Planschritt vorab installiert.
 
 #### 14.n.W – Let it Work
 
-- [ ] **14.n.W** · Position **610/900** · Voraussetzung: `14.m.C`.
+- [x] **14.n.W** · Position **610/900** · Voraussetzung: `14.m.C`.
 **Exakte Commit-Message:** `14.n.W feat(exchange): Netzwerk-/Konverterfreiheit und Archivangriffe aufbauen`
 
 **Umsetzung:** Alle Parser ausschließlich lokal und deklarativ betreiben; negative Sicherheitskorpora integrieren.
 
 **Verhaltensabnahme:** Zulässiger Import funktioniert in netzwerkisolierter Coreumgebung.
+
+**Umsetzungs- und Prüfnachweis 14.n.W, Bundle 449 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_093853_1024_8ebb1f.zip`, SHA-256
+`c72e078e3a4caef651e7d07e067aff1905fbc06a1b20b3c5bcd1dd5f31f10607`,
+bestätigt den sauberen Commit `4b932be4e27b4af27a90265553147bf22e810c94`
+für **14.m.C**, Position **609/900**, Bundle **448**. Der nachgewiesene
+Vorgänger ist `8865ba98e918dfb9165dd7b8c9629564f15a01f8`. Alle **2.199**
+Snapshotdateien, Vierfachbindung, Manifest-/Rundaten, Ausführungslog und
+read-only geprüfter Apply-Arbeitsbaum stimmen überein. Der gebundene
+parallele Apply-Lauf hat **6.590/6.590** Tests in Gruppe **2**, Sequenz **155**,
+mit vier Workern bestanden. Tatsächliche Outcomes, Selektionsbindung,
+Quellhash und Testidentitäten sind geprüft. Dies bleibt ein Teilnachweis;
+die fünf nachweislich übernommenen Fortschrittsmarker wurden in Dev angeglichen.
+
+**Nutzbarer W-Ausschnitt.** Die bereits vorhandenen lokalen Byteparser und
+festen deklarativen Mappinggrammatiken werden jetzt durch einen ausführbaren,
+formatübergreifenden Sicherheitskorpus integriert. Neue Produktparser oder
+Konverter sind nicht erforderlich: CSV, NDJSON, ReqIF-Objekte/-Struktur,
+ReqIFZ, JUnit und ihre Ressourcenleser besitzen bereits die geprüften
+passiven Grenzen. Produktcode und sämtliche bisherigen Tests bleiben
+bytegleich. Der Implementierungszuwachs besteht aus dem neuen ausführbaren
+Korpus mit echter Parser-zu-Transaktion-Komposition sowie seinen
+Verifikationsbindungen, nicht allein aus Dokumentation.
+
+Acht positive Fälle laufen für **CSV, NDJSON, ReqIF und ReqIFZ** jeweils
+in einem frischen dependency-freien Core- oder gebauten PYZ-Prozess. Die
+vorhandenen Interpreterparameter `-I/-S/-B`, leerer `PATH` und geschlossenes
+stdin bleiben wirksam. Ein vor Produktimport installierter CPython-Audithook
+sperrt und protokolliert Socket-/Resolver- sowie Prozess-/Shellzugriffe.
+Der reine Parserabschnitt verweigert zusätzlich alle Dateiöffnungen,
+Verzeichnisauflistungen und Schreibversuche; das reguläre Laden der Runtime
+und des ZIP-Dateinamencodecs erfolgt davor. Aufgefangene Zugriffsversuche
+bleiben im Protokoll und lassen die Abnahme fehlschlagen.
+
+Die tatsächlichen Eingangsbytes werden vollständig gelesen und ihre
+explizite Goal-Statement-Projektion über das gebundene Mapping an den
+vorhandenen nativen Importwriter übergeben. Erst der ausdrücklich
+vertrauenswürdige synthetische Host autorisiert die Transaktion. Geprüft
+werden der tatsächlich veröffentlichte und verifizierte Zielstand, die
+Revisionserhöhung, unveränderter vollständiger Text einschließlich
+Unicode, XML-Zeichen, URL und Shellsyntax als passive Daten, der originale
+Eingangshash sowie unveränderte fremde Projektdateien und Anhänge. ReqIFZ
+verwendet die echten Containerbytes und eine explizite Dokumentauswahl;
+zusätzliche unbenutzte Daten bleiben passiv.
+
+Der erste negative Korpus enthält **16** Datei-/Netzwerk-Entity-Fälle über
+ReqIF-Objekte, ReqIF-Struktur, ausgewähltes ReqIFZ-XML und JUnit jeweils in
+Core/PYZ, **sechs** Fälle für unbenutzte ZIP-Pfadtraversierung, Absolutpfade
+und Symlinks sowie **vier** unzulässige ausführbare Konverterdeklarationen
+in Mapping- und CSV-Profilgrammatik. Sicherheitsfehler bleiben Code **7**;
+nicht deklarierte Mappingfelder behalten ihren bestehenden Code **3**.
+Die eigenen Canarydateien und vollständigen Eingabeinventare bleiben gleich,
+es gibt keine externe Auflösung, Extraktion oder Schreibaktivität.
+Vier weitere Kontrollfälle prüfen die tatsächliche Sperrwirkung für
+Socketanlage, Resolver, Unterprozess und Shell, ohne einen solchen Effekt
+zuzulassen.
+
+Das ist reguläre Planarbeit zu **SR-REQ-0324/SR-REQ-0532** und
+**SR-VER-0024**, keine neue normative Festlegung.
+**SPECROAD-DECISION-1** ist in 2.4 ausdrücklich erteilt und wurde geprüft;
+eine eigene Klärung ist nicht nötig. Die Spezifikation **0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Bestehende Freigaben, Verlustregeln und Sicherheitsgrenzen
+werden nicht abgeschwächt.
+
+**Gezielte parallele Abnahme.** **1.807/1.807** Verhaltenstests bestanden
+mit **vier Workern**, Prozessabschluss **0**, alle Outcomes `passed`,
+`full_suite_passed=null`. Enthalten sind alle **38** neuen Fälle und die
+betroffenen vorhandenen Core-, Parser-, Mapping- und nativen Importtests.
+Der erste Entwicklerlauf zeigte acht Fehler ausschließlich in der neuen
+Prüfung eines optionalen Fixturefeldes nach bereits erfolgreicher
+Transaktion; die Fixtureauswahl wurde korrigiert und die komplette gezielte
+Auswahl auf dem endgültigen Zwischenstand erneut erfolgreich geprüft.
+Keine bestehende Facherwartung wurde dafür verändert.
+
+Geprüfte Testdateien:
+
+- `tests/test_core.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_exchange_mappings.py`
+- `tests/test_exchange_mappings_right.py`
+- `tests/test_import_execution.py`
+- `tests/test_import_execution_right.py`
+- `tests/test_import_security.py`
+- `tests/test_junit_xml.py`
+- `tests/test_junit_xml_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_security.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **19.810** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Die bisherigen **19.772**
+Testnummern bleiben unverändert; die **38** neuen Identitäten werden sortiert
+an Position **19.772–19.809** angefügt. Keine Nummer wird wiederverwendet.
+`SR-FIX-IMPORT-SECURITY-v1` bindet den Korpus. `SR-TC-0532` erhält alle
+38 Testidentitäten, `SR-TC-0324` zusätzlich die 16 Entityfälle und behält
+seine 213 bisherigen Tests. Beide Nachweise bleiben ausdrücklich `partial`.
+
+Der Audithook ist eine geprüfte CPython-API-Grenze, keine behauptete
+Kernel-Netzwerknamespace oder vollständige Referenz-Sandbox aus 14.2.
+Die Belege gelten für die tatsächlich geprüfte Runtime. Die breiteren
+Angriffsränder und Bereinigung bleiben **14.n.R/C** zugeordnet. Die
+Goal-Projektion belegt keine vollständige Import-CLI, keinen vollständigen
+Austauschformat-Roundtrip, Fremdtool-Interop, externe Testausführung,
+Releasefreigabe oder menschliche Produktentscheidung.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `cf20cf76d8b77679a094e8df779309dd2b00b50fea001ef27fda80adb06927ee`.
+- Selektionsdatei-SHA-256: `9ef5cd826215cbfb9d29bbcd2a8fbba9b35be7b6b586010aae555a1a844df329`.
+- Beobachtungsdatei-SHA-256: `b18769ecad16237bf40b08d9367f032f5bc349b1c80bfbeba5a3e8843f1ce057`.
+- Katalog-SHA-256: `cc7410383ddbdb219fde385a1f7d52642876098672722f8e5983f404a3de9567`.
+
+**Offene Apply-Abnahme.** Übergeben wird ausschließlich dieser gezielt
+geprüfte W-Zwischenstand. Der Entrypoint verlangt die saubere gebundene Basis
+und prüft ausschließlich Gruppe **0**, Sequenz **156**, mit **6.604** Tests
+und vier Workern. Erst nach erfolgreicher gebundener Apply-Abnahme setzt er
+die fünf Fortschrittsmarker auf **610/900**, zuletzt **14.n.W**, nächstens
+**14.n.R**, Bundle **449** und die W-Checkbox und erzeugt die exakte
+PLAN-Commit-Message. R und C werden nicht vorab installiert. Es gibt keinen
+vorgegriffenen Apply-Erfolg, keinen Voll- oder Serienlauf und keinen CI-Start.
 
 #### 14.n.R – Make it Right
 

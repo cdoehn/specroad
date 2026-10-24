@@ -7,8 +7,9 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-JUNIT-XML-v1",
-    "SR-FIX-JUNIT-XML-RIGHT-v1"
+    "SR-FIX-IMPORT-SECURITY-v1",
+    "SR-FIX-JUNIT-XML-RIGHT-v1",
+    "SR-FIX-JUNIT-XML-v1"
   ],
   "preconditions": [
     "One explicitly supplied immutable XML byte document and native per-document hard limits; no project writer or external resolver."
@@ -19,12 +20,13 @@
     "Check exact boundary acceptance, immutable result ownership, opaque extensions and matching isolated Core/PYZ behavior.",
     "Reject recursive, quadratic and exponential entity declarations before interpreting the DTD subset; reject schema/include references and processing instructions even inside opaque extensions.",
     "Enforce combined namespace-declaration/attribute limits and cumulative expanded-name budgets at exact boundaries; retain literal CDATA and comment content without false positives.",
-    "Reject nonprofile declared encodings before extensible host codec lookup; prove all supported declarations and matching isolated Core/PYZ error contracts with file/network/process traps."
+    "Reject nonprofile declared encodings before extensible host codec lookup; prove all supported declarations and matching isolated Core/PYZ error contracts with file/network/process traps.",
+    "14.n.W: reject a real external file/network entity declaration in ReqIF object, ReqIF structure, ReqIFZ-selected XML and JUnit byte adapters inside isolated Core/PYZ processes, with all parser filesystem opens and audited network/process effects blocked and recorded."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der XML-Import MUSS DTDs, externe Entitäten, externe Schemas und Netzwerkauflösung ablehnen sowie dokumentierte Grenzen für Tiefe, Elementanzahl, Textlänge und Gesamtbytes durchsetzen.",
-    "scope": "12.f.W/R/C provides the bounded byte-only JUnit core reader. The common internal XML event reader owns input validation, parser protection, limits and error translation; the JUnit adapter owns only its documented profile and value assembly. Unmodified W/R tests preserve original bytes, reported content, errors and passive behavior, including ignored subtrees and Core/PYZ distributions. This remains a partial proof, not a complete import CLI, mapping, Evidence publication or ReqIF reader proof."
+    "scope": "12.f.W/R/C provides the bounded byte-only JUnit core reader. The common internal XML event reader owns input validation, parser protection, limits and error translation; the JUnit adapter owns only its documented profile and value assembly. Unmodified W/R tests preserve original bytes, reported content, errors and passive behavior, including ignored subtrees and Core/PYZ distributions. This remains a partial proof, not a complete import CLI, mapping, Evidence publication or ReqIF reader proof. 14.n.W adds cross-adapter entity rejection in isolated Core/PYZ, without filesystem reads/writes or network/process attempts. This additional corpus is limited to the actual entity scenarios; it does not claim complete ReqIF/project import or exhaustive XML security."
   },
   "expected_diagnostics": [
     "SRV083"
@@ -48,6 +50,22 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-junit-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-junit-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-structure-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqif-structure-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqifz-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-reqifz-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-junit-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-junit-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-structure-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqif-structure-pyz]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqifz-core]",
+    "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[network-reqifz-pyz]",
     "tests/test_junit_xml.py::test_all_reported_counts_outcomes_and_source_paths_remain_passive",
     "tests/test_junit_xml.py::test_default_depth_and_element_boundaries_are_usable",
     "tests/test_junit_xml.py::test_depth_and_element_limits_cover_ignored_subtrees_too",
