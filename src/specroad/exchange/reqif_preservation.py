@@ -15,8 +15,8 @@ from ..model.errors import ModelError
 from ..model.metadata import validate_extensions
 from ..storage.json_syntax import parse_json_object
 from .reqif import ReqIFError, ReqIFLimits, decode_reqif_structure
-from ._reqif_values import _SEP
-from ._reqif_xhtml_profile import _ATTRS, _tag
+from ._reqif_loss_inventory import _inventory
+from ._reqif_loss_report import _assessed_items
 
 _KEY = 'specroad.reqif'
 _VERSION = 'reqif-preservation-v1'
@@ -190,37 +190,6 @@ def restore_reqif_source(target_bytes, *, expected_target_sha256, extensions_poi
     raise ReqIFError('reqif_preservation_source_missing', exit_code=6)
 
 
-def _inventory(document):
-    nodes, attrs = {}, {}
-    pending = [(document._root, [])]
-    while pending:
-        node, path = pending.pop()
-        nodes[node.pointer] = (node, path)
-        for key, _ in node.attributes:
-            namespace, _, name = key.rpartition(_SEP)
-            attrs[node.pointer + '/@' + key] = {
-                'kind': 'xml', 'path': path, 'attribute': {'namespace': namespace, 'name': name}}
-        pending.extend((child, path + [i]) for i, child in enumerate(node.children))
-    items = []
-    for pointer, reason in document.unsupported:
-        if pointer in attrs:
-            items.append((attrs[pointer], reason))
-        else:
-            node, path = nodes[pointer]
-            if reason == 'reqif_xhtml_attribute_not_representable':
-                for key, _ in node.attributes:
-                    if key not in _ATTRS.get(_tag(node), set()):
-                        items.append((attrs[node.pointer + '/@' + key], reason))
-            else:
-                items.append(({'kind': 'xml', 'path': path, 'attribute': None}, reason))
-    # An opaque subtree is one unit; independent attributes on partially mapped
-    # elements remain individual units. Different reasons at one place survive.
-    opaque = [loc['path'] for loc, _ in items if loc['attribute'] is None]
-    return [(loc, reason) for loc, reason in items if not any(
-        (len(parent) < len(loc['path']) or parent == loc['path'] and loc['attribute'] is not None)
-        and loc['path'][:len(parent)] == parent for parent in opaque)]
-
-
 def assess_reqif_preservation(raw, *, source_context, expected_source_sha256, direction,
                              limits, target_bytes=None, expected_target_sha256=None,
                              target_kind=None, extensions_pointer=None):
@@ -258,17 +227,10 @@ def assess_reqif_preservation(raw, *, source_context, expected_source_sha256, di
                                 'source_key': key}
     else:
         raise ReqIFError('reqif_target_kind_invalid', exit_code=2)
-    items = {}
-    for location, reason in _inventory(document):
-        identity = {'direction': direction, 'source_sha256': expected_source_sha256,
-                    'source_context': context, 'location': location, 'reason': reason}
-        item_id = 'reqif-item-' + canonical_json_sha256(identity)
-        item = {**identity, 'item_id': item_id, 'disposition': 'preserved' if preservation is not None else 'lost'}
-        if preservation is not None:
-            item['preservation_ref'] = preservation
-        else:
-            item['loss_id'] = item_id
-        items[item_id] = item
+    items = _assessed_items(((location, reason, preservation)
+                             for location, reason in _inventory(document)),
+                            direction=direction, source_sha256=expected_source_sha256,
+                            source_context=context)
     return deepcopy({'validation_scope': 'reqif_structure_profile_uninterpreted_xml',
                      'source_sha256': expected_source_sha256, 'source_context': context,
                      'direction': direction, 'mapping_binding': None,

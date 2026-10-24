@@ -11,14 +11,17 @@ from hashlib import sha256
 
 from ..mappings import select_mapping
 from ..model.attachments import AttachmentDescriptor
-from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 from .reqif import ReqIFError, ReqIFLimits, decode_reqif_structure
-from .reqif_preservation import (_KEY, _bound, _carrier, _context, _inventory,
+from .reqif_preservation import (_KEY, _bound, _carrier, _context,
                                 _json_at, _key, _target_sources)
 from ._reqif_attachments import _attachments, relative_reference
 from ._reqif_fields import records
+from ._reqif_loss_inventory import (_attribute, _location, _native_inventory,
+                                   _nodes, _pointer, _xml_inventory)
+from ._reqif_loss_report import _assessed_items
 from ._reqif_values import _SEP
 from ._reqif_xhtml import _binding as _xhtml_attachment, parse_markdown
 from ._reqif_xhtml_profile import _tag
@@ -36,28 +39,6 @@ class ReqIFLossError(ReqIFError):
     @property
     def report(self):
         return deepcopy(self._report)
-
-
-def _pointer(parent, key):
-    return parent + '/' + str(key).replace('~', '~0').replace('/', '~1')
-
-
-def _location(path, attribute=None):
-    return {'kind': 'xml', 'path': list(path), 'attribute': attribute}
-
-
-def _nodes(document):
-    result, pending = [], [(document._root, ())]
-    while pending:
-        node, path = pending.pop()
-        result.append((node, path))
-        pending.extend(reversed([(c, path + (i,)) for i, c in enumerate(node.children)]))
-    return result
-
-
-def _attribute(key):
-    namespace, _, name = key.rpartition(_SEP)
-    return {'namespace': namespace, 'name': name}
 
 
 def _json(raw):
@@ -216,76 +197,6 @@ def _import_comparisons(document, projections, mapping, target, bindings):
     return consumed, comparisons, unassessed
 
 
-def _xml_inventory(document, projections, consumed, mapping):
-    indexed = _nodes(document)
-    paths = {id(node): path for node, path in indexed}
-    opaque, attribute_reasons, value_uses, skip = {}, {}, {}, set()
-    for location, reason in _inventory(document):
-        path = tuple(location['path'])
-        if location['attribute'] is None:
-            opaque.setdefault(path, set()).add(reason)
-        else:
-            attribute_reasons[(path, canonical_json_bytes(location['attribute']))] = reason
-    for node, path in indexed:
-        if node.tag == 'THE-ORIGINAL-VALUE':
-            opaque.setdefault(path, set()).add('reqif_xhtml_original_not_projected')
-    rows = [] if mapping is None else mapping.resource.data['fields']
-    for record in records(document):
-        definitions = next(t.definitions for t in document.types if t.identifier == record.type_id)
-        explicit = {v.definition_id: v for v in record.values}
-        reasons = {v['definition_id']: v['reason'] for v in projections[record.identifier]['unrepresentable']}
-        for definition in definitions:
-            value = explicit.get(definition.identifier, definition.default)
-            if value is None:
-                continue
-            path = paths[id(value.element)]
-            used = (record.identifier, definition.identifier) in consumed
-            reason = reasons.get(definition.identifier)
-            if reason is None and not used:
-                mapped = any(r['external_type'] == record.type_id and r['external_field'] == definition.identifier for r in rows)
-                reason = 'reqif_mapping_target_mismatch' if mapped else 'reqif_mapping_remainder'
-            value_uses.setdefault(path, []).append((value, reason))
-    for path, uses in value_uses.items():
-        reasons = {reason for _, reason in uses if reason is not None}
-        if reasons:
-            opaque.setdefault(path, set()).update(reasons)
-        else:
-            value = uses[0][0]
-            # The field comparison proves the effective value, not unrelated
-            # metadata, original XHTML, editable flags or foreign attributes.
-            skip.add((path, 'THE-VALUE'))
-            for i, child in enumerate(value.element.children):
-                if child.tag in ('DEFINITION', 'VALUES', 'THE-VALUE'):
-                    skip.add((path + (i,), None))
-    result = []
-    for node, path in indexed:
-        if any(path[:size] in opaque for size in range(len(path))):
-            continue
-        if path in opaque:
-            result.extend((_location(path), reason) for reason in sorted(opaque[path]))
-            continue
-        # Native value comparison cannot consume foreign attributes even in
-        # an otherwise mapped reference/value subtree.
-        for name, _ in node.attributes:
-            attr = _attribute(name)
-            reason = attribute_reasons.get((path, canonical_json_bytes(attr)))
-            if reason is not None:
-                result.append((_location(path, attr), reason))
-        if any((path[:size], None) in skip for size in range(len(path) + 1)):
-            continue
-        for name, _ in node.attributes:
-            if (path, name) not in skip:
-                attr = _attribute(name)
-                result.append((_location(path, attr), attribute_reasons.get((path, canonical_json_bytes(attr)), 'reqif_metadata_not_projected')))
-        # Nonempty text and empty leaf elements carry independent information;
-        # container whitespace is formatting, already retained in source bytes.
-        if not node.children:
-            result.append((_location(path), 'reqif_xml_content_not_projected'))
-        elif any(type(c) is str and c.strip() for c in node.content):
-            result.append((_location(path), 'reqif_xml_mixed_content_not_projected'))
-    return result
-
-
 def _native_comparisons(value, document, mapping, identifier, attachments):
     if type(identifier) is not str or not identifier:
         raise ReqIFError('reqif_object_identifier_required', exit_code=2)
@@ -335,21 +246,6 @@ def _native_prose_references(value, document, mapping, identifier, references):
             if node.get('attachment_path') is not None and node['attachment_path'] not in paths:
                 raise ReqIFError('reqif_attachment_unresolved', pointer=_pointer('', name))
             pending.extend(node.get('children', []))
-
-
-def _native_inventory(value, consumed):
-    result = []
-    for name, content in value.items():
-        if name in consumed or name == 'attachments':
-            continue
-        at = _pointer('', name)
-        if name == 'extensions' and type(content) is dict and content:
-            result.extend(({'kind': 'json', 'pointer': _pointer(at, key)}, 'reqif_native_extension_not_projected') for key in content)
-        elif name == 'relations' and type(content) is list and content:
-            result.extend(({'kind': 'json', 'pointer': _pointer(at, i)}, 'reqif_native_relation_not_projected') for i in range(len(content)))
-        else:
-            result.append(({'kind': 'json', 'pointer': at}, 'reqif_native_field_not_projected'))
-    return result
 
 
 def assess_reqif_transfer(source_bytes, *, source_kind, source_context, expected_source_sha256,
@@ -423,17 +319,8 @@ def assess_reqif_transfer(source_bytes, *, source_kind, source_context, expected
         units = [(loc, reason, None) for loc, reason in _native_inventory(value, consumed)]
     transfers, attachment_losses = _transport(references, target_files)
     units.extend(attachment_losses)
-    items = {}
-    for location, reason, preservation in units:
-        identity = {'direction': direction, 'source_sha256': expected_source_sha256,
-                    'source_context': context, 'location': location, 'reason': reason}
-        item_id = 'reqif-item-' + canonical_json_sha256(identity)
-        item = {**identity, 'item_id': item_id, 'disposition': 'preserved' if preservation is not None else 'lost'}
-        if preservation is None:
-            item['loss_id'] = item_id
-        else:
-            item['preservation_ref'] = preservation
-        items[item_id] = item
+    items = _assessed_items(units, direction=direction,
+                            source_sha256=expected_source_sha256, source_context=context)
     complete = not unassessed
     return deepcopy({'validation_scope': scope, 'source_kind': source_kind, 'direction': direction,
         'source_sha256': expected_source_sha256, 'source_context': context,

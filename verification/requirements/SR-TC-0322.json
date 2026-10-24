@@ -245,7 +245,6 @@
     "tests/test_reqif_loss.py::test_unsafe_references_do_not_become_accepted_loss_or_trigger_resolution[https://invalid/a]"
   ],
   "open_items": [
-    "14.j.C: structure-only cleanup after R; preserve W/R results, errors and side-effect contracts.",
     "Later whole native model/CLI/project import/export, authorized Change Plans and ReqIFZ integration. The native record candidate scope does not certify a complete native artifact schema, project graph or performed Apply. Partial behavior evidence is not a full-suite, release or interoperability result."
   ]
 }

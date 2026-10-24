@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 14
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 599
-last_completed_plan_commit: 14.j.R
-next_plan_commit: 14.j.C
-last_completed_numbered_bundle: 435
+implementation_plan_commits_completed: 600
+last_completed_plan_commit: 14.j.C
+next_plan_commit: 14.k.W
+last_completed_numbered_bundle: 436
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -20717,7 +20717,7 @@ atomarer Übergabe endet dieser Einzelauftrag ohne Warte-/Resultschleife.
 
 #### 14.j.C – Make it Clean
 
-- [ ] **14.j.C** · Position **600/900** · Voraussetzung: `14.j.R`.
+- [x] **14.j.C** · Position **600/900** · Voraussetzung: `14.j.R`.
 **Exakte Commit-Message:** `14.j.C refactor(exchange): Informationsverluste und Erweiterungserhalt bereinigen`
 
 **Bereinigung:** Verlustklassifikation unabhängig von menschenlesbaren Meldungen gestalten.
@@ -20725,6 +20725,72 @@ atomarer Übergabe endet dieser Einzelauftrag ohne Warte-/Resultschleife.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Bereinigung und Übergabe (Bundle 436):** Das vollständig gebundene Result
+`specroad-apply_Result_232027_1023_95ed87.zip`, SHA-256
+`2e21772ba04d3af923cd44f8bfb265312cac810105aff95df887cd014858951e`,
+bestätigt **14.j.R / Bundle 435** auf
+`0afc697121511e51881ddcf2d31176986681104f`: sauberer Apply-Stand,
+**6.324/6.324** bestandene Tests, Gruppe **2/3**, Commitfolge **143**,
+vier Worker, **1.892,52 s**. Native Resultbindung, alle **2.181 Snapshotdateien**,
+Commit samt Elternstand und die tatsächlichen gebundenen Testbelege wurden
+abgeglichen. In Dev wurden zunächst ausschließlich die fünf belegten
+R-Fortschrittsmarker nachgeführt; danach entsprach der Bestand dem Snapshot.
+Vor Apply bleibt der Produktstand **599/900**, zuletzt **14.j.R**, nächstens
+**14.j.C**, Bundle **435**. SPECROAD-DECISION-1 ist vorhanden; Spezifikation
+**0.2.19 / D.1.3** bleibt bytegleich. Dies ist reguläre Strukturpflege.
+
+Die internen Module `_reqif_loss_inventory` und `_reqif_loss_report` trennen
+Quellinventar und maschinenlesbare Einzelberichte von Trägerprüfung,
+Abbildungsvergleichen und Exportentscheidung. Sieben vorhandene Orts- und
+Inventarfunktionen werden unverändert verschoben. Die gemeinsame Erzeugung
+der JCS-gebundenen Eintragskennung verwendet ausschließlich Quellkontext,
+Richtung, Quellhash, tatsächliche Stelle und stabilen Maschinengrund.
+Sie übernimmt überprüfte Erhaltungsreferenzen, dedupliziert nach derselben
+Kennung und erzeugt dieselben Verlustkennungen. Menschliche Meldungen
+werden weder gelesen noch als Klassifikationsgrundlage verwendet.
+
+Öffentliche Signaturen, `ReqIFLossError` samt unabhängig gehaltenem Bericht,
+Fehlercodes und Abbruchreihenfolge bleiben erhalten. Beide bisherigen
+Bewertungsfunktionen behalten ihre eigenen Umfangs-, Vollständigkeits- und
+Freigabeaussagen, sortierte Einträge und unabhängigen Rückgabedaten.
+Träger-/Zielprüfungen, Feldvergleiche, Anhangprüfung und fail-on-loss-Gate
+bleiben fachlich unverändert. Es entstehen keine neuen Writes, Auflösungen,
+Importfreigaben, Formatannahmen oder Verlustakzeptanzen.
+
+**Gezielter Dev-Verhaltensnachweis:** **1.334/1.334 Tests**, vier parallele
+Worker, **12,24 s**, Prozess-/Gate-Exit **0**, keine Beobachtungsfehler;
+`selected_passed=true`, `full_suite_passed=null`. Die **17 ausgewählten
+Testdateien** umfassen alle **84 W- und 109 R-Fälle** dieses Schritts sowie
+betroffene ReqIF-Struktur-/Objekt-, Mapping-, M11-Prose-, Importplan-,
+Metadata-, JSON-/JCS- und Python-3.10-Regressionen. Alle bisherigen Tests,
+Oracles, Fixtures und dauerhaften Testnummern bleiben unverändert.
+SR-TC-0322 entfernt ausschließlich den hier bearbeiteten C-Aufräumpunkt
+aus `open_items`; die spätere Modell-/CLI-/Projektintegration bleibt offen
+und der Nachweis weiterhin **partial**. Der abschließende Verhaltenslauf
+bindet genau den übergebenen Quellstand einschließlich dieser Katalognachführung.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **18.972 Identitäten**,
+**0 ausgeführte Testkörper** und keine Katalogfehler. Es werden keine Tests
+oder Nummern ergänzt, entfernt oder umgeordnet. Kein Vollsuite-, serieller,
+Darstellungs-/Dokumentationstest oder CI-Lauf wurde gestartet.
+Quellstand `09275ee9f8d32bfccb37a902848601f152151bc8d6d6698c9f36e474bf09b537`;
+Katalog `b11514e51150c16e374da54c543d43f1a4d2e49b264be8fcdbcbf743e81d0029`;
+Auswahlbeleg `1fee3b7db7db65239fd7fdefcc39dfeb2388833aba0ee5d782f5df175688d156`;
+Beobachtungsbeleg `5eb4b50276319f5ac5cb17471161516a823986149c26f86a4cdf479bbbf40e7f`.
+
+**Vorgesehene Apply-Grenze:** Ein regulärer Commit **14.j.C**, Position
+**600/900**, Bundle **436**, mit der oben festgelegten Commit-Message.
+Der Entrypoint installiert genau den gezielt geprüften C-Zustand und prüft
+nur **Gruppe 0/3**, Commitfolge **144**, mit **6.324 Tests** und vier parallelen
+Workern. Erst nach erfolgreichem gebundenem Gate werden die fünf
+Fortschrittsmarker auf **600/900**, zuletzt **14.j.C**, nächstens **14.k.W**,
+Bundle **436** und die C-Checkbox gesetzt und committet. Bei Fehlern bleiben
+tatsächliche Dateien, Index und erfolgreiche Commits erhalten. **14.k.W**
+und die vollständige CLI-/Projektintegration bleiben offen. Kein Vollsuite-,
+Fremdtool-, Release- oder Apply-Erfolg wird vorweggenommen. Nach nativer
+ZIP-Prüfung und atomarer Übergabe endet dieser Einzelauftrag ohne
+Warte-/Resultschleife.
 
 <a id="step-14-k"></a>
 ### 14.k – ReqIFZ und sicheres Archivprofil
