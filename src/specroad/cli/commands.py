@@ -145,6 +145,11 @@ def _export(invocation):
     return export_command(invocation)
 
 
+def _bundle_create(invocation):
+    from ..bundles.publication import create_command
+    return create_command(invocation)
+
+
 def _read_runtime_options():
     return (OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
             *(OptionSpec(flag, takes_value=True) for flag in ('--cpu-budget-ms', '--wall-budget-ms',
@@ -154,6 +159,23 @@ def _read_runtime_options():
 
 def builtin_registry() -> CommandRegistry:
     commands = (CommandSpec(
+        command_id='bundle.create', words=('bundle', 'create'),
+        command_class=CommandClass.GENERATED_OUTPUT, preflight_profile=PreflightProfile.PROJECT_READ,
+        effect_scope=EffectScope.EXTERNAL_OUTPUT, handler=_bundle_create, requires_project=True,
+        configuration_schema_required=True,
+        options=(OptionSpec('--scope', takes_value=True, choices=('project',)),
+            *(OptionSpec('--' + name, takes_value=True) for name in
+              ('output', 'output-root', 'configuration', 'project')),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('bundle-create-v1', {'command_id': 'bundle.create',
+            'options': {'--scope': 'project', '--output': 'generated/project.zip', '--format': 'json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002', 'SRV003', 'SRV060', 'SRV083'),
+            work=WorkContract('native_project_bundle', ('project_configuration', 'current_project_inventory',
+                                                       'empty_completed_receipt_inventory'))),
+    ), CommandSpec(
         command_id='export', words=('export',), command_class=CommandClass.GENERATED_OUTPUT,
         preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.EXTERNAL_OUTPUT,
         handler=_export, requires_project=True, configuration_schema_required=True,

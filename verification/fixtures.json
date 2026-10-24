@@ -408,6 +408,10 @@
       "kind": "owned versioned declarative profiles and scoped field observations; no profile composition, lifecycle approval or analyzer execution",
       "provider": "tests/support/profiles.py:profile_data"
     },
+    "SR-FIX-PROJECT-BUNDLE-R-v1": {
+      "kind": "Owned native projects, real initialized language-package files and historical Baseline objects with checked empty receipt inventories. Generated/external CLI, structured-request and library publications use real atomic file operations. Injected missing sources, unresolved histories, late source/target/private-image/directory changes and I/O faults never grant completion, extraction, arbitrary-bundle verification or human authority.",
+      "provider": "tests/test_project_bundle.py:project,baseline_project;tests/test_project_bundle_right.py:create"
+    },
     "SR-FIX-PROJECT-BUNDLE-W-v1": {
       "kind": "Owned native initialized or synthetic project roots, exact configured artifacts/resources, language packages, binary attachments and prepared native Baseline records/objects. Actual guarded inventory, declared unused archives, explicit empty receipt sets, partial markers, missing bytes and changes during encoding. Independent test materialization is not the production extractor or a human approval.",
       "provider": "tests/test_project_bundle.py:project,baseline_project;tests/support/inspection.py:inspection_project"
@@ -800,6 +804,7 @@
     "SR-FIX-PRODUCTION-VALIDATION-v1",
     "SR-FIX-PROFILE-COMPOSITION-v1",
     "SR-FIX-PROFILES-v1",
+    "SR-FIX-PROJECT-BUNDLE-R-v1",
     "SR-FIX-PROJECT-BUNDLE-W-v1",
     "SR-FIX-PROJECT-LOCK-v1",
     "SR-FIX-PUBLICATION-RECHECK-v1",

@@ -7,18 +7,20 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-PROJECT-BUNDLE-R-v1",
     "SR-FIX-PROJECT-BUNDLE-W-v1"
   ],
   "preconditions": [
     "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion."
   ],
   "steps": [
-    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing."
+    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
+    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad bundle create --scope project\\|document\\|release` MUSS ein selbstbeschreibendes Bundle mit der kanonischen Scope-/Kind-/Read-only-Kombination aus Anhang E.3 und allen für diesen Scope notwendigen Payloads erzeugen.",
-    "scope": "15.b.W read-only in-memory full-project preparation with exact native closure and payload bytes, including controls, configured language packages and required archive/attachment objects. Verified empty receipt inventories only; no arbitrary-bundle semantic verifier, portable receipt transfer, production extraction, CLI publication or write authority is claimed."
+    "scope": "15.b.W/R full-project preparation and generated-output publication for completely checked empty receipt histories. Exact native closure, source payloads, external ZIP hash, currentness rechecks, no-overwrite publication and fail-closed inventory/transaction/I/O behavior. No arbitrary-bundle semantic verifier, production extraction, nonempty portable receipt transfer or write/approval authority is claimed."
   },
   "expected_diagnostics": [
     "SRV002",
@@ -74,10 +76,73 @@
     "tests/test_project_bundle.py::test_unrelated_repository_cache_generated_and_previous_manifest_are_not_payload",
     "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/locks/writer.json]",
     "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/tmp/staging.json]",
-    "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/transactions/active/journal.json]"
+    "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/transactions/active/journal.json]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[archive]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[artifact]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[missing_attachment]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[new_artifact]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[receipt]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[root_manifest]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[transaction]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[directory]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[private_image]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[source]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[target]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[transaction]",
+    "tests/test_project_bundle_right.py::test_cli_registry_declares_only_implemented_project_creation",
+    "tests/test_project_bundle_right.py::test_creation_publishes_exact_complete_bytes_and_only_generated_output[cli]",
+    "tests/test_project_bundle_right.py::test_creation_publishes_exact_complete_bytes_and_only_generated_output[direct]",
+    "tests/test_project_bundle_right.py::test_creation_publishes_exact_complete_bytes_and_only_generated_output[structured]",
+    "tests/test_project_bundle_right.py::test_existing_or_unsafe_output_is_never_replaced[directory]",
+    "tests/test_project_bundle_right.py::test_existing_or_unsafe_output_is_never_replaced[fifo]",
+    "tests/test_project_bundle_right.py::test_existing_or_unsafe_output_is_never_replaced[file]",
+    "tests/test_project_bundle_right.py::test_existing_or_unsafe_output_is_never_replaced[leaf_case]",
+    "tests/test_project_bundle_right.py::test_existing_or_unsafe_output_is_never_replaced[nested_project]",
+    "tests/test_project_bundle_right.py::test_existing_or_unsafe_output_is_never_replaced[parent_case]",
+    "tests/test_project_bundle_right.py::test_existing_or_unsafe_output_is_never_replaced[symlink]",
+    "tests/test_project_bundle_right.py::test_explicit_external_output_is_relocatable_and_does_not_mutate_source",
+    "tests/test_project_bundle_right.py::test_external_output_root_must_be_separate_and_canonical[ancestor]",
+    "tests/test_project_bundle_right.py::test_external_output_root_must_be_separate_and_canonical[nested]",
+    "tests/test_project_bundle_right.py::test_external_output_root_must_be_separate_and_canonical[other_project]",
+    "tests/test_project_bundle_right.py::test_external_output_root_must_be_separate_and_canonical[source]",
+    "tests/test_project_bundle_right.py::test_external_output_root_must_be_separate_and_canonical[symlink]",
+    "tests/test_project_bundle_right.py::test_initialization_language_packages_and_baseline_objects_survive_publication",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options0]",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options1]",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options2]",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options3]",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options4]",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options5]",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options6]",
+    "tests/test_project_bundle_right.py::test_invalid_or_unimplemented_selections_fail_without_writes[options7]",
+    "tests/test_project_bundle_right.py::test_io_failure_preserves_actual_images_and_never_returns_completion[after_link]",
+    "tests/test_project_bundle_right.py::test_io_failure_preserves_actual_images_and_never_returns_completion[link]",
+    "tests/test_project_bundle_right.py::test_io_failure_preserves_actual_images_and_never_returns_completion[write]",
+    "tests/test_project_bundle_right.py::test_missing_required_source_never_publishes_a_zip[archive]",
+    "tests/test_project_bundle_right.py::test_missing_required_source_never_publishes_a_zip[attachment]",
+    "tests/test_project_bundle_right.py::test_missing_required_source_never_publishes_a_zip[language_package]",
+    "tests/test_project_bundle_right.py::test_missing_required_source_never_publishes_a_zip[profile]",
+    "tests/test_project_bundle_right.py::test_missing_required_source_never_publishes_a_zip[registry]",
+    "tests/test_project_bundle_right.py::test_partial_source_marker_remains_a_write_free_rejection",
+    "tests/test_project_bundle_right.py::test_self_consistent_container_cannot_replace_complete_selected_source[metadata]",
+    "tests/test_project_bundle_right.py::test_self_consistent_container_cannot_replace_complete_selected_source[omitted_resource]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/locks/writer.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/requests/item.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/tmp/staging.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/active/journal.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/receipts/item/transaction.json]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[../outside.zip]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[.specroad/out.zip]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[/absolute.zip]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[generated/../out.zip]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[generated/.git/config]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[generated/NUL.zip]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[generated]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[spec/goals/overwrite.json]",
+    "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[specroad.json]"
   ],
   "open_items": [
-    "15.b.R/C: complete CLI output integration, inventory/failure hardening and structural cleanup of this same project-creation slice.",
+    "15.b.C: structural cleanup of this same completed project-creation slice.",
     "Document/release partial bundles (15.c), independent bundle verification (15.d), production extraction (15.e) and validated nonempty receipt selection/transfer/replay (15.g) remain open. Nonempty receipt histories currently fail closed instead of pretending portable completeness."
   ]
 }

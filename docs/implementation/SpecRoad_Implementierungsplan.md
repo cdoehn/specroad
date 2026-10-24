@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 17
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 619
-last_completed_plan_commit: 15.b.W
-next_plan_commit: 15.b.R
-last_completed_numbered_bundle: 460
+implementation_plan_commits_completed: 620
+last_completed_plan_commit: 15.b.R
+next_plan_commit: 15.b.C
+last_completed_numbered_bundle: 462
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -23905,12 +23905,189 @@ zukünftiger Apply-Erfolg wird nicht vorweggenommen.
 
 #### 15.b.R – Make it Right
 
-- [ ] **15.b.R** · Position **620/900** · Voraussetzung: `15.b.W`.
+- [x] **15.b.R** · Position **620/900** · Voraussetzung: `15.b.W`.
 **Exakte Commit-Message:** `15.b.R feat(bundle): Vollprojektbundle erzeugen vervollständigen`
 
 **Vervollständigung:** Unvollständige Transaktion oder fehlende Pflichtressource verhindert normalen Vollbundleabschluss.
 
 **Verhaltensabnahme:** Manifest-/Payload-/Scopeinventur weist keine ausgelassenen Fachbytes nach. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Umsetzung und Übergabenachweis – Bundle 461 (R).** Maßgeblich ist
+`specroad-apply_Result_195830_1024_026210.zip`, SHA-256
+`a55679403bf95bed2937bfe2ee533ec17e7600241aedca4429cdd4a1d1b76428`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Executionlogs
+und alle **2.222** Snapshotdateien wurden gegen die tatsächliche Apply-Basis
+geprüft. **15.b.W** ist durch Commit
+`f59854432caa99b79d8d3f3fe895a39963bc1e1a`, dessen Parent
+`05146dc8d071836ac0e228cc2a6c834c14dda15f` und den sauberen Resultzustand
+bestätigt: **6.795/6.795** Apply-Tests in **1.769,70 s**, vier Worker,
+**Sequenz 166 / Gruppe 1**, **20.386** gesammelte Identitäten. Der tatsächliche
+nummerierte Auswahlbeleg und die Einzeloutcomes wurden abgeglichen.
+Der bestätigte Ausgangsstand ist **619/900**, zuletzt **15.b.W**, nächstens
+**15.b.R**, Bundle **460**; der Apply-Testlauf war eine Teilprüfung.
+
+**Reguläre Vervollständigung.** `bundle create --scope project --output ...`
+und der native Bibliotheksadapter erzeugen aus demselben unverändert
+gehaltenen Quellstand genau eine vollständige Projekt-ZIP. CLI und
+strukturierter Request verwenden denselben Erzeuger. Der versionierte
+maschinenlesbare Ergebnisvertrag bindet tatsächlichen Zielpfad, Größe und
+Voll-ZIP-SHA-256 außerhalb des enthaltenen Manifests. Die Registry beschreibt
+die tatsächlich implementierte Variante als `generated_output` mit
+`project_read` und externer/generierter Ausgabe.
+
+Ausgaben sind nur unter dem konfigurierten generierten Verzeichnis oder
+in einer ausdrücklich getrennten, kanonischen externen Ausgabewurzel
+zulässig. Native Pfad-, Root-, Verzeichnis- und Namenskollisionsprüfungen,
+der vorhandene Verzeichnis-Inode-Mutex und der vorhandene atomare
+Image-Publisher verhindern ein Überschreiben vorhandener Ziele. Es entsteht
+kein SpecRoad-Writer-Lock, Journal, Request-Receipt oder sonstiger
+`.specroad/`-Seiteneffekt. Nach einem Fehler bleiben tatsächlich vorhandene
+komplette und private Ausgabedateien erhalten; es gibt keinen behaupteten
+Erfolg und kein Löschen fremder Dateien.
+
+Der aus der ZIP dekodierte Payloadsatz und die Metadaten werden zusätzlich
+mit der vollständigen nativen Auswahl verglichen. Ein intern konsistenter
+Container genügt nicht, wenn ausgewählte Fachbytes fehlen oder native
+Bindungen ausgetauscht wurden. Die ursprüngliche Snapshotbeobachtung samt
+Rootmanifest, Archivinventar und explizit geprüften leeren Receiptwurzeln
+bleibt bis unmittelbar vor der atomaren Veröffentlichung gebunden.
+Nachlesen erfasst verschwundene/veränderte Pflichtbytes, neue Artefakte,
+Archivnamen, Receipts und ungelöste Transaktionen; ein frischer Snapshot
+kann alte ZIP-Bytes nicht nachträglich legitimieren. Sichtbare Änderungen,
+Ausgabekonkurrenz, beschädigte private Images und echte I/O-Fehler verhindern
+normalen Abschluss. Die vorhandenen Scope-/Snapshot-, M6-Archiv- und
+15.a-Manifestdienste bleiben maßgeblich.
+
+**Grenzen.** Die Projektvariante weist `--configuration` mit Code 2 ab.
+Dokument-/Release-Auswahl, `ai-runtime` und Receipt-Ausschluss werden nicht
+als implementiert registriert oder still ignoriert. Nichtleere
+Receipthistorien bleiben schreibfrei mit Exit 5 verweigert, bis **15.g** die
+bestehenden Auswahl-/Transfer-/Replaypflichten erfüllt. Die nachfolgenden
+Schritte **15.c–15.g**, **15.i** und **15.m–15.o** bleiben offen. Erfolg der
+Erzeugung bedeutet keinen atomaren Mehrdateisnapshot, keine vollständige
+semantische Projektprüfung, Authentizität, menschliche Freigabe, Extraktion
+oder Schreibberechtigung. SR-TC-0386/0407/0481 und der jetzt belegte
+Transaktions-Abweisungsanteil von SR-TC-0568 bleiben ausdrücklich **partial**.
+**SPECROAD-DECISION-1** ist vorhanden; die bestehenden fachlichen Vorgaben
+reichen aus. Spezifikation **0.2.22** und ihr gebundener SHA-256
+`32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`
+bleiben unverändert. Dies ist keine normative Klärung.
+
+**Gezielte Entwicklungsprüfung.** **637/637** Verhaltenstests bestanden unter
+Linux/Python 3.14.4 mit **vier parallelen Workern**: **63** neue R-Fälle,
+**29** W-Fälle, **248** Bundlecodec-Fälle, **23** Projekt-Exportfälle,
+**43** Initialisierungsfälle, **32** Capability-Fälle, **76** Schemakatalogfälle,
+**32** Preflight-Fälle sowie **91** Description-/Registry-/Request-/CLI-Fälle.
+Die vollständige Collection-/Katalogprüfung erfasste **20.449** eindeutige
+Tests mit **0** ausgeführten Testkörpern und ohne Katalogfehler. Neue Nummern
+**20386–20448** wurden angehängt; vorhandene Identitäten, Nummern und beide
+Rotationsanker bleiben erhalten. Zwei bestehende Registry-Erwartungen
+wurden ausschließlich um den tatsächlich registrierten Befehl ergänzt;
+W-Tests und bisherige Bundlevektoren bleiben bytegleich.
+
+Der erste gezielte Lauf zeigte eine falsche Fehlerklasse bei einer bereits
+schreibfrei verweigerten normativen Zieladresse, zwei noch nicht ergänzte
+Registry-Erwartungen und neue Fixtureannahmen über bereits vorhandene
+leere Betriebs-/Ausgabeverzeichnisse. Die Zielabwehr wurde auf die
+Sicherheitsklasse 7 korrigiert; die Tests prüfen unveränderte reale
+Inventare statt die Nichtexistenz vorab angelegter Verzeichnisse.
+Nur der anschließend vollständig bestandene gezielte Lauf bildet den
+Übergabenachweis. Fachliche Orakel und Sicherheitsgrenzen wurden nicht
+abgeschwächt.
+
+Geprüfter Quellstand:
+`38023f52c199110924713164bc1503bbdaded78ea57d8b4a96e406fb73aa9e20`.
+SHA-256 der Auswahlbeobachtung:
+`08ff7d4a4f3691a25ea63391bd41e401d1b4722e30532964e1aff92e22e59892`;
+SHA-256 der Einzeloutcomes:
+`3079b832ffad0c42c58fae5ac922d26f1dca41a3eaf3b11e871a948c6b290e58`;
+SHA-256 des vollständigen Katalogbelegs:
+`ea8416fa9082d01ba323ec16b64e0a85555073d91e43af9e65b8425cec20e1af`.
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+
+**Vorgesehene Übergabe.** Genau ein regulärer PLAN-Zustand **15.b.R**, Position
+**620/900**, als Bundle **461**, gebunden an die vier Resultwerte einschließlich
+Fingerprint `7c9d2a24e397e0e5`. Der Entrypoint prüft den sauberen Ausgangsstand,
+stellt ausschließlich diesen gezielt geprüften R-Zustand her und führt
+**Gruppe 2/3 / Sequenz 167** mit **6.816** Tests und vier Workern aus.
+Erst nach erfolgreichem Gate und passenden Quell-, Katalog-, Nummerierungs-
+und Auswahlbindungen setzt er die fünf Fortschrittsmarker auf **620/900**,
+zuletzt **15.b.R**, nächstens **15.b.C**, Bundle **461** und die R-Checkbox.
+Danach folgt die exakte PLAN-Commit-Message. Der erfolgreiche W-Commit bleibt
+Vorgänger; C wird nicht vorab installiert. Bei Fehler bleiben tatsächliche
+Dateien, Index, Nachweise und erfolgreiche Commits erhalten. Ein künftiger
+Apply-Erfolg wird nicht vorweggenommen.
+
+
+**Technische Korrektur und Fortsetzung – Bundle 462 (R).** Maßgeblich ist
+`specroad-apply_Result_204101_1024_857d3b.zip`, SHA-256
+`a0d60f481b912fd86fac2558edaf09dd70d3a32fb5db537ece7088498a6e5a69`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Executionlogs, alle
+**2.222** Base-Dateien und der zurückgegebene Arbeitszustand wurden geprüft.
+Das Result bestätigt für Bundle **461** einen fehlgeschlagenen Apply-Lauf:
+**6.815 bestanden, 1 fehlgeschlagen**, **2.213,36 s**, vier parallele Worker,
+**Sequenz 167 / Gruppe 2**, **20.449** gesammelte Testidentitäten. Der
+nummerierte Auswahlbeleg und die tatsächlichen Einzeloutcomes wurden
+abgeglichen. Es entstand **kein Commit**. HEAD bleibt der erfolgreiche
+W-Commit `f59854432caa99b79d8d3f3fe895a39963bc1e1a`; **14** geänderte
+getrackte Dateien und **2** neue Dateien des R-Zustands blieben erhalten.
+Der Index ist unverändert und ungestaged. Der gebundene Fingerprint ist
+`714b252df17d8fe4`; die Rotation bleibt bei **Sequenz 167 / Gruppe 2**.
+Der Planstand bleibt bis zum erfolgreichen Apply **619/900**, zuletzt
+**15.b.W**, nächstens **15.b.R**, zuletzt erfolgreiches Bundle **460**.
+
+Der einzige fehlgeschlagene Test war
+`tests/test_schema_catalog_change_plan.py::SchemaCatalogChangePlanTests::test_public_factory_inventory_equals_retrievable_catalog`.
+Seine unabhängige vollständige Erwartungsliste enthielt noch nicht das in
+15.b.R eingeführte Ergebnisschema `bundle-create-v1`. Die technische
+Korrektur ergänzt genau diese Identität; Gleichheit des vollständigen
+Inventars, Duplikatfreiheit, Abrufbarkeit und Schema-/Hashprüfung bleiben
+erhalten. Der Erzeuger, seine Fehlerverträge und Sicherheitsgrenzen bleiben
+unverändert. Es werden keine Tests entfernt oder neue Identitäten vergeben;
+der vollständige Katalog und die Nummerierung bleiben identisch zum
+fehlgeschlagenen R-Zustand. Die bestehende Verpflichtung aus **11.3 /
+SR-REQ-0377** zur vollständigen Schemaauflistung trägt die Korrektur.
+**SPECROAD-DECISION-1** ist ausdrücklich vorhanden. Keine normative
+Klärung ist erforderlich; Spezifikation **0.2.22** mit SHA-256
+`32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`
+bleibt bytegleich. Der vorstehende Nachweis zu Bundle 461 bleibt als
+historischer Übergabeversuch erhalten und ist kein Apply-Erfolgsnachweis.
+
+**Gezielte Entwicklungsprüfung:** **646/646** Verhaltenstests bestanden in
+**72,82 s** unter Linux/Python 3.14.4 mit **vier parallelen Workern**.
+Geprüft wurden die bereits für 461 ausgewählten **637** Bundle-, Export-,
+Initialisierungs-, Capability-, Schema-, Preflight-, Description-, Registry-,
+Request- und CLI-Fälle sowie die **9** Schemakatalog-Change-Plan-Fälle
+einschließlich der im Apply fehlgeschlagenen Inventarprüfung. Die vollständige
+Collection-/Katalogprüfung erfasste **20.449** eindeutige Identitäten ohne
+Katalogfehler und mit **0** ausgeführten Testkörpern. Kein Dev-Volltest,
+kein serieller Lauf, kein Vollsuite- oder Release-Erfolgsnachweis.
+
+Geprüfter Quellstand:
+`d370434276cb10fc7b4bdea612a057e8b0be29c21c9397154b481fbb72540ba3`.
+SHA-256 der Auswahlbeobachtung:
+`bdb1da2d69ba7083ed0f0b76a6521c05ab1701306a45928245006e4dacf321bc`;
+SHA-256 der Einzeloutcomes:
+`a988336e22ed7ff07bab90ecf8990ef4043f48df0b9b3e6736a5ed273c50c954`;
+SHA-256 des vollständigen Katalogbelegs:
+`93da68d0b3b98743f58f0e31438e3294def1a54f3ebd1b707b52f02a65458602`.
+
+**Gebundene Fortsetzung:** Genau ein regulärer PLAN-Zustand **15.b.R**,
+Position **620/900**, als technisches Korrekturbundle **462**. Der Entrypoint
+prüft zunächst die exakten erhaltenen Arbeitsbytes, den Index, die
+ungetrackten Dateien und den W-HEAD. Er schreibt ausschließlich die
+korrigierte Testdatei und diesen Plannachweis; alle übrigen R-Dateien
+bleiben unverändert. Danach prüft er den vollständigen korrigierten
+Commitumfang von **17** Dateien. Ausschließlich die weiterhin fällige
+**Gruppe 2/3 / Sequenz 167** mit **6.816** Tests läuft parallel mit vier
+Workern. Erst nach ihrem Erfolg und den Quell-/Katalog-/Auswahlbindungen
+werden die fünf Fortschrittsmarker auf **620/900**, zuletzt **15.b.R**,
+nächstens **15.b.C**, Bundle **462** und die R-Checkbox gesetzt. Dann folgt
+die exakte PLAN-Commit-Message für 15.b.R. W wird nicht wiederholt, C bleibt
+offen. Bei Fehler bleiben erfolgreiche Commits und tatsächliche Dateien,
+Index und Nachweise erhalten. Der künftige Apply-Erfolg wird nicht
+vorweggenommen; Übergabe als `patch_ready`, danach Ende des Einzelauftrags.
 
 #### 15.b.C – Make it Clean
 

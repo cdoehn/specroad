@@ -24,6 +24,7 @@ from ..security import SafetyViolation
 from ..security.resource_access import opened_resource, directory_entries, resource_is_directory
 from ..storage.json_syntax import parse_json_object
 from ..storage.project import ProjectSource
+from ..srx.errors import SrxError
 from .container import BundleContainer, encode_bundle
 from .errors import BundleError
 from .manifest import MANIFEST_NAME, owned_metadata, check_entries, require
@@ -115,13 +116,25 @@ def _prepare(root):
                               for p in archives if p not in payloads],
     }
     container = BundleContainer(encode_bundle(metadata, payloads))
-    snapshot.verify_current()
-    if _archive_paths(source) != archives or _previous_manifest(source) != previous_manifest:
-        raise InspectionChanged('bundle_inventory_changed')
-    _empty_receipts(source)
-    _preflight(source)
-    source.check_current()
-    return container
+    # Compare the decoded product with the complete selected input, not merely
+    # an internally consistent ZIP inventory. In particular inactive resources
+    # and declarative language-package source bytes must not disappear.
+    require(container.files == payloads, 'bundle_project_payload_incomplete', code='SRV060')
+    require({key: container.manifest[key] for key in metadata} == metadata,
+            'bundle_project_metadata_changed', code='SRV060')
+
+    def verify_current():
+        snapshot.verify_current()
+        if _archive_paths(source) != archives or _previous_manifest(source) != previous_manifest:
+            raise InspectionChanged('bundle_inventory_changed')
+        _empty_receipts(source)
+        _preflight(source)
+        source.check_current()
+
+    verify_current()
+    # The publisher retains this exact observation until the final atomic move;
+    # a fresh snapshot cannot legitimize stale, previously encoded bytes.
+    return container, source, verify_current
 
 
 def prepare_project_bundle(root):
@@ -134,11 +147,13 @@ def prepare_project_bundle(root):
     The returned container does not grant authenticity, approval or write access.
     """
     try:
-        return _prepare(root)
+        return _prepare(root)[0]
     except SafetyViolation as error:
         raise BundleError('unsafe_bundle_project_source', code='SRV083', exit_code=7) from error
     except ModelError as error:
         raise BundleError(error.reason, exit_code=getattr(error, 'exit_code', 3)) from error
+    except SrxError as error:
+        raise BundleError(error.reason, code=error.code) from error
     except OperationFailure as error:
         raise BundleError('bundle_project_preflight_failed', code=None, exit_code=int(error.kind)) from error
     except OSError as error:

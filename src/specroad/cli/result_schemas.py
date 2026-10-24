@@ -91,6 +91,13 @@ def _fields(schema_id):
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),
             "exit_codes": {"type": "object", "additionalProperties": text}, "examples": strings, "scope": text})
+    if schema_id == 'bundle-create-v1':
+        return _object({'format_version': {'const': 'bundle-create-v1'}, 'manifest': obj,
+            'file': _object({'path': nonempty, 'size': count, 'sha256': sha}),
+            'generated': {'const': True}, 'normative': {'const': False},
+            'atomic_snapshot': {'const': False}, 'source_bytes_rechecked': {'const': True},
+            'full_semantic_validation': {'const': False}, 'approval_granted': {'const': False},
+            'write_authorized': {'const': False}})
     if schema_id == 'exchange-export-v1':
         mapping = _object({'mapping_id': nonempty, 'mapping_version': nonempty, 'sha256': sha})
         loss_identity = {'resource_id': nonempty, 'pointer': text,

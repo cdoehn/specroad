@@ -4,18 +4,36 @@
   "requirement_id": "SR-REQ-0568",
   "specification_sha256": "32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84",
   "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-BUNDLE-R-v1"
+  ],
+  "preconditions": [
+    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion."
+  ],
+  "steps": [
+    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
+    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`bundle create` MUSS ungelöste Transaktionen als Projektvollbundle abweisen; ein separat gekennzeichnetes Arbeitspaket folgt dem Export- und Recoveryvertrag aus Anhang P.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "15.b.R ordinary full-project creation rejects unresolved transactions, active locks/staging and unverified completed history without normal bundle completion. Work-package export and Recovery remain separate unfinished obligations."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_diagnostics": [
+    "SRV002",
+    "SRV060",
+    "SRV083"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +46,26 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[archive]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[artifact]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[missing_attachment]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[new_artifact]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[receipt]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[root_manifest]",
+    "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[transaction]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[directory]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[private_image]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[source]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[target]",
+    "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[transaction]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/locks/writer.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/requests/item.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/tmp/staging.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/active/journal.json]",
+    "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/receipts/item/transaction.json]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "15.i: distinct incomplete-work package export and Recovery contract remain open; no normal project bundle success is substituted."
   ]
 }
