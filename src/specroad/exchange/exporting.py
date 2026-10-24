@@ -88,6 +88,42 @@ def _csv(artifacts, mapping, profiles, key, expected, losses):
     return codec.encode(rows), tuple(represented), profile.binding()
 
 
+def _attachment_files(model, attachments, include_attachments, losses):
+    """Verify selected bytes even when transport of attachments is disabled."""
+    payloads = dict(model.source_files)
+    files = []
+    for attachment in attachments:
+        raw = payloads.get(attachment.path)
+        if (type(raw) is not bytes or len(raw) != attachment.size
+                or sha256(raw).hexdigest() != attachment.sha256):
+            raise ExportError('export_attachment_bytes_changed', exit_code=6)
+        if include_attachments:
+            files.append((attachment.path, raw))
+        else:
+            losses.add(attachment.path, '', 'attachments_disabled')
+    return files
+
+
+def _reqif_bounds(model, output_format, reqif_limits, max_archive_bytes):
+    from .reqif import ReqIFLimits
+    if type(reqif_limits) is not ReqIFLimits:
+        raise ExportError('typed_xml_limits_required', exit_code=2)
+    # Explicit caller limits may tighten, never raise project/profile
+    # hard boundaries. Other fields keep their existing codec contract.
+    hard = model.profile.data['merge']['hard_limits']
+    configured = model.configuration.data.get('resource_limits', {})
+    depth = min(reqif_limits.max_depth, configured.get('xml_depth', reqif_limits.max_depth),
+                hard.get('xml_depth', reqif_limits.max_depth))
+    reqif_limits = replace(reqif_limits, max_depth=depth)
+    if output_format == 'reqifz':
+        if type(max_archive_bytes) is not int or max_archive_bytes < 1:
+            raise ExportError('reqifz_expansion_limit_required', exit_code=2)
+        max_archive_bytes = min(max_archive_bytes,
+            configured.get('archive_uncompressed_bytes', max_archive_bytes),
+            hard.get('archive_uncompressed_bytes', max_archive_bytes))
+    return reqif_limits, max_archive_bytes
+
+
 def prepare_export(model, descriptor, *, output_format, mapping_key, expected_mapping_sha256,
                    csv_profile_key=None, expected_csv_profile_sha256=None,
                    include_attachments=False, fail_on_loss=False, reqif_limits=None,
@@ -113,17 +149,7 @@ def prepare_export(model, descriptor, *, output_format, mapping_key, expected_ma
     closure, native, artifacts, resources = export_scope(model, descriptor)
     losses = ExportLosses()
     attachments = tuple(closure.attachments)
-    payloads = dict(model.source_files)
-    files = []
-    for attachment in attachments:
-        raw = payloads.get(attachment.path)
-        if (type(raw) is not bytes or len(raw) != attachment.size
-                or sha256(raw).hexdigest() != attachment.sha256):
-            raise ExportError('export_attachment_bytes_changed', exit_code=6)
-        if include_attachments:
-            files.append((attachment.path, raw))
-        else:
-            losses.add(attachment.path, '', 'attachments_disabled')
+    files = _attachment_files(model, attachments, include_attachments, losses)
     profile = None
     if output_format == 'ndjson':
         from .ndjson import encode_ndjson
@@ -134,22 +160,7 @@ def prepare_export(model, descriptor, *, output_format, mapping_key, expected_ma
         output, represented, profile = _csv(artifacts, mapping, profiles, csv_profile_key,
                                             expected_csv_profile_sha256, losses)
     else:
-        from .reqif import ReqIFLimits
-        if type(reqif_limits) is not ReqIFLimits:
-            raise ExportError('typed_xml_limits_required', exit_code=2)
-        # Explicit caller limits may tighten, never raise project/profile
-        # hard boundaries. Other fields keep their existing codec contract.
-        hard = model.profile.data['merge']['hard_limits']
-        configured = model.configuration.data.get('resource_limits', {})
-        depth = min(reqif_limits.max_depth, configured.get('xml_depth', reqif_limits.max_depth),
-                    hard.get('xml_depth', reqif_limits.max_depth))
-        reqif_limits = replace(reqif_limits, max_depth=depth)
-        if output_format == 'reqifz':
-            if type(max_archive_bytes) is not int or max_archive_bytes < 1:
-                raise ExportError('reqifz_expansion_limit_required', exit_code=2)
-            max_archive_bytes = min(max_archive_bytes,
-                configured.get('archive_uncompressed_bytes', max_archive_bytes),
-                hard.get('archive_uncompressed_bytes', max_archive_bytes))
+        reqif_limits, max_archive_bytes = _reqif_bounds(model, output_format, reqif_limits, max_archive_bytes)
         from ._export_reqif import export_reqif
         output, represented = export_reqif(artifacts, mapping, model, losses,
             attachments=tuple(files), scope_attachments=attachments,

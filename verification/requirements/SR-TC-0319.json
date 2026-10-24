@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Export MUSS Formatversion, Mappingversion, Modellwurzel, einen aus den enthaltenen normativen Zeitstempeln deterministisch abgeleiteten Snapshot-Zeitpunkt, Toolversion, enthaltene IDs, ausgeschlossene Inhalte und erkannte Informationsverluste in einem maschinenlesbaren Manifest dokumentieren; die tatsächliche Ausführungszeit gehört nur in den nicht exportierten Auditbericht.",
-    "scope": "14.l.W provides real project export for all four formats through the CLI and pure preparation API. Native scope/model-root and exact deterministic time are distinct from format bytes and their SHA-256. The separate exchange-export-v1 manifest reports actual representation and attachment/format losses; generated publication rechecks source bytes and never writes normative files. ReqIF uses existing closed typed/carrier/loss contracts. The requirement remains partial; no release or interoperability approval is asserted. 14.l.R adds native prose attachment closure, strict format-option admission, conflict classification and final source rechecks after published-byte verification. The R adversarial matrix is bound to explicit test identities; C and the stated interoperability/approval limits remain open."
+    "scope": "14.l.W provides real project export for all four formats through the CLI and pure preparation API. Native scope/model-root and exact deterministic time are distinct from format bytes and their SHA-256. The separate exchange-export-v1 manifest reports actual representation and attachment/format losses; generated publication rechecks source bytes and never writes normative files. ReqIF uses existing closed typed/carrier/loss contracts. The requirement remains partial; no release or interoperability approval is asserted. 14.l.R adds native prose attachment closure, strict format-option admission, conflict classification and final source rechecks after published-byte verification. The R adversarial matrix is bound to explicit test identities. 14.l.C separates native inventory, dependency resolution, query selection and canonical manifest projection, exact UTC comparison/formatting, and attachment/XML/archive binding. The same W/R behavioral expectations and the stated interoperability/approval limits are retained."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -210,7 +210,6 @@
     "tests/test_project_export_right.py::test_export_unsafe_existing_parent_is_rejected_without_writes[symlink]"
   ],
   "open_items": [
-    "14.l.C: clean shared scope/time/manifest integration without changing results, error contracts or allowed side effects.",
     "ReqIF projection requires actual unambiguous original typed carriers and explicit external occurrence/relation bindings. Unsupported inverse relation value bindings fail closed. This partial implementation does not establish foreign-tool interoperability, loss approval, atomic multi-file publication, full-suite or release success."
   ]
 }

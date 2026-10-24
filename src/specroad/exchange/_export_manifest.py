@@ -1,29 +1,36 @@
 """Exact time and closed manifest projection from an evaluated export."""
 from hashlib import sha256
+import json
+import re
 
 from ..model.audit_values import UtcTimestamp
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 
 
+def _timestamp_key(value):
+    UtcTimestamp(value)
+    calendar = tuple(int(value[start:end]) for start, end in
+                     ((0, 4), (5, 7), (8, 10), (11, 13), (14, 16), (17, 19)))
+    fraction = value[20:-1].rstrip('0') if value[19:20] == '.' else ''
+    return calendar, tuple(int(digit) for digit in fraction)
+
+
+def _format_timestamp(key):
+    (year, month, day, hour, minute, second), digits = key
+    fraction = ''.join(str(digit) for digit in digits)
+    return (f'{year:04}-{month:02}-{day:02}T{hour:02}:{minute:02}:{second:02}'
+            + ('.' + fraction if fraction else '') + 'Z')
+
+
 def snapshot_time(artifacts):
     """Compare UTC calendar fields and decimal digits without numeric rounding."""
     greatest = None
     for artifact in artifacts:
-        value = artifact.get('updated_at')
-        UtcTimestamp(value)
-        calendar = tuple(int(value[start:end]) for start, end in
-                         ((0, 4), (5, 7), (8, 10), (11, 13), (14, 16), (17, 19)))
-        fraction = value[20:-1].rstrip('0') if value[19:20] == '.' else ''
-        candidate = calendar, tuple(int(digit) for digit in fraction)
+        candidate = _timestamp_key(artifact.get('updated_at'))
         if greatest is None or candidate > greatest:
             greatest = candidate
-    if greatest is None:
-        return '1970-01-01T00:00:00Z'
-    (year, month, day, hour, minute, second), digits = greatest
-    fraction = ''.join(str(digit) for digit in digits)
-    return (f'{year:04}-{month:02}-{day:02}T{hour:02}:{minute:02}:{second:02}'
-            + ('.' + fraction if fraction else '') + 'Z')
+    return '1970-01-01T00:00:00Z' if greatest is None else _format_timestamp(greatest)
 
 
 class ExportLossConflict(ModelError):
@@ -35,7 +42,6 @@ class ExportLosses:
         self._items = {}
 
     def add(self, identity, pointer, reason, details=None):
-        import re
         if (type(identity) is not str or not identity or type(pointer) is not str
                 or pointer and not pointer.startswith('/') or re.search(r'~(?![01])', pointer)
                 or type(reason) is not str or re.fullmatch('[a-z][a-z0-9_]*', reason) is None):
@@ -51,7 +57,6 @@ class ExportLosses:
 
     @property
     def rows(self):
-        import json
         return [{'resource_id': key[0], 'pointer': key[1], 'reason': key[2],
                  'format_details': json.loads(self._items[key])}
                 for key in sorted(self._items, key=lambda k: tuple(s.encode('utf-8') for s in k))]

@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 605
-last_completed_plan_commit: 14.l.R
-next_plan_commit: 14.l.C
-last_completed_numbered_bundle: 443
+implementation_plan_commits_completed: 606
+last_completed_plan_commit: 14.l.C
+next_plan_commit: 14.m.W
+last_completed_numbered_bundle: 445
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -21672,7 +21672,7 @@ R-Apply-Erfolg.
 
 #### 14.l.C – Make it Clean
 
-- [ ] **14.l.C** · Position **606/900** · Voraussetzung: `14.l.R`.
+- [x] **14.l.C** · Position **606/900** · Voraussetzung: `14.l.R`.
 **Exakte Commit-Message:** `14.l.C refactor(exchange): Exportumfang und deterministisches Manifest bereinigen`
 
 **Bereinigung:** Die Scope-/Zeit-/Manifestprojektion nach 10.12.3 zentral für alle Formate mit vorhandenen Parsern und Hashdomänen bereitstellen. Keine zweite Formatimplementation, keine neuen Fachwerte und keine Änderung von Fehlern oder Seiteneffekten.
@@ -21680,6 +21680,274 @@ R-Apply-Erfolg.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Bereinigungs- und Teiltestnachweis – Bundle 444, 24. Oktober 2026.**
+Dieser normale C-Zwischenstand bereinigt ausschließlich die bestehende
+Umsetzung von 14.l. SPECROAD-DECISION-1 ist ausdrücklich vorhanden;
+EXPORT-MANIFEST-CONTRACT ist bereits geklärt, eine neue normative
+Entscheidung ist nicht nötig. Spezifikation **0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Der folgende Planschritt 14.m.W bleibt offen.
+
+**Bestätigte technische Basis.** Das nativ geprüfte Result
+`specroad-apply_Result_053934_1024_5c2892.zip`, SHA-256
+`18316e7b3ba216a655d8de8635c7d1b12cc50ae9aef4f34ea3ca8cdc3bc03b37`,
+bestätigt den erfolgreichen, sauberen R-Commit
+`fc1fb689e043361d2a24d713d1440e40fdef9cd3` aus Bundle **443**.
+Sein tatsächlicher paralleler Apply-Lauf bestand **6.442/6.442** Tests
+mit vier Workern, Gruppe **1**, Sequenz **151**, bei **19.326** gesammelten
+Tests. Dieser Nachweis gilt für die gewählte Testgruppe, nicht die Vollsuite.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.195** Snapshotdateien wurden geprüft und mit dem tatsächlichen sauberen
+Apply-Stand abgeglichen. Der Fortschritt bleibt vor der C-Apply-Abnahme
+**605/900**, zuletzt **14.l.R**, nächstens **14.l.C**, Bundle **443**.
+
+**Strukturelle Bereinigung.** Die gemeinsame native Scopeauflösung trennt
+jetzt Ressourceninventar, verifizierte Archivbindungen, Ressourcen- und
+Artefaktabhängigkeiten, tatsächliche Queryseite und kanonische
+Manifestprojektion in private Funktionen. Der öffentliche Ablauf verwendet
+weiter dieselben Parser, Auswahl-/Closureverträge und Hashdomänen in derselben
+Prüfreihenfolge. Er ermittelt zuerst den vollständigen nativen Umfang und
+erst danach die formatspezifische Darstellung. Proseanhänge, externe
+Registrybindungen, aktive Profile, Reviewstatus, schwache Grenzen und
+historische Archive behalten ihre bisherigen Fachwerte und Fehler.
+
+Die exakte UTC-Zeitprojektion trennt validierten Vergleichsschlüssel und
+kanonische Formatierung. Manifest und ReqIF verwenden weiterhin denselben
+Einstiegspunkt; beliebig lange dezimale Bruchteile werden nicht gerundet,
+Endnullen bleiben normalisiert, der leere Umfang behält den Epochenwert.
+Verlustidentitäten, Konfliktklassifikation, getrennte Detailkopien und die
+geschlossene Manifesthülle bleiben erhalten.
+
+Die Exportvorbereitung bündelt die Prüfung tatsächlicher Anhangbytes sowie
+die bestehenden XML-/Archivgrenzen in privaten Funktionen. Ausgeschalteter
+Anhangtransport umgeht weiterhin keine Bindungsprüfung. Callergrenzen können
+Projekt-/Profilgrenzen nur verschärfen. Formatauswahl, vorhandene Codecs,
+Ausgabe- und Manifestbytes, Fehlerprioritäten und zulässige Seiteneffekte
+bleiben erhalten. Der Veröffentlichungswriter wurde nicht verändert.
+
+**Gezielte parallele Regressionsabnahme.** **2.595/2.595** betroffene
+Verhaltenstests bestanden mit **vier Workern**, beobachteter Prozessabschluss
+**0**, alle Outcomes `passed`. Darin sind alle **160** vorhandenen W-/R-Tests
+von 14.l enthalten. Sämtliche Testdateien und Erwartungswerte sind bytegleich
+zur gebundenen R-Basis. Es gibt keine neuen Testidentitäten; alle **19.326**
+festen Testnummern bleiben unverändert. Vollständige Collection-/Katalogprüfung:
+**19.326** Tests, gültiger Katalog und **0** ausgeführte Testkörper. Der
+Verhaltenslauf bleibt ein Teiltest mit `full_suite_passed=null`.
+
+Geprüfte Testdateien:
+
+- `tests/test_baseline_verification.py`
+- `tests/test_baseline_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_configuration_scope.py`
+- `tests/test_configuration_scope_right.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_csv_export_compatibility.py`
+- `tests/test_description.py`
+- `tests/test_document_prose.py`
+- `tests/test_document_prose_right.py`
+- `tests/test_document_structure.py`
+- `tests/test_document_structure_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_options.py`
+- `tests/test_profile_composition.py`
+- `tests/test_profile_composition_right.py`
+- `tests/test_project_export.py`
+- `tests/test_project_export_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_registry.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_preservation.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requests.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_scope_closure.py`
+- `tests/test_scope_closure_right.py`
+- `tests/test_scope_seeds.py`
+- `tests/test_scope_seeds_right.py`
+- `tests/test_verification.py`
+
+Die unveränderten Abnahmen decken die vier Formate, alle Scopearten,
+Konfigurations- und Querybindungen, historische Baselines, exakte Zeiten,
+leere und teilweise dargestellte Umfänge, Verlustdetails, Originalträger,
+Anhangbytes, Ressourcen- und Größenlimits sowie echte CLI- und
+Distributionspfade ab. Bestehende adversarielle Fälle prüfen Quellenwechsel,
+falsche Bindungen, widersprüchliche Verluste, Pfadkollisionen, Symlinks,
+Fremdprojekte und Teilabbrüche der Veröffentlichung. Fachliche Erwartungswerte
+wurden nicht an das Refactoring angepasst.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `1de1f98b84f489704dfeb916c79aede5cce7c0246ae5553e8f56e4bfebc3124c`.
+- Selektionsdatei-SHA-256: `41a88c69acfcc7ba4dc910018a45dbbb2d15fd5eee336acffa58b8a1026d8f33`.
+- Beobachtungsdatei-SHA-256: `76c883de2b41a69b57b1621f651f5cfb8069a458d8a2db804b3ff89954a7a26e`.
+- Katalog-SHA-256: `0cbe46f141523db93c325511bd917772cb52527267ba81cb6868c3a2191467c2`.
+
+SR-TC-0319/0328/0329/0332 behalten ihre **160** Testidentitäten, die bestehende
+synthetische Fixture und den Status **partial**. Nur die beschriebene
+C-Bereinigung wird nachgeführt; die ausdrücklich genannten Grenzen für
+ReqIF-Inversabbildung, Fremdtool-Interoperabilität, persönliche Verlustfreigabe,
+atomare Mehrdateipublikation, Vollsuite und Release bleiben bestehen.
+
+**Ausstehende Apply-Abnahme.** Der Entrypoint stellt genau diesen gezielt
+geprüften C-Zustand her und führt ausschließlich die fällige stabile
+Testgruppe **2**, Sequenz **152**, mit **6.442** Tests und vier Workern aus.
+Erst nach erfolgreicher gebundener Apply-Abnahme werden genau fünf Planmarker
+auf **606/900**, zuletzt **14.l.C**, nächstens **14.m.W**, Bundle **444** und
+die C-Checkbox gesetzt. Danach erzeugt ausschließlich Apply den vorgesehenen
+C-Commit. Kein zusätzlicher Voll- oder Serienlauf. Fehler erhalten die bereits
+vorhandenen Commits und den tatsächlichen Zustand. Dieser Nachweis bescheinigt
+keinen vorweggenommenen C-Apply-Erfolg.
+
+**Technische Korrektur und Wiederaufnahme – Bundle 445, 24. Oktober 2026.**
+Das maßgebliche Result `specroad-apply_Result_061708_1024_a0d078.zip`,
+SHA-256 `d48c7f86ebcdbb3535176176da321aa77f97116f5aab2b3e6ee519a448ab4bb8`,
+meldet den fehlgeschlagenen Apply-Versuch von Bundle **444**. Der vollständige
+zurückgegebene Zustand besteht aus dem Base-Snapshot und seinen exakt acht
+unstaged Änderungen; staged und untracked Dateien fehlen. Alle **2.195**
+Dateien wurden rekonstruiert und mit dem tatsächlichen Apply-Arbeitsbaum
+abgeglichen. HEAD bleibt `fc1fb689e043361d2a24d713d1440e40fdef9cd3`,
+der gebundene Fingerprint ist nun `107d34d230786212`. Kein neuer Commit,
+kein Fortschritt und kein Weiterschalten der Testrotation sind entstanden.
+Die zuvor dokumentierten C-Entwicklungstests bleiben historische Teilnachweise;
+sie bescheinigen keinen Apply-Erfolg.
+
+**Beobachteter Fehler.** Der parallele Apply-Lauf mit vier Workern,
+Gruppe **2**, Sequenz **152**, sammelte **19.326** Tests und führte
+**6.442** aus: **6.440 bestanden**, genau **zwei fehlgeschlagen**.
+Betroffen waren
+`CapabilityScopeTests.test_proposal_record_schema_is_not_an_executable_proposal_workflow`
+und `SchemaCatalogChangePlanTests.test_public_factory_inventory_equals_retrievable_catalog`.
+Die erste Prüfung erwartete noch eine leere globale Austauschformatliste;
+die zweite ließ `exchange-export-v1` in ihrem expliziten Factoryinventar aus.
+Beide Annahmen stammen aus dem Stand vor der bereits committeden
+Exportintegration von 14.l.W. Capability- und Katalogimplementierung sind
+gegenüber der R-Basis unverändert; die C-Bereinigung verursacht kein neues
+fachliches Selbstbeschreibungsverhalten.
+
+**Begründete technische Testkorrektur.** SR-REQ-0376 verlangt die aktivierten
+Austauschformate, SR-REQ-0377/0378 das vollständige verfügbare Schemainventar
+und seine abrufbaren Inhalte. SR-REQ-0313 sowie der bereits geklärte Vertrag
+10.12.3 legen die vier Formate und das gemeinsame Manifest fest. Die korrigierte
+Capabilityprüfung erwartet daher die vier bereits ausgeführten Exportformate.
+Sie prüft zusätzlich mit derselben Registry ohne den Exporthandler die leere
+Formatliste: ein vorhandenes Proposal-Recordschema allein aktiviert keinen
+Export. Die bisherigen negativen Proposal-Versions- und Befehlsgruppenprüfungen
+bleiben unverändert. Das explizite Factoryinventar erhält den einen verfügbaren
+Manifestschemaeintrag; seine vollständige Mengen-, Anzahl-, Inhalts-,
+Metadaten- und SHA-Prüfung bleibt bestehen. Es wird weder ein Istwert als
+Erwartung übernommen noch eine Fehlprüfung gelöscht oder abgeschwächt.
+
+Dies ist eine notwendige technische Korrektur vor dem ersten erfolgreichen
+C-Commit. Die Produktquellen, die **160** W-/R-Tests von 14.l samt ihren
+Erwartungswerten, die Requirementnachweise, Fixtures und feste Testnummerierung
+bleiben bytegleich zum zurückgegebenen C-Zustand. Es gibt keine neue
+Spezifikationsentscheidung, kein neues Feature und keine neue Testidentität.
+SPECROAD-DECISION-1 ist vorhanden; Spezifikation **0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt unverändert. Der noch offene PLAN-Commit **14.l.C** behält seine
+exakte Message; ein zusätzlicher künstlicher FIX- oder C-Commit wird nicht
+vorgeschaltet. Die Planposition bleibt vor Apply **605/900**.
+
+**Gezielte parallele Abnahme.** **2.613/2.613** Verhaltenstests bestanden
+mit **vier Workern**, Prozessabschluss **0**, alle Outcomes `passed`.
+Die Auswahl umfasst die bisherigen C-Regressionen einschließlich aller
+**160** W-/R-Tests und beide vollständig ausgeführten korrigierten Testdateien.
+Die vollständige Collection-/Katalogprüfung ist bei unveränderten **19.326**
+Identitäten gültig; sie führte **0** Testkörper aus. Der Verhaltenslauf ist
+ausdrücklich ein Teiltest, `full_suite_passed=null`.
+
+Geprüfte Testdateien:
+
+- `tests/test_baseline_verification.py`
+- `tests/test_baseline_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_capability_scope.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_configuration_scope.py`
+- `tests/test_configuration_scope_right.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_csv_export_compatibility.py`
+- `tests/test_description.py`
+- `tests/test_document_prose.py`
+- `tests/test_document_prose_right.py`
+- `tests/test_document_structure.py`
+- `tests/test_document_structure_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_options.py`
+- `tests/test_profile_composition.py`
+- `tests/test_profile_composition_right.py`
+- `tests/test_project_export.py`
+- `tests/test_project_export_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_registry.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_preservation.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requests.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_scope_closure.py`
+- `tests/test_scope_closure_right.py`
+- `tests/test_scope_seeds.py`
+- `tests/test_scope_seeds_right.py`
+- `tests/test_verification.py`
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `c82fcdb441d9e74ea31ee46422b099763f960a126c9c2b002aaccd0d46974909`.
+- Selektionsdatei-SHA-256: `e1b7c2a86403b0c84b70ed22e475181718a42f33b245c486cd1f59b353b101c2`.
+- Beobachtungsdatei-SHA-256: `effd0438429d456975334c46180ccb60b15a5de63cf4669033e8727ff343ddc1`.
+- Katalog-SHA-256: `0cbe46f141523db93c325511bd917772cb52527267ba81cb6868c3a2191467c2`.
+
+**Gebundene Wiederaufnahme und offene Apply-Abnahme.** Der Entrypoint
+akzeptiert zu Beginn ausschließlich die acht exakt zurückgegebenen unstaged
+Dateibilder bei unverändertem HEAD, ohne staged oder untracked Dateien.
+Die vierfache PatchHarbor-Bindung verwendet ausschließlich dieses neue
+Result. Fremde Abweichungen werden abgewiesen; es gibt keine Bereinigung,
+Rücksetzung oder Übernahme eines vermuteten sauberen Zustands. Die bereits
+vorhandene C-Änderung bleibt erhalten und wird mit den zwei Testkorrekturen
+und diesem Nachweis als ein tatsächlicher Zwischenstand geprüft.
+
+Apply führt erneut ausschließlich die fällige Gruppe **2**, Sequenz **152**,
+mit **6.442** Tests und vier Workern aus. Erst nach ihrem gebundenen Erfolg
+werden die fünf Planmarker auf **606/900**, zuletzt **14.l.C**, nächstens
+**14.m.W**, Bundle **445** und die C-Checkbox gesetzt und anschließend der
+vorgesehene PLAN-Commit erzeugt. Dessen Scope enthält die bereits vorhandenen
+acht Änderungen sowie die beiden korrigierten Testdateien. Nur der erfolgreiche
+Commit schaltet zur nächsten Gruppe weiter. Fehler erhalten alle bestehenden
+Commits und den wirklichen Arbeitszustand. Kein zusätzlicher Voll-/Serienlauf,
+keine vorweggenommene Apply-, Interoperabilitäts- oder Releasefreigabe.
 
 <a id="step-14-m"></a>
 ### 14.m – Mehrsprachiger Requirement-Austausch

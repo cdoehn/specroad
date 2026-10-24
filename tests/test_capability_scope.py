@@ -77,7 +77,10 @@ class CapabilityScopeTests(unittest.TestCase):
         semantic = capabilities(builtin_registry())['semantic']
         self.assertEqual(semantic['supported_versions']['proposal'], [])
         self.assertNotIn('proposal', semantic['command_groups'])
-        self.assertEqual(semantic['exchange_formats'], [])
+        self.assertEqual(semantic['exchange_formats'], ['csv', 'ndjson', 'reqif', 'reqifz'])
+        without_export = CommandRegistry(tuple(command for command in builtin_registry().commands
+                                               if command.command_id != 'export'))
+        self.assertEqual(capabilities(without_export)['semantic']['exchange_formats'], [])
 
     def test_library_versions_do_not_invent_schema_catalog_ids(self):
         catalog = SchemaCatalog()

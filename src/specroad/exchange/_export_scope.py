@@ -17,9 +17,7 @@ def resource_identity(record):
     return value['path'] if 'path' in value else value['id'] + '@' + value['version']
 
 
-def export_scope(model, descriptor):
-    """Bind native selection and closure; never accept asserted inventories/hashes."""
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+def _scope_resources(model):
     by_resource = {resource_identity(r): r for r in model.resources}
     if len(by_resource) != len(model.resources):
         raise ModelError('export_resource_identity_conflict')
@@ -27,6 +25,10 @@ def export_scope(model, descriptor):
         r.data.get('version') if r.data['kind'] in ('profile', 'rule', 'mapping') else None,
         r.data['kind'] == 'profile' and name in model.profile.profile_chain)
         for name, r in by_resource.items()]
+    return by_resource, resources
+
+
+def _archive_bindings(model, records):
     archives = {}
     for record in records:
         if record.identity.artifact_type == 'baseline':
@@ -36,8 +38,11 @@ def export_scope(model, descriptor):
                 tuple(SnapshotObject(d.content) for d in model.resource_files
                       if d.path.startswith('archive/objects/')))
             archives[record.identity.id] = tuple(sorted({r['object_path'] for r in record.data['manifest']}))
-    inventory = ScopeSeedInputs(model.configuration, records, resources, archive_bindings=archives)
-    active = {r.resource_id for r in resources if r.active}
+    return archives
+
+
+def _resource_uses(model, by_resource):
+    """Bind mapping dependencies and the actual composed profile resources."""
     uses = {resource_node(name): set() for name in by_resource}
     from ..storage.json_syntax import parse_json_object
     from ..mappings import ExternalIdentityRegistry
@@ -68,7 +73,12 @@ def export_scope(model, descriptor):
             key = rule.get('rule_id', '') + '@' + rule.get('version', '')
             if key in by_resource:
                 uses[resource_node(resource.key)].add(resource_node(key))
-    attachments = {d.path: d for d in model.attachment_descriptors}
+    return uses, registries
+
+
+def _artifact_uses(records, active, attachments, registries, by_resource):
+    """Resolve artifact references through the existing native parsers."""
+    uses = {}
     for record in records:
         data = record.data
         targets = {resource_node(key) for key in active}
@@ -106,11 +116,10 @@ def export_scope(model, descriptor):
                     raise ModelError('export_mapping_dependency_missing')
                 targets.add(resource_node(key))
         uses[artifact_node(record.identity.id)] = targets
-    reviews = RelationReviewStatuses(records)
-    dependencies = ClosureBindings(inventory,
-        uses={key: tuple(value) for key, value in uses.items()},
-        current_reviews={r.relation_id: r.matching_review_ids for r in reviews.statuses},
-        attachments=attachments)
+    return uses
+
+
+def _query_page(model, descriptor, records, inventory):
     page = None
     value = descriptor.data
     if value['scope_kind'] == 'query':
@@ -121,8 +130,11 @@ def export_scope(model, descriptor):
                                configuration_id=value['configuration_id'])
         page = QuerySeedPage(descriptor, inventory, [r['id'] for r in result.data['items']],
                              total=result.data['total'])
-    seeds = resolve_scope_seeds(descriptor, inventory, query_page=page)
-    closure = resolve_scope_closure(seeds, dependencies, query_page=page)
+    return page
+
+
+def _native_manifest(model, descriptor, inventory, seeds, closure, records, by_resource):
+    """Project the selected native bytes through the canonical manifest domain."""
     selected = {r.identity.id: r for r in records if r.identity.id in closure.artifact_ids}
     manifest_resources = [by_resource[key] for key in closure.resource_ids]
     manifest_resources.extend(ManifestResource(model.binding, {'kind': 'artifact', 'id': key,
@@ -134,6 +146,28 @@ def export_scope(model, descriptor):
         [r for r in rows if r['kind'] not in ('artifact', 'attachment', 'archive')],
         [r for r in rows if r['kind'] == 'attachment'],
         [r.data for r in closure.boundary_references],
-        seeds.configuration_sha256 if value['configuration_id'] is not None else inventory.configuration_sha256,
+        seeds.configuration_sha256 if descriptor.data['configuration_id'] is not None else inventory.configuration_sha256,
         model.profile.sha256, archive_objects=[r for r in rows if r['kind'] == 'archive']))
-    return closure, native, tuple(selected[key].data for key in closure.artifact_ids), by_resource
+    return native, tuple(selected[key].data for key in closure.artifact_ids)
+
+
+def export_scope(model, descriptor):
+    """Bind native selection and closure; never accept asserted inventories/hashes."""
+    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+    by_resource, resources = _scope_resources(model)
+    archives = _archive_bindings(model, records)
+    inventory = ScopeSeedInputs(model.configuration, records, resources, archive_bindings=archives)
+    active = {r.resource_id for r in resources if r.active}
+    uses, registries = _resource_uses(model, by_resource)
+    attachments = {d.path: d for d in model.attachment_descriptors}
+    uses.update(_artifact_uses(records, active, attachments, registries, by_resource))
+    reviews = RelationReviewStatuses(records)
+    dependencies = ClosureBindings(inventory,
+        uses={key: tuple(value) for key, value in uses.items()},
+        current_reviews={r.relation_id: r.matching_review_ids for r in reviews.statuses},
+        attachments=attachments)
+    page = _query_page(model, descriptor, records, inventory)
+    seeds = resolve_scope_seeds(descriptor, inventory, query_page=page)
+    closure = resolve_scope_closure(seeds, dependencies, query_page=page)
+    native, artifacts = _native_manifest(model, descriptor, inventory, seeds, closure, records, by_resource)
+    return closure, native, artifacts, by_resource
