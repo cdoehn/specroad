@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 17
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 618
-last_completed_plan_commit: 15.a.C
-next_plan_commit: 15.b.W
-last_completed_numbered_bundle: 459
+implementation_plan_commits_completed: 619
+last_completed_plan_commit: 15.b.W
+next_plan_commit: 15.b.R
+last_completed_numbered_bundle: 460
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -23782,12 +23782,126 @@ Nachweise erhalten. Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen.
 
 #### 15.b.W – Let it Work
 
-- [ ] **15.b.W** · Position **619/900** · Voraussetzung: `15.a.C`.
+- [x] **15.b.W** · Position **619/900** · Voraussetzung: `15.a.C`.
 **Exakte Commit-Message:** `15.b.W feat(bundle): Vollprojektbundle erzeugen aufbauen`
 
 **Umsetzung:** Project/closed-Bundle mit vollständig schreibbarem Modell und notwendigen Objekten erzeugen.
 
 **Verhaltensabnahme:** Verifiziertes Bundle enthält die vollständige Projektclosure.
+
+**Umsetzungs- und Prüfnachweis 15.b.W, Bundle 460 (2026-10-24).**
+
+**Bestätigte Basis.** Das ausdrücklich gebundene Result
+`specroad-apply_Result_190819_1024_1e9d71.zip`, SHA-256
+`539556c2634069c3143e57cef4bc3f2d2aea7750576fdf0ba4bf76957c810269`,
+bestätigt den sauberen Commit
+`05146dc8d071836ac0e228cc2a6c834c14dda15f` für **15.a.C**, Bundle **459**.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run- und Ausführungslog sowie
+alle **2.220** Snapshot-Dateien wurden geprüft und mit dem tatsächlichen
+Apply-Stand lesend abgeglichen. Die Vierfachbindung verwendet unverändert
+Repository `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, obigen Basiscommit,
+Fingerprint `7c9d2a24e397e0e5` und `patchharbor-state-v1`.
+
+Die tatsächlichen Auswahl-, Katalog- und Einzeloutcome-Dateien bestätigen
+**6.786/6.786** bestandene Apply-Tests mit **vier parallelen Workern**,
+**Sequenz 165, Gruppe 0/3**. Die Auswahl aus **20.357** dauerhaften
+Identitäten wurde nachvollzogen; ihre Auswahlbindung hat SHA-256
+`f3ec7a3d545fb486c650bd171b4e6f5449d59119417e9e446295d3ea15a0160a`.
+Der erfolgreiche Commit folgt unmittelbar auf den bestätigten R-Stand.
+Die fünf bestätigten Planmarker wurden in Dev nachgeführt: **618/900**,
+zuletzt **15.a.C**, nächstens **15.b.W**, Bundle **459**.
+
+**Regulärer W-Ausschnitt.** `prepare_project_bundle(root)` erzeugt im
+Speicher einen kanonischen Project/closed-Container aus einem tatsächlich
+gelesenen, nicht konfigurationsgefilterten Projekt. Die vorhandene
+`InspectionSnapshot`-Inventur, native Scope-/Closure-Auflösung und
+Modellmanifestdomäne bestimmen Inhalte und Hashes. Artefaktschemata,
+Profilkomposition, Referenzen und benötigte Objektbindungen werden geprüft;
+eine frei behauptete Payloadliste oder Modellwurzel wird nicht übernommen.
+Kontrollartefakte einschließlich Proposals und Baselines, Profile, Regeln,
+Mappings, Sprachregister und die tatsächlich gespeicherten deklarativen
+Sprachpakete bleiben enthalten. Referenzierte Anhänge und historische
+Baselineobjekte werden in ihren unveränderten Bytes transportiert.
+
+Ursprungs- und Bundlemodellwurzel sind identisch; der Descriptor ist
+`project`, `closed`, ohne Konfigurationsfilter und ohne Boundary References.
+Die Transportkennzeichnung lautet `read_only=false`. Sie erteilt keine
+Schreibberechtigung. Nicht referenzierte, tatsächlich inventarisierte
+Archivobjekte werden gezielt ausgelassen und mit
+`unreferenced_archive_object` deklariert. Das vorhandene Rootmanifest eines
+Vollprojekts wird neu erzeugt; ein Partial-Marker verhindert die Promotion
+auch bei zufällig geschlossener aktueller Payload. Lokale Werkzeugdateien,
+Repositorydaten, generierte Dateien und Caches werden nicht transportiert.
+
+Die M6-/15.a-Codecs bleiben unverändert der einzige ZIP-/Manifestpfad.
+Abschließende Wiederlesungen prüfen beobachtete Änderungen der Quellbytes,
+Inventare, Rootmarker und Betriebszustände. Der Erzeuger schreibt keine
+Datei, initialisiert keine Betriebsstruktur und nimmt keinen Lock.
+Ungelöste Transaktionen verhindern die Erzeugung mit Exit 5. Ein Ergebnis
+ist weder atomarer Mehrdateisnapshot noch vollständiger semantischer
+Projekt-, Authentizitäts-, Freigabe- oder Extraktionsnachweis.
+
+**Explizite W-Grenze.** Dieser erste Live-Erzeuger unterstützt die nach E.1.1
+zulässige, tatsächlich vollständig beobachtete **leere Receiptmenge**.
+Beide passiven Receiptwurzeln werden eigens über sichere Verzeichnishandles
+geprüft; der normale flache Preflight allein genügt dafür nicht. Sobald
+Inhalte vorhanden sind, wird mit
+`bundle_portable_receipt_provider_required`/Exit 5 abgebrochen. Eine
+ungeprüfte oder nicht transportierte Historie wird nicht als `portable`
+ausgegeben. Auswahl, Validierung und Transfer nichtleerer Betriebssektionen
+samt Replay bleiben **15.g** vorbehalten. Die Produktions-CLI mit sicherer
+Ausgabeveröffentlichung und weitere Inventar-/Fehlerhärtung bleiben in
+**15.b.R**, die Bereinigung in **15.b.C** offen; unabhängige Bundleprüfung
+und Extraktion folgen in **15.d/15.e**. Die unabhängige Materialisierung im
+Test prüft die vorhandenen nativen Leser und ersetzt keinen Extraktor.
+
+**SPECROAD-DECISION-1** wurde geprüft; die bestehenden Vorgaben reichen
+für diesen regulären W-Ausschnitt aus. Spezifikation **0.2.22** bleibt
+bytegleich, SHA-256
+`32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`.
+Es wird keine normative Klärung und keine Änderung fachlicher Abnahmen
+vorgenommen. SR-TC-0386/0407/0481 bleiben ausdrücklich **partial**.
+
+**Gezielte Entwicklungsprüfung.** Alle **421/421** ausgewählten
+Verhaltenstests bestanden unter Linux/Python 3.14.4 mit **vier parallelen
+Workern**: **29** neue Project-Bundle-Fälle, **248** bestehende Bundlecodec-
+Fälle, **78** Scope-Seed-Fälle, **23** Projekt-Export- und **43**
+Projektinitialisierungsfälle. Die vollständige Collection-/Katalogprüfung
+erfasste **20.386** Testidentitäten mit **0** ausgeführten Testkörpern und
+ohne Katalogfehler. Neue Nummern **20357–20385** wurden hinten angehängt;
+alle bisherigen Nummern und beide Rotationsanker bleiben unverändert.
+Testauswahl und tatsächliche Einzeloutcomes wurden mit der Collection
+abgeglichen. Die ursprünglichen Testdateien und unabhängigen ZIP-Vektoren
+bleiben bytegleich.
+
+Die frühen lokalen Versuche deckten eine fehlende Fixture-Registrierung
+und zwei Fehler im neuen Fixtureaufbau auf: einen Anhang am falschen
+Artefakttyp und eine zunächst ungebundene Anhangreferenz beim Aufbau des
+TargetModel. Diese Testdaten wurden berichtigt; die nativen Schema- und
+Bindungsprüfungen wurden nicht abgeschwächt. Nur der anschließend vollständig
+bestandene gezielte Lauf ist der Übergabenachweis.
+
+Geprüfter Quellstand:
+`084c8345fea8d7134aafb376f794900757e6d5ce20d56e1460367fe9344d8de0`.
+SHA-256 der tatsächlichen Auswahlbeobachtung:
+`7f6b290cf32c3e1acb8b14e42645febd30637dcc525c2803f9a07ae5e96485e6`;
+SHA-256 der tatsächlichen Einzeloutcomes:
+`6f55a965465e9b46e4e75d4bbcdb5a616da0772d208c2ba6b70eafe3ac643ff6`;
+SHA-256 des vollständigen Katalogbelegs:
+`a3a0d1f7911ba0d488ac6cb5653ebe6cc4f71790f2a586827a607d7712b5a480`.
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+
+**Vorgesehene Übergabe.** Genau ein regulärer PLAN-Zustand **15.b.W**,
+Position **619/900**. Der Entrypoint prüft den sauberen gebundenen Basisstand,
+stellt ausschließlich den gezielt geprüften W-Zustand her und startet
+**Gruppe 1/3**, **Sequenz 166**, mit **6.795** Tests und vier Workern.
+Die bewährte private `build/`-Ablage für Testberichte und temporäre Dateien
+bleibt erhalten. Erst nach erfolgreichem Gate und passenden Quell-,
+Nummerierungs- und Auswahlbindungen setzt er die fünf Planmarker auf
+**619/900**, zuletzt **15.b.W**, nächstens **15.b.R**, Bundle **460** und
+die W-Checkbox und erzeugt die exakte PLAN-Commit-Message. Bei Fehler bleiben
+Arbeitsbaum, Index, Nachweise und erfolgreiche Commits erhalten. Ein
+zukünftiger Apply-Erfolg wird nicht vorweggenommen.
 
 #### 15.b.R – Make it Right
 

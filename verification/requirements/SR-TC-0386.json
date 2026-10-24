@@ -4,18 +4,35 @@
   "requirement_id": "SR-REQ-0386",
   "specification_sha256": "32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84",
   "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-BUNDLE-W-v1"
+  ],
+  "preconditions": [
+    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion."
+  ],
+  "steps": [
+    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad bundle create --scope project\\|document\\|release` MUSS ein selbstbeschreibendes Bundle mit der kanonischen Scope-/Kind-/Read-only-Kombination aus Anhang E.3 und allen für diesen Scope notwendigen Payloads erzeugen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "15.b.W read-only in-memory full-project preparation with exact native closure and payload bytes, including controls, configured language packages and required archive/attachment objects. Verified empty receipt inventories only; no arbitrary-bundle semantic verifier, portable receipt transfer, production extraction, CLI publication or write authority is claimed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_diagnostics": [
+    "SRV002",
+    "SRV060",
+    "SRV083"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +45,39 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_project_bundle.py::test_baselines_keep_every_referenced_historical_object",
+    "tests/test_project_bundle.py::test_changes_during_encoding_cannot_return_stale_success[archive]",
+    "tests/test_project_bundle.py::test_changes_during_encoding_cannot_return_stale_success[artifact]",
+    "tests/test_project_bundle.py::test_changes_during_encoding_cannot_return_stale_success[new_artifact]",
+    "tests/test_project_bundle.py::test_changes_during_encoding_cannot_return_stale_success[receipt]",
+    "tests/test_project_bundle.py::test_changes_during_encoding_cannot_return_stale_success[transaction]",
+    "tests/test_project_bundle.py::test_complete_project_preserves_native_bytes_controls_and_model_root",
+    "tests/test_project_bundle.py::test_explicitly_empty_receipt_directories_are_checked_and_accepted",
+    "tests/test_project_bundle.py::test_fresh_initialized_project_keeps_all_language_package_sources",
+    "tests/test_project_bundle.py::test_host_location_creation_order_and_mtime_do_not_change_bundle",
+    "tests/test_project_bundle.py::test_invalid_native_artifact_fields_are_not_hidden_by_valid_container_hashes",
+    "tests/test_project_bundle.py::test_missing_relation_target_cannot_become_an_empty_boundary_list",
+    "tests/test_project_bundle.py::test_missing_required_payload_never_becomes_a_closed_bundle[archive]",
+    "tests/test_project_bundle.py::test_missing_required_payload_never_becomes_a_closed_bundle[attachment]",
+    "tests/test_project_bundle.py::test_missing_required_payload_never_becomes_a_closed_bundle[profile]",
+    "tests/test_project_bundle.py::test_missing_required_payload_never_becomes_a_closed_bundle[registry]",
+    "tests/test_project_bundle.py::test_nonempty_receipt_history_is_not_silently_omitted[.specroad/requests/item.json]",
+    "tests/test_project_bundle.py::test_nonempty_receipt_history_is_not_silently_omitted[.specroad/transactions/receipts/item/transaction.json]",
+    "tests/test_project_bundle.py::test_partial_marker_cannot_be_promoted_even_when_payload_has_closed_project_shape",
+    "tests/test_project_bundle.py::test_relocated_payload_reopens_as_complete_normal_project",
+    "tests/test_project_bundle.py::test_representation_bytes_are_retained_without_changing_semantic_root",
+    "tests/test_project_bundle.py::test_source_links_are_not_followed[.specroad/requests]",
+    "tests/test_project_bundle.py::test_source_links_are_not_followed[attachments/owned.bin]",
+    "tests/test_project_bundle.py::test_source_links_are_not_followed[profiles/core.json]",
+    "tests/test_project_bundle.py::test_unreferenced_archive_optimization_is_explicit_and_not_a_model_change",
+    "tests/test_project_bundle.py::test_unrelated_repository_cache_generated_and_previous_manifest_are_not_payload",
+    "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/locks/writer.json]",
+    "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/tmp/staging.json]",
+    "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/transactions/active/journal.json]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "15.b.R/C: complete CLI output integration, inventory/failure hardening and structural cleanup of this same project-creation slice.",
+    "Document/release partial bundles (15.c), independent bundle verification (15.d), production extraction (15.e) and validated nonempty receipt selection/transfer/replay (15.g) remain open. Nonempty receipt histories currently fail closed instead of pretending portable completeness."
   ]
 }
