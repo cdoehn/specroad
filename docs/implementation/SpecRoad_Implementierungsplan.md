@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 613
-last_completed_plan_commit: 14.o.W
-next_plan_commit: 14.o.R
-last_completed_numbered_bundle: 452
+implementation_plan_commits_completed: 614
+last_completed_plan_commit: 14.o.R
+next_plan_commit: 14.o.C
+last_completed_numbered_bundle: 453
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -22917,12 +22917,213 @@ kein Volltest, kein serieller Test und kein CI-Start gehören zu diesem Bundle.
 
 #### 14.o.R – Make it Right
 
-- [ ] **14.o.R** · Position **614/900** · Voraussetzung: `14.o.W`.
+- [x] **14.o.R** · Position **614/900** · Voraussetzung: `14.o.W`.
 **Exakte Commit-Message:** `14.o.R feat(exchange): Format-Roundtrips und Importfortsetzung vervollständigen`
 
 **Vervollständigung:** Veränderte Reviewbindung wird suspect/unreviewed; geteilte Verarbeitung verliert kein Objekt.
 
 **Verhaltensabnahme:** Einzellauf und vollständige Workfolge ergeben denselben Importplan und Zielstand. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungs- und Prüfnachweis 14.o.R, Bundle 453 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_125134_1024_5419c2.zip`, SHA-256
+`b176840752416c08eeb340648198a17fffe1d9bc2f6209d6f3fbe69450893071`,
+bestätigt den sauberen Commit `0796c9ca512e86bf595cfa55fa219dc6d97c56f9`
+für **14.o.W**, Position **613/900**, Bundle **452**, mit Vorgänger
+`359f48a13e35b0a8c66695aa46a8f789792ba272`. Alle **2.205** Snapshotdateien,
+Vierfachbindung, Manifest-/Rundaten, Ausführungslogs und read-only geprüfter
+Apply-Arbeitsbaum stimmen überein. Die gebundene Apply-Teilprüfung hat
+**6.678/6.678** Tests in Gruppe **0**, Sequenz **159**, mit vier Workern
+bestanden. Tatsächliche Outcomes, Quellhash und Identitäten wurden geprüft;
+die fünf bestätigten Planmarker sind entsprechend in Dev angeglichen.
+
+**Implementierter R-Ausschnitt.** Der geschlossene Einbettungsadapter
+`exchange.import_work` setzt den bereits bestehenden Importvertrag
+`explicit_parsed_artifacts` mit echten persistenten Work-Einheiten fort.
+Er registriert keine neue öffentliche CLI und parst keine beliebigen
+Quelldateien. Der vertrauenswürdige Aufrufer liefert Registry, explizite
+Kandidaten, Mapping, vollständige Erstellungshüllen und Autorenmetadaten.
+`prepare_import_work` speichert die tatsächlich eigenen Modell-, Ressourcen-,
+Mapping-, Quell- und Kandidatenbytes sowie deklarierte Einheiten. Ursprüngliche
+absolute Projektpfade, ausführbare Callbacks und Publikationsbefugnis werden
+nicht gespeichert. Das geschlossene Ergebnisprotokoll ist
+`import-plan-work-v1`; das vollständige Ergebnis ist nur ein Importplan.
+
+Jeder Kandidat erhält genau eine fortsetzbare Mapping-/Vergleichseinheit mit
+seiner globalen Position. Externe Schlüssel und native Zielidentitäten bleiben
+über Fenstergrenzen eindeutig. Bereits bestätigte Kandidaten werden aus ihren
+gebundenen Beobachtungen übernommen; ihre Mapping-/Vergleichskerne laufen beim
+Resume nicht erneut. Danach prüft genau eine vollständige Zielreduktion die
+gesamte Operationsfolge mit der vorhandenen Change-Plan-Pipeline. Hierfür sind
+die vertrauenswürdige Policy und Gate-Callbacks erneut explizit zu liefern.
+Ein Kandidat und die vollständige Zielreduktion bleiben speicherresident;
+eine allgemeine Streaming-Engine oder ein hartes Ressourcenlimit wird nicht
+behauptet. Kleine weiche CPU-/Wall-Budgets sichern den vorhandenen Fortschritt
+nach mindestens einer wirklich ausgeführten Einheit.
+
+Die direkte Planung und der Work-Adapter teilen dieselben bestehenden
+Kandidaten- und Zielprüfungen. Wiederherstellung verlangt die gebundene
+initiale Work, dieselbe Buildidentität, exaktes Eingabe-/Aufgabeninventar,
+eine lückenlose abgeschlossene Präfixfolge und konsistente Beobachtungsdaten.
+Veränderte Identitäten, Positionen, Phasen, Eingabebindungen, Abschlussfelder,
+Policy, Zielhashes oder Freigabeflags werden abgewiesen. Unvollständige Work
+kann nicht abgeschlossen werden. Bei fehlender oder inkompatibler Work gibt
+es keine automatische Neuanlage und keinen stillen Neustart. Ein Fehler vor
+oder nach atomarem Checkpointaustausch erhält den tatsächlich vorhandenen
+dauerhaften Zustand; abgeschlossene Wiederholung verändert keine Dateien.
+
+Gespeicherte Plan- und Workdaten sind keine Ausführungswahrheit. Alle
+Publikations-/Freigabeflags bleiben negativ; ungültige vollständige Pläne
+behalten ihre Befunde und ihren nativen Fehlercode einschließlich fehlender
+Gates. Erst der unveränderte native Importwriter prüft den gespeicherten Plan
+erneut gegen aktuelle explizite Eingaben, das lebende Projekt, vertrauenswürdige
+Gates und Live-Autorisierung und führt gegebenenfalls die atomare Transaktion
+aus. Rehashen passiver Daten authentifiziert weder einen Prüfer noch einen
+Zielprüflauf und ersetzt diese erneute Prüfung nicht.
+
+**Fachliche Oracles.** Die erweiterten Format-Roundtrips verwenden echte CSV-
+und NDJSON-Bytes des vorhandenen W-Korpus. Geänderter Quellkontext, Zielkontext
+oder Relationsinhalt macht einen erhaltenen Review `suspect`; eine neue
+Relationsidentität oder ein fehlender Review ergibt `unreviewed`. Unveränderte
+Reviewbytes bleiben erhalten; `approval_granted` ist immer `false`.
+
+Der zusätzliche Importkorpus verwendet die tatsächlichen CSV-, NDJSON-, ReqIF-
+und ReqIFZ-Codecs. Vier explizite Kandidaten aktualisieren ein bestehendes Goal
+und erzeugen drei weitere; eine vorhandene Relation, ein synthetischer Review,
+native Ressourcen und tatsächliche Anhangbytes bleiben gebunden. Für alle vier
+Formate, zwei Ressourcenprofile und Fenstergrößen **1, 2 und 100** stimmen
+Einzellauf und vollständige geteilte Workfolge in den kanonischen Importplan-
+Bytes überein. Beide Pläne werden anschließend separat durch den bestehenden
+nativen Writer ausgeführt. Verglichen werden tatsächliche normative Zielbytes,
+semantische Zielwurzeln, Auditoperationen und vier unabhängige wörtliche
+Fachwerte einschließlich Unicode und Quotierung. Der erhaltene Review wird
+am tatsächlichen Ziel als `suspect` erkannt.
+
+Weitere Fälle prüfen späte Doppelidentitäten und Mappingfehler mit demselben
+nativen Fehlervertrag, alle Befunde ungültiger Pläne, leere Kandidatenmengen,
+unfertige Finalisierung, weiche Budgets, beschädigte/fehlende Eingaben,
+geänderte Builds/Policies und verfälschte Abschlussdaten. Reale Checkpoint-
+Speicherfehler erhalten die richtige Generation. Verschobene Workverzeichnisse
+und entfernte ursprüngliche Dateien verlieren keinen gespeicherten Kandidaten.
+Zusätzlich werden echte Core- und PYZ-Distributionen gebaut und jede Einheit
+in einem neuen Prozess nach Verzeichnisverschiebung fortgesetzt; Planbytes
+und Wiederholung sind identisch. Die kontrollierten Test-Host-Gates prüfen
+die eigenen Ressourcen und den synthetisch erhaltenen Reviewstatus, liefern
+aber keine echte menschliche Freigabe.
+
+Damit werden die vorhandenen Verträge **10.12.1/10.12.3, Anhang D, Anhang J
+und P.5** angewandt. **SPECROAD-DECISION-1** ist in § 2.4 ausdrücklich
+vorhanden und wurde geprüft. Eine neue normative Entscheidung ist für
+diesen R-Ausschnitt nicht erforderlich. Spezifikation **0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Die einzige Änderung an einem vorhandenen Verhaltenstest
+ergänzt das erwartete Schema-Inventar ausdrücklich um `import-plan-work-v1`;
+alle bisherigen Inventareinträge und Prüfungen bleiben erhalten. Weitere
+bestehende Tests, Runner und Workflows bleiben bytegleich. Bestehender
+Produktcode wird nur für die gemeinsame Importplanung und die maschinenlesbare
+Ergebnisschema-Registrierung angepasst.
+
+**Gezielte parallele Abnahme.** **3.032/3.032** Verhaltenstests bestanden
+mit **vier Workern**, Prozessabschluss **0**, ausschließlich `passed` und
+`full_suite_passed=null`. Enthalten sind alle **77** neuen R-Fälle, sämtliche
+**22** vorherigen W-Korpusfälle sowie die betroffenen Codec-, Export-, Import-,
+Identitäts-, Reviewstatus-, Schema-, Work- und Katalogvertrag-Regressionen.
+
+Die ersten isolierten Entwicklungsstände waren noch rot: zunächst fehlten
+in neu angelegten Relationsfixtures Pflichtfelder; danach fehlten explizite
+Test-Host-Gates für den erhaltenen synthetischen Review. Dabei wurde auch der
+native Fehlercode **5** für unvollständige Zielprüfungen in den neuen Work-
+Protokollvertrag aufgenommen. Falsche Testzugriffe auf das native Import-
+Ergebnis und unpassend enge Fehlererwartungen wurden korrigiert. Ein weiterer
+isolierter Lauf bestand **69/69** Fälle. Anschließend wurden acht weitere
+Fälle für widersprüchliche Abschlussdaten sowie engere Ressourcenprüfungen
+und konsistente Zeitangaben im eigenen Fixture ergänzt. Der erste größere
+Regressionslauf bestand **3.031/3.032** Fälle einschließlich aller 77 neuen
+Fälle. Der einzige Fehler benannte den fehlenden neuen Resultschema-Eintrag
+in der expliziten Erwartung des bestehenden Schema-Inventartests. Dieser eine
+Eintrag wurde ergänzt, ohne die Inventargleichheit oder vorherige Einträge
+aufzuweichen. Der erneute, jetzt gebundene Abschlusslauf besteht vollständig. Keine bestehende produktive Validierung,
+Gatepflicht oder W-Erwartung wurde zum Bestehen abgeschwächt.
+
+Geprüfte Testdateien:
+
+- `tests/test_capabilities.py`
+- `tests/test_configuration_scope.py`
+- `tests/test_configuration_scope_right.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_description.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_format_roundtrips.py`
+- `tests/test_format_roundtrips_right.py`
+- `tests/test_import_comparison.py`
+- `tests/test_import_comparison_right.py`
+- `tests/test_import_execution.py`
+- `tests/test_import_execution_right.py`
+- `tests/test_import_planning.py`
+- `tests/test_import_planning_right.py`
+- `tests/test_import_work.py`
+- `tests/test_import_work_portable.py`
+- `tests/test_native_identity_index.py`
+- `tests/test_native_identity_index_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_relation_review_status.py`
+- `tests/test_relation_review_status_right.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requirement_exchange.py`
+- `tests/test_requirement_exchange_right.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_verification_contracts.py`
+- `tests/test_verification_contracts_right.py`
+- `tests/test_work_checkpoints.py`
+- `tests/test_work_checkpoints_right.py`
+- `tests/test_work_finalization.py`
+- `tests/test_work_finalization_right.py`
+- `tests/test_work_manifest.py`
+- `tests/test_work_manifest_right.py`
+- `tests/test_work_resume.py`
+- `tests/test_work_resume_right.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **20.109** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Alle **20.032** alten
+Knoten-/ID-Zuordnungen und permanenten Testnummern bleiben erhalten; die
+**77** neuen Identitäten erhalten ausschließlich Nummern **20032–20108**.
+`SR-FIX-IMPORT-WORK-v1` wird ergänzt. `SR-TC-0285` behält seine W-Nachweise
+und bindet zusätzlich die geänderten Reviewkontexte und tatsächlichen
+Importziele; `SR-TC-0330` behält alle W-Nachweise und bindet die neuen R-Fälle.
+Beide bleiben mit konkreten externen und weitergehenden Restarbeiten `partial`.
+
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, Fremdtool-, Human-Review-
+oder Release-Erfolgsnachweis. Eine vollständige Import-CLI, allgemeiner
+Relations-/Anhangimport, tatsächliche Migration/Merge und mehrplattformige
+Interoperabilität werden nicht behauptet. Die bestehenden expliziten
+Verlustgrenzen des W-Schnittmengenprofils bleiben unverändert.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `1cde5c7e50a3eef5655f543dcdc40b59a1f232cee3d0cd4f77b9c8a1c1db8069`.
+- Selektionsdatei-SHA-256: `fe5a42c8903e394df06bdcb69150534091a10247e0db658806760281e9e42b5b`.
+- Beobachtungsdatei-SHA-256: `9a762b9cef99a166bc68ea1d2105f04b01020561a0a136cfeaeb026e50ea5bf4`.
+- Katalog-SHA-256: `fe05e6d94bccde7c6032b60ab770205f067e0f5a2df32fa8bbafe6cd50559ad6`.
+
+**Offene Apply-Abnahme.** Der Entrypoint stellt ausschließlich diesen
+gezielt geprüften R-Zustand her und verlangt die saubere gebundene Basis.
+Er prüft genau Gruppe **1**, Sequenz **160**, mit **6.703** Tests und vier
+Workern. Erst nach erfolgreicher gebundener Abnahme setzt er die fünf
+Fortschrittsmarker auf **614/900**, zuletzt **14.o.R**, nächstens **14.o.C**,
+Bundle **453** und die R-Checkbox und erzeugt die exakte PLAN-Commit-Message.
+Apply-Erfolg bleibt bis zum tatsächlichen Result offen. Keine weitere Phase,
+kein Volltest, kein serieller Test und kein CI-Start gehören zu diesem Bundle.
 
 #### 14.o.C – Make it Clean
 

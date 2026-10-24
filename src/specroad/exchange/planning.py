@@ -139,6 +139,21 @@ Requirements also require explicit mappings for language, normative_force and
 statement; missing content mappings are losses, never filled from an envelope
 or an existing artifact, and produce no candidate operation or new history.
 """
+    model, candidates, selected = _prepare_import_inputs(model, candidates,
+        input_format=input_format, input_bytes=input_bytes, mapping_resources=mapping_resources,
+        mapping_key=mapping_key, mapping_sha256=mapping_sha256, strategy=strategy)
+    changes = _prepare_candidate_changes(model, candidates, selected, strategy=strategy,
+        input_bytes=input_bytes, planned_at=planned_at)
+    return _finish_import_plan(model, candidates, selected, changes,
+        input_format=input_format, input_bytes=input_bytes, strategy=strategy,
+        change_plan_id=change_plan_id, request_id=request_id, actor=actor,
+        planned_at=planned_at, scope_descriptor=scope_descriptor,
+        metadata_policy_version=metadata_policy_version, policy=policy, gates=gates, strict=strict)
+
+
+def _prepare_import_inputs(model, candidates, *, input_format, input_bytes,
+                           mapping_resources, mapping_key, mapping_sha256, strategy):
+    """Own the common direct/Work inputs without executing candidate units."""
     if type(model) is not TargetModel:
         raise ImportIdentityError("import_target_model_required")
     if type(input_bytes) is not bytes:
@@ -158,12 +173,16 @@ or an existing artifact, and produce no candidate operation or new history.
     # Validate the explicit strategy even for an empty candidate set.
     ImportComparison(None, mapping_id=resource.key, strategy=strategy,
                      local_projection={}, source_projection={})
-    model = model.snapshot()
-    changes = _prepare_candidate_changes(model, candidates, selected, strategy=strategy,
-        input_bytes=input_bytes, planned_at=planned_at)
+    return model.snapshot(), candidates, selected
+
+
+def _finish_import_plan(model, candidates, selected, changes, *, input_format,
+        input_bytes, strategy, change_plan_id, request_id, actor, planned_at,
+        scope_descriptor, metadata_policy_version, policy, gates=(), strict=False):
+    """One complete target reduction, shared by direct and resumed planning."""
     target = prepare_change_target(model, changes.operations, change_plan_id=change_plan_id,
         request_id=request_id, actor=actor, planned_at=planned_at, scope_descriptor=scope_descriptor,
         metadata_policy_version=metadata_policy_version, policy=policy, gates=gates, strict=strict)
-    return ImportPlan._create(_import_plan_report(changes, target, candidates, resource,
+    return ImportPlan._create(_import_plan_report(changes, target, candidates, selected.resource,
         input_format=input_format, input_bytes=input_bytes, strategy=strategy,
         change_plan_id=change_plan_id))

@@ -110,6 +110,11 @@ def _fields(schema_id):
             'manifest_path': nonempty, 'generated': {'const': True}, 'normative': {'const': False},
             'atomic_snapshot': {'const': False}, 'source_bytes_rechecked': {'const': True},
             'approval_granted': {'const': False}})
+    if schema_id == 'import-plan-work-v1':
+        return _object({'format_version': {'const': 'import-plan-work-v1'},
+            'input_manifest_sha256': sha, 'task_manifest_sha256': sha,
+            'source_scope': {'const': 'explicit_saved_model'}, 'project_files_verified': {'const': False},
+            'import_plan': obj, 'import_completed': {'const': False}, 'write_authorized': {'const': False}})
     if schema_id == 'document-work-v1':
         return _object({'format_version': {'const': 'document-work-v1'},
             'input_manifest_sha256': sha, 'task_manifest_sha256': sha,

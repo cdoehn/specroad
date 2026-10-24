@@ -28,13 +28,16 @@ def _pointer(value):
 
 
 def _prepare_candidate_changes(model, candidates, selected, *, strategy,
-                               input_bytes, planned_at):
+                               input_bytes, planned_at, start_index=0, prior_objects=()):
     resource = selected.resource
     native = NativeIdentityIndex([SourceRelations(d.content, path=d.path) for d in model.documents])
     artifacts = {value["id"]: value for value in model.artifacts}
     operations, objects, losses, diagnostics, conflicts = [], [], [], [], []
-    keys, owners = set(), set()
-    for number, candidate in enumerate(candidates):
+    # A resumed window retains the original global positions and claims.
+    # Reconstruct only uniqueness indexes; never remap completed candidates.
+    keys = {ExternalIdentity(item['identity']).key for item in prior_objects}
+    owners = {item['artifact_id'] for item in prior_objects}
+    for number, candidate in enumerate(candidates, start=start_index):
         at = "/candidates/" + str(number)
         if type(candidate) is not dict or set(candidate) != {"identity", "external_type", "fields", "new_artifact"}:
             raise ImportIdentityError("import_artifact_candidate_required", pointer=at)

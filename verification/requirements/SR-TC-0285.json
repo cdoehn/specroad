@@ -7,26 +7,34 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-FORMAT-ROUNDTRIPS-v1"
+    "SR-FIX-FORMAT-ROUNDTRIPS-v1",
+    "SR-FIX-IMPORT-WORK-v1"
   ],
   "preconditions": [
-    "Owned nine-artifact corpus with ordered document occurrences, external identities, two bound attachment payloads, a configuration artifact and synthetic hash-bound relation review; no real approval is claimed."
+    "Owned nine-artifact corpus with ordered document occurrences, external identities, two bound attachment payloads, a configuration artifact and synthetic hash-bound relation review; no real approval is claimed.",
+    "Owned explicit parsed artifact candidates from real CSV, NDJSON, ReqIF and ReqIFZ codecs; supplied mappings and complete creation envelopes; retained synthetic relation review with native status checks; explicit trusted test-host gates and publication authority. No authentic human approval is claimed."
   ],
   "steps": [
     "Export and decode the corpus with the existing NDJSON envelope and explicit per-type CSV profiles; reconstruct only decoded artifacts and transported attachment bytes and compare native semantic model roots.",
     "Export and decode the declared ReqIF/ReqIFZ scalar/XHTML intersection; compare native/external identities, mapped values, ordered occurrence identities, the addresses relation and complete attachment bytes.",
     "Assess the retained native review with the real relation-status service; require current only for the unchanged relation and both endpoint contexts, with approval_granted=false.",
-    "Require explicit whole-record losses for review/configuration/evidence outside the chosen ReqIF intersection and reject fail_on_loss for remaining native-resource or format losses."
+    "Require explicit whole-record losses for review/configuration/evidence outside the chosen ReqIF intersection and reject fail_on_loss for remaining native-resource or format losses.",
+    "Modify the source context, target context or relation of a transported review and require suspect; replace its relation identity or omit its review and require unreviewed, with approval_granted=false.",
+    "Persist all candidate units and the final whole-target reduction in real Work checkpoints, reopen after each window and compare exact canonical ImportPlan bytes to the single-run planner across all four formats, two resource profiles and three window sizes.",
+    "Execute both plans through the existing native import writer with current inputs and explicit live authority; compare actual target bytes, semantic roots, audit operations, all four literal object values and the retained suspect review.",
+    "Require complete object coverage after relocation and loss of the original source, no rerun of completed mapping kernels, original late-error contracts, preserved durable generations on checkpoint failure and refusal of inconsistent or incomplete evidence.",
+    "Build actual Core and PYZ distributions, resume each Work unit in a fresh process after moving distribution and Work directories, and require identical completed planning results without live project writes or inferred authority."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Import, Migration und Merge MÜSSEN erhaltene Relationsreviews nur dann als `current` übernehmen, wenn Relation sowie Quell- und Ziel-Kontextprojektion nach der Operation exakt den im Review gebundenen Hashes entsprechen; andernfalls erscheinen sie als `suspect` oder `unreviewed`.",
-    "scope": "14.o.W: explicit nine-artifact corpus roundtrips in three languages. NDJSON and separate single-type typed-JSON CSV profiles preserve all artifact fields, review hashes, configuration values, ordered relations and transported attachments. Rebuilt model roots and actual relation-review statuses are compared. ReqIF/ReqIFZ preserve their explicitly mapped native/external identities, scalar/XHTML values, ordered hierarchy and relation identities plus attachment bytes; unsupported review/configuration/evidence records and native project resources remain explicit losses. No missing native data is filled from source-only records and no full import, review authentication, approval or release success is claimed."
+    "scope": "14.o.W: explicit nine-artifact corpus roundtrips in three languages. NDJSON and separate single-type typed-JSON CSV profiles preserve all artifact fields, review hashes, configuration values, ordered relations and transported attachments. Rebuilt model roots and actual relation-review statuses are compared. ReqIF/ReqIFZ preserve their explicitly mapped native/external identities, scalar/XHTML values, ordered hierarchy and relation identities plus attachment bytes; unsupported review/configuration/evidence records and native project resources remain explicit losses. No missing native data is filled from source-only records and no full import, review authentication, approval or release success is claimed. 14.o.R: changed native review bindings resolve to suspect/unreviewed. For the existing explicit_parsed_artifacts profile, durable per-candidate Work plus a whole-target reduction equals the direct import plan and actual published native target across CSV, NDJSON, ReqIF and ReqIFZ. Completed mapping/comparison units are reused; original inputs and mapping bytes remain owned in Work; final plan data alone grants no approval or execution truth. The native writer revalidates the full plan with current explicit inputs, trusted gates and live authority. Invalid plans retain their findings; incomplete, rehashed-inconsistent or incompatible Work is not promoted to completion. Fresh Core/PYZ process resumes and replay are checked on the current platform."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
-    3
+    3,
+    5
   ],
   "json_pointers": [],
   "required_environment": {
@@ -52,10 +60,44 @@
     "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-en-IN-csv]",
     "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-en-IN-ndjson]",
     "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-zh-Hant-TW-csv]",
-    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-zh-Hant-TW-ndjson]"
+    "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[True-zh-Hant-TW-ndjson]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[missing_review-unreviewed-csv]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[missing_review-unreviewed-ndjson]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[new_identity-unreviewed-csv]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[new_identity-unreviewed-ndjson]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[relation-suspect-csv]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[relation-suspect-ndjson]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[source-suspect-csv]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[source-suspect-ndjson]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[target-suspect-csv]",
+    "tests/test_format_roundtrips_right.py::test_transport_does_not_make_changed_review_bindings_current[target-suspect-ndjson]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-1-csv]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-1-ndjson]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-1-reqif]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-1-reqifz]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-100-csv]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-100-ndjson]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-100-reqif]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-100-reqifz]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-2-csv]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-2-ndjson]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-2-reqif]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[constrained-2-reqifz]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-1-csv]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-1-ndjson]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-1-reqif]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-1-reqifz]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-100-csv]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-100-ndjson]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-100-reqif]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-100-reqifz]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-csv]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-ndjson]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-reqif]",
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-reqifz]"
   ],
   "open_items": [
-    "14.o.R: changed review bindings and complete split/resumed import equivalence remain open; W is a bounded semantic transport proof, not a complete import CLI or Work sequence.",
-    "Current-run synthetic Core fixtures do not authenticate a human, provide foreign-tool interoperability or certify a full native project bundle. Live import/migration/merge and cross-platform release evidence require their own bound executions."
+    "The bounded explicit-candidate adapter is not a complete import CLI or a general relation/attachment import parser. Existing W format-intersection losses remain explicit; memory-resident candidate and final whole-target evaluation are not a generic streaming-engine claim.",
+    "Synthetic test-host gates and publication authority authenticate no real human. Actual migration/merge, foreign-tool interoperability, whole-project bundle and cross-platform release evidence require their own bound executions."
   ]
 }
