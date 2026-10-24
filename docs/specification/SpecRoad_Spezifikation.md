@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.19
+## Version 0.2.20
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.19` |
+| Dokumentversion | `0.2.20` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 23. Oktober 2026 |
+| Stand | 24. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.19 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.19 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.20 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.20 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.18 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung REQIF-PRESERVATION-LOSS, delegiert gemäß SPECROAD-DECISION-1: passiver Quellträger, überprüfter Zielerhalt und einzeln gebundene Verlustbewertung. Entscheidungsbeleg und Abnahmen stehen bei 14.j im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung von ReqIF-Erweiterungserhalt und Verlustbewertung in D.1.3; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.19 vom 23. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung REQIFZ-CONTAINER-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: explizite Dokumentauswahl, dokumentrelative Anhangbindungen und abgeleitetes Transportmanifest. Entscheidungsbeleg und Abnahmen stehen bei 14.k im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung des ReqIFZ-Containers und seiner Anhangbindungen in D.1.4; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.19 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.20 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.19 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.20 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4315,6 +4315,18 @@ bleiben erhalten. Umsetzung und Verhaltensevidence folgen in 14.j.W/R/C;
 Produktstand 597/900 und Control-/Laufzeitzustände bleiben bei dieser
 Dokumentübergabe unverändert. Die neue Katalogbindung ist kein Produkttest.
 
+### 20.19 ReqIFZ-Containerpräzisierung v0.2.20
+
+`REQIFZ-CONTAINER-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, präzisiert
+in D.1.4 die explizite Dokumentauswahl, dokumentrelative Anhangbindung und
+das aus tatsächlichen Bytes abgeleitete Transportmanifest außerhalb des ZIP.
+Alle Mitglieder bleiben erhalten; kein privates Pflichtmanifest oder zweiter
+Archivcodec wird eingeführt. Die bestehenden ZIP-, XML-, Sicherheits-,
+Import- und Writegrenzen bleiben wirksam. Umsetzung und Verhaltensevidence
+folgen in 14.k.W/R/C; Produktstand 600/900 und Control-/Laufzeitzustände
+bleiben bei dieser Dokumentübergabe unverändert. Die neue Katalogbindung
+ist kein Produkttest oder Fremdtool-Nachweis.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4357,6 +4369,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.20 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIFZ-CONTAINER-CONTRACT: explizite Dokumentauswahl, dokumentrelative Anhangbindungen, abgeleitetes Transportmanifest und gemeinsame sichere ZIP-Grenze; bestehende Import-/Sicherheitsverträge bleiben erhalten, Umsetzung bleibt in 14.k offen. |
 | 0.2.19 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-PRESERVATION-LOSS: passiver Originalquellträger, überprüfter Zielerhalt, konkrete Verlustidentitäten und fail-on-loss-Grenze; bestehende Sicherheits-/Importverträge bleiben erhalten, Umsetzung bleibt in 14.j offen. |
 | 0.2.18 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-STRUCTURE-XHTML: geordnete Vorkommensidentität, explizite Relationsabbildung und sichere XHTML-/Anhangschnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.i offen. |
 | 0.2.17 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-OBJECT-CONTRACT: typisierte Objekterhaltung, identitätsbasierte Selektoren, Default-Herkunft und verlustbewusste JSON-Schnittmenge; bestehende Sicherheits-/Mappingverträge bleiben erhalten, Umsetzung bleibt in 14.h offen. |
@@ -5105,6 +5118,147 @@ fail-on-loss. Alle Zustände bleiben durch Verhaltenstests abgesichert.
 und ReqIFZ behalten ihre Planstellen und bleiben bis zu ihren tatsächlichen
 Nachweisen offen. Dieser Dokumentvertrag selbst ist keine Implementierung,
 Loss-Akzeptanz, Produktabnahme oder Fremdtool-Konformitätsbescheinigung.
+
+### D.1.4 ReqIFZ-Container und Anhangbindungen v1
+
+**Entscheidung REQIFZ-CONTAINER-CONTRACT, delegiert gemäß SPECROAD-DECISION-1:**
+Der folgende Vertrag konkretisiert `SR-REQ-0323` und `SR-REQ-0486` für
+14.k.W/R/C. Er ergänzt D.1.1–D.1.3 um die Transporthülle und ihre expliziten
+Byte-/Pfadbindungen. Das kanonische ZIP-Profil aus 10.16, die sicheren XML-
+und Anhangregeln sowie alle Import-, Verlust- und Writegates bleiben wirksam.
+Ein erfolgreicher Containerroundtrip ist kein vollständiger nativer Import.
+
+**Container und Dokumentauswahl.** Ein ReqIFZ besteht aus genau den
+übergebenen regulären Dateimitgliedern im gemeinsamen kanonischen ZIP-Profil.
+Ein zusätzliches SpecRoad-JSON-Manifest im ZIP ist weder erforderlich noch
+wird es automatisch ergänzt. Es gibt keinen reservierten Manifestnamen
+und keinen vorgeschriebenen Namen wie `content.reqif`. Ein manifestartig
+benanntes Mitglied bleibt gewöhnlicher passiver Nutzinhalt; seine Angaben
+werden nicht als vertrauenswürdiges Containerinventar übernommen.
+Die Manifestpflichten anderer Archivformate bleiben unverändert.
+
+Der Aufrufer bindet eine nichtleere, duplikatfreie Liste exakter
+Dokumentmitgliedpfade. Jedes gewählte Mitglied muss vorhanden sein und
+mit dem bestehenden begrenzten ReqIF-Strukturparser nach D.1.1/D.1.2
+erfolgreich geprüft werden. Dateiendung, ZIP-Reihenfolge und erster Treffer
+ersetzen diese Auswahl nicht. Mehrere und in Unterverzeichnissen liegende
+Dokumente sind zulässig. Ihre IDs, Quellkontexte und nativen Zuordnungen
+werden nicht dokumentübergreifend geraten oder zusammengeführt.
+
+Alle übrigen Mitglieder bleiben mit ihren vollständigen Originalbytes im
+Inventar und im Byte-Rückweg erhalten, auch wenn kein gewähltes Dokument
+sie referenziert. Sie werden nicht ausgeführt, gerendert, rekursiv entpackt
+oder allein wegen ihrer Endung als weitere ReqIF-Dokumente interpretiert.
+Die explizite Dokumentauswahl begrenzt die fachliche XML-Bewertung; sie
+erlaubt keine Behauptung einer nativen Vollprojektion aller Archivdaten.
+
+**Dokumentrelative Referenzen.** Für jedes gewählte Dokument werden alle
+Anhang-/URI-Referenzen des bestehenden Sicherheitsprofils einschließlich
+der entsprechenden Stellen in Originalwerten, Fallbacks und passiven
+Erweiterungsteilbäumen geprüft. Schlüssel einer Bindung ist das Paar aus
+Dokumentmitgliedpfad und nach XML-Dekodierung unverändertem Referenzwert.
+Die strikte einmalige Prozent-/UTF-8-Dekodierung und die Verbote aus D.1.2
+gelten unverändert. Der resultierende relative Pfad wird an das Verzeichnis
+des ausgewählten XML-Mitglieds angehängt; bei einem Wurzeldokument an die
+Archivwurzel. Der so gebildete sichere Pfad muss exakt und unter Beachtung
+der Groß-/Kleinschreibung auf ein vorhandenes reguläres Mitglied zeigen.
+
+Beispiel: `docs/a.reqif` mit `images/p.png` bindet ausschließlich
+`docs/images/p.png`; weder `images/p.png` in der Archivwurzel noch ein
+gleichnamiges Mitglied in einem anderen Verzeichnis ist ein Ersatz.
+Eine Referenz `../images/p.png` bleibt auch dann unzulässig, wenn eine
+Normalisierung innerhalb des Archivs enden würde. Es gibt keine Auflösung
+gegen CWD, Netzwerk, externe Dateien, Basename-Suche oder Casefold-Fallback.
+Fehlende beziehungsweise konkurrierende Bytebindungen sind Konflikte,
+keine still akzeptierten Verluste. Ein als Dokument ausgewähltes Mitglied
+darf zugleich als passive Anhangbytes referenziert sein; dies startet
+keine rekursive Interpretation.
+
+Containerbindungen liefern tatsächliche Mitgliedbytes, Größe und SHA-256.
+Für eine native Anhangprojektion muss der Aufrufer zusätzlich die bereits
+vorgeschriebene eindeutige Bindung auf einen validierten nativen
+`attachments/`-Pfad und Anhangdeskriptor liefern. Besitzer, native Identität,
+Zielpfad und MIME-Typ werden nicht aus ZIP-Namen oder XML-Behauptungen
+erfunden. Die nativen Byte-/Hash-/MIME-Prüfungen aus D.1.2 bleiben erhalten.
+
+**Abgeleitetes Transportmanifest.** Der reine Codec liefert neben den
+geprüften Nutzbytes ein maschinenlesbares Manifest mit genau diesen Feldern:
+
+| Feld | Verbindlicher Inhalt |
+|---|---|
+| `format_version` | Exakt `reqifz-container-v1`. |
+| `archive_sha256` | Kleingeschriebene SHA-256 der tatsächlichen vollständigen ZIP-Bytes. |
+| `entries` | Liste aller Mitglieder; jeder Eintrag besitzt genau `path`, `size` und `sha256`. `size` ist die tatsächliche nichtnegative Byteanzahl, `sha256` der Hash dieser vollständigen Mitgliedbytes. Sortierung nach UTF-8-Bytes von `path`. |
+| `documents` | Liste der ausdrücklich ausgewählten und erfolgreich geprüften Dokumentpfade, nach UTF-8-Bytes sortiert. |
+| `references` | Liste mit genau `document_path`, `reference` und `member_path` je Bindung. `reference` bleibt der XML-dekodierte Originalwert, `member_path` das exakt aufgelöste Ziel. Sortierung nach den UTF-8-Bytes dieses Feldtupels. |
+
+Mehrfaches Auftreten derselben Referenz im selben Dokument erzeugt eine
+Bindung; gleich geschriebene Referenzen verschiedener Dokumente bleiben
+getrennt. Die Einträge und Referenzen entstehen aus der tatsächlichen
+Byteprüfung und XML-Auswertung. Kein vom Aufrufer behauptetes Inventar
+ersetzt diese Ableitung. Eine JSON-Repräsentation dieses Manifests verwendet
+die bestehende kanonische JSON-Kodierung. Das Manifest liegt außerhalb des
+ZIP-Byteumfangs, inventarisiert sich nicht selbst und erzeugt keinen
+rekursiven Archivhash. Es ist vom fachlichen Exportmanifest aus 14.l und
+vom Projektbundlemanifest getrennt. Zeitstempel, absolute Hostpfade,
+erfundene Projektidentitäten und Freigabeflags gehören nicht hinein.
+
+Der Leser verlangt die erwartete SHA-256 des vollständigen Archivs als
+explizite Eingangsbindung; der Schreiber berechnet sie erst aus seinen
+tatsächlichen Ausgabebytes. Die Auswahl und die abgeleiteten Bindungen
+bleiben zusätzlich im Transportmanifest sichtbar. Gleiche Mitglieder,
+Dokumentauswahl und Prüfparameter ergeben dieselben ZIP- und Manifestbytes.
+Ein unveränderter, gültiger kanonischer Container wird beim Byte-Rückweg
+ohne Umbenennen, XML-Neuserialisierung oder Entfernen von Mitgliedern
+identisch reproduziert. Zurückgegebene Daten dürfen nicht durch spätere
+Mutation einer übergebenen Sammlung ihre geprüfte Bindung verlieren.
+
+**Sicherheits- und Ressourcengrenze.** Vor Rückgabe von Mitgliednutzinhalt
+oder einer Materialisierung müssen das gesamte Inventar, alle Pfade,
+Header und tatsächlichen Byteumfänge geprüft sein. Traversal und doppelte
+oder kollidierende Ziele, einschließlich Datei-/Elternpfadkonflikten und
+Casefold-Kollisionen im portablen Zielnamensraum, sind unzulässig. Die
+bestehenden portablen Pfadregeln gelten auch für nicht referenzierte
+Mitglieder. Directory Entries, Symlinks und Sonderdateien sind verboten.
+Nichtkanonische Metadaten, Verschlüsselung, Kompression, widersprüchliche
+lokale/zentrale Header, überlappende Datenbereiche, fremde Vor-/Nachlaufbytes
+oder falsche CRC-/Größenwerte werden nicht durch Neupacken repariert.
+Maßgeblich bleibt das gemeinsame Profil aus 10.16, keine zweite ZIP-Variante.
+
+Der Aufrufer liefert eine positive ganzzahlige harte Grenze
+`max_uncompressed_bytes` für die Summe der unkomprimierten Bytes aller
+Mitglieder; boolesche Werte sind keine Größenangabe. Die Summe schließt
+ausgewählte Dokumente, referenzierte Anhänge und übrige Mitglieder ein;
+genau die Grenze ist zulässig, eine Überschreitung nicht. Behauptete Größen
+werden vor einer daraus abgeleiteten großen Allokation geprüft und mit
+den tatsächlichen Datenumfängen abgeglichen. Je ausgewähltem XML-Dokument
+gelten zusätzlich die ausdrücklich gelieferten bestehenden `ReqIFLimits`.
+Diese Archiv-/Parsergrenzen sind harte Sicherheitsgrenzen nach Anhang O,
+kein still eingeführtes Gesamtauftragslimit. Weiche Arbeitsbudgets bleiben
+fortsetzbar; echte Host-/Speicherfehler dürfen weder maskiert noch als
+normaler Datenverlust oder erfolgreicher Teilcontainer ausgegeben werden.
+
+Ungültige Aufrufparameter oder Dokumentauswahl haben Code 2; ein gewählter
+Pfad ohne vorhandenes Mitglied, eine geänderte erwartete Archivbindung
+oder eine fehlende Referenz-/native Bytebindung sind Konflikte mit Code 6.
+Ungültiges ZIP-/ReqIF-Format und nichtkanonische Transportdaten haben
+Code 3. Unsichere Pfade, Sonderdateien, aktive/externe XML-Inhalte und
+überschrittene harte Expansions-/Parsergrenzen haben Code 7. Reale I/O-
+und Hostfehler behalten ihre bisherigen Fehlerverträge. Bereits bestehende
+Archiv-/Mapping-APIs ändern ihre Fehlerklassen durch diese Ergänzung nicht.
+Kein Fehlerfall führt zu Extraktion, nativen Writes oder externem Nachladen.
+
+**Umsetzungsgrenze.** 14.k.W liefert den nutzbaren reinen Container-
+Roundtrip mit expliziter Dokumentauswahl, geprüften relativen Bindungen
+und abgeleitetem Manifest; vorhandene Sicherheitsgates gelten schon in W.
+14.k.R vervollständigt die negativen und Ressourcen-Grenzfälle, 14.k.C
+bereinigt ausschließlich die gemeinsame Struktur. ReqIFZ und andere
+Archivformate verwenden denselben kanonischen ZIP-Kern; ihre jeweiligen
+fachlichen Manifestregeln bleiben darüber getrennt. Es entsteht kein
+zweiter Entpacker. Vollständiger Exportumfang und Snapshotzeitpunkt bleiben
+in 14.l, CLI-/Projektübernahme an ihren bisherigen Planstellen. Dieser
+Dokumentvertrag ist keine Implementierung oder Fremdtool-Abnahme.
+
 
 ## D.2 CSV
 

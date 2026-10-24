@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 14 · **Stand:** 23. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.19
+**Planrevision:** 15 · **Stand:** 24. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.20
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `91f1890b0e3cf4d2ae5782e9c641d50a119f10ba76a00295022dfe1661592219`.
+Gebundene Spezifikations-SHA-256: `0e9e5cfa9907853a384e66d973bd90fe26f7ca70b7ce05aa1abe49c30c1eb726`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 14
+plan_revision: 15
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 600
 last_completed_plan_commit: 14.j.C
 next_plan_commit: 14.k.W
-last_completed_numbered_bundle: 436
+last_completed_numbered_bundle: 437
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,45 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – ReqIFZ-Container und Anhangbindungen (Bundle 437)
+
+Revision 15 dokumentiert **REQIFZ-CONTAINER-CONTRACT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.20, D.1.4**, legt explizite
+Dokumentauswahl, dokumentrelative Anhangbindungen und ein aus tatsächlichen
+Bytes abgeleitetes Transportmanifest für 14.k fest. Alternativen, geprüfte
+Quellen, Grenzprüfung und offene W/R/C-Abnahmen stehen unmittelbar bei 14.k.
+Keine persönliche Einzelzustimmung, technische Produktfreigabe oder
+Fremdtool-Abnahme wird behauptet.
+
+- [x] **REQIFZ-CONTAINER-CONTRACT:** ReqIFZ-Container und Anhangbindungen verbindlich klären. Commit: `docs(spec): ReqIFZ-Container und Anhangbindungen präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und ausschließlich notwendigen aktiven Katalog-Hashbindungen.
+Produktcode, Tests, Testnummern, Fixtures, Runner, Workflow und historische
+Evidence bleiben unverändert. Produktstand **600/900**, zuletzt **14.j.C**,
+nächstens **14.k.W**, bleibt unverändert; alle drei 14.k-Phasen bleiben offen.
+Erst nach dem erfolgreichen parallelen Apply-Gate setzt der Entrypoint den
+Offplan-Marker und die Bundlenummer auf 437. Keine Produktposition wird erhöht.
+
+**Prüfgrenze:** Keine Produktverhaltensänderung und keine erfundenen
+Dokumentationstests. Vollständige Collection-/Katalogprüfung mit null
+Testkörpern und native Paketprüfung bleiben erhalten. Apply führt vor
+diesem Commit ausschließlich **Gruppe 1/3**, Commitfolge **145**, mit
+**6.324 Tests** und vier parallelen Workern aus. Kein Vollsuite-/Release-
+Nachweis; Ergebnisse dieser künftigen Gruppe werden nicht vorweggenommen.
+Übergabe als `spec_clarification`, danach Ende des Einzelauftrags.
+Control-/Watcher-/CI-Zustände werden nicht verändert. Der nächste
+Produktauftrag setzt den geklärten Schritt um; keine zweite Phase hier.
+
+**Beobachtete Dev-Katalogprüfung:** Vollständige Collection mit
+**18.972 eindeutigen Testidentitäten**, Exit **0**, keine Katalogfehler,
+**0 ausgeführte Testkörper**, `full_suite_passed=null`. Bestehende Tests,
+Oracles, Fixtures und dauerhafte Testnummern bleiben bytegleich. Nur aktive
+Spezifikations-Hashbindungen wurden konsistent fortgeschrieben; historische
+Evidence bleibt unverändert. Dies ist kein neuer Produktverhaltensnachweis.
+Gebundener Quellstand: `b35a1ac216782ea5c865ca2d3fdd9cd449ef3e2d1c17a8394b4443f42dd1c639`;
+Katalog: `44e98fd26eed1e2d28fdd82c2b82d201672fe1ac37c96e8053f5b76806df14b6`.
 
 ## OFF-PLAN – ReqIF-Erweiterungserhalt und Verlustbewertung (Bundle 433)
 
@@ -20798,30 +20837,161 @@ Warte-/Resultschleife.
 **Anforderungsbezug:** `SR-REQ-0323`, `SR-REQ-0486`.
 **Verifikationsbezug:** `SR-VER-0024`, `SR-VER-0033`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Das vollständig gebundene Result
+`specroad-apply_Result_000355_1024_704ac1.zip`, SHA-256
+`1f89c1301e449e05486333f18bfe078c7a173cdc2b45d7bdbdc89f343173a3f3`,
+bestätigt Bundle **436** / **14.j.C** auf
+`d802e6f4471ae1b1aa076e614f8b8eb3a70312e3`: sauberer Apply-Arbeitsbaum,
+**6.324/6.324** Tests der Gruppe **0/3**, Commitfolge **144**, vier Worker,
+**1.772,94 s**. Native Result-/Patchbindung, alle **2.183** Snapshotdateien,
+tatsächlicher Commit samt Elternstand, Run-/Ausführungslogs und vollständige
+nummerierte Testbeobachtungen wurden abgeglichen. In Dev wurden ausschließlich
+die fünf dadurch bestätigten Fortschrittsmarker nachgeführt; danach entsprach
+der Produktbestand dem Snapshot. Diese Belege bestätigen die Bereinigung von
+Erweiterungserhalt/Verlustbewertung, keine bereits implementierte ReqIFZ-Funktion.
+
+**Entscheidungsbeleg REQIFZ-CONTAINER-CONTRACT — delegiert gemäß
+SPECROAD-DECISION-1, 24. Oktober 2026.** Betroffen ist ausschließlich
+14.k.W/R/C mit `SR-REQ-0323`/`SR-REQ-0486` und
+`SR-VER-0024`/`SR-VER-0033`. Normative Zielregel ist Spezifikation
+**0.2.20, D.1.4**. 14.k.W bleibt bis zur gesonderten Umsetzung offen.
+
+**Lücke und technische Basis.** 10.16 definiert das gemeinsame kanonische
+ZIP-Profil, D.1.2 verweist die sichere ReqIFZ-Anhangbindung ausdrücklich
+an 14.k, und 14.k.C nennt ein ReqIFZ-Manifest. Bislang fehlt jedoch die
+eindeutige Festlegung von Dokumentmitgliedern, dokumentrelativer Auflösung
+und Pflicht beziehungsweise Lage dieses Manifests. Der bestehende
+`src/specroad/storage/archive.py` koppelt seinen öffentlichen Codec an
+ein vom Aufrufer benanntes eingebettetes JSON-Manifest. Dessen unveränderte
+Übernahme würde ein zusätzliches ReqIFZ-Wireformat voraussetzen. Ein
+rein technischer Wrapper könnte diese fachlichen Fragen nicht entscheiden.
+
+Geprüfte lokale Quellen sind die vollständige gebundene Resultbasis,
+Spezifikation 2.4, 10.16, 11.7/11.8, D.1.1–D.1.3 und Anhang O,
+14.k/14.l dieses Plans, der gemeinsame Archivcodec samt Verhaltenstests
+sowie die ReqIF-Struktur-, Referenz- und Verlustprüfer. Die aktive
+Verifikation für 0323/0486 bleibt offen; Hashfortschreibung erzeugt
+keine neue Test-Evidence.
+
+Als externe fachliche Quelle wurde [OMG ReqIF 1.2, formal/2016-07-01](https://www.omg.org/spec/ReqIF/1.2/PDF)
+geprüft: Abschnitt 8, gedruckte Seite 22, grenzt den eigentlichen
+Transfermechanismus aus; Abschnitt 10.8.20, gedruckte Seite 57, bezieht
+relative Objekt-URLs auf den Ort des Austausch-XML-Dokuments. Daraus
+folgt keine Pflicht zu einem privaten SpecRoad-ZIP-Manifest. Die konkrete
+Dokumentauswahl und das folgende Transportmanifest sind eine delegierte
+SpecRoad-Detailentscheidung, keine behauptete OMG-Vorgabe. SpecRoads
+strengere bestehenden Verbote externer URLs und unsicherer Pfade bleiben
+erhalten. Eine praktische Fremdtool-Interoperabilität wurde nicht geprüft.
+
+**Untersuchte Alternativen.**
+
+1. Den bisherigen manifestgebundenen Archivcodec unverändert mit einem
+   neuen festen JSON-Pflichtmitglied verwenden. Das verlangt zusätzliche
+   transportfremde Eingabedaten und löst die Dokumentauswahl weiterhin
+   nicht; ein im ZIP enthaltener vollständiger Archivhash wäre zudem
+   selbstreferenziell. Nicht gewählt.
+2. Das erste `.reqif`-Mitglied oder einen festen Rootnamen wählen und
+   Anhänge über Dateinamen finden beziehungsweise umbenennen. Das ist
+   bei mehreren Dokumenten oder Unterverzeichnissen mehrdeutig, verliert
+   Herkunft und könnte vorhandene Bytebindungen ändern. Nicht gewählt.
+3. Den vorhandenen kanonischen ZIP-Kern wiederverwenden, Dokumentpfade
+   ausdrücklich binden, relative Referenzen dokumentbezogen auflösen
+   und das Transportmanifest aus den geprüften Bytes außerhalb des ZIP
+   ableiten. Alle Mitglieder bleiben erhalten. **Gewählt:** keine neue
+   Pflichtdatei, kein Erraten, keine zweite Archivimplementation und
+   keine Veränderung bestehender Projekt-/Work-Manifestverträge.
+
+**Grenzprüfung nach 2.4.1.** (1) Der Ausschnitt bleibt ReqIFZ-Transport
+und Anhangbindung innerhalb 14.k; 14.l-Exportscopes, CLI und Projektwrites
+werden nicht vorgezogen. (2) Die Zielregel erfüllt die genannten
+Requirements gemeinsam und präzisiert bisher fehlende Details; keine
+Requirement-, Verifikations- oder Produktposition wird gestrichen oder
+ergänzt. (3) Alle Originalbytes, bestehende Archivformate, XML-/Pfad-
+Sicherheitsgates, Loss-/Importgrenzen, TD-001 sowie Freigabe- und Review-
+pflichten bleiben erhalten. Mehrere Dokumente und Unterverzeichnisse
+werden nicht durch einen willkürlichen Einzeldokumentnamen ausgeschlossen.
+(4) Die Regel ist als additives v1-Profil versioniert; bestehende Daten,
+historische Hashes und Evidence bleiben unverändert. Eine spätere Revision
+kann den Vertrag ändern, ohne dieses Dokument als Erlaubnis für Resets
+oder Datenlöschung auszulegen. (5) Die erforderliche relative URL-Basis
+ist anhand der offiziellen Quelle geprüft; keine privaten Daten oder
+ausstehende menschliche Einzelentscheidung werden durch Annahmen ersetzt.
+Keine persönliche Zustimmung, unabhängiger Review oder Risikoakzeptanz
+wird behauptet.
+
+**Verbindliche beobachtbare Abnahmen der offenen Umsetzung.**
+
+- **W:** Ein gültiger kanonischer Container ohne zusätzliches Pflicht-
+  manifest mit ausdrücklich ausgewähltem ReqIF-Dokument und tatsächlichem
+  Anhang durchläuft Schreiben, Lesen und erneutes Schreiben bytegleich.
+  XML-Bytes, sonstige Mitglieder und unreferenzierte Zusatzdaten bleiben
+  vollständig erhalten. Das abgeleitete `reqifz-container-v1`-Manifest
+  weist den tatsächlichen Archivhash, sämtliche Mitgliedgrößen/-hashes,
+  Auswahl und Referenzziele aus. Gleiche Eingaben sind deterministisch.
+- **W:** `docs/a.reqif` und `other/b.reqif` können dieselbe relative
+  Referenz unterschiedlich binden; die tatsächlichen Verzeichnisse
+  bestimmen die Ziele. Ein nur im Root vorhandener gleichnamiger Anhang
+  wird nicht als Ersatz akzeptiert. Eine nicht vorhandene gewählte Datei
+  oder Referenz sowie ein falscher erwarteter Archivhash scheitern mit
+  Code 6. Leere Auswahl oder doppelte Auswahleinträge sind Code 2; ungültiges gewähltes
+  XML ist Code 3. Die vorhandenen Sicherheitsgates gelten bereits hier.
+- **R:** Alle Mitglieder werden geprüft, auch nicht ausgewählte und
+  nicht referenzierte Mitglieder. Traversal, Prozent-/UTF-8-Umgehung, Casefold-
+  und Datei-/Elternkollision, Directory Entry, Symlink und Sonderdatei
+  werden ohne Extraktion abgewiesen. Nichtkanonische ZIP-Parameter,
+  beschädigte beziehungsweise widersprüchliche Header/CRC/Größen und
+  fremde Vor-/Nachlaufbytes erzeugen keinen still reparierten Erfolg.
+- **R:** Die Summe aller tatsächlichen Mitgliedbytes genau an der harten
+  Expansionsgrenze bleibt zulässig, ein Byte darüber scheitert mit Code 7;
+  ungültige Grenzparameter mit Code 2. Gefälschte Größen werden vor daraus
+  abgeleiteter großer Allokation erkannt. Pro Dokument gelten die
+  vorhandenen XML-Grenzen. DTD/Entities, aktive/externe Referenzen und
+  Original-/Fallback-Umgehungen werden nicht als gewöhnlicher Verlust
+  ausgegeben. Hostfehler bleiben echte Fehler.
+- **R:** Gleich geschriebene Referenzen verschiedener Dokumente bleiben
+  getrennt; wiederholte Referenzen desselben Dokuments haben eine Bindung.
+  Nicht ausgewählte Mitglieder werden nicht rekursiv interpretiert.
+  Native Anhangübernahme benötigt weiterhin ihre expliziten Deskriptoren;
+  spätere Mutation von Eingabesammlungen ändert keine geprüften Daten.
+  Containererfolg liefert keine native Vollständigkeit oder Writefreigabe.
+- **C:** Gemeinsamer kanonischer ZIP-Kern und formatabhängige Manifest-
+  schicht sind ohne zweite ZIP-Implementierung verbunden. ReqIFZ-W/R-
+  Verträge und betroffene bisherige Projekt-/Work-Archivverhalten bleiben
+  unverändert; keine Fehlercodeänderung bestehender APIs als Aufräumen.
+
+Die Abnahmen beschreiben noch auszuführende Verhaltenstests, keine bereits
+beobachteten Erfolge. In diesem OFF-PLAN-Bundle ändern sich ausschließlich
+Spezifikation, Plan und die 743 notwendigen aktiven Spezifikations-
+Hashbindungen. Produktstand **600/900**, zuletzt **14.j.C**, nächstens
+**14.k.W**, sowie sämtliche drei offenen 14.k-Positionen bleiben erhalten.
+Die Dokumentklärung und ihre Collection-/Paketprüfung ersetzen keine
+Produktimplementierung, keinen parallelen Apply-Lauf und keine Abnahme.
+
+
 #### 14.k.W – Let it Work
 
 - [ ] **14.k.W** · Position **601/900** · Voraussetzung: `14.j.C`.
 **Exakte Commit-Message:** `14.k.W feat(exchange): ReqIFZ und sicheres Archivprofil aufbauen`
 
-**Umsetzung:** ReqIFZ auf den vorhandenen sicheren kanonischen Archivcodec aufsetzen.
+**Umsetzung:** ReqIFZ nach D.1.4 auf den vorhandenen sicheren kanonischen ZIP-Kern aufsetzen: explizite Dokumentauswahl, dokumentrelative Bytebindungen und abgeleitetes Transportmanifest ohne zusätzliches Pflichtmitglied. Die W-Abnahmen des Entscheidungsbelegs gelten; kein nativer Write oder zweiter Entpacker.
 
-**Verhaltensabnahme:** ReqIF-Daten und gebundene Anhänge überleben Containerroundtrip.
+**Verhaltensabnahme:** ReqIF-Daten, gebundene Anhänge und übrige Mitglieder überleben den Containerroundtrip bytegleich. Der tatsächliche Archivhash, die vollständigen Mitgliedgrößen/-hashes sowie Dokumentauswahl und Referenzziele sind deterministisch nachgewiesen. Fehlende oder geänderte Bindungen erzeugen keinen Erfolg.
 
 #### 14.k.R – Make it Right
 
 - [ ] **14.k.R** · Position **602/900** · Voraussetzung: `14.k.W`.
 **Exakte Commit-Message:** `14.k.R feat(exchange): ReqIFZ und sicheres Archivprofil vervollständigen`
 
-**Vervollständigung:** Traversal, doppelte Ziele, Sonderdateien und harte Expansionsgrenzen vor Extraktion abweisen.
+**Vervollständigung:** Die R-Abnahmen aus D.1.4 und dem Entscheidungsbeleg erfüllen: Traversal, doppelte beziehungsweise kollidierende Ziele, Sonderdateien, nichtkanonische/inkonsistente ZIP-Daten und harte Expansionsgrenzen vor Nutzinhaltsrückgabe oder Extraktion abweisen. Alle Mitglieder und dokumentrelativen Bindungen prüfen; vorhandene XML-/Loss-/Importgrenzen erhalten.
 
-**Verhaltensabnahme:** Containerdaten-/Sicherheitsvektoren prüfen echte Byte-/Pfadverträge, keine Darstellung. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Containerdaten-/Sicherheitsvektoren prüfen echte Byte-/Pfadverträge einschließlich mehrerer Dokumente, unverwendeter Mitglieder, Header-/Größenfehler und exakter Expansionsgrenzen. Keine reparierende Neuinterpretation, native Vollständigkeitsbehauptung oder implizite Writefreigabe. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 14.k.C – Make it Clean
 
 - [ ] **14.k.C** · Position **603/900** · Voraussetzung: `14.k.R`.
 **Exakte Commit-Message:** `14.k.C refactor(exchange): ReqIFZ und sicheres Archivprofil bereinigen`
 
-**Bereinigung:** ReqIFZ-Manifest und gemeinsames ZIP-Profil ohne zweite Archivimplementation verbinden.
+**Bereinigung:** Das abgeleitete ReqIFZ-Transportmanifest und den gemeinsamen ZIP-Kern nach D.1.4 ohne zweite Archivimplementation verbinden; bestehende formatabhängige Manifest- und Fehlerverträge unverändert erhalten.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
