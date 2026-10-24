@@ -11,7 +11,8 @@ from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..model.versions import SCHEMA_VERSION
-from ..storage.archive import validate_portable_archive_paths
+from ..storage.archive import _inventory, validate_portable_archive_paths
+from ..storage.json_syntax import parse_json_object
 from .errors import BundleError
 
 MANIFEST_NAME = 'bundle-manifest.json'
@@ -45,6 +46,14 @@ def metadata_bytes(value):
     require(type(value) is dict and set(value) == _FIELDS, 'bundle_metadata_fields')
     # Native JSON validation rejects foreign conversion hooks/cycles/Unicode.
     encoded = canonical_json_bytes(value)
+    _check_versions_and_identity(value)
+    kind = _check_scope(value)
+    _check_boundaries(value['boundary_references'], kind)
+    _check_exclusions(value['excluded_contents'], kind, value['idempotency_scope'])
+    return encoded
+
+
+def _check_versions_and_identity(value):
     for field in ('bundle_format_version', 'schema_version'):
         require(type(value[field]) is str, 'bundle_version_type')
     require(value['bundle_format_version'] == FORMAT_VERSION
@@ -54,6 +63,9 @@ def metadata_bytes(value):
         _text(value[field])
     for field in _HASHES:
         require_hash(value[field])
+
+
+def _check_scope(value):
     require(type(value['read_only']) is bool, 'bundle_read_only_type')
     descriptor = ScopeDescriptor(value['scope_descriptor']).data
     kind = value['bundle_kind']
@@ -70,12 +82,17 @@ def metadata_bytes(value):
         require(value['read_only'] and descriptor['scope_kind'] in ('document', 'release')
                 and descriptor['boundary_policy'] == 'partial', 'bundle_scope_combination')
         require(value['idempotency_scope'] == 'local_only', 'bundle_partial_idempotency')
-    boundaries = value['boundary_references']
+    return kind
+
+
+def _check_boundaries(boundaries, kind):
     require(type(boundaries) is list, 'bundle_boundary_list')
     keys = [BoundaryReference(item).order_key for item in boundaries]
     require(keys == sorted(set(keys)), 'bundle_boundary_order')
     require(kind != 'project' or not boundaries, 'bundle_project_boundary')
-    exclusions = value['excluded_contents']
+
+
+def _check_exclusions(exclusions, kind, idempotency_scope):
     require(type(exclusions) is list, 'bundle_exclusion_list')
     paths = []
     for item in exclusions:
@@ -88,11 +105,10 @@ def metadata_bytes(value):
         if item['reason'] == 'outside_scope':
             require(kind == 'partial', 'bundle_project_scope_exclusion')
         if item['reason'] == 'operational_receipts_excluded':
-            require(value['idempotency_scope'] == 'local_only', 'bundle_receipt_exclusion')
+            require(idempotency_scope == 'local_only', 'bundle_receipt_exclusion')
         paths.append(item['path'])
     require(paths == sorted(set(paths), key=lambda p: p.encode('utf-8')), 'bundle_exclusion_order')
     validate_portable_archive_paths(paths)
-    return encoded
 
 
 def check_entries(entries):
@@ -115,7 +131,6 @@ def check_payload_binding(metadata, files):
     require('specroad.json' in files, 'bundle_configuration_missing', code='SRV060')
     # Check only the manifest's direct identity/schema binding. Full native
     # configuration validity, model roots, closure and receipts are later gates.
-    from ..storage.json_syntax import parse_json_object
     configuration = parse_json_object(files['specroad.json'])
     require(configuration.get('project_id') == metadata['project_id']
             and configuration.get('schema_version') == metadata['schema_version'],
@@ -127,3 +142,24 @@ def owned_metadata(value):
         return json.loads(metadata_bytes(value))
     except ModelError as error:
         raise BundleError(error.reason) from error
+
+
+def check_manifest_bytes(manifest_raw, files):
+    """Check the transported manifest against the shared codec's inventory.
+
+    Keep field validation before canonical-byte and payload comparisons;
+    these checks establish container integrity, not semantic completeness.
+    """
+    try:
+        manifest = parse_json_object(manifest_raw)
+    except ModelError as error:
+        code = 'SRV060' if error.reason in ('invalid_utf8', 'invalid_json') else 'SRV002'
+        raise BundleError(error.reason, code=code) from error
+    require('entries' in manifest, 'bundle_entries_missing')
+    check_entries(manifest['entries'])
+    metadata = owned_metadata({k: v for k, v in manifest.items() if k != 'entries'})
+    require(canonical_json_bytes(manifest) == manifest_raw,
+            'noncanonical_bundle_manifest', code='SRV060')
+    require(canonical_json_bytes(manifest['entries']) == canonical_json_bytes(_inventory(files)),
+            'bundle_inventory_mismatch', code='SRV060')
+    check_payload_binding(metadata, files)

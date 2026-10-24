@@ -5,19 +5,29 @@ import json
 from types import MappingProxyType
 
 from .._metadata import __version__
-from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..storage.archive import (ArchiveError, _inventory, encode_archive, decode_zip,
+from ..storage.archive import (ArchiveError, encode_archive, decode_zip,
                                validate_portable_archive_paths)
-from ..storage.json_syntax import parse_json_object
 from .errors import BundleError
 from .manifest import (MANIFEST_NAME, require, require_hash, owned_metadata,
-                       check_entries, check_payload_binding)
+                       check_manifest_bytes, check_payload_binding)
 
 
 def _archive_failure(error):
     return BundleError(error.reason, exit_code=error.exit_code,
         code='SRV083' if error.exit_code == 7 else ('SRV060' if error.exit_code == 3 else None))
+
+
+def _owned_payloads(payloads):
+    """Copy exact bytes after validating the writer's portable ZIP namespace."""
+    require(type(payloads) is dict and all(type(raw) is bytes for raw in payloads.values()),
+            'bundle_payload_bytes_required')
+    files = dict(payloads)
+    require(MANIFEST_NAME not in files, 'recursive_bundle_manifest', code='SRV060')
+    validate_portable_archive_paths([MANIFEST_NAME, *files])
+    require(all(len(name.encode('utf-8')) <= 0xffff for name in files),
+            'bundle_path_exceeds_zip_field', code='SRV060')
+    return files
 
 
 def encode_bundle(metadata, payloads):
@@ -27,13 +37,7 @@ def encode_bundle(metadata, payloads):
     implicit project/receipt selection enters this in-memory transport.
     """
     try:
-        require(type(payloads) is dict and all(type(raw) is bytes for raw in payloads.values()),
-                'bundle_payload_bytes_required')
-        files = dict(payloads)
-        require(MANIFEST_NAME not in files, 'recursive_bundle_manifest', code='SRV060')
-        validate_portable_archive_paths([MANIFEST_NAME, *files])
-        require(all(len(name.encode('utf-8')) <= 0xffff for name in files),
-                'bundle_path_exceeds_zip_field', code='SRV060')
+        files = _owned_payloads(payloads)
         value = owned_metadata(metadata)
         require(value['tool_version'] == __version__, 'bundle_writer_version')
         check_payload_binding(value, files)
@@ -65,19 +69,7 @@ class BundleContainer:
                                validate_paths=validate_portable_archive_paths)
             require(MANIFEST_NAME in files, 'bundle_manifest_missing', code='SRV060')
             manifest_raw = files.pop(MANIFEST_NAME)
-            try:
-                manifest = parse_json_object(manifest_raw)
-            except ModelError as error:
-                code = 'SRV060' if error.reason in ('invalid_utf8', 'invalid_json') else 'SRV002'
-                raise BundleError(error.reason, code=code) from error
-            require('entries' in manifest, 'bundle_entries_missing')
-            check_entries(manifest['entries'])
-            metadata = owned_metadata({k: v for k, v in manifest.items() if k != 'entries'})
-            require(canonical_json_bytes(manifest) == manifest_raw,
-                    'noncanonical_bundle_manifest', code='SRV060')
-            require(canonical_json_bytes(manifest['entries']) == canonical_json_bytes(_inventory(files)),
-                    'bundle_inventory_mismatch', code='SRV060')
-            check_payload_binding(metadata, files)
+            check_manifest_bytes(manifest_raw, files)
         except ArchiveError as error:
             raise _archive_failure(error) from error
         except ModelError as error:

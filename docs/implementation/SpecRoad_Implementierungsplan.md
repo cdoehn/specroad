@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 17
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 617
-last_completed_plan_commit: 15.a.R
-next_plan_commit: 15.a.C
-last_completed_numbered_bundle: 458
+implementation_plan_commits_completed: 618
+last_completed_plan_commit: 15.a.C
+next_plan_commit: 15.b.W
+last_completed_numbered_bundle: 459
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -23685,7 +23685,7 @@ Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen; **15.a.C bleibt offen**
 
 #### 15.a.C – Make it Clean
 
-- [ ] **15.a.C** · Position **618/900** · Voraussetzung: `15.a.R`.
+- [x] **15.a.C** · Position **618/900** · Voraussetzung: `15.a.R`.
 **Exakte Commit-Message:** `15.a.C refactor(bundle): Kanonisches ZIP und Manifestdomäne bereinigen`
 
 **Bereinigung:** Manifestprojektion und Pfadprüfungen strukturieren und den gemeinsamen M6-Archivcodec wiederverwenden. Keine zweite ZIP-Implementation und keine Änderung der Work-/ReqIFZ-/Archivformate, Fehlerverträge oder zulässigen Seiteneffekte.
@@ -23693,6 +23693,86 @@ Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen; **15.a.C bleibt offen**
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungs- und Prüfnachweis 15.a.C, Bundle 459 (2026-10-24).**
+
+**Bestätigte technische Basis.** Das maßgebliche Result
+`specroad-apply_Result_182220_1024_51d9b6.zip`, SHA-256
+`c554f479df2d3da02a17ffe5fcc32044ac49a7f528dcc1a06142da7249e41355`,
+bestätigt den sauberen Commit
+`007c8103155a3942495183a00e35fd8b0159b3d7` für **15.a.R**, Bundle **458**.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run- und Ausführungslog sowie
+alle **2.220** Snapshot-Dateien wurden geprüft und mit dem tatsächlichen
+Apply-Stand lesend abgeglichen. Vierfachbindung: Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, obiger Basiscommit, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+
+Die tatsächlichen Auswahl-, Katalog- und Einzeloutcome-Dateien bestätigen
+**6.785/6.785** bestandene Tests mit **vier parallelen Workern**, **Sequenz
+164, Gruppe 2/3**. Die nummerierte Auswahl wurde aus allen **20.357**
+Identitäten erneut nachvollzogen; ihre Bindung hat SHA-256
+`e6734a08b909ba475ac6d5bfedaa78e377b4b8f9a3c1f7c7594e50af74bded3f`.
+Der Commit ist unmittelbarer Nachfolger des bestätigten W-Commits; kein
+fehlgeschlagener Versuch wird als Rotationsschritt gezählt. Die fünf
+bestätigten Planmarker wurden in Dev nachgeführt: **617/900**, zuletzt
+**15.a.R**, nächstens **15.a.C**, Bundle **458**.
+
+**Reine strukturelle Bereinigung.** `manifest.py` gliedert die bereits
+bestehenden Prüfungen in Version/Identität, Scope-/Kindkombination,
+Boundary References und bewusste Ausschlüsse. Die native JSON-Prüfung
+bleibt davor; die Reihenfolge der fachlichen Prüfungen bleibt erhalten.
+Die Prüfung der transportierten Manifestbytes, der nichtrekursiven
+Inventarbijektion und der direkten Konfigurationsbindung liegt nun
+zusammen im Manifestmodul. `container.py` bündelt die Besitzübernahme und
+Pfadprüfung der Writer-Payloads in einem eigenen Helfer und delegiert
+die Manifestprüfung an diesen gemeinsamen Prüfpfad.
+
+Der unveränderte M6-Archivcodec bleibt alleiniger ZIP-Reader/-Writer und
+Lieferant des tatsächlichen Payloadinventars. Kanonische ZIP-/Manifestbytes,
+portable Pfadgrenzen, Fehlerpriorität und -klassen, externe SHA-Erwartung,
+unveränderte Payloadbytes, Besitztrennung und fehlende Schreib-/Projekt-
+autorität bleiben erhalten. Work-/ReqIFZ-Formate und Seiteneffekte ändern
+sich nicht. **SPECROAD-DECISION-1** ist ausdrücklich vorhanden; für diese
+normale C-Umsetzung ist keine neue normative Entscheidung nötig.
+Spezifikation **0.2.22** bleibt bytegleich, SHA-256
+`32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`.
+
+**Gezielte Entwicklungsprüfung.** Alle **490/490** ausgewählten bestehenden
+Verhaltenstests bestanden unter Linux/Python 3.14.4 mit **vier parallelen
+Workern**: die **69** Bundle-W- und **179** Bundle-R-Fälle sowie **194**
+ReqIFZ- und **48** Work-Archivregressionen. Die vorhandenen unabhängigen
+ZIP-Vektoren, ihre erwarteten Fehler, sämtliche Testdateien und Fixtures
+bleiben bytegleich. Es wurden keine neuen Testidentitäten angelegt und
+keine der **20.357** dauerhaften Nummern verändert. Die vollständige
+Collection-/Katalogprüfung erfasste diese Identitäten mit **0** ausgeführten
+Testkörpern und ohne Katalogfehler. Einzeloutcomes und tatsächliche
+Testauswahl wurden gegen den Katalog abgeglichen.
+
+Geprüfter Quellstand:
+`ba906ca2eeebff8016100cb0d260f18f46903431b907af0057392801562930ba`.
+SHA-256 der tatsächlichen Auswahlbeobachtung:
+`a7f9ec75c7834a2d164e53891a759af249be1cf98c28fdd733085cba0e1620cf`;
+SHA-256 der tatsächlichen Einzeloutcomes:
+`9ba76d58c2f16afc05db01798d71759233f2c0e62f70726e1cfc3d3092d36c3e`;
+SHA-256 des vollständigen Katalogbelegs:
+`8c71f45d3e38435547c68cdcb4874bf595388342ae62b238d78d01f3188761dc`.
+Dies ist eine gezielte Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+Die drei Katalogverträge SR-TC-0387/0388/0485 bleiben **partial**; nur der
+C-Bereinigungspunkt entfällt. Semantische Projekt-/Closure-/Wurzelprüfung,
+Receipttransfer und CLI-Erzeugung/-Verifikation/-Extraktion bleiben in
+den nachfolgenden M15-Schritten offen.
+
+**Vorgesehene Übergabe.** Genau ein regulärer PLAN-Zustand **15.a.C**,
+Position **618/900**. Der Entrypoint prüft zuerst den sauberen gebundenen
+R-Stand, stellt dann ausschließlich diesen gezielt geprüften C-Zustand
+her und startet genau **Gruppe 0/3**, **Sequenz 165**, mit **6.786** Tests
+und vier Workern. Die bewährte private `build/`-Ablage für Testberichte
+und temporäre Dateien bleibt erhalten. Erst nach erfolgreichem Gate mit
+passenden Quell-, Nummerierungs- und Auswahlbindungen setzt er die fünf
+Planmarker auf **618/900**, zuletzt **15.a.C**, nächstens **15.b.W**, Bundle
+**459** und die C-Checkbox und erzeugt die exakte PLAN-Commit-Message.
+Bei Fehler bleiben bereits erfolgreiche Commits, Arbeitsbaum, Index und
+Nachweise erhalten. Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen.
 
 <a id="step-15-b"></a>
 ### 15.b – Vollprojektbundle erzeugen

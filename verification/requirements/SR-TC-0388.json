@@ -22,7 +22,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Projektbundle MUSS das kanonische ZIP-Profil aus Kapitel 10.16 erfüllen.",
-    "scope": "15.a.W/R exact container/manifest/payload byte contract. Frozen independent stdlib bytes and literal expected errors; exact field and native scope/boundary contracts; no filesystem effects or semantic-project/write authority."
+    "scope": "15.a.W/R/C exact container/manifest/payload byte contract. Frozen independent stdlib bytes and literal expected errors; exact field and native scope/boundary contracts; no filesystem effects or semantic-project/write authority."
   },
   "expected_diagnostics": [
     "SRV002",
@@ -253,7 +253,6 @@
     "tests/test_product_bundle_right.py::test_writer_reports_unrepresentable_zip_name_without_struct_error[utf8-overflow]"
   ],
   "open_items": [
-    "15.a.C structural cleanup remains open.",
     "Full project closure/root verification, operational receipt validity/transfer, CLI create/verify/extract and whole-project completeness remain in subsequent M15 steps; a pure container is not a project verification result."
   ]
 }
