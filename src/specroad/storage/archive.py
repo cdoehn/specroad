@@ -8,6 +8,7 @@ explicit limits of this initial codec; multipart/streaming is separate work.
 from hashlib import sha256
 from io import BytesIO
 import re
+import struct
 import unicodedata
 from zipfile import BadZipFile, LargeZipFile, ZipFile, ZipInfo, ZIP_STORED
 
@@ -145,11 +146,49 @@ def decode_zip(raw, *, max_uncompressed_bytes, validate_paths=None):
                      validate_paths=validate_paths)
 
 
+def _stored_layout(raw, infos):
+    """Check ZIP32 header agreement and contiguous extents before payload reads.
+
+    This is a preflight of the shared stored profile, not an unpacker. ZipFile
+    still owns decoding and CRC checks; the common writer remains the final
+    byte oracle. Only small fixed headers and names are copied here.
+    """
+    _require(len(infos) <= 0xffff, 'noncanonical_archive')
+    cursor = 0
+    for info in infos:
+        name = info.filename.encode('utf-8')
+        header = struct.pack('<4s5H3I2H', b'PK\x03\x04', 20, info.flag_bits,
+                             ZIP_STORED, 0, 33, info.CRC, info.file_size,
+                             info.file_size, len(name), 0) + name
+        _require(info.header_offset == cursor and raw[cursor:cursor+len(header)] == header,
+                 'archive_header_mismatch')
+        cursor += len(header) + info.file_size
+        _require(cursor <= len(raw), 'archive_data_extent_invalid')
+    central_start = cursor
+    for info in infos:
+        name = info.filename.encode('utf-8')
+        header = struct.pack('<4s6H3I5H2I', b'PK\x01\x02', (3 << 8) | 20,
+                             20, info.flag_bits, ZIP_STORED, 0, 33, info.CRC,
+                             info.file_size, info.file_size, len(name), 0, 0, 0,
+                             0, 0o100644 << 16, info.header_offset) + name
+        _require(raw[cursor:cursor+len(header)] == header, 'archive_header_mismatch')
+        cursor += len(header)
+    _require(central_start <= 0xffffffff and cursor - central_start <= 0xffffffff,
+             'noncanonical_archive')
+    end = struct.pack('<4s4H2IH', b'PK\x05\x06', 0, 0, len(infos), len(infos),
+                      cursor - central_start, central_start, 0)
+    _require(len(raw) == cursor + len(end) and raw[cursor:] == end,
+             'noncanonical_archive')
+
+
 def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_paths=None):
     try:
         with ZipFile(BytesIO(raw), 'r') as archive:
             infos = archive.infolist()
-            names = [info.filename for info in infos]
+            # ZipInfo truncates a NUL-bearing filename. Validate its original
+            # decoded spelling before that convenience can hide an unsafe path.
+            names = [info.orig_filename if max_uncompressed_bytes is not None
+                     else info.filename for info in infos]
             if validate_paths is not None:
                 validate_paths(names)
             _require(len(names) == len(set(names))
@@ -167,6 +206,10 @@ def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_
                     and info.internal_attr == 0 and not info.extra and not info.comment,
                     'noncanonical_archive_entry')
             _require(not archive.comment, 'noncanonical_archive')
+            if max_uncompressed_bytes is not None:
+                _require(names == sorted(names, key=lambda name: name.encode('utf-8')),
+                         'noncanonical_archive')
+                _stored_layout(raw, infos)
             if (max_uncompressed_bytes is not None
                     and sum(info.file_size for info in infos) > max_uncompressed_bytes):
                 raise ArchiveError('archive_byte_limit', exit_code=7)
@@ -174,6 +217,8 @@ def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_
     except (BadZipFile, OSError, ValueError, NotImplementedError) as error:
         if isinstance(error, ArchiveError):
             raise
+        if isinstance(error, UnicodeError) and manifest_name is None:
+            raise ArchiveError('unsafe_archive_path', exit_code=7) from error
         if isinstance(error, OSError) and manifest_name is None:
             raise  # A real host failure is not an ordinary malformed ReqIFZ.
         raise ArchiveError('invalid_archive_container') from error

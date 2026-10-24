@@ -125,6 +125,7 @@
     "SR-FIX-REQIF-STRUCTURE-XHTML-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-R-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-v1",
+    "SR-FIX-REQIFZ-CONTAINER-R-v1",
     "SR-FIX-REQIFZ-CONTAINER-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
@@ -845,6 +846,10 @@
     "SR-FIX-REQIFZ-CONTAINER-v1": {
       "provider": "tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:xdocument",
       "kind": "Owned XML and real independent stdlib ZIP bytes, nested/multiple explicitly selected documents, original byte attachments and unused members. Exact external archive/member hash and manifest oracles, native explicit attachment integration, safety/binding/limit failures, read-only guards and isolated Core/PYZ roundtrips. No project import/export, foreign-tool, full-suite or release claim."
+    },
+    "SR-FIX-REQIFZ-CONTAINER-R-v1": {
+      "provider": "tests/test_reqifz_right.py:source_files,offsets;tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:one,document;tests/support/reqif_structure.py:xdocument",
+      "kind": "Actual independently generated stored ZIPs with local/central/end record and payload mutations; unused members, gap/overlap/size/CRC failures, unsafe original filenames, complete URI and XML-boundary vectors. Tests require rejection before payload reads for invalid metadata and exact owned manifest/byte oracles for valid transports. No project write, full-suite, foreign-tool or release claim."
     }
   }
 }

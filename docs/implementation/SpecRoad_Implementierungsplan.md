@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 15
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 601
-last_completed_plan_commit: 14.k.W
-next_plan_commit: 14.k.R
-last_completed_numbered_bundle: 438
+implementation_plan_commits_completed: 602
+last_completed_plan_commit: 14.k.R
+next_plan_commit: 14.k.C
+last_completed_numbered_bundle: 439
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -21050,12 +21050,86 @@ ohne Warte-/Resultschleife.
 
 #### 14.k.R – Make it Right
 
-- [ ] **14.k.R** · Position **602/900** · Voraussetzung: `14.k.W`.
+- [x] **14.k.R** · Position **602/900** · Voraussetzung: `14.k.W`.
 **Exakte Commit-Message:** `14.k.R feat(exchange): ReqIFZ und sicheres Archivprofil vervollständigen`
 
 **Vervollständigung:** Die R-Abnahmen aus D.1.4 und dem Entscheidungsbeleg erfüllen: Traversal, doppelte beziehungsweise kollidierende Ziele, Sonderdateien, nichtkanonische/inkonsistente ZIP-Daten und harte Expansionsgrenzen vor Nutzinhaltsrückgabe oder Extraktion abweisen. Alle Mitglieder und dokumentrelativen Bindungen prüfen; vorhandene XML-/Loss-/Importgrenzen erhalten.
 
 **Verhaltensabnahme:** Containerdaten-/Sicherheitsvektoren prüfen echte Byte-/Pfadverträge einschließlich mehrerer Dokumente, unverwendeter Mitglieder, Header-/Größenfehler und exakter Expansionsgrenzen. Keine reparierende Neuinterpretation, native Vollständigkeitsbehauptung oder implizite Writefreigabe. Die W-Nachweise bleiben zusätzlich grün.
+
+**R-Vervollständigung und Übergabe (Bundle 439):** Das vollständig gebundene
+Result `specroad-apply_Result_012900_1024_088c9d.zip`, SHA-256
+`9d731afaa3f6c9d91300f9a95e6d54b9f2cf415e8fe8014c069c35be9ec1c3f6`,
+bestätigt **14.k.W / Bundle 438** auf
+`844893ebf7a93453b81598326c7c5e9bc618c835`: sauberer Apply-Stand,
+**6.340/6.340** bestandene Tests, Gruppe **2/3**, Commitfolge **146**,
+vier Worker, **1.911,80 s**. Native Resultbindung, alle **2.185 Snapshotdateien**,
+Commit samt Elternstand und tatsächliche gebundene Testbelege wurden
+abgeglichen. In Dev wurden ausschließlich die fünf belegten W-Fortschritts-
+marker nachgeführt; danach entsprach der Bestand dem Snapshot.
+Vor Apply bleibt der Produktstand **601/900**, zuletzt **14.k.W**, nächstens
+**14.k.R**, Bundle **438**. SPECROAD-DECISION-1 ist ausdrücklich vorhanden;
+Spezifikation **0.2.20 / D.1.4** bleibt bytegleich. Dies ist reguläre Umsetzung
+der geklärten R-Abnahmen, keine neue normative Entscheidung.
+
+Der gemeinsame begrenzte ZIP-Leser prüft jetzt vor jedem Nutzinhaltslesen
+auch die vollständige Anordnung der ZIP32-Datensätze: lokale und zentrale
+Header müssen in Namen, Flags, Größen, CRC-Angaben, Metadaten und Offsets
+zusammenpassen. Die Datenbereiche sind lückenlos, nicht überlappend und
+mit dem tatsächlichen Enddatensatz gebunden. Gefälschte Größen, versteckte
+Zusatzdaten und fremde Vor-/Nachlaufbytes werden vor einer darauf gestützten
+Nutzdatenallokation abgewiesen. Diese Vorprüfung kopiert nur kleine Header
+und Namen. Der bestehende ZIP-Leser behält das eigentliche Lesen und die
+CRC-Prüfung; der gemeinsame Schreiber bleibt die abschließende Bytekontrolle.
+
+Die ursprüngliche dekodierte Namensschreibweise wird vor einer möglichen
+NUL-Kürzung des ZIP-Lesers geprüft; ungültiges UTF-8 und versteckte unsichere
+Pfade führen zu Code 7. Die manifestgebundenen bisherigen Archiv-APIs
+behalten ihre Fehlerverträge. Dokumentauswahl, XML-Sicherheitsprofil,
+Original-/Fallback-Prüfung, dokumentrelative Anhangbindungen, tatsächliche
+Hash-/Größenableitung und native Deskriptorpflicht bleiben erhalten.
+Kein Entpacken, rekursives Interpretieren, externer Zugriff oder nativer
+Write wird eingeführt. Der erfolgreiche Transport bleibt von vollständigem
+Import, Exportscopes, Loss-Freigabe und Projektübernahme getrennt.
+
+**Gezielter Dev-Verhaltensnachweis:** **1.093/1.093 Tests**, vier parallele
+Worker, **32,00 s**, Prozess-/Gate-Exit **0**, keine Beobachtungsfehler;
+`selected_passed=true`, `full_suite_passed=null`. Die **12 ausgewählten
+Testdateien** enthalten die **146 neuen R-Fälle**, alle **48 W-Fälle** und
+betroffene ReqIF-Struktur-/Objekt-/Erhaltungs-/Verlust- sowie Work-Archiv-/
+Paketregressionen. Unabhängig erzeugte echte ZIPs werden an lokalen,
+zentralen und Endheadern sowie Nutzbytes verändert. Lesesperren prüfen,
+dass ungültige Metadaten bereits vor dem ersten Nutzdatenlesen scheitern.
+Weitere Vektoren prüfen die URI-Dekodierung, sämtliche URI-Attributarten,
+passive und originale XML-Teilbäume, gegenseitige Dokumentreferenzen,
+Unicode, unverwendete Daten, alle sieben XML-Grenzen, die exakte Gesamt-
+Expansionsgrenze, unabhängige Rückgaben und echte Hostfehler.
+
+Bestehende Tests, Oracles und Fixtures bleiben unverändert; eine eigene
+R-Fixture wird ergänzt. SR-TC-0323 und SR-TC-0486 binden W und R gemeinsam
+und entfernen nur den erledigten R-Punkt aus `open_items`; C und spätere
+Integration bleiben offen, der Nachweis bleibt **partial**. Die **146 neuen
+Testnummern** werden hinter die **19.020** vorhandenen Nummern angehängt.
+Die vollständige Collection-/Katalogprüfung bestätigt **19.166 Identitäten**,
+**0 ausgeführte Testkörper** und keine Katalogfehler. Kein Vollsuite-,
+serieller, Darstellungs-/Dokumentationstest oder CI-Lauf wurde gestartet.
+Quellstand `e6521c16440c58b3d5532e509219f0d806f4bb0ca82eb512d8e55676fbdbd8ff`;
+Katalog `5b842e6c297e794f3b618d3138cd1ebedb0cc559b701f4a072f66761d69f2267`;
+Auswahlbeleg `593be4b073bd39e5f926686969131f7526627a7350f6ab6accf2fdf23512bbf0`;
+Beobachtungsbeleg `cbdf66b15e266eefd77e785fae3f4b6034a5ae4a744a5865a00efe4c84d99bf5`.
+
+**Vorgesehene Apply-Grenze:** Ein regulärer Commit **14.k.R**, Position
+**602/900**, Bundle **439**, mit der oben festgelegten Commit-Message.
+Der Entrypoint installiert genau den gezielt geprüften R-Zustand und prüft
+nur **Gruppe 0/3**, Commitfolge **147**, mit **6.389 Tests** und vier parallelen
+Workern. Erst nach erfolgreichem gebundenem Gate werden die fünf
+Fortschrittsmarker auf **602/900**, zuletzt **14.k.R**, nächstens **14.k.C**,
+Bundle **439** und die R-Checkbox gesetzt und committet. Bei Fehlern bleiben
+tatsächliche Dateien, Index und erfolgreiche Commits erhalten. **14.k.C**,
+14.l und die vollständige CLI-/Projektintegration bleiben offen. Kein
+Vollsuite-, Fremdtool-, Release- oder Apply-Erfolg wird vorweggenommen.
+Nach nativer ZIP-Prüfung und atomarer Übergabe endet dieser Einzelauftrag
+ohne Warte-/Resultschleife.
 
 #### 14.k.C – Make it Clean
 
