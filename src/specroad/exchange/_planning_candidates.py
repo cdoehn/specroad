@@ -80,17 +80,35 @@ def _prepare_candidate_changes(model, candidates, selected, *, strategy,
                 "pointer": pointer, "reason": "unmapped_external_field", "value": value,
                 "accepted": False})
             diagnostics.append(ImportIdentityError("unaccepted_import_loss", pointer=pointer).diagnostic())
+        # A creation envelope or an existing native value is not a source
+        # mapping for the requirement's normative content. Keep absence
+        # distinct from an explicitly mapped null/empty value (which is still
+        # checked by the ordinary native validator). Configured source-member
+        # and value-table errors have already failed in the strict mapper.
+        missing_content = [field for field in ("language", "normative_force", "statement")
+                           if projection["artifact_type"] == "requirement" and field not in projection]
+        for field in missing_content:
+            pointer = at + "/fields"
+            losses.append({"candidate_index": number, "artifact_id": native_id,
+                "pointer": pointer, "reason": "unmapped_requirement_content",
+                "target_field": field, "accepted": False})
+            diagnostics.append({**ImportIdentityError("unaccepted_import_loss", pointer=pointer).diagnostic(),
+                                "target_field": field})
         local = {} if old is None else {key: old[key] for key in projection if key in old}
         comparison = ImportComparison(None if owner is None else owner["identity"],
             mapping_id=resource.key, strategy=strategy, local_projection=local, source_projection=projection).data
         observed = {"candidate_index": number, "artifact_id": native_id,
             "identity": identity.data, "comparison": comparison["comparison"],
-            "action": "create" if old is None else comparison["action"]}
+            "action": "reject" if missing_content else "create" if old is None else comparison["action"]}
         objects.append(observed)
         diagnostics.extend({**d, "candidate_index": number, "artifact_id": native_id}
                            for d in comparison["diagnostics"])
         if comparison["comparison"] == "diverged":
             conflicts.append({**observed, "code": "SRV148", "resolved": False})
+        if missing_content:
+            # Do not manufacture content or refresh import history, even in
+            # the passive operations of a plan that cannot be executed.
+            continue
         if old is not None and comparison["action"] != "adopt":
             # No-op may retain its baseline; skip/retain/reject MUST retain it.
             continue

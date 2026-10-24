@@ -135,6 +135,9 @@ Existing relations and nonmapped fields remain intact. Attachment references
 must resolve to actual bytes already bound by TargetModel; new attachment
 publication and relation/registry candidates belong to later import adapters.
 Unmapped source fields are individually reported as unaccepted losses.
+Requirements also require explicit mappings for language, normative_force and
+statement; missing content mappings are losses, never filled from an envelope
+or an existing artifact, and produce no candidate operation or new history.
 """
     if type(model) is not TargetModel:
         raise ImportIdentityError("import_target_model_required")

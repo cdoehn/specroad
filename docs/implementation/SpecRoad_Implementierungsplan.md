@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 607
-last_completed_plan_commit: 14.m.W
-next_plan_commit: 14.m.R
-last_completed_numbered_bundle: 446
+implementation_plan_commits_completed: 608
+last_completed_plan_commit: 14.m.R
+next_plan_commit: 14.m.C
+last_completed_numbered_bundle: 447
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -22093,12 +22093,135 @@ Serienlauf und keine Änderung der Spezifikation oder der allgemeinen Testregeln
 
 #### 14.m.R – Make it Right
 
-- [ ] **14.m.R** · Position **608/900** · Voraussetzung: `14.m.W`.
+- [x] **14.m.R** · Position **608/900** · Voraussetzung: `14.m.W`.
 **Exakte Commit-Message:** `14.m.R feat(exchange): Mehrsprachiger Requirement-Austausch vervollständigen`
 
 **Vervollständigung:** Fehlende Abbildung als Verlust statt Ableitung aus Keywords oder Detektor behandeln.
 
 **Verhaltensabnahme:** Datenroundtrips mit de/en/hi/id/pt/es/ru/ja/zh und Kennzeichnungsvarianten bleiben verlustfrei. Die W-Nachweise bleiben zusätzlich grün.
+
+**Umsetzungs- und Prüfnachweis 14.m.R, Bundle 447 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_074636_1024_b4e28d.zip` mit SHA-256
+`91950c3a495e19d54e882ebe246cf03b09bb32849860f5a2a95f7dc50ba78bf4`
+bestätigt den sauberen Commit `6af1be4e4600770a7bb359f28be4d35ee6f45a21`
+für **14.m.W**, Position **607/900**, Bundle **446**. Die tatsächlichen
+Apply-Beobachtungen bestätigen **6.455/6.455** bestandene Tests der festen
+Gruppe **0**, Sequenz **153**, mit vier Workern und Prozessabschluss **0**.
+Testidentitäten, Nummern, Selektionsbindung, Quellhash und tatsächliche Outcomes
+sind geprüft; dies ist ein Teiltest und kein Vollsuite-/Release-Nachweis.
+Result-Hash, Vierfachbindung, sauberer Snapshot und Commit stimmen überein.
+
+**Fachliche Vervollständigung.** Der gemeinsame Importplan verlangt für
+Requirements die ausdrücklich abgebildete vollständige Dreifeldprojektion
+`language`, `normative_force`, `statement`. Fehlt ein Zielfeld in der
+Projektion, meldet er pro Feld `unmapped_requirement_content` als nicht
+akzeptierten Verlust. `target_field` benennt das fehlende normative Feld;
+der Pointer benennt den tatsächlich vorhandenen Kandidaten-Feldcontainer.
+Es wird kein fehlender Quellwert als JSON-Null ausgegeben oder erfunden.
+Tatsächlich vorhandene, ungemappte Quellwerte bleiben zusätzlich einzeln im
+bisherigen Verlustbericht erhalten.
+
+Weder eine Erstellungsvorlage noch ein vorhandenes natives Requirement
+ersetzt diese Abbildung. Für den unvollständigen Kandidaten gibt es keine
+Create-/Updateoperation und keine neue Importhistorie; der Gesamtplan bleibt
+ungültig, auch bei `skip`. Die Verlust- und Fehlergates gelten weiter für
+den vollständigen Zielstand. Gespeicherte Berichte werden aus den gebundenen
+Eingaben neu geprüft; Entfernen von Verlusten oder fingierte Erfolgsfelder
+erzeugen keine Schreibautorität.
+
+Der reine Mapper behält seinen strikten Vertrag aus 10.12.1: Ein
+konfiguriertes, tatsächlich fehlendes Quellfeld und ein nicht abgebildeter
+Tabellenwert bleiben harte Mappingfehler. Vorhandene ungültige Sprache,
+Verbindlichkeit oder leere Aussage werden nicht durch Vorlagenwerte ersetzt.
+Nicht-Requirements behalten die bisherigen Regeln. Die Umsetzung konkretisiert
+die vorhandene R-Aufgabe und S.2/S.7; sie führt keine eigene normative
+Spezifikationsentscheidung, Sprachdetektion oder Schlüsselwortinterpretation ein.
+
+**Transport- und Fehlergrenzen.** Die tatsächlichen CSV-/NDJSON-/ReqIF-/
+ReqIFZ-Bytes erhalten den S.4-Mindestkorpus mit **elf** Kennzeichnungen,
+alle **sechs** zusätzlichen Transportkennzeichnungen sowie die gespeicherte
+Schreibweise `EN-us`, jeweils für alle vier Forcewerte. Geprüft werden
+vollständiger Unicode-Text, CR/LF, Quotes, XML-Zeichen, zusammengesetzte und
+zerlegte Zeichen sowie Emoji-Sequenzen. Das ist ein Datenvergleich, kein
+Nachweis von Übersetzungsäquivalenz oder Detektorqualität. Tatsächlich
+dekodierte Felder lassen sich mit ausdrücklichen nativen Erstellungshüllen
+und echtem hashgebundenem Offline-Sprachregister in den bestehenden
+Importplan übernehmen. Die übrigen nativen Felder werden dabei ausdrücklich
+lokal geliefert, nicht als rückübertragen behauptet.
+
+Das unveränderte RFC-4180-Stringprofil lehnt rohe Tabulatoren ab. Derselbe
+Originaltext bleibt mit ausdrücklich gewähltem `typed-json-v1`-Zellcodec
+verlustfrei erhalten; es gibt keine stille Textbereinigung. Fehlende
+Exportabbildungen bleiben im bisherigen Manifest sichtbar, und
+`fail_on_loss` blockiert weiterhin. Die CSV-/ReqIF-Kernabbildung bleibt
+eine Dreifeldprojektion: Weitere native Felder, einschließlich der
+Abweichungsmetadaten von `should`, bleiben explizite Verluste. NDJSON erhält
+das gesamte Artefakt. Kein tatsächlicher Import-Apply, keine Fremdtool-
+Interoperabilität, menschliche Zustimmung oder Releasefreigabe wird behauptet.
+
+**Gezielte parallele Abnahme.** **2.521/2.521** neue und betroffene
+Verhaltenstests bestanden mit **vier Workern**, Prozessabschluss **0**,
+alle Outcomes `passed`. Die **408 neuen** Tests decken die Sprach-/Force-
+Matrix, tatsächliche Rückabbildung, fehlende Abbildung bei neuen und bekannten
+Identitäten, unveränderte harte Fehler, Verluste und die dependency-freie
+Mappingnutzung ab. Alle **38** W-Tests und die betroffenen bisherigen
+Format-, Mapping-, Importplan-, Importausführungs-, Export- und
+Requirementtests bleiben grün. Dieser Lauf ist ausdrücklich ein Teiltest,
+`full_suite_passed=null`.
+
+Geprüfte Testdateien:
+
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_exchange_mappings.py`
+- `tests/test_exchange_mappings_right.py`
+- `tests/test_import_execution.py`
+- `tests/test_import_execution_right.py`
+- `tests/test_import_planning.py`
+- `tests/test_import_planning_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_project_export.py`
+- `tests/test_project_export_right.py`
+- `tests/test_reqif_loss.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_preservation.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_requirement.py`
+- `tests/test_requirement_exchange.py`
+- `tests/test_requirement_exchange_right.py`
+- `tests/test_requirement_right.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **19.772** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Die neuen Identitäten
+wurden ausschließlich hinten an die feste Nummerierung angefügt:
+**19.364–19.771**. Keine bestehende Nummer wurde geändert oder wiederverwendet.
+`SR-TC-0723` bleibt mit konkreten Testidentitäten und beiden W-/R-Fixtures
+`partial`; **14.m.C**, externe Nachweise und Freigabegrenzen bleiben offen.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `40ee22d824fe9720532c4a136b75c0900f92f26789910d3941f30d480eb64da6`.
+- Selektionsdatei-SHA-256: `aadd1b227d01496951231bcde166fd8b6a1b886c7f7eff59e76d01ed5d718c3b`.
+- Beobachtungsdatei-SHA-256: `e8545b00f3872be54aa7c92c31f886d4d0689fb63285fe206438345d51b9e750`.
+- Katalog-SHA-256: `85b77c1df7981c0aba98fccd012f5eee48fa6b90316d7566b99fe3ce1178fb6e`.
+
+**Offene Apply-Abnahme.** Dieses Bundle liefert genau den gezielt geprüften
+R-Zwischenstand und verlangt den sauberen gebundenen Ausgangszustand. Apply
+prüft ausschließlich Gruppe **1**, Sequenz **154**, mit **6.591** Tests und
+vier Workern. Erst nach dem erfolgreichen gebundenen Lauf werden die fünf
+Fortschrittsmarker auf **608/900**, zuletzt **14.m.R**, nächstens **14.m.C**,
+Bundle **447** und die R-Checkbox gesetzt und die exakte PLAN-Message
+committed. Es gibt keinen vorab behaupteten Apply-Erfolg, keinen Voll- oder
+Serienlauf und keine Änderung der Spezifikation oder der allgemeinen Testregeln.
 
 #### 14.m.C – Make it Clean
 
