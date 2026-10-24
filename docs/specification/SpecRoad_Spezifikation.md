@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.21
+## Version 0.2.22
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.21` |
+| Dokumentversion | `0.2.22` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 24. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.21 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.21 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.22 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.22 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.20 vom 24. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung EXPORT-MANIFEST-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: gebundener Exportumfang, deterministische Zeitprojektion und separates verlustbewusstes Manifest. Entscheidungsbeleg und Abnahmen stehen bei 14.l im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung des Exportumfangs und des gemeinsamen deterministischen Manifests in 10.12.3; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.21 vom 24. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung BUNDLE-MANIFEST-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: geschlossene Bundlemanifest-Feldmenge, tatsächliche Payloadbindung und getrennte Modell-/Idempotenzdomänen. Entscheidungsbeleg und Abnahmen stehen bei 15.a im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung des Produktbundlemanifests in E.1.1 auf dem bestehenden kanonischen Archivprofil; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.21 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.22 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.21 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.22 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4487,6 +4487,19 @@ in 14.l.W/R/C; Produktstand 603/900 und Control-/Laufzeitzustände bleiben bei
 dieser Dokumentübergabe unverändert. Die neue Katalogbindung ist kein
 Produkt-, Roundtrip-, Release- oder Fremdtool-Nachweis.
 
+### 20.21 Bundlemanifestpräzisierung v0.2.22
+
+`BUNDLE-MANIFEST-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, präzisiert
+in E.1.1 die geschlossene Feldmenge und Version des Produktbundlemanifests,
+die tatsächliche Payloadbindung, bewusste Ausschlüsse sowie die vorhandenen
+Scope-/Modell- und Idempotenzgrenzen. Der gemeinsame Archivcodec und das
+kanonische E.2-Profil bleiben Grundlage; bestehende Formate und historische
+Originalbytes werden nicht migriert. Umsetzung und Verhaltensevidence folgen
+in 15.a.W/R/C und den bestehenden nachfolgenden M15-Schritten. Produktstand
+615/900 und Control-/Laufzeitzustände bleiben bei dieser Dokumentübergabe
+unverändert. Die neue Katalogbindung ist kein Produkt-, Vollprojekt-,
+Idempotenz-, Freigabe- oder Release-Nachweis.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4529,6 +4542,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.22 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | BUNDLE-MANIFEST-CONTRACT: geschlossene Feldmenge, exakte Payloadbijektion, bewusste Ausschlüsse und getrennte Modell-/Idempotenzbindungen auf dem vorhandenen Archivprofil; Scope-, Sicherheits-, Kompatibilitäts- und Freigabeverträge bleiben erhalten, Umsetzung bleibt in 15.a und den folgenden M15-Schritten offen. |
 | 0.2.21 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | EXPORT-MANIFEST-CONTRACT: gebundener Exportumfang, exakte deterministische Zeitprojektion, separate Manifestfelder und tatsächliche Verlust-/Anhang-/Ausgabehashbindung; bestehende Scope-, Format- und Freigabeverträge bleiben erhalten, Umsetzung bleibt in 14.l offen. |
 | 0.2.20 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIFZ-CONTAINER-CONTRACT: explizite Dokumentauswahl, dokumentrelative Anhangbindungen, abgeleitetes Transportmanifest und gemeinsame sichere ZIP-Grenze; bestehende Import-/Sicherheitsverträge bleiben erhalten, Umsetzung bleibt in 14.k offen. |
 | 0.2.19 | 2026-10-23 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIF-PRESERVATION-LOSS: passiver Originalquellträger, überprüfter Zielerhalt, konkrete Verlustidentitäten und fail-on-loss-Grenze; bestehende Sicherheits-/Importverträge bleiben erhalten, Umsetzung bleibt in 14.j offen. |
@@ -5761,7 +5775,7 @@ Unterstützt werden SARIF 2.1.0 `runs`, `tool.driver`, `invocations`, `artifacts
 
 ## E.1 Manifest
 
-Jedes Bundle enthält genau einmal die kanonisch nach RFC 8785 serialisierte UTF-8-Datei `bundle-manifest.json` an der durch die lexikografische ZIP-Eintragsreihenfolge bestimmten Position. Sie besitzt mindestens `bundle_format_version`, `bundle_kind`, `read_only`, `project_id`, Tool- und Schema-Version, `scope_descriptor`, Ursprungmodellwurzel, Bundlemodellwurzel, Profil-/Konfigurationshash, `entries`, Boundary References, bewusste Ausschlüsse und `idempotency_scope`. Projekt- und partielle Kennzeichnung folgen ausschließlich E.3.
+Jedes Bundle enthält genau einmal die kanonisch nach RFC 8785 serialisierte UTF-8-Datei `bundle-manifest.json` an der durch die lexikografische ZIP-Eintragsreihenfolge bestimmten Position. Sie besitzt die geschlossene Feldmenge nach E.1.1: `bundle_format_version`, `bundle_kind`, `read_only`, `project_id`, Tool- und Schema-Version, `scope_descriptor`, Ursprungmodellwurzel, Bundlemodellwurzel, Profil-/Konfigurationshash, `entries`, Boundary References, bewusste Ausschlüsse und `idempotency_scope`. Projekt- und partielle Kennzeichnung folgen ausschließlich E.3.
 
 Die **Hashdomänen sind nicht rekursiv**. `entries` listet genau alle tatsächlichen regulären ZIP-Dateieinträge **außer `bundle-manifest.json`**. Für jeden gelisteten Eintrag stehen `path`, `size`, `media_type` und `sha256` fest. Fachliche Dateien und separat transportierte Betriebsdateien gehören beide in diese Liste; ungebündelte Inhalte dagegen nur in die Ausschlussdeklaration. Die Liste ist nach Pfad-UTF-8-Bytes sortiert, duplikatfrei und eine exakte Bijektion zur Payloadmenge. Das Manifest enthält weder seinen eigenen Bytehash oder seine eigene Größe noch den Hash der gesamten ZIP-Datei. Der Voll-ZIP-Hash wird ausschließlich außerhalb des Bundles geführt, etwa im Versandbeleg oder als erwarteter Eingangsparameter.
 
@@ -5770,6 +5784,138 @@ Ein extrahiertes Manifest wird beim erneuten Bündeln nicht als normale Projektp
 `bundle verify` vergleicht die ZIP-Eintragsmenge mit `entries` plus genau diesem einen Manifest und prüft für jede Payload die tatsächliche Bytelänge und SHA-256. Danach werden semantische Projektwurzel, Scope Descriptor, Typkombination und Closure unabhängig aus den Payloadbytes rekonstruiert. Ein selbstreferenzierender `entries`-Eintrag für das Manifest, fehlende/zusätzliche Payload, Dubletten oder inkonsistente Metadaten sind Fehler. Der manifestlose oder mehrfach manifeste Container ist ungültig.
 
 Das optionale `--expected-sha256 <HASH>` bei `bundle verify`, `bundle extract` und einer Bundle-Restore-Quelle vergleicht zusätzlich vor Extraktion beziehungsweise Veröffentlichung den Voll-ZIP-Hash mit einem außerhalb der Datei erhaltenen erwarteten Wert. Eine Manifeständerung kann durch interne Widersprüche auffallen; eine konsistente Neubeschreibung samt passenden Nutzdaten ist ohne externe Erwartungsbindung **nicht** als Manipulation einer bestimmten früheren Datei erkennbar. Selbstkonsistenz ist kein Authentizitätsnachweis. Bereits an Auftrag, Work-Manifest oder Restore-Plan gebundene Bundle-Hashes sind verpflichtend, nicht optional. Unpassende erwartete Bytes werden als Integritätsfehler Code 3/SRV060 abgewiesen.
+
+### E.1.1 Geschlossener Manifestvertrag v1
+
+**Entscheidung BUNDLE-MANIFEST-CONTRACT, delegiert gemäß
+SPECROAD-DECISION-1:** Die folgenden Regeln präzisieren die bereits geforderten
+Metadaten und Hashdomänen für 15.a. Sie ersetzen weder die Scope-/Closure-
+Prüfung noch die vollständige Projekt-/Teilbundleprüfung in E.3. Das
+Projektbundlemanifest ist kein Exportmanifest nach 10.12.3, kein Work-Manifest
+nach P.3 und kein äußeres Transportmanifest nach Anhang W.
+
+**Form und Version.** `bundle-manifest.json` ist genau ein UTF-8-JSON-Objekt
+in RFC-8785-kanonischen Bytes, ohne BOM, Kommentare oder zusätzliche Daten.
+Doppelte JSON-Schlüssel, unbekannte Felder, falsche JSON-Typen und nicht
+kanonisch darstellbare Zahlen werden abgewiesen. Alle folgenden Felder sind
+Pflicht; ein fehlender Wert wird nicht durch einen geratenen Default ersetzt.
+Die geschlossene Feldmenge für `bundle_format_version=1.0.0` lautet exakt:
+
+| Feld | Exakter Vertrag |
+|---|---|
+| `bundle_format_version` | String `1.0.0`. Andere Formatversionen liegen außerhalb dieses v1-Supports. |
+| `bundle_kind` | String `project` oder `partial`, ausschließlich mit der Kombination aus E.3. |
+| `read_only` | JSON-Boolean gemäß E.3, keine Zahl und kein String. |
+| `project_id` | Unveränderte gültige Projekt-ID der enthaltenen `specroad.json`; kein Hostpfad und keine neue Transfer-ID. |
+| `tool_version` | Nichtleerer UTF-8-String mit der tatsächlichen Version des erzeugenden SpecRoad-Builds. Die Version ist Provenienz, keine Freigabe. Eine andere Toolversion allein macht ein ansonsten unterstütztes Format nicht ungültig. |
+| `schema_version` | String `0.2.0` für diesen Bundlevertrag. Dies bezeichnet das native Projekt-Zielschema, nicht die Dokumentversion dieser Spezifikation und nicht eine Umschreibung geschützter Legacy-Ressourcen. |
+| `scope_descriptor` | Vollständiger kanonischer Descriptor nach 10.8 und E.3 einschließlich aller dort vorgeschriebenen Felder; keine eigenen Kurzformen oder Aliase. |
+| `origin_model_root_sha256` | Vollständiger kleingeschriebener 64-stelliger SHA-256 der nach 10.8–10.9 berechneten unkonfigurierten, geschlossenen Projektwurzel des Ursprungsstands. |
+| `bundle_model_root_sha256` | Vollständiger kleingeschriebener 64-stelliger SHA-256 der nach 10.8–10.9 berechneten normativen Modellwurzel des vollständig aufgelösten `scope_descriptor`. |
+| `profile_sha256` | Vollständiger kleingeschriebener 64-stelliger SHA-256 des effektiven Profilwerts, der auch in dieser Bundlemodellwurzel gebunden ist; Komposition unverändert nach 10.10 und Anhang S. |
+| `configuration_sha256` | Vollständiger kleingeschriebener 64-stelliger SHA-256 der effektiven semantischen Konfiguration dieser Bundlemodellwurzel. Bei ausgewählter Produktkonfiguration sind deren Werte und Parent-Kette nach 10.18 gebunden; sonst gilt die semantische Projektkonfiguration nach 10.9. Nicht der rohe Dateihash von `specroad.json`. |
+| `entries` | Die unten festgelegte vollständige, nach Pfad-UTF-8-Bytes sortierte Payloadliste. |
+| `boundary_references` | Geordnete, duplikatfreie Liste der tatsächlich aus der Closure nach 10.8 erzeugten Boundary References. Ihre vorhandenen Feld-, Identitäts- und Zielhashverträge bleiben unverändert; ein `project`-Bundle hat die leere Liste. |
+| `excluded_contents` | Die unten festgelegte geordnete Liste tatsächlich bewusst ausgelassener Quellpayloads, auch leer zulässig. |
+| `idempotency_scope` | String `portable` oder `local_only` mit den nachfolgenden Bedingungen; kein aus Dateimenge oder ZIP-Größe erratener Wert. |
+
+Für ein `project`-Bundle sind Ursprungs- und Bundlemodellwurzel gleich. Ein
+`partial`-Bundle bindet die tatsächlich berechnete Ursprungswurzel und seine
+getrennte Teilmodellwurzel. Der Reader rekonstruiert seine Bundlemodellwurzel
+und die enthaltenen Profil-/Konfigurationsbindungen aus den Payloadbytes.
+Die vollständige Ursprungswurzel eines Teilbundles lässt sich aus den bewusst
+fehlenden Ursprungsbytes allein nicht erneut berechnen; sie bleibt eine
+Provenienzbindung, kein Vollprojektnachweis. Boundary References ersetzen nur
+die nach 10.8 zulässigen schwachen Außenkanten. Fehlende starke Ziele oder
+notwendige Ressourcen bleiben Fehler, auch bei vorhandener Ausschlusszeile.
+
+**Payloadinventar.** Jeder `entries`-Eintrag hat exakt `path`, `size`,
+`media_type` und `sha256`. `path` ist der tatsächliche sichere ZIP-Mitgliedspfad
+nach E.2; er wird nicht normalisiert, um einen ungültigen Namen zu reparieren.
+`size` ist eine nichtnegative, RFC-8785-exakt darstellbare JSON-Ganzzahl, kein
+Boolean. Sie und der kleingeschriebene 64-stellige `sha256` werden über die
+unveränderten tatsächlichen Payloadbytes ermittelt. Die E.1-Bijektion gilt
+auch für leere Dateien, benötigte Archivobjekte und separat transportierte
+Betriebsdateien. Ein behaupteter Hash ohne seine erforderlichen Bytes genügt
+nicht. Jeder Pfad kommt genau einmal vor.
+
+Für diese Transportliste gilt die bereits vom gemeinsamen Archivcodec
+verwendete deterministische Medientypklassifikation: exakt
+`application/json` bei der groß-/kleinschreibungssensitiven Pfadendung `.json`,
+sonst `application/octet-stream`. Dies ist keine MIME-Erkennung oder Änderung
+des Inhalts. Fachlich deklarierte Anhangmedientypen bleiben unverändert in
+ihren nativen Deskriptoren und in der Modellwurzel gebunden; die gröbere
+Transportklassifikation ersetzt diese Deskriptoren nicht.
+
+Das Manifest selbst erscheint weder in `entries` noch in `excluded_contents`.
+Ein ausdrücklich als normale Payload angeliefertes Rootmanifest ist ein
+rekursiver Manifestfehler. Bei erneuter Bündelung eines extrahierten Projekts
+wird dessen bisheriges Rootmanifest bereits bei der Auswahl als nicht
+fachliche Metadatei ausgeschlossen und das neue Manifest aus dem aktuellen
+geprüften Stand erzeugt. Das ist keine Erlaubnis, notwendige Archivdateien
+oder geschützte historische Originalbytes zu entfernen. Es gibt im Manifest
+kein Feld für den eigenen Bytehash, die eigene Größe oder den Voll-ZIP-Hash.
+
+**Bewusste Ausschlüsse.** Jeder `excluded_contents`-Eintrag hat exakt `path`
+und `reason`. Der Pfad bezeichnet eine tatsächlich bekannte, nicht als Payload
+aufgenommene Quelldatei, folgt denselben sicheren relativen Pfadregeln und ist
+in dieser Liste eindeutig. Die Liste wird nach Pfad-UTF-8-Bytes sortiert.
+Zulässige Gründe sind `outside_scope` für einen nach dem vollständigen
+Descriptor ausgeschlossenen normativen Inhalt eines Teilbundles,
+`operational_receipts_excluded` für bewusst nicht transportierte abgeschlossene
+Receipts und `unreferenced_archive_object` für ausdrücklich optimierte,
+nachweislich unreferenzierte Archivobjekte. Eine Ausschlusszeile darf nicht
+zugleich in `entries` vorkommen. Fehlende Pflichtpayload wird niemals durch
+einen Ausschluss geheilt. Beliebige Repositorydateien außerhalb des gewählten
+Projekt-/Betriebsumfangs, lokale Konfigurationen fremder Werkzeuge, Caches,
+aktive Journale, Locks und Staging werden dafür nicht inventarisiert oder
+als erfolgreiche portable Daten aufgenommen. Ungelöste Transaktionen bleiben
+der Blocker aus 10.16.
+
+**Idempotenzgrenze.** Ein vollständiges `project`-Bundle verwendet
+standardmäßig `portable`: Es muss alle nach 10.16 und SR-REQ-0487 erforderlichen
+abgeschlossenen Request- und Transaktionsreceipts in der getrennten
+Betriebssektion mit exakten Payloadhashes enthalten. Eine tatsächlich vollständig
+geprüfte leere Receiptmenge ist zulässig; fehlende Prüfung ist keine leere Menge.
+Bei `--exclude-operational-receipts` ist der Wert zwingend `local_only`; die
+bewusst ausgelassenen vorhandenen Receipts werden deklariert. Ein `partial`-
+Bundle verwendet ebenfalls `local_only` und übernimmt keine portable
+Write-Idempotenz oder abgeschlossene Projekt-Receipts als solche. Das ändert
+weder sein Writeverbot noch die Pflicht zur erneuten Projekt-/Request-/Hashprüfung
+bei Übernahme gültiger Receipts aus einem verifizierten Vollbundle. Das Flag
+allein beweist keine erfolgreiche Übernahme. Auswahl und Transfer der
+Betriebssektion werden in den bestehenden nachfolgenden M15-Schritten umgesetzt.
+
+**Deterministik, Sicherheit und Nachweisgrenze.** Derselbe tatsächliche
+Payloadsatz mit denselben vollständig gebundenen Fachmetadaten ergibt dieselben
+Manifest- und Voll-ZIP-Bytes, unabhängig von Eingabeaufzählung, Hostpfad,
+Dateimtime, Laufzeit oder Ressourcenprofil. Arrayreihenfolgen des Descriptors
+und nativer fachlicher Payloads werden nicht willkürlich umgeordnet.
+Containerparameter folgen ausschließlich E.2 und dem gemeinsamen Archivcodec;
+kein zweiter ZIP-Writer und kein zweites Entpackverfahren werden eingeführt.
+
+Für den Bundlepfadraum werden vor Payloadverwendung auch Casefold-Kollisionen
+von Dateien und Verzeichnispräfixen sowie Datei-/Verzeichnis-Präfixkonflikte
+abgewiesen, entsprechend den bestehenden sicheren Projekt-/ReqIFZ-Pfadgrenzen.
+Eine andere Schreibweise wird nicht still auf ein vorhandenes Ziel abgebildet.
+Unbekannte Manifestfelder, falsche Typen oder widersprüchliche Kind-/Scopewerte
+sind Code 3/SRV002; eine nicht unterstützte Format-/Schemaversion ist Code
+3/SRV003. Fehler der kanonischen Container-/Manifestbytes, der Payloadbijektion,
+Größe oder Hashbindung einschließlich einer vorhandenen externen ZIP-Erwartung
+sind Code 3/SRV060. Gefährliche Pfade, Kollisionen oder Sonderdateien bleiben
+Code 7; echte Host-/I/O-Probleme bleiben Code 5. Anhang L und die bestehenden
+Sicherheitsgrenzen werden nicht durch eine pauschale Formatdiagnose ersetzt.
+
+Ein reiner Container-/Manifestcodec prüft Struktur, Typkombination,
+Kanonizität und tatsächliche Payloadbindung. Er darf damit keine erfolgreich
+rekonstruierte Modellwurzel, vollständige Closure, authentische Herkunft,
+menschliche Freigabe, portable Idempotenzwirkung oder sichere Extraktion
+bescheinigen. Diese Nachweise benötigen die nach E.1/E.3 vorgeschriebenen
+Fachprüfungen auf den echten Bytes. Ein äußerer erwarteter ZIP-Hash bleibt
+außerhalb des Manifests und, wo bereits an Auftrag oder Plan gebunden,
+verpflichtend. Bestehende Work-/ReqIFZ-/Archivformate werden weder umbenannt
+noch migriert; ihr bisheriger Byte- und Fehlervertrag bleibt erhalten.
+
 
 ## E.2 Kanonische ZIP-Bytes
 

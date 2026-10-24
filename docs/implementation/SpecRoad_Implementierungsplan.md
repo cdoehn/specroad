@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 16 · **Stand:** 24. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.21
+**Planrevision:** 17 · **Stand:** 24. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.22
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`.
+Gebundene Spezifikations-SHA-256: `32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 16
+plan_revision: 17
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 615
 last_completed_plan_commit: 14.o.C
 next_plan_commit: 15.a.W
-last_completed_numbered_bundle: 454
+last_completed_numbered_bundle: 455
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,45 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Bundlemanifest und Payloaddomäne (Bundle 455)
+
+Revision 17 dokumentiert **BUNDLE-MANIFEST-CONTRACT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.22, E.1.1**, legt die geschlossene
+Manifestfeldmenge, tatsächliche Payloadbindung und getrennte Modell-/
+Idempotenzdomänen für 15.a fest. Alternativen, geprüfte Quellen, Grenzprüfung
+und offene W/R/C-Abnahmen stehen bei 15.a. Keine persönliche Einzelzustimmung,
+technische Produktfreigabe oder unabhängige Abnahme wird behauptet.
+
+- [x] **BUNDLE-MANIFEST-CONTRACT:** Bundlemanifest und Payloaddomäne verbindlich klären. Commit: `docs(spec): Bundlemanifest und Payloaddomäne präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und ausschließlich notwendigen aktiven Katalog-Hashbindungen.
+Produktcode, Tests, Testnummern, Fixtures, Runner, Workflow und historische
+Evidence bleiben unverändert. Produktstand **615/900**, zuletzt **14.o.C**,
+nächstens **15.a.W**, bleibt unverändert; alle drei 15.a-Phasen bleiben offen.
+Erst nach dem erfolgreichen parallelen Apply-Gate setzt der Entrypoint den
+Offplan-Marker und die Bundlenummer auf 455. Keine Produktposition wird erhöht.
+
+**Prüfgrenze:** Keine Produktverhaltensänderung und keine erfundenen
+Dokumentationstests. Vollständige Collection-/Katalogprüfung mit null
+Testkörpern und native Paketprüfung bleiben erhalten. Apply führt vor
+diesem Commit ausschließlich **Gruppe 0/3**, Commitfolge **162**, mit
+**6.703 Tests** und vier parallelen Workern aus. Kein Vollsuite-/Release-
+Nachweis; Ergebnisse dieser künftigen Gruppe werden nicht vorweggenommen.
+Übergabe als `spec_clarification`, danach Ende des Einzelauftrags.
+Control-/Watcher-/CI-Zustände werden nicht verändert. Der nächste
+Produktauftrag setzt den geklärten Schritt um; keine zweite Phase hier.
+
+**Beobachtete Dev-Katalogprüfung:** Vollständige Collection mit
+**20.109 eindeutigen Testidentitäten**, Exit **0**, keine Katalogfehler,
+**0 ausgeführte Testkörper**, `full_suite_passed=null`. Die Identitäten
+entsprechen vollständig dem geprüften Ausgangsstand. Bestehende Tests,
+Oracles, Fixtures und dauerhafte Testnummern bleiben bytegleich. Nur aktive
+Spezifikations-Hashbindungen wurden konsistent fortgeschrieben; historische
+Evidence bleibt unverändert. Dies ist kein neuer Produktverhaltensnachweis.
+Gebundener Quellstand: `a2bc05a656cb6e55b3fa9cc7b091c73fcc33051dca16c97486ac4664f894b3e6`;
+Katalog: `930dff7152cab8a260e9788f187b82b174c7601dd7f3ab05b6cb8de6c7498b3b`.
 
 ## OFF-PLAN – Exportumfang und deterministisches Manifest (Bundle 441)
 
@@ -23232,30 +23271,142 @@ serieller Test und kein CI-Start gehören zu diesem Bundle.
 **Anforderungsbezug:** `SR-REQ-0387`–`SR-REQ-0388`, `SR-REQ-0485`.
 **Verifikationsbezug:** `SR-VER-0027`, `SR-VER-0033`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Bestätigte Ausgangsbasis:** Das vollständig gebundene Result
+`specroad-apply_Result_150722_1024_73985f.zip`, SHA-256
+`6a9ce36ebf9441c8f93b5d522296e5bd4027b1683236ed5718ef66bae24e9fda`,
+bestätigt Bundle **454** / **14.o.C** auf
+`947fb14f1a04928bb04c6d596b3db6f27df28ce9`: sauberer Apply-Arbeitsbaum,
+**6.703/6.703** Tests der Gruppe **2/3**, Commitfolge **161**, vier Worker,
+**2.071,85 s**. Native Result-/Patchbindung, alle **2.212** Snapshotdateien,
+tatsächlicher Commit samt Elternstand, Run-/Ausführungslogs und vollständige
+nummerierte Testbeobachtungen wurden abgeglichen. In Dev wurden ausschließlich
+die fünf dadurch bestätigten Fortschrittsmarker nachgeführt; danach entsprach
+der Produktbestand dem Snapshot. Diese Belege bestätigen den M14-Endstand,
+keine bereits implementierte Produktbundle-Funktion oder Releaseabnahme.
+
+**Entscheidungsbeleg BUNDLE-MANIFEST-CONTRACT — delegiert gemäß
+SPECROAD-DECISION-1, 24. Oktober 2026.** Betroffen ist der Manifestvertrag
+von 15.a.W/R/C mit SR-REQ-0387/0388/0485 und SR-VER-0027/0033.
+Normative Zielregel ist Spezifikation **0.2.22, E.1.1**; 15.a.W bleibt offen.
+
+**Lücke und geprüfte Quellen.** E.1 fordert bereits die vollständige,
+selbstreferenzfreie Payloadliste sowie Tool-/Schema-/Scope-/Modellbindungen.
+Es nennt aber mehrere Inhalte nur begrifflich und die Feldmenge als
+„mindestens“. Exakte Namen, Typen, unterstützte Formatversion, Eintrags-
+Medientypklassifikation, Ausschlusszeilen und der positive Idempotenzwert
+sind noch nicht vollständig festgelegt. Diese Werte im Produktcode frei
+zu wählen würde einen neuen fachlichen Austauschvertrag vorwegnehmen.
+
+Geprüft wurden das vollständig gebundene Result mit seinem Snapshot,
+Spezifikation 2.4, 10.7.1, 10.8–10.10, 10.16 und E.1–E.3 sowie die offenen
+M15-Abnahmen. Im Snapshot wurden der gemeinsame Codec
+`src/specroad/storage/archive.py`, sein Work-Kompatibilitätsadapter,
+die ReqIFZ-Pfadprüfung und die native Modellmanifest-/Scopehashprojektion
+abgeglichen. Der Codec implementiert bereits das kanonische ZIP-Profil,
+selbstreferenzfreie `entries` und die deterministische `.json`-
+Medientypklassifikation; er akzeptiert absichtlich generische Metadaten.
+Ein geschlossener Produktbundle-Manifestvertrag ist darin nicht enthalten.
+SR-TC-0387/0388/0485 bleiben offen; vorhandene Work-/ReqIFZ-Erfolge belegen
+keine implementierte Bundlefunktion.
+
+**Alternativen und Auswahl.**
+
+1. Das generische Metadatenobjekt ohne festen Produktvertrag übernehmen.
+   Fehlende und widersprüchliche Modell-/Scope-/Idempotenzbindungen blieben
+   undiagnostiziert; unterschiedliche Erzeuger könnten inkompatible Namen
+   verwenden. Nicht gewählt.
+2. Ein bestehendes Work-, Export- oder äußeres Transportmanifest umdeuten
+   oder einen eigenen ZIP-Codec schaffen. Dies verwechselt Hashdomänen,
+   verdoppelt das Byteprofil und gefährdet bestehende Formate. Nicht gewählt.
+3. **Gewählt:** eine geschlossene v1-Feldmenge als dünner Produktvertrag
+   über dem vorhandenen Archivcodec. Native Descriptor-, Profil-,
+   Konfigurations- und Modellhashregeln bleiben maßgeblich. `entries`
+   bindet unveränderte Bytes; seine vorhandene grobe Medientypklassifikation
+   ersetzt keinen fachlichen Anhangdeskriptor. Bewusste Ausschlüsse erhalten
+   sichere Quellpfade und einen geschlossenen Grund. `portable` gilt nur
+   für den geprüften vollständigen Receipttransfer des Vollbundles;
+   expliziter Receiptverzicht und Partials bleiben `local_only`.
+
+**Grenzprüfung nach 2.4.1.** (1) Präzisiert wird die bereits beauftragte
+Manifestdomäne von 15.a; Projekt-/Teilbundleauswahl, vollständige semantische
+Verifikation und Receiptübernahme bleiben in ihren vorhandenen späteren
+M15-Schritten. Keine zusätzliche CLI-Option oder Produktposition entsteht.
+(2) E.2-Bytes, E.3-Kindmatrix und die vorhandene Scope-/Modellprojektion
+werden übernommen. Keine Requirement, notwendige historische Ressource
+oder Freigabe wird gestrichen. (3) Fehlende Pflichtbytes, starke Ziele,
+ungeklärte Transaktionen und gefährliche Pfade bleiben Fehler. Hashbindung
+ist keine Authentizität, ein Flag keine portable Idempotenzwirkung und ein
+Containercodec kein Vollprojektnachweis. Native Anhangmedientypen und
+Originalbytes bleiben erhalten. (4) Das neue Format ist ausdrücklich
+versioniert. Work-, ReqIFZ-, Legacy- und Archivformate sowie frühere Evidence
+bleiben bytegebunden bestehen; eine spätere normative Revision benötigt
+keine Umschreibung dieser Bestandsdaten. Rücknahme erlaubt keine Löschung
+oder Git-Rücksetzung. (5) Die Festlegung benötigt keine nicht verfügbaren
+externen Fakten und ersetzt keine menschliche Review-/Risikoentscheidung.
+Eine persönliche Einzelzustimmung oder unabhängige Abnahme wird nicht behauptet.
+
+**Verbindliche beobachtbare Abnahmen.**
+
+- **W:** Das Manifest besitzt genau die E.1.1-Felder mit gültigen Typen und
+  Versionen. Fehlende Pflichtbindungen werden nicht erfunden. Gleiche
+  vollständig gebundene Metadaten und Payloads erzeugen dieselben RFC-8785-
+  Manifest- und E.2-ZIP-Bytes, auch bei anderer Eingabeaufzählung.
+- **W:** Tatsächliche Payloadlängen und SHA-256, leere Dateien, NFC-UTF-8-
+  Namen, `.json`/andere Endungen und benötigte Archiv-/Betriebsbytes sind
+  exakt inventarisiert. Das Rootmanifest ist genau einmal vorhanden und
+  niemals sein eigener Payload-, Größen- oder Hashbezug. Ein extern
+  erwarteter ZIP-Hash wird gesondert geprüft.
+- **W:** Der dünne Codec bindet vollständige native Scope-/Modellmetadaten
+  und die E.3-Typmatrix. Er bescheinigt allein keine semantische Closure,
+  Freigabe oder Idempotenzwirkung. Die vorhandenen Work-/ReqIFZ-Verträge
+  bleiben erhalten; Erzeuger/Reader verwenden den gemeinsamen ZIP-Codec.
+- **R:** Unbekannte oder doppelte Manifestfelder, falsche Typen, fehlende
+  Bindungen, nicht unterstützte Versionen, widersprüchliche Kind-/Scope-/
+  Idempotenzwerte, doppelte/unsortierte Ausschlüsse und sich überschneidende
+  Payload-/Ausschlussmengen werden mit den festgelegten Fehlerklassen abgewiesen.
+- **R:** Versionierte unabhängige ZIP-Datenvektoren prüfen Byteparameter,
+  nichtkanonisches JSON, doppelte Namen, Casefold-/Präfixkollisionen,
+  Traversal, Sondertypen, Data Descriptors, Fremdbytes und falsche Hash-/
+  Größenbindung. Negative Fälle erzeugen keine Extraktionsdateien;
+  Sicherheitsfehler werden nicht in bloße Formatfehler umgedeutet.
+- **C:** Struktur bereinigen und vorhandenen M6-Archivcodec wiederverwenden;
+  W-/R-Fachwerte, Fehlerklassen und Seiteneffekte bleiben gleich. Kein neuer
+  Writer oder Entpacker, keine neuen Formate oder fachlichen Defaults.
+
+Dies sind offene Abnahmen, keine beobachteten Produktnachweise. Vollständige
+Rekonstruktion echter Modellwurzeln und Closure aus Projektpayloads bleibt
+zusätzlich für 15.b–15.d geschuldet; Ausschlusszeilen heilen keine fehlenden
+starken Ziele oder Pflichtressourcen. Der operative Receipttransfer und die
+Wiederverwendung von Request-IDs bleiben an die bestehenden M15-Abnahmen
+gebunden. Dieser OFF-PLAN-Schritt ändert ausschließlich Spezifikation, Plan
+und notwendige aktive Spezifikationshashbindungen. Produktstand **615/900**,
+zuletzt **14.o.C**, nächstens **15.a.W**, sowie die drei offenen 15.a-Phasen
+bleiben erhalten. Keine Laufzeit-, Control-, Watcher- oder CI-Änderung.
+
 #### 15.a.W – Let it Work
 
 - [ ] **15.a.W** · Position **616/900** · Voraussetzung: `14.o.C`.
 **Exakte Commit-Message:** `15.a.W feat(bundle): Kanonisches ZIP und Manifestdomäne aufbauen`
 
-**Umsetzung:** Vollständiges ZIP-Profil und Manifest mit exakt allen Payloads ohne eigene rekursive Aufnahme ausprägen.
+**Umsetzung:** Vollständiges E.2-ZIP-Profil und geschlossenes Manifest nach E.1.1 mit exakt allen tatsächlichen Payloads ohne eigene rekursive Aufnahme ausprägen. Vorhandene native Scope-/Modellbindungen und gemeinsamen Archivcodec verwenden; die W-Abnahmen des Entscheidungsbelegs bleiben geschuldet.
 
-**Verhaltensabnahme:** Derselbe Payloadsatz erzeugt kanonische Containerbytes.
+**Verhaltensabnahme:** Derselbe Payloadsatz mit denselben gebundenen Metadaten erzeugt identische kanonische Manifest- und Containerbytes. Exakte Feldmenge, tatsächliche Längen/Hashes, leere Dateien, Unicodepfade, deterministische Medientypklassifikation und getrennte externe ZIP-Bindung nachweisen. Der Codec behauptet keine vollständige semantische Projektprüfung.
 
 #### 15.a.R – Make it Right
 
 - [ ] **15.a.R** · Position **617/900** · Voraussetzung: `15.a.W`.
 **Exakte Commit-Message:** `15.a.R feat(bundle): Kanonisches ZIP und Manifestdomäne vervollständigen`
 
-**Vervollständigung:** Dubletten, Groß-/Kleinschreibungskollision, Sondertypen und nichtkanonische Parameter erkennen.
+**Vervollständigung:** Die R-Abnahmen aus E.1.1 und dem Entscheidungsbeleg erfüllen: Feld-/Typ-/Versions-/Bindungsfehler, Dubletten, Casefold-/Präfixkollisionen, Sondertypen und nichtkanonische Parameter mit den festgelegten Fehlerklassen abweisen. Bewusste Ausschlüsse sind eindeutig, geordnet und keine Heilung fehlender Pflichtpayload.
 
-**Verhaltensabnahme:** Versionierte ZIP-Datenvektoren prüfen Bytes und Pfadsicherheit als Austauschvertrag. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Versionierte unabhängige ZIP-Datenvektoren prüfen Bytes, Manifest-/Payloadbijektion, externe Erwartung und Pfadsicherheit als Austauschvertrag. Fehler erzeugen keine Extraktionsdateien; Code-7-Sicherheitsgrenzen bleiben erhalten. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 15.a.C – Make it Clean
 
 - [ ] **15.a.C** · Position **618/900** · Voraussetzung: `15.a.R`.
 **Exakte Commit-Message:** `15.a.C refactor(bundle): Kanonisches ZIP und Manifestdomäne bereinigen`
 
-**Bereinigung:** Gemeinsamen M6-Archivcodec vervollständigen statt ein zweites Format zu erfinden.
+**Bereinigung:** Manifestprojektion und Pfadprüfungen strukturieren und den gemeinsamen M6-Archivcodec wiederverwenden. Keine zweite ZIP-Implementation und keine Änderung der Work-/ReqIFZ-/Archivformate, Fehlerverträge oder zulässigen Seiteneffekte.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
