@@ -17,6 +17,13 @@ from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 
 
+_ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
+_ZIP_DOS_DATE = 33
+_ZIP_SYSTEM = 3
+_ZIP_VERSION = 20
+_ZIP_EXTERNAL_ATTR = 0o100644 << 16
+
+
 class ArchiveError(ValueError):
     def __init__(self, reason, *, exit_code=3):
         super().__init__(reason)
@@ -74,11 +81,11 @@ def _zip(entries):
     try:
         with ZipFile(output, 'w', compression=ZIP_STORED, allowZip64=False) as archive:
             for name in sorted(entries, key=lambda item: item.encode('utf-8')):
-                info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
-                info.create_system = 3
-                info.create_version = info.extract_version = 20
+                info = ZipInfo(name, date_time=_ZIP_TIMESTAMP)
+                info.create_system = _ZIP_SYSTEM
+                info.create_version = info.extract_version = _ZIP_VERSION
                 info.compress_type = ZIP_STORED
-                info.external_attr = 0o100644 << 16
+                info.external_attr = _ZIP_EXTERNAL_ATTR
                 info.internal_attr = 0
                 archive.writestr(info, entries[name])
     except LargeZipFile as error:
@@ -146,6 +153,20 @@ def decode_zip(raw, *, max_uncompressed_bytes, validate_paths=None):
                      validate_paths=validate_paths)
 
 
+def _entry_profile(info, archive_size):
+    """Shared entry invariants, preserving security-before-format failures."""
+    if info.external_attr != _ZIP_EXTERNAL_ATTR:
+        raise ArchiveError('unsafe_archive_entry', exit_code=7)
+    _require(info.compress_type == ZIP_STORED
+        and info.file_size == info.compress_size and info.file_size <= archive_size
+        and info.date_time == _ZIP_TIMESTAMP
+        and info.create_system == _ZIP_SYSTEM
+        and info.create_version == info.extract_version == _ZIP_VERSION
+        and info.flag_bits == (0 if info.filename.isascii() else 0x800)
+        and info.internal_attr == 0 and not info.extra and not info.comment,
+        'noncanonical_archive_entry')
+
+
 def _stored_layout(raw, infos):
     """Check ZIP32 header agreement and contiguous extents before payload reads.
 
@@ -157,8 +178,8 @@ def _stored_layout(raw, infos):
     cursor = 0
     for info in infos:
         name = info.filename.encode('utf-8')
-        header = struct.pack('<4s5H3I2H', b'PK\x03\x04', 20, info.flag_bits,
-                             ZIP_STORED, 0, 33, info.CRC, info.file_size,
+        header = struct.pack('<4s5H3I2H', b'PK\x03\x04', _ZIP_VERSION, info.flag_bits,
+                             ZIP_STORED, 0, _ZIP_DOS_DATE, info.CRC, info.file_size,
                              info.file_size, len(name), 0) + name
         _require(info.header_offset == cursor and raw[cursor:cursor+len(header)] == header,
                  'archive_header_mismatch')
@@ -167,10 +188,10 @@ def _stored_layout(raw, infos):
     central_start = cursor
     for info in infos:
         name = info.filename.encode('utf-8')
-        header = struct.pack('<4s6H3I5H2I', b'PK\x01\x02', (3 << 8) | 20,
-                             20, info.flag_bits, ZIP_STORED, 0, 33, info.CRC,
+        header = struct.pack('<4s6H3I5H2I', b'PK\x01\x02', (_ZIP_SYSTEM << 8) | _ZIP_VERSION,
+                             _ZIP_VERSION, info.flag_bits, ZIP_STORED, 0, _ZIP_DOS_DATE, info.CRC,
                              info.file_size, info.file_size, len(name), 0, 0, 0,
-                             0, 0o100644 << 16, info.header_offset) + name
+                             0, _ZIP_EXTERNAL_ATTR, info.header_offset) + name
         _require(raw[cursor:cursor+len(header)] == header, 'archive_header_mismatch')
         cursor += len(header)
     _require(central_start <= 0xffffffff and cursor - central_start <= 0xffffffff,
@@ -196,15 +217,7 @@ def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_
                      'archive_entry_set_invalid')
             _paths(names)
             for info in infos:
-                if info.external_attr != 0o100644 << 16:
-                    raise ArchiveError('unsafe_archive_entry', exit_code=7)
-                _require(info.compress_type == ZIP_STORED
-                    and info.file_size == info.compress_size and info.file_size <= len(raw)
-                    and info.date_time == (1980, 1, 1, 0, 0, 0)
-                    and info.create_system == 3 and info.create_version == info.extract_version == 20
-                    and info.flag_bits == (0 if info.filename.isascii() else 0x800)
-                    and info.internal_attr == 0 and not info.extra and not info.comment,
-                    'noncanonical_archive_entry')
+                _entry_profile(info, len(raw))
             _require(not archive.comment, 'noncanonical_archive')
             if max_uncompressed_bytes is not None:
                 _require(names == sorted(names, key=lambda name: name.encode('utf-8')),

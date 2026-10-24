@@ -243,7 +243,6 @@
     "tests/test_reqifz_right.py::test_unused_bytes_order_and_member_names_cannot_be_repaired_or_ignored[truncated]"
   ],
   "open_items": [
-    "14.k.C: clean the common ZIP/domain-manifest structure without behavior or legacy API error changes.",
     "Full native project export scopes, deterministic snapshot metadata, CLI/import/write integration and foreign-tool interoperability are not established by this pure container proof."
   ]
 }

@@ -101,6 +101,18 @@ def encode_reqifz(payloads, *, document_paths, limits, max_uncompressed_bytes):
         raise ReqIFError(error.reason, exit_code=error.exit_code) from error
 
 
+def _transport_manifest_bytes(archive_sha256, files, paths, references):
+    """Derive only ReqIFZ metadata from the fully validated shared ZIP result."""
+    return canonical_json_bytes({
+        'format_version': 'reqifz-container-v1',
+        'archive_sha256': archive_sha256,
+        'entries': [{'path': name, 'size': len(files[name]), 'sha256': sha256(files[name]).hexdigest()}
+                    for name in sorted(files, key=lambda p: p.encode('utf-8'))],
+        'documents': list(paths),
+        'references': references,
+    })
+
+
 @dataclass(frozen=True, init=False)
 class ReqIFZContainer:
     """Validated immutable source bytes, owned members and derived manifest."""
@@ -123,13 +135,10 @@ class ReqIFZContainer:
         except ArchiveError as error:
             raise ReqIFError(error.reason, exit_code=error.exit_code) from error
         references = _references(files, paths, limits)
-        manifest = {'format_version': 'reqifz-container-v1', 'archive_sha256': expected_sha256,
-            'entries': [{'path': name, 'size': len(files[name]), 'sha256': sha256(files[name]).hexdigest()}
-                        for name in sorted(files, key=lambda p: p.encode('utf-8'))],
-            'documents': list(paths), 'references': references}
         for name, value in (('source_bytes', raw), ('document_paths', paths),
                             ('_files', MappingProxyType(files)),
-                            ('_manifest_bytes', canonical_json_bytes(manifest))):
+                            ('_manifest_bytes', _transport_manifest_bytes(
+                                expected_sha256, files, paths, references))):
             object.__setattr__(self, name, value)
 
     @property

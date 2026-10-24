@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 15
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 602
-last_completed_plan_commit: 14.k.R
-next_plan_commit: 14.k.C
-last_completed_numbered_bundle: 439
+implementation_plan_commits_completed: 603
+last_completed_plan_commit: 14.k.C
+next_plan_commit: 14.l.W
+last_completed_numbered_bundle: 440
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -21133,7 +21133,7 @@ ohne Warte-/Resultschleife.
 
 #### 14.k.C – Make it Clean
 
-- [ ] **14.k.C** · Position **603/900** · Voraussetzung: `14.k.R`.
+- [x] **14.k.C** · Position **603/900** · Voraussetzung: `14.k.R`.
 **Exakte Commit-Message:** `14.k.C refactor(exchange): ReqIFZ und sicheres Archivprofil bereinigen`
 
 **Bereinigung:** Das abgeleitete ReqIFZ-Transportmanifest und den gemeinsamen ZIP-Kern nach D.1.4 ohne zweite Archivimplementation verbinden; bestehende formatabhängige Manifest- und Fehlerverträge unverändert erhalten.
@@ -21141,6 +21141,75 @@ ohne Warte-/Resultschleife.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**C-Bereinigung und Übergabe (Bundle 440):** Das vollständig gebundene
+Result `specroad-apply_Result_021118_1024_13789b.zip`, SHA-256
+`6b5a34e824acb67ff12b79742de46ff9a8a282a4d40f68e1bf746c07a140a5a2`,
+bestätigt **14.k.R / Bundle 439** auf
+`6c4d94b6088be3b6ee2c04812a23530dee2e4b99`: sauberer Apply-Stand,
+**6.389/6.389** bestandene Tests, Gruppe **0/3**, Commitfolge **147**,
+vier Worker, **1.850,79 s**. Native Resultbindung, alle **2.186 Snapshotdateien**,
+Commit samt Elternstand, Ausführungslogs und tatsächliche nummerierte
+Testbelege wurden abgeglichen. In Dev wurden ausschließlich die fünf
+belegten R-Fortschrittsmarker nachgeführt; danach entsprach der Produktbestand
+dem Snapshot. Vor Apply bleibt der Produktstand **602/900**, zuletzt
+**14.k.R**, nächstens **14.k.C**, Bundle **439**. SPECROAD-DECISION-1 ist
+vorhanden; Spezifikation **0.2.20 / D.1.4** bleibt bytegleich. Diese reguläre
+strukturelle Bereinigung benötigt keine weitere normative Klärung.
+
+Der gemeinsame ZIP-Kern verwendet benannte Profilkonstanten für Zeitstempel,
+System, Version und Dateiattribute in Schreiber, Metadaten- und Headerprüfung.
+Die unveränderten Prüfungen eines Mitglieds sind in einer gemeinsamen
+Funktion gebündelt; ihre Reihenfolge und Sicherheits-/Formatfehler bleiben
+erhalten. Header-/Größenvorprüfung, Nutzdatenlesen und CRC-Prüfung sowie die
+abschließende Bytekontrolle bleiben an derselben Stelle. Der einzige
+kanonische ZIP-Schreiber und Leser bedienen weiterhin sowohl ReqIFZ als
+auch die bisherigen manifestgebundenen Archiv-APIs.
+
+Die Ableitung des geschlossenen ReqIFZ-Transportmanifests ist als eigene
+reine Funktion aus der Containerinitialisierung herausgelöst. Sie verwendet
+weiter die tatsächlich geprüften Mitgliedbytes, ausgewählten Dokumente und
+dokumentrelativen Referenzen; Feldmenge, Sortierung, Hashes und kanonische
+JSON-Bytes bleiben unverändert. Das Manifest wird weiterhin außerhalb des
+ZIP gebildet. Öffentliche Signaturen, Originalbytes, Fehlerklassen/-codes,
+Hostfehler, Sicherheitsgrenzen und unabhängige Rückgaben bleiben erhalten.
+Es entsteht kein zweiter Entpacker und kein neues Import-/Exportverhalten.
+
+**Gezielter Dev-Verhaltensnachweis:** **1.093/1.093 Tests**, vier parallele
+Worker, **32,12 s**, Prozess-/Gate-Exit **0**, keine Beobachtungsfehler;
+`selected_passed=true`, `full_suite_passed=null`. Die zwölf ausgewählten
+Testdateien sind `test_reqifz.py`, `test_reqifz_right.py`, `test_reqif_loss.py`,
+`test_reqif_preservation.py`, `test_reqif_objects.py`,
+`test_reqif_objects_right.py`, `test_reqif_structure.py`,
+`test_reqif_structure_right.py`, `test_work_archive.py`,
+`test_work_archive_right.py`, `test_work_packages.py` und
+`test_work_packages_right.py`, jeweils unter `tests/`. Darin bleiben alle
+**48 W- und 146 R-Fälle** einschließlich unabhängiger ZIP-/Byteoracles,
+Header-/CRC-/Pfad-/Ressourcenfehler und relevanter bisheriger Archivverträge
+unverändert. Tests, Fixtures, Oracles und sämtliche Testnummern sind bytegleich
+zur Resultbasis. Die vollständige Collection-/Katalogprüfung bestätigt
+**19.166 Identitäten**, **0 ausgeführte Testkörper** und keine Katalogfehler.
+In SR-TC-0323 und SR-TC-0486 wird ausschließlich der erledigte C-Punkt aus
+`open_items` entfernt; die Nachweise bleiben **partial**, spätere native
+Projekt-/CLI-/Importintegration und Fremdtool-Nachweise bleiben offen.
+Kein Vollsuite-, serieller, Darstellungs-/Dokumentationstest oder CI-Lauf.
+Quellstand `e07dcda424fb26ff0f1f2ad29c9a7aefb52e2f8f1e6aabebfa981db9a29ac6bf`;
+Katalog `f7e3821f0f10fa2d5f9f192d2f50c4f74212fc6268fae42b67773a121799cb07`;
+Auswahlbeleg `86644e3aacc27caedeca22ae6d8a40a369e8b96fb45e0153c61207bee61ca235`;
+Beobachtungsbeleg `82dd5ff18ccb7ed41e552436b64163ae9764e16e4cf7a82d2595be5274d48833`.
+
+**Vorgesehene Apply-Grenze:** Ein regulärer Commit **14.k.C**, Position
+**603/900**, Bundle **440**, mit der oben festgelegten Commit-Message.
+Der Entrypoint installiert genau den gezielt geprüften C-Zustand und prüft
+nur **Gruppe 1/3**, Commitfolge **148**, mit **6.389 Tests** und vier parallelen
+Workern. Erst nach erfolgreichem gebundenem Gate werden die fünf
+Fortschrittsmarker auf **603/900**, zuletzt **14.k.C**, nächstens **14.l.W**,
+Bundle **440** und die C-Checkbox gesetzt und committet. Bei Fehlern bleiben
+bereits erfolgreiche Commits und der tatsächliche Datei-/Indexzustand
+bestehen. 14.l und die vollständige Projektintegration bleiben offen.
+Diese Teiltests ergeben keinen Vollsuite-, Release-, Fremdtool- oder
+vorweggenommenen Apply-Erfolg. Nach nativer ZIP-Prüfung und atomarer Übergabe
+endet dieser Einzelauftrag ohne Warte-/Resultschleife.
 
 <a id="step-14-l"></a>
 ### 14.l – Exportumfang und deterministisches Manifest
