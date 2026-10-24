@@ -12,48 +12,21 @@ from xml.sax.saxutils import quoteattr
 import pytest
 
 from specroad.model.canonical import canonical_json_bytes
-from specroad.verification import JUnitLimits
 from support.exchange_mappings import registry_value
 from support.import_execution import project
-from support.import_security import IMPORTS, run_isolated
+from support.import_security import run_isolated
+from support.import_security_cases import (READER_IMPORTS, XML_PARSERS, XML_ATTACKS,
+    input_resources, parser_bounds, reader, wrapped, hostile_xml)
 from support.read_only import inventory
 from support.reqif_objects import LIMITS, document, one
 from support.reqif_structure import xdocument
-from test_import_security import input_resources
 from test_work_archive import foreign_zip
 
 
-XML_PARSERS = ['reqif', 'reqif-structure', 'reqifz', 'junit']
-R_IMPORTS = IMPORTS + '''
+R_IMPORTS = READER_IMPORTS + '''
 import codecs
 from zipfile import ZipFile
-from specroad.verification import JUnitLimits
-from specroad.mappings import ExternalIdentityRegistry, select_mapping
 '''
-
-
-def reader(parser, *, paths=('document.reqif',), maximum=8*1024*1024):
-    calls = {
-        'reqif': 'decode_reqif(raw, limits=ReqIFLimits(**bounds))',
-        'reqif-structure': 'decode_reqif_structure(raw, limits=ReqIFLimits(**bounds))',
-        'junit': 'JUnitDocument(raw, limits=JUnitLimits(**bounds))',
-        'mapping': 'ExchangeMapping(raw)',
-        'registry': 'ExternalIdentityRegistry(raw)',
-        'csv-profile': 'CSVProfile(raw)',
-    }
-    if parser == 'reqifz':
-        return ('decode_reqifz(raw, expected_sha256=sha256(raw).hexdigest(), document_paths='
-                + repr(list(paths)) + ', limits=ReqIFLimits(**bounds), max_uncompressed_bytes='
-                + repr(maximum) + ')')
-    return calls[parser]
-
-
-def wrapped(xml, parser):
-    return foreign_zip([('document.reqif', xml)]) if parser == 'reqifz' else xml
-
-
-def parser_bounds(parser):
-    return asdict(JUnitLimits() if parser == 'junit' else LIMITS)
 
 
 def refusal(tmp_path, mode, raw, parser, reason, *, code=7, limits=None,
@@ -93,56 +66,6 @@ print(json.dumps({'error': result, 'attempts': attempts, 'codec_requests': codec
         'error': {'reason': reason, 'exit_code': code}, 'attempts': [], 'codec_requests': []}
     # Includes artifacts, attachments, mappings, lock directories and receipts.
     assert inventory(sandbox) == before
-
-
-XML_ATTACKS = ['public-dtd', 'parameter-entity', 'recursive-entity', 'expansion',
-               'hidden-schema', 'encoded-schema', 'hidden-include', 'trailing-pi', 'host-codec']
-
-
-def hostile_xml(parser, attack):
-    junit = parser == 'junit'
-    root = 'testsuite' if junit else 'REQ-IF'
-    xml = '<testsuite><testcase name="already parsed"/></testsuite>' if junit else one().decode()
-    xml = xml.split('?>', 1)[-1].lstrip()  # The corpus supplies its own declaration/encoding.
-    encoding = 'utf-8'
-    if attack in XML_ATTACKS[:4]:
-        if attack == 'public-dtd':
-            dtd = ' PUBLIC "-//fixture//DTD//EN" "https://supplier.invalid/secret"'
-        elif attack == 'parameter-entity':
-            dtd = ' [<!ENTITY % e SYSTEM "file:///private/not-readable">%e;]'
-            encoding = 'utf-16'
-        elif attack == 'recursive-entity':
-            dtd = ' [<!ENTITY e "&e;">]'
-            encoding = 'utf-16-be'
-        else:
-            declarations = ['<!ENTITY e0 "xxxxxxxxxx">']
-            for i in range(1, 10):
-                declarations.append('<!ENTITY e' + str(i) + ' "' + ('&e' + str(i-1) + ';')*10 + '">')
-            dtd = ' [' + ''.join(declarations) + ']'
-        xml = '<!DOCTYPE ' + root + dtd + '>' + xml
-        reason, code = 'xml_dtd_or_entity_forbidden', 7
-    elif attack in ('hidden-schema', 'encoded-schema', 'hidden-include'):
-        if attack == 'hidden-include':
-            fragment = '<i:include xmlns:i="http://www.w3.org/2001/XInclude" href="file:///private/data" parse="text"/>'
-        else:
-            ns = 'http://www.w3.org/2001/XMLSchema-instance'
-            attr, location = 'schemaLocation', 'urn:fixture https://supplier.invalid/schema'
-            if attack == 'encoded-schema':
-                ns = ns.replace('instance', 'instan&#99;e')
-                attr, location, encoding = 'noNamespaceSchemaLocation', 'file:///private/schema', 'utf-16'
-            fragment = '<foreign xmlns:x="' + ns + '" x:' + attr + '=' + quoteattr(location) + '/>'
-        fragment = '<opaque xmlns="urn:foreign"><nested>' + fragment + '</nested></opaque>'
-        if not junit:
-            fragment = '<TOOL-EXTENSIONS>' + fragment + '</TOOL-EXTENSIONS>'
-        xml = xml.replace('</' + root + '>', fragment + '</' + root + '>')
-        reason, code = 'xml_external_reference_forbidden', 7
-    elif attack == 'trailing-pi':
-        xml += '<?xml-stylesheet href="https://supplier.invalid/converter"?>'
-        reason, code = 'xml_processing_instruction_forbidden', 7
-    else:
-        xml = '<?xml version="1.0" encoding="x-specroad-executable"?>' + xml
-        reason, code = 'unsupported_xml_encoding', 3
-    return wrapped(xml.encode(encoding), parser), reason, code
 
 
 @pytest.mark.parametrize('mode', ['core', 'pyz'])

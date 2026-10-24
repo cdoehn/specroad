@@ -23,12 +23,13 @@
     "14.n.R: refuse public/parameter/recursive/expansion DTDs, hidden schema/XInclude references, trailing processing instructions and input-selected host codecs across all four XML adapters in fresh Core/PYZ processes.",
     "Enforce byte/depth/element/text limits and reject active or unsafe references in original and opaque ReqIF content without external access or changes to the complete owned project.",
     "Reject unused archive paths, aliases, special/executable modes and NUL names before member reads; reject aggregate overflow, late CRC errors and a late hostile selected XML document without publishing a prefix.",
-    "Refuse converter fields in mapping, field/value-map, CSV profile/column/codec and identity-registry entry grammars. Confirm code-like passive values, registry data, literal XML lookalikes, exact byte boundaries and selected document-relative archive links remain usable without resolution or execution."
+    "Refuse converter fields in mapping, field/value-map, CSV profile/column/codec and identity-registry entry grammars. Confirm code-like passive values, registry data, literal XML lookalikes, exact byte boundaries and selected document-relative archive links remain usable without resolution or execution.",
+    "14.n.C: rerun the unchanged W/R behavior cases through shared owned source fixtures and fixed adapter call constructors. Preserve every test identity, expectation, per-adapter limit and isolated runtime effect trap."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Import DARF NICHT eine externe Netzwerkverbindung initiieren oder einen ausführbaren Konverter starten.",
-    "scope": "14.n.W adds current isolated Core/PYZ behavior for local declarative import parsers and ordinary native publication, with network/process attempts denied and observed. Initial negative corpora cover file/network entities, unused ZIP traversal/absolute/symlink members and nondeclarative converter keys. Existing product parser and writer contracts are unchanged; executable integration tests are the implementation increment. No full-suite or general sandbox success is asserted. 14.n.R extends executable isolated Core/PYZ coverage to 200 explicit attack, resource-bound and passive-data cases. Negative cases preserve a complete owned native project and retain zero attempted filesystem/network/process effects; metadata preflight also forbids member reads until safe. All W cases remain current. No product parser contract or normative specification changes."
+    "scope": "14.n.W adds current isolated Core/PYZ behavior for local declarative import parsers and ordinary native publication, with network/process attempts denied and observed. Initial negative corpora cover file/network entities, unused ZIP traversal/absolute/symlink members and nondeclarative converter keys. Existing product parser and writer contracts are unchanged; executable integration tests are the implementation increment. No full-suite or general sandbox success is asserted. 14.n.R extends executable isolated Core/PYZ coverage to 200 explicit attack, resource-bound and passive-data cases. Negative cases preserve a complete owned native project and retain zero attempted filesystem/network/process effects; metadata preflight also forbids member reads until safe. All W cases remain current. No product parser contract or normative specification changes. 14.n.C consolidates the reusable input corpus and reader construction without changing product code, attack bytes, expected outcomes, effect guards or test identities. The previously stated partial-proof boundaries remain."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -289,7 +290,7 @@
     "tests/test_import_security_right.py::test_xml_resolution_expansion_and_host_plugins_are_refused_in_all_adapters[trailing-pi-reqifz-pyz]"
   ],
   "open_items": [
-    "14.n.C retains consolidation of the security cases; this bounded corpus does not prove exhaustive resistance to every possible input or host failure.",
+    "The bounded W/R corpus and shared fixture layout do not prove exhaustive resistance to every possible input or host failure.",
     "The goal-statement projection exercises real local parser-to-writer integration through explicit trusted test-host composition. It is not a complete import CLI, whole-format roundtrip, foreign-tool interoperability or approval/release claim.",
     "The guard is a CPython audited API boundary, not a kernel network namespace or the complete reference-sandbox/multi-version verification. Evidence is limited to the actual platform and run."
   ]

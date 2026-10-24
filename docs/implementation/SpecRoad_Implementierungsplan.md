@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 16
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 611
-last_completed_plan_commit: 14.n.R
-next_plan_commit: 14.n.C
-last_completed_numbered_bundle: 450
+implementation_plan_commits_completed: 612
+last_completed_plan_commit: 14.n.C
+next_plan_commit: 14.o.W
+last_completed_numbered_bundle: 451
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -22649,7 +22649,7 @@ bis zum tatsächlichen Result offen; kein Volltest, serieller Test oder CI-Start
 
 #### 14.n.C – Make it Clean
 
-- [ ] **14.n.C** · Position **612/900** · Voraussetzung: `14.n.R`.
+- [x] **14.n.C** · Position **612/900** · Voraussetzung: `14.n.R`.
 **Exakte Commit-Message:** `14.n.C refactor(exchange): Netzwerk-/Konverterfreiheit und Archivangriffe bereinigen`
 
 **Bereinigung:** Wiederverwendbare Security-Fälle über die Formatadapter parametrieren.
@@ -22657,6 +22657,120 @@ bis zum tatsächlichen Result offen; kein Volltest, serieller Test oder CI-Start
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Umsetzungs- und Prüfnachweis 14.n.C, Bundle 451 (2026-10-24).**
+
+**Maßgebliche Basis.** Das Result
+`specroad-apply_Result_112211_1024_03cd2f.zip`, SHA-256
+`2b89e09b5098bc9133022deb7f870dc3f79f4f66346180d30a51541411f44fbc`,
+bestätigt den sauberen Commit `b1310b223e926782022f9a46f208a4c66f73e647`
+für **14.n.R**, Position **611/900**, Bundle **450**, mit Vorgänger
+`78b2c8adff43a05e0fb3ab58aa3a07444de99837`. Alle **2.202** Snapshotdateien,
+Vierfachbindung, Manifest-/Rundaten, Ausführungslogs und read-only geprüfter
+Apply-Arbeitsbaum stimmen überein. Der gebundene Apply-Teiltest hat
+**6.670/6.670** Tests in Gruppe **1**, Sequenz **157**, mit vier Workern
+bestanden. Tatsächliche Outcomes, Selektionsbindung, Quellhash und permanente
+Testidentitäten sind geprüft. Die fünf bestätigten Fortschrittsmarker
+wurden in Dev an den tatsächlich übernommenen Stand angeglichen.
+
+**Strukturelle Bereinigung.** Das neue Testhilfsmodul
+`tests/support/import_security_cases.py` bündelt die bereits vorhandenen
+passiven Quellbytes und Mappingressourcen, XML-Adapter-/Angriffsparameter,
+formatspezifischen harten Limits, ReqIFZ-Verpackung und Konstruktion der
+festen Parseraufrufe. W und R verwenden dieselbe Adapterauswahl und
+Ressourcenfixture. Der R-Korpus importiert seine Ressourcen nicht mehr aus
+dem W-Testmodul. Die doppelte W-Verzweigung über Parsernamen entfällt.
+JUnit verwendet dabei explizit dieselben Defaultlimits wie zuvor; alle
+ReqIF-/ReqIFZ-Limits, ausgewählten Dokumentpfade und Bytebudgets bleiben gleich.
+
+Alle **acht** verschobenen Definitionen sind auf AST-Ebene unverändert.
+Die Körper aller **14** bestehenden Testfunktionen mit zusammen **238**
+W-/R-Identitäten bleiben ebenfalls unverändert; die gemeinsame XML-Liste
+ersetzt ausschließlich dieselbe zuvor ausgeschriebene Parametermenge.
+Die vollständige Collection bestätigt identische Testknoten und Identitäten.
+Dies ist eine strukturelle Zusatzprüfung, kein neuer fachlicher Test.
+Die vorhandenen positiven Datenoracles, Fehlergründe/-codes, vollständigen
+Projektinventare und negativen Zugriffserwartungen werden nicht angepasst.
+
+`tests/support/import_security.py` mit frischen Core-/PYZ-Prozessen,
+Audithook, geschlossenem stdin und leerem PATH bleibt bytegleich. Die
+strengeren R-Prüfungen für Codec-Lookup, Mitgliedslesen und Diagnoseinhalte
+bleiben erhalten. Der gesamte Produktcode unter `src/`, sämtliche anderen
+Tests, Runner, Workflows, Spezifikation, Fixture-Registry und dauerhafte
+Testnummern bleiben bytegleich. Die zwei aktiven Verifikationsfälle erhalten
+nur die Beschreibung der gemeinsam verwendeten Struktur und ihrer weiter
+begrenzten Nachweise; Requirement-Verträge, Testidentitäten, Fixture-IDs,
+Diagnose-/Exit-Erwartungen und `partial`-Status bleiben erhalten.
+
+Die Bereinigung erfüllt den bestätigten C-Auftrag zu
+**SR-REQ-0324/SR-REQ-0532** und **SR-VER-0024** ohne neues Fachverhalten.
+**SPECROAD-DECISION-1** ist in § 2.4 ausdrücklich vorhanden und wurde geprüft;
+eine eigene normative Klärung ist nicht erforderlich. Spezifikation
+**0.2.21**, SHA-256
+`74975324c4840e1895a2346e28e10c70ef8abd91bbc2bf2a129ba8030f625f28`,
+bleibt bytegleich. Sicherheits-, Verlust- und Freigaberegeln werden nicht
+verändert. Die Format-Roundtrips aus **14.o.W** werden nicht vorgezogen.
+
+**Gezielte parallele Abnahme.** **2.007/2.007** Verhaltenstests bestanden
+mit **vier Workern**, Prozessabschluss **0**, ausschließlich `passed`-
+Outcomes und `full_suite_passed=null`. Enthalten sind alle **38 W-** und
+**200 R-Fälle** sowie die betroffenen vorhandenen Core-, Parser-, Mapping-
+und nativen Importregressionen. Ein ignorierter lokaler Build-Tempbereich
+hält die wegwerfbaren Fixture-Builds außerhalb der begrenzten `/tmp`-Quota;
+diese lokale Laufzeitwahl und Ausführungskennungen sind kein Payload.
+
+Geprüfte Testdateien:
+
+- `tests/test_core.py`
+- `tests/test_csv_codec.py`
+- `tests/test_csv_codec_right.py`
+- `tests/test_exchange_mappings.py`
+- `tests/test_exchange_mappings_right.py`
+- `tests/test_import_execution.py`
+- `tests/test_import_execution_right.py`
+- `tests/test_import_security.py`
+- `tests/test_import_security_right.py`
+- `tests/test_junit_xml.py`
+- `tests/test_junit_xml_right.py`
+- `tests/test_ndjson_codec.py`
+- `tests/test_ndjson_codec_right.py`
+- `tests/test_reqif_objects.py`
+- `tests/test_reqif_objects_right.py`
+- `tests/test_reqif_structure.py`
+- `tests/test_reqif_structure_right.py`
+- `tests/test_reqifz.py`
+- `tests/test_reqifz_right.py`
+- `tests/test_security.py`
+
+Die vollständige Collection-/Katalogprüfung ist für **20.010** eindeutige
+Identitäten gültig und führte **0** Testkörper aus. Alle Knoten-/ID-Zuordnungen
+stimmen mit dem bestätigten R-Stand überein. Es gibt keine neuen, entfernten
+oder umnummerierten Tests. `SR-TC-0532` behält **238** Testidentitäten,
+`SR-TC-0324` behält **341**; ihre Fixture-IDs bleiben unverändert.
+
+Diese Teilprüfung ist weder Vollsuite- noch Release-Erfolgsnachweis. Die
+Sicherheitsgrenze bleibt die tatsächlich geprüfte CPython-API-Grenze,
+keine behauptete Kernel-Netzwerknamespace oder vollständige mehrplattformige
+Referenz-Sandbox. Vollständige Import-CLI, Format-Roundtrips, Fremdtool-Interop,
+externe Testausführung und menschliche Freigaben werden nicht als erledigt
+behauptet. Der endliche Angriffskorpus ersetzt keinen universellen
+Sicherheitsnachweis.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `d31916d4a312380fb015f1c517750d1a56c6415c6624f5b016e883700e81c7a4`.
+- Selektionsdatei-SHA-256: `383a862fadb7e69ffa72ef9b520a3ed110d2d09a568c51823bed482acd30d98d`.
+- Beobachtungsdatei-SHA-256: `448f8fbeab2335fd6e574191956d6203f4301e33fb89982ef51675c2146da3cf`.
+- Katalog-SHA-256: `f9b4d3d67251a17139846332ac4e1ba9a4bd8ea782fc30d01e8f9a5e63715886`.
+
+**Offene Apply-Abnahme.** Übergeben wird ausschließlich der gezielt geprüfte
+C-Zwischenstand. Der Entrypoint verlangt die saubere gebundene Basis und
+prüft ausschließlich Gruppe **2**, Sequenz **158**, mit **6.670** Tests und
+vier Workern. Erst nach deren erfolgreicher gebundener Abnahme setzt er die
+fünf Fortschrittsmarker auf **612/900**, zuletzt **14.n.C**, nächstens
+**14.o.W**, Bundle **451** und die C-Checkbox und erzeugt die exakte
+PLAN-Commit-Message. Apply-Erfolg bleibt bis zum tatsächlichen Result offen;
+kein Volltest, serieller Test, CI-Start oder weiterer Produktzustand.
 
 <a id="step-14-o"></a>
 ### 14.o – Format-Roundtrips und Importfortsetzung

@@ -6,52 +6,20 @@ import stat
 
 import pytest
 
-from specroad.exchange import encode_reqifz
-from specroad.mappings import CSVProfile, ExchangeMapping
 from specroad.model.canonical import canonical_json_bytes
 from specroad.model.paths import artifact_path
-from support.csv_codec import column
-from support.exchange_mappings import mapping_value
-from support.folds import goal
 from support.import_execution import PAYLOAD, project
 from support.import_security import IMPORTS, run_isolated
-from support.ndjson_codec import envelope
+from support.import_security_cases import (READER_IMPORTS, TEXT, XML_PARSERS,
+    input_resources, parser_bounds, reader)
 from support.read_only import inventory
-from support.reqif_objects import LIMITS, document, datatype, definition, spec_object, value
+from support.reqif_objects import LIMITS, document
 from support.targets import ACTOR, TIME, SCOPE
 from test_work_archive import foreign_zip
 
 
-# Executable-looking values and remote locations remain literal supplier data.
-TEXT = "Literal $(touch CONVERTER_RAN); https://supplier.invalid/data; 日本語 & <value>."
 IDENTITY = {'source_system': 'supplier', 'source_document': 'explicit-document',
             'external_id': 'external-1', 'external_revision': '1'}
-
-
-def input_resources(fmt):
-    external_type, field = ('type', 'field') if fmt in ('reqif', 'reqifz') else ('Goal', 'Text')
-    resource = ExchangeMapping(canonical_json_bytes(mapping_value(
-        source_format='reqif' if fmt == 'reqifz' else fmt,
-        types=[{'external_type': external_type, 'artifact_type': 'goal'}],
-        fields=[{'external_type': external_type, 'external_field': field,
-                 'target_field': 'statement', 'value_map': None}], relations=[], hierarchies=[])))
-    profile = CSVProfile(canonical_json_bytes({
-        'schema_version': '0.2.0', 'mapping_format_version': 'csv-profile-v1',
-        'mapping_id': 'example:security-csv', 'mapping_version': '1.0.0',
-        'mapping': resource.binding(), 'external_type': external_type,
-        'identity': {'column': 'ID', 'kind': 'external_id'}, 'columns': [column('Text')],
-        'error_policy': 'reject', 'extensions': {}})) if fmt == 'csv' else None
-    if fmt == 'csv':
-        raw = ('ID,Text\r\nexternal-1,' + TEXT + '\r\n').encode()
-    elif fmt == 'ndjson':
-        raw = canonical_json_bytes(envelope(goal(statement=TEXT, external_identities=[]))) + b'\n'
-    else:
-        raw = document(datatypes=datatype('STRING'), definitions=definition('STRING', 'field', 'dt'),
-                       objects=spec_object(value('STRING', 'field', TEXT), identifier='external-1'))
-        if fmt == 'reqifz':
-            raw = encode_reqifz({'document.reqif': raw, 'unused.txt': b'passive only'},
-                document_paths=['document.reqif'], limits=LIMITS, max_uncompressed_bytes=8*1024*1024)
-    return raw, resource, profile
 
 
 def target_setup(root, model, resource):
@@ -145,20 +113,8 @@ phase = 'publish'
 
 
 def rejection(raw, parser, *, expected_reason, expected_exit):
-    body = IMPORTS + 'raw=' + repr(raw) + '\nparser=' + repr(parser) + '\n'
-    body += 'limits=ReqIFLimits(**' + repr(asdict(LIMITS)) + ')\n'
-    body += "phase='parse'\n"
-    body += '''
-try:
-    if parser == 'reqif': decode_reqif(raw, limits=limits)
-    elif parser == 'reqif-structure': decode_reqif_structure(raw, limits=limits)
-    elif parser == 'reqifz':
-        decode_reqifz(raw, expected_sha256=sha256(raw).hexdigest(),
-            document_paths=['document.reqif'], limits=limits, max_uncompressed_bytes=8*1024*1024)
-    elif parser == 'junit': JUnitDocument(raw)
-    elif parser == 'mapping': ExchangeMapping(raw)
-    elif parser == 'csv-profile': CSVProfile(raw)
-    else: raise AssertionError('unknown trusted fixture parser')
+    body = READER_IMPORTS + 'raw=' + repr(raw) + '\nbounds=' + repr(parser_bounds(parser)) + '\n'
+    body += "phase='parse'\ntry:\n    " + reader(parser) + '''
 except ModelError as error:
     result = {'reason': error.reason, 'exit_code': error.exit_code}
 else:
@@ -171,7 +127,7 @@ print(json.dumps({'error': result, 'attempts': attempts}))
 
 
 @pytest.mark.parametrize('mode', ['core', 'pyz'])
-@pytest.mark.parametrize('parser', ['reqif', 'reqif-structure', 'reqifz', 'junit'])
+@pytest.mark.parametrize('parser', XML_PARSERS)
 @pytest.mark.parametrize('location', ['network', 'local-file'])
 def test_external_entities_are_refused_before_any_resolution_or_write(tmp_path, mode, parser, location):
     sandbox = tmp_path / 'sandbox'; sandbox.mkdir()
