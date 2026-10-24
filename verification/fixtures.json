@@ -125,6 +125,7 @@
     "SR-FIX-REQIF-STRUCTURE-XHTML-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-R-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-v1",
+    "SR-FIX-REQIFZ-CONTAINER-v1",
     "SR-FIX-REQUIREMENT-APPROVAL-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
@@ -840,6 +841,10 @@
     "SR-FIX-REQIF-LOSS-v1": {
       "provider": "tests/test_reqif_loss.py:binding,mapped,locations;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:structured,xdocument,attachment;tests/support/reqif_preservation.py:opaque_source,source_entry,target_bytes",
       "kind": "Owned complete XML/native JSON candidates with explicit mapping resources and record locations, independent XML location oracle, actual byte-bound attachment candidates and report-bearing export errors. No filesystem/network publication, whole-project validation, interoperability or write approval claimed."
+    },
+    "SR-FIX-REQIFZ-CONTAINER-v1": {
+      "provider": "tests/test_reqifz.py:independent;tests/test_work_archive.py:foreign_zip;tests/support/reqif_objects.py:document,one;tests/support/reqif_structure.py:xdocument",
+      "kind": "Owned XML and real independent stdlib ZIP bytes, nested/multiple explicitly selected documents, original byte attachments and unused members. Exact external archive/member hash and manifest oracles, native explicit attachment integration, safety/binding/limit failures, read-only guards and isolated Core/PYZ roundtrips. No project import/export, foreign-tool, full-suite or release claim."
     }
   }
 }

@@ -4,18 +4,33 @@
   "requirement_id": "SR-REQ-0486",
   "specification_sha256": "0e9e5cfa9907853a384e66d973bd90fe26f7ca70b7ce05aa1abe49c30c1eb726",
   "primary_verification_id": "SR-VER-0033",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-REQIFZ-CONTAINER-v1"
+  ],
+  "preconditions": [
+    "Explicit immutable member bytes, a nonempty unique document selection, expected full archive hash for reads, per-document ReqIFLimits and a positive hard expansion bound; no implicit filesystem or native target."
+  ],
+  "steps": [
+    "Compare actual generated ZIP bytes with an independently built canonical container, retaining exact XML, attachment, manifest-like and unused member bytes; derive the complete external transport manifest.",
+    "Resolve each original URI reference relative to its selected XML member, preserve document identity separation and require exact actual bytes without basename/case fallback or a private mandatory ZIP manifest.",
+    "Reject missing/changed bindings, invalid selected XML, unsafe members and noncanonical containers before returning data; enforce existing XML safety, portable targets and the explicit expansion bound.",
+    "Require the existing explicit native attachment descriptor for XHTML projection, preserve owned returned data, propagate host failures and verify the pure codec in isolated Core/PYZ distributions."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "ReqIFZ-Exporte MÜSSEN dasselbe kanonische ZIP-Profil wie Projektbundles verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "14.k.W implements the pure reqifz-container-v1 codec over the shared canonical stored ZIP kernel. Explicit selected documents and real document-relative member bindings, byte-identical roundtrip and a nonrecursive external transport manifest are covered. Existing manifest-bound work archive APIs retain their behavior. This is a partial transport proof, not a complete project export/import, loss approval, full-suite or release result."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6,
+    7
+  ],
   "json_pointers": [],
   "required_environment": {
     "implementation": "cpython",
@@ -28,8 +43,59 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[../escape]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[.git/config]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[/absolute]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[NUL.bin]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[a/../b]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[a/./b]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[a//b]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[a:stream]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[a\\\\b]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[e\\u0301]",
+    "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[trailing.]",
+    "tests/test_reqifz.py::test_container_roundtrip_keeps_every_original_byte_and_derives_external_manifest",
+    "tests/test_reqifz.py::test_document_selection_is_explicit_nonempty_and_unique[document.reqif]",
+    "tests/test_reqifz.py::test_document_selection_is_explicit_nonempty_and_unique[paths0]",
+    "tests/test_reqifz.py::test_document_selection_is_explicit_nonempty_and_unique[paths1]",
+    "tests/test_reqifz.py::test_document_selection_is_explicit_nonempty_and_unique[paths3]",
+    "tests/test_reqifz.py::test_expansion_limit_is_a_positive_integer[-1]",
+    "tests/test_reqifz.py::test_expansion_limit_is_a_positive_integer[0]",
+    "tests/test_reqifz.py::test_expansion_limit_is_a_positive_integer[1.5]",
+    "tests/test_reqifz.py::test_expansion_limit_is_a_positive_integer[None]",
+    "tests/test_reqifz.py::test_expansion_limit_is_a_positive_integer[True]",
+    "tests/test_reqifz.py::test_expected_hash_binds_actual_container_and_selected_xml_is_really_parsed",
+    "tests/test_reqifz.py::test_hard_expansion_limit_counts_unused_members_and_accepts_exact_boundary",
+    "tests/test_reqifz.py::test_missing_document_or_exact_relative_member_is_a_conflict[files0-paths0]",
+    "tests/test_reqifz.py::test_missing_document_or_exact_relative_member_is_a_conflict[files1-paths1]",
+    "tests/test_reqifz.py::test_missing_document_or_exact_relative_member_is_a_conflict[files2-paths2]",
+    "tests/test_reqifz.py::test_multiple_documents_bind_same_reference_to_their_own_directory_without_merging_ids",
+    "tests/test_reqifz.py::test_native_projection_still_requires_explicit_native_attachment_descriptor",
+    "tests/test_reqifz.py::test_noncanonical_container_is_rejected_instead_of_silently_repacked[comment]",
+    "tests/test_reqifz.py::test_noncanonical_container_is_rejected_instead_of_silently_repacked[compressed]",
+    "tests/test_reqifz.py::test_noncanonical_container_is_rejected_instead_of_silently_repacked[duplicate]",
+    "tests/test_reqifz.py::test_noncanonical_container_is_rejected_instead_of_silently_repacked[prefix]",
+    "tests/test_reqifz.py::test_noncanonical_container_is_rejected_instead_of_silently_repacked[tail]",
+    "tests/test_reqifz.py::test_owned_container_data_cannot_be_changed_through_input_or_returned_collections",
+    "tests/test_reqifz.py::test_portable_collisions_fail_before_any_payload_is_read[other0]",
+    "tests/test_reqifz.py::test_portable_collisions_fail_before_any_payload_is_read[other1]",
+    "tests/test_reqifz.py::test_portable_collisions_fail_before_any_payload_is_read[other2]",
+    "tests/test_reqifz.py::test_portable_collisions_fail_before_any_payload_is_read[other3]",
+    "tests/test_reqifz.py::test_reqifz_bytes_and_external_manifest_work_in_isolated_distributions[core]",
+    "tests/test_reqifz.py::test_reqifz_bytes_and_external_manifest_work_in_isolated_distributions[pyz]",
+    "tests/test_reqifz.py::test_special_members_are_not_materialized[16877]",
+    "tests/test_reqifz.py::test_special_members_are_not_materialized[41471]",
+    "tests/test_reqifz.py::test_special_members_are_not_materialized[4480]",
+    "tests/test_reqifz.py::test_xml_byte_bound_remains_per_document_and_host_failures_are_not_format_success",
+    "tests/test_reqifz.py::test_xml_safety_applies_to_selected_documents_originals_and_opaque_subtrees[<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<!DOCTYPE REQ-IF [<!ENTITY x \"value\">]><REQ-IF xmlns=\"http://www.omg.org/spec/ReqIF/20110401/reqif.xsd\" xml:lang=\"de\"><THE-HEADER><REQ-IF-HEADER IDENTIFIER=\"header\"><COMMENT>owned fixture</COMMENT><CREATION-TIME>2026-10-23T12:00:00.125+02:00</CREATION-TIME><REQ-IF-TOOL-ID>fixture</REQ-IF-TOOL-ID><REQ-IF-VERSION>1.0</REQ-IF-VERSION><SOURCE-TOOL-ID>fixture</SOURCE-TOOL-ID><TITLE>Types</TITLE></REQ-IF-HEADER></THE-HEADER><CORE-CONTENT><REQ-IF-CONTENT><DATATYPES></DATATYPES><SPEC-TYPES><SPEC-OBJECT-TYPE IDENTIFIER=\"type\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\"><SPEC-ATTRIBUTES></SPEC-ATTRIBUTES></SPEC-OBJECT-TYPE></SPEC-TYPES><SPEC-OBJECTS></SPEC-OBJECTS></REQ-IF-CONTENT></CORE-CONTENT></REQ-IF>]",
+    "tests/test_reqifz.py::test_xml_safety_applies_to_selected_documents_originals_and_opaque_subtrees[<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<REQ-IF xmlns=\"http://www.omg.org/spec/ReqIF/20110401/reqif.xsd\" xml:lang=\"de\"><THE-HEADER><REQ-IF-HEADER IDENTIFIER=\"header\"><COMMENT>owned fixture</COMMENT><CREATION-TIME>2026-10-23T12:00:00.125+02:00</CREATION-TIME><REQ-IF-TOOL-ID>fixture</REQ-IF-TOOL-ID><REQ-IF-VERSION>1.0</REQ-IF-VERSION><SOURCE-TOOL-ID>fixture</SOURCE-TOOL-ID><TITLE>Types</TITLE></REQ-IF-HEADER></THE-HEADER><CORE-CONTENT><REQ-IF-CONTENT><DATATYPES></DATATYPES><SPEC-TYPES><SPEC-OBJECT-TYPE IDENTIFIER=\"type\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\"><SPEC-ATTRIBUTES></SPEC-ATTRIBUTES></SPEC-OBJECT-TYPE></SPEC-TYPES><SPEC-OBJECTS></SPEC-OBJECTS></REQ-IF-CONTENT></CORE-CONTENT><TOOL-EXTENSIONS><foreign xmlns=\"urn:other\" poster=\"https://example.invalid/x\"/></TOOL-EXTENSIONS></REQ-IF>]",
+    "tests/test_reqifz.py::test_xml_safety_applies_to_selected_documents_originals_and_opaque_subtrees[<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<REQ-IF xmlns=\"http://www.omg.org/spec/ReqIF/20110401/reqif.xsd\" xml:lang=\"de\"><THE-HEADER><REQ-IF-HEADER IDENTIFIER=\"header\"><COMMENT>owned fixture</COMMENT><CREATION-TIME>2026-10-23T12:00:00.125+02:00</CREATION-TIME><REQ-IF-TOOL-ID>fixture</REQ-IF-TOOL-ID><REQ-IF-VERSION>1.0</REQ-IF-VERSION><SOURCE-TOOL-ID>fixture</SOURCE-TOOL-ID><TITLE>Types</TITLE></REQ-IF-HEADER></THE-HEADER><CORE-CONTENT><REQ-IF-CONTENT><DATATYPES><DATATYPE-DEFINITION-XHTML IDENTIFIER=\"dt\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\" LONG-NAME=\"type metadata\"></DATATYPE-DEFINITION-XHTML></DATATYPES><SPEC-TYPES><SPEC-OBJECT-TYPE IDENTIFIER=\"type\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\"><SPEC-ATTRIBUTES><ATTRIBUTE-DEFINITION-XHTML IDENTIFIER=\"field\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\" LONG-NAME=\"same display name\" IS-EDITABLE=\"false\"><TYPE><DATATYPE-DEFINITION-XHTML-REF>dt</DATATYPE-DEFINITION-XHTML-REF></TYPE></ATTRIBUTE-DEFINITION-XHTML></SPEC-ATTRIBUTES></SPEC-OBJECT-TYPE></SPEC-TYPES><SPEC-OBJECTS><SPEC-OBJECT IDENTIFIER=\"object\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\" LONG-NAME=\"object name\" DESC=\"metadata\"><VALUES><ATTRIBUTE-VALUE-XHTML><DEFINITION><ATTRIBUTE-DEFINITION-XHTML-REF>field</ATTRIBUTE-DEFINITION-XHTML-REF></DEFINITION><THE-VALUE><div xmlns=\"http://www.w3.org/1999/xhtml\"><a href=\"../p.bin\">unsafe</a></div></THE-VALUE></ATTRIBUTE-VALUE-XHTML></VALUES><TYPE><SPEC-OBJECT-TYPE-REF>type</SPEC-OBJECT-TYPE-REF></TYPE></SPEC-OBJECT></SPEC-OBJECTS></REQ-IF-CONTENT></CORE-CONTENT></REQ-IF>]",
+    "tests/test_reqifz.py::test_xml_safety_applies_to_selected_documents_originals_and_opaque_subtrees[<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<REQ-IF xmlns=\"http://www.omg.org/spec/ReqIF/20110401/reqif.xsd\" xml:lang=\"de\"><THE-HEADER><REQ-IF-HEADER IDENTIFIER=\"header\"><COMMENT>owned fixture</COMMENT><CREATION-TIME>2026-10-23T12:00:00.125+02:00</CREATION-TIME><REQ-IF-TOOL-ID>fixture</REQ-IF-TOOL-ID><REQ-IF-VERSION>1.0</REQ-IF-VERSION><SOURCE-TOOL-ID>fixture</SOURCE-TOOL-ID><TITLE>Types</TITLE></REQ-IF-HEADER></THE-HEADER><CORE-CONTENT><REQ-IF-CONTENT><DATATYPES><DATATYPE-DEFINITION-XHTML IDENTIFIER=\"dt\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\" LONG-NAME=\"type metadata\"></DATATYPE-DEFINITION-XHTML></DATATYPES><SPEC-TYPES><SPEC-OBJECT-TYPE IDENTIFIER=\"type\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\"><SPEC-ATTRIBUTES><ATTRIBUTE-DEFINITION-XHTML IDENTIFIER=\"field\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\" LONG-NAME=\"same display name\" IS-EDITABLE=\"false\"><TYPE><DATATYPE-DEFINITION-XHTML-REF>dt</DATATYPE-DEFINITION-XHTML-REF></TYPE></ATTRIBUTE-DEFINITION-XHTML></SPEC-ATTRIBUTES></SPEC-OBJECT-TYPE></SPEC-TYPES><SPEC-OBJECTS><SPEC-OBJECT IDENTIFIER=\"object\" LAST-CHANGE=\"2026-10-23T12:00:00.125+02:00\" LONG-NAME=\"object name\" DESC=\"metadata\"><VALUES><ATTRIBUTE-VALUE-XHTML><DEFINITION><ATTRIBUTE-DEFINITION-XHTML-REF>field</ATTRIBUTE-DEFINITION-XHTML-REF></DEFINITION><THE-VALUE><div xmlns=\"http://www.w3.org/1999/xhtml\"><p>safe</p></div></THE-VALUE><THE-ORIGINAL-VALUE><div xmlns=\"http://www.w3.org/1999/xhtml\"><object data=\"file:///private/file\" type=\"image/png\"/></div></THE-ORIGINAL-VALUE></ATTRIBUTE-VALUE-XHTML></VALUES><TYPE><SPEC-OBJECT-TYPE-REF>type</SPEC-OBJECT-TYPE-REF></TYPE></SPEC-OBJECT></SPEC-OBJECTS></REQ-IF-CONTENT></CORE-CONTENT></REQ-IF>]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "14.k.R: complete adversarial header/size/overlap, reference and resource-boundary matrices while retaining all W behavior and security gates.",
+    "14.k.C: clean the common ZIP/domain-manifest structure without behavior or legacy API error changes.",
+    "Full native project export scopes, deterministic snapshot metadata, CLI/import/write integration and foreign-tool interoperability are not established by this pure container proof."
   ]
 }

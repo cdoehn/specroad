@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 15
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 600
-last_completed_plan_commit: 14.j.C
-next_plan_commit: 14.k.W
-last_completed_numbered_bundle: 437
+implementation_plan_commits_completed: 601
+last_completed_plan_commit: 14.k.W
+next_plan_commit: 14.k.R
+last_completed_numbered_bundle: 438
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -20970,12 +20970,83 @@ Produktimplementierung, keinen parallelen Apply-Lauf und keine Abnahme.
 
 #### 14.k.W – Let it Work
 
-- [ ] **14.k.W** · Position **601/900** · Voraussetzung: `14.j.C`.
+- [x] **14.k.W** · Position **601/900** · Voraussetzung: `14.j.C`.
 **Exakte Commit-Message:** `14.k.W feat(exchange): ReqIFZ und sicheres Archivprofil aufbauen`
 
 **Umsetzung:** ReqIFZ nach D.1.4 auf den vorhandenen sicheren kanonischen ZIP-Kern aufsetzen: explizite Dokumentauswahl, dokumentrelative Bytebindungen und abgeleitetes Transportmanifest ohne zusätzliches Pflichtmitglied. Die W-Abnahmen des Entscheidungsbelegs gelten; kein nativer Write oder zweiter Entpacker.
 
 **Verhaltensabnahme:** ReqIF-Daten, gebundene Anhänge und übrige Mitglieder überleben den Containerroundtrip bytegleich. Der tatsächliche Archivhash, die vollständigen Mitgliedgrößen/-hashes sowie Dokumentauswahl und Referenzziele sind deterministisch nachgewiesen. Fehlende oder geänderte Bindungen erzeugen keinen Erfolg.
+
+**W-Umsetzung und Übergabe (Bundle 438):** Das vollständig gebundene Result
+`specroad-apply_Result_004638_1024_4338c7.zip`, SHA-256
+`d3be50998a9d128c6762271cc8abb0c0c4e51a785303c255d3c8900f86343281`,
+bestätigt **REQIFZ-CONTAINER-CONTRACT / Bundle 437** auf
+`3e94d7023fda126ffc3a6d2da74c31be1c88f91b`: sauberer Apply-Stand,
+**6.324/6.324** bestandene Tests, Gruppe **1/3**, Commitfolge **145**,
+vier Worker, **1.627,90 s**. Native Resultbindung, alle **2.183 Snapshotdateien**,
+Commit samt Elternstand und die tatsächlichen gebundenen Testbelege wurden
+abgeglichen. In Dev wurden zunächst ausschließlich die zwei belegten
+OFF-PLAN-/Bundlemarker nachgeführt; danach entsprach der Bestand dem Snapshot.
+Vor Apply bleibt der Produktstand **600/900**, zuletzt **14.j.C**, nächstens
+**14.k.W**, Bundle **437**. SPECROAD-DECISION-1 ist vorhanden; Spezifikation
+**0.2.20 / D.1.4** bleibt bytegleich. Die bereits geklärte Vorgabe wird regulär
+umgesetzt; es entsteht keine weitere normative Klärung.
+
+`encode_reqifz`, `decode_reqifz` und `ReqIFZContainer` bilden einen reinen
+Bytecodec über dem vorhandenen kanonischen ZIP-Kern. Dokumentmitglieder
+werden ausdrücklich ausgewählt und mit den bestehenden ReqIF-Grenzen
+geprüft. Alle übrigen Mitgliedbytes bleiben erhalten, auch unreferenzierte
+Daten, fremde Dateiendungen und manifestähnliche Namen. Referenzen binden
+an den Pfad ihres jeweiligen XML-Dokuments; Root-, Basename- und Case-
+Ersatzauflösung findet nicht statt. Das außerhalb des ZIP abgeleitete
+`reqifz-container-v1`-Manifest weist tatsächlichen Archivhash, vollständige
+Mitgliedgrößen/-hashes, Dokumentauswahl und deduplizierte Originalreferenzen
+aus. Rückgabesammlungen erlauben keine Mutation des geprüften Trägers.
+
+Gemeinsame ZIP-Metadaten-/Inventarprüfung und kanonische Byteprüfung werden
+wiederverwendet. Bestehende manifestgebundene Work-/Projekt-APIs behalten
+Verhalten und Fehlerverträge. Bereits W prüft sämtliche Mitgliedpfade,
+portable Kollisionen, Sonderdateien und die explizite harte Expansionsgrenze
+vor Nutzinhaltsrückgabe. Dokumente behalten ihre XML-Sicherheitsgrenzen.
+Native XHTML-Projektion benötigt weiterhin den vorhandenen expliziten
+Anhangdeskriptor. Keine Extraktion, Fremddekodierung, Ausführung, native
+Writefreigabe, Verlustakzeptanz oder vollständige Projektintegration wird
+hinzugefügt. Die vollständigen adversarialen R-Matrizen bleiben offen.
+
+**Gezielter Dev-Verhaltensnachweis:** **947/947 Tests**, vier parallele
+Worker, **31,74 s**, Prozess-/Gate-Exit **0**, keine Beobachtungsfehler;
+`selected_passed=true`, `full_suite_passed=null`. Die **11 ausgewählten
+Testdateien** umfassen alle **48 neuen ReqIFZ-Fälle** sowie betroffene
+ReqIF-Struktur-/Objekt-/Erhaltungs-/Verlust- und Work-Archiv-/Paketregressionen.
+Ein erster Lauf bestand 946/947 Tests; ein neuer Test verwendete einen nicht
+vorhandenen Ergebnisschlüssel. Die Erwartung wurde auf den bestehenden
+fachlichen XHTML-Inhalts- und Deskriptorvertrag korrigiert. Der vollständige
+gezielte parallele Wiederholungslauf bindet den tatsächlich übergebenen Stand.
+Bestehende Tests und Oracles wurden nicht geändert. Die neue Fixture und
+SR-TC-0323/SR-TC-0486 dokumentieren ausschließlich diesen Transportausschnitt;
+beide Nachweise bleiben **partial** mit offenen R-/C-/Integrationsgrenzen.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **19.020 Identitäten**,
+**0 ausgeführte Testkörper** und keine Katalogfehler. Die **48 neuen Nummern**
+werden hinten angehängt; alle **18.972** bisherigen Nummern bleiben erhalten.
+Kein Vollsuite-, serieller, Darstellungs-/Dokumentationstest oder CI-Lauf
+wurde gestartet. Quellstand `92312be2d808b6629c68660d339e3da7483d03854b64217c20fb893a0e4eaaa8`;
+Katalog `8cc57fd9943fe8bcaf654a748120e163d4e3e20681b759d71d4a8331d3453778`;
+Auswahlbeleg `7abc78fa4dd71a4acb31b1014e8722f06ad30d13dab67cb6624a0fb954c02505`;
+Beobachtungsbeleg `9e98ad4442b759a09dbc94a9796d98aa76810e8790d668ab0342bfe97335f33a`.
+
+**Vorgesehene Apply-Grenze:** Ein regulärer Commit **14.k.W**, Position
+**601/900**, Bundle **438**, mit der oben festgelegten Commit-Message.
+Der Entrypoint installiert genau den gezielt geprüften W-Zustand und prüft
+nur **Gruppe 2/3**, Commitfolge **146**, mit **6.340 Tests** und vier parallelen
+Workern. Erst nach erfolgreichem gebundenem Gate werden die fünf
+Fortschrittsmarker auf **601/900**, zuletzt **14.k.W**, nächstens **14.k.R**,
+Bundle **438** und die W-Checkbox gesetzt und committet. Bei Fehlern bleiben
+tatsächliche Dateien, Index und erfolgreiche Commits erhalten. **14.k.R**,
+**14.k.C**, 14.l und die vollständige CLI-/Projektintegration bleiben offen.
+Kein Vollsuite-, Fremdtool-, Release- oder Apply-Erfolg wird vorweggenommen.
+Nach nativer ZIP-Prüfung und atomarer Übergabe endet dieser Einzelauftrag
+ohne Warte-/Resultschleife.
 
 #### 14.k.R – Make it Right
 

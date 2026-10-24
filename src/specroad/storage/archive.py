@@ -104,11 +104,56 @@ def decode_archive(raw, *, manifest_name, expected_sha256):
     _require(type(raw) is bytes, 'archive_bytes_required')
     _path(manifest_name); _hash(expected_sha256)
     _require(sha256(raw).hexdigest() == expected_sha256, 'archive_hash_mismatch')
+    entries = _read_zip(raw, manifest_name=manifest_name)
+    manifest_raw = entries.pop(manifest_name)
+    try:
+        manifest = parse_json_object(manifest_raw)
+        _require(canonical_json_bytes(manifest) == manifest_raw, 'noncanonical_archive_manifest')
+    except ModelError as error:
+        raise ArchiveError('invalid_archive_manifest') from error
+    _require(canonical_json_bytes(manifest.get('entries')) == canonical_json_bytes(_inventory(entries)),
+             'archive_inventory_mismatch')
+    metadata = {key: value for key, value in manifest.items() if key != 'entries'}
+    return metadata, entries
+
+
+def _byte_limit(value):
+    if type(value) is not int or value < 1:
+        raise ArchiveError('invalid_archive_byte_limit', exit_code=2)
+
+
+def encode_zip(payloads, *, max_uncompressed_bytes):
+    """Canonical members only; domain manifests are the caller's concern."""
+    _byte_limit(max_uncompressed_bytes)
+    _require(type(payloads) is dict and all(type(v) is bytes for v in payloads.values()))
+    if sum(map(len, payloads.values())) > max_uncompressed_bytes:
+        raise ArchiveError('archive_byte_limit', exit_code=7)
+    _inventory(payloads)  # Hash every name/payload before inclusion, as for bundles.
+    _paths(payloads)
+    return _zip(payloads)
+
+
+def decode_zip(raw, *, max_uncompressed_bytes, validate_paths=None):
+    """Bounded canonical members, without an implied domain manifest.
+
+    A trusted domain path validator may raise ArchiveError before any payload
+    read. The manifest-bound legacy API retains its original error contracts.
+    """
+    _byte_limit(max_uncompressed_bytes)
+    _require(type(raw) is bytes, 'archive_bytes_required')
+    return _read_zip(raw, max_uncompressed_bytes=max_uncompressed_bytes,
+                     validate_paths=validate_paths)
+
+
+def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_paths=None):
     try:
         with ZipFile(BytesIO(raw), 'r') as archive:
             infos = archive.infolist()
             names = [info.filename for info in infos]
-            _require(len(names) == len(set(names)) and names.count(manifest_name) == 1,
+            if validate_paths is not None:
+                validate_paths(names)
+            _require(len(names) == len(set(names))
+                     and (manifest_name is None or names.count(manifest_name) == 1),
                      'archive_entry_set_invalid')
             _paths(names)
             for info in infos:
@@ -122,19 +167,15 @@ def decode_archive(raw, *, manifest_name, expected_sha256):
                     and info.internal_attr == 0 and not info.extra and not info.comment,
                     'noncanonical_archive_entry')
             _require(not archive.comment, 'noncanonical_archive')
+            if (max_uncompressed_bytes is not None
+                    and sum(info.file_size for info in infos) > max_uncompressed_bytes):
+                raise ArchiveError('archive_byte_limit', exit_code=7)
             entries = {info.filename: archive.read(info) for info in infos}
     except (BadZipFile, OSError, ValueError, NotImplementedError) as error:
         if isinstance(error, ArchiveError):
             raise
+        if isinstance(error, OSError) and manifest_name is None:
+            raise  # A real host failure is not an ordinary malformed ReqIFZ.
         raise ArchiveError('invalid_archive_container') from error
     _require(raw == _zip(entries), 'noncanonical_archive')
-    manifest_raw = entries.pop(manifest_name)
-    try:
-        manifest = parse_json_object(manifest_raw)
-        _require(canonical_json_bytes(manifest) == manifest_raw, 'noncanonical_archive_manifest')
-    except ModelError as error:
-        raise ArchiveError('invalid_archive_manifest') from error
-    _require(canonical_json_bytes(manifest.get('entries')) == canonical_json_bytes(_inventory(entries)),
-             'archive_inventory_mismatch')
-    metadata = {key: value for key, value in manifest.items() if key != 'entries'}
-    return metadata, entries
+    return entries
