@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 17
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 621
-last_completed_plan_commit: 15.b.C
-next_plan_commit: 15.c.W
-last_completed_numbered_bundle: 463
+implementation_plan_commits_completed: 622
+last_completed_plan_commit: 15.c.W
+next_plan_commit: 15.c.R
+last_completed_numbered_bundle: 464
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -24188,12 +24188,140 @@ offen. Übergabe als `patch_ready`, danach Ende des Einzelauftrags.
 
 #### 15.c.W – Let it Work
 
-- [ ] **15.c.W** · Position **622/900** · Voraussetzung: `15.b.C`.
+- [x] **15.c.W** · Position **622/900** · Voraussetzung: `15.b.C`.
 **Exakte Commit-Message:** `15.c.W feat(bundle): Teilbundle und Boundarybindung aufbauen`
 
 **Umsetzung:** Document-/Release-Scope als partial/read_only mit Ursprungs- und Teilmodellwurzel speichern.
 
 **Verhaltensabnahme:** Fehlende schwache Zielressource ist exakt durch erlaubte Boundary gebunden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 464 (W), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Maßgeblich ist
+`specroad-apply_Result_220951_1024_f4a7ef.zip`, SHA-256
+`39434839fd8049fa40680aa895a3af672d7e19c421b36c68d4a7c6d7a6070545`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Executionlogs
+und alle **2.225** Base-Dateien wurden geprüft und mit dem tatsächlichen
+Apply-Stand lesend abgeglichen. Das Result bestätigt den sauberen Commit
+`5d764ead3a13e72b1bbe852c04343bc2c9937aeb` für **15.b.C**, Bundle **463**,
+mit Parent `938f5932967e4228c3d379f86d3602a393ffd1f2`.
+Die erfolgreiche vorherige Payload samt ihren fünf abschließenden
+Planmarkern entspricht vollständig dem zurückgegebenen Snapshot.
+
+Die tatsächlichen Katalog-, Auswahl- und Einzeloutcome-Dateien bestätigen
+**6.817/6.817** bestandene Apply-Tests in **1.977,45 s** mit **vier parallelen
+Workern**, **Sequenz 168 / Gruppe 0/3**, aus **20.449** Identitäten.
+Die dauerhafte nummerierte Auswahl wurde vollständig nachvollzogen;
+Auswahlbindung `b62383db5642382a788bed762bc6afee2f04f21386b70d3aaccce26e2e3621fa`,
+SHA-256 des Auswahlberichts `2995ee0a9ad968bde9ff5f9466d96b3eb77dd8a543d82eefb853448366a522bf`,
+der Einzeloutcomes `7daaf755eb912e340f9d564a7ba64edc283c62c36ac861c8d27f7919a6d9094c`.
+Der bestätigte Stand ist **621/900**, zuletzt **15.b.C**, nächstens
+**15.c.W**, Bundle **463**. Nur diese bestätigten fünf Marker wurden in
+Dev nachgeführt. Die vorherige Apply-Prüfung bleibt eine Teilprüfung.
+
+**Regulärer W-Ausschnitt.** `prepare_partial_bundle(root, descriptor)`
+erzeugt schreibfrei kanonische Bytes eines unkonfigurierten Dokument- oder
+Release-Teilbundles. Die native vollständige Ursprungsbeobachtung aus
+`ProjectBundleSnapshot` bleibt bis zur letzten Wiederlesung gebunden.
+`export_scope` bestimmt Seeds, transitive starke und gebundene Abhängigkeiten,
+schwache Außenkanten sowie die tatsächliche Teilmodellwurzel. Es gibt
+keinen zweiten Scope-Resolver und keinen zweiten ZIP-Writer.
+
+Der Container bindet `bundle_kind=partial`, `read_only=true`,
+`idempotency_scope=local_only`, den vollständigen partiellen Descriptor,
+die geschlossene unkonfigurierte Projektwurzel des Ursprungs und die
+separate Teilmodellwurzel einschließlich Profil-/Konfigurationshash.
+Jede ausgelassene schwache Kante besitzt genau ihre native siebenfeldrige
+Boundary Reference mit tatsächlichem kanonischem Zielhash. Ein fehlendes
+Ziel bereits im Ursprung ist ein Fehler. Wird das Ziel durch eine starke
+Kante erreicht, bleibt es enthalten und bekommt keine Boundary Reference.
+Auch bei zufällig vollständiger Artefaktclosure bleibt das Bundle partial.
+
+Artefakte, tatsächlich verwendete Profil-/Regel-/Mappingressourcen,
+Sprachregister, konfigurierte deklarative Sprachpakete, referenzierte
+Anhänge und benötigte Baselineobjekte werden mit unveränderten Quellbytes
+transportiert. Tatsächlich ausgeschlossene normative Quellpfade erscheinen
+geordnet als `outside_scope`; inventarisierte, unreferenzierte Archivobjekte
+als `unreferenced_archive_object`. Lokale Werkzeugkonfigurationen,
+Repositorydaten, Caches, Journale, Locks und generierte Ausgaben werden
+nicht übernommen. Nach dem Codec werden die exakten zurückgelesenen
+Payloads und Metadaten erneut mit der nativen Auswahl verglichen.
+Die Ursprungsbeobachtung prüft abschließend auch ausgelassene Quellbytes,
+Inventare, Rootmarker und Betriebszustände auf Änderungen.
+
+**Explizite W-Grenzen.** Dieser erste Bibliotheksadapter unterstützt
+`configuration_id=null`. Eine ausgewählte Produktkonfiguration wird mit
+`bundle_partial_configuration_provider_required`/Code 2 ausdrücklich
+verweigert, niemals still entfernt. Konfigurationsgebundene Auswahl und
+CLI-Veröffentlichung sowie weitere Fehler-/Sicherheitsfälle bleiben für
+**15.c.R**, die Strukturkonsolidierung für **15.c.C** offen. Der vorhandene
+Vollprojekterzeuger und seine CLI bleiben unverändert.
+Die bestehende Prüfung auf tatsächlich leere Receiptwurzeln wird vom
+Ursprungsadapter übernommen; nichtleere Historien bleiben bis zum
+Receiptprovider **15.g** verweigert. `local_only` behauptet keine portable
+Write-Idempotenz. Ungelöste Transaktionen verhindern auch dieses Bundle.
+Unabhängige Bundleprüfung und Extraktion bleiben **15.d/15.e** vorbehalten.
+Die Testmaterialisierung ist kein ausgelieferter Extraktor, die Byteprüfung
+kein Authentizitäts-, Freigabe-, Schreib- oder vollständiger semantischer
+Projektprüfnachweis.
+
+**SPECROAD-DECISION-1** ist in § 2.4 ausdrücklich enthalten und wurde
+geprüft. Die vorhandenen Vorgaben **10.8–10.10, 10.16 und E.1–E.3** reichen
+für diesen regulären W-Ausschnitt aus; keine normative Klärung und kein
+OFF-PLAN-Spezifikationsbundle. Spezifikation **0.2.22**, SHA-256
+`32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`,
+Verifikationsmatrix, Runner, Workflow und bestehende Verhaltenstests
+bleiben bytegleich. Sicherheits- und Freigabegrenzen werden nicht geändert.
+
+**Gezielte Entwicklungsprüfung:** **645/645** Verhaltenstests bestanden
+in **58,77 s** unter Linux/Python 3.14.4 mit **vier parallelen Workern**:
+**34** neue Partialfälle, **92** bestehende Projektbundlefälle,
+**248** Bundlecodec-Fälle, **51** Closure-Fälle, **78** Seed-Fälle,
+**35** Boundary-Fälle und **107** Exportfälle. Die neuen Oracles prüfen
+exakte Dateimengen, siebenfeldrige Boundarybindung, beide Modellwurzeln,
+eigenständige Rekonstruktion aus materialisierten Payloadbytes,
+Release-/Dokumentclosure, Anhänge, Archive, Sprachpakete, Deterministik,
+Originalbytes und unveränderte Quellinventare. Fehlende Ziele, falsche
+Scopekombinationen, Partial-Ursprünge, ungelöste Betriebszustände,
+Quelllinks, beobachtete Änderungen und konsistent umgeschriebene
+Codec-Ergebnisse werden abgewiesen.
+
+Im ersten gezielten Lauf bestanden **637** Fälle; **8** neue Fälle hatten
+fehlerhafte Testvorbedingungen: ein älterer Manifestassembler unterstützte
+Dokument-/Release-Descriptoren nicht, außerdem waren ein Anhang an einem
+Contentblock und eine direkte Dokument-Baseline-Relation unzulässig.
+Die Rekonstruktionsoracle bildet jetzt die vorhandene Manifestdomäne
+unabhängig aus echten Payloadressourcen nach; Anhänge liegen an Evidence,
+Baselineverweise an enthaltenen Referenzblöcken. Die bestehenden
+Produktverträge und erwarteten fachlichen Ergebnisse wurden nicht
+abgeschwächt. Der erneute vollständige gezielte Lauf ist oben belegt.
+
+Die vollständige Collection-/Katalogprüfung erfasste **20.483** eindeutige
+Identitäten, **0** Testkörper und keine Katalogfehler. Die bisherigen
+**20.449** dauerhaften Nummern und beide Rotationsanker bleiben erhalten;
+die **34** neuen Identitäten stehen hinten auf **20.449–20.482**.
+Kein vollständiger oder serieller Verhaltenstest in Dev wurde gestartet.
+Geprüfter Quellstand `1ab9712ffde908f356a87201300a489f9811a26c633cbf3e72d5e3a30f13871f`;
+SHA-256 der Auswahlbeobachtung `16aad29b47aeadda090283ee83dca0e81e3502f5679f1f606aeefd40aa750092`;
+der Einzeloutcomes `ecc4b3ca171c06da16641656396ec8077ad30a06eb3af95ac5d8588b6d6edc39`;
+des vollständigen Katalogbelegs `baa6fa8ce3f55f48c64ecb2c85e93bade62ff7ff18eb207a78b110a78070410b`.
+Dies ist eine Teilprüfung, kein Vollsuite-, M15- oder Release-Nachweis.
+
+**Gebundene Übergabe:** Genau ein regulärer PLAN-Zustand **15.c.W**,
+Position **622/900**, als Bundle **464**, ausschließlich gebunden an
+Repository `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, den obigen Basiscommit,
+Fingerprint `7c9d2a24e397e0e5` und `patchharbor-state-v1`.
+Der Entrypoint prüft die saubere Basis, stellt diesen gezielt geprüften
+W-Zustand her und führt ausschließlich **Gruppe 1/3 / Sequenz 169** mit
+**6.828** Tests und vier parallelen Workern aus. Erst nach erfolgreichem
+Gate und passenden Quell-/Katalog-/Nummerierungs-/Auswahlbindungen setzt
+er die fünf Fortschrittsmarker auf **622/900**, zuletzt **15.c.W**,
+nächstens **15.c.R**, Bundle **464** und die W-Checkbox und erzeugt die
+exakte PLAN-Commit-Message. R und C werden nicht vorab installiert.
+Bei Fehler bleiben frühere Commits und tatsächliche Dateien, Index und
+Nachweise erhalten. Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen.
+Übergabe als `patch_ready`, danach Ende dieses Einzelauftrags.
 
 #### 15.c.R – Make it Right
 
