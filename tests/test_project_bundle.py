@@ -263,7 +263,7 @@ def test_partial_marker_cannot_be_promoted_even_when_payload_has_closed_project_
     before = inventory(root)
     with no_write_attempts(), pytest.raises(BundleError) as failure:
         prepare_project_bundle(root)
-    assert failure.value.reason == 'bundle_partial_project_source' and failure.value.exit_code == 2
+    assert failure.value.reason == 'bundle_partial_project_source' and failure.value.exit_code == 7
     assert inventory(root) == before
 
 

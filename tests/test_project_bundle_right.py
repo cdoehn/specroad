@@ -25,12 +25,12 @@ def create(root, output='generated/bundles/project.zip', **options):
     return create_project_bundle(root, output=output, **options)
 
 
-def test_cli_registry_declares_only_implemented_project_creation():
+def test_cli_registry_declares_implemented_project_and_partial_creation():
     command = builtin_registry().resolve('bundle.create')
     assert command.command_class.value == 'generated_output'
     assert command.preflight_profile.value == 'project_read'
     assert command.effect_scope.value == 'external_output'
-    assert next(o for o in command.options if o.flag == '--scope').choices == ('project',)
+    assert next(o for o in command.options if o.flag == '--scope').choices == ('project', 'document', 'release')
     assert not any(o.flag in ('--profile', '--exclude-operational-receipts') for o in command.options)
     result = dispatch_result(['command', 'describe', 'bundle.create'])
     assert result.exit_code == 0, result.as_dict()
@@ -294,7 +294,7 @@ def test_partial_source_marker_remains_a_write_free_rejection(tmp_path):
     put(root, 'bundle-manifest.json', canonical_json_bytes(marker)); before = inventory(root)
     with no_write_attempts():
         result = create(root)
-    assert result.exit_code == 2 and inventory(root) == before, result.as_dict()
+    assert result.exit_code == 7 and inventory(root) == before, result.as_dict()
 
 
 @pytest.mark.parametrize('change', ['omitted_resource', 'metadata'])

@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 18
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 622
-last_completed_plan_commit: 15.c.W
-next_plan_commit: 15.c.R
-last_completed_numbered_bundle: 465
+implementation_plan_commits_completed: 623
+last_completed_plan_commit: 15.c.R
+next_plan_commit: 15.c.C
+last_completed_numbered_bundle: 466
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -24381,7 +24381,7 @@ Nachweise erhalten. Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen.
 
 #### 15.c.R – Make it Right
 
-- [ ] **15.c.R** · Position **623/900** · Voraussetzung: `15.c.W`.
+- [x] **15.c.R** · Position **623/900** · Voraussetzung: `15.c.W`.
 **Exakte Commit-Message:** `15.c.R feat(bundle): Teilbundle und Boundarybindung vervollständigen`
 
 **Vervollständigung:** Falsche Kind-/Read-only-/Scopekombination und fehlende starke Ziele ablehnen.
@@ -24518,6 +24518,179 @@ regulären R-Umsetzung die Struktur unter Erhalt sämtlicher Fachwerte,
 Fehlerklassen und Seiteneffekte. Diese Abnahmen sind offen, keine behaupteten
 Produkttesterfolge. Die begrenzte Klärung verbraucht genau ein Folgebundle;
 15.c.R wird erst nach dessen Apply erneut beauftragt.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 466 (R), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Das gebundene Result
+`specroad-apply_Result_233904_1024_3e1bac.zip`, SHA-256
+`68663f93edc88e09540dae45081ab28f3cd03e9de5a28194a65f3de4cd62686f`,
+bestätigt den sauberen OFF-PLAN-Commit
+`306ac33103761d82ede2ddd5215cf8ab9ea54552` aus Bundle **465**, Parent
+`ce14a6ee4af1b9ee43b2003a82bdff3e527e76e0`. Die generierte Root-Anleitung,
+Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle **2.227**
+Snapshotdateien samt Blob-IDs, Größen und Modi wurden geprüft und mit dem
+realen Apply-Arbeitsbaum ausschließlich lesend abgeglichen. Der vollständige
+Snapshot entspricht den vorherigen Payloads einschließlich der beiden erst
+nach dem Gate gesetzten OFF-PLAN-Markierungen. Nur diese bestätigten
+Planmarkierungen wurden in Dev nachgeführt; der Produktstand bleibt zunächst
+**622/900**, zuletzt **15.c.W**, nächstens **15.c.R**, Bundle **465**.
+
+Die realen Auswahl- und Einzeloutcome-Dateien bestätigen **6.827/6.827**
+bestandene Apply-Tests in **2.181,87 s**, vier parallele Worker,
+**Sequenz 170 / Gruppe 2/3**, Katalog **20.483** Identitäten. Nummern,
+Quellbindung und Auswahlbeleg wurden vollständig nachvollzogen:
+`ae5682d44f54bf5d8af83042bcf500c95facc5bada5d5291a078d9b2ff3c079d`; Auswahlbericht-SHA-256
+`a08f95c52bef2c891b6d0f7c4bf9b0c0d105912d7d9b32b95f8ad58b4784cb0e`; Einzeloutcomes-SHA-256
+`c0a46eb108adc8b74dcbbcb67a7d67fd0bd216089d02fbff0ba2bee9f95b6e4f`. Dies ist eine Apply-Teilprüfung.
+
+**Reguläre R-Umsetzung der bereits geklärten Vorgabe.** Die explizite Regel
+**SPECROAD-DECISION-1** wurde in den maßgeblichen Projektvorgaben geprüft.
+Dieser Schritt implementiert den bereits verbindlichen Vertrag **E.3.1**;
+er trifft keine zusätzliche normative Entscheidung. Die Spezifikation
+**0.2.23**, SHA-256
+`d5100497b2bef9c26f76197b97acd6c9a05a6c7c2ce7c2637f18ba98c0883caf`,
+bleibt bytegleich. `clarification_allowed=false` wird eingehalten.
+
+`prepare_partial_bundle` löst die ausgewählte Konfiguration und ihre ganze
+Parent-Kette mit dem vorhandenen nativen Resolver aus Originalbytes auf.
+Der ausdrücklich gewählte Dokument-/Release-Anker muss vorhanden, vom
+richtigen Typ und anwendbar sein. Der vorhandene Scope-/Closure-Resolver
+bleibt für Mitgliedschaft, starke Abhängigkeiten, Ressourcen, schwache
+Boundaries und Teilmodellwurzel maßgeblich. Keine zusätzlichen Seeds,
+Hashalgorithmen oder Manifestfelder werden eingeführt.
+
+Die genaue native Parent-Kette ergänzt die Transportmenge an ihren regulären
+Artefaktpfaden, mit unveränderten JSON-Bytes und ohne doppelte Payloads.
+Kontext allein erzeugt keine Modellmitglieder oder Boundaries. Bei regulärer
+Closuremitgliedschaft gelten alle starken Kanten, Anhänge und schwachen
+Grenzen weiterhin vollständig. Unbeteiligte Konfigurationen bleiben draußen.
+Der unabhängige Fixture-Oracle rekonstruiert die Konfigurationsbindung und
+Teilmodellwurzel aus tatsächlich transportierten Bytes mit ausdrücklich
+festgelegten Fixture-Mitgliedern; er verwendet nicht den erzeugenden
+Scope-Resolver. Parentinhalt und Revision bleiben auch bei gleichen
+Auswahlwerten gebunden, reine Formatierung betrifft nur die Transportbytes.
+
+`bundle create --scope document --document …` und
+`bundle create --scope release --release …` unterstützen die optionale
+`--configuration`. Die öffentliche API `create_partial_bundle` und die CLI
+verwenden denselben nativen Provider und den bestehenden sicheren
+Publikationsweg. Nicht passende Selector-Kombinationen und
+`project --configuration` bleiben Code **2**. Fehlende/ungültige Ketten,
+ausgeschlossene Anker oder starke Pflichtabhängigkeiten und widersprüchliche
+Payload-/Metadatenbindungen ergeben Code **3** vor Veröffentlichung. Die
+vorhandenen Pfad-, I/O-, Transaktions- und Frischegrenzen bleiben erhalten.
+Ein erkannter Teilbundle-Ursprung wird beim Re-Export jetzt entsprechend dem
+bereits bestehenden **E.3** mit **Code 7/SRV083** verweigert; der bisherige
+Provider verwendete dafür noch Code 2. Alle Partials bleiben `partial`,
+`read_only=true`, `local_only`, auch bei zufällig vollständiger Closure.
+
+**Gezielte parallele Abnahme.** Der endgültige R-Zustand besteht
+**1.015/1.015** Verhaltenstests in **95.37 s** mit **vier Workern**,
+Prozessabschluss **0**, ausschließlich `passed`-Outcomes und
+`full_suite_passed=null`. Darin sind **89 neue R-Fälle**, alle **33**
+weiter geltenden unkonfigurierten W-Fälle, bestehende Projekt-/Container-,
+Scope-, Konfigurations-, CLI-/Request- und Katalogregressionen enthalten.
+Die Tests prüfen maschinenlesbare Verträge und echte Nutzbytes, keine
+Markdown-/Konsolen- oder GUI-Darstellung.
+
+Ein zweiter Verhaltenstestlauf scheiterte mit **6 fehlgeschlagenen und
+1.009 bestandenen** Tests in **93,46 s**: Die ergänzten Fixtures legten
+ein nicht erlaubtes direktes Anhangsfeld an Konfigurationen an. Die positiven
+Fälle wurden an der nativen Schema-Grenze zurückgewiesen; bei fehlender Datei
+schlug schon die ursprüngliche I/O-Beobachtung fehl. Die Fixtures verwenden
+nun die zulässige starke Kette Konfiguration → Quelle → Evidence → Anhang.
+Die Negativprobe bestätigt erst den gültigen Ursprung, entfernt dann seine
+Datei und verlangt den bestehenden I/O-Vertrag **Code 5** samt tatsächlichem
+`FileNotFoundError`. Schema und Produktcode wurden dafür nicht gelockert.
+Der fehlgeschlagene Lauf bleibt als solcher erhalten.
+
+Der erste Collection-Versuch meldete veraltete Katalogverweise auf den
+umbenannten Registry-Vertragstest; dessen drei Referenzen wurden aktualisiert.
+Es liefen dabei **0 Testkörper**. Der erste Verhaltenstestlauf bestand
+**1.013/1.013** Tests in **93,18 s**. Beim Abgleich mit E.3.1 kamen danach
+Anhang-Mitgliedschaftsassertionen und zwei fehlende Konfigurationsanhangfälle
+hinzu; deshalb wurde der endgültige Quellenstand erneut gezielt parallel
+geprüft. Alle Versuchsnachweise bleiben erhalten. Der temporäre W-Test zur
+noch fehlenden Konfigurationsfähigkeit wurde durch die positive und negative
+R-Abnahme ersetzt. Die beiden bestehenden Teilursprung-Fehlertests erwarten
+nun den bereits spezifizierten Code 7. Andere bestehende fachliche
+Erwartungen wurden nicht passend zur Umsetzung abgeschwächt.
+
+Geprüfte Testdateien:
+
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_configuration_applicability.py`
+- `tests/test_configuration_applicability_right.py`
+- `tests/test_configuration_inheritance.py`
+- `tests/test_configuration_inheritance_right.py`
+- `tests/test_core.py`
+- `tests/test_description.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_registry.py`
+- `tests/test_requests.py`
+- `tests/test_scope_closure.py`
+- `tests/test_scope_closure_right.py`
+- `tests/test_scope_seeds.py`
+- `tests/test_scope_seeds_right.py`
+
+Die vollständige frische Collection-/Katalogprüfung bindet **20.571 aktive
+Identitäten** und führte **0 Testkörper** aus. Die **20.483** bisherigen
+Nummern bleiben unverändert, einschließlich der beiden jetzt inaktiven
+Identitäten. **90** neue Identitäten werden gemäß nativem Commitvertrag gemeinsam
+sortiert an den Nummern **20.483–20.572** angefügt. Insgesamt bleiben **20.573** Nummern reserviert; keine
+wurde wiederverwendet. 89 neue Identitäten gehören zum R-Korpus, eine zum
+umbenannten Registry-Vertragstest.
+
+`SR-FIX-PARTIAL-BUNDLE-RIGHT-v1` bindet den eigenen Korpus.
+`SR-TC-0400/0482/0483` erhalten zusätzliche echte, ausdrücklich partielle
+Verhaltensnachweise. Bestehende Bindungen bleiben erhalten; die drei
+Katalogverweise für den erweiterten Registry-Vertrag werden nachgeführt.
+Diese Abnahme behauptet keinen unabhängigen Reader beliebiger fremder ZIPs,
+keine Extraktion oder Schreibzulassung extrahierter Projekte, keine
+Herkunftsauthentizität, menschliche Freigabe, portable nichtleere Receipthistorie,
+Vollsuite oder Release. **15.d**, **15.e** und **15.g** bleiben zuständig;
+die strukturelle Bereinigung **15.c.C** bleibt offen.
+
+Die native Paketvorprüfung verweigerte vor der ZIP-Erzeugung einen ersten
+Entwurf der Nummerndatei: Die zwei später ergänzten Testidentitäten waren
+separat statt gemeinsam mit allen neuen Identitäten dieses Commits sortiert
+angehängt. Der Entwurf wurde an den vorhandenen Runnervertrag angepasst.
+Alle **20.483 bereits bestätigten Nummern** bleiben bytegenau im bisherigen
+Präfix erhalten, einschließlich stillgelegter Identitäten. Die Produktdateien
+und Testkörper änderten sich bei dieser Korrektur nicht; wegen der neuen
+Quellenbindung wurden Collection und gezielte parallele Abnahme dennoch
+für den endgültigen Stand erneut durchgeführt. Vorher waren im dritten
+Verhaltenstestlauf **1.015/1.015** Fälle in **93,47 s** bestanden. Es wurde
+kein unprüfbares ZIP veröffentlicht und keine Testrotation weitergeschaltet.
+
+Gebundene Nachweis-Hashes:
+
+- Entwicklerquellen-SHA-256: `b446a88ce6d47e599f8ce97fbba5e27b6e4637080ad29cb29af7cb3373c69494`.
+- Auswahlbericht-SHA-256: `0c71dc541450a092fc7a375283a776451376ba04670aca252b40e0b13cdff55a`.
+- Einzeloutcomes-SHA-256: `d8a5687548d1a5ff4dbc32cafd05403f5f6236b13841273b3f3dd8f7a8f2d8d1`.
+- Collectionbericht-SHA-256: `20e302641838f776a009f0382c22bd87ea7727e8a290d662bd6bbb97ad6ce221`.
+- Katalog-SHA-256: `d29c9d04f7b395f4bed65ace5253b4cdcea3b3ab7af364061f378b9c4d5a92a4`.
+
+**Offene Apply-Abnahme.** Das Bundle enthält genau einen regulären R-Zustand,
+18 geänderte Payloaddateien und die getrennte abschließende Planprojektion.
+Der Entrypoint prüft die saubere Vierfachbindung und stellt nur diesen
+gezielt geprüften Zustand her. Dann läuft ausschließlich die fällige
+**Gruppe 0/3**, **Sequenz 171**, mit **6.858** Tests und vier Workern.
+Erst nach deren Erfolg setzt der Entrypoint die fünf Fortschrittsmarker auf
+**623/900**, zuletzt **15.c.R**, nächstens **15.c.C**, Bundle **466** und
+die R-Checkbox und erzeugt den exakten regulären PLAN-Commit. Kein
+Apply-Erfolg wird vorweggenommen; kein C-Endzustand wird vorab installiert.
+Fehler erhalten alle tatsächlichen Dateien und frühere erfolgreiche Commits.
+Es gibt keinen Dev-Commit, Push/Fetch, CI-Start oder eigene Resultschleife.
+Die kanonische ZIP wird nativ geprüft und atomar übergeben, danach endet N.
 
 #### 15.c.C – Make it Clean
 

@@ -1,4 +1,4 @@
-"""Publish one complete generated project ZIP from a retained native observation."""
+"""Publish a generated project or partial ZIP from a retained native observation."""
 import os
 import secrets
 
@@ -10,6 +10,7 @@ from ..cli.result_schemas import validate_result_document
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic
 from ..documents._export_targets import _check_external, _output_boundary, _target_path
+from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.errors import ModelError
 from ..query._read_errors import read_details, read_failure
 from ..query.read_work import complete_read_steps
@@ -17,7 +18,11 @@ from ..security import SafetyViolation
 from ..security import paths as guards
 from ..srx.errors import SrxError
 from .errors import BundleError
+from .partial import _prepare_partial
 from .project import _prepare
+
+
+_PROJECT_SCOPE = object()
 
 
 def _publish(container, source, verify_current, output, output_root):
@@ -95,10 +100,11 @@ def _publish(container, source, verify_current, output, output_root):
             'approval_granted': False, 'write_authorized': False}
 
 
-def _steps(root, *, output, output_root=None):
+def _steps(root, *, output, output_root=None, descriptor=_PROJECT_SCOPE):
     project = None
     try:
-        container, source, verify_current = _prepare(root)
+        container, source, verify_current = (_prepare(root) if descriptor is _PROJECT_SCOPE
+                                            else _prepare_partial(root, descriptor))
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         yield 'evaluated'
         result = _publish(container, source, verify_current, output, output_root)
@@ -128,8 +134,35 @@ def create_command(invocation):
     options = invocation.options
     if '--scope' not in options or '--output' not in options:
         raise CommandUsageError('Bundle creation requires scope and output')
-    if '--configuration' in options:
+    kind, selector = options['--scope'], {}
+    for scope in ('document', 'release'):
+        flag = '--' + scope
+        if kind == scope:
+            if flag not in options:
+                raise CommandUsageError('Selected bundle scope requires its selector')
+            selector = {scope + '_id': options[flag]}
+        elif flag in options:
+            raise CommandUsageError('Bundle selector does not match scope')
+    if kind == 'project' and '--configuration' in options:
         raise CommandUsageError('A full project bundle cannot be configuration filtered')
+    descriptor = _PROJECT_SCOPE
+    if kind != 'project':
+        try:
+            descriptor = ScopeDescriptor({'scope_version': 'scope-v1', 'scope_kind': kind,
+                'selector': selector, 'configuration_id': options.get('--configuration'),
+                'closure_profile': 'core-closure-v1', 'boundary_policy': 'partial'})
+        except ModelError as error:
+            return read_failure('bundle.create', error, None, read_details())
     return complete_read_steps(_steps(invocation.resolved.project_root,
-        output=options['--output'], output_root=options.get('--output-root')),
+        output=options['--output'], output_root=options.get('--output-root'), descriptor=descriptor),
         call=invocation.consumption_call)
+
+
+def create_partial_bundle(root, descriptor, *, output, output_root=None):
+    """Publish the selected read-only document/release through the native guard.
+
+    Configuration context is transported without extending the selected scope.
+    Publication uses the same create-only and freshness rules as project bundles.
+    """
+    return complete_read_steps(_steps(root, output=output, output_root=output_root,
+                                     descriptor=descriptor))

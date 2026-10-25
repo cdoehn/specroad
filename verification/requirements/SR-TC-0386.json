@@ -89,7 +89,7 @@
     "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[source]",
     "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[target]",
     "tests/test_project_bundle_right.py::test_changes_at_final_publication_boundary_cannot_claim_success[transaction]",
-    "tests/test_project_bundle_right.py::test_cli_registry_declares_only_implemented_project_creation",
+    "tests/test_project_bundle_right.py::test_cli_registry_declares_implemented_project_and_partial_creation",
     "tests/test_project_bundle_right.py::test_creation_publishes_exact_complete_bytes_and_only_generated_output[cli]",
     "tests/test_project_bundle_right.py::test_creation_publishes_exact_complete_bytes_and_only_generated_output[direct]",
     "tests/test_project_bundle_right.py::test_creation_publishes_exact_complete_bytes_and_only_generated_output[structured]",

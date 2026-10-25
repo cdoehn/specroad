@@ -271,15 +271,6 @@ def test_wrong_scope_is_not_silently_promoted_or_repaired(tmp_path, policy, kind
     assert failure.value.exit_code == 3 and inventory(root) == before
 
 
-def test_configuration_is_explicitly_refused_until_its_provider_is_implemented(tmp_path):
-    root = tmp_path / 'origin'; project(root); save(root, record_value('configuration'))
-    before = inventory(root)
-    with no_write_attempts(), pytest.raises(BundleError) as failure:
-        prepare_partial_bundle(root, scope(configuration_id=ref('CFG')))
-    assert failure.value.reason == 'bundle_partial_configuration_provider_required'
-    assert failure.value.exit_code == 2 and inventory(root) == before
-
-
 @pytest.mark.parametrize('kind', ['document', 'release'])
 def test_missing_seed_has_no_partial_success(tmp_path, kind):
     root = tmp_path / 'origin'; project(root, kind)

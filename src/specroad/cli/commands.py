@@ -163,9 +163,9 @@ def builtin_registry() -> CommandRegistry:
         command_class=CommandClass.GENERATED_OUTPUT, preflight_profile=PreflightProfile.PROJECT_READ,
         effect_scope=EffectScope.EXTERNAL_OUTPUT, handler=_bundle_create, requires_project=True,
         configuration_schema_required=True,
-        options=(OptionSpec('--scope', takes_value=True, choices=('project',)),
+        options=(OptionSpec('--scope', takes_value=True, choices=('project', 'document', 'release')),
             *(OptionSpec('--' + name, takes_value=True) for name in
-              ('output', 'output-root', 'configuration', 'project')),
+              ('output', 'output-root', 'configuration', 'document', 'release', 'project')),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
             OptionSpec('--no-color'), OptionSpec('--quiet')),
         protocol=CommandProtocol('bundle-create-v1', {'command_id': 'bundle.create',

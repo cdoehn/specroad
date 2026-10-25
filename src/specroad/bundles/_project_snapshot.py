@@ -46,7 +46,7 @@ def _previous_manifest(source):
     require(raw == canonical_json_bytes(value), 'noncanonical_bundle_manifest', code='SRV060')
     require(metadata['project_id'] == source.configuration.project_id, 'bundle_configuration_binding')
     if metadata['bundle_kind'] != 'project':
-        raise BundleError('bundle_partial_project_source', code=None, exit_code=2)
+        raise BundleError('bundle_partial_project_source', code='SRV083', exit_code=7)
     return raw
 
 

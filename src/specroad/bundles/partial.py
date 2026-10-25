@@ -1,12 +1,14 @@
 """Prepare document/release bytes from a retained, complete origin observation.
 
-This first partial provider is unconfigured and read-only. Publication,
-configuration selection and independent verification are separate steps; the
-returned container never grants extraction, authenticity or write authority.
+Configuration context retains the native parent-chain bytes without changing
+scope membership. The returned container never grants extraction, authenticity
+or write authority; independent input-bundle verification is a separate step.
 """
 from .. import __version__
 from ..cli.results import OperationFailure
+from ..configurations import evaluate_applicability, resolve_configuration
 from ..exchange._export_scope import export_scope, resource_identity
+from ..graph.relations import SourceRelations
 from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.errors import ModelError
 from ..model.language_package_values import LanguagePackage
@@ -20,9 +22,27 @@ from .errors import BundleError
 from .manifest import require
 
 
-def _selected_payloads(origin, closure, artifacts):
+def _configuration_context(model, selection):
+    if selection['configuration_id'] is None:
+        return (), None
+    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+    effective = resolve_configuration(records, selection['configuration_id'])
+    kind = selection['scope_kind']
+    anchor_id = selection['selector'][kind + '_id']
+    anchor = next((r for r in records if r.identity.id == anchor_id), None)
+    require(anchor is not None and anchor.identity.artifact_type == kind,
+            'bundle_partial_anchor_missing')
+    require(evaluate_applicability(anchor, effective, require_configuration=True).status == 'applicable',
+            'bundle_partial_anchor_excluded')
+    paths = tuple(artifact_path('configuration', item['id'], model.configuration.id_prefix)
+                  for item in effective.manifest['configurations'])
+    return paths, effective.scope_sha256(model.configuration)
+
+
+def _selected_payloads(origin, closure, artifacts, context_paths):
     model = origin.model
-    paths = {'specroad.json'}
+    paths = {'specroad.json', *context_paths}
+    require(paths <= origin.payloads.keys(), 'bundle_partial_configuration_context_missing')
     paths.update(artifact_path(a['artifact_type'], a['id'], model.configuration.id_prefix)
                  for a in artifacts)
     by_path = {r.data['path']: r for r in model.resources if 'path' in r.data}
@@ -62,13 +82,15 @@ def _prepare_partial(root, descriptor):
     selection = descriptor.data
     require(selection['scope_kind'] in ('document', 'release')
             and selection['boundary_policy'] == 'partial', 'bundle_scope_combination')
-    if selection['configuration_id'] is not None:
-        raise BundleError('bundle_partial_configuration_provider_required', code=None, exit_code=2)
     # Reuse the full native origin guard, including empty-receipt observation.
     # A partial marker is never promoted, nor is a missing origin target guessed.
     origin = ProjectBundleSnapshot(root)
+    context_paths, configuration_sha256 = _configuration_context(origin.model, selection)
     closure, native, artifacts, _ = export_scope(origin.model, descriptor)
-    payloads = _selected_payloads(origin, closure, artifacts)
+    if configuration_sha256 is not None:
+        require(configuration_sha256 == native.data['configuration_sha256'],
+                'bundle_partial_configuration_binding', code='SRV060')
+    payloads = _selected_payloads(origin, closure, artifacts, context_paths)
     exclusions = {p: 'outside_scope' for p in origin.payloads if p not in payloads}
     exclusions.update({p: 'unreferenced_archive_object' for p in origin.archives
                        if p not in origin.payloads})
@@ -96,9 +118,9 @@ def _prepare_partial(root, descriptor):
 def prepare_partial_bundle(root, descriptor):
     """Return owned canonical partial bytes without creating files or locks.
 
-    The descriptor must select an unconfigured document/release with partial
-    boundaries. All omitted weak targets are present and hashed in the complete
-    origin. Stored partial targets are never used as a substitute origin.
+    The descriptor selects a document/release with partial boundaries and an
+    optional native configuration. All omitted weak targets are present and
+    hashed in the complete origin. A partial target never substitutes for it.
     Nonempty receipt histories remain outside this initial provider's support.
     """
     try:
