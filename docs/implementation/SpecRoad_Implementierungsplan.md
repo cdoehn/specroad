@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 18
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 624
-last_completed_plan_commit: 15.c.C
-next_plan_commit: 15.d.W
-last_completed_numbered_bundle: 467
+implementation_plan_commits_completed: 625
+last_completed_plan_commit: 15.d.W
+next_plan_commit: 15.d.R
+last_completed_numbered_bundle: 468
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -24829,12 +24829,171 @@ atomarer Übergabe genau einer kanonischen ZIP endet dieser N-Durchlauf.
 
 #### 15.d.W – Let it Work
 
-- [ ] **15.d.W** · Position **625/900** · Voraussetzung: `15.c.C`.
+- [x] **15.d.W** · Position **625/900** · Voraussetzung: `15.c.C`.
 **Exakte Commit-Message:** `15.d.W feat(bundle): Bundleverifikation ohne Extraktion aufbauen`
 
 **Umsetzung:** ZIP, Payloadmengen, Hashes, Referenzen und optionale externe Gesamt-ZIP-Bindung schreibfrei prüfen.
 
 **Verhaltensabnahme:** Intakter Container kann ohne Projektroot validiert werden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 468 (W), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Das Result
+`specroad-apply_Result_012006_1025_545663.zip`, SHA-256
+`afaf4a8c918dab9f4ea0ca4c4600f9d42ea47ba76617a8149c923fe20f6ee544`,
+bestätigt den sauberen **15.c.C**-Commit
+`25a494705d0151bade67a0c057be424a0b5c766c`, Bundle **467**, Parent
+`69aaab6ae1c1b26cdcf5fed51e7c7d25d708fc98`. Die generierte Root-Anleitung,
+Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle **2.229**
+Snapshotdateien wurden geprüft. Größen, Blob-IDs, Modi und vollständige Bytes
+entsprechen dem ausschließlich lesend geprüften Apply-Stand sowie den
+Payloads des vorigen Bundles einschließlich seiner fünf Planmarker.
+Vor Beginn wurden nur diese bestätigten Marker in Dev nachgeführt:
+**624/900**, zuletzt **15.c.C**, nächstens **15.d.W**, Bundle **467**.
+
+Die tatsächlichen Berichte und Einzeloutcomes bestätigen **6.856/6.856**
+bestandene Apply-Tests in **1.959,38 s** auf vier parallelen Workern,
+**Sequenz 172 / Gruppe 1/3**, aus **20.571** aktiven Identitäten.
+Die unveränderten Testnummern, Quellbindung und Auswahl wurden nachgerechnet.
+Auswahlbindung: `122691246d318fd8d129504a273b5decf12501a0f69dc77919802a74fc6f41bf`;
+Auswahlbericht-SHA-256: `a291118020a547b4aff31ae5897de96becdc9e89a6c1cc9fe9959946869f3e74`;
+Einzeloutcomes-SHA-256: `493062ec28d40baa62fd59bdd7179101821ca64b75521ec2f4049fd497506a02`.
+Dies ist ein Apply-Teilnachweis, kein Vollsuite- oder Releasebeleg.
+
+**Nutzbarer W-Ausschnitt.** **SPECROAD-DECISION-1** ist ausdrücklich in den
+maßgeblichen Projektvorgaben enthalten. Die bestehende Vorgabe ist für diesen
+W-Ausschnitt klar; es wird keine neue normative Entscheidung getroffen.
+Spezifikation **0.2.23**, SHA-256
+`d5100497b2bef9c26f76197b97acd6c9a05a6c7c2ce7c2637f18ba98c0883caf`,
+und ihre Abnahmen bleiben bytegleich.
+
+`verify_bundle` prüft geschlossene Projektbundles vollständig im Speicher.
+Der vorhandene kanonische Containerreader prüft ZIP, Versions-/Typkombination,
+Manifest-/Payloadbijektion und tatsächliche Größen/Hashes; eine übergebene
+externe Erwartung bindet die gesamte ZIP bereits vor dem Modellaufbau.
+Der neue Eingangsadapter rekonstruiert aus tatsächlichen Payloadbytes die
+native Projektkonfiguration, Sprachregistry und deklarativen Sprachpakete,
+Profilkomposition, Artefakte, Ressourcen, Anhänge und Baselineobjekte.
+Er verwendet `TargetModel` und den vorhandenen nativen Scope-/Closurepfad,
+prüft geschlossene Referenzen und vergleicht die neu berechneten Modell-,
+Profil- und Konfigurationshashes mit den Manifestbehauptungen. Es gibt keinen
+zweiten Closurealgorithmus, keine temporäre Extraktion und keinen Zugriff
+auf einen behaupteten Ursprungsroot. Die ausschließlich interne Byteprovenienz
+`bundle:<ZIP-SHA>` mit Null-Sentinel ist keine beobachtete Dateisystemidentität
+und fließt weder in Modellhashes noch in eine Schreibfreigabe ein.
+
+`specroad bundle verify <FILE> [--expected-sha256 <HASH>]` ist als `read_only`,
+`input_read`, `effect_scope=none` registriert. CLI und strukturierte Requests
+verwenden denselben schreibfreien Datei-Adapter; relative Eingaben sind an
+das Arbeitsverzeichnis des aktuellen Aufrufs gebunden. Der Adapter liest
+über die vorhandene descriptorbasierte Pfadpolicy und prüft die Eingabebytes
+vor der vollständigen Rückgabe erneut. Ein beobachteter Austausch liefert
+Konflikt Code 6; fehlende Dateien liefern Code 5 und unzulässige Dateitypen
+Code 7. Interne oder externe Hashwidersprüche liefern Code 3/SRV060.
+Runtime-Budgets und Kontrollpunkte verwenden den vorhandenen Read-Runner;
+keine frühe Teilausgabe wird als erfolgreicher Abschluss behandelt.
+
+Das geschlossene maschinenlesbare Schema `bundle-verify-v1` bezeichnet den
+Nachweisumfang `closed_project_payload_model`, ZIP-Größe/-Hash, Manifest,
+Container-, Modellwurzel- und Closureprüfung sowie die tatsächliche externe
+Hashbindung. `creator_authenticated`, `full_semantic_validation`,
+`approval_granted` und `write_authorized` bleiben ausdrücklich falsch.
+Selbst eine passende externe Hashbindung ist kein Nachweis der Urheberschaft;
+der Reader bestätigt keine unbekannte ursprüngliche Projektvollständigkeit
+und keine Release Readiness.
+
+**Offene Vervollständigung.** Teilbundles erhalten in diesem W-Zwischenstand
+keinen ersatzweisen Container-only-Erfolg, sondern Code 5 mit
+`bundle_partial_verification_provider_required`. **15.d.R** bleibt offen
+für ihre unabhängige Scope-/Boundary- und Konfigurationskontextprüfung sowie
+weitere adversariale Eingaben; **15.d.C** bleibt offen für die Bereinigung.
+Nichtleere portable Receipt-Historien verlangen weiterhin explizit ihren
+für **15.g** vorgesehenen Provider. `SR-TC-0389` ist deshalb **partial**,
+nicht vollständig implementiert. Der bestätigte Funktionsumfang und die
+Abnahmekriterien werden durch diese Zwischenstandsgrenze nicht reduziert.
+
+**Gezielte parallele Abnahme.** Alle **46** neuen Verhaltenstests bestehen,
+einschließlich realer Baselines und initialisierter Sprachpakete, fehlender
+Profil-/Registry-/Anhangsbytes, neu gehashter fachlich ungültiger Payloads,
+fehlender Relationsziele, gefälschter Modellbindungen, Fremdpayloads,
+semantisch neutraler Formatänderungen, konsistenter Ersatzarchive mit und
+ohne alte externe Bindung, projektfreier CLI/Request/API-Aufrufe, Dateischutz,
+Eingabeaustausch und expliziter Providergrenzen. Schreibversuche werden durch
+Testfallen abgefangen und tatsächliche Bestände verglichen; es werden keine
+GUI-, Konsolenformulierungs-, Darstellungs- oder Dokumentationstests erstellt.
+
+Die erste Auswahl von 727 Identitäten enthielt vier fehlgeschlagene bestehende
+CLI-Vertragsfälle: erwartete Befehlslisten/Budgetzuordnung und ein noch nicht
+bereitgestelltes ZIP für das ausführbare Command-Beispiel. Alle 46 neuen Fälle
+waren bereits erfolgreich. Die bestehenden Vertragslisten wurden um die
+implementierte Operation ergänzt; drei Beispiel-Ausführungsprüfer erhalten
+nun über eine gemeinsame Fixture tatsächliche externe ZIP-Eingaben neben
+einem unselektierten Ursprungsprojekt. Erfolg, reale Ausführung, Projektlosigkeit
+und Schemaübereinstimmung bleiben unveränderte fachliche Orakel. Bestehende
+Testidentitäten werden nicht umnummeriert oder entfernt.
+
+Der abschließende W-Zustand besteht **1.143/1.143** gezielte Verhaltenstests
+in **134.67 s** mit **vier parallelen Workern**, beobachtetem
+Prozessabschluss **0**, ausschließlich `passed`-Outcomes und
+`full_suite_passed=null`. Die wegen des neuen maschinenlesbaren Resultats
+betroffenen Schema-/Resultat- und Runtime-/Read-Regressionsdateien sind enthalten.
+Reproduzierbare Auswahl vollständiger Testdateien:
+
+- `tests/test_bootstrap.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_capabilities.py`
+- `tests/test_capability_scope.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_description.py`
+- `tests/test_options.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_query_read_integration.py`
+- `tests/test_query_read_integration_right.py`
+- `tests/test_registry.py`
+- `tests/test_requests.py`
+- `tests/test_results.py`
+- `tests/test_runtime_consumption.py`
+- `tests/test_runtime_consumption_right.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+
+Ausführung über `tools/run_selected_tests.py --workers 4 --expected-tests 1143`
+in einem frischen ignorierten Berichtsverzeichnis. Die vollständige Collection
+und Katalogprüfung ist gültig: **20.617** aktive Identitäten, **0** Testkörper.
+Die **46** neuen Identitäten wurden ausschließlich hinten mit den Nummern
+**20.573–20.618** ergänzt; die bisherigen **20.573** reservierten Nummern
+und zwei historischen Ruhestandsidentitäten bleiben unverändert.
+
+Quellidentität: `46bb6ab1001a13e0b332e29605a33f44a3e337372578bf3a1de7967d6e175587`;
+Katalogbericht-SHA-256: `00568c35416132373388b4c0d0c0cf9009a474dca3ea31532b6763847cb4977a`;
+Auswahlbericht-SHA-256: `6c0f6e26fcf096a41de0d5fc8d9c8b31a7742fed75c26e4f1fb16bc06e90384a`;
+Einzeloutcomes-SHA-256: `32a9702d622a5a0442fc44750172a3d7ee5cecc145144497c3f4a8cbb2c1f635`.
+Dies ist eine gezielte Entwicklungs-Teilprüfung; kein vollständiger
+Entwicklungs- oder serieller Testlauf wurde gestartet.
+
+**Gebundene Übergabe.** Bundle **468** enthält genau einen echten
+W-Zwischenstand mit **19** Dateien einschließlich dieses Plans.
+Der Entrypoint installiert die gezielt geprüften Bytes über den nativen
+PatchHarbor-Payloadwriter und prüft **Sequenz 173 / Gruppe 2/3**:
+**6.873** dauerhaft nummerierte Tests mit vier parallelen Workern.
+Erst nach erfolgreichem Gate setzt er die fünf Planmarker auf **625/900**,
+zuletzt **15.d.W**, nächstens **15.d.R**, Bundle **468** und die W-Checkbox.
+Danach entsteht ausschließlich in Apply der Commit
+`15.d.W feat(bundle): Bundleverifikation ohne Extraktion aufbauen`.
+Dieser zukünftige Testlauf und Commit werden nicht als erfolgt behauptet.
+Fehler erhalten den tatsächlichen Zustand; keine spätere Phase wird vorab
+installiert. Kein Dev-Commit, Push/Fetch, CI-, Control- oder Watcherstart.
+Nach nativer Paketprüfung und atomarer Übergabe genau einer kanonischen ZIP
+endet dieser N-Durchlauf ohne Warten auf ein weiteres Result.
 
 #### 15.d.R – Make it Right
 

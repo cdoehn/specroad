@@ -151,6 +151,11 @@ def _bundle_create(invocation):
     return create_command(invocation)
 
 
+def _bundle_verify(invocation):
+    from ..bundles.verification_command import verify_command
+    return verify_command(invocation)
+
+
 def _read_runtime_options():
     return (OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
             *(OptionSpec(flag, takes_value=True) for flag in ('--cpu-budget-ms', '--wall-budget-ms',
@@ -160,6 +165,19 @@ def _read_runtime_options():
 
 def builtin_registry() -> CommandRegistry:
     commands = (CommandSpec(
+        command_id='bundle.verify', words=('bundle', 'verify'), command_class=CommandClass.READ_ONLY,
+        preflight_profile=PreflightProfile.INPUT_READ, effect_scope=EffectScope.NONE, handler=_bundle_verify,
+        positionals=(PositionalSpec('file'),),
+        options=(OptionSpec('--expected-sha256', takes_value=True),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('bundle-verify-v1', {'command_id': 'bundle.verify',
+            'arguments': {'file': 'project.zip'}, 'options': {'--format': 'json'}},
+            handler_exit_codes=(0, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002', 'SRV003', 'SRV060', 'SRV083'),
+            work=WorkContract('native_bundle_verification', ('explicit_bundle_input', 'optional_external_hash'))),
+    ), CommandSpec(
         command_id='bundle.create', words=('bundle', 'create'),
         command_class=CommandClass.GENERATED_OUTPUT, preflight_profile=PreflightProfile.PROJECT_READ,
         effect_scope=EffectScope.EXTERNAL_OUTPUT, handler=_bundle_create, requires_project=True,
@@ -424,7 +442,7 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
             work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
     ))
-    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export'}
+    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify'}
     return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
         budget_policy_version='runtime-budget-v2') if command.command_id in readers else command
         for command in commands))

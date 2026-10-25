@@ -165,9 +165,8 @@ class SchemaCatalogWorkTests(unittest.TestCase):
     def test_every_builtin_has_a_real_retrievable_result_contract(self):
         for command in builtin_registry().commands:
             with tempfile.TemporaryDirectory() as tmp:
-                if command.requires_project:
-                    from support.inspection import command_example_project
-                    command_example_project(Path(tmp), command.command_id)
+                from support.inspection import command_example_inputs
+                command_example_inputs(Path(tmp), command)
                 outcome = execute_request(command.protocol.example, cwd=Path(tmp)).result
             self.assertEqual(outcome.exit_code, 0)
             self.catalog.validate(command.protocol.result_schema, outcome.as_dict()['result'])

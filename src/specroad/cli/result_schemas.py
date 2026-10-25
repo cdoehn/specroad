@@ -91,6 +91,14 @@ def _fields(schema_id):
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),
             "exit_codes": {"type": "object", "additionalProperties": text}, "examples": strings, "scope": text})
+    if schema_id == 'bundle-verify-v1':
+        return _object({'format_version': {'const': 'bundle-verify-v1'}, 'manifest': obj,
+            'file': _object({'size': count, 'sha256': sha}),
+            'validation_scope': {'const': 'closed_project_payload_model'},
+            'container_verified': {'const': True}, 'model_root_verified': {'const': True},
+            'closure_verified': {'const': True}, 'external_hash_verified': boolean,
+            'creator_authenticated': {'const': False}, 'full_semantic_validation': {'const': False},
+            'approval_granted': {'const': False}, 'write_authorized': {'const': False}})
     if schema_id == 'bundle-create-v1':
         return _object({'format_version': {'const': 'bundle-create-v1'}, 'manifest': obj,
             'file': _object({'path': nonempty, 'size': count, 'sha256': sha}),

@@ -4,19 +4,48 @@
   "requirement_id": "SR-REQ-0389",
   "specification_sha256": "d5100497b2bef9c26f76197b97acd6c9a05a6c7c2ce7c2637f18ba98c0883caf",
   "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-BUNDLE-VERIFICATION-v1"
+  ],
+  "preconditions": [
+    "Explicit canonical project ZIP bytes; no project root or extraction provider; external expected ZIP hash, when supplied, comes from the caller."
+  ],
+  "steps": [
+    "Reconstruct native configuration, effective profile, resource bindings, artifacts and closed scope from the exact payload bytes; compare independent native model roots to manifest assertions.",
+    "Reject malformed fields, missing references, missing bound resources and forged metadata even when the transport inventory is internally consistent.",
+    "Check read-only explicit file verification through CLI, structured request and direct API, external whole-ZIP binding, source recheck and absence of project selection or output files."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad bundle verify <FILE>` MUSS Formatkombination, ZIP-Struktur, nichtrekursive Manifest-/Payloadbindung, Scope, Hashes und Referenzen einschließlich einer angegebenen externen Voll-ZIP-Erwartung nach Anhang E prüfen, ohne das Bundle zu extrahieren oder das Projekt zu verändern.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "15.d.W closed project inventory only: byte-derived native model roots and reference closure, canonical input and optional whole-ZIP expectation, safe project-free input read without extraction. Partial bundles and nonempty receipt histories fail explicitly pending their providers."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "CORE_ENVIRONMENT",
+    "CORE_CONFLICT",
+    "CORE_SECURITY",
+    "SRV002",
+    "SRV060",
+    "SRV083"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/result/file/sha256",
+    "/result/manifest/bundle_model_root_sha256",
+    "/result/closure_verified",
+    "/result/external_hash_verified",
+    "/result/creator_authenticated",
+    "/result/write_authorized"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +57,56 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_bundle_verification.py::test_additional_nonmodel_payload_is_not_silently_ignored[.env]",
+    "tests/test_bundle_verification.py::test_additional_nonmodel_payload_is_not_silently_ignored[.specroad/locks/writer.json]",
+    "tests/test_bundle_verification.py::test_additional_nonmodel_payload_is_not_silently_ignored[README.md]",
+    "tests/test_bundle_verification.py::test_additional_nonmodel_payload_is_not_silently_ignored[attachments/orphan.bin]",
+    "tests/test_bundle_verification.py::test_additional_nonmodel_payload_is_not_silently_ignored[generated/file.json]",
+    "tests/test_bundle_verification.py::test_canonical_zip_inventory_does_not_validate_forged_native_bindings[bundle_model_root_sha256]",
+    "tests/test_bundle_verification.py::test_canonical_zip_inventory_does_not_validate_forged_native_bindings[configuration_sha256]",
+    "tests/test_bundle_verification.py::test_canonical_zip_inventory_does_not_validate_forged_native_bindings[origin_model_root_sha256]",
+    "tests/test_bundle_verification.py::test_canonical_zip_inventory_does_not_validate_forged_native_bindings[profile_sha256]",
+    "tests/test_bundle_verification.py::test_changed_input_after_verification_cannot_return_stale_success",
+    "tests/test_bundle_verification.py::test_consistent_replacement_has_a_distinct_external_binding[False]",
+    "tests/test_bundle_verification.py::test_consistent_replacement_has_a_distinct_external_binding[True]",
+    "tests/test_bundle_verification.py::test_explicit_file_without_project_is_verified_without_any_write[cli_absolute]",
+    "tests/test_bundle_verification.py::test_explicit_file_without_project_is_verified_without_any_write[cli_relative]",
+    "tests/test_bundle_verification.py::test_explicit_file_without_project_is_verified_without_any_write[direct]",
+    "tests/test_bundle_verification.py::test_explicit_file_without_project_is_verified_without_any_write[structured]",
+    "tests/test_bundle_verification.py::test_file_failure_never_creates_an_output_or_success_result[directory]",
+    "tests/test_bundle_verification.py::test_file_failure_never_creates_an_output_or_success_result[invalid_zip]",
+    "tests/test_bundle_verification.py::test_file_failure_never_creates_an_output_or_success_result[missing]",
+    "tests/test_bundle_verification.py::test_file_failure_never_creates_an_output_or_success_result[symlink]",
+    "tests/test_bundle_verification.py::test_file_failure_never_creates_an_output_or_success_result[wrong_hash]",
+    "tests/test_bundle_verification.py::test_formatting_changes_zip_hash_but_preserves_the_semantic_model",
+    "tests/test_bundle_verification.py::test_native_complete_inventory_is_verified_using_only_owned_bytes[False-baseline]",
+    "tests/test_bundle_verification.py::test_native_complete_inventory_is_verified_using_only_owned_bytes[False-initialized]",
+    "tests/test_bundle_verification.py::test_native_complete_inventory_is_verified_using_only_owned_bytes[False-project]",
+    "tests/test_bundle_verification.py::test_native_complete_inventory_is_verified_using_only_owned_bytes[True-baseline]",
+    "tests/test_bundle_verification.py::test_native_complete_inventory_is_verified_using_only_owned_bytes[True-initialized]",
+    "tests/test_bundle_verification.py::test_native_complete_inventory_is_verified_using_only_owned_bytes[True-project]",
+    "tests/test_bundle_verification.py::test_partial_provider_gap_is_not_reported_as_verified[document]",
+    "tests/test_bundle_verification.py::test_partial_provider_gap_is_not_reported_as_verified[release]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[attachment]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[dangling_relation]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[malformed_type]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[missing_package]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[path]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[profile]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[registry]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[statement]",
+    "tests/test_bundle_verification.py::test_recomputed_transport_hashes_cannot_hide_invalid_payload_models[type]",
+    "tests/test_bundle_verification.py::test_result_contract_rejects_invented_authority_and_missing_evidence",
+    "tests/test_bundle_verification.py::test_unimplemented_options_and_missing_file_fail_before_file_read[arguments0]",
+    "tests/test_bundle_verification.py::test_unimplemented_options_and_missing_file_fail_before_file_read[arguments1]",
+    "tests/test_bundle_verification.py::test_unimplemented_options_and_missing_file_fail_before_file_read[arguments2]",
+    "tests/test_bundle_verification.py::test_unimplemented_options_and_missing_file_fail_before_file_read[arguments3]",
+    "tests/test_bundle_verification.py::test_unimplemented_receipt_verification_is_not_claimed[.specroad/requests/item.json]",
+    "tests/test_bundle_verification.py::test_unimplemented_receipt_verification_is_not_claimed[.specroad/transactions/receipts/item/transaction.json]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "15.d.R: complete arbitrary partial-bundle verification including configured parent context, scope membership and boundary proofs, and broaden adversarial input coverage.",
+    "15.d.C: structural cleanup after behavior completion. Nonempty portable receipt history remains assigned to 15.g. Verification does not grant origin completeness, creator authenticity, full semantic validation, approval or write authority."
   ]
 }

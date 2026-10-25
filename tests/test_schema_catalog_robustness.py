@@ -48,9 +48,8 @@ class SchemaCatalogRobustnessTests(unittest.TestCase):
             for example in actual['examples']:
                 self.catalog.validate(schema['$id'], example)
                 with tempfile.TemporaryDirectory() as tmp:
-                    if command.requires_project:
-                        from support.inspection import command_example_project
-                        command_example_project(Path(tmp), command.command_id)
+                    from support.inspection import command_example_inputs
+                    command_example_inputs(Path(tmp), command)
                     self.assertEqual(execute_request(example, cwd=Path(tmp)).result.exit_code, 0)
 
     def test_requirement_enum_and_examples_have_no_obligation_default(self):
