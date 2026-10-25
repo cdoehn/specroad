@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.26
+## Version 0.2.27
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.26` |
+| Dokumentversion | `0.2.27` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 25. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.26 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.26 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.27 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.27 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.25 vom 25. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Vorgängerversion | Repository-Spezifikation v0.2.26 vom 25. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
 | Prüf- und Entscheidungsgrundlage | PARTIAL-READ-GRAPH, delegiert gemäß SPECROAD-DECISION-1; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.f.R im Implementierungsplan. Die ausdrückliche Nutzerentscheidung zum Boundary-Prüfkontext bleibt unverändert. |
 | Änderungsart | Präzisierung der Objekt-, Relations- und Traversierungsdomäne zulässiger Partial-Lesebefehle in E.3.3; keine neue Requirement-ID, Transportmenge oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung schreibt die Repository-Spezifikation als v0.2.26 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung schreibt die Repository-Spezifikation als v0.2.27 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.26 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.27 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4542,6 +4542,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.27 | 2026-10-25 | PARTIAL-READ-GRAPH.C | Bereits festgelegte gemeinsame Grenzen und Abfragedomänen strukturell ordnen; Fachverhalten unverändert, 15.f.R bleibt offen. |
 | 0.2.26 | 2026-10-25 | PARTIAL-READ-GRAPH.R | Fehler-, Kontext- und Randfallgrenzen des Partial-Lesevertrags ergänzen; 15.f.R bleibt offen. |
 | 0.2.25 | 2026-10-25 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PARTIAL-READ-GRAPH: tatsächliche Mitglieder, bekannte Außenkanten und lokale Traversierung für zulässige Partial-Lesebefehle; maschinenlesbare Scopegrenze, keine zusätzlichen Prüfobjekte, Produktumsetzung in 15.f.R offen. |
 | 0.2.23 | 2026-10-25 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PARTIAL-CONFIGURATION-CONTEXT: exakte Parent-Kette als bytegebundener Auflösungskontext konfigurierter Teilbundles, getrennt von unveränderter fachlicher Closure; keine zusätzlichen Scope-Mitglieder oder Hashalgorithmen. Umsetzung bleibt in 15.c.R offen, unabhängige Prüfung und Extraktion in 15.d/15.e. |
@@ -6207,29 +6208,25 @@ Relationen von Mitgliedern abgeleitet. Weder Außenquellen noch deren
 Relationen werden aus Prüfdateien oder aus der bloßen Symmetrie eines
 Relationstyps ergänzt. Die bestehenden kanonischen Orientierungsregeln gelten.
 
-**Unmittelbare Abfragen.** Show und direkte Relationsbeobachtungen behalten
-die bekannten Außenkanten mit ihrer originalen Relations-ID und Zielidentität.
-Query-Wertfilter `has_relation`/`missing_relation` sowie die unmittelbaren
-SRX-Operatoren `relation_count`, `incoming_count` und `has_relation` arbeiten
-auf diesen beobachteten Relationssichten, gemäß ihrer Richtung und Typfiltern.
-Eine ausgehende Boundary zählt daher als bekannte Relation; ihr Zieltyp und
-ihre Ziel-ID dürfen die dafür vorgesehenen unmittelbaren Filter erfüllen.
-Das liefert keine fremden Zielfelder und erfindet keine eingehende Außenquelle.
-Query-Items, `total`, Projektion, Sortierung und Pagination beziehen sich
-ausschließlich auf M nach den unveränderten Filtern aus 11.6.
-
-**Traversierung und Zielprädikate.** Trace, Why, deklarative Graphansichten
-und SRX `reachable` besuchen ausschließlich Mitglieder von M. Traversierbare
-Kanten haben beide Endpunkte in M; Richtung, Typfilter, stabile Reihenfolge,
-Tiefenvertrag und Zyklusbehandlung gelten unverändert. Eine Außenkante darf
-als begrenzte Relationsbeobachtung mit Boundary-Bindung sichtbar bleiben,
-wird aber nicht zu einem Zielknoten, Pfadschritt oder expandierbaren Frontiereintrag.
-Ein `reachable`-Zielprädikat wird niemals auf einem erfundenen Stub oder auf
-E.3.2-Prüfbytes ausgewertet. Tiefe 0 prüft nur das wirkliche Startmitglied.
-`false` bedeutet keine passende Erreichbarkeit im gewählten Teilmodell,
-nicht Unerreichbarkeit im Ursprung. Auch ein unmittelbarer Relationstreffer
-auf eine Boundary-ID und `reachable=false` auf dieselbe ID sind damit
-widerspruchsfrei. Bestehende Typ-/Auswertungsfehler werden nicht zu `false`.
+**Gemeinsame Fehler-, Kontext- und Randfallgrenzen.** Ein gültig gebundenes Außenziel
+ist kein unbekanntes Mitglied mit leeren Feldern. Ein ausdrücklich verlangtes
+Show-/Trace-/Why-/Impact-Startartefakt außerhalb von M wird als fehlendes
+Fachobjekt mit Code 3 abgewiesen, auch wenn Prüfbytes vorhanden sind.
+Dies betrifft keine gewöhnlichen Wertfilter auf Mitgliedern: eine leere
+Treffermenge bleibt eine gültige begrenzte Antwort. Fehlende, zusätzliche,
+typwidrige oder nicht exakt gebundene Boundaries ergeben Code 3; ein
+fehlendes starkes Ziel wird durch keine Boundary oder Prüfdatei ersetzt.
+Gefährliche Pfade/Dateitypen und Partial-Writes bleiben Code 7; ein
+unaufgelöstes Journal behält Code 5, eine nach Beobachtung veränderte
+gebundene Eingabe den bestehenden Konfliktvertrag mit Code 6. Frische
+Marker- und Sicherheitsprüfungen bleiben vorrangig; kein Fehler wird als
+erfolgreiches `partial` verborgen. Konfigurationsauflösung nach E.3.1 und
+Relationsreviews nach E.3.2/J.1–J.3 erfolgen weiterhin aus ihren notwendigen
+Originalbytes. Diese Kontextrollen erzeugen keine weiteren Objektpopulationen.
+Verlangt eine zugelassene Operation weitere echte Inputs, gelten deren
+bestehende Prüf- und Fehlerverträge; es gibt keinen Nachladefallback,
+keine erfundene Evidence und keinen Ersatz einer Pflichtfreigabe durch
+das Ergebnis einer lokalen Graphabfrage.
 
 **Maschinenlesbare Abgrenzung.** Ein erfolgreich vollständig abgearbeiteter
 fachlicher Leseauftrag auf M (Show, Query, Trace, Why, Impact sowie darauf
@@ -6255,30 +6252,34 @@ Prüf-/Ergebnisschemas; die Mitglieder- und Kontextgrenze gilt dort, wo sie
 fachliche Modellobjekte auswerten. Diese Regel ersetzt keinen dieser
 Verträge durch das Ergebnisschema einer Graphabfrage.
 
-**Fehler-, Kontext- und Randfallgrenzen.** Ein gültig gebundenes Außenziel
-ist kein unbekanntes Mitglied mit leeren Feldern. Ein ausdrücklich verlangtes
-Show-/Trace-/Why-/Impact-Startartefakt außerhalb von M wird als fehlendes
-Fachobjekt mit Code 3 abgewiesen, auch wenn Prüfbytes vorhanden sind.
-Dies betrifft keine gewöhnlichen Wertfilter auf Mitgliedern: eine leere
-Treffermenge bleibt eine gültige begrenzte Antwort. Fehlende, zusätzliche,
-typwidrige oder nicht exakt gebundene Boundaries ergeben Code 3; ein
-fehlendes starkes Ziel wird durch keine Boundary oder Prüfdatei ersetzt.
-Gefährliche Pfade/Dateitypen und Partial-Writes bleiben Code 7; ein
-unaufgelöstes Journal behält Code 5, eine nach Beobachtung veränderte
-gebundene Eingabe den bestehenden Konfliktvertrag mit Code 6. Frische
-Marker- und Sicherheitsprüfungen bleiben vorrangig; kein Fehler wird als
-erfolgreiches `partial` verborgen. Konfigurationsauflösung nach E.3.1 und
-Relationsreviews nach E.3.2/J.1–J.3 erfolgen weiterhin aus ihren notwendigen
-Originalbytes. Diese Kontextrollen erzeugen keine weiteren Objektpopulationen.
-Verlangt eine zugelassene Operation weitere echte Inputs, gelten deren
-bestehende Prüf- und Fehlerverträge; es gibt keinen Nachladefallback,
-keine erfundene Evidence und keinen Ersatz einer Pflichtfreigabe durch
-das Ergebnis einer lokalen Graphabfrage.
+**Unmittelbare Abfragen.** Show und direkte Relationsbeobachtungen behalten
+die bekannten Außenkanten mit ihrer originalen Relations-ID und Zielidentität.
+Query-Wertfilter `has_relation`/`missing_relation` sowie die unmittelbaren
+SRX-Operatoren `relation_count`, `incoming_count` und `has_relation` arbeiten
+auf diesen beobachteten Relationssichten, gemäß ihrer Richtung und Typfiltern.
+Eine ausgehende Boundary zählt daher als bekannte Relation; ihr Zieltyp und
+ihre Ziel-ID dürfen die dafür vorgesehenen unmittelbaren Filter erfüllen.
+Das liefert keine fremden Zielfelder und erfindet keine eingehende Außenquelle.
+Query-Items, `total`, Projektion, Sortierung und Pagination beziehen sich
+ausschließlich auf M nach den unveränderten Filtern aus 11.6.
+
+**Traversierung und Zielprädikate.** Trace, Why, deklarative Graphansichten
+und SRX `reachable` besuchen ausschließlich Mitglieder von M. Traversierbare
+Kanten haben beide Endpunkte in M; Richtung, Typfilter, stabile Reihenfolge,
+Tiefenvertrag und Zyklusbehandlung gelten unverändert. Eine Außenkante darf
+als begrenzte Relationsbeobachtung mit Boundary-Bindung sichtbar bleiben,
+wird aber nicht zu einem Zielknoten, Pfadschritt oder expandierbaren Frontiereintrag.
+Ein `reachable`-Zielprädikat wird niemals auf einem erfundenen Stub oder auf
+E.3.2-Prüfbytes ausgewertet. Tiefe 0 prüft nur das wirkliche Startmitglied.
+`false` bedeutet keine passende Erreichbarkeit im gewählten Teilmodell,
+nicht Unerreichbarkeit im Ursprung. Auch ein unmittelbarer Relationstreffer
+auf eine Boundary-ID und `reachable=false` auf dieselbe ID sind damit
+widerspruchsfrei. Bestehende Typ-/Auswertungsfehler werden nicht zu `false`.
 
 Die Anzeige ist keine Vollprojektvalidierung, Release Readiness oder Freigabe.
 E.3.2 bleibt ausschließlich der begrenzte Endpunktnachweis für enthaltene
 Relationsreviews nach J.1–J.3; daraus entsteht keine zusätzliche Lese- oder
-Schreibautorität. Die vorhandenen Frische-, Pfad- und Read-only-Grenzen gelten.
+Schreibautorität. Die gemeinsamen Grenzen dieses Abschnitts gelten.
 Die Umsetzung und ausführbare Abnahme dieses Lesevertrags bleiben in 15.f.R
 offen; die Dokumentänderung allein erklärt keine implementierte Funktion.
 
