@@ -5,7 +5,9 @@ retained bootstrap proof detects removal/replacement of the root manifest.
 Neither record is an authenticated authority or a substitute for live gates.
 """
 from hashlib import sha256
+import os
 
+from ..authoring._bootstrap_io import STAGING
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..storage.json_syntax import parse_json_object
@@ -22,6 +24,11 @@ def _optional(boundary, path):
 
 
 def require_complete_root(boundary):
+    # Even configuration-last publication has a window before completion of
+    # the durable bootstrap record. No reader may promote that unfinished root.
+    boundary._check_root()
+    if os.path.lexists(boundary.root / STAGING):
+        raise SafetyViolation('Unfinished bootstrap requires recovery')
     proof = _optional(boundary, '/'.join((*COMPLETED, 'journal.json')))
     # Only roots published by this extractor have this additional proof.
     # Existing readers keep their own marker/error/freshness contracts; the

@@ -279,13 +279,18 @@ class BootstrapTree:
         self.check()
         return locations
 
-    def publish(self):
+    def publish(self, *, guard=lambda: None):
         for path in self.units:
+            # A root creator can impose stricter live input/target constraints
+            # than init's collision-free repository contract. Rollback does not
+            # reuse this publication guard: it still proves its owned inventory.
+            guard()
             if self.checked_locations()[path]:
                 continue
             parts = path.split('/')
             with directory(self.fd, parts[:-1]) as staged, directory(self.held.root_fd, parts[:-1]) as target:
                 rename_new(self.function, staged, parts[-1], target, parts[-1])
+        guard()
         self.check()
         if not all(self.checked_locations().values()):
             raise BootstrapError('bootstrap_publication_incomplete')

@@ -209,7 +209,8 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(work['external_side_effects'], [])
             self.assertEqual(work['checkpoint_algorithms'], [])
             self.assertEqual(document['write_effects']['external_work'], [])
-            self.assertEqual(document['lock_kind'], 'bootstrap' if command.command_id == 'init' else 'none')
+            self.assertEqual(document['lock_kind'],
+                             'bootstrap' if command.command_id in ('init', 'bundle.extract') else 'none')
             self.assertNotIn(8, document['exit_codes'])
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
