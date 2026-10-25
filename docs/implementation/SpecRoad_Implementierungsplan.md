@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 17 · **Stand:** 24. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.22
+**Planrevision:** 18 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.23
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `32b1be87ff4284ced02001dfa9feeda832b750e581e3bbf55b234d637e023d84`.
+Gebundene Spezifikations-SHA-256: `d5100497b2bef9c26f76197b97acd6c9a05a6c7c2ce7c2637f18ba98c0883caf`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 17
+plan_revision: 18
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 622
 last_completed_plan_commit: 15.c.W
 next_plan_commit: 15.c.R
-last_completed_numbered_bundle: 464
+last_completed_numbered_bundle: 465
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,62 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Konfigurationskontext im Teilbundle (Bundle 465)
+
+Revision 18 dokumentiert **PARTIAL-CONFIGURATION-CONTEXT**, **delegiert gemäß
+SPECROAD-DECISION-1**. Spezifikation **0.2.23, E.3.1**, präzisiert die
+erforderlichen Konfigurationsbytes, ihre getrennte Transportrolle und die
+unveränderte fachliche Scope-/Hashberechnung. Quellen, Alternativen,
+Grenzprüfung und offene Abnahmen stehen unmittelbar bei 15.c.R.
+
+- [x] **PARTIAL-CONFIGURATION-CONTEXT:** Konfigurationskontext im Teilbundle verbindlich klären. Commit: `docs(spec): Konfigurationskontext partieller Bundles präzisieren`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und notwendigen aktiven Spezifikationshashbindungen. Kein Produktcode,
+keine Tests, Oracles, Fixtures, Testnummern, Runner oder Workflows werden
+geändert; historische Evidence bleibt erhalten. Der bestätigte Produktstand
+bleibt **622/900**, zuletzt **15.c.W**, nächstens **15.c.R**. R und C bleiben
+offen; der Dokumentcommit wird nicht als nominelle Produkt-W/R/C-Folge
+ausgegeben. Die regulären Zwischenstände behalten ihre jeweiligen gezielten
+parallelen Dev-Gates und commitgebundenen parallelen Apply-Gruppen.
+
+Der Entrypoint installiert zunächst nur diesen geprüften Dokumentzustand,
+führt vor seinem Commit ausschließlich die fällige **Gruppe 2/3** der
+**Sequenz 170** mit **6.827 Tests** und vier parallelen Workern aus und
+aktualisiert erst nach Erfolg den Offplan-Marker und die Bundlenummer auf
+465. Ein Fehler erhält den tatsächlichen Zustand und frühere Commits.
+Es gibt keine vorgezogene Produktumsetzung, Git-Änderung in Dev, CI,
+Control-/Watcher-Änderung oder Hintergrundfortsetzung. Übergabe als
+`spec_clarification`; danach endet dieser einmalige Auftrag. Der nächste
+Control-Auftrag setzt den geklärten offenen Schritt um.
+
+**Beobachtete Dev-Prüfung:** **828/828** bestehende Verhaltenstests in
+**70,92 s** mit **vier parallelen Workern**, Python **3.14.4**, bestanden:
+**34** Partial-, **92** Vollprojekt- und **248** Bundlecodecfälle,
+**51** Closure- und **78** Seedfälle, **157** Konfigurationsvererbungs- und
+**114** Applicabilityfälle sowie **54** maschinenlesbare Katalogprüfungen.
+Die Auswahl umfasst jeweils die vorhandenen W-/R-Dateien dieser Gruppen.
+Keine Testidentität oder Nummer wurde geändert; alle Oracles und Fixtures
+bleiben bytegleich. Die Prüfung sichert den unveränderten technischen
+Ausgangspunkt und die aktive Hashbindung, nicht die noch fehlende
+konfigurierte Bundlefunktion. Keine Dokumentations-/Darstellungstests und
+kein Dev-Vollsuitelauf; `full_suite_passed=null`.
+
+Die vollständige Collection bestätigt **20.483 eindeutige Identitäten**,
+Exit **0**, keine Katalogfehler und **0 ausgeführte Testkörper**. Ihre
+Identitäten stimmen vollständig mit dem bestätigten vorherigen Katalog
+überein. Die **743** aktiven Katalogdateien ändern ausschließlich
+`specification_sha256`; historische Evidence und fachliche Abnahmen bleiben
+erhalten. Quellbindung
+`76848c6eb64922e6240e61d3fc9d59cd405604f6f7d5f2e314fe4f9da23c4a7b`,
+Katalog `f1490015ef5e98d1607ef1e42c0abb1597a54d6228c5620a186795cab62503f9`,
+Auswahlbericht-SHA-256
+`1d3ed65364d2071f5c363856ba738d7f4e6fca4ef1e5abcdacfffac852a116f2`,
+Einzeloutcomes-SHA-256
+`f89921b94bca7470977cc32f673108ae6de46a985f43ba15db898ebd4b6c9942`.
+Die native Paketprüfung bleibt Übergabevoraussetzung. Der kommende
+Apply-Testlauf wird nicht als bestanden vorweggenommen.
 
 ## OFF-PLAN – Bundlemanifest und Payloaddomäne (Bundle 455)
 
@@ -24331,6 +24387,137 @@ Nachweise erhalten. Ein zukünftiger Apply-Erfolg wird nicht vorweggenommen.
 **Vervollständigung:** Falsche Kind-/Read-only-/Scopekombination und fehlende starke Ziele ablehnen.
 
 **Verhaltensabnahme:** Partials sind niemals als vollständige schreibbare Projekte ausgewiesen. Die W-Nachweise bleiben zusätzlich grün.
+
+**Entscheidungsbeleg PARTIAL-CONFIGURATION-CONTEXT — delegiert gemäß
+SPECROAD-DECISION-1, 25. Oktober 2026.** Betroffen ist der bereits für
+15.c.R vorgesehene Konfigurationssupport, einschließlich SR-REQ-0400,
+SR-REQ-0482/0483 und der Nachweisgrenzen SR-VER-0028/0033. Normative
+Zielregel ist **E.3.1** der Spezifikation **0.2.23**. Der reguläre
+Planschritt wird durch dieses OFF-PLAN-Bundle nicht abgeschlossen.
+
+**Bestätigte Basis.** Das Result
+`specroad-apply_Result_225539_1024_34ae4a.zip`, SHA-256
+`536e720069422908f78003f2d8efbf3f7a320c2b73b874d67f656b2791c34819`,
+ist das eindeutig aktuelle Result ohne bereits gebundenes Folgebundle.
+Native Resultprüfung, Root-CHAT_INSTRUCTIONS, Kontext, Umgebung, Manifest,
+Run-/Ausführungslogs, alle **2.227 Snapshotdateien** samt Blob-IDs, Größen
+und Modi sowie der reale Apply-Commit wurden abgeglichen. Bundle **464**
+hat exakt **15.c.W** als Commit
+`ce14a6ee4af1b9ee43b2003a82bdff3e527e76e0` mit Elternstand
+`5d764ead3a13e72b1bbe852c04343bc2c9937aeb` abgeschlossen; der Arbeitsbaum
+ist sauber. Die fünf dadurch bestätigten Planmarker wurden in Dev
+nachgeführt; der gesamte Produktbestand entsprach danach dem Snapshot.
+
+Die tatsächlichen nummerierten Auswahl- und Einzeloutcome-Dateien bestätigen
+**6.828/6.828** Tests in **1.781,01 s**, vier parallele Worker,
+**Sequenz 169 / Gruppe 1/3**, Katalog **20.483** Identitäten. Auswahlbindung
+`34eb626d2636d9f1da13fe9591165073e5dad51437f1d6aeac8ce3e37fadddc8`,
+Berichts-SHA-256 `21086f4feb0594c8a85aa36d9773d3f826f4662af7dfc48113d1c3dc21c2a466`,
+Einzeloutcomes-SHA-256 `d53b49e016a2af01d8d0f4c7d288721fd21dfebdbc2c5c051eec3d8434432809`.
+Der Snapshot stimmt vollständig mit den zuvor übergebenen W-Payloads und
+den tatsächlich nach dem Gate gesetzten Fortschrittsmarkern überein.
+Dies bleibt eine Apply-Teilprüfung, kein Vollsuite- oder Releasebeleg.
+
+**Lücke und geprüfte Quellen.** E.1.1 verlangt, den Konfigurationshash aus
+Payloadbytes zu rekonstruieren. 10.8 nennt für Dokument-/Release-Scope
+jedoch keine automatische Mitgliedschaft der ausgewählten Konfiguration
+und ihrer Parents. Ihre Auswahlwerte und vollständigen Inhaltsbindungen
+gehen nach 10.18/Anhang I in den Hash ein, ohne dass diese Artefakte durch
+die dokumentierte Seed-/Closureauswahl zwingend enthalten sind. Die exakte
+Transportrolle dieser zusätzlichen benötigten Quelldateien und ein unter
+der Auswahl ausgeschlossener Dokument-/Release-Anker waren nicht festgelegt.
+Eine frei gewählte Implementierung würde entweder den Scope verändern oder
+eine bisher unbestimmte Ausnahme für zusätzliche Payloads einführen.
+
+Geprüft wurden Spezifikation **2.4, 10.8–10.10, 10.16, 10.18, E.1–E.3
+und Anhang I**, die offenen M15-Abnahmen sowie die nativen Module
+`bundles/partial.py`, `bundles/_project_snapshot.py`,
+`exchange/_export_scope.py`, `graph/scope_seeds.py`, `graph/strong_closure.py`,
+`graph/_scope_applicability.py`, `configurations/_resolution.py`,
+`configurations/models.py` und `archive/_configured_project.py`.
+Der bestehende Scope-Resolver bindet die effektive Konfiguration, fügt
+aber keine zusätzlichen Konfigurationsseeds hinzu. Der W-Bundleadapter
+verweigert die Option noch explizit; diese Grenze ist kein fertiger
+SR-REQ-0400-Nachweis. Bestehende Konfigurations-/Scope-/Bundletests wurden
+als technische Basis geprüft, nicht als Beleg der neuen Sollregel ausgegeben.
+
+**Alternativen und Auswahl.**
+
+1. Nur den ausgewählten Scope ohne die benötigten Konfigurationsbytes
+   übertragen oder den behaupteten Hash als Ersatz akzeptieren. Eine
+   unabhängige Rekonstruktion wäre nicht möglich. Nicht gewählt.
+2. Konfiguration und Parents pauschal als neue Seeds oder Closuremitglieder
+   behandeln. Dies verändert den exakt gewählten Scope, folgt zusätzlichen
+   fachlichen Kanten und verändert bestehende Scope-/Modellhashes auch
+   außerhalb des Bundleadapters. Nicht gewählt.
+3. Eine neue Konfigurationsdatei, Manifestfeldmenge oder parallel berechnete
+   Wertetabelle einführen. Dies dupliziert die vorhandene native Auflösung
+   und verliert gegebenenfalls Originaldarstellung oder Parentbindung.
+   Nicht gewählt.
+4. **Gewählt:** Die tatsächlichen Dateien genau der Parent-Kette ergänzen
+   die Transportpayloads als abgeleiteter Auflösungskontext. Die fachliche
+   Closure und ihre Hashprojektion bleiben unverändert. Die vollständigen
+   kanonischen Konfigurationsinhalte sind über den bestehenden effektiven
+   Konfigurationshash gebunden; `entries` bindet zusätzlich die Originalbytes.
+   Ein regulär erreichter Konfigurationsknoten bleibt zugleich normales
+   Closuremitglied mit allen bisherigen Abhängigkeiten. Ein ausgeschlossener
+   Auswahlanker wird vor Veröffentlichung mit Code 3 abgewiesen.
+
+**Abgleich mit 2.4.1.** (1) Präzisiert wird der bereits zugesagte konfigurierte
+Dokument-/Release-Transfer aus 15.c.R; keine neue Operation, Architektur,
+Requirement oder Produktposition. Reader und Extraktion bleiben in 15.d/15.e.
+(2) Descriptor, Seed-Mengen, Closure, effektive Parentauflösung, Hashalgorithmen,
+E.3-Kindmatrix und E.1-Payloadbijektion bleiben maßgeblich. Die eng abgeleitete
+Payloadvereinigung erhält alle für die Prüfung erforderlichen Bytes.
+(3) Starke Abhängigkeiten des fachlichen Scopes werden weder weggelassen
+noch zu Boundaries herabgestuft; ungültige Ursprünge bleiben Fehler. Reine
+Kontextdateien werden nicht zu frei zugänglichen zusätzlichen Fachobjekten
+oder zu einem Vollprojektnachweis. Pfad-, Transaktions-, Write-, Human-Review-
+und Freigabegrenzen bleiben erhalten. Es gibt keine freie Ausnahmeliste.
+(4) Die Fassung ist versioniert, ohne alte Ressourcen oder Nachweise
+umzuschreiben. Bestehende unkonfigurierte Bundles, Export-/Baselinewurzeln
+und Hashstandards bleiben unverändert; konfigurierte Teilbundleerzeugung
+ist im bestätigten W-Stand noch nicht implementiert. Eine spätere Revision
+kann die Dokumentregel nachvollziehbar ändern, ohne Daten oder Evidence
+zu löschen oder Git zurückzusetzen. (5) Die Auswahl benötigt keine fehlenden
+externen Fakten, privaten Daten oder menschliche Risikoakzeptanz. Weder
+eine persönliche Einzelbestätigung noch ein unabhängiger Review wird erfunden.
+
+**Zusätzliche verbindliche R-Abnahmen:**
+
+- Dokument- und Release-Auswahl mit Root- und Kindkonfiguration liefern
+  die genaue native Closure plus genau die benötigten Parentdateien in
+  unveränderten Bytes. Ein unabhängiger Oracle berechnet die effektive
+  Konfiguration und Teilmodellwurzel aus diesen Bytes; der Ursprung bleibt
+  getrennt gebunden. Kein Extra-Seed und keine doppelte Payload entstehen.
+- Eine Parentänderung mit gleichen effektiven Werten verändert den
+  Konfigurations-/Teilmodellhash; reine JSON-Formatierung nur die Bytehashes.
+  Unbeteiligte Konfigurationen verändern bei sonst gleichem Teilumfang nur
+  die vollständige Ursprungsbindung, nicht die Teilmodellwurzel.
+- Wird eine Kontextkonfiguration durch eine reguläre starke Kante erreicht,
+  greift die normale Closure einschließlich aller starken Ziele, Ressourcen
+  und schwachen Boundaries. Kontext darf eine fehlende Fachabhängigkeit
+  niemals als erfüllt tarnen. Kontext außerhalb der Closure erzeugt weder
+  zusätzliche Fachmitglieder noch erfundene Boundaries.
+- Fehlende/falsche Auswahl, Parentlücke, Zyklus, ungültige Dimension/Auswahl,
+  ausgeschlossener Anker oder starke Pflichtabhängigkeit, manipulierte
+  Konfigurationsbindung sowie fehlende/zusätzliche Kontextdateien werden
+  gemäß E.3.1 abgewiesen. Originalbestand und Ausgabepfad bleiben bei
+  Vorprüfungsfehlern unverändert. Änderungen zwischen Beobachtung und
+  Veröffentlichung sowie unsichere Pfade behalten die vorhandenen Fehlergrenzen.
+- Die bestehende Bundle-CLI verwendet denselben nativen Provider und die
+  vorhandene sichere Veröffentlichung. `project --configuration` bleibt
+  Code 2; Partials bleiben jederzeit `partial`, `read_only=true`, `local_only`.
+  Die unkonfigurierten W-Nachweise und Vollbundle-Regressionswerte bleiben grün.
+
+Die unabhängige Readerprüfung der exakten Payloadvereinigung und ihrer
+Hashbindungen bleibt zusätzlich **15.d**, die erneute Kontextprüfung nach
+Extraktion und der Ausschluss reiner Kontextdateien aus dem fachlichen
+Read-only-Umfang **15.e** geschuldet. Die C-Phase bereinigt erst nach der
+regulären R-Umsetzung die Struktur unter Erhalt sämtlicher Fachwerte,
+Fehlerklassen und Seiteneffekte. Diese Abnahmen sind offen, keine behaupteten
+Produkttesterfolge. Die begrenzte Klärung verbraucht genau ein Folgebundle;
+15.c.R wird erst nach dessen Apply erneut beauftragt.
 
 #### 15.c.C – Make it Clean
 

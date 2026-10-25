@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.22
+## Version 0.2.23
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.22` |
+| Dokumentversion | `0.2.23` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 24. Oktober 2026 |
+| Stand | 25. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.22 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.22 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.23 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.23 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.21 vom 24. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung BUNDLE-MANIFEST-CONTRACT, delegiert gemäß SPECROAD-DECISION-1: geschlossene Bundlemanifest-Feldmenge, tatsächliche Payloadbindung und getrennte Modell-/Idempotenzdomänen. Entscheidungsbeleg und Abnahmen stehen bei 15.a im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung des Produktbundlemanifests in E.1.1 auf dem bestehenden kanonischen Archivprofil; keine neue Requirement-ID oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.22 vom 24. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Entscheidung PARTIAL-CONFIGURATION-CONTEXT, delegiert gemäß SPECROAD-DECISION-1: exakter Konfigurationskontext für Dokument-/Release-Teilbundles bei unveränderter Scope- und Hashprojektion. Entscheidungsbeleg und Abnahmen stehen bei 15.c.R im Implementierungsplan. |
+| Änderungsart | Additive Präzisierung der erforderlichen Konfigurationspayloads und ihrer Abgrenzung zur fachlichen Closure in E.3.1; keine neue Requirement-ID, Manifestfeldmenge oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.22 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.23 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -4542,6 +4542,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.23 | 2026-10-25 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PARTIAL-CONFIGURATION-CONTEXT: exakte Parent-Kette als bytegebundener Auflösungskontext konfigurierter Teilbundles, getrennt von unveränderter fachlicher Closure; keine zusätzlichen Scope-Mitglieder oder Hashalgorithmen. Umsetzung bleibt in 15.c.R offen, unabhängige Prüfung und Extraktion in 15.d/15.e. |
 | 0.2.22 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | BUNDLE-MANIFEST-CONTRACT: geschlossene Feldmenge, exakte Payloadbijektion, bewusste Ausschlüsse und getrennte Modell-/Idempotenzbindungen auf dem vorhandenen Archivprofil; Scope-, Sicherheits-, Kompatibilitäts- und Freigabeverträge bleiben erhalten, Umsetzung bleibt in 15.a und den folgenden M15-Schritten offen. |
 | 0.2.21 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | EXPORT-MANIFEST-CONTRACT: gebundener Exportumfang, exakte deterministische Zeitprojektion, separate Manifestfelder und tatsächliche Verlust-/Anhang-/Ausgabehashbindung; bestehende Scope-, Format- und Freigabeverträge bleiben erhalten, Umsetzung bleibt in 14.l offen. |
 | 0.2.20 | 2026-10-24 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | REQIFZ-CONTAINER-CONTRACT: explizite Dokumentauswahl, dokumentrelative Anhangbindungen, abgeleitetes Transportmanifest und gemeinsame sichere ZIP-Grenze; bestehende Import-/Sicherheitsverträge bleiben erhalten, Umsetzung bleibt in 14.k offen. |
@@ -5955,6 +5956,97 @@ Der kanonische Reader dieses Zielreleases akzeptiert **keine** Aliase `bundle_ki
 `bundle verify` prüft zuerst Format, kanonische Kennzeichnung und Hashdomänen, danach Scope-Closure und Inhalte. `bundle extract` übernimmt das unveränderte Manifest als nicht fachliche Root-Metadatei, sodass jeder neue Aufruf die Teilständigkeit erneut erkennt. Das Manifest ist kein Artefakt, wird weder als fachliche Ressource gehasht noch formatiert. Bei dokument-/releaseförmiger oder unvollständiger Projektstruktur ohne gültigen Vollprojektnachweis darf das Entfernen des Markers keinen schreibbaren Vollstand erzeugen. Teilbundle-Root und Boundary References werden vor jedem zulässigen Befehl geprüft; Widerspruch oder fehlende notwendige Daten verweigern einen Write.
 
 Für Teilbundles gelten exakt die in 10.16 erlaubten Read-only-Funktionen. Ein Writeversuch, eine Baseline-Erzeugung oder ein Re-Export als Vollprojekt ergibt Code 7. Im Produktumfang existiert kein stiller Rehydrationsbefehl: Ein schreibbarer Stand entsteht erst aus dem separat beschafften, vollständig verifizierten Ursprungsprojekt beziehungsweise Vollbundle in einem getrennten Zielroot. Übernahmen aus einem Teilstand unterliegen dort wieder den normalen Change-Plan-/Proposal-Regeln.
+
+### E.3.1 Konfigurationskontext eines Teilbundles
+
+**Entscheidung PARTIAL-CONFIGURATION-CONTEXT, delegiert gemäß
+SPECROAD-DECISION-1.** Dieser Vertrag präzisiert die nach E.1.1 zur
+Rekonstruktion erforderlichen Konfigurationsbytes für `document`-/`release`-
+Teilbundles mit `configuration_id != null`. Er ändert weder die Seed-Mengen
+und Closure aus 10.8 noch `scope-v1`, `core-closure-v1`, die Modellprojektion
+10.9 oder die Konfigurationsauflösung 10.18/Anhang I. Der Auflösungskontext
+ist keine neue Artefaktart, kein neues Manifestfeld und kein zweiter Scope.
+
+**Exakte Payloadmenge.** Der Erzeuger löst im tatsächlich beobachteten
+vollständigen Ursprung die ausgewählte Konfiguration einschließlich ihrer
+vollständigen Parent-Kette auf. Zusätzlich zu den fachlichen Closurepayloads
+MUSS das Teilbundle genau die unveränderten nativen JSON-Quelldateien dieser
+Kette an ihren regulären `configuration`-Artefaktpfaden enthalten. Eine
+berechnete Wertetabelle, ein behaupteter Hash oder eine neu serialisierte
+Ersatzkonfiguration ersetzt die erforderlichen Originalbytes nicht.
+`specroad.json` und die für die effektive Profilbindung benötigten nativen
+Ressourcen bleiben ebenfalls Pflicht. Unbeteiligte Konfigurationen werden
+nicht allein wegen ihres Typs mitgenommen; sind sie reguläre Closuremitglieder,
+gelten für sie unverändert die normalen Mitgliedschaftsregeln.
+
+Die Transportmenge ist die Vereinigung der benötigten Closurepayloads und
+dieses exakt abgeleiteten Konfigurationskontexts. Überlappende Pfade werden
+einmal transportiert. Alle diese Bytes sind normale, vollständig inventarisierte
+Payloads nach E.1; sie dürfen nicht zugleich als `outside_scope` ausgeschlossen
+sein. Es gibt keine vom Absender frei deklarierbare Kontext-Ausnahmeliste.
+Weitere Konfigurationsdateien ohne Closuremitgliedschaft oder Bedarf in der
+ausgewählten Parent-Kette sind zusätzliche unerwartete Payloads.
+
+**Mitgliedschaft und Hashdomänen.** Nur durch Seeds und Closure nach 10.8
+erreichte Artefakte bilden den fachlichen Teilumfang. Die bloße Mitnahme einer
+Konfiguration als Auflösungskontext macht sie nicht zu einem zusätzlichen
+Seed oder Artefakteintrag der Teilmodellwurzel. Ihr vollständiger kanonischer
+Inhalt, ihre ID und Revision sind bereits über die Parent-Kette im effektiven
+Konfigurationsmanifest nach I.2 gebunden; dessen Hash und die semantische
+Projektkonfiguration bilden unverändert `configuration_sha256` nach 10.9.
+Eine Änderung eines Parents MUSS diese Bindung auch dann verändern, wenn die
+effektiven Auswahlwerte gleich bleiben. Byteformatierungsänderungen verändern
+die Transporthashes, nicht die kanonischen Fachhashes.
+
+Erreicht die fachliche Closure eine solche Konfiguration zusätzlich regulär,
+ist sie zugleich ein normales Mitglied. Dann werden auch ihre starken Kanten,
+gebundenen Ressourcen und schwachen Grenzen vollständig nach 10.8 verarbeitet.
+Eine dafür fehlende starke Zielressource kann nicht als bloßer Kontext deklariert
+werden. Kanten einer ausschließlich als Konfigurationskontext transportierten
+Datei erweitern dagegen nicht den gewählten fachlichen Scope; sie erhalten
+keine erfundenen Boundary References. Das behauptet keine lokale Vollständigkeit
+dieses außerhalb des Scopes liegenden Graphteils. Der Erzeuger muss dennoch
+den vollständigen Ursprung einschließlich seiner Referenzen prüfen; ein bereits
+dort fehlendes Ziel wird nicht durch diese Transportregel zulässig.
+
+**Prüfung und Fehlergrenzen.** Erzeuger und unabhängiger Reader bestimmen
+dieselbe Kette erneut aus den tatsächlichen Bytes, prüfen native Identität,
+Schema, Parent-Verweise, Zyklusfreiheit, Dimensionen und Auswahl nach Anhang I
+und berechnen die Konfigurationsbindung selbst. Danach bestimmen sie die
+fachliche Mitgliedschaft und prüfen die exakte Payloadvereinigung. Der Reader
+darf den behaupteten `configuration_sha256` nicht als Ersatz für die Auflösung
+übernehmen. Fehlende, falsche oder zusätzliche Kontextdateien sowie eine
+widersprüchliche Konfigurationsbindung ergeben Code 3; gefährliche Pfade oder
+Dateitypen bleiben Code 7. Ein konfigurationsbedingt ausgeschlossener starker
+Fachabhängiger bleibt ein Fehler nach 10.8, keine schwache Boundary.
+
+Das ausdrücklich ausgewählte Dokument beziehungsweise Release muss vorhanden,
+vom passenden Typ und in der gewählten Konfiguration anwendbar sein. Ist dieser
+Auswahlanker ausgeschlossen, ergibt die Bundleerzeugung Code 3, bevor eine
+Ausgabedatei veröffentlicht wird; es wird weder ein anderer Anker gewählt noch
+ein scheinbar gültiges ankerloses Teilbundle erzeugt. Diese Prüfung verändert
+nicht die Seed-Filterung anderer Operationen. Fehlende Parentbytes, ungültige
+Konfigurationswerte und ein ungültiger Ursprung werden ebenso schreibfrei
+abgewiesen. Die bestehenden Frische-, Transaktions- und Ausgabepfadprüfungen
+gelten weiterhin bis zur Veröffentlichung.
+
+**Lesen, Kompatibilität und Nachweisgrenze.** Ein Kontextartefakt außerhalb der
+fachlichen Closure wird nicht als zusätzliches Query-/Trace-/Show-Objekt des
+Teilumfangs angeboten. Die erforderlichen Bytes bleiben zur erneuten
+Konfigurationsprüfung verfügbar. Extraktion erhält sie und das unveränderte
+Rootmanifest; daraus entsteht keine Schreibberechtigung. `partial`,
+`read_only=true` und `local_only` bleiben auch bei zufällig vollständiger
+Closure verbindlich. Die Ursprungswurzel bleibt die getrennte Provenienzbindung
+aus E.1.1 und kein aus den Teilbytes ableitbarer Vollprojektnachweis.
+
+Unkonfigurierte Teilbundles, Vollbundles, Export- und Baselineprojektionen
+behalten ihre bisherigen Hashdomänen und Bytes. Bereits gebundene Artefakte,
+Reviews, Evidence und historische Hashes werden nicht umgeschrieben oder
+nachträglich als neu geprüft bezeichnet. Bei konfigurierten Teilbundles werden
+keine neuen semantischen Mitglieder nur für den Transport erfunden. Die
+Produktumsetzung der Erzeugung bleibt in 15.c.R, die unabhängige Bundleprüfung
+in 15.d und der extrahierte Read-only-Umfang in 15.e offen. Diese Festlegung
+behauptet weder eine implementierte Funktion noch eine Freigabe oder Abnahme.
 
 ---
 
